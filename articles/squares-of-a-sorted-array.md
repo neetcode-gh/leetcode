@@ -64,6 +64,41 @@ public class Solution {
 }
 ```
 
+```go
+func sortedSquares(nums []int) []int {
+    for i := range nums {
+        nums[i] *= nums[i]
+    }
+    sort.Ints(nums)
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun sortedSquares(nums: IntArray): IntArray {
+        for (i in nums.indices) {
+            nums[i] *= nums[i]
+        }
+        nums.sort()
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortedSquares(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        for i in 0..<nums.count {
+            nums[i] *= nums[i]
+        }
+        nums.sort()
+        return nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,6 +219,73 @@ public class Solution {
 
         res.Reverse();
         return res.ToArray();
+    }
+}
+```
+
+```go
+func sortedSquares(nums []int) []int {
+    l, r := 0, len(nums)-1
+    res := []int{}
+
+    for l <= r {
+        if nums[l]*nums[l] > nums[r]*nums[r] {
+            res = append(res, nums[l]*nums[l])
+            l++
+        } else {
+            res = append(res, nums[r]*nums[r])
+            r--
+        }
+    }
+
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sortedSquares(nums: IntArray): IntArray {
+        var l = 0
+        var r = nums.size - 1
+        val res = mutableListOf<Int>()
+
+        while (l <= r) {
+            if (nums[l] * nums[l] > nums[r] * nums[r]) {
+                res.add(nums[l] * nums[l])
+                l++
+            } else {
+                res.add(nums[r] * nums[r])
+                r--
+            }
+        }
+
+        res.reverse()
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortedSquares(_ nums: [Int]) -> [Int] {
+        var l = 0
+        var r = nums.count - 1
+        var res = [Int]()
+
+        while l <= r {
+            if nums[l] * nums[l] > nums[r] * nums[r] {
+                res.append(nums[l] * nums[l])
+                l += 1
+            } else {
+                res.append(nums[r] * nums[r])
+                r -= 1
+            }
+        }
+
+        return res.reversed()
     }
 }
 ```
@@ -316,6 +418,85 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func sortedSquares(nums []int) []int {
+    n := len(nums)
+    res := make([]int, n)
+    l, r := 0, n-1
+    resIndex := n - 1
+
+    for l <= r {
+        if abs(nums[l]) > abs(nums[r]) {
+            res[resIndex] = nums[l] * nums[l]
+            l++
+        } else {
+            res[resIndex] = nums[r] * nums[r]
+            r--
+        }
+        resIndex--
+    }
+
+    return res
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun sortedSquares(nums: IntArray): IntArray {
+        val n = nums.size
+        val res = IntArray(n)
+        var l = 0
+        var r = n - 1
+        var resIndex = n - 1
+
+        while (l <= r) {
+            if (kotlin.math.abs(nums[l]) > kotlin.math.abs(nums[r])) {
+                res[resIndex] = nums[l] * nums[l]
+                l++
+            } else {
+                res[resIndex] = nums[r] * nums[r]
+                r--
+            }
+            resIndex--
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortedSquares(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var res = [Int](repeating: 0, count: n)
+        var l = 0
+        var r = n - 1
+        var resIndex = n - 1
+
+        while l <= r {
+            if abs(nums[l]) > abs(nums[r]) {
+                res[resIndex] = nums[l] * nums[l]
+                l += 1
+            } else {
+                res[resIndex] = nums[r] * nums[r]
+                r -= 1
+            }
+            resIndex -= 1
+        }
+
+        return res
     }
 }
 ```

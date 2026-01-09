@@ -221,6 +221,143 @@ public class Solution {
 }
 ```
 
+```go
+func reorganizeString(s string) string {
+    freq := make([]int, 26)
+    for _, c := range s {
+        freq[c-'a']++
+    }
+
+    maxFreq := 0
+    for _, f := range freq {
+        if f > maxFreq {
+            maxFreq = f
+        }
+    }
+    if maxFreq > (len(s)+1)/2 {
+        return ""
+    }
+
+    findMaxIndex := func() int {
+        maxIdx := 0
+        for i := 1; i < 26; i++ {
+            if freq[i] > freq[maxIdx] {
+                maxIdx = i
+            }
+        }
+        return maxIdx
+    }
+
+    res := []byte{}
+    for len(res) < len(s) {
+        maxIdx := findMaxIndex()
+        res = append(res, byte(maxIdx+'a'))
+        freq[maxIdx]--
+
+        if freq[maxIdx] == 0 {
+            continue
+        }
+
+        tmp := freq[maxIdx]
+        freq[maxIdx] = -1 << 31
+        nextMaxIdx := findMaxIndex()
+        res = append(res, byte(nextMaxIdx+'a'))
+        freq[maxIdx] = tmp
+        freq[nextMaxIdx]--
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun reorganizeString(s: String): String {
+        val freq = IntArray(26)
+        for (c in s) {
+            freq[c - 'a']++
+        }
+
+        val maxFreq = freq.maxOrNull() ?: 0
+        if (maxFreq > (s.length + 1) / 2) {
+            return ""
+        }
+
+        fun findMaxIndex(): Int {
+            var maxIdx = 0
+            for (i in 1 until 26) {
+                if (freq[i] > freq[maxIdx]) {
+                    maxIdx = i
+                }
+            }
+            return maxIdx
+        }
+
+        val res = StringBuilder()
+        while (res.length < s.length) {
+            val maxIdx = findMaxIndex()
+            res.append(('a' + maxIdx))
+            freq[maxIdx]--
+
+            if (freq[maxIdx] == 0) continue
+
+            val tmp = freq[maxIdx]
+            freq[maxIdx] = Int.MIN_VALUE
+            val nextMaxIdx = findMaxIndex()
+            res.append(('a' + nextMaxIdx))
+            freq[maxIdx] = tmp
+            freq[nextMaxIdx]--
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reorganizeString(_ s: String) -> String {
+        var freq = [Int](repeating: 0, count: 26)
+        for c in s {
+            freq[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+        }
+
+        let maxFreq = freq.max() ?? 0
+        if maxFreq > (s.count + 1) / 2 {
+            return ""
+        }
+
+        func findMaxIndex() -> Int {
+            var maxIdx = 0
+            for i in 1..<26 {
+                if freq[i] > freq[maxIdx] {
+                    maxIdx = i
+                }
+            }
+            return maxIdx
+        }
+
+        var res = [Character]()
+        while res.count < s.count {
+            let maxIdx = findMaxIndex()
+            res.append(Character(UnicodeScalar(maxIdx + Int(Character("a").asciiValue!))!))
+            freq[maxIdx] -= 1
+
+            if freq[maxIdx] == 0 { continue }
+
+            let tmp = freq[maxIdx]
+            freq[maxIdx] = Int.min
+            let nextMaxIdx = findMaxIndex()
+            res.append(Character(UnicodeScalar(nextMaxIdx + Int(Character("a").asciiValue!))!))
+            freq[maxIdx] = tmp
+            freq[nextMaxIdx] -= 1
+        }
+
+        return String(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -428,6 +565,147 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+import "container/heap"
+
+type MaxHeap [][]int
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i][0] > h[j][0] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x any)        { *h = append(*h, x.([]int)) }
+func (h *MaxHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func reorganizeString(s string) string {
+    freq := make([]int, 26)
+    for _, c := range s {
+        freq[c-'a']++
+    }
+
+    h := &MaxHeap{}
+    heap.Init(h)
+    for i := 0; i < 26; i++ {
+        if freq[i] > 0 {
+            heap.Push(h, []int{freq[i], i})
+        }
+    }
+
+    res := []byte{}
+    var prev []int
+
+    for h.Len() > 0 || prev != nil {
+        if prev != nil && h.Len() == 0 {
+            return ""
+        }
+
+        curr := heap.Pop(h).([]int)
+        res = append(res, byte(curr[1]+'a'))
+        curr[0]--
+
+        if prev != nil {
+            heap.Push(h, prev)
+            prev = nil
+        }
+
+        if curr[0] > 0 {
+            prev = curr
+        }
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class Solution {
+    fun reorganizeString(s: String): String {
+        val freq = IntArray(26)
+        for (c in s) {
+            freq[c - 'a']++
+        }
+
+        val maxHeap = PriorityQueue<IntArray> { a, b -> b[0] - a[0] }
+        for (i in 0 until 26) {
+            if (freq[i] > 0) {
+                maxHeap.offer(intArrayOf(freq[i], i))
+            }
+        }
+
+        val res = StringBuilder()
+        var prev: IntArray? = null
+
+        while (maxHeap.isNotEmpty() || prev != null) {
+            if (prev != null && maxHeap.isEmpty()) return ""
+
+            val curr = maxHeap.poll()
+            res.append(('a' + curr[1]))
+            curr[0]--
+
+            if (prev != null) {
+                maxHeap.offer(prev)
+                prev = null
+            }
+
+            if (curr[0] > 0) {
+                prev = curr
+            }
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reorganizeString(_ s: String) -> String {
+        var freq = [Int](repeating: 0, count: 26)
+        for c in s {
+            freq[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+        }
+
+        var heap = [(Int, Int)]()
+        for i in 0..<26 {
+            if freq[i] > 0 {
+                heap.append((freq[i], i))
+            }
+        }
+        heap.sort { $0.0 > $1.0 }
+
+        var res = [Character]()
+        var prev: (Int, Int)? = nil
+
+        while !heap.isEmpty || prev != nil {
+            if prev != nil && heap.isEmpty { return "" }
+
+            let curr = heap.removeFirst()
+            res.append(Character(UnicodeScalar(curr.1 + Int(Character("a").asciiValue!))!))
+            let newCount = curr.0 - 1
+
+            if let p = prev {
+                heap.append(p)
+                heap.sort { $0.0 > $1.0 }
+                prev = nil
+            }
+
+            if newCount > 0 {
+                prev = (newCount, curr.1)
+            }
+        }
+
+        return String(res)
     }
 }
 ```
@@ -654,6 +932,134 @@ public class Solution {
         }
 
         return new string(res);
+    }
+}
+```
+
+```go
+func reorganizeString(s string) string {
+    freq := make([]int, 26)
+    for _, c := range s {
+        freq[c-'a']++
+    }
+
+    maxIdx := 0
+    for i := 1; i < 26; i++ {
+        if freq[i] > freq[maxIdx] {
+            maxIdx = i
+        }
+    }
+
+    maxFreq := freq[maxIdx]
+    if maxFreq > (len(s)+1)/2 {
+        return ""
+    }
+
+    res := make([]byte, len(s))
+    idx := 0
+    maxChar := byte(maxIdx + 'a')
+
+    for freq[maxIdx] > 0 {
+        res[idx] = maxChar
+        idx += 2
+        freq[maxIdx]--
+    }
+
+    for i := 0; i < 26; i++ {
+        for freq[i] > 0 {
+            if idx >= len(s) {
+                idx = 1
+            }
+            res[idx] = byte(i + 'a')
+            idx += 2
+            freq[i]--
+        }
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun reorganizeString(s: String): String {
+        val freq = IntArray(26)
+        for (c in s) {
+            freq[c - 'a']++
+        }
+
+        var maxIdx = 0
+        for (i in 1 until 26) {
+            if (freq[i] > freq[maxIdx]) {
+                maxIdx = i
+            }
+        }
+
+        val maxFreq = freq[maxIdx]
+        if (maxFreq > (s.length + 1) / 2) return ""
+
+        val res = CharArray(s.length)
+        var idx = 0
+        val maxChar = ('a' + maxIdx)
+
+        while (freq[maxIdx] > 0) {
+            res[idx] = maxChar
+            idx += 2
+            freq[maxIdx]--
+        }
+
+        for (i in 0 until 26) {
+            while (freq[i] > 0) {
+                if (idx >= s.length) idx = 1
+                res[idx] = ('a' + i)
+                idx += 2
+                freq[i]--
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
+```swift
+class Solution {
+    func reorganizeString(_ s: String) -> String {
+        var freq = [Int](repeating: 0, count: 26)
+        for c in s {
+            freq[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+        }
+
+        var maxIdx = 0
+        for i in 1..<26 {
+            if freq[i] > freq[maxIdx] {
+                maxIdx = i
+            }
+        }
+
+        let maxFreq = freq[maxIdx]
+        if maxFreq > (s.count + 1) / 2 { return "" }
+
+        var res = [Character](repeating: " ", count: s.count)
+        var idx = 0
+        let maxChar = Character(UnicodeScalar(maxIdx + Int(Character("a").asciiValue!))!)
+
+        while freq[maxIdx] > 0 {
+            res[idx] = maxChar
+            idx += 2
+            freq[maxIdx] -= 1
+        }
+
+        for i in 0..<26 {
+            while freq[i] > 0 {
+                if idx >= s.count { idx = 1 }
+                res[idx] = Character(UnicodeScalar(i + Int(Character("a").asciiValue!))!)
+                idx += 2
+                freq[i] -= 1
+            }
+        }
+
+        return String(res)
     }
 }
 ```

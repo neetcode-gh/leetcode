@@ -192,6 +192,121 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func deleteNode(root *TreeNode, key int) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    if key > root.Val {
+        root.Right = deleteNode(root.Right, key)
+    } else if key < root.Val {
+        root.Left = deleteNode(root.Left, key)
+    } else {
+        if root.Left == nil {
+            return root.Right
+        }
+        if root.Right == nil {
+            return root.Left
+        }
+
+        cur := root.Right
+        for cur.Left != nil {
+            cur = cur.Left
+        }
+        root.Val = cur.Val
+        root.Right = deleteNode(root.Right, root.Val)
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun deleteNode(root: TreeNode?, key: Int): TreeNode? {
+        if (root == null) return null
+
+        if (key > root.`val`) {
+            root.right = deleteNode(root.right, key)
+        } else if (key < root.`val`) {
+            root.left = deleteNode(root.left, key)
+        } else {
+            if (root.left == null) return root.right
+            if (root.right == null) return root.left
+
+            var cur = root.right
+            while (cur?.left != null) {
+                cur = cur.left
+            }
+            root.`val` = cur!!.`val`
+            root.right = deleteNode(root.right, root.`val`)
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func deleteNode(_ root: TreeNode?, _ key: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        if key > root.val {
+            root.right = deleteNode(root.right, key)
+        } else if key < root.val {
+            root.left = deleteNode(root.left, key)
+        } else {
+            if root.left == nil { return root.right }
+            if root.right == nil { return root.left }
+
+            var cur = root.right
+            while cur?.left != nil {
+                cur = cur?.left
+            }
+            root.val = cur!.val
+            root.right = deleteNode(root.right, root.val)
+        }
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,6 +517,121 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func deleteNode(root *TreeNode, key int) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    if key > root.Val {
+        root.Right = deleteNode(root.Right, key)
+    } else if key < root.Val {
+        root.Left = deleteNode(root.Left, key)
+    } else {
+        if root.Left == nil {
+            return root.Right
+        }
+        if root.Right == nil {
+            return root.Left
+        }
+
+        cur := root.Right
+        for cur.Left != nil {
+            cur = cur.Left
+        }
+        cur.Left = root.Left
+        return root.Right
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun deleteNode(root: TreeNode?, key: Int): TreeNode? {
+        if (root == null) return null
+
+        if (key > root.`val`) {
+            root.right = deleteNode(root.right, key)
+        } else if (key < root.`val`) {
+            root.left = deleteNode(root.left, key)
+        } else {
+            if (root.left == null) return root.right
+            if (root.right == null) return root.left
+
+            var cur = root.right
+            while (cur?.left != null) {
+                cur = cur.left
+            }
+            cur?.left = root.left
+            return root.right
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func deleteNode(_ root: TreeNode?, _ key: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        if key > root.val {
+            root.right = deleteNode(root.right, key)
+        } else if key < root.val {
+            root.left = deleteNode(root.left, key)
+        } else {
+            if root.left == nil { return root.right }
+            if root.right == nil { return root.left }
+
+            var cur = root.right
+            while cur?.left != nil {
+                cur = cur?.left
+            }
+            cur?.left = root.left
+            return root.right
+        }
+
+        return root
     }
 }
 ```
@@ -777,6 +1007,227 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func deleteNode(root *TreeNode, key int) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    var parent *TreeNode
+    cur := root
+
+    for cur != nil && cur.Val != key {
+        parent = cur
+        if key > cur.Val {
+            cur = cur.Right
+        } else {
+            cur = cur.Left
+        }
+    }
+
+    if cur == nil {
+        return root
+    }
+
+    if cur.Left == nil || cur.Right == nil {
+        var child *TreeNode
+        if cur.Left != nil {
+            child = cur.Left
+        } else {
+            child = cur.Right
+        }
+
+        if parent == nil {
+            return child
+        }
+
+        if parent.Left == cur {
+            parent.Left = child
+        } else {
+            parent.Right = child
+        }
+    } else {
+        var par *TreeNode
+        delNode := cur
+        cur = cur.Right
+        for cur.Left != nil {
+            par = cur
+            cur = cur.Left
+        }
+
+        if par != nil {
+            par.Left = cur.Right
+            cur.Right = delNode.Right
+        }
+
+        cur.Left = delNode.Left
+
+        if parent == nil {
+            return cur
+        }
+
+        if parent.Left == delNode {
+            parent.Left = cur
+        } else {
+            parent.Right = cur
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun deleteNode(root: TreeNode?, key: Int): TreeNode? {
+        if (root == null) return null
+
+        var parent: TreeNode? = null
+        var cur: TreeNode? = root
+
+        while (cur != null && cur.`val` != key) {
+            parent = cur
+            cur = if (key > cur.`val`) cur.right else cur.left
+        }
+
+        if (cur == null) return root
+
+        if (cur.left == null || cur.right == null) {
+            val child = cur.left ?: cur.right
+
+            if (parent == null) return child
+
+            if (parent.left == cur) {
+                parent.left = child
+            } else {
+                parent.right = child
+            }
+        } else {
+            var par: TreeNode? = null
+            val delNode = cur
+            cur = cur.right
+            while (cur?.left != null) {
+                par = cur
+                cur = cur.left
+            }
+
+            if (par != null) {
+                par.left = cur?.right
+                cur?.right = delNode.right
+            }
+
+            cur?.left = delNode.left
+
+            if (parent == null) return cur
+
+            if (parent.left == delNode) {
+                parent.left = cur
+            } else {
+                parent.right = cur
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func deleteNode(_ root: TreeNode?, _ key: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        var parent: TreeNode? = nil
+        var cur: TreeNode? = root
+
+        while cur != nil && cur!.val != key {
+            parent = cur
+            if key > cur!.val {
+                cur = cur?.right
+            } else {
+                cur = cur?.left
+            }
+        }
+
+        guard let node = cur else { return root }
+
+        if node.left == nil || node.right == nil {
+            let child = node.left ?? node.right
+
+            if parent == nil {
+                return child
+            }
+
+            if parent?.left === node {
+                parent?.left = child
+            } else {
+                parent?.right = child
+            }
+        } else {
+            var par: TreeNode? = nil
+            let delNode = node
+            cur = node.right
+            while cur?.left != nil {
+                par = cur
+                cur = cur?.left
+            }
+
+            if par != nil {
+                par?.left = cur?.right
+                cur?.right = delNode.right
+            }
+
+            cur?.left = delNode.left
+
+            if parent == nil {
+                return cur
+            }
+
+            if parent?.left === delNode {
+                parent?.left = cur
+            } else {
+                parent?.right = cur
+            }
+        }
+
+        return root
     }
 }
 ```

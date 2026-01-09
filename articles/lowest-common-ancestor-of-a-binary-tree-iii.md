@@ -140,6 +140,98 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for Node.
+ * type Node struct {
+ *     Val int
+ *     Left *Node
+ *     Right *Node
+ *     Parent *Node
+ * }
+ */
+
+func lowestCommonAncestor(p *Node, q *Node) *Node {
+    seen := make(map[*Node]bool)
+    for p != nil {
+        seen[p] = true
+        p = p.Parent
+    }
+    for q != nil {
+        if seen[q] {
+            return q
+        }
+        q = q.Parent
+    }
+    return nil
+}
+```
+
+```kotlin
+/**
+ * Definition for a Node.
+ * class Node(var `val`: Int) {
+ *     var left: Node? = null
+ *     var right: Node? = null
+ *     var parent: Node? = null
+ * }
+ */
+
+class Solution {
+    fun lowestCommonAncestor(p: Node?, q: Node?): Node? {
+        val seen = HashSet<Node>()
+        var pNode = p
+        while (pNode != null) {
+            seen.add(pNode)
+            pNode = pNode.parent
+        }
+        var qNode = q
+        while (qNode != null) {
+            if (qNode in seen) return qNode
+            qNode = qNode.parent
+        }
+        return null
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var left: Node?
+ *     public var right: Node?
+ *     public var parent: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *         self.parent = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func lowestCommonAncestor(_ p: Node?,_ q: Node?) -> Node? {
+        var seen = Set<ObjectIdentifier>()
+        var pNode = p
+        while let node = pNode {
+            seen.insert(ObjectIdentifier(node))
+            pNode = node.parent
+        }
+        var qNode = q
+        while let node = qNode {
+            if seen.contains(ObjectIdentifier(node)) {
+                return node
+            }
+            qNode = node.parent
+        }
+        return nil
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,6 +455,151 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for Node.
+ * type Node struct {
+ *     Val int
+ *     Left *Node
+ *     Right *Node
+ *     Parent *Node
+ * }
+ */
+
+func lowestCommonAncestor(p *Node, q *Node) *Node {
+    height := func(node *Node) int {
+        h := 0
+        for node != nil {
+            h++
+            node = node.Parent
+        }
+        return h
+    }
+
+    h1, h2 := height(p), height(q)
+    if h2 < h1 {
+        p, q = q, p
+        h1, h2 = h2, h1
+    }
+
+    diff := h2 - h1
+    for diff > 0 {
+        q = q.Parent
+        diff--
+    }
+
+    for p != q {
+        p = p.Parent
+        q = q.Parent
+    }
+    return p
+}
+```
+
+```kotlin
+/**
+ * Definition for a Node.
+ * class Node(var `val`: Int) {
+ *     var left: Node? = null
+ *     var right: Node? = null
+ *     var parent: Node? = null
+ * }
+ */
+
+class Solution {
+    fun lowestCommonAncestor(p: Node?, q: Node?): Node? {
+        fun height(node: Node?): Int {
+            var h = 0
+            var curr = node
+            while (curr != null) {
+                h++
+                curr = curr.parent
+            }
+            return h
+        }
+
+        var pNode = p
+        var qNode = q
+        var h1 = height(pNode)
+        var h2 = height(qNode)
+
+        if (h2 < h1) {
+            val tmp = pNode
+            pNode = qNode
+            qNode = tmp
+            val th = h1
+            h1 = h2
+            h2 = th
+        }
+
+        var diff = h2 - h1
+        while (diff-- > 0) {
+            qNode = qNode?.parent
+        }
+
+        while (pNode != qNode) {
+            pNode = pNode?.parent
+            qNode = qNode?.parent
+        }
+        return pNode
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var left: Node?
+ *     public var right: Node?
+ *     public var parent: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *         self.parent = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func lowestCommonAncestor(_ p: Node?,_ q: Node?) -> Node? {
+        func height(_ node: Node?) -> Int {
+            var h = 0
+            var curr = node
+            while curr != nil {
+                h += 1
+                curr = curr?.parent
+            }
+            return h
+        }
+
+        var pNode = p
+        var qNode = q
+        var h1 = height(pNode)
+        var h2 = height(qNode)
+
+        if h2 < h1 {
+            swap(&pNode, &qNode)
+            swap(&h1, &h2)
+        }
+
+        var diff = h2 - h1
+        while diff > 0 {
+            qNode = qNode?.parent
+            diff -= 1
+        }
+
+        while pNode !== qNode {
+            pNode = pNode?.parent
+            qNode = qNode?.parent
+        }
+        return pNode
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -492,6 +729,88 @@ public class Solution {
             ptr2 = ptr2 != null ? ptr2.parent : p;
         }
         return ptr1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for Node.
+ * type Node struct {
+ *     Val int
+ *     Left *Node
+ *     Right *Node
+ *     Parent *Node
+ * }
+ */
+
+func lowestCommonAncestor(p *Node, q *Node) *Node {
+    ptr1, ptr2 := p, q
+    for ptr1 != ptr2 {
+        if ptr1 != nil {
+            ptr1 = ptr1.Parent
+        } else {
+            ptr1 = q
+        }
+        if ptr2 != nil {
+            ptr2 = ptr2.Parent
+        } else {
+            ptr2 = p
+        }
+    }
+    return ptr1
+}
+```
+
+```kotlin
+/**
+ * Definition for a Node.
+ * class Node(var `val`: Int) {
+ *     var left: Node? = null
+ *     var right: Node? = null
+ *     var parent: Node? = null
+ * }
+ */
+
+class Solution {
+    fun lowestCommonAncestor(p: Node?, q: Node?): Node? {
+        var ptr1 = p
+        var ptr2 = q
+        while (ptr1 != ptr2) {
+            ptr1 = if (ptr1 != null) ptr1.parent else q
+            ptr2 = if (ptr2 != null) ptr2.parent else p
+        }
+        return ptr1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var left: Node?
+ *     public var right: Node?
+ *     public var parent: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *         self.parent = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func lowestCommonAncestor(_ p: Node?,_ q: Node?) -> Node? {
+        var ptr1 = p
+        var ptr2 = q
+        while ptr1 !== ptr2 {
+            ptr1 = ptr1 != nil ? ptr1?.parent : q
+            ptr2 = ptr2 != nil ? ptr2?.parent : p
+        }
+        return ptr1
     }
 }
 ```

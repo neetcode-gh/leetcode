@@ -106,6 +106,62 @@ public class Solution {
 }
 ```
 
+```go
+func isIsomorphic(s string, t string) bool {
+    helper := func(s, t string) bool {
+        mp := make(map[byte]byte)
+        for i := 0; i < len(s); i++ {
+            if val, ok := mp[s[i]]; ok && val != t[i] {
+                return false
+            }
+            mp[s[i]] = t[i]
+        }
+        return true
+    }
+    return helper(s, t) && helper(t, s)
+}
+```
+
+```kotlin
+class Solution {
+    private fun helper(s: String, t: String): Boolean {
+        val mp = mutableMapOf<Char, Char>()
+        for (i in s.indices) {
+            if (mp.containsKey(s[i]) && mp[s[i]] != t[i]) {
+                return false
+            }
+            mp[s[i]] = t[i]
+        }
+        return true
+    }
+
+    fun isIsomorphic(s: String, t: String): Boolean {
+        return helper(s, t) && helper(t, s)
+    }
+}
+```
+
+```swift
+class Solution {
+    private func helper(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        var mp = [Character: Character]()
+        for i in 0..<sArr.count {
+            if let val = mp[sArr[i]], val != tArr[i] {
+                return false
+            }
+            mp[sArr[i]] = tArr[i]
+        }
+        return true
+    }
+
+    func isIsomorphic(_ s: String, _ t: String) -> Bool {
+        return helper(s, t) && helper(t, s)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -233,6 +289,83 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+func isIsomorphic(s string, t string) bool {
+    mapST := make(map[byte]byte)
+    mapTS := make(map[byte]byte)
+
+    for i := 0; i < len(s); i++ {
+        c1, c2 := s[i], t[i]
+
+        if val, ok := mapST[c1]; ok && val != c2 {
+            return false
+        }
+        if val, ok := mapTS[c2]; ok && val != c1 {
+            return false
+        }
+
+        mapST[c1] = c2
+        mapTS[c2] = c1
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isIsomorphic(s: String, t: String): Boolean {
+        val mapST = mutableMapOf<Char, Char>()
+        val mapTS = mutableMapOf<Char, Char>()
+
+        for (i in s.indices) {
+            val c1 = s[i]
+            val c2 = t[i]
+
+            if (mapST.containsKey(c1) && mapST[c1] != c2) {
+                return false
+            }
+            if (mapTS.containsKey(c2) && mapTS[c2] != c1) {
+                return false
+            }
+
+            mapST[c1] = c2
+            mapTS[c2] = c1
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isIsomorphic(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        var mapST = [Character: Character]()
+        var mapTS = [Character: Character]()
+
+        for i in 0..<sArr.count {
+            let c1 = sArr[i]
+            let c2 = tArr[i]
+
+            if let val = mapST[c1], val != c2 {
+                return false
+            }
+            if let val = mapTS[c2], val != c1 {
+                return false
+            }
+
+            mapST[c1] = c2
+            mapTS[c2] = c1
+        }
+
+        return true
     }
 }
 ```

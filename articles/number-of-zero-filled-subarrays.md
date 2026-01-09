@@ -64,6 +64,66 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long ZeroFilledSubarray(int[] nums) {
+        long res = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            for (int j = i; j < nums.Length; j++) {
+                if (nums[j] != 0) break;
+                res++;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func zeroFilledSubarray(nums []int) int64 {
+    var res int64 = 0
+    for i := 0; i < len(nums); i++ {
+        for j := i; j < len(nums); j++ {
+            if nums[j] != 0 {
+                break
+            }
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun zeroFilledSubarray(nums: IntArray): Long {
+        var res = 0L
+        for (i in nums.indices) {
+            for (j in i until nums.size) {
+                if (nums[j] != 0) break
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func zeroFilledSubarray(_ nums: [Int]) -> Int {
+        var res = 0
+        for i in 0..<nums.count {
+            for j in i..<nums.count {
+                if nums[j] != 0 { break }
+                res += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -149,6 +209,80 @@ class Solution {
             i++;
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long ZeroFilledSubarray(int[] nums) {
+        long res = 0;
+        int i = 0;
+        while (i < nums.Length) {
+            long count = 0;
+            while (i < nums.Length && nums[i] == 0) {
+                count++;
+                i++;
+                res += count;
+            }
+            i++;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func zeroFilledSubarray(nums []int) int64 {
+    var res int64 = 0
+    i := 0
+    for i < len(nums) {
+        var count int64 = 0
+        for i < len(nums) && nums[i] == 0 {
+            count++
+            i++
+            res += count
+        }
+        i++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun zeroFilledSubarray(nums: IntArray): Long {
+        var res = 0L
+        var i = 0
+        while (i < nums.size) {
+            var count = 0L
+            while (i < nums.size && nums[i] == 0) {
+                count++
+                i++
+                res += count
+            }
+            i++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func zeroFilledSubarray(_ nums: [Int]) -> Int {
+        var res = 0
+        var i = 0
+        while i < nums.count {
+            var count = 0
+            while i < nums.count && nums[i] == 0 {
+                count += 1
+                i += 1
+                res += count
+            }
+            i += 1
+        }
+        return res
     }
 }
 ```
@@ -246,6 +380,84 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long ZeroFilledSubarray(int[] nums) {
+        long res = 0;
+        int count = 0;
+
+        foreach (int num in nums) {
+            if (num == 0) {
+                count++;
+            } else {
+                count = 0;
+            }
+            res += count;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func zeroFilledSubarray(nums []int) int64 {
+    var res int64 = 0
+    count := 0
+
+    for _, num := range nums {
+        if num == 0 {
+            count++
+        } else {
+            count = 0
+        }
+        res += int64(count)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun zeroFilledSubarray(nums: IntArray): Long {
+        var res = 0L
+        var count = 0
+
+        for (num in nums) {
+            if (num == 0) {
+                count++
+            } else {
+                count = 0
+            }
+            res += count
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func zeroFilledSubarray(_ nums: [Int]) -> Int {
+        var res = 0
+        var count = 0
+
+        for num in nums {
+            if num == 0 {
+                count += 1
+            } else {
+                count = 0
+            }
+            res += count
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +541,78 @@ class Solution {
         }
         res += (count * (count + 1)) / 2;
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long ZeroFilledSubarray(int[] nums) {
+        long res = 0, count = 0;
+        foreach (int num in nums) {
+            if (num == 0) {
+                count++;
+            } else {
+                res += count * (count + 1) / 2;
+                count = 0;
+            }
+        }
+        res += count * (count + 1) / 2;
+        return res;
+    }
+}
+```
+
+```go
+func zeroFilledSubarray(nums []int) int64 {
+    var res, count int64 = 0, 0
+    for _, num := range nums {
+        if num == 0 {
+            count++
+        } else {
+            res += count * (count + 1) / 2
+            count = 0
+        }
+    }
+    res += count * (count + 1) / 2
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun zeroFilledSubarray(nums: IntArray): Long {
+        var res = 0L
+        var count = 0L
+        for (num in nums) {
+            if (num == 0) {
+                count++
+            } else {
+                res += count * (count + 1) / 2
+                count = 0
+            }
+        }
+        res += count * (count + 1) / 2
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func zeroFilledSubarray(_ nums: [Int]) -> Int {
+        var res = 0
+        var count = 0
+        for num in nums {
+            if num == 0 {
+                count += 1
+            } else {
+                res += count * (count + 1) / 2
+                count = 0
+            }
+        }
+        res += count * (count + 1) / 2
+        return res
     }
 }
 ```

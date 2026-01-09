@@ -85,6 +85,52 @@ public class Solution {
 }
 ```
 
+```go
+func singleNonDuplicate(nums []int) int {
+    n := len(nums)
+    for i := 0; i < n; i++ {
+        if (i > 0 && nums[i] == nums[i-1]) ||
+            (i < n-1 && nums[i] == nums[i+1]) {
+            continue
+        }
+        return nums[i]
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNonDuplicate(nums: IntArray): Int {
+        val n = nums.size
+        for (i in 0 until n) {
+            if ((i > 0 && nums[i] == nums[i - 1]) ||
+                (i < n - 1 && nums[i] == nums[i + 1])) {
+                continue
+            }
+            return nums[i]
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNonDuplicate(_ nums: [Int]) -> Int {
+        let n = nums.count
+        for i in 0..<n {
+            if (i > 0 && nums[i] == nums[i - 1]) ||
+                (i < n - 1 && nums[i] == nums[i + 1]) {
+                continue
+            }
+            return nums[i]
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -156,6 +202,40 @@ public class Solution {
             xorr ^= num;
         }
         return xorr;
+    }
+}
+```
+
+```go
+func singleNonDuplicate(nums []int) int {
+    xorr := 0
+    for _, num := range nums {
+        xorr ^= num
+    }
+    return xorr
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNonDuplicate(nums: IntArray): Int {
+        var xorr = 0
+        for (num in nums) {
+            xorr = xorr xor num
+        }
+        return xorr
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNonDuplicate(_ nums: [Int]) -> Int {
+        var xorr = 0
+        for num in nums {
+            xorr ^= num
+        }
+        return xorr
     }
 }
 ```
@@ -299,6 +379,86 @@ public class Solution {
 }
 ```
 
+```go
+func singleNonDuplicate(nums []int) int {
+    l, r := 0, len(nums)-1
+
+    for l <= r {
+        m := l + (r-l)/2
+        if (m-1 < 0 || nums[m-1] != nums[m]) &&
+            (m+1 == len(nums) || nums[m] != nums[m+1]) {
+            return nums[m]
+        }
+
+        leftSize := m
+        if m-1 >= 0 && nums[m-1] == nums[m] {
+            leftSize = m - 1
+        }
+
+        if leftSize%2 == 1 {
+            r = m - 1
+        } else {
+            l = m + 1
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNonDuplicate(nums: IntArray): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            if ((m - 1 < 0 || nums[m - 1] != nums[m]) &&
+                (m + 1 == nums.size || nums[m] != nums[m + 1])) {
+                return nums[m]
+            }
+
+            val leftSize = if (m - 1 >= 0 && nums[m - 1] == nums[m]) m - 1 else m
+
+            if (leftSize % 2 == 1) {
+                r = m - 1
+            } else {
+                l = m + 1
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNonDuplicate(_ nums: [Int]) -> Int {
+        var l = 0, r = nums.count - 1
+
+        while l <= r {
+            let m = l + (r - l) / 2
+            if (m - 1 < 0 || nums[m - 1] != nums[m]) &&
+                (m + 1 == nums.count || nums[m] != nums[m + 1]) {
+                return nums[m]
+            }
+
+            let leftSize = (m - 1 >= 0 && nums[m - 1] == nums[m]) ? m - 1 : m
+
+            if leftSize % 2 == 1 {
+                r = m - 1
+            } else {
+                l = m + 1
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -423,6 +583,71 @@ public class Solution {
 }
 ```
 
+```go
+func singleNonDuplicate(nums []int) int {
+    l, r := 0, len(nums)-1
+
+    for l < r {
+        m := l + (r-l)/2
+        if m&1 == 1 {
+            m--
+        }
+        if nums[m] != nums[m+1] {
+            r = m
+        } else {
+            l = m + 2
+        }
+    }
+
+    return nums[l]
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNonDuplicate(nums: IntArray): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l < r) {
+            var m = l + (r - l) / 2
+            if (m and 1 == 1) {
+                m--
+            }
+            if (nums[m] != nums[m + 1]) {
+                r = m
+            } else {
+                l = m + 2
+            }
+        }
+
+        return nums[l]
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNonDuplicate(_ nums: [Int]) -> Int {
+        var l = 0, r = nums.count - 1
+
+        while l < r {
+            var m = l + (r - l) / 2
+            if m & 1 == 1 {
+                m -= 1
+            }
+            if nums[m] != nums[m + 1] {
+                r = m
+            } else {
+                l = m + 2
+            }
+        }
+
+        return nums[l]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -529,6 +754,62 @@ public class Solution {
         }
 
         return nums[l];
+    }
+}
+```
+
+```go
+func singleNonDuplicate(nums []int) int {
+    l, r := 0, len(nums)-1
+
+    for l < r {
+        m := (l + r) >> 1
+        if nums[m] != nums[m^1] {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+
+    return nums[l]
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNonDuplicate(nums: IntArray): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l < r) {
+            val m = (l + r) shr 1
+            if (nums[m] != nums[m xor 1]) {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+
+        return nums[l]
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNonDuplicate(_ nums: [Int]) -> Int {
+        var l = 0, r = nums.count - 1
+
+        while l < r {
+            let m = (l + r) >> 1
+            if nums[m] != nums[m ^ 1] {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+
+        return nums[l]
     }
 }
 ```

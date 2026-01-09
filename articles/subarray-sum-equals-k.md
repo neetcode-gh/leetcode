@@ -87,6 +87,56 @@ public class Solution {
 }
 ```
 
+```go
+func subarraySum(nums []int, k int) int {
+    res := 0
+    for i := 0; i < len(nums); i++ {
+        sum := 0
+        for j := i; j < len(nums); j++ {
+            sum += nums[j]
+            if sum == k {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subarraySum(nums: IntArray, k: Int): Int {
+        var res = 0
+        for (i in nums.indices) {
+            var sum = 0
+            for (j in i until nums.size) {
+                sum += nums[j]
+                if (sum == k) res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subarraySum(_ nums: [Int], _ k: Int) -> Int {
+        var res = 0
+        for i in 0..<nums.count {
+            var sum = 0
+            for j in i..<nums.count {
+                sum += nums[j]
+                if sum == k {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,6 +252,60 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func subarraySum(nums []int, k int) int {
+    res, curSum := 0, 0
+    prefixSums := map[int]int{0: 1}
+
+    for _, num := range nums {
+        curSum += num
+        diff := curSum - k
+        res += prefixSums[diff]
+        prefixSums[curSum]++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subarraySum(nums: IntArray, k: Int): Int {
+        var res = 0
+        var curSum = 0
+        val prefixSums = hashMapOf(0 to 1)
+
+        for (num in nums) {
+            curSum += num
+            val diff = curSum - k
+            res += prefixSums.getOrDefault(diff, 0)
+            prefixSums[curSum] = prefixSums.getOrDefault(curSum, 0) + 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subarraySum(_ nums: [Int], _ k: Int) -> Int {
+        var res = 0
+        var curSum = 0
+        var prefixSums = [0: 1]
+
+        for num in nums {
+            curSum += num
+            let diff = curSum - k
+            res += prefixSums[diff] ?? 0
+            prefixSums[curSum, default: 0] += 1
+        }
+
+        return res
     }
 }
 ```

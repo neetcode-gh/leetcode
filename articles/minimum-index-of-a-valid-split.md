@@ -115,6 +115,119 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumIndex(IList<int> nums) {
+        int n = nums.Count;
+
+        for (int i = 0; i < n - 1; i++) {
+            Dictionary<int, int> leftCnt = new Dictionary<int, int>();
+            for (int l = 0; l <= i; l++) {
+                if (!leftCnt.ContainsKey(nums[l])) leftCnt[nums[l]] = 0;
+                leftCnt[nums[l]]++;
+            }
+
+            Dictionary<int, int> rightCnt = new Dictionary<int, int>();
+            for (int r = i + 1; r < n; r++) {
+                if (!rightCnt.ContainsKey(nums[r])) rightCnt[nums[r]] = 0;
+                rightCnt[nums[r]]++;
+            }
+
+            foreach (int num in leftCnt.Keys) {
+                int rightVal = rightCnt.ContainsKey(num) ? rightCnt[num] : 0;
+                if (leftCnt[num] > (i + 1) / 2 && rightVal > (n - i - 1) / 2) {
+                    return i;
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func minimumIndex(nums []int) int {
+    n := len(nums)
+
+    for i := 0; i < n-1; i++ {
+        leftCnt := make(map[int]int)
+        for l := 0; l <= i; l++ {
+            leftCnt[nums[l]]++
+        }
+
+        rightCnt := make(map[int]int)
+        for r := i + 1; r < n; r++ {
+            rightCnt[nums[r]]++
+        }
+
+        for num, cnt := range leftCnt {
+            if cnt > (i+1)/2 && rightCnt[num] > (n-i-1)/2 {
+                return i
+            }
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumIndex(nums: List<Int>): Int {
+        val n = nums.size
+
+        for (i in 0 until n - 1) {
+            val leftCnt = mutableMapOf<Int, Int>()
+            for (l in 0..i) {
+                leftCnt[nums[l]] = leftCnt.getOrDefault(nums[l], 0) + 1
+            }
+
+            val rightCnt = mutableMapOf<Int, Int>()
+            for (r in i + 1 until n) {
+                rightCnt[nums[r]] = rightCnt.getOrDefault(nums[r], 0) + 1
+            }
+
+            for ((num, cnt) in leftCnt) {
+                if (cnt > (i + 1) / 2 && (rightCnt[num] ?: 0) > (n - i - 1) / 2) {
+                    return i
+                }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumIndex(_ nums: [Int]) -> Int {
+        let n = nums.count
+
+        for i in 0..<(n - 1) {
+            var leftCnt = [Int: Int]()
+            for l in 0...i {
+                leftCnt[nums[l], default: 0] += 1
+            }
+
+            var rightCnt = [Int: Int]()
+            for r in (i + 1)..<n {
+                rightCnt[nums[r], default: 0] += 1
+            }
+
+            for (num, cnt) in leftCnt {
+                if cnt > (i + 1) / 2 && (rightCnt[num] ?? 0) > (n - i - 1) / 2 {
+                    return i
+                }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -234,6 +347,122 @@ class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumIndex(IList<int> nums) {
+        Dictionary<int, int> left = new Dictionary<int, int>();
+        Dictionary<int, int> right = new Dictionary<int, int>();
+        int n = nums.Count;
+
+        foreach (int num in nums) {
+            if (!right.ContainsKey(num)) right[num] = 0;
+            right[num]++;
+        }
+
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            if (!left.ContainsKey(num)) left[num] = 0;
+            left[num]++;
+            right[num]--;
+
+            int leftLen = i + 1;
+            int rightLen = n - i - 1;
+
+            if (2 * left[num] > leftLen && 2 * right[num] > rightLen) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func minimumIndex(nums []int) int {
+    left := make(map[int]int)
+    right := make(map[int]int)
+    n := len(nums)
+
+    for _, num := range nums {
+        right[num]++
+    }
+
+    for i := 0; i < n; i++ {
+        num := nums[i]
+        left[num]++
+        right[num]--
+
+        leftLen := i + 1
+        rightLen := n - i - 1
+
+        if 2*left[num] > leftLen && 2*right[num] > rightLen {
+            return i
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumIndex(nums: List<Int>): Int {
+        val left = mutableMapOf<Int, Int>()
+        val right = mutableMapOf<Int, Int>()
+        val n = nums.size
+
+        for (num in nums) {
+            right[num] = right.getOrDefault(num, 0) + 1
+        }
+
+        for (i in 0 until n) {
+            val num = nums[i]
+            left[num] = left.getOrDefault(num, 0) + 1
+            right[num] = right[num]!! - 1
+
+            val leftLen = i + 1
+            val rightLen = n - i - 1
+
+            if (2 * left[num]!! > leftLen && 2 * right[num]!! > rightLen) {
+                return i
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumIndex(_ nums: [Int]) -> Int {
+        var left = [Int: Int]()
+        var right = [Int: Int]()
+        let n = nums.count
+
+        for num in nums {
+            right[num, default: 0] += 1
+        }
+
+        for i in 0..<n {
+            let num = nums[i]
+            left[num, default: 0] += 1
+            right[num]! -= 1
+
+            let leftLen = i + 1
+            let rightLen = n - i - 1
+
+            if 2 * left[num]! > leftLen && 2 * right[num]! > rightLen {
+                return i
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -376,6 +605,145 @@ class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumIndex(IList<int> nums) {
+        int majority = 0, count = 0;
+        foreach (int num in nums) {
+            if (count == 0) majority = num;
+            count += (majority == num) ? 1 : -1;
+        }
+
+        int leftCnt = 0, rightCnt = 0;
+        foreach (int num in nums) {
+            if (num == majority) rightCnt++;
+        }
+
+        int n = nums.Count;
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == majority) {
+                leftCnt++;
+                rightCnt--;
+            }
+
+            int leftLen = i + 1;
+            int rightLen = n - i - 1;
+
+            if (2 * leftCnt > leftLen && 2 * rightCnt > rightLen) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func minimumIndex(nums []int) int {
+    majority, count := 0, 0
+    for _, num := range nums {
+        if count == 0 {
+            majority = num
+        }
+        if num == majority {
+            count++
+        } else {
+            count--
+        }
+    }
+
+    leftCnt, rightCnt := 0, 0
+    for _, num := range nums {
+        if num == majority {
+            rightCnt++
+        }
+    }
+
+    n := len(nums)
+    for i := 0; i < n; i++ {
+        if nums[i] == majority {
+            leftCnt++
+            rightCnt--
+        }
+
+        leftLen := i + 1
+        rightLen := n - i - 1
+
+        if 2*leftCnt > leftLen && 2*rightCnt > rightLen {
+            return i
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumIndex(nums: List<Int>): Int {
+        var majority = 0
+        var count = 0
+        for (num in nums) {
+            if (count == 0) majority = num
+            count += if (majority == num) 1 else -1
+        }
+
+        var leftCnt = 0
+        var rightCnt = nums.count { it == majority }
+
+        val n = nums.size
+        for (i in 0 until n) {
+            if (nums[i] == majority) {
+                leftCnt++
+                rightCnt--
+            }
+
+            val leftLen = i + 1
+            val rightLen = n - i - 1
+
+            if (2 * leftCnt > leftLen && 2 * rightCnt > rightLen) {
+                return i
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumIndex(_ nums: [Int]) -> Int {
+        var majority = 0, count = 0
+        for num in nums {
+            if count == 0 { majority = num }
+            count += (num == majority ? 1 : -1)
+        }
+
+        var leftCnt = 0
+        var rightCnt = nums.filter { $0 == majority }.count
+
+        let n = nums.count
+        for i in 0..<n {
+            if nums[i] == majority {
+                leftCnt += 1
+                rightCnt -= 1
+            }
+
+            let leftLen = i + 1
+            let rightLen = n - i - 1
+
+            if 2 * leftCnt > leftLen && 2 * rightCnt > rightLen {
+                return i
+            }
+        }
+
+        return -1
     }
 }
 ```

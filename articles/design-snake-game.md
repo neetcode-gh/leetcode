@@ -227,7 +227,7 @@ class SnakeGame {
         this.movement = {'U': [-1, 0], 'L': [0, -1], 'R': [0, 1], 'D': [1, 0]};
     }
 
-    /** 
+    /**
      * @param {string} direction
      * @return {number}
      */
@@ -259,7 +259,7 @@ class SnakeGame {
             nextFoodItem[0] === newHead[0] &&
             nextFoodItem[1] === newHead[1]) {  // eat food
             this.foodIndex++;
-        } else {    // not eating food: delete tail                 
+        } else {    // not eating food: delete tail
             let tail = this.snake.popBack();
             this.snakeSet.delete(tail[0] + ',' + tail[1]);
         }
@@ -271,6 +271,246 @@ class SnakeGame {
         this.snakeSet.add(newHeadKey);
 
         return this.snake.size() - 1;
+    }
+}
+```
+
+```csharp
+public class SnakeGame {
+    private LinkedList<(int, int)> snake;
+    private HashSet<string> snakeSet;
+    private int[][] food;
+    private int foodIndex;
+    private int width;
+    private int height;
+    private Dictionary<char, int[]> movement;
+
+    public SnakeGame(int width, int height, int[][] food) {
+        this.width = width;
+        this.height = height;
+        this.food = food;
+        this.foodIndex = 0;
+        this.snake = new LinkedList<(int, int)>();
+        this.snake.AddFirst((0, 0));
+        this.snakeSet = new HashSet<string> { "0,0" };
+        this.movement = new Dictionary<char, int[]> {
+            {'U', new int[]{-1, 0}},
+            {'D', new int[]{1, 0}},
+            {'L', new int[]{0, -1}},
+            {'R', new int[]{0, 1}}
+        };
+    }
+
+    public int Move(string direction) {
+        var head = snake.First.Value;
+        int[] dir = movement[direction[0]];
+        int newHeadRow = head.Item1 + dir[0];
+        int newHeadCol = head.Item2 + dir[1];
+
+        bool crossesBoundary1 = newHeadRow < 0 || newHeadRow >= height;
+        bool crossesBoundary2 = newHeadCol < 0 || newHeadCol >= width;
+
+        var tail = snake.Last.Value;
+        string newHeadKey = $"{newHeadRow},{newHeadCol}";
+        string tailKey = $"{tail.Item1},{tail.Item2}";
+        bool bitesItself = snakeSet.Contains(newHeadKey) && newHeadKey != tailKey;
+
+        if (crossesBoundary1 || crossesBoundary2 || bitesItself) {
+            return -1;
+        }
+
+        if (foodIndex < food.Length &&
+            food[foodIndex][0] == newHeadRow &&
+            food[foodIndex][1] == newHeadCol) {
+            foodIndex++;
+        } else {
+            snakeSet.Remove(tailKey);
+            snake.RemoveLast();
+        }
+
+        snake.AddFirst((newHeadRow, newHeadCol));
+        snakeSet.Add(newHeadKey);
+
+        return snake.Count - 1;
+    }
+}
+```
+
+```go
+type SnakeGame struct {
+    snake     [][]int
+    snakeSet  map[string]bool
+    food      [][]int
+    foodIndex int
+    width     int
+    height    int
+    movement  map[string][]int
+}
+
+func Constructor(width int, height int, food [][]int) SnakeGame {
+    snakeSet := make(map[string]bool)
+    snakeSet["0,0"] = true
+    return SnakeGame{
+        snake:     [][]int{{0, 0}},
+        snakeSet:  snakeSet,
+        food:      food,
+        foodIndex: 0,
+        width:     width,
+        height:    height,
+        movement: map[string][]int{
+            "U": {-1, 0},
+            "D": {1, 0},
+            "L": {0, -1},
+            "R": {0, 1},
+        },
+    }
+}
+
+func (this *SnakeGame) Move(direction string) int {
+    dir := this.movement[direction]
+    head := this.snake[0]
+    newHeadRow := head[0] + dir[0]
+    newHeadCol := head[1] + dir[1]
+
+    crossesBoundary1 := newHeadRow < 0 || newHeadRow >= this.height
+    crossesBoundary2 := newHeadCol < 0 || newHeadCol >= this.width
+
+    tail := this.snake[len(this.snake)-1]
+    newHeadKey := fmt.Sprintf("%d,%d", newHeadRow, newHeadCol)
+    tailKey := fmt.Sprintf("%d,%d", tail[0], tail[1])
+    bitesItself := this.snakeSet[newHeadKey] && newHeadKey != tailKey
+
+    if crossesBoundary1 || crossesBoundary2 || bitesItself {
+        return -1
+    }
+
+    if this.foodIndex < len(this.food) &&
+        this.food[this.foodIndex][0] == newHeadRow &&
+        this.food[this.foodIndex][1] == newHeadCol {
+        this.foodIndex++
+    } else {
+        delete(this.snakeSet, tailKey)
+        this.snake = this.snake[:len(this.snake)-1]
+    }
+
+    this.snake = append([][]int{{newHeadRow, newHeadCol}}, this.snake...)
+    this.snakeSet[newHeadKey] = true
+
+    return len(this.snake) - 1
+}
+```
+
+```kotlin
+class SnakeGame(width: Int, height: Int, food: Array<IntArray>) {
+    private val snake = ArrayDeque<Pair<Int, Int>>()
+    private val snakeSet = HashSet<String>()
+    private val food = food
+    private var foodIndex = 0
+    private val width = width
+    private val height = height
+    private val movement = mapOf(
+        "U" to intArrayOf(-1, 0),
+        "D" to intArrayOf(1, 0),
+        "L" to intArrayOf(0, -1),
+        "R" to intArrayOf(0, 1)
+    )
+
+    init {
+        snake.addFirst(Pair(0, 0))
+        snakeSet.add("0,0")
+    }
+
+    fun move(direction: String): Int {
+        val dir = movement[direction]!!
+        val head = snake.first()
+        val newHeadRow = head.first + dir[0]
+        val newHeadCol = head.second + dir[1]
+
+        val crossesBoundary1 = newHeadRow < 0 || newHeadRow >= height
+        val crossesBoundary2 = newHeadCol < 0 || newHeadCol >= width
+
+        val tail = snake.last()
+        val newHeadKey = "$newHeadRow,$newHeadCol"
+        val tailKey = "${tail.first},${tail.second}"
+        val bitesItself = snakeSet.contains(newHeadKey) && newHeadKey != tailKey
+
+        if (crossesBoundary1 || crossesBoundary2 || bitesItself) {
+            return -1
+        }
+
+        if (foodIndex < food.size &&
+            food[foodIndex][0] == newHeadRow &&
+            food[foodIndex][1] == newHeadCol) {
+            foodIndex++
+        } else {
+            snakeSet.remove(tailKey)
+            snake.removeLast()
+        }
+
+        snake.addFirst(Pair(newHeadRow, newHeadCol))
+        snakeSet.add(newHeadKey)
+
+        return snake.size - 1
+    }
+}
+```
+
+```swift
+class SnakeGame {
+    private var snake: [(Int, Int)]
+    private var snakeSet: Set<String>
+    private var food: [[Int]]
+    private var foodIndex: Int
+    private var width: Int
+    private var height: Int
+    private var movement: [String: [Int]]
+
+    init(_ width: Int, _ height: Int, _ food: [[Int]]) {
+        self.width = width
+        self.height = height
+        self.food = food
+        self.foodIndex = 0
+        self.snake = [(0, 0)]
+        self.snakeSet = Set(["0,0"])
+        self.movement = [
+            "U": [-1, 0],
+            "D": [1, 0],
+            "L": [0, -1],
+            "R": [0, 1]
+        ]
+    }
+
+    func move(_ direction: String) -> Int {
+        let dir = movement[direction]!
+        let head = snake[0]
+        let newHeadRow = head.0 + dir[0]
+        let newHeadCol = head.1 + dir[1]
+
+        let crossesBoundary1 = newHeadRow < 0 || newHeadRow >= height
+        let crossesBoundary2 = newHeadCol < 0 || newHeadCol >= width
+
+        let tail = snake[snake.count - 1]
+        let newHeadKey = "\(newHeadRow),\(newHeadCol)"
+        let tailKey = "\(tail.0),\(tail.1)"
+        let bitesItself = snakeSet.contains(newHeadKey) && newHeadKey != tailKey
+
+        if crossesBoundary1 || crossesBoundary2 || bitesItself {
+            return -1
+        }
+
+        if foodIndex < food.count &&
+            food[foodIndex][0] == newHeadRow &&
+            food[foodIndex][1] == newHeadCol {
+            foodIndex += 1
+        } else {
+            snakeSet.remove(tailKey)
+            snake.removeLast()
+        }
+
+        snake.insert((newHeadRow, newHeadCol), at: 0)
+        snakeSet.insert(newHeadKey)
+
+        return snake.count - 1
     }
 }
 ```

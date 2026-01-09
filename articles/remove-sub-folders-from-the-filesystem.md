@@ -107,6 +107,71 @@ public class Solution {
 }
 ```
 
+```go
+func removeSubfolders(folder []string) []string {
+    res := []string{}
+    folderSet := make(map[string]bool)
+    for _, f := range folder {
+        folderSet[f] = true
+    }
+
+    for _, f := range folder {
+        res = append(res, f)
+        for i := 0; i < len(f); i++ {
+            if f[i] == '/' && folderSet[f[:i]] {
+                res = res[:len(res)-1]
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun removeSubfolders(folder: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+        val folderSet = folder.toHashSet()
+
+        for (f in folder) {
+            res.add(f)
+            for (i in f.indices) {
+                if (f[i] == '/' && folderSet.contains(f.substring(0, i))) {
+                    res.removeAt(res.size - 1)
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeSubfolders(_ folder: [String]) -> [String] {
+        var res = [String]()
+        let folderSet = Set(folder)
+
+        for f in folder {
+            res.append(f)
+            let chars = Array(f)
+            for i in 0..<chars.count {
+                if chars[i] == "/" && folderSet.contains(String(chars[0..<i])) {
+                    res.removeLast()
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +272,58 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+import "sort"
+
+func removeSubfolders(folder []string) []string {
+    sort.Strings(folder)
+    res := []string{folder[0]}
+
+    for i := 1; i < len(folder); i++ {
+        last := res[len(res)-1] + "/"
+        if len(folder[i]) < len(last) || folder[i][:len(last)] != last {
+            res = append(res, folder[i])
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun removeSubfolders(folder: Array<String>): List<String> {
+        folder.sort()
+        val res = mutableListOf(folder[0])
+
+        for (i in 1 until folder.size) {
+            if (!folder[i].startsWith(res.last() + "/")) {
+                res.add(folder[i])
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeSubfolders(_ folder: [String]) -> [String] {
+        let sorted = folder.sorted()
+        var res = [sorted[0]]
+
+        for i in 1..<sorted.count {
+            if !sorted[i].hasPrefix(res.last! + "/") {
+                res.append(sorted[i])
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -483,6 +600,158 @@ public class Solution {
             if (!trie.PrefixSearch(f)) res.Add(f);
         }
         return res;
+    }
+}
+```
+
+```go
+import "strings"
+
+type Trie struct {
+    children     map[string]*Trie
+    endOfFolder  bool
+}
+
+func NewTrie() *Trie {
+    return &Trie{children: make(map[string]*Trie)}
+}
+
+func (t *Trie) Add(path string) {
+    cur := t
+    for _, f := range strings.Split(path, "/") {
+        if f == "" {
+            continue
+        }
+        if cur.children[f] == nil {
+            cur.children[f] = NewTrie()
+        }
+        cur = cur.children[f]
+    }
+    cur.endOfFolder = true
+}
+
+func (t *Trie) PrefixSearch(path string) bool {
+    cur := t
+    folders := strings.Split(path, "/")
+    for i := 0; i < len(folders)-1; i++ {
+        if folders[i] == "" {
+            continue
+        }
+        cur = cur.children[folders[i]]
+        if cur.endOfFolder {
+            return true
+        }
+    }
+    return false
+}
+
+func removeSubfolders(folder []string) []string {
+    trie := NewTrie()
+    for _, f := range folder {
+        trie.Add(f)
+    }
+
+    res := []string{}
+    for _, f := range folder {
+        if !trie.PrefixSearch(f) {
+            res = append(res, f)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Trie {
+    val children = mutableMapOf<String, Trie>()
+    var endOfFolder = false
+
+    fun add(path: String) {
+        var cur = this
+        for (f in path.split("/")) {
+            if (f.isEmpty()) continue
+            if (!cur.children.containsKey(f)) {
+                cur.children[f] = Trie()
+            }
+            cur = cur.children[f]!!
+        }
+        cur.endOfFolder = true
+    }
+
+    fun prefixSearch(path: String): Boolean {
+        var cur = this
+        val folders = path.split("/")
+        for (i in 0 until folders.size - 1) {
+            if (folders[i].isEmpty()) continue
+            cur = cur.children[folders[i]]!!
+            if (cur.endOfFolder) return true
+        }
+        return false
+    }
+}
+
+class Solution {
+    fun removeSubfolders(folder: Array<String>): List<String> {
+        val trie = Trie()
+        for (f in folder) {
+            trie.add(f)
+        }
+
+        val res = mutableListOf<String>()
+        for (f in folder) {
+            if (!trie.prefixSearch(f)) {
+                res.add(f)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Trie {
+    var children = [String: Trie]()
+    var endOfFolder = false
+
+    func add(_ path: String) {
+        var cur = self
+        for f in path.split(separator: "/") {
+            let key = String(f)
+            if key.isEmpty { continue }
+            if cur.children[key] == nil {
+                cur.children[key] = Trie()
+            }
+            cur = cur.children[key]!
+        }
+        cur.endOfFolder = true
+    }
+
+    func prefixSearch(_ path: String) -> Bool {
+        var cur = self
+        let folders = path.split(separator: "/").map { String($0) }
+        for i in 0..<(folders.count - 1) {
+            if folders[i].isEmpty { continue }
+            cur = cur.children[folders[i]]!
+            if cur.endOfFolder { return true }
+        }
+        return false
+    }
+}
+
+class Solution {
+    func removeSubfolders(_ folder: [String]) -> [String] {
+        let trie = Trie()
+        for f in folder {
+            trie.add(f)
+        }
+
+        var res = [String]()
+        for f in folder {
+            if !trie.prefixSearch(f) {
+                res.append(f)
+            }
+        }
+        return res
     }
 }
 ```

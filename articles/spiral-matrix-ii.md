@@ -198,6 +198,122 @@ public class Solution {
 }
 ```
 
+```go
+func generateMatrix(n int) [][]int {
+    mat := make([][]int, n)
+    for i := range mat {
+        mat[i] = make([]int, n)
+    }
+    left, right := 0, n-1
+    top, bottom := 0, n-1
+    val := 1
+
+    for left <= right {
+        for c := left; c <= right; c++ {
+            mat[top][c] = val
+            val++
+        }
+        top++
+
+        for r := top; r <= bottom; r++ {
+            mat[r][right] = val
+            val++
+        }
+        right--
+
+        for c := right; c >= left; c-- {
+            mat[bottom][c] = val
+            val++
+        }
+        bottom--
+
+        for r := bottom; r >= top; r-- {
+            mat[r][left] = val
+            val++
+        }
+        left++
+    }
+
+    return mat
+}
+```
+
+```kotlin
+class Solution {
+    fun generateMatrix(n: Int): Array<IntArray> {
+        val mat = Array(n) { IntArray(n) }
+        var left = 0
+        var right = n - 1
+        var top = 0
+        var bottom = n - 1
+        var value = 1
+
+        while (left <= right) {
+            for (c in left..right) {
+                mat[top][c] = value++
+            }
+            top++
+
+            for (r in top..bottom) {
+                mat[r][right] = value++
+            }
+            right--
+
+            for (c in right downTo left) {
+                mat[bottom][c] = value++
+            }
+            bottom--
+
+            for (r in bottom downTo top) {
+                mat[r][left] = value++
+            }
+            left++
+        }
+
+        return mat
+    }
+}
+```
+
+```swift
+class Solution {
+    func generateMatrix(_ n: Int) -> [[Int]] {
+        var mat = Array(repeating: Array(repeating: 0, count: n), count: n)
+        var left = 0, right = n - 1
+        var top = 0, bottom = n - 1
+        var val = 1
+
+        while left <= right {
+            for c in left...right {
+                mat[top][c] = val
+                val += 1
+            }
+            top += 1
+
+            for r in top...bottom {
+                mat[r][right] = val
+                val += 1
+            }
+            right -= 1
+
+            for c in stride(from: right, through: left, by: -1) {
+                mat[bottom][c] = val
+                val += 1
+            }
+            bottom -= 1
+
+            for r in stride(from: bottom, through: top, by: -1) {
+                mat[r][left] = val
+                val += 1
+            }
+            left += 1
+        }
+
+        return mat
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -423,6 +539,137 @@ public class Solution {
 }
 ```
 
+```go
+func generateMatrix(n int) [][]int {
+    mat := make([][]int, n)
+    for i := range mat {
+        mat[i] = make([]int, n)
+    }
+
+    var fill func(left, right, top, bottom, val int)
+    fill = func(left, right, top, bottom, val int) {
+        if left > right || top > bottom {
+            return
+        }
+
+        for c := left; c <= right; c++ {
+            mat[top][c] = val
+            val++
+        }
+        top++
+
+        for r := top; r <= bottom; r++ {
+            mat[r][right] = val
+            val++
+        }
+        right--
+
+        for c := right; c >= left; c-- {
+            mat[bottom][c] = val
+            val++
+        }
+        bottom--
+
+        for r := bottom; r >= top; r-- {
+            mat[r][left] = val
+            val++
+        }
+        left++
+
+        fill(left, right, top, bottom, val)
+    }
+
+    fill(0, n-1, 0, n-1, 1)
+    return mat
+}
+```
+
+```kotlin
+class Solution {
+    fun generateMatrix(n: Int): Array<IntArray> {
+        val mat = Array(n) { IntArray(n) }
+
+        fun fill(left: Int, right: Int, top: Int, bottom: Int, value: Int) {
+            if (left > right || top > bottom) return
+
+            var l = left
+            var r = right
+            var t = top
+            var b = bottom
+            var v = value
+
+            for (c in l..r) {
+                mat[t][c] = v++
+            }
+            t++
+
+            for (row in t..b) {
+                mat[row][r] = v++
+            }
+            r--
+
+            for (c in r downTo l) {
+                mat[b][c] = v++
+            }
+            b--
+
+            for (row in b downTo t) {
+                mat[row][l] = v++
+            }
+            l++
+
+            fill(l, r, t, b, v)
+        }
+
+        fill(0, n - 1, 0, n - 1, 1)
+        return mat
+    }
+}
+```
+
+```swift
+class Solution {
+    func generateMatrix(_ n: Int) -> [[Int]] {
+        var mat = Array(repeating: Array(repeating: 0, count: n), count: n)
+
+        func fill(_ left: Int, _ right: Int, _ top: Int, _ bottom: Int, _ val: Int) {
+            if left > right || top > bottom { return }
+
+            var l = left, r = right, t = top, b = bottom, v = val
+
+            for c in l...r {
+                mat[t][c] = v
+                v += 1
+            }
+            t += 1
+
+            for row in t...b {
+                mat[row][r] = v
+                v += 1
+            }
+            r -= 1
+
+            for c in stride(from: r, through: l, by: -1) {
+                mat[b][c] = v
+                v += 1
+            }
+            b -= 1
+
+            for row in stride(from: b, through: t, by: -1) {
+                mat[row][l] = v
+                v += 1
+            }
+            l += 1
+
+            fill(l, r, t, b, v)
+        }
+
+        fill(0, n - 1, 0, n - 1, 1)
+        return mat
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -556,6 +803,82 @@ public class Solution {
         }
 
         return mat;
+    }
+}
+```
+
+```go
+func generateMatrix(n int) [][]int {
+    mat := make([][]int, n)
+    for i := range mat {
+        mat[i] = make([]int, n)
+    }
+    r, c := 0, 0
+    dr, dc := 0, 1
+
+    for val := 0; val < n*n; val++ {
+        mat[r][c] = val + 1
+        nextR := (r + dr + n) % n
+        nextC := (c + dc + n) % n
+        if mat[nextR][nextC] != 0 {
+            dr, dc = dc, -dr
+        }
+        r += dr
+        c += dc
+    }
+
+    return mat
+}
+```
+
+```kotlin
+class Solution {
+    fun generateMatrix(n: Int): Array<IntArray> {
+        val mat = Array(n) { IntArray(n) }
+        var r = 0
+        var c = 0
+        var dr = 0
+        var dc = 1
+
+        for (value in 0 until n * n) {
+            mat[r][c] = value + 1
+            val nextR = (r + dr + n) % n
+            val nextC = (c + dc + n) % n
+            if (mat[nextR][nextC] != 0) {
+                val temp = dr
+                dr = dc
+                dc = -temp
+            }
+            r += dr
+            c += dc
+        }
+
+        return mat
+    }
+}
+```
+
+```swift
+class Solution {
+    func generateMatrix(_ n: Int) -> [[Int]] {
+        var mat = Array(repeating: Array(repeating: 0, count: n), count: n)
+        var r = 0, c = 0
+        var dr = 0, dc = 1
+
+        for val in 0..<(n * n) {
+            mat[r][c] = val + 1
+            let nextR = (r + dr + n) % n
+            let nextC = (c + dc + n) % n
+            if mat[nextR][nextC] != 0 {
+                let temp = dr
+                dr = dc
+                dc = -temp
+            }
+            r += dr
+            c += dc
+        }
+
+        return mat
     }
 }
 ```

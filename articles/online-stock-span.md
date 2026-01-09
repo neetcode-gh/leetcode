@@ -95,6 +95,59 @@ public class StockSpanner {
 }
 ```
 
+```go
+type StockSpanner struct {
+    arr []int
+}
+
+func Constructor() StockSpanner {
+    return StockSpanner{arr: []int{}}
+}
+
+func (this *StockSpanner) Next(price int) int {
+    this.arr = append(this.arr, price)
+    i := len(this.arr) - 2
+    for i >= 0 && this.arr[i] <= price {
+        i--
+    }
+    return len(this.arr) - i - 1
+}
+```
+
+```kotlin
+class StockSpanner() {
+    private val arr = mutableListOf<Int>()
+
+    fun next(price: Int): Int {
+        arr.add(price)
+        var i = arr.size - 2
+        while (i >= 0 && arr[i] <= price) {
+            i--
+        }
+        return arr.size - i - 1
+    }
+}
+```
+
+```swift
+class StockSpanner {
+    private var arr: [Int]
+
+    init() {
+        arr = []
+    }
+
+    func next(_ price: Int) -> Int {
+        arr.append(price)
+        var i = arr.count - 2
+        while i >= 0 && arr[i] <= price {
+            i -= 1
+        }
+        return arr.count - i - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,6 +255,60 @@ public class StockSpanner {
         }
         stack.Push((price, span));
         return span;
+    }
+}
+```
+
+```go
+type StockSpanner struct {
+    stack [][]int // [price, span]
+}
+
+func Constructor() StockSpanner {
+    return StockSpanner{stack: [][]int{}}
+}
+
+func (this *StockSpanner) Next(price int) int {
+    span := 1
+    for len(this.stack) > 0 && this.stack[len(this.stack)-1][0] <= price {
+        span += this.stack[len(this.stack)-1][1]
+        this.stack = this.stack[:len(this.stack)-1]
+    }
+    this.stack = append(this.stack, []int{price, span})
+    return span
+}
+```
+
+```kotlin
+class StockSpanner() {
+    private val stack = ArrayDeque<IntArray>() // [price, span]
+
+    fun next(price: Int): Int {
+        var span = 1
+        while (stack.isNotEmpty() && stack.last()[0] <= price) {
+            span += stack.removeLast()[1]
+        }
+        stack.addLast(intArrayOf(price, span))
+        return span
+    }
+}
+```
+
+```swift
+class StockSpanner {
+    private var stack: [(price: Int, span: Int)]
+
+    init() {
+        stack = []
+    }
+
+    func next(_ price: Int) -> Int {
+        var span = 1
+        while !stack.isEmpty && stack.last!.price <= price {
+            span += stack.removeLast().span
+        }
+        stack.append((price, span))
+        return span
     }
 }
 ```

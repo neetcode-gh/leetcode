@@ -69,6 +69,75 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ArraySign(int[] nums) {
+        int neg = 0;
+        foreach (int num in nums) {
+            if (num == 0) {
+                return 0;
+            }
+            if (num < 0) {
+                neg++;
+            }
+        }
+        return neg % 2 == 0 ? 1 : -1;
+    }
+}
+```
+
+```go
+func arraySign(nums []int) int {
+    neg := 0
+    for _, num := range nums {
+        if num == 0 {
+            return 0
+        }
+        if num < 0 {
+            neg++
+        }
+    }
+    if neg%2 == 0 {
+        return 1
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun arraySign(nums: IntArray): Int {
+        var neg = 0
+        for (num in nums) {
+            if (num == 0) {
+                return 0
+            }
+            if (num < 0) {
+                neg++
+            }
+        }
+        return if (neg % 2 == 0) 1 else -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func arraySign(_ nums: [Int]) -> Int {
+        var neg = 0
+        for num in nums {
+            if num == 0 {
+                return 0
+            }
+            if num < 0 {
+                neg += 1
+            }
+        }
+        return neg % 2 == 0 ? 1 : -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -146,6 +215,72 @@ class Solution {
             }
         }
         return sign;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ArraySign(int[] nums) {
+        int sign = 1;
+        foreach (int num in nums) {
+            if (num == 0) {
+                return 0;
+            }
+            if (num < 0) {
+                sign *= -1;
+            }
+        }
+        return sign;
+    }
+}
+```
+
+```go
+func arraySign(nums []int) int {
+    sign := 1
+    for _, num := range nums {
+        if num == 0 {
+            return 0
+        }
+        if num < 0 {
+            sign *= -1
+        }
+    }
+    return sign
+}
+```
+
+```kotlin
+class Solution {
+    fun arraySign(nums: IntArray): Int {
+        var sign = 1
+        for (num in nums) {
+            if (num == 0) {
+                return 0
+            }
+            if (num < 0) {
+                sign *= -1
+            }
+        }
+        return sign
+    }
+}
+```
+
+```swift
+class Solution {
+    func arraySign(_ nums: [Int]) -> Int {
+        var sign = 1
+        for num in nums {
+            if num == 0 {
+                return 0
+            }
+            if num < 0 {
+                sign *= -1
+            }
+        }
+        return sign
     }
 }
 ```

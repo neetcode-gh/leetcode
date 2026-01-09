@@ -95,6 +95,91 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxScore(string s) {
+        int n = s.Length, res = 0;
+        for (int i = 1; i < n; i++) {
+            int leftZero = 0, rightOne = 0;
+            for (int j = 0; j < i; j++) {
+                if (s[j] == '0') leftZero++;
+            }
+            for (int j = i; j < n; j++) {
+                if (s[j] == '1') rightOne++;
+            }
+            res = Math.Max(res, leftZero + rightOne);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxScore(s string) int {
+    n := len(s)
+    res := 0
+    for i := 1; i < n; i++ {
+        leftZero, rightOne := 0, 0
+        for j := 0; j < i; j++ {
+            if s[j] == '0' {
+                leftZero++
+            }
+        }
+        for j := i; j < n; j++ {
+            if s[j] == '1' {
+                rightOne++
+            }
+        }
+        if leftZero+rightOne > res {
+            res = leftZero + rightOne
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(s: String): Int {
+        val n = s.length
+        var res = 0
+        for (i in 1 until n) {
+            var leftZero = 0
+            var rightOne = 0
+            for (j in 0 until i) {
+                if (s[j] == '0') leftZero++
+            }
+            for (j in i until n) {
+                if (s[j] == '1') rightOne++
+            }
+            res = maxOf(res, leftZero + rightOne)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var res = 0
+        for i in 1..<n {
+            var leftZero = 0, rightOne = 0
+            for j in 0..<i {
+                if chars[j] == "0" { leftZero += 1 }
+            }
+            for j in i..<n {
+                if chars[j] == "1" { rightOne += 1 }
+            }
+            res = max(res, leftZero + rightOne)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -247,6 +332,127 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxScore(string s) {
+        int n = s.Length;
+        int[] leftZero = new int[n];
+        int[] rightOne = new int[n];
+
+        if (s[0] == '0') leftZero[0] = 1;
+        for (int i = 1; i < n; i++) {
+            leftZero[i] = leftZero[i - 1];
+            if (s[i] == '0') leftZero[i]++;
+        }
+
+        if (s[n - 1] == '1') rightOne[n - 1] = 1;
+        for (int i = n - 2; i >= 0; i--) {
+            rightOne[i] = rightOne[i + 1];
+            if (s[i] == '1') rightOne[i]++;
+        }
+
+        int res = 0;
+        for (int i = 1; i < n; i++) {
+            res = Math.Max(res, leftZero[i - 1] + rightOne[i]);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxScore(s string) int {
+    n := len(s)
+    leftZero := make([]int, n)
+    rightOne := make([]int, n)
+
+    if s[0] == '0' {
+        leftZero[0] = 1
+    }
+    for i := 1; i < n; i++ {
+        leftZero[i] = leftZero[i-1]
+        if s[i] == '0' {
+            leftZero[i]++
+        }
+    }
+
+    if s[n-1] == '1' {
+        rightOne[n-1] = 1
+    }
+    for i := n - 2; i >= 0; i-- {
+        rightOne[i] = rightOne[i+1]
+        if s[i] == '1' {
+            rightOne[i]++
+        }
+    }
+
+    res := 0
+    for i := 1; i < n; i++ {
+        if leftZero[i-1]+rightOne[i] > res {
+            res = leftZero[i-1] + rightOne[i]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(s: String): Int {
+        val n = s.length
+        val leftZero = IntArray(n)
+        val rightOne = IntArray(n)
+
+        if (s[0] == '0') leftZero[0] = 1
+        for (i in 1 until n) {
+            leftZero[i] = leftZero[i - 1]
+            if (s[i] == '0') leftZero[i]++
+        }
+
+        if (s[n - 1] == '1') rightOne[n - 1] = 1
+        for (i in n - 2 downTo 0) {
+            rightOne[i] = rightOne[i + 1]
+            if (s[i] == '1') rightOne[i]++
+        }
+
+        var res = 0
+        for (i in 1 until n) {
+            res = maxOf(res, leftZero[i - 1] + rightOne[i])
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var leftZero = [Int](repeating: 0, count: n)
+        var rightOne = [Int](repeating: 0, count: n)
+
+        if chars[0] == "0" { leftZero[0] = 1 }
+        for i in 1..<n {
+            leftZero[i] = leftZero[i - 1]
+            if chars[i] == "0" { leftZero[i] += 1 }
+        }
+
+        if chars[n - 1] == "1" { rightOne[n - 1] = 1 }
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            rightOne[i] = rightOne[i + 1]
+            if chars[i] == "1" { rightOne[i] += 1 }
+        }
+
+        var res = 0
+        for i in 1..<n {
+            res = max(res, leftZero[i - 1] + rightOne[i])
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +561,91 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxScore(string s) {
+        int zero = 0, one = 0, res = 0;
+
+        foreach (char c in s) {
+            if (c == '1') one++;
+        }
+
+        for (int i = 0; i < s.Length - 1; i++) {
+            if (s[i] == '0') zero++;
+            else one--;
+            res = Math.Max(res, zero + one);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func maxScore(s string) int {
+    zero, one, res := 0, 0, 0
+
+    for _, c := range s {
+        if c == '1' {
+            one++
+        }
+    }
+
+    for i := 0; i < len(s)-1; i++ {
+        if s[i] == '0' {
+            zero++
+        } else {
+            one--
+        }
+        if zero+one > res {
+            res = zero + one
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(s: String): Int {
+        var zero = 0
+        var one = s.count { it == '1' }
+        var res = 0
+
+        for (i in 0 until s.length - 1) {
+            if (s[i] == '0') zero++
+            else one--
+            res = maxOf(res, zero + one)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ s: String) -> Int {
+        let chars = Array(s)
+        var zero = 0
+        var one = chars.filter { $0 == "1" }.count
+        var res = 0
+
+        for i in 0..<(chars.count - 1) {
+            if chars[i] == "0" {
+                zero += 1
+            } else {
+                one -= 1
+            }
+            res = max(res, zero + one)
+        }
+
+        return res
     }
 }
 ```
@@ -488,6 +779,89 @@ class Solution {
         }
 
         return res + ones;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxScore(string s) {
+        int zeros = 0, ones = 0, res = int.MinValue;
+
+        if (s[0] == '0') zeros++;
+        else ones++;
+
+        for (int i = 1; i < s.Length; i++) {
+            res = Math.Max(res, zeros - ones);
+            if (s[i] == '0') zeros++;
+            else ones++;
+        }
+
+        return res + ones;
+    }
+}
+```
+
+```go
+func maxScore(s string) int {
+    zeros, ones := 0, 0
+    res := -1 << 31
+
+    if s[0] == '0' {
+        zeros++
+    } else {
+        ones++
+    }
+
+    for i := 1; i < len(s); i++ {
+        if zeros-ones > res {
+            res = zeros - ones
+        }
+        if s[i] == '0' {
+            zeros++
+        } else {
+            ones++
+        }
+    }
+
+    return res + ones
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(s: String): Int {
+        var zeros = 0
+        var ones = 0
+        var res = Int.MIN_VALUE
+
+        if (s[0] == '0') zeros++ else ones++
+
+        for (i in 1 until s.length) {
+            res = maxOf(res, zeros - ones)
+            if (s[i] == '0') zeros++ else ones++
+        }
+
+        return res + ones
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ s: String) -> Int {
+        let chars = Array(s)
+        var zeros = 0, ones = 0
+        var res = Int.min
+
+        if chars[0] == "0" { zeros += 1 } else { ones += 1 }
+
+        for i in 1..<chars.count {
+            res = max(res, zeros - ones)
+            if chars[i] == "0" { zeros += 1 } else { ones += 1 }
+        }
+
+        return res + ones
     }
 }
 ```

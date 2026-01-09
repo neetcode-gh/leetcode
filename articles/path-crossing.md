@@ -100,6 +100,106 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPathCrossing(string path) {
+        var visit = new HashSet<string>();
+        int x = 0, y = 0;
+        visit.Add($"{x},{y}");
+
+        foreach (char c in path) {
+            if (c == 'N') y++;
+            else if (c == 'S') y--;
+            else if (c == 'E') x++;
+            else if (c == 'W') x--;
+
+            string pos = $"{x},{y}";
+            if (visit.Contains(pos)) return true;
+            visit.Add(pos);
+        }
+
+        return false;
+    }
+}
+```
+
+```go
+func isPathCrossing(path string) bool {
+    visit := make(map[string]bool)
+    x, y := 0, 0
+    visit[fmt.Sprintf("%d,%d", x, y)] = true
+
+    for _, c := range path {
+        if c == 'N' {
+            y++
+        } else if c == 'S' {
+            y--
+        } else if c == 'E' {
+            x++
+        } else if c == 'W' {
+            x--
+        }
+
+        pos := fmt.Sprintf("%d,%d", x, y)
+        if visit[pos] {
+            return true
+        }
+        visit[pos] = true
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun isPathCrossing(path: String): Boolean {
+        val visit = HashSet<String>()
+        var x = 0
+        var y = 0
+        visit.add("$x,$y")
+
+        for (c in path) {
+            when (c) {
+                'N' -> y++
+                'S' -> y--
+                'E' -> x++
+                'W' -> x--
+            }
+
+            val pos = "$x,$y"
+            if (visit.contains(pos)) return true
+            visit.add(pos)
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPathCrossing(_ path: String) -> Bool {
+        var visit = Set<String>()
+        var x = 0, y = 0
+        visit.insert("\(x),\(y)")
+
+        for c in path {
+            if c == "N" { y += 1 }
+            else if c == "S" { y -= 1 }
+            else if c == "E" { x += 1 }
+            else if c == "W" { x -= 1 }
+
+            let pos = "\(x),\(y)"
+            if visit.contains(pos) { return true }
+            visit.insert(pos)
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -232,6 +332,122 @@ class Solution {
      */
     hash(x, y) {
         return (x << 16) + y;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPathCrossing(string path) {
+        var visit = new HashSet<long>();
+        int x = 0, y = 0;
+        visit.Add(Hash(x, y));
+
+        foreach (char c in path) {
+            if (c == 'N') y++;
+            else if (c == 'S') y--;
+            else if (c == 'E') x++;
+            else if (c == 'W') x--;
+
+            long pos = Hash(x, y);
+            if (visit.Contains(pos)) return true;
+            visit.Add(pos);
+        }
+
+        return false;
+    }
+
+    private long Hash(long x, long y) {
+        return (x << 32) + y;
+    }
+}
+```
+
+```go
+func isPathCrossing(path string) bool {
+    visit := make(map[int64]bool)
+    x, y := int64(0), int64(0)
+    visit[hash(x, y)] = true
+
+    for _, c := range path {
+        if c == 'N' {
+            y++
+        } else if c == 'S' {
+            y--
+        } else if c == 'E' {
+            x++
+        } else if c == 'W' {
+            x--
+        }
+
+        pos := hash(x, y)
+        if visit[pos] {
+            return true
+        }
+        visit[pos] = true
+    }
+
+    return false
+}
+
+func hash(x, y int64) int64 {
+    return (x << 32) + y
+}
+```
+
+```kotlin
+class Solution {
+    fun isPathCrossing(path: String): Boolean {
+        val visit = HashSet<Long>()
+        var x = 0L
+        var y = 0L
+        visit.add(hash(x, y))
+
+        for (c in path) {
+            when (c) {
+                'N' -> y++
+                'S' -> y--
+                'E' -> x++
+                'W' -> x--
+            }
+
+            val pos = hash(x, y)
+            if (visit.contains(pos)) return true
+            visit.add(pos)
+        }
+
+        return false
+    }
+
+    private fun hash(x: Long, y: Long): Long {
+        return (x shl 32) + y
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPathCrossing(_ path: String) -> Bool {
+        var visit = Set<Int64>()
+        var x: Int64 = 0, y: Int64 = 0
+        visit.insert(hash(x, y))
+
+        for c in path {
+            if c == "N" { y += 1 }
+            else if c == "S" { y -= 1 }
+            else if c == "E" { x += 1 }
+            else if c == "W" { x -= 1 }
+
+            let pos = hash(x, y)
+            if visit.contains(pos) { return true }
+            visit.insert(pos)
+        }
+
+        return false
+    }
+
+    private func hash(_ x: Int64, _ y: Int64) -> Int64 {
+        return (x << 32) + y
     }
 }
 ```

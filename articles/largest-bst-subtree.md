@@ -243,7 +243,7 @@ class Solution {
         if (!root) {
             return 0;
         }
-        
+
         // If current subtree is a validBST, its children will have smaller size BST.
         if (this.isValidBST(root)) {
             return this.countNodes(root);
@@ -251,7 +251,7 @@ class Solution {
         // Find BST in left and right subtrees of current nodes.
         return Math.max(this.largestBSTSubtree(root.left), this.largestBSTSubtree(root.right));
     }
-    
+
     // Function to check if given tree is a valid Binary Search Tree or not.
     isValidBST(root) {
         // An empty tree is a valid Binary Search Tree.
@@ -279,27 +279,27 @@ class Solution {
         }
         return false;
     }
-    
+
     findMax(root) {
         // Max node in a empty tree should me smaller than parent.
         if (!root) {
             return Number.MIN_SAFE_INTEGER;
         }
-        
+
         // Check the maximum node from the current node, left and right subtree of the current tree
         return Math.max(root.val, this.findMax(root.left), this.findMax(root.right));
     }
-    
+
     findMin(root) {
         // Min node in a empty tree should me larger than parent.
         if (!root) {
             return Number.MAX_SAFE_INTEGER;
         }
-        
+
         // Check the minimum node from the current node, left and right subtree of the current tree
         return Math.min(root.val, this.findMin(root.left), this.findMin(root.right));
     }
-    
+
     countNodes(root) {
         // Empty tree has 0 nodes.
         if (!root) {
@@ -308,6 +308,229 @@ class Solution {
         // Add nodes in left and right subtree.
         // Add 1 and return total size.
         return 1 + this.countNodes(root.left) + this.countNodes(root.right);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestBSTSubtree(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        if (IsValidBST(root)) {
+            return CountNodes(root);
+        }
+
+        return Math.Max(LargestBSTSubtree(root.left), LargestBSTSubtree(root.right));
+    }
+
+    private bool IsValidBST(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+
+        int leftMax = FindMax(root.left);
+        if (leftMax >= root.val) {
+            return false;
+        }
+
+        int rightMin = FindMin(root.right);
+        if (rightMin <= root.val) {
+            return false;
+        }
+
+        return IsValidBST(root.left) && IsValidBST(root.right);
+    }
+
+    private int FindMax(TreeNode root) {
+        if (root == null) {
+            return int.MinValue;
+        }
+        return Math.Max(root.val, Math.Max(FindMax(root.left), FindMax(root.right)));
+    }
+
+    private int FindMin(TreeNode root) {
+        if (root == null) {
+            return int.MaxValue;
+        }
+        return Math.Min(root.val, Math.Min(FindMin(root.left), FindMin(root.right)));
+    }
+
+    private int CountNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + CountNodes(root.left) + CountNodes(root.right);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func largestBSTSubtree(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    if isValidBST(root) {
+        return countNodes(root)
+    }
+
+    return max(largestBSTSubtree(root.Left), largestBSTSubtree(root.Right))
+}
+
+func isValidBST(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+
+    leftMax := findMax(root.Left)
+    if leftMax >= root.Val {
+        return false
+    }
+
+    rightMin := findMin(root.Right)
+    if rightMin <= root.Val {
+        return false
+    }
+
+    return isValidBST(root.Left) && isValidBST(root.Right)
+}
+
+func findMax(root *TreeNode) int {
+    if root == nil {
+        return math.MinInt32
+    }
+    return max(root.Val, max(findMax(root.Left), findMax(root.Right)))
+}
+
+func findMin(root *TreeNode) int {
+    if root == nil {
+        return math.MaxInt32
+    }
+    return min(root.Val, min(findMin(root.Left), findMin(root.Right)))
+}
+
+func countNodes(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    return 1 + countNodes(root.Left) + countNodes(root.Right)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun largestBSTSubtree(root: TreeNode?): Int {
+        if (root == null) return 0
+
+        if (isValidBST(root)) {
+            return countNodes(root)
+        }
+
+        return maxOf(largestBSTSubtree(root.left), largestBSTSubtree(root.right))
+    }
+
+    private fun isValidBST(root: TreeNode?): Boolean {
+        if (root == null) return true
+
+        val leftMax = findMax(root.left)
+        if (leftMax >= root.`val`) return false
+
+        val rightMin = findMin(root.right)
+        if (rightMin <= root.`val`) return false
+
+        return isValidBST(root.left) && isValidBST(root.right)
+    }
+
+    private fun findMax(root: TreeNode?): Int {
+        if (root == null) return Int.MIN_VALUE
+        return maxOf(root.`val`, maxOf(findMax(root.left), findMax(root.right)))
+    }
+
+    private fun findMin(root: TreeNode?): Int {
+        if (root == null) return Int.MAX_VALUE
+        return minOf(root.`val`, minOf(findMin(root.left), findMin(root.right)))
+    }
+
+    private fun countNodes(root: TreeNode?): Int {
+        if (root == null) return 0
+        return 1 + countNodes(root.left) + countNodes(root.right)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func largestBSTSubtree(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+
+        if isValidBST(root) {
+            return countNodes(root)
+        }
+
+        return max(largestBSTSubtree(root.left), largestBSTSubtree(root.right))
+    }
+
+    private func isValidBST(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+
+        let leftMax = findMax(root.left)
+        if leftMax >= root.val { return false }
+
+        let rightMin = findMin(root.right)
+        if rightMin <= root.val { return false }
+
+        return isValidBST(root.left) && isValidBST(root.right)
+    }
+
+    private func findMax(_ root: TreeNode?) -> Int {
+        guard let root = root else { return Int.min }
+        return max(root.val, max(findMax(root.left), findMax(root.right)))
+    }
+
+    private func findMin(_ root: TreeNode?) -> Int {
+        guard let root = root else { return Int.max }
+        return min(root.val, min(findMin(root.left), findMin(root.right)))
+    }
+
+    private func countNodes(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+        return 1 + countNodes(root.left) + countNodes(root.right)
     }
 }
 ```
@@ -513,7 +736,7 @@ class Solution {
         // Find BST in left and right subtrees of current nodes.
         return Math.max(this.largestBSTSubtree(root.left), this.largestBSTSubtree(root.right));
     }
-    
+
     // Function to check if given tree is a valid Binary Search Tree or not.
     isValidBST(root) {
         // An empty tree is a valid Binary Search Tree.
@@ -524,7 +747,7 @@ class Solution {
         if (!this.isValidBST(root.left)) {
             return false;
         }
-        // If current node's value is not greater than the previous 
+        // If current node's value is not greater than the previous
         // node's value in the in-order traversal return false.
         if (this.previous && this.previous.val >= root.val) {
             return false;
@@ -534,7 +757,7 @@ class Solution {
         // If right subtree is not a valid BST return false.
         return this.isValidBST(root.right);
     }
-    
+
     countNodes(root) {
         if (!root) {
             return 0;
@@ -542,6 +765,198 @@ class Solution {
         // Add nodes in left and right subtree.
         // Add 1 and return total size.
         return 1 + this.countNodes(root.left) + this.countNodes(root.right);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private TreeNode previous;
+
+    public int LargestBSTSubtree(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+
+        previous = null;
+
+        if (IsValidBST(root)) {
+            return CountNodes(root);
+        }
+
+        return Math.Max(LargestBSTSubtree(root.left), LargestBSTSubtree(root.right));
+    }
+
+    private bool IsValidBST(TreeNode root) {
+        if (root == null) {
+            return true;
+        }
+
+        if (!IsValidBST(root.left)) {
+            return false;
+        }
+
+        if (previous != null && previous.val >= root.val) {
+            return false;
+        }
+
+        previous = root;
+
+        return IsValidBST(root.right);
+    }
+
+    private int CountNodes(TreeNode root) {
+        if (root == null) {
+            return 0;
+        }
+        return 1 + CountNodes(root.left) + CountNodes(root.right);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func largestBSTSubtree(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    var previous *TreeNode
+
+    var isValidBST func(node *TreeNode) bool
+    isValidBST = func(node *TreeNode) bool {
+        if node == nil {
+            return true
+        }
+
+        if !isValidBST(node.Left) {
+            return false
+        }
+
+        if previous != nil && previous.Val >= node.Val {
+            return false
+        }
+
+        previous = node
+
+        return isValidBST(node.Right)
+    }
+
+    var countNodes func(node *TreeNode) int
+    countNodes = func(node *TreeNode) int {
+        if node == nil {
+            return 0
+        }
+        return 1 + countNodes(node.Left) + countNodes(node.Right)
+    }
+
+    previous = nil
+    if isValidBST(root) {
+        return countNodes(root)
+    }
+
+    return max(largestBSTSubtree(root.Left), largestBSTSubtree(root.Right))
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var previous: TreeNode? = null
+
+    fun largestBSTSubtree(root: TreeNode?): Int {
+        if (root == null) return 0
+
+        previous = null
+
+        if (isValidBST(root)) {
+            return countNodes(root)
+        }
+
+        return maxOf(largestBSTSubtree(root.left), largestBSTSubtree(root.right))
+    }
+
+    private fun isValidBST(root: TreeNode?): Boolean {
+        if (root == null) return true
+
+        if (!isValidBST(root.left)) return false
+
+        if (previous != null && previous!!.`val` >= root.`val`) return false
+
+        previous = root
+
+        return isValidBST(root.right)
+    }
+
+    private fun countNodes(root: TreeNode?): Int {
+        if (root == null) return 0
+        return 1 + countNodes(root.left) + countNodes(root.right)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    private var previous: TreeNode? = nil
+
+    func largestBSTSubtree(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+
+        previous = nil
+
+        if isValidBST(root) {
+            return countNodes(root)
+        }
+
+        return max(largestBSTSubtree(root.left), largestBSTSubtree(root.right))
+    }
+
+    private func isValidBST(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+
+        if !isValidBST(root.left) { return false }
+
+        if let prev = previous, prev.val >= root.val { return false }
+
+        previous = root
+
+        return isValidBST(root.right)
+    }
+
+    private func countNodes(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+        return 1 + countNodes(root.left) + countNodes(root.right)
     }
 }
 ```
@@ -700,21 +1115,182 @@ class Solution {
         if (!root) {
             return new NodeValue(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, 0);
         }
-        
+
         // Get values from left and right subtree of current tree.
         let left = largestBSTSubtreeHelper(root.left);
         let right = largestBSTSubtreeHelper(root.right);
-        
+
         // Current node is greater than max in left AND smaller than min in right, it is a BST.
         if (left.maxNode < root.val && root.val < right.minNode) {
             // It is a BST.
-            return new NodeValue(Math.min(root.val, left.minNode), Math.max(root.val, right.maxNode), 
+            return new NodeValue(Math.min(root.val, left.minNode), Math.max(root.val, right.maxNode),
                                 left.maxSize + right.maxSize + 1);
         }
-        
+
         // Otherwise, return [-inf, inf] so that parent can't be valid BST
-        return new NodeValue(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER, 
+        return new NodeValue(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER,
                             Math.max(left.maxSize, right.maxSize));
+    }
+}
+```
+
+```csharp
+public class NodeValue {
+    public int MaxNode, MinNode, MaxSize;
+
+    public NodeValue(int minNode, int maxNode, int maxSize) {
+        this.MaxNode = maxNode;
+        this.MinNode = minNode;
+        this.MaxSize = maxSize;
+    }
+}
+
+public class Solution {
+    public int LargestBSTSubtree(TreeNode root) {
+        return LargestBSTSubtreeHelper(root).MaxSize;
+    }
+
+    private NodeValue LargestBSTSubtreeHelper(TreeNode root) {
+        if (root == null) {
+            return new NodeValue(int.MaxValue, int.MinValue, 0);
+        }
+
+        var left = LargestBSTSubtreeHelper(root.left);
+        var right = LargestBSTSubtreeHelper(root.right);
+
+        if (left.MaxNode < root.val && root.val < right.MinNode) {
+            return new NodeValue(
+                Math.Min(root.val, left.MinNode),
+                Math.Max(root.val, right.MaxNode),
+                left.MaxSize + right.MaxSize + 1
+            );
+        }
+
+        return new NodeValue(int.MinValue, int.MaxValue, Math.Max(left.MaxSize, right.MaxSize));
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+type NodeValue struct {
+    MinNode, MaxNode, MaxSize int
+}
+
+func largestBSTSubtree(root *TreeNode) int {
+    return helper(root).MaxSize
+}
+
+func helper(root *TreeNode) NodeValue {
+    if root == nil {
+        return NodeValue{math.MaxInt32, math.MinInt32, 0}
+    }
+
+    left := helper(root.Left)
+    right := helper(root.Right)
+
+    if left.MaxNode < root.Val && root.Val < right.MinNode {
+        return NodeValue{
+            min(root.Val, left.MinNode),
+            max(root.Val, right.MaxNode),
+            left.MaxSize + right.MaxSize + 1,
+        }
+    }
+
+    return NodeValue{math.MinInt32, math.MaxInt32, max(left.MaxSize, right.MaxSize)}
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+data class NodeValue(val minNode: Int, val maxNode: Int, val maxSize: Int)
+
+class Solution {
+    fun largestBSTSubtree(root: TreeNode?): Int {
+        return helper(root).maxSize
+    }
+
+    private fun helper(root: TreeNode?): NodeValue {
+        if (root == null) {
+            return NodeValue(Int.MAX_VALUE, Int.MIN_VALUE, 0)
+        }
+
+        val left = helper(root.left)
+        val right = helper(root.right)
+
+        if (left.maxNode < root.`val` && root.`val` < right.minNode) {
+            return NodeValue(
+                minOf(root.`val`, left.minNode),
+                maxOf(root.`val`, right.maxNode),
+                left.maxSize + right.maxSize + 1
+            )
+        }
+
+        return NodeValue(Int.MIN_VALUE, Int.MAX_VALUE, maxOf(left.maxSize, right.maxSize))
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+struct NodeValue {
+    let minNode: Int
+    let maxNode: Int
+    let maxSize: Int
+}
+
+class Solution {
+    func largestBSTSubtree(_ root: TreeNode?) -> Int {
+        return helper(root).maxSize
+    }
+
+    private func helper(_ root: TreeNode?) -> NodeValue {
+        guard let root = root else {
+            return NodeValue(minNode: Int.max, maxNode: Int.min, maxSize: 0)
+        }
+
+        let left = helper(root.left)
+        let right = helper(root.right)
+
+        if left.maxNode < root.val && root.val < right.minNode {
+            return NodeValue(
+                minNode: min(root.val, left.minNode),
+                maxNode: max(root.val, right.maxNode),
+                maxSize: left.maxSize + right.maxSize + 1
+            )
+        }
+
+        return NodeValue(minNode: Int.min, maxNode: Int.max, maxSize: max(left.maxSize, right.maxSize))
     }
 }
 ```

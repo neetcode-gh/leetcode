@@ -270,6 +270,280 @@ class Solution {
 }
 ```
 
+```csharp
+public class DSU {
+    private int[] parent, size;
+    private int n;
+
+    public DSU(int n) {
+        this.n = n;
+        parent = new int[n + 1];
+        size = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int Find(int node) {
+        if (parent[node] != node) {
+            parent[node] = Find(parent[node]);
+        }
+        return parent[node];
+    }
+
+    public int Union(int u, int v) {
+        int pu = Find(u), pv = Find(v);
+        if (pu == pv) {
+            return 0;
+        }
+        if (size[pu] < size[pv]) {
+            int temp = pu;
+            pu = pv;
+            pv = temp;
+        }
+        size[pu] += size[pv];
+        parent[pv] = pu;
+        n--;
+        return 1;
+    }
+
+    public bool IsConnected() {
+        return n == 1;
+    }
+}
+
+public class Solution {
+    public int MaxNumEdgesToRemove(int n, int[][] edges) {
+        DSU alice = new DSU(n), bob = new DSU(n);
+        int cnt = 0;
+
+        foreach (var edge in edges) {
+            if (edge[0] == 3) {
+                cnt += (alice.Union(edge[1], edge[2]) | bob.Union(edge[1], edge[2]));
+            }
+        }
+
+        foreach (var edge in edges) {
+            if (edge[0] == 1) {
+                cnt += alice.Union(edge[1], edge[2]);
+            } else if (edge[0] == 2) {
+                cnt += bob.Union(edge[1], edge[2]);
+            }
+        }
+
+        if (alice.IsConnected() && bob.IsConnected()) {
+            return edges.Length - cnt;
+        }
+        return -1;
+    }
+}
+```
+
+```go
+type DSU struct {
+    parent []int
+    size   []int
+    n      int
+}
+
+func NewDSU(n int) *DSU {
+    parent := make([]int, n+1)
+    size := make([]int, n+1)
+    for i := 0; i <= n; i++ {
+        parent[i] = i
+        size[i] = 1
+    }
+    return &DSU{parent: parent, size: size, n: n}
+}
+
+func (d *DSU) Find(node int) int {
+    if d.parent[node] != node {
+        d.parent[node] = d.Find(d.parent[node])
+    }
+    return d.parent[node]
+}
+
+func (d *DSU) Union(u, v int) int {
+    pu, pv := d.Find(u), d.Find(v)
+    if pu == pv {
+        return 0
+    }
+    if d.size[pu] < d.size[pv] {
+        pu, pv = pv, pu
+    }
+    d.size[pu] += d.size[pv]
+    d.parent[pv] = pu
+    d.n--
+    return 1
+}
+
+func (d *DSU) IsConnected() bool {
+    return d.n == 1
+}
+
+func maxNumEdgesToRemove(n int, edges [][]int) int {
+    alice, bob := NewDSU(n), NewDSU(n)
+    cnt := 0
+
+    for _, edge := range edges {
+        if edge[0] == 3 {
+            a := alice.Union(edge[1], edge[2])
+            b := bob.Union(edge[1], edge[2])
+            if a == 1 || b == 1 {
+                cnt++
+            }
+        }
+    }
+
+    for _, edge := range edges {
+        if edge[0] == 1 {
+            cnt += alice.Union(edge[1], edge[2])
+        } else if edge[0] == 2 {
+            cnt += bob.Union(edge[1], edge[2])
+        }
+    }
+
+    if alice.IsConnected() && bob.IsConnected() {
+        return len(edges) - cnt
+    }
+    return -1
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n + 1) { it }
+    private val size = IntArray(n + 1) { 1 }
+    private var n = n
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Int {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) {
+            return 0
+        }
+        if (size[pu] < size[pv]) {
+            val temp = pu
+            pu = pv
+            pv = temp
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        n--
+        return 1
+    }
+
+    fun isConnected(): Boolean {
+        return n == 1
+    }
+}
+
+class Solution {
+    fun maxNumEdgesToRemove(n: Int, edges: Array<IntArray>): Int {
+        val alice = DSU(n)
+        val bob = DSU(n)
+        var cnt = 0
+
+        for (edge in edges) {
+            if (edge[0] == 3) {
+                cnt += (alice.union(edge[1], edge[2]) or bob.union(edge[1], edge[2]))
+            }
+        }
+
+        for (edge in edges) {
+            if (edge[0] == 1) {
+                cnt += alice.union(edge[1], edge[2])
+            } else if (edge[0] == 2) {
+                cnt += bob.union(edge[1], edge[2])
+            }
+        }
+
+        return if (alice.isConnected() && bob.isConnected()) {
+            edges.size - cnt
+        } else {
+            -1
+        }
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+    private var n: Int
+
+    init(_ n: Int) {
+        self.n = n
+        self.parent = Array(0...n)
+        self.size = Array(repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Int {
+        var pu = find(u)
+        var pv = find(v)
+        if pu == pv {
+            return 0
+        }
+        if size[pu] < size[pv] {
+            let temp = pu
+            pu = pv
+            pv = temp
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        n -= 1
+        return 1
+    }
+
+    func isConnected() -> Bool {
+        return n == 1
+    }
+}
+
+class Solution {
+    func maxNumEdgesToRemove(_ n: Int, _ edges: [[Int]]) -> Int {
+        let alice = DSU(n)
+        let bob = DSU(n)
+        var cnt = 0
+
+        for edge in edges {
+            if edge[0] == 3 {
+                cnt += (alice.union(edge[1], edge[2]) | bob.union(edge[1], edge[2]))
+            }
+        }
+
+        for edge in edges {
+            if edge[0] == 1 {
+                cnt += alice.union(edge[1], edge[2])
+            } else if edge[0] == 2 {
+                cnt += bob.union(edge[1], edge[2])
+            }
+        }
+
+        if alice.isConnected() && bob.isConnected() {
+            return edges.count - cnt
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

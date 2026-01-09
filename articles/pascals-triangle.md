@@ -95,6 +95,59 @@ public class Solution {
 }
 ```
 
+```go
+func generate(numRows int) [][]int {
+    res := make([][]int, 0)
+    for n := 0; n < numRows; n++ {
+        row := []int{1}
+        val := 1
+        for k := 1; k <= n; k++ {
+            val = val * (n - k + 1) / k
+            row = append(row, val)
+        }
+        res = append(res, row)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun generate(numRows: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        for (n in 0 until numRows) {
+            val row = mutableListOf(1)
+            var value = 1
+            for (k in 1..n) {
+                value = value * (n - k + 1) / k
+                row.add(value)
+            }
+            res.add(row)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func generate(_ numRows: Int) -> [[Int]] {
+        var res = [[Int]]()
+        for n in 0..<numRows {
+            var row = [1]
+            var val = 1
+            for k in 1...max(1, n) {
+                if k > n { break }
+                val = val * (n - k + 1) / k
+                row.append(val)
+            }
+            res.append(row)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -215,6 +268,59 @@ public class Solution {
 }
 ```
 
+```go
+func generate(numRows int) [][]int {
+    res := [][]int{{1}}
+
+    for i := 0; i < numRows-1; i++ {
+        temp := make([]int, len(res[len(res)-1])+2)
+        copy(temp[1:], res[len(res)-1])
+        row := make([]int, len(res[len(res)-1])+1)
+        for j := 0; j < len(row); j++ {
+            row[j] = temp[j] + temp[j+1]
+        }
+        res = append(res, row)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun generate(numRows: Int): List<List<Int>> {
+        val res = mutableListOf(listOf(1))
+
+        for (i in 0 until numRows - 1) {
+            val temp = listOf(0) + res.last() + listOf(0)
+            val row = mutableListOf<Int>()
+            for (j in 0 until res.last().size + 1) {
+                row.add(temp[j] + temp[j + 1])
+            }
+            res.add(row)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func generate(_ numRows: Int) -> [[Int]] {
+        var res = [[1]]
+
+        for i in 0..<numRows - 1 {
+            let temp = [0] + res.last! + [0]
+            var row = [Int]()
+            for j in 0..<res.last!.count + 1 {
+                row.append(temp[j] + temp[j + 1])
+            }
+            res.append(row)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -314,6 +420,52 @@ public class Solution {
             res.Add(row);
         }
         return res;
+    }
+}
+```
+
+```go
+func generate(numRows int) [][]int {
+    res := make([][]int, numRows)
+    for i := 0; i < numRows; i++ {
+        res[i] = make([]int, i+1)
+        res[i][0], res[i][i] = 1, 1
+        for j := 1; j < i; j++ {
+            res[i][j] = res[i-1][j-1] + res[i-1][j]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun generate(numRows: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        for (i in 0 until numRows) {
+            val row = MutableList(i + 1) { 1 }
+            for (j in 1 until i) {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j]
+            }
+            res.add(row)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func generate(_ numRows: Int) -> [[Int]] {
+        var res = [[Int]]()
+        for i in 0..<numRows {
+            var row = [Int](repeating: 1, count: i + 1)
+            for j in 1..<i {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j]
+            }
+            res.append(row)
+        }
+        return res
     }
 }
 ```

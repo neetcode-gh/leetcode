@@ -111,6 +111,72 @@ public class Solution {
 }
 ```
 
+```go
+func findLucky(arr []int) int {
+    res := -1
+
+    for _, num := range arr {
+        cnt := 0
+        for _, a := range arr {
+            if num == a {
+                cnt++
+            }
+        }
+        if cnt == num {
+            if num > res {
+                res = num
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findLucky(arr: IntArray): Int {
+        var res = -1
+
+        for (num in arr) {
+            var cnt = 0
+            for (a in arr) {
+                if (num == a) {
+                    cnt++
+                }
+            }
+            if (cnt == num) {
+                res = maxOf(res, num)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLucky(_ arr: [Int]) -> Int {
+        var res = -1
+
+        for num in arr {
+            var cnt = 0
+            for a in arr {
+                if num == a {
+                    cnt += 1
+                }
+            }
+            if cnt == num {
+                res = max(res, num)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,6 +289,64 @@ public class Solution {
 }
 ```
 
+```go
+func findLucky(arr []int) int {
+    sort.Ints(arr)
+    streak := 0
+
+    for i := len(arr) - 1; i >= 0; i-- {
+        streak++
+        if i == 0 || arr[i] != arr[i-1] {
+            if arr[i] == streak {
+                return arr[i]
+            }
+            streak = 0
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findLucky(arr: IntArray): Int {
+        arr.sort()
+        var streak = 0
+
+        for (i in arr.size - 1 downTo 0) {
+            streak++
+            if (i == 0 || arr[i] != arr[i - 1]) {
+                if (arr[i] == streak) {
+                    return arr[i]
+                }
+                streak = 0
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLucky(_ arr: [Int]) -> Int {
+        let arr = arr.sorted()
+        var streak = 0
+
+        for i in stride(from: arr.count - 1, through: 0, by: -1) {
+            streak += 1
+            if i == 0 || arr[i] != arr[i - 1] {
+                if arr[i] == streak {
+                    return arr[i]
+                }
+                streak = 0
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +453,63 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func findLucky(arr []int) int {
+    count := make(map[int]int)
+    for _, num := range arr {
+        count[num]++
+    }
+
+    res := -1
+    for num, freq := range count {
+        if num == freq {
+            if num > res {
+                res = num
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findLucky(arr: IntArray): Int {
+        val count = mutableMapOf<Int, Int>()
+        for (num in arr) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        var res = -1
+        for ((num, freq) in count) {
+            if (num == freq) {
+                res = maxOf(res, num)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLucky(_ arr: [Int]) -> Int {
+        var count = [Int: Int]()
+        for num in arr {
+            count[num, default: 0] += 1
+        }
+
+        var res = -1
+        for (num, freq) in count {
+            if num == freq {
+                res = max(res, num)
+            }
+        }
+        return res
     }
 }
 ```
@@ -464,6 +645,84 @@ public class Solution {
 }
 ```
 
+```go
+func findLucky(arr []int) int {
+    n := len(arr)
+    for i := 0; i < n; i++ {
+        prev, num := i, arr[i]
+        for num > 0 && num <= n {
+            nxt := arr[num-1]
+            if arr[num-1] > 0 {
+                arr[num-1] = -1
+            } else {
+                arr[num-1]--
+            }
+            if num-1 <= i || num-1 == prev {
+                break
+            }
+            prev = num - 1
+            num = nxt
+        }
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        if -arr[i] == i+1 {
+            return i + 1
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findLucky(arr: IntArray): Int {
+        val n = arr.size
+        for (i in 0 until n) {
+            var prev = i
+            var num = arr[i]
+            while (num > 0 && num <= n) {
+                val nxt = arr[num - 1]
+                arr[num - 1] = minOf(0, arr[num - 1]) - 1
+                if (num - 1 <= i || num - 1 == prev) break
+                prev = num - 1
+                num = nxt
+            }
+        }
+
+        for (i in n - 1 downTo 0) {
+            if (-arr[i] == i + 1) return i + 1
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLucky(_ arr: [Int]) -> Int {
+        var arr = arr
+        let n = arr.count
+        for i in 0..<n {
+            var prev = i
+            var num = arr[i]
+            while num > 0 && num <= n {
+                let nxt = arr[num - 1]
+                arr[num - 1] = min(0, arr[num - 1]) - 1
+                if num - 1 <= i || num - 1 == prev { break }
+                prev = num - 1
+                num = nxt
+            }
+        }
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            if -arr[i] == i + 1 { return i + 1 }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,6 +828,64 @@ public class Solution {
             if (cnt == i + 1) return i + 1;
         }
         return -1;
+    }
+}
+```
+
+```go
+func findLucky(arr []int) int {
+    for _, num := range arr {
+        idx := num & ((1 << 10) - 1)
+        if idx <= len(arr) {
+            arr[idx-1] += (1 << 10)
+        }
+    }
+
+    for i := len(arr) - 1; i >= 0; i-- {
+        cnt := arr[i] >> 10
+        if cnt == i+1 {
+            return i + 1
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findLucky(arr: IntArray): Int {
+        for (num in arr) {
+            val idx = num and ((1 shl 10) - 1)
+            if (idx <= arr.size) {
+                arr[idx - 1] += (1 shl 10)
+            }
+        }
+
+        for (i in arr.size - 1 downTo 0) {
+            val cnt = arr[i] shr 10
+            if (cnt == i + 1) return i + 1
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLucky(_ arr: [Int]) -> Int {
+        var arr = arr
+        for num in arr {
+            let idx = num & ((1 << 10) - 1)
+            if idx <= arr.count {
+                arr[idx - 1] += (1 << 10)
+            }
+        }
+
+        for i in stride(from: arr.count - 1, through: 0, by: -1) {
+            let cnt = arr[i] >> 10
+            if cnt == i + 1 { return i + 1 }
+        }
+        return -1
     }
 }
 ```

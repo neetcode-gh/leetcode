@@ -131,6 +131,96 @@ public class Solution {
 }
 ```
 
+```go
+func maxPoints(points [][]int) int64 {
+    m, n := len(points), len(points[0])
+
+    var dfs func(r, c int) int64
+    dfs = func(r, c int) int64 {
+        if r == m-1 {
+            return 0
+        }
+        var res int64 = 0
+        for col := 0; col < n; col++ {
+            diff := col - c
+            if diff < 0 {
+                diff = -diff
+            }
+            val := int64(points[r+1][col]) - int64(diff) + dfs(r+1, col)
+            if val > res {
+                res = val
+            }
+        }
+        return res
+    }
+
+    var ans int64 = 0
+    for c := 0; c < n; c++ {
+        val := int64(points[0][c]) + dfs(0, c)
+        if val > ans {
+            ans = val
+        }
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    private var m = 0
+    private var n = 0
+    private lateinit var points: Array<IntArray>
+
+    fun maxPoints(points: Array<IntArray>): Long {
+        this.points = points
+        m = points.size
+        n = points[0].size
+        var ans: Long = 0
+        for (c in 0 until n) {
+            ans = maxOf(ans, points[0][c].toLong() + dfs(0, c))
+        }
+        return ans
+    }
+
+    private fun dfs(r: Int, c: Int): Long {
+        if (r == m - 1) return 0
+        var res: Long = 0
+        for (col in 0 until n) {
+            res = maxOf(res, points[r + 1][col] - kotlin.math.abs(col - c) + dfs(r + 1, col))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    var m = 0
+    var n = 0
+    var points = [[Int]]()
+
+    func maxPoints(_ points: [[Int]]) -> Int {
+        self.points = points
+        m = points.count
+        n = points[0].count
+        var ans: Int = 0
+        for c in 0..<n {
+            ans = max(ans, points[0][c] + dfs(0, c))
+        }
+        return ans
+    }
+
+    private func dfs(_ r: Int, _ c: Int) -> Int {
+        if r == m - 1 { return 0 }
+        var res = 0
+        for col in 0..<n {
+            res = max(res, points[r + 1][col] - abs(col - c) + dfs(r + 1, col))
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,6 +392,115 @@ public class Solution {
 }
 ```
 
+```go
+func maxPoints(points [][]int) int64 {
+    m, n := len(points), len(points[0])
+    memo := make([][]int64, m)
+    for i := range memo {
+        memo[i] = make([]int64, n)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var dfs func(r, c int) int64
+    dfs = func(r, c int) int64 {
+        if memo[r][c] != -1 {
+            return memo[r][c]
+        }
+        if r == m-1 {
+            return 0
+        }
+        var res int64 = 0
+        for col := 0; col < n; col++ {
+            diff := col - c
+            if diff < 0 {
+                diff = -diff
+            }
+            val := int64(points[r+1][col]) - int64(diff) + dfs(r+1, col)
+            if val > res {
+                res = val
+            }
+        }
+        memo[r][c] = res
+        return res
+    }
+
+    var ans int64 = 0
+    for c := 0; c < n; c++ {
+        val := int64(points[0][c]) + dfs(0, c)
+        if val > ans {
+            ans = val
+        }
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    private var m = 0
+    private var n = 0
+    private lateinit var points: Array<IntArray>
+    private lateinit var memo: Array<LongArray>
+
+    fun maxPoints(points: Array<IntArray>): Long {
+        this.points = points
+        m = points.size
+        n = points[0].size
+        memo = Array(m) { LongArray(n) { -1 } }
+        var ans: Long = 0
+        for (c in 0 until n) {
+            ans = maxOf(ans, points[0][c].toLong() + dfs(0, c))
+        }
+        return ans
+    }
+
+    private fun dfs(r: Int, c: Int): Long {
+        if (memo[r][c] != -1L) return memo[r][c]
+        if (r == m - 1) return 0
+        var res: Long = 0
+        for (col in 0 until n) {
+            res = maxOf(res, points[r + 1][col] - kotlin.math.abs(col - c) + dfs(r + 1, col))
+        }
+        memo[r][c] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    var m = 0
+    var n = 0
+    var points = [[Int]]()
+    var memo = [[Int]]()
+
+    func maxPoints(_ points: [[Int]]) -> Int {
+        self.points = points
+        m = points.count
+        n = points[0].count
+        memo = Array(repeating: Array(repeating: -1, count: n), count: m)
+        var ans = 0
+        for c in 0..<n {
+            ans = max(ans, points[0][c] + dfs(0, c))
+        }
+        return ans
+    }
+
+    private func dfs(_ r: Int, _ c: Int) -> Int {
+        if memo[r][c] != -1 { return memo[r][c] }
+        if r == m - 1 { return 0 }
+        var res = 0
+        for col in 0..<n {
+            res = max(res, points[r + 1][col] - abs(col - c) + dfs(r + 1, col))
+        }
+        memo[r][c] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +668,115 @@ public class Solution {
 }
 ```
 
+```go
+func maxPoints(points [][]int) int64 {
+    ROWS, COLS := len(points), len(points[0])
+    dp := make([]int64, COLS)
+    for c := 0; c < COLS; c++ {
+        dp[c] = int64(points[0][c])
+    }
+
+    for r := 1; r < ROWS; r++ {
+        left := make([]int64, COLS)
+        left[0] = dp[0]
+        for c := 1; c < COLS; c++ {
+            left[c] = max64(dp[c], left[c-1]-1)
+        }
+
+        right := make([]int64, COLS)
+        right[COLS-1] = dp[COLS-1]
+        for c := COLS - 2; c >= 0; c-- {
+            right[c] = max64(dp[c], right[c+1]-1)
+        }
+
+        nextDp := make([]int64, COLS)
+        for c := 0; c < COLS; c++ {
+            nextDp[c] = int64(points[r][c]) + max64(left[c], right[c])
+        }
+        dp = nextDp
+    }
+
+    var ans int64 = 0
+    for _, val := range dp {
+        if val > ans {
+            ans = val
+        }
+    }
+    return ans
+}
+
+func max64(a, b int64) int64 {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxPoints(points: Array<IntArray>): Long {
+        val ROWS = points.size
+        val COLS = points[0].size
+        var dp = LongArray(COLS) { points[0][it].toLong() }
+
+        for (r in 1 until ROWS) {
+            val left = LongArray(COLS)
+            left[0] = dp[0]
+            for (c in 1 until COLS) {
+                left[c] = maxOf(dp[c], left[c - 1] - 1)
+            }
+
+            val right = LongArray(COLS)
+            right[COLS - 1] = dp[COLS - 1]
+            for (c in COLS - 2 downTo 0) {
+                right[c] = maxOf(dp[c], right[c + 1] - 1)
+            }
+
+            val nextDp = LongArray(COLS)
+            for (c in 0 until COLS) {
+                nextDp[c] = points[r][c] + maxOf(left[c], right[c])
+            }
+            dp = nextDp
+        }
+
+        return dp.maxOrNull() ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxPoints(_ points: [[Int]]) -> Int {
+        let ROWS = points.count
+        let COLS = points[0].count
+        var dp = points[0].map { Int($0) }
+
+        for r in 1..<ROWS {
+            var left = [Int](repeating: 0, count: COLS)
+            left[0] = dp[0]
+            for c in 1..<COLS {
+                left[c] = max(dp[c], left[c - 1] - 1)
+            }
+
+            var right = [Int](repeating: 0, count: COLS)
+            right[COLS - 1] = dp[COLS - 1]
+            for c in stride(from: COLS - 2, through: 0, by: -1) {
+                right[c] = max(dp[c], right[c + 1] - 1)
+            }
+
+            var nextDp = [Int](repeating: 0, count: COLS)
+            for c in 0..<COLS {
+                nextDp[c] = points[r][c] + max(left[c], right[c])
+            }
+            dp = nextDp
+        }
+
+        return dp.max() ?? 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,6 +924,103 @@ public class Solution {
         long ans = long.MinValue;
         foreach (long val in prev) ans = Math.Max(ans, val);
         return ans;
+    }
+}
+```
+
+```go
+func maxPoints(points [][]int) int64 {
+    rows, cols := len(points), len(points[0])
+    prev := make([]int64, cols)
+    for c := 0; c < cols; c++ {
+        prev[c] = int64(points[0][c])
+    }
+
+    for r := 1; r < rows; r++ {
+        cur := make([]int64, cols)
+        cur[0] = prev[0]
+        for c := 1; c < cols; c++ {
+            cur[c] = max64(prev[c], cur[c-1]-1)
+        }
+
+        rightMax := prev[cols-1]
+        for c := cols - 2; c >= 0; c-- {
+            rightMax = max64(prev[c], rightMax-1)
+            cur[c] = max64(cur[c], rightMax) + int64(points[r][c])
+        }
+        cur[cols-1] += int64(points[r][cols-1])
+        prev = cur
+    }
+
+    var ans int64 = prev[0]
+    for _, val := range prev {
+        if val > ans {
+            ans = val
+        }
+    }
+    return ans
+}
+
+func max64(a, b int64) int64 {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxPoints(points: Array<IntArray>): Long {
+        val rows = points.size
+        val cols = points[0].size
+        var prev = LongArray(cols) { points[0][it].toLong() }
+
+        for (r in 1 until rows) {
+            val cur = LongArray(cols)
+            cur[0] = prev[0]
+            for (c in 1 until cols) {
+                cur[c] = maxOf(prev[c], cur[c - 1] - 1)
+            }
+
+            var rightMax = prev[cols - 1]
+            for (c in cols - 2 downTo 0) {
+                rightMax = maxOf(prev[c], rightMax - 1)
+                cur[c] = maxOf(cur[c], rightMax) + points[r][c]
+            }
+            cur[cols - 1] += points[r][cols - 1]
+            prev = cur
+        }
+
+        return prev.maxOrNull() ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxPoints(_ points: [[Int]]) -> Int {
+        let rows = points.count
+        let cols = points[0].count
+        var prev = points[0].map { $0 }
+
+        for r in 1..<rows {
+            var cur = [Int](repeating: 0, count: cols)
+            cur[0] = prev[0]
+            for c in 1..<cols {
+                cur[c] = max(prev[c], cur[c - 1] - 1)
+            }
+
+            var rightMax = prev[cols - 1]
+            for c in stride(from: cols - 2, through: 0, by: -1) {
+                rightMax = max(prev[c], rightMax - 1)
+                cur[c] = max(cur[c], rightMax) + points[r][c]
+            }
+            cur[cols - 1] += points[r][cols - 1]
+            prev = cur
+        }
+
+        return prev.max() ?? 0
     }
 }
 ```

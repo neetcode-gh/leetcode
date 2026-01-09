@@ -102,6 +102,109 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(string s) {
+        int cur = 0, cnt1 = 0;
+        foreach (char c in s) {
+            if (c - '0' != cur) {
+                cnt1++;
+            }
+            cur ^= 1;
+        }
+
+        cur = 1;
+        int cnt2 = 0;
+        foreach (char c in s) {
+            if (c - '0' != cur) {
+                cnt2++;
+            }
+            cur ^= 1;
+        }
+
+        return Math.Min(cnt1, cnt2);
+    }
+}
+```
+
+```go
+func minOperations(s string) int {
+    cur, cnt1 := 0, 0
+    for _, c := range s {
+        if int(c-'0') != cur {
+            cnt1++
+        }
+        cur ^= 1
+    }
+
+    cur = 1
+    cnt2 := 0
+    for _, c := range s {
+        if int(c-'0') != cur {
+            cnt2++
+        }
+        cur ^= 1
+    }
+
+    if cnt1 < cnt2 {
+        return cnt1
+    }
+    return cnt2
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(s: String): Int {
+        var cur = 0
+        var cnt1 = 0
+        for (c in s) {
+            if (c - '0' != cur) {
+                cnt1++
+            }
+            cur = cur xor 1
+        }
+
+        cur = 1
+        var cnt2 = 0
+        for (c in s) {
+            if (c - '0' != cur) {
+                cnt2++
+            }
+            cur = cur xor 1
+        }
+
+        return minOf(cnt1, cnt2)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ s: String) -> Int {
+        var cur = 0
+        var cnt1 = 0
+        for c in s {
+            if Int(String(c))! != cur {
+                cnt1 += 1
+            }
+            cur ^= 1
+        }
+
+        cur = 1
+        var cnt2 = 0
+        for c in s {
+            if Int(String(c))! != cur {
+                cnt2 += 1
+            }
+            cur ^= 1
+        }
+
+        return min(cnt1, cnt2)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +299,96 @@ class Solution {
         }
 
         return Math.min(count, s.length - count);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinOperations(string s) {
+        int count = 0;
+
+        for (int i = 0; i < s.Length; i++) {
+            if (i % 2 == 0) {
+                if (s[i] == '0') {
+                    count++;
+                }
+            } else {
+                if (s[i] == '1') {
+                    count++;
+                }
+            }
+        }
+
+        return Math.Min(count, s.Length - count);
+    }
+}
+```
+
+```go
+func minOperations(s string) int {
+    count := 0
+
+    for i := 0; i < len(s); i++ {
+        if i%2 == 0 {
+            if s[i] == '0' {
+                count++
+            }
+        } else {
+            if s[i] == '1' {
+                count++
+            }
+        }
+    }
+
+    if count < len(s)-count {
+        return count
+    }
+    return len(s) - count
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(s: String): Int {
+        var count = 0
+
+        for (i in s.indices) {
+            if (i % 2 == 0) {
+                if (s[i] == '0') {
+                    count++
+                }
+            } else {
+                if (s[i] == '1') {
+                    count++
+                }
+            }
+        }
+
+        return minOf(count, s.length - count)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ s: String) -> Int {
+        var count = 0
+        let chars = Array(s)
+
+        for i in 0..<chars.count {
+            if i % 2 == 0 {
+                if chars[i] == "0" {
+                    count += 1
+                }
+            } else {
+                if chars[i] == "1" {
+                    count += 1
+                }
+            }
+        }
+
+        return min(count, chars.count - count)
     }
 }
 ```

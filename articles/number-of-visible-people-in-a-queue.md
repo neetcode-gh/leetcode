@@ -106,6 +106,65 @@ public class Solution {
 }
 ```
 
+```go
+func canSeePersonsCount(heights []int) []int {
+    n := len(heights)
+    res := make([]int, n)
+    for i := 0; i < n; i++ {
+        maxi, cnt := 0, 0
+        for j := i + 1; j < n; j++ {
+            if min(heights[i], heights[j]) > maxi {
+                cnt++
+            }
+            maxi = max(maxi, heights[j])
+        }
+        res[i] = cnt
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun canSeePersonsCount(heights: IntArray): IntArray {
+        val n = heights.size
+        val res = IntArray(n)
+        for (i in 0 until n) {
+            var maxi = 0
+            var cnt = 0
+            for (j in i + 1 until n) {
+                if (minOf(heights[i], heights[j]) > maxi) {
+                    cnt++
+                }
+                maxi = maxOf(maxi, heights[j])
+            }
+            res[i] = cnt
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func canSeePersonsCount(_ heights: [Int]) -> [Int] {
+        let n = heights.count
+        var res = [Int](repeating: 0, count: n)
+        for i in 0..<n {
+            var maxi = 0, cnt = 0
+            for j in (i + 1)..<n {
+                if min(heights[i], heights[j]) > maxi {
+                    cnt += 1
+                }
+                maxi = max(maxi, heights[j])
+            }
+            res[i] = cnt
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -222,6 +281,71 @@ public class Solution {
             stack.Push(i);
         }
         return res;
+    }
+}
+```
+
+```go
+func canSeePersonsCount(heights []int) []int {
+    n := len(heights)
+    res := make([]int, n)
+    stack := []int{}
+
+    for i := 0; i < n; i++ {
+        h := heights[i]
+        for len(stack) > 0 && heights[stack[len(stack)-1]] < h {
+            res[stack[len(stack)-1]]++
+            stack = stack[:len(stack)-1]
+        }
+        if len(stack) > 0 {
+            res[stack[len(stack)-1]]++
+        }
+        stack = append(stack, i)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun canSeePersonsCount(heights: IntArray): IntArray {
+        val n = heights.size
+        val res = IntArray(n)
+        val stack = ArrayDeque<Int>()
+
+        for (i in 0 until n) {
+            val h = heights[i]
+            while (stack.isNotEmpty() && heights[stack.last()] < h) {
+                res[stack.removeLast()]++
+            }
+            if (stack.isNotEmpty()) {
+                res[stack.last()]++
+            }
+            stack.addLast(i)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func canSeePersonsCount(_ heights: [Int]) -> [Int] {
+        let n = heights.count
+        var res = [Int](repeating: 0, count: n)
+        var stack = [Int]()
+
+        for i in 0..<n {
+            let h = heights[i]
+            while !stack.isEmpty && heights[stack.last!] < h {
+                res[stack.removeLast()] += 1
+            }
+            if !stack.isEmpty {
+                res[stack.last!] += 1
+            }
+            stack.append(i)
+        }
+        return res
     }
 }
 ```
@@ -347,6 +471,70 @@ public class Solution {
             stack.Push(heights[i]);
         }
         return res;
+    }
+}
+```
+
+```go
+func canSeePersonsCount(heights []int) []int {
+    n := len(heights)
+    res := make([]int, n)
+    stack := []int{}
+
+    for i := n - 1; i >= 0; i-- {
+        for len(stack) > 0 && stack[len(stack)-1] < heights[i] {
+            stack = stack[:len(stack)-1]
+            res[i]++
+        }
+        if len(stack) > 0 {
+            res[i]++
+        }
+        stack = append(stack, heights[i])
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun canSeePersonsCount(heights: IntArray): IntArray {
+        val n = heights.size
+        val res = IntArray(n)
+        val stack = ArrayDeque<Int>()
+
+        for (i in n - 1 downTo 0) {
+            while (stack.isNotEmpty() && stack.last() < heights[i]) {
+                stack.removeLast()
+                res[i]++
+            }
+            if (stack.isNotEmpty()) {
+                res[i]++
+            }
+            stack.addLast(heights[i])
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func canSeePersonsCount(_ heights: [Int]) -> [Int] {
+        let n = heights.count
+        var res = [Int](repeating: 0, count: n)
+        var stack = [Int]()
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            while !stack.isEmpty && stack.last! < heights[i] {
+                stack.removeLast()
+                res[i] += 1
+            }
+            if !stack.isEmpty {
+                res[i] += 1
+            }
+            stack.append(heights[i])
+        }
+        return res
     }
 }
 ```

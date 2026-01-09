@@ -193,6 +193,112 @@ public class Solution {
 }
 ```
 
+```go
+func findAllConcatenatedWordsInADict(words []string) []string {
+    wordSet := make(map[string]bool)
+    maxLen := 0
+    for _, w := range words {
+        wordSet[w] = true
+        if len(w) > maxLen {
+            maxLen = len(w)
+        }
+    }
+
+    var res []string
+    var dfs func(concatWord []string, totLen int)
+    dfs = func(concatWord []string, totLen int) {
+        if len(concatWord) > 1 {
+            word := strings.Join(concatWord, "")
+            if wordSet[word] {
+                res = append(res, word)
+                delete(wordSet, word)
+            }
+        }
+
+        for _, w := range words {
+            if totLen+len(w) > maxLen {
+                continue
+            }
+            concatWord = append(concatWord, w)
+            dfs(concatWord, totLen+len(w))
+            concatWord = concatWord[:len(concatWord)-1]
+        }
+    }
+
+    dfs([]string{}, 0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAllConcatenatedWordsInADict(words: Array<String>): List<String> {
+        val wordSet = words.toMutableSet()
+        var maxLen = 0
+        for (w in words) {
+            maxLen = maxOf(maxLen, w.length)
+        }
+
+        val res = mutableListOf<String>()
+
+        fun dfs(concatWord: MutableList<String>, totLen: Int) {
+            if (concatWord.size > 1) {
+                val word = concatWord.joinToString("")
+                if (word in wordSet) {
+                    res.add(word)
+                    wordSet.remove(word)
+                }
+            }
+
+            for (w in words) {
+                if (totLen + w.length > maxLen) continue
+                concatWord.add(w)
+                dfs(concatWord, totLen + w.length)
+                concatWord.removeAt(concatWord.size - 1)
+            }
+        }
+
+        dfs(mutableListOf(), 0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAllConcatenatedWordsInADict(_ words: [String]) -> [String] {
+        var wordSet = Set(words)
+        var maxLen = 0
+        for w in words {
+            maxLen = max(maxLen, w.count)
+        }
+
+        var res = [String]()
+
+        func dfs(_ concatWord: inout [String], _ totLen: Int) {
+            if concatWord.count > 1 {
+                let word = concatWord.joined()
+                if wordSet.contains(word) {
+                    res.append(word)
+                    wordSet.remove(word)
+                }
+            }
+
+            for w in words {
+                if totLen + w.count > maxLen { continue }
+                concatWord.append(w)
+                dfs(&concatWord, totLen + w.count)
+                concatWord.removeLast()
+            }
+        }
+
+        var concatWord = [String]()
+        dfs(&concatWord, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +455,92 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func findAllConcatenatedWordsInADict(words []string) []string {
+    wordSet := make(map[string]bool)
+    for _, w := range words {
+        wordSet[w] = true
+    }
+
+    var dfs func(word string) bool
+    dfs = func(word string) bool {
+        for i := 1; i < len(word); i++ {
+            prefix, suffix := word[:i], word[i:]
+            if (wordSet[prefix] && wordSet[suffix]) ||
+                (wordSet[prefix] && dfs(suffix)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    var res []string
+    for _, w := range words {
+        if dfs(w) {
+            res = append(res, w)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAllConcatenatedWordsInADict(words: Array<String>): List<String> {
+        val wordSet = words.toHashSet()
+
+        fun dfs(word: String): Boolean {
+            for (i in 1 until word.length) {
+                val prefix = word.substring(0, i)
+                val suffix = word.substring(i)
+                if ((prefix in wordSet && suffix in wordSet) ||
+                    (prefix in wordSet && dfs(suffix))) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        val res = mutableListOf<String>()
+        for (w in words) {
+            if (dfs(w)) {
+                res.add(w)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAllConcatenatedWordsInADict(_ words: [String]) -> [String] {
+        let wordSet = Set(words)
+
+        func dfs(_ word: String) -> Bool {
+            for i in 1..<word.count {
+                let prefixEnd = word.index(word.startIndex, offsetBy: i)
+                let prefix = String(word[..<prefixEnd])
+                let suffix = String(word[prefixEnd...])
+                if (wordSet.contains(prefix) && wordSet.contains(suffix)) ||
+                    (wordSet.contains(prefix) && dfs(suffix)) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        var res = [String]()
+        for w in words {
+            if dfs(w) {
+                res.append(w)
+            }
+        }
+        return res
     }
 }
 ```
@@ -550,6 +742,116 @@ public class Solution {
 }
 ```
 
+```go
+func findAllConcatenatedWordsInADict(words []string) []string {
+    wordSet := make(map[string]bool)
+    for _, w := range words {
+        wordSet[w] = true
+    }
+    dp := make(map[string]bool)
+    dpSet := make(map[string]bool)
+
+    var dfs func(word string) bool
+    dfs = func(word string) bool {
+        if val, ok := dpSet[word]; ok {
+            return val
+        }
+
+        for i := 1; i < len(word); i++ {
+            prefix, suffix := word[:i], word[i:]
+            if (wordSet[prefix] && wordSet[suffix]) ||
+                (wordSet[prefix] && dfs(suffix)) {
+                dp[word] = true
+                dpSet[word] = true
+                return true
+            }
+        }
+        dp[word] = false
+        dpSet[word] = true
+        return false
+    }
+
+    var res []string
+    for _, w := range words {
+        if dfs(w) {
+            res = append(res, w)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAllConcatenatedWordsInADict(words: Array<String>): List<String> {
+        val wordSet = words.toHashSet()
+        val dp = mutableMapOf<String, Boolean>()
+
+        fun dfs(word: String): Boolean {
+            if (word in dp) {
+                return dp[word]!!
+            }
+
+            for (i in 1 until word.length) {
+                val prefix = word.substring(0, i)
+                val suffix = word.substring(i)
+                if ((prefix in wordSet && suffix in wordSet) ||
+                    (prefix in wordSet && dfs(suffix))) {
+                    dp[word] = true
+                    return true
+                }
+            }
+            dp[word] = false
+            return false
+        }
+
+        val res = mutableListOf<String>()
+        for (w in words) {
+            if (dfs(w)) {
+                res.add(w)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAllConcatenatedWordsInADict(_ words: [String]) -> [String] {
+        let wordSet = Set(words)
+        var dp = [String: Bool]()
+
+        func dfs(_ word: String) -> Bool {
+            if let val = dp[word] {
+                return val
+            }
+
+            for i in 1..<word.count {
+                let prefixEnd = word.index(word.startIndex, offsetBy: i)
+                let prefix = String(word[..<prefixEnd])
+                let suffix = String(word[prefixEnd...])
+                if (wordSet.contains(prefix) && wordSet.contains(suffix)) ||
+                    (wordSet.contains(prefix) && dfs(suffix)) {
+                    dp[word] = true
+                    return true
+                }
+            }
+            dp[word] = false
+            return false
+        }
+
+        var res = [String]()
+        for w in words {
+            if dfs(w) {
+                res.append(w)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -713,6 +1015,100 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func findAllConcatenatedWordsInADict(words []string) []string {
+    wordSet := make(map[string]bool)
+    for _, w := range words {
+        wordSet[w] = true
+    }
+
+    var res []string
+    for _, word := range words {
+        m := len(word)
+        dp := make([]bool, m+1)
+        dp[0] = true
+
+        for i := 1; i <= m; i++ {
+            for j := 0; j < i; j++ {
+                if j == 0 && i == m {
+                    continue
+                }
+                if dp[j] && wordSet[word[j:i]] {
+                    dp[i] = true
+                    break
+                }
+            }
+        }
+
+        if dp[m] {
+            res = append(res, word)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAllConcatenatedWordsInADict(words: Array<String>): List<String> {
+        val wordSet = words.toHashSet()
+        val res = mutableListOf<String>()
+
+        for (word in words) {
+            val m = word.length
+            val dp = BooleanArray(m + 1)
+            dp[0] = true
+
+            for (i in 1..m) {
+                for (j in 0 until i) {
+                    if (j == 0 && i == m) continue
+                    if (dp[j] && word.substring(j, i) in wordSet) {
+                        dp[i] = true
+                        break
+                    }
+                }
+            }
+
+            if (dp[m]) {
+                res.add(word)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAllConcatenatedWordsInADict(_ words: [String]) -> [String] {
+        let wordSet = Set(words)
+        var res = [String]()
+
+        for word in words {
+            let m = word.count
+            var dp = [Bool](repeating: false, count: m + 1)
+            dp[0] = true
+            let chars = Array(word)
+
+            for i in 1...m {
+                for j in 0..<i {
+                    if j == 0 && i == m { continue }
+                    if dp[j] && wordSet.contains(String(chars[j..<i])) {
+                        dp[i] = true
+                        break
+                    }
+                }
+            }
+
+            if dp[m] {
+                res.append(word)
+            }
+        }
+        return res
     }
 }
 ```

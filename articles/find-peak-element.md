@@ -69,6 +69,43 @@ public class Solution {
 }
 ```
 
+```go
+func findPeakElement(nums []int) int {
+    for i := 0; i < len(nums)-1; i++ {
+        if nums[i] > nums[i+1] {
+            return i
+        }
+    }
+    return len(nums) - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun findPeakElement(nums: IntArray): Int {
+        for (i in 0 until nums.size - 1) {
+            if (nums[i] > nums[i + 1]) {
+                return i
+            }
+        }
+        return nums.size - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findPeakElement(_ nums: [Int]) -> Int {
+        for i in 0..<nums.count - 1 {
+            if nums[i] > nums[i + 1] {
+                return i
+            }
+        }
+        return nums.count - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -185,6 +222,69 @@ public class Solution {
 }
 ```
 
+```go
+func findPeakElement(nums []int) int {
+    l, r := 0, len(nums)-1
+
+    for l <= r {
+        m := l + (r-l)/2
+        if m > 0 && nums[m] < nums[m-1] {
+            r = m - 1
+        } else if m < len(nums)-1 && nums[m] < nums[m+1] {
+            l = m + 1
+        } else {
+            return m
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findPeakElement(nums: IntArray): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            if (m > 0 && nums[m] < nums[m - 1]) {
+                r = m - 1
+            } else if (m < nums.size - 1 && nums[m] < nums[m + 1]) {
+                l = m + 1
+            } else {
+                return m
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findPeakElement(_ nums: [Int]) -> Int {
+        var l = 0
+        var r = nums.count - 1
+
+        while l <= r {
+            let m = l + (r - l) / 2
+            if m > 0 && nums[m] < nums[m - 1] {
+                r = m - 1
+            } else if m < nums.count - 1 && nums[m] < nums[m + 1] {
+                l = m + 1
+            } else {
+                return m
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,6 +395,63 @@ public class Solution {
 }
 ```
 
+```go
+func findPeakElement(nums []int) int {
+    var binarySearch func(l, r int) int
+    binarySearch = func(l, r int) int {
+        if l == r {
+            return l
+        }
+        m := l + (r-l)/2
+        if nums[m] > nums[m+1] {
+            return binarySearch(l, m)
+        }
+        return binarySearch(m+1, r)
+    }
+
+    return binarySearch(0, len(nums)-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun findPeakElement(nums: IntArray): Int {
+        fun binarySearch(l: Int, r: Int): Int {
+            if (l == r) {
+                return l
+            }
+            val m = l + (r - l) / 2
+            return if (nums[m] > nums[m + 1]) {
+                binarySearch(l, m)
+            } else {
+                binarySearch(m + 1, r)
+            }
+        }
+
+        return binarySearch(0, nums.size - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findPeakElement(_ nums: [Int]) -> Int {
+        func binarySearch(_ l: Int, _ r: Int) -> Int {
+            if l == r {
+                return l
+            }
+            let m = l + (r - l) / 2
+            if nums[m] > nums[m + 1] {
+                return binarySearch(l, m)
+            }
+            return binarySearch(m + 1, r)
+        }
+
+        return binarySearch(0, nums.count - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +556,63 @@ public class Solution {
             }
         }
         return l;
+    }
+}
+```
+
+```go
+func findPeakElement(nums []int) int {
+    l, r := 0, len(nums)-1
+
+    for l < r {
+        m := (l + r) >> 1
+        if nums[m] > nums[m+1] {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+
+    return l
+}
+```
+
+```kotlin
+class Solution {
+    fun findPeakElement(nums: IntArray): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l < r) {
+            val m = (l + r) shr 1
+            if (nums[m] > nums[m + 1]) {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func findPeakElement(_ nums: [Int]) -> Int {
+        var l = 0
+        var r = nums.count - 1
+
+        while l < r {
+            let m = (l + r) >> 1
+            if nums[m] > nums[m + 1] {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+
+        return l
     }
 }
 ```

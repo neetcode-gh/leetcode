@@ -88,6 +88,96 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string[] UncommonFromSentences(string s1, string s2) {
+        string[] words = (s1 + " " + s2).Split(' ');
+        Dictionary<string, int> count = new Dictionary<string, int>();
+
+        foreach (string w in words) {
+            if (count.ContainsKey(w)) {
+                count[w]++;
+            } else {
+                count[w] = 1;
+            }
+        }
+
+        List<string> res = new List<string>();
+        foreach (var entry in count) {
+            if (entry.Value == 1) {
+                res.Add(entry.Key);
+            }
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func uncommonFromSentences(s1 string, s2 string) []string {
+    words := strings.Split(s1 + " " + s2, " ")
+    count := make(map[string]int)
+
+    for _, w := range words {
+        count[w]++
+    }
+
+    res := []string{}
+    for w, c := range count {
+        if c == 1 {
+            res = append(res, w)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun uncommonFromSentences(s1: String, s2: String): Array<String> {
+        val words = "$s1 $s2".split(" ")
+        val count = mutableMapOf<String, Int>()
+
+        for (w in words) {
+            count[w] = count.getOrDefault(w, 0) + 1
+        }
+
+        val res = mutableListOf<String>()
+        for ((w, c) in count) {
+            if (c == 1) {
+                res.add(w)
+            }
+        }
+
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func uncommonFromSentences(_ s1: String, _ s2: String) -> [String] {
+        let words = (s1 + " " + s2).split(separator: " ").map { String($0) }
+        var count = [String: Int]()
+
+        for w in words {
+            count[w, default: 0] += 1
+        }
+
+        var res = [String]()
+        for (w, c) in count {
+            if c == 1 {
+                res.append(w)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -167,6 +257,75 @@ class Solution {
         }
 
         return [...count.entries()].filter(([_, c]) => c === 1).map(([w]) => w);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string[] UncommonFromSentences(string s1, string s2) {
+        string[] words = (s1 + " " + s2).Split(' ');
+        Dictionary<string, int> count = new Dictionary<string, int>();
+
+        foreach (string w in words) {
+            if (count.ContainsKey(w)) {
+                count[w]++;
+            } else {
+                count[w] = 1;
+            }
+        }
+
+        return count.Where(e => e.Value == 1)
+                    .Select(e => e.Key)
+                    .ToArray();
+    }
+}
+```
+
+```go
+func uncommonFromSentences(s1 string, s2 string) []string {
+    words := strings.Split(s1 + " " + s2, " ")
+    count := make(map[string]int)
+
+    for _, w := range words {
+        count[w]++
+    }
+
+    res := []string{}
+    for w, c := range count {
+        if c == 1 {
+            res = append(res, w)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun uncommonFromSentences(s1: String, s2: String): Array<String> {
+        val words = "$s1 $s2".split(" ")
+        val count = words.groupingBy { it }.eachCount()
+
+        return count.filter { it.value == 1 }
+                    .keys
+                    .toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func uncommonFromSentences(_ s1: String, _ s2: String) -> [String] {
+        let words = (s1 + " " + s2).split(separator: " ").map { String($0) }
+        var count = [String: Int]()
+
+        for w in words {
+            count[w, default: 0] += 1
+        }
+
+        return count.filter { $0.value == 1 }.map { $0.key }
     }
 }
 ```

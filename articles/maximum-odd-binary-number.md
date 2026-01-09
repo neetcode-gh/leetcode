@@ -85,6 +85,62 @@ class Solution {
 }
 ```
 
+```go
+func maximumOddBinaryNumber(s string) string {
+    arr := []byte(s)
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i] > arr[j]
+    })
+
+    n := len(arr)
+    i := n - 1
+    for i >= 0 && arr[i] == '0' {
+        i--
+    }
+
+    arr[i], arr[n-1] = arr[n-1], arr[i]
+    return string(arr)
+}
+```
+
+```kotlin
+class Solution {
+    fun maximumOddBinaryNumber(s: String): String {
+        val arr = s.toCharArray()
+        arr.sortDescending()
+
+        val n = arr.size
+        var i = n - 1
+        while (i >= 0 && arr[i] == '0') {
+            i--
+        }
+
+        val temp = arr[i]
+        arr[i] = arr[n - 1]
+        arr[n - 1] = temp
+
+        return String(arr)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximumOddBinaryNumber(_ s: String) -> String {
+        var arr = Array(s).sorted(by: >)
+        let n = arr.count
+        var i = n - 1
+
+        while i >= 0 && arr[i] == "0" {
+            i -= 1
+        }
+
+        arr.swapAt(i, n - 1)
+        return String(arr)
+    }
+}
+```
+
 ```csharp
 public class Solution {
     public string MaximumOddBinaryNumber(string s) {
@@ -176,6 +232,48 @@ class Solution {
         }
 
         return '1'.repeat(count - 1) + '0'.repeat(s.length - count) + '1';
+    }
+}
+```
+
+```go
+func maximumOddBinaryNumber(s string) string {
+    count := 0
+    for _, c := range s {
+        if c == '1' {
+            count++
+        }
+    }
+
+    return strings.Repeat("1", count-1) + strings.Repeat("0", len(s)-count) + "1"
+}
+```
+
+```kotlin
+class Solution {
+    fun maximumOddBinaryNumber(s: String): String {
+        var count = 0
+        for (c in s) {
+            if (c == '1') count++
+        }
+
+        return "1".repeat(count - 1) + "0".repeat(s.length - count) + "1"
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximumOddBinaryNumber(_ s: String) -> String {
+        var count = 0
+        for c in s {
+            if c == "1" {
+                count += 1
+            }
+        }
+
+        return String(repeating: "1", count: count - 1) +
+               String(repeating: "0", count: s.count - count) + "1"
     }
 }
 ```
@@ -287,6 +385,66 @@ class Solution {
             arr[left - 1],
         ];
         return arr.join('');
+    }
+}
+```
+
+```go
+func maximumOddBinaryNumber(s string) string {
+    arr := []byte(s)
+    left := 0
+
+    for i := 0; i < len(arr); i++ {
+        if arr[i] == '1' {
+            arr[left], arr[i] = arr[i], arr[left]
+            left++
+        }
+    }
+
+    arr[left-1], arr[len(arr)-1] = arr[len(arr)-1], arr[left-1]
+    return string(arr)
+}
+```
+
+```kotlin
+class Solution {
+    fun maximumOddBinaryNumber(s: String): String {
+        val arr = s.toCharArray()
+        var left = 0
+
+        for (i in arr.indices) {
+            if (arr[i] == '1') {
+                val temp = arr[left]
+                arr[left] = arr[i]
+                arr[i] = temp
+                left++
+            }
+        }
+
+        val temp = arr[left - 1]
+        arr[left - 1] = arr[arr.size - 1]
+        arr[arr.size - 1] = temp
+
+        return String(arr)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximumOddBinaryNumber(_ s: String) -> String {
+        var arr = Array(s)
+        var left = 0
+
+        for i in 0..<arr.count {
+            if arr[i] == "1" {
+                arr.swapAt(left, i)
+                left += 1
+            }
+        }
+
+        arr.swapAt(left - 1, arr.count - 1)
+        return String(arr)
     }
 }
 ```

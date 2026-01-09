@@ -109,6 +109,132 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int ROWS, COLS;
+    private int[][] grid;
+
+    public int CherryPickup(int[][] grid) {
+        this.grid = grid;
+        ROWS = grid.Length;
+        COLS = grid[0].Length;
+        return Dfs(0, 0, COLS - 1);
+    }
+
+    private int Dfs(int r, int c1, int c2) {
+        if (c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2) {
+            return 0;
+        }
+        if (r == ROWS - 1) {
+            return grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+        }
+
+        int res = 0;
+        for (int c1_d = -1; c1_d <= 1; c1_d++) {
+            for (int c2_d = -1; c2_d <= 1; c2_d++) {
+                res = Math.Max(res, Dfs(r + 1, c1 + c1_d, c2 + c2_d));
+            }
+        }
+        return res + grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+    }
+}
+```
+
+```go
+func cherryPickup(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+
+    var dfs func(r, c1, c2 int) int
+    dfs = func(r, c1, c2 int) int {
+        if c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2 {
+            return 0
+        }
+        if r == ROWS-1 {
+            if c1 == c2 {
+                return grid[r][c1]
+            }
+            return grid[r][c1] + grid[r][c2]
+        }
+
+        res := 0
+        for c1_d := -1; c1_d <= 1; c1_d++ {
+            for c2_d := -1; c2_d <= 1; c2_d++ {
+                res = max(res, dfs(r+1, c1+c1_d, c2+c2_d))
+            }
+        }
+        if c1 == c2 {
+            return res + grid[r][c1]
+        }
+        return res + grid[r][c1] + grid[r][c2]
+    }
+
+    return dfs(0, 0, COLS-1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+
+        fun dfs(r: Int, c1: Int, c2: Int): Int {
+            if (c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2) {
+                return 0
+            }
+            if (r == ROWS - 1) {
+                return grid[r][c1] + if (c1 == c2) 0 else grid[r][c2]
+            }
+
+            var res = 0
+            for (c1_d in -1..1) {
+                for (c2_d in -1..1) {
+                    res = maxOf(res, dfs(r + 1, c1 + c1_d, c2 + c2_d))
+                }
+            }
+            return res + grid[r][c1] + if (c1 == c2) 0 else grid[r][c2]
+        }
+
+        return dfs(0, 0, COLS - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+
+        func dfs(_ r: Int, _ c1: Int, _ c2: Int) -> Int {
+            if c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2 {
+                return 0
+            }
+            if r == ROWS - 1 {
+                return grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2])
+            }
+
+            var res = 0
+            for c1_d in -1...1 {
+                for c2_d in -1...1 {
+                    res = max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d))
+                }
+            }
+            return res + grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2])
+        }
+
+        return dfs(0, 0, COLS - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,6 +380,178 @@ class Solution {
         };
 
         return dfs(0, 0, COLS - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[,,] cache;
+    private int[][] grid;
+
+    public int CherryPickup(int[][] grid) {
+        this.grid = grid;
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        cache = new int[ROWS, COLS, COLS];
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                for (int k = 0; k < COLS; k++) {
+                    cache[i, j, k] = -1;
+                }
+            }
+        }
+        return Dfs(0, 0, COLS - 1, ROWS, COLS);
+    }
+
+    private int Dfs(int r, int c1, int c2, int ROWS, int COLS) {
+        if (Math.Min(c1, c2) < 0 || Math.Max(c1, c2) >= COLS) {
+            return 0;
+        }
+        if (cache[r, c1, c2] != -1) {
+            return cache[r, c1, c2];
+        }
+        if (r == ROWS - 1) {
+            return cache[r, c1, c2] = grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+        }
+
+        int res = 0;
+        for (int c1_d = -1; c1_d <= 1; c1_d++) {
+            for (int c2_d = -1; c2_d <= 1; c2_d++) {
+                res = Math.Max(res, Dfs(r + 1, c1 + c1_d, c2 + c2_d, ROWS, COLS));
+            }
+        }
+        return cache[r, c1, c2] = res + grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+    }
+}
+```
+
+```go
+func cherryPickup(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    cache := make([][][]int, ROWS)
+    for i := range cache {
+        cache[i] = make([][]int, COLS)
+        for j := range cache[i] {
+            cache[i][j] = make([]int, COLS)
+            for k := range cache[i][j] {
+                cache[i][j][k] = -1
+            }
+        }
+    }
+
+    var dfs func(r, c1, c2 int) int
+    dfs = func(r, c1, c2 int) int {
+        if min(c1, c2) < 0 || max(c1, c2) >= COLS {
+            return 0
+        }
+        if cache[r][c1][c2] != -1 {
+            return cache[r][c1][c2]
+        }
+        if r == ROWS-1 {
+            if c1 == c2 {
+                cache[r][c1][c2] = grid[r][c1]
+            } else {
+                cache[r][c1][c2] = grid[r][c1] + grid[r][c2]
+            }
+            return cache[r][c1][c2]
+        }
+
+        res := 0
+        for c1_d := -1; c1_d <= 1; c1_d++ {
+            for c2_d := -1; c2_d <= 1; c2_d++ {
+                res = max(res, dfs(r+1, c1+c1_d, c2+c2_d))
+            }
+        }
+        if c1 == c2 {
+            cache[r][c1][c2] = res + grid[r][c1]
+        } else {
+            cache[r][c1][c2] = res + grid[r][c1] + grid[r][c2]
+        }
+        return cache[r][c1][c2]
+    }
+
+    return dfs(0, 0, COLS-1)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        val cache = Array(ROWS) { Array(COLS) { IntArray(COLS) { -1 } } }
+
+        fun dfs(r: Int, c1: Int, c2: Int): Int {
+            if (minOf(c1, c2) < 0 || maxOf(c1, c2) >= COLS) {
+                return 0
+            }
+            if (cache[r][c1][c2] != -1) {
+                return cache[r][c1][c2]
+            }
+            if (r == ROWS - 1) {
+                cache[r][c1][c2] = grid[r][c1] + if (c1 == c2) 0 else grid[r][c2]
+                return cache[r][c1][c2]
+            }
+
+            var res = 0
+            for (c1_d in -1..1) {
+                for (c2_d in -1..1) {
+                    res = maxOf(res, dfs(r + 1, c1 + c1_d, c2 + c2_d))
+                }
+            }
+            cache[r][c1][c2] = res + grid[r][c1] + if (c1 == c2) 0 else grid[r][c2]
+            return cache[r][c1][c2]
+        }
+
+        return dfs(0, 0, COLS - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var cache = Array(repeating: Array(repeating: Array(repeating: -1, count: COLS), count: COLS), count: ROWS)
+
+        func dfs(_ r: Int, _ c1: Int, _ c2: Int) -> Int {
+            if min(c1, c2) < 0 || max(c1, c2) >= COLS {
+                return 0
+            }
+            if cache[r][c1][c2] != -1 {
+                return cache[r][c1][c2]
+            }
+            if r == ROWS - 1 {
+                cache[r][c1][c2] = grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2])
+                return cache[r][c1][c2]
+            }
+
+            var res = 0
+            for c1_d in -1...1 {
+                for c2_d in -1...1 {
+                    res = max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d))
+                }
+            }
+            cache[r][c1][c2] = res + grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2])
+            return cache[r][c1][c2]
+        }
+
+        return dfs(0, 0, COLS - 1)
     }
 }
 ```
@@ -428,6 +726,164 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CherryPickup(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int[,,] dp = new int[ROWS, COLS, COLS];
+
+        for (int r = ROWS - 1; r >= 0; r--) {
+            for (int c1 = 0; c1 < COLS; c1++) {
+                for (int c2 = 0; c2 < COLS; c2++) {
+                    int res = grid[r][c1];
+                    if (c1 != c2) {
+                        res += grid[r][c2];
+                    }
+
+                    if (r != ROWS - 1) {
+                        int maxCherries = 0;
+                        for (int d1 = -1; d1 <= 1; d1++) {
+                            for (int d2 = -1; d2 <= 1; d2++) {
+                                int nc1 = c1 + d1, nc2 = c2 + d2;
+                                if (nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS) {
+                                    maxCherries = Math.Max(maxCherries, dp[r + 1, nc1, nc2]);
+                                }
+                            }
+                        }
+                        res += maxCherries;
+                    }
+
+                    dp[r, c1, c2] = res;
+                }
+            }
+        }
+
+        return dp[0, 0, COLS - 1];
+    }
+}
+```
+
+```go
+func cherryPickup(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    dp := make([][][]int, ROWS)
+    for i := range dp {
+        dp[i] = make([][]int, COLS)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, COLS)
+        }
+    }
+
+    for r := ROWS - 1; r >= 0; r-- {
+        for c1 := 0; c1 < COLS; c1++ {
+            for c2 := 0; c2 < COLS; c2++ {
+                res := grid[r][c1]
+                if c1 != c2 {
+                    res += grid[r][c2]
+                }
+
+                if r != ROWS-1 {
+                    maxCherries := 0
+                    for d1 := -1; d1 <= 1; d1++ {
+                        for d2 := -1; d2 <= 1; d2++ {
+                            nc1, nc2 := c1+d1, c2+d2
+                            if nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS {
+                                if dp[r+1][nc1][nc2] > maxCherries {
+                                    maxCherries = dp[r+1][nc1][nc2]
+                                }
+                            }
+                        }
+                    }
+                    res += maxCherries
+                }
+
+                dp[r][c1][c2] = res
+            }
+        }
+    }
+
+    return dp[0][0][COLS-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        val dp = Array(ROWS) { Array(COLS) { IntArray(COLS) } }
+
+        for (r in ROWS - 1 downTo 0) {
+            for (c1 in 0 until COLS) {
+                for (c2 in 0 until COLS) {
+                    var res = grid[r][c1]
+                    if (c1 != c2) {
+                        res += grid[r][c2]
+                    }
+
+                    if (r != ROWS - 1) {
+                        var maxCherries = 0
+                        for (d1 in -1..1) {
+                            for (d2 in -1..1) {
+                                val nc1 = c1 + d1
+                                val nc2 = c2 + d2
+                                if (nc1 in 0 until COLS && nc2 in 0 until COLS) {
+                                    maxCherries = maxOf(maxCherries, dp[r + 1][nc1][nc2])
+                                }
+                            }
+                        }
+                        res += maxCherries
+                    }
+
+                    dp[r][c1][c2] = res
+                }
+            }
+        }
+
+        return dp[0][0][COLS - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var dp = Array(repeating: Array(repeating: Array(repeating: 0, count: COLS), count: COLS), count: ROWS)
+
+        for r in stride(from: ROWS - 1, through: 0, by: -1) {
+            for c1 in 0..<COLS {
+                for c2 in 0..<COLS {
+                    var res = grid[r][c1]
+                    if c1 != c2 {
+                        res += grid[r][c2]
+                    }
+
+                    if r != ROWS - 1 {
+                        var maxCherries = 0
+                        for d1 in -1...1 {
+                            for d2 in -1...1 {
+                                let nc1 = c1 + d1
+                                let nc2 = c2 + d2
+                                if nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS {
+                                    maxCherries = max(maxCherries, dp[r + 1][nc1][nc2])
+                                }
+                            }
+                        }
+                        res += maxCherries
+                    }
+
+                    dp[r][c1][c2] = res
+                }
+            }
+        }
+
+        return dp[0][0][COLS - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +1027,141 @@ class Solution {
         }
 
         return dp[0][COLS - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CherryPickup(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int[,] dp = new int[COLS, COLS];
+
+        for (int r = ROWS - 1; r >= 0; r--) {
+            int[,] cur_dp = new int[COLS, COLS];
+            for (int c1 = 0; c1 < COLS; c1++) {
+                for (int c2 = c1; c2 < COLS; c2++) {
+                    int maxCherries = 0;
+                    int cherries = grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2]);
+                    for (int d1 = -1; d1 <= 1; d1++) {
+                        for (int d2 = -1; d2 <= 1; d2++) {
+                            int nc1 = c1 + d1, nc2 = c2 + d2;
+                            if (nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS) {
+                                maxCherries = Math.Max(maxCherries, cherries + dp[nc1, nc2]);
+                            }
+                        }
+                    }
+                    cur_dp[c1, c2] = maxCherries;
+                }
+            }
+            dp = cur_dp;
+        }
+        return dp[0, COLS - 1];
+    }
+}
+```
+
+```go
+func cherryPickup(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    dp := make([][]int, COLS)
+    for i := range dp {
+        dp[i] = make([]int, COLS)
+    }
+
+    for r := ROWS - 1; r >= 0; r-- {
+        cur_dp := make([][]int, COLS)
+        for i := range cur_dp {
+            cur_dp[i] = make([]int, COLS)
+        }
+        for c1 := 0; c1 < COLS; c1++ {
+            for c2 := c1; c2 < COLS; c2++ {
+                maxCherries := 0
+                cherries := grid[r][c1]
+                if c1 != c2 {
+                    cherries += grid[r][c2]
+                }
+                for d1 := -1; d1 <= 1; d1++ {
+                    for d2 := -1; d2 <= 1; d2++ {
+                        nc1, nc2 := c1+d1, c2+d2
+                        if nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS {
+                            if cherries+dp[nc1][nc2] > maxCherries {
+                                maxCherries = cherries + dp[nc1][nc2]
+                            }
+                        }
+                    }
+                }
+                cur_dp[c1][c2] = maxCherries
+            }
+        }
+        dp = cur_dp
+    }
+
+    return dp[0][COLS-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        var dp = Array(COLS) { IntArray(COLS) }
+
+        for (r in ROWS - 1 downTo 0) {
+            val cur_dp = Array(COLS) { IntArray(COLS) }
+            for (c1 in 0 until COLS) {
+                for (c2 in c1 until COLS) {
+                    var maxCherries = 0
+                    val cherries = grid[r][c1] + if (c1 == c2) 0 else grid[r][c2]
+                    for (d1 in -1..1) {
+                        for (d2 in -1..1) {
+                            val nc1 = c1 + d1
+                            val nc2 = c2 + d2
+                            if (nc1 in 0 until COLS && nc2 in 0 until COLS) {
+                                maxCherries = maxOf(maxCherries, cherries + dp[nc1][nc2])
+                            }
+                        }
+                    }
+                    cur_dp[c1][c2] = maxCherries
+                }
+            }
+            dp = cur_dp
+        }
+        return dp[0][COLS - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var dp = Array(repeating: Array(repeating: 0, count: COLS), count: COLS)
+
+        for r in stride(from: ROWS - 1, through: 0, by: -1) {
+            var cur_dp = Array(repeating: Array(repeating: 0, count: COLS), count: COLS)
+            for c1 in 0..<COLS {
+                for c2 in c1..<COLS {
+                    var maxCherries = 0
+                    let cherries = grid[r][c1] + (c1 == c2 ? 0 : grid[r][c2])
+                    for d1 in -1...1 {
+                        for d2 in -1...1 {
+                            let nc1 = c1 + d1
+                            let nc2 = c2 + d2
+                            if nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS {
+                                maxCherries = max(maxCherries, cherries + dp[nc1][nc2])
+                            }
+                        }
+                    }
+                    cur_dp[c1][c2] = maxCherries
+                }
+            }
+            dp = cur_dp
+        }
+
+        return dp[0][COLS - 1]
     }
 }
 ```

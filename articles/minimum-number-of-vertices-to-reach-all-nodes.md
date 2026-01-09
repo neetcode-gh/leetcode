@@ -118,6 +118,134 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+        List<int>[] adj = new List<int>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+        }
+
+        HashSet<int> res = new HashSet<int>();
+        for (int i = 0; i < n; i++) res.Add(i);
+
+        bool[] visited = new bool[n];
+        for (int i = 0; i < n; i++) {
+            Dfs(i, adj, visited, res);
+        }
+        return new List<int>(res);
+    }
+
+    private void Dfs(int node, List<int>[] adj, bool[] visited, HashSet<int> res) {
+        visited[node] = true;
+        foreach (int nei in adj[node]) {
+            if (!visited[nei]) Dfs(nei, adj, visited, res);
+            res.Remove(nei);
+        }
+    }
+}
+```
+
+```go
+func findSmallestSetOfVertices(n int, edges [][]int) []int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+    }
+
+    res := make(map[int]bool)
+    for i := 0; i < n; i++ {
+        res[i] = true
+    }
+    visited := make([]bool, n)
+
+    var dfs func(node int)
+    dfs = func(node int) {
+        visited[node] = true
+        for _, nei := range adj[node] {
+            if !visited[nei] {
+                dfs(nei)
+            }
+            delete(res, nei)
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        if !visited[i] {
+            dfs(i)
+        }
+    }
+
+    result := []int{}
+    for k := range res {
+        result = append(result, k)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+        }
+
+        val res = (0 until n).toMutableSet()
+        val visited = BooleanArray(n)
+
+        fun dfs(node: Int) {
+            visited[node] = true
+            for (nei in adj[node]) {
+                if (!visited[nei]) dfs(nei)
+                res.remove(nei)
+            }
+        }
+
+        for (i in 0 until n) {
+            if (!visited[i]) dfs(i)
+        }
+        return res.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findSmallestSetOfVertices(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+        }
+
+        var res = Set(0..<n)
+        var visited = [Bool](repeating: false, count: n)
+
+        func dfs(_ node: Int) {
+            visited[node] = true
+            for nei in adj[node] {
+                if !visited[nei] {
+                    dfs(nei)
+                }
+                res.remove(nei)
+            }
+        }
+
+        for i in 0..<n {
+            if !visited[i] {
+                dfs(i)
+            }
+        }
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -274,6 +402,165 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+        List<int>[] adj = new List<int>[n];
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+        }
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+        }
+
+        bool[] res = new bool[n];
+        Array.Fill(res, true);
+        bool[] visited = new bool[n];
+        Stack<int> stack = new Stack<int>();
+
+        for (int i = 0; i < n; i++) {
+            if (!visited[i]) {
+                stack.Push(i);
+                while (stack.Count > 0) {
+                    int node = stack.Pop();
+                    if (visited[node]) continue;
+                    visited[node] = true;
+                    foreach (int nei in adj[node]) {
+                        if (!visited[nei]) stack.Push(nei);
+                        res[nei] = false;
+                    }
+                }
+            }
+        }
+
+        List<int> result = new List<int>();
+        for (int i = 0; i < n; i++) {
+            if (res[i]) result.Add(i);
+        }
+        return result;
+    }
+}
+```
+
+```go
+func findSmallestSetOfVertices(n int, edges [][]int) []int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+    }
+
+    res := make([]bool, n)
+    for i := range res {
+        res[i] = true
+    }
+    visited := make([]bool, n)
+    stack := []int{}
+
+    for i := 0; i < n; i++ {
+        if !visited[i] {
+            stack = append(stack, i)
+            for len(stack) > 0 {
+                node := stack[len(stack)-1]
+                stack = stack[:len(stack)-1]
+                if visited[node] {
+                    continue
+                }
+                visited[node] = true
+                for _, nei := range adj[node] {
+                    if !visited[nei] {
+                        stack = append(stack, nei)
+                    }
+                    res[nei] = false
+                }
+            }
+        }
+    }
+
+    result := []int{}
+    for i := 0; i < n; i++ {
+        if res[i] {
+            result = append(result, i)
+        }
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+        }
+
+        val res = BooleanArray(n) { true }
+        val visited = BooleanArray(n)
+        val stack = ArrayDeque<Int>()
+
+        for (i in 0 until n) {
+            if (!visited[i]) {
+                stack.addLast(i)
+                while (stack.isNotEmpty()) {
+                    val node = stack.removeLast()
+                    if (visited[node]) continue
+                    visited[node] = true
+                    for (nei in adj[node]) {
+                        if (!visited[nei]) stack.addLast(nei)
+                        res[nei] = false
+                    }
+                }
+            }
+        }
+
+        return res.indices.filter { res[it] }
+    }
+}
+```
+
+```swift
+class Solution {
+    func findSmallestSetOfVertices(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+        }
+
+        var res = [Bool](repeating: true, count: n)
+        var visited = [Bool](repeating: false, count: n)
+        var stack = [Int]()
+
+        for i in 0..<n {
+            if !visited[i] {
+                stack.append(i)
+                while !stack.isEmpty {
+                    let node = stack.removeLast()
+                    if visited[node] { continue }
+                    visited[node] = true
+                    for nei in adj[node] {
+                        if !visited[nei] {
+                            stack.append(nei)
+                        }
+                        res[nei] = false
+                    }
+                }
+            }
+        }
+
+        var result = [Int]()
+        for i in 0..<n {
+            if res[i] {
+                result.append(i)
+            }
+        }
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,6 +657,86 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+        List<int>[] incoming = new List<int>[n];
+        for (int i = 0; i < n; i++) {
+            incoming[i] = new List<int>();
+        }
+        foreach (var edge in edges) {
+            incoming[edge[1]].Add(edge[0]);
+        }
+
+        List<int> res = new List<int>();
+        for (int i = 0; i < n; i++) {
+            if (incoming[i].Count == 0) {
+                res.Add(i);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findSmallestSetOfVertices(n int, edges [][]int) []int {
+    incoming := make([][]int, n)
+    for i := range incoming {
+        incoming[i] = []int{}
+    }
+    for _, edge := range edges {
+        incoming[edge[1]] = append(incoming[edge[1]], edge[0])
+    }
+
+    res := []int{}
+    for i := 0; i < n; i++ {
+        if len(incoming[i]) == 0 {
+            res = append(res, i)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+        val incoming = Array(n) { mutableListOf<Int>() }
+        for (edge in edges) {
+            incoming[edge[1]].add(edge[0])
+        }
+
+        val res = mutableListOf<Int>()
+        for (i in 0 until n) {
+            if (incoming[i].isEmpty()) {
+                res.add(i)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findSmallestSetOfVertices(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        var incoming = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            incoming[edge[1]].append(edge[0])
+        }
+
+        var res = [Int]()
+        for i in 0..<n {
+            if incoming[i].isEmpty {
+                res.append(i)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,6 +818,80 @@ class Solution {
             if (!indegree[i]) res.push(i);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> FindSmallestSetOfVertices(int n, IList<IList<int>> edges) {
+        bool[] indegree = new bool[n];
+        foreach (var edge in edges) {
+            indegree[edge[1]] = true;
+        }
+
+        List<int> res = new List<int>();
+        for (int i = 0; i < n; i++) {
+            if (!indegree[i]) {
+                res.Add(i);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findSmallestSetOfVertices(n int, edges [][]int) []int {
+    indegree := make([]bool, n)
+    for _, edge := range edges {
+        indegree[edge[1]] = true
+    }
+
+    res := []int{}
+    for i := 0; i < n; i++ {
+        if !indegree[i] {
+            res = append(res, i)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findSmallestSetOfVertices(n: Int, edges: List<List<Int>>): List<Int> {
+        val indegree = BooleanArray(n)
+        for (edge in edges) {
+            indegree[edge[1]] = true
+        }
+
+        val res = mutableListOf<Int>()
+        for (i in 0 until n) {
+            if (!indegree[i]) {
+                res.add(i)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findSmallestSetOfVertices(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        var indegree = [Bool](repeating: false, count: n)
+        for edge in edges {
+            indegree[edge[1]] = true
+        }
+
+        var res = [Int]()
+        for i in 0..<n {
+            if !indegree[i] {
+                res.append(i)
+            }
+        }
+        return res
     }
 }
 ```

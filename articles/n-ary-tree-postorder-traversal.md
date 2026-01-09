@@ -175,6 +175,91 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Children []*Node
+ * }
+ */
+
+func postorder(root *Node) []int {
+    res := []int{}
+
+    var dfs func(node *Node)
+    dfs = func(node *Node) {
+        if node == nil {
+            return
+        }
+        for _, child := range node.Children {
+            dfs(child)
+        }
+        res = append(res, node.Val)
+    }
+
+    dfs(root)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Definition for a Node.
+ * class Node(var `val`: Int) {
+ *     var children: List<Node?> = listOf()
+ * }
+ */
+
+class Solution {
+    fun postorder(root: Node?): List<Int> {
+        val res = mutableListOf<Int>()
+
+        fun dfs(node: Node?) {
+            if (node == null) return
+            for (child in node.children) {
+                dfs(child)
+            }
+            res.add(node.`val`)
+        }
+
+        dfs(root)
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var children: [Node]
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.children = []
+ *     }
+ * }
+ */
+
+class Solution {
+    func postorder(_ root: Node?) -> [Int] {
+        var res = [Int]()
+
+        func dfs(_ node: Node?) {
+            guard let node = node else { return }
+            for child in node.children {
+                dfs(child)
+            }
+            res.append(node.val)
+        }
+
+        dfs(root)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +478,118 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Children []*Node
+ * }
+ */
+
+func postorder(root *Node) []int {
+    res := []int{}
+    if root == nil {
+        return res
+    }
+
+    type pair struct {
+        node    *Node
+        visited bool
+    }
+
+    stack := []pair{{root, false}}
+
+    for len(stack) > 0 {
+        p := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        if p.visited {
+            res = append(res, p.node.Val)
+        } else {
+            stack = append(stack, pair{p.node, true})
+            for i := len(p.node.Children) - 1; i >= 0; i-- {
+                stack = append(stack, pair{p.node.Children[i], false})
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Definition for a Node.
+ * class Node(var `val`: Int) {
+ *     var children: List<Node?> = listOf()
+ * }
+ */
+
+class Solution {
+    fun postorder(root: Node?): List<Int> {
+        val res = mutableListOf<Int>()
+        if (root == null) return res
+
+        val stack = ArrayDeque<Pair<Node, Boolean>>()
+        stack.addLast(Pair(root, false))
+
+        while (stack.isNotEmpty()) {
+            val (node, visited) = stack.removeLast()
+
+            if (visited) {
+                res.add(node.`val`)
+            } else {
+                stack.addLast(Pair(node, true))
+                for (i in node.children.size - 1 downTo 0) {
+                    node.children[i]?.let { stack.addLast(Pair(it, false)) }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var children: [Node]
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.children = []
+ *     }
+ * }
+ */
+
+class Solution {
+    func postorder(_ root: Node?) -> [Int] {
+        var res = [Int]()
+        guard let root = root else { return res }
+
+        var stack: [(Node, Bool)] = [(root, false)]
+
+        while !stack.isEmpty {
+            let (node, visited) = stack.removeLast()
+
+            if visited {
+                res.append(node.val)
+            } else {
+                stack.append((node, true))
+                for i in stride(from: node.children.count - 1, through: 0, by: -1) {
+                    stack.append((node.children[i], false))
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

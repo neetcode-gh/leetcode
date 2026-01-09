@@ -67,6 +67,68 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumTrees(int n) {
+        if (n <= 1) {
+            return 1;
+        }
+
+        int res = 0;
+        for (int i = 1; i <= n; i++) {
+            res += NumTrees(i - 1) * NumTrees(n - i);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func numTrees(n int) int {
+    if n <= 1 {
+        return 1
+    }
+
+    res := 0
+    for i := 1; i <= n; i++ {
+        res += numTrees(i-1) * numTrees(n-i)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numTrees(n: Int): Int {
+        if (n <= 1) {
+            return 1
+        }
+
+        var res = 0
+        for (i in 1..n) {
+            res += numTrees(i - 1) * numTrees(n - i)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numTrees(_ n: Int) -> Int {
+        if n <= 1 {
+            return 1
+        }
+
+        var res = 0
+        for i in 1...n {
+            res += numTrees(i - 1) * numTrees(n - i)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -177,6 +239,99 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> dp = new Dictionary<int, int>();
+
+    public int NumTrees(int n) {
+        if (n <= 1) {
+            return 1;
+        }
+        if (dp.ContainsKey(n)) {
+            return dp[n];
+        }
+
+        int res = 0;
+        for (int i = 1; i <= n; i++) {
+            res += NumTrees(i - 1) * NumTrees(n - i);
+        }
+
+        dp[n] = res;
+        return res;
+    }
+}
+```
+
+```go
+func numTrees(n int) int {
+    dp := make(map[int]int)
+
+    var helper func(n int) int
+    helper = func(n int) int {
+        if n <= 1 {
+            return 1
+        }
+        if val, ok := dp[n]; ok {
+            return val
+        }
+
+        res := 0
+        for i := 1; i <= n; i++ {
+            res += helper(i-1) * helper(n-i)
+        }
+
+        dp[n] = res
+        return res
+    }
+
+    return helper(n)
+}
+```
+
+```kotlin
+class Solution {
+    private val dp = HashMap<Int, Int>()
+
+    fun numTrees(n: Int): Int {
+        if (n <= 1) {
+            return 1
+        }
+        dp[n]?.let { return it }
+
+        var res = 0
+        for (i in 1..n) {
+            res += numTrees(i - 1) * numTrees(n - i)
+        }
+
+        dp[n] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp = [Int: Int]()
+
+    func numTrees(_ n: Int) -> Int {
+        if n <= 1 {
+            return 1
+        }
+        if let val = dp[n] {
+            return val
+        }
+
+        var res = 0
+        for i in 1...n {
+            res += numTrees(i - 1) * numTrees(n - i)
+        }
+
+        dp[n] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,6 +428,89 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumTrees(int n) {
+        int[] numTree = new int[n + 1];
+        numTree[0] = 1;
+        numTree[1] = 1;
+
+        for (int nodes = 2; nodes <= n; nodes++) {
+            int total = 0;
+            for (int root = 1; root <= nodes; root++) {
+                int left = root - 1;
+                int right = nodes - root;
+                total += numTree[left] * numTree[right];
+            }
+            numTree[nodes] = total;
+        }
+
+        return numTree[n];
+    }
+}
+```
+
+```go
+func numTrees(n int) int {
+    numTree := make([]int, n+1)
+    for i := range numTree {
+        numTree[i] = 1
+    }
+
+    for nodes := 2; nodes <= n; nodes++ {
+        total := 0
+        for root := 1; root <= nodes; root++ {
+            left := root - 1
+            right := nodes - root
+            total += numTree[left] * numTree[right]
+        }
+        numTree[nodes] = total
+    }
+
+    return numTree[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun numTrees(n: Int): Int {
+        val numTree = IntArray(n + 1) { 1 }
+
+        for (nodes in 2..n) {
+            var total = 0
+            for (root in 1..nodes) {
+                val left = root - 1
+                val right = nodes - root
+                total += numTree[left] * numTree[right]
+            }
+            numTree[nodes] = total
+        }
+
+        return numTree[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numTrees(_ n: Int) -> Int {
+        var numTree = [Int](repeating: 1, count: n + 1)
+
+        for nodes in 2...n {
+            var total = 0
+            for root in 1...nodes {
+                let left = root - 1
+                let right = nodes - root
+                total += numTree[left] * numTree[right]
+            }
+            numTree[nodes] = total
+        }
+
+        return numTree[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -340,6 +578,56 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumTrees(int n) {
+        long res = 1;
+        for (int i = 1; i < n; i++) {
+            res *= (n + i + 1);
+            res /= i;
+        }
+        return (int)(res / n);
+    }
+}
+```
+
+```go
+func numTrees(n int) int {
+    res := int64(1)
+    for i := 1; i < n; i++ {
+        res *= int64(n + i + 1)
+        res /= int64(i)
+    }
+    return int(res / int64(n))
+}
+```
+
+```kotlin
+class Solution {
+    fun numTrees(n: Int): Int {
+        var res = 1L
+        for (i in 1 until n) {
+            res *= (n + i + 1)
+            res /= i
+        }
+        return (res / n).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numTrees(_ n: Int) -> Int {
+        var res: Int64 = 1
+        for i in 1..<n {
+            res *= Int64(n + i + 1)
+            res /= Int64(i)
+        }
+        return Int(res / Int64(n))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +687,52 @@ class Solution {
             res *= (4 * i + 2) / (i + 2);
         }
         return Math.floor(res);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumTrees(int n) {
+        long res = 1;
+        for (int i = 0; i < n; i++) {
+            res *= (4 * i + 2) / (i + 2.0);
+        }
+        return (int)res;
+    }
+}
+```
+
+```go
+func numTrees(n int) int {
+    res := 1.0
+    for i := 0; i < n; i++ {
+        res *= float64(4*i+2) / float64(i+2)
+    }
+    return int(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun numTrees(n: Int): Int {
+        var res = 1L
+        for (i in 0 until n) {
+            res = (res * (4 * i + 2) / (i + 2.0)).toLong()
+        }
+        return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numTrees(_ n: Int) -> Int {
+        var res = 1.0
+        for i in 0..<n {
+            res *= Double(4 * i + 2) / Double(i + 2)
+        }
+        return Int(res)
     }
 }
 ```

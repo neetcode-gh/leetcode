@@ -74,6 +74,79 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxLengthBetweenEqualCharacters(string s) {
+        int n = s.Length;
+        int res = -1;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (s[i] == s[j]) {
+                    res = Math.Max(res, j - i - 1);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxLengthBetweenEqualCharacters(s string) int {
+    n := len(s)
+    res := -1
+
+    for i := 0; i < n; i++ {
+        for j := i + 1; j < n; j++ {
+            if s[i] == s[j] {
+                if j-i-1 > res {
+                    res = j - i - 1
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxLengthBetweenEqualCharacters(s: String): Int {
+        val n = s.length
+        var res = -1
+
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                if (s[i] == s[j]) {
+                    res = maxOf(res, j - i - 1)
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxLengthBetweenEqualCharacters(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var res = -1
+
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                if chars[i] == chars[j] {
+                    res = max(res, j - i - 1)
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +256,105 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxLengthBetweenEqualCharacters(string s) {
+        Dictionary<char, int> firstIdx = new Dictionary<char, int>();
+        Dictionary<char, int> lastIdx = new Dictionary<char, int>();
+        int res = -1;
+
+        for (int i = 0; i < s.Length; i++) {
+            char c = s[i];
+            if (!firstIdx.ContainsKey(c)) {
+                firstIdx[c] = i;
+            } else {
+                lastIdx[c] = i;
+            }
+        }
+
+        foreach (char c in lastIdx.Keys) {
+            res = Math.Max(res, lastIdx[c] - firstIdx[c] - 1);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func maxLengthBetweenEqualCharacters(s string) int {
+    firstIdx := make(map[byte]int)
+    lastIdx := make(map[byte]int)
+    res := -1
+
+    for i := 0; i < len(s); i++ {
+        c := s[i]
+        if _, ok := firstIdx[c]; !ok {
+            firstIdx[c] = i
+        } else {
+            lastIdx[c] = i
+        }
+    }
+
+    for c := range lastIdx {
+        if lastIdx[c]-firstIdx[c]-1 > res {
+            res = lastIdx[c] - firstIdx[c] - 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxLengthBetweenEqualCharacters(s: String): Int {
+        val firstIdx = mutableMapOf<Char, Int>()
+        val lastIdx = mutableMapOf<Char, Int>()
+        var res = -1
+
+        for (i in s.indices) {
+            val c = s[i]
+            if (c !in firstIdx) {
+                firstIdx[c] = i
+            } else {
+                lastIdx[c] = i
+            }
+        }
+
+        for (c in lastIdx.keys) {
+            res = maxOf(res, lastIdx[c]!! - firstIdx[c]!! - 1)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxLengthBetweenEqualCharacters(_ s: String) -> Int {
+        var firstIdx = [Character: Int]()
+        var lastIdx = [Character: Int]()
+        var res = -1
+
+        for (i, c) in s.enumerated() {
+            if firstIdx[c] == nil {
+                firstIdx[c] = i
+            } else {
+                lastIdx[c] = i
+            }
+        }
+
+        for c in lastIdx.keys {
+            res = max(res, lastIdx[c]! - firstIdx[c]! - 1)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -270,6 +442,85 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxLengthBetweenEqualCharacters(string s) {
+        Dictionary<char, int> charIndex = new Dictionary<char, int>();
+        int res = -1;
+
+        for (int i = 0; i < s.Length; i++) {
+            char c = s[i];
+            if (charIndex.ContainsKey(c)) {
+                res = Math.Max(res, i - charIndex[c] - 1);
+            } else {
+                charIndex[c] = i;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func maxLengthBetweenEqualCharacters(s string) int {
+    charIndex := make(map[byte]int)
+    res := -1
+
+    for i := 0; i < len(s); i++ {
+        c := s[i]
+        if idx, ok := charIndex[c]; ok {
+            if i-idx-1 > res {
+                res = i - idx - 1
+            }
+        } else {
+            charIndex[c] = i
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxLengthBetweenEqualCharacters(s: String): Int {
+        val charIndex = mutableMapOf<Char, Int>()
+        var res = -1
+
+        for (i in s.indices) {
+            val c = s[i]
+            if (c in charIndex) {
+                res = maxOf(res, i - charIndex[c]!! - 1)
+            } else {
+                charIndex[c] = i
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxLengthBetweenEqualCharacters(_ s: String) -> Int {
+        var charIndex = [Character: Int]()
+        var res = -1
+
+        for (i, c) in s.enumerated() {
+            if let idx = charIndex[c] {
+                res = max(res, i - idx - 1)
+            } else {
+                charIndex[c] = i
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -368,6 +619,91 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxLengthBetweenEqualCharacters(string s) {
+        int[] firstIdx = new int[26];
+        Array.Fill(firstIdx, -1);
+        int res = -1;
+
+        for (int i = 0; i < s.Length; i++) {
+            int j = s[i] - 'a';
+            if (firstIdx[j] != -1) {
+                res = Math.Max(res, i - firstIdx[j] - 1);
+            } else {
+                firstIdx[j] = i;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func maxLengthBetweenEqualCharacters(s string) int {
+    firstIdx := make([]int, 26)
+    for i := range firstIdx {
+        firstIdx[i] = -1
+    }
+    res := -1
+
+    for i := 0; i < len(s); i++ {
+        j := int(s[i] - 'a')
+        if firstIdx[j] != -1 {
+            if i-firstIdx[j]-1 > res {
+                res = i - firstIdx[j] - 1
+            }
+        } else {
+            firstIdx[j] = i
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxLengthBetweenEqualCharacters(s: String): Int {
+        val firstIdx = IntArray(26) { -1 }
+        var res = -1
+
+        for (i in s.indices) {
+            val j = s[i] - 'a'
+            if (firstIdx[j] != -1) {
+                res = maxOf(res, i - firstIdx[j] - 1)
+            } else {
+                firstIdx[j] = i
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxLengthBetweenEqualCharacters(_ s: String) -> Int {
+        var firstIdx = [Int](repeating: -1, count: 26)
+        var res = -1
+        let aAscii = Character("a").asciiValue!
+
+        for (i, c) in s.enumerated() {
+            let j = Int(c.asciiValue! - aAscii)
+            if firstIdx[j] != -1 {
+                res = max(res, i - firstIdx[j] - 1)
+            } else {
+                firstIdx[j] = i
+            }
+        }
+
+        return res
     }
 }
 ```

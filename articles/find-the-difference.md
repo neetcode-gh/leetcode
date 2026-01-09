@@ -92,6 +92,70 @@ public class Solution {
 }
 ```
 
+```go
+func findTheDifference(s string, t string) byte {
+    countS := make([]int, 26)
+    countT := make([]int, 26)
+
+    for _, c := range s {
+        countS[c-'a']++
+    }
+    for _, c := range t {
+        countT[c-'a']++
+    }
+
+    for i := 0; i < 26; i++ {
+        if countT[i] > countS[i] {
+            return byte('a' + i)
+        }
+    }
+    return ' '
+}
+```
+
+```kotlin
+class Solution {
+    fun findTheDifference(s: String, t: String): Char {
+        val countS = IntArray(26)
+        val countT = IntArray(26)
+
+        for (c in s) countS[c - 'a']++
+        for (c in t) countT[c - 'a']++
+
+        for (i in 0 until 26) {
+            if (countT[i] > countS[i]) {
+                return ('a' + i)
+            }
+        }
+        return ' '
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTheDifference(_ s: String, _ t: String) -> Character {
+        var countS = [Int](repeating: 0, count: 26)
+        var countT = [Int](repeating: 0, count: 26)
+        let aValue = Character("a").asciiValue!
+
+        for c in s {
+            countS[Int(c.asciiValue! - aValue)] += 1
+        }
+        for c in t {
+            countT[Int(c.asciiValue! - aValue)] += 1
+        }
+
+        for i in 0..<26 {
+            if countT[i] > countS[i] {
+                return Character(UnicodeScalar(Int(aValue) + i)!)
+            }
+        }
+        return " "
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -194,6 +258,67 @@ public class Solution {
 }
 ```
 
+```go
+func findTheDifference(s string, t string) byte {
+    count := make([]int, 26)
+
+    for _, c := range t {
+        count[c-'a']++
+    }
+    for _, c := range s {
+        count[c-'a']--
+    }
+
+    for i := 0; i < 26; i++ {
+        if count[i] == 1 {
+            return byte('a' + i)
+        }
+    }
+    return ' '
+}
+```
+
+```kotlin
+class Solution {
+    fun findTheDifference(s: String, t: String): Char {
+        val count = IntArray(26)
+
+        for (c in t) count[c - 'a']++
+        for (c in s) count[c - 'a']--
+
+        for (i in 0 until 26) {
+            if (count[i] == 1) {
+                return ('a' + i)
+            }
+        }
+        return ' '
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTheDifference(_ s: String, _ t: String) -> Character {
+        var count = [Int](repeating: 0, count: 26)
+        let aValue = Character("a").asciiValue!
+
+        for c in t {
+            count[Int(c.asciiValue! - aValue)] += 1
+        }
+        for c in s {
+            count[Int(c.asciiValue! - aValue)] -= 1
+        }
+
+        for i in 0..<26 {
+            if count[i] == 1 {
+                return Character(UnicodeScalar(Int(aValue) + i)!)
+            }
+        }
+        return " "
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,6 +409,56 @@ public class Solution {
             }
         }
         return tArr[tArr.Length - 1];
+    }
+}
+```
+
+```go
+import "sort"
+
+func findTheDifference(s string, t string) byte {
+    sArr := []byte(s)
+    tArr := []byte(t)
+    sort.Slice(sArr, func(i, j int) bool { return sArr[i] < sArr[j] })
+    sort.Slice(tArr, func(i, j int) bool { return tArr[i] < tArr[j] })
+
+    for i := 0; i < len(sArr); i++ {
+        if sArr[i] != tArr[i] {
+            return tArr[i]
+        }
+    }
+    return tArr[len(tArr)-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun findTheDifference(s: String, t: String): Char {
+        val sArr = s.toCharArray().sortedArray()
+        val tArr = t.toCharArray().sortedArray()
+
+        for (i in sArr.indices) {
+            if (sArr[i] != tArr[i]) {
+                return tArr[i]
+            }
+        }
+        return tArr[tArr.size - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTheDifference(_ s: String, _ t: String) -> Character {
+        let sArr = s.sorted()
+        let tArr = t.sorted()
+
+        for i in 0..<sArr.count {
+            if sArr[i] != tArr[i] {
+                return tArr[i]
+            }
+        }
+        return tArr[tArr.count - 1]
     }
 }
 ```
@@ -379,6 +554,50 @@ public class Solution {
 }
 ```
 
+```go
+func findTheDifference(s string, t string) byte {
+    sumS, sumT := 0, 0
+    for _, c := range s {
+        sumS += int(c)
+    }
+    for _, c := range t {
+        sumT += int(c)
+    }
+    return byte(sumT - sumS)
+}
+```
+
+```kotlin
+class Solution {
+    fun findTheDifference(s: String, t: String): Char {
+        var sumS = 0
+        var sumT = 0
+        for (c in s) {
+            sumS += c.code
+        }
+        for (c in t) {
+            sumT += c.code
+        }
+        return (sumT - sumS).toChar()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTheDifference(_ s: String, _ t: String) -> Character {
+        var sumS = 0, sumT = 0
+        for c in s {
+            sumS += Int(c.asciiValue!)
+        }
+        for c in t {
+            sumT += Int(c.asciiValue!)
+        }
+        return Character(UnicodeScalar(sumT - sumS)!)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +688,49 @@ public class Solution {
 }
 ```
 
+```go
+func findTheDifference(s string, t string) byte {
+    res := 0
+    for _, c := range s {
+        res -= int(c)
+    }
+    for _, c := range t {
+        res += int(c)
+    }
+    return byte(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun findTheDifference(s: String, t: String): Char {
+        var res = 0
+        for (c in s) {
+            res -= c.code
+        }
+        for (c in t) {
+            res += c.code
+        }
+        return res.toChar()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTheDifference(_ s: String, _ t: String) -> Character {
+        var res = 0
+        for c in s {
+            res -= Int(c.asciiValue!)
+        }
+        for c in t {
+            res += Int(c.asciiValue!)
+        }
+        return Character(UnicodeScalar(res)!)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,6 +817,49 @@ public class Solution {
             res ^= t[i];
         }
         return (char)res;
+    }
+}
+```
+
+```go
+func findTheDifference(s string, t string) byte {
+    res := 0
+    for _, c := range s {
+        res ^= int(c)
+    }
+    for _, c := range t {
+        res ^= int(c)
+    }
+    return byte(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun findTheDifference(s: String, t: String): Char {
+        var res = 0
+        for (c in s) {
+            res = res xor c.code
+        }
+        for (c in t) {
+            res = res xor c.code
+        }
+        return res.toChar()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTheDifference(_ s: String, _ t: String) -> Character {
+        var res = 0
+        for c in s {
+            res ^= Int(c.asciiValue!)
+        }
+        for c in t {
+            res ^= Int(c.asciiValue!)
+        }
+        return Character(UnicodeScalar(res)!)
     }
 }
 ```

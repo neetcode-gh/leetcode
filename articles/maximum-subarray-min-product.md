@@ -78,6 +78,71 @@ class Solution {
 }
 ```
 
+```go
+func maxSumMinProduct(nums []int) int {
+    res := int64(0)
+    MOD := int64(1000000007)
+
+    for i := 0; i < len(nums); i++ {
+        totalSum := int64(0)
+        mini := int64(math.MaxInt64)
+        for j := i; j < len(nums); j++ {
+            if int64(nums[j]) < mini {
+                mini = int64(nums[j])
+            }
+            totalSum += int64(nums[j])
+            cur := (mini * totalSum) % MOD
+            if cur > res {
+                res = cur
+            }
+        }
+    }
+    return int(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumMinProduct(nums: IntArray): Int {
+        var res = 0L
+        val MOD = 1000000007L
+
+        for (i in nums.indices) {
+            var totalSum = 0L
+            var mini = Long.MAX_VALUE
+            for (j in i until nums.size) {
+                mini = minOf(mini, nums[j].toLong())
+                totalSum += nums[j]
+                val cur = (mini * totalSum) % MOD
+                res = maxOf(res, cur)
+            }
+        }
+        return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumMinProduct(_ nums: [Int]) -> Int {
+        var res: Int64 = 0
+        let MOD: Int64 = 1000000007
+
+        for i in 0..<nums.count {
+            var totalSum: Int64 = 0
+            var mini: Int64 = Int64.max
+            for j in i..<nums.count {
+                mini = min(mini, Int64(nums[j]))
+                totalSum += Int64(nums[j])
+                let cur = (mini * totalSum) % MOD
+                res = max(res, cur)
+            }
+        }
+        return Int(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -205,6 +270,100 @@ class Solution {
         };
 
         return Number(rec(0, nums.length - 1) % BigInt(MOD));
+    }
+}
+```
+
+```go
+func maxSumMinProduct(nums []int) int {
+    MOD := int64(1e9 + 7)
+
+    var rec func(l, r int) int64
+    rec = func(l, r int) int64 {
+        if l > r {
+            return 0
+        }
+
+        minIdx := l
+        var totalSum int64 = 0
+        for i := l; i <= r; i++ {
+            totalSum += int64(nums[i])
+            if nums[i] < nums[minIdx] {
+                minIdx = i
+            }
+        }
+
+        cur := totalSum * int64(nums[minIdx])
+        left := rec(l, minIdx-1)
+        right := rec(minIdx+1, r)
+
+        if left > cur {
+            cur = left
+        }
+        if right > cur {
+            cur = right
+        }
+        return cur
+    }
+
+    return int(rec(0, len(nums)-1) % MOD)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumMinProduct(nums: IntArray): Int {
+        val MOD = 1_000_000_007L
+
+        fun rec(l: Int, r: Int): Long {
+            if (l > r) return 0L
+
+            var minIdx = l
+            var totalSum = 0L
+            for (i in l..r) {
+                totalSum += nums[i]
+                if (nums[i] < nums[minIdx]) {
+                    minIdx = i
+                }
+            }
+
+            var cur = totalSum * nums[minIdx]
+            val left = rec(l, minIdx - 1)
+            val right = rec(minIdx + 1, r)
+
+            return maxOf(cur, left, right)
+        }
+
+        return (rec(0, nums.size - 1) % MOD).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumMinProduct(_ nums: [Int]) -> Int {
+        let MOD: Int64 = 1_000_000_007
+
+        func rec(_ l: Int, _ r: Int) -> Int64 {
+            if l > r { return 0 }
+
+            var minIdx = l
+            var totalSum: Int64 = 0
+            for i in l...r {
+                totalSum += Int64(nums[i])
+                if nums[i] < nums[minIdx] {
+                    minIdx = i
+                }
+            }
+
+            var cur = totalSum * Int64(nums[minIdx])
+            let left = rec(l, minIdx - 1)
+            let right = rec(minIdx + 1, r)
+
+            return max(cur, max(left, right))
+        }
+
+        return Int(rec(0, nums.count - 1) % MOD)
     }
 }
 ```
@@ -696,6 +855,157 @@ class Solution {
 }
 ```
 
+```go
+func maxSumMinProduct(nums []int) int {
+    n := len(nums)
+    prefixSum := make([]int64, n+1)
+    for i := 0; i < n; i++ {
+        prefixSum[i+1] = prefixSum[i] + int64(nums[i])
+    }
+
+    prevMin := make([]int, n)
+    nxtMin := make([]int, n)
+    for i := 0; i < n; i++ {
+        prevMin[i] = -1
+        nxtMin[i] = n
+    }
+
+    stack := []int{}
+    for i := 0; i < n; i++ {
+        for len(stack) > 0 && nums[stack[len(stack)-1]] >= nums[i] {
+            stack = stack[:len(stack)-1]
+        }
+        if len(stack) > 0 {
+            prevMin[i] = stack[len(stack)-1]
+        }
+        stack = append(stack, i)
+    }
+
+    stack = stack[:0]
+    for i := n - 1; i >= 0; i-- {
+        for len(stack) > 0 && nums[stack[len(stack)-1]] >= nums[i] {
+            stack = stack[:len(stack)-1]
+        }
+        if len(stack) > 0 {
+            nxtMin[i] = stack[len(stack)-1]
+        }
+        stack = append(stack, i)
+    }
+
+    var res int64 = 0
+    MOD := int64(1e9 + 7)
+    for i := 0; i < n; i++ {
+        l := prevMin[i] + 1
+        r := nxtMin[i] - 1
+        totalSum := prefixSum[r+1] - prefixSum[l]
+        tmp := int64(nums[i]) * totalSum
+        if tmp > res {
+            res = tmp
+        }
+    }
+
+    return int(res % MOD)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumMinProduct(nums: IntArray): Int {
+        val n = nums.size
+        val prefixSum = LongArray(n + 1)
+        for (i in 0 until n) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        val prevMin = IntArray(n) { -1 }
+        val nxtMin = IntArray(n) { n }
+        val stack = ArrayDeque<Int>()
+
+        for (i in 0 until n) {
+            while (stack.isNotEmpty() && nums[stack.last()] >= nums[i]) {
+                stack.removeLast()
+            }
+            if (stack.isNotEmpty()) {
+                prevMin[i] = stack.last()
+            }
+            stack.addLast(i)
+        }
+
+        stack.clear()
+        for (i in n - 1 downTo 0) {
+            while (stack.isNotEmpty() && nums[stack.last()] >= nums[i]) {
+                stack.removeLast()
+            }
+            if (stack.isNotEmpty()) {
+                nxtMin[i] = stack.last()
+            }
+            stack.addLast(i)
+        }
+
+        var res = 0L
+        val MOD = 1_000_000_007L
+        for (i in 0 until n) {
+            val l = prevMin[i] + 1
+            val r = nxtMin[i] - 1
+            val totalSum = prefixSum[r + 1] - prefixSum[l]
+            val tmp = nums[i].toLong() * totalSum
+            if (tmp > res) res = tmp
+        }
+
+        return (res % MOD).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumMinProduct(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var prefixSum = [Int64](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixSum[i + 1] = prefixSum[i] + Int64(nums[i])
+        }
+
+        var prevMin = [Int](repeating: -1, count: n)
+        var nxtMin = [Int](repeating: n, count: n)
+        var stack = [Int]()
+
+        for i in 0..<n {
+            while !stack.isEmpty && nums[stack.last!] >= nums[i] {
+                stack.removeLast()
+            }
+            if !stack.isEmpty {
+                prevMin[i] = stack.last!
+            }
+            stack.append(i)
+        }
+
+        stack.removeAll()
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            while !stack.isEmpty && nums[stack.last!] >= nums[i] {
+                stack.removeLast()
+            }
+            if !stack.isEmpty {
+                nxtMin[i] = stack.last!
+            }
+            stack.append(i)
+        }
+
+        var res: Int64 = 0
+        let MOD: Int64 = 1_000_000_007
+        for i in 0..<n {
+            let l = prevMin[i] + 1
+            let r = nxtMin[i] - 1
+            let totalSum = prefixSum[r + 1] - prefixSum[l]
+            let tmp = Int64(nums[i]) * totalSum
+            if tmp > res { res = tmp }
+        }
+
+        return Int(res % MOD)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,6 +1159,120 @@ class Solution {
 }
 ```
 
+```go
+func maxSumMinProduct(nums []int) int {
+    n := len(nums)
+    prefix := make([]int64, n+1)
+    for i := 0; i < n; i++ {
+        prefix[i+1] = prefix[i] + int64(nums[i])
+    }
+
+    var res int64 = 0
+    stack := [][2]int{}
+
+    for i := 0; i < n; i++ {
+        newStart := i
+        for len(stack) > 0 && stack[len(stack)-1][1] > nums[i] {
+            top := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            start, val := top[0], top[1]
+            total := prefix[i] - prefix[start]
+            if int64(val)*total > res {
+                res = int64(val) * total
+            }
+            newStart = start
+        }
+        stack = append(stack, [2]int{newStart, nums[i]})
+    }
+
+    for len(stack) > 0 {
+        top := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        start, val := top[0], top[1]
+        total := prefix[n] - prefix[start]
+        if int64(val)*total > res {
+            res = int64(val) * total
+        }
+    }
+
+    return int(res % int64(1e9+7))
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumMinProduct(nums: IntArray): Int {
+        val n = nums.size
+        val prefix = LongArray(n + 1)
+        for (i in 0 until n) {
+            prefix[i + 1] = prefix[i] + nums[i]
+        }
+
+        var res = 0L
+        val stack = ArrayDeque<IntArray>()
+
+        for (i in 0 until n) {
+            var newStart = i
+            while (stack.isNotEmpty() && stack.last()[1] > nums[i]) {
+                val top = stack.removeLast()
+                val start = top[0]
+                val value = top[1]
+                val total = prefix[i] - prefix[start]
+                res = maxOf(res, value.toLong() * total)
+                newStart = start
+            }
+            stack.addLast(intArrayOf(newStart, nums[i]))
+        }
+
+        while (stack.isNotEmpty()) {
+            val top = stack.removeLast()
+            val start = top[0]
+            val value = top[1]
+            val total = prefix[n] - prefix[start]
+            res = maxOf(res, value.toLong() * total)
+        }
+
+        return (res % 1_000_000_007L).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumMinProduct(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var prefix = [Int64](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefix[i + 1] = prefix[i] + Int64(nums[i])
+        }
+
+        var res: Int64 = 0
+        var stack = [(Int, Int)]()
+
+        for i in 0..<n {
+            var newStart = i
+            while !stack.isEmpty && stack.last!.1 > nums[i] {
+                let (start, val) = stack.removeLast()
+                let total = prefix[i] - prefix[start]
+                let tmp = Int64(val) * total
+                if tmp > res { res = tmp }
+                newStart = start
+            }
+            stack.append((newStart, nums[i]))
+        }
+
+        while !stack.isEmpty {
+            let (start, val) = stack.removeLast()
+            let total = prefix[n] - prefix[start]
+            let tmp = Int64(val) * total
+            if tmp > res { res = tmp }
+        }
+
+        return Int(res % 1_000_000_007)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -967,6 +1391,97 @@ class Solution {
         }
 
         return Number(res % MOD);
+    }
+}
+```
+
+```go
+func maxSumMinProduct(nums []int) int {
+    n := len(nums)
+    prefixSum := make([]int64, n+1)
+    for i := 0; i < n; i++ {
+        prefixSum[i+1] = prefixSum[i] + int64(nums[i])
+    }
+
+    var res int64 = 0
+    MOD := int64(1e9 + 7)
+    stack := []int{}
+
+    for i := 0; i <= n; i++ {
+        for len(stack) > 0 && (i == n || nums[i] < nums[stack[len(stack)-1]]) {
+            j := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            start := 0
+            if len(stack) > 0 {
+                start = stack[len(stack)-1] + 1
+            }
+            total := prefixSum[i] - prefixSum[start]
+            tmp := int64(nums[j]) * total
+            if tmp > res {
+                res = tmp
+            }
+        }
+        stack = append(stack, i)
+    }
+
+    return int(res % MOD)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumMinProduct(nums: IntArray): Int {
+        val n = nums.size
+        val prefixSum = LongArray(n + 1)
+        for (i in 0 until n) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        var res = 0L
+        val MOD = 1_000_000_007L
+        val stack = ArrayDeque<Int>()
+
+        for (i in 0..n) {
+            while (stack.isNotEmpty() && (i == n || nums[i] < nums[stack.last()])) {
+                val j = stack.removeLast()
+                val start = if (stack.isEmpty()) 0 else stack.last() + 1
+                val total = prefixSum[i] - prefixSum[start]
+                val tmp = nums[j].toLong() * total
+                if (tmp > res) res = tmp
+            }
+            stack.addLast(i)
+        }
+
+        return (res % MOD).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumMinProduct(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var prefixSum = [Int64](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixSum[i + 1] = prefixSum[i] + Int64(nums[i])
+        }
+
+        var res: Int64 = 0
+        let MOD: Int64 = 1_000_000_007
+        var stack = [Int]()
+
+        for i in 0...n {
+            while !stack.isEmpty && (i == n || nums[i] < nums[stack.last!]) {
+                let j = stack.removeLast()
+                let start = stack.isEmpty ? 0 : stack.last! + 1
+                let total = prefixSum[i] - prefixSum[start]
+                let tmp = Int64(nums[j]) * total
+                if tmp > res { res = tmp }
+            }
+            stack.append(i)
+        }
+
+        return Int(res % MOD)
     }
 }
 ```

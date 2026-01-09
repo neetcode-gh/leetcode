@@ -86,6 +86,59 @@ public class Solution {
 }
 ```
 
+```go
+func isPerfectSquare(num int) bool {
+    for i := 1; i <= num; i++ {
+        sq := i * i
+        if sq > num {
+            return false
+        }
+        if sq == num {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun isPerfectSquare(num: Int): Boolean {
+        var i: Long = 1
+        while (i <= num) {
+            val sq = i * i
+            if (sq > num) {
+                return false
+            }
+            if (sq == num.toLong()) {
+                return true
+            }
+            i++
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPerfectSquare(_ num: Int) -> Bool {
+        var i = 1
+        while i <= num {
+            let sq = i * i
+            if sq > num {
+                return false
+            }
+            if sq == num {
+                return true
+            }
+            i += 1
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -143,6 +196,31 @@ public class Solution {
     public bool IsPerfectSquare(int num) {
         int sqRoot = (int)Math.Sqrt(num);
         return sqRoot * sqRoot == num;
+    }
+}
+```
+
+```go
+func isPerfectSquare(num int) bool {
+    sqRoot := int(math.Sqrt(float64(num)))
+    return sqRoot*sqRoot == num
+}
+```
+
+```kotlin
+class Solution {
+    fun isPerfectSquare(num: Int): Boolean {
+        val sqRoot = Math.sqrt(num.toDouble()).toInt()
+        return sqRoot * sqRoot == num
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPerfectSquare(_ num: Int) -> Bool {
+        let sqRoot = Int(Double(num).squareRoot())
+        return sqRoot * sqRoot == num
     }
 }
 ```
@@ -272,6 +350,72 @@ public class Solution {
 }
 ```
 
+```go
+func isPerfectSquare(num int) bool {
+    l, r := 1, num
+
+    for l <= r {
+        m := l + (r-l)/2
+        sq := m * m
+        if sq > num {
+            r = m - 1
+        } else if sq < num {
+            l = m + 1
+        } else {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun isPerfectSquare(num: Int): Boolean {
+        var l: Long = 1
+        var r: Long = num.toLong()
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            val sq = m * m
+            if (sq > num) {
+                r = m - 1
+            } else if (sq < num) {
+                l = m + 1
+            } else {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPerfectSquare(_ num: Int) -> Bool {
+        var l = 1
+        var r = num
+
+        while l <= r {
+            let m = l + (r - l) / 2
+            let sq = m * m
+            if sq > num {
+                r = m - 1
+            } else if sq < num {
+                l = m + 1
+            } else {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -352,6 +496,45 @@ public class Solution {
 }
 ```
 
+```go
+func isPerfectSquare(num int) bool {
+    i := 1
+    for num > 0 {
+        num -= i
+        i += 2
+    }
+    return num == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun isPerfectSquare(num: Int): Boolean {
+        var n = num
+        var i = 1
+        while (n > 0) {
+            n -= i
+            i += 2
+        }
+        return n == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPerfectSquare(_ num: Int) -> Bool {
+        var num = num
+        var i = 1
+        while num > 0 {
+            num -= i
+            i += 2
+        }
+        return num == 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -423,6 +606,40 @@ public class Solution {
             r = (r + num / r) / 2;
         }
         return r * r == num;
+    }
+}
+```
+
+```go
+func isPerfectSquare(num int) bool {
+    r := num
+    for r*r > num {
+        r = (r + num/r) / 2
+    }
+    return r*r == num
+}
+```
+
+```kotlin
+class Solution {
+    fun isPerfectSquare(num: Int): Boolean {
+        var r: Long = num.toLong()
+        while (r * r > num) {
+            r = (r + num / r) / 2
+        }
+        return r * r == num.toLong()
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPerfectSquare(_ num: Int) -> Bool {
+        var r = num
+        while r * r > num {
+            r = (r + num / r) / 2
+        }
+        return r * r == num
     }
 }
 ```
@@ -528,6 +745,60 @@ public class Solution {
         }
 
         return r * r == num;
+    }
+}
+```
+
+```go
+func isPerfectSquare(num int) bool {
+    r, mask := 0, 1<<15
+
+    for mask > 0 {
+        r |= mask
+        if r > num/r {
+            r ^= mask
+        }
+        mask >>= 1
+    }
+
+    return r*r == num
+}
+```
+
+```kotlin
+class Solution {
+    fun isPerfectSquare(num: Int): Boolean {
+        var r = 0
+        var mask = 1 shl 15
+
+        while (mask > 0) {
+            r = r or mask
+            if (r > num / r) {
+                r = r xor mask
+            }
+            mask = mask shr 1
+        }
+
+        return r * r == num
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPerfectSquare(_ num: Int) -> Bool {
+        var r = 0
+        var mask = 1 << 15
+
+        while mask > 0 {
+            r |= mask
+            if r > num / r {
+                r ^= mask
+            }
+            mask >>= 1
+        }
+
+        return r * r == num
     }
 }
 ```

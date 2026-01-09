@@ -96,6 +96,87 @@ class Solution {
 }
 ```
 
+```go
+func maxValueOfCoins(piles [][]int, k int) int {
+    n := len(piles)
+
+    var dfs func(i, coins int) int
+    dfs = func(i, coins int) int {
+        if i == n {
+            return 0
+        }
+
+        res := dfs(i+1, coins)
+        curPile := 0
+        for j := 0; j < min(coins, len(piles[i])); j++ {
+            curPile += piles[i][j]
+            res = max(res, curPile+dfs(i+1, coins-(j+1)))
+        }
+        return res
+    }
+
+    return dfs(0, k)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+        val n = piles.size
+
+        fun dfs(i: Int, coins: Int): Int {
+            if (i == n) return 0
+
+            var res = dfs(i + 1, coins)
+            var curPile = 0
+            for (j in 0 until minOf(coins, piles[i].size)) {
+                curPile += piles[i][j]
+                res = maxOf(res, curPile + dfs(i + 1, coins - (j + 1)))
+            }
+            return res
+        }
+
+        return dfs(0, k)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxValueOfCoins(_ piles: [[Int]], _ k: Int) -> Int {
+        let n = piles.count
+
+        func dfs(_ i: Int, _ coins: Int) -> Int {
+            if i == n { return 0 }
+
+            var res = dfs(i + 1, coins)
+            var curPile = 0
+            for j in 0..<min(coins, piles[i].count) {
+                curPile += piles[i][j]
+                res = max(res, curPile + dfs(i + 1, coins - (j + 1)))
+            }
+            return res
+        }
+
+        return dfs(0, k)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -228,6 +309,109 @@ class Solution {
 }
 ```
 
+```go
+func maxValueOfCoins(piles [][]int, k int) int {
+    n := len(piles)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, coins int) int
+    dfs = func(i, coins int) int {
+        if i == n {
+            return 0
+        }
+        if dp[i][coins] != -1 {
+            return dp[i][coins]
+        }
+
+        dp[i][coins] = dfs(i+1, coins)
+        curPile := 0
+        for j := 0; j < min(coins, len(piles[i])); j++ {
+            curPile += piles[i][j]
+            dp[i][coins] = max(dp[i][coins], curPile+dfs(i+1, coins-(j+1)))
+        }
+        return dp[i][coins]
+    }
+
+    return dfs(0, k)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+    private lateinit var piles: List<List<Int>>
+    private var n = 0
+
+    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+        this.piles = piles
+        n = piles.size
+        dp = Array(n) { IntArray(k + 1) { -1 } }
+        return dfs(0, k)
+    }
+
+    private fun dfs(i: Int, coins: Int): Int {
+        if (i == n) return 0
+        if (dp[i][coins] != -1) return dp[i][coins]
+
+        dp[i][coins] = dfs(i + 1, coins)
+        var curPile = 0
+        for (j in 0 until minOf(coins, piles[i].size)) {
+            curPile += piles[i][j]
+            dp[i][coins] = maxOf(dp[i][coins], curPile + dfs(i + 1, coins - (j + 1)))
+        }
+        return dp[i][coins]
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp = [[Int]]()
+    private var piles = [[Int]]()
+    private var n = 0
+
+    func maxValueOfCoins(_ piles: [[Int]], _ k: Int) -> Int {
+        self.piles = piles
+        n = piles.count
+        dp = [[Int]](repeating: [Int](repeating: -1, count: k + 1), count: n)
+        return dfs(0, k)
+    }
+
+    private func dfs(_ i: Int, _ coins: Int) -> Int {
+        if i == n { return 0 }
+        if dp[i][coins] != -1 { return dp[i][coins] }
+
+        dp[i][coins] = dfs(i + 1, coins)
+        var curPile = 0
+        for j in 0..<min(coins, piles[i].count) {
+            curPile += piles[i][j]
+            dp[i][coins] = max(dp[i][coins], curPile + dfs(i + 1, coins - (j + 1)))
+        }
+        return dp[i][coins]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -348,6 +532,90 @@ class Solution {
 }
 ```
 
+```go
+func maxValueOfCoins(piles [][]int, k int) int {
+    n := len(piles)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for coins := 0; coins <= k; coins++ {
+            dp[i][coins] = dp[i+1][coins]
+
+            curPile := 0
+            for j := 0; j < min(coins, len(piles[i])); j++ {
+                curPile += piles[i][j]
+                dp[i][coins] = max(dp[i][coins], curPile+dp[i+1][coins-(j+1)])
+            }
+        }
+    }
+
+    return dp[0][k]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+        val n = piles.size
+        val dp = Array(n + 1) { IntArray(k + 1) }
+
+        for (i in n - 1 downTo 0) {
+            for (coins in 0..k) {
+                dp[i][coins] = dp[i + 1][coins]
+
+                var curPile = 0
+                for (j in 0 until minOf(coins, piles[i].size)) {
+                    curPile += piles[i][j]
+                    dp[i][coins] = maxOf(dp[i][coins], curPile + dp[i + 1][coins - (j + 1)])
+                }
+            }
+        }
+
+        return dp[0][k]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxValueOfCoins(_ piles: [[Int]], _ k: Int) -> Int {
+        let n = piles.count
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: k + 1), count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for coins in 0...k {
+                dp[i][coins] = dp[i + 1][coins]
+
+                var curPile = 0
+                for j in 0..<min(coins, piles[i].count) {
+                    curPile += piles[i][j]
+                    dp[i][coins] = max(dp[i][coins], curPile + dp[i + 1][coins - (j + 1)])
+                }
+            }
+        }
+
+        return dp[0][k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +712,78 @@ class Solution {
 
         return dp[k];
     };
+}
+```
+
+```go
+func maxValueOfCoins(piles [][]int, k int) int {
+    dp := make([]int, k+1)
+
+    for _, pile := range piles {
+        for coins := k; coins >= 1; coins-- {
+            curPile := 0
+            for j := 0; j < min(coins, len(pile)); j++ {
+                curPile += pile[j]
+                dp[coins] = max(dp[coins], dp[coins-(j+1)]+curPile)
+            }
+        }
+    }
+
+    return dp[k]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxValueOfCoins(piles: List<List<Int>>, k: Int): Int {
+        val dp = IntArray(k + 1)
+
+        for (pile in piles) {
+            for (coins in k downTo 1) {
+                var curPile = 0
+                for (j in 0 until minOf(coins, pile.size)) {
+                    curPile += pile[j]
+                    dp[coins] = maxOf(dp[coins], dp[coins - (j + 1)] + curPile)
+                }
+            }
+        }
+
+        return dp[k]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxValueOfCoins(_ piles: [[Int]], _ k: Int) -> Int {
+        var dp = [Int](repeating: 0, count: k + 1)
+
+        for pile in piles {
+            for coins in stride(from: k, through: 1, by: -1) {
+                var curPile = 0
+                for j in 0..<min(coins, pile.count) {
+                    curPile += pile[j]
+                    dp[coins] = max(dp[coins], dp[coins - (j + 1)] + curPile)
+                }
+            }
+        }
+
+        return dp[k]
+    }
 }
 ```
 

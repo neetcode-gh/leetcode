@@ -84,6 +84,86 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindAnagrams(string s, string p) {
+        int n = s.Length, m = p.Length;
+        List<int> res = new List<int>();
+        char[] pArr = p.ToCharArray();
+        Array.Sort(pArr);
+        string sortedP = new string(pArr);
+
+        for (int i = 0; i <= n - m; i++) {
+            char[] subArr = s.Substring(i, m).ToCharArray();
+            Array.Sort(subArr);
+            if (new string(subArr) == sortedP) {
+                res.Add(i);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+import "sort"
+
+func findAnagrams(s string, p string) []int {
+    n, m := len(s), len(p)
+    res := []int{}
+    pArr := []byte(p)
+    sort.Slice(pArr, func(i, j int) bool { return pArr[i] < pArr[j] })
+    sortedP := string(pArr)
+
+    for i := 0; i <= n-m; i++ {
+        subArr := []byte(s[i : i+m])
+        sort.Slice(subArr, func(i, j int) bool { return subArr[i] < subArr[j] })
+        if string(subArr) == sortedP {
+            res = append(res, i)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAnagrams(s: String, p: String): List<Int> {
+        val n = s.length
+        val m = p.length
+        val res = mutableListOf<Int>()
+        val sortedP = p.toCharArray().sorted().joinToString("")
+
+        for (i in 0..n - m) {
+            val sub = s.substring(i, i + m).toCharArray().sorted().joinToString("")
+            if (sub == sortedP) {
+                res.add(i)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAnagrams(_ s: String, _ p: String) -> [Int] {
+        let n = s.count, m = p.count
+        var res = [Int]()
+        let sortedP = String(p.sorted())
+        let sArr = Array(s)
+
+        for i in 0...(n - m) {
+            let sub = String(sArr[i..<(i + m)].sorted())
+            if sub == sortedP {
+                res.append(i)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,6 +330,165 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindAnagrams(string s, string p) {
+        int n = s.Length, m = p.Length;
+        if (m > n) return new List<int>();
+
+        int[] pCount = new int[26];
+        foreach (char c in p) {
+            pCount[c - 'a']++;
+        }
+
+        int[][] prefix = new int[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            prefix[i] = new int[26];
+        }
+        for (int i = 1; i <= n; i++) {
+            Array.Copy(prefix[i - 1], prefix[i], 26);
+            prefix[i][s[i - 1] - 'a']++;
+        }
+
+        List<int> res = new List<int>();
+        int left = 0, right = m - 1;
+        while (right < n) {
+            bool isValid = true;
+            for (int c = 0; c < 26; c++) {
+                if (prefix[right + 1][c] - prefix[left][c] != pCount[c]) {
+                    isValid = false;
+                    break;
+                }
+            }
+            if (isValid) res.Add(left);
+            left++;
+            right++;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findAnagrams(s string, p string) []int {
+    n, m := len(s), len(p)
+    if m > n {
+        return []int{}
+    }
+
+    pCount := make([]int, 26)
+    for _, c := range p {
+        pCount[c-'a']++
+    }
+
+    prefix := make([][]int, n+1)
+    for i := range prefix {
+        prefix[i] = make([]int, 26)
+    }
+    for i := 1; i <= n; i++ {
+        copy(prefix[i], prefix[i-1])
+        prefix[i][s[i-1]-'a']++
+    }
+
+    res := []int{}
+    i, j := 0, m-1
+    for j < n {
+        isValid := true
+        for c := 0; c < 26; c++ {
+            if prefix[j+1][c]-prefix[i][c] != pCount[c] {
+                isValid = false
+                break
+            }
+        }
+        if isValid {
+            res = append(res, i)
+        }
+        i++
+        j++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAnagrams(s: String, p: String): List<Int> {
+        val n = s.length
+        val m = p.length
+        if (m > n) return emptyList()
+
+        val pCount = IntArray(26)
+        for (c in p) {
+            pCount[c - 'a']++
+        }
+
+        val prefix = Array(n + 1) { IntArray(26) }
+        for (i in 1..n) {
+            prefix[i - 1].copyInto(prefix[i])
+            prefix[i][s[i - 1] - 'a']++
+        }
+
+        val res = mutableListOf<Int>()
+        var i = 0
+        var j = m - 1
+        while (j < n) {
+            var isValid = true
+            for (c in 0 until 26) {
+                if (prefix[j + 1][c] - prefix[i][c] != pCount[c]) {
+                    isValid = false
+                    break
+                }
+            }
+            if (isValid) res.add(i)
+            i++
+            j++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAnagrams(_ s: String, _ p: String) -> [Int] {
+        let n = s.count, m = p.count
+        if m > n { return [] }
+
+        var pCount = [Int](repeating: 0, count: 26)
+        for c in p {
+            pCount[Int(c.asciiValue!) - 97] += 1
+        }
+
+        let sArr = Array(s)
+        var prefix = [[Int]](repeating: [Int](repeating: 0, count: 26), count: n + 1)
+        for i in 1...n {
+            prefix[i] = prefix[i - 1]
+            prefix[i][Int(sArr[i - 1].asciiValue!) - 97] += 1
+        }
+
+        var res = [Int]()
+        var i = 0, j = m - 1
+        while j < n {
+            var isValid = true
+            for c in 0..<26 {
+                if prefix[j + 1][c] - prefix[i][c] != pCount[c] {
+                    isValid = false
+                    break
+                }
+            }
+            if isValid { res.append(i) }
+            i += 1
+            j += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -387,6 +626,151 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> FindAnagrams(string s, string p) {
+        if (p.Length > s.Length) return new List<int>();
+
+        int[] pCount = new int[26];
+        int[] sCount = new int[26];
+
+        foreach (char c in p) {
+            pCount[c - 'a']++;
+        }
+        for (int i = 0; i < p.Length; i++) {
+            sCount[s[i] - 'a']++;
+        }
+
+        List<int> res = new List<int>();
+        if (pCount.SequenceEqual(sCount)) res.Add(0);
+
+        int l = 0;
+        for (int r = p.Length; r < s.Length; r++) {
+            sCount[s[r] - 'a']++;
+            sCount[s[l] - 'a']--;
+            l++;
+            if (pCount.SequenceEqual(sCount)) {
+                res.Add(l);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findAnagrams(s string, p string) []int {
+    if len(p) > len(s) {
+        return []int{}
+    }
+
+    pCount := make([]int, 26)
+    sCount := make([]int, 26)
+
+    for _, c := range p {
+        pCount[c-'a']++
+    }
+    for i := 0; i < len(p); i++ {
+        sCount[s[i]-'a']++
+    }
+
+    equal := func() bool {
+        for i := 0; i < 26; i++ {
+            if pCount[i] != sCount[i] {
+                return false
+            }
+        }
+        return true
+    }
+
+    res := []int{}
+    if equal() {
+        res = append(res, 0)
+    }
+
+    l := 0
+    for r := len(p); r < len(s); r++ {
+        sCount[s[r]-'a']++
+        sCount[s[l]-'a']--
+        l++
+        if equal() {
+            res = append(res, l)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAnagrams(s: String, p: String): List<Int> {
+        if (p.length > s.length) return emptyList()
+
+        val pCount = IntArray(26)
+        val sCount = IntArray(26)
+
+        for (c in p) {
+            pCount[c - 'a']++
+        }
+        for (i in p.indices) {
+            sCount[s[i] - 'a']++
+        }
+
+        val res = mutableListOf<Int>()
+        if (pCount.contentEquals(sCount)) res.add(0)
+
+        var l = 0
+        for (r in p.length until s.length) {
+            sCount[s[r] - 'a']++
+            sCount[s[l] - 'a']--
+            l++
+            if (pCount.contentEquals(sCount)) {
+                res.add(l)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAnagrams(_ s: String, _ p: String) -> [Int] {
+        if p.count > s.count { return [] }
+
+        var pCount = [Int](repeating: 0, count: 26)
+        var sCount = [Int](repeating: 0, count: 26)
+        let sArr = Array(s)
+        let pArr = Array(p)
+
+        for c in pArr {
+            pCount[Int(c.asciiValue!) - 97] += 1
+        }
+        for i in 0..<pArr.count {
+            sCount[Int(sArr[i].asciiValue!) - 97] += 1
+        }
+
+        var res = [Int]()
+        if pCount == sCount { res.append(0) }
+
+        var l = 0
+        for r in pArr.count..<sArr.count {
+            sCount[Int(sArr[r].asciiValue!) - 97] += 1
+            sCount[Int(sArr[l].asciiValue!) - 97] -= 1
+            l += 1
+            if pCount == sCount {
+                res.append(l)
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -575,6 +959,191 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> FindAnagrams(string s, string p) {
+        int n = s.Length, m = p.Length;
+        if (m > n) return new List<int>();
+
+        int[] pCount = new int[26], sCount = new int[26];
+        for (int i = 0; i < m; i++) {
+            pCount[p[i] - 'a']++;
+            sCount[s[i] - 'a']++;
+        }
+
+        int match = 0;
+        for (int i = 0; i < 26; i++) {
+            if (pCount[i] == sCount[i]) match++;
+        }
+
+        List<int> res = new List<int>();
+        if (match == 26) res.Add(0);
+
+        int l = 0;
+        for (int r = m; r < n; r++) {
+            int c = s[l] - 'a';
+            if (sCount[c] == pCount[c]) match--;
+            sCount[c]--;
+            l++;
+            if (sCount[c] == pCount[c]) match++;
+
+            c = s[r] - 'a';
+            if (sCount[c] == pCount[c]) match--;
+            sCount[c]++;
+            if (sCount[c] == pCount[c]) match++;
+
+            if (match == 26) res.Add(l);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findAnagrams(s string, p string) []int {
+    n, m := len(s), len(p)
+    if m > n {
+        return []int{}
+    }
+
+    pCount := make([]int, 26)
+    sCount := make([]int, 26)
+    for i := 0; i < m; i++ {
+        pCount[p[i]-'a']++
+        sCount[s[i]-'a']++
+    }
+
+    match := 0
+    for i := 0; i < 26; i++ {
+        if pCount[i] == sCount[i] {
+            match++
+        }
+    }
+
+    res := []int{}
+    if match == 26 {
+        res = append(res, 0)
+    }
+
+    l := 0
+    for r := m; r < n; r++ {
+        c := s[l] - 'a'
+        if sCount[c] == pCount[c] {
+            match--
+        }
+        sCount[c]--
+        l++
+        if sCount[c] == pCount[c] {
+            match++
+        }
+
+        c = s[r] - 'a'
+        if sCount[c] == pCount[c] {
+            match--
+        }
+        sCount[c]++
+        if sCount[c] == pCount[c] {
+            match++
+        }
+
+        if match == 26 {
+            res = append(res, l)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findAnagrams(s: String, p: String): List<Int> {
+        val n = s.length
+        val m = p.length
+        if (m > n) return emptyList()
+
+        val pCount = IntArray(26)
+        val sCount = IntArray(26)
+        for (i in 0 until m) {
+            pCount[p[i] - 'a']++
+            sCount[s[i] - 'a']++
+        }
+
+        var match = 0
+        for (i in 0 until 26) {
+            if (pCount[i] == sCount[i]) match++
+        }
+
+        val res = mutableListOf<Int>()
+        if (match == 26) res.add(0)
+
+        var l = 0
+        for (r in m until n) {
+            var c = s[l] - 'a'
+            if (sCount[c] == pCount[c]) match--
+            sCount[c]--
+            l++
+            if (sCount[c] == pCount[c]) match++
+
+            c = s[r] - 'a'
+            if (sCount[c] == pCount[c]) match--
+            sCount[c]++
+            if (sCount[c] == pCount[c]) match++
+
+            if (match == 26) res.add(l)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findAnagrams(_ s: String, _ p: String) -> [Int] {
+        let n = s.count, m = p.count
+        if m > n { return [] }
+
+        var pCount = [Int](repeating: 0, count: 26)
+        var sCount = [Int](repeating: 0, count: 26)
+        let sArr = Array(s)
+        let pArr = Array(p)
+
+        for i in 0..<m {
+            pCount[Int(pArr[i].asciiValue!) - 97] += 1
+            sCount[Int(sArr[i].asciiValue!) - 97] += 1
+        }
+
+        var match = 0
+        for i in 0..<26 {
+            if pCount[i] == sCount[i] { match += 1 }
+        }
+
+        var res = [Int]()
+        if match == 26 { res.append(0) }
+
+        var l = 0
+        for r in m..<n {
+            var c = Int(sArr[l].asciiValue!) - 97
+            if sCount[c] == pCount[c] { match -= 1 }
+            sCount[c] -= 1
+            l += 1
+            if sCount[c] == pCount[c] { match += 1 }
+
+            c = Int(sArr[r].asciiValue!) - 97
+            if sCount[c] == pCount[c] { match -= 1 }
+            sCount[c] += 1
+            if sCount[c] == pCount[c] { match += 1 }
+
+            if match == 26 { res.append(l) }
+        }
+
+        return res
     }
 }
 ```

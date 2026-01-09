@@ -145,6 +145,89 @@ public class Solution {
 }
 ```
 
+```go
+func validPalindrome(s string) bool {
+    isPalindrome := func(str string) bool {
+        left, right := 0, len(str)-1
+        for left < right {
+            if str[left] != str[right] {
+                return false
+            }
+            left++
+            right--
+        }
+        return true
+    }
+
+    if isPalindrome(s) {
+        return true
+    }
+
+    for i := 0; i < len(s); i++ {
+        newS := s[:i] + s[i+1:]
+        if isPalindrome(newS) {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun validPalindrome(s: String): Boolean {
+        fun isPalindrome(str: String): Boolean {
+            var left = 0
+            var right = str.length - 1
+            while (left < right) {
+                if (str[left] != str[right]) return false
+                left++
+                right--
+            }
+            return true
+        }
+
+        if (isPalindrome(s)) return true
+
+        for (i in s.indices) {
+            val newS = s.substring(0, i) + s.substring(i + 1)
+            if (isPalindrome(newS)) return true
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func validPalindrome(_ s: String) -> Bool {
+        func isPalindrome(_ str: String) -> Bool {
+            let arr = Array(str)
+            var left = 0
+            var right = arr.count - 1
+            while left < right {
+                if arr[left] != arr[right] { return false }
+                left += 1
+                right -= 1
+            }
+            return true
+        }
+
+        if isPalindrome(s) { return true }
+
+        let arr = Array(s)
+        for i in 0..<arr.count {
+            let newS = String(arr[0..<i]) + String(arr[(i+1)...])
+            if isPalindrome(newS) { return true }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -306,6 +389,101 @@ public class Solution {
             right--;
         }
         return true;
+    }
+}
+```
+
+```go
+func validPalindrome(s string) bool {
+    isPalindrome := func(str string) bool {
+        left, right := 0, len(str)-1
+        for left < right {
+            if str[left] != str[right] {
+                return false
+            }
+            left++
+            right--
+        }
+        return true
+    }
+
+    l, r := 0, len(s)-1
+    for l < r {
+        if s[l] != s[r] {
+            skipL := s[l+1 : r+1]
+            skipR := s[l:r]
+            return isPalindrome(skipL) || isPalindrome(skipR)
+        }
+        l++
+        r--
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun validPalindrome(s: String): Boolean {
+        fun isPalindrome(str: String): Boolean {
+            var left = 0
+            var right = str.length - 1
+            while (left < right) {
+                if (str[left] != str[right]) return false
+                left++
+                right--
+            }
+            return true
+        }
+
+        var l = 0
+        var r = s.length - 1
+
+        while (l < r) {
+            if (s[l] != s[r]) {
+                val skipL = s.substring(l + 1, r + 1)
+                val skipR = s.substring(l, r)
+                return isPalindrome(skipL) || isPalindrome(skipR)
+            }
+            l++
+            r--
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func validPalindrome(_ s: String) -> Bool {
+        func isPalindrome(_ str: String) -> Bool {
+            let arr = Array(str)
+            var left = 0
+            var right = arr.count - 1
+            while left < right {
+                if arr[left] != arr[right] { return false }
+                left += 1
+                right -= 1
+            }
+            return true
+        }
+
+        let arr = Array(s)
+        var l = 0
+        var r = arr.count - 1
+
+        while l < r {
+            if arr[l] != arr[r] {
+                let skipL = String(arr[(l+1)...(r)])
+                let skipR = String(arr[l..<r])
+                return isPalindrome(skipL) || isPalindrome(skipR)
+            }
+            l += 1
+            r -= 1
+        }
+
+        return true
     }
 }
 ```
@@ -472,6 +650,92 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+func validPalindrome(s string) bool {
+    isPalindrome := func(l, r int) bool {
+        for l < r {
+            if s[l] != s[r] {
+                return false
+            }
+            l++
+            r--
+        }
+        return true
+    }
+
+    l, r := 0, len(s)-1
+    for l < r {
+        if s[l] != s[r] {
+            return isPalindrome(l+1, r) || isPalindrome(l, r-1)
+        }
+        l++
+        r--
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun validPalindrome(s: String): Boolean {
+        fun isPalindrome(l: Int, r: Int): Boolean {
+            var left = l
+            var right = r
+            while (left < right) {
+                if (s[left] != s[right]) return false
+                left++
+                right--
+            }
+            return true
+        }
+
+        var l = 0
+        var r = s.length - 1
+        while (l < r) {
+            if (s[l] != s[r]) {
+                return isPalindrome(l + 1, r) || isPalindrome(l, r - 1)
+            }
+            l++
+            r--
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func validPalindrome(_ s: String) -> Bool {
+        let arr = Array(s)
+
+        func isPalindrome(_ l: Int, _ r: Int) -> Bool {
+            var left = l
+            var right = r
+            while left < right {
+                if arr[left] != arr[right] { return false }
+                left += 1
+                right -= 1
+            }
+            return true
+        }
+
+        var l = 0
+        var r = arr.count - 1
+        while l < r {
+            if arr[l] != arr[r] {
+                return isPalindrome(l + 1, r) || isPalindrome(l, r - 1)
+            }
+            l += 1
+            r -= 1
+        }
+
+        return true
     }
 }
 ```

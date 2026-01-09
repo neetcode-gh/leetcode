@@ -152,6 +152,174 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+    private int[,] dp;
+
+    public int NumberOfWays(string corridor) {
+        int n = corridor.Length;
+        dp = new int[n, 3];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < 3; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, 0, corridor);
+    }
+
+    private int Dfs(int i, int seats, string corridor) {
+        if (i == corridor.Length) {
+            return seats == 2 ? 1 : 0;
+        }
+        if (dp[i, seats] != -1) {
+            return dp[i, seats];
+        }
+
+        int res = 0;
+        if (seats == 2) {
+            if (corridor[i] == 'S') {
+                res = Dfs(i + 1, 1, corridor);
+            } else {
+                res = (Dfs(i + 1, 0, corridor) + Dfs(i + 1, 2, corridor)) % MOD;
+            }
+        } else {
+            if (corridor[i] == 'S') {
+                res = Dfs(i + 1, seats + 1, corridor);
+            } else {
+                res = Dfs(i + 1, seats, corridor);
+            }
+        }
+
+        return dp[i, seats] = res;
+    }
+}
+```
+
+```go
+func numberOfWays(corridor string) int {
+    MOD := 1_000_000_007
+    n := len(corridor)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = []int{-1, -1, -1}
+    }
+
+    var dfs func(i, seats int) int
+    dfs = func(i, seats int) int {
+        if i == n {
+            if seats == 2 {
+                return 1
+            }
+            return 0
+        }
+        if dp[i][seats] != -1 {
+            return dp[i][seats]
+        }
+
+        res := 0
+        if seats == 2 {
+            if corridor[i] == 'S' {
+                res = dfs(i+1, 1)
+            } else {
+                res = (dfs(i+1, 0) + dfs(i+1, 2)) % MOD
+            }
+        } else {
+            if corridor[i] == 'S' {
+                res = dfs(i+1, seats+1)
+            } else {
+                res = dfs(i+1, seats)
+            }
+        }
+
+        dp[i][seats] = res
+        return res
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1_000_000_007
+    private lateinit var dp: Array<IntArray>
+
+    fun numberOfWays(corridor: String): Int {
+        val n = corridor.length
+        dp = Array(n) { IntArray(3) { -1 } }
+        return dfs(0, 0, corridor)
+    }
+
+    private fun dfs(i: Int, seats: Int, corridor: String): Int {
+        if (i == corridor.length) {
+            return if (seats == 2) 1 else 0
+        }
+        if (dp[i][seats] != -1) {
+            return dp[i][seats]
+        }
+
+        val res: Int
+        if (seats == 2) {
+            res = if (corridor[i] == 'S') {
+                dfs(i + 1, 1, corridor)
+            } else {
+                (dfs(i + 1, 0, corridor) + dfs(i + 1, 2, corridor)) % MOD
+            }
+        } else {
+            res = if (corridor[i] == 'S') {
+                dfs(i + 1, seats + 1, corridor)
+            } else {
+                dfs(i + 1, seats, corridor)
+            }
+        }
+
+        dp[i][seats] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ corridor: String) -> Int {
+        let MOD = 1_000_000_007
+        let n = corridor.count
+        let chars = Array(corridor)
+        var dp = [[Int]](repeating: [-1, -1, -1], count: n)
+
+        func dfs(_ i: Int, _ seats: Int) -> Int {
+            if i == n {
+                return seats == 2 ? 1 : 0
+            }
+            if dp[i][seats] != -1 {
+                return dp[i][seats]
+            }
+
+            var res = 0
+            if seats == 2 {
+                if chars[i] == "S" {
+                    res = dfs(i + 1, 1)
+                } else {
+                    res = (dfs(i + 1, 0) + dfs(i + 1, 2)) % MOD
+                }
+            } else {
+                if chars[i] == "S" {
+                    res = dfs(i + 1, seats + 1)
+                } else {
+                    res = dfs(i + 1, seats)
+                }
+            }
+
+            dp[i][seats] = res
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,6 +452,128 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumberOfWays(string corridor) {
+        int MOD = 1000000007;
+        int n = corridor.Length;
+        int[,] dp = new int[n + 1, 3];
+        dp[n, 2] = 1;
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int seats = 0; seats < 3; seats++) {
+                if (seats == 2) {
+                    if (corridor[i] == 'S') {
+                        dp[i, seats] = dp[i + 1, 1];
+                    } else {
+                        dp[i, seats] = (dp[i + 1, 0] + dp[i + 1, 2]) % MOD;
+                    }
+                } else {
+                    if (corridor[i] == 'S') {
+                        dp[i, seats] = dp[i + 1, seats + 1];
+                    } else {
+                        dp[i, seats] = dp[i + 1, seats];
+                    }
+                }
+            }
+        }
+        return dp[0, 0];
+    }
+}
+```
+
+```go
+func numberOfWays(corridor string) int {
+    MOD := 1000000007
+    n := len(corridor)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, 3)
+    }
+    dp[n][2] = 1
+
+    for i := n - 1; i >= 0; i-- {
+        for seats := 0; seats < 3; seats++ {
+            if seats == 2 {
+                if corridor[i] == 'S' {
+                    dp[i][seats] = dp[i+1][1]
+                } else {
+                    dp[i][seats] = (dp[i+1][0] + dp[i+1][2]) % MOD
+                }
+            } else {
+                if corridor[i] == 'S' {
+                    dp[i][seats] = dp[i+1][seats+1]
+                } else {
+                    dp[i][seats] = dp[i+1][seats]
+                }
+            }
+        }
+    }
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfWays(corridor: String): Int {
+        val MOD = 1000000007
+        val n = corridor.length
+        val dp = Array(n + 1) { IntArray(3) }
+        dp[n][2] = 1
+
+        for (i in n - 1 downTo 0) {
+            for (seats in 0 until 3) {
+                if (seats == 2) {
+                    if (corridor[i] == 'S') {
+                        dp[i][seats] = dp[i + 1][1]
+                    } else {
+                        dp[i][seats] = (dp[i + 1][0] + dp[i + 1][2]) % MOD
+                    }
+                } else {
+                    if (corridor[i] == 'S') {
+                        dp[i][seats] = dp[i + 1][seats + 1]
+                    } else {
+                        dp[i][seats] = dp[i + 1][seats]
+                    }
+                }
+            }
+        }
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ corridor: String) -> Int {
+        let MOD = 1000000007
+        let n = corridor.count
+        let chars = Array(corridor)
+        var dp = [[Int]](repeating: [0, 0, 0], count: n + 1)
+        dp[n][2] = 1
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for seats in 0..<3 {
+                if seats == 2 {
+                    if chars[i] == "S" {
+                        dp[i][seats] = dp[i + 1][1]
+                    } else {
+                        dp[i][seats] = (dp[i + 1][0] + dp[i + 1][2]) % MOD
+                    }
+                } else {
+                    if chars[i] == "S" {
+                        dp[i][seats] = dp[i + 1][seats + 1]
+                    } else {
+                        dp[i][seats] = dp[i + 1][seats]
+                    }
+                }
+            }
+        }
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +674,101 @@ class Solution {
             dp = new_dp;
         }
         return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumberOfWays(string corridor) {
+        int MOD = 1000000007;
+        int[] dp = { 0, 0, 1 };
+
+        for (int i = corridor.Length - 1; i >= 0; i--) {
+            int[] new_dp = new int[3];
+            for (int seats = 0; seats < 3; seats++) {
+                if (seats == 2) {
+                    new_dp[seats] = corridor[i] == 'S' ? dp[1] : (dp[0] + dp[2]) % MOD;
+                } else {
+                    new_dp[seats] = corridor[i] == 'S' ? dp[seats + 1] : dp[seats];
+                }
+            }
+            dp = new_dp;
+        }
+        return dp[0];
+    }
+}
+```
+
+```go
+func numberOfWays(corridor string) int {
+    MOD := 1000000007
+    dp := []int{0, 0, 1}
+
+    for i := len(corridor) - 1; i >= 0; i-- {
+        newDp := make([]int, 3)
+        for seats := 0; seats < 3; seats++ {
+            if seats == 2 {
+                if corridor[i] == 'S' {
+                    newDp[seats] = dp[1]
+                } else {
+                    newDp[seats] = (dp[0] + dp[2]) % MOD
+                }
+            } else {
+                if corridor[i] == 'S' {
+                    newDp[seats] = dp[seats+1]
+                } else {
+                    newDp[seats] = dp[seats]
+                }
+            }
+        }
+        dp = newDp
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfWays(corridor: String): Int {
+        val MOD = 1000000007
+        var dp = intArrayOf(0, 0, 1)
+
+        for (i in corridor.length - 1 downTo 0) {
+            val newDp = IntArray(3)
+            for (seats in 0 until 3) {
+                if (seats == 2) {
+                    newDp[seats] = if (corridor[i] == 'S') dp[1] else (dp[0] + dp[2]) % MOD
+                } else {
+                    newDp[seats] = if (corridor[i] == 'S') dp[seats + 1] else dp[seats]
+                }
+            }
+            dp = newDp
+        }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ corridor: String) -> Int {
+        let MOD = 1000000007
+        let chars = Array(corridor)
+        var dp = [0, 0, 1]
+
+        for i in stride(from: chars.count - 1, through: 0, by: -1) {
+            var newDp = [0, 0, 0]
+            for seats in 0..<3 {
+                if seats == 2 {
+                    newDp[seats] = chars[i] == "S" ? dp[1] : (dp[0] + dp[2]) % MOD
+                } else {
+                    newDp[seats] = chars[i] == "S" ? dp[seats + 1] : dp[seats]
+                }
+            }
+            dp = newDp
+        }
+        return dp[0]
     }
 }
 ```
@@ -504,6 +889,113 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumberOfWays(string corridor) {
+        int mod = 1_000_000_007;
+        var seats = new List<int>();
+
+        for (int i = 0; i < corridor.Length; i++) {
+            if (corridor[i] == 'S') {
+                seats.Add(i);
+            }
+        }
+
+        int length = seats.Count;
+        if (length < 2 || length % 2 == 1) {
+            return 0;
+        }
+
+        long res = 1;
+        for (int i = 1; i < length - 1; i += 2) {
+            res = (res * (seats[i + 1] - seats[i])) % mod;
+        }
+
+        return (int)res;
+    }
+}
+```
+
+```go
+func numberOfWays(corridor string) int {
+    mod := 1_000_000_007
+    seats := []int{}
+
+    for i := 0; i < len(corridor); i++ {
+        if corridor[i] == 'S' {
+            seats = append(seats, i)
+        }
+    }
+
+    length := len(seats)
+    if length < 2 || length%2 == 1 {
+        return 0
+    }
+
+    res := 1
+    for i := 1; i < length-1; i += 2 {
+        res = (res * (seats[i+1] - seats[i])) % mod
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfWays(corridor: String): Int {
+        val mod = 1_000_000_007
+        val seats = mutableListOf<Int>()
+
+        for (i in corridor.indices) {
+            if (corridor[i] == 'S') {
+                seats.add(i)
+            }
+        }
+
+        val length = seats.size
+        if (length < 2 || length % 2 == 1) {
+            return 0
+        }
+
+        var res = 1L
+        for (i in 1 until length - 1 step 2) {
+            res = (res * (seats[i + 1] - seats[i])) % mod
+        }
+
+        return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ corridor: String) -> Int {
+        let mod = 1_000_000_007
+        var seats = [Int]()
+        let chars = Array(corridor)
+
+        for i in 0..<chars.count {
+            if chars[i] == "S" {
+                seats.append(i)
+            }
+        }
+
+        let length = seats.count
+        if length < 2 || length % 2 == 1 {
+            return 0
+        }
+
+        var res = 1
+        for i in stride(from: 1, to: length - 1, by: 2) {
+            res = (res * (seats[i + 1] - seats[i])) % mod
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -600,6 +1092,97 @@ class Solution {
         }
 
         return count >= 2 && count % 2 === 0 ? res : 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumberOfWays(string corridor) {
+        int mod = 1_000_000_007;
+        int count = 0, prev = -1;
+        long res = 1;
+
+        for (int i = 0; i < corridor.Length; i++) {
+            if (corridor[i] == 'S') {
+                count++;
+                if (count > 2 && count % 2 == 1) {
+                    res = (res * (i - prev)) % mod;
+                }
+                prev = i;
+            }
+        }
+
+        return (count >= 2 && count % 2 == 0) ? (int)res : 0;
+    }
+}
+```
+
+```go
+func numberOfWays(corridor string) int {
+    mod := 1_000_000_007
+    count, res, prev := 0, 1, -1
+
+    for i := 0; i < len(corridor); i++ {
+        if corridor[i] == 'S' {
+            count++
+            if count > 2 && count%2 == 1 {
+                res = (res * (i - prev)) % mod
+            }
+            prev = i
+        }
+    }
+
+    if count >= 2 && count%2 == 0 {
+        return res
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfWays(corridor: String): Int {
+        val mod = 1_000_000_007
+        var count = 0
+        var res = 1L
+        var prev = -1
+
+        for (i in corridor.indices) {
+            if (corridor[i] == 'S') {
+                count++
+                if (count > 2 && count % 2 == 1) {
+                    res = (res * (i - prev)) % mod
+                }
+                prev = i
+            }
+        }
+
+        return if (count >= 2 && count % 2 == 0) res.toInt() else 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ corridor: String) -> Int {
+        let mod = 1_000_000_007
+        var count = 0
+        var res = 1
+        var prev = -1
+        let chars = Array(corridor)
+
+        for i in 0..<chars.count {
+            if chars[i] == "S" {
+                count += 1
+                if count > 2 && count % 2 == 1 {
+                    res = (res * (i - prev)) % mod
+                }
+                prev = i
+            }
+        }
+
+        return (count >= 2 && count % 2 == 0) ? res : 0
     }
 }
 ```

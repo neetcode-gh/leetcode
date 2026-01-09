@@ -69,6 +69,58 @@ class Solution {
 }
 ```
 
+```go
+func maxAlternatingSum(nums []int) int64 {
+    var dfs func(i int, even bool) int64
+    dfs = func(i int, even bool) int64 {
+        if i == len(nums) {
+            return 0
+        }
+        var total int64
+        if even {
+            total = int64(nums[i])
+        } else {
+            total = -int64(nums[i])
+        }
+        return max64(total+dfs(i+1, !even), dfs(i+1, even))
+    }
+    return dfs(0, true)
+}
+
+func max64(a, b int64) int64 {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxAlternatingSum(nums: IntArray): Long {
+        fun dfs(i: Int, even: Boolean): Long {
+            if (i == nums.size) return 0L
+            val total = if (even) nums[i].toLong() else -nums[i].toLong()
+            return maxOf(total + dfs(i + 1, !even), dfs(i + 1, even))
+        }
+        return dfs(0, true)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxAlternatingSum(_ nums: [Int]) -> Int {
+        func dfs(_ i: Int, _ even: Bool) -> Int {
+            if i == nums.count { return 0 }
+            let total = even ? nums[i] : -nums[i]
+            return max(total + dfs(i + 1, !even), dfs(i + 1, even))
+        }
+        return dfs(0, true)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -185,6 +237,80 @@ class Solution {
 }
 ```
 
+```go
+func maxAlternatingSum(nums []int) int64 {
+    n := len(nums)
+    dp := make([][]int64, n)
+    for i := range dp {
+        dp[i] = []int64{-1, -1}
+    }
+
+    var dfs func(i, even int) int64
+    dfs = func(i, even int) int64 {
+        if i == n {
+            return 0
+        }
+        if dp[i][even] != -1 {
+            return dp[i][even]
+        }
+        var total int64
+        if even == 1 {
+            total = int64(nums[i])
+        } else {
+            total = -int64(nums[i])
+        }
+        dp[i][even] = max64(total+dfs(i+1, 1-even), dfs(i+1, even))
+        return dp[i][even]
+    }
+    return dfs(0, 1)
+}
+
+func max64(a, b int64) int64 {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxAlternatingSum(nums: IntArray): Long {
+        val n = nums.size
+        val dp = Array(n) { LongArray(2) { -1L } }
+
+        fun dfs(i: Int, even: Int): Long {
+            if (i == n) return 0L
+            if (dp[i][even] != -1L) return dp[i][even]
+
+            val total = if (even == 1) nums[i].toLong() else -nums[i].toLong()
+            dp[i][even] = maxOf(total + dfs(i + 1, 1 - even), dfs(i + 1, even))
+            return dp[i][even]
+        }
+        return dfs(0, 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxAlternatingSum(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var dp = [[Int]](repeating: [-1, -1], count: n)
+
+        func dfs(_ i: Int, _ even: Int) -> Int {
+            if i == n { return 0 }
+            if dp[i][even] != -1 { return dp[i][even] }
+
+            let total = even == 1 ? nums[i] : -nums[i]
+            dp[i][even] = max(total + dfs(i + 1, 1 - even), dfs(i + 1, even))
+            return dp[i][even]
+        }
+        return dfs(0, 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -260,6 +386,59 @@ class Solution {
         }
 
         return dp[0][1]; // Result starts with even index
+    }
+}
+```
+
+```go
+func maxAlternatingSum(nums []int) int64 {
+    n := len(nums)
+    dp := make([][]int64, n+1)
+    for i := range dp {
+        dp[i] = []int64{0, 0}
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i][1] = max64(int64(nums[i])+dp[i+1][0], dp[i+1][1]) // even
+        dp[i][0] = max64(-int64(nums[i])+dp[i+1][1], dp[i+1][0]) // odd
+    }
+    return dp[0][1]
+}
+
+func max64(a, b int64) int64 {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxAlternatingSum(nums: IntArray): Long {
+        val n = nums.size
+        val dp = Array(n + 1) { LongArray(2) }
+
+        for (i in n - 1 downTo 0) {
+            dp[i][1] = maxOf(nums[i] + dp[i + 1][0], dp[i + 1][1]) // even
+            dp[i][0] = maxOf(-nums[i] + dp[i + 1][1], dp[i + 1][0]) // odd
+        }
+        return dp[0][1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxAlternatingSum(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var dp = [[Int]](repeating: [0, 0], count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i][1] = max(nums[i] + dp[i + 1][0], dp[i + 1][1]) // even
+            dp[i][0] = max(-nums[i] + dp[i + 1][1], dp[i + 1][0]) // odd
+        }
+        return dp[0][1]
     }
 }
 ```
@@ -343,6 +522,60 @@ class Solution {
         }
 
         return sumEven;
+    }
+}
+```
+
+```go
+func maxAlternatingSum(nums []int) int64 {
+    var sumEven, sumOdd int64 = 0, 0
+
+    for i := len(nums) - 1; i >= 0; i-- {
+        tmpEven := max64(int64(nums[i])+sumOdd, sumEven)
+        tmpOdd := max64(-int64(nums[i])+sumEven, sumOdd)
+        sumEven, sumOdd = tmpEven, tmpOdd
+    }
+    return sumEven
+}
+
+func max64(a, b int64) int64 {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxAlternatingSum(nums: IntArray): Long {
+        var sumEven = 0L
+        var sumOdd = 0L
+
+        for (i in nums.lastIndex downTo 0) {
+            val tmpEven = maxOf(nums[i] + sumOdd, sumEven)
+            val tmpOdd = maxOf(-nums[i] + sumEven, sumOdd)
+            sumEven = tmpEven
+            sumOdd = tmpOdd
+        }
+        return sumEven
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxAlternatingSum(_ nums: [Int]) -> Int {
+        var sumEven = 0
+        var sumOdd = 0
+
+        for i in stride(from: nums.count - 1, through: 0, by: -1) {
+            let tmpEven = max(nums[i] + sumOdd, sumEven)
+            let tmpOdd = max(-nums[i] + sumEven, sumOdd)
+            sumEven = tmpEven
+            sumOdd = tmpOdd
+        }
+        return sumEven
     }
 }
 ```

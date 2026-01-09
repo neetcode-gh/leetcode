@@ -114,6 +114,77 @@ public class Solution {
 }
 ```
 
+```go
+func prefixCount(words []string, pref string) int {
+    N := len(pref)
+    res := 0
+
+    for _, w := range words {
+        if len(w) < N {
+            continue
+        }
+        inc := 1
+        for i := 0; i < N; i++ {
+            if w[i] != pref[i] {
+                inc = 0
+                break
+            }
+        }
+        res += inc
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun prefixCount(words: Array<String>, pref: String): Int {
+        val N = pref.length
+        var res = 0
+
+        for (w in words) {
+            if (w.length < N) continue
+            var inc = 1
+            for (i in 0 until N) {
+                if (w[i] != pref[i]) {
+                    inc = 0
+                    break
+                }
+            }
+            res += inc
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func prefixCount(_ words: [String], _ pref: String) -> Int {
+        let N = pref.count
+        var res = 0
+        let prefArr = Array(pref)
+
+        for w in words {
+            if w.count < N { continue }
+            let wArr = Array(w)
+            var inc = 1
+            for i in 0..<N {
+                if wArr[i] != prefArr[i] {
+                    inc = 0
+                    break
+                }
+            }
+            res += inc
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +267,46 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func prefixCount(words []string, pref string) int {
+    res := 0
+    for _, w := range words {
+        if strings.HasPrefix(w, pref) {
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun prefixCount(words: Array<String>, pref: String): Int {
+        var res = 0
+        for (w in words) {
+            if (w.startsWith(pref)) {
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func prefixCount(_ words: [String], _ pref: String) -> Int {
+        var res = 0
+        for w in words {
+            if w.hasPrefix(pref) {
+                res += 1
+            }
+        }
+        return res
     }
 }
 ```
@@ -468,6 +579,147 @@ public class Solution {
             }
         }
         return prefixTree.Count(pref);
+    }
+}
+```
+
+```go
+type PrefixNode struct {
+    children [26]*PrefixNode
+    count    int
+}
+
+type PrefixTree struct {
+    root *PrefixNode
+}
+
+func NewPrefixTree() *PrefixTree {
+    return &PrefixTree{root: &PrefixNode{}}
+}
+
+func (t *PrefixTree) Add(w string, length int) {
+    cur := t.root
+    for i := 0; i < length; i++ {
+        idx := w[i] - 'a'
+        if cur.children[idx] == nil {
+            cur.children[idx] = &PrefixNode{}
+        }
+        cur = cur.children[idx]
+        cur.count++
+    }
+}
+
+func (t *PrefixTree) Count(pref string) int {
+    cur := t.root
+    for _, c := range pref {
+        idx := c - 'a'
+        if cur.children[idx] == nil {
+            return 0
+        }
+        cur = cur.children[idx]
+    }
+    return cur.count
+}
+
+func prefixCount(words []string, pref string) int {
+    prefixTree := NewPrefixTree()
+    for _, w := range words {
+        if len(w) >= len(pref) {
+            prefixTree.Add(w, len(pref))
+        }
+    }
+    return prefixTree.Count(pref)
+}
+```
+
+```kotlin
+class PrefixNode {
+    val children = arrayOfNulls<PrefixNode>(26)
+    var count = 0
+}
+
+class PrefixTree {
+    private val root = PrefixNode()
+
+    fun add(w: String, length: Int) {
+        var cur = root
+        for (i in 0 until length) {
+            val idx = w[i] - 'a'
+            if (cur.children[idx] == null) {
+                cur.children[idx] = PrefixNode()
+            }
+            cur = cur.children[idx]!!
+            cur.count++
+        }
+    }
+
+    fun count(pref: String): Int {
+        var cur = root
+        for (c in pref) {
+            val idx = c - 'a'
+            if (cur.children[idx] == null) return 0
+            cur = cur.children[idx]!!
+        }
+        return cur.count
+    }
+}
+
+class Solution {
+    fun prefixCount(words: Array<String>, pref: String): Int {
+        val prefixTree = PrefixTree()
+        for (w in words) {
+            if (w.length >= pref.length) {
+                prefixTree.add(w, pref.length)
+            }
+        }
+        return prefixTree.count(pref)
+    }
+}
+```
+
+```swift
+class PrefixNode {
+    var children = [Character: PrefixNode]()
+    var count = 0
+}
+
+class PrefixTree {
+    private let root = PrefixNode()
+
+    func add(_ w: String, _ length: Int) {
+        var cur = root
+        let chars = Array(w)
+        for i in 0..<length {
+            let c = chars[i]
+            if cur.children[c] == nil {
+                cur.children[c] = PrefixNode()
+            }
+            cur = cur.children[c]!
+            cur.count += 1
+        }
+    }
+
+    func count(_ pref: String) -> Int {
+        var cur = root
+        for c in pref {
+            if cur.children[c] == nil {
+                return 0
+            }
+            cur = cur.children[c]!
+        }
+        return cur.count
+    }
+}
+
+class Solution {
+    func prefixCount(_ words: [String], _ pref: String) -> Int {
+        let prefixTree = PrefixTree()
+        for w in words {
+            if w.count >= pref.count {
+                prefixTree.add(w, pref.count)
+            }
+        }
+        return prefixTree.count(pref)
     }
 }
 ```

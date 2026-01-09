@@ -125,7 +125,7 @@ public class Solution {
             int cur = Dfs(i + 1);
             if (s[i] == '(') {
                 cur += 1;
-            } 
+            }
             else if (s[i] == ')') {
                 cur -= 1;
             }
@@ -136,6 +136,95 @@ public class Solution {
 
         Dfs(0);
         return res;
+    }
+}
+```
+
+```go
+func maxDepth(s string) int {
+    res := 0
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == len(s) {
+            return 0
+        }
+
+        cur := dfs(i + 1)
+        if s[i] == '(' {
+            cur += 1
+        } else if s[i] == ')' {
+            cur -= 1
+        }
+
+        if cur < 0 {
+            if -cur > res {
+                res = -cur
+            }
+        } else {
+            if cur > res {
+                res = cur
+            }
+        }
+        return cur
+    }
+
+    dfs(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxDepth(s: String): Int {
+        var res = 0
+
+        fun dfs(i: Int): Int {
+            if (i == s.length) {
+                return 0
+            }
+
+            var cur = dfs(i + 1)
+            if (s[i] == '(') {
+                cur += 1
+            } else if (s[i] == ')') {
+                cur -= 1
+            }
+
+            res = maxOf(res, kotlin.math.abs(cur))
+            return cur
+        }
+
+        dfs(0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDepth(_ s: String) -> Int {
+        var res = 0
+        let chars = Array(s)
+
+        func dfs(_ i: Int) -> Int {
+            if i == chars.count {
+                return 0
+            }
+
+            var cur = dfs(i + 1)
+            if chars[i] == "(" {
+                cur += 1
+            } else if chars[i] == ")" {
+                cur -= 1
+            }
+
+            res = max(res, abs(cur))
+            return cur
+        }
+
+        dfs(0)
+        return res
     }
 }
 ```
@@ -243,13 +332,73 @@ public class Solution {
             if (c == '(') {
                 stack.Push(c);
                 res = Math.Max(res, stack.Count);
-            } 
+            }
             else if (c == ')') {
                 stack.Pop();
             }
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxDepth(s string) int {
+    res := 0
+    stack := []rune{}
+
+    for _, c := range s {
+        if c == '(' {
+            stack = append(stack, c)
+            if len(stack) > res {
+                res = len(stack)
+            }
+        } else if c == ')' {
+            stack = stack[:len(stack)-1]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxDepth(s: String): Int {
+        var res = 0
+        val stack = ArrayDeque<Char>()
+
+        for (c in s) {
+            if (c == '(') {
+                stack.addLast(c)
+                res = maxOf(res, stack.size)
+            } else if (c == ')') {
+                stack.removeLast()
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDepth(_ s: String) -> Int {
+        var res = 0
+        var stack = [Character]()
+
+        for c in s {
+            if c == "(" {
+                stack.append(c)
+                res = max(res, stack.count)
+            } else if c == ")" {
+                stack.removeLast()
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -356,7 +505,7 @@ public class Solution {
         foreach (char c in s) {
             if (c == '(') {
                 cur++;
-            } 
+            }
             else if (c == ')') {
                 cur--;
             }
@@ -364,6 +513,66 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxDepth(s string) int {
+    res := 0
+    cur := 0
+
+    for _, c := range s {
+        if c == '(' {
+            cur++
+        } else if c == ')' {
+            cur--
+        }
+        if cur > res {
+            res = cur
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxDepth(s: String): Int {
+        var res = 0
+        var cur = 0
+
+        for (c in s) {
+            if (c == '(') {
+                cur++
+            } else if (c == ')') {
+                cur--
+            }
+            res = maxOf(res, cur)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDepth(_ s: String) -> Int {
+        var res = 0
+        var cur = 0
+
+        for c in s {
+            if c == "(" {
+                cur += 1
+            } else if c == ")" {
+                cur -= 1
+            }
+            res = max(res, cur)
+        }
+
+        return res
     }
 }
 ```

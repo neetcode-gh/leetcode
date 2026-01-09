@@ -95,6 +95,64 @@ public class Solution {
 }
 ```
 
+```go
+func maxSumDistinctTriplet(x []int, y []int) int {
+    mp := make(map[int]int)
+    for i := 0; i < len(x); i++ {
+        key, val := x[i], y[i]
+        if existing, ok := mp[key]; ok {
+            if val > existing {
+                mp[key] = val
+            }
+        } else {
+            mp[key] = val
+        }
+    }
+    if len(mp) < 3 {
+        return -1
+    }
+    vals := make([]int, 0, len(mp))
+    for _, v := range mp {
+        vals = append(vals, v)
+    }
+    sort.Ints(vals)
+    n := len(vals)
+    return vals[n-1] + vals[n-2] + vals[n-3]
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumDistinctTriplet(x: IntArray, y: IntArray): Int {
+        val mp = mutableMapOf<Int, Int>()
+        for (i in x.indices) {
+            val key = x[i]
+            val value = y[i]
+            mp[key] = maxOf(mp.getOrDefault(key, 0), value)
+        }
+        if (mp.size < 3) return -1
+        val vals = mp.values.sortedDescending()
+        return vals[0] + vals[1] + vals[2]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumDistinctTriplet(_ x: [Int], _ y: [Int]) -> Int {
+        var mp = [Int: Int]()
+        for i in 0..<x.count {
+            let key = x[i], val = y[i]
+            mp[key] = max(mp[key] ?? 0, val)
+        }
+        if mp.count < 3 { return -1 }
+        let vals = mp.values.sorted()
+        let n = vals.count
+        return vals[n-1] + vals[n-2] + vals[n-3]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -233,6 +291,100 @@ public class Solution {
             sum += pq.Dequeue();
         }
         return sum;
+    }
+}
+```
+
+```go
+func maxSumDistinctTriplet(x []int, y []int) int {
+    mp := make(map[int]int)
+    for i := 0; i < len(x); i++ {
+        key, val := x[i], y[i]
+        if existing, ok := mp[key]; ok {
+            if val > existing {
+                mp[key] = val
+            }
+        } else {
+            mp[key] = val
+        }
+    }
+
+    minHeap := &IntHeap{}
+    heap.Init(minHeap)
+    for _, val := range mp {
+        heap.Push(minHeap, val)
+        if minHeap.Len() > 3 {
+            heap.Pop(minHeap)
+        }
+    }
+
+    if minHeap.Len() < 3 {
+        return -1
+    }
+    sum := 0
+    for minHeap.Len() > 0 {
+        sum += heap.Pop(minHeap).(int)
+    }
+    return sum
+}
+
+type IntHeap []int
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumDistinctTriplet(x: IntArray, y: IntArray): Int {
+        val mp = mutableMapOf<Int, Int>()
+        for (i in x.indices) {
+            val key = x[i]
+            val value = y[i]
+            mp[key] = maxOf(mp.getOrDefault(key, 0), value)
+        }
+
+        val pq = PriorityQueue<Int>()
+        for (value in mp.values) {
+            pq.offer(value)
+            if (pq.size > 3) {
+                pq.poll()
+            }
+        }
+
+        if (pq.size < 3) return -1
+        var sum = 0
+        while (pq.isNotEmpty()) {
+            sum += pq.poll()
+        }
+        return sum
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumDistinctTriplet(_ x: [Int], _ y: [Int]) -> Int {
+        var mp = [Int: Int]()
+        for i in 0..<x.count {
+            let key = x[i], val = y[i]
+            mp[key] = max(mp[key] ?? 0, val)
+        }
+
+        var vals = Array(mp.values)
+        vals.sort()
+        if vals.count < 3 { return -1 }
+
+        let n = vals.count
+        return vals[n-1] + vals[n-2] + vals[n-3]
     }
 }
 ```
@@ -423,6 +575,117 @@ public class Solution {
         return best[2].yi == int.MinValue
             ? -1
             : best[0].yi + best[1].yi + best[2].yi;
+    }
+}
+```
+
+```go
+func maxSumDistinctTriplet(x []int, y []int) int {
+    const minInt = -1 << 31
+    best := [][2]int{{minInt, minInt}, {minInt, minInt}, {minInt, minInt}}
+
+    for i := 0; i < len(x); i++ {
+        xi, yi := x[i], y[i]
+        updated := false
+        for j := 0; j < 3; j++ {
+            if best[j][0] == xi {
+                if yi > best[j][1] {
+                    best[j][1] = yi
+                    sort.Slice(best, func(a, b int) bool {
+                        return best[a][1] > best[b][1]
+                    })
+                }
+                updated = true
+                break
+            }
+        }
+        if updated {
+            continue
+        }
+        if yi > best[0][1] {
+            best = [][2]int{{xi, yi}, best[0], best[1]}
+        } else if yi > best[1][1] {
+            best = [][2]int{best[0], {xi, yi}, best[1]}
+        } else if yi > best[2][1] {
+            best[2] = [2]int{xi, yi}
+        }
+    }
+
+    if best[2][1] == minInt {
+        return -1
+    }
+    return best[0][1] + best[1][1] + best[2][1]
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSumDistinctTriplet(x: IntArray, y: IntArray): Int {
+        var best = mutableListOf(
+            intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE),
+            intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE),
+            intArrayOf(Int.MIN_VALUE, Int.MIN_VALUE)
+        )
+
+        for (i in x.indices) {
+            val xi = x[i]
+            val yi = y[i]
+            var updated = false
+            for (j in 0 until 3) {
+                if (best[j][0] == xi) {
+                    if (yi > best[j][1]) {
+                        best[j][1] = yi
+                        best.sortByDescending { it[1] }
+                    }
+                    updated = true
+                    break
+                }
+            }
+            if (updated) continue
+            if (yi > best[0][1]) {
+                best = mutableListOf(intArrayOf(xi, yi), best[0], best[1])
+            } else if (yi > best[1][1]) {
+                best = mutableListOf(best[0], intArrayOf(xi, yi), best[1])
+            } else if (yi > best[2][1]) {
+                best[2] = intArrayOf(xi, yi)
+            }
+        }
+
+        return if (best[2][1] == Int.MIN_VALUE) -1
+               else best[0][1] + best[1][1] + best[2][1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSumDistinctTriplet(_ x: [Int], _ y: [Int]) -> Int {
+        var best: [[Int]] = [[Int.min, Int.min], [Int.min, Int.min], [Int.min, Int.min]]
+
+        for i in 0..<x.count {
+            let xi = x[i], yi = y[i]
+            var updated = false
+            for j in 0..<3 {
+                if best[j][0] == xi {
+                    if yi > best[j][1] {
+                        best[j][1] = yi
+                        best.sort { $0[1] > $1[1] }
+                    }
+                    updated = true
+                    break
+                }
+            }
+            if updated { continue }
+            if yi > best[0][1] {
+                best = [[xi, yi], best[0], best[1]]
+            } else if yi > best[1][1] {
+                best = [best[0], [xi, yi], best[1]]
+            } else if yi > best[2][1] {
+                best[2] = [xi, yi]
+            }
+        }
+
+        return best[2][1] == Int.min ? -1 : best[0][1] + best[1][1] + best[2][1]
     }
 }
 ```

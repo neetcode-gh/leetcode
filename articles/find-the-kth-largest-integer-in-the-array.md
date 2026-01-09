@@ -47,6 +47,60 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string KthLargestNumber(string[] nums, int k) {
+        Array.Sort(nums, (a, b) => {
+            if (a.Length != b.Length) return b.Length.CompareTo(a.Length);
+            return string.Compare(b, a, StringComparison.Ordinal);
+        });
+        return nums[k - 1];
+    }
+}
+```
+
+```go
+import (
+    "sort"
+)
+
+func kthLargestNumber(nums []string, k int) string {
+    sort.Slice(nums, func(i, j int) bool {
+        if len(nums[i]) != len(nums[j]) {
+            return len(nums[i]) > len(nums[j])
+        }
+        return nums[i] > nums[j]
+    })
+    return nums[k-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun kthLargestNumber(nums: Array<String>, k: Int): String {
+        nums.sortWith { a, b ->
+            if (a.length != b.length) b.length - a.length
+            else b.compareTo(a)
+        }
+        return nums[k - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthLargestNumber(_ nums: [String], _ k: Int) -> String {
+        let sorted = nums.sorted { a, b in
+            if a.count != b.count {
+                return a.count > b.count
+            }
+            return a > b
+        }
+        return sorted[k - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -151,6 +205,119 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string KthLargestNumber(string[] nums, int k) {
+        var maxHeap = new PriorityQueue<string, string>(
+            Comparer<string>.Create((a, b) => {
+                if (a.Length != b.Length) return a.Length.CompareTo(b.Length);
+                return string.Compare(a, b, StringComparison.Ordinal);
+            })
+        );
+
+        foreach (var num in nums) {
+            maxHeap.Enqueue(num, num);
+        }
+
+        while (--k > 0) {
+            maxHeap.Dequeue();
+        }
+
+        return maxHeap.Dequeue();
+    }
+}
+```
+
+```go
+import (
+    "container/heap"
+)
+
+type MaxHeap []string
+
+func (h MaxHeap) Len() int { return len(h) }
+func (h MaxHeap) Less(i, j int) bool {
+    if len(h[i]) != len(h[j]) {
+        return len(h[i]) > len(h[j])
+    }
+    return h[i] > h[j]
+}
+func (h MaxHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(string)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func kthLargestNumber(nums []string, k int) string {
+    h := &MaxHeap{}
+    heap.Init(h)
+
+    for _, num := range nums {
+        heap.Push(h, num)
+    }
+
+    for k > 1 {
+        heap.Pop(h)
+        k--
+    }
+
+    return heap.Pop(h).(string)
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class Solution {
+    fun kthLargestNumber(nums: Array<String>, k: Int): String {
+        val maxHeap = PriorityQueue<String> { a, b ->
+            if (a.length != b.length) b.length - a.length
+            else b.compareTo(a)
+        }
+
+        for (num in nums) {
+            maxHeap.offer(num)
+        }
+
+        repeat(k - 1) {
+            maxHeap.poll()
+        }
+
+        return maxHeap.poll()
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthLargestNumber(_ nums: [String], _ k: Int) -> String {
+        var heap = nums
+        heap.sort { a, b in
+            if a.count != b.count {
+                return a.count > b.count
+            }
+            return a > b
+        }
+
+        var result = ""
+        var count = k
+        var index = 0
+
+        while count > 0 {
+            result = heap[index]
+            index += 1
+            count -= 1
+        }
+
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -247,6 +414,149 @@ class Solution {
         }
 
         return minHeap.front();
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string KthLargestNumber(string[] nums, int k) {
+        var minHeap = new PriorityQueue<string, string>(
+            Comparer<string>.Create((a, b) => {
+                if (a.Length != b.Length) return a.Length.CompareTo(b.Length);
+                return string.Compare(a, b, StringComparison.Ordinal);
+            })
+        );
+
+        foreach (var num in nums) {
+            minHeap.Enqueue(num, num);
+            if (minHeap.Count > k) {
+                minHeap.Dequeue();
+            }
+        }
+
+        return minHeap.Peek();
+    }
+}
+```
+
+```go
+import (
+    "container/heap"
+)
+
+type MinHeap []string
+
+func (h MinHeap) Len() int { return len(h) }
+func (h MinHeap) Less(i, j int) bool {
+    if len(h[i]) != len(h[j]) {
+        return len(h[i]) < len(h[j])
+    }
+    return h[i] < h[j]
+}
+func (h MinHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(string)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func kthLargestNumber(nums []string, k int) string {
+    h := &MinHeap{}
+    heap.Init(h)
+
+    for _, num := range nums {
+        heap.Push(h, num)
+        if h.Len() > k {
+            heap.Pop(h)
+        }
+    }
+
+    return (*h)[0]
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class Solution {
+    fun kthLargestNumber(nums: Array<String>, k: Int): String {
+        val minHeap = PriorityQueue<String> { a, b ->
+            if (a.length != b.length) a.length - b.length
+            else a.compareTo(b)
+        }
+
+        for (num in nums) {
+            minHeap.offer(num)
+            if (minHeap.size > k) {
+                minHeap.poll()
+            }
+        }
+
+        return minHeap.peek()
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthLargestNumber(_ nums: [String], _ k: Int) -> String {
+        var minHeap = [String]()
+
+        func siftUp(_ index: Int) {
+            var i = index
+            while i > 0 {
+                let parent = (i - 1) / 2
+                if compare(minHeap[i], minHeap[parent]) < 0 {
+                    minHeap.swapAt(i, parent)
+                    i = parent
+                } else {
+                    break
+                }
+            }
+        }
+
+        func siftDown(_ index: Int) {
+            var i = index
+            let n = minHeap.count
+            while true {
+                var smallest = i
+                let left = 2 * i + 1
+                let right = 2 * i + 2
+                if left < n && compare(minHeap[left], minHeap[smallest]) < 0 {
+                    smallest = left
+                }
+                if right < n && compare(minHeap[right], minHeap[smallest]) < 0 {
+                    smallest = right
+                }
+                if smallest == i { break }
+                minHeap.swapAt(i, smallest)
+                i = smallest
+            }
+        }
+
+        func compare(_ a: String, _ b: String) -> Int {
+            if a.count != b.count {
+                return a.count - b.count
+            }
+            return a < b ? -1 : (a > b ? 1 : 0)
+        }
+
+        for num in nums {
+            minHeap.append(num)
+            siftUp(minHeap.count - 1)
+            if minHeap.count > k {
+                minHeap[0] = minHeap.removeLast()
+                if !minHeap.isEmpty {
+                    siftDown(0)
+                }
+            }
+        }
+
+        return minHeap[0]
     }
 }
 ```
@@ -538,6 +848,267 @@ class Solution {
         };
 
         return quickSelect(nums, k - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string KthLargestNumber(string[] nums, int k) {
+        return QuickSelect(nums, k - 1);
+    }
+
+    private bool Greater(string x, string y) {
+        if (x.Length != y.Length) return x.Length > y.Length;
+        return string.Compare(x, y, StringComparison.Ordinal) > 0;
+    }
+
+    private bool Less(string x, string y) {
+        if (x.Length != y.Length) return x.Length < y.Length;
+        return string.Compare(x, y, StringComparison.Ordinal) < 0;
+    }
+
+    private void Swap(string[] nums, int i, int j) {
+        var temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+
+    private int Partition(string[] nums, int left, int right) {
+        int mid = (left + right) >> 1;
+        Swap(nums, mid, left + 1);
+
+        if (Less(nums[left], nums[right])) Swap(nums, left, right);
+        if (Less(nums[left + 1], nums[right])) Swap(nums, left + 1, right);
+        if (Less(nums[left], nums[left + 1])) Swap(nums, left, left + 1);
+
+        string pivot = nums[left + 1];
+        int i = left + 1, j = right;
+
+        while (true) {
+            while (Greater(nums[++i], pivot)) ;
+            while (Less(nums[--j], pivot)) ;
+            if (i > j) break;
+            Swap(nums, i, j);
+        }
+
+        Swap(nums, left + 1, j);
+        return j;
+    }
+
+    private string QuickSelect(string[] nums, int k) {
+        int left = 0, right = nums.Length - 1;
+
+        while (true) {
+            if (right <= left + 1) {
+                if (right == left + 1 && Greater(nums[right], nums[left])) {
+                    Swap(nums, left, right);
+                }
+                return nums[k];
+            }
+
+            int j = Partition(nums, left, right);
+            if (j >= k) right = j - 1;
+            if (j <= k) left = j + 1;
+        }
+    }
+}
+```
+
+```go
+func kthLargestNumber(nums []string, k int) string {
+    return quickSelect(nums, k-1)
+}
+
+func greater(x, y string) bool {
+    if len(x) != len(y) {
+        return len(x) > len(y)
+    }
+    return x > y
+}
+
+func less(x, y string) bool {
+    if len(x) != len(y) {
+        return len(x) < len(y)
+    }
+    return x < y
+}
+
+func partition(nums []string, left, right int) int {
+    mid := (left + right) >> 1
+    nums[mid], nums[left+1] = nums[left+1], nums[mid]
+
+    if less(nums[left], nums[right]) {
+        nums[left], nums[right] = nums[right], nums[left]
+    }
+    if less(nums[left+1], nums[right]) {
+        nums[left+1], nums[right] = nums[right], nums[left+1]
+    }
+    if less(nums[left], nums[left+1]) {
+        nums[left], nums[left+1] = nums[left+1], nums[left]
+    }
+
+    pivot := nums[left+1]
+    i, j := left+1, right
+
+    for {
+        for i++; greater(nums[i], pivot); i++ {
+        }
+        for j--; less(nums[j], pivot); j-- {
+        }
+        if i > j {
+            break
+        }
+        nums[i], nums[j] = nums[j], nums[i]
+    }
+
+    nums[left+1], nums[j] = nums[j], nums[left+1]
+    return j
+}
+
+func quickSelect(nums []string, k int) string {
+    left, right := 0, len(nums)-1
+
+    for {
+        if right <= left+1 {
+            if right == left+1 && greater(nums[right], nums[left]) {
+                nums[left], nums[right] = nums[right], nums[left]
+            }
+            return nums[k]
+        }
+
+        j := partition(nums, left, right)
+        if j >= k {
+            right = j - 1
+        }
+        if j <= k {
+            left = j + 1
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun kthLargestNumber(nums: Array<String>, k: Int): String {
+        return quickSelect(nums, k - 1)
+    }
+
+    private fun greater(x: String, y: String): Boolean {
+        if (x.length != y.length) return x.length > y.length
+        return x > y
+    }
+
+    private fun less(x: String, y: String): Boolean {
+        if (x.length != y.length) return x.length < y.length
+        return x < y
+    }
+
+    private fun swap(nums: Array<String>, i: Int, j: Int) {
+        val temp = nums[i]
+        nums[i] = nums[j]
+        nums[j] = temp
+    }
+
+    private fun partition(nums: Array<String>, left: Int, right: Int): Int {
+        val mid = (left + right) shr 1
+        swap(nums, mid, left + 1)
+
+        if (less(nums[left], nums[right])) swap(nums, left, right)
+        if (less(nums[left + 1], nums[right])) swap(nums, left + 1, right)
+        if (less(nums[left], nums[left + 1])) swap(nums, left, left + 1)
+
+        val pivot = nums[left + 1]
+        var i = left + 1
+        var j = right
+
+        while (true) {
+            do { i++ } while (greater(nums[i], pivot))
+            do { j-- } while (less(nums[j], pivot))
+            if (i > j) break
+            swap(nums, i, j)
+        }
+
+        swap(nums, left + 1, j)
+        return j
+    }
+
+    private fun quickSelect(nums: Array<String>, k: Int): String {
+        var left = 0
+        var right = nums.size - 1
+
+        while (true) {
+            if (right <= left + 1) {
+                if (right == left + 1 && greater(nums[right], nums[left])) {
+                    swap(nums, left, right)
+                }
+                return nums[k]
+            }
+
+            val j = partition(nums, left, right)
+            if (j >= k) right = j - 1
+            if (j <= k) left = j + 1
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthLargestNumber(_ nums: [String], _ k: Int) -> String {
+        var nums = nums
+        return quickSelect(&nums, k - 1)
+    }
+
+    private func greater(_ x: String, _ y: String) -> Bool {
+        if x.count != y.count { return x.count > y.count }
+        return x > y
+    }
+
+    private func less(_ x: String, _ y: String) -> Bool {
+        if x.count != y.count { return x.count < y.count }
+        return x < y
+    }
+
+    private func partition(_ nums: inout [String], _ left: Int, _ right: Int) -> Int {
+        let mid = (left + right) >> 1
+        nums.swapAt(mid, left + 1)
+
+        if less(nums[left], nums[right]) { nums.swapAt(left, right) }
+        if less(nums[left + 1], nums[right]) { nums.swapAt(left + 1, right) }
+        if less(nums[left], nums[left + 1]) { nums.swapAt(left, left + 1) }
+
+        let pivot = nums[left + 1]
+        var i = left + 1
+        var j = right
+
+        while true {
+            repeat { i += 1 } while greater(nums[i], pivot)
+            repeat { j -= 1 } while less(nums[j], pivot)
+            if i > j { break }
+            nums.swapAt(i, j)
+        }
+
+        nums.swapAt(left + 1, j)
+        return j
+    }
+
+    private func quickSelect(_ nums: inout [String], _ k: Int) -> String {
+        var left = 0
+        var right = nums.count - 1
+
+        while true {
+            if right <= left + 1 {
+                if right == left + 1 && greater(nums[right], nums[left]) {
+                    nums.swapAt(left, right)
+                }
+                return nums[k]
+            }
+
+            let j = partition(&nums, left, right)
+            if j >= k { right = j - 1 }
+            if j <= k { left = j + 1 }
+        }
     }
 }
 ```

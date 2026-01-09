@@ -117,6 +117,111 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountStudents(int[] students, int[] sandwiches) {
+        int n = students.Length;
+        Queue<int> q = new Queue<int>();
+        foreach (int student in students) {
+            q.Enqueue(student);
+        }
+
+        int res = n;
+        foreach (int sandwich in sandwiches) {
+            int cnt = 0;
+            while (cnt < n && q.Peek() != sandwich) {
+                q.Enqueue(q.Dequeue());
+                cnt++;
+            }
+            if (q.Peek() == sandwich) {
+                q.Dequeue();
+                res--;
+            } else {
+                break;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countStudents(students []int, sandwiches []int) int {
+    n := len(students)
+    q := make([]int, n)
+    copy(q, students)
+
+    res := n
+    for _, sandwich := range sandwiches {
+        cnt := 0
+        for cnt < n && q[0] != sandwich {
+            q = append(q[1:], q[0])
+            cnt++
+        }
+        if q[0] == sandwich {
+            q = q[1:]
+            res--
+        } else {
+            break
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countStudents(students: IntArray, sandwiches: IntArray): Int {
+        val n = students.size
+        val q = ArrayDeque<Int>()
+        for (student in students) {
+            q.add(student)
+        }
+
+        var res = n
+        for (sandwich in sandwiches) {
+            var cnt = 0
+            while (cnt < n && q.first() != sandwich) {
+                q.add(q.removeFirst())
+                cnt++
+            }
+            if (q.first() == sandwich) {
+                q.removeFirst()
+                res--
+            } else {
+                break
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countStudents(_ students: [Int], _ sandwiches: [Int]) -> Int {
+        let n = students.count
+        var q = students
+
+        var res = n
+        for sandwich in sandwiches {
+            var cnt = 0
+            while cnt < n && q[0] != sandwich {
+                q.append(q.removeFirst())
+                cnt += 1
+            }
+            if q[0] == sandwich {
+                q.removeFirst()
+                res -= 1
+            } else {
+                break
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,6 +342,109 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountStudents(int[] students, int[] sandwiches) {
+        int n = students.Length;
+        int idx = 0;
+
+        int res = n;
+        foreach (int sandwich in sandwiches) {
+            int cnt = 0;
+            while (cnt < n && students[idx] != sandwich) {
+                idx++;
+                idx %= n;
+                cnt++;
+            }
+            if (students[idx] == sandwich) {
+                students[idx] = -1;
+                res--;
+            } else {
+                break;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countStudents(students []int, sandwiches []int) int {
+    n := len(students)
+    idx := 0
+
+    res := n
+    for _, sandwich := range sandwiches {
+        cnt := 0
+        for cnt < n && students[idx] != sandwich {
+            idx++
+            idx %= n
+            cnt++
+        }
+        if students[idx] == sandwich {
+            students[idx] = -1
+            res--
+        } else {
+            break
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countStudents(students: IntArray, sandwiches: IntArray): Int {
+        val n = students.size
+        var idx = 0
+
+        var res = n
+        for (sandwich in sandwiches) {
+            var cnt = 0
+            while (cnt < n && students[idx] != sandwich) {
+                idx++
+                idx %= n
+                cnt++
+            }
+            if (students[idx] == sandwich) {
+                students[idx] = -1
+                res--
+            } else {
+                break
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countStudents(_ students: [Int], _ sandwiches: [Int]) -> Int {
+        var students = students
+        let n = students.count
+        var idx = 0
+
+        var res = n
+        for sandwich in sandwiches {
+            var cnt = 0
+            while cnt < n && students[idx] != sandwich {
+                idx += 1
+                idx %= n
+                cnt += 1
+            }
+            if students[idx] == sandwich {
+                students[idx] = -1
+                res -= 1
+            } else {
+                break
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,6 +544,92 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountStudents(int[] students, int[] sandwiches) {
+        int res = students.Length;
+        int[] cnt = new int[2];
+        foreach (int student in students) {
+            cnt[student]++;
+        }
+
+        foreach (int s in sandwiches) {
+            if (cnt[s] > 0) {
+                cnt[s]--;
+                res--;
+            } else {
+                break;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countStudents(students []int, sandwiches []int) int {
+    res := len(students)
+    cnt := make([]int, 2)
+    for _, student := range students {
+        cnt[student]++
+    }
+
+    for _, s := range sandwiches {
+        if cnt[s] > 0 {
+            cnt[s]--
+            res--
+        } else {
+            break
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countStudents(students: IntArray, sandwiches: IntArray): Int {
+        var res = students.size
+        val cnt = IntArray(2)
+        for (student in students) {
+            cnt[student]++
+        }
+
+        for (s in sandwiches) {
+            if (cnt[s] > 0) {
+                cnt[s]--
+                res--
+            } else {
+                break
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countStudents(_ students: [Int], _ sandwiches: [Int]) -> Int {
+        var res = students.count
+        var cnt = [0, 0]
+        for student in students {
+            cnt[student] += 1
+        }
+
+        for s in sandwiches {
+            if cnt[s] > 0 {
+                cnt[s] -= 1
+                res -= 1
+            } else {
+                break
+            }
+        }
+        return res
     }
 }
 ```

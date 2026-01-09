@@ -120,6 +120,75 @@ public class Solution {
 }
 ```
 
+```go
+func subarraysWithKDistinct(nums []int, k int) int {
+    n, res := len(nums), 0
+
+    for i := 0; i < n; i++ {
+        seen := make(map[int]bool)
+        for j := i; j < n; j++ {
+            seen[nums[j]] = true
+            if len(seen) > k {
+                break
+            }
+            if len(seen) == k {
+                res++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subarraysWithKDistinct(nums: IntArray, k: Int): Int {
+        val n = nums.size
+        var res = 0
+
+        for (i in 0 until n) {
+            val seen = HashSet<Int>()
+            for (j in i until n) {
+                seen.add(nums[j])
+                if (seen.size > k) {
+                    break
+                }
+                if (seen.size == k) {
+                    res++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subarraysWithKDistinct(_ nums: [Int], _ k: Int) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for i in 0..<n {
+            var seen = Set<Int>()
+            for j in i..<n {
+                seen.insert(nums[j])
+                if seen.count > k {
+                    break
+                }
+                if seen.count == k {
+                    res += 1
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,6 +364,107 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func subarraysWithKDistinct(nums []int, k int) int {
+    atMostK := func(k int) int {
+        count := make(map[int]int)
+        res, l := 0, 0
+
+        for r := 0; r < len(nums); r++ {
+            count[nums[r]]++
+            if count[nums[r]] == 1 {
+                k--
+            }
+
+            for k < 0 {
+                count[nums[l]]--
+                if count[nums[l]] == 0 {
+                    delete(count, nums[l])
+                    k++
+                }
+                l++
+            }
+
+            res += r - l + 1
+        }
+
+        return res
+    }
+
+    return atMostK(k) - atMostK(k-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun subarraysWithKDistinct(nums: IntArray, k: Int): Int {
+        return atMostK(nums, k) - atMostK(nums, k - 1)
+    }
+
+    private fun atMostK(nums: IntArray, k: Int): Int {
+        var k = k
+        val count = HashMap<Int, Int>()
+        var res = 0
+        var l = 0
+
+        for (r in nums.indices) {
+            count[nums[r]] = count.getOrDefault(nums[r], 0) + 1
+            if (count[nums[r]] == 1) {
+                k--
+            }
+
+            while (k < 0) {
+                count[nums[l]] = count[nums[l]]!! - 1
+                if (count[nums[l]] == 0) {
+                    count.remove(nums[l])
+                    k++
+                }
+                l++
+            }
+
+            res += r - l + 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subarraysWithKDistinct(_ nums: [Int], _ k: Int) -> Int {
+        func atMostK(_ k: Int) -> Int {
+            var k = k
+            var count = [Int: Int]()
+            var res = 0
+            var l = 0
+
+            for r in 0..<nums.count {
+                count[nums[r], default: 0] += 1
+                if count[nums[r]] == 1 {
+                    k -= 1
+                }
+
+                while k < 0 {
+                    count[nums[l]]! -= 1
+                    if count[nums[l]] == 0 {
+                        count.removeValue(forKey: nums[l])
+                        k += 1
+                    }
+                    l += 1
+                }
+
+                res += r - l + 1
+            }
+
+            return res
+        }
+
+        return atMostK(k) - atMostK(k - 1)
     }
 }
 ```
@@ -478,6 +648,107 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func subarraysWithKDistinct(nums []int, k int) int {
+    count := make(map[int]int)
+    res, lFar, lNear := 0, 0, 0
+
+    for r := 0; r < len(nums); r++ {
+        count[nums[r]]++
+
+        for len(count) > k {
+            count[nums[lNear]]--
+            if count[nums[lNear]] == 0 {
+                delete(count, nums[lNear])
+            }
+            lNear++
+            lFar = lNear
+        }
+
+        for count[nums[lNear]] > 1 {
+            count[nums[lNear]]--
+            lNear++
+        }
+
+        if len(count) == k {
+            res += lNear - lFar + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subarraysWithKDistinct(nums: IntArray, k: Int): Int {
+        val count = HashMap<Int, Int>()
+        var res = 0
+        var lFar = 0
+        var lNear = 0
+
+        for (r in nums.indices) {
+            count[nums[r]] = count.getOrDefault(nums[r], 0) + 1
+
+            while (count.size > k) {
+                count[nums[lNear]] = count[nums[lNear]]!! - 1
+                if (count[nums[lNear]] == 0) {
+                    count.remove(nums[lNear])
+                }
+                lNear++
+                lFar = lNear
+            }
+
+            while (count[nums[lNear]]!! > 1) {
+                count[nums[lNear]] = count[nums[lNear]]!! - 1
+                lNear++
+            }
+
+            if (count.size == k) {
+                res += lNear - lFar + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subarraysWithKDistinct(_ nums: [Int], _ k: Int) -> Int {
+        var count = [Int: Int]()
+        var res = 0
+        var lFar = 0
+        var lNear = 0
+
+        for r in 0..<nums.count {
+            count[nums[r], default: 0] += 1
+
+            while count.count > k {
+                count[nums[lNear]]! -= 1
+                if count[nums[lNear]] == 0 {
+                    count.removeValue(forKey: nums[lNear])
+                }
+                lNear += 1
+                lFar = lNear
+            }
+
+            while count[nums[lNear]]! > 1 {
+                count[nums[lNear]]! -= 1
+                lNear += 1
+            }
+
+            if count.count == k {
+                res += lNear - lFar + 1
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -671,6 +942,115 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func subarraysWithKDistinct(nums []int, k int) int {
+    n := len(nums)
+    count := make([]int, n+1)
+    res, l, cnt := 0, 0, 0
+
+    for r := 0; r < n; r++ {
+        count[nums[r]]++
+        if count[nums[r]] == 1 {
+            k--
+        }
+
+        if k < 0 {
+            count[nums[l]]--
+            l++
+            k++
+            cnt = 0
+        }
+
+        if k == 0 {
+            for count[nums[l]] > 1 {
+                count[nums[l]]--
+                l++
+                cnt++
+            }
+            res += cnt + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subarraysWithKDistinct(nums: IntArray, k: Int): Int {
+        var k = k
+        val n = nums.size
+        val count = IntArray(n + 1)
+        var res = 0
+        var l = 0
+        var cnt = 0
+
+        for (r in 0 until n) {
+            count[nums[r]]++
+            if (count[nums[r]] == 1) {
+                k--
+            }
+
+            if (k < 0) {
+                count[nums[l]]--
+                l++
+                k++
+                cnt = 0
+            }
+
+            if (k == 0) {
+                while (count[nums[l]] > 1) {
+                    count[nums[l]]--
+                    l++
+                    cnt++
+                }
+                res += cnt + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subarraysWithKDistinct(_ nums: [Int], _ k: Int) -> Int {
+        var k = k
+        let n = nums.count
+        var count = [Int](repeating: 0, count: n + 1)
+        var res = 0
+        var l = 0
+        var cnt = 0
+
+        for r in 0..<n {
+            count[nums[r]] += 1
+            if count[nums[r]] == 1 {
+                k -= 1
+            }
+
+            if k < 0 {
+                count[nums[l]] -= 1
+                l += 1
+                k += 1
+                cnt = 0
+            }
+
+            if k == 0 {
+                while count[nums[l]] > 1 {
+                    count[nums[l]] -= 1
+                    l += 1
+                    cnt += 1
+                }
+                res += cnt + 1
+            }
+        }
+
+        return res
     }
 }
 ```

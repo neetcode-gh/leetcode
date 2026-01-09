@@ -97,6 +97,101 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CheckPossibility(int[] nums) {
+        bool changed = false;
+
+        for (int i = 0; i < nums.Length - 1; i++) {
+            if (nums[i] <= nums[i + 1]) {
+                continue;
+            }
+            if (changed) {
+                return false;
+            }
+            if (i == 0 || nums[i + 1] >= nums[i - 1]) {
+                nums[i] = nums[i + 1];
+            } else {
+                nums[i + 1] = nums[i];
+            }
+            changed = true;
+        }
+        return true;
+    }
+}
+```
+
+```go
+func checkPossibility(nums []int) bool {
+    changed := false
+
+    for i := 0; i < len(nums)-1; i++ {
+        if nums[i] <= nums[i+1] {
+            continue
+        }
+        if changed {
+            return false
+        }
+        if i == 0 || nums[i+1] >= nums[i-1] {
+            nums[i] = nums[i+1]
+        } else {
+            nums[i+1] = nums[i]
+        }
+        changed = true
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun checkPossibility(nums: IntArray): Boolean {
+        var changed = false
+
+        for (i in 0 until nums.size - 1) {
+            if (nums[i] <= nums[i + 1]) {
+                continue
+            }
+            if (changed) {
+                return false
+            }
+            if (i == 0 || nums[i + 1] >= nums[i - 1]) {
+                nums[i] = nums[i + 1]
+            } else {
+                nums[i + 1] = nums[i]
+            }
+            changed = true
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkPossibility(_ nums: [Int]) -> Bool {
+        var nums = nums
+        var changed = false
+
+        for i in 0..<(nums.count - 1) {
+            if nums[i] <= nums[i + 1] {
+                continue
+            }
+            if changed {
+                return false
+            }
+            if i == 0 || nums[i + 1] >= nums[i - 1] {
+                nums[i] = nums[i + 1]
+            } else {
+                nums[i + 1] = nums[i]
+            }
+            changed = true
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

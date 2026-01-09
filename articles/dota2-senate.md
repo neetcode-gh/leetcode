@@ -190,6 +190,124 @@ public class Solution {
 }
 ```
 
+```go
+func predictPartyVictory(senate string) string {
+    s := []byte(senate)
+    for {
+        i := 0
+        for i < len(s) {
+            hasR, hasD := false, false
+            for _, c := range s {
+                if c == 'R' {
+                    hasR = true
+                }
+                if c == 'D' {
+                    hasD = true
+                }
+            }
+            if !hasR {
+                return "Dire"
+            }
+            if !hasD {
+                return "Radiant"
+            }
+            if s[i] == 'R' {
+                j := (i + 1) % len(s)
+                for s[j] == 'R' {
+                    j = (j + 1) % len(s)
+                }
+                s = append(s[:j], s[j+1:]...)
+                if j < i {
+                    i--
+                }
+            } else {
+                j := (i + 1) % len(s)
+                for s[j] == 'D' {
+                    j = (j + 1) % len(s)
+                }
+                s = append(s[:j], s[j+1:]...)
+                if j < i {
+                    i--
+                }
+            }
+            i++
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun predictPartyVictory(senate: String): String {
+        val s = senate.toMutableList()
+
+        while (true) {
+            var i = 0
+            while (i < s.size) {
+                if ('R' !in s) return "Dire"
+                if ('D' !in s) return "Radiant"
+                if (s[i] == 'R') {
+                    var j = (i + 1) % s.size
+                    while (s[j] == 'R') {
+                        j = (j + 1) % s.size
+                    }
+                    s.removeAt(j)
+                    if (j < i) i--
+                } else {
+                    var j = (i + 1) % s.size
+                    while (s[j] == 'D') {
+                        j = (j + 1) % s.size
+                    }
+                    s.removeAt(j)
+                    if (j < i) i--
+                }
+                i++
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func predictPartyVictory(_ senate: String) -> String {
+        var s = Array(senate)
+
+        while true {
+            var i = 0
+            while i < s.count {
+                if !s.contains("R") {
+                    return "Dire"
+                }
+                if !s.contains("D") {
+                    return "Radiant"
+                }
+                if s[i] == "R" {
+                    var j = (i + 1) % s.count
+                    while s[j] == "R" {
+                        j = (j + 1) % s.count
+                    }
+                    s.remove(at: j)
+                    if j < i {
+                        i -= 1
+                    }
+                } else {
+                    var j = (i + 1) % s.count
+                    while s[j] == "D" {
+                        j = (j + 1) % s.count
+                    }
+                    s.remove(at: j)
+                    if j < i {
+                        i -= 1
+                    }
+                }
+                i += 1
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -351,6 +469,103 @@ public class Solution {
         }
 
         return R.Count > 0 ? "Radiant" : "Dire";
+    }
+}
+```
+
+```go
+func predictPartyVictory(senate string) string {
+    R := []int{}
+    D := []int{}
+    n := len(senate)
+
+    for i, c := range senate {
+        if c == 'R' {
+            R = append(R, i)
+        } else {
+            D = append(D, i)
+        }
+    }
+
+    for len(R) > 0 && len(D) > 0 {
+        rTurn := R[0]
+        R = R[1:]
+        dTurn := D[0]
+        D = D[1:]
+
+        if rTurn < dTurn {
+            R = append(R, rTurn+n)
+        } else {
+            D = append(D, dTurn+n)
+        }
+    }
+
+    if len(R) > 0 {
+        return "Radiant"
+    }
+    return "Dire"
+}
+```
+
+```kotlin
+class Solution {
+    fun predictPartyVictory(senate: String): String {
+        val R = ArrayDeque<Int>()
+        val D = ArrayDeque<Int>()
+        val n = senate.length
+
+        for (i in senate.indices) {
+            if (senate[i] == 'R') {
+                R.addLast(i)
+            } else {
+                D.addLast(i)
+            }
+        }
+
+        while (R.isNotEmpty() && D.isNotEmpty()) {
+            val rTurn = R.removeFirst()
+            val dTurn = D.removeFirst()
+
+            if (rTurn < dTurn) {
+                R.addLast(rTurn + n)
+            } else {
+                D.addLast(dTurn + n)
+            }
+        }
+
+        return if (R.isNotEmpty()) "Radiant" else "Dire"
+    }
+}
+```
+
+```swift
+class Solution {
+    func predictPartyVictory(_ senate: String) -> String {
+        var R = [Int]()
+        var D = [Int]()
+        let n = senate.count
+        let chars = Array(senate)
+
+        for (i, c) in chars.enumerated() {
+            if c == "R" {
+                R.append(i)
+            } else {
+                D.append(i)
+            }
+        }
+
+        while !R.isEmpty && !D.isEmpty {
+            let rTurn = R.removeFirst()
+            let dTurn = D.removeFirst()
+
+            if rTurn < dTurn {
+                R.append(rTurn + n)
+            } else {
+                D.append(dTurn + n)
+            }
+        }
+
+        return R.isEmpty ? "Dire" : "Radiant"
     }
 }
 ```

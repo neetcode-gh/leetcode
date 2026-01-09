@@ -82,7 +82,7 @@ class Solution {
     multiply(mat1, mat2) {
         // Product matrix.
         let ans = Array(mat1.length).fill(0).map(x => Array(mat2[0].length).fill(0))
-        
+
         mat1.forEach((rowElements, rowIndex) => {
             rowElements.forEach((rowElement, elementIndex) => {
                 // If current element of mat1 is non-zero then iterate over all columns of mat2.
@@ -93,6 +93,114 @@ class Solution {
                 }
             });
         });
+
+        return ans
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[][] Multiply(int[][] mat1, int[][] mat2) {
+        int n = mat1.Length;
+        int k = mat1[0].Length;
+        int m = mat2[0].Length;
+
+        // Product matrix will have 'n x m' size.
+        int[][] ans = new int[n][];
+        for (int i = 0; i < n; i++) {
+            ans[i] = new int[m];
+        }
+
+        for (int rowIndex = 0; rowIndex < n; rowIndex++) {
+            for (int elementIndex = 0; elementIndex < k; elementIndex++) {
+                // If current element of mat1 is non-zero then iterate over all columns of mat2.
+                if (mat1[rowIndex][elementIndex] != 0) {
+                    for (int colIndex = 0; colIndex < m; colIndex++) {
+                        ans[rowIndex][colIndex] += mat1[rowIndex][elementIndex] * mat2[elementIndex][colIndex];
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+}
+```
+
+```go
+func multiply(mat1 [][]int, mat2 [][]int) [][]int {
+    n := len(mat1)
+    k := len(mat1[0])
+    m := len(mat2[0])
+
+    // Product matrix will have 'n x m' size.
+    ans := make([][]int, n)
+    for i := range ans {
+        ans[i] = make([]int, m)
+    }
+
+    for rowIndex := 0; rowIndex < n; rowIndex++ {
+        for elementIndex := 0; elementIndex < k; elementIndex++ {
+            // If current element of mat1 is non-zero then iterate over all columns of mat2.
+            if mat1[rowIndex][elementIndex] != 0 {
+                for colIndex := 0; colIndex < m; colIndex++ {
+                    ans[rowIndex][colIndex] += mat1[rowIndex][elementIndex] * mat2[elementIndex][colIndex]
+                }
+            }
+        }
+    }
+
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun multiply(mat1: Array<IntArray>, mat2: Array<IntArray>): Array<IntArray> {
+        val n = mat1.size
+        val k = mat1[0].size
+        val m = mat2[0].size
+
+        // Product matrix will have 'n x m' size.
+        val ans = Array(n) { IntArray(m) }
+
+        for (rowIndex in 0 until n) {
+            for (elementIndex in 0 until k) {
+                // If current element of mat1 is non-zero then iterate over all columns of mat2.
+                if (mat1[rowIndex][elementIndex] != 0) {
+                    for (colIndex in 0 until m) {
+                        ans[rowIndex][colIndex] += mat1[rowIndex][elementIndex] * mat2[elementIndex][colIndex]
+                    }
+                }
+            }
+        }
+
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func multiply(_ mat1: [[Int]], _ mat2: [[Int]]) -> [[Int]] {
+        let n = mat1.count
+        let k = mat1[0].count
+        let m = mat2[0].count
+
+        // Product matrix will have 'n x m' size.
+        var ans = [[Int]](repeating: [Int](repeating: 0, count: m), count: n)
+
+        for rowIndex in 0..<n {
+            for elementIndex in 0..<k {
+                // If current element of mat1 is non-zero then iterate over all columns of mat2.
+                if mat1[rowIndex][elementIndex] != 0 {
+                    for colIndex in 0..<m {
+                        ans[rowIndex][colIndex] += mat1[rowIndex][elementIndex] * mat2[elementIndex][colIndex]
+                    }
+                }
+            }
+        }
 
         return ans
     }
@@ -260,7 +368,7 @@ class Solution {
             matrix.forEach((rowElements, row) => {
                 let currRow = [];
                 rowElements.forEach((element, col) => {
-                    if (element) {          
+                    if (element) {
                         currRow.push([element, col]);
                     }
                 });
@@ -268,22 +376,22 @@ class Solution {
             });
             return compressedMatrix;
         }
-        
+
         let m = mat1.length;
         let k = mat1[0].length;
         let n = mat2[0].length;
-        
+
         // Store the non-zero values of each matrix.
         let A = compressMatrix(mat1);
         let B = compressMatrix(mat2);
-        
+
         let ans = Array(m).fill(0).map(x => Array(n).fill(0));
-        
+
         for (let mat1Row = 0; mat1Row < m; ++mat1Row) {
             // Iterate on all current 'row' non-zero elements of mat1.
             for (let mat1Element of A[mat1Row]) {
                 let [element1, mat1Col] = mat1Element;
-                
+
                 // Multiply and add all non-zero elements of mat2
                 // where the row is equal to col of current element of mat1.
                 for (let mat2Element of B[mat1Col]) {
@@ -293,6 +401,194 @@ class Solution {
             }
         }
         return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private List<List<(int val, int col)>> CompressMatrix(int[][] matrix) {
+        int rows = matrix.Length;
+        int cols = matrix[0].Length;
+        var compressedMatrix = new List<List<(int val, int col)>>();
+
+        for (int row = 0; row < rows; row++) {
+            var currRow = new List<(int val, int col)>();
+            for (int col = 0; col < cols; col++) {
+                if (matrix[row][col] != 0) {
+                    currRow.Add((matrix[row][col], col));
+                }
+            }
+            compressedMatrix.Add(currRow);
+        }
+        return compressedMatrix;
+    }
+
+    public int[][] Multiply(int[][] mat1, int[][] mat2) {
+        int m = mat1.Length;
+        int k = mat1[0].Length;
+        int n = mat2[0].Length;
+
+        // Store the non-zero values of each matrix.
+        var A = CompressMatrix(mat1);
+        var B = CompressMatrix(mat2);
+
+        int[][] ans = new int[m][];
+        for (int i = 0; i < m; i++) {
+            ans[i] = new int[n];
+        }
+
+        for (int mat1Row = 0; mat1Row < m; mat1Row++) {
+            // Iterate on all current 'row' non-zero elements of mat1.
+            foreach (var (element1, mat1Col) in A[mat1Row]) {
+                // Multiply and add all non-zero elements of mat2
+                // where the row is equal to col of current element of mat1.
+                foreach (var (element2, mat2Col) in B[mat1Col]) {
+                    ans[mat1Row][mat2Col] += element1 * element2;
+                }
+            }
+        }
+
+        return ans;
+    }
+}
+```
+
+```go
+func multiply(mat1 [][]int, mat2 [][]int) [][]int {
+    compressMatrix := func(matrix [][]int) [][][2]int {
+        rows := len(matrix)
+        cols := len(matrix[0])
+        compressedMatrix := make([][][2]int, rows)
+
+        for row := 0; row < rows; row++ {
+            var currRow [][2]int
+            for col := 0; col < cols; col++ {
+                if matrix[row][col] != 0 {
+                    currRow = append(currRow, [2]int{matrix[row][col], col})
+                }
+            }
+            compressedMatrix[row] = currRow
+        }
+        return compressedMatrix
+    }
+
+    m := len(mat1)
+    n := len(mat2[0])
+
+    // Store the non-zero values of each matrix.
+    A := compressMatrix(mat1)
+    B := compressMatrix(mat2)
+
+    ans := make([][]int, m)
+    for i := range ans {
+        ans[i] = make([]int, n)
+    }
+
+    for mat1Row := 0; mat1Row < m; mat1Row++ {
+        // Iterate on all current 'row' non-zero elements of mat1.
+        for _, mat1Element := range A[mat1Row] {
+            element1, mat1Col := mat1Element[0], mat1Element[1]
+
+            // Multiply and add all non-zero elements of mat2
+            // where the row is equal to col of current element of mat1.
+            for _, mat2Element := range B[mat1Col] {
+                element2, mat2Col := mat2Element[0], mat2Element[1]
+                ans[mat1Row][mat2Col] += element1 * element2
+            }
+        }
+    }
+
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    private fun compressMatrix(matrix: Array<IntArray>): List<List<Pair<Int, Int>>> {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        val compressedMatrix = mutableListOf<List<Pair<Int, Int>>>()
+
+        for (row in 0 until rows) {
+            val currRow = mutableListOf<Pair<Int, Int>>()
+            for (col in 0 until cols) {
+                if (matrix[row][col] != 0) {
+                    currRow.add(matrix[row][col] to col)
+                }
+            }
+            compressedMatrix.add(currRow)
+        }
+        return compressedMatrix
+    }
+
+    fun multiply(mat1: Array<IntArray>, mat2: Array<IntArray>): Array<IntArray> {
+        val m = mat1.size
+        val n = mat2[0].size
+
+        // Store the non-zero values of each matrix.
+        val A = compressMatrix(mat1)
+        val B = compressMatrix(mat2)
+
+        val ans = Array(m) { IntArray(n) }
+
+        for (mat1Row in 0 until m) {
+            // Iterate on all current 'row' non-zero elements of mat1.
+            for ((element1, mat1Col) in A[mat1Row]) {
+                // Multiply and add all non-zero elements of mat2
+                // where the row is equal to col of current element of mat1.
+                for ((element2, mat2Col) in B[mat1Col]) {
+                    ans[mat1Row][mat2Col] += element1 * element2
+                }
+            }
+        }
+
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    private func compressMatrix(_ matrix: [[Int]]) -> [[(Int, Int)]] {
+        let rows = matrix.count
+        let cols = matrix[0].count
+        var compressedMatrix = [[(Int, Int)]]()
+
+        for row in 0..<rows {
+            var currRow = [(Int, Int)]()
+            for col in 0..<cols {
+                if matrix[row][col] != 0 {
+                    currRow.append((matrix[row][col], col))
+                }
+            }
+            compressedMatrix.append(currRow)
+        }
+        return compressedMatrix
+    }
+
+    func multiply(_ mat1: [[Int]], _ mat2: [[Int]]) -> [[Int]] {
+        let m = mat1.count
+        let n = mat2[0].count
+
+        // Store the non-zero values of each matrix.
+        let A = compressMatrix(mat1)
+        let B = compressMatrix(mat2)
+
+        var ans = [[Int]](repeating: [Int](repeating: 0, count: n), count: m)
+
+        for mat1Row in 0..<m {
+            // Iterate on all current 'row' non-zero elements of mat1.
+            for (element1, mat1Col) in A[mat1Row] {
+                // Multiply and add all non-zero elements of mat2
+                // where the row is equal to col of current element of mat1.
+                for (element2, mat2Col) in B[mat1Col] {
+                    ans[mat1Row][mat2Col] += element1 * element2
+                }
+            }
+        }
+
+        return ans
     }
 }
 ```
@@ -551,17 +847,17 @@ class SparseMatrix {
     constructor(matrix, colWise) {
         [this.values, this.rowIndex, this.colIndex] = this.compressMatrix(matrix, colWise);
     }
-    
+
     compressMatrix(matrix, colWise) {
-        return (colWise ? this.compressColWise(matrix) : this.compressRowWise(matrix)); 
+        return (colWise ? this.compressColWise(matrix) : this.compressRowWise(matrix));
     }
-    
+
     // Compressed Sparse Row
     compressRowWise(matrix) {
         let values = []
         let rowIndex = [0]
         let colIndex = []
-        
+
         for (let row = 0; row < matrix.length; ++row) {
             for (let col = 0; col < matrix[0].length; ++col) {
                 if (matrix[row][col]) {
@@ -571,16 +867,16 @@ class SparseMatrix {
             }
             rowIndex.push(values.length);
         }
-        
+
         return [values, rowIndex, colIndex];
     }
-    
+
     // Compressed Sparse Col
     compressColWise(matrix) {
         let values = []
         let rowIndex = []
         let colIndex = [0]
-        
+
         for (let col = 0; col < matrix[0].length; ++col) {
             for (let row = 0; row < matrix.length; ++row) {
                 if (matrix[row][col]) {
@@ -590,7 +886,7 @@ class SparseMatrix {
             }
             colIndex.push(values.length);
         }
-        
+
         return [values, rowIndex, colIndex];
     }
 }
@@ -604,9 +900,9 @@ class Solution {
     multiply(mat1, mat2) {
         let A = new SparseMatrix(mat1, false)
         let B = new SparseMatrix(mat2, true)
-        
+
         let ans = Array(mat1.length).fill(0).map(x => Array(mat2[0].length).fill(0));
-        
+
         ans.forEach((_, row) => {
             ans[row].forEach((_, col) => {
                 // Row element range indices
@@ -630,8 +926,339 @@ class Solution {
                 }
             });
         });
-        
+
         return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    class SparseMatrix {
+        public int cols = 0, rows = 0;
+        public List<int> values = new List<int>();
+        public List<int> colIndex = new List<int>();
+        public List<int> rowIndex = new List<int>();
+
+        // Compressed Sparse Row
+        public SparseMatrix(int[][] matrix) {
+            rows = matrix.Length;
+            cols = matrix[0].Length;
+            rowIndex.Add(0);
+
+            for (int row = 0; row < rows; row++) {
+                for (int col = 0; col < cols; col++) {
+                    if (matrix[row][col] != 0) {
+                        values.Add(matrix[row][col]);
+                        colIndex.Add(col);
+                    }
+                }
+                rowIndex.Add(values.Count);
+            }
+        }
+
+        // Compressed Sparse Column
+        public SparseMatrix(int[][] matrix, bool colWise) {
+            rows = matrix.Length;
+            cols = matrix[0].Length;
+            colIndex.Add(0);
+
+            for (int col = 0; col < cols; col++) {
+                for (int row = 0; row < rows; row++) {
+                    if (matrix[row][col] != 0) {
+                        values.Add(matrix[row][col]);
+                        rowIndex.Add(row);
+                    }
+                }
+                colIndex.Add(values.Count);
+            }
+        }
+    }
+
+    public int[][] Multiply(int[][] mat1, int[][] mat2) {
+        SparseMatrix A = new SparseMatrix(mat1);
+        SparseMatrix B = new SparseMatrix(mat2, true);
+
+        int[][] ans = new int[mat1.Length][];
+        for (int i = 0; i < mat1.Length; i++) {
+            ans[i] = new int[mat2[0].Length];
+        }
+
+        for (int row = 0; row < ans.Length; row++) {
+            for (int col = 0; col < ans[0].Length; col++) {
+                // Row element range indices
+                int matrixOneRowStart = A.rowIndex[row];
+                int matrixOneRowEnd = A.rowIndex[row + 1];
+
+                // Column element range indices
+                int matrixTwoColStart = B.colIndex[col];
+                int matrixTwoColEnd = B.colIndex[col + 1];
+
+                // Iterate over both row and column.
+                while (matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd) {
+                    if (A.colIndex[matrixOneRowStart] < B.rowIndex[matrixTwoColStart]) {
+                        matrixOneRowStart++;
+                    } else if (A.colIndex[matrixOneRowStart] > B.rowIndex[matrixTwoColStart]) {
+                        matrixTwoColStart++;
+                    } else {
+                        // Row index and col index are same so we can multiply these elements.
+                        ans[row][col] += A.values[matrixOneRowStart] * B.values[matrixTwoColStart];
+                        matrixOneRowStart++;
+                        matrixTwoColStart++;
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+}
+```
+
+```go
+type SparseMatrix struct {
+    values   []int
+    rowIndex []int
+    colIndex []int
+}
+
+func newSparseMatrixRowWise(matrix [][]int) *SparseMatrix {
+    rows := len(matrix)
+    cols := len(matrix[0])
+    sm := &SparseMatrix{
+        rowIndex: []int{0},
+    }
+
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            if matrix[row][col] != 0 {
+                sm.values = append(sm.values, matrix[row][col])
+                sm.colIndex = append(sm.colIndex, col)
+            }
+        }
+        sm.rowIndex = append(sm.rowIndex, len(sm.values))
+    }
+
+    return sm
+}
+
+func newSparseMatrixColWise(matrix [][]int) *SparseMatrix {
+    rows := len(matrix)
+    cols := len(matrix[0])
+    sm := &SparseMatrix{
+        colIndex: []int{0},
+    }
+
+    for col := 0; col < cols; col++ {
+        for row := 0; row < rows; row++ {
+            if matrix[row][col] != 0 {
+                sm.values = append(sm.values, matrix[row][col])
+                sm.rowIndex = append(sm.rowIndex, row)
+            }
+        }
+        sm.colIndex = append(sm.colIndex, len(sm.values))
+    }
+
+    return sm
+}
+
+func multiply(mat1 [][]int, mat2 [][]int) [][]int {
+    A := newSparseMatrixRowWise(mat1)
+    B := newSparseMatrixColWise(mat2)
+
+    ans := make([][]int, len(mat1))
+    for i := range ans {
+        ans[i] = make([]int, len(mat2[0]))
+    }
+
+    for row := 0; row < len(ans); row++ {
+        for col := 0; col < len(ans[0]); col++ {
+            // Row element range indices
+            matrixOneRowStart := A.rowIndex[row]
+            matrixOneRowEnd := A.rowIndex[row+1]
+
+            // Column element range indices
+            matrixTwoColStart := B.colIndex[col]
+            matrixTwoColEnd := B.colIndex[col+1]
+
+            // Iterate over both row and column.
+            for matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd {
+                if A.colIndex[matrixOneRowStart] < B.rowIndex[matrixTwoColStart] {
+                    matrixOneRowStart++
+                } else if A.colIndex[matrixOneRowStart] > B.rowIndex[matrixTwoColStart] {
+                    matrixTwoColStart++
+                } else {
+                    // Row index and col index are same so we can multiply these elements.
+                    ans[row][col] += A.values[matrixOneRowStart] * B.values[matrixTwoColStart]
+                    matrixOneRowStart++
+                    matrixTwoColStart++
+                }
+            }
+        }
+    }
+
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    class SparseMatrix {
+        val values = mutableListOf<Int>()
+        val colIndex = mutableListOf<Int>()
+        val rowIndex = mutableListOf<Int>()
+
+        // Compressed Sparse Row
+        constructor(matrix: Array<IntArray>) {
+            val rows = matrix.size
+            val cols = matrix[0].size
+            rowIndex.add(0)
+
+            for (row in 0 until rows) {
+                for (col in 0 until cols) {
+                    if (matrix[row][col] != 0) {
+                        values.add(matrix[row][col])
+                        colIndex.add(col)
+                    }
+                }
+                rowIndex.add(values.size)
+            }
+        }
+
+        // Compressed Sparse Column
+        constructor(matrix: Array<IntArray>, colWise: Boolean) {
+            val rows = matrix.size
+            val cols = matrix[0].size
+            colIndex.add(0)
+
+            for (col in 0 until cols) {
+                for (row in 0 until rows) {
+                    if (matrix[row][col] != 0) {
+                        values.add(matrix[row][col])
+                        rowIndex.add(row)
+                    }
+                }
+                colIndex.add(values.size)
+            }
+        }
+    }
+
+    fun multiply(mat1: Array<IntArray>, mat2: Array<IntArray>): Array<IntArray> {
+        val A = SparseMatrix(mat1)
+        val B = SparseMatrix(mat2, true)
+
+        val ans = Array(mat1.size) { IntArray(mat2[0].size) }
+
+        for (row in ans.indices) {
+            for (col in ans[0].indices) {
+                // Row element range indices
+                var matrixOneRowStart = A.rowIndex[row]
+                val matrixOneRowEnd = A.rowIndex[row + 1]
+
+                // Column element range indices
+                var matrixTwoColStart = B.colIndex[col]
+                val matrixTwoColEnd = B.colIndex[col + 1]
+
+                // Iterate over both row and column.
+                while (matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd) {
+                    when {
+                        A.colIndex[matrixOneRowStart] < B.rowIndex[matrixTwoColStart] -> {
+                            matrixOneRowStart++
+                        }
+                        A.colIndex[matrixOneRowStart] > B.rowIndex[matrixTwoColStart] -> {
+                            matrixTwoColStart++
+                        }
+                        else -> {
+                            // Row index and col index are same so we can multiply these elements.
+                            ans[row][col] += A.values[matrixOneRowStart] * B.values[matrixTwoColStart]
+                            matrixOneRowStart++
+                            matrixTwoColStart++
+                        }
+                    }
+                }
+            }
+        }
+
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    class SparseMatrix {
+        var values = [Int]()
+        var colIndex = [Int]()
+        var rowIndex = [Int]()
+
+        // Compressed Sparse Row
+        init(matrix: [[Int]]) {
+            let rows = matrix.count
+            let cols = matrix[0].count
+            rowIndex.append(0)
+
+            for row in 0..<rows {
+                for col in 0..<cols {
+                    if matrix[row][col] != 0 {
+                        values.append(matrix[row][col])
+                        colIndex.append(col)
+                    }
+                }
+                rowIndex.append(values.count)
+            }
+        }
+
+        // Compressed Sparse Column
+        init(matrix: [[Int]], colWise: Bool) {
+            let rows = matrix.count
+            let cols = matrix[0].count
+            colIndex.append(0)
+
+            for col in 0..<cols {
+                for row in 0..<rows {
+                    if matrix[row][col] != 0 {
+                        values.append(matrix[row][col])
+                        rowIndex.append(row)
+                    }
+                }
+                colIndex.append(values.count)
+            }
+        }
+    }
+
+    func multiply(_ mat1: [[Int]], _ mat2: [[Int]]) -> [[Int]] {
+        let A = SparseMatrix(matrix: mat1)
+        let B = SparseMatrix(matrix: mat2, colWise: true)
+
+        var ans = [[Int]](repeating: [Int](repeating: 0, count: mat2[0].count), count: mat1.count)
+
+        for row in 0..<ans.count {
+            for col in 0..<ans[0].count {
+                // Row element range indices
+                var matrixOneRowStart = A.rowIndex[row]
+                let matrixOneRowEnd = A.rowIndex[row + 1]
+
+                // Column element range indices
+                var matrixTwoColStart = B.colIndex[col]
+                let matrixTwoColEnd = B.colIndex[col + 1]
+
+                // Iterate over both row and column.
+                while matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd {
+                    if A.colIndex[matrixOneRowStart] < B.rowIndex[matrixTwoColStart] {
+                        matrixOneRowStart += 1
+                    } else if A.colIndex[matrixOneRowStart] > B.rowIndex[matrixTwoColStart] {
+                        matrixTwoColStart += 1
+                    } else {
+                        // Row index and col index are same so we can multiply these elements.
+                        ans[row][col] += A.values[matrixOneRowStart] * B.values[matrixTwoColStart]
+                        matrixOneRowStart += 1
+                        matrixTwoColStart += 1
+                    }
+                }
+            }
+        }
+
+        return ans
     }
 }
 ```

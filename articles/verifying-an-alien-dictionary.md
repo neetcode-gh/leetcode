@@ -116,6 +116,92 @@ public class Solution {
 }
 ```
 
+```go
+func isAlienSorted(words []string, order string) bool {
+    orderIndex := make([]int, 26)
+    for i, c := range order {
+        orderIndex[c-'a'] = i
+    }
+
+    compare := func(w1, w2 string) bool {
+        for i := 0; i < len(w1) && i < len(w2); i++ {
+            if w1[i] != w2[i] {
+                return orderIndex[w1[i]-'a'] < orderIndex[w2[i]-'a']
+            }
+        }
+        return len(w1) <= len(w2)
+    }
+
+    sortedWords := make([]string, len(words))
+    copy(sortedWords, words)
+    sort.Slice(sortedWords, func(i, j int) bool {
+        return compare(sortedWords[i], sortedWords[j])
+    })
+
+    for i := range words {
+        if words[i] != sortedWords[i] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isAlienSorted(words: Array<String>, order: String): Boolean {
+        val orderIndex = IntArray(26)
+        for (i in order.indices) {
+            orderIndex[order[i] - 'a'] = i
+        }
+
+        val compare = Comparator<String> { w1, w2 ->
+            for (i in 0 until minOf(w1.length, w2.length)) {
+                if (w1[i] != w2[i]) {
+                    return@Comparator orderIndex[w1[i] - 'a'] - orderIndex[w2[i] - 'a']
+                }
+            }
+            w1.length - w2.length
+        }
+
+        val sortedWords = words.clone()
+        sortedWords.sortWith(compare)
+
+        for (i in words.indices) {
+            if (words[i] != sortedWords[i]) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isAlienSorted(_ words: [String], _ order: String) -> Bool {
+        var orderIndex = [Int](repeating: 0, count: 26)
+        for (i, c) in order.enumerated() {
+            orderIndex[Int(c.asciiValue! - Character("a").asciiValue!)] = i
+        }
+
+        let sortedWords = words.sorted { w1, w2 in
+            let arr1 = Array(w1), arr2 = Array(w2)
+            for i in 0..<min(arr1.count, arr2.count) {
+                if arr1[i] != arr2[i] {
+                    let idx1 = Int(arr1[i].asciiValue! - Character("a").asciiValue!)
+                    let idx2 = Int(arr2[i].asciiValue! - Character("a").asciiValue!)
+                    return orderIndex[idx1] < orderIndex[idx2]
+                }
+            }
+            return arr1.count < arr2.count
+        }
+
+        return words == sortedWords
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -264,6 +350,95 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+func isAlienSorted(words []string, order string) bool {
+    orderIndex := make([]int, 26)
+    for i, c := range order {
+        orderIndex[c-'a'] = i
+    }
+
+    for i := 0; i < len(words)-1; i++ {
+        w1, w2 := words[i], words[i+1]
+
+        for j := 0; j < len(w1); j++ {
+            if j == len(w2) {
+                return false
+            }
+
+            if w1[j] != w2[j] {
+                if orderIndex[w1[j]-'a'] > orderIndex[w2[j]-'a'] {
+                    return false
+                }
+                break
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isAlienSorted(words: Array<String>, order: String): Boolean {
+        val orderIndex = IntArray(26)
+        for (i in order.indices) {
+            orderIndex[order[i] - 'a'] = i
+        }
+
+        for (i in 0 until words.size - 1) {
+            val w1 = words[i]
+            val w2 = words[i + 1]
+
+            for (j in w1.indices) {
+                if (j == w2.length) {
+                    return false
+                }
+
+                if (w1[j] != w2[j]) {
+                    if (orderIndex[w1[j] - 'a'] > orderIndex[w2[j] - 'a']) {
+                        return false
+                    }
+                    break
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isAlienSorted(_ words: [String], _ order: String) -> Bool {
+        var orderIndex = [Int](repeating: 0, count: 26)
+        for (i, c) in order.enumerated() {
+            orderIndex[Int(c.asciiValue! - Character("a").asciiValue!)] = i
+        }
+
+        for i in 0..<words.count - 1 {
+            let w1 = Array(words[i])
+            let w2 = Array(words[i + 1])
+
+            for j in 0..<w1.count {
+                if j == w2.count {
+                    return false
+                }
+
+                if w1[j] != w2[j] {
+                    let idx1 = Int(w1[j].asciiValue! - Character("a").asciiValue!)
+                    let idx2 = Int(w2[j].asciiValue! - Character("a").asciiValue!)
+                    if orderIndex[idx1] > orderIndex[idx2] {
+                        return false
+                    }
+                    break
+                }
+            }
+        }
+        return true
     }
 }
 ```

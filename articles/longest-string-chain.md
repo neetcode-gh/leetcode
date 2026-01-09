@@ -148,6 +148,169 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<string, int> wordIndex;
+    private int[] dp;
+    private string[] words;
+
+    public int LongestStrChain(string[] words) {
+        Array.Sort(words, (a, b) => b.Length.CompareTo(a.Length));
+        this.words = words;
+        wordIndex = new Dictionary<string, int>();
+        for (int i = 0; i < words.Length; i++) {
+            wordIndex[words[i]] = i;
+        }
+
+        dp = new int[words.Length];
+        Array.Fill(dp, -1);
+
+        int maxChain = 1;
+        for (int i = 0; i < words.Length; i++) {
+            maxChain = Math.Max(maxChain, Dfs(i));
+        }
+        return maxChain;
+    }
+
+    private int Dfs(int i) {
+        if (dp[i] != -1) {
+            return dp[i];
+        }
+
+        int res = 1;
+        string w = words[i];
+        for (int j = 0; j < w.Length; j++) {
+            string pred = w.Substring(0, j) + w.Substring(j + 1);
+            if (wordIndex.ContainsKey(pred)) {
+                res = Math.Max(res, 1 + Dfs(wordIndex[pred]));
+            }
+        }
+        dp[i] = res;
+        return res;
+    }
+}
+```
+
+```go
+func longestStrChain(words []string) int {
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) > len(words[j])
+    })
+
+    wordIndex := make(map[string]int)
+    for i, w := range words {
+        wordIndex[w] = i
+    }
+
+    dp := make([]int, len(words))
+    for i := range dp {
+        dp[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if dp[i] != -1 {
+            return dp[i]
+        }
+
+        res := 1
+        w := words[i]
+        for j := 0; j < len(w); j++ {
+            pred := w[:j] + w[j+1:]
+            if idx, ok := wordIndex[pred]; ok {
+                if val := 1 + dfs(idx); val > res {
+                    res = val
+                }
+            }
+        }
+        dp[i] = res
+        return res
+    }
+
+    maxChain := 1
+    for i := range words {
+        if val := dfs(i); val > maxChain {
+            maxChain = val
+        }
+    }
+    return maxChain
+}
+```
+
+```kotlin
+class Solution {
+    fun longestStrChain(words: Array<String>): Int {
+        words.sortByDescending { it.length }
+        val wordIndex = mutableMapOf<String, Int>()
+        for (i in words.indices) {
+            wordIndex[words[i]] = i
+        }
+
+        val dp = IntArray(words.size) { -1 }
+
+        fun dfs(i: Int): Int {
+            if (dp[i] != -1) {
+                return dp[i]
+            }
+
+            var res = 1
+            val w = words[i]
+            for (j in w.indices) {
+                val pred = w.substring(0, j) + w.substring(j + 1)
+                if (pred in wordIndex) {
+                    res = maxOf(res, 1 + dfs(wordIndex[pred]!!))
+                }
+            }
+            dp[i] = res
+            return res
+        }
+
+        var maxChain = 1
+        for (i in words.indices) {
+            maxChain = maxOf(maxChain, dfs(i))
+        }
+        return maxChain
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestStrChain(_ words: [String]) -> Int {
+        var words = words.sorted { $0.count > $1.count }
+        var wordIndex = [String: Int]()
+        for i in 0..<words.count {
+            wordIndex[words[i]] = i
+        }
+
+        var dp = [Int](repeating: -1, count: words.count)
+
+        func dfs(_ i: Int) -> Int {
+            if dp[i] != -1 {
+                return dp[i]
+            }
+
+            var res = 1
+            let w = Array(words[i])
+            for j in 0..<w.count {
+                let pred = String(w[0..<j]) + String(w[(j+1)...])
+                if let idx = wordIndex[pred] {
+                    res = max(res, 1 + dfs(idx))
+                }
+            }
+            dp[i] = res
+            return res
+        }
+
+        var maxChain = 1
+        for i in 0..<words.count {
+            maxChain = max(maxChain, dfs(i))
+        }
+        return maxChain
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -318,6 +481,172 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LongestStrChain(string[] words) {
+        Array.Sort(words, (a, b) => a.Length.CompareTo(b.Length));
+        int n = words.Length;
+        int[] dp = new int[n];
+        Array.Fill(dp, 1);
+
+        for (int i = 1; i < n; i++) {
+            for (int j = i - 1; j >= 0; j--) {
+                if (words[j].Length + 1 < words[i].Length) {
+                    break;
+                }
+                if (words[j].Length + 1 > words[i].Length || !IsPred(words[j], words[i])) {
+                    continue;
+                }
+                dp[i] = Math.Max(dp[i], 1 + dp[j]);
+            }
+        }
+
+        int maxChain = 0;
+        foreach (int chain in dp) {
+            maxChain = Math.Max(maxChain, chain);
+        }
+        return maxChain;
+    }
+
+    private bool IsPred(string w1, string w2) {
+        int i = 0;
+        foreach (char c in w2) {
+            if (i == w1.Length) {
+                return true;
+            }
+            if (w1[i] == c) {
+                i++;
+            }
+        }
+        return i == w1.Length;
+    }
+}
+```
+
+```go
+func longestStrChain(words []string) int {
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) < len(words[j])
+    })
+
+    n := len(words)
+    dp := make([]int, n)
+    for i := range dp {
+        dp[i] = 1
+    }
+
+    isPred := func(w1, w2 string) bool {
+        i := 0
+        for _, c := range w2 {
+            if i == len(w1) {
+                return true
+            }
+            if rune(w1[i]) == c {
+                i++
+            }
+        }
+        return i == len(w1)
+    }
+
+    for i := 1; i < n; i++ {
+        for j := i - 1; j >= 0; j-- {
+            if len(words[j])+1 < len(words[i]) {
+                break
+            }
+            if len(words[j])+1 > len(words[i]) || !isPred(words[j], words[i]) {
+                continue
+            }
+            if dp[j]+1 > dp[i] {
+                dp[i] = dp[j] + 1
+            }
+        }
+    }
+
+    maxChain := 0
+    for _, v := range dp {
+        if v > maxChain {
+            maxChain = v
+        }
+    }
+    return maxChain
+}
+```
+
+```kotlin
+class Solution {
+    fun longestStrChain(words: Array<String>): Int {
+        words.sortBy { it.length }
+        val n = words.size
+        val dp = IntArray(n) { 1 }
+
+        fun isPred(w1: String, w2: String): Boolean {
+            var i = 0
+            for (c in w2) {
+                if (i == w1.length) {
+                    return true
+                }
+                if (w1[i] == c) {
+                    i++
+                }
+            }
+            return i == w1.length
+        }
+
+        for (i in 1 until n) {
+            for (j in i - 1 downTo 0) {
+                if (words[j].length + 1 < words[i].length) {
+                    break
+                }
+                if (words[j].length + 1 > words[i].length || !isPred(words[j], words[i])) {
+                    continue
+                }
+                dp[i] = maxOf(dp[i], 1 + dp[j])
+            }
+        }
+
+        return dp.max()
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestStrChain(_ words: [String]) -> Int {
+        var words = words.sorted { $0.count < $1.count }
+        let n = words.count
+        var dp = [Int](repeating: 1, count: n)
+
+        func isPred(_ w1: String, _ w2: String) -> Bool {
+            var i = 0
+            let w1Arr = Array(w1)
+            for c in w2 {
+                if i == w1Arr.count {
+                    return true
+                }
+                if w1Arr[i] == c {
+                    i += 1
+                }
+            }
+            return i == w1Arr.count
+        }
+
+        for i in 1..<n {
+            for j in stride(from: i - 1, through: 0, by: -1) {
+                if words[j].count + 1 < words[i].count {
+                    break
+                }
+                if words[j].count + 1 > words[i].count || !isPred(words[j], words[i]) {
+                    continue
+                }
+                dp[i] = max(dp[i], 1 + dp[j])
+            }
+        }
+
+        return dp.max()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -424,6 +753,104 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LongestStrChain(string[] words) {
+        Array.Sort(words, (a, b) => a.Length.CompareTo(b.Length));
+        var dp = new Dictionary<string, int>();
+        int res = 0;
+
+        foreach (string word in words) {
+            dp[word] = 1;
+            for (int i = 0; i < word.Length; i++) {
+                string pred = word.Substring(0, i) + word.Substring(i + 1);
+                if (dp.ContainsKey(pred)) {
+                    dp[word] = Math.Max(dp[word], dp[pred] + 1);
+                }
+            }
+            res = Math.Max(res, dp[word]);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func longestStrChain(words []string) int {
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) < len(words[j])
+    })
+
+    dp := make(map[string]int)
+    res := 0
+
+    for _, word := range words {
+        dp[word] = 1
+        for i := 0; i < len(word); i++ {
+            pred := word[:i] + word[i+1:]
+            if val, ok := dp[pred]; ok {
+                if val+1 > dp[word] {
+                    dp[word] = val + 1
+                }
+            }
+        }
+        if dp[word] > res {
+            res = dp[word]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestStrChain(words: Array<String>): Int {
+        words.sortBy { it.length }
+        val dp = mutableMapOf<String, Int>()
+        var res = 0
+
+        for (word in words) {
+            dp[word] = 1
+            for (i in word.indices) {
+                val pred = word.substring(0, i) + word.substring(i + 1)
+                if (pred in dp) {
+                    dp[word] = maxOf(dp[word]!!, dp[pred]!! + 1)
+                }
+            }
+            res = maxOf(res, dp[word]!!)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestStrChain(_ words: [String]) -> Int {
+        var words = words.sorted { $0.count < $1.count }
+        var dp = [String: Int]()
+        var res = 0
+
+        for word in words {
+            dp[word] = 1
+            let w = Array(word)
+            for i in 0..<w.count {
+                let pred = String(w[0..<i]) + String(w[(i+1)...])
+                if let predVal = dp[pred] {
+                    dp[word] = max(dp[word]!, predVal + 1)
+                }
+            }
+            res = max(res, dp[word]!)
+        }
+
+        return res
     }
 }
 ```

@@ -124,6 +124,128 @@ class SummaryRanges {
 }
 ```
 
+```csharp
+public class SummaryRanges {
+    private List<int> arr;
+
+    public SummaryRanges() {
+        arr = new List<int>();
+    }
+
+    public void AddNum(int value) {
+        arr.Add(value);
+    }
+
+    public int[][] GetIntervals() {
+        if (arr.Count == 0) return new int[0][];
+
+        arr.Sort();
+        int start = arr[0];
+        List<int[]> res = new List<int[]>();
+
+        for (int i = 1; i < arr.Count; i++) {
+            if (arr[i] - arr[i - 1] > 1) {
+                res.Add(new int[] { start, arr[i - 1] });
+                start = arr[i];
+            }
+        }
+        res.Add(new int[] { start, arr[arr.Count - 1] });
+        return res.ToArray();
+    }
+}
+```
+
+```go
+type SummaryRanges struct {
+    arr []int
+}
+
+func Constructor() SummaryRanges {
+    return SummaryRanges{arr: []int{}}
+}
+
+func (this *SummaryRanges) AddNum(value int) {
+    this.arr = append(this.arr, value)
+}
+
+func (this *SummaryRanges) GetIntervals() [][]int {
+    if len(this.arr) == 0 {
+        return [][]int{}
+    }
+
+    sort.Ints(this.arr)
+    start := this.arr[0]
+    res := [][]int{}
+
+    for i := 1; i < len(this.arr); i++ {
+        if this.arr[i]-this.arr[i-1] > 1 {
+            res = append(res, []int{start, this.arr[i-1]})
+            start = this.arr[i]
+        }
+    }
+    res = append(res, []int{start, this.arr[len(this.arr)-1]})
+    return res
+}
+```
+
+```kotlin
+class SummaryRanges() {
+    private val arr = mutableListOf<Int>()
+
+    fun addNum(value: Int) {
+        arr.add(value)
+    }
+
+    fun getIntervals(): Array<IntArray> {
+        if (arr.isEmpty()) return arrayOf()
+
+        arr.sort()
+        var start = arr[0]
+        val res = mutableListOf<IntArray>()
+
+        for (i in 1 until arr.size) {
+            if (arr[i] - arr[i - 1] > 1) {
+                res.add(intArrayOf(start, arr[i - 1]))
+                start = arr[i]
+            }
+        }
+        res.add(intArrayOf(start, arr[arr.size - 1]))
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class SummaryRanges {
+    private var arr: [Int]
+
+    init() {
+        arr = []
+    }
+
+    func addNum(_ value: Int) {
+        arr.append(value)
+    }
+
+    func getIntervals() -> [[Int]] {
+        if arr.isEmpty { return [] }
+
+        arr.sort()
+        var start = arr[0]
+        var res = [[Int]]()
+
+        for i in 1..<arr.count {
+            if arr[i] - arr[i - 1] > 1 {
+                res.append([start, arr[i - 1]])
+                start = arr[i]
+            }
+        }
+        res.append([start, arr[arr.count - 1]])
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +385,133 @@ class SummaryRanges {
 }
 ```
 
+```csharp
+public class SummaryRanges {
+    private SortedSet<int> arr;
+
+    public SummaryRanges() {
+        arr = new SortedSet<int>();
+    }
+
+    public void AddNum(int value) {
+        arr.Add(value);
+    }
+
+    public int[][] GetIntervals() {
+        if (arr.Count == 0) return new int[0][];
+
+        List<int> lst = new List<int>(arr);
+        int start = lst[0];
+        List<int[]> res = new List<int[]>();
+
+        for (int i = 1; i < lst.Count; i++) {
+            if (lst[i] - lst[i - 1] > 1) {
+                res.Add(new int[] { start, lst[i - 1] });
+                start = lst[i];
+            }
+        }
+        res.Add(new int[] { start, lst[lst.Count - 1] });
+        return res.ToArray();
+    }
+}
+```
+
+```go
+type SummaryRanges struct {
+    arr map[int]bool
+}
+
+func Constructor() SummaryRanges {
+    return SummaryRanges{arr: make(map[int]bool)}
+}
+
+func (this *SummaryRanges) AddNum(value int) {
+    this.arr[value] = true
+}
+
+func (this *SummaryRanges) GetIntervals() [][]int {
+    if len(this.arr) == 0 {
+        return [][]int{}
+    }
+
+    lst := make([]int, 0, len(this.arr))
+    for k := range this.arr {
+        lst = append(lst, k)
+    }
+    sort.Ints(lst)
+
+    start := lst[0]
+    res := [][]int{}
+
+    for i := 1; i < len(lst); i++ {
+        if lst[i]-lst[i-1] > 1 {
+            res = append(res, []int{start, lst[i-1]})
+            start = lst[i]
+        }
+    }
+    res = append(res, []int{start, lst[len(lst)-1]})
+    return res
+}
+```
+
+```kotlin
+class SummaryRanges() {
+    private val arr = sortedSetOf<Int>()
+
+    fun addNum(value: Int) {
+        arr.add(value)
+    }
+
+    fun getIntervals(): Array<IntArray> {
+        if (arr.isEmpty()) return arrayOf()
+
+        val lst = arr.toList()
+        var start = lst[0]
+        val res = mutableListOf<IntArray>()
+
+        for (i in 1 until lst.size) {
+            if (lst[i] - lst[i - 1] > 1) {
+                res.add(intArrayOf(start, lst[i - 1]))
+                start = lst[i]
+            }
+        }
+        res.add(intArrayOf(start, lst[lst.size - 1]))
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class SummaryRanges {
+    private var arr: Set<Int>
+
+    init() {
+        arr = Set<Int>()
+    }
+
+    func addNum(_ value: Int) {
+        arr.insert(value)
+    }
+
+    func getIntervals() -> [[Int]] {
+        if arr.isEmpty { return [] }
+
+        let lst = arr.sorted()
+        var start = lst[0]
+        var res = [[Int]]()
+
+        for i in 1..<lst.count {
+            if lst[i] - lst[i - 1] > 1 {
+                res.append([start, lst[i - 1]])
+                start = lst[i]
+            }
+        }
+        res.append([start, lst[lst.count - 1]])
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -351,6 +600,143 @@ public:
 };
 ```
 
+```javascript
+class SummaryRanges {
+    constructor() {
+        this.treeMap = new Map();
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    addNum(value) {
+        this.treeMap.set(value, true);
+    }
+
+    /**
+     * @return {number[][]}
+     */
+    getIntervals() {
+        const keys = Array.from(this.treeMap.keys()).sort((a, b) => a - b);
+        const res = [];
+        for (const n of keys) {
+            if (res.length > 0 && res[res.length - 1][1] + 1 === n) {
+                res[res.length - 1][1] = n;
+            } else {
+                res.push([n, n]);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class SummaryRanges {
+    private SortedDictionary<int, bool> treeMap;
+
+    public SummaryRanges() {
+        treeMap = new SortedDictionary<int, bool>();
+    }
+
+    public void AddNum(int value) {
+        treeMap[value] = true;
+    }
+
+    public int[][] GetIntervals() {
+        List<int[]> res = new List<int[]>();
+        foreach (int n in treeMap.Keys) {
+            if (res.Count > 0 && res[res.Count - 1][1] + 1 == n) {
+                res[res.Count - 1][1] = n;
+            } else {
+                res.Add(new int[] { n, n });
+            }
+        }
+        return res.ToArray();
+    }
+}
+```
+
+```go
+import "github.com/emirpasic/gods/maps/treemap"
+
+type SummaryRanges struct {
+    treeMap *treemap.Map
+}
+
+func Constructor() SummaryRanges {
+    return SummaryRanges{treeMap: treemap.NewWithIntComparator()}
+}
+
+func (this *SummaryRanges) AddNum(value int) {
+    this.treeMap.Put(value, true)
+}
+
+func (this *SummaryRanges) GetIntervals() [][]int {
+    res := [][]int{}
+    it := this.treeMap.Iterator()
+    for it.Next() {
+        n := it.Key().(int)
+        if len(res) > 0 && res[len(res)-1][1]+1 == n {
+            res[len(res)-1][1] = n
+        } else {
+            res = append(res, []int{n, n})
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class SummaryRanges() {
+    private val treeMap = sortedMapOf<Int, Boolean>()
+
+    fun addNum(value: Int) {
+        treeMap[value] = true
+    }
+
+    fun getIntervals(): Array<IntArray> {
+        val res = mutableListOf<IntArray>()
+        for (n in treeMap.keys) {
+            if (res.isNotEmpty() && res.last()[1] + 1 == n) {
+                res.last()[1] = n
+            } else {
+                res.add(intArrayOf(n, n))
+            }
+        }
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class SummaryRanges {
+    private var treeMap: [Int: Bool]
+
+    init() {
+        treeMap = [:]
+    }
+
+    func addNum(_ value: Int) {
+        treeMap[value] = true
+    }
+
+    func getIntervals() -> [[Int]] {
+        var res = [[Int]]()
+        let keys = treeMap.keys.sorted()
+        for n in keys {
+            if !res.isEmpty && res[res.count - 1][1] + 1 == n {
+                res[res.count - 1][1] = n
+            } else {
+                res.append([n, n])
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -437,6 +823,143 @@ public:
         return res;
     }
 };
+```
+
+```javascript
+class SummaryRanges {
+    constructor() {
+        this.orderedSet = new Set();
+    }
+
+    /**
+     * @param {number} value
+     * @return {void}
+     */
+    addNum(value) {
+        this.orderedSet.add(value);
+    }
+
+    /**
+     * @return {number[][]}
+     */
+    getIntervals() {
+        const sorted = Array.from(this.orderedSet).sort((a, b) => a - b);
+        const res = [];
+        for (const n of sorted) {
+            if (res.length > 0 && res[res.length - 1][1] + 1 === n) {
+                res[res.length - 1][1] = n;
+            } else {
+                res.push([n, n]);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class SummaryRanges {
+    private SortedSet<int> orderedSet;
+
+    public SummaryRanges() {
+        orderedSet = new SortedSet<int>();
+    }
+
+    public void AddNum(int value) {
+        orderedSet.Add(value);
+    }
+
+    public int[][] GetIntervals() {
+        List<int[]> res = new List<int[]>();
+        foreach (int n in orderedSet) {
+            if (res.Count > 0 && res[res.Count - 1][1] + 1 == n) {
+                res[res.Count - 1][1] = n;
+            } else {
+                res.Add(new int[] { n, n });
+            }
+        }
+        return res.ToArray();
+    }
+}
+```
+
+```go
+import "github.com/emirpasic/gods/sets/treeset"
+
+type SummaryRanges struct {
+    orderedSet *treeset.Set
+}
+
+func Constructor() SummaryRanges {
+    return SummaryRanges{orderedSet: treeset.NewWithIntComparator()}
+}
+
+func (this *SummaryRanges) AddNum(value int) {
+    this.orderedSet.Add(value)
+}
+
+func (this *SummaryRanges) GetIntervals() [][]int {
+    res := [][]int{}
+    it := this.orderedSet.Iterator()
+    for it.Next() {
+        n := it.Value().(int)
+        if len(res) > 0 && res[len(res)-1][1]+1 == n {
+            res[len(res)-1][1] = n
+        } else {
+            res = append(res, []int{n, n})
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class SummaryRanges() {
+    private val orderedSet = sortedSetOf<Int>()
+
+    fun addNum(value: Int) {
+        orderedSet.add(value)
+    }
+
+    fun getIntervals(): Array<IntArray> {
+        val res = mutableListOf<IntArray>()
+        for (n in orderedSet) {
+            if (res.isNotEmpty() && res.last()[1] + 1 == n) {
+                res.last()[1] = n
+            } else {
+                res.add(intArrayOf(n, n))
+            }
+        }
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class SummaryRanges {
+    private var orderedSet: Set<Int>
+
+    init() {
+        orderedSet = Set<Int>()
+    }
+
+    func addNum(_ value: Int) {
+        orderedSet.insert(value)
+    }
+
+    func getIntervals() -> [[Int]] {
+        var res = [[Int]]()
+        let sorted = orderedSet.sorted()
+        for n in sorted {
+            if !res.isEmpty && res[res.count - 1][1] + 1 == n {
+                res[res.count - 1][1] = n
+            } else {
+                res.append([n, n])
+            }
+        }
+        return res
+    }
+}
 ```
 
 ::tabs-end

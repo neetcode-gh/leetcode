@@ -203,6 +203,133 @@ public class Solution {
 }
 ```
 
+```go
+func openLock(deadends []string, target string) int {
+    if target == "0000" {
+        return 0
+    }
+
+    visit := make(map[string]bool)
+    for _, d := range deadends {
+        visit[d] = true
+    }
+    if visit["0000"] {
+        return -1
+    }
+
+    children := func(lock string) []string {
+        res := []string{}
+        for i := 0; i < 4; i++ {
+            digit := int(lock[i] - '0')
+            up := lock[:i] + string('0'+byte((digit+1)%10)) + lock[i+1:]
+            down := lock[:i] + string('0'+byte((digit+9)%10)) + lock[i+1:]
+            res = append(res, up, down)
+        }
+        return res
+    }
+
+    type pair struct {
+        lock  string
+        turns int
+    }
+    q := []pair{{"0000", 0}}
+    visit["0000"] = true
+
+    for len(q) > 0 {
+        cur := q[0]
+        q = q[1:]
+        if cur.lock == target {
+            return cur.turns
+        }
+        for _, child := range children(cur.lock) {
+            if !visit[child] {
+                visit[child] = true
+                q = append(q, pair{child, cur.turns + 1})
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun openLock(deadends: Array<String>, target: String): Int {
+        val visit = deadends.toMutableSet()
+        if ("0000" in visit) return -1
+
+        fun children(lock: String): List<String> {
+            val res = mutableListOf<String>()
+            for (i in 0..3) {
+                val digit = lock[i] - '0'
+                val up = lock.substring(0, i) + ((digit + 1) % 10) + lock.substring(i + 1)
+                val down = lock.substring(0, i) + ((digit + 9) % 10) + lock.substring(i + 1)
+                res.add(up)
+                res.add(down)
+            }
+            return res
+        }
+
+        val q = ArrayDeque<Pair<String, Int>>()
+        q.add("0000" to 0)
+        visit.add("0000")
+
+        while (q.isNotEmpty()) {
+            val (lock, turns) = q.removeFirst()
+            if (lock == target) return turns
+            for (child in children(lock)) {
+                if (child !in visit) {
+                    visit.add(child)
+                    q.add(child to turns + 1)
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func openLock(_ deadends: [String], _ target: String) -> Int {
+        if target == "0000" { return 0 }
+
+        var visit = Set(deadends)
+        if visit.contains("0000") { return -1 }
+
+        func children(_ lock: String) -> [String] {
+            var res = [String]()
+            let arr = Array(lock)
+            for i in 0..<4 {
+                let digit = Int(String(arr[i]))!
+                var up = arr
+                up[i] = Character(String((digit + 1) % 10))
+                var down = arr
+                down[i] = Character(String((digit + 9) % 10))
+                res.append(String(up))
+                res.append(String(down))
+            }
+            return res
+        }
+
+        var q: [(String, Int)] = [("0000", 0)]
+        visit.insert("0000")
+
+        while !q.isEmpty {
+            let (lock, turns) = q.removeFirst()
+            if lock == target { return turns }
+            for child in children(lock) {
+                if !visit.contains(child) {
+                    visit.insert(child)
+                    q.append((child, turns + 1))
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,6 +517,121 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func openLock(deadends []string, target string) int {
+    if target == "0000" {
+        return 0
+    }
+
+    visit := make(map[string]bool)
+    for _, d := range deadends {
+        visit[d] = true
+    }
+    if visit["0000"] {
+        return -1
+    }
+
+    q := []string{"0000"}
+    visit["0000"] = true
+    steps := 0
+
+    for len(q) > 0 {
+        steps++
+        size := len(q)
+        for i := 0; i < size; i++ {
+            lock := q[0]
+            q = q[1:]
+            for j := 0; j < 4; j++ {
+                for _, move := range []int{1, -1} {
+                    digit := (int(lock[j]-'0') + move + 10) % 10
+                    nextLock := lock[:j] + string('0'+byte(digit)) + lock[j+1:]
+                    if visit[nextLock] {
+                        continue
+                    }
+                    if nextLock == target {
+                        return steps
+                    }
+                    q = append(q, nextLock)
+                    visit[nextLock] = true
+                }
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun openLock(deadends: Array<String>, target: String): Int {
+        if (target == "0000") return 0
+
+        val visit = deadends.toMutableSet()
+        if ("0000" in visit) return -1
+
+        val q = ArrayDeque<String>()
+        q.add("0000")
+        visit.add("0000")
+        var steps = 0
+
+        while (q.isNotEmpty()) {
+            steps++
+            repeat(q.size) {
+                val lock = q.removeFirst()
+                for (j in 0..3) {
+                    for (move in listOf(1, -1)) {
+                        val digit = (lock[j] - '0' + move + 10) % 10
+                        val nextLock = lock.substring(0, j) + digit + lock.substring(j + 1)
+                        if (nextLock in visit) continue
+                        if (nextLock == target) return steps
+                        q.add(nextLock)
+                        visit.add(nextLock)
+                    }
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func openLock(_ deadends: [String], _ target: String) -> Int {
+        if target == "0000" { return 0 }
+
+        var visit = Set(deadends)
+        if visit.contains("0000") { return -1 }
+
+        var q = ["0000"]
+        visit.insert("0000")
+        var steps = 0
+
+        while !q.isEmpty {
+            steps += 1
+            let size = q.count
+            for _ in 0..<size {
+                let lock = q.removeFirst()
+                let arr = Array(lock)
+                for j in 0..<4 {
+                    for move in [1, -1] {
+                        let digit = (Int(String(arr[j]))! + move + 10) % 10
+                        var newArr = arr
+                        newArr[j] = Character(String(digit))
+                        let nextLock = String(newArr)
+                        if visit.contains(nextLock) { continue }
+                        if nextLock == target { return steps }
+                        q.append(nextLock)
+                        visit.insert(nextLock)
+                    }
+                }
+            }
+        }
+        return -1
     }
 }
 ```
@@ -614,6 +856,143 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func openLock(deadends []string, target string) int {
+    if target == "0000" {
+        return 0
+    }
+
+    visit := make(map[string]bool)
+    for _, d := range deadends {
+        visit[d] = true
+    }
+    if visit["0000"] {
+        return -1
+    }
+
+    begin := map[string]bool{"0000": true}
+    end := map[string]bool{target: true}
+    steps := 0
+
+    for len(begin) > 0 && len(end) > 0 {
+        if len(begin) > len(end) {
+            begin, end = end, begin
+        }
+
+        steps++
+        temp := make(map[string]bool)
+
+        for lock := range begin {
+            for i := 0; i < 4; i++ {
+                for _, j := range []int{-1, 1} {
+                    digit := (int(lock[i]-'0') + j + 10) % 10
+                    nextLock := lock[:i] + string('0'+byte(digit)) + lock[i+1:]
+
+                    if end[nextLock] {
+                        return steps
+                    }
+                    if visit[nextLock] {
+                        continue
+                    }
+
+                    visit[nextLock] = true
+                    temp[nextLock] = true
+                }
+            }
+        }
+        begin = temp
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun openLock(deadends: Array<String>, target: String): Int {
+        if (target == "0000") return 0
+
+        val visit = deadends.toMutableSet()
+        if ("0000" in visit) return -1
+
+        var begin = mutableSetOf("0000")
+        var end = mutableSetOf(target)
+        var steps = 0
+
+        while (begin.isNotEmpty() && end.isNotEmpty()) {
+            if (begin.size > end.size) {
+                val temp = begin
+                begin = end
+                end = temp
+            }
+
+            steps++
+            val temp = mutableSetOf<String>()
+
+            for (lock in begin) {
+                for (i in 0..3) {
+                    for (j in listOf(-1, 1)) {
+                        val digit = (lock[i] - '0' + j + 10) % 10
+                        val nextLock = lock.substring(0, i) + digit + lock.substring(i + 1)
+
+                        if (nextLock in end) return steps
+                        if (nextLock in visit) continue
+
+                        visit.add(nextLock)
+                        temp.add(nextLock)
+                    }
+                }
+            }
+            begin = temp
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func openLock(_ deadends: [String], _ target: String) -> Int {
+        if target == "0000" { return 0 }
+
+        var visit = Set(deadends)
+        if visit.contains("0000") { return -1 }
+
+        var begin: Set<String> = ["0000"]
+        var end: Set<String> = [target]
+        var steps = 0
+
+        while !begin.isEmpty && !end.isEmpty {
+            if begin.count > end.count {
+                swap(&begin, &end)
+            }
+
+            steps += 1
+            var temp = Set<String>()
+
+            for lock in begin {
+                let arr = Array(lock)
+                for i in 0..<4 {
+                    for j in [-1, 1] {
+                        let digit = (Int(String(arr[i]))! + j + 10) % 10
+                        var newArr = arr
+                        newArr[i] = Character(String(digit))
+                        let nextLock = String(newArr)
+
+                        if end.contains(nextLock) { return steps }
+                        if visit.contains(nextLock) { continue }
+
+                        visit.insert(nextLock)
+                        temp.insert(nextLock)
+                    }
+                }
+            }
+            begin = temp
+        }
+        return -1
     }
 }
 ```

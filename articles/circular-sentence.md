@@ -80,6 +80,82 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsCircularSentence(string sentence) {
+        string[] w = sentence.Split(' ');
+        int n = w.Length;
+
+        for (int i = 0; i < n; i++) {
+            char start = w[i][0];
+            char end = w[(i - 1 + n) % n][w[(i - 1 + n) % n].Length - 1];
+            if (start != end) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func isCircularSentence(sentence string) bool {
+    w := strings.Split(sentence, " ")
+    n := len(w)
+
+    for i := 0; i < n; i++ {
+        start := w[i][0]
+        prevIdx := (i - 1 + n) % n
+        end := w[prevIdx][len(w[prevIdx])-1]
+        if start != end {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isCircularSentence(sentence: String): Boolean {
+        val w = sentence.split(" ")
+        val n = w.size
+
+        for (i in 0 until n) {
+            val start = w[i][0]
+            val end = w[(i - 1 + n) % n].last()
+            if (start != end) {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isCircularSentence(_ sentence: String) -> Bool {
+        let w = sentence.split(separator: " ").map { String($0) }
+        let n = w.count
+
+        for i in 0..<n {
+            let start = w[i].first!
+            let prevIdx = (i - 1 + n) % n
+            let end = w[prevIdx].last!
+            if start != end {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -142,6 +218,57 @@ class Solution {
             }
         }
         return sentence[0] === sentence[sentence.length - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsCircularSentence(string sentence) {
+        for (int i = 0; i < sentence.Length; i++) {
+            if (sentence[i] == ' ' && sentence[i - 1] != sentence[i + 1]) {
+                return false;
+            }
+        }
+        return sentence[0] == sentence[sentence.Length - 1];
+    }
+}
+```
+
+```go
+func isCircularSentence(sentence string) bool {
+    for i := 0; i < len(sentence); i++ {
+        if sentence[i] == ' ' && sentence[i-1] != sentence[i+1] {
+            return false
+        }
+    }
+    return sentence[0] == sentence[len(sentence)-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun isCircularSentence(sentence: String): Boolean {
+        for (i in sentence.indices) {
+            if (sentence[i] == ' ' && sentence[i - 1] != sentence[i + 1]) {
+                return false
+            }
+        }
+        return sentence[0] == sentence[sentence.length - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isCircularSentence(_ sentence: String) -> Bool {
+        let chars = Array(sentence)
+        for i in 0..<chars.count {
+            if chars[i] == " " && chars[i - 1] != chars[i + 1] {
+                return false
+            }
+        }
+        return chars[0] == chars[chars.count - 1]
     }
 }
 ```

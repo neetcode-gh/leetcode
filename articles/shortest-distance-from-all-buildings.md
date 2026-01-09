@@ -2,6 +2,63 @@
 
 ::tabs-start
 
+```python
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        total_houses = 0
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1:
+                    total_houses += 1
+
+        def bfs(start_row, start_col):
+            distance_sum = 0
+            houses_reached = 0
+
+            q = deque([(start_row, start_col)])
+            vis = [[False] * cols for _ in range(rows)]
+            vis[start_row][start_col] = True
+
+            steps = 0
+            while q and houses_reached != total_houses:
+                for _ in range(len(q)):
+                    row, col = q.popleft()
+
+                    if grid[row][col] == 1:
+                        distance_sum += steps
+                        houses_reached += 1
+                        continue
+
+                    for dr, dc in dirs:
+                        next_row, next_col = row + dr, col + dc
+                        if 0 <= next_row < rows and 0 <= next_col < cols:
+                            if not vis[next_row][next_col] and grid[next_row][next_col] != 2:
+                                vis[next_row][next_col] = True
+                                q.append((next_row, next_col))
+
+                steps += 1
+
+            if houses_reached != total_houses:
+                for row in range(rows):
+                    for col in range(cols):
+                        if grid[row][col] == 0 and vis[row][col]:
+                            grid[row][col] = 2
+                return float('inf')
+
+            return distance_sum
+
+        min_distance = float('inf')
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 0:
+                    min_distance = min(min_distance, bfs(row, col))
+
+        return -1 if min_distance == float('inf') else min_distance
+```
+
 ```java
 class Solution {
     private int bfs(int[][] grid, int row, int col, int totalHouses) {
@@ -219,7 +276,7 @@ class Solution {
         let rows = grid.length;
         let cols = grid[0].length;
         let totalHouses = 0;
-        
+
         for (let row = 0; row < rows; ++row) {
             for (let col = 0; col < cols; ++col) {
                 if (grid[row][col] == 1) {
@@ -227,7 +284,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Find the min distance sum for each empty cell.
         for (let row = 0; row < rows; ++row) {
             for (let col = 0; col < cols; ++col) {
@@ -236,14 +293,14 @@ class Solution {
                 }
             }
         }
-        
+
         // If it is impossible to reach all houses from any empty cell, then return -1.
         if (minDistance == Number.MAX_VALUE) {
             return -1;
         }
         return minDistance;
     }
-    
+
     bfs(grid, row, col, totalHouses) {
         // Next four directions.
         const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
@@ -251,27 +308,27 @@ class Solution {
         let cols = grid[0].length;
         let distanceSum = 0;
         let housesReached = 0;
-        
+
         // Use a queue to do a bfs, starting from cell located at (row, col).
         // Using @datastructures-js/queue implementation
         let queue = new Queue([[row, col]]);
-        
+
         // Keep track of visited cells.
         let vis = new Array(rows).fill(false).map(() => new Array(cols).fill(false));
         vis[row][col] = true;
-        
+
         let steps = 0;
-        
+
         while (!queue.isEmpty() && housesReached != totalHouses) {
             // Record the cells that we will explore in the next level
             let next_queue = new Queue();
             let currentLevelSize = queue.size();
-            
+
             for (let i = 0; i < currentLevelSize; i++) {
                 let curr = queue.dequeue();
                 let currRow = curr[0];
                 let currCol = curr[1];
-                
+
                 // If this cell is a house, then add the distance from source to this cell
                 // and we go past from this cell.
                 if (grid[currRow][currCol] == 1) {
@@ -279,7 +336,7 @@ class Solution {
                     housesReached++;
                     continue;
                 }
-                
+
                 // This cell was empty cell, hence traverse the next cells which is not a blockage.
                 dirs.forEach((dir) => {
                     let nextRow = currRow + dir[0];
@@ -292,13 +349,13 @@ class Solution {
                     }
                 });
             }
-            
+
             // Set the queue equal to the next level queue.
             queue = next_queue;
             // After traversing one level cells, increment the steps by 1 to reach to next level.
             steps++;
         }
-        
+
         // If we did not reach all houses, then any cell visited also cannot reach all houses.
         // Set all cells visited to 2 so we do not check them again and return MAX_VALUE.
         if (housesReached != totalHouses) {
@@ -311,9 +368,347 @@ class Solution {
             }
             return Number.MAX_VALUE;
         }
-        
+
         // If we have reached all houses then return the total distance calculated.
         return distanceSum;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] dirs = new int[][] { new int[] {1, 0}, new int[] {-1, 0}, new int[] {0, 1}, new int[] {0, -1} };
+
+    public int ShortestDistance(int[][] grid) {
+        int minDistance = int.MaxValue;
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+        int totalHouses = 0;
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (grid[row][col] == 1) {
+                    totalHouses++;
+                }
+            }
+        }
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (grid[row][col] == 0) {
+                    minDistance = Math.Min(minDistance, Bfs(grid, row, col, totalHouses));
+                }
+            }
+        }
+
+        return minDistance == int.MaxValue ? -1 : minDistance;
+    }
+
+    private int Bfs(int[][] grid, int row, int col, int totalHouses) {
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+        int distanceSum = 0;
+        int housesReached = 0;
+
+        Queue<int[]> q = new Queue<int[]>();
+        q.Enqueue(new int[] { row, col });
+
+        bool[][] vis = new bool[rows][];
+        for (int i = 0; i < rows; i++) {
+            vis[i] = new bool[cols];
+        }
+        vis[row][col] = true;
+
+        int steps = 0;
+
+        while (q.Count > 0 && housesReached != totalHouses) {
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                int[] curr = q.Dequeue();
+                row = curr[0];
+                col = curr[1];
+
+                if (grid[row][col] == 1) {
+                    distanceSum += steps;
+                    housesReached++;
+                    continue;
+                }
+
+                foreach (int[] dir in dirs) {
+                    int nextRow = row + dir[0];
+                    int nextCol = col + dir[1];
+                    if (nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols) {
+                        if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] != 2) {
+                            vis[nextRow][nextCol] = true;
+                            q.Enqueue(new int[] { nextRow, nextCol });
+                        }
+                    }
+                }
+            }
+            steps++;
+        }
+
+        if (housesReached != totalHouses) {
+            for (row = 0; row < rows; row++) {
+                for (col = 0; col < cols; col++) {
+                    if (grid[row][col] == 0 && vis[row][col]) {
+                        grid[row][col] = 2;
+                    }
+                }
+            }
+            return int.MaxValue;
+        }
+
+        return distanceSum;
+    }
+}
+```
+
+```go
+func shortestDistance(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    dirs := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+
+    totalHouses := 0
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            if grid[row][col] == 1 {
+                totalHouses++
+            }
+        }
+    }
+
+    bfs := func(startRow, startCol int) int {
+        distanceSum := 0
+        housesReached := 0
+
+        q := [][]int{{startRow, startCol}}
+        vis := make([][]bool, rows)
+        for i := range vis {
+            vis[i] = make([]bool, cols)
+        }
+        vis[startRow][startCol] = true
+
+        steps := 0
+
+        for len(q) > 0 && housesReached != totalHouses {
+            size := len(q)
+            for i := 0; i < size; i++ {
+                curr := q[0]
+                q = q[1:]
+                row, col := curr[0], curr[1]
+
+                if grid[row][col] == 1 {
+                    distanceSum += steps
+                    housesReached++
+                    continue
+                }
+
+                for _, dir := range dirs {
+                    nextRow, nextCol := row+dir[0], col+dir[1]
+                    if nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols {
+                        if !vis[nextRow][nextCol] && grid[nextRow][nextCol] != 2 {
+                            vis[nextRow][nextCol] = true
+                            q = append(q, []int{nextRow, nextCol})
+                        }
+                    }
+                }
+            }
+            steps++
+        }
+
+        if housesReached != totalHouses {
+            for row := 0; row < rows; row++ {
+                for col := 0; col < cols; col++ {
+                    if grid[row][col] == 0 && vis[row][col] {
+                        grid[row][col] = 2
+                    }
+                }
+            }
+            return math.MaxInt32
+        }
+
+        return distanceSum
+    }
+
+    minDistance := math.MaxInt32
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            if grid[row][col] == 0 {
+                minDistance = min(minDistance, bfs(row, col))
+            }
+        }
+    }
+
+    if minDistance == math.MaxInt32 {
+        return -1
+    }
+    return minDistance
+}
+```
+
+```kotlin
+class Solution {
+    private val dirs = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+
+    fun shortestDistance(grid: Array<IntArray>): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+
+        var totalHouses = 0
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                if (grid[row][col] == 1) {
+                    totalHouses++
+                }
+            }
+        }
+
+        var minDistance = Int.MAX_VALUE
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                if (grid[row][col] == 0) {
+                    minDistance = minOf(minDistance, bfs(grid, row, col, totalHouses))
+                }
+            }
+        }
+
+        return if (minDistance == Int.MAX_VALUE) -1 else minDistance
+    }
+
+    private fun bfs(grid: Array<IntArray>, startRow: Int, startCol: Int, totalHouses: Int): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+        var distanceSum = 0
+        var housesReached = 0
+
+        val q = ArrayDeque<IntArray>()
+        q.add(intArrayOf(startRow, startCol))
+
+        val vis = Array(rows) { BooleanArray(cols) }
+        vis[startRow][startCol] = true
+
+        var steps = 0
+
+        while (q.isNotEmpty() && housesReached != totalHouses) {
+            val size = q.size
+            repeat(size) {
+                val curr = q.removeFirst()
+                val row = curr[0]
+                val col = curr[1]
+
+                if (grid[row][col] == 1) {
+                    distanceSum += steps
+                    housesReached++
+                    return@repeat
+                }
+
+                for (dir in dirs) {
+                    val nextRow = row + dir[0]
+                    val nextCol = col + dir[1]
+                    if (nextRow in 0 until rows && nextCol in 0 until cols) {
+                        if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] != 2) {
+                            vis[nextRow][nextCol] = true
+                            q.add(intArrayOf(nextRow, nextCol))
+                        }
+                    }
+                }
+            }
+            steps++
+        }
+
+        if (housesReached != totalHouses) {
+            for (row in 0 until rows) {
+                for (col in 0 until cols) {
+                    if (grid[row][col] == 0 && vis[row][col]) {
+                        grid[row][col] = 2
+                    }
+                }
+            }
+            return Int.MAX_VALUE
+        }
+
+        return distanceSum
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let rows = grid.count
+        let cols = grid[0].count
+        let dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        var totalHouses = 0
+        for row in 0..<rows {
+            for col in 0..<cols {
+                if grid[row][col] == 1 {
+                    totalHouses += 1
+                }
+            }
+        }
+
+        func bfs(_ startRow: Int, _ startCol: Int) -> Int {
+            var distanceSum = 0
+            var housesReached = 0
+
+            var q = [(startRow, startCol)]
+            var vis = Array(repeating: Array(repeating: false, count: cols), count: rows)
+            vis[startRow][startCol] = true
+
+            var steps = 0
+
+            while !q.isEmpty && housesReached != totalHouses {
+                let size = q.count
+                for _ in 0..<size {
+                    let (row, col) = q.removeFirst()
+
+                    if grid[row][col] == 1 {
+                        distanceSum += steps
+                        housesReached += 1
+                        continue
+                    }
+
+                    for (dr, dc) in dirs {
+                        let nextRow = row + dr
+                        let nextCol = col + dc
+                        if nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols {
+                            if !vis[nextRow][nextCol] && grid[nextRow][nextCol] != 2 {
+                                vis[nextRow][nextCol] = true
+                                q.append((nextRow, nextCol))
+                            }
+                        }
+                    }
+                }
+                steps += 1
+            }
+
+            if housesReached != totalHouses {
+                for row in 0..<rows {
+                    for col in 0..<cols {
+                        if grid[row][col] == 0 && vis[row][col] {
+                            grid[row][col] = 2
+                        }
+                    }
+                }
+                return Int.max
+            }
+
+            return distanceSum
+        }
+
+        var minDistance = Int.max
+        for row in 0..<rows {
+            for col in 0..<cols {
+                if grid[row][col] == 0 {
+                    minDistance = min(minDistance, bfs(row, col))
+                }
+            }
+        }
+
+        return minDistance == Int.max ? -1 : minDistance
     }
 }
 ```
@@ -332,6 +727,52 @@ class Solution {
 ## 2. BFS from Houses to Empty Land
 
 ::tabs-start
+
+```python
+class Solution:
+    def shortestDistance(self, grid: List[List[int]]) -> int:
+        rows, cols = len(grid), len(grid[0])
+        dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        total_houses = 0
+
+        distances = [[[0, 0] for _ in range(cols)] for _ in range(rows)]
+
+        def bfs(start_row, start_col):
+            q = deque([(start_row, start_col)])
+            vis = [[False] * cols for _ in range(rows)]
+            vis[start_row][start_col] = True
+            steps = 0
+
+            while q:
+                for _ in range(len(q)):
+                    row, col = q.popleft()
+
+                    if grid[row][col] == 0:
+                        distances[row][col][0] += steps
+                        distances[row][col][1] += 1
+
+                    for dr, dc in dirs:
+                        next_row, next_col = row + dr, col + dc
+                        if 0 <= next_row < rows and 0 <= next_col < cols:
+                            if not vis[next_row][next_col] and grid[next_row][next_col] == 0:
+                                vis[next_row][next_col] = True
+                                q.append((next_row, next_col))
+                steps += 1
+
+        for row in range(rows):
+            for col in range(cols):
+                if grid[row][col] == 1:
+                    total_houses += 1
+                    bfs(row, col)
+
+        min_distance = float('inf')
+        for row in range(rows):
+            for col in range(cols):
+                if distances[row][col][1] == total_houses:
+                    min_distance = min(min_distance, distances[row][col][0])
+
+        return -1 if min_distance == float('inf') else min_distance
+```
 
 ```java
 class Solution {
@@ -521,7 +962,7 @@ class Solution {
         let totalHouses = 0;
         // Store { total_dist, houses_count } for each cell.
         let distances = new Array(rows).fill(0).map(() => new Array(cols).fill(0).map(() => new Array(2).fill(0)));
-        
+
         // Count houses and start BFS from each house.
         for (let row = 0; row < rows; ++row) {
             for (let col = 0; col < cols; ++col) {
@@ -531,7 +972,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Check all empty lands with houses count equal to total houses and find the min ans.
         for (let row = 0; row < rows; ++row) {
             for (let col = 0; col < cols; ++col) {
@@ -540,46 +981,46 @@ class Solution {
                 }
             }
         }
-        
+
         // If we haven't found a valid cell return -1.
         if (minDistance == Number.MAX_VALUE) {
             return -1;
         }
         return minDistance;
     }
-    
+
     bfs(grid, distances, row, col) {
         // Next four directions.
         const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
         let rows = grid.length;
         let cols = grid[0].length;
-        
+
         // Use a queue to do a BFS, starting from cell at (row, col).
         // Using @datastructures-js/queue implementation
         let queue = new Queue([[row, col]]);
-        
+
         // Keep track of visited cells
         let vis = new Array(rows).fill(false).map(() => new Array(cols).fill(false));
         vis[row][col] = true;
         let steps = 0;
-        
+
         while (!queue.isEmpty()) {
             // Record the cells that we will explore in the next level
             let next_queue = new Queue();
             let currentLevelSize = queue.size();
-            
+
             for (let i = 0; i < currentLevelSize; i++) {
                 let curr = queue.dequeue();
                 let currRow = curr[0];
                 let currCol = curr[1];
-                
+
                 // If we reached an empty cell, then add the distance
                 // and increment the count of houses reached at this cell.
                 if (grid[currRow][currCol] == 0) {
                     distances[currRow][currCol][0] += steps;
                     distances[currRow][currCol][1]++;
                 }
-                
+
                 // Traverse the next cells which is not a blockage.
                 dirs.forEach((dir) => {
                     let nextRow = currRow + dir[0];
@@ -592,12 +1033,307 @@ class Solution {
                     }
                 });
             }
-            
+
             // Set the queue equal to the next level queue.
             queue = next_queue;
             // After traversing one level cells, increment the steps by 1 to reach to next level.
             steps++;
         }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] dirs = new int[][] { new int[] {1, 0}, new int[] {-1, 0}, new int[] {0, 1}, new int[] {0, -1} };
+
+    public int ShortestDistance(int[][] grid) {
+        int minDistance = int.MaxValue;
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+        int totalHouses = 0;
+
+        int[][][] distances = new int[rows][][];
+        for (int i = 0; i < rows; i++) {
+            distances[i] = new int[cols][];
+            for (int j = 0; j < cols; j++) {
+                distances[i][j] = new int[2];
+            }
+        }
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (grid[row][col] == 1) {
+                    totalHouses++;
+                    Bfs(grid, distances, row, col);
+                }
+            }
+        }
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (distances[row][col][1] == totalHouses) {
+                    minDistance = Math.Min(minDistance, distances[row][col][0]);
+                }
+            }
+        }
+
+        return minDistance == int.MaxValue ? -1 : minDistance;
+    }
+
+    private void Bfs(int[][] grid, int[][][] distances, int startRow, int startCol) {
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+
+        Queue<int[]> q = new Queue<int[]>();
+        q.Enqueue(new int[] { startRow, startCol });
+
+        bool[][] vis = new bool[rows][];
+        for (int i = 0; i < rows; i++) {
+            vis[i] = new bool[cols];
+        }
+        vis[startRow][startCol] = true;
+
+        int steps = 0;
+
+        while (q.Count > 0) {
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                int[] curr = q.Dequeue();
+                int row = curr[0];
+                int col = curr[1];
+
+                if (grid[row][col] == 0) {
+                    distances[row][col][0] += steps;
+                    distances[row][col][1]++;
+                }
+
+                foreach (int[] dir in dirs) {
+                    int nextRow = row + dir[0];
+                    int nextCol = col + dir[1];
+                    if (nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols) {
+                        if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] == 0) {
+                            vis[nextRow][nextCol] = true;
+                            q.Enqueue(new int[] { nextRow, nextCol });
+                        }
+                    }
+                }
+            }
+            steps++;
+        }
+    }
+}
+```
+
+```go
+func shortestDistance(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    dirs := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    totalHouses := 0
+
+    distances := make([][][]int, rows)
+    for i := 0; i < rows; i++ {
+        distances[i] = make([][]int, cols)
+        for j := 0; j < cols; j++ {
+            distances[i][j] = make([]int, 2)
+        }
+    }
+
+    bfs := func(startRow, startCol int) {
+        q := [][]int{{startRow, startCol}}
+        vis := make([][]bool, rows)
+        for i := range vis {
+            vis[i] = make([]bool, cols)
+        }
+        vis[startRow][startCol] = true
+        steps := 0
+
+        for len(q) > 0 {
+            size := len(q)
+            for i := 0; i < size; i++ {
+                curr := q[0]
+                q = q[1:]
+                row, col := curr[0], curr[1]
+
+                if grid[row][col] == 0 {
+                    distances[row][col][0] += steps
+                    distances[row][col][1]++
+                }
+
+                for _, dir := range dirs {
+                    nextRow, nextCol := row+dir[0], col+dir[1]
+                    if nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols {
+                        if !vis[nextRow][nextCol] && grid[nextRow][nextCol] == 0 {
+                            vis[nextRow][nextCol] = true
+                            q = append(q, []int{nextRow, nextCol})
+                        }
+                    }
+                }
+            }
+            steps++
+        }
+    }
+
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            if grid[row][col] == 1 {
+                totalHouses++
+                bfs(row, col)
+            }
+        }
+    }
+
+    minDistance := math.MaxInt32
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            if distances[row][col][1] == totalHouses {
+                if distances[row][col][0] < minDistance {
+                    minDistance = distances[row][col][0]
+                }
+            }
+        }
+    }
+
+    if minDistance == math.MaxInt32 {
+        return -1
+    }
+    return minDistance
+}
+```
+
+```kotlin
+class Solution {
+    private val dirs = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+
+    fun shortestDistance(grid: Array<IntArray>): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+        var totalHouses = 0
+
+        val distances = Array(rows) { Array(cols) { IntArray(2) } }
+
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                if (grid[row][col] == 1) {
+                    totalHouses++
+                    bfs(grid, distances, row, col)
+                }
+            }
+        }
+
+        var minDistance = Int.MAX_VALUE
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                if (distances[row][col][1] == totalHouses) {
+                    minDistance = minOf(minDistance, distances[row][col][0])
+                }
+            }
+        }
+
+        return if (minDistance == Int.MAX_VALUE) -1 else minDistance
+    }
+
+    private fun bfs(grid: Array<IntArray>, distances: Array<Array<IntArray>>, startRow: Int, startCol: Int) {
+        val rows = grid.size
+        val cols = grid[0].size
+
+        val q = ArrayDeque<IntArray>()
+        q.add(intArrayOf(startRow, startCol))
+
+        val vis = Array(rows) { BooleanArray(cols) }
+        vis[startRow][startCol] = true
+
+        var steps = 0
+
+        while (q.isNotEmpty()) {
+            val size = q.size
+            repeat(size) {
+                val curr = q.removeFirst()
+                val row = curr[0]
+                val col = curr[1]
+
+                if (grid[row][col] == 0) {
+                    distances[row][col][0] += steps
+                    distances[row][col][1]++
+                }
+
+                for (dir in dirs) {
+                    val nextRow = row + dir[0]
+                    val nextCol = col + dir[1]
+                    if (nextRow in 0 until rows && nextCol in 0 until cols) {
+                        if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] == 0) {
+                            vis[nextRow][nextCol] = true
+                            q.add(intArrayOf(nextRow, nextCol))
+                        }
+                    }
+                }
+            }
+            steps++
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ grid: [[Int]]) -> Int {
+        let rows = grid.count
+        let cols = grid[0].count
+        let dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        var totalHouses = 0
+
+        var distances = [[[Int]]](repeating: [[Int]](repeating: [0, 0], count: cols), count: rows)
+
+        func bfs(_ startRow: Int, _ startCol: Int) {
+            var q = [(startRow, startCol)]
+            var vis = [[Bool]](repeating: [Bool](repeating: false, count: cols), count: rows)
+            vis[startRow][startCol] = true
+            var steps = 0
+
+            while !q.isEmpty {
+                let size = q.count
+                for _ in 0..<size {
+                    let (row, col) = q.removeFirst()
+
+                    if grid[row][col] == 0 {
+                        distances[row][col][0] += steps
+                        distances[row][col][1] += 1
+                    }
+
+                    for (dr, dc) in dirs {
+                        let nextRow = row + dr
+                        let nextCol = col + dc
+                        if nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols {
+                            if !vis[nextRow][nextCol] && grid[nextRow][nextCol] == 0 {
+                                vis[nextRow][nextCol] = true
+                                q.append((nextRow, nextCol))
+                            }
+                        }
+                    }
+                }
+                steps += 1
+            }
+        }
+
+        for row in 0..<rows {
+            for col in 0..<cols {
+                if grid[row][col] == 1 {
+                    totalHouses += 1
+                    bfs(row, col)
+                }
+            }
+        }
+
+        var minDistance = Int.max
+        for row in 0..<rows {
+            for col in 0..<cols {
+                if distances[row][col][1] == totalHouses {
+                    minDistance = min(minDistance, distances[row][col][0])
+                }
+            }
+        }
+
+        return minDistance == Int.max ? -1 : minDistance
     }
 }
 ```
@@ -810,34 +1546,34 @@ class Solution {
     shortestDistance(grid) {
         const rows = grid.length;
         const cols = grid[0].length;
-        
+
         // Total Matrix to store total distance sum for each empty cell.
         const total = new Array(rows).fill(0).map(() => new Array(cols).fill(0));
         let emptyLandValue = 0;
         let minDist = Number.MAX_VALUE;
-        
+
         for (let row = 0; row < rows; ++row) {
             for (let col = 0; col < cols; ++col) {
                 // Start a BFS from each house.
                 if (grid[row][col] === 1) {
                     minDist = Number.MAX_VALUE;
-                    
+
                     // Use a queue to perform a BFS, starting from the cell located at (row, col).
                     // Using @datastructures-js/queue implementation
                     const q = new Queue([{row, col}]);
                     let steps = 0;
-                    
+
                     while (!q.isEmpty()) {
                         steps++;
                         const levelSize = q.size();
-                        
+
                         for (let level = 0; level < levelSize; level++) {
                             const curr = q.dequeue();
-                            
+
                             dirs.forEach((dir) => {
                                 const nextRow = curr.row + dir[0];
                                 const nextCol = curr.col + dir[1];
-                                
+
                                 // For each cell with the value equal to empty land value
                                 // add distance and decrement the cell value by 1.
                                 if (nextRow >= 0 && nextRow < rows &&
@@ -851,14 +1587,241 @@ class Solution {
                             });
                         }
                     }
-                    
+
                     // Decrement empty land value to be searched in next iteration.
                     emptyLandValue--;
                 }
             }
         }
-        
+
         return minDist === Number.MAX_VALUE ? -1 : minDist;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestDistance(int[][] grid) {
+        int[][] dirs = new int[][] { new int[] {1, 0}, new int[] {-1, 0}, new int[] {0, 1}, new int[] {0, -1} };
+
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+
+        int[][] total = new int[rows][];
+        for (int i = 0; i < rows; i++) {
+            total[i] = new int[cols];
+        }
+
+        int emptyLandValue = 0;
+        int minDist = int.MaxValue;
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                if (grid[row][col] == 1) {
+                    minDist = int.MaxValue;
+
+                    Queue<int[]> q = new Queue<int[]>();
+                    q.Enqueue(new int[] { row, col });
+
+                    int steps = 0;
+
+                    while (q.Count > 0) {
+                        steps++;
+                        int levelSize = q.Count;
+
+                        for (int level = 0; level < levelSize; level++) {
+                            int[] curr = q.Dequeue();
+
+                            foreach (int[] dir in dirs) {
+                                int nextRow = curr[0] + dir[0];
+                                int nextCol = curr[1] + dir[1];
+
+                                if (nextRow >= 0 && nextRow < rows &&
+                                    nextCol >= 0 && nextCol < cols &&
+                                    grid[nextRow][nextCol] == emptyLandValue) {
+                                    grid[nextRow][nextCol]--;
+                                    total[nextRow][nextCol] += steps;
+                                    q.Enqueue(new int[] { nextRow, nextCol });
+                                    minDist = Math.Min(minDist, total[nextRow][nextCol]);
+                                }
+                            }
+                        }
+                    }
+
+                    emptyLandValue--;
+                }
+            }
+        }
+
+        return minDist == int.MaxValue ? -1 : minDist;
+    }
+}
+```
+
+```go
+func shortestDistance(grid [][]int) int {
+    dirs := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    rows, cols := len(grid), len(grid[0])
+
+    total := make([][]int, rows)
+    for i := 0; i < rows; i++ {
+        total[i] = make([]int, cols)
+    }
+
+    emptyLandValue := 0
+    minDist := math.MaxInt32
+
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            if grid[row][col] == 1 {
+                minDist = math.MaxInt32
+
+                q := [][]int{{row, col}}
+                steps := 0
+
+                for len(q) > 0 {
+                    steps++
+                    levelSize := len(q)
+
+                    for level := 0; level < levelSize; level++ {
+                        curr := q[0]
+                        q = q[1:]
+
+                        for _, dir := range dirs {
+                            nextRow := curr[0] + dir[0]
+                            nextCol := curr[1] + dir[1]
+
+                            if nextRow >= 0 && nextRow < rows &&
+                                nextCol >= 0 && nextCol < cols &&
+                                grid[nextRow][nextCol] == emptyLandValue {
+                                grid[nextRow][nextCol]--
+                                total[nextRow][nextCol] += steps
+                                q = append(q, []int{nextRow, nextCol})
+                                if total[nextRow][nextCol] < minDist {
+                                    minDist = total[nextRow][nextCol]
+                                }
+                            }
+                        }
+                    }
+                }
+
+                emptyLandValue--
+            }
+        }
+    }
+
+    if minDist == math.MaxInt32 {
+        return -1
+    }
+    return minDist
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestDistance(grid: Array<IntArray>): Int {
+        val dirs = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+        val rows = grid.size
+        val cols = grid[0].size
+
+        val total = Array(rows) { IntArray(cols) }
+
+        var emptyLandValue = 0
+        var minDist = Int.MAX_VALUE
+
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                if (grid[row][col] == 1) {
+                    minDist = Int.MAX_VALUE
+
+                    val q = ArrayDeque<IntArray>()
+                    q.add(intArrayOf(row, col))
+
+                    var steps = 0
+
+                    while (q.isNotEmpty()) {
+                        steps++
+                        val levelSize = q.size
+
+                        repeat(levelSize) {
+                            val curr = q.removeFirst()
+
+                            for (dir in dirs) {
+                                val nextRow = curr[0] + dir[0]
+                                val nextCol = curr[1] + dir[1]
+
+                                if (nextRow in 0 until rows &&
+                                    nextCol in 0 until cols &&
+                                    grid[nextRow][nextCol] == emptyLandValue) {
+                                    grid[nextRow][nextCol]--
+                                    total[nextRow][nextCol] += steps
+                                    q.add(intArrayOf(nextRow, nextCol))
+                                    minDist = minOf(minDist, total[nextRow][nextCol])
+                                }
+                            }
+                        }
+                    }
+
+                    emptyLandValue--
+                }
+            }
+        }
+
+        return if (minDist == Int.MAX_VALUE) -1 else minDist
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        let rows = grid.count
+        let cols = grid[0].count
+
+        var total = [[Int]](repeating: [Int](repeating: 0, count: cols), count: rows)
+
+        var emptyLandValue = 0
+        var minDist = Int.max
+
+        for row in 0..<rows {
+            for col in 0..<cols {
+                if grid[row][col] == 1 {
+                    minDist = Int.max
+
+                    var q = [(row, col)]
+                    var steps = 0
+
+                    while !q.isEmpty {
+                        steps += 1
+                        let levelSize = q.count
+
+                        for _ in 0..<levelSize {
+                            let curr = q.removeFirst()
+
+                            for (dr, dc) in dirs {
+                                let nextRow = curr.0 + dr
+                                let nextCol = curr.1 + dc
+
+                                if nextRow >= 0 && nextRow < rows &&
+                                   nextCol >= 0 && nextCol < cols &&
+                                   grid[nextRow][nextCol] == emptyLandValue {
+                                    grid[nextRow][nextCol] -= 1
+                                    total[nextRow][nextCol] += steps
+                                    q.append((nextRow, nextCol))
+                                    minDist = min(minDist, total[nextRow][nextCol])
+                                }
+                            }
+                        }
+                    }
+
+                    emptyLandValue -= 1
+                }
+            }
+        }
+
+        return minDist == Int.max ? -1 : minDist
     }
 }
 ```

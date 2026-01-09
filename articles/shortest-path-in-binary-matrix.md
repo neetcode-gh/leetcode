@@ -186,6 +186,119 @@ public class Solution {
 }
 ```
 
+```go
+func shortestPathBinaryMatrix(grid [][]int) int {
+    n := len(grid)
+    if grid[0][0] == 1 || grid[n-1][n-1] == 1 {
+        return -1
+    }
+
+    directions := [][]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0},
+                          {1, 1}, {-1, -1}, {1, -1}, {-1, 1}}
+    visit := make([][]bool, n)
+    for i := range visit {
+        visit[i] = make([]bool, n)
+    }
+
+    q := [][]int{{0, 0, 1}}
+    visit[0][0] = true
+
+    for len(q) > 0 {
+        cell := q[0]
+        q = q[1:]
+        r, c, length := cell[0], cell[1], cell[2]
+
+        if r == n-1 && c == n-1 {
+            return length
+        }
+
+        for _, d := range directions {
+            nr, nc := r+d[0], c+d[1]
+            if nr >= 0 && nc >= 0 && nr < n && nc < n &&
+                grid[nr][nc] == 0 && !visit[nr][nc] {
+                q = append(q, []int{nr, nc, length + 1})
+                visit[nr][nc] = true
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestPathBinaryMatrix(grid: Array<IntArray>): Int {
+        val n = grid.size
+        if (grid[0][0] == 1 || grid[n - 1][n - 1] == 1) return -1
+
+        val directions = arrayOf(
+            intArrayOf(0, 1), intArrayOf(1, 0), intArrayOf(0, -1), intArrayOf(-1, 0),
+            intArrayOf(1, 1), intArrayOf(-1, -1), intArrayOf(1, -1), intArrayOf(-1, 1)
+        )
+        val visit = Array(n) { BooleanArray(n) }
+
+        val q = ArrayDeque<IntArray>()
+        q.add(intArrayOf(0, 0, 1))
+        visit[0][0] = true
+
+        while (q.isNotEmpty()) {
+            val (r, c, length) = q.removeFirst()
+
+            if (r == n - 1 && c == n - 1) return length
+
+            for (d in directions) {
+                val nr = r + d[0]
+                val nc = c + d[1]
+                if (nr in 0 until n && nc in 0 until n &&
+                    grid[nr][nc] == 0 && !visit[nr][nc]) {
+                    q.add(intArrayOf(nr, nc, length + 1))
+                    visit[nr][nc] = true
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestPathBinaryMatrix(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        if grid[0][0] == 1 || grid[n - 1][n - 1] == 1 {
+            return -1
+        }
+
+        let directions = [(0, 1), (1, 0), (0, -1), (-1, 0),
+                          (1, 1), (-1, -1), (1, -1), (-1, 1)]
+        var visit = [[Bool]](repeating: [Bool](repeating: false, count: n), count: n)
+
+        var q = [(r: Int, c: Int, length: Int)]()
+        q.append((0, 0, 1))
+        visit[0][0] = true
+
+        while !q.isEmpty {
+            let (r, c, length) = q.removeFirst()
+
+            if r == n - 1 && c == n - 1 {
+                return length
+            }
+
+            for (dr, dc) in directions {
+                let nr = r + dr
+                let nc = c + dc
+                if nr >= 0 && nc >= 0 && nr < n && nc < n &&
+                   grid[nr][nc] == 0 && !visit[nr][nc] {
+                    q.append((nr, nc, length + 1))
+                    visit[nr][nc] = true
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -376,6 +489,117 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func shortestPathBinaryMatrix(grid [][]int) int {
+    n := len(grid)
+    direct := []int{0, 1, 0, -1, 0, 1, 1, -1, -1, 1}
+
+    if grid[0][0] == 1 || grid[n-1][n-1] == 1 {
+        return -1
+    }
+
+    q := [][]int{{0, 0}}
+    grid[0][0] = 1
+
+    for len(q) > 0 {
+        cell := q[0]
+        q = q[1:]
+        r, c := cell[0], cell[1]
+        dist := grid[r][c]
+
+        if r == n-1 && c == n-1 {
+            return dist
+        }
+
+        for d := 0; d < 9; d++ {
+            nr := r + direct[d]
+            nc := c + direct[d+1]
+            if nr >= 0 && nc >= 0 && nr < n && nc < n && grid[nr][nc] == 0 {
+                grid[nr][nc] = dist + 1
+                q = append(q, []int{nr, nc})
+            }
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestPathBinaryMatrix(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val direct = intArrayOf(0, 1, 0, -1, 0, 1, 1, -1, -1, 1)
+
+        if (grid[0][0] == 1 || grid[n - 1][n - 1] == 1) {
+            return -1
+        }
+
+        val q = ArrayDeque<IntArray>()
+        q.add(intArrayOf(0, 0))
+        grid[0][0] = 1
+
+        while (q.isNotEmpty()) {
+            val (r, c) = q.removeFirst()
+            val dist = grid[r][c]
+
+            if (r == n - 1 && c == n - 1) {
+                return dist
+            }
+
+            for (d in 0 until 9) {
+                val nr = r + direct[d]
+                val nc = c + direct[d + 1]
+                if (nr in 0 until n && nc in 0 until n && grid[nr][nc] == 0) {
+                    grid[nr][nc] = dist + 1
+                    q.add(intArrayOf(nr, nc))
+                }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestPathBinaryMatrix(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let n = grid.count
+        let direct = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1]
+
+        if grid[0][0] == 1 || grid[n - 1][n - 1] == 1 {
+            return -1
+        }
+
+        var q = [(Int, Int)]()
+        q.append((0, 0))
+        grid[0][0] = 1
+
+        while !q.isEmpty {
+            let (r, c) = q.removeFirst()
+            let dist = grid[r][c]
+
+            if r == n - 1 && c == n - 1 {
+                return dist
+            }
+
+            for d in 0..<9 {
+                let nr = r + direct[d]
+                let nc = c + direct[d + 1]
+                if nr >= 0 && nc >= 0 && nr < n && nc < n && grid[nr][nc] == 0 {
+                    grid[nr][nc] = dist + 1
+                    q.append((nr, nc))
+                }
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -611,6 +835,162 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func shortestPathBinaryMatrix(grid [][]int) int {
+    n := len(grid)
+    if grid[0][0] != 0 || grid[n-1][n-1] != 0 {
+        return -1
+    }
+    if n == 1 {
+        return 1
+    }
+
+    direct := []int{0, 1, 0, -1, 0, 1, 1, -1, -1, 1}
+    q1 := [][]int{{0, 0}}
+    q2 := [][]int{{n - 1, n - 1}}
+    grid[0][0] = -1
+    grid[n-1][n-1] = -2
+
+    res := 2
+    start, end := -1, -2
+
+    for len(q1) > 0 && len(q2) > 0 {
+        size := len(q1)
+        for i := 0; i < size; i++ {
+            cell := q1[0]
+            q1 = q1[1:]
+            r, c := cell[0], cell[1]
+
+            for d := 0; d < 9; d++ {
+                nr := r + direct[d]
+                nc := c + direct[d+1]
+                if nr >= 0 && nc >= 0 && nr < n && nc < n {
+                    if grid[nr][nc] == end {
+                        return res
+                    }
+                    if grid[nr][nc] == 0 {
+                        grid[nr][nc] = start
+                        q1 = append(q1, []int{nr, nc})
+                    }
+                }
+            }
+        }
+        q1, q2 = q2, q1
+        start, end = end, start
+        res++
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestPathBinaryMatrix(grid: Array<IntArray>): Int {
+        val n = grid.size
+        if (grid[0][0] != 0 || grid[n - 1][n - 1] != 0) {
+            return -1
+        }
+        if (n == 1) {
+            return 1
+        }
+
+        val direct = intArrayOf(0, 1, 0, -1, 0, 1, 1, -1, -1, 1)
+        var q1 = ArrayDeque<IntArray>()
+        var q2 = ArrayDeque<IntArray>()
+        q1.add(intArrayOf(0, 0))
+        q2.add(intArrayOf(n - 1, n - 1))
+        grid[0][0] = -1
+        grid[n - 1][n - 1] = -2
+
+        var res = 2
+        var start = -1
+        var end = -2
+
+        while (q1.isNotEmpty() && q2.isNotEmpty()) {
+            val size = q1.size
+            repeat(size) {
+                val (r, c) = q1.removeFirst()
+                for (d in 0 until 9) {
+                    val nr = r + direct[d]
+                    val nc = c + direct[d + 1]
+                    if (nr in 0 until n && nc in 0 until n) {
+                        if (grid[nr][nc] == end) {
+                            return res
+                        }
+                        if (grid[nr][nc] == 0) {
+                            grid[nr][nc] = start
+                            q1.add(intArrayOf(nr, nc))
+                        }
+                    }
+                }
+            }
+            val temp = q1
+            q1 = q2
+            q2 = temp
+            val tmpVal = start
+            start = end
+            end = tmpVal
+            res++
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestPathBinaryMatrix(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let n = grid.count
+        if grid[0][0] != 0 || grid[n - 1][n - 1] != 0 {
+            return -1
+        }
+        if n == 1 {
+            return 1
+        }
+
+        let direct = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1]
+        var q1 = [(Int, Int)]()
+        var q2 = [(Int, Int)]()
+        q1.append((0, 0))
+        q2.append((n - 1, n - 1))
+        grid[0][0] = -1
+        grid[n - 1][n - 1] = -2
+
+        var res = 2
+        var start = -1
+        var end = -2
+
+        while !q1.isEmpty && !q2.isEmpty {
+            let size = q1.count
+            for _ in 0..<size {
+                let (r, c) = q1.removeFirst()
+                for d in 0..<9 {
+                    let nr = r + direct[d]
+                    let nc = c + direct[d + 1]
+                    if nr >= 0 && nc >= 0 && nr < n && nc < n {
+                        if grid[nr][nc] == end {
+                            return res
+                        }
+                        if grid[nr][nc] == 0 {
+                            grid[nr][nc] = start
+                            q1.append((nr, nc))
+                        }
+                    }
+                }
+            }
+            swap(&q1, &q2)
+            swap(&start, &end)
+            res += 1
+        }
+
+        return -1
     }
 }
 ```

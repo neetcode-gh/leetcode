@@ -96,6 +96,105 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long DistinctNames(string[] ideas) {
+        int n = ideas.Length;
+        HashSet<string> res = new HashSet<string>();
+        HashSet<string> ideasSet = new HashSet<string>(ideas);
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                string A = ideas[j][0] + ideas[i].Substring(1);
+                string B = ideas[i][0] + ideas[j].Substring(1);
+
+                if (!ideasSet.Contains(A) && !ideasSet.Contains(B)) {
+                    res.Add(A + " " + B);
+                    res.Add(B + " " + A);
+                }
+            }
+        }
+
+        return res.Count;
+    }
+}
+```
+
+```go
+func distinctNames(ideas []string) int64 {
+    n := len(ideas)
+    res := make(map[string]struct{})
+    ideasSet := make(map[string]struct{})
+    for _, idea := range ideas {
+        ideasSet[idea] = struct{}{}
+    }
+
+    for i := 0; i < n; i++ {
+        for j := i + 1; j < n; j++ {
+            A := string(ideas[j][0]) + ideas[i][1:]
+            B := string(ideas[i][0]) + ideas[j][1:]
+
+            _, hasA := ideasSet[A]
+            _, hasB := ideasSet[B]
+            if !hasA && !hasB {
+                res[A+" "+B] = struct{}{}
+                res[B+" "+A] = struct{}{}
+            }
+        }
+    }
+
+    return int64(len(res))
+}
+```
+
+```kotlin
+class Solution {
+    fun distinctNames(ideas: Array<String>): Long {
+        val n = ideas.size
+        val res = HashSet<String>()
+        val ideasSet = ideas.toHashSet()
+
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                val A = ideas[j][0] + ideas[i].substring(1)
+                val B = ideas[i][0] + ideas[j].substring(1)
+
+                if (A !in ideasSet && B !in ideasSet) {
+                    res.add("$A $B")
+                    res.add("$B $A")
+                }
+            }
+        }
+
+        return res.size.toLong()
+    }
+}
+```
+
+```swift
+class Solution {
+    func distinctNames(_ ideas: [String]) -> Int {
+        let n = ideas.count
+        var res = Set<String>()
+        let ideasSet = Set(ideas)
+
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                let A = String(ideas[j].first!) + String(ideas[i].dropFirst())
+                let B = String(ideas[i].first!) + String(ideas[j].dropFirst())
+
+                if !ideasSet.contains(A) && !ideasSet.contains(B) {
+                    res.insert("\(A) \(B)")
+                    res.insert("\(B) \(A)")
+                }
+            }
+        }
+
+        return res.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -236,6 +335,141 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long DistinctNames(string[] ideas) {
+        var wordMap = new Dictionary<char, HashSet<string>>();
+        foreach (var word in ideas) {
+            if (!wordMap.ContainsKey(word[0])) {
+                wordMap[word[0]] = new HashSet<string>();
+            }
+            wordMap[word[0]].Add(word.Substring(1));
+        }
+
+        long res = 0;
+        foreach (var kv1 in wordMap) {
+            foreach (var kv2 in wordMap) {
+                if (kv1.Key == kv2.Key) continue;
+
+                int intersect = 0;
+                foreach (var w in kv1.Value) {
+                    if (kv2.Value.Contains(w)) {
+                        intersect++;
+                    }
+                }
+
+                int distinct1 = kv1.Value.Count - intersect;
+                int distinct2 = kv2.Value.Count - intersect;
+                res += (long)distinct1 * distinct2;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func distinctNames(ideas []string) int64 {
+    wordMap := make(map[byte]map[string]struct{})
+    for _, word := range ideas {
+        key := word[0]
+        if wordMap[key] == nil {
+            wordMap[key] = make(map[string]struct{})
+        }
+        wordMap[key][word[1:]] = struct{}{}
+    }
+
+    var res int64 = 0
+    for char1, set1 := range wordMap {
+        for char2, set2 := range wordMap {
+            if char1 == char2 {
+                continue
+            }
+
+            intersect := 0
+            for w := range set1 {
+                if _, ok := set2[w]; ok {
+                    intersect++
+                }
+            }
+
+            distinct1 := len(set1) - intersect
+            distinct2 := len(set2) - intersect
+            res += int64(distinct1) * int64(distinct2)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distinctNames(ideas: Array<String>): Long {
+        val wordMap = HashMap<Char, HashSet<String>>()
+        for (word in ideas) {
+            wordMap.getOrPut(word[0]) { HashSet() }.add(word.substring(1))
+        }
+
+        var res = 0L
+        for ((char1, set1) in wordMap) {
+            for ((char2, set2) in wordMap) {
+                if (char1 == char2) continue
+
+                var intersect = 0
+                for (w in set1) {
+                    if (w in set2) {
+                        intersect++
+                    }
+                }
+
+                val distinct1 = set1.size - intersect
+                val distinct2 = set2.size - intersect
+                res += distinct1.toLong() * distinct2
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distinctNames(_ ideas: [String]) -> Int {
+        var wordMap = [Character: Set<String>]()
+        for word in ideas {
+            let key = word.first!
+            if wordMap[key] == nil {
+                wordMap[key] = Set<String>()
+            }
+            wordMap[key]!.insert(String(word.dropFirst()))
+        }
+
+        var res = 0
+        for (char1, set1) in wordMap {
+            for (char2, set2) in wordMap {
+                if char1 == char2 { continue }
+
+                var intersect = 0
+                for w in set1 {
+                    if set2.contains(w) {
+                        intersect += 1
+                    }
+                }
+
+                let distinct1 = set1.count - intersect
+                let distinct2 = set2.count - intersect
+                res += distinct1 * distinct2
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +583,111 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long DistinctNames(string[] ideas) {
+        HashSet<string>[] suffixes = new HashSet<string>[26];
+        for (int i = 0; i < 26; i++) {
+            suffixes[i] = new HashSet<string>();
+        }
+        foreach (var w in ideas) {
+            suffixes[w[0] - 'a'].Add(w.Substring(1));
+        }
+
+        long res = 0;
+        for (int i = 0; i < 26; i++) {
+            for (int j = i + 1; j < 26; j++) {
+                int intersect = 0;
+                foreach (var s in suffixes[i]) {
+                    if (suffixes[j].Contains(s)) {
+                        intersect++;
+                    }
+                }
+                res += 2L * (suffixes[i].Count - intersect) * (suffixes[j].Count - intersect);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func distinctNames(ideas []string) int64 {
+    suffixes := make([]map[string]struct{}, 26)
+    for i := 0; i < 26; i++ {
+        suffixes[i] = make(map[string]struct{})
+    }
+    for _, w := range ideas {
+        suffixes[w[0]-'a'][w[1:]] = struct{}{}
+    }
+
+    var res int64 = 0
+    for i := 0; i < 26; i++ {
+        for j := i + 1; j < 26; j++ {
+            intersect := 0
+            for s := range suffixes[i] {
+                if _, ok := suffixes[j][s]; ok {
+                    intersect++
+                }
+            }
+            res += 2 * int64(len(suffixes[i])-intersect) * int64(len(suffixes[j])-intersect)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distinctNames(ideas: Array<String>): Long {
+        val suffixes = Array(26) { HashSet<String>() }
+        for (w in ideas) {
+            suffixes[w[0] - 'a'].add(w.substring(1))
+        }
+
+        var res = 0L
+        for (i in 0 until 26) {
+            for (j in i + 1 until 26) {
+                var intersect = 0
+                for (s in suffixes[i]) {
+                    if (s in suffixes[j]) {
+                        intersect++
+                    }
+                }
+                res += 2L * (suffixes[i].size - intersect) * (suffixes[j].size - intersect)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distinctNames(_ ideas: [String]) -> Int {
+        var suffixes = Array(repeating: Set<String>(), count: 26)
+        for w in ideas {
+            let idx = Int(w.first!.asciiValue! - Character("a").asciiValue!)
+            suffixes[idx].insert(String(w.dropFirst()))
+        }
+
+        var res = 0
+        for i in 0..<26 {
+            for j in (i + 1)..<26 {
+                var intersect = 0
+                for s in suffixes[i] {
+                    if suffixes[j].contains(s) {
+                        intersect += 1
+                    }
+                }
+                res += 2 * (suffixes[i].count - intersect) * (suffixes[j].count - intersect)
+            }
+        }
+        return res
     }
 }
 ```
@@ -484,6 +823,136 @@ class Solution {
             }
         }
         return 2 * res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long DistinctNames(string[] ideas) {
+        var mp = new Dictionary<string, bool[]>();
+        int[,] count = new int[26, 26];
+        long res = 0;
+
+        foreach (var s in ideas) {
+            int firstChar = s[0] - 'a';
+            string suffix = s.Substring(1);
+            if (!mp.ContainsKey(suffix)) {
+                mp[suffix] = new bool[26];
+            }
+            mp[suffix][firstChar] = true;
+        }
+
+        foreach (var arr in mp.Values) {
+            for (int i = 0; i < 26; i++) {
+                if (arr[i]) {
+                    for (int j = 0; j < 26; j++) {
+                        if (!arr[j]) {
+                            count[i, j]++;
+                            res += count[j, i];
+                        }
+                    }
+                }
+            }
+        }
+        return 2 * res;
+    }
+}
+```
+
+```go
+func distinctNames(ideas []string) int64 {
+    mp := make(map[string][]bool)
+    count := make([][]int64, 26)
+    for i := 0; i < 26; i++ {
+        count[i] = make([]int64, 26)
+    }
+    var res int64 = 0
+
+    for _, s := range ideas {
+        firstChar := int(s[0] - 'a')
+        suffix := s[1:]
+        if mp[suffix] == nil {
+            mp[suffix] = make([]bool, 26)
+        }
+        mp[suffix][firstChar] = true
+    }
+
+    for _, arr := range mp {
+        for i := 0; i < 26; i++ {
+            if arr[i] {
+                for j := 0; j < 26; j++ {
+                    if !arr[j] {
+                        count[i][j]++
+                        res += count[j][i]
+                    }
+                }
+            }
+        }
+    }
+    return 2 * res
+}
+```
+
+```kotlin
+class Solution {
+    fun distinctNames(ideas: Array<String>): Long {
+        val mp = HashMap<String, BooleanArray>()
+        val count = Array(26) { LongArray(26) }
+        var res = 0L
+
+        for (s in ideas) {
+            val firstChar = s[0] - 'a'
+            val suffix = s.substring(1)
+            mp.getOrPut(suffix) { BooleanArray(26) }[firstChar] = true
+        }
+
+        for (arr in mp.values) {
+            for (i in 0 until 26) {
+                if (arr[i]) {
+                    for (j in 0 until 26) {
+                        if (!arr[j]) {
+                            count[i][j]++
+                            res += count[j][i]
+                        }
+                    }
+                }
+            }
+        }
+        return 2 * res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distinctNames(_ ideas: [String]) -> Int {
+        var mp = [String: [Bool]]()
+        var count = Array(repeating: Array(repeating: 0, count: 26), count: 26)
+        var res = 0
+
+        for s in ideas {
+            let firstChar = Int(s.first!.asciiValue! - Character("a").asciiValue!)
+            let suffix = String(s.dropFirst())
+            if mp[suffix] == nil {
+                mp[suffix] = Array(repeating: false, count: 26)
+            }
+            mp[suffix]![firstChar] = true
+        }
+
+        for arr in mp.values {
+            for i in 0..<26 {
+                if arr[i] {
+                    for j in 0..<26 {
+                        if !arr[j] {
+                            count[i][j] += 1
+                            res += count[j][i]
+                        }
+                    }
+                }
+            }
+        }
+        return 2 * res
     }
 }
 ```

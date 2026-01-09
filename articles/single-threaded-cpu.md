@@ -177,6 +177,142 @@ public class Solution {
 }
 ```
 
+```go
+func getOrder(tasks [][]int) []int {
+    n := len(tasks)
+    type task struct {
+        enqueueTime, processTime, index int
+    }
+
+    pending := make([]task, n)
+    for i := 0; i < n; i++ {
+        pending[i] = task{tasks[i][0], tasks[i][1], i}
+    }
+    sort.Slice(pending, func(i, j int) bool {
+        return pending[i].enqueueTime < pending[j].enqueueTime
+    })
+
+    available := &minHeap{}
+    heap.Init(available)
+
+    res := make([]int, 0, n)
+    time := 0
+    i := 0
+
+    for available.Len() > 0 || i < n {
+        for i < n && pending[i].enqueueTime <= time {
+            heap.Push(available, [2]int{pending[i].processTime, pending[i].index})
+            i++
+        }
+
+        if available.Len() == 0 {
+            time = pending[i].enqueueTime
+            continue
+        }
+
+        next := heap.Pop(available).([2]int)
+        time += next[0]
+        res = append(res, next[1])
+    }
+
+    return res
+}
+
+type minHeap [][2]int
+
+func (h minHeap) Len() int { return len(h) }
+func (h minHeap) Less(i, j int) bool {
+    if h[i][0] != h[j][0] {
+        return h[i][0] < h[j][0]
+    }
+    return h[i][1] < h[j][1]
+}
+func (h minHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *minHeap) Push(x interface{}) { *h = append(*h, x.([2]int)) }
+func (h *minHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun getOrder(tasks: Array<IntArray>): IntArray {
+        val n = tasks.size
+        data class Task(val enqueueTime: Int, val processTime: Int, val index: Int)
+
+        val pending = PriorityQueue<Task>(compareBy { it.enqueueTime })
+        for (i in 0 until n) {
+            pending.add(Task(tasks[i][0], tasks[i][1], i))
+        }
+
+        val available = PriorityQueue<IntArray>(compareBy({ it[0] }, { it[1] }))
+
+        val res = IntArray(n)
+        var time = 0L
+        var idx = 0
+
+        while (pending.isNotEmpty() || available.isNotEmpty()) {
+            while (pending.isNotEmpty() && pending.peek().enqueueTime <= time) {
+                val task = pending.poll()
+                available.add(intArrayOf(task.processTime, task.index))
+            }
+
+            if (available.isEmpty()) {
+                time = pending.peek().enqueueTime.toLong()
+                continue
+            }
+
+            val next = available.poll()
+            time += next[0]
+            res[idx++] = next[1]
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func getOrder(_ tasks: [[Int]]) -> [Int] {
+        let n = tasks.count
+        var taskList = [(enqueueTime: Int, processTime: Int, index: Int)]()
+        for i in 0..<n {
+            taskList.append((tasks[i][0], tasks[i][1], i))
+        }
+        taskList.sort { $0.enqueueTime < $1.enqueueTime }
+
+        var available = [(processTime: Int, index: Int)]()
+        var res = [Int]()
+        var time = 0
+        var i = 0
+
+        while !available.isEmpty || i < n {
+            while i < n && taskList[i].enqueueTime <= time {
+                available.append((taskList[i].processTime, taskList[i].index))
+                i += 1
+            }
+            available.sort { $0.processTime == $1.processTime ? $0.index < $1.index : $0.processTime < $1.processTime }
+
+            if available.isEmpty {
+                time = taskList[i].enqueueTime
+                continue
+            }
+
+            let next = available.removeFirst()
+            time += next.processTime
+            res.append(next.index)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -351,6 +487,123 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func getOrder(tasks [][]int) []int {
+    n := len(tasks)
+    for i := 0; i < n; i++ {
+        tasks[i] = append(tasks[i], i)
+    }
+    sort.Slice(tasks, func(i, j int) bool {
+        return tasks[i][0] < tasks[j][0]
+    })
+
+    minHeap := &minHeap2{}
+    heap.Init(minHeap)
+
+    res := make([]int, 0, n)
+    i := 0
+    time := tasks[0][0]
+
+    for minHeap.Len() > 0 || i < n {
+        for i < n && time >= tasks[i][0] {
+            heap.Push(minHeap, [2]int{tasks[i][1], tasks[i][2]})
+            i++
+        }
+        if minHeap.Len() == 0 {
+            time = tasks[i][0]
+        } else {
+            task := heap.Pop(minHeap).([2]int)
+            time += task[0]
+            res = append(res, task[1])
+        }
+    }
+    return res
+}
+
+type minHeap2 [][2]int
+
+func (h minHeap2) Len() int { return len(h) }
+func (h minHeap2) Less(i, j int) bool {
+    if h[i][0] != h[j][0] {
+        return h[i][0] < h[j][0]
+    }
+    return h[i][1] < h[j][1]
+}
+func (h minHeap2) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *minHeap2) Push(x interface{}) { *h = append(*h, x.([2]int)) }
+func (h *minHeap2) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun getOrder(tasks: Array<IntArray>): IntArray {
+        val n = tasks.size
+        val tasksWithIndex = tasks.mapIndexed { i, t -> intArrayOf(t[0], t[1], i) }
+            .sortedBy { it[0] }
+
+        val minHeap = PriorityQueue<IntArray>(compareBy({ it[0] }, { it[1] }))
+
+        val res = IntArray(n)
+        var i = 0
+        var idx = 0
+        var time = tasksWithIndex[0][0].toLong()
+
+        while (minHeap.isNotEmpty() || i < n) {
+            while (i < n && time >= tasksWithIndex[i][0]) {
+                minHeap.add(intArrayOf(tasksWithIndex[i][1], tasksWithIndex[i][2]))
+                i++
+            }
+            if (minHeap.isEmpty()) {
+                time = tasksWithIndex[i][0].toLong()
+            } else {
+                val task = minHeap.poll()
+                time += task[0]
+                res[idx++] = task[1]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func getOrder(_ tasks: [[Int]]) -> [Int] {
+        let n = tasks.count
+        var tasksWithIndex = tasks.enumerated().map { (idx, t) in [t[0], t[1], idx] }
+        tasksWithIndex.sort { $0[0] < $1[0] }
+
+        var minHeap = [(Int, Int)]()
+        var res = [Int]()
+        var i = 0
+        var time = tasksWithIndex[0][0]
+
+        while !minHeap.isEmpty || i < n {
+            while i < n && time >= tasksWithIndex[i][0] {
+                minHeap.append((tasksWithIndex[i][1], tasksWithIndex[i][2]))
+                i += 1
+            }
+            minHeap.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+
+            if minHeap.isEmpty {
+                time = tasksWithIndex[i][0]
+            } else {
+                let task = minHeap.removeFirst()
+                time += task.0
+                res.append(task.1)
+            }
+        }
+        return res
     }
 }
 ```
@@ -572,6 +825,137 @@ public class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```go
+func getOrder(tasks [][]int) []int {
+    n := len(tasks)
+    indices := make([]int, n)
+    for i := 0; i < n; i++ {
+        indices[i] = i
+    }
+
+    sort.Slice(indices, func(i, j int) bool {
+        if tasks[indices[i]][0] != tasks[indices[j]][0] {
+            return tasks[indices[i]][0] < tasks[indices[j]][0]
+        }
+        return indices[i] < indices[j]
+    })
+
+    minHeap := &minHeap3{tasks: tasks}
+    heap.Init(minHeap)
+
+    result := make([]int, 0, n)
+    time := 0
+    i := 0
+
+    for minHeap.Len() > 0 || i < n {
+        for i < n && tasks[indices[i]][0] <= time {
+            heap.Push(minHeap, indices[i])
+            i++
+        }
+
+        if minHeap.Len() == 0 {
+            time = tasks[indices[i]][0]
+        } else {
+            nextIndex := heap.Pop(minHeap).(int)
+            time += tasks[nextIndex][1]
+            result = append(result, nextIndex)
+        }
+    }
+
+    return result
+}
+
+type minHeap3 struct {
+    tasks [][]int
+    data  []int
+}
+
+func (h minHeap3) Len() int { return len(h.data) }
+func (h minHeap3) Less(i, j int) bool {
+    a, b := h.data[i], h.data[j]
+    if h.tasks[a][1] != h.tasks[b][1] {
+        return h.tasks[a][1] < h.tasks[b][1]
+    }
+    return a < b
+}
+func (h minHeap3) Swap(i, j int)       { h.data[i], h.data[j] = h.data[j], h.data[i] }
+func (h *minHeap3) Push(x interface{}) { h.data = append(h.data, x.(int)) }
+func (h *minHeap3) Pop() interface{} {
+    old := h.data
+    n := len(old)
+    x := old[n-1]
+    h.data = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun getOrder(tasks: Array<IntArray>): IntArray {
+        val n = tasks.size
+        val indices = IntArray(n) { it }
+        indices.sortWith(compareBy({ tasks[it][0] }, { it }))
+
+        val minHeap = PriorityQueue<Int>(compareBy({ tasks[it][1] }, { it }))
+
+        val result = IntArray(n)
+        var time = 0L
+        var i = 0
+        var resIndex = 0
+
+        while (minHeap.isNotEmpty() || i < n) {
+            while (i < n && tasks[indices[i]][0] <= time) {
+                minHeap.add(indices[i])
+                i++
+            }
+
+            if (minHeap.isEmpty()) {
+                time = tasks[indices[i]][0].toLong()
+            } else {
+                val nextIndex = minHeap.poll()
+                time += tasks[nextIndex][1]
+                result[resIndex++] = nextIndex
+            }
+        }
+
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func getOrder(_ tasks: [[Int]]) -> [Int] {
+        let n = tasks.count
+        var indices = Array(0..<n)
+        indices.sort { tasks[$0][0] < tasks[$1][0] || (tasks[$0][0] == tasks[$1][0] && $0 < $1) }
+
+        var minHeap = [Int]()
+        var result = [Int]()
+        var time = 0
+        var i = 0
+
+        while !minHeap.isEmpty || i < n {
+            while i < n && tasks[indices[i]][0] <= time {
+                minHeap.append(indices[i])
+                i += 1
+            }
+            minHeap.sort { tasks[$0][1] < tasks[$1][1] || (tasks[$0][1] == tasks[$1][1] && $0 < $1) }
+
+            if minHeap.isEmpty {
+                time = tasks[indices[i]][0]
+            } else {
+                let nextIndex = minHeap.removeFirst()
+                time += tasks[nextIndex][1]
+                result.append(nextIndex)
+            }
+        }
+
+        return result
     }
 }
 ```

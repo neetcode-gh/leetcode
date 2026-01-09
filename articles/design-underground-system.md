@@ -131,6 +131,129 @@ class UndergroundSystem {
 }
 ```
 
+```csharp
+public class UndergroundSystem {
+    private Dictionary<int, (string, int)> checkInMap;
+    private Dictionary<string, int[]> routeMap;
+
+    public UndergroundSystem() {
+        checkInMap = new Dictionary<int, (string, int)>();
+        routeMap = new Dictionary<string, int[]>();
+    }
+
+    public void CheckIn(int id, string startStation, int t) {
+        checkInMap[id] = (startStation, t);
+    }
+
+    public void CheckOut(int id, string endStation, int t) {
+        var (startStation, time) = checkInMap[id];
+        string route = startStation + "," + endStation;
+        if (!routeMap.ContainsKey(route)) {
+            routeMap[route] = new int[]{0, 0};
+        }
+        routeMap[route][0] += t - time;
+        routeMap[route][1] += 1;
+    }
+
+    public double GetAverageTime(string startStation, string endStation) {
+        int[] data = routeMap[startStation + "," + endStation];
+        return (double)data[0] / data[1];
+    }
+}
+```
+
+```go
+type UndergroundSystem struct {
+    checkInMap map[int][]interface{}
+    routeMap   map[string][]int
+}
+
+func Constructor() UndergroundSystem {
+    return UndergroundSystem{
+        checkInMap: make(map[int][]interface{}),
+        routeMap:   make(map[string][]int),
+    }
+}
+
+func (this *UndergroundSystem) CheckIn(id int, stationName string, t int) {
+    this.checkInMap[id] = []interface{}{stationName, t}
+}
+
+func (this *UndergroundSystem) CheckOut(id int, stationName string, t int) {
+    entry := this.checkInMap[id]
+    startStation := entry[0].(string)
+    time := entry[1].(int)
+    route := startStation + "," + stationName
+    if _, ok := this.routeMap[route]; !ok {
+        this.routeMap[route] = []int{0, 0}
+    }
+    this.routeMap[route][0] += t - time
+    this.routeMap[route][1] += 1
+}
+
+func (this *UndergroundSystem) GetAverageTime(startStation string, endStation string) float64 {
+    data := this.routeMap[startStation+","+endStation]
+    return float64(data[0]) / float64(data[1])
+}
+```
+
+```kotlin
+class UndergroundSystem() {
+    private val checkInMap = HashMap<Int, Pair<String, Int>>()
+    private val routeMap = HashMap<String, IntArray>()
+
+    fun checkIn(id: Int, stationName: String, t: Int) {
+        checkInMap[id] = Pair(stationName, t)
+    }
+
+    fun checkOut(id: Int, stationName: String, t: Int) {
+        val (startStation, time) = checkInMap[id]!!
+        val route = "$startStation,$stationName"
+        if (route !in routeMap) {
+            routeMap[route] = intArrayOf(0, 0)
+        }
+        routeMap[route]!![0] += t - time
+        routeMap[route]!![1] += 1
+    }
+
+    fun getAverageTime(startStation: String, endStation: String): Double {
+        val data = routeMap["$startStation,$endStation"]!!
+        return data[0].toDouble() / data[1]
+    }
+}
+```
+
+```swift
+class UndergroundSystem {
+    private var checkInMap: [Int: (String, Int)]
+    private var routeMap: [String: [Int]]
+
+    init() {
+        checkInMap = [:]
+        routeMap = [:]
+    }
+
+    func checkIn(_ id: Int, _ stationName: String, _ t: Int) {
+        checkInMap[id] = (stationName, t)
+    }
+
+    func checkOut(_ id: Int, _ stationName: String, _ t: Int) {
+        let (startStation, time) = checkInMap[id]!
+        let route = "\(startStation),\(stationName)"
+        if routeMap[route] == nil {
+            routeMap[route] = [0, 0]
+        }
+        routeMap[route]![0] += t - time
+        routeMap[route]![1] += 1
+    }
+
+    func getAverageTime(_ startStation: String, _ endStation: String) -> Double {
+        let data = routeMap["\(startStation),\(endStation)"]!
+        return Double(data[0]) / Double(data[1])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +468,203 @@ class UndergroundSystem {
         let routeHash = this.getHash(startStation, endStation);
         let [totalTime, count] = this.routeMap.get(routeHash);
         return totalTime / count;
+    }
+}
+```
+
+```csharp
+public class UndergroundSystem {
+    private const int MOD1 = 768258391, MOD2 = 685683731;
+    private const int BASE1 = 37, BASE2 = 31;
+    private Dictionary<int, (string, int)> checkInMap;
+    private Dictionary<long, int[]> routeMap;
+
+    public UndergroundSystem() {
+        checkInMap = new Dictionary<int, (string, int)>();
+        routeMap = new Dictionary<long, int[]>();
+    }
+
+    private long GetHash(string s1, string s2) {
+        long h1 = 0, h2 = 0, p1 = 1, p2 = 1;
+        string combined = s1 + "," + s2;
+        foreach (char c in combined) {
+            h1 = (h1 + (c - 96) * p1) % MOD1;
+            h2 = (h2 + (c - 96) * p2) % MOD2;
+            p1 = (p1 * BASE1) % MOD1;
+            p2 = (p2 * BASE2) % MOD2;
+        }
+        return (h1 << 32) | h2;
+    }
+
+    public void CheckIn(int id, string startStation, int t) {
+        checkInMap[id] = (startStation, t);
+    }
+
+    public void CheckOut(int id, string endStation, int t) {
+        var (startStation, time) = checkInMap[id];
+        long routeHash = GetHash(startStation, endStation);
+        if (!routeMap.ContainsKey(routeHash)) {
+            routeMap[routeHash] = new int[]{0, 0};
+        }
+        routeMap[routeHash][0] += t - time;
+        routeMap[routeHash][1]++;
+    }
+
+    public double GetAverageTime(string startStation, string endStation) {
+        long routeHash = GetHash(startStation, endStation);
+        int[] data = routeMap[routeHash];
+        return (double)data[0] / data[1];
+    }
+}
+```
+
+```go
+type UndergroundSystem struct {
+    checkInMap map[int][]interface{}
+    routeMap   map[uint64][]int
+}
+
+const MOD1 = 768258391
+const MOD2 = 685683731
+const BASE1 = 37
+const BASE2 = 31
+
+func Constructor() UndergroundSystem {
+    return UndergroundSystem{
+        checkInMap: make(map[int][]interface{}),
+        routeMap:   make(map[uint64][]int),
+    }
+}
+
+func getHash(s1, s2 string) uint64 {
+    var h1, h2, p1, p2 int64 = 0, 0, 1, 1
+    combined := s1 + "," + s2
+    for _, c := range combined {
+        h1 = (h1 + int64(c-96)*p1) % MOD1
+        h2 = (h2 + int64(c-96)*p2) % MOD2
+        p1 = (p1 * BASE1) % MOD1
+        p2 = (p2 * BASE2) % MOD2
+    }
+    return (uint64(h1) << 32) | uint64(h2)
+}
+
+func (this *UndergroundSystem) CheckIn(id int, stationName string, t int) {
+    this.checkInMap[id] = []interface{}{stationName, t}
+}
+
+func (this *UndergroundSystem) CheckOut(id int, stationName string, t int) {
+    entry := this.checkInMap[id]
+    startStation := entry[0].(string)
+    time := entry[1].(int)
+    routeHash := getHash(startStation, stationName)
+    if _, ok := this.routeMap[routeHash]; !ok {
+        this.routeMap[routeHash] = []int{0, 0}
+    }
+    this.routeMap[routeHash][0] += t - time
+    this.routeMap[routeHash][1]++
+}
+
+func (this *UndergroundSystem) GetAverageTime(startStation string, endStation string) float64 {
+    routeHash := getHash(startStation, endStation)
+    data := this.routeMap[routeHash]
+    return float64(data[0]) / float64(data[1])
+}
+```
+
+```kotlin
+class UndergroundSystem() {
+    private val MOD1 = 768258391L
+    private val MOD2 = 685683731L
+    private val BASE1 = 37L
+    private val BASE2 = 31L
+    private val checkInMap = HashMap<Int, Pair<String, Int>>()
+    private val routeMap = HashMap<Long, IntArray>()
+
+    private fun getHash(s1: String, s2: String): Long {
+        var h1 = 0L
+        var h2 = 0L
+        var p1 = 1L
+        var p2 = 1L
+        val combined = "$s1,$s2"
+        for (c in combined) {
+            h1 = (h1 + (c.code - 96) * p1) % MOD1
+            h2 = (h2 + (c.code - 96) * p2) % MOD2
+            p1 = (p1 * BASE1) % MOD1
+            p2 = (p2 * BASE2) % MOD2
+        }
+        return (h1 shl 32) or h2
+    }
+
+    fun checkIn(id: Int, stationName: String, t: Int) {
+        checkInMap[id] = Pair(stationName, t)
+    }
+
+    fun checkOut(id: Int, stationName: String, t: Int) {
+        val (startStation, time) = checkInMap[id]!!
+        val routeHash = getHash(startStation, stationName)
+        if (routeHash !in routeMap) {
+            routeMap[routeHash] = intArrayOf(0, 0)
+        }
+        routeMap[routeHash]!![0] += t - time
+        routeMap[routeHash]!![1]++
+    }
+
+    fun getAverageTime(startStation: String, endStation: String): Double {
+        val routeHash = getHash(startStation, endStation)
+        val data = routeMap[routeHash]!!
+        return data[0].toDouble() / data[1]
+    }
+}
+```
+
+```swift
+class UndergroundSystem {
+    private let MOD1 = 768258391
+    private let MOD2 = 685683731
+    private let BASE1 = 37
+    private let BASE2 = 31
+    private var checkInMap: [Int: (String, Int)]
+    private var routeMap: [Int64: [Int]]
+
+    init() {
+        checkInMap = [:]
+        routeMap = [:]
+    }
+
+    private func getHash(_ s1: String, _ s2: String) -> Int64 {
+        var h1: Int64 = 0
+        var h2: Int64 = 0
+        var p1: Int64 = 1
+        var p2: Int64 = 1
+        let combined = s1 + "," + s2
+        for c in combined.unicodeScalars {
+            let val = Int64(c.value) - 96
+            h1 = (h1 + val * p1) % Int64(MOD1)
+            h2 = (h2 + val * p2) % Int64(MOD2)
+            p1 = (p1 * Int64(BASE1)) % Int64(MOD1)
+            p2 = (p2 * Int64(BASE2)) % Int64(MOD2)
+        }
+        return (h1 << 32) | h2
+    }
+
+    func checkIn(_ id: Int, _ stationName: String, _ t: Int) {
+        checkInMap[id] = (stationName, t)
+    }
+
+    func checkOut(_ id: Int, _ stationName: String, _ t: Int) {
+        let (startStation, time) = checkInMap[id]!
+        let routeHash = getHash(startStation, stationName)
+        if routeMap[routeHash] == nil {
+            routeMap[routeHash] = [0, 0]
+        }
+        routeMap[routeHash]![0] += t - time
+        routeMap[routeHash]![1] += 1
+    }
+
+    func getAverageTime(_ startStation: String, _ endStation: String) -> Double {
+        let routeHash = getHash(startStation, endStation)
+        let data = routeMap[routeHash]!
+        return Double(data[0]) / Double(data[1])
     }
 }
 ```

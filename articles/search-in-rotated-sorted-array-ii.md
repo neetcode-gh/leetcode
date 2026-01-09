@@ -61,6 +61,33 @@ public class Solution {
 }
 ```
 
+```go
+func search(nums []int, target int) bool {
+    for _, num := range nums {
+        if num == target {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Boolean {
+        return target in nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func search(_ nums: [Int], _ target: Int) -> Bool {
+        return nums.contains(target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,6 +264,101 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func search(nums []int, target int) bool {
+    l, r := 0, len(nums)-1
+    for l <= r {
+        m := l + (r-l)/2
+        if nums[m] == target {
+            return true
+        }
+
+        if nums[l] < nums[m] {
+            if nums[l] <= target && target < nums[m] {
+                r = m - 1
+            } else {
+                l = m + 1
+            }
+        } else if nums[l] > nums[m] {
+            if nums[m] < target && target <= nums[r] {
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        } else {
+            l++
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Boolean {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            if (nums[m] == target) {
+                return true
+            }
+
+            if (nums[l] < nums[m]) {
+                if (nums[l] <= target && target < nums[m]) {
+                    r = m - 1
+                } else {
+                    l = m + 1
+                }
+            } else if (nums[l] > nums[m]) {
+                if (nums[m] < target && target <= nums[r]) {
+                    l = m + 1
+                } else {
+                    r = m - 1
+                }
+            } else {
+                l++
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func search(_ nums: [Int], _ target: Int) -> Bool {
+        var l = 0
+        var r = nums.count - 1
+
+        while l <= r {
+            let m = l + (r - l) / 2
+            if nums[m] == target {
+                return true
+            }
+
+            if nums[l] < nums[m] {
+                if nums[l] <= target && target < nums[m] {
+                    r = m - 1
+                } else {
+                    l = m + 1
+                }
+            } else if nums[l] > nums[m] {
+                if nums[m] < target && target <= nums[r] {
+                    l = m + 1
+                } else {
+                    r = m - 1
+                }
+            } else {
+                l += 1
+            }
+        }
+        return false
     }
 }
 ```

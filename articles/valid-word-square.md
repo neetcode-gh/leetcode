@@ -122,7 +122,7 @@ class Solution {
         let cols = 0;
         let rows = words.length;
         let newWords = [];
-        
+
         for (let word of words) {
             cols = Math.max(cols, word.length);
         }
@@ -149,6 +149,165 @@ class Solution {
 
         // Check if all row's words match with the respective column's words.
         return words.every((value, index) => value === newWords[index]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ValidWordSquare(IList<string> words) {
+        int cols = 0;
+        int rows = words.Count;
+        List<string> newWords = new List<string>();
+
+        foreach (string word in words) {
+            cols = Math.Max(cols, word.Length);
+        }
+
+        // If the first row doesn't have maximum number of characters, or
+        // the number of rows is not equal to columns it can't form a square.
+        if (cols != words[0].Length || rows != cols) {
+            return false;
+        }
+
+        for (int col = 0; col < cols; col++) {
+            StringBuilder newWord = new StringBuilder();
+            // Iterate on each character of column 'col'.
+            for (int row = 0; row < rows; row++) {
+                // If the current row's word's size is less than the column number it means this column is empty,
+                // or, if there is a character present then use it to make the new word.
+                if (col < words[row].Length) {
+                    newWord.Append(words[row][col]);
+                }
+            }
+            // Push the new word of column 'col' in the list.
+            newWords.Add(newWord.ToString());
+        }
+
+        // Check if all row's words match with the respective column's words.
+        for (int index = 0; index < rows; index++) {
+            if (words[index] != newWords[index]) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func validWordSquare(words []string) bool {
+    cols := 0
+    rows := len(words)
+    newWords := []string{}
+
+    for _, word := range words {
+        if len(word) > cols {
+            cols = len(word)
+        }
+    }
+
+    // If the first row doesn't have maximum number of characters, or
+    // the number of rows is not equal to columns it can't form a square.
+    if cols != len(words[0]) || rows != cols {
+        return false
+    }
+
+    for col := 0; col < cols; col++ {
+        newWord := []byte{}
+        // Iterate on each character of column 'col'.
+        for row := 0; row < rows; row++ {
+            // If the current row's word's size is less than the column number it means this column is empty,
+            // or, if there is a character present then use it to make the new word.
+            if col < len(words[row]) {
+                newWord = append(newWord, words[row][col])
+            }
+        }
+        // Push the new word of column 'col' in the list.
+        newWords = append(newWords, string(newWord))
+    }
+
+    // Check if all row's words match with the respective column's words.
+    for i := 0; i < rows; i++ {
+        if words[i] != newWords[i] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun validWordSquare(words: List<String>): Boolean {
+        var cols = 0
+        val rows = words.size
+        val newWords = mutableListOf<String>()
+
+        for (word in words) {
+            cols = maxOf(cols, word.length)
+        }
+
+        // If the first row doesn't have maximum number of characters, or
+        // the number of rows is not equal to columns it can't form a square.
+        if (cols != words[0].length || rows != cols) {
+            return false
+        }
+
+        for (col in 0 until cols) {
+            val newWord = StringBuilder()
+            // Iterate on each character of column 'col'.
+            for (row in 0 until rows) {
+                // If the current row's word's size is less than the column number it means this column is empty,
+                // or, if there is a character present then use it to make the new word.
+                if (col < words[row].length) {
+                    newWord.append(words[row][col])
+                }
+            }
+            // Push the new word of column 'col' in the list.
+            newWords.add(newWord.toString())
+        }
+
+        // Check if all row's words match with the respective column's words.
+        return words == newWords
+    }
+}
+```
+
+```swift
+class Solution {
+    func validWordSquare(_ words: [String]) -> Bool {
+        var cols = 0
+        let rows = words.count
+        var newWords: [String] = []
+        let wordsArr = words.map { Array($0) }
+
+        for word in wordsArr {
+            cols = max(cols, word.count)
+        }
+
+        // If the first row doesn't have maximum number of characters, or
+        // the number of rows is not equal to columns it can't form a square.
+        if cols != wordsArr[0].count || rows != cols {
+            return false
+        }
+
+        for col in 0..<cols {
+            var newWord = ""
+            // Iterate on each character of column 'col'.
+            for row in 0..<rows {
+                // If the current row's word's size is less than the column number it means this column is empty,
+                // or, if there is a character present then use it to make the new word.
+                if col < wordsArr[row].count {
+                    newWord.append(wordsArr[row][col])
+                }
+            }
+            // Push the new word of column 'col' in the list.
+            newWords.append(newWord)
+        }
+
+        // Check if all row's words match with the respective column's words.
+        return words == newWords
     }
 }
 ```
@@ -234,16 +393,95 @@ class Solution {
         for (let wordNum = 0; wordNum < words.length; ++wordNum) {
             for (let charPos = 0; charPos < words[wordNum].length; ++charPos) {
                 // charPos (curr 'row' word) is bigger than column word, or
-                // wordNum (curr 'column' word) is bigger than row word, or 
+                // wordNum (curr 'column' word) is bigger than row word, or
                 // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
-                if (charPos >= words.length || 
-                    wordNum >= words[charPos].length || 
+                if (charPos >= words.length ||
+                    wordNum >= words[charPos].length ||
                     words[wordNum][charPos] != words[charPos][wordNum]){
                     return false;
                 }
             }
         }
-        return true;   
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ValidWordSquare(IList<string> words) {
+        for (int wordNum = 0; wordNum < words.Count; wordNum++) {
+            for (int charPos = 0; charPos < words[wordNum].Length; charPos++) {
+                // charPos (curr 'row' word) is bigger than column word, or
+                // wordNum (curr 'column' word) is bigger than row word, or
+                // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
+                if (charPos >= words.Count ||
+                    wordNum >= words[charPos].Length ||
+                    words[wordNum][charPos] != words[charPos][wordNum]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func validWordSquare(words []string) bool {
+    for wordNum := 0; wordNum < len(words); wordNum++ {
+        for charPos := 0; charPos < len(words[wordNum]); charPos++ {
+            // charPos (curr 'row' word) is bigger than column word, or
+            // wordNum (curr 'column' word) is bigger than row word, or
+            // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
+            if charPos >= len(words) ||
+               wordNum >= len(words[charPos]) ||
+               words[wordNum][charPos] != words[charPos][wordNum] {
+                return false
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun validWordSquare(words: List<String>): Boolean {
+        for (wordNum in words.indices) {
+            for (charPos in words[wordNum].indices) {
+                // charPos (curr 'row' word) is bigger than column word, or
+                // wordNum (curr 'column' word) is bigger than row word, or
+                // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
+                if (charPos >= words.size ||
+                    wordNum >= words[charPos].length ||
+                    words[wordNum][charPos] != words[charPos][wordNum]) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func validWordSquare(_ words: [String]) -> Bool {
+        let wordsArr = words.map { Array($0) }
+        for wordNum in 0..<wordsArr.count {
+            for charPos in 0..<wordsArr[wordNum].count {
+                // charPos (curr 'row' word) is bigger than column word, or
+                // wordNum (curr 'column' word) is bigger than row word, or
+                // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
+                if charPos >= wordsArr.count ||
+                   wordNum >= wordsArr[charPos].count ||
+                   wordsArr[wordNum][charPos] != wordsArr[charPos][wordNum] {
+                    return false
+                }
+            }
+        }
+        return true
     }
 }
 ```

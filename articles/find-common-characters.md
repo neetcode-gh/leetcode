@@ -110,6 +110,122 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<string> CommonChars(string[] words) {
+        int[] cnt = new int[26];
+        Array.Fill(cnt, int.MaxValue);
+
+        foreach (string word in words) {
+            int[] curCnt = new int[26];
+            foreach (char c in word) {
+                curCnt[c - 'a']++;
+            }
+
+            for (int i = 0; i < 26; i++) {
+                cnt[i] = Math.Min(cnt[i], curCnt[i]);
+            }
+        }
+
+        List<string> res = new List<string>();
+        for (int i = 0; i < 26; i++) {
+            for (int j = 0; j < cnt[i]; j++) {
+                res.Add(((char)(i + 'a')).ToString());
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func commonChars(words []string) []string {
+    cnt := make([]int, 26)
+    for i := range cnt {
+        cnt[i] = math.MaxInt32
+    }
+
+    for _, word := range words {
+        curCnt := make([]int, 26)
+        for _, c := range word {
+            curCnt[c-'a']++
+        }
+
+        for i := 0; i < 26; i++ {
+            if curCnt[i] < cnt[i] {
+                cnt[i] = curCnt[i]
+            }
+        }
+    }
+
+    res := []string{}
+    for i := 0; i < 26; i++ {
+        for j := 0; j < cnt[i]; j++ {
+            res = append(res, string(rune(i+'a')))
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun commonChars(words: Array<String>): List<String> {
+        val cnt = IntArray(26) { Int.MAX_VALUE }
+
+        for (word in words) {
+            val curCnt = IntArray(26)
+            for (c in word) {
+                curCnt[c - 'a']++
+            }
+
+            for (i in 0 until 26) {
+                cnt[i] = minOf(cnt[i], curCnt[i])
+            }
+        }
+
+        val res = mutableListOf<String>()
+        for (i in 0 until 26) {
+            repeat(cnt[i]) {
+                res.add((i + 'a'.code).toChar().toString())
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func commonChars(_ words: [String]) -> [String] {
+        var cnt = [Int](repeating: Int.max, count: 26)
+
+        for word in words {
+            var curCnt = [Int](repeating: 0, count: 26)
+            for c in word {
+                curCnt[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+            }
+
+            for i in 0..<26 {
+                cnt[i] = min(cnt[i], curCnt[i])
+            }
+        }
+
+        var res = [String]()
+        for i in 0..<26 {
+            for _ in 0..<cnt[i] {
+                res.append(String(Character(UnicodeScalar(i + Int(Character("a").asciiValue!))!)))
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -85,6 +85,88 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] FullBloomFlowers(int[][] flowers, int[] people) {
+        int m = people.Length;
+        int[] res = new int[m];
+
+        for (int i = 0; i < m; i++) {
+            int count = 0;
+            foreach (var flower in flowers) {
+                if (flower[0] <= people[i] && people[i] <= flower[1]) {
+                    count++;
+                }
+            }
+            res[i] = count;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func fullBloomFlowers(flowers [][]int, people []int) []int {
+    m := len(people)
+    res := make([]int, m)
+
+    for i := 0; i < m; i++ {
+        count := 0
+        for _, flower := range flowers {
+            if flower[0] <= people[i] && people[i] <= flower[1] {
+                count++
+            }
+        }
+        res[i] = count
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun fullBloomFlowers(flowers: Array<IntArray>, people: IntArray): IntArray {
+        val m = people.size
+        val res = IntArray(m)
+
+        for (i in 0 until m) {
+            var count = 0
+            for (flower in flowers) {
+                if (flower[0] <= people[i] && people[i] <= flower[1]) {
+                    count++
+                }
+            }
+            res[i] = count
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fullBloomFlowers(_ flowers: [[Int]], _ people: [Int]) -> [Int] {
+        let m = people.count
+        var res = [Int](repeating: 0, count: m)
+
+        for i in 0..<m {
+            var count = 0
+            for flower in flowers {
+                if flower[0] <= people[i] && people[i] <= flower[1] {
+                    count += 1
+                }
+            }
+            res[i] = count
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -244,6 +326,165 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] FullBloomFlowers(int[][] flowers, int[] people) {
+        int m = people.Length;
+        int[] res = new int[m];
+
+        var sortedPeople = new List<int[]>();
+        for (int i = 0; i < m; i++) {
+            sortedPeople.Add(new int[] { people[i], i });
+        }
+        sortedPeople.Sort((a, b) => a[0].CompareTo(b[0]));
+
+        var startHeap = new PriorityQueue<int, int>();
+        var endHeap = new PriorityQueue<int, int>();
+        foreach (var f in flowers) {
+            startHeap.Enqueue(f[0], f[0]);
+            endHeap.Enqueue(f[1], f[1]);
+        }
+
+        int count = 0;
+        foreach (var person in sortedPeople) {
+            int p = person[0], index = person[1];
+
+            while (startHeap.Count > 0 && startHeap.Peek() <= p) {
+                startHeap.Dequeue();
+                count++;
+            }
+            while (endHeap.Count > 0 && endHeap.Peek() < p) {
+                endHeap.Dequeue();
+                count--;
+            }
+            res[index] = count;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func fullBloomFlowers(flowers [][]int, people []int) []int {
+    m := len(people)
+    res := make([]int, m)
+
+    sortedPeople := make([][2]int, m)
+    for i, p := range people {
+        sortedPeople[i] = [2]int{p, i}
+    }
+    sort.Slice(sortedPeople, func(i, j int) bool {
+        return sortedPeople[i][0] < sortedPeople[j][0]
+    })
+
+    startHeap := &IntHeap{}
+    endHeap := &IntHeap{}
+    heap.Init(startHeap)
+    heap.Init(endHeap)
+    for _, f := range flowers {
+        heap.Push(startHeap, f[0])
+        heap.Push(endHeap, f[1])
+    }
+
+    count := 0
+    for _, person := range sortedPeople {
+        p, index := person[0], person[1]
+
+        for startHeap.Len() > 0 && (*startHeap)[0] <= p {
+            heap.Pop(startHeap)
+            count++
+        }
+        for endHeap.Len() > 0 && (*endHeap)[0] < p {
+            heap.Pop(endHeap)
+            count--
+        }
+        res[index] = count
+    }
+
+    return res
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun fullBloomFlowers(flowers: Array<IntArray>, people: IntArray): IntArray {
+        val m = people.size
+        val res = IntArray(m)
+
+        val sortedPeople = people.mapIndexed { i, p -> intArrayOf(p, i) }
+            .sortedBy { it[0] }
+
+        val startHeap = PriorityQueue<Int>()
+        val endHeap = PriorityQueue<Int>()
+        for (f in flowers) {
+            startHeap.offer(f[0])
+            endHeap.offer(f[1])
+        }
+
+        var count = 0
+        for ((p, index) in sortedPeople) {
+            while (startHeap.isNotEmpty() && startHeap.peek() <= p) {
+                startHeap.poll()
+                count++
+            }
+            while (endHeap.isNotEmpty() && endHeap.peek() < p) {
+                endHeap.poll()
+                count--
+            }
+            res[index] = count
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fullBloomFlowers(_ flowers: [[Int]], _ people: [Int]) -> [Int] {
+        let m = people.count
+        var res = [Int](repeating: 0, count: m)
+
+        var sortedPeople = people.enumerated().map { ($0.element, $0.offset) }
+        sortedPeople.sort { $0.0 < $1.0 }
+
+        var start = flowers.map { $0[0] }.sorted()
+        var end = flowers.map { $0[1] }.sorted()
+
+        var count = 0
+        var si = 0, ei = 0
+        for (p, index) in sortedPeople {
+            while si < start.count && start[si] <= p {
+                si += 1
+                count += 1
+            }
+            while ei < end.count && end[ei] < p {
+                ei += 1
+                count -= 1
+            }
+            res[index] = count
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,6 +616,159 @@ class Solution {
             res[index] = endHeap.size();
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] FullBloomFlowers(int[][] flowers, int[] people) {
+        int m = people.Length;
+        int[] res = new int[m];
+        int[][] indexedPeople = new int[m][];
+
+        for (int i = 0; i < m; i++) {
+            indexedPeople[i] = new int[] { people[i], i };
+        }
+        Array.Sort(indexedPeople, (a, b) => a[0].CompareTo(b[0]));
+        Array.Sort(flowers, (a, b) => a[0].CompareTo(b[0]));
+
+        var endHeap = new PriorityQueue<int, int>();
+        int j = 0, n = flowers.Length;
+
+        foreach (var person in indexedPeople) {
+            int p = person[0], index = person[1];
+
+            while (j < n && flowers[j][0] <= p) {
+                endHeap.Enqueue(flowers[j][1], flowers[j][1]);
+                j++;
+            }
+            while (endHeap.Count > 0 && endHeap.Peek() < p) {
+                endHeap.Dequeue();
+            }
+            res[index] = endHeap.Count;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func fullBloomFlowers(flowers [][]int, people []int) []int {
+    m := len(people)
+    res := make([]int, m)
+    indexedPeople := make([][2]int, m)
+
+    for i, p := range people {
+        indexedPeople[i] = [2]int{p, i}
+    }
+    sort.Slice(indexedPeople, func(i, j int) bool {
+        return indexedPeople[i][0] < indexedPeople[j][0]
+    })
+    sort.Slice(flowers, func(i, j int) bool {
+        return flowers[i][0] < flowers[j][0]
+    })
+
+    endHeap := &IntHeap{}
+    heap.Init(endHeap)
+    j, n := 0, len(flowers)
+
+    for _, person := range indexedPeople {
+        p, index := person[0], person[1]
+
+        for j < n && flowers[j][0] <= p {
+            heap.Push(endHeap, flowers[j][1])
+            j++
+        }
+        for endHeap.Len() > 0 && (*endHeap)[0] < p {
+            heap.Pop(endHeap)
+        }
+        res[index] = endHeap.Len()
+    }
+    return res
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun fullBloomFlowers(flowers: Array<IntArray>, people: IntArray): IntArray {
+        val m = people.size
+        val res = IntArray(m)
+        val indexedPeople = people.mapIndexed { i, p -> intArrayOf(p, i) }
+            .sortedBy { it[0] }
+
+        flowers.sortBy { it[0] }
+
+        val endHeap = PriorityQueue<Int>()
+        var j = 0
+        val n = flowers.size
+
+        for ((p, index) in indexedPeople) {
+            while (j < n && flowers[j][0] <= p) {
+                endHeap.offer(flowers[j][1])
+                j++
+            }
+            while (endHeap.isNotEmpty() && endHeap.peek() < p) {
+                endHeap.poll()
+            }
+            res[index] = endHeap.size
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fullBloomFlowers(_ flowers: [[Int]], _ people: [Int]) -> [Int] {
+        let m = people.count
+        var res = [Int](repeating: 0, count: m)
+        var indexedPeople = people.enumerated().map { ($0.element, $0.offset) }
+
+        indexedPeople.sort { $0.0 < $1.0 }
+        let sortedFlowers = flowers.sorted { $0[0] < $1[0] }
+
+        var end = [Int]()
+        var j = 0, n = sortedFlowers.count
+
+        for (p, index) in indexedPeople {
+            while j < n && sortedFlowers[j][0] <= p {
+                insertSorted(&end, sortedFlowers[j][1])
+                j += 1
+            }
+            while !end.isEmpty && end[0] < p {
+                end.removeFirst()
+            }
+            res[index] = end.count
+        }
+        return res
+    }
+
+    private func insertSorted(_ arr: inout [Int], _ val: Int) {
+        var lo = 0, hi = arr.count
+        while lo < hi {
+            let mid = (lo + hi) / 2
+            if arr[mid] < val {
+                lo = mid + 1
+            } else {
+                hi = mid
+            }
+        }
+        arr.insert(val, at: lo)
     }
 }
 ```
@@ -537,6 +931,150 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] FullBloomFlowers(int[][] flowers, int[] people) {
+        int m = people.Length;
+        int[] res = new int[m];
+        var start = new List<int>();
+        var end = new List<int>();
+
+        foreach (var f in flowers) {
+            start.Add(f[0]);
+            end.Add(f[1]);
+        }
+
+        start.Sort();
+        end.Sort();
+
+        int count = 0, i = 0, j = 0;
+        var peopleIndex = new List<int[]>();
+        for (int k = 0; k < m; k++) {
+            peopleIndex.Add(new int[] { people[k], k });
+        }
+        peopleIndex.Sort((a, b) => a[0].CompareTo(b[0]));
+
+        foreach (var p in peopleIndex) {
+            int time = p[0], index = p[1];
+
+            while (i < start.Count && start[i] <= time) {
+                count++;
+                i++;
+            }
+            while (j < end.Count && end[j] < time) {
+                count--;
+                j++;
+            }
+            res[index] = count;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func fullBloomFlowers(flowers [][]int, people []int) []int {
+    m := len(people)
+    res := make([]int, m)
+    start := make([]int, len(flowers))
+    end := make([]int, len(flowers))
+
+    for i, f := range flowers {
+        start[i] = f[0]
+        end[i] = f[1]
+    }
+
+    sort.Ints(start)
+    sort.Ints(end)
+
+    count, i, j := 0, 0, 0
+    peopleIndex := make([][2]int, m)
+    for k := 0; k < m; k++ {
+        peopleIndex[k] = [2]int{people[k], k}
+    }
+    sort.Slice(peopleIndex, func(a, b int) bool {
+        return peopleIndex[a][0] < peopleIndex[b][0]
+    })
+
+    for _, p := range peopleIndex {
+        time, index := p[0], p[1]
+
+        for i < len(start) && start[i] <= time {
+            count++
+            i++
+        }
+        for j < len(end) && end[j] < time {
+            count--
+            j++
+        }
+        res[index] = count
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun fullBloomFlowers(flowers: Array<IntArray>, people: IntArray): IntArray {
+        val m = people.size
+        val res = IntArray(m)
+        val start = flowers.map { it[0] }.sorted()
+        val end = flowers.map { it[1] }.sorted()
+
+        var count = 0
+        var i = 0
+        var j = 0
+        val peopleIndex = people.mapIndexed { idx, p -> intArrayOf(p, idx) }
+            .sortedBy { it[0] }
+
+        for ((time, index) in peopleIndex) {
+            while (i < start.size && start[i] <= time) {
+                count++
+                i++
+            }
+            while (j < end.size && end[j] < time) {
+                count--
+                j++
+            }
+            res[index] = count
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fullBloomFlowers(_ flowers: [[Int]], _ people: [Int]) -> [Int] {
+        let m = people.count
+        var res = [Int](repeating: 0, count: m)
+        let start = flowers.map { $0[0] }.sorted()
+        let end = flowers.map { $0[1] }.sorted()
+
+        var count = 0, i = 0, j = 0
+        var peopleIndex = people.enumerated().map { ($0.element, $0.offset) }
+        peopleIndex.sort { $0.0 < $1.0 }
+
+        for (time, index) in peopleIndex {
+            while i < start.count && start[i] <= time {
+                count += 1
+                i += 1
+            }
+            while j < end.count && end[j] < time {
+                count -= 1
+                j += 1
+            }
+            res[index] = count
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,6 +1204,132 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] FullBloomFlowers(int[][] flowers, int[] people) {
+        var events = new List<int[]>();
+        foreach (var f in flowers) {
+            events.Add(new int[] { f[0], 1 });
+            events.Add(new int[] { f[1] + 1, -1 });
+        }
+
+        events.Sort((a, b) => a[0].CompareTo(b[0]));
+        int[][] queries = new int[people.Length][];
+        for (int i = 0; i < people.Length; i++) {
+            queries[i] = new int[] { people[i], i };
+        }
+        Array.Sort(queries, (a, b) => a[0].CompareTo(b[0]));
+
+        int[] res = new int[people.Length];
+        int count = 0, j = 0;
+        foreach (var query in queries) {
+            int time = query[0], index = query[1];
+            while (j < events.Count && events[j][0] <= time) {
+                count += events[j][1];
+                j++;
+            }
+            res[index] = count;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func fullBloomFlowers(flowers [][]int, people []int) []int {
+    events := make([][2]int, 0, len(flowers)*2)
+    for _, f := range flowers {
+        events = append(events, [2]int{f[0], 1})
+        events = append(events, [2]int{f[1] + 1, -1})
+    }
+
+    sort.Slice(events, func(i, j int) bool {
+        return events[i][0] < events[j][0]
+    })
+
+    queries := make([][2]int, len(people))
+    for i, p := range people {
+        queries[i] = [2]int{p, i}
+    }
+    sort.Slice(queries, func(i, j int) bool {
+        return queries[i][0] < queries[j][0]
+    })
+
+    res := make([]int, len(people))
+    count, j := 0, 0
+
+    for _, query := range queries {
+        time, index := query[0], query[1]
+        for j < len(events) && events[j][0] <= time {
+            count += events[j][1]
+            j++
+        }
+        res[index] = count
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun fullBloomFlowers(flowers: Array<IntArray>, people: IntArray): IntArray {
+        val events = mutableListOf<IntArray>()
+        for (f in flowers) {
+            events.add(intArrayOf(f[0], 1))
+            events.add(intArrayOf(f[1] + 1, -1))
+        }
+
+        events.sortBy { it[0] }
+        val queries = people.mapIndexed { i, p -> intArrayOf(p, i) }
+            .sortedBy { it[0] }
+
+        val res = IntArray(people.size)
+        var count = 0
+        var j = 0
+
+        for ((time, index) in queries) {
+            while (j < events.size && events[j][0] <= time) {
+                count += events[j][1]
+                j++
+            }
+            res[index] = count
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fullBloomFlowers(_ flowers: [[Int]], _ people: [Int]) -> [Int] {
+        var events = [(Int, Int)]()
+        for f in flowers {
+            events.append((f[0], 1))
+            events.append((f[1] + 1, -1))
+        }
+
+        events.sort { $0.0 < $1.0 }
+        var queries = people.enumerated().map { ($0.element, $0.offset) }
+        queries.sort { $0.0 < $1.0 }
+
+        var res = [Int](repeating: 0, count: people.count)
+        var count = 0, j = 0
+
+        for (time, index) in queries {
+            while j < events.count && events[j].0 <= time {
+                count += events[j].1
+                j += 1
+            }
+            res[index] = count
+        }
+
+        return res
     }
 }
 ```

@@ -150,6 +150,96 @@ public class Solution {
 }
 ```
 
+```go
+func largestDivisibleSubset(nums []int) []int {
+    sort.Ints(nums)
+    n := len(nums)
+    cache := make([][][]int, n)
+    for i := range cache {
+        cache[i] = make([][]int, n+1)
+    }
+
+    var dfs func(i, prevIndex int) []int
+    dfs = func(i, prevIndex int) []int {
+        if i == n {
+            return []int{}
+        }
+        if cache[i][prevIndex+1] != nil {
+            return cache[i][prevIndex+1]
+        }
+
+        res := dfs(i+1, prevIndex)
+        if prevIndex == -1 || nums[i]%nums[prevIndex] == 0 {
+            tmp := append([]int{nums[i]}, dfs(i+1, i)...)
+            if len(tmp) > len(res) {
+                res = tmp
+            }
+        }
+
+        cache[i][prevIndex+1] = res
+        return res
+    }
+
+    return dfs(0, -1)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var cache: Array<Array<List<Int>?>>
+    private lateinit var nums: IntArray
+
+    fun largestDivisibleSubset(nums: IntArray): List<Int> {
+        nums.sort()
+        this.nums = nums
+        val n = nums.size
+        cache = Array(n) { arrayOfNulls<List<Int>>(n + 1) }
+        return dfs(0, -1)
+    }
+
+    private fun dfs(i: Int, prevIndex: Int): List<Int> {
+        if (i == nums.size) return emptyList()
+        cache[i][prevIndex + 1]?.let { return it }
+
+        var res = dfs(i + 1, prevIndex)
+        if (prevIndex == -1 || nums[i] % nums[prevIndex] == 0) {
+            val tmp = listOf(nums[i]) + dfs(i + 1, i)
+            if (tmp.size > res.size) res = tmp
+        }
+
+        cache[i][prevIndex + 1] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        let n = nums.count
+        var cache = [[Int]?](repeating: nil, count: n * (n + 1))
+
+        func dfs(_ i: Int, _ prevIndex: Int) -> [Int] {
+            if i == n { return [] }
+            let key = i * (n + 1) + (prevIndex + 1)
+            if let cached = cache[key] { return cached }
+
+            var res = dfs(i + 1, prevIndex)
+            if prevIndex == -1 || nums[i] % nums[prevIndex] == 0 {
+                let tmp = [nums[i]] + dfs(i + 1, i)
+                if tmp.count > res.count { res = tmp }
+            }
+
+            cache[key] = res
+            return res
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,6 +440,118 @@ public class Solution {
 }
 ```
 
+```go
+func largestDivisibleSubset(nums []int) []int {
+    sort.Ints(nums)
+    n := len(nums)
+    cache := make([][]int, n)
+
+    var dfs func(i int) []int
+    dfs = func(i int) []int {
+        if cache[i] != nil {
+            return cache[i]
+        }
+
+        res := []int{nums[i]}
+        for j := i + 1; j < n; j++ {
+            if nums[j]%nums[i] == 0 {
+                tmp := append([]int{nums[i]}, dfs(j)...)
+                if len(tmp) > len(res) {
+                    res = tmp
+                }
+            }
+        }
+
+        cache[i] = res
+        return res
+    }
+
+    res := []int{}
+    for i := 0; i < n; i++ {
+        tmp := dfs(i)
+        if len(tmp) > len(res) {
+            res = tmp
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var cache: Array<List<Int>?>
+    private lateinit var nums: IntArray
+
+    fun largestDivisibleSubset(nums: IntArray): List<Int> {
+        nums.sort()
+        this.nums = nums
+        cache = arrayOfNulls(nums.size)
+
+        var res = emptyList<Int>()
+        for (i in nums.indices) {
+            val tmp = dfs(i)
+            if (tmp.size > res.size) {
+                res = tmp
+            }
+        }
+        return res
+    }
+
+    private fun dfs(i: Int): List<Int> {
+        cache[i]?.let { return it }
+
+        var res = listOf(nums[i])
+        for (j in i + 1 until nums.size) {
+            if (nums[j] % nums[i] == 0) {
+                val tmp = listOf(nums[i]) + dfs(j)
+                if (tmp.size > res.size) {
+                    res = tmp
+                }
+            }
+        }
+
+        cache[i] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        let n = nums.count
+        var cache = [[Int]?](repeating: nil, count: n)
+
+        func dfs(_ i: Int) -> [Int] {
+            if let cached = cache[i] { return cached }
+
+            var res = [nums[i]]
+            for j in (i + 1)..<n {
+                if nums[j] % nums[i] == 0 {
+                    let tmp = [nums[i]] + dfs(j)
+                    if tmp.count > res.count {
+                        res = tmp
+                    }
+                }
+            }
+
+            cache[i] = res
+            return res
+        }
+
+        var res = [Int]()
+        for i in 0..<n {
+            let tmp = dfs(i)
+            if tmp.count > res.count {
+                res = tmp
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,6 +698,88 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func largestDivisibleSubset(nums []int) []int {
+    sort.Ints(nums)
+    n := len(nums)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = []int{nums[i]}
+    }
+
+    res := []int{}
+    for i := n - 1; i >= 0; i-- {
+        for j := i + 1; j < n; j++ {
+            if nums[j]%nums[i] == 0 {
+                tmp := append([]int{nums[i]}, dp[j]...)
+                if len(tmp) > len(dp[i]) {
+                    dp[i] = tmp
+                }
+            }
+        }
+        if len(dp[i]) > len(res) {
+            res = dp[i]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestDivisibleSubset(nums: IntArray): List<Int> {
+        nums.sort()
+        val n = nums.size
+        val dp = Array(n) { mutableListOf(nums[it]) }
+
+        var res = emptyList<Int>()
+        for (i in n - 1 downTo 0) {
+            for (j in i + 1 until n) {
+                if (nums[j] % nums[i] == 0) {
+                    val tmp = listOf(nums[i]) + dp[j]
+                    if (tmp.size > dp[i].size) {
+                        dp[i] = tmp.toMutableList()
+                    }
+                }
+            }
+            if (dp[i].size > res.size) {
+                res = dp[i]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        let n = nums.count
+        var dp = nums.map { [$0] }
+
+        var res = [Int]()
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for j in (i + 1)..<n {
+                if nums[j] % nums[i] == 0 {
+                    let tmp = [nums[i]] + dp[j]
+                    if tmp.count > dp[i].count {
+                        dp[i] = tmp
+                    }
+                }
+            }
+            if dp[i].count > res.count {
+                res = dp[i]
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -737,6 +1021,146 @@ public class Solution {
 }
 ```
 
+```go
+func largestDivisibleSubset(nums []int) []int {
+    sort.Ints(nums)
+    n := len(nums)
+    dp := make([][2]int, n)
+    for i := range dp {
+        dp[i] = [2]int{-1, -1}
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if dp[i][0] != -1 {
+            return dp[i][0]
+        }
+
+        dp[i][0] = 1
+        for j := i + 1; j < n; j++ {
+            if nums[j]%nums[i] == 0 {
+                length := dfs(j) + 1
+                if length > dp[i][0] {
+                    dp[i][0] = length
+                    dp[i][1] = j
+                }
+            }
+        }
+        return dp[i][0]
+    }
+
+    maxLen, startIndex := 1, 0
+    for i := 0; i < n; i++ {
+        if dfs(i) > maxLen {
+            maxLen = dfs(i)
+            startIndex = i
+        }
+    }
+
+    subset := []int{}
+    for startIndex != -1 {
+        subset = append(subset, nums[startIndex])
+        startIndex = dp[startIndex][1]
+    }
+
+    return subset
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+    private lateinit var nums: IntArray
+    private var n = 0
+
+    fun largestDivisibleSubset(nums: IntArray): List<Int> {
+        nums.sort()
+        this.nums = nums
+        n = nums.size
+        dp = Array(n) { intArrayOf(-1, -1) }
+
+        var maxLen = 1
+        var startIndex = 0
+        for (i in 0 until n) {
+            if (dfs(i) > maxLen) {
+                maxLen = dfs(i)
+                startIndex = i
+            }
+        }
+
+        val subset = mutableListOf<Int>()
+        var idx = startIndex
+        while (idx != -1) {
+            subset.add(nums[idx])
+            idx = dp[idx][1]
+        }
+
+        return subset
+    }
+
+    private fun dfs(i: Int): Int {
+        if (dp[i][0] != -1) return dp[i][0]
+
+        dp[i][0] = 1
+        for (j in i + 1 until n) {
+            if (nums[j] % nums[i] == 0) {
+                val length = dfs(j) + 1
+                if (length > dp[i][0]) {
+                    dp[i][0] = length
+                    dp[i][1] = j
+                }
+            }
+        }
+
+        return dp[i][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        let n = nums.count
+        var dp = [[Int]](repeating: [-1, -1], count: n)
+
+        func dfs(_ i: Int) -> Int {
+            if dp[i][0] != -1 { return dp[i][0] }
+
+            dp[i][0] = 1
+            for j in (i + 1)..<n {
+                if nums[j] % nums[i] == 0 {
+                    let length = dfs(j) + 1
+                    if length > dp[i][0] {
+                        dp[i][0] = length
+                        dp[i][1] = j
+                    }
+                }
+            }
+            return dp[i][0]
+        }
+
+        var maxLen = 1
+        var startIndex = 0
+        for i in 0..<n {
+            if dfs(i) > maxLen {
+                maxLen = dfs(i)
+                startIndex = i
+            }
+        }
+
+        var subset = [Int]()
+        var idx = startIndex
+        while idx != -1 {
+            subset.append(nums[idx])
+            idx = dp[idx][1]
+        }
+
+        return subset
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -915,6 +1339,113 @@ public class Solution {
         }
 
         return subset;
+    }
+}
+```
+
+```go
+func largestDivisibleSubset(nums []int) []int {
+    sort.Ints(nums)
+    n := len(nums)
+    dp := make([][2]int, n)
+    for i := range dp {
+        dp[i] = [2]int{1, -1}
+    }
+
+    maxLen, startIndex := 1, 0
+
+    for i := 0; i < n; i++ {
+        for j := 0; j < i; j++ {
+            if nums[i]%nums[j] == 0 && dp[j][0]+1 > dp[i][0] {
+                dp[i][0] = dp[j][0] + 1
+                dp[i][1] = j
+            }
+        }
+
+        if dp[i][0] > maxLen {
+            maxLen = dp[i][0]
+            startIndex = i
+        }
+    }
+
+    subset := []int{}
+    for startIndex != -1 {
+        subset = append(subset, nums[startIndex])
+        startIndex = dp[startIndex][1]
+    }
+
+    return subset
+}
+```
+
+```kotlin
+class Solution {
+    fun largestDivisibleSubset(nums: IntArray): List<Int> {
+        nums.sort()
+        val n = nums.size
+        val dp = Array(n) { intArrayOf(1, -1) }
+
+        var maxLen = 1
+        var startIndex = 0
+
+        for (i in 0 until n) {
+            for (j in 0 until i) {
+                if (nums[i] % nums[j] == 0 && dp[j][0] + 1 > dp[i][0]) {
+                    dp[i][0] = dp[j][0] + 1
+                    dp[i][1] = j
+                }
+            }
+
+            if (dp[i][0] > maxLen) {
+                maxLen = dp[i][0]
+                startIndex = i
+            }
+        }
+
+        val subset = mutableListOf<Int>()
+        var idx = startIndex
+        while (idx != -1) {
+            subset.add(nums[idx])
+            idx = dp[idx][1]
+        }
+
+        return subset
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestDivisibleSubset(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        let n = nums.count
+        var dp = [[Int]](repeating: [1, -1], count: n)
+
+        var maxLen = 1
+        var startIndex = 0
+
+        for i in 0..<n {
+            for j in 0..<i {
+                if nums[i] % nums[j] == 0 && dp[j][0] + 1 > dp[i][0] {
+                    dp[i][0] = dp[j][0] + 1
+                    dp[i][1] = j
+                }
+            }
+
+            if dp[i][0] > maxLen {
+                maxLen = dp[i][0]
+                startIndex = i
+            }
+        }
+
+        var subset = [Int]()
+        var idx = startIndex
+        while idx != -1 {
+            subset.append(nums[idx])
+            idx = dp[idx][1]
+        }
+
+        return subset
     }
 }
 ```

@@ -113,6 +113,90 @@ class Solution {
 }
 ```
 
+```go
+func findMissingAndRepeatedValues(grid [][]int) []int {
+    n := len(grid)
+    doubleVal, missing := 0, 0
+
+    for num := 1; num <= n*n; num++ {
+        cnt := 0
+        for i := 0; i < n; i++ {
+            for j := 0; j < n; j++ {
+                if grid[i][j] == num {
+                    cnt++
+                }
+            }
+        }
+
+        if cnt == 2 {
+            doubleVal = num
+        } else if cnt == 0 {
+            missing = num
+        }
+    }
+
+    return []int{doubleVal, missing}
+}
+```
+
+```kotlin
+class Solution {
+    fun findMissingAndRepeatedValues(grid: Array<IntArray>): IntArray {
+        val n = grid.size
+        var doubleVal = 0
+        var missing = 0
+
+        for (num in 1..n * n) {
+            var cnt = 0
+            for (i in 0 until n) {
+                for (j in 0 until n) {
+                    if (grid[i][j] == num) {
+                        cnt++
+                    }
+                }
+            }
+
+            if (cnt == 2) {
+                doubleVal = num
+            } else if (cnt == 0) {
+                missing = num
+            }
+        }
+
+        return intArrayOf(doubleVal, missing)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMissingAndRepeatedValues(_ grid: [[Int]]) -> [Int] {
+        let n = grid.count
+        var doubleVal = 0
+        var missing = 0
+
+        for num in 1...(n * n) {
+            var cnt = 0
+            for i in 0..<n {
+                for j in 0..<n {
+                    if grid[i][j] == num {
+                        cnt += 1
+                    }
+                }
+            }
+
+            if cnt == 2 {
+                doubleVal = num
+            } else if cnt == 0 {
+                missing = num
+            }
+        }
+
+        return [doubleVal, missing]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,6 +309,85 @@ class Solution {
         }
 
         return [doubleVal, missing];
+    }
+}
+```
+
+```go
+func findMissingAndRepeatedValues(grid [][]int) []int {
+    N := len(grid)
+    count := make(map[int]int)
+
+    for i := 0; i < N; i++ {
+        for j := 0; j < N; j++ {
+            count[grid[i][j]]++
+        }
+    }
+
+    doubleVal, missing := 0, 0
+
+    for num := 1; num <= N*N; num++ {
+        freq := count[num]
+        if freq == 0 {
+            missing = num
+        }
+        if freq == 2 {
+            doubleVal = num
+        }
+    }
+
+    return []int{doubleVal, missing}
+}
+```
+
+```kotlin
+class Solution {
+    fun findMissingAndRepeatedValues(grid: Array<IntArray>): IntArray {
+        val N = grid.size
+        val count = mutableMapOf<Int, Int>()
+
+        for (i in 0 until N) {
+            for (j in 0 until N) {
+                count[grid[i][j]] = count.getOrDefault(grid[i][j], 0) + 1
+            }
+        }
+
+        var doubleVal = 0
+        var missing = 0
+
+        for (num in 1..N * N) {
+            val freq = count.getOrDefault(num, 0)
+            if (freq == 0) missing = num
+            if (freq == 2) doubleVal = num
+        }
+
+        return intArrayOf(doubleVal, missing)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMissingAndRepeatedValues(_ grid: [[Int]]) -> [Int] {
+        let N = grid.count
+        var count = [Int: Int]()
+
+        for i in 0..<N {
+            for j in 0..<N {
+                count[grid[i][j], default: 0] += 1
+            }
+        }
+
+        var doubleVal = 0
+        var missing = 0
+
+        for num in 1...(N * N) {
+            let freq = count[num] ?? 0
+            if freq == 0 { missing = num }
+            if freq == 2 { doubleVal = num }
+        }
+
+        return [doubleVal, missing]
     }
 }
 ```
@@ -350,6 +513,118 @@ class Solution {
         }
 
         return [doubleVal, missing];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] FindMissingAndRepeatedValues(int[][] grid) {
+        int N = grid.Length;
+        HashSet<int> seen = new HashSet<int>();
+        int doubleVal = 0, missing = 0;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (seen.Contains(grid[i][j])) {
+                    doubleVal = grid[i][j];
+                }
+                seen.Add(grid[i][j]);
+            }
+        }
+
+        for (int num = 1; num <= N * N; num++) {
+            if (!seen.Contains(num)) {
+                missing = num;
+                break;
+            }
+        }
+
+        return new int[] { doubleVal, missing };
+    }
+}
+```
+
+```go
+func findMissingAndRepeatedValues(grid [][]int) []int {
+    N := len(grid)
+    seen := make(map[int]bool)
+    doubleVal, missing := 0, 0
+
+    for i := 0; i < N; i++ {
+        for j := 0; j < N; j++ {
+            if seen[grid[i][j]] {
+                doubleVal = grid[i][j]
+            }
+            seen[grid[i][j]] = true
+        }
+    }
+
+    for num := 1; num <= N*N; num++ {
+        if !seen[num] {
+            missing = num
+            break
+        }
+    }
+
+    return []int{doubleVal, missing}
+}
+```
+
+```kotlin
+class Solution {
+    fun findMissingAndRepeatedValues(grid: Array<IntArray>): IntArray {
+        val N = grid.size
+        val seen = mutableSetOf<Int>()
+        var doubleVal = 0
+        var missing = 0
+
+        for (i in 0 until N) {
+            for (j in 0 until N) {
+                if (grid[i][j] in seen) {
+                    doubleVal = grid[i][j]
+                }
+                seen.add(grid[i][j])
+            }
+        }
+
+        for (num in 1..N * N) {
+            if (num !in seen) {
+                missing = num
+                break
+            }
+        }
+
+        return intArrayOf(doubleVal, missing)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMissingAndRepeatedValues(_ grid: [[Int]]) -> [Int] {
+        let N = grid.count
+        var seen = Set<Int>()
+        var doubleVal = 0
+        var missing = 0
+
+        for i in 0..<N {
+            for j in 0..<N {
+                if seen.contains(grid[i][j]) {
+                    doubleVal = grid[i][j]
+                }
+                seen.insert(grid[i][j])
+            }
+        }
+
+        for num in 1...(N * N) {
+            if !seen.contains(num) {
+                missing = num
+                break
+            }
+        }
+
+        return [doubleVal, missing]
     }
 }
 ```
@@ -483,6 +758,124 @@ class Solution {
         let b = sum - a;
 
         return [a, b];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] FindMissingAndRepeatedValues(int[][] grid) {
+        int N = grid.Length;
+        long gridSum = 0;
+        long gridSqSum = 0;
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                gridSum += grid[i][j];
+                gridSqSum += (long)grid[i][j] * grid[i][j];
+            }
+        }
+
+        long totSum = (long)N * N * (N * N + 1) / 2;
+        long diff = gridSum - totSum; // a - b
+
+        long totSqSum = (long)N * N * (N * N + 1) * (2L * N * N + 1) / 6;
+        long sqDiff = gridSqSum - totSqSum; // (a^2) - (b^2)
+
+        long sum = sqDiff / diff; // a + b
+
+        long a = (sum + diff) / 2;
+        long b = sum - a;
+
+        return new int[] { (int)a, (int)b };
+    }
+}
+```
+
+```go
+func findMissingAndRepeatedValues(grid [][]int) []int {
+    N := len(grid)
+    gridSum := 0
+    gridSqSum := 0
+
+    for i := 0; i < N; i++ {
+        for j := 0; j < N; j++ {
+            gridSum += grid[i][j]
+            gridSqSum += grid[i][j] * grid[i][j]
+        }
+    }
+
+    totSum := N * N * (N*N + 1) / 2
+    diff := gridSum - totSum // a - b
+
+    totSqSum := N * N * (N*N + 1) * (2*N*N + 1) / 6
+    sqDiff := gridSqSum - totSqSum // (a^2) - (b^2)
+
+    sum := sqDiff / diff // a + b
+
+    a := (sum + diff) / 2
+    b := sum - a
+
+    return []int{a, b}
+}
+```
+
+```kotlin
+class Solution {
+    fun findMissingAndRepeatedValues(grid: Array<IntArray>): IntArray {
+        val N = grid.size
+        var gridSum = 0L
+        var gridSqSum = 0L
+
+        for (i in 0 until N) {
+            for (j in 0 until N) {
+                gridSum += grid[i][j]
+                gridSqSum += grid[i][j].toLong() * grid[i][j]
+            }
+        }
+
+        val totSum = N.toLong() * N * (N * N + 1) / 2
+        val diff = gridSum - totSum // a - b
+
+        val totSqSum = N.toLong() * N * (N * N + 1) * (2L * N * N + 1) / 6
+        val sqDiff = gridSqSum - totSqSum // (a^2) - (b^2)
+
+        val sum = sqDiff / diff // a + b
+
+        val a = ((sum + diff) / 2).toInt()
+        val b = (sum - a).toInt()
+
+        return intArrayOf(a, b)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMissingAndRepeatedValues(_ grid: [[Int]]) -> [Int] {
+        let N = grid.count
+        var gridSum = 0
+        var gridSqSum = 0
+
+        for i in 0..<N {
+            for j in 0..<N {
+                gridSum += grid[i][j]
+                gridSqSum += grid[i][j] * grid[i][j]
+            }
+        }
+
+        let totSum = N * N * (N * N + 1) / 2
+        let diff = gridSum - totSum // a - b
+
+        let totSqSum = N * N * (N * N + 1) * (2 * N * N + 1) / 6
+        let sqDiff = gridSqSum - totSqSum // (a^2) - (b^2)
+
+        let sum = sqDiff / diff // a + b
+
+        let a = (sum + diff) / 2
+        let b = sum - a
+
+        return [a, b]
     }
 }
 ```

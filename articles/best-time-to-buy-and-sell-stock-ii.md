@@ -109,6 +109,65 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    var rec func(i int, bought bool) int
+    rec = func(i int, bought bool) int {
+        if i == len(prices) {
+            return 0
+        }
+        res := rec(i+1, bought)
+        if bought {
+            if prices[i]+rec(i+1, false) > res {
+                res = prices[i] + rec(i+1, false)
+            }
+        } else {
+            if -prices[i]+rec(i+1, true) > res {
+                res = -prices[i] + rec(i+1, true)
+            }
+        }
+        return res
+    }
+    return rec(0, false)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        fun rec(i: Int, bought: Boolean): Int {
+            if (i == prices.size) return 0
+            var res = rec(i + 1, bought)
+            if (bought) {
+                res = maxOf(res, prices[i] + rec(i + 1, false))
+            } else {
+                res = maxOf(res, -prices[i] + rec(i + 1, true))
+            }
+            return res
+        }
+        return rec(0, false)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        func rec(_ i: Int, _ bought: Bool) -> Int {
+            if i == prices.count { return 0 }
+            var res = rec(i + 1, bought)
+            if bought {
+                res = max(res, prices[i] + rec(i + 1, false))
+            } else {
+                res = max(res, -prices[i] + rec(i + 1, true))
+            }
+            return res
+        }
+        return rec(0, false)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,6 +331,85 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    n := len(prices)
+    dp := make([][2]int, n)
+    for i := range dp {
+        dp[i][0], dp[i][1] = -1, -1
+    }
+
+    var rec func(i, bought int) int
+    rec = func(i, bought int) int {
+        if i == n {
+            return 0
+        }
+        if dp[i][bought] != -1 {
+            return dp[i][bought]
+        }
+        res := rec(i+1, bought)
+        if bought == 1 {
+            if prices[i]+rec(i+1, 0) > res {
+                res = prices[i] + rec(i+1, 0)
+            }
+        } else {
+            if -prices[i]+rec(i+1, 1) > res {
+                res = -prices[i] + rec(i+1, 1)
+            }
+        }
+        dp[i][bought] = res
+        return res
+    }
+    return rec(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        val n = prices.size
+        val dp = Array(n) { IntArray(2) { -1 } }
+
+        fun rec(i: Int, bought: Int): Int {
+            if (i == n) return 0
+            if (dp[i][bought] != -1) return dp[i][bought]
+            var res = rec(i + 1, bought)
+            if (bought == 1) {
+                res = maxOf(res, prices[i] + rec(i + 1, 0))
+            } else {
+                res = maxOf(res, -prices[i] + rec(i + 1, 1))
+            }
+            dp[i][bought] = res
+            return res
+        }
+        return rec(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        let n = prices.count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: 2), count: n)
+
+        func rec(_ i: Int, _ bought: Int) -> Int {
+            if i == n { return 0 }
+            if dp[i][bought] != -1 { return dp[i][bought] }
+            var res = rec(i + 1, bought)
+            if bought == 1 {
+                res = max(res, prices[i] + rec(i + 1, 0))
+            } else {
+                res = max(res, -prices[i] + rec(i + 1, 1))
+            }
+            dp[i][bought] = res
+            return res
+        }
+        return rec(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,6 +501,59 @@ public class Solution {
         }
 
         return dp[0, 0];
+    }
+}
+```
+
+```go
+func maxProfit(prices []int) int {
+    n := len(prices)
+    dp := make([][2]int, n+1)
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i][0] = max(dp[i+1][0], -prices[i]+dp[i+1][1])
+        dp[i][1] = max(dp[i+1][1], prices[i]+dp[i+1][0])
+    }
+
+    return dp[0][0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        val n = prices.size
+        val dp = Array(n + 1) { IntArray(2) }
+
+        for (i in n - 1 downTo 0) {
+            dp[i][0] = maxOf(dp[i + 1][0], -prices[i] + dp[i + 1][1])
+            dp[i][1] = maxOf(dp[i + 1][1], prices[i] + dp[i + 1][0])
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        let n = prices.count
+        var dp = [[Int]](repeating: [0, 0], count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i][0] = max(dp[i + 1][0], -prices[i] + dp[i + 1][1])
+            dp[i][1] = max(dp[i + 1][1], prices[i] + dp[i + 1][0])
+        }
+
+        return dp[0][0]
     }
 }
 ```
@@ -475,6 +666,67 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    nextBuy, nextSell := 0, 0
+    curBuy, curSell := 0, 0
+
+    for i := len(prices) - 1; i >= 0; i-- {
+        curBuy = max(nextBuy, -prices[i]+nextSell)
+        curSell = max(nextSell, prices[i]+nextBuy)
+        nextBuy = curBuy
+        nextSell = curSell
+    }
+
+    return curBuy
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var nextBuy = 0
+        var nextSell = 0
+        var curBuy = 0
+        var curSell = 0
+
+        for (i in prices.size - 1 downTo 0) {
+            curBuy = maxOf(nextBuy, -prices[i] + nextSell)
+            curSell = maxOf(nextSell, prices[i] + nextBuy)
+            nextBuy = curBuy
+            nextSell = curSell
+        }
+
+        return curBuy
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        var nextBuy = 0, nextSell = 0
+        var curBuy = 0, curSell = 0
+
+        for i in stride(from: prices.count - 1, through: 0, by: -1) {
+            curBuy = max(nextBuy, -prices[i] + nextSell)
+            curSell = max(nextSell, prices[i] + nextBuy)
+            nextBuy = curBuy
+            nextSell = curSell
+        }
+
+        return curBuy
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +809,46 @@ public class Solution {
             }
         }
         return profit;
+    }
+}
+```
+
+```go
+func maxProfit(prices []int) int {
+    profit := 0
+    for i := 1; i < len(prices); i++ {
+        if prices[i] > prices[i-1] {
+            profit += prices[i] - prices[i-1]
+        }
+    }
+    return profit
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var profit = 0
+        for (i in 1 until prices.size) {
+            if (prices[i] > prices[i - 1]) {
+                profit += prices[i] - prices[i - 1]
+            }
+        }
+        return profit
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        var profit = 0
+        for i in 1..<prices.count {
+            if prices[i] > prices[i - 1] {
+                profit += prices[i] - prices[i - 1]
+            }
+        }
+        return profit
     }
 }
 ```

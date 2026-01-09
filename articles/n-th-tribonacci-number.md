@@ -62,6 +62,38 @@ public class Solution {
 }
 ```
 
+```go
+func tribonacci(n int) int {
+    if n <= 2 {
+        if n == 0 {
+            return 0
+        }
+        return 1
+    }
+    return tribonacci(n-1) + tribonacci(n-2) + tribonacci(n-3)
+}
+```
+
+```kotlin
+class Solution {
+    fun tribonacci(n: Int): Int {
+        if (n == 0) return 0
+        if (n <= 2) return 1
+        return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3)
+    }
+}
+```
+
+```swift
+class Solution {
+    func tribonacci(_ n: Int) -> Int {
+        if n == 0 { return 0 }
+        if n <= 2 { return 1 }
+        return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -170,6 +202,59 @@ public class Solution {
 }
 ```
 
+```go
+func tribonacci(n int) int {
+    dp := make(map[int]int)
+
+    var helper func(n int) int
+    helper = func(n int) int {
+        if n == 0 {
+            return 0
+        }
+        if n <= 2 {
+            return 1
+        }
+        if val, ok := dp[n]; ok {
+            return val
+        }
+        dp[n] = helper(n-1) + helper(n-2) + helper(n-3)
+        return dp[n]
+    }
+
+    return helper(n)
+}
+```
+
+```kotlin
+class Solution {
+    private val dp = HashMap<Int, Int>()
+
+    fun tribonacci(n: Int): Int {
+        if (n == 0) return 0
+        if (n <= 2) return 1
+        if (dp.containsKey(n)) return dp[n]!!
+
+        dp[n] = tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3)
+        return dp[n]!!
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp = [Int: Int]()
+
+    func tribonacci(_ n: Int) -> Int {
+        if n == 0 { return 0 }
+        if n <= 2 { return 1 }
+        if let val = dp[n] { return val }
+
+        dp[n] = tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3)
+        return dp[n]!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -271,6 +356,58 @@ public class Solution {
 }
 ```
 
+```go
+func tribonacci(n int) int {
+    if n == 0 {
+        return 0
+    }
+    if n <= 2 {
+        return 1
+    }
+
+    dp := make([]int, n+1)
+    dp[1], dp[2] = 1, 1
+    for i := 3; i <= n; i++ {
+        dp[i] = dp[i-1] + dp[i-2] + dp[i-3]
+    }
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun tribonacci(n: Int): Int {
+        if (n == 0) return 0
+        if (n <= 2) return 1
+
+        val dp = IntArray(n + 1)
+        dp[1] = 1
+        dp[2] = 1
+        for (i in 3..n) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3]
+        }
+        return dp[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func tribonacci(_ n: Int) -> Int {
+        if n == 0 { return 0 }
+        if n <= 2 { return 1 }
+
+        var dp = [Int](repeating: 0, count: n + 1)
+        dp[1] = 1
+        dp[2] = 1
+        for i in 3...n {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3]
+        }
+        return dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +492,48 @@ public class Solution {
         }
 
         return t[n % 3];
+    }
+}
+```
+
+```go
+func tribonacci(n int) int {
+    t := []int{0, 1, 1}
+    if n < 3 {
+        return t[n]
+    }
+
+    for i := 3; i <= n; i++ {
+        t[i%3] = t[0] + t[1] + t[2]
+    }
+    return t[n%3]
+}
+```
+
+```kotlin
+class Solution {
+    fun tribonacci(n: Int): Int {
+        val t = intArrayOf(0, 1, 1)
+        if (n < 3) return t[n]
+
+        for (i in 3..n) {
+            t[i % 3] = t[0] + t[1] + t[2]
+        }
+        return t[n % 3]
+    }
+}
+```
+
+```swift
+class Solution {
+    func tribonacci(_ n: Int) -> Int {
+        var t = [0, 1, 1]
+        if n < 3 { return t[n] }
+
+        for i in 3...n {
+            t[i % 3] = t[0] + t[1] + t[2]
+        }
+        return t[n % 3]
     }
 }
 ```

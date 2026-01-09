@@ -197,6 +197,120 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeElements(head *ListNode, val int) *ListNode {
+    arr := []int{}
+    cur := head
+
+    for cur != nil {
+        if cur.Val != val {
+            arr = append(arr, cur.Val)
+        }
+        cur = cur.Next
+    }
+
+    if len(arr) == 0 {
+        return nil
+    }
+
+    res := &ListNode{Val: arr[0]}
+    cur = res
+    for i := 1; i < len(arr); i++ {
+        node := &ListNode{Val: arr[i]}
+        cur.Next = node
+        cur = cur.Next
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeElements(head: ListNode?, `val`: Int): ListNode? {
+        val arr = mutableListOf<Int>()
+        var cur = head
+
+        while (cur != null) {
+            if (cur.`val` != `val`) {
+                arr.add(cur.`val`)
+            }
+            cur = cur.next
+        }
+
+        if (arr.isEmpty()) {
+            return null
+        }
+
+        val res = ListNode(arr[0])
+        cur = res
+        for (i in 1 until arr.size) {
+            val node = ListNode(arr[i])
+            cur!!.next = node
+            cur = cur.next
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+        var arr = [Int]()
+        var cur = head
+
+        while cur != nil {
+            if cur!.val != val {
+                arr.append(cur!.val)
+            }
+            cur = cur?.next
+        }
+
+        if arr.isEmpty {
+            return nil
+        }
+
+        let res = ListNode(arr[0])
+        cur = res
+        for i in 1..<arr.count {
+            let node = ListNode(arr[i])
+            cur?.next = node
+            cur = cur?.next
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,6 +422,65 @@ public class Solution {
         }
         head.next = RemoveElements(head.next, val);
         return head.val != val ? head : head.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeElements(head *ListNode, val int) *ListNode {
+    if head == nil {
+        return nil
+    }
+    head.Next = removeElements(head.Next, val)
+    if head.Val != val {
+        return head
+    }
+    return head.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeElements(head: ListNode?, `val`: Int): ListNode? {
+        if (head == null) return null
+        head.next = removeElements(head.next, `val`)
+        return if (head.`val` != `val`) head else head.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+        guard let head = head else { return nil }
+        head.next = removeElements(head.next, val)
+        return head.val != val ? head : head.next
     }
 }
 ```
@@ -478,6 +651,96 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeElements(head *ListNode, val int) *ListNode {
+    dummy := &ListNode{Val: 0, Next: head}
+    prev, curr := dummy, head
+
+    for curr != nil {
+        nxt := curr.Next
+        if curr.Val == val {
+            prev.Next = nxt
+        } else {
+            prev = curr
+        }
+        curr = nxt
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeElements(head: ListNode?, `val`: Int): ListNode? {
+        val dummy = ListNode(0)
+        dummy.next = head
+        var prev: ListNode? = dummy
+        var curr = head
+
+        while (curr != null) {
+            val nxt = curr.next
+            if (curr.`val` == `val`) {
+                prev?.next = nxt
+            } else {
+                prev = curr
+            }
+            curr = nxt
+        }
+
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var prev: ListNode? = dummy
+        var curr = head
+
+        while curr != nil {
+            let nxt = curr?.next
+            if curr!.val == val {
+                prev?.next = nxt
+            } else {
+                prev = curr
+            }
+            curr = nxt
+        }
+
+        return dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -629,6 +892,88 @@ public class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeElements(head *ListNode, val int) *ListNode {
+    dummy := &ListNode{Val: -1, Next: head}
+    curr := dummy
+
+    for curr.Next != nil {
+        if curr.Next.Val == val {
+            curr.Next = curr.Next.Next
+        } else {
+            curr = curr.Next
+        }
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeElements(head: ListNode?, `val`: Int): ListNode? {
+        val dummy = ListNode(-1)
+        dummy.next = head
+        var curr: ListNode? = dummy
+
+        while (curr?.next != null) {
+            if (curr.next!!.`val` == `val`) {
+                curr.next = curr.next!!.next
+            } else {
+                curr = curr.next
+            }
+        }
+
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeElements(_ head: ListNode?, _ val: Int) -> ListNode? {
+        let dummy = ListNode(-1, head)
+        var curr: ListNode? = dummy
+
+        while curr?.next != nil {
+            if curr!.next!.val == val {
+                curr?.next = curr?.next?.next
+            } else {
+                curr = curr?.next
+            }
+        }
+
+        return dummy.next
     }
 }
 ```

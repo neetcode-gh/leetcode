@@ -181,6 +181,113 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(inorder []int, postorder []int) *TreeNode {
+    if len(postorder) == 0 || len(inorder) == 0 {
+        return nil
+    }
+
+    rootVal := postorder[len(postorder)-1]
+    root := &TreeNode{Val: rootVal}
+
+    mid := 0
+    for i, v := range inorder {
+        if v == rootVal {
+            mid = i
+            break
+        }
+    }
+
+    root.Left = buildTree(inorder[:mid], postorder[:mid])
+    root.Right = buildTree(inorder[mid+1:], postorder[mid:len(postorder)-1])
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun buildTree(inorder: IntArray, postorder: IntArray): TreeNode? {
+        if (postorder.isEmpty() || inorder.isEmpty()) {
+            return null
+        }
+
+        val rootVal = postorder.last()
+        val root = TreeNode(rootVal)
+        val mid = inorder.indexOf(rootVal)
+
+        root.left = buildTree(
+            inorder.sliceArray(0 until mid),
+            postorder.sliceArray(0 until mid)
+        )
+        root.right = buildTree(
+            inorder.sliceArray(mid + 1 until inorder.size),
+            postorder.sliceArray(mid until postorder.size - 1)
+        )
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func buildTree(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {
+        if postorder.isEmpty || inorder.isEmpty {
+            return nil
+        }
+
+        let rootVal = postorder.last!
+        let root = TreeNode(rootVal)
+        let mid = inorder.firstIndex(of: rootVal)!
+
+        root.left = buildTree(
+            Array(inorder[0..<mid]),
+            Array(postorder[0..<mid])
+        )
+        root.right = buildTree(
+            Array(inorder[(mid + 1)...]),
+            Array(postorder[mid..<(postorder.count - 1)])
+        )
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +484,118 @@ public class Solution {
         root.right = Dfs(i + 1, r);
         root.left = Dfs(l, i - 1);
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(inorder []int, postorder []int) *TreeNode {
+    inorderIdx := make(map[int]int)
+    for i, v := range inorder {
+        inorderIdx[v] = i
+    }
+    postIdx := len(postorder) - 1
+
+    var dfs func(l, r int) *TreeNode
+    dfs = func(l, r int) *TreeNode {
+        if l > r {
+            return nil
+        }
+
+        root := &TreeNode{Val: postorder[postIdx]}
+        postIdx--
+        idx := inorderIdx[root.Val]
+        root.Right = dfs(idx+1, r)
+        root.Left = dfs(l, idx-1)
+        return root
+    }
+
+    return dfs(0, len(inorder)-1)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private lateinit var inorderIdx: Map<Int, Int>
+    private var postIdx = 0
+    private lateinit var postorder: IntArray
+
+    fun buildTree(inorder: IntArray, postorder: IntArray): TreeNode? {
+        this.postorder = postorder
+        inorderIdx = inorder.withIndex().associate { it.value to it.index }
+        postIdx = postorder.size - 1
+        return dfs(0, inorder.size - 1)
+    }
+
+    private fun dfs(l: Int, r: Int): TreeNode? {
+        if (l > r) return null
+
+        val root = TreeNode(postorder[postIdx--])
+        val idx = inorderIdx[root.`val`]!!
+        root.right = dfs(idx + 1, r)
+        root.left = dfs(l, idx - 1)
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    private var inorderIdx: [Int: Int] = [:]
+    private var postIdx = 0
+    private var postorder: [Int] = []
+
+    func buildTree(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {
+        self.postorder = postorder
+        for (i, v) in inorder.enumerated() {
+            inorderIdx[v] = i
+        }
+        postIdx = postorder.count - 1
+        return dfs(0, inorder.count - 1)
+    }
+
+    private func dfs(_ l: Int, _ r: Int) -> TreeNode? {
+        if l > r { return nil }
+
+        let root = TreeNode(postorder[postIdx])
+        postIdx -= 1
+        let idx = inorderIdx[root.val]!
+        root.right = dfs(idx + 1, r)
+        root.left = dfs(l, idx - 1)
+        return root
     }
 }
 ```
@@ -584,6 +803,126 @@ public class Solution {
         root.right = Dfs(root.val);
         root.left = Dfs(limit);
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(inorder []int, postorder []int) *TreeNode {
+    postIdx := len(postorder) - 1
+    inIdx := len(inorder) - 1
+
+    var dfs func(limit int) *TreeNode
+    dfs = func(limit int) *TreeNode {
+        if postIdx < 0 {
+            return nil
+        }
+        if inorder[inIdx] == limit {
+            inIdx--
+            return nil
+        }
+
+        root := &TreeNode{Val: postorder[postIdx]}
+        postIdx--
+        root.Right = dfs(root.Val)
+        root.Left = dfs(limit)
+        return root
+    }
+
+    return dfs(math.MaxInt32)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var postIdx = 0
+    private var inIdx = 0
+    private lateinit var inorder: IntArray
+    private lateinit var postorder: IntArray
+
+    fun buildTree(inorder: IntArray, postorder: IntArray): TreeNode? {
+        this.inorder = inorder
+        this.postorder = postorder
+        postIdx = postorder.size - 1
+        inIdx = inorder.size - 1
+        return dfs(Int.MAX_VALUE)
+    }
+
+    private fun dfs(limit: Int): TreeNode? {
+        if (postIdx < 0) return null
+        if (inorder[inIdx] == limit) {
+            inIdx--
+            return null
+        }
+
+        val root = TreeNode(postorder[postIdx--])
+        root.right = dfs(root.`val`)
+        root.left = dfs(limit)
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    private var postIdx = 0
+    private var inIdx = 0
+    private var inorder: [Int] = []
+    private var postorder: [Int] = []
+
+    func buildTree(_ inorder: [Int], _ postorder: [Int]) -> TreeNode? {
+        self.inorder = inorder
+        self.postorder = postorder
+        postIdx = postorder.count - 1
+        inIdx = inorder.count - 1
+        return dfs(Int.max)
+    }
+
+    private func dfs(_ limit: Int) -> TreeNode? {
+        if postIdx < 0 { return nil }
+        if inorder[inIdx] == limit {
+            inIdx -= 1
+            return nil
+        }
+
+        let root = TreeNode(postorder[postIdx])
+        postIdx -= 1
+        root.right = dfs(root.val)
+        root.left = dfs(limit)
+        return root
     }
 }
 ```

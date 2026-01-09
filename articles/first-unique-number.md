@@ -105,7 +105,7 @@ class FirstUnique {
         }
         return -1;
     }
-    /** 
+    /**
      * @param {number} value
      * @return {void}
      */
@@ -115,15 +115,136 @@ class FirstUnique {
 }
 ```
 
+```csharp
+public class FirstUnique {
+
+    private Queue<int> queue = new Queue<int>();
+
+    public FirstUnique(int[] nums) {
+        foreach (int num in nums) {
+            queue.Enqueue(num);
+        }
+    }
+
+    public int ShowFirstUnique() {
+        foreach (int num in queue) {
+            int count = 0;
+            foreach (int el in queue) {
+                if (el == num) count++;
+            }
+            if (count == 1) {
+                return num;
+            }
+        }
+        return -1;
+    }
+
+    public void Add(int value) {
+        queue.Enqueue(value);
+    }
+}
+```
+
+```go
+type FirstUnique struct {
+    queue []int
+}
+
+func Constructor(nums []int) FirstUnique {
+    queue := make([]int, len(nums))
+    copy(queue, nums)
+    return FirstUnique{queue: queue}
+}
+
+func (this *FirstUnique) ShowFirstUnique() int {
+    for _, item := range this.queue {
+        count := 0
+        for _, el := range this.queue {
+            if el == item {
+                count++
+            }
+        }
+        if count == 1 {
+            return item
+        }
+    }
+    return -1
+}
+
+func (this *FirstUnique) Add(value int) {
+    this.queue = append(this.queue, value)
+}
+```
+
+```kotlin
+class FirstUnique(nums: IntArray) {
+
+    private val queue = ArrayDeque<Int>()
+
+    init {
+        for (num in nums) {
+            queue.addLast(num)
+        }
+    }
+
+    fun showFirstUnique(): Int {
+        for (num in queue) {
+            var count = 0
+            for (el in queue) {
+                if (el == num) count++
+            }
+            if (count == 1) {
+                return num
+            }
+        }
+        return -1
+    }
+
+    fun add(value: Int) {
+        queue.addLast(value)
+    }
+}
+```
+
+```swift
+class FirstUnique {
+
+    private var queue: [Int]
+
+    init(_ nums: [Int]) {
+        queue = nums
+    }
+
+    func showFirstUnique() -> Int {
+        for item in queue {
+            var count = 0
+            for el in queue {
+                if el == item {
+                    count += 1
+                }
+            }
+            if count == 1 {
+                return item
+            }
+        }
+        return -1
+    }
+
+    func add(_ value: Int) {
+        queue.append(value)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: 
+- Time complexity:
     - **constructor**: $O(K)$
 
     - **add()**: $O(1)$
-    
+
     - **showFirstUnique()**: $O(N^2)$
 
 - Space complexity: $O(N)$
@@ -261,12 +382,12 @@ class FirstUnique {
     constructor(nums) {
         this._queue = nums.slice();
         this._is_unique = {};
-        
+
         for (let num of nums) {
             this.add(num);
         }
     }
-    
+
     /**
      * @return {number}
      */
@@ -274,15 +395,15 @@ class FirstUnique {
         while (this._queue.length > 0 && !this._is_unique[this._queue[0]]) {
             this._queue.shift();
         }
-        
+
         if (this._queue.length > 0) {
             return this._queue[0];
         }
-        
+
         return -1;
     }
-    
-    /** 
+
+    /**
      * @param {number} value
      * @return {void}
      */
@@ -297,15 +418,161 @@ class FirstUnique {
 }
 ```
 
+```csharp
+public class FirstUnique {
+
+    private Queue<int> queue = new Queue<int>();
+    private Dictionary<int, bool> isUnique = new Dictionary<int, bool>();
+
+    public FirstUnique(int[] nums) {
+        foreach (int num in nums) {
+            Add(num);
+        }
+    }
+
+    public int ShowFirstUnique() {
+        while (queue.Count > 0 && !isUnique[queue.Peek()]) {
+            queue.Dequeue();
+        }
+
+        if (queue.Count > 0) {
+            return queue.Peek();
+        }
+
+        return -1;
+    }
+
+    public void Add(int value) {
+        if (!isUnique.ContainsKey(value)) {
+            isUnique[value] = true;
+            queue.Enqueue(value);
+        } else {
+            isUnique[value] = false;
+        }
+    }
+}
+```
+
+```go
+type FirstUnique struct {
+    queue    []int
+    isUnique map[int]bool
+}
+
+func Constructor(nums []int) FirstUnique {
+    fu := FirstUnique{
+        queue:    []int{},
+        isUnique: make(map[int]bool),
+    }
+    for _, num := range nums {
+        fu.Add(num)
+    }
+    return fu
+}
+
+func (this *FirstUnique) ShowFirstUnique() int {
+    for len(this.queue) > 0 && !this.isUnique[this.queue[0]] {
+        this.queue = this.queue[1:]
+    }
+
+    if len(this.queue) > 0 {
+        return this.queue[0]
+    }
+
+    return -1
+}
+
+func (this *FirstUnique) Add(value int) {
+    if _, exists := this.isUnique[value]; !exists {
+        this.isUnique[value] = true
+        this.queue = append(this.queue, value)
+    } else {
+        this.isUnique[value] = false
+    }
+}
+```
+
+```kotlin
+class FirstUnique(nums: IntArray) {
+
+    private val queue = ArrayDeque<Int>()
+    private val isUnique = HashMap<Int, Boolean>()
+
+    init {
+        for (num in nums) {
+            add(num)
+        }
+    }
+
+    fun showFirstUnique(): Int {
+        while (queue.isNotEmpty() && isUnique[queue.first()] == false) {
+            queue.removeFirst()
+        }
+
+        if (queue.isNotEmpty()) {
+            return queue.first()
+        }
+
+        return -1
+    }
+
+    fun add(value: Int) {
+        if (value !in isUnique) {
+            isUnique[value] = true
+            queue.addLast(value)
+        } else {
+            isUnique[value] = false
+        }
+    }
+}
+```
+
+```swift
+class FirstUnique {
+
+    private var queue: [Int]
+    private var isUnique: [Int: Bool]
+
+    init(_ nums: [Int]) {
+        queue = []
+        isUnique = [:]
+        for num in nums {
+            add(num)
+        }
+    }
+
+    func showFirstUnique() -> Int {
+        while !queue.isEmpty && isUnique[queue[0]] == false {
+            queue.removeFirst()
+        }
+
+        if !queue.isEmpty {
+            return queue[0]
+        }
+
+        return -1
+    }
+
+    func add(_ value: Int) {
+        if isUnique[value] == nil {
+            isUnique[value] = true
+            queue.append(value)
+        } else {
+            isUnique[value] = false
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: 
+- Time complexity:
     - **constructor**: $O(K)$
 
     - **add()**: $O(1)$
-    
+
     - **showFirstUnique()**: $O(1)$ (amortized)
 
 - Space complexity: $O(N)$
@@ -445,12 +712,12 @@ class FirstUnique {
     constructor(nums) {
         this.setQueue = new Set();
         this.isUnique = new Map();
-        
+
         for (const num of nums) {
             this.add(num);
         }
     }
-    
+
     /**
      * @return {number}
      */
@@ -462,8 +729,8 @@ class FirstUnique {
         }
         return -1;
     }
-    
-    /** 
+
+    /**
      * @param {number} value
      * @return {void}
      */
@@ -483,11 +750,156 @@ class FirstUnique {
 }
 ```
 
+```csharp
+public class FirstUnique {
+
+    private LinkedList<int> setQueue = new LinkedList<int>();
+    private Dictionary<int, LinkedListNode<int>> queuePosition = new Dictionary<int, LinkedListNode<int>>();
+    private Dictionary<int, bool> isUnique = new Dictionary<int, bool>();
+
+    public FirstUnique(int[] nums) {
+        foreach (int num in nums) {
+            Add(num);
+        }
+    }
+
+    public int ShowFirstUnique() {
+        if (setQueue.Count > 0) {
+            return setQueue.First.Value;
+        }
+        return -1;
+    }
+
+    public void Add(int value) {
+        if (!isUnique.ContainsKey(value)) {
+            isUnique[value] = true;
+            setQueue.AddLast(value);
+            queuePosition[value] = setQueue.Last;
+        } else if (isUnique[value]) {
+            isUnique[value] = false;
+            setQueue.Remove(queuePosition[value]);
+            queuePosition.Remove(value);
+        }
+    }
+}
+```
+
+```go
+type FirstUnique struct {
+    setQueue      *list.List
+    queuePosition map[int]*list.Element
+    isUnique      map[int]bool
+}
+
+func Constructor(nums []int) FirstUnique {
+    fu := FirstUnique{
+        setQueue:      list.New(),
+        queuePosition: make(map[int]*list.Element),
+        isUnique:      make(map[int]bool),
+    }
+    for _, num := range nums {
+        fu.Add(num)
+    }
+    return fu
+}
+
+func (this *FirstUnique) ShowFirstUnique() int {
+    if this.setQueue.Len() > 0 {
+        return this.setQueue.Front().Value.(int)
+    }
+    return -1
+}
+
+func (this *FirstUnique) Add(value int) {
+    if _, exists := this.isUnique[value]; !exists {
+        this.isUnique[value] = true
+        elem := this.setQueue.PushBack(value)
+        this.queuePosition[value] = elem
+    } else if this.isUnique[value] {
+        this.isUnique[value] = false
+        this.setQueue.Remove(this.queuePosition[value])
+        delete(this.queuePosition, value)
+    }
+}
+```
+
+```kotlin
+class FirstUnique(nums: IntArray) {
+
+    private val setQueue = LinkedHashSet<Int>()
+    private val isUnique = HashMap<Int, Boolean>()
+
+    init {
+        for (num in nums) {
+            add(num)
+        }
+    }
+
+    fun showFirstUnique(): Int {
+        if (setQueue.isNotEmpty()) {
+            return setQueue.iterator().next()
+        }
+        return -1
+    }
+
+    fun add(value: Int) {
+        if (value !in isUnique) {
+            isUnique[value] = true
+            setQueue.add(value)
+        } else if (isUnique[value] == true) {
+            isUnique[value] = false
+            setQueue.remove(value)
+        }
+    }
+}
+```
+
+```swift
+class FirstUnique {
+
+    private var setQueue: [Int] = []
+    private var queuePosition: [Int: Int] = [:]
+    private var isUnique: [Int: Bool] = [:]
+
+    init(_ nums: [Int]) {
+        for num in nums {
+            add(num)
+        }
+    }
+
+    func showFirstUnique() -> Int {
+        if !setQueue.isEmpty {
+            return setQueue[0]
+        }
+        return -1
+    }
+
+    func add(_ value: Int) {
+        if isUnique[value] == nil {
+            isUnique[value] = true
+            queuePosition[value] = setQueue.count
+            setQueue.append(value)
+        } else if isUnique[value] == true {
+            isUnique[value] = false
+            if let pos = queuePosition[value] {
+                setQueue.remove(at: pos)
+                queuePosition.removeValue(forKey: value)
+                for (key, idx) in queuePosition {
+                    if idx > pos {
+                        queuePosition[key] = idx - 1
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: 
+- Time complexity:
     - **constructor**: $O(K)$
 
     - **add()**: $O(1)$

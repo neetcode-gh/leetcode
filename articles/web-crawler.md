@@ -124,6 +124,121 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * // This is HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * type HtmlParser struct {
+ *     func GetUrls(url string) []string {}
+ * }
+ */
+
+func crawl(startUrl string, htmlParser HtmlParser) []string {
+    getHostname := func(url string) string {
+        // split url by slashes
+        // for instance, "http://example.org/foo/bar" will be split into
+        // "http:", "", "example.org", "foo", "bar"
+        // the hostname is the 2nd (0-indexed) element
+        return strings.Split(url, "/")[2]
+    }
+
+    startHostname := getHostname(startUrl)
+    visited := make(map[string]bool)
+
+    var dfs func(url string)
+    dfs = func(url string) {
+        visited[url] = true
+        for _, nextUrl := range htmlParser.GetUrls(url) {
+            if getHostname(nextUrl) == startHostname && !visited[nextUrl] {
+                dfs(nextUrl)
+            }
+        }
+    }
+
+    dfs(startUrl)
+
+    result := make([]string, 0, len(visited))
+    for url := range visited {
+        result = append(result, url)
+    }
+    return result
+}
+```
+
+```kotlin
+/**
+ * // This is the HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class HtmlParser {
+ *     fun getUrls(url: String): List<String> {}
+ * }
+ */
+
+class Solution {
+    fun crawl(startUrl: String, htmlParser: HtmlParser): List<String> {
+        fun getHostname(url: String): String {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split("/")[2]
+        }
+
+        val startHostname = getHostname(startUrl)
+        val visited = mutableSetOf<String>()
+
+        fun dfs(url: String) {
+            visited.add(url)
+            for (nextUrl in htmlParser.getUrls(url)) {
+                if (getHostname(nextUrl) == startHostname && nextUrl !in visited) {
+                    dfs(nextUrl)
+                }
+            }
+        }
+
+        dfs(startUrl)
+        return visited.toList()
+    }
+}
+```
+
+```swift
+/**
+ * // This is HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class HtmlParser {
+ *     func getUrls(_ url: String) -> [String] {}
+ * }
+ */
+
+class Solution {
+    func crawl(_ startUrl: String, _ htmlParser: HtmlParser) -> [String] {
+        func getHostname(_ url: String) -> String {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split(separator: "/")[1].description
+        }
+
+        let startHostname = getHostname(startUrl)
+        var visited = Set<String>()
+
+        func dfs(_ url: String) {
+            visited.insert(url)
+            for nextUrl in htmlParser.getUrls(url) {
+                if getHostname(nextUrl) == startHostname && !visited.contains(nextUrl) {
+                    dfs(nextUrl)
+                }
+            }
+        }
+
+        dfs(startUrl)
+        return Array(visited)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -221,6 +336,200 @@ public:
     }
 };
 ```
+
+```javascript
+class Solution {
+    /**
+     * @param {string} startUrl
+     * @param {HtmlParser} htmlParser
+     * @return {string[]}
+    */
+    crawl(startUrl, htmlParser) {
+        function getHostname(url) {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split('/')[2];
+        }
+
+        const startHostname = getHostname(startUrl);
+        const visited = new Set([startUrl]);
+        const queue = [startUrl];
+
+        while (queue.length > 0) {
+            const url = queue.shift();
+            for (const nextUrl of htmlParser.getUrls(url)) {
+                if (getHostname(nextUrl) === startHostname && !visited.has(nextUrl)) {
+                    queue.push(nextUrl);
+                    visited.add(nextUrl);
+                }
+            }
+        }
+
+        return Array.from(visited);
+    }
+}
+```
+
+```csharp
+/**
+ * // This is HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class HtmlParser {
+ *     public List<string> GetUrls(string url) {}
+ * }
+ */
+
+public class Solution {
+    public IList<string> Crawl(string startUrl, HtmlParser htmlParser) {
+        string GetHostname(string url) {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.Split('/')[2];
+        }
+
+        string startHostname = GetHostname(startUrl);
+        Queue<string> q = new Queue<string>();
+        q.Enqueue(startUrl);
+        HashSet<string> visited = new HashSet<string> { startUrl };
+
+        while (q.Count > 0) {
+            string url = q.Dequeue();
+            foreach (string nextUrl in htmlParser.GetUrls(url)) {
+                if (GetHostname(nextUrl) == startHostname && !visited.Contains(nextUrl)) {
+                    q.Enqueue(nextUrl);
+                    visited.Add(nextUrl);
+                }
+            }
+        }
+
+        return new List<string>(visited);
+    }
+}
+```
+
+```go
+/**
+ * // This is HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * type HtmlParser struct {
+ *     func GetUrls(url string) []string {}
+ * }
+ */
+
+func crawl(startUrl string, htmlParser HtmlParser) []string {
+    getHostname := func(url string) string {
+        // split url by slashes
+        // for instance, "http://example.org/foo/bar" will be split into
+        // "http:", "", "example.org", "foo", "bar"
+        // the hostname is the 2nd (0-indexed) element
+        return strings.Split(url, "/")[2]
+    }
+
+    startHostname := getHostname(startUrl)
+    visited := make(map[string]bool)
+    visited[startUrl] = true
+    queue := []string{startUrl}
+
+    for len(queue) > 0 {
+        url := queue[0]
+        queue = queue[1:]
+        for _, nextUrl := range htmlParser.GetUrls(url) {
+            if getHostname(nextUrl) == startHostname && !visited[nextUrl] {
+                queue = append(queue, nextUrl)
+                visited[nextUrl] = true
+            }
+        }
+    }
+
+    result := make([]string, 0, len(visited))
+    for url := range visited {
+        result = append(result, url)
+    }
+    return result
+}
+```
+
+```kotlin
+/**
+ * // This is the HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class HtmlParser {
+ *     fun getUrls(url: String): List<String> {}
+ * }
+ */
+
+class Solution {
+    fun crawl(startUrl: String, htmlParser: HtmlParser): List<String> {
+        fun getHostname(url: String): String {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split("/")[2]
+        }
+
+        val startHostname = getHostname(startUrl)
+        val visited = mutableSetOf(startUrl)
+        val queue = ArrayDeque<String>()
+        queue.add(startUrl)
+
+        while (queue.isNotEmpty()) {
+            val url = queue.removeFirst()
+            for (nextUrl in htmlParser.getUrls(url)) {
+                if (getHostname(nextUrl) == startHostname && nextUrl !in visited) {
+                    queue.add(nextUrl)
+                    visited.add(nextUrl)
+                }
+            }
+        }
+
+        return visited.toList()
+    }
+}
+```
+
+```swift
+/**
+ * // This is HtmlParser's API interface.
+ * // You should not implement it, or speculate about its implementation
+ * class HtmlParser {
+ *     func getUrls(_ url: String) -> [String] {}
+ * }
+ */
+
+class Solution {
+    func crawl(_ startUrl: String, _ htmlParser: HtmlParser) -> [String] {
+        func getHostname(_ url: String) -> String {
+            // split url by slashes
+            // for instance, "http://example.org/foo/bar" will be split into
+            // "http:", "", "example.org", "foo", "bar"
+            // the hostname is the 2nd (0-indexed) element
+            return url.split(separator: "/")[1].description
+        }
+
+        let startHostname = getHostname(startUrl)
+        var visited = Set<String>([startUrl])
+        var queue = [startUrl]
+
+        while !queue.isEmpty {
+            let url = queue.removeFirst()
+            for nextUrl in htmlParser.getUrls(url) {
+                if getHostname(nextUrl) == startHostname && !visited.contains(nextUrl) {
+                    queue.append(nextUrl)
+                    visited.insert(nextUrl)
+                }
+            }
+        }
+
+        return Array(visited)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

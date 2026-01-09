@@ -106,6 +106,69 @@ public class Solution {
 }
 ```
 
+```go
+func totalFruit(fruits []int) int {
+    n := len(fruits)
+    res := 0
+
+    for i := 0; i < n; i++ {
+        types := make(map[int]bool)
+        j := i
+
+        for j < n && (len(types) < 2 || types[fruits[j]]) {
+            types[fruits[j]] = true
+            j++
+        }
+        if j-i > res {
+            res = j - i
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalFruit(fruits: IntArray): Int {
+        val n = fruits.size
+        var res = 0
+
+        for (i in 0 until n) {
+            val types = HashSet<Int>()
+            var j = i
+
+            while (j < n && (types.size < 2 || fruits[j] in types)) {
+                types.add(fruits[j])
+                j++
+            }
+            res = maxOf(res, j - i)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalFruit(_ fruits: [Int]) -> Int {
+        let n = fruits.count
+        var res = 0
+
+        for i in 0..<n {
+            var types = Set<Int>()
+            var j = i
+
+            while j < n && (types.count < 2 || types.contains(fruits[j])) {
+                types.insert(fruits[j])
+                j += 1
+            }
+            res = max(res, j - i)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -257,6 +320,88 @@ public class Solution {
 }
 ```
 
+```go
+func totalFruit(fruits []int) int {
+    count := make(map[int]int)
+    l, total, res := 0, 0, 0
+
+    for r := 0; r < len(fruits); r++ {
+        count[fruits[r]]++
+        total++
+
+        for len(count) > 2 {
+            f := fruits[l]
+            count[f]--
+            total--
+            if count[f] == 0 {
+                delete(count, f)
+            }
+            l++
+        }
+        if total > res {
+            res = total
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalFruit(fruits: IntArray): Int {
+        val count = HashMap<Int, Int>()
+        var l = 0
+        var total = 0
+        var res = 0
+
+        for (r in fruits.indices) {
+            count[fruits[r]] = count.getOrDefault(fruits[r], 0) + 1
+            total++
+
+            while (count.size > 2) {
+                val f = fruits[l]
+                count[f] = count[f]!! - 1
+                total--
+                if (count[f] == 0) {
+                    count.remove(f)
+                }
+                l++
+            }
+            res = maxOf(res, total)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalFruit(_ fruits: [Int]) -> Int {
+        var count = [Int: Int]()
+        var l = 0
+        var total = 0
+        var res = 0
+
+        for r in 0..<fruits.count {
+            count[fruits[r], default: 0] += 1
+            total += 1
+
+            while count.count > 2 {
+                let f = fruits[l]
+                count[f]! -= 1
+                total -= 1
+                if count[f] == 0 {
+                    count.removeValue(forKey: f)
+                }
+                l += 1
+            }
+            res = max(res, total)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +529,73 @@ public class Solution {
         }
 
         return fruits.Length - l;
+    }
+}
+```
+
+```go
+func totalFruit(fruits []int) int {
+    count := make(map[int]int)
+    l := 0
+
+    for r := 0; r < len(fruits); r++ {
+        count[fruits[r]]++
+
+        if len(count) > 2 {
+            count[fruits[l]]--
+            if count[fruits[l]] == 0 {
+                delete(count, fruits[l])
+            }
+            l++
+        }
+    }
+
+    return len(fruits) - l
+}
+```
+
+```kotlin
+class Solution {
+    fun totalFruit(fruits: IntArray): Int {
+        val count = HashMap<Int, Int>()
+        var l = 0
+
+        for (r in fruits.indices) {
+            count[fruits[r]] = count.getOrDefault(fruits[r], 0) + 1
+
+            if (count.size > 2) {
+                count[fruits[l]] = count[fruits[l]]!! - 1
+                if (count[fruits[l]] == 0) {
+                    count.remove(fruits[l])
+                }
+                l++
+            }
+        }
+
+        return fruits.size - l
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalFruit(_ fruits: [Int]) -> Int {
+        var count = [Int: Int]()
+        var l = 0
+
+        for r in 0..<fruits.count {
+            count[fruits[r], default: 0] += 1
+
+            if count.count > 2 {
+                count[fruits[l]]! -= 1
+                if count[fruits[l]] == 0 {
+                    count.removeValue(forKey: fruits[l])
+                }
+                l += 1
+            }
+        }
+
+        return fruits.count - l
     }
 }
 ```
@@ -589,6 +801,131 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func totalFruit(fruits []int) int {
+    l := 0
+    fruit1LastIdx := 0
+    fruit2LastIdx := -1
+    fruit1 := fruits[0]
+    fruit2 := -1
+    total := 1
+    res := 1
+
+    for r := 0; r < len(fruits); r++ {
+        f := fruits[r]
+        if f == fruit1 {
+            total++
+            fruit1LastIdx = r
+        } else if f == fruit2 || fruit2 == -1 {
+            total++
+            fruit2LastIdx = r
+            fruit2 = f
+        } else {
+            if fruit2LastIdx == min(fruit1LastIdx, fruit2LastIdx) {
+                fruit1LastIdx, fruit2LastIdx = fruit2LastIdx, fruit1LastIdx
+                fruit1, fruit2 = fruit2, fruit1
+            }
+
+            total -= fruit1LastIdx - l + 1
+            l = fruit1LastIdx + 1
+            fruit1 = f
+            fruit1LastIdx = r
+        }
+        if r-l+1 > res {
+            res = r - l + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalFruit(fruits: IntArray): Int {
+        var l = 0
+        var fruit1LastIdx = 0
+        var fruit2LastIdx = -1
+        var fruit1 = fruits[0]
+        var fruit2 = -1
+        var total = 1
+        var res = 1
+
+        for (r in fruits.indices) {
+            val f = fruits[r]
+            if (f == fruit1) {
+                total++
+                fruit1LastIdx = r
+            } else if (f == fruit2 || fruit2 == -1) {
+                total++
+                fruit2LastIdx = r
+                fruit2 = f
+            } else {
+                if (fruit2LastIdx == minOf(fruit1LastIdx, fruit2LastIdx)) {
+                    val tempIdx = fruit1LastIdx
+                    fruit1LastIdx = fruit2LastIdx
+                    fruit2LastIdx = tempIdx
+                    val tempFruit = fruit1
+                    fruit1 = fruit2
+                    fruit2 = tempFruit
+                }
+
+                total -= fruit1LastIdx - l + 1
+                l = fruit1LastIdx + 1
+                fruit1 = f
+                fruit1LastIdx = r
+            }
+            res = maxOf(res, r - l + 1)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalFruit(_ fruits: [Int]) -> Int {
+        var l = 0
+        var fruit1LastIdx = 0
+        var fruit2LastIdx = -1
+        var fruit1 = fruits[0]
+        var fruit2 = -1
+        var total = 1
+        var res = 1
+
+        for r in 0..<fruits.count {
+            let f = fruits[r]
+            if f == fruit1 {
+                total += 1
+                fruit1LastIdx = r
+            } else if f == fruit2 || fruit2 == -1 {
+                total += 1
+                fruit2LastIdx = r
+                fruit2 = f
+            } else {
+                if fruit2LastIdx == min(fruit1LastIdx, fruit2LastIdx) {
+                    let tempIdx = fruit1LastIdx
+                    fruit1LastIdx = fruit2LastIdx
+                    fruit2LastIdx = tempIdx
+                    let tempFruit = fruit1
+                    fruit1 = fruit2
+                    fruit2 = tempFruit
+                }
+
+                total -= fruit1LastIdx - l + 1
+                l = fruit1LastIdx + 1
+                fruit1 = f
+                fruit1LastIdx = r
+            }
+            res = max(res, r - l + 1)
+        }
+
+        return res
     }
 }
 ```

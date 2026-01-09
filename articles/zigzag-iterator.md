@@ -150,7 +150,7 @@ class ZigzagIterator {
         this.vectors = [v1, v2];
         this.p_elem = 0;   // pointer to the index of element
         this.p_vec = 0;    // pointer to the vector
-        
+
         // variables for hasNext() function
         this.total_num = v1.length + v2.length;
         this.output_count = 0;
@@ -169,31 +169,203 @@ class ZigzagIterator {
     next() {
         let iter_num = 0;
         let ret = null;
-        
+
         // Iterate over the vectors
         while (iter_num < this.vectors.length) {
             let curr_vec = this.vectors[this.p_vec];
-            
+
             if (this.p_elem < curr_vec.length) {
                 ret = curr_vec[this.p_elem];
             }
-            
+
             iter_num++;
             this.p_vec = (this.p_vec + 1) % this.vectors.length;
-            
+
             // increment the element pointer once iterating all vectors
             if (this.p_vec === 0) {
                 this.p_elem++;
             }
-            
+
             if (ret !== null) {
                 this.output_count++;
                 return ret;
             }
         }
-        
+
         // no more element to output
         throw new Error("No more elements");
+    }
+}
+```
+
+```csharp
+public class ZigzagIterator {
+    private List<IList<int>> vectors = new List<IList<int>>();
+    private int pVec = 0, pElem = 0;
+    private int totalNum = 0, outputCount = 0;
+
+    public ZigzagIterator(IList<int> v1, IList<int> v2) {
+        vectors.Add(v1);
+        vectors.Add(v2);
+        foreach (var vec in vectors) {
+            totalNum += vec.Count;
+        }
+    }
+
+    public int Next() {
+        int iterNum = 0;
+        int? ret = null;
+        while (iterNum < vectors.Count) {
+            var currVec = vectors[pVec];
+            if (pElem < currVec.Count) {
+                ret = currVec[pElem];
+                outputCount++;
+            }
+
+            iterNum++;
+            pVec = (pVec + 1) % vectors.Count;
+            if (pVec == 0)
+                pElem++;
+
+            if (ret != null)
+                return ret.Value;
+        }
+        return 0;
+    }
+
+    public bool HasNext() {
+        return outputCount < totalNum;
+    }
+}
+```
+
+```go
+type ZigzagIterator struct {
+    vectors     [][]int
+    pVec        int
+    pElem       int
+    totalNum    int
+    outputCount int
+}
+
+func Constructor(v1, v2 []int) *ZigzagIterator {
+    return &ZigzagIterator{
+        vectors:     [][]int{v1, v2},
+        pVec:        0,
+        pElem:       0,
+        totalNum:    len(v1) + len(v2),
+        outputCount: 0,
+    }
+}
+
+func (this *ZigzagIterator) next() int {
+    iterNum := 0
+    ret := -1
+    found := false
+
+    for iterNum < len(this.vectors) {
+        currVec := this.vectors[this.pVec]
+        if this.pElem < len(currVec) {
+            ret = currVec[this.pElem]
+            this.outputCount++
+            found = true
+        }
+
+        iterNum++
+        this.pVec = (this.pVec + 1) % len(this.vectors)
+        if this.pVec == 0 {
+            this.pElem++
+        }
+
+        if found {
+            return ret
+        }
+    }
+    return 0
+}
+
+func (this *ZigzagIterator) hasNext() bool {
+    return this.outputCount < this.totalNum
+}
+```
+
+```kotlin
+class ZigzagIterator(v1: List<Int>, v2: List<Int>) {
+    private val vectors = listOf(v1, v2)
+    private var pVec = 0
+    private var pElem = 0
+    private val totalNum = v1.size + v2.size
+    private var outputCount = 0
+
+    fun next(): Int {
+        var iterNum = 0
+        var ret: Int? = null
+
+        while (iterNum < vectors.size) {
+            val currVec = vectors[pVec]
+            if (pElem < currVec.size) {
+                ret = currVec[pElem]
+                outputCount++
+            }
+
+            iterNum++
+            pVec = (pVec + 1) % vectors.size
+            if (pVec == 0) {
+                pElem++
+            }
+
+            if (ret != null) {
+                return ret
+            }
+        }
+        return 0
+    }
+
+    fun hasNext(): Boolean {
+        return outputCount < totalNum
+    }
+}
+```
+
+```swift
+class ZigzagIterator {
+    private var vectors: [[Int]]
+    private var pVec: Int = 0
+    private var pElem: Int = 0
+    private var totalNum: Int
+    private var outputCount: Int = 0
+
+    init(_ v1: [Int], _ v2: [Int]) {
+        vectors = [v1, v2]
+        totalNum = v1.count + v2.count
+    }
+
+    func next() -> Int {
+        var iterNum = 0
+        var ret: Int? = nil
+
+        while iterNum < vectors.count {
+            let currVec = vectors[pVec]
+            if pElem < currVec.count {
+                ret = currVec[pElem]
+                outputCount += 1
+            }
+
+            iterNum += 1
+            pVec = (pVec + 1) % vectors.count
+            if pVec == 0 {
+                pElem += 1
+            }
+
+            if let result = ret {
+                return result
+            }
+        }
+        return 0
+    }
+
+    func hasNext() -> Bool {
+        return outputCount < totalNum
     }
 }
 ```
@@ -344,7 +516,7 @@ class ZigzagIterator {
     constructor(v1, v2) {
         this.vectors = [v1, v2];
         this.queue = new Deque(); // Using @datastructures-js/deque
-        
+
         for (let index = 0; index < this.vectors.length; index++) {
             const vector = this.vectors[index];
             // <index_of_vector, index_of_element_to_output>
@@ -368,18 +540,165 @@ class ZigzagIterator {
         if (!this.queue.isEmpty()) {
             const [vecIndex, elemIndex] = this.queue.popFront();
             const nextElemIndex = elemIndex + 1;
-            
+
             if (nextElemIndex < this.vectors[vecIndex].length) {
                 // append the pointer for the next round
                 // if there are some elements left
                 this.queue.pushBack([vecIndex, nextElemIndex]);
             }
-            
+
             return this.vectors[vecIndex][elemIndex];
         }
-        
+
         // no more element to output
         throw new Error("No more elements");
+    }
+}
+```
+
+```csharp
+public class ZigzagIterator {
+    private List<IList<int>> vectors = new List<IList<int>>();
+    private Queue<(int, int)> queue = new Queue<(int, int)>();
+
+    public ZigzagIterator(IList<int> v1, IList<int> v2) {
+        vectors.Add(v1);
+        vectors.Add(v2);
+        for (int index = 0; index < vectors.Count; index++) {
+            if (vectors[index].Count > 0) {
+                // <index_to_vec, index_to_element_within_vec>
+                queue.Enqueue((index, 0));
+            }
+        }
+    }
+
+    public int Next() {
+        // <index_to_vec, index_to_element_within_vec>
+        var (vecIndex, elemIndex) = queue.Dequeue();
+        int nextElemIndex = elemIndex + 1;
+        // append the pointer for the next round
+        // if there are some elements left.
+        if (nextElemIndex < vectors[vecIndex].Count) {
+            queue.Enqueue((vecIndex, nextElemIndex));
+        }
+
+        return vectors[vecIndex][elemIndex];
+    }
+
+    public bool HasNext() {
+        return queue.Count > 0;
+    }
+}
+```
+
+```go
+type ZigzagIterator struct {
+    vectors [][]int
+    queue   [][2]int
+}
+
+func Constructor(v1, v2 []int) *ZigzagIterator {
+    zi := &ZigzagIterator{
+        vectors: [][]int{v1, v2},
+        queue:   [][2]int{},
+    }
+    for index, vec := range zi.vectors {
+        if len(vec) > 0 {
+            // [index_to_vec, index_to_element_within_vec]
+            zi.queue = append(zi.queue, [2]int{index, 0})
+        }
+    }
+    return zi
+}
+
+func (this *ZigzagIterator) next() int {
+    // [index_to_vec, index_to_element_within_vec]
+    pointer := this.queue[0]
+    this.queue = this.queue[1:]
+
+    vecIndex := pointer[0]
+    elemIndex := pointer[1]
+    nextElemIndex := elemIndex + 1
+
+    // append the pointer for the next round
+    // if there are some elements left.
+    if nextElemIndex < len(this.vectors[vecIndex]) {
+        this.queue = append(this.queue, [2]int{vecIndex, nextElemIndex})
+    }
+
+    return this.vectors[vecIndex][elemIndex]
+}
+
+func (this *ZigzagIterator) hasNext() bool {
+    return len(this.queue) > 0
+}
+```
+
+```kotlin
+class ZigzagIterator(v1: List<Int>, v2: List<Int>) {
+    private val vectors = listOf(v1, v2)
+    private val queue = ArrayDeque<Pair<Int, Int>>()
+
+    init {
+        for ((index, vec) in vectors.withIndex()) {
+            if (vec.isNotEmpty()) {
+                // <index_to_vec, index_to_element_within_vec>
+                queue.add(Pair(index, 0))
+            }
+        }
+    }
+
+    fun next(): Int {
+        // <index_to_vec, index_to_element_within_vec>
+        val (vecIndex, elemIndex) = queue.removeFirst()
+        val nextElemIndex = elemIndex + 1
+
+        // append the pointer for the next round
+        // if there are some elements left.
+        if (nextElemIndex < vectors[vecIndex].size) {
+            queue.add(Pair(vecIndex, nextElemIndex))
+        }
+
+        return vectors[vecIndex][elemIndex]
+    }
+
+    fun hasNext(): Boolean {
+        return queue.isNotEmpty()
+    }
+}
+```
+
+```swift
+class ZigzagIterator {
+    private var vectors: [[Int]]
+    private var queue: [(Int, Int)] = []
+
+    init(_ v1: [Int], _ v2: [Int]) {
+        vectors = [v1, v2]
+        for (index, vec) in vectors.enumerated() {
+            if !vec.isEmpty {
+                // (index_to_vec, index_to_element_within_vec)
+                queue.append((index, 0))
+            }
+        }
+    }
+
+    func next() -> Int {
+        // (index_to_vec, index_to_element_within_vec)
+        let (vecIndex, elemIndex) = queue.removeFirst()
+        let nextElemIndex = elemIndex + 1
+
+        // append the pointer for the next round
+        // if there are some elements left.
+        if nextElemIndex < vectors[vecIndex].count {
+            queue.append((vecIndex, nextElemIndex))
+        }
+
+        return vectors[vecIndex][elemIndex]
+    }
+
+    func hasNext() -> Bool {
+        return !queue.isEmpty
     }
 }
 ```

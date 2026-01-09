@@ -113,6 +113,47 @@ func appendCharacters(s string, t string) int {
 }
 ```
 
+```kotlin
+class Solution {
+    fun appendCharacters(s: String, t: String): Int {
+        var i = 0
+        var j = 0
+
+        while (i < s.length && j < t.length) {
+            if (s[i] == t[j]) {
+                i++
+                j++
+            } else {
+                i++
+            }
+        }
+
+        return t.length - j
+    }
+}
+```
+
+```swift
+class Solution {
+    func appendCharacters(_ s: String, _ t: String) -> Int {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        var i = 0, j = 0
+
+        while i < sArr.count && j < tArr.count {
+            if sArr[i] == tArr[j] {
+                i += 1
+                j += 1
+            } else {
+                i += 1
+            }
+        }
+
+        return tArr.count - j
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -307,6 +348,62 @@ func appendCharacters(s string, t string) int {
     }
 
     return m - j
+}
+```
+
+```kotlin
+class Solution {
+    fun appendCharacters(s: String, t: String): Int {
+        val n = s.length
+        val m = t.length
+        val store = Array(n) { IntArray(26) { n + 1 } }
+        store[n - 1][s[n - 1] - 'a'] = n - 1
+
+        for (i in n - 2 downTo 0) {
+            store[i] = store[i + 1].copyOf()
+            store[i][s[i] - 'a'] = i
+        }
+
+        var i = 0
+        var j = 0
+        while (i < n && j < m) {
+            val idx = store[i][t[j] - 'a']
+            if (idx == n + 1) break
+            i = idx + 1
+            j++
+        }
+
+        return m - j
+    }
+}
+```
+
+```swift
+class Solution {
+    func appendCharacters(_ s: String, _ t: String) -> Int {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        let n = sArr.count
+        let m = tArr.count
+
+        var store = [[Int]](repeating: [Int](repeating: n + 1, count: 26), count: n)
+        store[n - 1][Int(sArr[n - 1].asciiValue!) - 97] = n - 1
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            store[i] = store[i + 1]
+            store[i][Int(sArr[i].asciiValue!) - 97] = i
+        }
+
+        var i = 0, j = 0
+        while i < n && j < m {
+            let idx = store[i][Int(tArr[j].asciiValue!) - 97]
+            if idx == n + 1 { break }
+            i = idx + 1
+            j += 1
+        }
+
+        return m - j
+    }
 }
 ```
 

@@ -80,6 +80,81 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MakeGood(string s) {
+        int n = s.Length;
+        int i = 0;
+        while (i < n) {
+            if (i > 0 && s[i] != s[i - 1] &&
+                char.ToLower(s[i]) == char.ToLower(s[i - 1])) {
+                s = s.Substring(0, i - 1) + s.Substring(i + 1);
+                n -= 2;
+                i -= 2;
+            }
+            i++;
+        }
+        return s;
+    }
+}
+```
+
+```go
+func makeGood(s string) string {
+    n := len(s)
+    i := 0
+    for i < n {
+        if i > 0 && s[i] != s[i-1] &&
+            strings.ToLower(string(s[i])) == strings.ToLower(string(s[i-1])) {
+            s = s[:i-1] + s[i+1:]
+            n -= 2
+            i -= 2
+        }
+        i++
+    }
+    return s
+}
+```
+
+```kotlin
+class Solution {
+    fun makeGood(s: String): String {
+        var str = s
+        var n = str.length
+        var i = 0
+        while (i < n) {
+            if (i > 0 && str[i] != str[i - 1] &&
+                str[i].lowercaseChar() == str[i - 1].lowercaseChar()) {
+                str = str.substring(0, i - 1) + str.substring(i + 1)
+                n -= 2
+                i -= 2
+            }
+            i++
+        }
+        return str
+    }
+}
+```
+
+```swift
+class Solution {
+    func makeGood(_ s: String) -> String {
+        var chars = Array(s)
+        var i = 0
+        while i < chars.count {
+            if i > 0 && chars[i] != chars[i - 1] &&
+                chars[i].lowercased() == chars[i - 1].lowercased() {
+                chars.remove(at: i)
+                chars.remove(at: i - 1)
+                i -= 2
+            }
+            i += 1
+        }
+        return String(chars)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -171,6 +246,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MakeGood(string s) {
+        var stack = new StringBuilder();
+        foreach (char c in s) {
+            if (stack.Length > 0 && stack[stack.Length - 1] != c &&
+                char.ToLower(stack[stack.Length - 1]) == char.ToLower(c)) {
+                stack.Remove(stack.Length - 1, 1);
+            } else {
+                stack.Append(c);
+            }
+        }
+        return stack.ToString();
+    }
+}
+```
+
+```go
+func makeGood(s string) string {
+    stack := []rune{}
+    for _, c := range s {
+        if len(stack) > 0 && stack[len(stack)-1] != c &&
+            unicode.ToLower(stack[len(stack)-1]) == unicode.ToLower(c) {
+            stack = stack[:len(stack)-1]
+        } else {
+            stack = append(stack, c)
+        }
+    }
+    return string(stack)
+}
+```
+
+```kotlin
+class Solution {
+    fun makeGood(s: String): String {
+        val stack = StringBuilder()
+        for (c in s) {
+            if (stack.isNotEmpty() && stack.last() != c &&
+                stack.last().lowercaseChar() == c.lowercaseChar()) {
+                stack.deleteCharAt(stack.length - 1)
+            } else {
+                stack.append(c)
+            }
+        }
+        return stack.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func makeGood(_ s: String) -> String {
+        var stack = [Character]()
+        for c in s {
+            if !stack.isEmpty && stack.last! != c &&
+                stack.last!.lowercased() == c.lowercased() {
+                stack.removeLast()
+            } else {
+                stack.append(c)
+            }
+        }
+        return String(stack)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,6 +392,78 @@ class Solution {
             }
         }
         return stack.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MakeGood(string s) {
+        var stack = new StringBuilder();
+        foreach (char c in s) {
+            if (stack.Length > 0 &&
+                Math.Abs(stack[stack.Length - 1] - c) == 32) {
+                stack.Remove(stack.Length - 1, 1);
+            } else {
+                stack.Append(c);
+            }
+        }
+        return stack.ToString();
+    }
+}
+```
+
+```go
+func makeGood(s string) string {
+    stack := []byte{}
+    for i := 0; i < len(s); i++ {
+        if len(stack) > 0 && abs(int(stack[len(stack)-1])-int(s[i])) == 32 {
+            stack = stack[:len(stack)-1]
+        } else {
+            stack = append(stack, s[i])
+        }
+    }
+    return string(stack)
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun makeGood(s: String): String {
+        val stack = StringBuilder()
+        for (c in s) {
+            if (stack.isNotEmpty() &&
+                kotlin.math.abs(stack.last().code - c.code) == 32) {
+                stack.deleteCharAt(stack.length - 1)
+            } else {
+                stack.append(c)
+            }
+        }
+        return stack.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func makeGood(_ s: String) -> String {
+        var stack = [Character]()
+        for c in s {
+            if !stack.isEmpty &&
+                abs(Int(stack.last!.asciiValue!) - Int(c.asciiValue!)) == 32 {
+                stack.removeLast()
+            } else {
+                stack.append(c)
+            }
+        }
+        return String(stack)
     }
 }
 ```
@@ -336,6 +549,81 @@ class Solution {
             }
         }
         return arr.slice(0, l).join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MakeGood(string s) {
+        int l = 0;
+        char[] arr = s.ToCharArray();
+        for (int r = 0; r < arr.Length; r++) {
+            if (l > 0 && Math.Abs(arr[r] - arr[l - 1]) == 32) {
+                l--;
+            } else {
+                arr[l++] = arr[r];
+            }
+        }
+        return new string(arr, 0, l);
+    }
+}
+```
+
+```go
+func makeGood(s string) string {
+    arr := []byte(s)
+    l := 0
+    for r := 0; r < len(arr); r++ {
+        if l > 0 && abs(int(arr[r])-int(arr[l-1])) == 32 {
+            l--
+        } else {
+            arr[l] = arr[r]
+            l++
+        }
+    }
+    return string(arr[:l])
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun makeGood(s: String): String {
+        val arr = s.toCharArray()
+        var l = 0
+        for (r in arr.indices) {
+            if (l > 0 && kotlin.math.abs(arr[r].code - arr[l - 1].code) == 32) {
+                l--
+            } else {
+                arr[l++] = arr[r]
+            }
+        }
+        return String(arr, 0, l)
+    }
+}
+```
+
+```swift
+class Solution {
+    func makeGood(_ s: String) -> String {
+        var arr = Array(s)
+        var l = 0
+        for r in 0..<arr.count {
+            if l > 0 && abs(Int(arr[r].asciiValue!) - Int(arr[l - 1].asciiValue!)) == 32 {
+                l -= 1
+            } else {
+                arr[l] = arr[r]
+                l += 1
+            }
+        }
+        return String(arr[0..<l])
     }
 }
 ```

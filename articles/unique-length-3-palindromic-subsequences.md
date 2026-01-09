@@ -100,6 +100,108 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private HashSet<string> res;
+
+    public int CountPalindromicSubsequence(string s) {
+        res = new HashSet<string>();
+        Rec(s, 0, "");
+        return res.Count;
+    }
+
+    private void Rec(string s, int i, string cur) {
+        if (cur.Length == 3) {
+            if (cur[0] == cur[2]) {
+                res.Add(cur);
+            }
+            return;
+        }
+        if (i == s.Length) {
+            return;
+        }
+        Rec(s, i + 1, cur);
+        Rec(s, i + 1, cur + s[i]);
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    res := make(map[string]bool)
+
+    var rec func(i int, cur string)
+    rec = func(i int, cur string) {
+        if len(cur) == 3 {
+            if cur[0] == cur[2] {
+                res[cur] = true
+            }
+            return
+        }
+        if i == len(s) {
+            return
+        }
+        rec(i+1, cur)
+        rec(i+1, cur+string(s[i]))
+    }
+
+    rec(0, "")
+    return len(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        val res = HashSet<String>()
+
+        fun rec(i: Int, cur: String) {
+            if (cur.length == 3) {
+                if (cur[0] == cur[2]) {
+                    res.add(cur)
+                }
+                return
+            }
+            if (i == s.length) {
+                return
+            }
+            rec(i + 1, cur)
+            rec(i + 1, cur + s[i])
+        }
+
+        rec(0, "")
+        return res.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        var res = Set<String>()
+        let chars = Array(s)
+
+        func rec(_ i: Int, _ cur: String) {
+            if cur.count == 3 {
+                let curArr = Array(cur)
+                if curArr[0] == curArr[2] {
+                    res.insert(cur)
+                }
+                return
+            }
+            if i == chars.count {
+                return
+            }
+            rec(i + 1, cur)
+            rec(i + 1, cur + String(chars[i]))
+        }
+
+        rec(0, "")
+        return res.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -190,6 +292,85 @@ class Solution {
             }
         }
         return res.size;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPalindromicSubsequence(string s) {
+        var res = new HashSet<string>();
+
+        for (int i = 0; i < s.Length - 2; i++) {
+            for (int j = i + 1; j < s.Length - 1; j++) {
+                for (int k = j + 1; k < s.Length; k++) {
+                    if (s[i] != s[k]) {
+                        continue;
+                    }
+                    res.Add("" + s[i] + s[j] + s[k]);
+                }
+            }
+        }
+        return res.Count;
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    res := make(map[string]bool)
+
+    for i := 0; i < len(s)-2; i++ {
+        for j := i + 1; j < len(s)-1; j++ {
+            for k := j + 1; k < len(s); k++ {
+                if s[i] != s[k] {
+                    continue
+                }
+                res[string([]byte{s[i], s[j], s[k]})] = true
+            }
+        }
+    }
+    return len(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        val res = HashSet<String>()
+
+        for (i in 0 until s.length - 2) {
+            for (j in i + 1 until s.length - 1) {
+                for (k in j + 1 until s.length) {
+                    if (s[i] != s[k]) {
+                        continue
+                    }
+                    res.add("" + s[i] + s[j] + s[k])
+                }
+            }
+        }
+        return res.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        var res = Set<String>()
+        let chars = Array(s)
+
+        for i in 0..<(chars.count - 2) {
+            for j in (i + 1)..<(chars.count - 1) {
+                for k in (j + 1)..<chars.count {
+                    if chars[i] != chars[k] {
+                        continue
+                    }
+                    res.insert(String([chars[i], chars[j], chars[k]]))
+                }
+            }
+        }
+        return res.count
     }
 }
 ```
@@ -307,6 +488,109 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPalindromicSubsequence(string s) {
+        int res = 0;
+        for (char ends = 'a'; ends <= 'z'; ends++) {
+            for (char mid = 'a'; mid <= 'z'; mid++) {
+                string seq = "" + ends + mid + ends;
+                int idx = 0, found = 0;
+                foreach (char c in s) {
+                    if (seq[idx] == c) {
+                        idx++;
+                        if (idx == 3) {
+                            found = 1;
+                            break;
+                        }
+                    }
+                }
+                res += found;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    res := 0
+    for ends := 'a'; ends <= 'z'; ends++ {
+        for mid := 'a'; mid <= 'z'; mid++ {
+            seq := string([]rune{ends, mid, ends})
+            idx, found := 0, 0
+            for _, c := range s {
+                if rune(seq[idx]) == c {
+                    idx++
+                    if idx == 3 {
+                        found = 1
+                        break
+                    }
+                }
+            }
+            res += found
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        var res = 0
+        for (ends in 'a'..'z') {
+            for (mid in 'a'..'z') {
+                val seq = "" + ends + mid + ends
+                var idx = 0
+                var found = 0
+                for (c in s) {
+                    if (seq[idx] == c) {
+                        idx++
+                        if (idx == 3) {
+                            found = 1
+                            break
+                        }
+                    }
+                }
+                res += found
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        var res = 0
+        let chars = Array(s)
+        for ends in Character("a").asciiValue!...Character("z").asciiValue! {
+            for mid in Character("a").asciiValue!...Character("z").asciiValue! {
+                let seq = [Character(UnicodeScalar(ends)),
+                           Character(UnicodeScalar(mid)),
+                           Character(UnicodeScalar(ends))]
+                var idx = 0
+                var found = 0
+                for c in chars {
+                    if seq[idx] == c {
+                        idx += 1
+                        if idx == 3 {
+                            found = 1
+                            break
+                        }
+                    }
+                }
+                res += found
+            }
+        }
+        return res
     }
 }
 ```
@@ -441,6 +725,131 @@ class Solution {
         }
 
         return res.size;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPalindromicSubsequence(string s) {
+        var res = new HashSet<string>();
+        var left = new HashSet<char>();
+        int[] right = new int[26];
+
+        foreach (char c in s) {
+            right[c - 'a']++;
+        }
+
+        for (int i = 0; i < s.Length; i++) {
+            right[s[i] - 'a']--;
+            if (right[s[i] - 'a'] == 0) {
+                right[s[i] - 'a'] = -1;
+            }
+
+            for (int j = 0; j < 26; j++) {
+                char c = (char)(j + 'a');
+                if (left.Contains(c) && right[j] > 0) {
+                    res.Add("" + s[i] + c);
+                }
+            }
+            left.Add(s[i]);
+        }
+
+        return res.Count;
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    res := make(map[string]bool)
+    left := make(map[byte]bool)
+    right := make([]int, 26)
+
+    for i := 0; i < len(s); i++ {
+        right[s[i]-'a']++
+    }
+
+    for i := 0; i < len(s); i++ {
+        right[s[i]-'a']--
+        if right[s[i]-'a'] == 0 {
+            right[s[i]-'a'] = -1
+        }
+
+        for j := 0; j < 26; j++ {
+            c := byte('a' + j)
+            if left[c] && right[j] > 0 {
+                res[string([]byte{s[i], c})] = true
+            }
+        }
+        left[s[i]] = true
+    }
+
+    return len(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        val res = HashSet<String>()
+        val left = HashSet<Char>()
+        val right = IntArray(26)
+
+        for (c in s) {
+            right[c - 'a']++
+        }
+
+        for (i in s.indices) {
+            right[s[i] - 'a']--
+            if (right[s[i] - 'a'] == 0) {
+                right[s[i] - 'a'] = -1
+            }
+
+            for (j in 0 until 26) {
+                val c = ('a' + j)
+                if (c in left && right[j] > 0) {
+                    res.add("" + s[i] + c)
+                }
+            }
+            left.add(s[i])
+        }
+
+        return res.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        var res = Set<String>()
+        var left = Set<Character>()
+        var right = [Int](repeating: 0, count: 26)
+        let chars = Array(s)
+        let aVal = Int(Character("a").asciiValue!)
+
+        for c in chars {
+            right[Int(c.asciiValue!) - aVal] += 1
+        }
+
+        for i in 0..<chars.count {
+            let idx = Int(chars[i].asciiValue!) - aVal
+            right[idx] -= 1
+            if right[idx] == 0 {
+                right[idx] = -1
+            }
+
+            for j in 0..<26 {
+                let c = Character(UnicodeScalar(aVal + j)!)
+                if left.contains(c) && right[j] > 0 {
+                    res.insert(String(chars[i]) + String(c))
+                }
+            }
+            left.insert(chars[i])
+        }
+
+        return res.count
     }
 }
 ```
@@ -607,6 +1016,164 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountPalindromicSubsequence(string s) {
+        int n = s.Length;
+        int[][] prefix = new int[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            prefix[i] = new int[26];
+        }
+        int[] firstIndex = new int[26];
+        int[] lastIndex = new int[26];
+        Array.Fill(firstIndex, -1);
+        Array.Fill(lastIndex, -1);
+
+        for (int i = 0; i < n; i++) {
+            int j = s[i] - 'a';
+            if (firstIndex[j] == -1) {
+                firstIndex[j] = i;
+            }
+            lastIndex[j] = i;
+            for (int k = 0; k < 26; k++) {
+                prefix[i + 1][k] = prefix[i][k];
+            }
+            prefix[i + 1][j]++;
+        }
+
+        int res = 0;
+        for (int ends = 0; ends < 26; ends++) {
+            if (firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends]) {
+                continue;
+            }
+            int l = firstIndex[ends], r = lastIndex[ends];
+            for (int mid = 0; mid < 26; mid++) {
+                if (prefix[r][mid] - prefix[l + 1][mid] > 0) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    n := len(s)
+    prefix := make([][]int, n+1)
+    for i := range prefix {
+        prefix[i] = make([]int, 26)
+    }
+    firstIndex := make([]int, 26)
+    lastIndex := make([]int, 26)
+    for i := range firstIndex {
+        firstIndex[i] = -1
+        lastIndex[i] = -1
+    }
+
+    for i := 0; i < n; i++ {
+        j := int(s[i] - 'a')
+        if firstIndex[j] == -1 {
+            firstIndex[j] = i
+        }
+        lastIndex[j] = i
+        copy(prefix[i+1], prefix[i])
+        prefix[i+1][j]++
+    }
+
+    res := 0
+    for ends := 0; ends < 26; ends++ {
+        if firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends] {
+            continue
+        }
+        l, r := firstIndex[ends], lastIndex[ends]
+        for mid := 0; mid < 26; mid++ {
+            if prefix[r][mid]-prefix[l+1][mid] > 0 {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        val n = s.length
+        val prefix = Array(n + 1) { IntArray(26) }
+        val firstIndex = IntArray(26) { -1 }
+        val lastIndex = IntArray(26) { -1 }
+
+        for (i in 0 until n) {
+            val j = s[i] - 'a'
+            if (firstIndex[j] == -1) {
+                firstIndex[j] = i
+            }
+            lastIndex[j] = i
+            for (k in 0 until 26) {
+                prefix[i + 1][k] = prefix[i][k]
+            }
+            prefix[i + 1][j]++
+        }
+
+        var res = 0
+        for (ends in 0 until 26) {
+            if (firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends]) {
+                continue
+            }
+            val l = firstIndex[ends]
+            val r = lastIndex[ends]
+            for (mid in 0 until 26) {
+                if (prefix[r][mid] - prefix[l + 1][mid] > 0) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        let n = s.count
+        let chars = Array(s)
+        var prefix = [[Int]](repeating: [Int](repeating: 0, count: 26), count: n + 1)
+        var firstIndex = [Int](repeating: -1, count: 26)
+        var lastIndex = [Int](repeating: -1, count: 26)
+        let aVal = Int(Character("a").asciiValue!)
+
+        for i in 0..<n {
+            let j = Int(chars[i].asciiValue!) - aVal
+            if firstIndex[j] == -1 {
+                firstIndex[j] = i
+            }
+            lastIndex[j] = i
+            prefix[i + 1] = prefix[i]
+            prefix[i + 1][j] += 1
+        }
+
+        var res = 0
+        for ends in 0..<26 {
+            if firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends] {
+                continue
+            }
+            let l = firstIndex[ends]
+            let r = lastIndex[ends]
+            for mid in 0..<26 {
+                if prefix[r][mid] - prefix[l + 1][mid] > 0 {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -705,6 +1272,97 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPalindromicSubsequence(string s) {
+        int res = 0;
+
+        for (char c = 'a'; c <= 'z'; c++) {
+            int l = s.IndexOf(c), r = s.LastIndexOf(c);
+            if (l == -1 || l == r) continue;
+
+            var mids = new HashSet<char>();
+            for (int j = l + 1; j < r; j++) {
+                mids.Add(s[j]);
+            }
+            res += mids.Count;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    res := 0
+
+    for c := byte('a'); c <= 'z'; c++ {
+        l := strings.IndexByte(s, c)
+        r := strings.LastIndexByte(s, c)
+        if l == -1 || l == r {
+            continue
+        }
+
+        mids := make(map[byte]bool)
+        for j := l + 1; j < r; j++ {
+            mids[s[j]] = true
+        }
+        res += len(mids)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        var res = 0
+
+        for (c in 'a'..'z') {
+            val l = s.indexOf(c)
+            val r = s.lastIndexOf(c)
+            if (l == -1 || l == r) continue
+
+            val mids = HashSet<Char>()
+            for (j in l + 1 until r) {
+                mids.add(s[j])
+            }
+            res += mids.size
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        var res = 0
+        let chars = Array(s)
+
+        for i in 0..<26 {
+            let c = Character(UnicodeScalar(Int(Character("a").asciiValue!) + i)!)
+            guard let lIdx = chars.firstIndex(of: c),
+                  let rIdx = chars.lastIndex(of: c),
+                  lIdx != rIdx else {
+                continue
+            }
+
+            var mids = Set<Character>()
+            for j in (lIdx + 1)..<rIdx {
+                mids.insert(chars[j])
+            }
+            res += mids.count
+        }
+
+        return res
     }
 }
 ```
@@ -862,6 +1520,154 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountPalindromicSubsequence(string s) {
+        int[] firstIndex = new int[26];
+        int[] lastIndex = new int[26];
+        Array.Fill(firstIndex, -1);
+        Array.Fill(lastIndex, -1);
+
+        for (int i = 0; i < s.Length; i++) {
+            int j = s[i] - 'a';
+            if (firstIndex[j] == -1) {
+                firstIndex[j] = i;
+            }
+            lastIndex[j] = i;
+        }
+
+        int res = 0;
+        for (int ends = 0; ends < 26; ends++) {
+            if (firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends]) {
+                continue;
+            }
+            int l = firstIndex[ends], r = lastIndex[ends];
+            int mask = 0;
+            for (int i = l + 1; i < r; i++) {
+                int c = s[i] - 'a';
+                if ((mask & (1 << c)) != 0) {
+                    continue;
+                }
+                mask |= (1 << c);
+                res++;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countPalindromicSubsequence(s string) int {
+    firstIndex := make([]int, 26)
+    lastIndex := make([]int, 26)
+    for i := range firstIndex {
+        firstIndex[i] = -1
+        lastIndex[i] = -1
+    }
+
+    for i := 0; i < len(s); i++ {
+        j := int(s[i] - 'a')
+        if firstIndex[j] == -1 {
+            firstIndex[j] = i
+        }
+        lastIndex[j] = i
+    }
+
+    res := 0
+    for ends := 0; ends < 26; ends++ {
+        if firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends] {
+            continue
+        }
+        l, r := firstIndex[ends], lastIndex[ends]
+        mask := 0
+        for i := l + 1; i < r; i++ {
+            c := int(s[i] - 'a')
+            if mask&(1<<c) != 0 {
+                continue
+            }
+            mask |= (1 << c)
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPalindromicSubsequence(s: String): Int {
+        val firstIndex = IntArray(26) { -1 }
+        val lastIndex = IntArray(26) { -1 }
+
+        for (i in s.indices) {
+            val j = s[i] - 'a'
+            if (firstIndex[j] == -1) {
+                firstIndex[j] = i
+            }
+            lastIndex[j] = i
+        }
+
+        var res = 0
+        for (ends in 0 until 26) {
+            if (firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends]) {
+                continue
+            }
+            val l = firstIndex[ends]
+            val r = lastIndex[ends]
+            var mask = 0
+            for (i in l + 1 until r) {
+                val c = s[i] - 'a'
+                if (mask and (1 shl c) != 0) {
+                    continue
+                }
+                mask = mask or (1 shl c)
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPalindromicSubsequence(_ s: String) -> Int {
+        var firstIndex = [Int](repeating: -1, count: 26)
+        var lastIndex = [Int](repeating: -1, count: 26)
+        let chars = Array(s)
+        let aVal = Int(Character("a").asciiValue!)
+
+        for i in 0..<chars.count {
+            let j = Int(chars[i].asciiValue!) - aVal
+            if firstIndex[j] == -1 {
+                firstIndex[j] = i
+            }
+            lastIndex[j] = i
+        }
+
+        var res = 0
+        for ends in 0..<26 {
+            if firstIndex[ends] == -1 || firstIndex[ends] == lastIndex[ends] {
+                continue
+            }
+            let l = firstIndex[ends]
+            let r = lastIndex[ends]
+            var mask = 0
+            for i in (l + 1)..<r {
+                let c = Int(chars[i].asciiValue!) - aVal
+                if mask & (1 << c) != 0 {
+                    continue
+                }
+                mask |= (1 << c)
+                res += 1
+            }
+        }
+        return res
     }
 }
 ```

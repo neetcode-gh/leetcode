@@ -114,6 +114,93 @@ class Solution {
 }
 ```
 
+```go
+func maximumRemovals(s string, p string, removable []int) int {
+    n, m := len(s), len(p)
+    marked := make(map[int]bool)
+    res := 0
+
+    for _, removeIdx := range removable {
+        marked[removeIdx] = true
+
+        sIdx, pIdx := 0, 0
+        for pIdx < m && sIdx < n {
+            if !marked[sIdx] && s[sIdx] == p[pIdx] {
+                pIdx++
+            }
+            sIdx++
+        }
+
+        if pIdx != m {
+            break
+        }
+        res++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maximumRemovals(s: String, p: String, removable: IntArray): Int {
+        val n = s.length
+        val m = p.length
+        val marked = mutableSetOf<Int>()
+        var res = 0
+
+        for (removeIdx in removable) {
+            marked.add(removeIdx)
+
+            var sIdx = 0
+            var pIdx = 0
+            while (pIdx < m && sIdx < n) {
+                if (sIdx !in marked && s[sIdx] == p[pIdx]) {
+                    pIdx++
+                }
+                sIdx++
+            }
+
+            if (pIdx != m) break
+            res++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximumRemovals(_ s: String, _ p: String, _ removable: [Int]) -> Int {
+        let sArr = Array(s)
+        let pArr = Array(p)
+        let n = sArr.count
+        let m = pArr.count
+        var marked = Set<Int>()
+        var res = 0
+
+        for removeIdx in removable {
+            marked.insert(removeIdx)
+
+            var sIdx = 0
+            var pIdx = 0
+            while pIdx < m && sIdx < n {
+                if !marked.contains(sIdx) && sArr[sIdx] == pArr[pIdx] {
+                    pIdx += 1
+                }
+                sIdx += 1
+            }
+
+            if pIdx != m { break }
+            res += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +364,122 @@ class Solution {
             i2++;
         }
         return i2 === subseq.length;
+    }
+}
+```
+
+```go
+func maximumRemovals(s string, p string, removable []int) int {
+    res, l, r := 0, 0, len(removable)-1
+
+    isSubseq := func(s, subseq string, removed map[int]bool) bool {
+        i1, i2 := 0, 0
+        for i1 < len(s) && i2 < len(subseq) {
+            if removed[i1] || s[i1] != subseq[i2] {
+                i1++
+                continue
+            }
+            i1++
+            i2++
+        }
+        return i2 == len(subseq)
+    }
+
+    for l <= r {
+        m := (l + r) / 2
+        removed := make(map[int]bool)
+        for i := 0; i <= m; i++ {
+            removed[removable[i]] = true
+        }
+
+        if isSubseq(s, p, removed) {
+            if m+1 > res {
+                res = m + 1
+            }
+            l = m + 1
+        } else {
+            r = m - 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maximumRemovals(s: String, p: String, removable: IntArray): Int {
+        var res = 0
+        var l = 0
+        var r = removable.size - 1
+
+        while (l <= r) {
+            val m = (l + r) / 2
+            val removed = removable.sliceArray(0..m).toHashSet()
+
+            if (isSubseq(s, p, removed)) {
+                res = maxOf(res, m + 1)
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+
+        return res
+    }
+
+    private fun isSubseq(s: String, subseq: String, removed: Set<Int>): Boolean {
+        var i1 = 0
+        var i2 = 0
+        while (i1 < s.length && i2 < subseq.length) {
+            if (i1 in removed || s[i1] != subseq[i2]) {
+                i1++
+                continue
+            }
+            i1++
+            i2++
+        }
+        return i2 == subseq.length
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximumRemovals(_ s: String, _ p: String, _ removable: [Int]) -> Int {
+        let sArr = Array(s)
+        let pArr = Array(p)
+        var res = 0
+        var l = 0
+        var r = removable.count - 1
+
+        func isSubseq(_ removed: Set<Int>) -> Bool {
+            var i1 = 0
+            var i2 = 0
+            while i1 < sArr.count && i2 < pArr.count {
+                if removed.contains(i1) || sArr[i1] != pArr[i2] {
+                    i1 += 1
+                    continue
+                }
+                i1 += 1
+                i2 += 1
+            }
+            return i2 == pArr.count
+        }
+
+        while l <= r {
+            let m = (l + r) / 2
+            let removed = Set(removable[0...m])
+
+            if isSubseq(removed) {
+                res = max(res, m + 1)
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -445,6 +648,123 @@ class Solution {
         }
 
         return l;
+    }
+}
+```
+
+```go
+func maximumRemovals(s string, p string, removable []int) int {
+    l, r := 0, len(removable)
+    n, m := len(s), len(p)
+
+    isSubseq := func(tmpS []byte) bool {
+        i1, i2 := 0, 0
+        for i1 < n && i2 < m {
+            if tmpS[i1] == p[i2] {
+                i2++
+            }
+            i1++
+        }
+        return i2 == m
+    }
+
+    for l < r {
+        mid := l + (r-l)/2
+        tmpS := []byte(s)
+
+        for i := 0; i <= mid; i++ {
+            tmpS[removable[i]] = '#'
+        }
+
+        if isSubseq(tmpS) {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+
+    return l
+}
+```
+
+```kotlin
+class Solution {
+    fun maximumRemovals(s: String, p: String, removable: IntArray): Int {
+        var l = 0
+        var r = removable.size
+        val n = s.length
+        val m = p.length
+
+        fun isSubseq(tmpS: CharArray): Boolean {
+            var i1 = 0
+            var i2 = 0
+            while (i1 < n && i2 < m) {
+                if (tmpS[i1] == p[i2]) {
+                    i2++
+                }
+                i1++
+            }
+            return i2 == m
+        }
+
+        while (l < r) {
+            val mid = l + (r - l) / 2
+            val tmpS = s.toCharArray()
+
+            for (i in 0..mid) {
+                tmpS[removable[i]] = '#'
+            }
+
+            if (isSubseq(tmpS)) {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximumRemovals(_ s: String, _ p: String, _ removable: [Int]) -> Int {
+        var l = 0
+        var r = removable.count
+        var sArr = Array(s)
+        let pArr = Array(p)
+        let n = sArr.count
+        let m = pArr.count
+
+        func isSubseq(_ tmpS: [Character]) -> Bool {
+            var i1 = 0
+            var i2 = 0
+            while i1 < n && i2 < m {
+                if tmpS[i1] == pArr[i2] {
+                    i2 += 1
+                }
+                i1 += 1
+            }
+            return i2 == m
+        }
+
+        while l < r {
+            let mid = l + (r - l) / 2
+            var tmpS = sArr
+
+            for i in 0...mid {
+                tmpS[removable[i]] = "#"
+            }
+
+            if isSubseq(tmpS) {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+
+        return l
     }
 }
 ```

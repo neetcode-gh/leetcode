@@ -164,6 +164,112 @@ public class Solution {
 }
 ```
 
+```go
+func canPartitionKSubsets(nums []int, k int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%k != 0 {
+        return false
+    }
+
+    target := sum / k
+    sort.Sort(sort.Reverse(sort.IntSlice(nums)))
+    used := make([]bool, len(nums))
+
+    var backtrack func(i, k, subsetSum int) bool
+    backtrack = func(i, k, subsetSum int) bool {
+        if k == 0 {
+            return true
+        }
+        if subsetSum == target {
+            return backtrack(0, k-1, 0)
+        }
+        for j := i; j < len(nums); j++ {
+            if used[j] || subsetSum+nums[j] > target {
+                continue
+            }
+            used[j] = true
+            if backtrack(j+1, k, subsetSum+nums[j]) {
+                return true
+            }
+            used[j] = false
+        }
+        return false
+    }
+
+    return backtrack(0, k, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartitionKSubsets(nums: IntArray, k: Int): Boolean {
+        val sum = nums.sum()
+        if (sum % k != 0) return false
+
+        val target = sum / k
+        nums.sortDescending()
+        val used = BooleanArray(nums.size)
+
+        fun backtrack(i: Int, k: Int, subsetSum: Int): Boolean {
+            if (k == 0) return true
+            if (subsetSum == target) return backtrack(0, k - 1, 0)
+
+            for (j in i until nums.size) {
+                if (used[j] || subsetSum + nums[j] > target) continue
+
+                used[j] = true
+                if (backtrack(j + 1, k, subsetSum + nums[j])) return true
+                used[j] = false
+            }
+
+            return false
+        }
+
+        return backtrack(0, k, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPartitionKSubsets(_ nums: [Int], _ k: Int) -> Bool {
+        let sum = nums.reduce(0, +)
+        if sum % k != 0 {
+            return false
+        }
+
+        let target = sum / k
+        var nums = nums.sorted(by: >)
+        var used = [Bool](repeating: false, count: nums.count)
+
+        func backtrack(_ i: Int, _ k: Int, _ subsetSum: Int) -> Bool {
+            if k == 0 {
+                return true
+            }
+            if subsetSum == target {
+                return backtrack(0, k - 1, 0)
+            }
+            for j in i..<nums.count {
+                if used[j] || subsetSum + nums[j] > target {
+                    continue
+                }
+                used[j] = true
+                if backtrack(j + 1, k, subsetSum + nums[j]) {
+                    return true
+                }
+                used[j] = false
+            }
+            return false
+        }
+
+        return backtrack(0, k, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -357,6 +463,120 @@ public class Solution {
 }
 ```
 
+```go
+func canPartitionKSubsets(nums []int, k int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%k != 0 {
+        return false
+    }
+
+    target := sum / k
+    sort.Sort(sort.Reverse(sort.IntSlice(nums)))
+    used := make([]bool, len(nums))
+
+    var backtrack func(i, k, subsetSum int) bool
+    backtrack = func(i, k, subsetSum int) bool {
+        if k == 0 {
+            return true
+        }
+        if subsetSum == target {
+            return backtrack(0, k-1, 0)
+        }
+        for j := i; j < len(nums); j++ {
+            if used[j] || subsetSum+nums[j] > target {
+                continue
+            }
+            used[j] = true
+            if backtrack(j+1, k, subsetSum+nums[j]) {
+                return true
+            }
+            used[j] = false
+            if subsetSum == 0 { // Pruning
+                return false
+            }
+        }
+        return false
+    }
+
+    return backtrack(0, k, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartitionKSubsets(nums: IntArray, k: Int): Boolean {
+        val total = nums.sum()
+        if (total % k != 0) return false
+
+        nums.sortDescending()
+        val target = total / k
+        val used = BooleanArray(nums.size)
+
+        fun backtrack(i: Int, k: Int, subsetSum: Int): Boolean {
+            if (k == 0) return true
+            if (subsetSum == target) return backtrack(0, k - 1, 0)
+
+            for (j in i until nums.size) {
+                if (used[j] || subsetSum + nums[j] > target) continue
+
+                used[j] = true
+                if (backtrack(j + 1, k, subsetSum + nums[j])) return true
+                used[j] = false
+
+                if (subsetSum == 0) return false // Pruning
+            }
+
+            return false
+        }
+
+        return backtrack(0, k, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPartitionKSubsets(_ nums: [Int], _ k: Int) -> Bool {
+        let total = nums.reduce(0, +)
+        if total % k != 0 {
+            return false
+        }
+
+        var nums = nums.sorted(by: >)
+        let target = total / k
+        var used = [Bool](repeating: false, count: nums.count)
+
+        func backtrack(_ i: Int, _ k: Int, _ subsetSum: Int) -> Bool {
+            if k == 0 {
+                return true
+            }
+            if subsetSum == target {
+                return backtrack(0, k - 1, 0)
+            }
+            for j in i..<nums.count {
+                if used[j] || subsetSum + nums[j] > target {
+                    continue
+                }
+                used[j] = true
+                if backtrack(j + 1, k, subsetSum + nums[j]) {
+                    return true
+                }
+                used[j] = false
+                if subsetSum == 0 { // Pruning
+                    return false
+                }
+            }
+            return false
+        }
+
+        return backtrack(0, k, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,6 +756,115 @@ public class Solution {
         }
 
         return Backtrack(0, k, 0, (1 << n) - 1);
+    }
+}
+```
+
+```go
+func canPartitionKSubsets(nums []int, k int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%k != 0 {
+        return false
+    }
+
+    target := sum / k
+    n := len(nums)
+    sort.Sort(sort.Reverse(sort.IntSlice(nums)))
+
+    var backtrack func(i, k, subsetSum, mask int) bool
+    backtrack = func(i, k, subsetSum, mask int) bool {
+        if k == 0 {
+            return true
+        }
+        if subsetSum == target {
+            return backtrack(0, k-1, 0, mask)
+        }
+        for j := i; j < n; j++ {
+            if mask&(1<<j) == 0 || subsetSum+nums[j] > target {
+                continue
+            }
+            if backtrack(j+1, k, subsetSum+nums[j], mask^(1<<j)) {
+                return true
+            }
+            if subsetSum == 0 {
+                return false
+            }
+        }
+        return false
+    }
+
+    return backtrack(0, k, 0, (1<<n)-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartitionKSubsets(nums: IntArray, k: Int): Boolean {
+        val total = nums.sum()
+        if (total % k != 0) return false
+
+        nums.sortDescending()
+        val target = total / k
+        val n = nums.size
+
+        fun backtrack(i: Int, k: Int, subsetSum: Int, mask: Int): Boolean {
+            if (k == 0) return true
+            if (subsetSum == target) return backtrack(0, k - 1, 0, mask)
+
+            for (j in i until n) {
+                if (mask and (1 shl j) == 0 || subsetSum + nums[j] > target) continue
+
+                if (backtrack(j + 1, k, subsetSum + nums[j], mask xor (1 shl j)))
+                    return true
+
+                if (subsetSum == 0) return false
+            }
+
+            return false
+        }
+
+        return backtrack(0, k, 0, (1 shl n) - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPartitionKSubsets(_ nums: [Int], _ k: Int) -> Bool {
+        let total = nums.reduce(0, +)
+        if total % k != 0 {
+            return false
+        }
+
+        var nums = nums.sorted(by: >)
+        let target = total / k
+        let n = nums.count
+
+        func backtrack(_ i: Int, _ k: Int, _ subsetSum: Int, _ mask: Int) -> Bool {
+            if k == 0 {
+                return true
+            }
+            if subsetSum == target {
+                return backtrack(0, k - 1, 0, mask)
+            }
+            for j in i..<n {
+                if mask & (1 << j) == 0 || subsetSum + nums[j] > target {
+                    continue
+                }
+                if backtrack(j + 1, k, subsetSum + nums[j], mask ^ (1 << j)) {
+                    return true
+                }
+                if subsetSum == 0 {
+                    return false
+                }
+            }
+            return false
+        }
+
+        return backtrack(0, k, 0, (1 << n) - 1)
     }
 }
 ```
@@ -786,6 +1115,157 @@ public class Solution {
 }
 ```
 
+```go
+func canPartitionKSubsets(nums []int, k int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%k != 0 {
+        return false
+    }
+
+    target := sum / k
+    n := len(nums)
+    sort.Sort(sort.Reverse(sort.IntSlice(nums)))
+    dp := make([]int, 1<<n)
+    for i := range dp {
+        dp[i] = -1
+    }
+
+    var backtrack func(i, k, subsetSum, mask int) bool
+    backtrack = func(i, k, subsetSum, mask int) bool {
+        if dp[mask] != -1 {
+            return dp[mask] == 1
+        }
+        if k == 0 {
+            dp[mask] = 1
+            return true
+        }
+        if subsetSum == target {
+            result := backtrack(0, k-1, 0, mask)
+            if result {
+                dp[mask] = 1
+            } else {
+                dp[mask] = 0
+            }
+            return result
+        }
+        for j := i; j < n; j++ {
+            if mask&(1<<j) == 0 || subsetSum+nums[j] > target {
+                continue
+            }
+            if backtrack(j+1, k, subsetSum+nums[j], mask^(1<<j)) {
+                dp[mask] = 1
+                return true
+            }
+            if subsetSum == 0 {
+                break
+            }
+        }
+        dp[mask] = 0
+        return false
+    }
+
+    return backtrack(0, k, 0, (1<<n)-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartitionKSubsets(nums: IntArray, k: Int): Boolean {
+        val total = nums.sum()
+        if (total % k != 0) return false
+
+        nums.sortDescending()
+        val target = total / k
+        val n = nums.size
+        val dp = arrayOfNulls<Boolean>(1 shl n)
+
+        fun backtrack(i: Int, k: Int, subsetSum: Int, mask: Int): Boolean {
+            dp[mask]?.let { return it }
+            if (k == 0) {
+                dp[mask] = true
+                return true
+            }
+            if (subsetSum == target) {
+                dp[mask] = backtrack(0, k - 1, 0, mask)
+                return dp[mask]!!
+            }
+
+            for (j in i until n) {
+                if (mask and (1 shl j) == 0 || subsetSum + nums[j] > target) continue
+
+                if (backtrack(j + 1, k, subsetSum + nums[j], mask xor (1 shl j))) {
+                    dp[mask] = true
+                    return true
+                }
+
+                if (subsetSum == 0) {
+                    dp[mask] = false
+                    return false
+                }
+            }
+
+            dp[mask] = false
+            return false
+        }
+
+        return backtrack(0, k, 0, (1 shl n) - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPartitionKSubsets(_ nums: [Int], _ k: Int) -> Bool {
+        let total = nums.reduce(0, +)
+        if total % k != 0 {
+            return false
+        }
+
+        var nums = nums.sorted(by: >)
+        let target = total / k
+        let n = nums.count
+        var dp = [Int: Bool]()
+
+        func backtrack(_ i: Int, _ k: Int, _ subsetSum: Int, _ mask: Int) -> Bool {
+            if let cached = dp[mask] {
+                return cached
+            }
+            if k == 0 {
+                dp[mask] = true
+                return true
+            }
+            if subsetSum == target {
+                let result = backtrack(0, k - 1, 0, mask)
+                dp[mask] = result
+                return result
+            }
+
+            for j in i..<n {
+                if mask & (1 << j) == 0 || subsetSum + nums[j] > target {
+                    continue
+                }
+                if backtrack(j + 1, k, subsetSum + nums[j], mask ^ (1 << j)) {
+                    dp[mask] = true
+                    return true
+                }
+                if subsetSum == 0 {
+                    dp[mask] = false
+                    return false
+                }
+            }
+
+            dp[mask] = false
+            return false
+        }
+
+        return backtrack(0, k, 0, (1 << n) - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -934,6 +1414,95 @@ public class Solution {
         }
 
         return dp[N - 1] == 0;
+    }
+}
+```
+
+```go
+func canPartitionKSubsets(nums []int, k int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%k != 0 {
+        return false
+    }
+
+    target := sum / k
+    n := len(nums)
+    N := 1 << n
+    dp := make([]int, N)
+    for i := 1; i < N; i++ {
+        dp[i] = -1
+    }
+
+    for mask := 0; mask < N; mask++ {
+        if dp[mask] == -1 {
+            continue
+        }
+        for i := 0; i < n; i++ {
+            if mask&(1<<i) == 0 && dp[mask]+nums[i] <= target {
+                dp[mask|(1<<i)] = (dp[mask] + nums[i]) % target
+            }
+        }
+    }
+
+    return dp[N-1] == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartitionKSubsets(nums: IntArray, k: Int): Boolean {
+        val total = nums.sum()
+        if (total % k != 0) return false
+
+        val target = total / k
+        val n = nums.size
+        val N = 1 shl n
+        val dp = IntArray(N) { -1 }
+        dp[0] = 0
+
+        for (mask in 0 until N) {
+            if (dp[mask] == -1) continue
+            for (i in 0 until n) {
+                if (mask and (1 shl i) == 0 && dp[mask] + nums[i] <= target) {
+                    dp[mask or (1 shl i)] = (dp[mask] + nums[i]) % target
+                }
+            }
+        }
+
+        return dp[N - 1] == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPartitionKSubsets(_ nums: [Int], _ k: Int) -> Bool {
+        let total = nums.reduce(0, +)
+        if total % k != 0 {
+            return false
+        }
+
+        let target = total / k
+        let n = nums.count
+        let N = 1 << n
+        var dp = [Int](repeating: -1, count: N)
+        dp[0] = 0
+
+        for mask in 0..<N {
+            if dp[mask] == -1 {
+                continue
+            }
+            for i in 0..<n {
+                if mask & (1 << i) == 0 && dp[mask] + nums[i] <= target {
+                    dp[mask | (1 << i)] = (dp[mask] + nums[i]) % target
+                }
+            }
+        }
+
+        return dp[N - 1] == 0
     }
 }
 ```

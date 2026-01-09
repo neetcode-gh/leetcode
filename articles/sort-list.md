@@ -135,6 +135,107 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func sortList(head *ListNode) *ListNode {
+    if head == nil {
+        return nil
+    }
+
+    arr := []int{}
+    cur := head
+
+    for cur != nil {
+        arr = append(arr, cur.Val)
+        cur = cur.Next
+    }
+
+    sort.Ints(arr)
+    cur = head
+    for _, val := range arr {
+        cur.Val = val
+        cur = cur.Next
+    }
+
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun sortList(head: ListNode?): ListNode? {
+        if (head == null) return null
+
+        val arr = mutableListOf<Int>()
+        var cur = head
+
+        while (cur != null) {
+            arr.add(cur.`val`)
+            cur = cur.next
+        }
+
+        arr.sort()
+        cur = head
+        for (value in arr) {
+            cur!!.`val` = value
+            cur = cur.next
+        }
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func sortList(_ head: ListNode?) -> ListNode? {
+        guard head != nil else { return nil }
+
+        var arr = [Int]()
+        var cur = head
+
+        while cur != nil {
+            arr.append(cur!.val)
+            cur = cur?.next
+        }
+
+        arr.sort()
+        cur = head
+        for val in arr {
+            cur?.val = val
+            cur = cur?.next
+        }
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +500,263 @@ class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode left = head;
+        ListNode right = GetMid(head);
+        ListNode temp = right.next;
+        right.next = null;
+        right = temp;
+
+        left = SortList(left);
+        right = SortList(right);
+        return Merge(left, right);
+    }
+
+    private ListNode GetMid(ListNode head) {
+        ListNode slow = head, fast = head.next;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+
+    private ListNode Merge(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+            }
+            tail = tail.next;
+        }
+
+        if (list1 != null) {
+            tail.next = list1;
+        }
+        if (list2 != null) {
+            tail.next = list2;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func sortList(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+
+    left := head
+    right := getMid(head)
+    temp := right.Next
+    right.Next = nil
+    right = temp
+
+    left = sortList(left)
+    right = sortList(right)
+    return merge(left, right)
+}
+
+func getMid(head *ListNode) *ListNode {
+    slow, fast := head, head.Next
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+    return slow
+}
+
+func merge(list1, list2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    tail := dummy
+
+    for list1 != nil && list2 != nil {
+        if list1.Val < list2.Val {
+            tail.Next = list1
+            list1 = list1.Next
+        } else {
+            tail.Next = list2
+            list2 = list2.Next
+        }
+        tail = tail.Next
+    }
+
+    if list1 != nil {
+        tail.Next = list1
+    }
+    if list2 != nil {
+        tail.Next = list2
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun sortList(head: ListNode?): ListNode? {
+        if (head?.next == null) {
+            return head
+        }
+
+        var left = head
+        var right = getMid(head)
+        val temp = right?.next
+        right?.next = null
+        right = temp
+
+        left = sortList(left)
+        right = sortList(right)
+        return merge(left, right)
+    }
+
+    private fun getMid(head: ListNode?): ListNode? {
+        var slow = head
+        var fast = head?.next
+        while (fast?.next != null) {
+            slow = slow?.next
+            fast = fast.next?.next
+        }
+        return slow
+    }
+
+    private fun merge(list1: ListNode?, list2: ListNode?): ListNode? {
+        val dummy = ListNode(0)
+        var tail: ListNode? = dummy
+        var l1 = list1
+        var l2 = list2
+
+        while (l1 != null && l2 != null) {
+            if (l1.`val` < l2.`val`) {
+                tail?.next = l1
+                l1 = l1.next
+            } else {
+                tail?.next = l2
+                l2 = l2.next
+            }
+            tail = tail?.next
+        }
+
+        if (l1 != null) {
+            tail?.next = l1
+        }
+        if (l2 != null) {
+            tail?.next = l2
+        }
+
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func sortList(_ head: ListNode?) -> ListNode? {
+        guard head != nil && head?.next != nil else {
+            return head
+        }
+
+        var left = head
+        var right = getMid(head)
+        let temp = right?.next
+        right?.next = nil
+        right = temp
+
+        left = sortList(left)
+        right = sortList(right)
+        return merge(left, right)
+    }
+
+    private func getMid(_ head: ListNode?) -> ListNode? {
+        var slow = head
+        var fast = head?.next
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next?.next
+        }
+        return slow
+    }
+
+    private func merge(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        var tail: ListNode? = dummy
+        var l1 = list1
+        var l2 = list2
+
+        while l1 != nil && l2 != nil {
+            if l1!.val < l2!.val {
+                tail?.next = l1
+                l1 = l1?.next
+            } else {
+                tail?.next = l2
+                l2 = l2?.next
+            }
+            tail = tail?.next
+        }
+
+        if l1 != nil {
+            tail?.next = l1
+        }
+        if l2 != nil {
+            tail?.next = l2
+        }
+
+        return dummy.next
     }
 }
 ```
@@ -720,6 +1078,323 @@ class Solution {
 
         tail.next = list1 || list2;
         return dummy.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SortList(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        int length = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            length++;
+            cur = cur.next;
+        }
+
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        int step = 1;
+
+        while (step < length) {
+            ListNode prev = dummy, curr = dummy.next;
+            while (curr != null) {
+                ListNode left = curr;
+                ListNode right = Split(left, step);
+                curr = Split(right, step);
+                ListNode merged = Merge(left, right);
+                prev.next = merged;
+                while (prev.next != null) {
+                    prev = prev.next;
+                }
+            }
+            step *= 2;
+        }
+
+        return dummy.next;
+    }
+
+    private ListNode Split(ListNode head, int step) {
+        if (head == null) return null;
+        for (int i = 0; i < step - 1 && head.next != null; i++) {
+            head = head.next;
+        }
+        ListNode nextPart = head.next;
+        head.next = null;
+        return nextPart;
+    }
+
+    private ListNode Merge(ListNode list1, ListNode list2) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+
+        while (list1 != null && list2 != null) {
+            if (list1.val < list2.val) {
+                tail.next = list1;
+                list1 = list1.next;
+            } else {
+                tail.next = list2;
+                list2 = list2.next;
+            }
+            tail = tail.next;
+        }
+
+        tail.next = (list1 != null) ? list1 : list2;
+        return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func sortList(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+
+    length := 0
+    cur := head
+    for cur != nil {
+        length++
+        cur = cur.Next
+    }
+
+    dummy := &ListNode{Val: 0, Next: head}
+    step := 1
+
+    for step < length {
+        prev, curr := dummy, dummy.Next
+        for curr != nil {
+            left := curr
+            right := split(left, step)
+            curr = split(right, step)
+            merged := merge(left, right)
+            prev.Next = merged
+            for prev.Next != nil {
+                prev = prev.Next
+            }
+        }
+        step *= 2
+    }
+
+    return dummy.Next
+}
+
+func split(head *ListNode, step int) *ListNode {
+    if head == nil {
+        return nil
+    }
+    for i := 0; i < step-1 && head.Next != nil; i++ {
+        head = head.Next
+    }
+    nextPart := head.Next
+    head.Next = nil
+    return nextPart
+}
+
+func merge(list1, list2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    tail := dummy
+
+    for list1 != nil && list2 != nil {
+        if list1.Val < list2.Val {
+            tail.Next = list1
+            list1 = list1.Next
+        } else {
+            tail.Next = list2
+            list2 = list2.Next
+        }
+        tail = tail.Next
+    }
+
+    if list1 != nil {
+        tail.Next = list1
+    } else {
+        tail.Next = list2
+    }
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun sortList(head: ListNode?): ListNode? {
+        if (head?.next == null) {
+            return head
+        }
+
+        var length = 0
+        var cur = head
+        while (cur != null) {
+            length++
+            cur = cur.next
+        }
+
+        val dummy = ListNode(0)
+        dummy.next = head
+        var step = 1
+
+        while (step < length) {
+            var prev: ListNode? = dummy
+            var curr = dummy.next
+            while (curr != null) {
+                val left = curr
+                val right = split(left, step)
+                curr = split(right, step)
+                val merged = merge(left, right)
+                prev?.next = merged
+                while (prev?.next != null) {
+                    prev = prev.next
+                }
+            }
+            step *= 2
+        }
+
+        return dummy.next
+    }
+
+    private fun split(head: ListNode?, step: Int): ListNode? {
+        var h = head
+        if (h == null) return null
+        for (i in 0 until step - 1) {
+            if (h?.next == null) break
+            h = h.next
+        }
+        val nextPart = h?.next
+        h?.next = null
+        return nextPart
+    }
+
+    private fun merge(list1: ListNode?, list2: ListNode?): ListNode? {
+        val dummy = ListNode(0)
+        var tail: ListNode? = dummy
+        var l1 = list1
+        var l2 = list2
+
+        while (l1 != null && l2 != null) {
+            if (l1.`val` < l2.`val`) {
+                tail?.next = l1
+                l1 = l1.next
+            } else {
+                tail?.next = l2
+                l2 = l2.next
+            }
+            tail = tail?.next
+        }
+
+        tail?.next = l1 ?: l2
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func sortList(_ head: ListNode?) -> ListNode? {
+        guard head != nil && head?.next != nil else {
+            return head
+        }
+
+        var length = 0
+        var cur = head
+        while cur != nil {
+            length += 1
+            cur = cur?.next
+        }
+
+        let dummy = ListNode(0)
+        dummy.next = head
+        var step = 1
+
+        while step < length {
+            var prev: ListNode? = dummy
+            var curr = dummy.next
+            while curr != nil {
+                let left = curr
+                let right = split(left, step)
+                curr = split(right, step)
+                let merged = merge(left, right)
+                prev?.next = merged
+                while prev?.next != nil {
+                    prev = prev?.next
+                }
+            }
+            step *= 2
+        }
+
+        return dummy.next
+    }
+
+    private func split(_ head: ListNode?, _ step: Int) -> ListNode? {
+        guard var h = head else { return nil }
+        for _ in 0..<(step - 1) {
+            guard h.next != nil else { break }
+            h = h.next!
+        }
+        let nextPart = h.next
+        h.next = nil
+        return nextPart
+    }
+
+    private func merge(_ list1: ListNode?, _ list2: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        var tail: ListNode? = dummy
+        var l1 = list1
+        var l2 = list2
+
+        while l1 != nil && l2 != nil {
+            if l1!.val < l2!.val {
+                tail?.next = l1
+                l1 = l1?.next
+            } else {
+                tail?.next = l2
+                l2 = l2?.next
+            }
+            tail = tail?.next
+        }
+
+        tail?.next = l1 ?? l2
+        return dummy.next
     }
 }
 ```

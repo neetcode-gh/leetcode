@@ -80,6 +80,79 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountLetters(string s) {
+        int total = 0;
+        for (int left = 0, right = 0; right <= s.Length; right++) {
+            if (right == s.Length || s[left] != s[right]) {
+                int lenSubstring = right - left;
+                total += (1 + lenSubstring) * lenSubstring / 2;
+                left = right;
+            }
+        }
+
+        return total;
+    }
+}
+```
+
+```go
+func countLetters(s string) int {
+    total := 0
+    left := 0
+
+    for right := 0; right <= len(s); right++ {
+        if right == len(s) || s[left] != s[right] {
+            lenSubstring := right - left
+            total += (1 + lenSubstring) * lenSubstring / 2
+            left = right
+        }
+    }
+
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun countLetters(s: String): Int {
+        var total = 0
+        var left = 0
+
+        for (right in 0..s.length) {
+            if (right == s.length || s[left] != s[right]) {
+                val lenSubstring = right - left
+                total += (1 + lenSubstring) * lenSubstring / 2
+                left = right
+            }
+        }
+
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    func countLetters(_ s: String) -> Int {
+        var total = 0
+        let chars = Array(s)
+        var left = 0
+
+        for right in 0...chars.count {
+            if right == chars.count || chars[left] != chars[right] {
+                let lenSubstring = right - left
+                total += (1 + lenSubstring) * lenSubstring / 2
+                left = right
+            }
+        }
+
+        return total
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -169,7 +242,7 @@ class Solution {
         let substrings = new Array(s.length);
         let total = 1;
         substrings[0] = 1;
-        
+
         for (let i = 1; i < s.length; i++) {
             if (s[i] === s[i - 1]) {
                 substrings[i] = substrings[i - 1] + 1;
@@ -181,6 +254,93 @@ class Solution {
         }
 
         return total;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountLetters(string s) {
+        int[] substrings = new int[s.Length];
+        int total = 1;
+        substrings[0] = 1;
+
+        for (int i = 1; i < s.Length; i++) {
+            if (s[i] == s[i - 1]) {
+                substrings[i] = substrings[i - 1] + 1;
+            } else {
+                substrings[i] = 1;
+            }
+
+            total += substrings[i];
+        }
+
+        return total;
+    }
+}
+```
+
+```go
+func countLetters(s string) int {
+    substrings := make([]int, len(s))
+    total := 1
+    substrings[0] = 1
+
+    for i := 1; i < len(s); i++ {
+        if s[i] == s[i-1] {
+            substrings[i] = substrings[i-1] + 1
+        } else {
+            substrings[i] = 1
+        }
+
+        total += substrings[i]
+    }
+
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun countLetters(s: String): Int {
+        val substrings = IntArray(s.length)
+        var total = 1
+        substrings[0] = 1
+
+        for (i in 1 until s.length) {
+            substrings[i] = if (s[i] == s[i - 1]) {
+                substrings[i - 1] + 1
+            } else {
+                1
+            }
+
+            total += substrings[i]
+        }
+
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    func countLetters(_ s: String) -> Int {
+        let chars = Array(s)
+        var substrings = [Int](repeating: 0, count: chars.count)
+        var total = 1
+        substrings[0] = 1
+
+        for i in 1..<chars.count {
+            if chars[i] == chars[i - 1] {
+                substrings[i] = substrings[i - 1] + 1
+            } else {
+                substrings[i] = 1
+            }
+
+            total += substrings[i]
+        }
+
+        return total
     }
 }
 ```
@@ -278,6 +438,85 @@ class Solution {
         }
 
         return total;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountLetters(string s) {
+        int total = 1, count = 1;
+
+        for (int i = 1; i < s.Length; i++) {
+            if (s[i] == s[i - 1]) {
+                count++;
+            } else {
+                count = 1;
+            }
+
+            total += count;
+        }
+
+        return total;
+    }
+}
+```
+
+```go
+func countLetters(s string) int {
+    total, count := 1, 1
+
+    for i := 1; i < len(s); i++ {
+        if s[i] == s[i-1] {
+            count++
+        } else {
+            count = 1
+        }
+        total += count
+    }
+
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun countLetters(s: String): Int {
+        var total = 1
+        var count = 1
+
+        for (i in 1 until s.length) {
+            if (s[i] == s[i - 1]) {
+                count++
+            } else {
+                count = 1
+            }
+
+            total += count
+        }
+
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    func countLetters(_ s: String) -> Int {
+        let chars = Array(s)
+        var total = 1, count = 1
+
+        for i in 1..<chars.count {
+            if chars[i] == chars[i - 1] {
+                count += 1
+            } else {
+                count = 1
+            }
+
+            total += count
+        }
+
+        return total
     }
 }
 ```

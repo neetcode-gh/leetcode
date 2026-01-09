@@ -108,6 +108,67 @@ public class Solution {
 }
 ```
 
+```go
+func moveZeroes(nums []int) {
+    tmp := []int{}
+    for _, num := range nums {
+        if num != 0 {
+            tmp = append(tmp, num)
+        }
+    }
+
+    for i := 0; i < len(nums); i++ {
+        if i < len(tmp) {
+            nums[i] = tmp[i]
+        } else {
+            nums[i] = 0
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun moveZeroes(nums: IntArray) {
+        val tmp = mutableListOf<Int>()
+        for (num in nums) {
+            if (num != 0) {
+                tmp.add(num)
+            }
+        }
+
+        for (i in nums.indices) {
+            if (i < tmp.size) {
+                nums[i] = tmp[i]
+            } else {
+                nums[i] = 0
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func moveZeroes(_ nums: inout [Int]) {
+        var tmp = [Int]()
+        for num in nums {
+            if num != 0 {
+                tmp.append(num)
+            }
+        }
+
+        for i in 0..<nums.count {
+            if i < tmp.count {
+                nums[i] = tmp[i]
+            } else {
+                nums[i] = 0
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -212,6 +273,59 @@ public class Solution {
 }
 ```
 
+```go
+func moveZeroes(nums []int) {
+    l := 0
+    for r := 0; r < len(nums); r++ {
+        if nums[r] != 0 {
+            nums[l] = nums[r]
+            l++
+        }
+    }
+
+    for l < len(nums) {
+        nums[l] = 0
+        l++
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun moveZeroes(nums: IntArray) {
+        var l = 0
+        for (r in nums.indices) {
+            if (nums[r] != 0) {
+                nums[l++] = nums[r]
+            }
+        }
+
+        while (l < nums.size) {
+            nums[l++] = 0
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func moveZeroes(_ nums: inout [Int]) {
+        var l = 0
+        for r in 0..<nums.count {
+            if nums[r] != 0 {
+                nums[l] = nums[r]
+                l += 1
+            }
+        }
+
+        while l < nums.count {
+            nums[l] = 0
+            l += 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +408,48 @@ public class Solution {
                 nums[l] = nums[r];
                 nums[r] = temp;
                 l++;
+            }
+        }
+    }
+}
+```
+
+```go
+func moveZeroes(nums []int) {
+    l := 0
+    for r := 0; r < len(nums); r++ {
+        if nums[r] != 0 {
+            nums[l], nums[r] = nums[r], nums[l]
+            l++
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun moveZeroes(nums: IntArray) {
+        var l = 0
+        for (r in nums.indices) {
+            if (nums[r] != 0) {
+                val temp = nums[l]
+                nums[l] = nums[r]
+                nums[r] = temp
+                l++
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func moveZeroes(_ nums: inout [Int]) {
+        var l = 0
+        for r in 0..<nums.count {
+            if nums[r] != 0 {
+                nums.swapAt(l, r)
+                l += 1
             }
         }
     }

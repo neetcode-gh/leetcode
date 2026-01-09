@@ -133,6 +133,124 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FurthestBuilding(int[] heights, int bricks, int ladders) {
+        int n = heights.Length;
+
+        for (int i = 1; i < n; i++) {
+            if (ladders >= i) continue;
+
+            List<int> diffs = new List<int>();
+            for (int j = 0; j < i; j++) {
+                if (heights[j + 1] > heights[j]) {
+                    diffs.Add(heights[j + 1] - heights[j]);
+                }
+            }
+
+            diffs.Sort();
+            long brickSum = 0;
+            for (int j = 0; j < diffs.Count - ladders; j++) {
+                brickSum += diffs[j];
+            }
+
+            if (brickSum > bricks) return i - 1;
+        }
+
+        return n - 1;
+    }
+}
+```
+
+```go
+func furthestBuilding(heights []int, bricks int, ladders int) int {
+    n := len(heights)
+
+    for i := 1; i < n; i++ {
+        if ladders >= i {
+            continue
+        }
+
+        diffs := []int{}
+        for j := 0; j < i; j++ {
+            if heights[j+1] > heights[j] {
+                diffs = append(diffs, heights[j+1]-heights[j])
+            }
+        }
+
+        sort.Ints(diffs)
+        brickSum := 0
+        for j := 0; j < len(diffs)-ladders; j++ {
+            brickSum += diffs[j]
+        }
+
+        if brickSum > bricks {
+            return i - 1
+        }
+    }
+
+    return n - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun furthestBuilding(heights: IntArray, bricks: Int, ladders: Int): Int {
+        val n = heights.size
+
+        for (i in 1 until n) {
+            if (ladders >= i) continue
+
+            val diffs = mutableListOf<Int>()
+            for (j in 0 until i) {
+                if (heights[j + 1] > heights[j]) {
+                    diffs.add(heights[j + 1] - heights[j])
+                }
+            }
+
+            diffs.sort()
+            var brickSum = 0L
+            for (j in 0 until diffs.size - ladders) {
+                brickSum += diffs[j]
+            }
+
+            if (brickSum > bricks) return i - 1
+        }
+
+        return n - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
+        let n = heights.count
+
+        for i in 1..<n {
+            if ladders >= i { continue }
+
+            var diffs = [Int]()
+            for j in 0..<i {
+                if heights[j + 1] > heights[j] {
+                    diffs.append(heights[j + 1] - heights[j])
+                }
+            }
+
+            diffs.sort()
+            var brickSum = 0
+            for j in 0..<(diffs.count - ladders) {
+                brickSum += diffs[j]
+            }
+
+            if brickSum > bricks { return i - 1 }
+        }
+
+        return n - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,6 +420,161 @@ class Solution {
         }
 
         return l - 1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FurthestBuilding(int[] heights, int bricks, int ladders) {
+        int l = ladders - 1, r = heights.Length - 1;
+
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (CanReach(heights, mid, bricks, ladders)) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        return l - 1;
+    }
+
+    private bool CanReach(int[] heights, int mid, int bricks, int ladders) {
+        List<int> diffs = new List<int>();
+
+        for (int i = 0; i < mid; i++) {
+            if (heights[i + 1] > heights[i]) {
+                diffs.Add(heights[i + 1] - heights[i]);
+            }
+        }
+
+        diffs.Sort();
+        int brickSum = 0;
+
+        for (int j = 0; j < diffs.Count - ladders; j++) {
+            brickSum += diffs[j];
+            if (brickSum > bricks) return false;
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func furthestBuilding(heights []int, bricks int, ladders int) int {
+    l, r := ladders-1, len(heights)-1
+
+    canReach := func(mid int) bool {
+        diffs := []int{}
+        for i := 0; i < mid; i++ {
+            if heights[i+1] > heights[i] {
+                diffs = append(diffs, heights[i+1]-heights[i])
+            }
+        }
+
+        sort.Ints(diffs)
+        brickSum := 0
+
+        for j := 0; j < len(diffs)-ladders; j++ {
+            brickSum += diffs[j]
+            if brickSum > bricks {
+                return false
+            }
+        }
+
+        return true
+    }
+
+    for l <= r {
+        mid := (l + r) / 2
+        if canReach(mid) {
+            l = mid + 1
+        } else {
+            r = mid - 1
+        }
+    }
+
+    return l - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun furthestBuilding(heights: IntArray, bricks: Int, ladders: Int): Int {
+        var l = ladders - 1
+        var r = heights.size - 1
+
+        fun canReach(mid: Int): Boolean {
+            val diffs = mutableListOf<Int>()
+            for (i in 0 until mid) {
+                if (heights[i + 1] > heights[i]) {
+                    diffs.add(heights[i + 1] - heights[i])
+                }
+            }
+
+            diffs.sort()
+            var brickSum = 0
+
+            for (j in 0 until diffs.size - ladders) {
+                brickSum += diffs[j]
+                if (brickSum > bricks) return false
+            }
+
+            return true
+        }
+
+        while (l <= r) {
+            val mid = (l + r) / 2
+            if (canReach(mid)) {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+
+        return l - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
+        var l = ladders - 1
+        var r = heights.count - 1
+
+        func canReach(_ mid: Int) -> Bool {
+            var diffs = [Int]()
+            for i in 0..<mid {
+                if heights[i + 1] > heights[i] {
+                    diffs.append(heights[i + 1] - heights[i])
+                }
+            }
+
+            diffs.sort()
+            var brickSum = 0
+
+            for j in 0..<(diffs.count - ladders) {
+                brickSum += diffs[j]
+                if brickSum > bricks { return false }
+            }
+
+            return true
+        }
+
+        while l <= r {
+            let mid = (l + r) / 2
+            if canReach(mid) {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+
+        return l - 1
     }
 }
 ```
@@ -501,6 +774,188 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FurthestBuilding(int[] heights, int bricks, int ladders) {
+        var diffs = new List<int[]>();
+        for (int i = 1; i < heights.Length; i++) {
+            if (heights[i] > heights[i - 1]) {
+                diffs.Add(new int[] { heights[i] - heights[i - 1], i });
+            }
+        }
+
+        diffs.Sort((a, b) => b[0].CompareTo(a[0]));
+
+        int l = 1, r = heights.Length - 1;
+        while (l <= r) {
+            int mid = (l + r) >> 1;
+            if (CanReach(diffs, mid, bricks, ladders)) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        return l - 1;
+    }
+
+    private bool CanReach(List<int[]> diffs, int index, int bricks, int ladders) {
+        int useLadders = 0;
+        long useBricks = 0;
+        foreach (var diff in diffs) {
+            int jump = diff[0], i = diff[1];
+            if (i > index) continue;
+
+            if (useLadders < ladders) {
+                useLadders++;
+            } else {
+                useBricks += jump;
+                if (useBricks > bricks) return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func furthestBuilding(heights []int, bricks int, ladders int) int {
+    type pair struct {
+        diff, idx int
+    }
+    diffs := []pair{}
+    for i := 1; i < len(heights); i++ {
+        if heights[i] > heights[i-1] {
+            diffs = append(diffs, pair{heights[i] - heights[i-1], i})
+        }
+    }
+
+    sort.Slice(diffs, func(i, j int) bool {
+        return diffs[i].diff > diffs[j].diff
+    })
+
+    canReach := func(index int) bool {
+        useLadders, useBricks := 0, 0
+        for _, d := range diffs {
+            if d.idx > index {
+                continue
+            }
+
+            if useLadders < ladders {
+                useLadders++
+            } else {
+                useBricks += d.diff
+                if useBricks > bricks {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    l, r := 1, len(heights)-1
+    for l <= r {
+        mid := (l + r) >> 1
+        if canReach(mid) {
+            l = mid + 1
+        } else {
+            r = mid - 1
+        }
+    }
+
+    return l - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun furthestBuilding(heights: IntArray, bricks: Int, ladders: Int): Int {
+        val diffs = mutableListOf<IntArray>()
+        for (i in 1 until heights.size) {
+            if (heights[i] > heights[i - 1]) {
+                diffs.add(intArrayOf(heights[i] - heights[i - 1], i))
+            }
+        }
+
+        diffs.sortByDescending { it[0] }
+
+        fun canReach(index: Int): Boolean {
+            var useLadders = 0
+            var useBricks = 0L
+            for (diff in diffs) {
+                val (jump, i) = diff[0] to diff[1]
+                if (i > index) continue
+
+                if (useLadders < ladders) {
+                    useLadders++
+                } else {
+                    useBricks += jump
+                    if (useBricks > bricks) return false
+                }
+            }
+            return true
+        }
+
+        var l = 1
+        var r = heights.size - 1
+        while (l <= r) {
+            val mid = (l + r) shr 1
+            if (canReach(mid)) {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+
+        return l - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
+        var diffs = [(Int, Int)]()
+        for i in 1..<heights.count {
+            if heights[i] > heights[i - 1] {
+                diffs.append((heights[i] - heights[i - 1], i))
+            }
+        }
+
+        diffs.sort { $0.0 > $1.0 }
+
+        func canReach(_ index: Int) -> Bool {
+            var useLadders = 0
+            var useBricks = 0
+            for (diff, i) in diffs {
+                if i > index { continue }
+
+                if useLadders < ladders {
+                    useLadders += 1
+                } else {
+                    useBricks += diff
+                    if useBricks > bricks { return false }
+                }
+            }
+            return true
+        }
+
+        var l = 1
+        var r = heights.count - 1
+        while l <= r {
+            let mid = (l + r) >> 1
+            if canReach(mid) {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+
+        return l - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,6 +1071,128 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FurthestBuilding(int[] heights, int bricks, int ladders) {
+        var maxHeap = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b - a));
+
+        for (int i = 0; i < heights.Length - 1; i++) {
+            int diff = heights[i + 1] - heights[i];
+            if (diff <= 0) continue;
+
+            bricks -= diff;
+            maxHeap.Enqueue(diff, diff);
+
+            if (bricks < 0) {
+                if (ladders == 0) return i;
+                ladders--;
+                bricks += maxHeap.Dequeue();
+            }
+        }
+
+        return heights.Length - 1;
+    }
+}
+```
+
+```go
+func furthestBuilding(heights []int, bricks int, ladders int) int {
+    maxHeap := &MaxHeap{}
+    heap.Init(maxHeap)
+
+    for i := 0; i < len(heights)-1; i++ {
+        diff := heights[i+1] - heights[i]
+        if diff <= 0 {
+            continue
+        }
+
+        bricks -= diff
+        heap.Push(maxHeap, diff)
+
+        if bricks < 0 {
+            if ladders == 0 {
+                return i
+            }
+            ladders--
+            bricks += heap.Pop(maxHeap).(int)
+        }
+    }
+
+    return len(heights) - 1
+}
+
+type MaxHeap []int
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *MaxHeap) Push(x interface{}) {
+    *h = append(*h, x.(int))
+}
+
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun furthestBuilding(heights: IntArray, bricks: Int, ladders: Int): Int {
+        var bricks = bricks
+        var ladders = ladders
+        val maxHeap = PriorityQueue<Int>(reverseOrder())
+
+        for (i in 0 until heights.size - 1) {
+            val diff = heights[i + 1] - heights[i]
+            if (diff <= 0) continue
+
+            bricks -= diff
+            maxHeap.add(diff)
+
+            if (bricks < 0) {
+                if (ladders == 0) return i
+                ladders--
+                bricks += maxHeap.poll()
+            }
+        }
+
+        return heights.size - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
+        var bricks = bricks
+        var ladders = ladders
+        var maxHeap = [Int]()
+
+        for i in 0..<(heights.count - 1) {
+            let diff = heights[i + 1] - heights[i]
+            if diff <= 0 { continue }
+
+            bricks -= diff
+            maxHeap.append(diff)
+            maxHeap.sort(by: >)
+
+            if bricks < 0 {
+                if ladders == 0 { return i }
+                ladders -= 1
+                bricks += maxHeap.removeFirst()
+            }
+        }
+
+        return heights.count - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -714,6 +1291,114 @@ class Solution {
         }
 
         return heights.length - 1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FurthestBuilding(int[] heights, int bricks, int ladders) {
+        var minHeap = new PriorityQueue<int, int>();
+
+        for (int i = 0; i < heights.Length - 1; i++) {
+            int diff = heights[i + 1] - heights[i];
+            if (diff <= 0) continue;
+
+            minHeap.Enqueue(diff, diff);
+            if (minHeap.Count > ladders) {
+                bricks -= minHeap.Dequeue();
+                if (bricks < 0) return i;
+            }
+        }
+
+        return heights.Length - 1;
+    }
+}
+```
+
+```go
+func furthestBuilding(heights []int, bricks int, ladders int) int {
+    minHeap := &MinHeap{}
+    heap.Init(minHeap)
+
+    for i := 0; i < len(heights)-1; i++ {
+        diff := heights[i+1] - heights[i]
+        if diff <= 0 {
+            continue
+        }
+
+        heap.Push(minHeap, diff)
+        if minHeap.Len() > ladders {
+            bricks -= heap.Pop(minHeap).(int)
+            if bricks < 0 {
+                return i
+            }
+        }
+    }
+
+    return len(heights) - 1
+}
+
+type MinHeap []int
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+
+func (h *MinHeap) Push(x interface{}) {
+    *h = append(*h, x.(int))
+}
+
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun furthestBuilding(heights: IntArray, bricks: Int, ladders: Int): Int {
+        var bricks = bricks
+        val minHeap = PriorityQueue<Int>()
+
+        for (i in 0 until heights.size - 1) {
+            val diff = heights[i + 1] - heights[i]
+            if (diff <= 0) continue
+
+            minHeap.add(diff)
+            if (minHeap.size > ladders) {
+                bricks -= minHeap.poll()
+                if (bricks < 0) return i
+            }
+        }
+
+        return heights.size - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func furthestBuilding(_ heights: [Int], _ bricks: Int, _ ladders: Int) -> Int {
+        var bricks = bricks
+        var minHeap = [Int]()
+
+        for i in 0..<(heights.count - 1) {
+            let diff = heights[i + 1] - heights[i]
+            if diff <= 0 { continue }
+
+            minHeap.append(diff)
+            minHeap.sort()
+            if minHeap.count > ladders {
+                bricks -= minHeap.removeFirst()
+                if bricks < 0 { return i }
+            }
+        }
+
+        return heights.count - 1
     }
 }
 ```

@@ -187,6 +187,139 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func zigzagLevelOrder(root *TreeNode) [][]int {
+    res := [][]int{}
+    if root == nil {
+        return res
+    }
+
+    q := []*TreeNode{root}
+
+    for len(q) > 0 {
+        level := []int{}
+        size := len(q)
+
+        for i := 0; i < size; i++ {
+            node := q[0]
+            q = q[1:]
+            level = append(level, node.Val)
+            if node.Left != nil {
+                q = append(q, node.Left)
+            }
+            if node.Right != nil {
+                q = append(q, node.Right)
+            }
+        }
+
+        if len(res)%2 == 1 {
+            for i, j := 0, len(level)-1; i < j; i, j = i+1, j-1 {
+                level[i], level[j] = level[j], level[i]
+            }
+        }
+        res = append(res, level)
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun zigzagLevelOrder(root: TreeNode?): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        if (root == null) return res
+
+        val q = ArrayDeque<TreeNode>()
+        q.add(root)
+
+        while (q.isNotEmpty()) {
+            val level = mutableListOf<Int>()
+            val size = q.size
+
+            repeat(size) {
+                val node = q.removeFirst()
+                level.add(node.`val`)
+                node.left?.let { q.add(it) }
+                node.right?.let { q.add(it) }
+            }
+
+            if (res.size % 2 == 1) level.reverse()
+            res.add(level)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func zigzagLevelOrder(_ root: TreeNode?) -> [[Int]] {
+        var res = [[Int]]()
+        guard let root = root else { return res }
+
+        var q = [root]
+
+        while !q.isEmpty {
+            var level = [Int]()
+            let size = q.count
+
+            for _ in 0..<size {
+                let node = q.removeFirst()
+                level.append(node.val)
+                if let left = node.left {
+                    q.append(left)
+                }
+                if let right = node.right {
+                    q.append(right)
+                }
+            }
+
+            if res.count % 2 == 1 {
+                level.reverse()
+            }
+            res.append(level)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,6 +515,136 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func zigzagLevelOrder(root *TreeNode) [][]int {
+    res := [][]int{}
+    if root == nil {
+        return res
+    }
+
+    q := []*TreeNode{root}
+
+    for len(q) > 0 {
+        size := len(q)
+        level := make([]int, size)
+
+        for i := 0; i < size; i++ {
+            node := q[0]
+            q = q[1:]
+            idx := i
+            if len(res)%2 == 1 {
+                idx = size - i - 1
+            }
+            level[idx] = node.Val
+            if node.Left != nil {
+                q = append(q, node.Left)
+            }
+            if node.Right != nil {
+                q = append(q, node.Right)
+            }
+        }
+
+        res = append(res, level)
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun zigzagLevelOrder(root: TreeNode?): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        if (root == null) return res
+
+        val q = ArrayDeque<TreeNode>()
+        q.add(root)
+
+        while (q.isNotEmpty()) {
+            val size = q.size
+            val level = IntArray(size)
+
+            for (i in 0 until size) {
+                val node = q.removeFirst()
+                val idx = if (res.size % 2 == 0) i else size - i - 1
+                level[idx] = node.`val`
+                node.left?.let { q.add(it) }
+                node.right?.let { q.add(it) }
+            }
+
+            res.add(level.toList())
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func zigzagLevelOrder(_ root: TreeNode?) -> [[Int]] {
+        var res = [[Int]]()
+        guard let root = root else { return res }
+
+        var q = [root]
+
+        while !q.isEmpty {
+            let size = q.count
+            var level = [Int](repeating: 0, count: size)
+
+            for i in 0..<size {
+                let node = q.removeFirst()
+                let idx = res.count % 2 == 0 ? i : size - i - 1
+                level[idx] = node.val
+                if let left = node.left {
+                    q.append(left)
+                }
+                if let right = node.right {
+                    q.append(right)
+                }
+            }
+
+            res.append(level)
+        }
+
+        return res
     }
 }
 ```
@@ -585,6 +848,127 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func zigzagLevelOrder(root *TreeNode) [][]int {
+    res := [][]int{}
+
+    var dfs func(node *TreeNode, depth int)
+    dfs = func(node *TreeNode, depth int) {
+        if node == nil {
+            return
+        }
+        if depth == len(res) {
+            res = append(res, []int{})
+        }
+        res[depth] = append(res[depth], node.Val)
+        dfs(node.Left, depth+1)
+        dfs(node.Right, depth+1)
+    }
+
+    dfs(root, 0)
+
+    for i := range res {
+        if i%2 == 1 {
+            level := res[i]
+            for l, r := 0, len(level)-1; l < r; l, r = l+1, r-1 {
+                level[l], level[r] = level[r], level[l]
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun zigzagLevelOrder(root: TreeNode?): List<List<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+
+        fun dfs(node: TreeNode?, depth: Int) {
+            if (node == null) return
+            if (depth == res.size) {
+                res.add(mutableListOf())
+            }
+            res[depth].add(node.`val`)
+            dfs(node.left, depth + 1)
+            dfs(node.right, depth + 1)
+        }
+
+        dfs(root, 0)
+
+        for (i in res.indices) {
+            if (i and 1 == 1) {
+                res[i].reverse()
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func zigzagLevelOrder(_ root: TreeNode?) -> [[Int]] {
+        var res = [[Int]]()
+
+        func dfs(_ node: TreeNode?, _ depth: Int) {
+            guard let node = node else { return }
+            if depth == res.count {
+                res.append([])
+            }
+            res[depth].append(node.val)
+            dfs(node.left, depth + 1)
+            dfs(node.right, depth + 1)
+        }
+
+        dfs(root, 0)
+
+        for i in 0..<res.count {
+            if i % 2 == 1 {
+                res[i].reverse()
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -823,6 +1207,153 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func zigzagLevelOrder(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    res := [][]int{}
+    stack := []struct {
+        node  *TreeNode
+        depth int
+    }{{root, 0}}
+
+    for len(stack) > 0 {
+        top := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        node, depth := top.node, top.depth
+
+        if depth == len(res) {
+            res = append(res, []int{})
+        }
+        res[depth] = append(res[depth], node.Val)
+
+        if node.Right != nil {
+            stack = append(stack, struct {
+                node  *TreeNode
+                depth int
+            }{node.Right, depth + 1})
+        }
+        if node.Left != nil {
+            stack = append(stack, struct {
+                node  *TreeNode
+                depth int
+            }{node.Left, depth + 1})
+        }
+    }
+
+    for i := range res {
+        if i%2 == 1 {
+            level := res[i]
+            for l, r := 0, len(level)-1; l < r; l, r = l+1, r-1 {
+                level[l], level[r] = level[r], level[l]
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun zigzagLevelOrder(root: TreeNode?): List<List<Int>> {
+        if (root == null) return emptyList()
+
+        val res = mutableListOf<MutableList<Int>>()
+        val stack = ArrayDeque<Pair<TreeNode, Int>>()
+        stack.addLast(root to 0)
+
+        while (stack.isNotEmpty()) {
+            val (node, depth) = stack.removeLast()
+            if (depth == res.size) {
+                res.add(mutableListOf())
+            }
+            res[depth].add(node.`val`)
+
+            node.right?.let { stack.addLast(it to depth + 1) }
+            node.left?.let { stack.addLast(it to depth + 1) }
+        }
+
+        for (i in res.indices) {
+            if (i % 2 == 1) {
+                res[i].reverse()
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func zigzagLevelOrder(_ root: TreeNode?) -> [[Int]] {
+        guard let root = root else { return [] }
+
+        var res = [[Int]]()
+        var stack: [(TreeNode, Int)] = [(root, 0)]
+
+        while !stack.isEmpty {
+            let (node, depth) = stack.removeLast()
+            if depth == res.count {
+                res.append([])
+            }
+            res[depth].append(node.val)
+
+            if let right = node.right {
+                stack.append((right, depth + 1))
+            }
+            if let left = node.left {
+                stack.append((left, depth + 1))
+            }
+        }
+
+        for i in 0..<res.count {
+            if i % 2 == 1 {
+                res[i].reverse()
+            }
+        }
+
+        return res
     }
 }
 ```

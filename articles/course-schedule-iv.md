@@ -138,6 +138,83 @@ public class Solution {
 }
 ```
 
+```go
+func checkIfPrerequisite(numCourses int, prerequisites [][]int, queries [][]int) []bool {
+    adj := make([][]int, numCourses)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, pre := range prerequisites {
+        adj[pre[0]] = append(adj[pre[0]], pre[1])
+    }
+
+    var dfs func(node, target int) bool
+    dfs = func(node, target int) bool {
+        if node == target {
+            return true
+        }
+        for _, nei := range adj[node] {
+            if dfs(nei, target) {
+                return true
+            }
+        }
+        return false
+    }
+
+    res := make([]bool, len(queries))
+    for i, q := range queries {
+        res[i] = dfs(q[0], q[1])
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+
+    fun checkIfPrerequisite(numCourses: Int, prerequisites: Array<IntArray>, queries: Array<IntArray>): List<Boolean> {
+        adj = Array(numCourses) { mutableListOf() }
+        for (pre in prerequisites) {
+            adj[pre[0]].add(pre[1])
+        }
+
+        return queries.map { dfs(it[0], it[1]) }
+    }
+
+    private fun dfs(node: Int, target: Int): Boolean {
+        if (node == target) return true
+        for (nei in adj[node]) {
+            if (dfs(nei, target)) return true
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    private var adj = [[Int]]()
+
+    func checkIfPrerequisite(_ numCourses: Int, _ prerequisites: [[Int]], _ queries: [[Int]]) -> [Bool] {
+        adj = Array(repeating: [Int](), count: numCourses)
+        for pre in prerequisites {
+            adj[pre[0]].append(pre[1])
+        }
+
+        func dfs(_ node: Int, _ target: Int) -> Bool {
+            if node == target { return true }
+            for nei in adj[node] {
+                if dfs(nei, target) { return true }
+            }
+            return false
+        }
+
+        return queries.map { dfs($0[0], $0[1]) }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -323,6 +400,112 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func checkIfPrerequisite(numCourses int, prerequisites [][]int, queries [][]int) []bool {
+    adj := make([][]int, numCourses)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, pre := range prerequisites {
+        prereq, crs := pre[0], pre[1]
+        adj[crs] = append(adj[crs], prereq)
+    }
+
+    prereqMap := make(map[int]map[int]bool)
+
+    var dfs func(crs int) map[int]bool
+    dfs = func(crs int) map[int]bool {
+        if _, exists := prereqMap[crs]; !exists {
+            prereqMap[crs] = make(map[int]bool)
+            for _, prereq := range adj[crs] {
+                for p := range dfs(prereq) {
+                    prereqMap[crs][p] = true
+                }
+            }
+            prereqMap[crs][crs] = true
+        }
+        return prereqMap[crs]
+    }
+
+    for crs := 0; crs < numCourses; crs++ {
+        dfs(crs)
+    }
+
+    res := make([]bool, len(queries))
+    for i, q := range queries {
+        res[i] = prereqMap[q[1]][q[0]]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+    private lateinit var prereqMap: MutableMap<Int, MutableSet<Int>>
+
+    fun checkIfPrerequisite(numCourses: Int, prerequisites: Array<IntArray>, queries: Array<IntArray>): List<Boolean> {
+        adj = Array(numCourses) { mutableListOf() }
+        prereqMap = mutableMapOf()
+
+        for (pre in prerequisites) {
+            adj[pre[1]].add(pre[0])
+        }
+
+        for (crs in 0 until numCourses) {
+            dfs(crs)
+        }
+
+        return queries.map { prereqMap[it[1]]?.contains(it[0]) ?: false }
+    }
+
+    private fun dfs(crs: Int): MutableSet<Int> {
+        if (crs !in prereqMap) {
+            prereqMap[crs] = mutableSetOf()
+            for (prereq in adj[crs]) {
+                prereqMap[crs]!!.addAll(dfs(prereq))
+            }
+            prereqMap[crs]!!.add(crs)
+        }
+        return prereqMap[crs]!!
+    }
+}
+```
+
+```swift
+class Solution {
+    private var adj = [[Int]]()
+    private var prereqMap = [Int: Set<Int>]()
+
+    func checkIfPrerequisite(_ numCourses: Int, _ prerequisites: [[Int]], _ queries: [[Int]]) -> [Bool] {
+        adj = Array(repeating: [Int](), count: numCourses)
+        prereqMap = [:]
+
+        for pre in prerequisites {
+            adj[pre[1]].append(pre[0])
+        }
+
+        for crs in 0..<numCourses {
+            _ = dfs(crs)
+        }
+
+        return queries.map { prereqMap[$0[1]]?.contains($0[0]) ?? false }
+    }
+
+    private func dfs(_ crs: Int) -> Set<Int> {
+        if prereqMap[crs] == nil {
+            var prereqs = Set<Int>()
+            for prereq in adj[crs] {
+                prereqs.formUnion(dfs(prereq))
+            }
+            prereqs.insert(crs)
+            prereqMap[crs] = prereqs
+        }
+        return prereqMap[crs]!
     }
 }
 ```
@@ -533,6 +716,117 @@ public class Solution {
 }
 ```
 
+```go
+func checkIfPrerequisite(numCourses int, prerequisites [][]int, queries [][]int) []bool {
+    adj := make([][]int, numCourses)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+
+    isPrereq := make([][]int, numCourses)
+    for i := range isPrereq {
+        isPrereq[i] = make([]int, numCourses)
+        for j := range isPrereq[i] {
+            isPrereq[i][j] = -1
+        }
+    }
+
+    for _, pre := range prerequisites {
+        prereq, crs := pre[0], pre[1]
+        adj[crs] = append(adj[crs], prereq)
+        isPrereq[crs][prereq] = 1
+    }
+
+    var dfs func(crs, prereq int) bool
+    dfs = func(crs, prereq int) bool {
+        if isPrereq[crs][prereq] != -1 {
+            return isPrereq[crs][prereq] == 1
+        }
+        for _, pre := range adj[crs] {
+            if pre == prereq || dfs(pre, prereq) {
+                isPrereq[crs][prereq] = 1
+                return true
+            }
+        }
+        isPrereq[crs][prereq] = 0
+        return false
+    }
+
+    res := make([]bool, len(queries))
+    for i, q := range queries {
+        res[i] = dfs(q[1], q[0])
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+    private lateinit var isPrereq: Array<IntArray>
+
+    fun checkIfPrerequisite(numCourses: Int, prerequisites: Array<IntArray>, queries: Array<IntArray>): List<Boolean> {
+        adj = Array(numCourses) { mutableListOf() }
+        isPrereq = Array(numCourses) { IntArray(numCourses) { -1 } }
+
+        for (pre in prerequisites) {
+            adj[pre[1]].add(pre[0])
+            isPrereq[pre[1]][pre[0]] = 1
+        }
+
+        return queries.map { dfs(it[1], it[0]) }
+    }
+
+    private fun dfs(crs: Int, prereq: Int): Boolean {
+        if (isPrereq[crs][prereq] != -1) {
+            return isPrereq[crs][prereq] == 1
+        }
+        for (pre in adj[crs]) {
+            if (pre == prereq || dfs(pre, prereq)) {
+                isPrereq[crs][prereq] = 1
+                return true
+            }
+        }
+        isPrereq[crs][prereq] = 0
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    private var adj = [[Int]]()
+    private var isPrereq = [[Int]]()
+
+    func checkIfPrerequisite(_ numCourses: Int, _ prerequisites: [[Int]], _ queries: [[Int]]) -> [Bool] {
+        adj = Array(repeating: [Int](), count: numCourses)
+        isPrereq = Array(repeating: Array(repeating: -1, count: numCourses), count: numCourses)
+
+        for pre in prerequisites {
+            let prereq = pre[0], crs = pre[1]
+            adj[crs].append(prereq)
+            isPrereq[crs][prereq] = 1
+        }
+
+        func dfs(_ crs: Int, _ prereq: Int) -> Bool {
+            if isPrereq[crs][prereq] != -1 {
+                return isPrereq[crs][prereq] == 1
+            }
+            for pre in adj[crs] {
+                if pre == prereq || dfs(pre, prereq) {
+                    isPrereq[crs][prereq] = 1
+                    return true
+                }
+            }
+            isPrereq[crs][prereq] = 0
+            return false
+        }
+
+        return queries.map { dfs($0[1], $0[0]) }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -739,6 +1033,122 @@ public class Solution {
 }
 ```
 
+```go
+func checkIfPrerequisite(numCourses int, prerequisites [][]int, queries [][]int) []bool {
+    adj := make([]map[int]bool, numCourses)
+    isPrereq := make([]map[int]bool, numCourses)
+    indegree := make([]int, numCourses)
+
+    for i := 0; i < numCourses; i++ {
+        adj[i] = make(map[int]bool)
+        isPrereq[i] = make(map[int]bool)
+    }
+
+    for _, pre := range prerequisites {
+        adj[pre[0]][pre[1]] = true
+        indegree[pre[1]]++
+    }
+
+    q := []int{}
+    for i := 0; i < numCourses; i++ {
+        if indegree[i] == 0 {
+            q = append(q, i)
+        }
+    }
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        for neighbor := range adj[node] {
+            isPrereq[neighbor][node] = true
+            for p := range isPrereq[node] {
+                isPrereq[neighbor][p] = true
+            }
+            indegree[neighbor]--
+            if indegree[neighbor] == 0 {
+                q = append(q, neighbor)
+            }
+        }
+    }
+
+    res := make([]bool, len(queries))
+    for i, query := range queries {
+        res[i] = isPrereq[query[1]][query[0]]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun checkIfPrerequisite(numCourses: Int, prerequisites: Array<IntArray>, queries: Array<IntArray>): List<Boolean> {
+        val adj = Array(numCourses) { mutableSetOf<Int>() }
+        val isPrereq = Array(numCourses) { mutableSetOf<Int>() }
+        val indegree = IntArray(numCourses)
+
+        for (pre in prerequisites) {
+            adj[pre[0]].add(pre[1])
+            indegree[pre[1]]++
+        }
+
+        val q = ArrayDeque<Int>()
+        for (i in 0 until numCourses) {
+            if (indegree[i] == 0) q.add(i)
+        }
+
+        while (q.isNotEmpty()) {
+            val node = q.removeFirst()
+            for (neighbor in adj[node]) {
+                isPrereq[neighbor].add(node)
+                isPrereq[neighbor].addAll(isPrereq[node])
+                indegree[neighbor]--
+                if (indegree[neighbor] == 0) {
+                    q.add(neighbor)
+                }
+            }
+        }
+
+        return queries.map { isPrereq[it[1]].contains(it[0]) }
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkIfPrerequisite(_ numCourses: Int, _ prerequisites: [[Int]], _ queries: [[Int]]) -> [Bool] {
+        var adj = Array(repeating: Set<Int>(), count: numCourses)
+        var isPrereq = Array(repeating: Set<Int>(), count: numCourses)
+        var indegree = Array(repeating: 0, count: numCourses)
+
+        for pre in prerequisites {
+            adj[pre[0]].insert(pre[1])
+            indegree[pre[1]] += 1
+        }
+
+        var queue = [Int]()
+        for i in 0..<numCourses {
+            if indegree[i] == 0 {
+                queue.append(i)
+            }
+        }
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            for neighbor in adj[node] {
+                isPrereq[neighbor].insert(node)
+                isPrereq[neighbor].formUnion(isPrereq[node])
+                indegree[neighbor] -= 1
+                if indegree[neighbor] == 0 {
+                    queue.append(neighbor)
+                }
+            }
+        }
+
+        return queries.map { isPrereq[$0[1]].contains($0[0]) }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -889,6 +1299,77 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func checkIfPrerequisite(numCourses int, prerequisites [][]int, queries [][]int) []bool {
+    adj := make([][]bool, numCourses)
+    for i := range adj {
+        adj[i] = make([]bool, numCourses)
+    }
+
+    for _, pre := range prerequisites {
+        adj[pre[0]][pre[1]] = true
+    }
+
+    for k := 0; k < numCourses; k++ {
+        for i := 0; i < numCourses; i++ {
+            for j := 0; j < numCourses; j++ {
+                adj[i][j] = adj[i][j] || (adj[i][k] && adj[k][j])
+            }
+        }
+    }
+
+    res := make([]bool, len(queries))
+    for i, q := range queries {
+        res[i] = adj[q[0]][q[1]]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun checkIfPrerequisite(numCourses: Int, prerequisites: Array<IntArray>, queries: Array<IntArray>): List<Boolean> {
+        val adj = Array(numCourses) { BooleanArray(numCourses) }
+
+        for (pre in prerequisites) {
+            adj[pre[0]][pre[1]] = true
+        }
+
+        for (k in 0 until numCourses) {
+            for (i in 0 until numCourses) {
+                for (j in 0 until numCourses) {
+                    adj[i][j] = adj[i][j] || (adj[i][k] && adj[k][j])
+                }
+            }
+        }
+
+        return queries.map { adj[it[0]][it[1]] }
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkIfPrerequisite(_ numCourses: Int, _ prerequisites: [[Int]], _ queries: [[Int]]) -> [Bool] {
+        var adj = Array(repeating: Array(repeating: false, count: numCourses), count: numCourses)
+
+        for pre in prerequisites {
+            adj[pre[0]][pre[1]] = true
+        }
+
+        for k in 0..<numCourses {
+            for i in 0..<numCourses {
+                for j in 0..<numCourses {
+                    adj[i][j] = adj[i][j] || (adj[i][k] && adj[k][j])
+                }
+            }
+        }
+
+        return queries.map { adj[$0[0]][$0[1]] }
     }
 }
 ```

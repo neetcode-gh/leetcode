@@ -138,6 +138,149 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string PushDominoes(string dominoes) {
+        int n = dominoes.Length;
+        char[] res = dominoes.ToCharArray();
+
+        for (int i = 0; i < n; i++) {
+            if (dominoes[i] != '.') continue;
+
+            int l = i - 1, r = i + 1;
+
+            while (l >= 0 && dominoes[l] == '.') l--;
+            while (r < n && dominoes[r] == '.') r++;
+
+            char leftForce = (l >= 0) ? dominoes[l] : ' ';
+            char rightForce = (r < n) ? dominoes[r] : ' ';
+
+            if (leftForce == 'R' && rightForce == 'L') {
+                if ((i - l) < (r - i)) res[i] = 'R';
+                else if ((r - i) < (i - l)) res[i] = 'L';
+            } else if (leftForce == 'R') {
+                res[i] = 'R';
+            } else if (rightForce == 'L') {
+                res[i] = 'L';
+            }
+        }
+
+        return new string(res);
+    }
+}
+```
+
+```go
+func pushDominoes(dominoes string) string {
+    n := len(dominoes)
+    res := []byte(dominoes)
+
+    for i := 0; i < n; i++ {
+        if dominoes[i] != '.' {
+            continue
+        }
+
+        l, r := i-1, i+1
+
+        for l >= 0 && dominoes[l] == '.' {
+            l--
+        }
+        for r < n && dominoes[r] == '.' {
+            r++
+        }
+
+        var leftForce, rightForce byte = ' ', ' '
+        if l >= 0 {
+            leftForce = dominoes[l]
+        }
+        if r < n {
+            rightForce = dominoes[r]
+        }
+
+        if leftForce == 'R' && rightForce == 'L' {
+            if (i - l) < (r - i) {
+                res[i] = 'R'
+            } else if (r - i) < (i - l) {
+                res[i] = 'L'
+            }
+        } else if leftForce == 'R' {
+            res[i] = 'R'
+        } else if rightForce == 'L' {
+            res[i] = 'L'
+        }
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun pushDominoes(dominoes: String): String {
+        val n = dominoes.length
+        val res = dominoes.toCharArray()
+
+        for (i in 0 until n) {
+            if (dominoes[i] != '.') continue
+
+            var l = i - 1
+            var r = i + 1
+
+            while (l >= 0 && dominoes[l] == '.') l--
+            while (r < n && dominoes[r] == '.') r++
+
+            val leftForce = if (l >= 0) dominoes[l] else ' '
+            val rightForce = if (r < n) dominoes[r] else ' '
+
+            if (leftForce == 'R' && rightForce == 'L') {
+                if ((i - l) < (r - i)) res[i] = 'R'
+                else if ((r - i) < (i - l)) res[i] = 'L'
+            } else if (leftForce == 'R') {
+                res[i] = 'R'
+            } else if (rightForce == 'L') {
+                res[i] = 'L'
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
+```swift
+class Solution {
+    func pushDominoes(_ dominoes: String) -> String {
+        let n = dominoes.count
+        var res = Array(dominoes)
+        let chars = Array(dominoes)
+
+        for i in 0..<n {
+            if chars[i] != "." { continue }
+
+            var l = i - 1
+            var r = i + 1
+
+            while l >= 0 && chars[l] == "." { l -= 1 }
+            while r < n && chars[r] == "." { r += 1 }
+
+            let leftForce: Character = l >= 0 ? chars[l] : " "
+            let rightForce: Character = r < n ? chars[r] : " "
+
+            if leftForce == "R" && rightForce == "L" {
+                if (i - l) < (r - i) { res[i] = "R" }
+                else if (r - i) < (i - l) { res[i] = "L" }
+            } else if leftForce == "R" {
+                res[i] = "R"
+            } else if rightForce == "L" {
+                res[i] = "L"
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,6 +471,193 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string PushDominoes(string dominoes) {
+        int n = dominoes.Length;
+        int[] left = new int[n];
+        int[] right = new int[n];
+        char[] res = dominoes.ToCharArray();
+        Array.Fill(left, int.MaxValue);
+        Array.Fill(right, int.MaxValue);
+
+        int force = int.MaxValue;
+        for (int i = 0; i < n; i++) {
+            if (dominoes[i] == 'R') {
+                force = 0;
+            } else if (dominoes[i] == 'L') {
+                force = int.MaxValue;
+            } else {
+                force = force == int.MaxValue ? int.MaxValue : force + 1;
+            }
+            right[i] = force;
+        }
+
+        force = int.MaxValue;
+        for (int i = n - 1; i >= 0; i--) {
+            if (dominoes[i] == 'L') {
+                force = 0;
+            } else if (dominoes[i] == 'R') {
+                force = int.MaxValue;
+            } else {
+                force = force == int.MaxValue ? int.MaxValue : force + 1;
+            }
+            left[i] = force;
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (left[i] < right[i]) {
+                res[i] = 'L';
+            } else if (right[i] < left[i]) {
+                res[i] = 'R';
+            }
+        }
+
+        return new string(res);
+    }
+}
+```
+
+```go
+func pushDominoes(dominoes string) string {
+    n := len(dominoes)
+    left := make([]int, n)
+    right := make([]int, n)
+    res := []byte(dominoes)
+    const INF = 1 << 30
+
+    for i := range left {
+        left[i] = INF
+        right[i] = INF
+    }
+
+    force := INF
+    for i := 0; i < n; i++ {
+        if dominoes[i] == 'R' {
+            force = 0
+        } else if dominoes[i] == 'L' {
+            force = INF
+        } else {
+            if force != INF {
+                force++
+            }
+        }
+        right[i] = force
+    }
+
+    force = INF
+    for i := n - 1; i >= 0; i-- {
+        if dominoes[i] == 'L' {
+            force = 0
+        } else if dominoes[i] == 'R' {
+            force = INF
+        } else {
+            if force != INF {
+                force++
+            }
+        }
+        left[i] = force
+    }
+
+    for i := 0; i < n; i++ {
+        if left[i] < right[i] {
+            res[i] = 'L'
+        } else if right[i] < left[i] {
+            res[i] = 'R'
+        }
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun pushDominoes(dominoes: String): String {
+        val n = dominoes.length
+        val left = IntArray(n) { Int.MAX_VALUE }
+        val right = IntArray(n) { Int.MAX_VALUE }
+        val res = dominoes.toCharArray()
+
+        var force = Int.MAX_VALUE
+        for (i in 0 until n) {
+            when (dominoes[i]) {
+                'R' -> force = 0
+                'L' -> force = Int.MAX_VALUE
+                else -> if (force != Int.MAX_VALUE) force++
+            }
+            right[i] = force
+        }
+
+        force = Int.MAX_VALUE
+        for (i in n - 1 downTo 0) {
+            when (dominoes[i]) {
+                'L' -> force = 0
+                'R' -> force = Int.MAX_VALUE
+                else -> if (force != Int.MAX_VALUE) force++
+            }
+            left[i] = force
+        }
+
+        for (i in 0 until n) {
+            if (left[i] < right[i]) {
+                res[i] = 'L'
+            } else if (right[i] < left[i]) {
+                res[i] = 'R'
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
+```swift
+class Solution {
+    func pushDominoes(_ dominoes: String) -> String {
+        let n = dominoes.count
+        let chars = Array(dominoes)
+        var left = [Int](repeating: Int.max, count: n)
+        var right = [Int](repeating: Int.max, count: n)
+        var res = chars
+
+        var force = Int.max
+        for i in 0..<n {
+            if chars[i] == "R" {
+                force = 0
+            } else if chars[i] == "L" {
+                force = Int.max
+            } else {
+                if force != Int.max { force += 1 }
+            }
+            right[i] = force
+        }
+
+        force = Int.max
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            if chars[i] == "L" {
+                force = 0
+            } else if chars[i] == "R" {
+                force = Int.max
+            } else {
+                if force != Int.max { force += 1 }
+            }
+            left[i] = force
+        }
+
+        for i in 0..<n {
+            if left[i] < right[i] {
+                res[i] = "L"
+            } else if right[i] < left[i] {
+                res[i] = "R"
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -477,6 +807,150 @@ class Solution {
         }
 
         return dom.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string PushDominoes(string dominoes) {
+        char[] dom = dominoes.ToCharArray();
+        Queue<int[]> q = new Queue<int[]>();
+
+        for (int i = 0; i < dom.Length; i++) {
+            if (dom[i] != '.') {
+                q.Enqueue(new int[] { i, dom[i] });
+            }
+        }
+
+        while (q.Count > 0) {
+            int[] curr = q.Dequeue();
+            int i = curr[0];
+            char d = (char)curr[1];
+
+            if (d == 'L' && i > 0 && dom[i - 1] == '.') {
+                q.Enqueue(new int[] { i - 1, 'L' });
+                dom[i - 1] = 'L';
+            } else if (d == 'R') {
+                if (i + 1 < dom.Length && dom[i + 1] == '.') {
+                    if (i + 2 < dom.Length && dom[i + 2] == 'L') {
+                        q.Dequeue();
+                    } else {
+                        q.Enqueue(new int[] { i + 1, 'R' });
+                        dom[i + 1] = 'R';
+                    }
+                }
+            }
+        }
+
+        return new string(dom);
+    }
+}
+```
+
+```go
+func pushDominoes(dominoes string) string {
+    dom := []byte(dominoes)
+    q := [][2]int{}
+
+    for i := 0; i < len(dom); i++ {
+        if dom[i] != '.' {
+            q = append(q, [2]int{i, int(dom[i])})
+        }
+    }
+
+    for len(q) > 0 {
+        curr := q[0]
+        q = q[1:]
+        i, d := curr[0], byte(curr[1])
+
+        if d == 'L' && i > 0 && dom[i-1] == '.' {
+            q = append(q, [2]int{i - 1, int('L')})
+            dom[i-1] = 'L'
+        } else if d == 'R' {
+            if i+1 < len(dom) && dom[i+1] == '.' {
+                if i+2 < len(dom) && dom[i+2] == 'L' {
+                    q = q[1:]
+                } else {
+                    q = append(q, [2]int{i + 1, int('R')})
+                    dom[i+1] = 'R'
+                }
+            }
+        }
+    }
+
+    return string(dom)
+}
+```
+
+```kotlin
+class Solution {
+    fun pushDominoes(dominoes: String): String {
+        val dom = dominoes.toCharArray()
+        val q: ArrayDeque<Pair<Int, Char>> = ArrayDeque()
+
+        for (i in dom.indices) {
+            if (dom[i] != '.') {
+                q.addLast(Pair(i, dom[i]))
+            }
+        }
+
+        while (q.isNotEmpty()) {
+            val (i, d) = q.removeFirst()
+
+            if (d == 'L' && i > 0 && dom[i - 1] == '.') {
+                q.addLast(Pair(i - 1, 'L'))
+                dom[i - 1] = 'L'
+            } else if (d == 'R') {
+                if (i + 1 < dom.size && dom[i + 1] == '.') {
+                    if (i + 2 < dom.size && dom[i + 2] == 'L') {
+                        q.removeFirst()
+                    } else {
+                        q.addLast(Pair(i + 1, 'R'))
+                        dom[i + 1] = 'R'
+                    }
+                }
+            }
+        }
+
+        return String(dom)
+    }
+}
+```
+
+```swift
+class Solution {
+    func pushDominoes(_ dominoes: String) -> String {
+        var dom = Array(dominoes)
+        var q: [(Int, Character)] = []
+
+        for i in 0..<dom.count {
+            if dom[i] != "." {
+                q.append((i, dom[i]))
+            }
+        }
+
+        var idx = 0
+        while idx < q.count {
+            let (i, d) = q[idx]
+            idx += 1
+
+            if d == "L" && i > 0 && dom[i - 1] == "." {
+                q.append((i - 1, "L"))
+                dom[i - 1] = "L"
+            } else if d == "R" {
+                if i + 1 < dom.count && dom[i + 1] == "." {
+                    if i + 2 < dom.count && dom[i + 2] == "L" {
+                        idx += 1
+                    } else {
+                        q.append((i + 1, "R"))
+                        dom[i + 1] = "R"
+                    }
+                }
+            }
+        }
+
+        return String(dom)
     }
 }
 ```
@@ -738,6 +1212,202 @@ class Solution {
         }
 
         return res.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string PushDominoes(string dominoes) {
+        var res = new System.Text.StringBuilder();
+        int dots = 0;
+        bool R = false;
+
+        foreach (char d in dominoes) {
+            if (d == '.') {
+                dots++;
+            } else if (d == 'R') {
+                if (R) {
+                    res.Append(new string('R', dots + 1));
+                } else if (dots > 0) {
+                    res.Append(new string('.', dots));
+                }
+                dots = 0;
+                R = true;
+            } else {
+                if (R) {
+                    res.Append('R');
+                    if (dots > 0) {
+                        res.Append(new string('R', dots / 2));
+                        if (dots % 2 != 0) {
+                            res.Append('.');
+                        }
+                        res.Append(new string('L', dots / 2));
+                    }
+                    res.Append('L');
+                    R = false;
+                    dots = 0;
+                } else {
+                    res.Append(new string('L', dots + 1));
+                    dots = 0;
+                }
+            }
+        }
+
+        if (R) {
+            res.Append(new string('R', dots + 1));
+        } else {
+            res.Append(new string('.', dots));
+        }
+
+        return res.ToString();
+    }
+}
+```
+
+```go
+func pushDominoes(dominoes string) string {
+    var res strings.Builder
+    dots := 0
+    R := false
+
+    for _, d := range dominoes {
+        if d == '.' {
+            dots++
+        } else if d == 'R' {
+            if R {
+                res.WriteString(strings.Repeat("R", dots+1))
+            } else if dots > 0 {
+                res.WriteString(strings.Repeat(".", dots))
+            }
+            dots = 0
+            R = true
+        } else {
+            if R {
+                res.WriteByte('R')
+                if dots > 0 {
+                    res.WriteString(strings.Repeat("R", dots/2))
+                    if dots%2 != 0 {
+                        res.WriteByte('.')
+                    }
+                    res.WriteString(strings.Repeat("L", dots/2))
+                }
+                res.WriteByte('L')
+                R = false
+                dots = 0
+            } else {
+                res.WriteString(strings.Repeat("L", dots+1))
+                dots = 0
+            }
+        }
+    }
+
+    if R {
+        res.WriteString(strings.Repeat("R", dots+1))
+    } else {
+        res.WriteString(strings.Repeat(".", dots))
+    }
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun pushDominoes(dominoes: String): String {
+        val res = StringBuilder()
+        var dots = 0
+        var R = false
+
+        for (d in dominoes) {
+            when (d) {
+                '.' -> dots++
+                'R' -> {
+                    if (R) {
+                        res.append("R".repeat(dots + 1))
+                    } else if (dots > 0) {
+                        res.append(".".repeat(dots))
+                    }
+                    dots = 0
+                    R = true
+                }
+                'L' -> {
+                    if (R) {
+                        res.append('R')
+                        if (dots > 0) {
+                            res.append("R".repeat(dots / 2))
+                            if (dots % 2 != 0) {
+                                res.append('.')
+                            }
+                            res.append("L".repeat(dots / 2))
+                        }
+                        res.append('L')
+                        R = false
+                        dots = 0
+                    } else {
+                        res.append("L".repeat(dots + 1))
+                        dots = 0
+                    }
+                }
+            }
+        }
+
+        if (R) {
+            res.append("R".repeat(dots + 1))
+        } else {
+            res.append(".".repeat(dots))
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func pushDominoes(_ dominoes: String) -> String {
+        var res = ""
+        var dots = 0
+        var R = false
+
+        for d in dominoes {
+            if d == "." {
+                dots += 1
+            } else if d == "R" {
+                if R {
+                    res += String(repeating: "R", count: dots + 1)
+                } else if dots > 0 {
+                    res += String(repeating: ".", count: dots)
+                }
+                dots = 0
+                R = true
+            } else {
+                if R {
+                    res += "R"
+                    if dots > 0 {
+                        res += String(repeating: "R", count: dots / 2)
+                        if dots % 2 != 0 {
+                            res += "."
+                        }
+                        res += String(repeating: "L", count: dots / 2)
+                    }
+                    res += "L"
+                    R = false
+                    dots = 0
+                } else {
+                    res += String(repeating: "L", count: dots + 1)
+                    dots = 0
+                }
+            }
+        }
+
+        if R {
+            res += String(repeating: "R", count: dots + 1)
+        } else {
+            res += String(repeating: ".", count: dots)
+        }
+
+        return res
     }
 }
 ```

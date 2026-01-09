@@ -106,7 +106,7 @@ class Solution {
     findLonelyPixel(picture) {
         let n = picture.length;
         let m = picture[0].length;
-        
+
         // Arrays to store the count of black cells in rows and columns.
         let rowCount = new Array(n).fill(0);
         let columnCount = new Array(m).fill(0);
@@ -118,7 +118,7 @@ class Solution {
                 }
             }
         }
-        
+
         let answer = 0;
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < m; j++) {
@@ -129,8 +129,142 @@ class Solution {
                 }
             }
         }
-        
+
         return answer;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindLonelyPixel(char[][] picture) {
+        int n = picture.Length;
+        int m = picture[0].Length;
+
+        // Arrays to store the count of black cells in rows and columns.
+        int[] rowCount = new int[n];
+        int[] columnCount = new int[m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (picture[i][j] == 'B') {
+                    rowCount[i]++;
+                    columnCount[j]++;
+                }
+            }
+        }
+
+        int answer = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                // Its a lonely cell, if the current cell is black and,
+                // the count of black cells in its row and column is 1.
+                if (picture[i][j] == 'B' && rowCount[i] == 1 && columnCount[j] == 1) {
+                    answer++;
+                }
+            }
+        }
+
+        return answer;
+    }
+}
+```
+
+```go
+func findLonelyPixel(picture [][]byte) int {
+    n := len(picture)
+    m := len(picture[0])
+
+    // Arrays to store the count of black cells in rows and columns.
+    rowCount := make([]int, n)
+    columnCount := make([]int, m)
+    for i := 0; i < n; i++ {
+        for j := 0; j < m; j++ {
+            if picture[i][j] == 'B' {
+                rowCount[i]++
+                columnCount[j]++
+            }
+        }
+    }
+
+    answer := 0
+    for i := 0; i < n; i++ {
+        for j := 0; j < m; j++ {
+            // Its a lonely cell, if the current cell is black and,
+            // the count of black cells in its row and column is 1.
+            if picture[i][j] == 'B' && rowCount[i] == 1 && columnCount[j] == 1 {
+                answer++
+            }
+        }
+    }
+
+    return answer
+}
+```
+
+```kotlin
+class Solution {
+    fun findLonelyPixel(picture: Array<CharArray>): Int {
+        val n = picture.size
+        val m = picture[0].size
+
+        // Arrays to store the count of black cells in rows and columns.
+        val rowCount = IntArray(n)
+        val columnCount = IntArray(m)
+        for (i in 0 until n) {
+            for (j in 0 until m) {
+                if (picture[i][j] == 'B') {
+                    rowCount[i]++
+                    columnCount[j]++
+                }
+            }
+        }
+
+        var answer = 0
+        for (i in 0 until n) {
+            for (j in 0 until m) {
+                // Its a lonely cell, if the current cell is black and,
+                // the count of black cells in its row and column is 1.
+                if (picture[i][j] == 'B' && rowCount[i] == 1 && columnCount[j] == 1) {
+                    answer++
+                }
+            }
+        }
+
+        return answer
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLonelyPixel(_ picture: [[Character]]) -> Int {
+        let n = picture.count
+        let m = picture[0].count
+
+        // Arrays to store the count of black cells in rows and columns.
+        var rowCount = [Int](repeating: 0, count: n)
+        var columnCount = [Int](repeating: 0, count: m)
+        for i in 0..<n {
+            for j in 0..<m {
+                if picture[i][j] == "B" {
+                    rowCount[i] += 1
+                    columnCount[j] += 1
+                }
+            }
+        }
+
+        var answer = 0
+        for i in 0..<n {
+            for j in 0..<m {
+                // Its a lonely cell, if the current cell is black and,
+                // the count of black cells in its row and column is 1.
+                if picture[i][j] == "B" && rowCount[i] == 1 && columnCount[j] == 1 {
+                    answer += 1
+                }
+            }
+        }
+
+        return answer
     }
 }
 ```
@@ -351,27 +485,27 @@ class Solution {
      */
     findLonelyPixel(picture) {
         // Returns true if the cell at (x, y) is lonely.
-        // There should not be any other black cell 
+        // There should not be any other black cell
         // In the first row and column except (x, y) itself.
         const check = (x, y) => {
             let n = picture.length;
             let m = picture[0].length;
-            
+
             let cnt = 0;
             for (let i = 0; i < n; i++) {
                 cnt += (picture[i][y] === 'B' ? 1 : 0);
             }
-            
+
             for (let j = 0; j < m; j++) {
                 // avoid double count (x, y)
                 if (j !== y) cnt += (picture[x][j] === 'B' ? 1 : 0);
             }
             return picture[x][y] === 'B' && cnt === 1;
         };
-        
+
         let n = picture.length;
         let m = picture[0].length;
-        
+
         let answer = 0;
         for (let j = 0; j < m; j++) {
             answer += check(0, j) ? 1 : 0;
@@ -383,11 +517,11 @@ class Solution {
         for (let j = 0; j < m; j++) {
             picture[0][j] = (picture[0][j] === 'B' ? '1' : '0');
         }
-        
+
         for (let i = 0; i < n; i++) {
             picture[i][0] = (picture[i][0] === 'B' ? '1' : '0');
         }
-        
+
         // If the cell is black increment the count of corresponding row and column by 1
         for (let i = 1; i < n; i++) {
             for (let j = 1; j < m; j++) {
@@ -397,7 +531,7 @@ class Solution {
                 }
             }
         }
-        
+
         for (let i = 1; i < n; i++) {
             for (let j = 1; j < m; j++) {
                 if (picture[i][j] === 'B') {
@@ -407,8 +541,299 @@ class Solution {
                 }
             }
         }
-        
+
         return answer;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    // Returns true if the cell at (x, y) is lonely.
+    // There should not be any other black cell
+    // In the first row and column except (x, y) itself.
+    private bool Check(char[][] picture, int x, int y) {
+        int n = picture.Length;
+        int m = picture[0].Length;
+
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
+            cnt += (picture[i][y] == 'B' ? 1 : 0);
+        }
+
+        for (int j = 0; j < m; j++) {
+            // avoid double count (x, y)
+            if (j != y) cnt += (picture[x][j] == 'B' ? 1 : 0);
+        }
+        return picture[x][y] == 'B' && cnt == 1;
+    }
+
+    public int FindLonelyPixel(char[][] picture) {
+        int n = picture.Length;
+        int m = picture[0].Length;
+
+        int answer = 0;
+        for (int j = 0; j < m; j++) {
+            answer += Check(picture, 0, j) ? 1 : 0;
+        }
+        for (int i = 1; i < n; i++) {
+            answer += Check(picture, i, 0) ? 1 : 0;
+        }
+
+        // Convert cell 'B' to '1' and 'W' to '0'
+        for (int j = 0; j < m; j++) {
+            picture[0][j] = (picture[0][j] == 'B' ? '1' : '0');
+        }
+
+        for (int i = 0; i < n; i++) {
+            picture[i][0] = (picture[i][0] == 'B' ? '1' : '0');
+        }
+
+        // If the cell is black increment the count of corresponding row and column by 1
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < m; j++) {
+                if (picture[i][j] == 'B') {
+                    picture[i][0]++;
+                    picture[0][j]++;
+                }
+            }
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int j = 1; j < m; j++) {
+                if (picture[i][j] == 'B') {
+                    if (picture[0][j] == '1' && picture[i][0] == '1') {
+                        answer++;
+                    }
+                }
+            }
+        }
+
+        return answer;
+    }
+}
+```
+
+```go
+func findLonelyPixel(picture [][]byte) int {
+    // Returns true if the cell at (x, y) is lonely.
+    // There should not be any other black cell
+    // In the first row and column except (x, y) itself.
+    check := func(x, y int) bool {
+        n := len(picture)
+        m := len(picture[0])
+
+        cnt := 0
+        for i := 0; i < n; i++ {
+            if picture[i][y] == 'B' {
+                cnt++
+            }
+        }
+
+        for j := 0; j < m; j++ {
+            // avoid double count (x, y)
+            if j != y && picture[x][j] == 'B' {
+                cnt++
+            }
+        }
+        return picture[x][y] == 'B' && cnt == 1
+    }
+
+    n := len(picture)
+    m := len(picture[0])
+
+    answer := 0
+    for j := 0; j < m; j++ {
+        if check(0, j) {
+            answer++
+        }
+    }
+    for i := 1; i < n; i++ {
+        if check(i, 0) {
+            answer++
+        }
+    }
+
+    // Convert cell 'B' to '1' and 'W' to '0'
+    for j := 0; j < m; j++ {
+        if picture[0][j] == 'B' {
+            picture[0][j] = '1'
+        } else {
+            picture[0][j] = '0'
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        if picture[i][0] == 'B' {
+            picture[i][0] = '1'
+        } else {
+            picture[i][0] = '0'
+        }
+    }
+
+    // If the cell is black increment the count of corresponding row and column by 1
+    for i := 1; i < n; i++ {
+        for j := 1; j < m; j++ {
+            if picture[i][j] == 'B' {
+                picture[i][0]++
+                picture[0][j]++
+            }
+        }
+    }
+
+    for i := 1; i < n; i++ {
+        for j := 1; j < m; j++ {
+            if picture[i][j] == 'B' {
+                if picture[0][j] == '1' && picture[i][0] == '1' {
+                    answer++
+                }
+            }
+        }
+    }
+
+    return answer
+}
+```
+
+```kotlin
+class Solution {
+    // Returns true if the cell at (x, y) is lonely.
+    // There should not be any other black cell
+    // In the first row and column except (x, y) itself.
+    private fun check(picture: Array<CharArray>, x: Int, y: Int): Boolean {
+        val n = picture.size
+        val m = picture[0].size
+
+        var cnt = 0
+        for (i in 0 until n) {
+            if (picture[i][y] == 'B') cnt++
+        }
+
+        for (j in 0 until m) {
+            // avoid double count (x, y)
+            if (j != y && picture[x][j] == 'B') cnt++
+        }
+        return picture[x][y] == 'B' && cnt == 1
+    }
+
+    fun findLonelyPixel(picture: Array<CharArray>): Int {
+        val n = picture.size
+        val m = picture[0].size
+
+        var answer = 0
+        for (j in 0 until m) {
+            if (check(picture, 0, j)) answer++
+        }
+        for (i in 1 until n) {
+            if (check(picture, i, 0)) answer++
+        }
+
+        // Convert cell 'B' to '1' and 'W' to '0'
+        for (j in 0 until m) {
+            picture[0][j] = if (picture[0][j] == 'B') '1' else '0'
+        }
+
+        for (i in 0 until n) {
+            picture[i][0] = if (picture[i][0] == 'B') '1' else '0'
+        }
+
+        // If the cell is black increment the count of corresponding row and column by 1
+        for (i in 1 until n) {
+            for (j in 1 until m) {
+                if (picture[i][j] == 'B') {
+                    picture[i][0]++
+                    picture[0][j]++
+                }
+            }
+        }
+
+        for (i in 1 until n) {
+            for (j in 1 until m) {
+                if (picture[i][j] == 'B') {
+                    if (picture[0][j] == '1' && picture[i][0] == '1') {
+                        answer++
+                    }
+                }
+            }
+        }
+
+        return answer
+    }
+}
+```
+
+```swift
+class Solution {
+    // Returns true if the cell at (x, y) is lonely.
+    // There should not be any other black cell
+    // In the first row and column except (x, y) itself.
+    private func check(_ picture: inout [[Character]], _ x: Int, _ y: Int) -> Bool {
+        let n = picture.count
+        let m = picture[0].count
+
+        var cnt = 0
+        for i in 0..<n {
+            if picture[i][y] == "B" {
+                cnt += 1
+            }
+        }
+
+        for j in 0..<m {
+            // avoid double count (x, y)
+            if j != y && picture[x][j] == "B" {
+                cnt += 1
+            }
+        }
+        return picture[x][y] == "B" && cnt == 1
+    }
+
+    func findLonelyPixel(_ picture: [[Character]]) -> Int {
+        var picture = picture
+        let n = picture.count
+        let m = picture[0].count
+
+        var answer = 0
+        for j in 0..<m {
+            if check(&picture, 0, j) {
+                answer += 1
+            }
+        }
+        for i in 1..<n {
+            if check(&picture, i, 0) {
+                answer += 1
+            }
+        }
+
+        // Convert cell 'B' to '1' and 'W' to '0'
+        for j in 0..<m {
+            picture[0][j] = picture[0][j] == "B" ? "1" : "0"
+        }
+
+        for i in 0..<n {
+            picture[i][0] = picture[i][0] == "B" ? "1" : "0"
+        }
+
+        // If the cell is black increment the count of corresponding row and column by 1
+        for i in 1..<n {
+            for j in 1..<m {
+                if picture[i][j] == "B" {
+                    picture[i][0] = Character(UnicodeScalar(picture[i][0].asciiValue! + 1))
+                    picture[0][j] = Character(UnicodeScalar(picture[0][j].asciiValue! + 1))
+                }
+            }
+        }
+
+        for i in 1..<n {
+            for j in 1..<m {
+                if picture[i][j] == "B" {
+                    if picture[0][j] == "1" && picture[i][0] == "1" {
+                        answer += 1
+                    }
+                }
+            }
+        }
+
+        return answer
     }
 }
 ```

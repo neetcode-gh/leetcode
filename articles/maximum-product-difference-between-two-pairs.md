@@ -89,6 +89,99 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxProductDifference(int[] nums) {
+        int n = nums.Length, res = 0;
+        for (int a = 0; a < n; a++) {
+            for (int b = 0; b < n; b++) {
+                if (a == b) continue;
+                for (int c = 0; c < n; c++) {
+                    if (a == c || b == c) continue;
+                    for (int d = 0; d < n; d++) {
+                        if (a == d || b == d || c == d) continue;
+                        res = Math.Max(res, nums[a] * nums[b] - nums[c] * nums[d]);
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxProductDifference(nums []int) int {
+    n := len(nums)
+    res := 0
+    for a := 0; a < n; a++ {
+        for b := 0; b < n; b++ {
+            if a == b {
+                continue
+            }
+            for c := 0; c < n; c++ {
+                if a == c || b == c {
+                    continue
+                }
+                for d := 0; d < n; d++ {
+                    if a == d || b == d || c == d {
+                        continue
+                    }
+                    if nums[a]*nums[b]-nums[c]*nums[d] > res {
+                        res = nums[a]*nums[b] - nums[c]*nums[d]
+                    }
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProductDifference(nums: IntArray): Int {
+        val n = nums.size
+        var res = 0
+        for (a in 0 until n) {
+            for (b in 0 until n) {
+                if (a == b) continue
+                for (c in 0 until n) {
+                    if (a == c || b == c) continue
+                    for (d in 0 until n) {
+                        if (a == d || b == d || c == d) continue
+                        res = maxOf(res, nums[a] * nums[b] - nums[c] * nums[d])
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProductDifference(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = 0
+        for a in 0..<n {
+            for b in 0..<n {
+                if a == b { continue }
+                for c in 0..<n {
+                    if a == c || b == c { continue }
+                    for d in 0..<n {
+                        if a == d || b == d || c == d { continue }
+                        res = max(res, nums[a] * nums[b] - nums[c] * nums[d])
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -139,6 +232,43 @@ class Solution {
         return (
             nums[nums.length - 1] * nums[nums.length - 2] - nums[0] * nums[1]
         );
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxProductDifference(int[] nums) {
+        Array.Sort(nums);
+        return nums[nums.Length - 1] * nums[nums.Length - 2] - nums[0] * nums[1];
+    }
+}
+```
+
+```go
+func maxProductDifference(nums []int) int {
+    sort.Ints(nums)
+    n := len(nums)
+    return nums[n-1]*nums[n-2] - nums[0]*nums[1]
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProductDifference(nums: IntArray): Int {
+        nums.sort()
+        val n = nums.size
+        return nums[n - 1] * nums[n - 2] - nums[0] * nums[1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProductDifference(_ nums: [Int]) -> Int {
+        let sorted = nums.sorted()
+        let n = sorted.count
+        return sorted[n - 1] * sorted[n - 2] - sorted[0] * sorted[1]
     }
 }
 ```
@@ -250,6 +380,102 @@ class Solution {
             }
         }
         return max1 * max2 - min1 * min2;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxProductDifference(int[] nums) {
+        int max1 = 0, max2 = 0;
+        int min1 = int.MaxValue, min2 = int.MaxValue;
+        foreach (int num in nums) {
+            if (num > max1) {
+                max2 = max1;
+                max1 = num;
+            } else if (num > max2) {
+                max2 = num;
+            }
+            if (num < min1) {
+                min2 = min1;
+                min1 = num;
+            } else if (num < min2) {
+                min2 = num;
+            }
+        }
+        return (max1 * max2) - (min1 * min2);
+    }
+}
+```
+
+```go
+func maxProductDifference(nums []int) int {
+    max1, max2 := 0, 0
+    min1, min2 := math.MaxInt32, math.MaxInt32
+    for _, num := range nums {
+        if num > max1 {
+            max2 = max1
+            max1 = num
+        } else if num > max2 {
+            max2 = num
+        }
+        if num < min1 {
+            min2 = min1
+            min1 = num
+        } else if num < min2 {
+            min2 = num
+        }
+    }
+    return (max1 * max2) - (min1 * min2)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProductDifference(nums: IntArray): Int {
+        var max1 = 0
+        var max2 = 0
+        var min1 = Int.MAX_VALUE
+        var min2 = Int.MAX_VALUE
+        for (num in nums) {
+            if (num > max1) {
+                max2 = max1
+                max1 = num
+            } else if (num > max2) {
+                max2 = num
+            }
+            if (num < min1) {
+                min2 = min1
+                min1 = num
+            } else if (num < min2) {
+                min2 = num
+            }
+        }
+        return (max1 * max2) - (min1 * min2)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProductDifference(_ nums: [Int]) -> Int {
+        var max1 = 0, max2 = 0
+        var min1 = Int.max, min2 = Int.max
+        for num in nums {
+            if num > max1 {
+                max2 = max1
+                max1 = num
+            } else if num > max2 {
+                max2 = num
+            }
+            if num < min1 {
+                min2 = min1
+                min1 = num
+            } else if num < min2 {
+                min2 = num
+            }
+        }
+        return (max1 * max2) - (min1 * min2)
     }
 }
 ```

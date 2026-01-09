@@ -88,6 +88,57 @@ public class Solution {
 }
 ```
 
+```go
+func replaceElements(arr []int) []int {
+    n := len(arr)
+    ans := make([]int, n)
+    for i := 0; i < n; i++ {
+        rightMax := -1
+        for j := i + 1; j < n; j++ {
+            if arr[j] > rightMax {
+                rightMax = arr[j]
+            }
+        }
+        ans[i] = rightMax
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun replaceElements(arr: IntArray): IntArray {
+        val n = arr.size
+        val ans = IntArray(n)
+        for (i in 0 until n) {
+            var rightMax = -1
+            for (j in i + 1 until n) {
+                rightMax = maxOf(rightMax, arr[j])
+            }
+            ans[i] = rightMax
+        }
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func replaceElements(_ arr: [Int]) -> [Int] {
+        let n = arr.count
+        var ans = [Int](repeating: 0, count: n)
+        for i in 0..<n {
+            var rightMax = -1
+            for j in (i + 1)..<n {
+                rightMax = max(rightMax, arr[j])
+            }
+            ans[i] = rightMax
+        }
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -174,6 +225,51 @@ public class Solution {
             rightMax = Math.Max(arr[i], rightMax);
         }
         return ans;
+    }
+}
+```
+
+```go
+func replaceElements(arr []int) []int {
+    n := len(arr)
+    ans := make([]int, n)
+    rightMax := -1
+    for i := n - 1; i >= 0; i-- {
+        ans[i] = rightMax
+        if arr[i] > rightMax {
+            rightMax = arr[i]
+        }
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun replaceElements(arr: IntArray): IntArray {
+        val n = arr.size
+        val ans = IntArray(n)
+        var rightMax = -1
+        for (i in n - 1 downTo 0) {
+            ans[i] = rightMax
+            rightMax = maxOf(rightMax, arr[i])
+        }
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func replaceElements(_ arr: [Int]) -> [Int] {
+        let n = arr.count
+        var ans = [Int](repeating: 0, count: n)
+        var rightMax = -1
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            ans[i] = rightMax
+            rightMax = max(rightMax, arr[i])
+        }
+        return ans
     }
 }
 ```

@@ -80,6 +80,61 @@ class Solution {
 }
 ```
 
+```go
+func findMaxAverage(nums []int, k int) float64 {
+    res := math.Inf(-1)
+
+    for s := 0; s < len(nums)-k+1; s++ {
+        sum := 0
+        for i := s; i < len(nums); i++ {
+            sum += nums[i]
+            if i-s+1 >= k {
+                res = math.Max(res, float64(sum)/float64(i-s+1))
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxAverage(nums: IntArray, k: Int): Double {
+        var res = Double.NEGATIVE_INFINITY
+
+        for (s in 0..nums.size - k) {
+            var sum = 0L
+            for (i in s until nums.size) {
+                sum += nums[i]
+                if (i - s + 1 >= k) {
+                    res = maxOf(res, sum.toDouble() / (i - s + 1))
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxAverage(_ nums: [Int], _ k: Int) -> Double {
+        var res = -Double.infinity
+
+        for s in 0...(nums.count - k) {
+            var sum = 0
+            for i in s..<nums.count {
+                sum += nums[i]
+                if i - s + 1 >= k {
+                    res = max(res, Double(sum) / Double(i - s + 1))
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,15 +306,15 @@ class Solution {
     findMaxAverage(nums, k) {
         let max_val = -Infinity;
         let min_val = Infinity;
-        
+
         for (let n of nums) {
             max_val = Math.max(max_val, n);
             min_val = Math.min(min_val, n);
         }
-        
+
         let prev_mid = max_val;
         let error = Infinity;
-        
+
         while (error > 0.00001) {
             let mid = (max_val + min_val) * 0.5;
             if (this.check(nums, mid, k))
@@ -269,7 +324,7 @@ class Solution {
             error = Math.abs(prev_mid - mid);
             prev_mid = mid;
         }
-        
+
         return min_val;
     }
 
@@ -281,13 +336,13 @@ class Solution {
      */
     check(nums, mid, k) {
         let sum = 0, prev = 0, min_sum = 0;
-        
+
         for (let i = 0; i < k; i++)
             sum += nums[i] - mid;
-        
+
         if (sum >= 0)
             return true;
-        
+
         for (let i = k; i < nums.length; i++) {
             sum += nums[i] - mid;
             prev += nums[i - k] - mid;
@@ -295,8 +350,141 @@ class Solution {
             if (sum >= min_sum)
                 return true;
         }
-        
+
         return false;
+    }
+}
+```
+
+```go
+func findMaxAverage(nums []int, k int) float64 {
+    maxVal := float64(nums[0])
+    minVal := float64(nums[0])
+    for _, n := range nums {
+        maxVal = math.Max(maxVal, float64(n))
+        minVal = math.Min(minVal, float64(n))
+    }
+
+    prevMid := maxVal
+    err := math.MaxFloat64
+
+    for err > 0.00001 {
+        mid := (maxVal + minVal) * 0.5
+        if check(nums, mid, k) {
+            minVal = mid
+        } else {
+            maxVal = mid
+        }
+        err = math.Abs(prevMid - mid)
+        prevMid = mid
+    }
+    return minVal
+}
+
+func check(nums []int, mid float64, k int) bool {
+    sum, prev, minSum := 0.0, 0.0, 0.0
+
+    for i := 0; i < k; i++ {
+        sum += float64(nums[i]) - mid
+    }
+    if sum >= 0 {
+        return true
+    }
+
+    for i := k; i < len(nums); i++ {
+        sum += float64(nums[i]) - mid
+        prev += float64(nums[i-k]) - mid
+        minSum = math.Min(prev, minSum)
+        if sum >= minSum {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxAverage(nums: IntArray, k: Int): Double {
+        var maxVal = nums.maxOrNull()!!.toDouble()
+        var minVal = nums.minOrNull()!!.toDouble()
+
+        var prevMid = maxVal
+        var error = Double.MAX_VALUE
+
+        while (error > 0.00001) {
+            val mid = (maxVal + minVal) * 0.5
+            if (check(nums, mid, k)) {
+                minVal = mid
+            } else {
+                maxVal = mid
+            }
+            error = kotlin.math.abs(prevMid - mid)
+            prevMid = mid
+        }
+        return minVal
+    }
+
+    private fun check(nums: IntArray, mid: Double, k: Int): Boolean {
+        var sum = 0.0
+        var prev = 0.0
+        var minSum = 0.0
+
+        for (i in 0 until k) {
+            sum += nums[i] - mid
+        }
+        if (sum >= 0) return true
+
+        for (i in k until nums.size) {
+            sum += nums[i] - mid
+            prev += nums[i - k] - mid
+            minSum = minOf(prev, minSum)
+            if (sum >= minSum) return true
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxAverage(_ nums: [Int], _ k: Int) -> Double {
+        var maxVal = Double(nums.max()!)
+        var minVal = Double(nums.min()!)
+
+        var prevMid = maxVal
+        var error = Double.infinity
+
+        while error > 0.00001 {
+            let mid = (maxVal + minVal) * 0.5
+            if check(nums, mid, k) {
+                minVal = mid
+            } else {
+                maxVal = mid
+            }
+            error = abs(prevMid - mid)
+            prevMid = mid
+        }
+        return minVal
+    }
+
+    private func check(_ nums: [Int], _ mid: Double, _ k: Int) -> Bool {
+        var sum = 0.0
+        var prev = 0.0
+        var minSum = 0.0
+
+        for i in 0..<k {
+            sum += Double(nums[i]) - mid
+        }
+        if sum >= 0 { return true }
+
+        for i in k..<nums.count {
+            sum += Double(nums[i]) - mid
+            prev += Double(nums[i - k]) - mid
+            minSum = min(prev, minSum)
+            if sum >= minSum { return true }
+        }
+        return false
     }
 }
 ```

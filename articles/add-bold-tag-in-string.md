@@ -119,7 +119,7 @@ class Solution {
     addBoldTag(s, words) {
         const n = s.length;
         const bold = new Array(n).fill(false);
-        
+
         for (const word of words) {
             let start = s.indexOf(word);
             while (start !== -1) {
@@ -129,11 +129,11 @@ class Solution {
                 start = s.indexOf(word, start + 1);
             }
         }
-        
+
         const openTag = "<b>";
         const closeTag = "</b>";
         const ans = [];
-        
+
         for (let i = 0; i < n; i++) {
             if (bold[i] && (i === 0 || !bold[i - 1])) {
                 ans.push(openTag);
@@ -143,8 +143,154 @@ class Solution {
                 ans.push(closeTag);
             }
         }
-        
+
         return ans.join("");
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string AddBoldTag(string s, string[] words) {
+        int n = s.Length;
+        bool[] bold = new bool[n];
+
+        foreach (string word in words) {
+            int start = s.IndexOf(word);
+            while (start != -1) {
+                for (int i = start; i < start + word.Length; i++) {
+                    bold[i] = true;
+                }
+                start = s.IndexOf(word, start + 1);
+            }
+        }
+
+        string openTag = "<b>";
+        string closeTag = "</b>";
+        StringBuilder ans = new StringBuilder();
+
+        for (int i = 0; i < n; i++) {
+            if (bold[i] && (i == 0 || !bold[i - 1])) {
+                ans.Append(openTag);
+            }
+            ans.Append(s[i]);
+            if (bold[i] && (i == n - 1 || !bold[i + 1])) {
+                ans.Append(closeTag);
+            }
+        }
+
+        return ans.ToString();
+    }
+}
+```
+
+```go
+func addBoldTag(s string, words []string) string {
+    n := len(s)
+    bold := make([]bool, n)
+
+    for _, word := range words {
+        start := 0
+        for {
+            idx := strings.Index(s[start:], word)
+            if idx == -1 {
+                break
+            }
+            idx += start
+            for i := idx; i < idx+len(word); i++ {
+                bold[i] = true
+            }
+            start = idx + 1
+        }
+    }
+
+    openTag := "<b>"
+    closeTag := "</b>"
+    var ans strings.Builder
+
+    for i := 0; i < n; i++ {
+        if bold[i] && (i == 0 || !bold[i-1]) {
+            ans.WriteString(openTag)
+        }
+        ans.WriteByte(s[i])
+        if bold[i] && (i == n-1 || !bold[i+1]) {
+            ans.WriteString(closeTag)
+        }
+    }
+
+    return ans.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun addBoldTag(s: String, words: Array<String>): String {
+        val n = s.length
+        val bold = BooleanArray(n)
+
+        for (word in words) {
+            var start = s.indexOf(word)
+            while (start != -1) {
+                for (i in start until start + word.length) {
+                    bold[i] = true
+                }
+                start = s.indexOf(word, start + 1)
+            }
+        }
+
+        val openTag = "<b>"
+        val closeTag = "</b>"
+        val ans = StringBuilder()
+
+        for (i in 0 until n) {
+            if (bold[i] && (i == 0 || !bold[i - 1])) {
+                ans.append(openTag)
+            }
+            ans.append(s[i])
+            if (bold[i] && (i == n - 1 || !bold[i + 1])) {
+                ans.append(closeTag)
+            }
+        }
+
+        return ans.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func addBoldTag(_ s: String, _ words: [String]) -> String {
+        let chars = Array(s)
+        let n = chars.count
+        var bold = [Bool](repeating: false, count: n)
+
+        for word in words {
+            var searchStart = s.startIndex
+            while let range = s.range(of: word, range: searchStart..<s.endIndex) {
+                let start = s.distance(from: s.startIndex, to: range.lowerBound)
+                let end = s.distance(from: s.startIndex, to: range.upperBound)
+                for i in start..<end {
+                    bold[i] = true
+                }
+                searchStart = s.index(after: range.lowerBound)
+            }
+        }
+
+        let openTag = "<b>"
+        let closeTag = "</b>"
+        var ans = ""
+
+        for i in 0..<n {
+            if bold[i] && (i == 0 || !bold[i - 1]) {
+                ans += openTag
+            }
+            ans.append(chars[i])
+            if bold[i] && (i == n - 1 || !bold[i + 1]) {
+                ans += closeTag
+            }
+        }
+
+        return ans
     }
 }
 ```

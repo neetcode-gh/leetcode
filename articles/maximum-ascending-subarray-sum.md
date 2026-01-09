@@ -78,6 +78,61 @@ class Solution {
 }
 ```
 
+```go
+func maxAscendingSum(nums []int) int {
+    res := 0
+    for i := 0; i < len(nums); i++ {
+        curSum := nums[i]
+        for j := i + 1; j < len(nums); j++ {
+            if nums[j] <= nums[j-1] {
+                break
+            }
+            curSum += nums[j]
+        }
+        if curSum > res {
+            res = curSum
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxAscendingSum(nums: IntArray): Int {
+        var res = 0
+        for (i in nums.indices) {
+            var curSum = nums[i]
+            for (j in i + 1 until nums.size) {
+                if (nums[j] <= nums[j - 1]) break
+                curSum += nums[j]
+            }
+            res = maxOf(res, curSum)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxAscendingSum(_ nums: [Int]) -> Int {
+        var res = 0
+        for i in 0..<nums.count {
+            var curSum = nums[i]
+            for j in (i + 1)..<nums.count {
+                if nums[j] <= nums[j - 1] {
+                    break
+                }
+                curSum += nums[j]
+            }
+            res = max(res, curSum)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -162,6 +217,59 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxAscendingSum(nums []int) int {
+    res, curSum := nums[0], nums[0]
+
+    for i := 1; i < len(nums); i++ {
+        if nums[i] <= nums[i-1] {
+            curSum = 0
+        }
+        curSum += nums[i]
+        if curSum > res {
+            res = curSum
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxAscendingSum(nums: IntArray): Int {
+        var res = nums[0]
+        var curSum = nums[0]
+
+        for (i in 1 until nums.size) {
+            if (nums[i] <= nums[i - 1]) {
+                curSum = 0
+            }
+            curSum += nums[i]
+            res = maxOf(res, curSum)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxAscendingSum(_ nums: [Int]) -> Int {
+        var res = nums[0]
+        var curSum = nums[0]
+
+        for i in 1..<nums.count {
+            if nums[i] <= nums[i - 1] {
+                curSum = 0
+            }
+            curSum += nums[i]
+            res = max(res, curSum)
+        }
+        return res
     }
 }
 ```

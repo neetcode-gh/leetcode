@@ -131,6 +131,79 @@ public class Solution {
 }
 ```
 
+```go
+func simplifyPath(path string) string {
+    stack := []string{}
+    cur := ""
+
+    for _, c := range path + "/" {
+        if c == '/' {
+            if cur == ".." {
+                if len(stack) > 0 {
+                    stack = stack[:len(stack)-1]
+                }
+            } else if cur != "" && cur != "." {
+                stack = append(stack, cur)
+            }
+            cur = ""
+        } else {
+            cur += string(c)
+        }
+    }
+
+    return "/" + strings.Join(stack, "/")
+}
+```
+
+```kotlin
+class Solution {
+    fun simplifyPath(path: String): String {
+        val stack = ArrayDeque<String>()
+        var cur = StringBuilder()
+
+        for (c in path + "/") {
+            if (c == '/') {
+                val s = cur.toString()
+                if (s == "..") {
+                    if (stack.isNotEmpty()) stack.removeLast()
+                } else if (s != "" && s != ".") {
+                    stack.addLast(s)
+                }
+                cur = StringBuilder()
+            } else {
+                cur.append(c)
+            }
+        }
+
+        return "/" + stack.joinToString("/")
+    }
+}
+```
+
+```swift
+class Solution {
+    func simplifyPath(_ path: String) -> String {
+        var stack = [String]()
+        var cur = ""
+
+        for c in path + "/" {
+            if c == "/" {
+                if cur == ".." {
+                    if !stack.isEmpty { stack.removeLast() }
+                } else if cur != "" && cur != "." {
+                    stack.append(cur)
+                }
+                cur = ""
+            } else {
+                cur += String(c)
+            }
+        }
+
+        return "/" + stack.joined(separator: "/")
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,6 +323,64 @@ public class Solution {
         var result = new List<string>(stack);
         result.Reverse();
         return "/" + string.Join("/", result);
+    }
+}
+```
+
+```go
+func simplifyPath(path string) string {
+    stack := []string{}
+    paths := strings.Split(path, "/")
+
+    for _, cur := range paths {
+        if cur == ".." {
+            if len(stack) > 0 {
+                stack = stack[:len(stack)-1]
+            }
+        } else if cur != "" && cur != "." {
+            stack = append(stack, cur)
+        }
+    }
+
+    return "/" + strings.Join(stack, "/")
+}
+```
+
+```kotlin
+class Solution {
+    fun simplifyPath(path: String): String {
+        val stack = ArrayDeque<String>()
+        val paths = path.split("/")
+
+        for (cur in paths) {
+            if (cur == "..") {
+                if (stack.isNotEmpty()) stack.removeLast()
+            } else if (cur != "" && cur != ".") {
+                stack.addLast(cur)
+            }
+        }
+
+        return "/" + stack.joinToString("/")
+    }
+}
+```
+
+```swift
+class Solution {
+    func simplifyPath(_ path: String) -> String {
+        var stack = [String]()
+        let paths = path.split(separator: "/")
+
+        for cur in paths {
+            let part = String(cur)
+            if part == ".." {
+                if !stack.isEmpty { stack.removeLast() }
+            } else if part != "" && part != "." {
+                stack.append(part)
+            }
+        }
+
+        return "/" + stack.joined(separator: "/")
     }
 }
 ```

@@ -116,7 +116,7 @@ public:
 class Solution {
 
     reversiblePairs = [
-        ['0', '0'], ['1', '1'], 
+        ['0', '0'], ['1', '1'],
         ['6', '9'], ['8', '8'], ['9', '6']
     ];
 
@@ -130,10 +130,10 @@ class Solution {
             // 1-digit strobogrammatic numbers.
             return ["0", "1", "8"];
         }
-        
+
         let prevStroboNums = this.generateStroboNumbers(n - 2, finalLength);
         let currStroboNums = [];
-        
+
         for (let prevStroboNum of prevStroboNums) {
             for (let pair of this.reversiblePairs) {
                 // We can only append 0's if it is not first digit.
@@ -142,7 +142,7 @@ class Solution {
                 }
             }
         }
-        
+
         return currStroboNums;
     }
 
@@ -152,6 +152,150 @@ class Solution {
      */
     findStrobogrammatic(n) {
         return this.generateStroboNumbers(n, n);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private char[][] reversiblePairs = new char[][] {
+        new char[] {'0', '0'}, new char[] {'1', '1'},
+        new char[] {'6', '9'}, new char[] {'8', '8'}, new char[] {'9', '6'}
+    };
+
+    public IList<string> FindStrobogrammatic(int n) {
+        return GenerateStroboNumbers(n, n);
+    }
+
+    private List<string> GenerateStroboNumbers(int n, int finalLength) {
+        if (n == 0) {
+            return new List<string> { "" };
+        }
+
+        if (n == 1) {
+            return new List<string> { "0", "1", "8" };
+        }
+
+        List<string> prevStroboNums = GenerateStroboNumbers(n - 2, finalLength);
+        List<string> currStroboNums = new List<string>();
+
+        foreach (string prevStroboNum in prevStroboNums) {
+            foreach (char[] pair in reversiblePairs) {
+                if (pair[0] != '0' || n != finalLength) {
+                    currStroboNums.Add(pair[0] + prevStroboNum + pair[1]);
+                }
+            }
+        }
+
+        return currStroboNums;
+    }
+}
+```
+
+```go
+func findStrobogrammatic(n int) []string {
+    reversiblePairs := [][]byte{
+        {'0', '0'}, {'1', '1'},
+        {'6', '9'}, {'8', '8'}, {'9', '6'},
+    }
+
+    var generateStroboNumbers func(n, finalLength int) []string
+    generateStroboNumbers = func(n, finalLength int) []string {
+        if n == 0 {
+            return []string{""}
+        }
+
+        if n == 1 {
+            return []string{"0", "1", "8"}
+        }
+
+        prevStroboNums := generateStroboNumbers(n-2, finalLength)
+        currStroboNums := []string{}
+
+        for _, prevStroboNum := range prevStroboNums {
+            for _, pair := range reversiblePairs {
+                if pair[0] != '0' || n != finalLength {
+                    currStroboNums = append(currStroboNums,
+                        string(pair[0])+prevStroboNum+string(pair[1]))
+                }
+            }
+        }
+
+        return currStroboNums
+    }
+
+    return generateStroboNumbers(n, n)
+}
+```
+
+```kotlin
+class Solution {
+    private val reversiblePairs = arrayOf(
+        charArrayOf('0', '0'), charArrayOf('1', '1'),
+        charArrayOf('6', '9'), charArrayOf('8', '8'), charArrayOf('9', '6')
+    )
+
+    fun findStrobogrammatic(n: Int): List<String> {
+        return generateStroboNumbers(n, n)
+    }
+
+    private fun generateStroboNumbers(n: Int, finalLength: Int): List<String> {
+        if (n == 0) {
+            return listOf("")
+        }
+
+        if (n == 1) {
+            return listOf("0", "1", "8")
+        }
+
+        val prevStroboNums = generateStroboNumbers(n - 2, finalLength)
+        val currStroboNums = mutableListOf<String>()
+
+        for (prevStroboNum in prevStroboNums) {
+            for (pair in reversiblePairs) {
+                if (pair[0] != '0' || n != finalLength) {
+                    currStroboNums.add("${pair[0]}$prevStroboNum${pair[1]}")
+                }
+            }
+        }
+
+        return currStroboNums
+    }
+}
+```
+
+```swift
+class Solution {
+    private let reversiblePairs: [[Character]] = [
+        ["0", "0"], ["1", "1"],
+        ["6", "9"], ["8", "8"], ["9", "6"]
+    ]
+
+    func findStrobogrammatic(_ n: Int) -> [String] {
+        return generateStroboNumbers(n, n)
+    }
+
+    private func generateStroboNumbers(_ n: Int, _ finalLength: Int) -> [String] {
+        if n == 0 {
+            return [""]
+        }
+
+        if n == 1 {
+            return ["0", "1", "8"]
+        }
+
+        let prevStroboNums = generateStroboNumbers(n - 2, finalLength)
+        var currStroboNums = [String]()
+
+        for prevStroboNum in prevStroboNums {
+            for pair in reversiblePairs {
+                if pair[0] != "0" || n != finalLength {
+                    currStroboNums.append("\(pair[0])\(prevStroboNum)\(pair[1])")
+                }
+            }
+        }
+
+        return currStroboNums
     }
 }
 ```
@@ -299,12 +443,12 @@ public:
 
 ```javascript
 class Solution {
-    
+
     reversiblePairs = [
-        ['0', '0'], ['1', '1'], 
+        ['0', '0'], ['1', '1'],
         ['6', '9'], ['8', '8'], ['9', '6']
     ];
-    
+
     /**
      * @param {number} n
      * @return {string[]}
@@ -312,7 +456,7 @@ class Solution {
     findStrobogrammatic(n) {
         let currStringsLength;
         let q = [];
-        
+
         // When n is even, it means when decreasing by 2 we will go till 0.
         if (n % 2 == 0) {
             // We will start with 0-digit strobogrammatic numbers.
@@ -323,11 +467,11 @@ class Solution {
             currStringsLength = 1;
             q = ["0", "1", "8"];
         }
-        
+
         while (currStringsLength < n) {
             currStringsLength += 2;
             let nextLevel = [];
-            
+
             q.forEach((number) => {
                 this.reversiblePairs.forEach((pair) => {
                     if (currStringsLength != n || pair[0] != '0') {
@@ -335,11 +479,150 @@ class Solution {
                     }
                 });
             });
-            
+
             q = nextLevel;
         }
-        
+
         return q;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private char[][] reversiblePairs = new char[][] {
+        new char[] {'0', '0'}, new char[] {'1', '1'},
+        new char[] {'6', '9'}, new char[] {'8', '8'}, new char[] {'9', '6'}
+    };
+
+    public IList<string> FindStrobogrammatic(int n) {
+        Queue<string> q = new Queue<string>();
+        int currStringsLength;
+
+        if (n % 2 == 0) {
+            currStringsLength = 0;
+            q.Enqueue("");
+        } else {
+            currStringsLength = 1;
+            q.Enqueue("0");
+            q.Enqueue("1");
+            q.Enqueue("8");
+        }
+
+        while (currStringsLength < n) {
+            currStringsLength += 2;
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                string number = q.Dequeue();
+
+                foreach (char[] pair in reversiblePairs) {
+                    if (currStringsLength != n || pair[0] != '0') {
+                        q.Enqueue(pair[0] + number + pair[1]);
+                    }
+                }
+            }
+        }
+
+        return q.ToList();
+    }
+}
+```
+
+```go
+func findStrobogrammatic(n int) []string {
+    reversiblePairs := [][]byte{
+        {'0', '0'}, {'1', '1'},
+        {'6', '9'}, {'8', '8'}, {'9', '6'},
+    }
+
+    currStringsLength := n % 2
+    var q []string
+
+    if currStringsLength == 1 {
+        q = []string{"0", "1", "8"}
+    } else {
+        q = []string{""}
+    }
+
+    for currStringsLength < n {
+        currStringsLength += 2
+        nextLevel := []string{}
+
+        for _, number := range q {
+            for _, pair := range reversiblePairs {
+                if currStringsLength != n || pair[0] != '0' {
+                    nextLevel = append(nextLevel,
+                        string(pair[0])+number+string(pair[1]))
+                }
+            }
+        }
+        q = nextLevel
+    }
+
+    return q
+}
+```
+
+```kotlin
+class Solution {
+    private val reversiblePairs = arrayOf(
+        charArrayOf('0', '0'), charArrayOf('1', '1'),
+        charArrayOf('6', '9'), charArrayOf('8', '8'), charArrayOf('9', '6')
+    )
+
+    fun findStrobogrammatic(n: Int): List<String> {
+        var currStringsLength = n % 2
+        var q = if (currStringsLength == 1) {
+            mutableListOf("0", "1", "8")
+        } else {
+            mutableListOf("")
+        }
+
+        while (currStringsLength < n) {
+            currStringsLength += 2
+            val nextLevel = mutableListOf<String>()
+
+            for (number in q) {
+                for (pair in reversiblePairs) {
+                    if (currStringsLength != n || pair[0] != '0') {
+                        nextLevel.add("${pair[0]}$number${pair[1]}")
+                    }
+                }
+            }
+            q = nextLevel
+        }
+
+        return q
+    }
+}
+```
+
+```swift
+class Solution {
+    private let reversiblePairs: [[Character]] = [
+        ["0", "0"], ["1", "1"],
+        ["6", "9"], ["8", "8"], ["9", "6"]
+    ]
+
+    func findStrobogrammatic(_ n: Int) -> [String] {
+        var currStringsLength = n % 2
+        var q: [String] = currStringsLength == 1 ? ["0", "1", "8"] : [""]
+
+        while currStringsLength < n {
+            currStringsLength += 2
+            var nextLevel = [String]()
+
+            for number in q {
+                for pair in reversiblePairs {
+                    if currStringsLength != n || pair[0] != "0" {
+                        nextLevel.append("\(pair[0])\(number)\(pair[1])")
+                    }
+                }
+            }
+            q = nextLevel
+        }
+
+        return q
     }
 }
 ```

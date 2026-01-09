@@ -184,6 +184,121 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGameII(piles []int) int {
+    n := len(piles)
+    dp := make([][][]int, 2)
+    for a := 0; a < 2; a++ {
+        dp[a] = make([][]int, n)
+        for i := 0; i < n; i++ {
+            dp[a][i] = make([]int, n+1)
+            for m := 0; m <= n; m++ {
+                dp[a][i][m] = -1
+            }
+        }
+    }
+
+    var dfs func(alice, i, M int) int
+    dfs = func(alice, i, M int) int {
+        if i == n {
+            return 0
+        }
+        if dp[alice][i][M] != -1 {
+            return dp[alice][i][M]
+        }
+
+        res := 0
+        if alice == 0 {
+            res = math.MaxInt32
+        }
+        total := 0
+
+        for X := 1; X <= 2*M; X++ {
+            if i+X > n {
+                break
+            }
+            total += piles[i+X-1]
+            if alice == 1 {
+                res = max(res, total+dfs(0, i+X, max(M, X)))
+            } else {
+                res = min(res, dfs(1, i+X, max(M, X)))
+            }
+        }
+
+        dp[alice][i][M] = res
+        return res
+    }
+
+    return dfs(1, 0, 1)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<Array<IntArray>>
+
+    fun stoneGameII(piles: IntArray): Int {
+        val n = piles.size
+        dp = Array(2) { Array(n) { IntArray(n + 1) { -1 } } }
+        return dfs(1, 0, 1, piles)
+    }
+
+    private fun dfs(alice: Int, i: Int, M: Int, piles: IntArray): Int {
+        if (i == piles.size) return 0
+        if (dp[alice][i][M] != -1) return dp[alice][i][M]
+
+        var res = if (alice == 1) 0 else Int.MAX_VALUE
+        var total = 0
+
+        for (X in 1..2 * M) {
+            if (i + X > piles.size) break
+            total += piles[i + X - 1]
+            res = if (alice == 1) {
+                maxOf(res, total + dfs(0, i + X, maxOf(M, X), piles))
+            } else {
+                minOf(res, dfs(1, i + X, maxOf(M, X), piles))
+            }
+        }
+
+        dp[alice][i][M] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp: [[[Int]]] = []
+
+    func stoneGameII(_ piles: [Int]) -> Int {
+        let n = piles.count
+        dp = Array(repeating: Array(repeating: Array(repeating: -1, count: n + 1), count: n), count: 2)
+        return dfs(1, 0, 1, piles)
+    }
+
+    private func dfs(_ alice: Int, _ i: Int, _ M: Int, _ piles: [Int]) -> Int {
+        if i == piles.count { return 0 }
+        if dp[alice][i][M] != -1 { return dp[alice][i][M] }
+
+        var res = alice == 1 ? 0 : Int.max
+        var total = 0
+
+        for X in 1...(2 * M) {
+            if i + X > piles.count { break }
+            total += piles[i + X - 1]
+            if alice == 1 {
+                res = max(res, total + dfs(0, i + X, max(M, X), piles))
+            } else {
+                res = min(res, dfs(1, i + X, max(M, X), piles))
+            }
+        }
+
+        dp[alice][i][M] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,6 +485,116 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGameII(piles []int) int {
+    n := len(piles)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    suffixSum := make([]int, n)
+    suffixSum[n-1] = piles[n-1]
+    for i := n - 2; i >= 0; i-- {
+        suffixSum[i] = piles[i] + suffixSum[i+1]
+    }
+
+    var dfs func(i, M int) int
+    dfs = func(i, M int) int {
+        if i == n {
+            return 0
+        }
+        if dp[i][M] != -1 {
+            return dp[i][M]
+        }
+
+        res := 0
+        for X := 1; X <= 2*M; X++ {
+            if i+X > n {
+                break
+            }
+            res = max(res, suffixSum[i]-dfs(i+X, max(M, X)))
+        }
+
+        dp[i][M] = res
+        return res
+    }
+
+    return dfs(0, 1)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+    private lateinit var suffixSum: IntArray
+
+    fun stoneGameII(piles: IntArray): Int {
+        val n = piles.size
+        dp = Array(n) { IntArray(n + 1) { -1 } }
+
+        suffixSum = IntArray(n)
+        suffixSum[n - 1] = piles[n - 1]
+        for (i in n - 2 downTo 0) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1]
+        }
+
+        return dfs(0, 1)
+    }
+
+    private fun dfs(i: Int, M: Int): Int {
+        if (i == suffixSum.size) return 0
+        if (dp[i][M] != -1) return dp[i][M]
+
+        var res = 0
+        for (X in 1..2 * M) {
+            if (i + X > suffixSum.size) break
+            res = maxOf(res, suffixSum[i] - dfs(i + X, maxOf(M, X)))
+        }
+
+        dp[i][M] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp: [[Int]] = []
+    private var suffixSum: [Int] = []
+
+    func stoneGameII(_ piles: [Int]) -> Int {
+        let n = piles.count
+        dp = Array(repeating: Array(repeating: -1, count: n + 1), count: n)
+
+        suffixSum = Array(repeating: 0, count: n)
+        suffixSum[n - 1] = piles[n - 1]
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1]
+        }
+
+        return dfs(0, 1)
+    }
+
+    private func dfs(_ i: Int, _ M: Int) -> Int {
+        if i == suffixSum.count { return 0 }
+        if dp[i][M] != -1 { return dp[i][M] }
+
+        var res = 0
+        for X in 1...(2 * M) {
+            if i + X > suffixSum.count { break }
+            res = max(res, suffixSum[i] - dfs(i + X, max(M, X)))
+        }
+
+        dp[i][M] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +750,93 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGameII(piles []int) int {
+    n := len(piles)
+    dp := make([][][]int, 2)
+    for a := 0; a < 2; a++ {
+        dp[a] = make([][]int, n+1)
+        for i := 0; i <= n; i++ {
+            dp[a][i] = make([]int, n+1)
+        }
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for M := 1; M <= n; M++ {
+            total := 0
+            dp[1][i][M] = 0
+            dp[0][i][M] = math.MaxInt32
+
+            for X := 1; X <= 2*M; X++ {
+                if i+X > n {
+                    break
+                }
+                total += piles[i+X-1]
+
+                dp[1][i][M] = max(dp[1][i][M], total+dp[0][i+X][max(M, X)])
+                dp[0][i][M] = min(dp[0][i][M], dp[1][i+X][max(M, X)])
+            }
+        }
+    }
+
+    return dp[1][0][1]
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGameII(piles: IntArray): Int {
+        val n = piles.size
+        val dp = Array(2) { Array(n + 1) { IntArray(n + 1) } }
+
+        for (i in n - 1 downTo 0) {
+            for (M in 1..n) {
+                var total = 0
+                dp[1][i][M] = 0
+                dp[0][i][M] = Int.MAX_VALUE
+
+                for (X in 1..2 * M) {
+                    if (i + X > n) break
+                    total += piles[i + X - 1]
+
+                    dp[1][i][M] = maxOf(dp[1][i][M], total + dp[0][i + X][maxOf(M, X)])
+                    dp[0][i][M] = minOf(dp[0][i][M], dp[1][i + X][maxOf(M, X)])
+                }
+            }
+        }
+
+        return dp[1][0][1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGameII(_ piles: [Int]) -> Int {
+        let n = piles.count
+        var dp = Array(repeating: Array(repeating: Array(repeating: 0, count: n + 1), count: n + 1), count: 2)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for M in 1...n {
+                var total = 0
+                dp[1][i][M] = 0
+                dp[0][i][M] = Int.max
+
+                for X in 1...(2 * M) {
+                    if i + X > n { break }
+                    total += piles[i + X - 1]
+
+                    dp[1][i][M] = max(dp[1][i][M], total + dp[0][i + X][max(M, X)])
+                    dp[0][i][M] = min(dp[0][i][M], dp[1][i + X][max(M, X)])
+                }
+            }
+        }
+
+        return dp[1][0][1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -671,6 +983,90 @@ public class Solution {
         }
 
         return dp[0, 1];
+    }
+}
+```
+
+```go
+func stoneGameII(piles []int) int {
+    n := len(piles)
+
+    suffixSum := make([]int, n)
+    suffixSum[n-1] = piles[n-1]
+    for i := n - 2; i >= 0; i-- {
+        suffixSum[i] = piles[i] + suffixSum[i+1]
+    }
+
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for M := 1; M <= n; M++ {
+            for X := 1; X <= 2*M; X++ {
+                if i+X > n {
+                    break
+                }
+                dp[i][M] = max(dp[i][M], suffixSum[i]-dp[i+X][max(M, X)])
+            }
+        }
+    }
+
+    return dp[0][1]
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGameII(piles: IntArray): Int {
+        val n = piles.size
+
+        val suffixSum = IntArray(n)
+        suffixSum[n - 1] = piles[n - 1]
+        for (i in n - 2 downTo 0) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1]
+        }
+
+        val dp = Array(n + 1) { IntArray(n + 1) }
+
+        for (i in n - 1 downTo 0) {
+            for (M in 1..n) {
+                for (X in 1..2 * M) {
+                    if (i + X > n) break
+                    dp[i][M] = maxOf(dp[i][M], suffixSum[i] - dp[i + X][maxOf(M, X)])
+                }
+            }
+        }
+
+        return dp[0][1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGameII(_ piles: [Int]) -> Int {
+        let n = piles.count
+
+        var suffixSum = [Int](repeating: 0, count: n)
+        suffixSum[n - 1] = piles[n - 1]
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1]
+        }
+
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for M in 1...n {
+                for X in 1...(2 * M) {
+                    if i + X > n { break }
+                    dp[i][M] = max(dp[i][M], suffixSum[i] - dp[i + X][max(M, X)])
+                }
+            }
+        }
+
+        return dp[0][1]
     }
 }
 ```

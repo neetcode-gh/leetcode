@@ -215,6 +215,169 @@ public class Solution {
 }
 ```
 
+```go
+import (
+    "container/heap"
+)
+
+type Item struct {
+    diff, r, c int
+}
+
+type MinHeap []Item
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i].diff < h[j].diff }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(Item)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func minimumEffortPath(heights [][]int) int {
+    rows, cols := len(heights), len(heights[0])
+    dist := make([][]int, rows)
+    for i := range dist {
+        dist[i] = make([]int, cols)
+        for j := range dist[i] {
+            dist[i][j] = 1 << 31 - 1
+        }
+    }
+    dist[0][0] = 0
+
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+
+    minHeap := &MinHeap{Item{0, 0, 0}}
+    heap.Init(minHeap)
+
+    for minHeap.Len() > 0 {
+        curr := heap.Pop(minHeap).(Item)
+        diff, r, c := curr.diff, curr.r, curr.c
+
+        if r == rows-1 && c == cols-1 {
+            return diff
+        }
+        if dist[r][c] < diff {
+            continue
+        }
+
+        for _, dir := range directions {
+            newR, newC := r+dir[0], c+dir[1]
+            if newR < 0 || newC < 0 || newR >= rows || newC >= cols {
+                continue
+            }
+
+            newDiff := max(diff, abs(heights[r][c]-heights[newR][newC]))
+            if newDiff < dist[newR][newC] {
+                dist[newR][newC] = newDiff
+                heap.Push(minHeap, Item{newDiff, newR, newC})
+            }
+        }
+    }
+
+    return 0
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumEffortPath(heights: Array<IntArray>): Int {
+        val rows = heights.size
+        val cols = heights[0].size
+        val dist = Array(rows) { IntArray(cols) { Int.MAX_VALUE } }
+        dist[0][0] = 0
+
+        val directions = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+
+        val minHeap = PriorityQueue<IntArray>(compareBy { it[0] })
+        minHeap.offer(intArrayOf(0, 0, 0)) // [diff, row, col]
+
+        while (minHeap.isNotEmpty()) {
+            val (diff, r, c) = minHeap.poll()
+
+            if (r == rows - 1 && c == cols - 1) return diff
+            if (dist[r][c] < diff) continue
+
+            for (dir in directions) {
+                val newR = r + dir[0]
+                val newC = c + dir[1]
+                if (newR < 0 || newC < 0 || newR >= rows || newC >= cols) continue
+
+                val newDiff = maxOf(diff, kotlin.math.abs(heights[r][c] - heights[newR][newC]))
+                if (newDiff < dist[newR][newC]) {
+                    dist[newR][newC] = newDiff
+                    minHeap.offer(intArrayOf(newDiff, newR, newC))
+                }
+            }
+        }
+
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumEffortPath(_ heights: [[Int]]) -> Int {
+        let rows = heights.count
+        let cols = heights[0].count
+        var dist = [[Int]](repeating: [Int](repeating: Int.max, count: cols), count: rows)
+        dist[0][0] = 0
+
+        let directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
+        var minHeap = [(Int, Int, Int)]() // (diff, row, col)
+        minHeap.append((0, 0, 0))
+
+        while !minHeap.isEmpty {
+            minHeap.sort { $0.0 < $1.0 }
+            let (diff, r, c) = minHeap.removeFirst()
+
+            if r == rows - 1 && c == cols - 1 {
+                return diff
+            }
+            if dist[r][c] < diff {
+                continue
+            }
+
+            for dir in directions {
+                let newR = r + dir[0]
+                let newC = c + dir[1]
+                if newR < 0 || newC < 0 || newR >= rows || newC >= cols {
+                    continue
+                }
+
+                let newDiff = max(diff, abs(heights[r][c] - heights[newR][newC]))
+                if newDiff < dist[newR][newC] {
+                    dist[newR][newC] = newDiff
+                    minHeap.append((newDiff, newR, newC))
+                }
+            }
+        }
+
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,6 +656,152 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func minimumEffortPath(heights [][]int) int {
+    rows, cols := len(heights), len(heights[0])
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+
+    var dfs func(r, c, limit int, visited [][]bool) bool
+    dfs = func(r, c, limit int, visited [][]bool) bool {
+        if r == rows-1 && c == cols-1 {
+            return true
+        }
+
+        visited[r][c] = true
+        for _, dir := range directions {
+            newR, newC := r+dir[0], c+dir[1]
+            if newR < 0 || newC < 0 || newR >= rows || newC >= cols || visited[newR][newC] {
+                continue
+            }
+            if abs(heights[newR][newC]-heights[r][c]) > limit {
+                continue
+            }
+            if dfs(newR, newC, limit, visited) {
+                return true
+            }
+        }
+        return false
+    }
+
+    l, r := 0, 1000000
+    res := r
+
+    for l <= r {
+        mid := (l + r) / 2
+        visited := make([][]bool, rows)
+        for i := range visited {
+            visited[i] = make([]bool, cols)
+        }
+        if dfs(0, 0, mid, visited) {
+            res = mid
+            r = mid - 1
+        } else {
+            l = mid + 1
+        }
+    }
+
+    return res
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    private val directions = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+
+    fun minimumEffortPath(heights: Array<IntArray>): Int {
+        val rows = heights.size
+        val cols = heights[0].size
+
+        fun dfs(r: Int, c: Int, limit: Int, visited: Array<BooleanArray>): Boolean {
+            if (r == rows - 1 && c == cols - 1) return true
+
+            visited[r][c] = true
+            for (dir in directions) {
+                val newR = r + dir[0]
+                val newC = c + dir[1]
+                if (newR < 0 || newC < 0 || newR >= rows || newC >= cols || visited[newR][newC]) continue
+                if (kotlin.math.abs(heights[newR][newC] - heights[r][c]) > limit) continue
+                if (dfs(newR, newC, limit, visited)) return true
+            }
+            return false
+        }
+
+        var l = 0
+        var r = 1000000
+        var res = r
+
+        while (l <= r) {
+            val mid = (l + r) / 2
+            val visited = Array(rows) { BooleanArray(cols) }
+            if (dfs(0, 0, mid, visited)) {
+                res = mid
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumEffortPath(_ heights: [[Int]]) -> Int {
+        let rows = heights.count
+        let cols = heights[0].count
+        let directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
+        func dfs(_ r: Int, _ c: Int, _ limit: Int, _ visited: inout [[Bool]]) -> Bool {
+            if r == rows - 1 && c == cols - 1 {
+                return true
+            }
+
+            visited[r][c] = true
+            for dir in directions {
+                let newR = r + dir[0]
+                let newC = c + dir[1]
+                if newR < 0 || newC < 0 || newR >= rows || newC >= cols || visited[newR][newC] {
+                    continue
+                }
+                if abs(heights[newR][newC] - heights[r][c]) > limit {
+                    continue
+                }
+                if dfs(newR, newC, limit, &visited) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        var l = 0
+        var r = 1000000
+        var res = r
+
+        while l <= r {
+            let mid = (l + r) / 2
+            var visited = [[Bool]](repeating: [Bool](repeating: false, count: cols), count: rows)
+            if dfs(0, 0, mid, &visited) {
+                res = mid
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -841,6 +1150,210 @@ public class Solution {
 }
 ```
 
+```go
+type DSU struct {
+    parent []int
+    size   []int
+}
+
+func NewDSU(n int) *DSU {
+    parent := make([]int, n+1)
+    size := make([]int, n+1)
+    for i := 0; i <= n; i++ {
+        parent[i] = i
+        size[i] = 1
+    }
+    return &DSU{parent, size}
+}
+
+func (d *DSU) Find(node int) int {
+    if d.parent[node] != node {
+        d.parent[node] = d.Find(d.parent[node])
+    }
+    return d.parent[node]
+}
+
+func (d *DSU) Union(u, v int) bool {
+    pu, pv := d.Find(u), d.Find(v)
+    if pu == pv {
+        return false
+    }
+    if d.size[pu] < d.size[pv] {
+        pu, pv = pv, pu
+    }
+    d.size[pu] += d.size[pv]
+    d.parent[pv] = pu
+    return true
+}
+
+func minimumEffortPath(heights [][]int) int {
+    rows, cols := len(heights), len(heights[0])
+    edges := [][]int{}
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if r+1 < rows {
+                diff := abs(heights[r][c] - heights[r+1][c])
+                edges = append(edges, []int{diff, r*cols + c, (r+1)*cols + c})
+            }
+            if c+1 < cols {
+                diff := abs(heights[r][c] - heights[r][c+1])
+                edges = append(edges, []int{diff, r*cols + c, r*cols + c + 1})
+            }
+        }
+    }
+
+    sort.Slice(edges, func(i, j int) bool {
+        return edges[i][0] < edges[j][0]
+    })
+
+    dsu := NewDSU(rows * cols)
+    for _, edge := range edges {
+        weight, u, v := edge[0], edge[1], edge[2]
+        dsu.Union(u, v)
+        if dsu.Find(0) == dsu.Find(rows*cols-1) {
+            return weight
+        }
+    }
+
+    return 0
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n + 1) { it }
+    private val size = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) return false
+        if (size[pu] < size[pv]) {
+            val temp = pu
+            pu = pv
+            pv = temp
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        return true
+    }
+}
+
+class Solution {
+    fun minimumEffortPath(heights: Array<IntArray>): Int {
+        val rows = heights.size
+        val cols = heights[0].size
+        val edges = mutableListOf<IntArray>()
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (r + 1 < rows) {
+                    val diff = kotlin.math.abs(heights[r][c] - heights[r + 1][c])
+                    edges.add(intArrayOf(diff, r * cols + c, (r + 1) * cols + c))
+                }
+                if (c + 1 < cols) {
+                    val diff = kotlin.math.abs(heights[r][c] - heights[r][c + 1])
+                    edges.add(intArrayOf(diff, r * cols + c, r * cols + c + 1))
+                }
+            }
+        }
+
+        edges.sortBy { it[0] }
+        val dsu = DSU(rows * cols)
+
+        for ((weight, u, v) in edges) {
+            dsu.union(u, v)
+            if (dsu.find(0) == dsu.find(rows * cols - 1)) {
+                return weight
+            }
+        }
+
+        return 0
+    }
+}
+```
+
+```swift
+class DSU {
+    var parent: [Int]
+    var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...n)
+        size = [Int](repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        var pu = find(u)
+        var pv = find(v)
+        if pu == pv {
+            return false
+        }
+        if size[pu] < size[pv] {
+            swap(&pu, &pv)
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        return true
+    }
+}
+
+class Solution {
+    func minimumEffortPath(_ heights: [[Int]]) -> Int {
+        let rows = heights.count
+        let cols = heights[0].count
+        var edges = [(Int, Int, Int)]()
+
+        for r in 0..<rows {
+            for c in 0..<cols {
+                if r + 1 < rows {
+                    let diff = abs(heights[r][c] - heights[r + 1][c])
+                    edges.append((diff, r * cols + c, (r + 1) * cols + c))
+                }
+                if c + 1 < cols {
+                    let diff = abs(heights[r][c] - heights[r][c + 1])
+                    edges.append((diff, r * cols + c, r * cols + c + 1))
+                }
+            }
+        }
+
+        edges.sort { $0.0 < $1.0 }
+        let dsu = DSU(rows * cols)
+
+        for (weight, u, v) in edges {
+            _ = dsu.union(u, v)
+            if dsu.find(0) == dsu.find(rows * cols - 1) {
+                return weight
+            }
+        }
+
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1076,6 +1589,152 @@ public class Solution {
         }
 
         return dist[rows * cols - 1];
+    }
+}
+```
+
+```go
+func minimumEffortPath(heights [][]int) int {
+    rows, cols := len(heights), len(heights[0])
+    dist := make([]int, rows*cols)
+    for i := range dist {
+        dist[i] = 1 << 31 - 1
+    }
+    dist[0] = 0
+
+    inQueue := make([]bool, rows*cols)
+    queue := []int{0}
+    inQueue[0] = true
+
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+
+    for len(queue) > 0 {
+        u := queue[0]
+        queue = queue[1:]
+        inQueue[u] = false
+
+        r, c := u/cols, u%cols
+
+        for _, dir := range directions {
+            newR, newC := r+dir[0], c+dir[1]
+            if newR >= 0 && newC >= 0 && newR < rows && newC < cols {
+                v := newR*cols + newC
+                weight := abs(heights[r][c] - heights[newR][newC])
+                newDist := max(dist[u], weight)
+                if newDist < dist[v] {
+                    dist[v] = newDist
+                    if !inQueue[v] {
+                        queue = append(queue, v)
+                        inQueue[v] = true
+                    }
+                }
+            }
+        }
+    }
+
+    return dist[rows*cols-1]
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumEffortPath(heights: Array<IntArray>): Int {
+        val rows = heights.size
+        val cols = heights[0].size
+        val dist = IntArray(rows * cols) { Int.MAX_VALUE }
+        dist[0] = 0
+
+        val inQueue = BooleanArray(rows * cols)
+        val queue = ArrayDeque<Int>()
+        queue.add(0)
+        inQueue[0] = true
+
+        val directions = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+
+        while (queue.isNotEmpty()) {
+            val u = queue.removeFirst()
+            inQueue[u] = false
+
+            val r = u / cols
+            val c = u % cols
+
+            for (dir in directions) {
+                val newR = r + dir[0]
+                val newC = c + dir[1]
+                if (newR in 0 until rows && newC in 0 until cols) {
+                    val v = newR * cols + newC
+                    val weight = kotlin.math.abs(heights[r][c] - heights[newR][newC])
+                    val newDist = maxOf(dist[u], weight)
+                    if (newDist < dist[v]) {
+                        dist[v] = newDist
+                        if (!inQueue[v]) {
+                            queue.add(v)
+                            inQueue[v] = true
+                        }
+                    }
+                }
+            }
+        }
+
+        return dist[rows * cols - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumEffortPath(_ heights: [[Int]]) -> Int {
+        let rows = heights.count
+        let cols = heights[0].count
+        var dist = [Int](repeating: Int.max, count: rows * cols)
+        dist[0] = 0
+
+        var inQueue = [Bool](repeating: false, count: rows * cols)
+        var queue = [0]
+        inQueue[0] = true
+
+        let directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
+
+        while !queue.isEmpty {
+            let u = queue.removeFirst()
+            inQueue[u] = false
+
+            let r = u / cols
+            let c = u % cols
+
+            for dir in directions {
+                let newR = r + dir[0]
+                let newC = c + dir[1]
+                if newR >= 0 && newC >= 0 && newR < rows && newC < cols {
+                    let v = newR * cols + newC
+                    let weight = abs(heights[r][c] - heights[newR][newC])
+                    let newDist = max(dist[u], weight)
+                    if newDist < dist[v] {
+                        dist[v] = newDist
+                        if !inQueue[v] {
+                            queue.append(v)
+                            inQueue[v] = true
+                        }
+                    }
+                }
+            }
+        }
+
+        return dist[rows * cols - 1]
     }
 }
 ```

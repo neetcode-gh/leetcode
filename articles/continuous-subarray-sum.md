@@ -82,6 +82,55 @@ public class Solution {
 }
 ```
 
+```go
+func checkSubarraySum(nums []int, k int) bool {
+    for i := 0; i < len(nums)-1; i++ {
+        sum := nums[i]
+        for j := i + 1; j < len(nums); j++ {
+            sum += nums[j]
+            if sum%k == 0 {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun checkSubarraySum(nums: IntArray, k: Int): Boolean {
+        for (i in 0 until nums.size - 1) {
+            var sum = nums[i]
+            for (j in i + 1 until nums.size) {
+                sum += nums[j]
+                if (sum % k == 0) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkSubarraySum(_ nums: [Int], _ k: Int) -> Bool {
+        for i in 0..<(nums.count - 1) {
+            var sum = nums[i]
+            for j in (i + 1)..<nums.count {
+                sum += nums[j]
+                if sum % k == 0 {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,6 +251,69 @@ public class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```go
+func checkSubarraySum(nums []int, k int) bool {
+    remainder := map[int]int{0: -1}
+    total := 0
+
+    for i, num := range nums {
+        total += num
+        r := total % k
+        if idx, ok := remainder[r]; !ok {
+            remainder[r] = i
+        } else if i-idx > 1 {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun checkSubarraySum(nums: IntArray, k: Int): Boolean {
+        val remainder = mutableMapOf(0 to -1)
+        var total = 0
+
+        for (i in nums.indices) {
+            total += nums[i]
+            val r = total % k
+            if (r !in remainder) {
+                remainder[r] = i
+            } else if (i - remainder[r]!! > 1) {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkSubarraySum(_ nums: [Int], _ k: Int) -> Bool {
+        var remainder: [Int: Int] = [0: -1]
+        var total = 0
+
+        for i in 0..<nums.count {
+            total += nums[i]
+            let r = total % k
+            if let idx = remainder[r] {
+                if i - idx > 1 {
+                    return true
+                }
+            } else {
+                remainder[r] = i
+            }
+        }
+
+        return false
     }
 }
 ```

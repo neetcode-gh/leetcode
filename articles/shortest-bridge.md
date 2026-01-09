@@ -318,6 +318,180 @@ public class Solution {
 }
 ```
 
+```go
+func shortestBridge(grid [][]int) int {
+    N := len(grid)
+    direct := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    visit := make(map[[2]int]bool)
+
+    invalid := func(r, c int) bool {
+        return r < 0 || c < 0 || r == N || c == N
+    }
+
+    var dfs func(r, c int)
+    dfs = func(r, c int) {
+        if invalid(r, c) || grid[r][c] == 0 || visit[[2]int{r, c}] {
+            return
+        }
+        visit[[2]int{r, c}] = true
+        for _, d := range direct {
+            dfs(r+d[0], c+d[1])
+        }
+    }
+
+    bfs := func() int {
+        res := 0
+        q := [][]int{}
+        for k := range visit {
+            q = append(q, []int{k[0], k[1]})
+        }
+
+        for len(q) > 0 {
+            size := len(q)
+            for i := 0; i < size; i++ {
+                r, c := q[0][0], q[0][1]
+                q = q[1:]
+                for _, d := range direct {
+                    curR, curC := r+d[0], c+d[1]
+                    if invalid(curR, curC) || visit[[2]int{curR, curC}] {
+                        continue
+                    }
+                    if grid[curR][curC] == 1 {
+                        return res
+                    }
+                    q = append(q, []int{curR, curC})
+                    visit[[2]int{curR, curC}] = true
+                }
+            }
+            res++
+        }
+        return -1
+    }
+
+    for r := 0; r < N; r++ {
+        for c := 0; c < N; c++ {
+            if grid[r][c] == 1 {
+                dfs(r, c)
+                return bfs()
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestBridge(grid: Array<IntArray>): Int {
+        val N = grid.size
+        val direct = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+        val visit = HashSet<Pair<Int, Int>>()
+
+        fun invalid(r: Int, c: Int) = r < 0 || c < 0 || r == N || c == N
+
+        fun dfs(r: Int, c: Int) {
+            if (invalid(r, c) || grid[r][c] == 0 || Pair(r, c) in visit) return
+            visit.add(Pair(r, c))
+            for (d in direct) {
+                dfs(r + d[0], c + d[1])
+            }
+        }
+
+        fun bfs(): Int {
+            var res = 0
+            val q = ArrayDeque(visit)
+
+            while (q.isNotEmpty()) {
+                repeat(q.size) {
+                    val (r, c) = q.removeFirst()
+                    for (d in direct) {
+                        val curR = r + d[0]
+                        val curC = c + d[1]
+                        if (invalid(curR, curC) || Pair(curR, curC) in visit) continue
+                        if (grid[curR][curC] == 1) return res
+                        q.addLast(Pair(curR, curC))
+                        visit.add(Pair(curR, curC))
+                    }
+                }
+                res++
+            }
+            return -1
+        }
+
+        for (r in 0 until N) {
+            for (c in 0 until N) {
+                if (grid[r][c] == 1) {
+                    dfs(r, c)
+                    return bfs()
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestBridge(_ grid: [[Int]]) -> Int {
+        let N = grid.count
+        let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        var visit = Set<[Int]>()
+        var grid = grid
+
+        func invalid(_ r: Int, _ c: Int) -> Bool {
+            return r < 0 || c < 0 || r == N || c == N
+        }
+
+        func dfs(_ r: Int, _ c: Int) {
+            if invalid(r, c) || grid[r][c] == 0 || visit.contains([r, c]) {
+                return
+            }
+            visit.insert([r, c])
+            for d in direct {
+                dfs(r + d.0, c + d.1)
+            }
+        }
+
+        func bfs() -> Int {
+            var res = 0
+            var q = Array(visit)
+
+            while !q.isEmpty {
+                let size = q.count
+                for _ in 0..<size {
+                    let cell = q.removeFirst()
+                    let r = cell[0], c = cell[1]
+                    for d in direct {
+                        let curR = r + d.0, curC = c + d.1
+                        if invalid(curR, curC) || visit.contains([curR, curC]) {
+                            continue
+                        }
+                        if grid[curR][curC] == 1 {
+                            return res
+                        }
+                        q.append([curR, curC])
+                        visit.insert([curR, curC])
+                    }
+                }
+                res += 1
+            }
+            return -1
+        }
+
+        for r in 0..<N {
+            for c in 0..<N {
+                if grid[r][c] == 1 {
+                    dfs(r, c)
+                    return bfs()
+                }
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -589,6 +763,161 @@ public class Solution {
             res++;
         }
         return -1;
+    }
+}
+```
+
+```go
+func shortestBridge(grid [][]int) int {
+    N := len(grid)
+    direct := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    q := [][]int{}
+
+    var dfs func(r, c int)
+    dfs = func(r, c int) {
+        if r >= 0 && r < N && c >= 0 && c < N && grid[r][c] == 1 {
+            grid[r][c] = 2
+            q = append(q, []int{r, c})
+            for _, d := range direct {
+                dfs(r+d[0], c+d[1])
+            }
+        }
+    }
+
+    found := false
+    for r := 0; r < N && !found; r++ {
+        for c := 0; c < N; c++ {
+            if grid[r][c] == 1 {
+                dfs(r, c)
+                found = true
+                break
+            }
+        }
+    }
+
+    res := 0
+    for len(q) > 0 {
+        size := len(q)
+        for i := 0; i < size; i++ {
+            r, c := q[0][0], q[0][1]
+            q = q[1:]
+            for _, d := range direct {
+                nr, nc := r+d[0], c+d[1]
+                if nr >= 0 && nr < N && nc >= 0 && nc < N {
+                    if grid[nr][nc] == 1 {
+                        return res
+                    }
+                    if grid[nr][nc] == 0 {
+                        grid[nr][nc] = 2
+                        q = append(q, []int{nr, nc})
+                    }
+                }
+            }
+        }
+        res++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestBridge(grid: Array<IntArray>): Int {
+        val N = grid.size
+        val direct = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+        val q = ArrayDeque<Pair<Int, Int>>()
+
+        fun dfs(r: Int, c: Int) {
+            if (r in 0 until N && c in 0 until N && grid[r][c] == 1) {
+                grid[r][c] = 2
+                q.addLast(Pair(r, c))
+                for (d in direct) {
+                    dfs(r + d[0], c + d[1])
+                }
+            }
+        }
+
+        outer@ for (r in 0 until N) {
+            for (c in 0 until N) {
+                if (grid[r][c] == 1) {
+                    dfs(r, c)
+                    break@outer
+                }
+            }
+        }
+
+        var res = 0
+        while (q.isNotEmpty()) {
+            repeat(q.size) {
+                val (r, c) = q.removeFirst()
+                for (d in direct) {
+                    val nr = r + d[0]
+                    val nc = c + d[1]
+                    if (nr in 0 until N && nc in 0 until N) {
+                        if (grid[nr][nc] == 1) return res
+                        if (grid[nr][nc] == 0) {
+                            grid[nr][nc] = 2
+                            q.addLast(Pair(nr, nc))
+                        }
+                    }
+                }
+            }
+            res++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestBridge(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let N = grid.count
+        let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        var q = [[Int]]()
+
+        func dfs(_ r: Int, _ c: Int) {
+            if r >= 0 && r < N && c >= 0 && c < N && grid[r][c] == 1 {
+                grid[r][c] = 2
+                q.append([r, c])
+                for d in direct {
+                    dfs(r + d.0, c + d.1)
+                }
+            }
+        }
+
+        outerLoop: for r in 0..<N {
+            for c in 0..<N {
+                if grid[r][c] == 1 {
+                    dfs(r, c)
+                    break outerLoop
+                }
+            }
+        }
+
+        var res = 0
+        while !q.isEmpty {
+            let size = q.count
+            for _ in 0..<size {
+                let cell = q.removeFirst()
+                let r = cell[0], c = cell[1]
+                for d in direct {
+                    let nr = r + d.0, nc = c + d.1
+                    if nr >= 0 && nr < N && nc >= 0 && nc < N {
+                        if grid[nr][nc] == 1 {
+                            return res
+                        }
+                        if grid[nr][nc] == 0 {
+                            grid[nr][nc] = 2
+                            q.append([nr, nc])
+                        }
+                    }
+                }
+            }
+            res += 1
+        }
+        return res
     }
 }
 ```
@@ -898,6 +1227,178 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func shortestBridge(grid [][]int) int {
+    N := len(grid)
+    direct := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    q2 := [][]int{}
+
+    found := false
+    for r := 0; r < N && !found; r++ {
+        for c := 0; c < N; c++ {
+            if grid[r][c] == 1 {
+                q1 := [][]int{{r, c}}
+                grid[r][c] = 2
+
+                for len(q1) > 0 {
+                    x, y := q1[0][0], q1[0][1]
+                    q1 = q1[1:]
+                    q2 = append(q2, []int{x, y})
+
+                    for _, d := range direct {
+                        nx, ny := x+d[0], y+d[1]
+                        if nx >= 0 && ny >= 0 && nx < N && ny < N && grid[nx][ny] == 1 {
+                            grid[nx][ny] = 2
+                            q1 = append(q1, []int{nx, ny})
+                        }
+                    }
+                }
+                found = true
+                break
+            }
+        }
+    }
+
+    res := 0
+    for len(q2) > 0 {
+        size := len(q2)
+        for i := 0; i < size; i++ {
+            x, y := q2[0][0], q2[0][1]
+            q2 = q2[1:]
+
+            for _, d := range direct {
+                nx, ny := x+d[0], y+d[1]
+                if nx >= 0 && ny >= 0 && nx < N && ny < N {
+                    if grid[nx][ny] == 1 {
+                        return res
+                    }
+                    if grid[nx][ny] == 0 {
+                        grid[nx][ny] = 2
+                        q2 = append(q2, []int{nx, ny})
+                    }
+                }
+            }
+        }
+        res++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestBridge(grid: Array<IntArray>): Int {
+        val N = grid.size
+        val direct = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+        val q2 = ArrayDeque<Pair<Int, Int>>()
+
+        outer@ for (r in 0 until N) {
+            for (c in 0 until N) {
+                if (grid[r][c] == 1) {
+                    val q1 = ArrayDeque<Pair<Int, Int>>()
+                    q1.addLast(Pair(r, c))
+                    grid[r][c] = 2
+
+                    while (q1.isNotEmpty()) {
+                        val (x, y) = q1.removeFirst()
+                        q2.addLast(Pair(x, y))
+
+                        for (d in direct) {
+                            val nx = x + d[0]
+                            val ny = y + d[1]
+                            if (nx in 0 until N && ny in 0 until N && grid[nx][ny] == 1) {
+                                grid[nx][ny] = 2
+                                q1.addLast(Pair(nx, ny))
+                            }
+                        }
+                    }
+                    break@outer
+                }
+            }
+        }
+
+        var res = 0
+        while (q2.isNotEmpty()) {
+            repeat(q2.size) {
+                val (x, y) = q2.removeFirst()
+                for (d in direct) {
+                    val nx = x + d[0]
+                    val ny = y + d[1]
+                    if (nx in 0 until N && ny in 0 until N) {
+                        if (grid[nx][ny] == 1) return res
+                        if (grid[nx][ny] == 0) {
+                            grid[nx][ny] = 2
+                            q2.addLast(Pair(nx, ny))
+                        }
+                    }
+                }
+            }
+            res++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestBridge(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let N = grid.count
+        let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        var q2 = [[Int]]()
+
+        outerLoop: for r in 0..<N {
+            for c in 0..<N {
+                if grid[r][c] == 1 {
+                    var q1 = [[r, c]]
+                    grid[r][c] = 2
+
+                    while !q1.isEmpty {
+                        let cell = q1.removeFirst()
+                        let x = cell[0], y = cell[1]
+                        q2.append([x, y])
+
+                        for d in direct {
+                            let nx = x + d.0, ny = y + d.1
+                            if nx >= 0 && ny >= 0 && nx < N && ny < N && grid[nx][ny] == 1 {
+                                grid[nx][ny] = 2
+                                q1.append([nx, ny])
+                            }
+                        }
+                    }
+                    break outerLoop
+                }
+            }
+        }
+
+        var res = 0
+        while !q2.isEmpty {
+            let size = q2.count
+            for _ in 0..<size {
+                let cell = q2.removeFirst()
+                let x = cell[0], y = cell[1]
+
+                for d in direct {
+                    let nx = x + d.0, ny = y + d.1
+                    if nx >= 0 && ny >= 0 && nx < N && ny < N {
+                        if grid[nx][ny] == 1 {
+                            return res
+                        }
+                        if grid[nx][ny] == 0 {
+                            grid[nx][ny] = 2
+                            q2.append([nx, ny])
+                        }
+                    }
+                }
+            }
+            res += 1
+        }
+        return res
     }
 }
 ```
@@ -1349,6 +1850,297 @@ public class Solution {
             res++;
         }
         return res;
+    }
+}
+```
+
+```go
+type DSU struct {
+    parent []int
+    rank   []int
+}
+
+func NewDSU(n int) *DSU {
+    parent := make([]int, n)
+    rank := make([]int, n)
+    for i := 0; i < n; i++ {
+        parent[i] = i
+        rank[i] = 1
+    }
+    return &DSU{parent, rank}
+}
+
+func (d *DSU) Find(node int) int {
+    if d.parent[node] != node {
+        d.parent[node] = d.Find(d.parent[node])
+    }
+    return d.parent[node]
+}
+
+func (d *DSU) Union(u, v int) bool {
+    pu, pv := d.Find(u), d.Find(v)
+    if pu == pv {
+        return false
+    }
+    if d.rank[pv] > d.rank[pu] {
+        pu, pv = pv, pu
+    }
+    d.parent[pv] = pu
+    d.rank[pu] += d.rank[pv]
+    return true
+}
+
+func shortestBridge(grid [][]int) int {
+    n := len(grid)
+    direct := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    dsu := NewDSU(n*n + 1)
+    q := [][]int{}
+
+    idx := func(r, c int) int {
+        return r*n + c + 1
+    }
+
+    firstIsland := -1
+    for r := 0; r < n; r++ {
+        for c := 0; c < n; c++ {
+            if grid[r][c] == 1 {
+                firstIsland = dsu.Find(idx(r, c))
+                if c+1 < n && grid[r][c+1] == 1 {
+                    dsu.Union(idx(r, c), idx(r, c+1))
+                }
+                if r+1 < n && grid[r+1][c] == 1 {
+                    dsu.Union(idx(r, c), idx(r+1, c))
+                }
+            }
+        }
+    }
+
+    for r := 0; r < n; r++ {
+        for c := 0; c < n; c++ {
+            if grid[r][c] == 1 && dsu.Find(idx(r, c)) == firstIsland {
+                for _, d := range direct {
+                    nr, nc := r+d[0], c+d[1]
+                    if nr >= 0 && nc >= 0 && nr < n && nc < n && grid[nr][nc] == 0 {
+                        q = append(q, []int{r, c})
+                        break
+                    }
+                }
+            }
+        }
+    }
+
+    res := 0
+    for len(q) > 0 {
+        size := len(q)
+        for i := 0; i < size; i++ {
+            r, c := q[0][0], q[0][1]
+            q = q[1:]
+            for _, d := range direct {
+                nr, nc := r+d[0], c+d[1]
+                if nr >= 0 && nc >= 0 && nr < n && nc < n {
+                    if grid[nr][nc] == 1 && dsu.Union(idx(r, c), idx(nr, nc)) {
+                        return res
+                    }
+                    if grid[nr][nc] == 0 {
+                        grid[nr][nc] = 1
+                        dsu.Union(idx(r, c), idx(nr, nc))
+                        q = append(q, []int{nr, nc})
+                    }
+                }
+            }
+        }
+        res++
+    }
+    return res
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n) { it }
+    private val rank = IntArray(n) { 1 }
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) return false
+        if (rank[pv] > rank[pu]) {
+            val temp = pu
+            pu = pv
+            pv = temp
+        }
+        parent[pv] = pu
+        rank[pu] += rank[pv]
+        return true
+    }
+}
+
+class Solution {
+    fun shortestBridge(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val direct = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(1, 0), intArrayOf(-1, 0))
+        val dsu = DSU(n * n + 1)
+        val q = ArrayDeque<Pair<Int, Int>>()
+
+        fun idx(r: Int, c: Int) = r * n + c + 1
+
+        var firstIsland = -1
+        for (r in 0 until n) {
+            for (c in 0 until n) {
+                if (grid[r][c] == 1) {
+                    firstIsland = dsu.find(idx(r, c))
+                    if (c + 1 < n && grid[r][c + 1] == 1) {
+                        dsu.union(idx(r, c), idx(r, c + 1))
+                    }
+                    if (r + 1 < n && grid[r + 1][c] == 1) {
+                        dsu.union(idx(r, c), idx(r + 1, c))
+                    }
+                }
+            }
+        }
+
+        for (r in 0 until n) {
+            for (c in 0 until n) {
+                if (grid[r][c] == 1 && dsu.find(idx(r, c)) == firstIsland) {
+                    for (d in direct) {
+                        val nr = r + d[0]
+                        val nc = c + d[1]
+                        if (nr in 0 until n && nc in 0 until n && grid[nr][nc] == 0) {
+                            q.addLast(Pair(r, c))
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
+        var res = 0
+        while (q.isNotEmpty()) {
+            repeat(q.size) {
+                val (r, c) = q.removeFirst()
+                for (d in direct) {
+                    val nr = r + d[0]
+                    val nc = c + d[1]
+                    if (nr in 0 until n && nc in 0 until n) {
+                        if (grid[nr][nc] == 1 && dsu.union(idx(r, c), idx(nr, nc))) {
+                            return res
+                        }
+                        if (grid[nr][nc] == 0) {
+                            grid[nr][nc] = 1
+                            dsu.union(idx(r, c), idx(nr, nc))
+                            q.addLast(Pair(nr, nc))
+                        }
+                    }
+                }
+            }
+            res++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var rank: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0..<n)
+        rank = [Int](repeating: 1, count: n)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        var pu = find(u)
+        var pv = find(v)
+        if pu == pv { return false }
+        if rank[pv] > rank[pu] {
+            swap(&pu, &pv)
+        }
+        parent[pv] = pu
+        rank[pu] += rank[pv]
+        return true
+    }
+}
+
+class Solution {
+    func shortestBridge(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let n = grid.count
+        let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+        let dsu = DSU(n * n + 1)
+        var q = [[Int]]()
+
+        func idx(_ r: Int, _ c: Int) -> Int {
+            return r * n + c + 1
+        }
+
+        var firstIsland = -1
+        for r in 0..<n {
+            for c in 0..<n {
+                if grid[r][c] == 1 {
+                    firstIsland = dsu.find(idx(r, c))
+                    if c + 1 < n && grid[r][c + 1] == 1 {
+                        _ = dsu.union(idx(r, c), idx(r, c + 1))
+                    }
+                    if r + 1 < n && grid[r + 1][c] == 1 {
+                        _ = dsu.union(idx(r, c), idx(r + 1, c))
+                    }
+                }
+            }
+        }
+
+        for r in 0..<n {
+            for c in 0..<n {
+                if grid[r][c] == 1 && dsu.find(idx(r, c)) == firstIsland {
+                    for d in direct {
+                        let nr = r + d.0, nc = c + d.1
+                        if nr >= 0 && nc >= 0 && nr < n && nc < n && grid[nr][nc] == 0 {
+                            q.append([r, c])
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
+        var res = 0
+        while !q.isEmpty {
+            let size = q.count
+            for _ in 0..<size {
+                let cell = q.removeFirst()
+                let r = cell[0], c = cell[1]
+                for d in direct {
+                    let nr = r + d.0, nc = c + d.1
+                    if nr >= 0 && nc >= 0 && nr < n && nc < n {
+                        if grid[nr][nc] == 1 && dsu.union(idx(r, c), idx(nr, nc)) {
+                            return res
+                        }
+                        if grid[nr][nc] == 0 {
+                            grid[nr][nc] = 1
+                            _ = dsu.union(idx(r, c), idx(nr, nc))
+                            q.append([nr, nc])
+                        }
+                    }
+                }
+            }
+            res += 1
+        }
+        return res
     }
 }
 ```

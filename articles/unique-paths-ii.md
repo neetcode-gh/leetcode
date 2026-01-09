@@ -140,6 +140,87 @@ public class Solution {
 }
 ```
 
+```go
+func uniquePathsWithObstacles(grid [][]int) int {
+    M, N := len(grid), len(grid[0])
+    dp := make([][]int, M)
+    for i := range dp {
+        dp[i] = make([]int, N)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r == M || c == N || grid[r][c] == 1 {
+            return 0
+        }
+        if r == M-1 && c == N-1 {
+            return 1
+        }
+        if dp[r][c] != -1 {
+            return dp[r][c]
+        }
+        dp[r][c] = dfs(r+1, c) + dfs(r, c+1)
+        return dp[r][c]
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePathsWithObstacles(grid: Array<IntArray>): Int {
+        val M = grid.size
+        val N = grid[0].size
+        val dp = Array(M) { IntArray(N) { -1 } }
+
+        fun dfs(r: Int, c: Int): Int {
+            if (r == M || c == N || grid[r][c] == 1) {
+                return 0
+            }
+            if (r == M - 1 && c == N - 1) {
+                return 1
+            }
+            if (dp[r][c] != -1) {
+                return dp[r][c]
+            }
+            dp[r][c] = dfs(r + 1, c) + dfs(r, c + 1)
+            return dp[r][c]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePathsWithObstacles(_ grid: [[Int]]) -> Int {
+        let M = grid.count, N = grid[0].count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: N), count: M)
+
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if r == M || c == N || grid[r][c] == 1 {
+                return 0
+            }
+            if r == M - 1 && c == N - 1 {
+                return 1
+            }
+            if dp[r][c] != -1 {
+                return dp[r][c]
+            }
+            dp[r][c] = dfs(r + 1, c) + dfs(r, c + 1)
+            return dp[r][c]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,6 +372,89 @@ public class Solution {
 }
 ```
 
+```go
+func uniquePathsWithObstacles(grid [][]int) int {
+    M, N := len(grid), len(grid[0])
+    if grid[0][0] == 1 || grid[M-1][N-1] == 1 {
+        return 0
+    }
+
+    dp := make([][]int, M+1)
+    for i := range dp {
+        dp[i] = make([]int, N+1)
+    }
+    dp[M-1][N-1] = 1
+
+    for r := M - 1; r >= 0; r-- {
+        for c := N - 1; c >= 0; c-- {
+            if grid[r][c] == 1 {
+                dp[r][c] = 0
+            } else {
+                dp[r][c] += dp[r+1][c]
+                dp[r][c] += dp[r][c+1]
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePathsWithObstacles(grid: Array<IntArray>): Int {
+        val M = grid.size
+        val N = grid[0].size
+        if (grid[0][0] == 1 || grid[M - 1][N - 1] == 1) {
+            return 0
+        }
+
+        val dp = Array(M + 1) { IntArray(N + 1) }
+        dp[M - 1][N - 1] = 1
+
+        for (r in M - 1 downTo 0) {
+            for (c in N - 1 downTo 0) {
+                if (grid[r][c] == 1) {
+                    dp[r][c] = 0
+                } else {
+                    dp[r][c] += dp[r + 1][c]
+                    dp[r][c] += dp[r][c + 1]
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePathsWithObstacles(_ grid: [[Int]]) -> Int {
+        let M = grid.count, N = grid[0].count
+        if grid[0][0] == 1 || grid[M - 1][N - 1] == 1 {
+            return 0
+        }
+
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: N + 1), count: M + 1)
+        dp[M - 1][N - 1] = 1
+
+        for r in stride(from: M - 1, through: 0, by: -1) {
+            for c in stride(from: N - 1, through: 0, by: -1) {
+                if grid[r][c] == 1 {
+                    dp[r][c] = 0
+                } else {
+                    dp[r][c] += dp[r + 1][c]
+                    dp[r][c] += dp[r][c + 1]
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -413,6 +577,71 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func uniquePathsWithObstacles(grid [][]int) int {
+    M, N := len(grid), len(grid[0])
+    dp := make([]int, N+1)
+    dp[N-1] = 1
+
+    for r := M - 1; r >= 0; r-- {
+        for c := N - 1; c >= 0; c-- {
+            if grid[r][c] == 1 {
+                dp[c] = 0
+            } else {
+                dp[c] += dp[c+1]
+            }
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePathsWithObstacles(grid: Array<IntArray>): Int {
+        val M = grid.size
+        val N = grid[0].size
+        val dp = IntArray(N + 1)
+        dp[N - 1] = 1
+
+        for (r in M - 1 downTo 0) {
+            for (c in N - 1 downTo 0) {
+                if (grid[r][c] == 1) {
+                    dp[c] = 0
+                } else {
+                    dp[c] += dp[c + 1]
+                }
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePathsWithObstacles(_ grid: [[Int]]) -> Int {
+        let M = grid.count, N = grid[0].count
+        var dp = [Int](repeating: 0, count: N + 1)
+        dp[N - 1] = 1
+
+        for r in stride(from: M - 1, through: 0, by: -1) {
+            for c in stride(from: N - 1, through: 0, by: -1) {
+                if grid[r][c] == 1 {
+                    dp[c] = 0
+                } else {
+                    dp[c] += dp[c + 1]
+                }
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -582,6 +811,105 @@ public class Solution {
         }
 
         return grid[0][0];
+    }
+}
+```
+
+```go
+func uniquePathsWithObstacles(grid [][]int) int {
+    M, N := len(grid), len(grid[0])
+    if grid[0][0] == 1 || grid[M-1][N-1] == 1 {
+        return 0
+    }
+
+    grid[M-1][N-1] = 1
+
+    for r := M - 1; r >= 0; r-- {
+        for c := N - 1; c >= 0; c-- {
+            if r == M-1 && c == N-1 {
+                continue
+            }
+
+            if grid[r][c] == 1 {
+                grid[r][c] = 0
+            } else {
+                down := 0
+                if r+1 < M {
+                    down = grid[r+1][c]
+                }
+                right := 0
+                if c+1 < N {
+                    right = grid[r][c+1]
+                }
+                grid[r][c] = down + right
+            }
+        }
+    }
+
+    return grid[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePathsWithObstacles(grid: Array<IntArray>): Int {
+        val M = grid.size
+        val N = grid[0].size
+        if (grid[0][0] == 1 || grid[M - 1][N - 1] == 1) {
+            return 0
+        }
+
+        grid[M - 1][N - 1] = 1
+
+        for (r in M - 1 downTo 0) {
+            for (c in N - 1 downTo 0) {
+                if (r == M - 1 && c == N - 1) {
+                    continue
+                }
+
+                if (grid[r][c] == 1) {
+                    grid[r][c] = 0
+                } else {
+                    val down = if (r + 1 < M) grid[r + 1][c] else 0
+                    val right = if (c + 1 < N) grid[r][c + 1] else 0
+                    grid[r][c] = down + right
+                }
+            }
+        }
+
+        return grid[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePathsWithObstacles(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let M = grid.count, N = grid[0].count
+        if grid[0][0] == 1 || grid[M - 1][N - 1] == 1 {
+            return 0
+        }
+
+        grid[M - 1][N - 1] = 1
+
+        for r in stride(from: M - 1, through: 0, by: -1) {
+            for c in stride(from: N - 1, through: 0, by: -1) {
+                if r == M - 1 && c == N - 1 {
+                    continue
+                }
+
+                if grid[r][c] == 1 {
+                    grid[r][c] = 0
+                } else {
+                    let down = (r + 1 < M) ? grid[r + 1][c] : 0
+                    let right = (c + 1 < N) ? grid[r][c + 1] : 0
+                    grid[r][c] = down + right
+                }
+            }
+        }
+
+        return grid[0][0]
     }
 }
 ```

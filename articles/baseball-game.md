@@ -126,6 +126,75 @@ public class Solution {
 }
 ```
 
+```go
+func calPoints(operations []string) int {
+    stack := []int{}
+    for _, op := range operations {
+        if op == "+" {
+            n := len(stack)
+            stack = append(stack, stack[n-1]+stack[n-2])
+        } else if op == "D" {
+            stack = append(stack, 2*stack[len(stack)-1])
+        } else if op == "C" {
+            stack = stack[:len(stack)-1]
+        } else {
+            num, _ := strconv.Atoi(op)
+            stack = append(stack, num)
+        }
+    }
+    sum := 0
+    for _, v := range stack {
+        sum += v
+    }
+    return sum
+}
+```
+
+```kotlin
+class Solution {
+    fun calPoints(operations: Array<String>): Int {
+        val stack = mutableListOf<Int>()
+        for (op in operations) {
+            when (op) {
+                "+" -> {
+                    val top = stack.removeLast()
+                    val newTop = top + stack.last()
+                    stack.add(top)
+                    stack.add(newTop)
+                }
+                "D" -> stack.add(2 * stack.last())
+                "C" -> stack.removeLast()
+                else -> stack.add(op.toInt())
+            }
+        }
+        return stack.sum()
+    }
+}
+```
+
+```swift
+class Solution {
+    func calPoints(_ operations: [String]) -> Int {
+        var stack = [Int]()
+        for op in operations {
+            if op == "+" {
+                let top = stack.removeLast()
+                let newTop = top + stack.last!
+                stack.append(top)
+                stack.append(newTop)
+            } else if op == "D" {
+                stack.append(2 * stack.last!)
+            } else if op == "C" {
+                stack.removeLast()
+            } else {
+                stack.append(Int(op)!)
+            }
+        }
+        return stack.reduce(0, +)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,6 +342,94 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func calPoints(operations []string) int {
+    stack := []int{}
+    res := 0
+    for _, op := range operations {
+        if op == "+" {
+            n := len(stack)
+            newTop := stack[n-1] + stack[n-2]
+            stack = append(stack, newTop)
+            res += newTop
+        } else if op == "D" {
+            val := 2 * stack[len(stack)-1]
+            stack = append(stack, val)
+            res += val
+        } else if op == "C" {
+            res -= stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+        } else {
+            num, _ := strconv.Atoi(op)
+            stack = append(stack, num)
+            res += num
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun calPoints(operations: Array<String>): Int {
+        val stack = mutableListOf<Int>()
+        var res = 0
+        for (op in operations) {
+            when (op) {
+                "+" -> {
+                    val top = stack.removeLast()
+                    val newTop = top + stack.last()
+                    stack.add(top)
+                    stack.add(newTop)
+                    res += newTop
+                }
+                "D" -> {
+                    val doubleVal = 2 * stack.last()
+                    stack.add(doubleVal)
+                    res += doubleVal
+                }
+                "C" -> res -= stack.removeLast()
+                else -> {
+                    val num = op.toInt()
+                    stack.add(num)
+                    res += num
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func calPoints(_ operations: [String]) -> Int {
+        var stack = [Int]()
+        var res = 0
+        for op in operations {
+            if op == "+" {
+                let top = stack.removeLast()
+                let newTop = top + stack.last!
+                stack.append(top)
+                stack.append(newTop)
+                res += newTop
+            } else if op == "D" {
+                let doubleVal = 2 * stack.last!
+                stack.append(doubleVal)
+                res += doubleVal
+            } else if op == "C" {
+                res -= stack.removeLast()
+            } else {
+                let num = Int(op)!
+                stack.append(num)
+                res += num
+            }
+        }
+        return res
     }
 }
 ```

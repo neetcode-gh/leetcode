@@ -84,6 +84,84 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SuccessfulPairs(int[] spells, int[] potions, long success) {
+        int[] res = new int[spells.Length];
+
+        for (int i = 0; i < spells.Length; i++) {
+            int cnt = 0;
+            foreach (int p in potions) {
+                if ((long)spells[i] * p >= success) {
+                    cnt++;
+                }
+            }
+            res[i] = cnt;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func successfulPairs(spells []int, potions []int, success int64) []int {
+    res := make([]int, len(spells))
+
+    for i, s := range spells {
+        cnt := 0
+        for _, p := range potions {
+            if int64(s)*int64(p) >= success {
+                cnt++
+            }
+        }
+        res[i] = cnt
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun successfulPairs(spells: IntArray, potions: IntArray, success: Long): IntArray {
+        val res = IntArray(spells.size)
+
+        for (i in spells.indices) {
+            var cnt = 0
+            for (p in potions) {
+                if (spells[i].toLong() * p >= success) {
+                    cnt++
+                }
+            }
+            res[i] = cnt
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func successfulPairs(_ spells: [Int], _ potions: [Int], _ success: Int) -> [Int] {
+        var res = [Int]()
+
+        for s in spells {
+            var cnt = 0
+            for p in potions {
+                if s * p >= success {
+                    cnt += 1
+                }
+            }
+            res.append(cnt)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -212,6 +290,116 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SuccessfulPairs(int[] spells, int[] potions, long success) {
+        Array.Sort(potions);
+        int[] res = new int[spells.Length];
+
+        for (int i = 0; i < spells.Length; i++) {
+            int l = 0, r = potions.Length - 1, idx = potions.Length;
+
+            while (l <= r) {
+                int m = (l + r) / 2;
+                if ((long)spells[i] * potions[m] >= success) {
+                    r = m - 1;
+                    idx = m;
+                } else {
+                    l = m + 1;
+                }
+            }
+
+            res[i] = potions.Length - idx;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func successfulPairs(spells []int, potions []int, success int64) []int {
+    sort.Ints(potions)
+    res := make([]int, len(spells))
+
+    for i, s := range spells {
+        l, r, idx := 0, len(potions)-1, len(potions)
+
+        for l <= r {
+            m := (l + r) / 2
+            if int64(s)*int64(potions[m]) >= success {
+                r = m - 1
+                idx = m
+            } else {
+                l = m + 1
+            }
+        }
+
+        res[i] = len(potions) - idx
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun successfulPairs(spells: IntArray, potions: IntArray, success: Long): IntArray {
+        potions.sort()
+        val res = IntArray(spells.size)
+
+        for (i in spells.indices) {
+            var l = 0
+            var r = potions.size - 1
+            var idx = potions.size
+
+            while (l <= r) {
+                val m = (l + r) / 2
+                if (spells[i].toLong() * potions[m] >= success) {
+                    r = m - 1
+                    idx = m
+                } else {
+                    l = m + 1
+                }
+            }
+
+            res[i] = potions.size - idx
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func successfulPairs(_ spells: [Int], _ potions: [Int], _ success: Int) -> [Int] {
+        let sortedPotions = potions.sorted()
+        var res = [Int]()
+
+        for s in spells {
+            var l = 0
+            var r = sortedPotions.count - 1
+            var idx = sortedPotions.count
+
+            while l <= r {
+                let m = (l + r) / 2
+                if s * sortedPotions[m] >= success {
+                    r = m - 1
+                    idx = m
+                } else {
+                    l = m + 1
+                }
+            }
+
+            res.append(sortedPotions.count - idx)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -335,6 +523,104 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SuccessfulPairs(int[] spells, int[] potions, long success) {
+        int n = spells.Length, m = potions.Length;
+        int[] S = (int[])spells.Clone();
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        Array.Sort(spells);
+        Array.Sort(potions);
+
+        int j = m - 1;
+        for (int i = 0; i < n; i++) {
+            while (j >= 0 && (long)spells[i] * potions[j] >= success) {
+                j--;
+            }
+            count[spells[i]] = m - j - 1;
+        }
+
+        int[] res = new int[n];
+        for (int i = 0; i < n; i++) {
+            res[i] = count[S[i]];
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func successfulPairs(spells []int, potions []int, success int64) []int {
+    n, m := len(spells), len(potions)
+    S := make([]int, n)
+    copy(S, spells)
+    count := make(map[int]int)
+    sort.Ints(spells)
+    sort.Ints(potions)
+
+    j := m - 1
+    for i := 0; i < n; i++ {
+        for j >= 0 && int64(spells[i])*int64(potions[j]) >= success {
+            j--
+        }
+        count[spells[i]] = m - j - 1
+    }
+
+    res := make([]int, n)
+    for i := 0; i < n; i++ {
+        res[i] = count[S[i]]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun successfulPairs(spells: IntArray, potions: IntArray, success: Long): IntArray {
+        val n = spells.size
+        val m = potions.size
+        val S = spells.copyOf()
+        val count = HashMap<Int, Int>()
+        spells.sort()
+        potions.sort()
+
+        var j = m - 1
+        for (i in 0 until n) {
+            while (j >= 0 && spells[i].toLong() * potions[j] >= success) {
+                j--
+            }
+            count[spells[i]] = m - j - 1
+        }
+
+        return IntArray(n) { count[S[it]]!! }
+    }
+}
+```
+
+```swift
+class Solution {
+    func successfulPairs(_ spells: [Int], _ potions: [Int], _ success: Int) -> [Int] {
+        let n = spells.count, m = potions.count
+        let S = spells
+        var count = [Int: Int]()
+        let sortedSpells = spells.sorted()
+        let sortedPotions = potions.sorted()
+
+        var j = m - 1
+        for i in 0..<n {
+            while j >= 0 && sortedSpells[i] * sortedPotions[j] >= success {
+                j -= 1
+            }
+            count[sortedSpells[i]] = m - j - 1
+        }
+
+        return S.map { count[$0]! }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -449,6 +735,103 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SuccessfulPairs(int[] spells, int[] potions, long success) {
+        int n = spells.Length, m = potions.Length;
+        int[] sIdx = new int[n];
+        for (int i = 0; i < n; i++) sIdx[i] = i;
+
+        Array.Sort(sIdx, (a, b) => spells[a].CompareTo(spells[b]));
+        Array.Sort(potions);
+
+        int j = m - 1;
+        int[] res = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            while (j >= 0 && (long)spells[sIdx[i]] * potions[j] >= success) {
+                j--;
+            }
+            res[sIdx[i]] = m - j - 1;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func successfulPairs(spells []int, potions []int, success int64) []int {
+    n, m := len(spells), len(potions)
+    sIdx := make([]int, n)
+    for i := range sIdx {
+        sIdx[i] = i
+    }
+
+    sort.Slice(sIdx, func(i, j int) bool {
+        return spells[sIdx[i]] < spells[sIdx[j]]
+    })
+    sort.Ints(potions)
+
+    j := m - 1
+    res := make([]int, n)
+
+    for i := 0; i < n; i++ {
+        for j >= 0 && int64(spells[sIdx[i]])*int64(potions[j]) >= success {
+            j--
+        }
+        res[sIdx[i]] = m - j - 1
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun successfulPairs(spells: IntArray, potions: IntArray, success: Long): IntArray {
+        val n = spells.size
+        val m = potions.size
+        val sIdx = (0 until n).sortedBy { spells[it] }
+        potions.sort()
+
+        var j = m - 1
+        val res = IntArray(n)
+
+        for (i in 0 until n) {
+            while (j >= 0 && spells[sIdx[i]].toLong() * potions[j] >= success) {
+                j--
+            }
+            res[sIdx[i]] = m - j - 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func successfulPairs(_ spells: [Int], _ potions: [Int], _ success: Int) -> [Int] {
+        let n = spells.count, m = potions.count
+        let sIdx = (0..<n).sorted { spells[$0] < spells[$1] }
+        let sortedPotions = potions.sorted()
+
+        var j = m - 1
+        var res = [Int](repeating: 0, count: n)
+
+        for i in 0..<n {
+            while j >= 0 && spells[sIdx[i]] * sortedPotions[j] >= success {
+                j -= 1
+            }
+            res[sIdx[i]] = m - j - 1
+        }
+
+        return res
     }
 }
 ```

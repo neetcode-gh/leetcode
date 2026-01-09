@@ -105,29 +105,167 @@ class Solution {
     deleteNodes(head, m, n) {
         let currentNode = head;
         let lastMNode = head;
-        
+
         while (currentNode !== null) {
             // initialize mCount to m and nCount to n
             let mCount = m, nCount = n;
-            
+
             // traverse m nodes
             while (currentNode !== null && mCount !== 0) {
                 lastMNode = currentNode;
                 currentNode = currentNode.next;
                 mCount--;
             }
-            
+
             // traverse n nodes
             while (currentNode !== null && nCount !== 0) {
                 currentNode = currentNode.next;
                 nCount--;
             }
-            
+
             // delete n nodes
             lastMNode.next = currentNode;
         }
-        
+
         return head;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public ListNode DeleteNodes(ListNode head, int m, int n) {
+        ListNode currentNode = head;
+        ListNode lastMNode = head;
+
+        while (currentNode != null) {
+            int mCount = m, nCount = n;
+
+            while (currentNode != null && mCount != 0) {
+                lastMNode = currentNode;
+                currentNode = currentNode.next;
+                mCount--;
+            }
+
+            while (currentNode != null && nCount != 0) {
+                currentNode = currentNode.next;
+                nCount--;
+            }
+
+            lastMNode.next = currentNode;
+        }
+
+        return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func deleteNodes(head *ListNode, m int, n int) *ListNode {
+    currentNode := head
+    var lastMNode *ListNode = head
+
+    for currentNode != nil {
+        mCount, nCount := m, n
+
+        for currentNode != nil && mCount != 0 {
+            lastMNode = currentNode
+            currentNode = currentNode.Next
+            mCount--
+        }
+
+        for currentNode != nil && nCount != 0 {
+            currentNode = currentNode.Next
+            nCount--
+        }
+
+        lastMNode.Next = currentNode
+    }
+
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun deleteNodes(head: ListNode?, m: Int, n: Int): ListNode? {
+        var currentNode = head
+        var lastMNode = head
+
+        while (currentNode != null) {
+            var mCount = m
+            var nCount = n
+
+            while (currentNode != null && mCount != 0) {
+                lastMNode = currentNode
+                currentNode = currentNode.next
+                mCount--
+            }
+
+            while (currentNode != null && nCount != 0) {
+                currentNode = currentNode.next
+                nCount--
+            }
+
+            lastMNode?.next = currentNode
+        }
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func deleteNodes(_ head: ListNode?, _ m: Int, _ n: Int) -> ListNode? {
+        var currentNode = head
+        var lastMNode = head
+
+        while currentNode != nil {
+            var mCount = m
+            var nCount = n
+
+            while currentNode != nil && mCount != 0 {
+                lastMNode = currentNode
+                currentNode = currentNode?.next
+                mCount -= 1
+            }
+
+            while currentNode != nil && nCount != 0 {
+                currentNode = currentNode?.next
+                nCount -= 1
+            }
+
+            lastMNode?.next = currentNode
+        }
+
+        return head
     }
 }
 ```

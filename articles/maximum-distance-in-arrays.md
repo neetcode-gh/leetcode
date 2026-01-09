@@ -119,6 +119,44 @@ func maxDistance(arrays [][]int) int {
 }
 ```
 
+```kotlin
+class Solution {
+    fun maxDistance(arrays: List<List<Int>>): Int {
+        var res = 0
+        val n = arrays.size
+        for (i in 0 until n - 1) {
+            for (j in arrays[i].indices) {
+                for (k in i + 1 until n) {
+                    for (l in arrays[k].indices) {
+                        res = maxOf(res, kotlin.math.abs(arrays[i][j] - arrays[k][l]))
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDistance(_ arrays: [[Int]]) -> Int {
+        var res = 0
+        let n = arrays.count
+        for i in 0..<(n - 1) {
+            for j in 0..<arrays[i].count {
+                for k in (i + 1)..<n {
+                    for l in 0..<arrays[k].count {
+                        res = max(res, abs(arrays[i][j] - arrays[k][l]))
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -260,6 +298,42 @@ func max(a, b int) int {
 }
 ```
 
+```kotlin
+class Solution {
+    fun maxDistance(arrays: List<List<Int>>): Int {
+        var res = 0
+        val n = arrays.size
+        for (i in 0 until n - 1) {
+            for (j in i + 1 until n) {
+                val array1 = arrays[i]
+                val array2 = arrays[j]
+                res = maxOf(res, kotlin.math.abs(array1[0] - array2[array2.size - 1]))
+                res = maxOf(res, kotlin.math.abs(array2[0] - array1[array1.size - 1]))
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDistance(_ arrays: [[Int]]) -> Int {
+        var res = 0
+        let n = arrays.count
+        for i in 0..<(n - 1) {
+            for j in (i + 1)..<n {
+                let array1 = arrays[i]
+                let array2 = arrays[j]
+                res = max(res, abs(array1[0] - array2[array2.count - 1]))
+                res = max(res, abs(array2[0] - array1[array1.count - 1]))
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,7 +456,7 @@ func maxDistance(arrays [][]int) int {
     max_val := arrays[0][n-1]
     for i := 1; i < len(arrays); i++ {
         n = len(arrays[i])
-        res = max(res, max(abs(arrays[i][n-1]-min_val), 
+        res = max(res, max(abs(arrays[i][n-1]-min_val),
                            abs(max_val-arrays[i][0])))
         min_val = min(min_val, arrays[i][0])
         max_val = max(max_val, arrays[i][n-1])
@@ -409,6 +483,46 @@ func min(a, b int) int {
         return a
     }
     return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxDistance(arrays: List<List<Int>>): Int {
+        var res = 0
+        var minVal = arrays[0][0]
+        var maxVal = arrays[0][arrays[0].size - 1]
+        for (i in 1 until arrays.size) {
+            val n = arrays[i].size
+            res = maxOf(res, maxOf(
+                kotlin.math.abs(arrays[i][n - 1] - minVal),
+                kotlin.math.abs(maxVal - arrays[i][0])
+            ))
+            minVal = minOf(minVal, arrays[i][0])
+            maxVal = maxOf(maxVal, arrays[i][n - 1])
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDistance(_ arrays: [[Int]]) -> Int {
+        var res = 0
+        var minVal = arrays[0][0]
+        var maxVal = arrays[0][arrays[0].count - 1]
+        for i in 1..<arrays.count {
+            let n = arrays[i].count
+            res = max(res, max(
+                abs(arrays[i][n - 1] - minVal),
+                abs(maxVal - arrays[i][0])
+            ))
+            minVal = min(minVal, arrays[i][0])
+            maxVal = max(maxVal, arrays[i][n - 1])
+        }
+        return res
+    }
 }
 ```
 

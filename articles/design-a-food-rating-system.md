@@ -139,6 +139,142 @@ class FoodRatings {
 }
 ```
 
+```csharp
+public class FoodRatings {
+    private Dictionary<string, int> foodToRating;
+    private Dictionary<string, List<string>> cuisineToFood;
+
+    public FoodRatings(string[] foods, string[] cuisines, int[] ratings) {
+        foodToRating = new Dictionary<string, int>();
+        cuisineToFood = new Dictionary<string, List<string>>();
+        for (int i = 0; i < foods.Length; i++) {
+            foodToRating[foods[i]] = ratings[i];
+            if (!cuisineToFood.ContainsKey(cuisines[i])) {
+                cuisineToFood[cuisines[i]] = new List<string>();
+            }
+            cuisineToFood[cuisines[i]].Add(foods[i]);
+        }
+    }
+
+    public void ChangeRating(string food, int newRating) {
+        foodToRating[food] = newRating;
+    }
+
+    public string HighestRated(string cuisine) {
+        int maxR = 0;
+        string res = "";
+        foreach (string food in cuisineToFood[cuisine]) {
+            int r = foodToRating[food];
+            if (r > maxR || (r == maxR && string.Compare(food, res) < 0)) {
+                res = food;
+                maxR = r;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+type FoodRatings struct {
+    foodToRating  map[string]int
+    cuisineToFood map[string][]string
+}
+
+func Constructor(foods []string, cuisines []string, ratings []int) FoodRatings {
+    f := FoodRatings{
+        foodToRating:  make(map[string]int),
+        cuisineToFood: make(map[string][]string),
+    }
+    for i := 0; i < len(foods); i++ {
+        f.foodToRating[foods[i]] = ratings[i]
+        f.cuisineToFood[cuisines[i]] = append(f.cuisineToFood[cuisines[i]], foods[i])
+    }
+    return f
+}
+
+func (this *FoodRatings) ChangeRating(food string, newRating int) {
+    this.foodToRating[food] = newRating
+}
+
+func (this *FoodRatings) HighestRated(cuisine string) string {
+    maxR := 0
+    res := ""
+    for _, food := range this.cuisineToFood[cuisine] {
+        r := this.foodToRating[food]
+        if r > maxR || (r == maxR && food < res) {
+            res = food
+            maxR = r
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class FoodRatings(foods: Array<String>, cuisines: Array<String>, ratings: IntArray) {
+    private val foodToRating = mutableMapOf<String, Int>()
+    private val cuisineToFood = mutableMapOf<String, MutableList<String>>()
+
+    init {
+        for (i in foods.indices) {
+            foodToRating[foods[i]] = ratings[i]
+            cuisineToFood.getOrPut(cuisines[i]) { mutableListOf() }.add(foods[i])
+        }
+    }
+
+    fun changeRating(food: String, newRating: Int) {
+        foodToRating[food] = newRating
+    }
+
+    fun highestRated(cuisine: String): String {
+        var maxR = 0
+        var res = ""
+        for (food in cuisineToFood[cuisine]!!) {
+            val r = foodToRating[food]!!
+            if (r > maxR || (r == maxR && food < res)) {
+                res = food
+                maxR = r
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class FoodRatings {
+    private var foodToRating: [String: Int]
+    private var cuisineToFood: [String: [String]]
+
+    init(_ foods: [String], _ cuisines: [String], _ ratings: [Int]) {
+        foodToRating = [:]
+        cuisineToFood = [:]
+        for i in 0..<foods.count {
+            foodToRating[foods[i]] = ratings[i]
+            cuisineToFood[cuisines[i], default: []].append(foods[i])
+        }
+    }
+
+    func changeRating(_ food: String, _ newRating: Int) {
+        foodToRating[food] = newRating
+    }
+
+    func highestRated(_ cuisine: String) -> String {
+        var maxR = 0
+        var res = ""
+        for food in cuisineToFood[cuisine]! {
+            let r = foodToRating[food]!
+            if r > maxR || (r == maxR && food < res) {
+                res = food
+                maxR = r
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +470,202 @@ class FoodRatings {
 }
 ```
 
+```csharp
+public class FoodRatings {
+    private Dictionary<string, int> foodToRating;
+    private Dictionary<string, string> foodToCuisine;
+    private Dictionary<string, PriorityQueue<(string name, int rating), (int rating, string name)>> cuisineToHeap;
+
+    public FoodRatings(string[] foods, string[] cuisines, int[] ratings) {
+        foodToRating = new Dictionary<string, int>();
+        foodToCuisine = new Dictionary<string, string>();
+        cuisineToHeap = new Dictionary<string, PriorityQueue<(string, int), (int, string)>>();
+
+        for (int i = 0; i < foods.Length; i++) {
+            foodToRating[foods[i]] = ratings[i];
+            foodToCuisine[foods[i]] = cuisines[i];
+            if (!cuisineToHeap.ContainsKey(cuisines[i])) {
+                cuisineToHeap[cuisines[i]] = new PriorityQueue<(string, int), (int, string)>(
+                    Comparer<(int rating, string name)>.Create((a, b) => {
+                        if (a.rating != b.rating) return b.rating.CompareTo(a.rating);
+                        return a.name.CompareTo(b.name);
+                    })
+                );
+            }
+            cuisineToHeap[cuisines[i]].Enqueue((foods[i], ratings[i]), (-ratings[i], foods[i]));
+        }
+    }
+
+    public void ChangeRating(string food, int newRating) {
+        string cuisine = foodToCuisine[food];
+        foodToRating[food] = newRating;
+        cuisineToHeap[cuisine].Enqueue((food, newRating), (-newRating, food));
+    }
+
+    public string HighestRated(string cuisine) {
+        var heap = cuisineToHeap[cuisine];
+        while (heap.Count > 0) {
+            var top = heap.Peek();
+            if (foodToRating[top.name] == top.rating) {
+                return top.name;
+            }
+            heap.Dequeue();
+        }
+        return "";
+    }
+}
+```
+
+```go
+import (
+    "container/heap"
+)
+
+type Food struct {
+    rating int
+    name   string
+}
+
+type MaxHeap []Food
+
+func (h MaxHeap) Len() int { return len(h) }
+func (h MaxHeap) Less(i, j int) bool {
+    if h[i].rating == h[j].rating {
+        return h[i].name < h[j].name
+    }
+    return h[i].rating > h[j].rating
+}
+func (h MaxHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(Food)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type FoodRatings struct {
+    foodToRating  map[string]int
+    foodToCuisine map[string]string
+    cuisineToHeap map[string]*MaxHeap
+}
+
+func Constructor(foods []string, cuisines []string, ratings []int) FoodRatings {
+    f := FoodRatings{
+        foodToRating:  make(map[string]int),
+        foodToCuisine: make(map[string]string),
+        cuisineToHeap: make(map[string]*MaxHeap),
+    }
+    for i := 0; i < len(foods); i++ {
+        f.foodToRating[foods[i]] = ratings[i]
+        f.foodToCuisine[foods[i]] = cuisines[i]
+        if _, ok := f.cuisineToHeap[cuisines[i]]; !ok {
+            f.cuisineToHeap[cuisines[i]] = &MaxHeap{}
+            heap.Init(f.cuisineToHeap[cuisines[i]])
+        }
+        heap.Push(f.cuisineToHeap[cuisines[i]], Food{ratings[i], foods[i]})
+    }
+    return f
+}
+
+func (this *FoodRatings) ChangeRating(food string, newRating int) {
+    cuisine := this.foodToCuisine[food]
+    this.foodToRating[food] = newRating
+    heap.Push(this.cuisineToHeap[cuisine], Food{newRating, food})
+}
+
+func (this *FoodRatings) HighestRated(cuisine string) string {
+    h := this.cuisineToHeap[cuisine]
+    for h.Len() > 0 {
+        top := (*h)[0]
+        if this.foodToRating[top.name] == top.rating {
+            return top.name
+        }
+        heap.Pop(h)
+    }
+    return ""
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class FoodRatings(foods: Array<String>, cuisines: Array<String>, ratings: IntArray) {
+    private val foodToRating = mutableMapOf<String, Int>()
+    private val foodToCuisine = mutableMapOf<String, String>()
+    private val cuisineToHeap = mutableMapOf<String, PriorityQueue<Pair<Int, String>>>()
+
+    init {
+        for (i in foods.indices) {
+            foodToRating[foods[i]] = ratings[i]
+            foodToCuisine[foods[i]] = cuisines[i]
+            cuisineToHeap.getOrPut(cuisines[i]) {
+                PriorityQueue(compareBy({ -it.first }, { it.second }))
+            }.offer(Pair(ratings[i], foods[i]))
+        }
+    }
+
+    fun changeRating(food: String, newRating: Int) {
+        val cuisine = foodToCuisine[food]!!
+        foodToRating[food] = newRating
+        cuisineToHeap[cuisine]!!.offer(Pair(newRating, food))
+    }
+
+    fun highestRated(cuisine: String): String {
+        val heap = cuisineToHeap[cuisine]!!
+        while (heap.isNotEmpty()) {
+            val top = heap.peek()
+            if (foodToRating[top.second] == top.first) {
+                return top.second
+            }
+            heap.poll()
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class FoodRatings {
+    private var foodToRating: [String: Int]
+    private var foodToCuisine: [String: String]
+    private var cuisineToFood: [String: [(Int, String)]]
+
+    init(_ foods: [String], _ cuisines: [String], _ ratings: [Int]) {
+        foodToRating = [:]
+        foodToCuisine = [:]
+        cuisineToFood = [:]
+        for i in 0..<foods.count {
+            foodToRating[foods[i]] = ratings[i]
+            foodToCuisine[foods[i]] = cuisines[i]
+            cuisineToFood[cuisines[i], default: []].append((-ratings[i], foods[i]))
+        }
+        for key in cuisineToFood.keys {
+            cuisineToFood[key]!.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+        }
+    }
+
+    func changeRating(_ food: String, _ newRating: Int) {
+        let cuisine = foodToCuisine[food]!
+        foodToRating[food] = newRating
+        cuisineToFood[cuisine]!.append((-newRating, food))
+        cuisineToFood[cuisine]!.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+    }
+
+    func highestRated(_ cuisine: String) -> String {
+        while !cuisineToFood[cuisine]!.isEmpty {
+            let top = cuisineToFood[cuisine]![0]
+            if foodToRating[top.1] == -top.0 {
+                return top.1
+            }
+            cuisineToFood[cuisine]!.removeFirst()
+        }
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -449,6 +781,232 @@ public:
         return begin(cuisineToSet[cuisine])->second;
     }
 };
+```
+
+```javascript
+// Sorted Set implementation is not available in JavaScript standard library
+// Use a Map with sorted arrays as a workaround
+class FoodRatings {
+    /**
+     * @param {string[]} foods
+     * @param {string[]} cuisines
+     * @param {number[]} ratings
+     */
+    constructor(foods, cuisines, ratings) {
+        this.foodToRating = new Map();
+        this.foodToCuisine = new Map();
+        this.cuisineToSet = new Map();
+
+        for (let i = 0; i < foods.length; i++) {
+            this.foodToRating.set(foods[i], ratings[i]);
+            this.foodToCuisine.set(foods[i], cuisines[i]);
+            if (!this.cuisineToSet.has(cuisines[i])) {
+                this.cuisineToSet.set(cuisines[i], []);
+            }
+            this.cuisineToSet.get(cuisines[i]).push([-ratings[i], foods[i]]);
+        }
+        for (let [, arr] of this.cuisineToSet) {
+            arr.sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));
+        }
+    }
+
+    /**
+     * @param {string} food
+     * @param {number} newRating
+     * @return {void}
+     */
+    changeRating(food, newRating) {
+        let cuisine = this.foodToCuisine.get(food);
+        let oldRating = this.foodToRating.get(food);
+        let arr = this.cuisineToSet.get(cuisine);
+
+        let idx = arr.findIndex(([r, f]) => r === -oldRating && f === food);
+        if (idx !== -1) arr.splice(idx, 1);
+
+        this.foodToRating.set(food, newRating);
+        arr.push([-newRating, food]);
+        arr.sort((a, b) => a[0] - b[0] || a[1].localeCompare(b[1]));
+    }
+
+    /**
+     * @param {string} cuisine
+     * @return {string}
+     */
+    highestRated(cuisine) {
+        return this.cuisineToSet.get(cuisine)[0][1];
+    }
+}
+```
+
+```csharp
+public class FoodRatings {
+    private Dictionary<string, int> foodToRating;
+    private Dictionary<string, string> foodToCuisine;
+    private Dictionary<string, SortedSet<(int negRating, string food)>> cuisineToSet;
+
+    public FoodRatings(string[] foods, string[] cuisines, int[] ratings) {
+        foodToRating = new Dictionary<string, int>();
+        foodToCuisine = new Dictionary<string, string>();
+        cuisineToSet = new Dictionary<string, SortedSet<(int, string)>>();
+
+        for (int i = 0; i < foods.Length; i++) {
+            foodToRating[foods[i]] = ratings[i];
+            foodToCuisine[foods[i]] = cuisines[i];
+            if (!cuisineToSet.ContainsKey(cuisines[i])) {
+                cuisineToSet[cuisines[i]] = new SortedSet<(int, string)>();
+            }
+            cuisineToSet[cuisines[i]].Add((-ratings[i], foods[i]));
+        }
+    }
+
+    public void ChangeRating(string food, int newRating) {
+        string cuisine = foodToCuisine[food];
+        int oldRating = foodToRating[food];
+        var set = cuisineToSet[cuisine];
+
+        set.Remove((-oldRating, food));
+        foodToRating[food] = newRating;
+        set.Add((-newRating, food));
+    }
+
+    public string HighestRated(string cuisine) {
+        return cuisineToSet[cuisine].Min.food;
+    }
+}
+```
+
+```go
+import (
+    "github.com/emirpasic/gods/sets/treeset"
+)
+
+type FoodRatings struct {
+    foodToRating  map[string]int
+    foodToCuisine map[string]string
+    cuisineToSet  map[string]*treeset.Set
+}
+
+func foodComparator(a, b interface{}) int {
+    fa := a.([2]interface{})
+    fb := b.([2]interface{})
+    ra, rb := fa[0].(int), fb[0].(int)
+    na, nb := fa[1].(string), fb[1].(string)
+    if ra != rb {
+        return ra - rb
+    }
+    if na < nb {
+        return -1
+    }
+    if na > nb {
+        return 1
+    }
+    return 0
+}
+
+func Constructor(foods []string, cuisines []string, ratings []int) FoodRatings {
+    f := FoodRatings{
+        foodToRating:  make(map[string]int),
+        foodToCuisine: make(map[string]string),
+        cuisineToSet:  make(map[string]*treeset.Set),
+    }
+    for i := 0; i < len(foods); i++ {
+        f.foodToRating[foods[i]] = ratings[i]
+        f.foodToCuisine[foods[i]] = cuisines[i]
+        if _, ok := f.cuisineToSet[cuisines[i]]; !ok {
+            f.cuisineToSet[cuisines[i]] = treeset.NewWith(foodComparator)
+        }
+        f.cuisineToSet[cuisines[i]].Add([2]interface{}{-ratings[i], foods[i]})
+    }
+    return f
+}
+
+func (this *FoodRatings) ChangeRating(food string, newRating int) {
+    cuisine := this.foodToCuisine[food]
+    oldRating := this.foodToRating[food]
+    set := this.cuisineToSet[cuisine]
+
+    set.Remove([2]interface{}{-oldRating, food})
+    this.foodToRating[food] = newRating
+    set.Add([2]interface{}{-newRating, food})
+}
+
+func (this *FoodRatings) HighestRated(cuisine string) string {
+    it := this.cuisineToSet[cuisine].Iterator()
+    it.First()
+    return it.Value().([2]interface{})[1].(string)
+}
+```
+
+```kotlin
+import java.util.TreeSet
+
+class FoodRatings(foods: Array<String>, cuisines: Array<String>, ratings: IntArray) {
+    private val foodToRating = mutableMapOf<String, Int>()
+    private val foodToCuisine = mutableMapOf<String, String>()
+    private val cuisineToSet = mutableMapOf<String, TreeSet<Pair<Int, String>>>()
+
+    init {
+        for (i in foods.indices) {
+            foodToRating[foods[i]] = ratings[i]
+            foodToCuisine[foods[i]] = cuisines[i]
+            cuisineToSet.getOrPut(cuisines[i]) {
+                TreeSet(compareBy({ it.first }, { it.second }))
+            }.add(Pair(-ratings[i], foods[i]))
+        }
+    }
+
+    fun changeRating(food: String, newRating: Int) {
+        val cuisine = foodToCuisine[food]!!
+        val oldRating = foodToRating[food]!!
+        val set = cuisineToSet[cuisine]!!
+
+        set.remove(Pair(-oldRating, food))
+        foodToRating[food] = newRating
+        set.add(Pair(-newRating, food))
+    }
+
+    fun highestRated(cuisine: String): String {
+        return cuisineToSet[cuisine]!!.first().second
+    }
+}
+```
+
+```swift
+class FoodRatings {
+    private var foodToRating: [String: Int]
+    private var foodToCuisine: [String: String]
+    private var cuisineToSet: [String: [(Int, String)]]
+
+    init(_ foods: [String], _ cuisines: [String], _ ratings: [Int]) {
+        foodToRating = [:]
+        foodToCuisine = [:]
+        cuisineToSet = [:]
+        for i in 0..<foods.count {
+            foodToRating[foods[i]] = ratings[i]
+            foodToCuisine[foods[i]] = cuisines[i]
+            cuisineToSet[cuisines[i], default: []].append((-ratings[i], foods[i]))
+        }
+        for key in cuisineToSet.keys {
+            cuisineToSet[key]!.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+        }
+    }
+
+    func changeRating(_ food: String, _ newRating: Int) {
+        let cuisine = foodToCuisine[food]!
+        let oldRating = foodToRating[food]!
+
+        if let idx = cuisineToSet[cuisine]!.firstIndex(where: { $0.0 == -oldRating && $0.1 == food }) {
+            cuisineToSet[cuisine]!.remove(at: idx)
+        }
+        foodToRating[food] = newRating
+        cuisineToSet[cuisine]!.append((-newRating, food))
+        cuisineToSet[cuisine]!.sort { $0.0 == $1.0 ? $0.1 < $1.1 : $0.0 < $1.0 }
+    }
+
+    func highestRated(_ cuisine: String) -> String {
+        return cuisineToSet[cuisine]![0].1
+    }
+}
 ```
 
 ::tabs-end

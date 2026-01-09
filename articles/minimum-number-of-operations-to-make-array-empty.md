@@ -163,6 +163,111 @@ public class Solution {
 }
 ```
 
+```go
+func minOperations(nums []int) int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    var dfs func(cur int) int
+    dfs = func(cur int) int {
+        if cur < 0 {
+            return 1 << 30
+        }
+        if cur == 0 {
+            return 0
+        }
+
+        ops := min(dfs(cur-2), dfs(cur-3))
+        if ops == 1<<30 {
+            return ops
+        }
+        return 1 + ops
+    }
+
+    res := 0
+    for _, cnt := range count {
+        op := dfs(cnt)
+        if op == 1<<30 {
+            return -1
+        }
+        res += op
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        fun dfs(cur: Int): Int {
+            if (cur < 0) return Int.MAX_VALUE
+            if (cur == 0) return 0
+
+            val ops = minOf(dfs(cur - 2), dfs(cur - 3))
+            return if (ops == Int.MAX_VALUE) ops else 1 + ops
+        }
+
+        var res = 0
+        for (cnt in count.values) {
+            val op = dfs(cnt)
+            if (op == Int.MAX_VALUE) return -1
+            res += op
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        func dfs(_ cur: Int) -> Int {
+            if cur < 0 {
+                return Int.max
+            }
+            if cur == 0 {
+                return 0
+            }
+
+            let ops = min(dfs(cur - 2), dfs(cur - 3))
+            return ops == Int.max ? ops : 1 + ops
+        }
+
+        var res = 0
+        for cnt in count.values {
+            let op = dfs(cnt)
+            if op == Int.max {
+                return -1
+            }
+            res += op
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,6 +473,128 @@ public class Solution {
 }
 ```
 
+```go
+func minOperations(nums []int) int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    cache := make(map[int]int)
+
+    var dfs func(num int) int
+    dfs = func(num int) int {
+        if num < 0 {
+            return 1 << 30
+        }
+        if num == 2 || num == 3 {
+            return 1
+        }
+        if val, ok := cache[num]; ok {
+            return val
+        }
+
+        res := min(dfs(num-2), dfs(num-3))
+        if res == 1<<30 {
+            cache[num] = res
+        } else {
+            cache[num] = res + 1
+        }
+        return cache[num]
+    }
+
+    resTotal := 0
+    for _, cnt := range count {
+        op := dfs(cnt)
+        if op == 1<<30 {
+            return -1
+        }
+        resTotal += op
+    }
+
+    return resTotal
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val cache = HashMap<Int, Int>()
+
+        fun dfs(num: Int): Int {
+            if (num < 0) return Int.MAX_VALUE
+            if (num == 2 || num == 3) return 1
+            if (cache.containsKey(num)) return cache[num]!!
+
+            val res = minOf(dfs(num - 2), dfs(num - 3))
+            cache[num] = if (res == Int.MAX_VALUE) res else res + 1
+            return cache[num]!!
+        }
+
+        var resTotal = 0
+        for (cnt in count.values) {
+            val op = dfs(cnt)
+            if (op == Int.MAX_VALUE) return -1
+            resTotal += op
+        }
+
+        return resTotal
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var cache = [Int: Int]()
+
+        func dfs(_ num: Int) -> Int {
+            if num < 0 {
+                return Int.max
+            }
+            if num == 2 || num == 3 {
+                return 1
+            }
+            if let cached = cache[num] {
+                return cached
+            }
+
+            let res = min(dfs(num - 2), dfs(num - 3))
+            cache[num] = res == Int.max ? res : res + 1
+            return cache[num]!
+        }
+
+        var resTotal = 0
+        for cnt in count.values {
+            let op = dfs(cnt)
+            if op == Int.max {
+                return -1
+            }
+            resTotal += op
+        }
+
+        return resTotal
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -559,6 +786,122 @@ public class Solution {
 }
 ```
 
+```go
+func minOperations(nums []int) int {
+    count := make(map[int]int)
+    maxf := 0
+    for _, num := range nums {
+        count[num]++
+        if count[num] > maxf {
+            maxf = count[num]
+        }
+    }
+
+    minOps := make([]int, maxf+1)
+    minOps[1] = 1 << 30
+
+    for i := 2; i <= maxf; i++ {
+        minOps[i] = minOps[i-2]
+        if i-3 >= 0 {
+            minOps[i] = min(minOps[i], minOps[i-3])
+        }
+        if minOps[i] != 1<<30 {
+            minOps[i]++
+        }
+    }
+
+    res := 0
+    for _, cnt := range count {
+        op := minOps[cnt]
+        if op == 1<<30 {
+            return -1
+        }
+        res += op
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val maxf = count.values.maxOrNull() ?: 0
+        val minOps = IntArray(maxf + 1)
+        minOps[1] = Int.MAX_VALUE
+
+        for (i in 2..maxf) {
+            minOps[i] = minOps[i - 2]
+            if (i - 3 >= 0) {
+                minOps[i] = minOf(minOps[i], minOps[i - 3])
+            }
+            if (minOps[i] != Int.MAX_VALUE) {
+                minOps[i]++
+            }
+        }
+
+        var res = 0
+        for (cnt in count.values) {
+            val op = minOps[cnt]
+            if (op == Int.MAX_VALUE) return -1
+            res += op
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        let maxf = count.values.max() ?? 0
+        var minOps = [Int](repeating: 0, count: maxf + 1)
+        if maxf >= 1 {
+            minOps[1] = Int.max
+        }
+
+        for i in 2...maxf {
+            minOps[i] = minOps[i - 2]
+            if i - 3 >= 0 {
+                minOps[i] = min(minOps[i], minOps[i - 3])
+            }
+            if minOps[i] != Int.max {
+                minOps[i] += 1
+            }
+        }
+
+        var res = 0
+        for cnt in count.values {
+            let op = minOps[cnt]
+            if op == Int.max {
+                return -1
+            }
+            res += op
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -673,6 +1016,65 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func minOperations(nums []int) int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    res := 0
+    for _, cnt := range count {
+        if cnt == 1 {
+            return -1
+        }
+        res += (cnt + 2) / 3
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        var res = 0
+        for (cnt in count.values) {
+            if (cnt == 1) return -1
+            res += (cnt + 2) / 3
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var res = 0
+        for cnt in count.values {
+            if cnt == 1 {
+                return -1
+            }
+            res += (cnt + 2) / 3
+        }
+
+        return res
     }
 }
 ```

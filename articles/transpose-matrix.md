@@ -94,6 +94,60 @@ public class Solution {
 }
 ```
 
+```go
+func transpose(matrix [][]int) [][]int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    res := make([][]int, COLS)
+    for i := range res {
+        res[i] = make([]int, ROWS)
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            res[c][r] = matrix[r][c]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun transpose(matrix: Array<IntArray>): Array<IntArray> {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        val res = Array(COLS) { IntArray(ROWS) }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                res[c][r] = matrix[r][c]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func transpose(_ matrix: [[Int]]) -> [[Int]] {
+        let ROWS = matrix.count
+        let COLS = matrix[0].count
+        var res = [[Int]](repeating: [Int](repeating: 0, count: ROWS), count: COLS)
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                res[c][r] = matrix[r][c]
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,6 +305,95 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func transpose(matrix [][]int) [][]int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+
+    if ROWS == COLS {
+        for r := 0; r < ROWS; r++ {
+            for c := 0; c < r; c++ {
+                matrix[r][c], matrix[c][r] = matrix[c][r], matrix[r][c]
+            }
+        }
+        return matrix
+    }
+
+    res := make([][]int, COLS)
+    for i := range res {
+        res[i] = make([]int, ROWS)
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            res[c][r] = matrix[r][c]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun transpose(matrix: Array<IntArray>): Array<IntArray> {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+
+        if (ROWS == COLS) {
+            for (r in 0 until ROWS) {
+                for (c in 0 until r) {
+                    val temp = matrix[r][c]
+                    matrix[r][c] = matrix[c][r]
+                    matrix[c][r] = temp
+                }
+            }
+            return matrix
+        }
+
+        val res = Array(COLS) { IntArray(ROWS) }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                res[c][r] = matrix[r][c]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func transpose(_ matrix: [[Int]]) -> [[Int]] {
+        let ROWS = matrix.count
+        let COLS = matrix[0].count
+        var matrix = matrix
+
+        if ROWS == COLS {
+            for r in 0..<ROWS {
+                for c in 0..<r {
+                    let temp = matrix[r][c]
+                    matrix[r][c] = matrix[c][r]
+                    matrix[c][r] = temp
+                }
+            }
+            return matrix
+        }
+
+        var res = [[Int]](repeating: [Int](repeating: 0, count: ROWS), count: COLS)
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                res[c][r] = matrix[r][c]
+            }
+        }
+
+        return res
     }
 }
 ```

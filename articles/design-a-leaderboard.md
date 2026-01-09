@@ -105,13 +105,13 @@ public:
 
 ```javascript
 class Leaderboard {
-    
+
     constructor() {
         this.scores = new Map();
     }
-    
-    /** 
-     * @param {number} playerId 
+
+    /**
+     * @param {number} playerId
      * @param {number} score
      * @return {void}
      */
@@ -121,8 +121,8 @@ class Leaderboard {
         }
         this.scores.set(playerId, this.scores.get(playerId) + score);
     }
-    
-    /** 
+
+    /**
      * @param {number} K
      * @return {number}
      */
@@ -131,7 +131,7 @@ class Leaderboard {
             .sort((a, b) => a[1] - b[1])
             .map(entry => entry[1]);
         values.sort((a, b) => b - a);
-        
+
         let total = 0;
         let i = 0;
         while (i < K) {
@@ -140,8 +140,8 @@ class Leaderboard {
         }
         return total;
     }
-    
-    /** 
+
+    /**
      * @param {number} playerId
      * @return {void}
      */
@@ -151,11 +151,125 @@ class Leaderboard {
 }
 ```
 
+```csharp
+public class Leaderboard {
+    private Dictionary<int, int> scores;
+
+    public Leaderboard() {
+        scores = new Dictionary<int, int>();
+    }
+
+    public void AddScore(int playerId, int score) {
+        if (!scores.ContainsKey(playerId)) {
+            scores[playerId] = 0;
+        }
+        scores[playerId] += score;
+    }
+
+    public int Top(int K) {
+        var values = scores.Values.ToList();
+        values.Sort((a, b) => b.CompareTo(a));
+
+        int total = 0;
+        for (int i = 0; i < K; i++) {
+            total += values[i];
+        }
+        return total;
+    }
+
+    public void Reset(int playerId) {
+        scores[playerId] = 0;
+    }
+}
+```
+
+```go
+type Leaderboard struct {
+    scores map[int]int
+}
+
+func Constructor() Leaderboard {
+    return Leaderboard{scores: make(map[int]int)}
+}
+
+func (this *Leaderboard) AddScore(playerId int, score int) {
+    this.scores[playerId] += score
+}
+
+func (this *Leaderboard) Top(K int) int {
+    values := make([]int, 0, len(this.scores))
+    for _, v := range this.scores {
+        values = append(values, v)
+    }
+    sort.Sort(sort.Reverse(sort.IntSlice(values)))
+
+    total := 0
+    for i := 0; i < K; i++ {
+        total += values[i]
+    }
+    return total
+}
+
+func (this *Leaderboard) Reset(playerId int) {
+    this.scores[playerId] = 0
+}
+```
+
+```kotlin
+class Leaderboard() {
+    private val scores = mutableMapOf<Int, Int>()
+
+    fun addScore(playerId: Int, score: Int) {
+        scores[playerId] = scores.getOrDefault(playerId, 0) + score
+    }
+
+    fun top(K: Int): Int {
+        val values = scores.values.sortedDescending()
+        var total = 0
+        for (i in 0 until K) {
+            total += values[i]
+        }
+        return total
+    }
+
+    fun reset(playerId: Int) {
+        scores[playerId] = 0
+    }
+}
+```
+
+```swift
+class Leaderboard {
+    private var scores: [Int: Int]
+
+    init() {
+        scores = [:]
+    }
+
+    func addScore(_ playerId: Int, _ score: Int) {
+        scores[playerId, default: 0] += score
+    }
+
+    func top(_ K: Int) -> Int {
+        let values = scores.values.sorted(by: >)
+        var total = 0
+        for i in 0..<K {
+            total += values[i]
+        }
+        return total
+    }
+
+    func reset(_ playerId: Int) {
+        scores[playerId] = 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: 
+- Time complexity:
     - $O(1)$ for `addScore`
     - $O(1)$ for `reset`
     - $O(N \log N)$ for `top`
@@ -291,9 +405,9 @@ class Leaderboard {
     constructor() {
         this.scores = {};
     }
-    
-    /** 
-     * @param {number} playerId 
+
+    /**
+     * @param {number} playerId
      * @param {number} score
      * @return {void}
      */
@@ -301,24 +415,24 @@ class Leaderboard {
         if (!(playerId in this.scores)) {
             this.scores[playerId] = 0;
         }
-        
+
         this.scores[playerId] += score;
     }
-    
-    /** 
+
+    /**
      * @param {number} K
      * @return {number}
      */
     top(K) {
         const heap = new PriorityQueue((a, b) => a - b); // Using @datastructures-js/priority-queue
-        
+
         for (const score of Object.values(this.scores)) {
             heap.enqueue(score);
             if (heap.size() > K) {
                 heap.dequeue();
             }
         }
-        
+
         let res = 0;
         while (heap.size() > 0) {
             res += heap.dequeue();
@@ -326,8 +440,8 @@ class Leaderboard {
 
         return res;
     }
-    
-    /** 
+
+    /**
      * @param {number} playerId
      * @return {void}
      */
@@ -337,11 +451,166 @@ class Leaderboard {
 }
 ```
 
+```csharp
+public class Leaderboard {
+    private Dictionary<int, int> scores;
+
+    public Leaderboard() {
+        scores = new Dictionary<int, int>();
+    }
+
+    public void AddScore(int playerId, int score) {
+        if (!scores.ContainsKey(playerId)) {
+            scores[playerId] = 0;
+        }
+        scores[playerId] += score;
+    }
+
+    public int Top(int K) {
+        var heap = new PriorityQueue<int, int>();
+
+        foreach (var score in scores.Values) {
+            heap.Enqueue(score, score);
+            if (heap.Count > K) {
+                heap.Dequeue();
+            }
+        }
+
+        int total = 0;
+        while (heap.Count > 0) {
+            total += heap.Dequeue();
+        }
+        return total;
+    }
+
+    public void Reset(int playerId) {
+        scores[playerId] = 0;
+    }
+}
+```
+
+```go
+import "container/heap"
+
+type MinHeap []int
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type Leaderboard struct {
+    scores map[int]int
+}
+
+func Constructor() Leaderboard {
+    return Leaderboard{scores: make(map[int]int)}
+}
+
+func (this *Leaderboard) AddScore(playerId int, score int) {
+    this.scores[playerId] += score
+}
+
+func (this *Leaderboard) Top(K int) int {
+    h := &MinHeap{}
+    heap.Init(h)
+
+    for _, score := range this.scores {
+        heap.Push(h, score)
+        if h.Len() > K {
+            heap.Pop(h)
+        }
+    }
+
+    total := 0
+    for h.Len() > 0 {
+        total += heap.Pop(h).(int)
+    }
+    return total
+}
+
+func (this *Leaderboard) Reset(playerId int) {
+    this.scores[playerId] = 0
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class Leaderboard() {
+    private val scores = mutableMapOf<Int, Int>()
+
+    fun addScore(playerId: Int, score: Int) {
+        scores[playerId] = scores.getOrDefault(playerId, 0) + score
+    }
+
+    fun top(K: Int): Int {
+        val heap = PriorityQueue<Int>()
+
+        for (score in scores.values) {
+            heap.offer(score)
+            if (heap.size > K) {
+                heap.poll()
+            }
+        }
+
+        var total = 0
+        while (heap.isNotEmpty()) {
+            total += heap.poll()
+        }
+        return total
+    }
+
+    fun reset(playerId: Int) {
+        scores[playerId] = 0
+    }
+}
+```
+
+```swift
+class Leaderboard {
+    private var scores: [Int: Int]
+
+    init() {
+        scores = [:]
+    }
+
+    func addScore(_ playerId: Int, _ score: Int) {
+        scores[playerId, default: 0] += score
+    }
+
+    func top(_ K: Int) -> Int {
+        var heap = [Int]()
+
+        for score in scores.values {
+            heap.append(score)
+            heap.sort()
+            if heap.count > K {
+                heap.removeFirst()
+            }
+        }
+
+        return heap.reduce(0, +)
+    }
+
+    func reset(_ playerId: Int) {
+        scores[playerId] = 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: 
+- Time complexity:
     - $O(1)$ for `addScore`
     - $O(1)$ for `reset`
     - $O(N \log K)$ for `top`
@@ -500,11 +769,390 @@ class Leaderboard {
 }
 ```
 
+```cpp
+class Leaderboard {
+public:
+    unordered_map<int, int> scores;
+    map<int, int, greater<int>> sortedScores;
+
+    Leaderboard() {}
+
+    void addScore(int playerId, int score) {
+        if (scores.find(playerId) == scores.end()) {
+            scores[playerId] = score;
+            sortedScores[score]++;
+        } else {
+            int preScore = scores[playerId];
+            sortedScores[preScore]--;
+            if (sortedScores[preScore] == 0) {
+                sortedScores.erase(preScore);
+            }
+
+            int newScore = preScore + score;
+            scores[playerId] = newScore;
+            sortedScores[newScore]++;
+        }
+    }
+
+    int top(int K) {
+        int count = 0, sum = 0;
+
+        for (auto& [key, times] : sortedScores) {
+            for (int i = 0; i < times; i++) {
+                sum += key;
+                count++;
+                if (count == K) break;
+            }
+            if (count == K) break;
+        }
+
+        return sum;
+    }
+
+    void reset(int playerId) {
+        int preScore = scores[playerId];
+        sortedScores[preScore]--;
+        if (sortedScores[preScore] == 0) {
+            sortedScores.erase(preScore);
+        }
+        scores.erase(playerId);
+    }
+};
+```
+
+```javascript
+class Leaderboard {
+    constructor() {
+        this.scores = new Map();
+        this.sortedScores = new Map();
+    }
+
+    /**
+     * @param {number} playerId
+     * @param {number} score
+     * @return {void}
+     */
+    addScore(playerId, score) {
+        if (!this.scores.has(playerId)) {
+            this.scores.set(playerId, score);
+            this.sortedScores.set(score, (this.sortedScores.get(score) || 0) + 1);
+        } else {
+            const preScore = this.scores.get(playerId);
+            const playerCount = this.sortedScores.get(preScore);
+
+            if (playerCount === 1) {
+                this.sortedScores.delete(preScore);
+            } else {
+                this.sortedScores.set(preScore, playerCount - 1);
+            }
+
+            const newScore = preScore + score;
+            this.scores.set(playerId, newScore);
+            this.sortedScores.set(newScore, (this.sortedScores.get(newScore) || 0) + 1);
+        }
+    }
+
+    /**
+     * @param {number} K
+     * @return {number}
+     */
+    top(K) {
+        const sortedKeys = [...this.sortedScores.keys()].sort((a, b) => b - a);
+        let count = 0, sum = 0;
+
+        for (const key of sortedKeys) {
+            const times = this.sortedScores.get(key);
+            for (let i = 0; i < times; i++) {
+                sum += key;
+                count++;
+                if (count === K) break;
+            }
+            if (count === K) break;
+        }
+
+        return sum;
+    }
+
+    /**
+     * @param {number} playerId
+     * @return {void}
+     */
+    reset(playerId) {
+        const preScore = this.scores.get(playerId);
+        const playerCount = this.sortedScores.get(preScore);
+
+        if (playerCount === 1) {
+            this.sortedScores.delete(preScore);
+        } else {
+            this.sortedScores.set(preScore, playerCount - 1);
+        }
+
+        this.scores.delete(playerId);
+    }
+}
+```
+
+```csharp
+public class Leaderboard {
+    private Dictionary<int, int> scores;
+    private SortedDictionary<int, int> sortedScores;
+
+    public Leaderboard() {
+        scores = new Dictionary<int, int>();
+        sortedScores = new SortedDictionary<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+    }
+
+    public void AddScore(int playerId, int score) {
+        if (!scores.ContainsKey(playerId)) {
+            scores[playerId] = score;
+            sortedScores[score] = sortedScores.GetValueOrDefault(score, 0) + 1;
+        } else {
+            int preScore = scores[playerId];
+            int playerCount = sortedScores[preScore];
+
+            if (playerCount == 1) {
+                sortedScores.Remove(preScore);
+            } else {
+                sortedScores[preScore] = playerCount - 1;
+            }
+
+            int newScore = preScore + score;
+            scores[playerId] = newScore;
+            sortedScores[newScore] = sortedScores.GetValueOrDefault(newScore, 0) + 1;
+        }
+    }
+
+    public int Top(int K) {
+        int count = 0, sum = 0;
+
+        foreach (var entry in sortedScores) {
+            int key = entry.Key;
+            int times = entry.Value;
+
+            for (int i = 0; i < times; i++) {
+                sum += key;
+                count++;
+                if (count == K) break;
+            }
+            if (count == K) break;
+        }
+
+        return sum;
+    }
+
+    public void Reset(int playerId) {
+        int preScore = scores[playerId];
+        sortedScores[preScore]--;
+        if (sortedScores[preScore] == 0) {
+            sortedScores.Remove(preScore);
+        }
+        scores.Remove(playerId);
+    }
+}
+```
+
+```go
+type Leaderboard struct {
+    scores       map[int]int
+    sortedScores *redblacktree.Tree
+}
+
+func Constructor() Leaderboard {
+    return Leaderboard{
+        scores:       make(map[int]int),
+        sortedScores: redblacktree.NewWith(func(a, b interface{}) int {
+            return b.(int) - a.(int)
+        }),
+    }
+}
+
+func (this *Leaderboard) AddScore(playerId int, score int) {
+    if _, exists := this.scores[playerId]; !exists {
+        this.scores[playerId] = score
+        count := 0
+        if val, found := this.sortedScores.Get(score); found {
+            count = val.(int)
+        }
+        this.sortedScores.Put(score, count+1)
+    } else {
+        preScore := this.scores[playerId]
+        playerCount := this.sortedScores.Values()[this.findIndex(preScore)].(int)
+
+        if playerCount == 1 {
+            this.sortedScores.Remove(preScore)
+        } else {
+            this.sortedScores.Put(preScore, playerCount-1)
+        }
+
+        newScore := preScore + score
+        this.scores[playerId] = newScore
+        count := 0
+        if val, found := this.sortedScores.Get(newScore); found {
+            count = val.(int)
+        }
+        this.sortedScores.Put(newScore, count+1)
+    }
+}
+
+func (this *Leaderboard) findIndex(score int) int {
+    for i, k := range this.sortedScores.Keys() {
+        if k.(int) == score {
+            return i
+        }
+    }
+    return -1
+}
+
+func (this *Leaderboard) Top(K int) int {
+    count, sum := 0, 0
+    it := this.sortedScores.Iterator()
+
+    for it.Next() {
+        key := it.Key().(int)
+        times := it.Value().(int)
+
+        for i := 0; i < times; i++ {
+            sum += key
+            count++
+            if count == K {
+                return sum
+            }
+        }
+    }
+
+    return sum
+}
+
+func (this *Leaderboard) Reset(playerId int) {
+    preScore := this.scores[playerId]
+    if val, found := this.sortedScores.Get(preScore); found {
+        playerCount := val.(int)
+        if playerCount == 1 {
+            this.sortedScores.Remove(preScore)
+        } else {
+            this.sortedScores.Put(preScore, playerCount-1)
+        }
+    }
+    delete(this.scores, playerId)
+}
+```
+
+```kotlin
+import java.util.*
+
+class Leaderboard() {
+    private val scores = HashMap<Int, Int>()
+    private val sortedScores = TreeMap<Int, Int>(Collections.reverseOrder())
+
+    fun addScore(playerId: Int, score: Int) {
+        if (playerId !in scores) {
+            scores[playerId] = score
+            sortedScores[score] = sortedScores.getOrDefault(score, 0) + 1
+        } else {
+            val preScore = scores[playerId]!!
+            val playerCount = sortedScores[preScore]!!
+
+            if (playerCount == 1) {
+                sortedScores.remove(preScore)
+            } else {
+                sortedScores[preScore] = playerCount - 1
+            }
+
+            val newScore = preScore + score
+            scores[playerId] = newScore
+            sortedScores[newScore] = sortedScores.getOrDefault(newScore, 0) + 1
+        }
+    }
+
+    fun top(K: Int): Int {
+        var count = 0
+        var sum = 0
+
+        for ((key, times) in sortedScores) {
+            for (i in 0 until times) {
+                sum += key
+                count++
+                if (count == K) return sum
+            }
+        }
+
+        return sum
+    }
+
+    fun reset(playerId: Int) {
+        val preScore = scores[playerId]!!
+        sortedScores[preScore] = sortedScores[preScore]!! - 1
+        if (sortedScores[preScore] == 0) {
+            sortedScores.remove(preScore)
+        }
+        scores.remove(playerId)
+    }
+}
+```
+
+```swift
+class Leaderboard {
+    private var scores: [Int: Int]
+    private var sortedScores: [Int: Int]
+
+    init() {
+        scores = [:]
+        sortedScores = [:]
+    }
+
+    func addScore(_ playerId: Int, _ score: Int) {
+        if scores[playerId] == nil {
+            scores[playerId] = score
+            sortedScores[score, default: 0] += 1
+        } else {
+            let preScore = scores[playerId]!
+            let playerCount = sortedScores[preScore]!
+
+            if playerCount == 1 {
+                sortedScores.removeValue(forKey: preScore)
+            } else {
+                sortedScores[preScore] = playerCount - 1
+            }
+
+            let newScore = preScore + score
+            scores[playerId] = newScore
+            sortedScores[newScore, default: 0] += 1
+        }
+    }
+
+    func top(_ K: Int) -> Int {
+        let sortedKeys = sortedScores.keys.sorted(by: >)
+        var count = 0
+        var sum = 0
+
+        for key in sortedKeys {
+            let times = sortedScores[key]!
+            for _ in 0..<times {
+                sum += key
+                count += 1
+                if count == K { return sum }
+            }
+        }
+
+        return sum
+    }
+
+    func reset(_ playerId: Int) {
+        let preScore = scores[playerId]!
+        sortedScores[preScore]! -= 1
+        if sortedScores[preScore] == 0 {
+            sortedScores.removeValue(forKey: preScore)
+        }
+        scores.removeValue(forKey: playerId)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: 
+- Time complexity:
     - $O(\log N)$ for `addScore`
 
     - $O(\log N)$ for `reset`.  Note that this complexity is in the case when every player always maintains a unique score.

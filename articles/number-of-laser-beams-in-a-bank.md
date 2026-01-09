@@ -100,6 +100,106 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumberOfBeams(string[] bank) {
+        int prev = CountOnes(bank[0]);
+        int res = 0;
+
+        for (int i = 1; i < bank.Length; i++) {
+            int curr = CountOnes(bank[i]);
+            if (curr > 0) {
+                res += prev * curr;
+                prev = curr;
+            }
+        }
+
+        return res;
+    }
+
+    private int CountOnes(string s) {
+        int count = 0;
+        foreach (char c in s) {
+            if (c == '1') count++;
+        }
+        return count;
+    }
+}
+```
+
+```go
+func numberOfBeams(bank []string) int {
+    countOnes := func(s string) int {
+        count := 0
+        for _, c := range s {
+            if c == '1' {
+                count++
+            }
+        }
+        return count
+    }
+
+    prev := countOnes(bank[0])
+    res := 0
+
+    for i := 1; i < len(bank); i++ {
+        curr := countOnes(bank[i])
+        if curr > 0 {
+            res += prev * curr
+            prev = curr
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfBeams(bank: Array<String>): Int {
+        fun countOnes(s: String): Int {
+            return s.count { it == '1' }
+        }
+
+        var prev = countOnes(bank[0])
+        var res = 0
+
+        for (i in 1 until bank.size) {
+            val curr = countOnes(bank[i])
+            if (curr > 0) {
+                res += prev * curr
+                prev = curr
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfBeams(_ bank: [String]) -> Int {
+        func countOnes(_ s: String) -> Int {
+            return s.filter { $0 == "1" }.count
+        }
+
+        var prev = countOnes(bank[0])
+        var res = 0
+
+        for i in 1..<bank.count {
+            let curr = countOnes(bank[i])
+            if curr > 0 {
+                res += prev * curr
+                prev = curr
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -92,6 +92,47 @@ public class Solution {
 }
 ```
 
+```go
+func getConcatenation(nums []int) []int {
+    ans := make([]int, 0, 2*len(nums))
+    for i := 0; i < 2; i++ {
+        for _, num := range nums {
+            ans = append(ans, num)
+        }
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun getConcatenation(nums: IntArray): IntArray {
+        val ans = IntArray(2 * nums.size)
+        var idx = 0
+        for (i in 0 until 2) {
+            for (num in nums) {
+                ans[idx++] = num
+            }
+        }
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func getConcatenation(_ nums: [Int]) -> [Int] {
+        var ans = [Int]()
+        for _ in 0..<2 {
+            for num in nums {
+                ans.append(num)
+            }
+        }
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -182,6 +223,46 @@ public class Solution {
             ans[i] = ans[i + n] = nums[i];
         }
         return ans;
+    }
+}
+```
+
+```go
+func getConcatenation(nums []int) []int {
+    n := len(nums)
+    ans := make([]int, 2*n)
+    for i, num := range nums {
+        ans[i] = num
+        ans[i+n] = num
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun getConcatenation(nums: IntArray): IntArray {
+        val n = nums.size
+        val ans = IntArray(2 * n)
+        for (i in nums.indices) {
+            ans[i] = nums[i]
+            ans[i + n] = nums[i]
+        }
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func getConcatenation(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var ans = [Int](repeating: 0, count: 2 * n)
+        for i in 0..<n {
+            ans[i] = nums[i]
+            ans[i + n] = nums[i]
+        }
+        return ans
     }
 }
 ```

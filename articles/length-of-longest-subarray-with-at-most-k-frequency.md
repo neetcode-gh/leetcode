@@ -85,6 +85,89 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSubarrayLength(int[] nums, int k) {
+        int n = nums.Length, res = 0;
+
+        for (int i = 0; i < n; i++) {
+            Dictionary<int, int> count = new Dictionary<int, int>();
+            for (int j = i; j < n; j++) {
+                if (!count.ContainsKey(nums[j])) count[nums[j]] = 0;
+                count[nums[j]]++;
+                if (count[nums[j]] > k) {
+                    break;
+                }
+                res = Math.Max(res, j - i + 1);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxSubarrayLength(nums []int, k int) int {
+    n, res := len(nums), 0
+
+    for i := 0; i < n; i++ {
+        count := make(map[int]int)
+        for j := i; j < n; j++ {
+            count[nums[j]]++
+            if count[nums[j]] > k {
+                break
+            }
+            if j-i+1 > res {
+                res = j - i + 1
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubarrayLength(nums: IntArray, k: Int): Int {
+        val n = nums.size
+        var res = 0
+
+        for (i in 0 until n) {
+            val count = HashMap<Int, Int>()
+            for (j in i until n) {
+                count[nums[j]] = count.getOrDefault(nums[j], 0) + 1
+                if (count[nums[j]]!! > k) {
+                    break
+                }
+                res = maxOf(res, j - i + 1)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubarrayLength(_ nums: [Int], _ k: Int) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for i in 0..<n {
+            var count = [Int: Int]()
+            for j in i..<n {
+                count[nums[j], default: 0] += 1
+                if count[nums[j]]! > k {
+                    break
+                }
+                res = max(res, j - i + 1)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -179,6 +262,87 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSubarrayLength(int[] nums, int k) {
+        int res = 0;
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int l = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            if (!count.ContainsKey(nums[r])) count[nums[r]] = 0;
+            count[nums[r]]++;
+            while (count[nums[r]] > k) {
+                count[nums[l]]--;
+                l++;
+            }
+            res = Math.Max(res, r - l + 1);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxSubarrayLength(nums []int, k int) int {
+    res := 0
+    count := make(map[int]int)
+    l := 0
+
+    for r := 0; r < len(nums); r++ {
+        count[nums[r]]++
+        for count[nums[r]] > k {
+            count[nums[l]]--
+            l++
+        }
+        if r-l+1 > res {
+            res = r - l + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubarrayLength(nums: IntArray, k: Int): Int {
+        var res = 0
+        val count = HashMap<Int, Int>()
+        var l = 0
+
+        for (r in nums.indices) {
+            count[nums[r]] = count.getOrDefault(nums[r], 0) + 1
+            while (count[nums[r]]!! > k) {
+                count[nums[l]] = count[nums[l]]!! - 1
+                l++
+            }
+            res = maxOf(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubarrayLength(_ nums: [Int], _ k: Int) -> Int {
+        var res = 0
+        var count = [Int: Int]()
+        var l = 0
+
+        for r in 0..<nums.count {
+            count[nums[r], default: 0] += 1
+            while count[nums[r]]! > k {
+                count[nums[l]]! -= 1
+                l += 1
+            }
+            res = max(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -268,6 +432,91 @@ class Solution {
             }
         }
         return nums.length - l;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxSubarrayLength(int[] nums, int k) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int l = 0, cnt = 0; // count of numbers with freq > k
+        for (int r = 0; r < nums.Length; r++) {
+            if (!count.ContainsKey(nums[r])) count[nums[r]] = 0;
+            count[nums[r]]++;
+            if (count[nums[r]] > k) cnt++;
+            if (cnt > 0) {
+                if (count[nums[l]] > k) cnt--;
+                count[nums[l]]--;
+                l++;
+            }
+        }
+        return nums.Length - l;
+    }
+}
+```
+
+```go
+func maxSubarrayLength(nums []int, k int) int {
+    count := make(map[int]int)
+    l, cnt := 0, 0 // count of numbers with freq > k
+    for r := 0; r < len(nums); r++ {
+        count[nums[r]]++
+        if count[nums[r]] > k {
+            cnt++
+        }
+        if cnt > 0 {
+            if count[nums[l]] > k {
+                cnt--
+            }
+            count[nums[l]]--
+            l++
+        }
+    }
+    return len(nums) - l
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubarrayLength(nums: IntArray, k: Int): Int {
+        val count = HashMap<Int, Int>()
+        var l = 0
+        var cnt = 0 // count of numbers with freq > k
+        for (r in nums.indices) {
+            count[nums[r]] = count.getOrDefault(nums[r], 0) + 1
+            if (count[nums[r]]!! > k) cnt++
+            if (cnt > 0) {
+                if (count[nums[l]]!! > k) cnt--
+                count[nums[l]] = count[nums[l]]!! - 1
+                l++
+            }
+        }
+        return nums.size - l
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubarrayLength(_ nums: [Int], _ k: Int) -> Int {
+        var count = [Int: Int]()
+        var l = 0
+        var cnt = 0 // count of numbers with freq > k
+        for r in 0..<nums.count {
+            count[nums[r], default: 0] += 1
+            if count[nums[r]]! > k {
+                cnt += 1
+            }
+            if cnt > 0 {
+                if count[nums[l]]! > k {
+                    cnt -= 1
+                }
+                count[nums[l]]! -= 1
+                l += 1
+            }
+        }
+        return nums.count - l
     }
 }
 ```

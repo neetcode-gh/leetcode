@@ -141,6 +141,104 @@ public class Solution {
 }
 ```
 
+```go
+func restoreIpAddresses(s string) []string {
+    res := []string{}
+    if len(s) > 12 {
+        return res
+    }
+
+    var backtrack func(i, dots int, curIP string)
+    backtrack = func(i, dots int, curIP string) {
+        if dots == 4 && i == len(s) {
+            res = append(res, curIP[:len(curIP)-1])
+            return
+        }
+        if dots > 4 {
+            return
+        }
+
+        for j := i; j < min(i+3, len(s)); j++ {
+            if i != j && s[i] == '0' {
+                continue
+            }
+            part := s[i : j+1]
+            num, _ := strconv.Atoi(part)
+            if num < 256 {
+                backtrack(j+1, dots+1, curIP+part+".")
+            }
+        }
+    }
+
+    backtrack(0, 0, "")
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun restoreIpAddresses(s: String): List<String> {
+        val res = mutableListOf<String>()
+        if (s.length > 12) return res
+
+        fun backtrack(i: Int, dots: Int, curIP: String) {
+            if (dots == 4 && i == s.length) {
+                res.add(curIP.dropLast(1))
+                return
+            }
+            if (dots > 4) return
+
+            for (j in i until minOf(i + 3, s.length)) {
+                if (i != j && s[i] == '0') continue
+                val part = s.substring(i, j + 1)
+                if (part.toInt() < 256) {
+                    backtrack(j + 1, dots + 1, curIP + part + ".")
+                }
+            }
+        }
+
+        backtrack(0, 0, "")
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func restoreIpAddresses(_ s: String) -> [String] {
+        var res = [String]()
+        if s.count > 12 { return res }
+        let chars = Array(s)
+
+        func backtrack(_ i: Int, _ dots: Int, _ curIP: String) {
+            if dots == 4 && i == chars.count {
+                res.append(String(curIP.dropLast()))
+                return
+            }
+            if dots > 4 { return }
+
+            for j in i..<min(i + 3, chars.count) {
+                if i != j && chars[i] == "0" { continue }
+                let part = String(chars[i...j])
+                if let num = Int(part), num < 256 {
+                    backtrack(j + 1, dots + 1, curIP + part + ".")
+                }
+            }
+        }
+
+        backtrack(0, 0, "")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -338,6 +436,115 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func restoreIpAddresses(s string) []string {
+    res := []string{}
+    if len(s) > 12 {
+        return res
+    }
+
+    valid := func(num string) bool {
+        if len(num) > 1 && num[0] == '0' {
+            return false
+        }
+        val, _ := strconv.Atoi(num)
+        return val <= 255
+    }
+
+    for seg1 := 1; seg1 < 4; seg1++ {
+        for seg2 := 1; seg2 < 4; seg2++ {
+            for seg3 := 1; seg3 < 4; seg3++ {
+                for seg4 := 1; seg4 < 4; seg4++ {
+                    if seg1+seg2+seg3+seg4 != len(s) {
+                        continue
+                    }
+
+                    num1 := s[:seg1]
+                    num2 := s[seg1 : seg1+seg2]
+                    num3 := s[seg1+seg2 : seg1+seg2+seg3]
+                    num4 := s[seg1+seg2+seg3:]
+
+                    if valid(num1) && valid(num2) && valid(num3) && valid(num4) {
+                        res = append(res, num1+"."+num2+"."+num3+"."+num4)
+                    }
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun restoreIpAddresses(s: String): List<String> {
+        val res = mutableListOf<String>()
+        if (s.length > 12) return res
+
+        fun valid(num: String): Boolean {
+            if (num.length > 1 && num[0] == '0') return false
+            return num.toInt() <= 255
+        }
+
+        for (seg1 in 1 until 4) {
+            for (seg2 in 1 until 4) {
+                for (seg3 in 1 until 4) {
+                    for (seg4 in 1 until 4) {
+                        if (seg1 + seg2 + seg3 + seg4 != s.length) continue
+
+                        val num1 = s.substring(0, seg1)
+                        val num2 = s.substring(seg1, seg1 + seg2)
+                        val num3 = s.substring(seg1 + seg2, seg1 + seg2 + seg3)
+                        val num4 = s.substring(seg1 + seg2 + seg3)
+
+                        if (valid(num1) && valid(num2) && valid(num3) && valid(num4)) {
+                            res.add("$num1.$num2.$num3.$num4")
+                        }
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func restoreIpAddresses(_ s: String) -> [String] {
+        var res = [String]()
+        if s.count > 12 { return res }
+        let chars = Array(s)
+
+        func valid(_ num: String) -> Bool {
+            if num.count > 1 && num.first == "0" { return false }
+            guard let val = Int(num) else { return false }
+            return val <= 255
+        }
+
+        for seg1 in 1..<4 {
+            for seg2 in 1..<4 {
+                for seg3 in 1..<4 {
+                    for seg4 in 1..<4 {
+                        if seg1 + seg2 + seg3 + seg4 != chars.count { continue }
+
+                        let num1 = String(chars[0..<seg1])
+                        let num2 = String(chars[seg1..<(seg1 + seg2)])
+                        let num3 = String(chars[(seg1 + seg2)..<(seg1 + seg2 + seg3)])
+                        let num4 = String(chars[(seg1 + seg2 + seg3)...])
+
+                        if valid(num1) && valid(num2) && valid(num3) && valid(num4) {
+                            res.append("\(num1).\(num2).\(num3).\(num4)")
+                        }
+                    }
+                }
+            }
+        }
+        return res
     }
 }
 ```

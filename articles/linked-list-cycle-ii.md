@@ -105,6 +105,111 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode DetectCycle(ListNode head) {
+        HashSet<ListNode> seen = new HashSet<ListNode>();
+        ListNode cur = head;
+        while (cur != null) {
+            if (seen.Contains(cur)) {
+                return cur;
+            }
+            seen.Add(cur);
+            cur = cur.next;
+        }
+        return null;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func detectCycle(head *ListNode) *ListNode {
+    seen := make(map[*ListNode]bool)
+    cur := head
+    for cur != nil {
+        if seen[cur] {
+            return cur
+        }
+        seen[cur] = true
+        cur = cur.Next
+    }
+    return nil
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun detectCycle(head: ListNode?): ListNode? {
+        val seen = HashSet<ListNode>()
+        var cur = head
+        while (cur != null) {
+            if (cur in seen) {
+                return cur
+            }
+            seen.add(cur)
+            cur = cur.next
+        }
+        return null
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *     }
+ * }
+ */
+class Solution {
+    func detectCycle(_ head: ListNode?) -> ListNode? {
+        var seen = Set<ObjectIdentifier>()
+        var cur = head
+        while let node = cur {
+            let id = ObjectIdentifier(node)
+            if seen.contains(id) {
+                return node
+            }
+            seen.insert(id)
+            cur = node.next
+        }
+        return nil
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,6 +358,146 @@ class Solution {
             }
         }
         return null;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) {
+ *         val = x;
+ *         next = null;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode DetectCycle(ListNode head) {
+        if (head == null || head.next == null) {
+            return null;
+        }
+
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+            if (slow == fast) {
+                slow = head;
+                while (slow != fast) {
+                    slow = slow.next;
+                    fast = fast.next;
+                }
+                return slow;
+            }
+        }
+        return null;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func detectCycle(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return nil
+    }
+
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+        if slow == fast {
+            slow = head
+            for slow != fast {
+                slow = slow.Next
+                fast = fast.Next
+            }
+            return slow
+        }
+    }
+    return nil
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun detectCycle(head: ListNode?): ListNode? {
+        if (head?.next == null) {
+            return null
+        }
+
+        var slow = head
+        var fast = head
+        while (fast?.next != null) {
+            slow = slow?.next
+            fast = fast.next?.next
+            if (slow == fast) {
+                slow = head
+                while (slow != fast) {
+                    slow = slow?.next
+                    fast = fast?.next
+                }
+                return slow
+            }
+        }
+        return null
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *     }
+ * }
+ */
+class Solution {
+    func detectCycle(_ head: ListNode?) -> ListNode? {
+        if head == nil || head?.next == nil {
+            return nil
+        }
+
+        var slow = head
+        var fast = head
+
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next?.next
+
+            if slow === fast {
+                slow = head
+                while slow !== fast {
+                    slow = slow?.next
+                    fast = fast?.next
+                }
+                return slow
+            }
+        }
+        return nil
     }
 }
 ```

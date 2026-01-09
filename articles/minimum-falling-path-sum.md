@@ -98,6 +98,101 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] matrix) {
+        int N = matrix.Length;
+        int res = int.MaxValue;
+        for (int c = 0; c < N; c++) {
+            res = Math.Min(res, Dfs(matrix, 0, c, N));
+        }
+        return res;
+    }
+
+    private int Dfs(int[][] matrix, int r, int c, int N) {
+        if (r == N) return 0;
+        if (c < 0 || c >= N) return int.MaxValue;
+        return matrix[r][c] + Math.Min(
+            Math.Min(Dfs(matrix, r + 1, c - 1, N), Dfs(matrix, r + 1, c, N)),
+            Dfs(matrix, r + 1, c + 1, N)
+        );
+    }
+}
+```
+
+```go
+func minFallingPathSum(matrix [][]int) int {
+    n := len(matrix)
+
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r == n {
+            return 0
+        }
+        if c < 0 || c >= n {
+            return math.MaxInt32
+        }
+        return matrix[r][c] + min(
+            dfs(r+1, c-1),
+            min(dfs(r+1, c), dfs(r+1, c+1)),
+        )
+    }
+
+    res := math.MaxInt32
+    for c := 0; c < n; c++ {
+        res = min(res, dfs(0, c))
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(matrix: Array<IntArray>): Int {
+        val n = matrix.size
+
+        fun dfs(r: Int, c: Int): Int {
+            if (r == n) return 0
+            if (c < 0 || c >= n) return Int.MAX_VALUE
+            return matrix[r][c] + minOf(
+                dfs(r + 1, c - 1),
+                dfs(r + 1, c),
+                dfs(r + 1, c + 1)
+            )
+        }
+
+        var res = Int.MAX_VALUE
+        for (c in 0 until n) {
+            res = minOf(res, dfs(0, c))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ matrix: [[Int]]) -> Int {
+        let n = matrix.count
+
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if r == n { return 0 }
+            if c < 0 || c >= n { return Int.max }
+            return matrix[r][c] + min(
+                dfs(r + 1, c - 1),
+                min(dfs(r + 1, c), dfs(r + 1, c + 1))
+            )
+        }
+
+        var res = Int.max
+        for c in 0..<n {
+            res = min(res, dfs(0, c))
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,6 +326,133 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] cache;
+
+    public int MinFallingPathSum(int[][] matrix) {
+        int N = matrix.Length;
+        cache = new int[N, N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                cache[i, j] = int.MinValue;
+            }
+        }
+
+        int res = int.MaxValue;
+        for (int c = 0; c < N; c++) {
+            res = Math.Min(res, Dfs(matrix, 0, c, N));
+        }
+        return res;
+    }
+
+    private int Dfs(int[][] matrix, int r, int c, int N) {
+        if (r == N) return 0;
+        if (c < 0 || c >= N) return int.MaxValue;
+        if (cache[r, c] != int.MinValue) return cache[r, c];
+
+        cache[r, c] = matrix[r][c] + Math.Min(
+            Math.Min(Dfs(matrix, r + 1, c - 1, N), Dfs(matrix, r + 1, c, N)),
+            Dfs(matrix, r + 1, c + 1, N)
+        );
+        return cache[r, c];
+    }
+}
+```
+
+```go
+func minFallingPathSum(matrix [][]int) int {
+    n := len(matrix)
+    cache := make([][]int, n)
+    for i := range cache {
+        cache[i] = make([]int, n)
+        for j := range cache[i] {
+            cache[i][j] = math.MinInt32
+        }
+    }
+
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r == n {
+            return 0
+        }
+        if c < 0 || c >= n {
+            return math.MaxInt32
+        }
+        if cache[r][c] != math.MinInt32 {
+            return cache[r][c]
+        }
+
+        cache[r][c] = matrix[r][c] + min(
+            dfs(r+1, c-1),
+            min(dfs(r+1, c), dfs(r+1, c+1)),
+        )
+        return cache[r][c]
+    }
+
+    res := math.MaxInt32
+    for c := 0; c < n; c++ {
+        res = min(res, dfs(0, c))
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(matrix: Array<IntArray>): Int {
+        val n = matrix.size
+        val cache = Array(n) { IntArray(n) { Int.MIN_VALUE } }
+
+        fun dfs(r: Int, c: Int): Int {
+            if (r == n) return 0
+            if (c < 0 || c >= n) return Int.MAX_VALUE
+            if (cache[r][c] != Int.MIN_VALUE) return cache[r][c]
+
+            cache[r][c] = matrix[r][c] + minOf(
+                dfs(r + 1, c - 1),
+                dfs(r + 1, c),
+                dfs(r + 1, c + 1)
+            )
+            return cache[r][c]
+        }
+
+        var res = Int.MAX_VALUE
+        for (c in 0 until n) {
+            res = minOf(res, dfs(0, c))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ matrix: [[Int]]) -> Int {
+        let n = matrix.count
+        var cache = Array(repeating: Array(repeating: Int.min, count: n), count: n)
+
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if r == n { return 0 }
+            if c < 0 || c >= n { return Int.max }
+            if cache[r][c] != Int.min { return cache[r][c] }
+
+            cache[r][c] = matrix[r][c] + min(
+                dfs(r + 1, c - 1),
+                min(dfs(r + 1, c), dfs(r + 1, c + 1))
+            )
+            return cache[r][c]
+        }
+
+        var res = Int.max
+        for c in 0..<n {
+            res = min(res, dfs(0, c))
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -344,6 +566,103 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] matrix) {
+        int N = matrix.Length;
+        int[] dp = new int[N];
+        for (int c = 0; c < N; c++) {
+            dp[c] = matrix[0][c];
+        }
+
+        for (int r = 1; r < N; r++) {
+            int leftUp = int.MaxValue;
+            for (int c = 0; c < N; c++) {
+                int midUp = dp[c];
+                int rightUp = (c < N - 1) ? dp[c + 1] : int.MaxValue;
+                dp[c] = matrix[r][c] + Math.Min(midUp, Math.Min(leftUp, rightUp));
+                leftUp = midUp;
+            }
+        }
+
+        int ans = int.MaxValue;
+        foreach (int val in dp) {
+            ans = Math.Min(ans, val);
+        }
+        return ans;
+    }
+}
+```
+
+```go
+func minFallingPathSum(matrix [][]int) int {
+    n := len(matrix)
+    dp := make([]int, n)
+    copy(dp, matrix[0])
+
+    for r := 1; r < n; r++ {
+        leftUp := math.MaxInt32
+        for c := 0; c < n; c++ {
+            midUp := dp[c]
+            rightUp := math.MaxInt32
+            if c < n-1 {
+                rightUp = dp[c+1]
+            }
+            dp[c] = matrix[r][c] + min(midUp, min(leftUp, rightUp))
+            leftUp = midUp
+        }
+    }
+
+    ans := math.MaxInt32
+    for _, val := range dp {
+        ans = min(ans, val)
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(matrix: Array<IntArray>): Int {
+        val n = matrix.size
+        val dp = matrix[0].clone()
+
+        for (r in 1 until n) {
+            var leftUp = Int.MAX_VALUE
+            for (c in 0 until n) {
+                val midUp = dp[c]
+                val rightUp = if (c < n - 1) dp[c + 1] else Int.MAX_VALUE
+                dp[c] = matrix[r][c] + minOf(midUp, leftUp, rightUp)
+                leftUp = midUp
+            }
+        }
+
+        return dp.minOrNull()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ matrix: [[Int]]) -> Int {
+        let n = matrix.count
+        var dp = matrix[0]
+
+        for r in 1..<n {
+            var leftUp = Int.max
+            for c in 0..<n {
+                let midUp = dp[c]
+                let rightUp = c < n - 1 ? dp[c + 1] : Int.max
+                dp[c] = matrix[r][c] + min(midUp, min(leftUp, rightUp))
+                leftUp = midUp
+            }
+        }
+
+        return dp.min()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,6 +753,95 @@ class Solution {
         }
 
         return Math.min(...matrix[N - 1]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] matrix) {
+        int N = matrix.Length;
+
+        for (int r = 1; r < N; r++) {
+            for (int c = 0; c < N; c++) {
+                int mid = matrix[r - 1][c];
+                int left = (c > 0) ? matrix[r - 1][c - 1] : int.MaxValue;
+                int right = (c < N - 1) ? matrix[r - 1][c + 1] : int.MaxValue;
+                matrix[r][c] = matrix[r][c] + Math.Min(mid, Math.Min(left, right));
+            }
+        }
+
+        int res = int.MaxValue;
+        for (int c = 0; c < N; c++) {
+            res = Math.Min(res, matrix[N - 1][c]);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minFallingPathSum(matrix [][]int) int {
+    n := len(matrix)
+
+    for r := 1; r < n; r++ {
+        for c := 0; c < n; c++ {
+            mid := matrix[r-1][c]
+            left := math.MaxInt32
+            if c > 0 {
+                left = matrix[r-1][c-1]
+            }
+            right := math.MaxInt32
+            if c < n-1 {
+                right = matrix[r-1][c+1]
+            }
+            matrix[r][c] = matrix[r][c] + min(mid, min(left, right))
+        }
+    }
+
+    res := math.MaxInt32
+    for _, val := range matrix[n-1] {
+        res = min(res, val)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(matrix: Array<IntArray>): Int {
+        val n = matrix.size
+
+        for (r in 1 until n) {
+            for (c in 0 until n) {
+                val mid = matrix[r - 1][c]
+                val left = if (c > 0) matrix[r - 1][c - 1] else Int.MAX_VALUE
+                val right = if (c < n - 1) matrix[r - 1][c + 1] else Int.MAX_VALUE
+                matrix[r][c] = matrix[r][c] + minOf(mid, left, right)
+            }
+        }
+
+        return matrix[n - 1].minOrNull()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ matrix: [[Int]]) -> Int {
+        var matrix = matrix
+        let n = matrix.count
+
+        for r in 1..<n {
+            for c in 0..<n {
+                let mid = matrix[r - 1][c]
+                let left = c > 0 ? matrix[r - 1][c - 1] : Int.max
+                let right = c < n - 1 ? matrix[r - 1][c + 1] : Int.max
+                matrix[r][c] = matrix[r][c] + min(mid, min(left, right))
+            }
+        }
+
+        return matrix[n - 1].min()!
     }
 }
 ```

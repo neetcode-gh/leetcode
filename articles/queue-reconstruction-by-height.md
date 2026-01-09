@@ -174,6 +174,173 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        int n = people.Length;
+        var mp = new Dictionary<int, List<int>>();
+
+        foreach (var p in people) {
+            if (!mp.ContainsKey(p[1])) mp[p[1]] = new List<int>();
+            mp[p[1]].Add(p[0]);
+        }
+        foreach (var key in mp.Keys.ToList()) {
+            mp[key].Sort((a, b) => b.CompareTo(a));
+        }
+
+        var res = new List<int[]>();
+        for (int i = 0; i < n; i++) {
+            int mini = -1;
+            foreach (var k in mp.Keys) {
+                if (k > i) continue;
+
+                int cnt = 0;
+                for (int j = res.Count - 1; j >= 0; j--) {
+                    if (res[j][0] >= mp[k][mp[k].Count - 1]) cnt++;
+                }
+
+                if (cnt == k && (mini == -1 || mp[k][mp[k].Count - 1] < mp[mini][mp[mini].Count - 1])) {
+                    mini = k;
+                }
+            }
+
+            res.Add(new int[] { mp[mini][mp[mini].Count - 1], mini });
+            mp[mini].RemoveAt(mp[mini].Count - 1);
+            if (mp[mini].Count == 0) {
+                mp.Remove(mini);
+            }
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func reconstructQueue(people [][]int) [][]int {
+    n := len(people)
+    mp := make(map[int][]int)
+
+    for _, p := range people {
+        mp[p[1]] = append(mp[p[1]], p[0])
+    }
+    for k := range mp {
+        sort.Sort(sort.Reverse(sort.IntSlice(mp[k])))
+    }
+
+    res := [][]int{}
+    for i := 0; i < n; i++ {
+        mini := -1
+        for k := range mp {
+            if k > i {
+                continue
+            }
+
+            cnt := 0
+            for j := len(res) - 1; j >= 0; j-- {
+                if res[j][0] >= mp[k][len(mp[k])-1] {
+                    cnt++
+                }
+            }
+
+            if cnt == k && (mini == -1 || mp[k][len(mp[k])-1] < mp[mini][len(mp[mini])-1]) {
+                mini = k
+            }
+        }
+
+        res = append(res, []int{mp[mini][len(mp[mini])-1], mini})
+        mp[mini] = mp[mini][:len(mp[mini])-1]
+        if len(mp[mini]) == 0 {
+            delete(mp, mini)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun reconstructQueue(people: Array<IntArray>): Array<IntArray> {
+        val n = people.size
+        val mp = mutableMapOf<Int, MutableList<Int>>()
+
+        for (p in people) {
+            mp.getOrPut(p[1]) { mutableListOf() }.add(p[0])
+        }
+        for (key in mp.keys) {
+            mp[key]!!.sortDescending()
+        }
+
+        val res = mutableListOf<IntArray>()
+        for (i in 0 until n) {
+            var mini = -1
+            for (k in mp.keys) {
+                if (k > i) continue
+
+                var cnt = 0
+                for (j in res.indices.reversed()) {
+                    if (res[j][0] >= mp[k]!!.last()) cnt++
+                }
+
+                if (cnt == k && (mini == -1 || mp[k]!!.last() < mp[mini]!!.last())) {
+                    mini = k
+                }
+            }
+
+            res.add(intArrayOf(mp[mini]!!.removeLast(), mini))
+            if (mp[mini]!!.isEmpty()) {
+                mp.remove(mini)
+            }
+        }
+
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reconstructQueue(_ people: [[Int]]) -> [[Int]] {
+        let n = people.count
+        var mp = [Int: [Int]]()
+
+        for p in people {
+            mp[p[1], default: []].append(p[0])
+        }
+        for key in mp.keys {
+            mp[key]!.sort(by: >)
+        }
+
+        var res = [[Int]]()
+        for i in 0..<n {
+            var mini = -1
+            for k in mp.keys {
+                if k > i { continue }
+
+                var cnt = 0
+                for j in stride(from: res.count - 1, through: 0, by: -1) {
+                    if res[j][0] >= mp[k]!.last! {
+                        cnt += 1
+                    }
+                }
+
+                if cnt == k && (mini == -1 || mp[k]!.last! < mp[mini]!.last!) {
+                    mini = k
+                }
+            }
+
+            res.append([mp[mini]!.removeLast(), mini])
+            if mp[mini]!.isEmpty {
+                mp.removeValue(forKey: mini)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,6 +410,64 @@ class Solution {
             res.splice(k, 0, [h, k]);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        Array.Sort(people, (a, b) => a[0] == b[0] ? a[1] - b[1] : b[0] - a[0]);
+        var res = new List<int[]>();
+        foreach (var person in people) {
+            res.Insert(person[1], person);
+        }
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func reconstructQueue(people [][]int) [][]int {
+    sort.Slice(people, func(i, j int) bool {
+        if people[i][0] == people[j][0] {
+            return people[i][1] < people[j][1]
+        }
+        return people[i][0] > people[j][0]
+    })
+
+    res := [][]int{}
+    for _, p := range people {
+        res = append(res[:p[1]], append([][]int{p}, res[p[1]:]...)...)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun reconstructQueue(people: Array<IntArray>): Array<IntArray> {
+        people.sortWith(compareBy({ -it[0] }, { it[1] }))
+        val res = mutableListOf<IntArray>()
+        for (person in people) {
+            res.add(person[1], person)
+        }
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reconstructQueue(_ people: [[Int]]) -> [[Int]] {
+        var people = people.sorted {
+            $0[0] == $1[0] ? $0[1] < $1[1] : $0[0] > $1[0]
+        }
+        var res = [[Int]]()
+        for p in people {
+            res.insert(p, at: p[1])
+        }
+        return res
     }
 }
 ```
@@ -357,6 +582,110 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        int n = people.Length;
+        Array.Sort(people, (a, b) => a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
+        int[][] res = new int[n][];
+
+        foreach (var p in people) {
+            int cnt = 0, i = 0;
+            while (i < n) {
+                if (res[i] == null) {
+                    if (cnt == p[1]) break;
+                    cnt++;
+                }
+                i++;
+            }
+            res[i] = p;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func reconstructQueue(people [][]int) [][]int {
+    n := len(people)
+    sort.Slice(people, func(i, j int) bool {
+        if people[i][0] == people[j][0] {
+            return people[i][1] > people[j][1]
+        }
+        return people[i][0] < people[j][0]
+    })
+
+    res := make([][]int, n)
+    for _, p := range people {
+        cnt, i := 0, 0
+        for i < n {
+            if res[i] == nil {
+                if cnt == p[1] {
+                    break
+                }
+                cnt++
+            }
+            i++
+        }
+        res[i] = p
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun reconstructQueue(people: Array<IntArray>): Array<IntArray> {
+        val n = people.size
+        people.sortWith(compareBy({ it[0] }, { -it[1] }))
+        val res = arrayOfNulls<IntArray>(n)
+
+        for (p in people) {
+            var cnt = 0
+            var i = 0
+            while (i < n) {
+                if (res[i] == null) {
+                    if (cnt == p[1]) break
+                    cnt++
+                }
+                i++
+            }
+            res[i] = p
+        }
+
+        return res.requireNoNulls()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reconstructQueue(_ people: [[Int]]) -> [[Int]] {
+        let n = people.count
+        var people = people.sorted {
+            $0[0] == $1[0] ? $0[1] > $1[1] : $0[0] < $1[0]
+        }
+        var res = [[Int]?](repeating: nil, count: n)
+
+        for p in people {
+            var cnt = 0, i = 0
+            while i < n {
+                if res[i] == nil {
+                    if cnt == p[1] { break }
+                    cnt += 1
+                }
+                i += 1
+            }
+            res[i] = p
+        }
+
+        return res.compactMap { $0 }
     }
 }
 ```
@@ -674,6 +1003,299 @@ class Solution {
 }
 ```
 
+```csharp
+public class SegmentTree {
+    private int n;
+    private int[] tree;
+
+    public SegmentTree(int N) {
+        n = N;
+        while ((n & (n - 1)) != 0) n++;
+        Build(N);
+    }
+
+    private void Build(int N) {
+        tree = new int[2 * n];
+        for (int i = 0; i < N; i++) {
+            tree[n + i] = 1;
+        }
+        for (int i = n - 1; i > 0; i--) {
+            tree[i] = tree[i << 1] + tree[(i << 1) | 1];
+        }
+    }
+
+    public void Update(int i, int val) {
+        tree[n + i] = val;
+        for (int j = (n + i) >> 1; j >= 1; j >>= 1) {
+            tree[j] = tree[j << 1] + tree[(j << 1) | 1];
+        }
+    }
+
+    public int Query(int l, int r) {
+        int res = 0;
+        for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
+            if ((l & 1) == 1) res += tree[l++];
+            if ((r & 1) == 1) res += tree[--r];
+        }
+        return res;
+    }
+}
+
+public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        int n = people.Length;
+        Array.Sort(people, (a, b) => a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
+        int[][] res = new int[n][];
+
+        var segTree = new SegmentTree(n);
+        foreach (var p in people) {
+            int l = 0, r = n - 1, idx = 0;
+            while (l <= r) {
+                int mid = (l + r) >> 1;
+                int cnt = segTree.Query(0, mid);
+                if (cnt > p[1]) {
+                    idx = mid;
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+
+            res[idx] = p;
+            segTree.Update(idx, 0);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+type SegmentTree struct {
+    n    int
+    tree []int
+}
+
+func NewSegmentTree(N int) *SegmentTree {
+    n := N
+    for n&(n-1) != 0 {
+        n++
+    }
+    st := &SegmentTree{n: n, tree: make([]int, 2*n)}
+    for i := 0; i < N; i++ {
+        st.tree[n+i] = 1
+    }
+    for i := n - 1; i > 0; i-- {
+        st.tree[i] = st.tree[i<<1] + st.tree[i<<1|1]
+    }
+    return st
+}
+
+func (st *SegmentTree) Update(i, val int) {
+    st.tree[st.n+i] = val
+    for j := (st.n + i) >> 1; j >= 1; j >>= 1 {
+        st.tree[j] = st.tree[j<<1] + st.tree[j<<1|1]
+    }
+}
+
+func (st *SegmentTree) Query(l, r int) int {
+    res := 0
+    for l, r = l+st.n, r+st.n+1; l < r; l, r = l>>1, r>>1 {
+        if l&1 == 1 {
+            res += st.tree[l]
+            l++
+        }
+        if r&1 == 1 {
+            r--
+            res += st.tree[r]
+        }
+    }
+    return res
+}
+
+func reconstructQueue(people [][]int) [][]int {
+    n := len(people)
+    sort.Slice(people, func(i, j int) bool {
+        if people[i][0] == people[j][0] {
+            return people[i][1] > people[j][1]
+        }
+        return people[i][0] < people[j][0]
+    })
+
+    res := make([][]int, n)
+    segTree := NewSegmentTree(n)
+    for _, p := range people {
+        l, r, idx := 0, n-1, 0
+        for l <= r {
+            mid := (l + r) >> 1
+            cnt := segTree.Query(0, mid)
+            if cnt > p[1] {
+                idx = mid
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+
+        res[idx] = p
+        segTree.Update(idx, 0)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class SegmentTree(N: Int) {
+    private var n: Int = N
+    private lateinit var tree: IntArray
+
+    init {
+        while (n and (n - 1) != 0) n++
+        build(N)
+    }
+
+    private fun build(N: Int) {
+        tree = IntArray(2 * n)
+        for (i in 0 until N) {
+            tree[n + i] = 1
+        }
+        for (i in n - 1 downTo 1) {
+            tree[i] = tree[i shl 1] + tree[i shl 1 or 1]
+        }
+    }
+
+    fun update(i: Int, value: Int) {
+        tree[n + i] = value
+        var j = (n + i) shr 1
+        while (j >= 1) {
+            tree[j] = tree[j shl 1] + tree[j shl 1 or 1]
+            j = j shr 1
+        }
+    }
+
+    fun query(l: Int, r: Int): Int {
+        var res = 0
+        var left = l + n
+        var right = r + n + 1
+        while (left < right) {
+            if (left and 1 == 1) res += tree[left++]
+            if (right and 1 == 1) res += tree[--right]
+            left = left shr 1
+            right = right shr 1
+        }
+        return res
+    }
+}
+
+class Solution {
+    fun reconstructQueue(people: Array<IntArray>): Array<IntArray> {
+        val n = people.size
+        people.sortWith(compareBy({ it[0] }, { -it[1] }))
+        val res = arrayOfNulls<IntArray>(n)
+
+        val segTree = SegmentTree(n)
+        for (p in people) {
+            var l = 0
+            var r = n - 1
+            var idx = 0
+            while (l <= r) {
+                val mid = (l + r) shr 1
+                val cnt = segTree.query(0, mid)
+                if (cnt > p[1]) {
+                    idx = mid
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+
+            res[idx] = p
+            segTree.update(idx, 0)
+        }
+
+        return res.requireNoNulls()
+    }
+}
+```
+
+```swift
+class SegmentTree {
+    private var n: Int
+    private var tree: [Int]
+
+    init(_ N: Int) {
+        n = N
+        while n & (n - 1) != 0 { n += 1 }
+        tree = [Int](repeating: 0, count: 2 * n)
+        for i in 0..<N {
+            tree[n + i] = 1
+        }
+        for i in stride(from: n - 1, through: 1, by: -1) {
+            tree[i] = tree[i << 1] + tree[i << 1 | 1]
+        }
+    }
+
+    func update(_ i: Int, _ val: Int) {
+        tree[n + i] = val
+        var j = (n + i) >> 1
+        while j >= 1 {
+            tree[j] = tree[j << 1] + tree[j << 1 | 1]
+            j >>= 1
+        }
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        var res = 0
+        var left = l + n
+        var right = r + n + 1
+        while left < right {
+            if left & 1 == 1 {
+                res += tree[left]
+                left += 1
+            }
+            if right & 1 == 1 {
+                right -= 1
+                res += tree[right]
+            }
+            left >>= 1
+            right >>= 1
+        }
+        return res
+    }
+}
+
+class Solution {
+    func reconstructQueue(_ people: [[Int]]) -> [[Int]] {
+        let n = people.count
+        var people = people.sorted {
+            $0[0] == $1[0] ? $0[1] > $1[1] : $0[0] < $1[0]
+        }
+        var res = [[Int]?](repeating: nil, count: n)
+
+        let segTree = SegmentTree(n)
+        for p in people {
+            var l = 0, r = n - 1, idx = 0
+            while l <= r {
+                let mid = (l + r) >> 1
+                let cnt = segTree.query(0, mid)
+                if cnt > p[1] {
+                    idx = mid
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+
+            res[idx] = p
+            segTree.update(idx, 0)
+        }
+
+        return res.compactMap { $0 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -953,6 +1575,271 @@ class Solution {
 }
 ```
 
+```csharp
+public class BIT {
+    private int[] tree;
+    private int n;
+
+    public BIT(int N) {
+        n = N + 1;
+        tree = new int[n];
+        for (int i = 0; i < n - 1; i++) {
+            Update(i, 1);
+        }
+    }
+
+    public void Update(int index, int val) {
+        index++;
+        while (index < n) {
+            tree[index] += val;
+            index += index & -index;
+        }
+    }
+
+    public int PrefixSum(int index) {
+        int totalSum = 0;
+        while (index > 0) {
+            totalSum += tree[index];
+            index -= index & -index;
+        }
+        return totalSum;
+    }
+
+    public int Query(int left, int right) {
+        return PrefixSum(right + 1) - PrefixSum(left);
+    }
+}
+
+public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        int n = people.Length;
+        Array.Sort(people, (a, b) => a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
+        int[][] res = new int[n][];
+
+        var bit = new BIT(n);
+        foreach (var p in people) {
+            int l = 0, r = n - 1, idx = 0;
+            while (l <= r) {
+                int mid = (l + r) >> 1;
+                int cnt = bit.Query(0, mid);
+                if (cnt > p[1]) {
+                    idx = mid;
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+
+            res[idx] = p;
+            bit.Update(idx, -1);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+type BIT struct {
+    tree []int
+    n    int
+}
+
+func NewBIT(N int) *BIT {
+    n := N + 1
+    bit := &BIT{tree: make([]int, n), n: n}
+    for i := 0; i < n-1; i++ {
+        bit.Update(i, 1)
+    }
+    return bit
+}
+
+func (bit *BIT) Update(index, val int) {
+    index++
+    for index < bit.n {
+        bit.tree[index] += val
+        index += index & -index
+    }
+}
+
+func (bit *BIT) PrefixSum(index int) int {
+    totalSum := 0
+    for index > 0 {
+        totalSum += bit.tree[index]
+        index -= index & -index
+    }
+    return totalSum
+}
+
+func (bit *BIT) Query(left, right int) int {
+    return bit.PrefixSum(right+1) - bit.PrefixSum(left)
+}
+
+func reconstructQueue(people [][]int) [][]int {
+    n := len(people)
+    sort.Slice(people, func(i, j int) bool {
+        if people[i][0] == people[j][0] {
+            return people[i][1] > people[j][1]
+        }
+        return people[i][0] < people[j][0]
+    })
+
+    res := make([][]int, n)
+    bit := NewBIT(n)
+    for _, p := range people {
+        l, r, idx := 0, n-1, 0
+        for l <= r {
+            mid := (l + r) >> 1
+            cnt := bit.Query(0, mid)
+            if cnt > p[1] {
+                idx = mid
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+
+        res[idx] = p
+        bit.Update(idx, -1)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class BIT(N: Int) {
+    private val tree: IntArray
+    private val n: Int = N + 1
+
+    init {
+        tree = IntArray(n)
+        for (i in 0 until n - 1) {
+            update(i, 1)
+        }
+    }
+
+    fun update(index: Int, value: Int) {
+        var idx = index + 1
+        while (idx < n) {
+            tree[idx] += value
+            idx += idx and -idx
+        }
+    }
+
+    fun prefixSum(index: Int): Int {
+        var totalSum = 0
+        var idx = index
+        while (idx > 0) {
+            totalSum += tree[idx]
+            idx -= idx and -idx
+        }
+        return totalSum
+    }
+
+    fun query(left: Int, right: Int): Int {
+        return prefixSum(right + 1) - prefixSum(left)
+    }
+}
+
+class Solution {
+    fun reconstructQueue(people: Array<IntArray>): Array<IntArray> {
+        val n = people.size
+        people.sortWith(compareBy({ it[0] }, { -it[1] }))
+        val res = arrayOfNulls<IntArray>(n)
+
+        val bit = BIT(n)
+        for (p in people) {
+            var l = 0
+            var r = n - 1
+            var idx = 0
+            while (l <= r) {
+                val mid = (l + r) shr 1
+                val cnt = bit.query(0, mid)
+                if (cnt > p[1]) {
+                    idx = mid
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+
+            res[idx] = p
+            bit.update(idx, -1)
+        }
+
+        return res.requireNoNulls()
+    }
+}
+```
+
+```swift
+class BIT {
+    private var tree: [Int]
+    private var n: Int
+
+    init(_ N: Int) {
+        n = N + 1
+        tree = [Int](repeating: 0, count: n)
+        for i in 0..<(n - 1) {
+            update(i, 1)
+        }
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        var idx = index + 1
+        while idx < n {
+            tree[idx] += val
+            idx += idx & -idx
+        }
+    }
+
+    func prefixSum(_ index: Int) -> Int {
+        var totalSum = 0
+        var idx = index
+        while idx > 0 {
+            totalSum += tree[idx]
+            idx -= idx & -idx
+        }
+        return totalSum
+    }
+
+    func query(_ left: Int, _ right: Int) -> Int {
+        return prefixSum(right + 1) - prefixSum(left)
+    }
+}
+
+class Solution {
+    func reconstructQueue(_ people: [[Int]]) -> [[Int]] {
+        let n = people.count
+        var people = people.sorted {
+            $0[0] == $1[0] ? $0[1] > $1[1] : $0[0] < $1[0]
+        }
+        var res = [[Int]?](repeating: nil, count: n)
+
+        let bit = BIT(n)
+        for p in people {
+            var l = 0, r = n - 1, idx = 0
+            while l <= r {
+                let mid = (l + r) >> 1
+                let cnt = bit.query(0, mid)
+                if cnt > p[1] {
+                    idx = mid
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+
+            res[idx] = p
+            bit.update(idx, -1)
+        }
+
+        return res.compactMap { $0 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1183,6 +2070,231 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class BIT {
+    private int[] tree;
+    private int n;
+
+    public BIT(int N) {
+        n = N + 1;
+        tree = new int[n];
+        for (int i = 0; i < n - 1; i++) {
+            Update(i, 1);
+        }
+    }
+
+    public void Update(int index, int val) {
+        index++;
+        while (index < n) {
+            tree[index] += val;
+            index += index & -index;
+        }
+    }
+
+    public int GetIdx(int cnt, int MSB) {
+        int idx = 0;
+        while (MSB != 0) {
+            int nxtIdx = idx + MSB;
+            if (nxtIdx < n && cnt >= tree[nxtIdx]) {
+                idx = nxtIdx;
+                cnt -= tree[nxtIdx];
+            }
+            MSB >>= 1;
+        }
+        return idx;
+    }
+}
+
+public class Solution {
+    public int[][] ReconstructQueue(int[][] people) {
+        int n = people.Length;
+        Array.Sort(people, (a, b) => a[0] == b[0] ? b[1] - a[1] : a[0] - b[0]);
+        int[][] res = new int[n][];
+
+        var bit = new BIT(n);
+        int MSB = 1 << (31 - System.Numerics.BitOperations.LeadingZeroCount((uint)n));
+        foreach (var p in people) {
+            int idx = bit.GetIdx(p[1], MSB);
+            res[idx] = p;
+            bit.Update(idx, -1);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+type BIT struct {
+    tree []int
+    n    int
+}
+
+func NewBIT(N int) *BIT {
+    n := N + 1
+    bit := &BIT{tree: make([]int, n), n: n}
+    for i := 0; i < n-1; i++ {
+        bit.Update(i, 1)
+    }
+    return bit
+}
+
+func (bit *BIT) Update(index, val int) {
+    index++
+    for index < bit.n {
+        bit.tree[index] += val
+        index += index & -index
+    }
+}
+
+func (bit *BIT) GetIdx(cnt, MSB int) int {
+    idx := 0
+    for MSB != 0 {
+        nxtIdx := idx + MSB
+        if nxtIdx < bit.n && cnt >= bit.tree[nxtIdx] {
+            idx = nxtIdx
+            cnt -= bit.tree[nxtIdx]
+        }
+        MSB >>= 1
+    }
+    return idx
+}
+
+func reconstructQueue(people [][]int) [][]int {
+    n := len(people)
+    sort.Slice(people, func(i, j int) bool {
+        if people[i][0] == people[j][0] {
+            return people[i][1] > people[j][1]
+        }
+        return people[i][0] < people[j][0]
+    })
+
+    res := make([][]int, n)
+    bit := NewBIT(n)
+    MSB := 1 << (bits.Len(uint(n)) - 1)
+    for _, p := range people {
+        idx := bit.GetIdx(p[1], MSB)
+        res[idx] = p
+        bit.Update(idx, -1)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class BIT(N: Int) {
+    private val tree: IntArray
+    private val n: Int = N + 1
+
+    init {
+        tree = IntArray(n)
+        for (i in 0 until n - 1) {
+            update(i, 1)
+        }
+    }
+
+    fun update(index: Int, value: Int) {
+        var idx = index + 1
+        while (idx < n) {
+            tree[idx] += value
+            idx += idx and -idx
+        }
+    }
+
+    fun getIdx(cnt: Int, msb: Int): Int {
+        var count = cnt
+        var idx = 0
+        var bit = msb
+        while (bit != 0) {
+            val nxtIdx = idx + bit
+            if (nxtIdx < n && count >= tree[nxtIdx]) {
+                idx = nxtIdx
+                count -= tree[nxtIdx]
+            }
+            bit = bit shr 1
+        }
+        return idx
+    }
+}
+
+class Solution {
+    fun reconstructQueue(people: Array<IntArray>): Array<IntArray> {
+        val n = people.size
+        people.sortWith(compareBy({ it[0] }, { -it[1] }))
+        val res = arrayOfNulls<IntArray>(n)
+
+        val bit = BIT(n)
+        val msb = 1 shl (31 - Integer.numberOfLeadingZeros(n))
+        for (p in people) {
+            val idx = bit.getIdx(p[1], msb)
+            res[idx] = p
+            bit.update(idx, -1)
+        }
+
+        return res.requireNoNulls()
+    }
+}
+```
+
+```swift
+class BIT {
+    private var tree: [Int]
+    private var n: Int
+
+    init(_ N: Int) {
+        n = N + 1
+        tree = [Int](repeating: 0, count: n)
+        for i in 0..<(n - 1) {
+            update(i, 1)
+        }
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        var idx = index + 1
+        while idx < n {
+            tree[idx] += val
+            idx += idx & -idx
+        }
+    }
+
+    func getIdx(_ cnt: Int, _ msb: Int) -> Int {
+        var count = cnt
+        var idx = 0
+        var bit = msb
+        while bit != 0 {
+            let nxtIdx = idx + bit
+            if nxtIdx < n && count >= tree[nxtIdx] {
+                idx = nxtIdx
+                count -= tree[nxtIdx]
+            }
+            bit >>= 1
+        }
+        return idx
+    }
+}
+
+class Solution {
+    func reconstructQueue(_ people: [[Int]]) -> [[Int]] {
+        let n = people.count
+        var people = people.sorted {
+            $0[0] == $1[0] ? $0[1] > $1[1] : $0[0] < $1[0]
+        }
+        var res = [[Int]?](repeating: nil, count: n)
+
+        let bit = BIT(n)
+        let msb = 1 << (Int.bitWidth - n.leadingZeroBitCount - 1)
+        for p in people {
+            let idx = bit.getIdx(p[1], msb)
+            res[idx] = p
+            bit.update(idx, -1)
+        }
+
+        return res.compactMap { $0 }
     }
 }
 ```

@@ -174,6 +174,94 @@ public class Solution {
 }
 ```
 
+```go
+func verticalOrder(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    cols := make(map[int][]int)
+    type pair struct {
+        node *TreeNode
+        pos  int
+    }
+    queue := []pair{{root, 0}}
+
+    for len(queue) > 0 {
+        p := queue[0]
+        queue = queue[1:]
+        cols[p.pos] = append(cols[p.pos], p.node.Val)
+
+        if p.node.Left != nil {
+            queue = append(queue, pair{p.node.Left, p.pos - 1})
+        }
+        if p.node.Right != nil {
+            queue = append(queue, pair{p.node.Right, p.pos + 1})
+        }
+    }
+
+    keys := make([]int, 0, len(cols))
+    for k := range cols {
+        keys = append(keys, k)
+    }
+    sort.Ints(keys)
+
+    res := make([][]int, len(keys))
+    for i, k := range keys {
+        res[i] = cols[k]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun verticalOrder(root: TreeNode?): List<List<Int>> {
+        if (root == null) return emptyList()
+
+        val cols = sortedMapOf<Int, MutableList<Int>>()
+        val queue = ArrayDeque<Pair<TreeNode, Int>>()
+        queue.add(Pair(root, 0))
+
+        while (queue.isNotEmpty()) {
+            val (node, pos) = queue.removeFirst()
+            cols.getOrPut(pos) { mutableListOf() }.add(node.`val`)
+
+            node.left?.let { queue.add(Pair(it, pos - 1)) }
+            node.right?.let { queue.add(Pair(it, pos + 1)) }
+        }
+
+        return cols.values.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func verticalOrder(_ root: TreeNode?) -> [[Int]] {
+        guard let root = root else { return [] }
+
+        var cols = [Int: [Int]]()
+        var queue = [(TreeNode, Int)]()
+        queue.append((root, 0))
+
+        while !queue.isEmpty {
+            let (node, pos) = queue.removeFirst()
+            cols[pos, default: []].append(node.val)
+
+            if let left = node.left {
+                queue.append((left, pos - 1))
+            }
+            if let right = node.right {
+                queue.append((right, pos + 1))
+            }
+        }
+
+        return cols.keys.sorted().map { cols[$0]! }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -374,6 +462,91 @@ public class Solution {
         cols[col].Add((row, node.val));
         DFS(node.left, row + 1, col - 1);
         DFS(node.right, row + 1, col + 1);
+    }
+}
+```
+
+```go
+func verticalOrder(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    cols := make(map[int][][2]int)
+
+    var dfs func(node *TreeNode, row, col int)
+    dfs = func(node *TreeNode, row, col int) {
+        if node == nil {
+            return
+        }
+        cols[col] = append(cols[col], [2]int{row, node.Val})
+        dfs(node.Left, row+1, col-1)
+        dfs(node.Right, row+1, col+1)
+    }
+
+    dfs(root, 0, 0)
+
+    keys := make([]int, 0, len(cols))
+    for k := range cols {
+        keys = append(keys, k)
+    }
+    sort.Ints(keys)
+
+    res := make([][]int, len(keys))
+    for i, k := range keys {
+        vec := cols[k]
+        sort.SliceStable(vec, func(a, b int) bool {
+            return vec[a][0] < vec[b][0]
+        })
+        colVals := make([]int, len(vec))
+        for j, p := range vec {
+            colVals[j] = p[1]
+        }
+        res[i] = colVals
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val cols = sortedMapOf<Int, MutableList<Pair<Int, Int>>>()
+
+    fun verticalOrder(root: TreeNode?): List<List<Int>> {
+        dfs(root, 0, 0)
+
+        return cols.values.map { list ->
+            list.sortedBy { it.first }.map { it.second }
+        }
+    }
+
+    private fun dfs(node: TreeNode?, row: Int, col: Int) {
+        if (node == null) return
+        cols.getOrPut(col) { mutableListOf() }.add(Pair(row, node.`val`))
+        dfs(node.left, row + 1, col - 1)
+        dfs(node.right, row + 1, col + 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    private var cols = [Int: [(Int, Int)]]()
+
+    func verticalOrder(_ root: TreeNode?) -> [[Int]] {
+        guard root != nil else { return [] }
+        dfs(root, 0, 0)
+
+        return cols.keys.sorted().map { col in
+            cols[col]!.sorted { $0.0 < $1.0 }.map { $0.1 }
+        }
+    }
+
+    private func dfs(_ node: TreeNode?, _ row: Int, _ col: Int) {
+        guard let node = node else { return }
+        cols[col, default: []].append((row, node.val))
+        dfs(node.left, row + 1, col - 1)
+        dfs(node.right, row + 1, col + 1)
     }
 }
 ```
@@ -594,6 +767,103 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func verticalOrder(root *TreeNode) [][]int {
+    if root == nil {
+        return [][]int{}
+    }
+
+    cols := make(map[int][]int)
+    type pair struct {
+        node *TreeNode
+        col  int
+    }
+    queue := []pair{{root, 0}}
+    minCol, maxCol := 0, 0
+
+    for len(queue) > 0 {
+        p := queue[0]
+        queue = queue[1:]
+        cols[p.col] = append(cols[p.col], p.node.Val)
+        if p.col < minCol {
+            minCol = p.col
+        }
+        if p.col > maxCol {
+            maxCol = p.col
+        }
+
+        if p.node.Left != nil {
+            queue = append(queue, pair{p.node.Left, p.col - 1})
+        }
+        if p.node.Right != nil {
+            queue = append(queue, pair{p.node.Right, p.col + 1})
+        }
+    }
+
+    res := make([][]int, maxCol-minCol+1)
+    for c := minCol; c <= maxCol; c++ {
+        res[c-minCol] = cols[c]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun verticalOrder(root: TreeNode?): List<List<Int>> {
+        if (root == null) return emptyList()
+
+        val cols = mutableMapOf<Int, MutableList<Int>>()
+        val queue = ArrayDeque<Pair<TreeNode, Int>>()
+        queue.add(Pair(root, 0))
+        var minCol = 0
+        var maxCol = 0
+
+        while (queue.isNotEmpty()) {
+            val (node, col) = queue.removeFirst()
+            cols.getOrPut(col) { mutableListOf() }.add(node.`val`)
+            minCol = minOf(minCol, col)
+            maxCol = maxOf(maxCol, col)
+
+            node.left?.let { queue.add(Pair(it, col - 1)) }
+            node.right?.let { queue.add(Pair(it, col + 1)) }
+        }
+
+        return (minCol..maxCol).map { cols[it]!! }
+    }
+}
+```
+
+```swift
+class Solution {
+    func verticalOrder(_ root: TreeNode?) -> [[Int]] {
+        guard let root = root else { return [] }
+
+        var cols = [Int: [Int]]()
+        var queue = [(TreeNode, Int)]()
+        queue.append((root, 0))
+        var minCol = 0
+        var maxCol = 0
+
+        while !queue.isEmpty {
+            let (node, col) = queue.removeFirst()
+            cols[col, default: []].append(node.val)
+            minCol = min(minCol, col)
+            maxCol = max(maxCol, col)
+
+            if let left = node.left {
+                queue.append((left, col - 1))
+            }
+            if let right = node.right {
+                queue.append((right, col + 1))
+            }
+        }
+
+        return (minCol...maxCol).map { cols[$0]! }
     }
 }
 ```

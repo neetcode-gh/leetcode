@@ -113,6 +113,108 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindMaxForm(string[] strs, int m, int n) {
+        int[][] arr = new int[strs.Length][];
+        for (int i = 0; i < strs.Length; i++) {
+            arr[i] = new int[2];
+            foreach (char c in strs[i]) {
+                arr[i][c - '0']++;
+            }
+        }
+        return Dfs(0, m, n, arr);
+    }
+
+    private int Dfs(int i, int m, int n, int[][] arr) {
+        if (i == arr.Length) return 0;
+
+        int res = Dfs(i + 1, m, n, arr);
+        if (m >= arr[i][0] && n >= arr[i][1]) {
+            res = Math.Max(res, 1 + Dfs(i + 1, m - arr[i][0], n - arr[i][1], arr));
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findMaxForm(strs []string, m int, n int) int {
+    arr := make([][]int, len(strs))
+    for i, s := range strs {
+        arr[i] = make([]int, 2)
+        for _, c := range s {
+            arr[i][c-'0']++
+        }
+    }
+
+    var dfs func(i, m, n int) int
+    dfs = func(i, m, n int) int {
+        if i == len(strs) {
+            return 0
+        }
+
+        res := dfs(i+1, m, n)
+        if m >= arr[i][0] && n >= arr[i][1] {
+            res = max(res, 1+dfs(i+1, m-arr[i][0], n-arr[i][1]))
+        }
+        return res
+    }
+
+    return dfs(0, m, n)
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
+        val arr = Array(strs.size) { IntArray(2) }
+        for (i in strs.indices) {
+            for (c in strs[i]) {
+                arr[i][c - '0']++
+            }
+        }
+
+        fun dfs(i: Int, m: Int, n: Int): Int {
+            if (i == strs.size) return 0
+
+            var res = dfs(i + 1, m, n)
+            if (m >= arr[i][0] && n >= arr[i][1]) {
+                res = maxOf(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]))
+            }
+            return res
+        }
+
+        return dfs(0, m, n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxForm(_ strs: [String], _ m: Int, _ n: Int) -> Int {
+        var arr = [[Int]](repeating: [0, 0], count: strs.count)
+        for i in 0..<strs.count {
+            for c in strs[i] {
+                arr[i][Int(c.asciiValue!) - Int(Character("0").asciiValue!)] += 1
+            }
+        }
+
+        func dfs(_ i: Int, _ m: Int, _ n: Int) -> Int {
+            if i == strs.count { return 0 }
+
+            var res = dfs(i + 1, m, n)
+            if m >= arr[i][0] && n >= arr[i][1] {
+                res = max(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]))
+            }
+            return res
+        }
+
+        return dfs(0, m, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,6 +385,154 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,,] dp;
+    private int[][] arr;
+
+    public int FindMaxForm(string[] strs, int m, int n) {
+        arr = new int[strs.Length][];
+        for (int i = 0; i < strs.Length; i++) {
+            arr[i] = new int[2];
+            foreach (char c in strs[i]) {
+                arr[i][c - '0']++;
+            }
+        }
+
+        dp = new int[strs.Length, m + 1, n + 1];
+        for (int i = 0; i < strs.Length; i++) {
+            for (int j = 0; j <= m; j++) {
+                for (int k = 0; k <= n; k++) {
+                    dp[i, j, k] = -1;
+                }
+            }
+        }
+
+        return Dfs(0, m, n);
+    }
+
+    private int Dfs(int i, int m, int n) {
+        if (i == arr.Length) return 0;
+        if (m == 0 && n == 0) return 0;
+        if (dp[i, m, n] != -1) return dp[i, m, n];
+
+        int res = Dfs(i + 1, m, n);
+        if (m >= arr[i][0] && n >= arr[i][1]) {
+            res = Math.Max(res, 1 + Dfs(i + 1, m - arr[i][0], n - arr[i][1]));
+        }
+        dp[i, m, n] = res;
+        return res;
+    }
+}
+```
+
+```go
+func findMaxForm(strs []string, m int, n int) int {
+    arr := make([][]int, len(strs))
+    for i, s := range strs {
+        arr[i] = make([]int, 2)
+        for _, c := range s {
+            arr[i][c-'0']++
+        }
+    }
+
+    dp := make([][][]int, len(strs))
+    for i := range dp {
+        dp[i] = make([][]int, m+1)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, n+1)
+            for k := range dp[i][j] {
+                dp[i][j][k] = -1
+            }
+        }
+    }
+
+    var dfs func(i, m, n int) int
+    dfs = func(i, m, n int) int {
+        if i == len(strs) {
+            return 0
+        }
+        if m == 0 && n == 0 {
+            return 0
+        }
+        if dp[i][m][n] != -1 {
+            return dp[i][m][n]
+        }
+
+        res := dfs(i+1, m, n)
+        if m >= arr[i][0] && n >= arr[i][1] {
+            res = max(res, 1+dfs(i+1, m-arr[i][0], n-arr[i][1]))
+        }
+        dp[i][m][n] = res
+        return res
+    }
+
+    return dfs(0, m, n)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<Array<IntArray>>
+    private lateinit var arr: Array<IntArray>
+
+    fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
+        arr = Array(strs.size) { IntArray(2) }
+        for (i in strs.indices) {
+            for (c in strs[i]) {
+                arr[i][c - '0']++
+            }
+        }
+
+        dp = Array(strs.size) { Array(m + 1) { IntArray(n + 1) { -1 } } }
+        return dfs(0, m, n)
+    }
+
+    private fun dfs(i: Int, m: Int, n: Int): Int {
+        if (i == arr.size) return 0
+        if (m == 0 && n == 0) return 0
+        if (dp[i][m][n] != -1) return dp[i][m][n]
+
+        var res = dfs(i + 1, m, n)
+        if (m >= arr[i][0] && n >= arr[i][1]) {
+            res = maxOf(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]))
+        }
+        dp[i][m][n] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxForm(_ strs: [String], _ m: Int, _ n: Int) -> Int {
+        var arr = [[Int]](repeating: [0, 0], count: strs.count)
+        for i in 0..<strs.count {
+            for c in strs[i] {
+                arr[i][Int(c.asciiValue!) - Int(Character("0").asciiValue!)] += 1
+            }
+        }
+
+        var dp = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: -1, count: n + 1), count: m + 1), count: strs.count)
+
+        func dfs(_ i: Int, _ m: Int, _ n: Int) -> Int {
+            if i == strs.count { return 0 }
+            if m == 0 && n == 0 { return 0 }
+            if dp[i][m][n] != -1 { return dp[i][m][n] }
+
+            var res = dfs(i + 1, m, n)
+            if m >= arr[i][0] && n >= arr[i][1] {
+                res = max(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]))
+            }
+            dp[i][m][n] = res
+            return res
+        }
+
+        return dfs(0, m, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -413,6 +663,124 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindMaxForm(string[] strs, int m, int n) {
+        int[][] arr = new int[strs.Length][];
+        for (int i = 0; i < strs.Length; i++) {
+            arr[i] = new int[2];
+            foreach (char c in strs[i]) {
+                arr[i][c - '0']++;
+            }
+        }
+
+        int[,,] dp = new int[strs.Length + 1, m + 1, n + 1];
+
+        for (int i = 1; i <= strs.Length; i++) {
+            for (int j = 0; j <= m; j++) {
+                for (int k = 0; k <= n; k++) {
+                    dp[i, j, k] = dp[i - 1, j, k];
+                    if (j >= arr[i - 1][0] && k >= arr[i - 1][1]) {
+                        dp[i, j, k] = Math.Max(dp[i, j, k], 1 + dp[i - 1, j - arr[i - 1][0], k - arr[i - 1][1]]);
+                    }
+                }
+            }
+        }
+
+        return dp[strs.Length, m, n];
+    }
+}
+```
+
+```go
+func findMaxForm(strs []string, m int, n int) int {
+    arr := make([][]int, len(strs))
+    for i, s := range strs {
+        arr[i] = make([]int, 2)
+        for _, c := range s {
+            arr[i][c-'0']++
+        }
+    }
+
+    dp := make([][][]int, len(strs)+1)
+    for i := range dp {
+        dp[i] = make([][]int, m+1)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, n+1)
+        }
+    }
+
+    for i := 1; i <= len(strs); i++ {
+        for j := 0; j <= m; j++ {
+            for k := 0; k <= n; k++ {
+                dp[i][j][k] = dp[i-1][j][k]
+                if j >= arr[i-1][0] && k >= arr[i-1][1] {
+                    dp[i][j][k] = max(dp[i][j][k], 1+dp[i-1][j-arr[i-1][0]][k-arr[i-1][1]])
+                }
+            }
+        }
+    }
+
+    return dp[len(strs)][m][n]
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
+        val arr = Array(strs.size) { IntArray(2) }
+        for (i in strs.indices) {
+            for (c in strs[i]) {
+                arr[i][c - '0']++
+            }
+        }
+
+        val dp = Array(strs.size + 1) { Array(m + 1) { IntArray(n + 1) } }
+
+        for (i in 1..strs.size) {
+            for (j in 0..m) {
+                for (k in 0..n) {
+                    dp[i][j][k] = dp[i - 1][j][k]
+                    if (j >= arr[i - 1][0] && k >= arr[i - 1][1]) {
+                        dp[i][j][k] = maxOf(dp[i][j][k], 1 + dp[i - 1][j - arr[i - 1][0]][k - arr[i - 1][1]])
+                    }
+                }
+            }
+        }
+
+        return dp[strs.size][m][n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxForm(_ strs: [String], _ m: Int, _ n: Int) -> Int {
+        var arr = [[Int]](repeating: [0, 0], count: strs.count)
+        for i in 0..<strs.count {
+            for c in strs[i] {
+                arr[i][Int(c.asciiValue!) - Int(Character("0").asciiValue!)] += 1
+            }
+        }
+
+        var dp = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: 0, count: n + 1), count: m + 1), count: strs.count + 1)
+
+        for i in 1...strs.count {
+            for j in 0...m {
+                for k in 0...n {
+                    dp[i][j][k] = dp[i - 1][j][k]
+                    if j >= arr[i - 1][0] && k >= arr[i - 1][1] {
+                        dp[i][j][k] = max(dp[i][j][k], 1 + dp[i - 1][j - arr[i - 1][0]][k - arr[i - 1][1]])
+                    }
+                }
+            }
+        }
+
+        return dp[strs.count][m][n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -526,6 +894,115 @@ class Solution {
         }
 
         return dp[m][n];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindMaxForm(string[] strs, int m, int n) {
+        int[][] arr = new int[strs.Length][];
+        for (int i = 0; i < strs.Length; i++) {
+            arr[i] = new int[2];
+            foreach (char c in strs[i]) {
+                arr[i][c - '0']++;
+            }
+        }
+
+        int[,] dp = new int[m + 1, n + 1];
+
+        foreach (int[] pair in arr) {
+            int zeros = pair[0], ones = pair[1];
+            for (int j = m; j >= zeros; j--) {
+                for (int k = n; k >= ones; k--) {
+                    dp[j, k] = Math.Max(dp[j, k], 1 + dp[j - zeros, k - ones]);
+                }
+            }
+        }
+
+        return dp[m, n];
+    }
+}
+```
+
+```go
+func findMaxForm(strs []string, m int, n int) int {
+    arr := make([][]int, len(strs))
+    for i, s := range strs {
+        arr[i] = make([]int, 2)
+        for _, c := range s {
+            arr[i][c-'0']++
+        }
+    }
+
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for _, pair := range arr {
+        zeros, ones := pair[0], pair[1]
+        for j := m; j >= zeros; j-- {
+            for k := n; k >= ones; k-- {
+                dp[j][k] = max(dp[j][k], 1+dp[j-zeros][k-ones])
+            }
+        }
+    }
+
+    return dp[m][n]
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxForm(strs: Array<String>, m: Int, n: Int): Int {
+        val arr = Array(strs.size) { IntArray(2) }
+        for (i in strs.indices) {
+            for (c in strs[i]) {
+                arr[i][c - '0']++
+            }
+        }
+
+        val dp = Array(m + 1) { IntArray(n + 1) }
+
+        for (pair in arr) {
+            val zeros = pair[0]
+            val ones = pair[1]
+            for (j in m downTo zeros) {
+                for (k in n downTo ones) {
+                    dp[j][k] = maxOf(dp[j][k], 1 + dp[j - zeros][k - ones])
+                }
+            }
+        }
+
+        return dp[m][n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxForm(_ strs: [String], _ m: Int, _ n: Int) -> Int {
+        var arr = [[Int]](repeating: [0, 0], count: strs.count)
+        for i in 0..<strs.count {
+            for c in strs[i] {
+                arr[i][Int(c.asciiValue!) - Int(Character("0").asciiValue!)] += 1
+            }
+        }
+
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: n + 1), count: m + 1)
+
+        for pair in arr {
+            let zeros = pair[0]
+            let ones = pair[1]
+            for j in stride(from: m, through: zeros, by: -1) {
+                for k in stride(from: n, through: ones, by: -1) {
+                    dp[j][k] = max(dp[j][k], 1 + dp[j - zeros][k - ones])
+                }
+            }
+        }
+
+        return dp[m][n]
     }
 }
 ```

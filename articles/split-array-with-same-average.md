@@ -137,6 +137,97 @@ public class Solution {
 }
 ```
 
+```go
+func splitArraySameAverage(nums []int) bool {
+    var backtrack func(i int, A, B []int) bool
+    backtrack = func(i int, A, B []int) bool {
+        if i == len(nums) {
+            if len(A) == 0 || len(B) == 0 {
+                return false
+            }
+            sumA, sumB := 0, 0
+            for _, v := range A {
+                sumA += v
+            }
+            for _, v := range B {
+                sumB += v
+            }
+            return sumA*len(B) == sumB*len(A)
+        }
+
+        A = append(A, nums[i])
+        if backtrack(i+1, A, B) {
+            return true
+        }
+        A = A[:len(A)-1]
+
+        B = append(B, nums[i])
+        res := backtrack(i+1, A, B)
+        B = B[:len(B)-1]
+
+        return res
+    }
+
+    return backtrack(0, []int{}, []int{})
+}
+```
+
+```kotlin
+class Solution {
+    fun splitArraySameAverage(nums: IntArray): Boolean {
+        fun backtrack(i: Int, A: MutableList<Int>, B: MutableList<Int>): Boolean {
+            if (i == nums.size) {
+                if (A.isEmpty() || B.isEmpty()) return false
+                val sumA = A.sum()
+                val sumB = B.sum()
+                return sumA * B.size == sumB * A.size
+            }
+
+            A.add(nums[i])
+            if (backtrack(i + 1, A, B)) return true
+            A.removeAt(A.size - 1)
+
+            B.add(nums[i])
+            val res = backtrack(i + 1, A, B)
+            B.removeAt(B.size - 1)
+
+            return res
+        }
+
+        return backtrack(0, mutableListOf(), mutableListOf())
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitArraySameAverage(_ nums: [Int]) -> Bool {
+        func backtrack(_ i: Int, _ A: inout [Int], _ B: inout [Int]) -> Bool {
+            if i == nums.count {
+                if A.isEmpty || B.isEmpty { return false }
+                let sumA = A.reduce(0, +)
+                let sumB = B.reduce(0, +)
+                return sumA * B.count == sumB * A.count
+            }
+
+            A.append(nums[i])
+            if backtrack(i + 1, &A, &B) { return true }
+            A.removeLast()
+
+            B.append(nums[i])
+            let res = backtrack(i + 1, &A, &B)
+            B.removeLast()
+
+            return res
+        }
+
+        var A: [Int] = []
+        var B: [Int] = []
+        return backtrack(0, &A, &B)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -297,6 +388,103 @@ public class Solution {
         }
 
         return Dfs(0, 0, 0);
+    }
+}
+```
+
+```go
+func splitArraySameAverage(nums []int) bool {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    n := len(nums)
+    memo := make(map[string]bool)
+
+    var dfs func(i, size, currSum int) bool
+    dfs = func(i, size, currSum int) bool {
+        key := fmt.Sprintf("%d,%d,%d", i, size, currSum)
+        if val, ok := memo[key]; ok {
+            return val
+        }
+
+        if size > 0 && size < n && currSum*(n-size) == (total-currSum)*size {
+            return true
+        }
+        if i == n {
+            return false
+        }
+
+        if dfs(i+1, size+1, currSum+nums[i]) || dfs(i+1, size, currSum) {
+            memo[key] = true
+            return true
+        }
+
+        memo[key] = false
+        return false
+    }
+
+    return dfs(0, 0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun splitArraySameAverage(nums: IntArray): Boolean {
+        val total = nums.sum()
+        val n = nums.size
+        val memo = mutableMapOf<String, Boolean>()
+
+        fun dfs(i: Int, size: Int, currSum: Int): Boolean {
+            val key = "$i,$size,$currSum"
+            if (memo.containsKey(key)) return memo[key]!!
+
+            if (size > 0 && size < n && currSum * (n - size) == (total - currSum) * size)
+                return true
+            if (i == n) return false
+
+            if (dfs(i + 1, size + 1, currSum + nums[i]) || dfs(i + 1, size, currSum)) {
+                memo[key] = true
+                return true
+            }
+
+            memo[key] = false
+            return false
+        }
+
+        return dfs(0, 0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitArraySameAverage(_ nums: [Int]) -> Bool {
+        let total = nums.reduce(0, +)
+        let n = nums.count
+        var memo: [String: Bool] = [:]
+
+        func dfs(_ i: Int, _ size: Int, _ currSum: Int) -> Bool {
+            let key = "\(i),\(size),\(currSum)"
+            if let val = memo[key] {
+                return val
+            }
+
+            if size > 0 && size < n && currSum * (n - size) == (total - currSum) * size {
+                return true
+            }
+            if i == n { return false }
+
+            if dfs(i + 1, size + 1, currSum + nums[i]) || dfs(i + 1, size, currSum) {
+                memo[key] = true
+                return true
+            }
+
+            memo[key] = false
+            return false
+        }
+
+        return dfs(0, 0, 0)
     }
 }
 ```
@@ -510,6 +698,119 @@ public class Solution {
 }
 ```
 
+```go
+func splitArraySameAverage(nums []int) bool {
+    n := len(nums)
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+
+    memo := make([][][]int, n+1)
+    for i := range memo {
+        memo[i] = make([][]int, n/2+1)
+        for j := range memo[i] {
+            memo[i][j] = make([]int, total+1)
+            for k := range memo[i][j] {
+                memo[i][j][k] = -1
+            }
+        }
+    }
+
+    var dfs func(i, a, s int) bool
+    dfs = func(i, a, s int) bool {
+        if a == 0 {
+            return s == 0
+        }
+        if i == n || a < 0 || s < 0 {
+            return false
+        }
+        if memo[i][a][s] != -1 {
+            return memo[i][a][s] == 1
+        }
+
+        res := dfs(i+1, a, s) || dfs(i+1, a-1, s-nums[i])
+        if res {
+            memo[i][a][s] = 1
+        } else {
+            memo[i][a][s] = 0
+        }
+        return res
+    }
+
+    for a := 1; a <= n/2; a++ {
+        if (total*a)%n == 0 {
+            target := (total * a) / n
+            if dfs(0, a, target) {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun splitArraySameAverage(nums: IntArray): Boolean {
+        val n = nums.size
+        val total = nums.sum()
+
+        val memo = Array(n + 1) { Array(n / 2 + 1) { IntArray(total + 1) { -1 } } }
+
+        fun dfs(i: Int, a: Int, s: Int): Boolean {
+            if (a == 0) return s == 0
+            if (i == n || a < 0 || s < 0) return false
+            if (memo[i][a][s] != -1) return memo[i][a][s] == 1
+
+            val res = dfs(i + 1, a, s) || dfs(i + 1, a - 1, s - nums[i])
+            memo[i][a][s] = if (res) 1 else 0
+            return res
+        }
+
+        for (a in 1..n / 2) {
+            if ((total * a) % n == 0) {
+                val target = (total * a) / n
+                if (dfs(0, a, target)) return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitArraySameAverage(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        let total = nums.reduce(0, +)
+
+        var memo = [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: -1, count: total + 1), count: n / 2 + 1), count: n + 1)
+
+        func dfs(_ i: Int, _ a: Int, _ s: Int) -> Bool {
+            if a == 0 { return s == 0 }
+            if i == n || a < 0 || s < 0 { return false }
+            if memo[i][a][s] != -1 { return memo[i][a][s] == 1 }
+
+            let res = dfs(i + 1, a, s) || dfs(i + 1, a - 1, s - nums[i])
+            memo[i][a][s] = res ? 1 : 0
+            return res
+        }
+
+        for a in 1...(n / 2) {
+            if (total * a) % n == 0 {
+                let target = (total * a) / n
+                if dfs(0, a, target) { return true }
+            }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -706,6 +1007,96 @@ public class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```go
+func splitArraySameAverage(nums []int) bool {
+    n := len(nums)
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+
+    dp := make([]map[int]bool, n/2+1)
+    for i := range dp {
+        dp[i] = make(map[int]bool)
+    }
+    dp[0][0] = true
+
+    for _, num := range nums {
+        for a := n / 2; a >= 1; a-- {
+            for prev := range dp[a-1] {
+                dp[a][prev+num] = true
+            }
+        }
+    }
+
+    for a := 1; a <= n/2; a++ {
+        if (a*total)%n == 0 {
+            if dp[a][(a*total)/n] {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun splitArraySameAverage(nums: IntArray): Boolean {
+        val n = nums.size
+        val total = nums.sum()
+
+        val dp = Array(n / 2 + 1) { mutableSetOf<Int>() }
+        dp[0].add(0)
+
+        for (num in nums) {
+            for (a in n / 2 downTo 1) {
+                for (prev in dp[a - 1]) {
+                    dp[a].add(prev + num)
+                }
+            }
+        }
+
+        for (a in 1..n / 2) {
+            if ((a * total) % n == 0 && dp[a].contains((a * total) / n)) {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitArraySameAverage(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        let total = nums.reduce(0, +)
+
+        var dp = [Set<Int>](repeating: Set<Int>(), count: n / 2 + 1)
+        dp[0].insert(0)
+
+        for num in nums {
+            for a in stride(from: n / 2, through: 1, by: -1) {
+                for prev in dp[a - 1] {
+                    dp[a].insert(prev + num)
+                }
+            }
+        }
+
+        for a in 1...(n / 2) {
+            if (a * total) % n == 0 && dp[a].contains((a * total) / n) {
+                return true
+            }
+        }
+
+        return false
     }
 }
 ```

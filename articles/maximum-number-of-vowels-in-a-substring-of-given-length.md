@@ -86,6 +86,70 @@ class Solution {
 }
 ```
 
+```go
+func maxVowels(s string, k int) int {
+    vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
+    res := 0
+
+    for i := 0; i <= len(s)-k; i++ {
+        cnt := 0
+        for j := i; j < i+k; j++ {
+            if vowels[s[j]] {
+                cnt++
+            }
+        }
+        if cnt > res {
+            res = cnt
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxVowels(s: String, k: Int): Int {
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
+        var res = 0
+
+        for (i in 0..s.length - k) {
+            var cnt = 0
+            for (j in i until i + k) {
+                if (s[j] in vowels) {
+                    cnt++
+                }
+            }
+            res = maxOf(res, cnt)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxVowels(_ s: String, _ k: Int) -> Int {
+        let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
+        let chars = Array(s)
+        var res = 0
+
+        for i in 0...(chars.count - k) {
+            var cnt = 0
+            for j in i..<(i + k) {
+                if vowels.contains(chars[j]) {
+                    cnt += 1
+                }
+            }
+            res = max(res, cnt)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -176,6 +240,71 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxVowels(s string, k int) int {
+    vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
+    prefix := make([]int, len(s)+1)
+
+    for i := 0; i < len(s); i++ {
+        if vowels[s[i]] {
+            prefix[i+1] = prefix[i] + 1
+        } else {
+            prefix[i+1] = prefix[i]
+        }
+    }
+
+    res := 0
+    for i := k; i <= len(s); i++ {
+        if prefix[i]-prefix[i-k] > res {
+            res = prefix[i] - prefix[i-k]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxVowels(s: String, k: Int): Int {
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
+        val prefix = IntArray(s.length + 1)
+
+        for (i in s.indices) {
+            prefix[i + 1] = prefix[i] + if (s[i] in vowels) 1 else 0
+        }
+
+        var res = 0
+        for (i in k..s.length) {
+            res = maxOf(res, prefix[i] - prefix[i - k])
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxVowels(_ s: String, _ k: Int) -> Int {
+        let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
+        let chars = Array(s)
+        var prefix = [Int](repeating: 0, count: chars.count + 1)
+
+        for i in 0..<chars.count {
+            prefix[i + 1] = prefix[i] + (vowels.contains(chars[i]) ? 1 : 0)
+        }
+
+        var res = 0
+        for i in k...chars.count {
+            res = max(res, prefix[i] - prefix[i - k])
+        }
+
+        return res
     }
 }
 ```

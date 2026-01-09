@@ -132,6 +132,81 @@ public class Solution {
 }
 ```
 
+```go
+func fourSum(nums []int, target int) [][]int {
+    n := len(nums)
+    sort.Ints(nums)
+    res := make(map[[4]int]bool)
+
+    for a := 0; a < n; a++ {
+        for b := a + 1; b < n; b++ {
+            for c := b + 1; c < n; c++ {
+                for d := c + 1; d < n; d++ {
+                    if nums[a]+nums[b]+nums[c]+nums[d] == target {
+                        res[[4]int{nums[a], nums[b], nums[c], nums[d]}] = true
+                    }
+                }
+            }
+        }
+    }
+
+    result := [][]int{}
+    for quad := range res {
+        result = append(result, []int{quad[0], quad[1], quad[2], quad[3]})
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun fourSum(nums: IntArray, target: Int): List<List<Int>> {
+        val n = nums.size
+        nums.sort()
+        val res = mutableSetOf<List<Int>>()
+
+        for (a in 0 until n) {
+            for (b in a + 1 until n) {
+                for (c in b + 1 until n) {
+                    for (d in c + 1 until n) {
+                        val sum = nums[a].toLong() + nums[b] + nums[c] + nums[d]
+                        if (sum == target.toLong()) {
+                            res.add(listOf(nums[a], nums[b], nums[c], nums[d]))
+                        }
+                    }
+                }
+            }
+        }
+
+        return res.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+        let n = nums.count
+        let nums = nums.sorted()
+        var res = Set<[Int]>()
+
+        for a in 0..<n {
+            for b in (a + 1)..<n {
+                for c in (b + 1)..<n {
+                    for d in (c + 1)..<n {
+                        if nums[a] + nums[b] + nums[c] + nums[d] == target {
+                            res.insert([nums[a], nums[b], nums[c], nums[d]])
+                        }
+                    }
+                }
+            }
+        }
+
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,6 +450,141 @@ public class Solution {
 }
 ```
 
+```go
+func fourSum(nums []int, target int) [][]int {
+    sort.Ints(nums)
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+    res := [][]int{}
+
+    for i := 0; i < len(nums); i++ {
+        count[nums[i]]--
+        if i > 0 && nums[i] == nums[i-1] {
+            continue
+        }
+
+        for j := i + 1; j < len(nums); j++ {
+            count[nums[j]]--
+            if j > i+1 && nums[j] == nums[j-1] {
+                continue
+            }
+
+            for k := j + 1; k < len(nums); k++ {
+                count[nums[k]]--
+                if k > j+1 && nums[k] == nums[k-1] {
+                    continue
+                }
+
+                fourth := target - nums[i] - nums[j] - nums[k]
+                if count[fourth] > 0 {
+                    res = append(res, []int{nums[i], nums[j], nums[k], fourth})
+                }
+            }
+
+            for k := j + 1; k < len(nums); k++ {
+                count[nums[k]]++
+            }
+        }
+
+        for j := i + 1; j < len(nums); j++ {
+            count[nums[j]]++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun fourSum(nums: IntArray, target: Int): List<List<Int>> {
+        nums.sort()
+        val count = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+        val res = mutableListOf<List<Int>>()
+
+        for (i in nums.indices) {
+            count[nums[i]] = count[nums[i]]!! - 1
+            if (i > 0 && nums[i] == nums[i - 1]) continue
+
+            for (j in i + 1 until nums.size) {
+                count[nums[j]] = count[nums[j]]!! - 1
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue
+
+                for (k in j + 1 until nums.size) {
+                    count[nums[k]] = count[nums[k]]!! - 1
+                    if (k > j + 1 && nums[k] == nums[k - 1]) continue
+
+                    val fourth = target.toLong() - nums[i] - nums[j] - nums[k]
+                    if (fourth in Int.MIN_VALUE.toLong()..Int.MAX_VALUE.toLong()) {
+                        if (count.getOrDefault(fourth.toInt(), 0) > 0) {
+                            res.add(listOf(nums[i], nums[j], nums[k], fourth.toInt()))
+                        }
+                    }
+                }
+
+                for (k in j + 1 until nums.size) {
+                    count[nums[k]] = count[nums[k]]!! + 1
+                }
+            }
+
+            for (j in i + 1 until nums.size) {
+                count[nums[j]] = count[nums[j]]!! + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+        var nums = nums.sorted()
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+        var res = [[Int]]()
+
+        for i in 0..<nums.count {
+            count[nums[i]]! -= 1
+            if i > 0 && nums[i] == nums[i - 1] { continue }
+
+            for j in (i + 1)..<nums.count {
+                count[nums[j]]! -= 1
+                if j > i + 1 && nums[j] == nums[j - 1] { continue }
+
+                for k in (j + 1)..<nums.count {
+                    count[nums[k]]! -= 1
+                    if k > j + 1 && nums[k] == nums[k - 1] { continue }
+
+                    let fourth = target - nums[i] - nums[j] - nums[k]
+                    if let cnt = count[fourth], cnt > 0 {
+                        res.append([nums[i], nums[j], nums[k], fourth])
+                    }
+                }
+
+                for k in (j + 1)..<nums.count {
+                    count[nums[k]]! += 1
+                }
+            }
+
+            for j in (i + 1)..<nums.count {
+                count[nums[j]]! += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +781,122 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func fourSum(nums []int, target int) [][]int {
+    sort.Ints(nums)
+    res := [][]int{}
+    n := len(nums)
+
+    for i := 0; i < n; i++ {
+        if i > 0 && nums[i] == nums[i-1] {
+            continue
+        }
+
+        for j := i + 1; j < n; j++ {
+            if j > i+1 && nums[j] == nums[j-1] {
+                continue
+            }
+
+            left, right := j+1, n-1
+            for left < right {
+                sum := nums[i] + nums[j] + nums[left] + nums[right]
+                if sum == target {
+                    res = append(res, []int{nums[i], nums[j], nums[left], nums[right]})
+                    left++
+                    right--
+                    for left < right && nums[left] == nums[left-1] {
+                        left++
+                    }
+                    for left < right && nums[right] == nums[right+1] {
+                        right--
+                    }
+                } else if sum < target {
+                    left++
+                } else {
+                    right--
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun fourSum(nums: IntArray, target: Int): List<List<Int>> {
+        nums.sort()
+        val res = mutableListOf<List<Int>>()
+        val n = nums.size
+
+        for (i in 0 until n) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue
+
+            for (j in i + 1 until n) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue
+
+                var left = j + 1
+                var right = n - 1
+                while (left < right) {
+                    val sum = nums[i].toLong() + nums[j] + nums[left] + nums[right]
+                    when {
+                        sum == target.toLong() -> {
+                            res.add(listOf(nums[i], nums[j], nums[left], nums[right]))
+                            left++
+                            right--
+                            while (left < right && nums[left] == nums[left - 1]) left++
+                            while (left < right && nums[right] == nums[right + 1]) right--
+                        }
+                        sum < target -> left++
+                        else -> right--
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+        let nums = nums.sorted()
+        var res = [[Int]]()
+        let n = nums.count
+
+        for i in 0..<n {
+            if i > 0 && nums[i] == nums[i - 1] { continue }
+
+            for j in (i + 1)..<n {
+                if j > i + 1 && nums[j] == nums[j - 1] { continue }
+
+                var left = j + 1
+                var right = n - 1
+                while left < right {
+                    let sum = nums[i] + nums[j] + nums[left] + nums[right]
+                    if sum == target {
+                        res.append([nums[i], nums[j], nums[left], nums[right]])
+                        left += 1
+                        right -= 1
+                        while left < right && nums[left] == nums[left - 1] { left += 1 }
+                        while left < right && nums[right] == nums[right + 1] { right -= 1 }
+                    } else if sum < target {
+                        left += 1
+                    } else {
+                        right -= 1
+                    }
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -806,6 +1132,143 @@ public class Solution {
             quad.Add(nums[i]);
             KSum(nums, k - 1, i + 1, target - nums[i]);
             quad.RemoveAt(quad.Count - 1);
+        }
+    }
+}
+```
+
+```go
+func fourSum(nums []int, target int) [][]int {
+    sort.Ints(nums)
+    res := [][]int{}
+    quad := []int{}
+
+    var kSum func(k, start, target int)
+    kSum = func(k, start, target int) {
+        if k == 2 {
+            l, r := start, len(nums)-1
+            for l < r {
+                sum := nums[l] + nums[r]
+                if sum < target {
+                    l++
+                } else if sum > target {
+                    r--
+                } else {
+                    temp := make([]int, len(quad))
+                    copy(temp, quad)
+                    temp = append(temp, nums[l], nums[r])
+                    res = append(res, temp)
+                    l++
+                    r--
+                    for l < r && nums[l] == nums[l-1] {
+                        l++
+                    }
+                    for l < r && nums[r] == nums[r+1] {
+                        r--
+                    }
+                }
+            }
+            return
+        }
+
+        for i := start; i <= len(nums)-k; i++ {
+            if i > start && nums[i] == nums[i-1] {
+                continue
+            }
+            quad = append(quad, nums[i])
+            kSum(k-1, i+1, target-nums[i])
+            quad = quad[:len(quad)-1]
+        }
+    }
+
+    kSum(4, 0, target)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val res = mutableListOf<List<Int>>()
+    private val quad = mutableListOf<Int>()
+
+    fun fourSum(nums: IntArray, target: Int): List<List<Int>> {
+        nums.sort()
+        res.clear()
+        quad.clear()
+        kSum(nums, 4, 0, target.toLong())
+        return res
+    }
+
+    private fun kSum(nums: IntArray, k: Int, start: Int, target: Long) {
+        if (k == 2) {
+            var l = start
+            var r = nums.size - 1
+            while (l < r) {
+                val sum = nums[l].toLong() + nums[r]
+                when {
+                    sum < target -> l++
+                    sum > target -> r--
+                    else -> {
+                        res.add(quad.toMutableList().apply { add(nums[l]); add(nums[r]) })
+                        l++
+                        r--
+                        while (l < r && nums[l] == nums[l - 1]) l++
+                        while (l < r && nums[r] == nums[r + 1]) r--
+                    }
+                }
+            }
+            return
+        }
+
+        for (i in start..nums.size - k) {
+            if (i > start && nums[i] == nums[i - 1]) continue
+            quad.add(nums[i])
+            kSum(nums, k - 1, i + 1, target - nums[i])
+            quad.removeAt(quad.size - 1)
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    private var res = [[Int]]()
+    private var quad = [Int]()
+
+    func fourSum(_ nums: [Int], _ target: Int) -> [[Int]] {
+        let nums = nums.sorted()
+        res = []
+        quad = []
+        kSum(nums, 4, 0, target)
+        return res
+    }
+
+    private func kSum(_ nums: [Int], _ k: Int, _ start: Int, _ target: Int) {
+        if k == 2 {
+            var l = start
+            var r = nums.count - 1
+            while l < r {
+                let sum = nums[l] + nums[r]
+                if sum < target {
+                    l += 1
+                } else if sum > target {
+                    r -= 1
+                } else {
+                    res.append(quad + [nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    while l < r && nums[l] == nums[l - 1] { l += 1 }
+                    while l < r && nums[r] == nums[r + 1] { r -= 1 }
+                }
+            }
+            return
+        }
+
+        for i in start...(nums.count - k) {
+            if i > start && nums[i] == nums[i - 1] { continue }
+            quad.append(nums[i])
+            kSum(nums, k - 1, i + 1, target - nums[i])
+            quad.removeLast()
         }
     }
 }

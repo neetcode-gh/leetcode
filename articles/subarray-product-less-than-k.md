@@ -101,6 +101,66 @@ public class Solution {
 }
 ```
 
+```go
+func numSubarrayProductLessThanK(nums []int, k int) int {
+    n := len(nums)
+    res := 0
+
+    for i := 0; i < n; i++ {
+        curProd := 1
+        for j := i; j < n; j++ {
+            curProd *= nums[j]
+            if curProd >= k {
+                break
+            }
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarrayProductLessThanK(nums: IntArray, k: Int): Int {
+        val n = nums.size
+        var res = 0
+
+        for (i in 0 until n) {
+            var curProd = 1
+            for (j in i until n) {
+                curProd *= nums[j]
+                if (curProd >= k) break
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarrayProductLessThanK(_ nums: [Int], _ k: Int) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for i in 0..<n {
+            var curProd = 1
+            for j in i..<n {
+                curProd *= nums[j]
+                if curProd >= k { break }
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -258,6 +318,92 @@ public class Solution {
 }
 ```
 
+```go
+func numSubarrayProductLessThanK(nums []int, k int) int {
+    if k <= 1 {
+        return 0
+    }
+    n := len(nums)
+    logs := make([]float64, n+1)
+    logK := math.Log(float64(k))
+    for i := 0; i < n; i++ {
+        logs[i+1] = logs[i] + math.Log(float64(nums[i]))
+    }
+    res := 0
+    for i := 0; i < n; i++ {
+        l, r := i+1, n+1
+        for l < r {
+            mid := (l + r) >> 1
+            if logs[mid] < logs[i]+logK-1e-12 {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+        res += l - (i + 1)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarrayProductLessThanK(nums: IntArray, k: Int): Int {
+        if (k <= 1) return 0
+        val n = nums.size
+        val logs = DoubleArray(n + 1)
+        val logK = kotlin.math.ln(k.toDouble())
+        for (i in 0 until n) {
+            logs[i + 1] = logs[i] + kotlin.math.ln(nums[i].toDouble())
+        }
+        var res = 0
+        for (i in 0 until n) {
+            var l = i + 1
+            var r = n + 1
+            while (l < r) {
+                val mid = (l + r) shr 1
+                if (logs[mid] < logs[i] + logK - 1e-12) {
+                    l = mid + 1
+                } else {
+                    r = mid
+                }
+            }
+            res += l - (i + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarrayProductLessThanK(_ nums: [Int], _ k: Int) -> Int {
+        if k <= 1 { return 0 }
+        let n = nums.count
+        var logs = [Double](repeating: 0, count: n + 1)
+        let logK = log(Double(k))
+        for i in 0..<n {
+            logs[i + 1] = logs[i] + log(Double(nums[i]))
+        }
+        var res = 0
+        for i in 0..<n {
+            var l = i + 1
+            var r = n + 1
+            while l < r {
+                let mid = (l + r) >> 1
+                if logs[mid] < logs[i] + logK - 1e-12 {
+                    l = mid + 1
+                } else {
+                    r = mid
+                }
+            }
+            res += l - (i + 1)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -359,6 +505,61 @@ public class Solution {
             res += (r - l + 1);
         }
         return res;
+    }
+}
+```
+
+```go
+func numSubarrayProductLessThanK(nums []int, k int) int {
+    res := 0
+    l := 0
+    product := 1
+    for r := 0; r < len(nums); r++ {
+        product *= nums[r]
+        for l <= r && product >= k {
+            product /= nums[l]
+            l++
+        }
+        res += r - l + 1
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarrayProductLessThanK(nums: IntArray, k: Int): Int {
+        var res = 0
+        var l = 0
+        var product = 1L
+        for (r in nums.indices) {
+            product *= nums[r]
+            while (l <= r && product >= k) {
+                product /= nums[l]
+                l++
+            }
+            res += r - l + 1
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarrayProductLessThanK(_ nums: [Int], _ k: Int) -> Int {
+        var res = 0
+        var l = 0
+        var product = 1
+        for r in 0..<nums.count {
+            product *= nums[r]
+            while l <= r && product >= k {
+                product /= nums[l]
+                l += 1
+            }
+            res += r - l + 1
+        }
+        return res
     }
 }
 ```

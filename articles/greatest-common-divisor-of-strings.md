@@ -131,6 +131,93 @@ public class Solution {
 }
 ```
 
+```go
+func gcdOfStrings(str1 string, str2 string) string {
+    len1, len2 := len(str1), len(str2)
+
+    isDivisor := func(l int) bool {
+        if len1%l != 0 || len2%l != 0 {
+            return false
+        }
+        f1, f2 := len1/l, len2/l
+        sub := str1[:l]
+        repeated1, repeated2 := "", ""
+        for i := 0; i < f1; i++ {
+            repeated1 += sub
+        }
+        for i := 0; i < f2; i++ {
+            repeated2 += sub
+        }
+        return repeated1 == str1 && repeated2 == str2
+    }
+
+    minLen := len1
+    if len2 < minLen {
+        minLen = len2
+    }
+    for l := minLen; l > 0; l-- {
+        if isDivisor(l) {
+            return str1[:l]
+        }
+    }
+
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun gcdOfStrings(str1: String, str2: String): String {
+        val len1 = str1.length
+        val len2 = str2.length
+
+        fun isDivisor(l: Int): Boolean {
+            if (len1 % l != 0 || len2 % l != 0) return false
+            val f1 = len1 / l
+            val f2 = len2 / l
+            val sub = str1.substring(0, l)
+            return sub.repeat(f1) == str1 && sub.repeat(f2) == str2
+        }
+
+        for (l in minOf(len1, len2) downTo 1) {
+            if (isDivisor(l)) {
+                return str1.substring(0, l)
+            }
+        }
+
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func gcdOfStrings(_ str1: String, _ str2: String) -> String {
+        let len1 = str1.count
+        let len2 = str2.count
+        let arr1 = Array(str1)
+        let arr2 = Array(str2)
+
+        func isDivisor(_ l: Int) -> Bool {
+            if len1 % l != 0 || len2 % l != 0 { return false }
+            let f1 = len1 / l
+            let f2 = len2 / l
+            let sub = String(arr1[0..<l])
+            return String(repeating: sub, count: f1) == str1 &&
+                   String(repeating: sub, count: f2) == str2
+        }
+
+        for l in stride(from: min(len1, len2), through: 1, by: -1) {
+            if isDivisor(l) {
+                return String(arr1[0..<l])
+            }
+        }
+
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -338,6 +425,124 @@ public class Solution {
 }
 ```
 
+```go
+func gcdOfStrings(str1 string, str2 string) string {
+    m, n := len(str1), len(str2)
+    if m < n {
+        m, n = n, m
+        str1, str2 = str2, str1
+    }
+
+    for l := n; l > 0; l-- {
+        if m%l != 0 || n%l != 0 {
+            continue
+        }
+
+        valid := true
+        for i := 0; i < m; i++ {
+            if str1[i] != str2[i%l] {
+                valid = false
+                break
+            }
+        }
+        if !valid {
+            continue
+        }
+
+        for i := l; i < n; i++ {
+            if str2[i] != str2[i%l] {
+                valid = false
+                break
+            }
+        }
+
+        if valid {
+            return str2[:l]
+        }
+    }
+
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun gcdOfStrings(str1: String, str2: String): String {
+        var s1 = str1
+        var s2 = str2
+        var m = s1.length
+        var n = s2.length
+        if (m < n) {
+            s1 = str2.also { s2 = str1 }
+            m = n.also { n = m }
+        }
+
+        for (l in n downTo 1) {
+            if (m % l != 0 || n % l != 0) continue
+
+            var valid = true
+            for (i in 0 until m) {
+                if (s1[i] != s2[i % l]) {
+                    valid = false
+                    break
+                }
+            }
+            if (!valid) continue
+
+            for (i in l until n) {
+                if (s2[i] != s2[i % l]) {
+                    valid = false
+                    break
+                }
+            }
+
+            if (valid) return s2.substring(0, l)
+        }
+
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func gcdOfStrings(_ str1: String, _ str2: String) -> String {
+        var s1 = Array(str1)
+        var s2 = Array(str2)
+        var m = s1.count
+        var n = s2.count
+        if m < n {
+            swap(&s1, &s2)
+            swap(&m, &n)
+        }
+
+        for l in stride(from: n, through: 1, by: -1) {
+            if m % l != 0 || n % l != 0 { continue }
+
+            var valid = true
+            for i in 0..<m {
+                if s1[i] != s2[i % l] {
+                    valid = false
+                    break
+                }
+            }
+            if !valid { continue }
+
+            for i in l..<n {
+                if s2[i] != s2[i % l] {
+                    valid = false
+                    break
+                }
+            }
+
+            if valid { return String(s2[0..<l]) }
+        }
+
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -428,6 +633,49 @@ public class Solution {
             a = temp;
         }
         return a;
+    }
+}
+```
+
+```go
+func gcdOfStrings(str1 string, str2 string) string {
+    if str1+str2 != str2+str1 {
+        return ""
+    }
+    var gcd func(a, b int) int
+    gcd = func(a, b int) int {
+        if b == 0 {
+            return a
+        }
+        return gcd(b, a%b)
+    }
+    return str1[:gcd(len(str1), len(str2))]
+}
+```
+
+```kotlin
+class Solution {
+    fun gcdOfStrings(str1: String, str2: String): String {
+        if (str1 + str2 != str2 + str1) {
+            return ""
+        }
+        fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+        return str1.substring(0, gcd(str1.length, str2.length))
+    }
+}
+```
+
+```swift
+class Solution {
+    func gcdOfStrings(_ str1: String, _ str2: String) -> String {
+        if str1 + str2 != str2 + str1 {
+            return ""
+        }
+        func gcd(_ a: Int, _ b: Int) -> Int {
+            return b == 0 ? a : gcd(b, a % b)
+        }
+        let g = gcd(str1.count, str2.count)
+        return String(str1.prefix(g))
     }
 }
 ```
@@ -562,6 +810,83 @@ public class Solution {
             a = temp;
         }
         return a;
+    }
+}
+```
+
+```go
+func gcdOfStrings(str1 string, str2 string) string {
+    var gcd func(a, b int) int
+    gcd = func(a, b int) int {
+        if b == 0 {
+            return a
+        }
+        return gcd(b, a%b)
+    }
+    g := gcd(len(str1), len(str2))
+
+    for i := 0; i < len(str1); i++ {
+        if str1[i] != str1[i%g] {
+            return ""
+        }
+    }
+
+    for i := 0; i < len(str2); i++ {
+        if str2[i] != str1[i%g] {
+            return ""
+        }
+    }
+
+    return str1[:g]
+}
+```
+
+```kotlin
+class Solution {
+    fun gcdOfStrings(str1: String, str2: String): String {
+        fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+        val g = gcd(str1.length, str2.length)
+
+        for (i in str1.indices) {
+            if (str1[i] != str1[i % g]) {
+                return ""
+            }
+        }
+
+        for (i in str2.indices) {
+            if (str2[i] != str1[i % g]) {
+                return ""
+            }
+        }
+
+        return str1.substring(0, g)
+    }
+}
+```
+
+```swift
+class Solution {
+    func gcdOfStrings(_ str1: String, _ str2: String) -> String {
+        func gcd(_ a: Int, _ b: Int) -> Int {
+            return b == 0 ? a : gcd(b, a % b)
+        }
+        let g = gcd(str1.count, str2.count)
+        let s1 = Array(str1)
+        let s2 = Array(str2)
+
+        for i in 0..<s1.count {
+            if s1[i] != s1[i % g] {
+                return ""
+            }
+        }
+
+        for i in 0..<s2.count {
+            if s2[i] != s1[i % g] {
+                return ""
+            }
+        }
+
+        return String(s1[0..<g])
     }
 }
 ```

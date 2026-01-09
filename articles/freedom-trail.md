@@ -92,6 +92,101 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindRotateSteps(string ring, string key) {
+        return Dfs(0, 0, ring, key);
+    }
+
+    private int Dfs(int r, int k, string ring, string key) {
+        if (k == key.Length) return 0;
+
+        int res = int.MaxValue;
+        for (int i = 0; i < ring.Length; i++) {
+            if (ring[i] == key[k]) {
+                int minDist = Math.Min(Math.Abs(r - i), ring.Length - Math.Abs(r - i));
+                res = Math.Min(res, minDist + 1 + Dfs(i, k + 1, ring, key));
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findRotateSteps(ring string, key string) int {
+    var dfs func(r, k int) int
+    dfs = func(r, k int) int {
+        if k == len(key) {
+            return 0
+        }
+
+        res := 1 << 30
+        for i := 0; i < len(ring); i++ {
+            if ring[i] == key[k] {
+                minDist := min(abs(r-i), len(ring)-abs(r-i))
+                res = min(res, minDist+1+dfs(i, k+1))
+            }
+        }
+        return res
+    }
+
+    return dfs(0, 0)
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findRotateSteps(ring: String, key: String): Int {
+        fun dfs(r: Int, k: Int): Int {
+            if (k == key.length) return 0
+
+            var res = Int.MAX_VALUE
+            for (i in ring.indices) {
+                if (ring[i] == key[k]) {
+                    val minDist = minOf(kotlin.math.abs(r - i), ring.length - kotlin.math.abs(r - i))
+                    res = minOf(res, minDist + 1 + dfs(i, k + 1))
+                }
+            }
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRotateSteps(_ ring: String, _ key: String) -> Int {
+        let ringArr = Array(ring)
+        let keyArr = Array(key)
+
+        func dfs(_ r: Int, _ k: Int) -> Int {
+            if k == keyArr.count { return 0 }
+
+            var res = Int.max
+            for i in 0..<ringArr.count {
+                if ringArr[i] == keyArr[k] {
+                    let minDist = min(abs(r - i), ringArr.count - abs(r - i))
+                    res = min(res, minDist + 1 + dfs(i, k + 1))
+                }
+            }
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -230,6 +325,142 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int FindRotateSteps(string ring, string key) {
+        int n = ring.Length;
+        int m = key.Length;
+        dp = new int[n, m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, 0, ring, key);
+    }
+
+    private int Dfs(int r, int k, string ring, string key) {
+        if (k == key.Length) return 0;
+        if (dp[r, k] != -1) return dp[r, k];
+
+        int res = int.MaxValue;
+        for (int i = 0; i < ring.Length; i++) {
+            if (ring[i] == key[k]) {
+                int minDist = Math.Min(Math.Abs(r - i), ring.Length - Math.Abs(r - i));
+                res = Math.Min(res, minDist + 1 + Dfs(i, k + 1, ring, key));
+            }
+        }
+
+        dp[r, k] = res;
+        return res;
+    }
+}
+```
+
+```go
+func findRotateSteps(ring string, key string) int {
+    n, m := len(ring), len(key)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, m)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(r, k int) int
+    dfs = func(r, k int) int {
+        if k == m {
+            return 0
+        }
+        if dp[r][k] != -1 {
+            return dp[r][k]
+        }
+
+        res := 1 << 30
+        for i := 0; i < n; i++ {
+            if ring[i] == key[k] {
+                minDist := min(abs(r-i), n-abs(r-i))
+                res = min(res, minDist+1+dfs(i, k+1))
+            }
+        }
+
+        dp[r][k] = res
+        return res
+    }
+
+    return dfs(0, 0)
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+
+    fun findRotateSteps(ring: String, key: String): Int {
+        val n = ring.length
+        val m = key.length
+        dp = Array(n) { IntArray(m) { -1 } }
+        return dfs(0, 0, ring, key)
+    }
+
+    private fun dfs(r: Int, k: Int, ring: String, key: String): Int {
+        if (k == key.length) return 0
+        if (dp[r][k] != -1) return dp[r][k]
+
+        var res = Int.MAX_VALUE
+        for (i in ring.indices) {
+            if (ring[i] == key[k]) {
+                val minDist = minOf(kotlin.math.abs(r - i), ring.length - kotlin.math.abs(r - i))
+                res = minOf(res, minDist + 1 + dfs(i, k + 1, ring, key))
+            }
+        }
+
+        dp[r][k] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRotateSteps(_ ring: String, _ key: String) -> Int {
+        let ringArr = Array(ring)
+        let keyArr = Array(key)
+        let n = ringArr.count
+        let m = keyArr.count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: m), count: n)
+
+        func dfs(_ r: Int, _ k: Int) -> Int {
+            if k == m { return 0 }
+            if dp[r][k] != -1 { return dp[r][k] }
+
+            var res = Int.max
+            for i in 0..<n {
+                if ringArr[i] == keyArr[k] {
+                    let minDist = min(abs(r - i), n - abs(r - i))
+                    res = min(res, minDist + 1 + dfs(i, k + 1))
+                }
+            }
+
+            dp[r][k] = res
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -356,6 +587,127 @@ class Solution {
             }
         }
         return dp[0][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindRotateSteps(string ring, string key) {
+        int n = ring.Length;
+        int m = key.Length;
+        int[,] dp = new int[m + 1, n];
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i, j] = int.MaxValue;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            dp[m, i] = 0;
+        }
+
+        for (int k = m - 1; k >= 0; k--) {
+            for (int r = 0; r < n; r++) {
+                for (int i = 0; i < n; i++) {
+                    if (ring[i] == key[k]) {
+                        int minDist = Math.Min(Math.Abs(r - i), n - Math.Abs(r - i));
+                        dp[k, r] = Math.Min(dp[k, r], minDist + 1 + dp[k + 1, i]);
+                    }
+                }
+            }
+        }
+        return dp[0, 0];
+    }
+}
+```
+
+```go
+func findRotateSteps(ring string, key string) int {
+    n, m := len(ring), len(key)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = 1 << 30
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        dp[m][i] = 0
+    }
+
+    for k := m - 1; k >= 0; k-- {
+        for r := 0; r < n; r++ {
+            for i := 0; i < n; i++ {
+                if ring[i] == key[k] {
+                    minDist := min(abs(r-i), n-abs(r-i))
+                    dp[k][r] = min(dp[k][r], minDist+1+dp[k+1][i])
+                }
+            }
+        }
+    }
+    return dp[0][0]
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findRotateSteps(ring: String, key: String): Int {
+        val n = ring.length
+        val m = key.length
+        val dp = Array(m + 1) { IntArray(n) { Int.MAX_VALUE } }
+
+        for (i in 0 until n) {
+            dp[m][i] = 0
+        }
+
+        for (k in m - 1 downTo 0) {
+            for (r in 0 until n) {
+                for (i in 0 until n) {
+                    if (ring[i] == key[k]) {
+                        val minDist = minOf(kotlin.math.abs(r - i), n - kotlin.math.abs(r - i))
+                        dp[k][r] = minOf(dp[k][r], minDist + 1 + dp[k + 1][i])
+                    }
+                }
+            }
+        }
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRotateSteps(_ ring: String, _ key: String) -> Int {
+        let ringArr = Array(ring)
+        let keyArr = Array(key)
+        let n = ringArr.count
+        let m = keyArr.count
+        var dp = [[Int]](repeating: [Int](repeating: Int.max, count: n), count: m + 1)
+
+        for i in 0..<n {
+            dp[m][i] = 0
+        }
+
+        for k in stride(from: m - 1, through: 0, by: -1) {
+            for r in 0..<n {
+                for i in 0..<n {
+                    if ringArr[i] == keyArr[k] {
+                        let minDist = min(abs(r - i), n - abs(r - i))
+                        dp[k][r] = min(dp[k][r], minDist + 1 + dp[k + 1][i])
+                    }
+                }
+            }
+        }
+        return dp[0][0]
     }
 }
 ```
@@ -490,6 +842,136 @@ class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindRotateSteps(string ring, string key) {
+        int n = ring.Length;
+        int m = key.Length;
+        int[] dp = new int[n];
+
+        List<int>[] adj = new List<int>[26];
+        for (int i = 0; i < 26; i++) {
+            adj[i] = new List<int>();
+        }
+        for (int i = 0; i < n; i++) {
+            adj[ring[i] - 'a'].Add(i);
+        }
+
+        for (int k = m - 1; k >= 0; k--) {
+            int[] nextDp = new int[n];
+            Array.Fill(nextDp, int.MaxValue);
+            for (int r = 0; r < n; r++) {
+                foreach (int i in adj[key[k] - 'a']) {
+                    int minDist = Math.Min(Math.Abs(r - i), n - Math.Abs(r - i));
+                    nextDp[r] = Math.Min(nextDp[r], minDist + 1 + dp[i]);
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```go
+func findRotateSteps(ring string, key string) int {
+    n, m := len(ring), len(key)
+    dp := make([]int, n)
+
+    adj := make([][]int, 26)
+    for i := 0; i < 26; i++ {
+        adj[i] = []int{}
+    }
+    for i := 0; i < n; i++ {
+        adj[ring[i]-'a'] = append(adj[ring[i]-'a'], i)
+    }
+
+    for k := m - 1; k >= 0; k-- {
+        nextDp := make([]int, n)
+        for i := range nextDp {
+            nextDp[i] = 1 << 30
+        }
+        for r := 0; r < n; r++ {
+            for _, i := range adj[key[k]-'a'] {
+                minDist := min(abs(r-i), n-abs(r-i))
+                nextDp[r] = min(nextDp[r], minDist+1+dp[i])
+            }
+        }
+        dp = nextDp
+    }
+
+    return dp[0]
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findRotateSteps(ring: String, key: String): Int {
+        val n = ring.length
+        val m = key.length
+        var dp = IntArray(n)
+
+        val adj = Array(26) { mutableListOf<Int>() }
+        for (i in 0 until n) {
+            adj[ring[i] - 'a'].add(i)
+        }
+
+        for (k in m - 1 downTo 0) {
+            val nextDp = IntArray(n) { Int.MAX_VALUE }
+            for (r in 0 until n) {
+                for (i in adj[key[k] - 'a']) {
+                    val minDist = minOf(kotlin.math.abs(r - i), n - kotlin.math.abs(r - i))
+                    nextDp[r] = minOf(nextDp[r], minDist + 1 + dp[i])
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRotateSteps(_ ring: String, _ key: String) -> Int {
+        let ringArr = Array(ring)
+        let keyArr = Array(key)
+        let n = ringArr.count
+        let m = keyArr.count
+        var dp = [Int](repeating: 0, count: n)
+
+        var adj = [[Int]](repeating: [], count: 26)
+        for i in 0..<n {
+            let idx = Int(ringArr[i].asciiValue! - Character("a").asciiValue!)
+            adj[idx].append(i)
+        }
+
+        for k in stride(from: m - 1, through: 0, by: -1) {
+            var nextDp = [Int](repeating: Int.max, count: n)
+            let keyIdx = Int(keyArr[k].asciiValue! - Character("a").asciiValue!)
+            for r in 0..<n {
+                for i in adj[keyIdx] {
+                    let minDist = min(abs(r - i), n - abs(r - i))
+                    nextDp[r] = min(nextDp[r], minDist + 1 + dp[i])
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -646,6 +1128,161 @@ class Solution {
         return (
             Math.min(...adj[key.charCodeAt(m - 1) - 97].map((i) => dp[i])) + m
         );
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindRotateSteps(string ring, string key) {
+        int n = ring.Length;
+        int m = key.Length;
+        int[] dp = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            dp[i] = Math.Min(i, n - i);
+        }
+
+        List<int>[] adj = new List<int>[26];
+        for (int i = 0; i < 26; i++) {
+            adj[i] = new List<int>();
+        }
+
+        for (int i = 0; i < n; i++) {
+            adj[ring[i] - 'a'].Add(i);
+        }
+
+        for (int k = 1; k < m; k++) {
+            foreach (int r in adj[key[k] - 'a']) {
+                int minDist = int.MaxValue;
+                foreach (int i in adj[key[k - 1] - 'a']) {
+                    minDist = Math.Min(minDist,
+                                Math.Min(Math.Abs(r - i), n - Math.Abs(r - i)) + dp[i]);
+                }
+                dp[r] = minDist;
+            }
+        }
+
+        int result = int.MaxValue;
+        foreach (int i in adj[key[m - 1] - 'a']) {
+            result = Math.Min(result, dp[i]);
+        }
+
+        return result + m;
+    }
+}
+```
+
+```go
+func findRotateSteps(ring string, key string) int {
+    n, m := len(ring), len(key)
+    dp := make([]int, n)
+
+    for i := 0; i < n; i++ {
+        dp[i] = min(i, n-i)
+    }
+
+    adj := make([][]int, 26)
+    for i := 0; i < 26; i++ {
+        adj[i] = []int{}
+    }
+
+    for i := 0; i < n; i++ {
+        adj[ring[i]-'a'] = append(adj[ring[i]-'a'], i)
+    }
+
+    for k := 1; k < m; k++ {
+        for _, r := range adj[key[k]-'a'] {
+            minDist := 1 << 30
+            for _, i := range adj[key[k-1]-'a'] {
+                minDist = min(minDist, min(abs(r-i), n-abs(r-i))+dp[i])
+            }
+            dp[r] = minDist
+        }
+    }
+
+    result := 1 << 30
+    for _, i := range adj[key[m-1]-'a'] {
+        result = min(result, dp[i])
+    }
+
+    return result + m
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findRotateSteps(ring: String, key: String): Int {
+        val n = ring.length
+        val m = key.length
+        val dp = IntArray(n) { minOf(it, n - it) }
+
+        val adj = Array(26) { mutableListOf<Int>() }
+        for (i in 0 until n) {
+            adj[ring[i] - 'a'].add(i)
+        }
+
+        for (k in 1 until m) {
+            for (r in adj[key[k] - 'a']) {
+                var minDist = Int.MAX_VALUE
+                for (i in adj[key[k - 1] - 'a']) {
+                    minDist = minOf(minDist, minOf(kotlin.math.abs(r - i), n - kotlin.math.abs(r - i)) + dp[i])
+                }
+                dp[r] = minDist
+            }
+        }
+
+        var result = Int.MAX_VALUE
+        for (i in adj[key[m - 1] - 'a']) {
+            result = minOf(result, dp[i])
+        }
+
+        return result + m
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRotateSteps(_ ring: String, _ key: String) -> Int {
+        let ringArr = Array(ring)
+        let keyArr = Array(key)
+        let n = ringArr.count
+        let m = keyArr.count
+        var dp = (0..<n).map { min($0, n - $0) }
+
+        var adj = [[Int]](repeating: [], count: 26)
+        for i in 0..<n {
+            let idx = Int(ringArr[i].asciiValue! - Character("a").asciiValue!)
+            adj[idx].append(i)
+        }
+
+        for k in 1..<m {
+            let keyIdx = Int(keyArr[k].asciiValue! - Character("a").asciiValue!)
+            let prevIdx = Int(keyArr[k - 1].asciiValue! - Character("a").asciiValue!)
+            for r in adj[keyIdx] {
+                var minDist = Int.max
+                for i in adj[prevIdx] {
+                    minDist = min(minDist, min(abs(r - i), n - abs(r - i)) + dp[i])
+                }
+                dp[r] = minDist
+            }
+        }
+
+        let lastIdx = Int(keyArr[m - 1].asciiValue! - Character("a").asciiValue!)
+        var result = Int.max
+        for i in adj[lastIdx] {
+            result = min(result, dp[i])
+        }
+
+        return result + m
     }
 }
 ```
@@ -847,6 +1484,210 @@ class Solution {
         }
 
         return dp[0] + m;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindRotateSteps(string ring, string key) {
+        int n = ring.Length, m = key.Length;
+
+        int[] dp = new int[n];
+        int[] nextDp = new int[n];
+        List<int>[] adj = new List<int>[26];
+
+        for (int i = 0; i < 26; i++) {
+            adj[i] = new List<int>();
+        }
+        for (int i = 0; i < n; i++) {
+            adj[ring[i] - 'a'].Add(i);
+        }
+
+        for (int k = m - 1; k >= 0; k--) {
+            int c = key[k] - 'a';
+            int it = 0, N = adj[c].Count;
+
+            for (int r = 0; r < n; r++) {
+                if (ring[r] - 'a' != c) {
+                    nextDp[r] = int.MaxValue;
+                    while (it < N && adj[c][it] < r) {
+                        it++;
+                    }
+
+                    int nextIdx = it < N ? adj[c][it] : adj[c][0];
+                    int prevIdx = it > 0 ? adj[c][it - 1] : adj[c][N - 1];
+
+                    nextDp[r] = Math.Min(
+                        (r > prevIdx ? r - prevIdx : n - (prevIdx - r)) + dp[prevIdx],
+                        (nextIdx > r ? nextIdx - r : n - (r - nextIdx)) + dp[nextIdx]
+                    );
+                } else {
+                    nextDp[r] = dp[r];
+                }
+            }
+
+            var temp = dp;
+            dp = nextDp;
+            nextDp = temp;
+        }
+
+        return dp[0] + m;
+    }
+}
+```
+
+```go
+func findRotateSteps(ring string, key string) int {
+    n, m := len(ring), len(key)
+
+    dp := make([]int, n)
+    nextDp := make([]int, n)
+    adj := make([][]int, 26)
+
+    for i := 0; i < 26; i++ {
+        adj[i] = []int{}
+    }
+    for i := 0; i < n; i++ {
+        adj[ring[i]-'a'] = append(adj[ring[i]-'a'], i)
+    }
+
+    for k := m - 1; k >= 0; k-- {
+        c := int(key[k] - 'a')
+        it, N := 0, len(adj[c])
+
+        for r := 0; r < n; r++ {
+            if int(ring[r]-'a') != c {
+                nextDp[r] = 1 << 30
+                for it < N && adj[c][it] < r {
+                    it++
+                }
+
+                nextIdx := adj[c][0]
+                if it < N {
+                    nextIdx = adj[c][it]
+                }
+                prevIdx := adj[c][N-1]
+                if it > 0 {
+                    prevIdx = adj[c][it-1]
+                }
+
+                dist1 := r - prevIdx
+                if r <= prevIdx {
+                    dist1 = n - (prevIdx - r)
+                }
+                dist2 := nextIdx - r
+                if nextIdx <= r {
+                    dist2 = n - (r - nextIdx)
+                }
+
+                nextDp[r] = min(dist1+dp[prevIdx], dist2+dp[nextIdx])
+            } else {
+                nextDp[r] = dp[r]
+            }
+        }
+
+        dp, nextDp = nextDp, dp
+    }
+
+    return dp[0] + m
+}
+```
+
+```kotlin
+class Solution {
+    fun findRotateSteps(ring: String, key: String): Int {
+        val n = ring.length
+        val m = key.length
+
+        var dp = IntArray(n)
+        var nextDp = IntArray(n)
+        val adj = Array(26) { mutableListOf<Int>() }
+
+        for (i in 0 until n) {
+            adj[ring[i] - 'a'].add(i)
+        }
+
+        for (k in m - 1 downTo 0) {
+            val c = key[k] - 'a'
+            var it = 0
+            val N = adj[c].size
+
+            for (r in 0 until n) {
+                if (ring[r] - 'a' != c) {
+                    nextDp[r] = Int.MAX_VALUE
+                    while (it < N && adj[c][it] < r) {
+                        it++
+                    }
+
+                    val nextIdx = if (it < N) adj[c][it] else adj[c][0]
+                    val prevIdx = if (it > 0) adj[c][it - 1] else adj[c][N - 1]
+
+                    nextDp[r] = minOf(
+                        (if (r > prevIdx) r - prevIdx else n - (prevIdx - r)) + dp[prevIdx],
+                        (if (nextIdx > r) nextIdx - r else n - (r - nextIdx)) + dp[nextIdx]
+                    )
+                } else {
+                    nextDp[r] = dp[r]
+                }
+            }
+
+            val temp = dp
+            dp = nextDp
+            nextDp = temp
+        }
+
+        return dp[0] + m
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRotateSteps(_ ring: String, _ key: String) -> Int {
+        let ringArr = Array(ring)
+        let keyArr = Array(key)
+        let n = ringArr.count
+        let m = keyArr.count
+
+        var dp = [Int](repeating: 0, count: n)
+        var nextDp = [Int](repeating: 0, count: n)
+        var adj = [[Int]](repeating: [], count: 26)
+
+        for i in 0..<n {
+            let idx = Int(ringArr[i].asciiValue! - Character("a").asciiValue!)
+            adj[idx].append(i)
+        }
+
+        for k in stride(from: m - 1, through: 0, by: -1) {
+            let c = Int(keyArr[k].asciiValue! - Character("a").asciiValue!)
+            var it = 0
+            let N = adj[c].count
+
+            for r in 0..<n {
+                let ringIdx = Int(ringArr[r].asciiValue! - Character("a").asciiValue!)
+                if ringIdx != c {
+                    nextDp[r] = Int.max
+                    while it < N && adj[c][it] < r {
+                        it += 1
+                    }
+
+                    let nextIdx = it < N ? adj[c][it] : adj[c][0]
+                    let prevIdx = it > 0 ? adj[c][it - 1] : adj[c][N - 1]
+
+                    nextDp[r] = min(
+                        (r > prevIdx ? r - prevIdx : n - (prevIdx - r)) + dp[prevIdx],
+                        (nextIdx > r ? nextIdx - r : n - (r - nextIdx)) + dp[nextIdx]
+                    )
+                } else {
+                    nextDp[r] = dp[r]
+                }
+            }
+
+            swap(&dp, &nextDp)
+        }
+
+        return dp[0] + m
     }
 }
 ```

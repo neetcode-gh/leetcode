@@ -351,6 +351,196 @@ public class Solution {
 }
 ```
 
+```go
+func buildMatrix(k int, rowConditions [][]int, colConditions [][]int) [][]int {
+    topoSort := func(edges [][]int) []int {
+        adj := make([][]int, k+1)
+        for i := range adj {
+            adj[i] = []int{}
+        }
+        for _, edge := range edges {
+            adj[edge[0]] = append(adj[edge[0]], edge[1])
+        }
+
+        visit := make(map[int]bool)
+        path := make(map[int]bool)
+        order := []int{}
+
+        var dfs func(src int) bool
+        dfs = func(src int) bool {
+            if path[src] {
+                return false
+            }
+            if visit[src] {
+                return true
+            }
+            visit[src] = true
+            path[src] = true
+            for _, nei := range adj[src] {
+                if !dfs(nei) {
+                    return false
+                }
+            }
+            delete(path, src)
+            order = append(order, src)
+            return true
+        }
+
+        for i := 1; i <= k; i++ {
+            if !visit[i] {
+                if !dfs(i) {
+                    return nil
+                }
+            }
+        }
+
+        for i, j := 0, len(order)-1; i < j; i, j = i+1, j-1 {
+            order[i], order[j] = order[j], order[i]
+        }
+        return order
+    }
+
+    rowOrder := topoSort(rowConditions)
+    if rowOrder == nil {
+        return [][]int{}
+    }
+
+    colOrder := topoSort(colConditions)
+    if colOrder == nil {
+        return [][]int{}
+    }
+
+    valToRow := make(map[int]int)
+    for i, num := range rowOrder {
+        valToRow[num] = i
+    }
+    valToCol := make(map[int]int)
+    for i, num := range colOrder {
+        valToCol[num] = i
+    }
+
+    res := make([][]int, k)
+    for i := range res {
+        res[i] = make([]int, k)
+    }
+    for num := 1; num <= k; num++ {
+        r, c := valToRow[num], valToCol[num]
+        res[r][c] = num
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun buildMatrix(k: Int, rowConditions: Array<IntArray>, colConditions: Array<IntArray>): Array<IntArray> {
+        fun topoSort(edges: Array<IntArray>): IntArray? {
+            val adj = Array(k + 1) { mutableListOf<Int>() }
+            for (edge in edges) {
+                adj[edge[0]].add(edge[1])
+            }
+
+            val visit = mutableSetOf<Int>()
+            val path = mutableSetOf<Int>()
+            val order = mutableListOf<Int>()
+
+            fun dfs(src: Int): Boolean {
+                if (src in path) return false
+                if (src in visit) return true
+                visit.add(src)
+                path.add(src)
+                for (nei in adj[src]) {
+                    if (!dfs(nei)) return false
+                }
+                path.remove(src)
+                order.add(src)
+                return true
+            }
+
+            for (i in 1..k) {
+                if (i !in visit) {
+                    if (!dfs(i)) return null
+                }
+            }
+            return order.reversed().toIntArray()
+        }
+
+        val rowOrder = topoSort(rowConditions) ?: return arrayOf()
+        val colOrder = topoSort(colConditions) ?: return arrayOf()
+
+        val valToRow = mutableMapOf<Int, Int>()
+        rowOrder.forEachIndexed { i, num -> valToRow[num] = i }
+        val valToCol = mutableMapOf<Int, Int>()
+        colOrder.forEachIndexed { i, num -> valToCol[num] = i }
+
+        val res = Array(k) { IntArray(k) }
+        for (num in 1..k) {
+            val r = valToRow[num]!!
+            val c = valToCol[num]!!
+            res[r][c] = num
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func buildMatrix(_ k: Int, _ rowConditions: [[Int]], _ colConditions: [[Int]]) -> [[Int]] {
+        func topoSort(_ edges: [[Int]]) -> [Int]? {
+            var adj = [[Int]](repeating: [], count: k + 1)
+            for edge in edges {
+                adj[edge[0]].append(edge[1])
+            }
+
+            var visit = Set<Int>()
+            var path = Set<Int>()
+            var order = [Int]()
+
+            func dfs(_ src: Int) -> Bool {
+                if path.contains(src) { return false }
+                if visit.contains(src) { return true }
+                visit.insert(src)
+                path.insert(src)
+                for nei in adj[src] {
+                    if !dfs(nei) { return false }
+                }
+                path.remove(src)
+                order.append(src)
+                return true
+            }
+
+            for i in 1...k {
+                if !visit.contains(i) {
+                    if !dfs(i) { return nil }
+                }
+            }
+            return order.reversed()
+        }
+
+        guard let rowOrder = topoSort(rowConditions) else { return [] }
+        guard let colOrder = topoSort(colConditions) else { return [] }
+
+        var valToRow = [Int: Int]()
+        for (i, num) in rowOrder.enumerated() {
+            valToRow[num] = i
+        }
+        var valToCol = [Int: Int]()
+        for (i, num) in colOrder.enumerated() {
+            valToCol[num] = i
+        }
+
+        var res = [[Int]](repeating: [Int](repeating: 0, count: k), count: k)
+        for num in 1...k {
+            let r = valToRow[num]!
+            let c = valToCol[num]!
+            res[r][c] = num
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -653,6 +843,170 @@ public class Solution {
 
         if (idx != k) return new int[0];
         return order;
+    }
+}
+```
+
+```go
+func buildMatrix(k int, rowConditions [][]int, colConditions [][]int) [][]int {
+    topoSort := func(edges [][]int) []int {
+        indegree := make([]int, k+1)
+        adj := make([][]int, k+1)
+        for i := range adj {
+            adj[i] = []int{}
+        }
+        for _, edge := range edges {
+            adj[edge[0]] = append(adj[edge[0]], edge[1])
+            indegree[edge[1]]++
+        }
+
+        queue := []int{}
+        order := []int{}
+        for i := 1; i <= k; i++ {
+            if indegree[i] == 0 {
+                queue = append(queue, i)
+            }
+        }
+
+        for len(queue) > 0 {
+            node := queue[0]
+            queue = queue[1:]
+            order = append(order, node)
+            for _, nei := range adj[node] {
+                indegree[nei]--
+                if indegree[nei] == 0 {
+                    queue = append(queue, nei)
+                }
+            }
+        }
+
+        if len(order) != k {
+            return nil
+        }
+        return order
+    }
+
+    rowOrder := topoSort(rowConditions)
+    if rowOrder == nil {
+        return [][]int{}
+    }
+
+    colOrder := topoSort(colConditions)
+    if colOrder == nil {
+        return [][]int{}
+    }
+
+    res := make([][]int, k)
+    for i := range res {
+        res[i] = make([]int, k)
+    }
+    colIndex := make([]int, k+1)
+    for i := 0; i < k; i++ {
+        colIndex[colOrder[i]] = i
+    }
+    for i := 0; i < k; i++ {
+        res[i][colIndex[rowOrder[i]]] = rowOrder[i]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun buildMatrix(k: Int, rowConditions: Array<IntArray>, colConditions: Array<IntArray>): Array<IntArray> {
+        fun topoSort(edges: Array<IntArray>): IntArray? {
+            val indegree = IntArray(k + 1)
+            val adj = Array(k + 1) { mutableListOf<Int>() }
+            for (edge in edges) {
+                adj[edge[0]].add(edge[1])
+                indegree[edge[1]]++
+            }
+
+            val queue = ArrayDeque<Int>()
+            val order = mutableListOf<Int>()
+            for (i in 1..k) {
+                if (indegree[i] == 0) {
+                    queue.add(i)
+                }
+            }
+
+            while (queue.isNotEmpty()) {
+                val node = queue.removeFirst()
+                order.add(node)
+                for (nei in adj[node]) {
+                    indegree[nei]--
+                    if (indegree[nei] == 0) {
+                        queue.add(nei)
+                    }
+                }
+            }
+
+            return if (order.size == k) order.toIntArray() else null
+        }
+
+        val rowOrder = topoSort(rowConditions) ?: return arrayOf()
+        val colOrder = topoSort(colConditions) ?: return arrayOf()
+
+        val res = Array(k) { IntArray(k) }
+        val colIndex = IntArray(k + 1)
+        for (i in 0 until k) {
+            colIndex[colOrder[i]] = i
+        }
+        for (i in 0 until k) {
+            res[i][colIndex[rowOrder[i]]] = rowOrder[i]
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func buildMatrix(_ k: Int, _ rowConditions: [[Int]], _ colConditions: [[Int]]) -> [[Int]] {
+        func topoSort(_ edges: [[Int]]) -> [Int]? {
+            var indegree = [Int](repeating: 0, count: k + 1)
+            var adj = [[Int]](repeating: [], count: k + 1)
+            for edge in edges {
+                adj[edge[0]].append(edge[1])
+                indegree[edge[1]] += 1
+            }
+
+            var queue = [Int]()
+            var order = [Int]()
+            for i in 1...k {
+                if indegree[i] == 0 {
+                    queue.append(i)
+                }
+            }
+
+            var front = 0
+            while front < queue.count {
+                let node = queue[front]
+                front += 1
+                order.append(node)
+                for nei in adj[node] {
+                    indegree[nei] -= 1
+                    if indegree[nei] == 0 {
+                        queue.append(nei)
+                    }
+                }
+            }
+
+            return order.count == k ? order : nil
+        }
+
+        guard let rowOrder = topoSort(rowConditions) else { return [] }
+        guard let colOrder = topoSort(colConditions) else { return [] }
+
+        var res = [[Int]](repeating: [Int](repeating: 0, count: k), count: k)
+        var colIndex = [Int](repeating: 0, count: k + 1)
+        for i in 0..<k {
+            colIndex[colOrder[i]] = i
+        }
+        for i in 0..<k {
+            res[i][colIndex[rowOrder[i]]] = rowOrder[i]
+        }
+        return res
     }
 }
 ```

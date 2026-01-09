@@ -126,6 +126,80 @@ public class Solution {
 }
 ```
 
+```go
+func numSubseq(nums []int, target int) int {
+    MOD := 1000000007
+    n := len(nums)
+
+    var dfs func(maxi, mini, i int) int
+    dfs = func(maxi, mini, i int) int {
+        if i == n {
+            if mini != 1<<31-1 && (maxi+mini) <= target {
+                return 1
+            }
+            return 0
+        }
+
+        skip := dfs(maxi, mini, i+1)
+        newMaxi := maxi
+        if nums[i] > maxi {
+            newMaxi = nums[i]
+        }
+        newMini := mini
+        if nums[i] < mini {
+            newMini = nums[i]
+        }
+        include := dfs(newMaxi, newMini, i+1)
+        return (skip + include) % MOD
+    }
+
+    return dfs(-1<<31, 1<<31-1, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubseq(nums: IntArray, target: Int): Int {
+        val MOD = 1000000007
+
+        fun dfs(maxi: Int, mini: Int, i: Int): Int {
+            if (i == nums.size) {
+                return if (mini != Int.MAX_VALUE && (maxi + mini) <= target) 1 else 0
+            }
+
+            val skip = dfs(maxi, mini, i + 1)
+            val include = dfs(maxOf(maxi, nums[i]), minOf(mini, nums[i]), i + 1)
+            return ((skip.toLong() + include) % MOD).toInt()
+        }
+
+        return dfs(Int.MIN_VALUE, Int.MAX_VALUE, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubseq(_ nums: [Int], _ target: Int) -> Int {
+        let MOD = 1000000007
+
+        func dfs(_ maxi: Int, _ mini: Int, _ i: Int) -> Int {
+            if i == nums.count {
+                if mini != Int.max && (maxi + mini) <= target {
+                    return 1
+                }
+                return 0
+            }
+
+            let skip = dfs(maxi, mini, i + 1)
+            let include = dfs(max(maxi, nums[i]), min(mini, nums[i]), i + 1)
+            return (skip + include) % MOD
+        }
+
+        return dfs(Int.min, Int.max, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,6 +399,127 @@ public class Solution {
 }
 ```
 
+```go
+func numSubseq(nums []int, target int) int {
+    sort.Ints(nums)
+    MOD := 1000000007
+    res := 0
+
+    powMod := func(base, exp, mod int) int {
+        result := 1
+        b := base
+        for exp > 0 {
+            if exp&1 == 1 {
+                result = (result * b) % mod
+            }
+            b = (b * b) % mod
+            exp >>= 1
+        }
+        return result
+    }
+
+    for i := 0; i < len(nums); i++ {
+        if nums[i]*2 > target {
+            break
+        }
+
+        l, r := i, len(nums)-1
+        for l <= r {
+            mid := l + (r-l)/2
+            if nums[i]+nums[mid] <= target {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+
+        count := powMod(2, r-i, MOD)
+        res = (res + count) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubseq(nums: IntArray, target: Int): Int {
+        nums.sort()
+        val MOD = 1000000007
+        var res = 0L
+
+        fun powMod(base: Long, exp: Int, mod: Int): Long {
+            var result = 1L
+            var b = base
+            var e = exp
+            while (e > 0) {
+                if (e and 1 == 1) result = (result * b) % mod
+                b = (b * b) % mod
+                e = e shr 1
+            }
+            return result
+        }
+
+        for (i in nums.indices) {
+            if (nums[i] * 2 > target) break
+
+            var l = i
+            var r = nums.size - 1
+            while (l <= r) {
+                val mid = l + (r - l) / 2
+                if (nums[i] + nums[mid] <= target) l = mid + 1
+                else r = mid - 1
+            }
+
+            val count = powMod(2L, r - i, MOD)
+            res = (res + count) % MOD
+        }
+        return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubseq(_ nums: [Int], _ target: Int) -> Int {
+        let nums = nums.sorted()
+        let MOD = 1000000007
+        var res = 0
+
+        func powMod(_ base: Int, _ exp: Int, _ mod: Int) -> Int {
+            var result = 1
+            var b = base
+            var e = exp
+            while e > 0 {
+                if e & 1 == 1 {
+                    result = (result * b) % mod
+                }
+                b = (b * b) % mod
+                e >>= 1
+            }
+            return result
+        }
+
+        for i in 0..<nums.count {
+            if nums[i] * 2 > target { break }
+
+            var l = i, r = nums.count - 1
+            while l <= r {
+                let mid = l + (r - l) / 2
+                if nums[i] + nums[mid] <= target {
+                    l = mid + 1
+                } else {
+                    r = mid - 1
+                }
+            }
+
+            let count = powMod(2, r - i, MOD)
+            res = (res + count) % MOD
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -487,6 +682,107 @@ public class Solution {
 }
 ```
 
+```go
+func numSubseq(nums []int, target int) int {
+    sort.Ints(nums)
+    MOD := 1000000007
+    res := 0
+    r := len(nums) - 1
+
+    power := func(base, exp, mod int) int {
+        result := 1
+        b := base
+        for exp > 0 {
+            if exp&1 == 1 {
+                result = (result * b) % mod
+            }
+            b = (b * b) % mod
+            exp >>= 1
+        }
+        return result
+    }
+
+    for i := 0; i < len(nums); i++ {
+        for i <= r && nums[i]+nums[r] > target {
+            r--
+        }
+        if i <= r {
+            res = (res + power(2, r-i, MOD)) % MOD
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubseq(nums: IntArray, target: Int): Int {
+        nums.sort()
+        val MOD = 1000000007
+        var res = 0L
+        var r = nums.size - 1
+
+        fun power(base: Long, exp: Int, mod: Int): Long {
+            var result = 1L
+            var b = base
+            var e = exp
+            while (e > 0) {
+                if (e and 1 == 1) result = (result * b) % mod
+                b = (b * b) % mod
+                e = e shr 1
+            }
+            return result
+        }
+
+        for (i in nums.indices) {
+            while (i <= r && nums[i] + nums[r] > target) r--
+            if (i <= r) {
+                res = (res + power(2L, r - i, MOD)) % MOD
+            }
+        }
+
+        return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubseq(_ nums: [Int], _ target: Int) -> Int {
+        let nums = nums.sorted()
+        let MOD = 1000000007
+        var res = 0
+        var r = nums.count - 1
+
+        func power(_ base: Int, _ exp: Int, _ mod: Int) -> Int {
+            var result = 1
+            var b = base
+            var e = exp
+            while e > 0 {
+                if e & 1 == 1 {
+                    result = (result * b) % mod
+                }
+                b = (b * b) % mod
+                e >>= 1
+            }
+            return result
+        }
+
+        for i in 0..<nums.count {
+            while i <= r && nums[i] + nums[r] > target {
+                r -= 1
+            }
+            if i <= r {
+                res = (res + power(2, r - i, MOD)) % MOD
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,6 +930,91 @@ public class Solution {
         }
 
         return (int)res;
+    }
+}
+```
+
+```go
+func numSubseq(nums []int, target int) int {
+    sort.Ints(nums)
+    MOD := 1000000007
+    n := len(nums)
+    res := 0
+    l, r := 0, n-1
+
+    power := make([]int, n)
+    power[0] = 1
+    for i := 1; i < n; i++ {
+        power[i] = (power[i-1] * 2) % MOD
+    }
+
+    for l <= r {
+        if nums[l]+nums[r] <= target {
+            res = (res + power[r-l]) % MOD
+            l++
+        } else {
+            r--
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubseq(nums: IntArray, target: Int): Int {
+        nums.sort()
+        val MOD = 1000000007
+        val n = nums.size
+        var res = 0L
+        var l = 0
+        var r = n - 1
+
+        val power = LongArray(n)
+        power[0] = 1
+        for (i in 1 until n) {
+            power[i] = (power[i - 1] * 2) % MOD
+        }
+
+        while (l <= r) {
+            if (nums[l] + nums[r] <= target) {
+                res = (res + power[r - l]) % MOD
+                l++
+            } else {
+                r--
+            }
+        }
+
+        return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubseq(_ nums: [Int], _ target: Int) -> Int {
+        let nums = nums.sorted()
+        let MOD = 1000000007
+        let n = nums.count
+        var res = 0
+        var l = 0, r = n - 1
+
+        var power = [Int](repeating: 1, count: n)
+        for i in 1..<n {
+            power[i] = (power[i - 1] * 2) % MOD
+        }
+
+        while l <= r {
+            if nums[l] + nums[r] <= target {
+                res = (res + power[r - l]) % MOD
+                l += 1
+            } else {
+                r -= 1
+            }
+        }
+
+        return res
     }
 }
 ```

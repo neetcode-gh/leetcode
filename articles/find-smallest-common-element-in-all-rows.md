@@ -69,20 +69,111 @@ class Solution {
     smallestCommonElement(mat) {
         const count = new Array(10001).fill(0);
         const n = mat.length, m = mat[0].length;
-        
+
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < m; j++) {
                 count[mat[i][j]]++;
             }
         }
-        
+
         for (let k = 1; k <= 10000; k++) {
             if (count[k] === n) {
                 return k;
             }
         }
-        
+
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SmallestCommonElement(int[][] mat) {
+        int[] count = new int[10001];
+        int n = mat.Length, m = mat[0].Length;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                count[mat[i][j]]++;
+            }
+        }
+
+        for (int k = 1; k <= 10000; k++) {
+            if (count[k] == n) {
+                return k;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func smallestCommonElement(mat [][]int) int {
+    count := make([]int, 10001)
+    n, m := len(mat), len(mat[0])
+
+    for i := 0; i < n; i++ {
+        for j := 0; j < m; j++ {
+            count[mat[i][j]]++
+        }
+    }
+
+    for k := 1; k <= 10000; k++ {
+        if count[k] == n {
+            return k
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun smallestCommonElement(mat: Array<IntArray>): Int {
+        val count = IntArray(10001)
+        val n = mat.size
+        val m = mat[0].size
+
+        for (i in 0 until n) {
+            for (j in 0 until m) {
+                count[mat[i][j]]++
+            }
+        }
+
+        for (k in 1..10000) {
+            if (count[k] == n) {
+                return k
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestCommonElement(_ mat: [[Int]]) -> Int {
+        var count = [Int](repeating: 0, count: 10001)
+        let n = mat.count, m = mat[0].count
+
+        for i in 0..<n {
+            for j in 0..<m {
+                count[mat[i][j]] += 1
+            }
+        }
+
+        for k in 1...10000 {
+            if count[k] == n {
+                return k
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -154,7 +245,7 @@ class Solution {
     smallestCommonElement(mat) {
         const count = new Array(10001).fill(0);
         const n = mat.length, m = mat[0].length;
-        
+
         for (let j = 0; j < m; j++) {
             for (let i = 0; i < n; i++) {
                 count[mat[i][j]]++;
@@ -163,8 +254,87 @@ class Solution {
                 }
             }
         }
-        
+
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SmallestCommonElement(int[][] mat) {
+        int[] count = new int[10001];
+        int n = mat.Length, m = mat[0].Length;
+
+        for (int j = 0; j < m; j++) {
+            for (int i = 0; i < n; i++) {
+                count[mat[i][j]]++;
+                if (count[mat[i][j]] == n) {
+                    return mat[i][j];
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func smallestCommonElement(mat [][]int) int {
+    count := make([]int, 10001)
+    n, m := len(mat), len(mat[0])
+
+    for j := 0; j < m; j++ {
+        for i := 0; i < n; i++ {
+            count[mat[i][j]]++
+            if count[mat[i][j]] == n {
+                return mat[i][j]
+            }
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun smallestCommonElement(mat: Array<IntArray>): Int {
+        val count = IntArray(10001)
+        val n = mat.size
+        val m = mat[0].size
+
+        for (j in 0 until m) {
+            for (i in 0 until n) {
+                count[mat[i][j]]++
+                if (count[mat[i][j]] == n) {
+                    return mat[i][j]
+                }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestCommonElement(_ mat: [[Int]]) -> Int {
+        var count = [Int](repeating: 0, count: 10001)
+        let n = mat.count, m = mat[0].count
+
+        for j in 0..<m {
+            for i in 0..<n {
+                count[mat[i][j]] += 1
+                if count[mat[i][j]] == n {
+                    return mat[i][j]
+                }
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -268,7 +438,7 @@ class Solution {
      */
     smallestCommonElement(mat) {
         const n = mat.length, m = mat[0].length;
-        
+
         for (let j = 0; j < m; j++) {
             let found = true;
             for (let i = 1; i < n && found; i++) {
@@ -278,10 +448,10 @@ class Solution {
                 return mat[0][j];
             }
         }
-        
+
         return -1;
     }
-    
+
     /**
      * @param {number[]} arr
      * @param {number} target
@@ -300,6 +470,119 @@ class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SmallestCommonElement(int[][] mat) {
+        int n = mat.Length, m = mat[0].Length;
+
+        for (int j = 0; j < m; j++) {
+            bool found = true;
+            for (int i = 1; i < n && found; i++) {
+                found = Array.BinarySearch(mat[i], mat[0][j]) >= 0;
+            }
+            if (found) {
+                return mat[0][j];
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func smallestCommonElement(mat [][]int) int {
+    n, m := len(mat), len(mat[0])
+
+    for j := 0; j < m; j++ {
+        found := true
+        for i := 1; i < n && found; i++ {
+            found = binarySearch(mat[i], mat[0][j]) >= 0
+        }
+        if found {
+            return mat[0][j]
+        }
+    }
+
+    return -1
+}
+
+func binarySearch(arr []int, target int) int {
+    left, right := 0, len(arr)-1
+    for left <= right {
+        mid := (left + right) / 2
+        if arr[mid] == target {
+            return mid
+        } else if arr[mid] < target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun smallestCommonElement(mat: Array<IntArray>): Int {
+        val n = mat.size
+        val m = mat[0].size
+
+        for (j in 0 until m) {
+            var found = true
+            var i = 1
+            while (i < n && found) {
+                found = mat[i].binarySearch(mat[0][j]) >= 0
+                i++
+            }
+            if (found) {
+                return mat[0][j]
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestCommonElement(_ mat: [[Int]]) -> Int {
+        let n = mat.count, m = mat[0].count
+
+        for j in 0..<m {
+            var found = true
+            var i = 1
+            while i < n && found {
+                found = binarySearch(mat[i], mat[0][j]) >= 0
+                i += 1
+            }
+            if found {
+                return mat[0][j]
+            }
+        }
+
+        return -1
+    }
+
+    private func binarySearch(_ arr: [Int], _ target: Int) -> Int {
+        var left = 0, right = arr.count - 1
+        while left <= right {
+            let mid = (left + right) / 2
+            if arr[mid] == target {
+                return mid
+            } else if arr[mid] < target {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return -1
     }
 }
 ```
@@ -407,7 +690,7 @@ class Solution {
     smallestCommonElement(mat) {
         const n = mat.length, m = mat[0].length;
         const pos = new Array(n).fill(0);
-        
+
         for (let j = 0; j < m; j++) {
             let found = true;
             for (let i = 1; i < n && found; i++) {
@@ -424,10 +707,10 @@ class Solution {
                 return mat[0][j];
             }
         }
-        
+
         return -1;
     }
-    
+
     /**
      * @param {number[]} arr
      * @param {number} fromIndex
@@ -448,6 +731,167 @@ class Solution {
             }
         }
         return -(left + 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SmallestCommonElement(int[][] mat) {
+        int n = mat.Length, m = mat[0].Length;
+        int[] pos = new int[n];
+
+        for (int j = 0; j < m; j++) {
+            bool found = true;
+            for (int i = 1; i < n && found; i++) {
+                pos[i] = Array.BinarySearch(mat[i], pos[i], m - pos[i], mat[0][j]);
+                if (pos[i] < 0) {
+                    found = false;
+                    pos[i] = ~pos[i];
+                    if (pos[i] >= m) {
+                        return -1;
+                    }
+                }
+            }
+            if (found) {
+                return mat[0][j];
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func smallestCommonElement(mat [][]int) int {
+    n, m := len(mat), len(mat[0])
+    pos := make([]int, n)
+
+    for j := 0; j < m; j++ {
+        found := true
+        for i := 1; i < n && found; i++ {
+            pos[i] = binarySearchRange(mat[i], pos[i], m, mat[0][j])
+            if pos[i] < 0 {
+                found = false
+                pos[i] = -pos[i] - 1
+                if pos[i] >= m {
+                    return -1
+                }
+            }
+        }
+        if found {
+            return mat[0][j]
+        }
+    }
+
+    return -1
+}
+
+func binarySearchRange(arr []int, fromIndex, toIndex, target int) int {
+    left, right := fromIndex, toIndex-1
+    for left <= right {
+        mid := (left + right) / 2
+        if arr[mid] == target {
+            return mid
+        } else if arr[mid] < target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+    return -(left + 1)
+}
+```
+
+```kotlin
+class Solution {
+    fun smallestCommonElement(mat: Array<IntArray>): Int {
+        val n = mat.size
+        val m = mat[0].size
+        val pos = IntArray(n)
+
+        for (j in 0 until m) {
+            var found = true
+            var i = 1
+            while (i < n && found) {
+                pos[i] = binarySearchRange(mat[i], pos[i], m, mat[0][j])
+                if (pos[i] < 0) {
+                    found = false
+                    pos[i] = -pos[i] - 1
+                    if (pos[i] >= m) {
+                        return -1
+                    }
+                }
+                i++
+            }
+            if (found) {
+                return mat[0][j]
+            }
+        }
+
+        return -1
+    }
+
+    private fun binarySearchRange(arr: IntArray, fromIndex: Int, toIndex: Int, target: Int): Int {
+        var left = fromIndex
+        var right = toIndex - 1
+        while (left <= right) {
+            val mid = (left + right) / 2
+            if (arr[mid] == target) {
+                return mid
+            } else if (arr[mid] < target) {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return -(left + 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestCommonElement(_ mat: [[Int]]) -> Int {
+        let n = mat.count, m = mat[0].count
+        var pos = [Int](repeating: 0, count: n)
+
+        for j in 0..<m {
+            var found = true
+            var i = 1
+            while i < n && found {
+                pos[i] = binarySearchRange(mat[i], pos[i], m, mat[0][j])
+                if pos[i] < 0 {
+                    found = false
+                    pos[i] = -pos[i] - 1
+                    if pos[i] >= m {
+                        return -1
+                    }
+                }
+                i += 1
+            }
+            if found {
+                return mat[0][j]
+            }
+        }
+
+        return -1
+    }
+
+    private func binarySearchRange(_ arr: [Int], _ fromIndex: Int, _ toIndex: Int, _ target: Int) -> Int {
+        var left = fromIndex, right = toIndex - 1
+        while left <= right {
+            let mid = (left + right) / 2
+            if arr[mid] == target {
+                return mid
+            } else if arr[mid] < target {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return -(left + 1)
     }
 }
 ```
@@ -542,7 +986,7 @@ class Solution {
         const n = mat.length, m = mat[0].length;
         const pos = new Array(n).fill(0);
         let cur_max = 0, cnt = 0;
-        
+
         while (true) {
             for (let i = 0; i < n; i++) {
                 while (pos[i] < m && mat[i][pos[i]] < cur_max) {
@@ -558,6 +1002,123 @@ class Solution {
                     cnt++;
                     if (cnt === n) {
                         return cur_max;
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SmallestCommonElement(int[][] mat) {
+        int n = mat.Length, m = mat[0].Length;
+        int[] pos = new int[n];
+        int curMax = 0, cnt = 0;
+
+        while (true) {
+            for (int i = 0; i < n; i++) {
+                while (pos[i] < m && mat[i][pos[i]] < curMax) {
+                    pos[i]++;
+                }
+                if (pos[i] >= m) {
+                    return -1;
+                }
+                if (mat[i][pos[i]] != curMax) {
+                    cnt = 1;
+                    curMax = mat[i][pos[i]];
+                } else if (++cnt == n) {
+                    return curMax;
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+func smallestCommonElement(mat [][]int) int {
+    n, m := len(mat), len(mat[0])
+    pos := make([]int, n)
+    curMax, cnt := 0, 0
+
+    for {
+        for i := 0; i < n; i++ {
+            for pos[i] < m && mat[i][pos[i]] < curMax {
+                pos[i]++
+            }
+            if pos[i] >= m {
+                return -1
+            }
+            if mat[i][pos[i]] != curMax {
+                cnt = 1
+                curMax = mat[i][pos[i]]
+            } else {
+                cnt++
+                if cnt == n {
+                    return curMax
+                }
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun smallestCommonElement(mat: Array<IntArray>): Int {
+        val n = mat.size
+        val m = mat[0].size
+        val pos = IntArray(n)
+        var curMax = 0
+        var cnt = 0
+
+        while (true) {
+            for (i in 0 until n) {
+                while (pos[i] < m && mat[i][pos[i]] < curMax) {
+                    pos[i]++
+                }
+                if (pos[i] >= m) {
+                    return -1
+                }
+                if (mat[i][pos[i]] != curMax) {
+                    cnt = 1
+                    curMax = mat[i][pos[i]]
+                } else {
+                    cnt++
+                    if (cnt == n) {
+                        return curMax
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func smallestCommonElement(_ mat: [[Int]]) -> Int {
+        let n = mat.count, m = mat[0].count
+        var pos = [Int](repeating: 0, count: n)
+        var curMax = 0, cnt = 0
+
+        while true {
+            for i in 0..<n {
+                while pos[i] < m && mat[i][pos[i]] < curMax {
+                    pos[i] += 1
+                }
+                if pos[i] >= m {
+                    return -1
+                }
+                if mat[i][pos[i]] != curMax {
+                    cnt = 1
+                    curMax = mat[i][pos[i]]
+                } else {
+                    cnt += 1
+                    if cnt == n {
+                        return curMax
                     }
                 }
             }

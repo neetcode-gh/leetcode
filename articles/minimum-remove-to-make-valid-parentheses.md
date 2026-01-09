@@ -161,6 +161,106 @@ public class Solution {
 }
 ```
 
+```go
+func minRemoveToMakeValid(s string) string {
+    res := []byte{}
+    cnt := 0
+
+    for i := 0; i < len(s); i++ {
+        c := s[i]
+        if c == '(' {
+            res = append(res, c)
+            cnt++
+        } else if c == ')' && cnt > 0 {
+            res = append(res, c)
+            cnt--
+        } else if c != ')' {
+            res = append(res, c)
+        }
+    }
+
+    filtered := []byte{}
+    for i := len(res) - 1; i >= 0; i-- {
+        c := res[i]
+        if c == '(' && cnt > 0 {
+            cnt--
+        } else {
+            filtered = append(filtered, c)
+        }
+    }
+
+    for i, j := 0, len(filtered)-1; i < j; i, j = i+1, j-1 {
+        filtered[i], filtered[j] = filtered[j], filtered[i]
+    }
+    return string(filtered)
+}
+```
+
+```kotlin
+class Solution {
+    fun minRemoveToMakeValid(s: String): String {
+        val res = mutableListOf<Char>()
+        var cnt = 0
+
+        for (c in s) {
+            if (c == '(') {
+                res.add(c)
+                cnt++
+            } else if (c == ')' && cnt > 0) {
+                res.add(c)
+                cnt--
+            } else if (c != ')') {
+                res.add(c)
+            }
+        }
+
+        val filtered = mutableListOf<Char>()
+        for (i in res.size - 1 downTo 0) {
+            val c = res[i]
+            if (c == '(' && cnt > 0) {
+                cnt--
+            } else {
+                filtered.add(c)
+            }
+        }
+
+        return filtered.reversed().joinToString("")
+    }
+}
+```
+
+```swift
+class Solution {
+    func minRemoveToMakeValid(_ s: String) -> String {
+        var res = [Character]()
+        var cnt = 0
+
+        for c in s {
+            if c == "(" {
+                res.append(c)
+                cnt += 1
+            } else if c == ")" && cnt > 0 {
+                res.append(c)
+                cnt -= 1
+            } else if c != ")" {
+                res.append(c)
+            }
+        }
+
+        var filtered = [Character]()
+        for c in res.reversed() {
+            if c == "(" && cnt > 0 {
+                cnt -= 1
+            } else {
+                filtered.append(c)
+            }
+        }
+
+        return String(filtered.reversed())
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,6 +428,95 @@ public class Solution {
 }
 ```
 
+```go
+func minRemoveToMakeValid(s string) string {
+    arr := []byte(s)
+    cnt := 0
+
+    for i := 0; i < len(s); i++ {
+        if s[i] == '(' {
+            cnt++
+        } else if s[i] == ')' && cnt > 0 {
+            cnt--
+        } else if s[i] == ')' {
+            arr[i] = 0
+        }
+    }
+
+    res := []byte{}
+    for i := len(arr) - 1; i >= 0; i-- {
+        if arr[i] == '(' && cnt > 0 {
+            cnt--
+        } else if arr[i] != 0 {
+            res = append(res, arr[i])
+        }
+    }
+
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun minRemoveToMakeValid(s: String): String {
+        val arr = s.toCharArray()
+        var cnt = 0
+
+        for (i in s.indices) {
+            when {
+                s[i] == '(' -> cnt++
+                s[i] == ')' && cnt > 0 -> cnt--
+                s[i] == ')' -> arr[i] = '\u0000'
+            }
+        }
+
+        val res = StringBuilder()
+        for (i in arr.size - 1 downTo 0) {
+            if (arr[i] == '(' && cnt > 0) {
+                cnt--
+            } else if (arr[i] != '\u0000') {
+                res.append(arr[i])
+            }
+        }
+
+        return res.reverse().toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func minRemoveToMakeValid(_ s: String) -> String {
+        var arr = Array(s)
+        var cnt = 0
+
+        for i in 0..<arr.count {
+            if arr[i] == "(" {
+                cnt += 1
+            } else if arr[i] == ")" && cnt > 0 {
+                cnt -= 1
+            } else if arr[i] == ")" {
+                arr[i] = "\0"
+            }
+        }
+
+        var res = [Character]()
+        for i in stride(from: arr.count - 1, through: 0, by: -1) {
+            if arr[i] == "(" && cnt > 0 {
+                cnt -= 1
+            } else if arr[i] != "\0" {
+                res.append(arr[i])
+            }
+        }
+
+        return String(res.reversed())
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -491,6 +680,92 @@ public class Solution {
 }
 ```
 
+```go
+func minRemoveToMakeValid(s string) string {
+    arr := []byte(s)
+    stack := []int{}
+
+    for i := 0; i < len(arr); i++ {
+        if arr[i] == '(' {
+            stack = append(stack, i)
+        } else if arr[i] == ')' {
+            if len(stack) > 0 {
+                stack = stack[:len(stack)-1]
+            } else {
+                arr[i] = 0
+            }
+        }
+    }
+
+    for len(stack) > 0 {
+        arr[stack[len(stack)-1]] = 0
+        stack = stack[:len(stack)-1]
+    }
+
+    result := []byte{}
+    for _, c := range arr {
+        if c != 0 {
+            result = append(result, c)
+        }
+    }
+    return string(result)
+}
+```
+
+```kotlin
+class Solution {
+    fun minRemoveToMakeValid(s: String): String {
+        val arr = s.toCharArray()
+        val stack = ArrayDeque<Int>()
+
+        for (i in arr.indices) {
+            if (arr[i] == '(') {
+                stack.addLast(i)
+            } else if (arr[i] == ')') {
+                if (stack.isNotEmpty()) {
+                    stack.removeLast()
+                } else {
+                    arr[i] = '\u0000'
+                }
+            }
+        }
+
+        while (stack.isNotEmpty()) {
+            arr[stack.removeLast()] = '\u0000'
+        }
+
+        return arr.filter { it != '\u0000' }.joinToString("")
+    }
+}
+```
+
+```swift
+class Solution {
+    func minRemoveToMakeValid(_ s: String) -> String {
+        var arr = Array(s)
+        var stack = [Int]()
+
+        for i in 0..<arr.count {
+            if arr[i] == "(" {
+                stack.append(i)
+            } else if arr[i] == ")" {
+                if !stack.isEmpty {
+                    stack.removeLast()
+                } else {
+                    arr[i] = "\0"
+                }
+            }
+        }
+
+        while !stack.isEmpty {
+            arr[stack.removeLast()] = "\0"
+        }
+
+        return String(arr.filter { $0 != "\0" })
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -633,6 +908,85 @@ public class Solution {
         }
 
         return res.ToString();
+    }
+}
+```
+
+```go
+func minRemoveToMakeValid(s string) string {
+    openCnt, closeCnt := 0, 0
+    for i := 0; i < len(s); i++ {
+        if s[i] == ')' {
+            closeCnt++
+        }
+    }
+
+    res := []byte{}
+    for i := 0; i < len(s); i++ {
+        c := s[i]
+        if c == '(' {
+            if openCnt == closeCnt {
+                continue
+            }
+            openCnt++
+        } else if c == ')' {
+            closeCnt--
+            if openCnt == 0 {
+                continue
+            }
+            openCnt--
+        }
+        res = append(res, c)
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun minRemoveToMakeValid(s: String): String {
+        var openCnt = 0
+        var closeCnt = s.count { it == ')' }
+
+        val res = StringBuilder()
+        for (c in s) {
+            if (c == '(') {
+                if (openCnt == closeCnt) continue
+                openCnt++
+            } else if (c == ')') {
+                closeCnt--
+                if (openCnt == 0) continue
+                openCnt--
+            }
+            res.append(c)
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func minRemoveToMakeValid(_ s: String) -> String {
+        var openCnt = 0
+        var closeCnt = s.filter { $0 == ")" }.count
+
+        var res = [Character]()
+        for c in s {
+            if c == "(" {
+                if openCnt == closeCnt { continue }
+                openCnt += 1
+            } else if c == ")" {
+                closeCnt -= 1
+                if openCnt == 0 { continue }
+                openCnt -= 1
+            }
+            res.append(c)
+        }
+
+        return String(res)
     }
 }
 ```

@@ -138,6 +138,127 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+    private Dictionary<char, List<char>> follows = new Dictionary<char, List<char>> {
+        {'a', new List<char>{'e'}},
+        {'e', new List<char>{'a', 'i'}},
+        {'i', new List<char>{'a', 'e', 'o', 'u'}},
+        {'o', new List<char>{'i', 'u'}},
+        {'u', new List<char>{'a'}}
+    };
+
+    public int CountVowelPermutation(int n) {
+        int res = 0;
+        foreach (char vowel in "aeiou") {
+            res = (res + Dfs(1, vowel, n)) % MOD;
+        }
+        return res;
+    }
+
+    private int Dfs(int i, char v, int n) {
+        if (i == n) return 1;
+        int total = 0;
+        foreach (char next in follows[v]) {
+            total = (total + Dfs(i + 1, next, n)) % MOD;
+        }
+        return total;
+    }
+}
+```
+
+```go
+func countVowelPermutation(n int) int {
+    MOD := int(1e9 + 7)
+    follows := map[byte][]byte{
+        'a': {'e'},
+        'e': {'a', 'i'},
+        'i': {'a', 'e', 'o', 'u'},
+        'o': {'i', 'u'},
+        'u': {'a'},
+    }
+
+    var dfs func(i int, v byte) int
+    dfs = func(i int, v byte) int {
+        if i == n {
+            return 1
+        }
+        total := 0
+        for _, next := range follows[v] {
+            total = (total + dfs(i+1, next)) % MOD
+        }
+        return total
+    }
+
+    res := 0
+    for _, vowel := range "aeiou" {
+        res = (res + dfs(1, byte(vowel))) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1_000_000_007
+    private val follows = mapOf(
+        'a' to listOf('e'),
+        'e' to listOf('a', 'i'),
+        'i' to listOf('a', 'e', 'o', 'u'),
+        'o' to listOf('i', 'u'),
+        'u' to listOf('a')
+    )
+
+    fun countVowelPermutation(n: Int): Int {
+        var res = 0
+        for (vowel in "aeiou") {
+            res = (res + dfs(1, vowel, n)) % MOD
+        }
+        return res
+    }
+
+    private fun dfs(i: Int, v: Char, n: Int): Int {
+        if (i == n) return 1
+        var total = 0
+        for (next in follows[v]!!) {
+            total = (total + dfs(i + 1, next, n)) % MOD
+        }
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    private let MOD = 1_000_000_007
+    private let follows: [Character: [Character]] = [
+        "a": ["e"],
+        "e": ["a", "i"],
+        "i": ["a", "e", "o", "u"],
+        "o": ["i", "u"],
+        "u": ["a"]
+    ]
+
+    func countVowelPermutation(_ n: Int) -> Int {
+        var res = 0
+        for vowel in "aeiou" {
+            res = (res + dfs(1, vowel, n)) % MOD
+        }
+        return res
+    }
+
+    private func dfs(_ i: Int, _ v: Character, _ n: Int) -> Int {
+        if i == n { return 1 }
+        var total = 0
+        for next in follows[v]! {
+            total = (total + dfs(i + 1, next, n)) % MOD
+        }
+        return total
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +420,161 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+    private int[][] follows = new int[][] {
+        new int[] {1},          // 'a' -> 'e'
+        new int[] {0, 2},       // 'e' -> 'a', 'i'
+        new int[] {0, 1, 3, 4}, // 'i' -> 'a', 'e', 'o', 'u'
+        new int[] {2, 4},       // 'o' -> 'i', 'u'
+        new int[] {0}           // 'u' -> 'a'
+    };
+    private int[,] dp;
+
+    public int CountVowelPermutation(int n) {
+        dp = new int[n, 5];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < 5; j++) {
+                dp[i, j] = -1;
+            }
+        }
+
+        int res = 0;
+        for (int vowel = 0; vowel < 5; vowel++) {
+            res = (res + Dfs(1, vowel, n)) % MOD;
+        }
+        return res;
+    }
+
+    private int Dfs(int i, int v, int n) {
+        if (i == n) return 1;
+        if (dp[i, v] != -1) return dp[i, v];
+
+        int total = 0;
+        foreach (int next in follows[v]) {
+            total = (total + Dfs(i + 1, next, n)) % MOD;
+        }
+        return dp[i, v] = total;
+    }
+}
+```
+
+```go
+func countVowelPermutation(n int) int {
+    MOD := int(1e9 + 7)
+    follows := [][]int{
+        {1},          // 'a' -> 'e'
+        {0, 2},       // 'e' -> 'a', 'i'
+        {0, 1, 3, 4}, // 'i' -> 'a', 'e', 'o', 'u'
+        {2, 4},       // 'o' -> 'i', 'u'
+        {0},          // 'u' -> 'a'
+    }
+
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, 5)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, v int) int
+    dfs = func(i, v int) int {
+        if i == n {
+            return 1
+        }
+        if dp[i][v] != -1 {
+            return dp[i][v]
+        }
+        total := 0
+        for _, next := range follows[v] {
+            total = (total + dfs(i+1, next)) % MOD
+        }
+        dp[i][v] = total
+        return total
+    }
+
+    res := 0
+    for vowel := 0; vowel < 5; vowel++ {
+        res = (res + dfs(1, vowel)) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1_000_000_007
+    private val follows = arrayOf(
+        intArrayOf(1),          // 'a' -> 'e'
+        intArrayOf(0, 2),       // 'e' -> 'a', 'i'
+        intArrayOf(0, 1, 3, 4), // 'i' -> 'a', 'e', 'o', 'u'
+        intArrayOf(2, 4),       // 'o' -> 'i', 'u'
+        intArrayOf(0)           // 'u' -> 'a'
+    )
+    private lateinit var dp: Array<IntArray>
+
+    fun countVowelPermutation(n: Int): Int {
+        dp = Array(n) { IntArray(5) { -1 } }
+
+        var res = 0
+        for (vowel in 0 until 5) {
+            res = (res + dfs(1, vowel, n)) % MOD
+        }
+        return res
+    }
+
+    private fun dfs(i: Int, v: Int, n: Int): Int {
+        if (i == n) return 1
+        if (dp[i][v] != -1) return dp[i][v]
+
+        var total = 0
+        for (next in follows[v]) {
+            total = (total + dfs(i + 1, next, n)) % MOD
+        }
+        dp[i][v] = total
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    private let MOD = 1_000_000_007
+    private let follows = [
+        [1],          // 'a' -> 'e'
+        [0, 2],       // 'e' -> 'a', 'i'
+        [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+        [2, 4],       // 'o' -> 'i', 'u'
+        [0]           // 'u' -> 'a'
+    ]
+    private var dp: [[Int]] = []
+
+    func countVowelPermutation(_ n: Int) -> Int {
+        dp = Array(repeating: Array(repeating: -1, count: 5), count: n)
+
+        var res = 0
+        for vowel in 0..<5 {
+            res = (res + dfs(1, vowel, n)) % MOD
+        }
+        return res
+    }
+
+    private func dfs(_ i: Int, _ v: Int, _ n: Int) -> Int {
+        if i == n { return 1 }
+        if dp[i][v] != -1 { return dp[i][v] }
+
+        var total = 0
+        for next in follows[v] {
+            total = (total + dfs(i + 1, next, n)) % MOD
+        }
+        dp[i][v] = total
+        return total
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -432,6 +708,151 @@ class Solution {
         }
 
         return dp[n].reduce((sum, val) => (sum + val) % MOD, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+
+    public int CountVowelPermutation(int n) {
+        int[][] dp = new int[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            dp[i] = new int[5];
+        }
+
+        int[][] follows = new int[][] {
+            new int[] {1},          // 'a' -> 'e'
+            new int[] {0, 2},       // 'e' -> 'a', 'i'
+            new int[] {0, 1, 3, 4}, // 'i' -> 'a', 'e', 'o', 'u'
+            new int[] {2, 4},       // 'o' -> 'i', 'u'
+            new int[] {0}           // 'u' -> 'a'
+        };
+
+        for (int v = 0; v < 5; v++) {
+            dp[1][v] = 1;
+        }
+
+        for (int i = 2; i <= n; i++) {
+            for (int v = 0; v < 5; v++) {
+                foreach (int nextV in follows[v]) {
+                    dp[i][v] = (dp[i][v] + dp[i - 1][nextV]) % MOD;
+                }
+            }
+        }
+
+        int result = 0;
+        for (int v = 0; v < 5; v++) {
+            result = (result + dp[n][v]) % MOD;
+        }
+        return result;
+    }
+}
+```
+
+```go
+func countVowelPermutation(n int) int {
+    MOD := int(1e9 + 7)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, 5)
+    }
+
+    follows := [][]int{
+        {1},          // 'a' -> 'e'
+        {0, 2},       // 'e' -> 'a', 'i'
+        {0, 1, 3, 4}, // 'i' -> 'a', 'e', 'o', 'u'
+        {2, 4},       // 'o' -> 'i', 'u'
+        {0},          // 'u' -> 'a'
+    }
+
+    for v := 0; v < 5; v++ {
+        dp[1][v] = 1
+    }
+
+    for i := 2; i <= n; i++ {
+        for v := 0; v < 5; v++ {
+            for _, nextV := range follows[v] {
+                dp[i][v] = (dp[i][v] + dp[i-1][nextV]) % MOD
+            }
+        }
+    }
+
+    result := 0
+    for v := 0; v < 5; v++ {
+        result = (result + dp[n][v]) % MOD
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun countVowelPermutation(n: Int): Int {
+        val MOD = 1_000_000_007
+        val dp = Array(n + 1) { IntArray(5) }
+
+        val follows = arrayOf(
+            intArrayOf(1),          // 'a' -> 'e'
+            intArrayOf(0, 2),       // 'e' -> 'a', 'i'
+            intArrayOf(0, 1, 3, 4), // 'i' -> 'a', 'e', 'o', 'u'
+            intArrayOf(2, 4),       // 'o' -> 'i', 'u'
+            intArrayOf(0)           // 'u' -> 'a'
+        )
+
+        for (v in 0 until 5) {
+            dp[1][v] = 1
+        }
+
+        for (i in 2..n) {
+            for (v in 0 until 5) {
+                for (nextV in follows[v]) {
+                    dp[i][v] = (dp[i][v] + dp[i - 1][nextV]) % MOD
+                }
+            }
+        }
+
+        var result = 0
+        for (v in 0 until 5) {
+            result = (result + dp[n][v]) % MOD
+        }
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func countVowelPermutation(_ n: Int) -> Int {
+        let MOD = 1_000_000_007
+        var dp = Array(repeating: Array(repeating: 0, count: 5), count: n + 1)
+
+        let follows = [
+            [1],          // 'a' -> 'e'
+            [0, 2],       // 'e' -> 'a', 'i'
+            [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            [2, 4],       // 'o' -> 'i', 'u'
+            [0]           // 'u' -> 'a'
+        ]
+
+        for v in 0..<5 {
+            dp[1][v] = 1
+        }
+
+        for i in 2...n {
+            for v in 0..<5 {
+                for nextV in follows[v] {
+                    dp[i][v] = (dp[i][v] + dp[i - 1][nextV]) % MOD
+                }
+            }
+        }
+
+        var result = 0
+        for v in 0..<5 {
+            result = (result + dp[n][v]) % MOD
+        }
+        return result
     }
 }
 ```
@@ -571,6 +992,137 @@ class Solution {
         }
 
         return dp.reduce((sum, count) => (sum + count) % MOD, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+
+    public int CountVowelPermutation(int n) {
+        int[][] follows = new int[][] {
+            new int[] {1},          // 'a' -> 'e'
+            new int[] {0, 2},       // 'e' -> 'a', 'i'
+            new int[] {0, 1, 3, 4}, // 'i' -> 'a', 'e', 'o', 'u'
+            new int[] {2, 4},       // 'o' -> 'i', 'u'
+            new int[] {0}           // 'u' -> 'a'
+        };
+
+        int[] dp = {1, 1, 1, 1, 1};
+
+        for (int i = 2; i <= n; i++) {
+            int[] nextDp = new int[5];
+            for (int v = 0; v < 5; v++) {
+                foreach (int nextV in follows[v]) {
+                    nextDp[v] = (nextDp[v] + dp[nextV]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        int result = 0;
+        foreach (int count in dp) {
+            result = (result + count) % MOD;
+        }
+        return result;
+    }
+}
+```
+
+```go
+func countVowelPermutation(n int) int {
+    MOD := int(1e9 + 7)
+    follows := [][]int{
+        {1},          // 'a' -> 'e'
+        {0, 2},       // 'e' -> 'a', 'i'
+        {0, 1, 3, 4}, // 'i' -> 'a', 'e', 'o', 'u'
+        {2, 4},       // 'o' -> 'i', 'u'
+        {0},          // 'u' -> 'a'
+    }
+
+    dp := []int{1, 1, 1, 1, 1}
+
+    for i := 2; i <= n; i++ {
+        nextDp := make([]int, 5)
+        for v := 0; v < 5; v++ {
+            for _, nextV := range follows[v] {
+                nextDp[v] = (nextDp[v] + dp[nextV]) % MOD
+            }
+        }
+        dp = nextDp
+    }
+
+    result := 0
+    for _, count := range dp {
+        result = (result + count) % MOD
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun countVowelPermutation(n: Int): Int {
+        val MOD = 1_000_000_007
+        val follows = arrayOf(
+            intArrayOf(1),          // 'a' -> 'e'
+            intArrayOf(0, 2),       // 'e' -> 'a', 'i'
+            intArrayOf(0, 1, 3, 4), // 'i' -> 'a', 'e', 'o', 'u'
+            intArrayOf(2, 4),       // 'o' -> 'i', 'u'
+            intArrayOf(0)           // 'u' -> 'a'
+        )
+
+        var dp = intArrayOf(1, 1, 1, 1, 1)
+
+        for (i in 2..n) {
+            val nextDp = IntArray(5)
+            for (v in 0 until 5) {
+                for (nextV in follows[v]) {
+                    nextDp[v] = (nextDp[v] + dp[nextV]) % MOD
+                }
+            }
+            dp = nextDp
+        }
+
+        var result = 0
+        for (count in dp) {
+            result = (result + count) % MOD
+        }
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func countVowelPermutation(_ n: Int) -> Int {
+        let MOD = 1_000_000_007
+        let follows = [
+            [1],          // 'a' -> 'e'
+            [0, 2],       // 'e' -> 'a', 'i'
+            [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            [2, 4],       // 'o' -> 'i', 'u'
+            [0]           // 'u' -> 'a'
+        ]
+
+        var dp = [1, 1, 1, 1, 1]
+
+        for _ in 2...n {
+            var nextDp = [0, 0, 0, 0, 0]
+            for v in 0..<5 {
+                for nextV in follows[v] {
+                    nextDp[v] = (nextDp[v] + dp[nextV]) % MOD
+                }
+            }
+            dp = nextDp
+        }
+
+        var result = 0
+        for count in dp {
+            result = (result + count) % MOD
+        }
+        return result
     }
 }
 ```
@@ -849,6 +1401,285 @@ class Solution {
             }
         }
         return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+
+    private class M {
+        public long[,] a;
+
+        public M(int n) {
+            a = new long[n, n];
+        }
+
+        public M Multiply(M other) {
+            int n = a.GetLength(0);
+            M product = new M(n);
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    for (int k = 0; k < n; k++) {
+                        product.a[i, k] = (product.a[i, k] + a[i, j] * other.a[j, k]) % MOD;
+                    }
+                }
+            }
+            return product;
+        }
+    }
+
+    private M MatrixExpo(M baseM, int exp) {
+        int n = baseM.a.GetLength(0);
+        M result = new M(n);
+        for (int i = 0; i < n; i++) {
+            result.a[i, i] = 1;
+        }
+        while (exp > 0) {
+            if (exp % 2 == 1) {
+                result = result.Multiply(baseM);
+            }
+            baseM = baseM.Multiply(baseM);
+            exp /= 2;
+        }
+        return result;
+    }
+
+    public int CountVowelPermutation(int n) {
+        int[,] follows = {
+            {0, 1, 0, 0, 0},  // 'a' -> 'e'
+            {1, 0, 1, 0, 0},  // 'e' -> 'a', 'i'
+            {1, 1, 0, 1, 1},  // 'i' -> 'a', 'e', 'o', 'u'
+            {0, 0, 1, 0, 1},  // 'o' -> 'i', 'u'
+            {1, 0, 0, 0, 0}   // 'u' -> 'a'
+        };
+
+        M baseM = new M(5);
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                baseM.a[i, j] = follows[i, j];
+            }
+        }
+
+        M result = MatrixExpo(baseM, n - 1);
+
+        long ans = 0;
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
+                ans = (ans + result.a[i, j]) % MOD;
+            }
+        }
+        return (int)ans;
+    }
+}
+```
+
+```go
+func countVowelPermutation(n int) int {
+    MOD := int64(1e9 + 7)
+
+    type M struct {
+        a [][]int64
+    }
+
+    newMatrix := func(size int) M {
+        a := make([][]int64, size)
+        for i := range a {
+            a[i] = make([]int64, size)
+        }
+        return M{a: a}
+    }
+
+    multiply := func(m1, m2 M) M {
+        size := len(m1.a)
+        product := newMatrix(size)
+        for i := 0; i < size; i++ {
+            for j := 0; j < size; j++ {
+                for k := 0; k < size; k++ {
+                    product.a[i][k] = (product.a[i][k] + m1.a[i][j]*m2.a[j][k]) % MOD
+                }
+            }
+        }
+        return product
+    }
+
+    matrixExpo := func(base M, exp int) M {
+        size := len(base.a)
+        result := newMatrix(size)
+        for i := 0; i < size; i++ {
+            result.a[i][i] = 1
+        }
+        for exp > 0 {
+            if exp%2 == 1 {
+                result = multiply(result, base)
+            }
+            base = multiply(base, base)
+            exp /= 2
+        }
+        return result
+    }
+
+    follows := [][]int64{
+        {0, 1, 0, 0, 0}, // 'a' -> 'e'
+        {1, 0, 1, 0, 0}, // 'e' -> 'a', 'i'
+        {1, 1, 0, 1, 1}, // 'i' -> 'a', 'e', 'o', 'u'
+        {0, 0, 1, 0, 1}, // 'o' -> 'i', 'u'
+        {1, 0, 0, 0, 0}, // 'u' -> 'a'
+    }
+
+    base := newMatrix(5)
+    base.a = follows
+
+    result := matrixExpo(base, n-1)
+
+    var ans int64
+    for i := 0; i < 5; i++ {
+        for j := 0; j < 5; j++ {
+            ans = (ans + result.a[i][j]) % MOD
+        }
+    }
+    return int(ans)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1_000_000_007L
+
+    private class M(n: Int) {
+        val a: Array<LongArray> = Array(n) { LongArray(n) }
+
+        fun multiply(other: M, mod: Long): M {
+            val n = a.size
+            val product = M(n)
+            for (i in 0 until n) {
+                for (j in 0 until n) {
+                    for (k in 0 until n) {
+                        product.a[i][k] = (product.a[i][k] + a[i][j] * other.a[j][k]) % mod
+                    }
+                }
+            }
+            return product
+        }
+    }
+
+    private fun matrixExpo(base: M, exp: Int): M {
+        var baseM = base
+        var e = exp
+        val n = baseM.a.size
+        var result = M(n)
+        for (i in 0 until n) {
+            result.a[i][i] = 1
+        }
+        while (e > 0) {
+            if (e % 2 == 1) {
+                result = result.multiply(baseM, MOD)
+            }
+            baseM = baseM.multiply(baseM, MOD)
+            e /= 2
+        }
+        return result
+    }
+
+    fun countVowelPermutation(n: Int): Int {
+        val follows = arrayOf(
+            longArrayOf(0, 1, 0, 0, 0), // 'a' -> 'e'
+            longArrayOf(1, 0, 1, 0, 0), // 'e' -> 'a', 'i'
+            longArrayOf(1, 1, 0, 1, 1), // 'i' -> 'a', 'e', 'o', 'u'
+            longArrayOf(0, 0, 1, 0, 1), // 'o' -> 'i', 'u'
+            longArrayOf(1, 0, 0, 0, 0)  // 'u' -> 'a'
+        )
+
+        val base = M(5)
+        for (i in 0 until 5) {
+            for (j in 0 until 5) {
+                base.a[i][j] = follows[i][j]
+            }
+        }
+
+        val result = matrixExpo(base, n - 1)
+
+        var ans = 0L
+        for (i in 0 until 5) {
+            for (j in 0 until 5) {
+                ans = (ans + result.a[i][j]) % MOD
+            }
+        }
+        return ans.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    private let MOD = 1_000_000_007
+
+    private class M {
+        var a: [[Int]]
+
+        init(_ n: Int) {
+            a = Array(repeating: Array(repeating: 0, count: n), count: n)
+        }
+
+        func multiply(_ other: M, _ mod: Int) -> M {
+            let n = a.count
+            let product = M(n)
+            for i in 0..<n {
+                for j in 0..<n {
+                    for k in 0..<n {
+                        product.a[i][k] = (product.a[i][k] + a[i][j] * other.a[j][k]) % mod
+                    }
+                }
+            }
+            return product
+        }
+    }
+
+    private func matrixExpo(_ base: M, _ exp: Int) -> M {
+        var baseM = base
+        var e = exp
+        let n = baseM.a.count
+        let result = M(n)
+        for i in 0..<n {
+            result.a[i][i] = 1
+        }
+        var res = result
+        while e > 0 {
+            if e % 2 == 1 {
+                res = res.multiply(baseM, MOD)
+            }
+            baseM = baseM.multiply(baseM, MOD)
+            e /= 2
+        }
+        return res
+    }
+
+    func countVowelPermutation(_ n: Int) -> Int {
+        let follows = [
+            [0, 1, 0, 0, 0], // 'a' -> 'e'
+            [1, 0, 1, 0, 0], // 'e' -> 'a', 'i'
+            [1, 1, 0, 1, 1], // 'i' -> 'a', 'e', 'o', 'u'
+            [0, 0, 1, 0, 1], // 'o' -> 'i', 'u'
+            [1, 0, 0, 0, 0]  // 'u' -> 'a'
+        ]
+
+        let base = M(5)
+        for i in 0..<5 {
+            for j in 0..<5 {
+                base.a[i][j] = follows[i][j]
+            }
+        }
+
+        let result = matrixExpo(base, n - 1)
+
+        var ans = 0
+        for i in 0..<5 {
+            for j in 0..<5 {
+                ans = (ans + result.a[i][j]) % MOD
+            }
+        }
+        return ans
     }
 }
 ```

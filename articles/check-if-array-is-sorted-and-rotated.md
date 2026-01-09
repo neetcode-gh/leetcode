@@ -117,6 +117,146 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool Check(int[] nums) {
+        int n = nums.Length;
+        int[] sortedNums = (int[])nums.Clone();
+        Array.Sort(sortedNums);
+
+        for (int i = 0; i < n; i++) {
+            bool match = true;
+            int idx = 0;
+
+            for (int j = n - i; j < n && match; j++) {
+                if (nums[idx] != sortedNums[j]) {
+                    match = false;
+                }
+                idx++;
+            }
+
+            for (int j = 0; j < n - i && match; j++) {
+                if (nums[idx] != sortedNums[j]) {
+                    match = false;
+                }
+                idx++;
+            }
+
+            if (match) return true;
+        }
+
+        return false;
+    }
+}
+```
+
+```go
+func check(nums []int) bool {
+    n := len(nums)
+    sortedNums := make([]int, n)
+    copy(sortedNums, nums)
+    sort.Ints(sortedNums)
+
+    for i := 0; i < n; i++ {
+        match := true
+        idx := 0
+
+        for j := n - i; j < n && match; j++ {
+            if nums[idx] != sortedNums[j] {
+                match = false
+            }
+            idx++
+        }
+
+        for j := 0; j < n-i && match; j++ {
+            if nums[idx] != sortedNums[j] {
+                match = false
+            }
+            idx++
+        }
+
+        if match {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun check(nums: IntArray): Boolean {
+        val n = nums.size
+        val sortedNums = nums.clone()
+        sortedNums.sort()
+
+        for (i in 0 until n) {
+            var match = true
+            var idx = 0
+
+            var j = n - i
+            while (j < n && match) {
+                if (nums[idx] != sortedNums[j]) {
+                    match = false
+                }
+                idx++
+                j++
+            }
+
+            j = 0
+            while (j < n - i && match) {
+                if (nums[idx] != sortedNums[j]) {
+                    match = false
+                }
+                idx++
+                j++
+            }
+
+            if (match) return true
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func check(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        let sortedNums = nums.sorted()
+
+        for i in 0..<n {
+            var match = true
+            var idx = 0
+
+            var j = n - i
+            while j < n && match {
+                if nums[idx] != sortedNums[j] {
+                    match = false
+                }
+                idx += 1
+                j += 1
+            }
+
+            j = 0
+            while j < n - i && match {
+                if nums[idx] != sortedNums[j] {
+                    match = false
+                }
+                idx += 1
+                j += 1
+            }
+
+            if match { return true }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -218,6 +358,92 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool Check(int[] nums) {
+        int N = nums.Length;
+        int count = 1;
+
+        for (int i = 1; i < 2 * N; i++) {
+            if (nums[(i - 1) % N] <= nums[i % N]) {
+                count++;
+            } else {
+                count = 1;
+            }
+            if (count == N) {
+                return true;
+            }
+        }
+
+        return N == 1;
+    }
+}
+```
+
+```go
+func check(nums []int) bool {
+    N := len(nums)
+    count := 1
+
+    for i := 1; i < 2*N; i++ {
+        if nums[(i-1)%N] <= nums[i%N] {
+            count++
+        } else {
+            count = 1
+        }
+        if count == N {
+            return true
+        }
+    }
+
+    return N == 1
+}
+```
+
+```kotlin
+class Solution {
+    fun check(nums: IntArray): Boolean {
+        val N = nums.size
+        var count = 1
+
+        for (i in 1 until 2 * N) {
+            if (nums[(i - 1) % N] <= nums[i % N]) {
+                count++
+            } else {
+                count = 1
+            }
+            if (count == N) {
+                return true
+            }
+        }
+
+        return N == 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func check(_ nums: [Int]) -> Bool {
+        let N = nums.count
+        var count = 1
+
+        for i in 1..<(2 * N) {
+            if nums[(i - 1) % N] <= nums[i % N] {
+                count += 1
+            } else {
+                count = 1
+            }
+            if count == N {
+                return true
+            }
+        }
+
+        return N == 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,6 +521,79 @@ class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool Check(int[] nums) {
+        int count = 0, N = nums.Length;
+
+        for (int i = 0; i < N; i++) {
+            if (nums[i] > nums[(i + 1) % N] && ++count > 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func check(nums []int) bool {
+    count, N := 0, len(nums)
+
+    for i := 0; i < N; i++ {
+        if nums[i] > nums[(i+1)%N] {
+            count++
+            if count > 1 {
+                return false
+            }
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun check(nums: IntArray): Boolean {
+        var count = 0
+        val N = nums.size
+
+        for (i in 0 until N) {
+            if (nums[i] > nums[(i + 1) % N]) {
+                count++
+                if (count > 1) {
+                    return false
+                }
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func check(_ nums: [Int]) -> Bool {
+        var count = 0
+        let N = nums.count
+
+        for i in 0..<N {
+            if nums[i] > nums[(i + 1) % N] {
+                count += 1
+                if count > 1 {
+                    return false
+                }
+            }
+        }
+
+        return true
     }
 }
 ```

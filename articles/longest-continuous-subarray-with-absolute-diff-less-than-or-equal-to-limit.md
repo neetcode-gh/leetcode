@@ -135,6 +135,81 @@ public class Solution {
 }
 ```
 
+```go
+func longestSubarray(nums []int, limit int) int {
+    n := len(nums)
+    res := 1
+
+    for i := 0; i < n; i++ {
+        mini, maxi := nums[i], nums[i]
+        for j := i + 1; j < n; j++ {
+            if nums[j] < mini {
+                mini = nums[j]
+            }
+            if nums[j] > maxi {
+                maxi = nums[j]
+            }
+            if maxi-mini > limit {
+                break
+            }
+            if j-i+1 > res {
+                res = j - i + 1
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestSubarray(nums: IntArray, limit: Int): Int {
+        val n = nums.size
+        var res = 1
+
+        for (i in 0 until n) {
+            var mini = nums[i]
+            var maxi = nums[i]
+            for (j in i + 1 until n) {
+                mini = minOf(mini, nums[j])
+                maxi = maxOf(maxi, nums[j])
+                if (maxi - mini > limit) {
+                    break
+                }
+                res = maxOf(res, j - i + 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestSubarray(_ nums: [Int], _ limit: Int) -> Int {
+        let n = nums.count
+        var res = 1
+
+        for i in 0..<n {
+            var mini = nums[i]
+            var maxi = nums[i]
+            for j in (i + 1)..<n {
+                mini = min(mini, nums[j])
+                maxi = max(maxi, nums[j])
+                if maxi - mini > limit {
+                    break
+                }
+                res = max(res, j - i + 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -327,6 +402,124 @@ public class Solution {
 }
 ```
 
+```go
+func longestSubarray(nums []int, limit int) int {
+    maxHeap := &MaxHeap{}
+    minHeap := &MinHeap{}
+    heap.Init(maxHeap)
+    heap.Init(minHeap)
+
+    j, res := 0, 0
+    for i, v := range nums {
+        heap.Push(maxHeap, []int{v, i})
+        heap.Push(minHeap, []int{v, i})
+
+        for (*maxHeap)[0][0]-(*minHeap)[0][0] > limit {
+            j++
+            for maxHeap.Len() > 0 && (*maxHeap)[0][1] < j {
+                heap.Pop(maxHeap)
+            }
+            for minHeap.Len() > 0 && (*minHeap)[0][1] < j {
+                heap.Pop(minHeap)
+            }
+        }
+
+        if i-j+1 > res {
+            res = i - j + 1
+        }
+    }
+    return res
+}
+
+type MaxHeap [][]int
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i][0] > h[j][0] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x any)        { *h = append(*h, x.([]int)) }
+func (h *MaxHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type MinHeap [][]int
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x any)        { *h = append(*h, x.([]int)) }
+func (h *MinHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun longestSubarray(nums: IntArray, limit: Int): Int {
+        val maxHeap = PriorityQueue<IntArray> { a, b -> b[0] - a[0] }
+        val minHeap = PriorityQueue<IntArray> { a, b -> a[0] - b[0] }
+
+        var j = 0
+        var res = 0
+        for (i in nums.indices) {
+            val v = nums[i]
+            maxHeap.offer(intArrayOf(v, i))
+            minHeap.offer(intArrayOf(v, i))
+
+            while (maxHeap.peek()[0] - minHeap.peek()[0] > limit) {
+                j++
+                while (maxHeap.isNotEmpty() && maxHeap.peek()[1] < j) {
+                    maxHeap.poll()
+                }
+                while (minHeap.isNotEmpty() && minHeap.peek()[1] < j) {
+                    minHeap.poll()
+                }
+            }
+
+            res = maxOf(res, i - j + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestSubarray(_ nums: [Int], _ limit: Int) -> Int {
+        var maxHeap = [(Int, Int)]()
+        var minHeap = [(Int, Int)]()
+
+        var j = 0
+        var res = 0
+        for i in 0..<nums.count {
+            let v = nums[i]
+            maxHeap.append((v, i))
+            maxHeap.sort { $0.0 > $1.0 }
+            minHeap.append((v, i))
+            minHeap.sort { $0.0 < $1.0 }
+
+            while maxHeap[0].0 - minHeap[0].0 > limit {
+                j += 1
+                while !maxHeap.isEmpty && maxHeap[0].1 < j {
+                    maxHeap.removeFirst()
+                }
+                while !minHeap.isEmpty && minHeap[0].1 < j {
+                    minHeap.removeFirst()
+                }
+            }
+
+            res = max(res, i - j + 1)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +637,103 @@ public class Solution {
             res = Math.Max(res, r - l + 1);
         }
         return res;
+    }
+}
+```
+
+```go
+func longestSubarray(nums []int, limit int) int {
+    tree := redblacktree.NewWithIntComparator()
+    l, res := 0, 0
+
+    for r := 0; r < len(nums); r++ {
+        x := nums[r]
+        if val, found := tree.Get(x); found {
+            tree.Put(x, val.(int)+1)
+        } else {
+            tree.Put(x, 1)
+        }
+
+        for tree.Size() > 0 {
+            maxKey := tree.Right().Key.(int)
+            minKey := tree.Left().Key.(int)
+            if maxKey-minKey <= limit {
+                break
+            }
+            y := nums[l]
+            l++
+            val, _ := tree.Get(y)
+            if val.(int) == 1 {
+                tree.Remove(y)
+            } else {
+                tree.Put(y, val.(int)-1)
+            }
+        }
+
+        if r-l+1 > res {
+            res = r - l + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestSubarray(nums: IntArray, limit: Int): Int {
+        val map = TreeMap<Int, Int>()
+        var l = 0
+        var res = 0
+
+        for (r in nums.indices) {
+            map[nums[r]] = map.getOrDefault(nums[r], 0) + 1
+
+            while (map.lastKey() - map.firstKey() > limit) {
+                val cnt = map[nums[l]]!!
+                if (cnt == 1) map.remove(nums[l])
+                else map[nums[l]] = cnt - 1
+                l++
+            }
+
+            res = maxOf(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestSubarray(_ nums: [Int], _ limit: Int) -> Int {
+        var map = [Int: Int]()
+        var sortedKeys = [Int]()
+        var l = 0
+        var res = 0
+
+        for r in 0..<nums.count {
+            let x = nums[r]
+            if map[x] == nil {
+                sortedKeys.append(x)
+                sortedKeys.sort()
+            }
+            map[x, default: 0] += 1
+
+            while let maxKey = sortedKeys.last, let minKey = sortedKeys.first,
+                  maxKey - minKey > limit {
+                let y = nums[l]
+                l += 1
+                map[y]! -= 1
+                if map[y] == 0 {
+                    map.removeValue(forKey: y)
+                    if let idx = sortedKeys.firstIndex(of: y) {
+                        sortedKeys.remove(at: idx)
+                    }
+                }
+            }
+
+            res = max(res, r - l + 1)
+        }
+        return res
     }
 }
 ```
@@ -650,6 +940,107 @@ public class Solution {
             res = System.Math.Max(res, r - l + 1);
         }
         return res;
+    }
+}
+```
+
+```go
+func longestSubarray(nums []int, limit int) int {
+    minQ := []int{}
+    maxQ := []int{}
+    l, res := 0, 0
+
+    for r := 0; r < len(nums); r++ {
+        for len(minQ) > 0 && nums[r] < minQ[len(minQ)-1] {
+            minQ = minQ[:len(minQ)-1]
+        }
+        for len(maxQ) > 0 && nums[r] > maxQ[len(maxQ)-1] {
+            maxQ = maxQ[:len(maxQ)-1]
+        }
+        minQ = append(minQ, nums[r])
+        maxQ = append(maxQ, nums[r])
+
+        for maxQ[0]-minQ[0] > limit {
+            if nums[l] == maxQ[0] {
+                maxQ = maxQ[1:]
+            }
+            if nums[l] == minQ[0] {
+                minQ = minQ[1:]
+            }
+            l++
+        }
+        if r-l+1 > res {
+            res = r - l + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestSubarray(nums: IntArray, limit: Int): Int {
+        val minQ = ArrayDeque<Int>()
+        val maxQ = ArrayDeque<Int>()
+        var l = 0
+        var res = 0
+
+        for (r in nums.indices) {
+            while (minQ.isNotEmpty() && nums[r] < minQ.last()) {
+                minQ.removeLast()
+            }
+            while (maxQ.isNotEmpty() && nums[r] > maxQ.last()) {
+                maxQ.removeLast()
+            }
+            minQ.addLast(nums[r])
+            maxQ.addLast(nums[r])
+
+            while (maxQ.first() - minQ.first() > limit) {
+                if (nums[l] == maxQ.first()) {
+                    maxQ.removeFirst()
+                }
+                if (nums[l] == minQ.first()) {
+                    minQ.removeFirst()
+                }
+                l++
+            }
+            res = maxOf(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestSubarray(_ nums: [Int], _ limit: Int) -> Int {
+        var minQ = [Int]()
+        var maxQ = [Int]()
+        var l = 0
+        var res = 0
+
+        for r in 0..<nums.count {
+            while !minQ.isEmpty && nums[r] < minQ.last! {
+                minQ.removeLast()
+            }
+            while !maxQ.isEmpty && nums[r] > maxQ.last! {
+                maxQ.removeLast()
+            }
+            minQ.append(nums[r])
+            maxQ.append(nums[r])
+
+            while maxQ.first! - minQ.first! > limit {
+                if nums[l] == maxQ.first! {
+                    maxQ.removeFirst()
+                }
+                if nums[l] == minQ.first! {
+                    minQ.removeFirst()
+                }
+                l += 1
+            }
+            res = max(res, r - l + 1)
+        }
+        return res
     }
 }
 ```
@@ -864,6 +1255,108 @@ public class Solution {
         }
 
         return nums.Length - j;
+    }
+}
+```
+
+```go
+func longestSubarray(nums []int, limit int) int {
+    inc := []int{nums[0]}
+    dec := []int{nums[0]}
+    j := 0
+
+    for i := 1; i < len(nums); i++ {
+        for len(inc) > 0 && inc[len(inc)-1] > nums[i] {
+            inc = inc[:len(inc)-1]
+        }
+        for len(dec) > 0 && dec[len(dec)-1] < nums[i] {
+            dec = dec[:len(dec)-1]
+        }
+
+        inc = append(inc, nums[i])
+        dec = append(dec, nums[i])
+
+        if dec[0]-inc[0] > limit {
+            if dec[0] == nums[j] {
+                dec = dec[1:]
+            }
+            if inc[0] == nums[j] {
+                inc = inc[1:]
+            }
+            j++
+        }
+    }
+
+    return len(nums) - j
+}
+```
+
+```kotlin
+class Solution {
+    fun longestSubarray(nums: IntArray, limit: Int): Int {
+        val inc = ArrayDeque<Int>()
+        val dec = ArrayDeque<Int>()
+        inc.addLast(nums[0])
+        dec.addLast(nums[0])
+        var j = 0
+
+        for (i in 1 until nums.size) {
+            while (inc.isNotEmpty() && inc.last() > nums[i]) {
+                inc.removeLast()
+            }
+            while (dec.isNotEmpty() && dec.last() < nums[i]) {
+                dec.removeLast()
+            }
+
+            inc.addLast(nums[i])
+            dec.addLast(nums[i])
+
+            if (dec.first() - inc.first() > limit) {
+                if (dec.first() == nums[j]) {
+                    dec.removeFirst()
+                }
+                if (inc.first() == nums[j]) {
+                    inc.removeFirst()
+                }
+                j++
+            }
+        }
+
+        return nums.size - j
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestSubarray(_ nums: [Int], _ limit: Int) -> Int {
+        var inc = [nums[0]]
+        var dec = [nums[0]]
+        var j = 0
+
+        for i in 1..<nums.count {
+            while !inc.isEmpty && inc.last! > nums[i] {
+                inc.removeLast()
+            }
+            while !dec.isEmpty && dec.last! < nums[i] {
+                dec.removeLast()
+            }
+
+            inc.append(nums[i])
+            dec.append(nums[i])
+
+            if dec.first! - inc.first! > limit {
+                if dec.first! == nums[j] {
+                    dec.removeFirst()
+                }
+                if inc.first! == nums[j] {
+                    inc.removeFirst()
+                }
+                j += 1
+            }
+        }
+
+        return nums.count - j
     }
 }
 ```

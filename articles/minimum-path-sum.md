@@ -95,6 +95,63 @@ public class Solution {
 }
 ```
 
+```go
+func minPathSum(grid [][]int) int {
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r == len(grid)-1 && c == len(grid[0])-1 {
+            return grid[r][c]
+        }
+        if r == len(grid) || c == len(grid[0]) {
+            return 1 << 30
+        }
+        return grid[r][c] + min(dfs(r+1, c), dfs(r, c+1))
+    }
+    return dfs(0, 0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minPathSum(grid: Array<IntArray>): Int {
+        fun dfs(r: Int, c: Int): Int {
+            if (r == grid.size - 1 && c == grid[0].size - 1) {
+                return grid[r][c]
+            }
+            if (r == grid.size || c == grid[0].size) {
+                return Int.MAX_VALUE
+            }
+            return grid[r][c] + minOf(dfs(r + 1, c), dfs(r, c + 1))
+        }
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if r == grid.count - 1 && c == grid[0].count - 1 {
+                return grid[r][c]
+            }
+            if r == grid.count || c == grid[0].count {
+                return Int.max
+            }
+            return grid[r][c] + min(dfs(r + 1, c), dfs(r, c + 1))
+        }
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -256,6 +313,97 @@ public class Solution {
 }
 ```
 
+```go
+func minPathSum(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    dp := make([][]int, m)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r == m-1 && c == n-1 {
+            return grid[r][c]
+        }
+        if r == m || c == n {
+            return 1 << 30
+        }
+        if dp[r][c] != -1 {
+            return dp[r][c]
+        }
+
+        dp[r][c] = grid[r][c] + min(dfs(r+1, c), dfs(r, c+1))
+        return dp[r][c]
+    }
+
+    return dfs(0, 0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minPathSum(grid: Array<IntArray>): Int {
+        val m = grid.size
+        val n = grid[0].size
+        val dp = Array(m) { IntArray(n) { -1 } }
+
+        fun dfs(r: Int, c: Int): Int {
+            if (r == m - 1 && c == n - 1) {
+                return grid[r][c]
+            }
+            if (r == m || c == n) {
+                return Int.MAX_VALUE
+            }
+            if (dp[r][c] != -1) {
+                return dp[r][c]
+            }
+
+            dp[r][c] = grid[r][c] + minOf(dfs(r + 1, c), dfs(r, c + 1))
+            return dp[r][c]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        let m = grid.count, n = grid[0].count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: n), count: m)
+
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if r == m - 1 && c == n - 1 {
+                return grid[r][c]
+            }
+            if r == m || c == n {
+                return Int.max
+            }
+            if dp[r][c] != -1 {
+                return dp[r][c]
+            }
+
+            dp[r][c] = grid[r][c] + min(dfs(r + 1, c), dfs(r, c + 1))
+            return dp[r][c]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -378,6 +526,72 @@ public class Solution {
 }
 ```
 
+```go
+func minPathSum(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    dp := make([][]int, ROWS+1)
+    for i := range dp {
+        dp[i] = make([]int, COLS+1)
+        for j := range dp[i] {
+            dp[i][j] = 1 << 30
+        }
+    }
+    dp[ROWS-1][COLS] = 0
+
+    for r := ROWS - 1; r >= 0; r-- {
+        for c := COLS - 1; c >= 0; c-- {
+            dp[r][c] = grid[r][c] + min(dp[r+1][c], dp[r][c+1])
+        }
+    }
+
+    return dp[0][0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minPathSum(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        val dp = Array(ROWS + 1) { IntArray(COLS + 1) { Int.MAX_VALUE } }
+        dp[ROWS - 1][COLS] = 0
+
+        for (r in ROWS - 1 downTo 0) {
+            for (c in COLS - 1 downTo 0) {
+                dp[r][c] = grid[r][c] + minOf(dp[r + 1][c], dp[r][c + 1])
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count, COLS = grid[0].count
+        var dp = [[Int]](repeating: [Int](repeating: Int.max, count: COLS + 1), count: ROWS + 1)
+        dp[ROWS - 1][COLS] = 0
+
+        for r in stride(from: ROWS - 1, through: 0, by: -1) {
+            for c in stride(from: COLS - 1, through: 0, by: -1) {
+                dp[r][c] = grid[r][c] + min(dp[r + 1][c], dp[r][c + 1])
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -487,6 +701,69 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func minPathSum(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    dp := make([]int, COLS+1)
+    for i := range dp {
+        dp[i] = 1 << 30
+    }
+    dp[COLS-1] = 0
+
+    for r := ROWS - 1; r >= 0; r-- {
+        for c := COLS - 1; c >= 0; c-- {
+            dp[c] = grid[r][c] + min(dp[c], dp[c+1])
+        }
+    }
+
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minPathSum(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        val dp = IntArray(COLS + 1) { Int.MAX_VALUE }
+        dp[COLS - 1] = 0
+
+        for (r in ROWS - 1 downTo 0) {
+            for (c in COLS - 1 downTo 0) {
+                dp[c] = grid[r][c] + minOf(dp[c], dp[c + 1])
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minPathSum(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count, COLS = grid[0].count
+        var dp = [Int](repeating: Int.max, count: COLS + 1)
+        dp[COLS - 1] = 0
+
+        for r in stride(from: ROWS - 1, through: 0, by: -1) {
+            for c in stride(from: COLS - 1, through: 0, by: -1) {
+                dp[c] = grid[r][c] + min(dp[c], dp[c + 1])
+            }
+        }
+
+        return dp[0]
     }
 }
 ```

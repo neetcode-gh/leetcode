@@ -114,6 +114,72 @@ public class Solution {
 }
 ```
 
+```go
+func carPooling(trips [][]int, capacity int) bool {
+    sort.Slice(trips, func(i, j int) bool {
+        return trips[i][1] < trips[j][1]
+    })
+
+    for i := 0; i < len(trips); i++ {
+        curPass := trips[i][0]
+        for j := 0; j < i; j++ {
+            if trips[j][2] > trips[i][1] {
+                curPass += trips[j][0]
+            }
+        }
+        if curPass > capacity {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun carPooling(trips: Array<IntArray>, capacity: Int): Boolean {
+        trips.sortBy { it[1] }
+
+        for (i in trips.indices) {
+            var curPass = trips[i][0]
+            for (j in 0 until i) {
+                if (trips[j][2] > trips[i][1]) {
+                    curPass += trips[j][0]
+                }
+            }
+            if (curPass > capacity) {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func carPooling(_ trips: [[Int]], _ capacity: Int) -> Bool {
+        let sortedTrips = trips.sorted { $0[1] < $1[1] }
+
+        for i in 0..<sortedTrips.count {
+            var curPass = sortedTrips[i][0]
+            for j in 0..<i {
+                if sortedTrips[j][2] > sortedTrips[i][1] {
+                    curPass += sortedTrips[j][0]
+                }
+            }
+            if curPass > capacity {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +335,159 @@ public class Solution {
 }
 ```
 
+```go
+func carPooling(trips [][]int, capacity int) bool {
+    sort.Slice(trips, func(i, j int) bool {
+        return trips[i][1] < trips[j][1]
+    })
+
+    h := &MinHeap{}
+    heap.Init(h)
+    curPass := 0
+
+    for _, trip := range trips {
+        numPass, start, end := trip[0], trip[1], trip[2]
+
+        for h.Len() > 0 && (*h)[0][0] <= start {
+            curPass -= heap.Pop(h).([2]int)[1]
+        }
+
+        curPass += numPass
+        if curPass > capacity {
+            return false
+        }
+
+        heap.Push(h, [2]int{end, numPass})
+    }
+
+    return true
+}
+
+type MinHeap [][2]int
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x any)        { *h = append(*h, x.([2]int)) }
+func (h *MinHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun carPooling(trips: Array<IntArray>, capacity: Int): Boolean {
+        trips.sortBy { it[1] }
+
+        val minHeap = PriorityQueue<IntArray>(compareBy { it[0] })
+        var curPass = 0
+
+        for (trip in trips) {
+            val (numPass, start, end) = trip
+
+            while (minHeap.isNotEmpty() && minHeap.peek()[0] <= start) {
+                curPass -= minHeap.poll()[1]
+            }
+
+            curPass += numPass
+            if (curPass > capacity) {
+                return false
+            }
+
+            minHeap.offer(intArrayOf(end, numPass))
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func carPooling(_ trips: [[Int]], _ capacity: Int) -> Bool {
+        let sortedTrips = trips.sorted { $0[1] < $1[1] }
+
+        var minHeap = Heap<(Int, Int)>(comparator: { $0.0 < $1.0 })
+        var curPass = 0
+
+        for trip in sortedTrips {
+            let numPass = trip[0], start = trip[1], end = trip[2]
+
+            while let top = minHeap.peek(), top.0 <= start {
+                curPass -= minHeap.remove()!.1
+            }
+
+            curPass += numPass
+            if curPass > capacity {
+                return false
+            }
+
+            minHeap.insert((end, numPass))
+        }
+
+        return true
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !elements.isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -408,6 +627,89 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+func carPooling(trips [][]int, capacity int) bool {
+    points := make([][2]int, 0, len(trips)*2)
+    for _, trip := range trips {
+        passengers, start, end := trip[0], trip[1], trip[2]
+        points = append(points, [2]int{start, passengers})
+        points = append(points, [2]int{end, -passengers})
+    }
+
+    sort.Slice(points, func(i, j int) bool {
+        if points[i][0] == points[j][0] {
+            return points[i][1] < points[j][1]
+        }
+        return points[i][0] < points[j][0]
+    })
+
+    curPass := 0
+    for _, point := range points {
+        curPass += point[1]
+        if curPass > capacity {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun carPooling(trips: Array<IntArray>, capacity: Int): Boolean {
+        val points = mutableListOf<IntArray>()
+        for (trip in trips) {
+            val (passengers, start, end) = trip
+            points.add(intArrayOf(start, passengers))
+            points.add(intArrayOf(end, -passengers))
+        }
+
+        points.sortWith { a, b ->
+            if (a[0] == b[0]) a[1] - b[1] else a[0] - b[0]
+        }
+
+        var curPass = 0
+        for (point in points) {
+            curPass += point[1]
+            if (curPass > capacity) {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func carPooling(_ trips: [[Int]], _ capacity: Int) -> Bool {
+        var points = [(Int, Int)]()
+        for trip in trips {
+            let passengers = trip[0], start = trip[1], end = trip[2]
+            points.append((start, passengers))
+            points.append((end, -passengers))
+        }
+
+        points.sort { a, b in
+            if a.0 == b.0 { return a.1 < b.1 }
+            return a.0 < b.0
+        }
+
+        var curPass = 0
+        for point in points {
+            curPass += point.1
+            if curPass > capacity {
+                return false
+            }
+        }
+
+        return true
     }
 }
 ```
@@ -572,6 +874,106 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+func carPooling(trips [][]int, capacity int) bool {
+    L, R := math.MaxInt32, math.MinInt32
+    for _, trip := range trips {
+        start, end := trip[1], trip[2]
+        if start < L {
+            L = start
+        }
+        if end > R {
+            R = end
+        }
+    }
+
+    N := R - L + 1
+    passChange := make([]int, N+1)
+    for _, trip := range trips {
+        passengers, start, end := trip[0], trip[1], trip[2]
+        passChange[start-L] += passengers
+        passChange[end-L] -= passengers
+    }
+
+    curPass := 0
+    for _, change := range passChange {
+        curPass += change
+        if curPass > capacity {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun carPooling(trips: Array<IntArray>, capacity: Int): Boolean {
+        var L = Int.MAX_VALUE
+        var R = Int.MIN_VALUE
+        for (trip in trips) {
+            val start = trip[1]
+            val end = trip[2]
+            L = minOf(L, start)
+            R = maxOf(R, end)
+        }
+
+        val N = R - L + 1
+        val passChange = IntArray(N + 1)
+        for (trip in trips) {
+            val passengers = trip[0]
+            val start = trip[1]
+            val end = trip[2]
+            passChange[start - L] += passengers
+            passChange[end - L] -= passengers
+        }
+
+        var curPass = 0
+        for (change in passChange) {
+            curPass += change
+            if (curPass > capacity) {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func carPooling(_ trips: [[Int]], _ capacity: Int) -> Bool {
+        var L = Int.max
+        var R = Int.min
+        for trip in trips {
+            let start = trip[1], end = trip[2]
+            L = min(L, start)
+            R = max(R, end)
+        }
+
+        let N = R - L + 1
+        var passChange = [Int](repeating: 0, count: N + 1)
+        for trip in trips {
+            let passengers = trip[0], start = trip[1], end = trip[2]
+            passChange[start - L] += passengers
+            passChange[end - L] -= passengers
+        }
+
+        var curPass = 0
+        for change in passChange {
+            curPass += change
+            if curPass > capacity {
+                return false
+            }
+        }
+
+        return true
     }
 }
 ```

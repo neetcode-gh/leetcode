@@ -174,6 +174,116 @@ public class Solution {
 }
 ```
 
+```go
+func putMarbles(weights []int, k int) int64 {
+    n := len(weights)
+    cache := make(map[string][2]int64)
+
+    var dfs func(i, k int) [2]int64
+    dfs = func(i, k int) [2]int64 {
+        key := fmt.Sprintf("%d,%d", i, k)
+        if val, ok := cache[key]; ok {
+            return val
+        }
+        if k == 0 {
+            return [2]int64{0, 0}
+        }
+        if i == n-1 || n-i-1 < k {
+            return [2]int64{-1e15, 1e15}
+        }
+
+        res := [2]int64{0, int64(1e15)}
+
+        cur := dfs(i+1, k-1)
+        res[0] = max(res[0], int64(weights[i]+weights[i+1])+cur[0])
+        res[1] = min(res[1], int64(weights[i]+weights[i+1])+cur[1])
+
+        cur = dfs(i+1, k)
+        res[0] = max(res[0], cur[0])
+        res[1] = min(res[1], cur[1])
+
+        cache[key] = res
+        return res
+    }
+
+    ans := dfs(0, k-1)
+    return ans[0] - ans[1]
+}
+```
+
+```kotlin
+class Solution {
+    private val cache = HashMap<String, LongArray>()
+
+    fun putMarbles(weights: IntArray, k: Int): Long {
+        val n = weights.size
+        val ans = dfs(0, k - 1, weights, n)
+        return ans[0] - ans[1]
+    }
+
+    private fun dfs(i: Int, k: Int, weights: IntArray, n: Int): LongArray {
+        val key = "$i,$k"
+        cache[key]?.let { return it }
+        if (k == 0) return longArrayOf(0L, 0L)
+        if (i == n - 1 || n - i - 1 < k) {
+            return longArrayOf(-1_000_000_000_000_000L, 1_000_000_000_000_000L)
+        }
+
+        val res = longArrayOf(0L, 1_000_000_000_000_000L)
+
+        var cur = dfs(i + 1, k - 1, weights, n)
+        res[0] = maxOf(res[0], weights[i] + weights[i + 1] + cur[0])
+        res[1] = minOf(res[1], weights[i] + weights[i + 1] + cur[1])
+
+        cur = dfs(i + 1, k, weights, n)
+        res[0] = maxOf(res[0], cur[0])
+        res[1] = minOf(res[1], cur[1])
+
+        cache[key] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var cache = [String: [Int64]]()
+
+    func putMarbles(_ weights: [Int], _ k: Int) -> Int64 {
+        let n = weights.count
+        cache.removeAll()
+        let ans = dfs(0, k - 1, weights, n)
+        return ans[0] - ans[1]
+    }
+
+    private func dfs(_ i: Int, _ k: Int, _ weights: [Int], _ n: Int) -> [Int64] {
+        let key = "\(i),\(k)"
+        if let cached = cache[key] {
+            return cached
+        }
+        if k == 0 {
+            return [0, 0]
+        }
+        if i == n - 1 || n - i - 1 < k {
+            return [Int64(-1e15), Int64(1e15)]
+        }
+
+        var res: [Int64] = [0, Int64(1e15)]
+
+        var cur = dfs(i + 1, k - 1, weights, n)
+        res[0] = max(res[0], Int64(weights[i] + weights[i + 1]) + cur[0])
+        res[1] = min(res[1], Int64(weights[i] + weights[i + 1]) + cur[1])
+
+        cur = dfs(i + 1, k, weights, n)
+        res[0] = max(res[0], cur[0])
+        res[1] = min(res[1], cur[1])
+
+        cache[key] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -312,6 +422,90 @@ public class Solution {
         }
 
         return maxScore - minScore;
+    }
+}
+```
+
+```go
+func putMarbles(weights []int, k int) int64 {
+    if k == 1 {
+        return 0
+    }
+
+    n := len(weights)
+    splits := make([]int, 0, n-1)
+
+    for i := 0; i < n-1; i++ {
+        splits = append(splits, weights[i]+weights[i+1])
+    }
+
+    sort.Ints(splits)
+    cnt := k - 1
+
+    var minScore, maxScore int64
+    for j := 0; j < cnt; j++ {
+        minScore += int64(splits[j])
+    }
+    for j := len(splits) - cnt; j < len(splits); j++ {
+        maxScore += int64(splits[j])
+    }
+
+    return maxScore - minScore
+}
+```
+
+```kotlin
+class Solution {
+    fun putMarbles(weights: IntArray, k: Int): Long {
+        if (k == 1) return 0L
+
+        val n = weights.size
+        val splits = mutableListOf<Int>()
+
+        for (i in 0 until n - 1) {
+            splits.add(weights[i] + weights[i + 1])
+        }
+
+        splits.sort()
+        val cnt = k - 1
+        var minScore = 0L
+        var maxScore = 0L
+
+        for (j in 0 until cnt) minScore += splits[j]
+        for (j in splits.size - cnt until splits.size) {
+            maxScore += splits[j]
+        }
+
+        return maxScore - minScore
+    }
+}
+```
+
+```swift
+class Solution {
+    func putMarbles(_ weights: [Int], _ k: Int) -> Int64 {
+        if k == 1 { return 0 }
+
+        let n = weights.count
+        var splits = [Int]()
+
+        for i in 0..<(n - 1) {
+            splits.append(weights[i] + weights[i + 1])
+        }
+
+        splits.sort()
+        let cnt = k - 1
+        var minScore: Int64 = 0
+        var maxScore: Int64 = 0
+
+        for j in 0..<cnt {
+            minScore += Int64(splits[j])
+        }
+        for j in (splits.count - cnt)..<splits.count {
+            maxScore += Int64(splits[j])
+        }
+
+        return maxScore - minScore
     }
 }
 ```
@@ -489,6 +683,131 @@ public class Solution {
         while (minHeap.Count > 0) minScore += minHeap.Dequeue();
 
         return maxScore - minScore;
+    }
+}
+```
+
+```go
+func putMarbles(weights []int, k int) int64 {
+    if k == 1 {
+        return 0
+    }
+
+    maxHeap := &MinHeap{}
+    minHeap := &MaxHeap{}
+    heap.Init(maxHeap)
+    heap.Init(minHeap)
+
+    for i := 0; i < len(weights)-1; i++ {
+        split := weights[i] + weights[i+1]
+
+        heap.Push(maxHeap, split)
+        if maxHeap.Len() > k-1 {
+            heap.Pop(maxHeap)
+        }
+
+        heap.Push(minHeap, split)
+        if minHeap.Len() > k-1 {
+            heap.Pop(minHeap)
+        }
+    }
+
+    var maxScore, minScore int64
+    for maxHeap.Len() > 0 {
+        maxScore += int64(heap.Pop(maxHeap).(int))
+    }
+    for minHeap.Len() > 0 {
+        minScore += int64(heap.Pop(minHeap).(int))
+    }
+
+    return maxScore - minScore
+}
+
+type MinHeap []int
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type MaxHeap []int
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *MaxHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun putMarbles(weights: IntArray, k: Int): Long {
+        if (k == 1) return 0L
+
+        val maxHeap = PriorityQueue<Int>()
+        val minHeap = PriorityQueue<Int>(reverseOrder())
+
+        for (i in 0 until weights.size - 1) {
+            val split = weights[i] + weights[i + 1]
+
+            maxHeap.offer(split)
+            if (maxHeap.size > k - 1) maxHeap.poll()
+
+            minHeap.offer(split)
+            if (minHeap.size > k - 1) minHeap.poll()
+        }
+
+        var maxScore = 0L
+        var minScore = 0L
+        while (maxHeap.isNotEmpty()) maxScore += maxHeap.poll()
+        while (minHeap.isNotEmpty()) minScore += minHeap.poll()
+
+        return maxScore - minScore
+    }
+}
+```
+
+```swift
+class Solution {
+    func putMarbles(_ weights: [Int], _ k: Int) -> Int64 {
+        if k == 1 { return 0 }
+
+        var maxHeap = [Int]()
+        var minHeap = [Int]()
+
+        for i in 0..<(weights.count - 1) {
+            let split = weights[i] + weights[i + 1]
+
+            maxHeap.append(split)
+            maxHeap.sort()
+            if maxHeap.count > k - 1 {
+                maxHeap.removeFirst()
+            }
+
+            minHeap.append(split)
+            minHeap.sort(by: >)
+            if minHeap.count > k - 1 {
+                minHeap.removeFirst()
+            }
+        }
+
+        var maxScore: Int64 = 0
+        var minScore: Int64 = 0
+        for val in maxHeap { maxScore += Int64(val) }
+        for val in minHeap { minScore += Int64(val) }
+
+        return maxScore - minScore
     }
 }
 ```

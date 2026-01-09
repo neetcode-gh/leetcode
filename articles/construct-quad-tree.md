@@ -314,6 +314,159 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a QuadTree node.
+ * type Node struct {
+ *     Val bool
+ *     IsLeaf bool
+ *     TopLeft *Node
+ *     TopRight *Node
+ *     BottomLeft *Node
+ *     BottomRight *Node
+ * }
+ */
+
+func construct(grid [][]int) *Node {
+    return dfs(grid, len(grid), 0, 0)
+}
+
+func dfs(grid [][]int, n, r, c int) *Node {
+    allSame := true
+    for i := 0; i < n && allSame; i++ {
+        for j := 0; j < n; j++ {
+            if grid[r][c] != grid[r+i][c+j] {
+                allSame = false
+                break
+            }
+        }
+    }
+
+    if allSame {
+        return &Node{Val: grid[r][c] == 1, IsLeaf: true}
+    }
+
+    mid := n / 2
+    topLeft := dfs(grid, mid, r, c)
+    topRight := dfs(grid, mid, r, c+mid)
+    bottomLeft := dfs(grid, mid, r+mid, c)
+    bottomRight := dfs(grid, mid, r+mid, c+mid)
+
+    return &Node{
+        Val:         false,
+        IsLeaf:      false,
+        TopLeft:     topLeft,
+        TopRight:    topRight,
+        BottomLeft:  bottomLeft,
+        BottomRight: bottomRight,
+    }
+}
+```
+
+```kotlin
+/**
+ * Definition for a QuadTree node.
+ * class Node(var `val`: Boolean, var isLeaf: Boolean) {
+ *     var topLeft: Node? = null
+ *     var topRight: Node? = null
+ *     var bottomLeft: Node? = null
+ *     var bottomRight: Node? = null
+ * }
+ */
+
+class Solution {
+    fun construct(grid: Array<IntArray>): Node? {
+        return dfs(grid, grid.size, 0, 0)
+    }
+
+    private fun dfs(grid: Array<IntArray>, n: Int, r: Int, c: Int): Node {
+        var allSame = true
+        outer@ for (i in 0 until n) {
+            for (j in 0 until n) {
+                if (grid[r][c] != grid[r + i][c + j]) {
+                    allSame = false
+                    break@outer
+                }
+            }
+        }
+
+        if (allSame) {
+            return Node(grid[r][c] == 1, true)
+        }
+
+        val mid = n / 2
+        val topLeft = dfs(grid, mid, r, c)
+        val topRight = dfs(grid, mid, r, c + mid)
+        val bottomLeft = dfs(grid, mid, r + mid, c)
+        val bottomRight = dfs(grid, mid, r + mid, c + mid)
+
+        return Node(false, false).apply {
+            this.topLeft = topLeft
+            this.topRight = topRight
+            this.bottomLeft = bottomLeft
+            this.bottomRight = bottomRight
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a QuadTree node.
+ * public class Node {
+ *     public var val: Bool
+ *     public var isLeaf: Bool
+ *     public var topLeft: Node?
+ *     public var topRight: Node?
+ *     public var bottomLeft: Node?
+ *     public var bottomRight: Node?
+ *     public init(_ val: Bool, _ isLeaf: Bool) {
+ *         self.val = val
+ *         self.isLeaf = isLeaf
+ *         self.topLeft = nil
+ *         self.topRight = nil
+ *         self.bottomLeft = nil
+ *         self.bottomRight = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func construct(_ grid: [[Int]]) -> Node? {
+        return dfs(grid, grid.count, 0, 0)
+    }
+
+    private func dfs(_ grid: [[Int]], _ n: Int, _ r: Int, _ c: Int) -> Node {
+        var allSame = true
+        outer: for i in 0..<n {
+            for j in 0..<n {
+                if grid[r][c] != grid[r + i][c + j] {
+                    allSame = false
+                    break outer
+                }
+            }
+        }
+
+        if allSame {
+            return Node(grid[r][c] == 1, true)
+        }
+
+        let mid = n / 2
+        let topLeft = dfs(grid, mid, r, c)
+        let topRight = dfs(grid, mid, r, c + mid)
+        let bottomLeft = dfs(grid, mid, r + mid, c)
+        let bottomRight = dfs(grid, mid, r + mid, c + mid)
+
+        let node = Node(false, false)
+        node.topLeft = topLeft
+        node.topRight = topRight
+        node.bottomLeft = bottomLeft
+        node.bottomRight = bottomRight
+        return node
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -628,6 +781,153 @@ public class Solution {
         }
 
         return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a QuadTree node.
+ * type Node struct {
+ *     Val bool
+ *     IsLeaf bool
+ *     TopLeft *Node
+ *     TopRight *Node
+ *     BottomLeft *Node
+ *     BottomRight *Node
+ * }
+ */
+
+func construct(grid [][]int) *Node {
+    return dfs(grid, len(grid), 0, 0)
+}
+
+func dfs(grid [][]int, n, r, c int) *Node {
+    if n == 1 {
+        return &Node{Val: grid[r][c] == 1, IsLeaf: true}
+    }
+
+    mid := n / 2
+    topLeft := dfs(grid, mid, r, c)
+    topRight := dfs(grid, mid, r, c+mid)
+    bottomLeft := dfs(grid, mid, r+mid, c)
+    bottomRight := dfs(grid, mid, r+mid, c+mid)
+
+    if topLeft.IsLeaf && topRight.IsLeaf &&
+        bottomLeft.IsLeaf && bottomRight.IsLeaf &&
+        topLeft.Val == topRight.Val &&
+        topLeft.Val == bottomLeft.Val &&
+        topLeft.Val == bottomRight.Val {
+        return &Node{Val: topLeft.Val, IsLeaf: true}
+    }
+
+    return &Node{
+        Val:         false,
+        IsLeaf:      false,
+        TopLeft:     topLeft,
+        TopRight:    topRight,
+        BottomLeft:  bottomLeft,
+        BottomRight: bottomRight,
+    }
+}
+```
+
+```kotlin
+/**
+ * Definition for a QuadTree node.
+ * class Node(var `val`: Boolean, var isLeaf: Boolean) {
+ *     var topLeft: Node? = null
+ *     var topRight: Node? = null
+ *     var bottomLeft: Node? = null
+ *     var bottomRight: Node? = null
+ * }
+ */
+
+class Solution {
+    fun construct(grid: Array<IntArray>): Node? {
+        return dfs(grid, grid.size, 0, 0)
+    }
+
+    private fun dfs(grid: Array<IntArray>, n: Int, r: Int, c: Int): Node {
+        if (n == 1) {
+            return Node(grid[r][c] == 1, true)
+        }
+
+        val mid = n / 2
+        val topLeft = dfs(grid, mid, r, c)
+        val topRight = dfs(grid, mid, r, c + mid)
+        val bottomLeft = dfs(grid, mid, r + mid, c)
+        val bottomRight = dfs(grid, mid, r + mid, c + mid)
+
+        if (topLeft.isLeaf && topRight.isLeaf &&
+            bottomLeft.isLeaf && bottomRight.isLeaf &&
+            topLeft.`val` == topRight.`val` &&
+            topLeft.`val` == bottomLeft.`val` &&
+            topLeft.`val` == bottomRight.`val`) {
+            return Node(topLeft.`val`, true)
+        }
+
+        return Node(false, false).apply {
+            this.topLeft = topLeft
+            this.topRight = topRight
+            this.bottomLeft = bottomLeft
+            this.bottomRight = bottomRight
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a QuadTree node.
+ * public class Node {
+ *     public var val: Bool
+ *     public var isLeaf: Bool
+ *     public var topLeft: Node?
+ *     public var topRight: Node?
+ *     public var bottomLeft: Node?
+ *     public var bottomRight: Node?
+ *     public init(_ val: Bool, _ isLeaf: Bool) {
+ *         self.val = val
+ *         self.isLeaf = isLeaf
+ *         self.topLeft = nil
+ *         self.topRight = nil
+ *         self.bottomLeft = nil
+ *         self.bottomRight = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func construct(_ grid: [[Int]]) -> Node? {
+        return dfs(grid, grid.count, 0, 0)
+    }
+
+    private func dfs(_ grid: [[Int]], _ n: Int, _ r: Int, _ c: Int) -> Node {
+        if n == 1 {
+            return Node(grid[r][c] == 1, true)
+        }
+
+        let mid = n / 2
+        let topLeft = dfs(grid, mid, r, c)
+        let topRight = dfs(grid, mid, r, c + mid)
+        let bottomLeft = dfs(grid, mid, r + mid, c)
+        let bottomRight = dfs(grid, mid, r + mid, c + mid)
+
+        if topLeft.isLeaf && topRight.isLeaf &&
+            bottomLeft.isLeaf && bottomRight.isLeaf &&
+            topLeft.val == topRight.val &&
+            topLeft.val == bottomLeft.val &&
+            topLeft.val == bottomRight.val {
+            return Node(topLeft.val, true)
+        }
+
+        let node = Node(false, false)
+        node.topLeft = topLeft
+        node.topRight = topRight
+        node.bottomLeft = bottomLeft
+        node.bottomRight = bottomRight
+        return node
     }
 }
 ```
@@ -963,6 +1263,165 @@ public class Solution {
         }
 
         return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a QuadTree node.
+ * type Node struct {
+ *     Val bool
+ *     IsLeaf bool
+ *     TopLeft *Node
+ *     TopRight *Node
+ *     BottomLeft *Node
+ *     BottomRight *Node
+ * }
+ */
+
+var falseLeaf = &Node{Val: false, IsLeaf: true}
+var trueLeaf = &Node{Val: true, IsLeaf: true}
+
+func construct(grid [][]int) *Node {
+    return dfs(grid, len(grid), 0, 0)
+}
+
+func dfs(grid [][]int, n, r, c int) *Node {
+    if n == 1 {
+        if grid[r][c] == 1 {
+            return trueLeaf
+        }
+        return falseLeaf
+    }
+
+    n /= 2
+    topLeft := dfs(grid, n, r, c)
+    topRight := dfs(grid, n, r, c+n)
+    bottomLeft := dfs(grid, n, r+n, c)
+    bottomRight := dfs(grid, n, r+n, c+n)
+
+    if topLeft.IsLeaf && topRight.IsLeaf &&
+        bottomLeft.IsLeaf && bottomRight.IsLeaf &&
+        topLeft.Val == topRight.Val &&
+        topLeft.Val == bottomLeft.Val &&
+        topLeft.Val == bottomRight.Val {
+        return topLeft
+    }
+
+    return &Node{
+        Val:         false,
+        IsLeaf:      false,
+        TopLeft:     topLeft,
+        TopRight:    topRight,
+        BottomLeft:  bottomLeft,
+        BottomRight: bottomRight,
+    }
+}
+```
+
+```kotlin
+/**
+ * Definition for a QuadTree node.
+ * class Node(var `val`: Boolean, var isLeaf: Boolean) {
+ *     var topLeft: Node? = null
+ *     var topRight: Node? = null
+ *     var bottomLeft: Node? = null
+ *     var bottomRight: Node? = null
+ * }
+ */
+
+class Solution {
+    private val falseLeaf = Node(false, true)
+    private val trueLeaf = Node(true, true)
+
+    fun construct(grid: Array<IntArray>): Node? {
+        return dfs(grid, grid.size, 0, 0)
+    }
+
+    private fun dfs(grid: Array<IntArray>, n: Int, r: Int, c: Int): Node {
+        if (n == 1) {
+            return if (grid[r][c] == 1) trueLeaf else falseLeaf
+        }
+
+        val half = n / 2
+        val topLeft = dfs(grid, half, r, c)
+        val topRight = dfs(grid, half, r, c + half)
+        val bottomLeft = dfs(grid, half, r + half, c)
+        val bottomRight = dfs(grid, half, r + half, c + half)
+
+        if (topLeft.isLeaf && topRight.isLeaf &&
+            bottomLeft.isLeaf && bottomRight.isLeaf &&
+            topLeft.`val` == topRight.`val` &&
+            topLeft.`val` == bottomLeft.`val` &&
+            topLeft.`val` == bottomRight.`val`) {
+            return topLeft
+        }
+
+        return Node(false, false).apply {
+            this.topLeft = topLeft
+            this.topRight = topRight
+            this.bottomLeft = bottomLeft
+            this.bottomRight = bottomRight
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a QuadTree node.
+ * public class Node {
+ *     public var val: Bool
+ *     public var isLeaf: Bool
+ *     public var topLeft: Node?
+ *     public var topRight: Node?
+ *     public var bottomLeft: Node?
+ *     public var bottomRight: Node?
+ *     public init(_ val: Bool, _ isLeaf: Bool) {
+ *         self.val = val
+ *         self.isLeaf = isLeaf
+ *         self.topLeft = nil
+ *         self.topRight = nil
+ *         self.bottomLeft = nil
+ *         self.bottomRight = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    private let falseLeaf = Node(false, true)
+    private let trueLeaf = Node(true, true)
+
+    func construct(_ grid: [[Int]]) -> Node? {
+        return dfs(grid, grid.count, 0, 0)
+    }
+
+    private func dfs(_ grid: [[Int]], _ n: Int, _ r: Int, _ c: Int) -> Node {
+        if n == 1 {
+            return grid[r][c] == 1 ? trueLeaf : falseLeaf
+        }
+
+        let half = n / 2
+        let topLeft = dfs(grid, half, r, c)
+        let topRight = dfs(grid, half, r, c + half)
+        let bottomLeft = dfs(grid, half, r + half, c)
+        let bottomRight = dfs(grid, half, r + half, c + half)
+
+        if topLeft.isLeaf && topRight.isLeaf &&
+            bottomLeft.isLeaf && bottomRight.isLeaf &&
+            topLeft.val == topRight.val &&
+            topLeft.val == bottomLeft.val &&
+            topLeft.val == bottomRight.val {
+            return topLeft
+        }
+
+        let node = Node(false, false)
+        node.topLeft = topLeft
+        node.topRight = topRight
+        node.bottomLeft = bottomLeft
+        node.bottomRight = bottomRight
+        return node
     }
 }
 ```

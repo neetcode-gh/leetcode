@@ -149,6 +149,143 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private bool[,] visit;
+
+    public int CountSubIslands(int[][] grid1, int[][] grid2) {
+        int ROWS = grid1.Length, COLS = grid1[0].Length;
+        visit = new bool[ROWS, COLS];
+        int count = 0;
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (grid2[r][c] == 1 && !visit[r, c] && Dfs(r, c, grid1, grid2)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
+    private bool Dfs(int r, int c, int[][] grid1, int[][] grid2) {
+        if (r < 0 || c < 0 || r >= grid1.Length || c >= grid1[0].Length ||
+            grid2[r][c] == 0 || visit[r, c]) {
+            return true;
+        }
+        visit[r, c] = true;
+        bool res = grid1[r][c] == 1;
+        res &= Dfs(r - 1, c, grid1, grid2);
+        res &= Dfs(r + 1, c, grid1, grid2);
+        res &= Dfs(r, c - 1, grid1, grid2);
+        res &= Dfs(r, c + 1, grid1, grid2);
+        return res;
+    }
+}
+```
+
+```go
+func countSubIslands(grid1 [][]int, grid2 [][]int) int {
+    ROWS, COLS := len(grid1), len(grid1[0])
+    visit := make([][]bool, ROWS)
+    for i := range visit {
+        visit[i] = make([]bool, COLS)
+    }
+
+    var dfs func(r, c int) bool
+    dfs = func(r, c int) bool {
+        if r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+            grid2[r][c] == 0 || visit[r][c] {
+            return true
+        }
+        visit[r][c] = true
+        res := grid1[r][c] == 1
+        res = dfs(r-1, c) && res
+        res = dfs(r+1, c) && res
+        res = dfs(r, c-1) && res
+        res = dfs(r, c+1) && res
+        return res
+    }
+
+    count := 0
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if grid2[r][c] == 1 && !visit[r][c] && dfs(r, c) {
+                count++
+            }
+        }
+    }
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var visit: Array<BooleanArray>
+
+    fun countSubIslands(grid1: Array<IntArray>, grid2: Array<IntArray>): Int {
+        val ROWS = grid1.size
+        val COLS = grid1[0].size
+        visit = Array(ROWS) { BooleanArray(COLS) }
+        var count = 0
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (grid2[r][c] == 1 && !visit[r][c] && dfs(r, c, grid1, grid2)) {
+                    count++
+                }
+            }
+        }
+        return count
+    }
+
+    private fun dfs(r: Int, c: Int, grid1: Array<IntArray>, grid2: Array<IntArray>): Boolean {
+        if (r < 0 || c < 0 || r >= grid1.size || c >= grid1[0].size ||
+            grid2[r][c] == 0 || visit[r][c]) {
+            return true
+        }
+        visit[r][c] = true
+        var res = grid1[r][c] == 1
+        res = dfs(r - 1, c, grid1, grid2) && res
+        res = dfs(r + 1, c, grid1, grid2) && res
+        res = dfs(r, c - 1, grid1, grid2) && res
+        res = dfs(r, c + 1, grid1, grid2) && res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubIslands(_ grid1: [[Int]], _ grid2: [[Int]]) -> Int {
+        let ROWS = grid1.count, COLS = grid1[0].count
+        var visit = [[Bool]](repeating: [Bool](repeating: false, count: COLS), count: ROWS)
+
+        func dfs(_ r: Int, _ c: Int) -> Bool {
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+               grid2[r][c] == 0 || visit[r][c] {
+                return true
+            }
+            visit[r][c] = true
+            var res = grid1[r][c] == 1
+            res = dfs(r - 1, c) && res
+            res = dfs(r + 1, c) && res
+            res = dfs(r, c - 1) && res
+            res = dfs(r, c + 1) && res
+            return res
+        }
+
+        var count = 0
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid2[r][c] == 1 && !visit[r][c] && dfs(r, c) {
+                    count += 1
+                }
+            }
+        }
+        return count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +482,187 @@ class Solution {
             }
         }
         return count;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private bool[,] visit;
+    private int[] directions = {1, 0, -1, 0, 1};
+
+    public int CountSubIslands(int[][] grid1, int[][] grid2) {
+        int ROWS = grid1.Length, COLS = grid1[0].Length;
+        visit = new bool[ROWS, COLS];
+        int count = 0;
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (grid2[r][c] == 1 && !visit[r, c]) {
+                    if (Bfs(r, c, grid1, grid2)) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
+    private bool Bfs(int r, int c, int[][] grid1, int[][] grid2) {
+        Queue<int[]> queue = new Queue<int[]>();
+        queue.Enqueue(new int[]{r, c});
+        visit[r, c] = true;
+        bool res = true;
+
+        while (queue.Count > 0) {
+            int[] cell = queue.Dequeue();
+            int cr = cell[0], cc = cell[1];
+            if (grid1[cr][cc] == 0) res = false;
+
+            for (int i = 0; i < 4; i++) {
+                int nr = cr + directions[i], nc = cc + directions[i + 1];
+                if (nr >= 0 && nr < grid1.Length && nc >= 0 && nc < grid1[0].Length &&
+                    grid2[nr][nc] == 1 && !visit[nr, nc]) {
+                    visit[nr, nc] = true;
+                    queue.Enqueue(new int[]{nr, nc});
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countSubIslands(grid1 [][]int, grid2 [][]int) int {
+    ROWS, COLS := len(grid1), len(grid1[0])
+    visit := make([][]bool, ROWS)
+    for i := range visit {
+        visit[i] = make([]bool, COLS)
+    }
+    directions := []int{1, 0, -1, 0, 1}
+
+    bfs := func(sr, sc int) bool {
+        queue := [][]int{{sr, sc}}
+        visit[sr][sc] = true
+        res := true
+
+        for len(queue) > 0 {
+            cell := queue[0]
+            queue = queue[1:]
+            r, c := cell[0], cell[1]
+            if grid1[r][c] == 0 {
+                res = false
+            }
+
+            for i := 0; i < 4; i++ {
+                nr, nc := r+directions[i], c+directions[i+1]
+                if nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
+                    grid2[nr][nc] == 1 && !visit[nr][nc] {
+                    visit[nr][nc] = true
+                    queue = append(queue, []int{nr, nc})
+                }
+            }
+        }
+        return res
+    }
+
+    count := 0
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if grid2[r][c] == 1 && !visit[r][c] {
+                if bfs(r, c) {
+                    count++
+                }
+            }
+        }
+    }
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubIslands(grid1: Array<IntArray>, grid2: Array<IntArray>): Int {
+        val ROWS = grid1.size
+        val COLS = grid1[0].size
+        val visit = Array(ROWS) { BooleanArray(COLS) }
+        val directions = intArrayOf(1, 0, -1, 0, 1)
+        var count = 0
+
+        fun bfs(sr: Int, sc: Int): Boolean {
+            val queue = ArrayDeque<Pair<Int, Int>>()
+            queue.add(Pair(sr, sc))
+            visit[sr][sc] = true
+            var res = true
+
+            while (queue.isNotEmpty()) {
+                val (r, c) = queue.removeFirst()
+                if (grid1[r][c] == 0) res = false
+
+                for (i in 0 until 4) {
+                    val nr = r + directions[i]
+                    val nc = c + directions[i + 1]
+                    if (nr in 0 until ROWS && nc in 0 until COLS &&
+                        grid2[nr][nc] == 1 && !visit[nr][nc]) {
+                        visit[nr][nc] = true
+                        queue.add(Pair(nr, nc))
+                    }
+                }
+            }
+            return res
+        }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (grid2[r][c] == 1 && !visit[r][c]) {
+                    if (bfs(r, c)) count++
+                }
+            }
+        }
+        return count
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubIslands(_ grid1: [[Int]], _ grid2: [[Int]]) -> Int {
+        let ROWS = grid1.count, COLS = grid1[0].count
+        var visit = [[Bool]](repeating: [Bool](repeating: false, count: COLS), count: ROWS)
+        let directions = [1, 0, -1, 0, 1]
+
+        func bfs(_ sr: Int, _ sc: Int) -> Bool {
+            var queue = [[Int]]()
+            queue.append([sr, sc])
+            visit[sr][sc] = true
+            var res = true
+
+            while !queue.isEmpty {
+                let cell = queue.removeFirst()
+                let r = cell[0], c = cell[1]
+                if grid1[r][c] == 0 { res = false }
+
+                for i in 0..<4 {
+                    let nr = r + directions[i], nc = c + directions[i + 1]
+                    if nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
+                       grid2[nr][nc] == 1 && !visit[nr][nc] {
+                        visit[nr][nc] = true
+                        queue.append([nr, nc])
+                    }
+                }
+            }
+            return res
+        }
+
+        var count = 0
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid2[r][c] == 1 && !visit[r][c] {
+                    if bfs(r, c) { count += 1 }
+                }
+            }
+        }
+        return count
     }
 }
 ```
@@ -573,6 +891,235 @@ class Solution {
             }
         }
         return land - unions;
+    }
+}
+```
+
+```csharp
+public class DSU {
+    private int[] Parent, Size;
+
+    public DSU(int n) {
+        Parent = new int[n + 1];
+        Size = new int[n + 1];
+        for (int i = 0; i <= n; i++) Parent[i] = i;
+        Array.Fill(Size, 1);
+    }
+
+    public int Find(int node) {
+        if (Parent[node] != node) Parent[node] = Find(Parent[node]);
+        return Parent[node];
+    }
+
+    public int Union(int u, int v) {
+        int pu = Find(u), pv = Find(v);
+        if (pu == pv) return 0;
+        if (Size[pu] < Size[pv]) {
+            int temp = pu; pu = pv; pv = temp;
+        }
+        Size[pu] += Size[pv];
+        Parent[pv] = pu;
+        return 1;
+    }
+}
+
+public class Solution {
+    public int CountSubIslands(int[][] grid1, int[][] grid2) {
+        int ROWS = grid1.Length, COLS = grid1[0].Length, N = ROWS * COLS;
+        DSU dsu = new DSU(N);
+
+        int land = 0, unions = 0;
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (grid2[r][c] == 0) continue;
+                land++;
+                if (r + 1 < ROWS && grid2[r + 1][c] == 1)
+                    unions += dsu.Union(r * COLS + c, (r + 1) * COLS + c);
+                if (c + 1 < COLS && grid2[r][c + 1] == 1)
+                    unions += dsu.Union(r * COLS + c, r * COLS + c + 1);
+                if (grid1[r][c] == 0)
+                    unions += dsu.Union(r * COLS + c, N);
+            }
+        }
+        return land - unions;
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent []int
+    Size   []int
+}
+
+func NewDSU(n int) *DSU {
+    parent := make([]int, n+1)
+    size := make([]int, n+1)
+    for i := 0; i <= n; i++ {
+        parent[i] = i
+        size[i] = 1
+    }
+    return &DSU{Parent: parent, Size: size}
+}
+
+func (d *DSU) Find(node int) int {
+    if d.Parent[node] != node {
+        d.Parent[node] = d.Find(d.Parent[node])
+    }
+    return d.Parent[node]
+}
+
+func (d *DSU) Union(u, v int) int {
+    pu, pv := d.Find(u), d.Find(v)
+    if pu == pv {
+        return 0
+    }
+    if d.Size[pu] < d.Size[pv] {
+        pu, pv = pv, pu
+    }
+    d.Size[pu] += d.Size[pv]
+    d.Parent[pv] = pu
+    return 1
+}
+
+func countSubIslands(grid1 [][]int, grid2 [][]int) int {
+    ROWS, COLS := len(grid1), len(grid1[0])
+    N := ROWS * COLS
+    dsu := NewDSU(N)
+
+    getId := func(r, c int) int {
+        return r*COLS + c
+    }
+
+    land, unions := 0, 0
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if grid2[r][c] == 0 {
+                continue
+            }
+            land++
+            if r+1 < ROWS && grid2[r+1][c] == 1 {
+                unions += dsu.Union(getId(r, c), getId(r+1, c))
+            }
+            if c+1 < COLS && grid2[r][c+1] == 1 {
+                unions += dsu.Union(getId(r, c), getId(r, c+1))
+            }
+            if grid1[r][c] == 0 {
+                unions += dsu.Union(getId(r, c), N)
+            }
+        }
+    }
+    return land - unions
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n + 1) { it }
+    private val size = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) parent[node] = find(parent[node])
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Int {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) return 0
+        if (size[pu] < size[pv]) {
+            val temp = pu; pu = pv; pv = temp
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        return 1
+    }
+}
+
+class Solution {
+    fun countSubIslands(grid1: Array<IntArray>, grid2: Array<IntArray>): Int {
+        val ROWS = grid1.size
+        val COLS = grid1[0].size
+        val N = ROWS * COLS
+        val dsu = DSU(N)
+
+        fun getId(r: Int, c: Int) = r * COLS + c
+
+        var land = 0
+        var unions = 0
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (grid2[r][c] == 0) continue
+                land++
+                if (r + 1 < ROWS && grid2[r + 1][c] == 1)
+                    unions += dsu.union(getId(r, c), getId(r + 1, c))
+                if (c + 1 < COLS && grid2[r][c + 1] == 1)
+                    unions += dsu.union(getId(r, c), getId(r, c + 1))
+                if (grid1[r][c] == 0)
+                    unions += dsu.union(getId(r, c), N)
+            }
+        }
+        return land - unions
+    }
+}
+```
+
+```swift
+class DSU {
+    var parent: [Int]
+    var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...n)
+        size = [Int](repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Int {
+        var pu = find(u), pv = find(v)
+        if pu == pv { return 0 }
+        if size[pu] < size[pv] {
+            swap(&pu, &pv)
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        return 1
+    }
+}
+
+class Solution {
+    func countSubIslands(_ grid1: [[Int]], _ grid2: [[Int]]) -> Int {
+        let ROWS = grid1.count, COLS = grid1[0].count
+        let N = ROWS * COLS
+        let dsu = DSU(N)
+
+        func getId(_ r: Int, _ c: Int) -> Int {
+            return r * COLS + c
+        }
+
+        var land = 0, unions = 0
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid2[r][c] == 0 { continue }
+                land += 1
+                if r + 1 < ROWS && grid2[r + 1][c] == 1 {
+                    unions += dsu.union(getId(r, c), getId(r + 1, c))
+                }
+                if c + 1 < COLS && grid2[r][c + 1] == 1 {
+                    unions += dsu.union(getId(r, c), getId(r, c + 1))
+                }
+                if grid1[r][c] == 0 {
+                    unions += dsu.union(getId(r, c), N)
+                }
+            }
+        }
+        return land - unions
     }
 }
 ```

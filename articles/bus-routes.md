@@ -207,6 +207,134 @@ public class Solution {
 }
 ```
 
+```go
+func numBusesToDestination(routes [][]int, source int, target int) int {
+    if source == target {
+        return 0
+    }
+
+    n := len(routes)
+    stops := make(map[int][]int)
+    for bus := 0; bus < n; bus++ {
+        for _, stop := range routes[bus] {
+            stops[stop] = append(stops[stop], bus)
+        }
+    }
+
+    seenBus := make(map[int]bool)
+    seenStop := make(map[int]bool)
+    seenStop[source] = true
+    q := []int{source}
+    res := 0
+
+    for len(q) > 0 {
+        size := len(q)
+        for k := 0; k < size; k++ {
+            stop := q[0]
+            q = q[1:]
+            if stop == target {
+                return res
+            }
+            for _, bus := range stops[stop] {
+                if seenBus[bus] {
+                    continue
+                }
+                seenBus[bus] = true
+                for _, nxtStop := range routes[bus] {
+                    if seenStop[nxtStop] {
+                        continue
+                    }
+                    seenStop[nxtStop] = true
+                    q = append(q, nxtStop)
+                }
+            }
+        }
+        res++
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun numBusesToDestination(routes: Array<IntArray>, source: Int, target: Int): Int {
+        if (source == target) return 0
+
+        val n = routes.size
+        val stops = mutableMapOf<Int, MutableList<Int>>()
+        for (bus in 0 until n) {
+            for (stop in routes[bus]) {
+                stops.getOrPut(stop) { mutableListOf() }.add(bus)
+            }
+        }
+
+        val seenBus = mutableSetOf<Int>()
+        val seenStop = mutableSetOf(source)
+        val q = ArrayDeque<Int>()
+        q.add(source)
+        var res = 0
+
+        while (q.isNotEmpty()) {
+            repeat(q.size) {
+                val stop = q.removeFirst()
+                if (stop == target) return res
+                for (bus in stops.getOrDefault(stop, mutableListOf())) {
+                    if (bus in seenBus) continue
+                    seenBus.add(bus)
+                    for (nxtStop in routes[bus]) {
+                        if (nxtStop in seenStop) continue
+                        seenStop.add(nxtStop)
+                        q.add(nxtStop)
+                    }
+                }
+            }
+            res++
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func numBusesToDestination(_ routes: [[Int]], _ source: Int, _ target: Int) -> Int {
+        if source == target { return 0 }
+
+        let n = routes.count
+        var stops = [Int: [Int]]()
+        for bus in 0..<n {
+            for stop in routes[bus] {
+                stops[stop, default: []].append(bus)
+            }
+        }
+
+        var seenBus = Set<Int>()
+        var seenStop = Set<Int>([source])
+        var queue = [source]
+        var res = 0
+
+        while !queue.isEmpty {
+            var nextQueue = [Int]()
+            for stop in queue {
+                if stop == target { return res }
+                for bus in stops[stop, default: []] {
+                    if seenBus.contains(bus) { continue }
+                    seenBus.insert(bus)
+                    for nxtStop in routes[bus] {
+                        if seenStop.contains(nxtStop) { continue }
+                        seenStop.insert(nxtStop)
+                        nextQueue.append(nxtStop)
+                    }
+                }
+            }
+            queue = nextQueue
+            res += 1
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,6 +617,178 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func numBusesToDestination(routes [][]int, source int, target int) int {
+    if source == target {
+        return 0
+    }
+
+    n := len(routes)
+    adjList := make([][]int, n)
+    for i := range adjList {
+        adjList[i] = []int{}
+    }
+    stopToRoutes := make(map[int][]int)
+    for bus := 0; bus < n; bus++ {
+        for _, stop := range routes[bus] {
+            stopToRoutes[stop] = append(stopToRoutes[stop], bus)
+        }
+    }
+
+    if _, ok := stopToRoutes[source]; !ok {
+        return -1
+    }
+    if _, ok := stopToRoutes[target]; !ok {
+        return -1
+    }
+
+    hasEdge := make([][]bool, n)
+    for i := range hasEdge {
+        hasEdge[i] = make([]bool, n)
+    }
+    for _, buses := range stopToRoutes {
+        for i := 0; i < len(buses); i++ {
+            for j := i + 1; j < len(buses); j++ {
+                if !hasEdge[buses[i]][buses[j]] {
+                    hasEdge[buses[i]][buses[j]] = true
+                    hasEdge[buses[j]][buses[i]] = true
+                    adjList[buses[i]] = append(adjList[buses[i]], buses[j])
+                    adjList[buses[j]] = append(adjList[buses[j]], buses[i])
+                }
+            }
+        }
+    }
+
+    q := append([]int{}, stopToRoutes[source]...)
+    res := 1
+    for len(q) > 0 {
+        size := len(q)
+        for k := 0; k < size; k++ {
+            node := q[0]
+            q = q[1:]
+            for _, t := range stopToRoutes[target] {
+                if node == t {
+                    return res
+                }
+            }
+            for len(adjList[node]) > 0 {
+                nxtBus := adjList[node][len(adjList[node])-1]
+                adjList[node] = adjList[node][:len(adjList[node])-1]
+                if len(adjList[nxtBus]) > 0 {
+                    q = append(q, nxtBus)
+                }
+            }
+        }
+        res++
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun numBusesToDestination(routes: Array<IntArray>, source: Int, target: Int): Int {
+        if (source == target) return 0
+
+        val n = routes.size
+        val adjList = Array(n) { mutableListOf<Int>() }
+        val stopToRoutes = mutableMapOf<Int, MutableList<Int>>()
+        for (bus in 0 until n) {
+            for (stop in routes[bus]) {
+                stopToRoutes.getOrPut(stop) { mutableListOf() }.add(bus)
+            }
+        }
+
+        if (source !in stopToRoutes || target !in stopToRoutes) return -1
+
+        val hasEdge = Array(n) { BooleanArray(n) }
+        for (buses in stopToRoutes.values) {
+            for (i in buses.indices) {
+                for (j in i + 1 until buses.size) {
+                    if (!hasEdge[buses[i]][buses[j]]) {
+                        hasEdge[buses[i]][buses[j]] = true
+                        hasEdge[buses[j]][buses[i]] = true
+                        adjList[buses[i]].add(buses[j])
+                        adjList[buses[j]].add(buses[i])
+                    }
+                }
+            }
+        }
+
+        val q = ArrayDeque<Int>()
+        for (node in stopToRoutes[source]!!) q.add(node)
+        var res = 1
+
+        while (q.isNotEmpty()) {
+            repeat(q.size) {
+                val node = q.removeFirst()
+                if (node in stopToRoutes[target]!!) return res
+                while (adjList[node].isNotEmpty()) {
+                    val nxtBus = adjList[node].removeLast()
+                    if (adjList[nxtBus].isNotEmpty()) {
+                        q.add(nxtBus)
+                    }
+                }
+            }
+            res++
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func numBusesToDestination(_ routes: [[Int]], _ source: Int, _ target: Int) -> Int {
+        if source == target { return 0 }
+
+        let n = routes.count
+        var adjList = [[Int]](repeating: [], count: n)
+        var stopToRoutes = [Int: [Int]]()
+        for bus in 0..<n {
+            for stop in routes[bus] {
+                stopToRoutes[stop, default: []].append(bus)
+            }
+        }
+
+        guard stopToRoutes[source] != nil, stopToRoutes[target] != nil else { return -1 }
+
+        var hasEdge = [[Bool]](repeating: [Bool](repeating: false, count: n), count: n)
+        for buses in stopToRoutes.values {
+            for i in 0..<buses.count {
+                for j in (i + 1)..<buses.count {
+                    if !hasEdge[buses[i]][buses[j]] {
+                        hasEdge[buses[i]][buses[j]] = true
+                        hasEdge[buses[j]][buses[i]] = true
+                        adjList[buses[i]].append(buses[j])
+                        adjList[buses[j]].append(buses[i])
+                    }
+                }
+            }
+        }
+
+        var queue = stopToRoutes[source]!
+        var res = 1
+
+        while !queue.isEmpty {
+            var nextQueue = [Int]()
+            for node in queue {
+                if stopToRoutes[target]!.contains(node) { return res }
+                while !adjList[node].isEmpty {
+                    let nxtBus = adjList[node].removeLast()
+                    if !adjList[nxtBus].isEmpty {
+                        nextQueue.append(nxtBus)
+                    }
+                }
+            }
+            queue = nextQueue
+            res += 1
+        }
+        return -1
     }
 }
 ```

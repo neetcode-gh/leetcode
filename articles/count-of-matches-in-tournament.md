@@ -64,6 +64,66 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumberOfMatches(int n) {
+        int res = 0;
+
+        while (n > 1) {
+            res += n / 2;
+            n = (n + 1) / 2;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func numberOfMatches(n int) int {
+    res := 0
+
+    for n > 1 {
+        res += n / 2
+        n = (n + 1) / 2
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfMatches(n: Int): Int {
+        var n = n
+        var res = 0
+
+        while (n > 1) {
+            res += n / 2
+            n = (n + 1) / 2
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfMatches(_ n: Int) -> Int {
+        var n = n
+        var res = 0
+
+        while n > 1 {
+            res += n / 2
+            n = (n + 1) / 2
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -108,6 +168,36 @@ class Solution {
      */
     numberOfMatches(n) {
         return n - 1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumberOfMatches(int n) {
+        return n - 1;
+    }
+}
+```
+
+```go
+func numberOfMatches(n int) int {
+    return n - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfMatches(n: Int): Int {
+        return n - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfMatches(_ n: Int) -> Int {
+        return n - 1
     }
 }
 ```

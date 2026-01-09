@@ -167,6 +167,104 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func isPalindrome(head *ListNode) bool {
+    arr := []int{}
+    cur := head
+    for cur != nil {
+        arr = append(arr, cur.Val)
+        cur = cur.Next
+    }
+
+    l, r := 0, len(arr)-1
+    for l < r {
+        if arr[l] != arr[r] {
+            return false
+        }
+        l++
+        r--
+    }
+
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun isPalindrome(head: ListNode?): Boolean {
+        val arr = mutableListOf<Int>()
+        var cur = head
+        while (cur != null) {
+            arr.add(cur.`val`)
+            cur = cur.next
+        }
+
+        var l = 0
+        var r = arr.size - 1
+        while (l < r) {
+            if (arr[l] != arr[r]) {
+                return false
+            }
+            l++
+            r--
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func isPalindrome(_ head: ListNode?) -> Bool {
+        var arr = [Int]()
+        var cur = head
+        while cur != nil {
+            arr.append(cur!.val)
+            cur = cur?.next
+        }
+
+        var l = 0
+        var r = arr.count - 1
+        while l < r {
+            if arr[l] != arr[r] {
+                return false
+            }
+            l += 1
+            r -= 1
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -341,6 +439,102 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func isPalindrome(head *ListNode) bool {
+    cur := head
+
+    var rec func(node *ListNode) bool
+    rec = func(node *ListNode) bool {
+        if node != nil {
+            if !rec(node.Next) {
+                return false
+            }
+            if cur.Val != node.Val {
+                return false
+            }
+            cur = cur.Next
+        }
+        return true
+    }
+
+    return rec(head)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    private var cur: ListNode? = null
+
+    fun isPalindrome(head: ListNode?): Boolean {
+        cur = head
+        return rec(head)
+    }
+
+    private fun rec(node: ListNode?): Boolean {
+        if (node != null) {
+            if (!rec(node.next)) {
+                return false
+            }
+            if (cur?.`val` != node.`val`) {
+                return false
+            }
+            cur = cur?.next
+        }
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    var cur: ListNode?
+
+    func isPalindrome(_ head: ListNode?) -> Bool {
+        cur = head
+        return rec(head)
+    }
+
+    private func rec(_ node: ListNode?) -> Bool {
+        if node != nil {
+            if !rec(node?.next) {
+                return false
+            }
+            if cur?.val != node?.val {
+                return false
+            }
+            cur = cur?.next
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,6 +695,94 @@ public class Solution {
         }
 
         return cur == null;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func isPalindrome(head *ListNode) bool {
+    stack := []int{}
+    cur := head
+
+    for cur != nil {
+        stack = append(stack, cur.Val)
+        cur = cur.Next
+    }
+
+    cur = head
+    for cur != nil && cur.Val == stack[len(stack)-1] {
+        stack = stack[:len(stack)-1]
+        cur = cur.Next
+    }
+
+    return cur == nil
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun isPalindrome(head: ListNode?): Boolean {
+        val stack = ArrayDeque<Int>()
+        var cur = head
+
+        while (cur != null) {
+            stack.addLast(cur.`val`)
+            cur = cur.next
+        }
+
+        cur = head
+        while (cur != null && cur.`val` == stack.removeLast()) {
+            cur = cur.next
+        }
+
+        return cur == null
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func isPalindrome(_ head: ListNode?) -> Bool {
+        var stack = [Int]()
+        var cur = head
+
+        while cur != nil {
+            stack.append(cur!.val)
+            cur = cur?.next
+        }
+
+        cur = head
+        while cur != nil && cur!.val == stack.removeLast() {
+            cur = cur?.next
+        }
+
+        return cur == nil
     }
 }
 ```
@@ -732,6 +1014,141 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func isPalindrome(head *ListNode) bool {
+    fast, slow := head, head
+
+    // find middle (slow)
+    for fast != nil && fast.Next != nil {
+        fast = fast.Next.Next
+        slow = slow.Next
+    }
+
+    // reverse second half
+    var prev *ListNode
+    for slow != nil {
+        tmp := slow.Next
+        slow.Next = prev
+        prev = slow
+        slow = tmp
+    }
+
+    // check palindrome
+    left, right := head, prev
+    for right != nil {
+        if left.Val != right.Val {
+            return false
+        }
+        left = left.Next
+        right = right.Next
+    }
+
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun isPalindrome(head: ListNode?): Boolean {
+        var fast = head
+        var slow = head
+
+        // find middle (slow)
+        while (fast != null && fast.next != null) {
+            fast = fast.next?.next
+            slow = slow?.next
+        }
+
+        // reverse second half
+        var prev: ListNode? = null
+        var curr = slow
+        while (curr != null) {
+            val tmp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = tmp
+        }
+
+        // check palindrome
+        var left = head
+        var right = prev
+        while (right != null) {
+            if (left?.`val` != right.`val`) {
+                return false
+            }
+            left = left?.next
+            right = right.next
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func isPalindrome(_ head: ListNode?) -> Bool {
+        var fast = head
+        var slow = head
+
+        // find middle (slow)
+        while fast != nil && fast?.next != nil {
+            fast = fast?.next?.next
+            slow = slow?.next
+        }
+
+        // reverse second half
+        var prev: ListNode? = nil
+        var curr = slow
+        while curr != nil {
+            let tmp = curr?.next
+            curr?.next = prev
+            prev = curr
+            curr = tmp
+        }
+
+        // check palindrome
+        var left = head
+        var right = prev
+        while right != nil {
+            if left?.val != right?.val {
+                return false
+            }
+            left = left?.next
+            right = right?.next
+        }
+
+        return true
     }
 }
 ```

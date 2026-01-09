@@ -97,6 +97,89 @@ class NumArray {
 }
 ```
 
+```csharp
+public class NumArray {
+    private int[] nums;
+
+    public NumArray(int[] nums) {
+        this.nums = nums;
+    }
+
+    public void Update(int index, int val) {
+        nums[index] = val;
+    }
+
+    public int SumRange(int left, int right) {
+        int res = 0;
+        for (int i = left; i <= right; i++) {
+            res += nums[i];
+        }
+        return res;
+    }
+}
+```
+
+```go
+type NumArray struct {
+    nums []int
+}
+
+func Constructor(nums []int) NumArray {
+    return NumArray{nums: nums}
+}
+
+func (this *NumArray) Update(index int, val int) {
+    this.nums[index] = val
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+    res := 0
+    for i := left; i <= right; i++ {
+        res += this.nums[i]
+    }
+    return res
+}
+```
+
+```kotlin
+class NumArray(private val nums: IntArray) {
+
+    fun update(index: Int, `val`: Int) {
+        nums[index] = `val`
+    }
+
+    fun sumRange(left: Int, right: Int): Int {
+        var res = 0
+        for (i in left..right) {
+            res += nums[i]
+        }
+        return res
+    }
+}
+```
+
+```swift
+class NumArray {
+    private var nums: [Int]
+
+    init(_ nums: [Int]) {
+        self.nums = nums
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        nums[index] = val
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        var res = 0
+        for i in left...right {
+            res += nums[i]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -456,6 +539,317 @@ class NumArray {
 }
 ```
 
+```csharp
+class SegmentTree {
+    private int[] tree;
+    private int n;
+
+    public SegmentTree(int N, int[] A) {
+        n = N;
+        while ((n & (n - 1)) != 0) {
+            n++;
+        }
+        tree = new int[2 * n];
+        Build(0, 0, n - 1, A);
+    }
+
+    private void Build(int node, int start, int end, int[] A) {
+        if (start == end) {
+            tree[node] = start < A.Length ? A[start] : 0;
+        } else {
+            int mid = (start + end) / 2;
+            Build(2 * node + 1, start, mid, A);
+            Build(2 * node + 2, mid + 1, end, A);
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        }
+    }
+
+    private void UpdateHelper(int node, int start, int end, int idx, int val) {
+        if (start == end) {
+            tree[node] = val;
+        } else {
+            int mid = (start + end) / 2;
+            if (idx <= mid) {
+                UpdateHelper(2 * node + 1, start, mid, idx, val);
+            } else {
+                UpdateHelper(2 * node + 2, mid + 1, end, idx, val);
+            }
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2];
+        }
+    }
+
+    private int QueryHelper(int node, int start, int end, int l, int r) {
+        if (r < start || end < l) {
+            return 0;
+        }
+        if (l <= start && end <= r) {
+            return tree[node];
+        }
+        int mid = (start + end) / 2;
+        int leftSum = QueryHelper(2 * node + 1, start, mid, l, r);
+        int rightSum = QueryHelper(2 * node + 2, mid + 1, end, l, r);
+        return leftSum + rightSum;
+    }
+
+    public void Update(int idx, int val) {
+        UpdateHelper(0, 0, n - 1, idx, val);
+    }
+
+    public int Query(int l, int r) {
+        return QueryHelper(0, 0, n - 1, l, r);
+    }
+}
+
+public class NumArray {
+    private SegmentTree segTree;
+
+    public NumArray(int[] nums) {
+        segTree = new SegmentTree(nums.Length, nums);
+    }
+
+    public void Update(int index, int val) {
+        segTree.Update(index, val);
+    }
+
+    public int SumRange(int left, int right) {
+        return segTree.Query(left, right);
+    }
+}
+```
+
+```go
+type SegmentTree struct {
+    tree []int
+    n    int
+}
+
+func NewSegmentTree(N int, A []int) *SegmentTree {
+    n := N
+    for n&(n-1) != 0 {
+        n++
+    }
+    tree := make([]int, 2*n)
+    st := &SegmentTree{tree: tree, n: n}
+    st.build(0, 0, n-1, A)
+    return st
+}
+
+func (st *SegmentTree) build(node, start, end int, A []int) {
+    if start == end {
+        if start < len(A) {
+            st.tree[node] = A[start]
+        }
+    } else {
+        mid := (start + end) / 2
+        st.build(2*node+1, start, mid, A)
+        st.build(2*node+2, mid+1, end, A)
+        st.tree[node] = st.tree[2*node+1] + st.tree[2*node+2]
+    }
+}
+
+func (st *SegmentTree) updateHelper(node, start, end, idx, val int) {
+    if start == end {
+        st.tree[node] = val
+    } else {
+        mid := (start + end) / 2
+        if idx <= mid {
+            st.updateHelper(2*node+1, start, mid, idx, val)
+        } else {
+            st.updateHelper(2*node+2, mid+1, end, idx, val)
+        }
+        st.tree[node] = st.tree[2*node+1] + st.tree[2*node+2]
+    }
+}
+
+func (st *SegmentTree) queryHelper(node, start, end, l, r int) int {
+    if r < start || end < l {
+        return 0
+    }
+    if l <= start && end <= r {
+        return st.tree[node]
+    }
+    mid := (start + end) / 2
+    leftSum := st.queryHelper(2*node+1, start, mid, l, r)
+    rightSum := st.queryHelper(2*node+2, mid+1, end, l, r)
+    return leftSum + rightSum
+}
+
+func (st *SegmentTree) Update(idx, val int) {
+    st.updateHelper(0, 0, st.n-1, idx, val)
+}
+
+func (st *SegmentTree) Query(l, r int) int {
+    return st.queryHelper(0, 0, st.n-1, l, r)
+}
+
+type NumArray struct {
+    segTree *SegmentTree
+}
+
+func Constructor(nums []int) NumArray {
+    return NumArray{segTree: NewSegmentTree(len(nums), nums)}
+}
+
+func (this *NumArray) Update(index int, val int) {
+    this.segTree.Update(index, val)
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+    return this.segTree.Query(left, right)
+}
+```
+
+```kotlin
+class SegmentTree(N: Int, A: IntArray) {
+    private var n: Int = N
+    private val tree: IntArray
+
+    init {
+        while (n and (n - 1) != 0) {
+            n++
+        }
+        tree = IntArray(2 * n)
+        build(0, 0, n - 1, A)
+    }
+
+    private fun build(node: Int, start: Int, end: Int, A: IntArray) {
+        if (start == end) {
+            tree[node] = if (start < A.size) A[start] else 0
+        } else {
+            val mid = (start + end) / 2
+            build(2 * node + 1, start, mid, A)
+            build(2 * node + 2, mid + 1, end, A)
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]
+        }
+    }
+
+    private fun updateHelper(node: Int, start: Int, end: Int, idx: Int, value: Int) {
+        if (start == end) {
+            tree[node] = value
+        } else {
+            val mid = (start + end) / 2
+            if (idx <= mid) {
+                updateHelper(2 * node + 1, start, mid, idx, value)
+            } else {
+                updateHelper(2 * node + 2, mid + 1, end, idx, value)
+            }
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]
+        }
+    }
+
+    private fun queryHelper(node: Int, start: Int, end: Int, l: Int, r: Int): Int {
+        if (r < start || end < l) {
+            return 0
+        }
+        if (l <= start && end <= r) {
+            return tree[node]
+        }
+        val mid = (start + end) / 2
+        val leftSum = queryHelper(2 * node + 1, start, mid, l, r)
+        val rightSum = queryHelper(2 * node + 2, mid + 1, end, l, r)
+        return leftSum + rightSum
+    }
+
+    fun update(idx: Int, value: Int) {
+        updateHelper(0, 0, n - 1, idx, value)
+    }
+
+    fun query(l: Int, r: Int): Int {
+        return queryHelper(0, 0, n - 1, l, r)
+    }
+}
+
+class NumArray(nums: IntArray) {
+    private val segTree = SegmentTree(nums.size, nums)
+
+    fun update(index: Int, `val`: Int) {
+        segTree.update(index, `val`)
+    }
+
+    fun sumRange(left: Int, right: Int): Int {
+        return segTree.query(left, right)
+    }
+}
+```
+
+```swift
+class SegmentTree {
+    private var tree: [Int]
+    private var n: Int
+
+    init(_ N: Int, _ A: [Int]) {
+        n = N
+        while n & (n - 1) != 0 {
+            n += 1
+        }
+        tree = Array(repeating: 0, count: 2 * n)
+        build(0, 0, n - 1, A)
+    }
+
+    private func build(_ node: Int, _ start: Int, _ end: Int, _ A: [Int]) {
+        if start == end {
+            tree[node] = start < A.count ? A[start] : 0
+        } else {
+            let mid = (start + end) / 2
+            build(2 * node + 1, start, mid, A)
+            build(2 * node + 2, mid + 1, end, A)
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]
+        }
+    }
+
+    private func updateHelper(_ node: Int, _ start: Int, _ end: Int, _ idx: Int, _ val: Int) {
+        if start == end {
+            tree[node] = val
+        } else {
+            let mid = (start + end) / 2
+            if idx <= mid {
+                updateHelper(2 * node + 1, start, mid, idx, val)
+            } else {
+                updateHelper(2 * node + 2, mid + 1, end, idx, val)
+            }
+            tree[node] = tree[2 * node + 1] + tree[2 * node + 2]
+        }
+    }
+
+    private func queryHelper(_ node: Int, _ start: Int, _ end: Int, _ l: Int, _ r: Int) -> Int {
+        if r < start || end < l {
+            return 0
+        }
+        if l <= start && end <= r {
+            return tree[node]
+        }
+        let mid = (start + end) / 2
+        let leftSum = queryHelper(2 * node + 1, start, mid, l, r)
+        let rightSum = queryHelper(2 * node + 2, mid + 1, end, l, r)
+        return leftSum + rightSum
+    }
+
+    func update(_ idx: Int, _ val: Int) {
+        updateHelper(0, 0, n - 1, idx, val)
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        return queryHelper(0, 0, n - 1, l, r)
+    }
+}
+
+class NumArray {
+    private var segTree: SegmentTree
+
+    init(_ nums: [Int]) {
+        segTree = SegmentTree(nums.count, nums)
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        segTree.update(index, val)
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        return segTree.query(left, right)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -729,6 +1123,263 @@ class NumArray {
 }
 ```
 
+```csharp
+class SegmentTree {
+    private int[] tree;
+    private int n;
+
+    public SegmentTree(int N, int[] A) {
+        n = N;
+        while ((n & (n - 1)) != 0) {
+            n++;
+        }
+        Build(N, A);
+    }
+
+    private void Build(int N, int[] A) {
+        tree = new int[2 * n];
+        for (int i = 0; i < N; i++) {
+            tree[n + i] = A[i];
+        }
+        for (int i = n - 1; i > 0; i--) {
+            tree[i] = tree[i << 1] + tree[(i << 1) | 1];
+        }
+    }
+
+    public void Update(int i, int val) {
+        tree[n + i] = val;
+        for (int j = (n + i) >> 1; j >= 1; j >>= 1) {
+            tree[j] = tree[j << 1] + tree[(j << 1) | 1];
+        }
+    }
+
+    public int Query(int l, int r) {
+        int res = 0;
+        l += n;
+        r += n + 1;
+        while (l < r) {
+            if ((l & 1) == 1) res += tree[l++];
+            if ((r & 1) == 1) res += tree[--r];
+            l >>= 1;
+            r >>= 1;
+        }
+        return res;
+    }
+}
+
+public class NumArray {
+    private SegmentTree segTree;
+
+    public NumArray(int[] nums) {
+        segTree = new SegmentTree(nums.Length, nums);
+    }
+
+    public void Update(int index, int val) {
+        segTree.Update(index, val);
+    }
+
+    public int SumRange(int left, int right) {
+        return segTree.Query(left, right);
+    }
+}
+```
+
+```go
+type SegmentTree struct {
+    tree []int
+    n    int
+}
+
+func NewSegmentTree(N int, A []int) *SegmentTree {
+    n := N
+    for n&(n-1) != 0 {
+        n++
+    }
+    st := &SegmentTree{n: n}
+    st.build(N, A)
+    return st
+}
+
+func (st *SegmentTree) build(N int, A []int) {
+    st.tree = make([]int, 2*st.n)
+    for i := 0; i < N; i++ {
+        st.tree[st.n+i] = A[i]
+    }
+    for i := st.n - 1; i > 0; i-- {
+        st.tree[i] = st.tree[i<<1] + st.tree[(i<<1)|1]
+    }
+}
+
+func (st *SegmentTree) Update(i, val int) {
+    st.tree[st.n+i] = val
+    for j := (st.n + i) >> 1; j >= 1; j >>= 1 {
+        st.tree[j] = st.tree[j<<1] + st.tree[(j<<1)|1]
+    }
+}
+
+func (st *SegmentTree) Query(l, r int) int {
+    res := 0
+    l += st.n
+    r += st.n + 1
+    for l < r {
+        if l&1 == 1 {
+            res += st.tree[l]
+            l++
+        }
+        if r&1 == 1 {
+            r--
+            res += st.tree[r]
+        }
+        l >>= 1
+        r >>= 1
+    }
+    return res
+}
+
+type NumArray struct {
+    segTree *SegmentTree
+}
+
+func Constructor(nums []int) NumArray {
+    return NumArray{segTree: NewSegmentTree(len(nums), nums)}
+}
+
+func (this *NumArray) Update(index int, val int) {
+    this.segTree.Update(index, val)
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+    return this.segTree.Query(left, right)
+}
+```
+
+```kotlin
+class SegmentTree(N: Int, A: IntArray) {
+    private var n: Int = N
+    private lateinit var tree: IntArray
+
+    init {
+        while (n and (n - 1) != 0) {
+            n++
+        }
+        build(N, A)
+    }
+
+    private fun build(N: Int, A: IntArray) {
+        tree = IntArray(2 * n)
+        for (i in 0 until N) {
+            tree[n + i] = A[i]
+        }
+        for (i in n - 1 downTo 1) {
+            tree[i] = tree[i shl 1] + tree[(i shl 1) or 1]
+        }
+    }
+
+    fun update(i: Int, value: Int) {
+        tree[n + i] = value
+        var j = (n + i) shr 1
+        while (j >= 1) {
+            tree[j] = tree[j shl 1] + tree[(j shl 1) or 1]
+            j = j shr 1
+        }
+    }
+
+    fun query(l: Int, r: Int): Int {
+        var left = l + n
+        var right = r + n + 1
+        var res = 0
+        while (left < right) {
+            if (left and 1 == 1) res += tree[left++]
+            if (right and 1 == 1) res += tree[--right]
+            left = left shr 1
+            right = right shr 1
+        }
+        return res
+    }
+}
+
+class NumArray(nums: IntArray) {
+    private val segTree = SegmentTree(nums.size, nums)
+
+    fun update(index: Int, `val`: Int) {
+        segTree.update(index, `val`)
+    }
+
+    fun sumRange(left: Int, right: Int): Int {
+        return segTree.query(left, right)
+    }
+}
+```
+
+```swift
+class SegmentTree {
+    private var tree: [Int]
+    private var n: Int
+
+    init(_ N: Int, _ A: [Int]) {
+        n = N
+        while n & (n - 1) != 0 {
+            n += 1
+        }
+        tree = Array(repeating: 0, count: 2 * n)
+        build(N, A)
+    }
+
+    private func build(_ N: Int, _ A: [Int]) {
+        for i in 0..<N {
+            tree[n + i] = A[i]
+        }
+        for i in stride(from: n - 1, through: 1, by: -1) {
+            tree[i] = tree[i << 1] + tree[(i << 1) | 1]
+        }
+    }
+
+    func update(_ i: Int, _ val: Int) {
+        tree[n + i] = val
+        var j = (n + i) >> 1
+        while j >= 1 {
+            tree[j] = tree[j << 1] + tree[(j << 1) | 1]
+            j >>= 1
+        }
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        var left = l + n
+        var right = r + n + 1
+        var res = 0
+        while left < right {
+            if left & 1 == 1 {
+                res += tree[left]
+                left += 1
+            }
+            if right & 1 == 1 {
+                right -= 1
+                res += tree[right]
+            }
+            left >>= 1
+            right >>= 1
+        }
+        return res
+    }
+}
+
+class NumArray {
+    private var segTree: SegmentTree
+
+    init(_ nums: [Int]) {
+        segTree = SegmentTree(nums.count, nums)
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        segTree.update(index, val)
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        return segTree.query(left, right)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -985,6 +1636,237 @@ class NumArray {
      */
     sumRange(left, right) {
         return this.sq.query(left, right);
+    }
+}
+```
+
+```csharp
+class SqrtDecomposition {
+    private int[] nums, blocks;
+    private int blockSize, n;
+
+    public SqrtDecomposition(int[] nums) {
+        this.nums = (int[])nums.Clone();
+        n = nums.Length;
+        blockSize = (int)Math.Sqrt(n) + 1;
+        blocks = new int[blockSize];
+
+        for (int i = 0; i < n; i++) {
+            blocks[i / blockSize] += nums[i];
+        }
+    }
+
+    public int Query(int left, int right) {
+        int totalSum = 0;
+        while (left <= right && left % blockSize != 0) {
+            totalSum += nums[left++];
+        }
+        while (left + blockSize - 1 <= right) {
+            totalSum += blocks[left / blockSize];
+            left += blockSize;
+        }
+        while (left <= right) {
+            totalSum += nums[left++];
+        }
+        return totalSum;
+    }
+
+    public void Update(int index, int val) {
+        int blockIndex = index / blockSize;
+        blocks[blockIndex] += val - nums[index];
+        nums[index] = val;
+    }
+}
+
+public class NumArray {
+    private SqrtDecomposition sq;
+
+    public NumArray(int[] nums) {
+        sq = new SqrtDecomposition(nums);
+    }
+
+    public void Update(int index, int val) {
+        sq.Update(index, val);
+    }
+
+    public int SumRange(int left, int right) {
+        return sq.Query(left, right);
+    }
+}
+```
+
+```go
+type SqrtDecomposition struct {
+    nums      []int
+    blocks    []int
+    blockSize int
+    n         int
+}
+
+func NewSqrtDecomposition(nums []int) *SqrtDecomposition {
+    n := len(nums)
+    blockSize := int(math.Sqrt(float64(n))) + 1
+    blocks := make([]int, blockSize)
+    numsCopy := make([]int, n)
+    copy(numsCopy, nums)
+
+    for i := 0; i < n; i++ {
+        blocks[i/blockSize] += nums[i]
+    }
+
+    return &SqrtDecomposition{
+        nums:      numsCopy,
+        blocks:    blocks,
+        blockSize: blockSize,
+        n:         n,
+    }
+}
+
+func (sq *SqrtDecomposition) Query(left, right int) int {
+    totalSum := 0
+    for left <= right && left%sq.blockSize != 0 {
+        totalSum += sq.nums[left]
+        left++
+    }
+    for left+sq.blockSize-1 <= right {
+        totalSum += sq.blocks[left/sq.blockSize]
+        left += sq.blockSize
+    }
+    for left <= right {
+        totalSum += sq.nums[left]
+        left++
+    }
+    return totalSum
+}
+
+func (sq *SqrtDecomposition) Update(index, val int) {
+    blockIndex := index / sq.blockSize
+    sq.blocks[blockIndex] += val - sq.nums[index]
+    sq.nums[index] = val
+}
+
+type NumArray struct {
+    sq *SqrtDecomposition
+}
+
+func Constructor(nums []int) NumArray {
+    return NumArray{sq: NewSqrtDecomposition(nums)}
+}
+
+func (this *NumArray) Update(index int, val int) {
+    this.sq.Update(index, val)
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+    return this.sq.Query(left, right)
+}
+```
+
+```kotlin
+class SqrtDecomposition(nums: IntArray) {
+    private val nums: IntArray = nums.copyOf()
+    private val n: Int = nums.size
+    private val blockSize: Int = kotlin.math.sqrt(n.toDouble()).toInt() + 1
+    private val blocks: IntArray = IntArray(blockSize)
+
+    init {
+        for (i in 0 until n) {
+            blocks[i / blockSize] += nums[i]
+        }
+    }
+
+    fun query(left: Int, right: Int): Int {
+        var l = left
+        var totalSum = 0
+        while (l <= right && l % blockSize != 0) {
+            totalSum += nums[l++]
+        }
+        while (l + blockSize - 1 <= right) {
+            totalSum += blocks[l / blockSize]
+            l += blockSize
+        }
+        while (l <= right) {
+            totalSum += nums[l++]
+        }
+        return totalSum
+    }
+
+    fun update(index: Int, value: Int) {
+        val blockIndex = index / blockSize
+        blocks[blockIndex] += value - nums[index]
+        nums[index] = value
+    }
+}
+
+class NumArray(nums: IntArray) {
+    private val sq = SqrtDecomposition(nums)
+
+    fun update(index: Int, `val`: Int) {
+        sq.update(index, `val`)
+    }
+
+    fun sumRange(left: Int, right: Int): Int {
+        return sq.query(left, right)
+    }
+}
+```
+
+```swift
+class SqrtDecomposition {
+    private var nums: [Int]
+    private var blocks: [Int]
+    private var blockSize: Int
+    private var n: Int
+
+    init(_ nums: [Int]) {
+        self.nums = nums
+        n = nums.count
+        blockSize = Int(Double(n).squareRoot()) + 1
+        blocks = Array(repeating: 0, count: blockSize)
+
+        for i in 0..<n {
+            blocks[i / blockSize] += nums[i]
+        }
+    }
+
+    func query(_ left: Int, _ right: Int) -> Int {
+        var l = left
+        var totalSum = 0
+        while l <= right && l % blockSize != 0 {
+            totalSum += nums[l]
+            l += 1
+        }
+        while l + blockSize - 1 <= right {
+            totalSum += blocks[l / blockSize]
+            l += blockSize
+        }
+        while l <= right {
+            totalSum += nums[l]
+            l += 1
+        }
+        return totalSum
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        let blockIndex = index / blockSize
+        blocks[blockIndex] += val - nums[index]
+        nums[index] = val
+    }
+}
+
+class NumArray {
+    private var sq: SqrtDecomposition
+
+    init(_ nums: [Int]) {
+        sq = SqrtDecomposition(nums)
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        sq.update(index, val)
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        return sq.query(left, right)
     }
 }
 ```
@@ -1268,6 +2150,253 @@ class NumArray {
 }
 ```
 
+```csharp
+class SqrtDecomposition {
+    private int[] nums, prefixSums;
+    private int blockSize, n;
+
+    public SqrtDecomposition(int[] nums) {
+        this.nums = (int[])nums.Clone();
+        n = nums.Length;
+        blockSize = (int)Math.Sqrt(n) + 1;
+        prefixSums = (int[])nums.Clone();
+
+        for (int i = 1; i < n; i++) {
+            if (i % blockSize != 0) {
+                prefixSums[i] += prefixSums[i - 1];
+            }
+        }
+    }
+
+    public int Query(int left, int right) {
+        int totalSum = (left % blockSize != 0) ? -prefixSums[left - 1] : 0;
+
+        while (left / blockSize < right / blockSize) {
+            int blockEnd = Math.Min(n - 1, (left / blockSize) * blockSize + blockSize - 1);
+            totalSum += prefixSums[blockEnd];
+            left = blockEnd + 1;
+        }
+
+        totalSum += prefixSums[right];
+        return totalSum;
+    }
+
+    public void Update(int index, int val) {
+        int diff = val - nums[index];
+        nums[index] = val;
+
+        int blockEnd = Math.Min(n - 1, (index / blockSize) * blockSize + blockSize - 1);
+        for (int i = index; i <= blockEnd; i++) {
+            prefixSums[i] += diff;
+        }
+    }
+}
+
+public class NumArray {
+    private SqrtDecomposition sq;
+
+    public NumArray(int[] nums) {
+        sq = new SqrtDecomposition(nums);
+    }
+
+    public void Update(int index, int val) {
+        sq.Update(index, val);
+    }
+
+    public int SumRange(int left, int right) {
+        return sq.Query(left, right);
+    }
+}
+```
+
+```go
+type SqrtDecomposition struct {
+    nums       []int
+    prefixSums []int
+    blockSize  int
+    n          int
+}
+
+func NewSqrtDecomposition(nums []int) *SqrtDecomposition {
+    n := len(nums)
+    blockSize := int(math.Sqrt(float64(n))) + 1
+    numsCopy := make([]int, n)
+    prefixSums := make([]int, n)
+    copy(numsCopy, nums)
+    copy(prefixSums, nums)
+
+    for i := 1; i < n; i++ {
+        if i%blockSize != 0 {
+            prefixSums[i] += prefixSums[i-1]
+        }
+    }
+
+    return &SqrtDecomposition{
+        nums:       numsCopy,
+        prefixSums: prefixSums,
+        blockSize:  blockSize,
+        n:          n,
+    }
+}
+
+func (sq *SqrtDecomposition) Query(left, right int) int {
+    totalSum := 0
+    if left%sq.blockSize != 0 {
+        totalSum = -sq.prefixSums[left-1]
+    }
+
+    for left/sq.blockSize < right/sq.blockSize {
+        blockEnd := min(sq.n-1, (left/sq.blockSize)*sq.blockSize+sq.blockSize-1)
+        totalSum += sq.prefixSums[blockEnd]
+        left = blockEnd + 1
+    }
+
+    totalSum += sq.prefixSums[right]
+    return totalSum
+}
+
+func (sq *SqrtDecomposition) Update(index, val int) {
+    diff := val - sq.nums[index]
+    sq.nums[index] = val
+
+    blockEnd := min(sq.n-1, (index/sq.blockSize)*sq.blockSize+sq.blockSize-1)
+    for i := index; i <= blockEnd; i++ {
+        sq.prefixSums[i] += diff
+    }
+}
+
+type NumArray struct {
+    sq *SqrtDecomposition
+}
+
+func Constructor(nums []int) NumArray {
+    return NumArray{sq: NewSqrtDecomposition(nums)}
+}
+
+func (this *NumArray) Update(index int, val int) {
+    this.sq.Update(index, val)
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+    return this.sq.Query(left, right)
+}
+```
+
+```kotlin
+class SqrtDecomposition(nums: IntArray) {
+    private val nums: IntArray = nums.copyOf()
+    private val prefixSums: IntArray = nums.copyOf()
+    private val n: Int = nums.size
+    private val blockSize: Int = kotlin.math.sqrt(n.toDouble()).toInt() + 1
+
+    init {
+        for (i in 1 until n) {
+            if (i % blockSize != 0) {
+                prefixSums[i] += prefixSums[i - 1]
+            }
+        }
+    }
+
+    fun query(left: Int, right: Int): Int {
+        var l = left
+        var totalSum = if (l % blockSize != 0) -prefixSums[l - 1] else 0
+
+        while (l / blockSize < right / blockSize) {
+            val blockEnd = minOf(n - 1, (l / blockSize) * blockSize + blockSize - 1)
+            totalSum += prefixSums[blockEnd]
+            l = blockEnd + 1
+        }
+
+        totalSum += prefixSums[right]
+        return totalSum
+    }
+
+    fun update(index: Int, value: Int) {
+        val diff = value - nums[index]
+        nums[index] = value
+
+        val blockEnd = minOf(n - 1, (index / blockSize) * blockSize + blockSize - 1)
+        for (i in index..blockEnd) {
+            prefixSums[i] += diff
+        }
+    }
+}
+
+class NumArray(nums: IntArray) {
+    private val sq = SqrtDecomposition(nums)
+
+    fun update(index: Int, `val`: Int) {
+        sq.update(index, `val`)
+    }
+
+    fun sumRange(left: Int, right: Int): Int {
+        return sq.query(left, right)
+    }
+}
+```
+
+```swift
+class SqrtDecomposition {
+    private var nums: [Int]
+    private var prefixSums: [Int]
+    private var blockSize: Int
+    private var n: Int
+
+    init(_ nums: [Int]) {
+        self.nums = nums
+        self.prefixSums = nums
+        n = nums.count
+        blockSize = Int(Double(n).squareRoot()) + 1
+
+        for i in 1..<n {
+            if i % blockSize != 0 {
+                prefixSums[i] += prefixSums[i - 1]
+            }
+        }
+    }
+
+    func query(_ left: Int, _ right: Int) -> Int {
+        var l = left
+        var totalSum = (l % blockSize != 0) ? -prefixSums[l - 1] : 0
+
+        while l / blockSize < right / blockSize {
+            let blockEnd = min(n - 1, (l / blockSize) * blockSize + blockSize - 1)
+            totalSum += prefixSums[blockEnd]
+            l = blockEnd + 1
+        }
+
+        totalSum += prefixSums[right]
+        return totalSum
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        let diff = val - nums[index]
+        nums[index] = val
+
+        let blockEnd = min(n - 1, (index / blockSize) * blockSize + blockSize - 1)
+        for i in index...blockEnd {
+            prefixSums[i] += diff
+        }
+    }
+}
+
+class NumArray {
+    private var sq: SqrtDecomposition
+
+    init(_ nums: [Int]) {
+        sq = SqrtDecomposition(nums)
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        sq.update(index, val)
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        return sq.query(left, right)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1512,6 +2641,229 @@ class NumArray {
      */
     sumRange(left, right) {
         return this.bit.query(left, right);
+    }
+}
+```
+
+```csharp
+class BIT {
+    private int[] nums;
+    private int[] tree;
+    private int n;
+
+    public BIT(int[] nums) {
+        n = nums.Length + 1;
+        this.nums = new int[n];
+        tree = new int[n];
+        for (int i = 0; i < n - 1; i++) {
+            Update(i, nums[i]);
+        }
+    }
+
+    public void Update(int index, int val) {
+        index++;
+        int diff = val - nums[index];
+        nums[index] = val;
+        while (index < n) {
+            tree[index] += diff;
+            index += index & -index;
+        }
+    }
+
+    public int PrefixSum(int index) {
+        int totalSum = 0;
+        while (index > 0) {
+            totalSum += tree[index];
+            index -= index & -index;
+        }
+        return totalSum;
+    }
+
+    public int Query(int left, int right) {
+        return PrefixSum(right + 1) - PrefixSum(left);
+    }
+}
+
+public class NumArray {
+    private BIT bit;
+
+    public NumArray(int[] nums) {
+        bit = new BIT(nums);
+    }
+
+    public void Update(int index, int val) {
+        bit.Update(index, val);
+    }
+
+    public int SumRange(int left, int right) {
+        return bit.Query(left, right);
+    }
+}
+```
+
+```go
+type BIT struct {
+    nums []int
+    tree []int
+    n    int
+}
+
+func NewBIT(nums []int) *BIT {
+    n := len(nums) + 1
+    bit := &BIT{
+        nums: make([]int, n),
+        tree: make([]int, n),
+        n:    n,
+    }
+    for i := 0; i < n-1; i++ {
+        bit.Update(i, nums[i])
+    }
+    return bit
+}
+
+func (bit *BIT) Update(index, val int) {
+    index++
+    diff := val - bit.nums[index]
+    bit.nums[index] = val
+    for index < bit.n {
+        bit.tree[index] += diff
+        index += index & -index
+    }
+}
+
+func (bit *BIT) PrefixSum(index int) int {
+    totalSum := 0
+    for index > 0 {
+        totalSum += bit.tree[index]
+        index -= index & -index
+    }
+    return totalSum
+}
+
+func (bit *BIT) Query(left, right int) int {
+    return bit.PrefixSum(right+1) - bit.PrefixSum(left)
+}
+
+type NumArray struct {
+    bit *BIT
+}
+
+func Constructor(nums []int) NumArray {
+    return NumArray{bit: NewBIT(nums)}
+}
+
+func (this *NumArray) Update(index int, val int) {
+    this.bit.Update(index, val)
+}
+
+func (this *NumArray) SumRange(left int, right int) int {
+    return this.bit.Query(left, right)
+}
+```
+
+```kotlin
+class BIT(nums: IntArray) {
+    private val n: Int = nums.size + 1
+    private val tree: IntArray = IntArray(n)
+    private val numsArr: IntArray = IntArray(n)
+
+    init {
+        for (i in 0 until n - 1) {
+            update(i, nums[i])
+        }
+    }
+
+    fun update(index: Int, value: Int) {
+        var idx = index + 1
+        val diff = value - numsArr[idx]
+        numsArr[idx] = value
+        while (idx < n) {
+            tree[idx] += diff
+            idx += idx and -idx
+        }
+    }
+
+    fun prefixSum(index: Int): Int {
+        var idx = index
+        var totalSum = 0
+        while (idx > 0) {
+            totalSum += tree[idx]
+            idx -= idx and -idx
+        }
+        return totalSum
+    }
+
+    fun query(left: Int, right: Int): Int {
+        return prefixSum(right + 1) - prefixSum(left)
+    }
+}
+
+class NumArray(nums: IntArray) {
+    private val bit = BIT(nums)
+
+    fun update(index: Int, `val`: Int) {
+        bit.update(index, `val`)
+    }
+
+    fun sumRange(left: Int, right: Int): Int {
+        return bit.query(left, right)
+    }
+}
+```
+
+```swift
+class BIT {
+    private var nums: [Int]
+    private var tree: [Int]
+    private var n: Int
+
+    init(_ nums: [Int]) {
+        n = nums.count + 1
+        self.nums = Array(repeating: 0, count: n)
+        tree = Array(repeating: 0, count: n)
+        for i in 0..<(n - 1) {
+            update(i, nums[i])
+        }
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        var idx = index + 1
+        let diff = val - nums[idx]
+        nums[idx] = val
+        while idx < n {
+            tree[idx] += diff
+            idx += idx & -idx
+        }
+    }
+
+    func prefixSum(_ index: Int) -> Int {
+        var idx = index
+        var totalSum = 0
+        while idx > 0 {
+            totalSum += tree[idx]
+            idx -= idx & -idx
+        }
+        return totalSum
+    }
+
+    func query(_ left: Int, _ right: Int) -> Int {
+        return prefixSum(right + 1) - prefixSum(left)
+    }
+}
+
+class NumArray {
+    private var bit: BIT
+
+    init(_ nums: [Int]) {
+        bit = BIT(nums)
+    }
+
+    func update(_ index: Int, _ val: Int) {
+        bit.update(index, val)
+    }
+
+    func sumRange(_ left: Int, _ right: Int) -> Int {
+        return bit.query(left, right)
     }
 }
 ```

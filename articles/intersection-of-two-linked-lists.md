@@ -134,6 +134,87 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    for headA != nil {
+        cur := headB
+        for cur != nil {
+            if headA == cur {
+                return headA
+            }
+            cur = cur.Next
+        }
+        headA = headA.Next
+    }
+    return nil
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun getIntersectionNode(headA: ListNode?, headB: ListNode?): ListNode? {
+        var a = headA
+        while (a != null) {
+            var cur = headB
+            while (cur != null) {
+                if (a === cur) {
+                    return a
+                }
+                cur = cur.next
+            }
+            a = a.next
+        }
+        return null
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *     }
+ * }
+ */
+class Solution {
+    func getIntersectionNode(_ headA: ListNode?, _ headB: ListNode?) -> ListNode? {
+        var a = headA
+        while a != nil {
+            var cur = headB
+            while cur != nil {
+                if a === cur {
+                    return a
+                }
+                cur = cur?.next
+            }
+            a = a?.next
+        }
+        return nil
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -305,6 +386,100 @@ public class Solution {
         }
 
         return null;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    nodeSet := make(map[*ListNode]bool)
+    cur := headA
+    for cur != nil {
+        nodeSet[cur] = true
+        cur = cur.Next
+    }
+
+    cur = headB
+    for cur != nil {
+        if nodeSet[cur] {
+            return cur
+        }
+        cur = cur.Next
+    }
+
+    return nil
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun getIntersectionNode(headA: ListNode?, headB: ListNode?): ListNode? {
+        val nodeSet = mutableSetOf<ListNode>()
+        var cur = headA
+        while (cur != null) {
+            nodeSet.add(cur)
+            cur = cur.next
+        }
+
+        cur = headB
+        while (cur != null) {
+            if (cur in nodeSet) {
+                return cur
+            }
+            cur = cur.next
+        }
+
+        return null
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *     }
+ * }
+ */
+class Solution {
+    func getIntersectionNode(_ headA: ListNode?, _ headB: ListNode?) -> ListNode? {
+        var nodeSet = Set<ObjectIdentifier>()
+        var cur = headA
+        while cur != nil {
+            nodeSet.insert(ObjectIdentifier(cur!))
+            cur = cur?.next
+        }
+
+        cur = headB
+        while cur != nil {
+            if nodeSet.contains(ObjectIdentifier(cur!)) {
+                return cur
+            }
+            cur = cur?.next
+        }
+
+        return nil
     }
 }
 ```
@@ -543,6 +718,142 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    getLength := func(head *ListNode) int {
+        length := 0
+        for head != nil {
+            length++
+            head = head.Next
+        }
+        return length
+    }
+
+    m, n := getLength(headA), getLength(headB)
+    l1, l2 := headA, headB
+
+    if m < n {
+        m, n = n, m
+        l1, l2 = l2, l1
+    }
+
+    for m > n {
+        l1 = l1.Next
+        m--
+    }
+
+    for l1 != l2 {
+        l1 = l1.Next
+        l2 = l2.Next
+    }
+
+    return l1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun getIntersectionNode(headA: ListNode?, headB: ListNode?): ListNode? {
+        fun getLength(head: ListNode?): Int {
+            var length = 0
+            var cur = head
+            while (cur != null) {
+                length++
+                cur = cur.next
+            }
+            return length
+        }
+
+        var m = getLength(headA)
+        var n = getLength(headB)
+        var l1 = headA
+        var l2 = headB
+
+        if (m < n) {
+            val temp = m; m = n; n = temp
+            l1 = headB
+            l2 = headA
+        }
+
+        repeat(m - n) {
+            l1 = l1?.next
+        }
+
+        while (l1 !== l2) {
+            l1 = l1?.next
+            l2 = l2?.next
+        }
+
+        return l1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *     }
+ * }
+ */
+class Solution {
+    func getIntersectionNode(_ headA: ListNode?, _ headB: ListNode?) -> ListNode? {
+        func getLength(_ head: ListNode?) -> Int {
+            var length = 0
+            var cur = head
+            while cur != nil {
+                length += 1
+                cur = cur?.next
+            }
+            return length
+        }
+
+        var m = getLength(headA)
+        var n = getLength(headB)
+        var l1 = headA
+        var l2 = headB
+
+        if m < n {
+            swap(&m, &n)
+            l1 = headB
+            l2 = headA
+        }
+
+        for _ in 0..<(m - n) {
+            l1 = l1?.next
+        }
+
+        while l1 !== l2 {
+            l1 = l1?.next
+            l2 = l2?.next
+        }
+
+        return l1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -667,6 +978,80 @@ public class Solution {
         }
 
         return l1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func getIntersectionNode(headA, headB *ListNode) *ListNode {
+    l1, l2 := headA, headB
+    for l1 != l2 {
+        if l1 != nil {
+            l1 = l1.Next
+        } else {
+            l1 = headB
+        }
+        if l2 != nil {
+            l2 = l2.Next
+        } else {
+            l2 = headA
+        }
+    }
+    return l1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun getIntersectionNode(headA: ListNode?, headB: ListNode?): ListNode? {
+        var l1 = headA
+        var l2 = headB
+        while (l1 !== l2) {
+            l1 = if (l1 != null) l1.next else headB
+            l2 = if (l2 != null) l2.next else headA
+        }
+        return l1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *     }
+ * }
+ */
+class Solution {
+    func getIntersectionNode(_ headA: ListNode?, _ headB: ListNode?) -> ListNode? {
+        var l1 = headA
+        var l2 = headB
+        while l1 !== l2 {
+            l1 = l1 != nil ? l1?.next : headB
+            l2 = l2 != nil ? l2?.next : headA
+        }
+        return l1
     }
 }
 ```

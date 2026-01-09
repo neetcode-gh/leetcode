@@ -81,6 +81,84 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string DestCity(IList<IList<string>> paths) {
+        for (int i = 0; i < paths.Count; i++) {
+            bool flag = true;
+            for (int j = 0; j < paths.Count; j++) {
+                if (paths[i][1] == paths[j][0]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                return paths[i][1];
+            }
+        }
+        return "";
+    }
+}
+```
+
+```go
+func destCity(paths [][]string) string {
+    for i := 0; i < len(paths); i++ {
+        flag := true
+        for j := 0; j < len(paths); j++ {
+            if paths[i][1] == paths[j][0] {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            return paths[i][1]
+        }
+    }
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun destCity(paths: List<List<String>>): String {
+        for (i in paths.indices) {
+            var flag = true
+            for (j in paths.indices) {
+                if (paths[i][1] == paths[j][0]) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) {
+                return paths[i][1]
+            }
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func destCity(_ paths: [[String]]) -> String {
+        for i in 0..<paths.count {
+            var flag = true
+            for j in 0..<paths.count {
+                if paths[i][1] == paths[j][0] {
+                    flag = false
+                    break
+                }
+            }
+            if flag {
+                return paths[i][1]
+            }
+        }
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -165,6 +243,76 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string DestCity(IList<IList<string>> paths) {
+        HashSet<string> s = new HashSet<string>();
+        foreach (var p in paths) {
+            s.Add(p[0]);
+        }
+
+        foreach (var p in paths) {
+            if (!s.Contains(p[1])) {
+                return p[1];
+            }
+        }
+        return "";
+    }
+}
+```
+
+```go
+func destCity(paths [][]string) string {
+    s := make(map[string]bool)
+    for _, p := range paths {
+        s[p[0]] = true
+    }
+
+    for _, p := range paths {
+        if !s[p[1]] {
+            return p[1]
+        }
+    }
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun destCity(paths: List<List<String>>): String {
+        val s = HashSet<String>()
+        for (p in paths) {
+            s.add(p[0])
+        }
+
+        for (p in paths) {
+            if (p[1] !in s) {
+                return p[1]
+            }
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func destCity(_ paths: [[String]]) -> String {
+        var s = Set<String>()
+        for p in paths {
+            s.insert(p[0])
+        }
+
+        for p in paths {
+            if !s.contains(p[1]) {
+                return p[1]
+            }
+        }
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -241,6 +389,76 @@ class Solution {
             start = mp.get(start);
         }
         return start;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string DestCity(IList<IList<string>> paths) {
+        Dictionary<string, string> mp = new Dictionary<string, string>();
+        foreach (var p in paths) {
+            mp[p[0]] = p[1];
+        }
+
+        string start = paths[0][0];
+        while (mp.ContainsKey(start)) {
+            start = mp[start];
+        }
+        return start;
+    }
+}
+```
+
+```go
+func destCity(paths [][]string) string {
+    mp := make(map[string]string)
+    for _, p := range paths {
+        mp[p[0]] = p[1]
+    }
+
+    start := paths[0][0]
+    for {
+        if next, ok := mp[start]; ok {
+            start = next
+        } else {
+            break
+        }
+    }
+    return start
+}
+```
+
+```kotlin
+class Solution {
+    fun destCity(paths: List<List<String>>): String {
+        val mp = HashMap<String, String>()
+        for (p in paths) {
+            mp[p[0]] = p[1]
+        }
+
+        var start = paths[0][0]
+        while (start in mp) {
+            start = mp[start]!!
+        }
+        return start
+    }
+}
+```
+
+```swift
+class Solution {
+    func destCity(_ paths: [[String]]) -> String {
+        var mp = [String: String]()
+        for p in paths {
+            mp[p[0]] = p[1]
+        }
+
+        var start = paths[0][0]
+        while let next = mp[start] {
+            start = next
+        }
+        return start
     }
 }
 ```

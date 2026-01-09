@@ -101,6 +101,63 @@ public class Solution {
 }
 ```
 
+```go
+func integerBreak(n int) int {
+    var dfs func(num, original int) int
+    dfs = func(num, original int) int {
+        if num == 1 {
+            return 1
+        }
+        res := num
+        if num == original {
+            res = 0
+        }
+        for i := 1; i < num; i++ {
+            val := dfs(i, original) * dfs(num-i, original)
+            if val > res {
+                res = val
+            }
+        }
+        return res
+    }
+    return dfs(n, n)
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        fun dfs(num: Int, original: Int): Int {
+            if (num == 1) return 1
+            var res = if (num == original) 0 else num
+            for (i in 1 until num) {
+                val value = dfs(i, original) * dfs(num - i, original)
+                res = maxOf(res, value)
+            }
+            return res
+        }
+        return dfs(n, n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        func dfs(_ num: Int, _ original: Int) -> Int {
+            if num == 1 { return 1 }
+            var res = num == original ? 0 : num
+            for i in 1..<num {
+                let val = dfs(i, original) * dfs(num - i, original)
+                res = max(res, val)
+            }
+            return res
+        }
+        return dfs(n, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -211,6 +268,62 @@ public class Solution {
         }
 
         return Dfs(n, n - 1);
+    }
+}
+```
+
+```go
+func integerBreak(n int) int {
+    var dfs func(num, i int) int
+    dfs = func(num, i int) int {
+        if min(num, i) == 0 {
+            return 1
+        }
+        if i > num {
+            return dfs(num, num)
+        }
+        return max(i*dfs(num-i, i), dfs(num, i-1))
+    }
+    return dfs(n, n-1)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        fun dfs(num: Int, i: Int): Int {
+            if (minOf(num, i) == 0) return 1
+            if (i > num) return dfs(num, num)
+            return maxOf(i * dfs(num - i, i), dfs(num, i - 1))
+        }
+        return dfs(n, n - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        func dfs(_ num: Int, _ i: Int) -> Int {
+            if min(num, i) == 0 { return 1 }
+            if i > num { return dfs(num, num) }
+            return max(i * dfs(num - i, i), dfs(num, i - 1))
+        }
+        return dfs(n, n - 1)
     }
 }
 ```
@@ -352,6 +465,80 @@ public class Solution {
         }
 
         return Dfs(n);
+    }
+}
+```
+
+```go
+func integerBreak(n int) int {
+    dp := map[int]int{1: 1}
+
+    var dfs func(num int) int
+    dfs = func(num int) int {
+        if val, ok := dp[num]; ok {
+            return val
+        }
+
+        res := num
+        if num == n {
+            res = 0
+        }
+        for i := 1; i < num; i++ {
+            val := dfs(i) * dfs(num-i)
+            if val > res {
+                res = val
+            }
+        }
+        dp[num] = res
+        return res
+    }
+
+    return dfs(n)
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        val dp = mutableMapOf(1 to 1)
+
+        fun dfs(num: Int): Int {
+            if (dp.containsKey(num)) return dp[num]!!
+
+            var res = if (num == n) 0 else num
+            for (i in 1 until num) {
+                val value = dfs(i) * dfs(num - i)
+                res = maxOf(res, value)
+            }
+            dp[num] = res
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        var dp: [Int: Int] = [1: 1]
+
+        func dfs(_ num: Int) -> Int {
+            if let val = dp[num] {
+                return val
+            }
+
+            var res = num == n ? 0 : num
+            for i in 1..<num {
+                let val = dfs(i) * dfs(num - i)
+                res = max(res, val)
+            }
+            dp[num] = res
+            return res
+        }
+
+        return dfs(n)
     }
 }
 ```
@@ -500,6 +687,92 @@ public class Solution {
 }
 ```
 
+```go
+func integerBreak(n int) int {
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(num, i int) int
+    dfs = func(num, i int) int {
+        if min(num, i) == 0 {
+            return 1
+        }
+        if dp[num][i] != -1 {
+            return dp[num][i]
+        }
+        if i > num {
+            dp[num][i] = dfs(num, num)
+            return dp[num][i]
+        }
+        dp[num][i] = max(i*dfs(num-i, i), dfs(num, i-1))
+        return dp[num][i]
+    }
+
+    return dfs(n, n-1)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        val dp = Array(n + 1) { IntArray(n) { -1 } }
+
+        fun dfs(num: Int, i: Int): Int {
+            if (minOf(num, i) == 0) return 1
+            if (dp[num][i] != -1) return dp[num][i]
+            if (i > num) {
+                dp[num][i] = dfs(num, num)
+                return dp[num][i]
+            }
+            dp[num][i] = maxOf(i * dfs(num - i, i), dfs(num, i - 1))
+            return dp[num][i]
+        }
+
+        return dfs(n, n - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: n), count: n + 1)
+
+        func dfs(_ num: Int, _ i: Int) -> Int {
+            if min(num, i) == 0 { return 1 }
+            if dp[num][i] != -1 { return dp[num][i] }
+            if i > num {
+                dp[num][i] = dfs(num, num)
+                return dp[num][i]
+            }
+            dp[num][i] = max(i * dfs(num - i, i), dfs(num, i - 1))
+            return dp[num][i]
+        }
+
+        return dfs(n, n - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,6 +877,64 @@ public class Solution {
 }
 ```
 
+```go
+func integerBreak(n int) int {
+    dp := make([]int, n+1)
+    dp[1] = 1
+
+    for num := 2; num <= n; num++ {
+        if num == n {
+            dp[num] = 0
+        } else {
+            dp[num] = num
+        }
+        for i := 1; i < num; i++ {
+            if dp[i]*dp[num-i] > dp[num] {
+                dp[num] = dp[i] * dp[num-i]
+            }
+        }
+    }
+
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        val dp = IntArray(n + 1)
+        dp[1] = 1
+
+        for (num in 2..n) {
+            dp[num] = if (num == n) 0 else num
+            for (i in 1 until num) {
+                dp[num] = maxOf(dp[num], dp[i] * dp[num - i])
+            }
+        }
+
+        return dp[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        var dp = [Int](repeating: 0, count: n + 1)
+        dp[1] = 1
+
+        for num in 2...n {
+            dp[num] = num == n ? 0 : num
+            for i in 1..<num {
+                dp[num] = max(dp[num], dp[i] * dp[num - i])
+            }
+        }
+
+        return dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -694,6 +1025,53 @@ public class Solution {
         }
 
         return res * n;
+    }
+}
+```
+
+```go
+func integerBreak(n int) int {
+    if n <= 3 {
+        return n - 1
+    }
+
+    res := 1
+    for n > 4 {
+        res *= 3
+        n -= 3
+    }
+    return res * n
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        if (n <= 3) return n - 1
+
+        var res = 1
+        var num = n
+        while (num > 4) {
+            res *= 3
+            num -= 3
+        }
+        return res * num
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        if n <= 3 { return n - 1 }
+
+        var res = 1
+        var num = n
+        while num > 4 {
+            res *= 3
+            num -= 3
+        }
+        return res * num
     }
 }
 ```
@@ -794,6 +1172,64 @@ public class Solution {
         }
 
         return res * Math.Max(1, n % 3);
+    }
+}
+```
+
+```go
+func integerBreak(n int) int {
+    if n <= 3 {
+        return n - 1
+    }
+
+    res := 1
+    for i := 0; i < n/3; i++ {
+        res *= 3
+    }
+
+    if n%3 == 1 {
+        return (res / 3) * 4
+    }
+
+    if n%3 == 0 {
+        return res
+    }
+    return res * (n % 3)
+}
+```
+
+```kotlin
+class Solution {
+    fun integerBreak(n: Int): Int {
+        if (n <= 3) return n - 1
+
+        var res = 1
+        repeat(n / 3) { res *= 3 }
+
+        return when (n % 3) {
+            1 -> (res / 3) * 4
+            0 -> res
+            else -> res * (n % 3)
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func integerBreak(_ n: Int) -> Int {
+        if n <= 3 { return n - 1 }
+
+        var res = 1
+        for _ in 0..<(n / 3) {
+            res *= 3
+        }
+
+        if n % 3 == 1 {
+            return (res / 3) * 4
+        }
+
+        return res * max(1, n % 3)
     }
 }
 ```

@@ -255,6 +255,263 @@ class LockingTree {
 }
 ```
 
+```csharp
+public class LockingTree {
+    private int[] parent;
+    private List<int>[] child;
+    private int[] locked;
+
+    public LockingTree(int[] parent) {
+        this.parent = parent;
+        int n = parent.Length;
+        child = new List<int>[n];
+        locked = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            child[i] = new List<int>();
+        }
+        for (int node = 1; node < n; node++) {
+            child[parent[node]].Add(node);
+        }
+    }
+
+    public bool Lock(int num, int user) {
+        if (locked[num] != 0) {
+            return false;
+        }
+        locked[num] = user;
+        return true;
+    }
+
+    public bool Unlock(int num, int user) {
+        if (locked[num] != user) {
+            return false;
+        }
+        locked[num] = 0;
+        return true;
+    }
+
+    public bool Upgrade(int num, int user) {
+        int node = num;
+        while (node != -1) {
+            if (locked[node] != 0) {
+                return false;
+            }
+            node = parent[node];
+        }
+
+        int lockedCount = Dfs(num);
+        if (lockedCount > 0) {
+            locked[num] = user;
+            return true;
+        }
+        return false;
+    }
+
+    private int Dfs(int node) {
+        int lockedCount = 0;
+        if (locked[node] != 0) {
+            lockedCount++;
+            locked[node] = 0;
+        }
+        foreach (int nei in child[node]) {
+            lockedCount += Dfs(nei);
+        }
+        return lockedCount;
+    }
+}
+```
+
+```go
+type LockingTree struct {
+    parent []int
+    child  [][]int
+    locked []int
+}
+
+func Constructor(parent []int) LockingTree {
+    n := len(parent)
+    child := make([][]int, n)
+    for i := range child {
+        child[i] = []int{}
+    }
+    for node := 1; node < n; node++ {
+        child[parent[node]] = append(child[parent[node]], node)
+    }
+    return LockingTree{
+        parent: parent,
+        child:  child,
+        locked: make([]int, n),
+    }
+}
+
+func (this *LockingTree) Lock(num int, user int) bool {
+    if this.locked[num] != 0 {
+        return false
+    }
+    this.locked[num] = user
+    return true
+}
+
+func (this *LockingTree) Unlock(num int, user int) bool {
+    if this.locked[num] != user {
+        return false
+    }
+    this.locked[num] = 0
+    return true
+}
+
+func (this *LockingTree) Upgrade(num int, user int) bool {
+    node := num
+    for node != -1 {
+        if this.locked[node] != 0 {
+            return false
+        }
+        node = this.parent[node]
+    }
+
+    var dfs func(node int) int
+    dfs = func(node int) int {
+        lockedCount := 0
+        if this.locked[node] != 0 {
+            lockedCount++
+            this.locked[node] = 0
+        }
+        for _, nei := range this.child[node] {
+            lockedCount += dfs(nei)
+        }
+        return lockedCount
+    }
+
+    if dfs(num) > 0 {
+        this.locked[num] = user
+        return true
+    }
+    return false
+}
+```
+
+```kotlin
+class LockingTree(private val parent: IntArray) {
+    private val child: Array<MutableList<Int>> = Array(parent.size) { mutableListOf() }
+    private val locked = IntArray(parent.size)
+
+    init {
+        for (node in 1 until parent.size) {
+            child[parent[node]].add(node)
+        }
+    }
+
+    fun lock(num: Int, user: Int): Boolean {
+        if (locked[num] != 0) {
+            return false
+        }
+        locked[num] = user
+        return true
+    }
+
+    fun unlock(num: Int, user: Int): Boolean {
+        if (locked[num] != user) {
+            return false
+        }
+        locked[num] = 0
+        return true
+    }
+
+    fun upgrade(num: Int, user: Int): Boolean {
+        var node = num
+        while (node != -1) {
+            if (locked[node] != 0) {
+                return false
+            }
+            node = parent[node]
+        }
+
+        val lockedCount = dfs(num)
+        if (lockedCount > 0) {
+            locked[num] = user
+            return true
+        }
+        return false
+    }
+
+    private fun dfs(node: Int): Int {
+        var lockedCount = 0
+        if (locked[node] != 0) {
+            lockedCount++
+            locked[node] = 0
+        }
+        for (nei in child[node]) {
+            lockedCount += dfs(nei)
+        }
+        return lockedCount
+    }
+}
+```
+
+```swift
+class LockingTree {
+    private var parent: [Int]
+    private var child: [[Int]]
+    private var locked: [Int]
+
+    init(_ parent: [Int]) {
+        self.parent = parent
+        let n = parent.count
+        self.child = Array(repeating: [Int](), count: n)
+        self.locked = Array(repeating: 0, count: n)
+
+        for node in 1..<n {
+            self.child[parent[node]].append(node)
+        }
+    }
+
+    func lock(_ num: Int, _ user: Int) -> Bool {
+        if locked[num] != 0 {
+            return false
+        }
+        locked[num] = user
+        return true
+    }
+
+    func unlock(_ num: Int, _ user: Int) -> Bool {
+        if locked[num] != user {
+            return false
+        }
+        locked[num] = 0
+        return true
+    }
+
+    func upgrade(_ num: Int, _ user: Int) -> Bool {
+        var node = num
+        while node != -1 {
+            if locked[node] != 0 {
+                return false
+            }
+            node = parent[node]
+        }
+
+        func dfs(_ node: Int) -> Int {
+            var lockedCount = 0
+            if locked[node] != 0 {
+                lockedCount += 1
+                locked[node] = 0
+            }
+            for nei in child[node] {
+                lockedCount += dfs(nei)
+            }
+            return lockedCount
+        }
+
+        if dfs(num) > 0 {
+            locked[num] = user
+            return true
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +782,265 @@ class LockingTree {
 }
 ```
 
+```csharp
+public class LockingTree {
+    private int[] parent;
+    private List<int>[] child;
+    private int[] locked;
+
+    public LockingTree(int[] parent) {
+        this.parent = parent;
+        int n = parent.Length;
+        child = new List<int>[n];
+        locked = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            child[i] = new List<int>();
+        }
+        for (int node = 1; node < n; node++) {
+            child[parent[node]].Add(node);
+        }
+    }
+
+    public bool Lock(int num, int user) {
+        if (locked[num] != 0) {
+            return false;
+        }
+        locked[num] = user;
+        return true;
+    }
+
+    public bool Unlock(int num, int user) {
+        if (locked[num] != user) {
+            return false;
+        }
+        locked[num] = 0;
+        return true;
+    }
+
+    public bool Upgrade(int num, int user) {
+        int node = num;
+        while (node != -1) {
+            if (locked[node] != 0) {
+                return false;
+            }
+            node = parent[node];
+        }
+
+        int lockedCount = 0;
+        Queue<int> q = new Queue<int>();
+        q.Enqueue(num);
+
+        while (q.Count > 0) {
+            node = q.Dequeue();
+            if (locked[node] != 0) {
+                locked[node] = 0;
+                lockedCount++;
+            }
+            foreach (int nei in child[node]) {
+                q.Enqueue(nei);
+            }
+        }
+
+        if (lockedCount > 0) {
+            locked[num] = user;
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+```go
+type LockingTree struct {
+    parent []int
+    child  [][]int
+    locked []int
+}
+
+func Constructor(parent []int) LockingTree {
+    n := len(parent)
+    child := make([][]int, n)
+    for i := range child {
+        child[i] = []int{}
+    }
+    for node := 1; node < n; node++ {
+        child[parent[node]] = append(child[parent[node]], node)
+    }
+    return LockingTree{
+        parent: parent,
+        child:  child,
+        locked: make([]int, n),
+    }
+}
+
+func (this *LockingTree) Lock(num int, user int) bool {
+    if this.locked[num] != 0 {
+        return false
+    }
+    this.locked[num] = user
+    return true
+}
+
+func (this *LockingTree) Unlock(num int, user int) bool {
+    if this.locked[num] != user {
+        return false
+    }
+    this.locked[num] = 0
+    return true
+}
+
+func (this *LockingTree) Upgrade(num int, user int) bool {
+    node := num
+    for node != -1 {
+        if this.locked[node] != 0 {
+            return false
+        }
+        node = this.parent[node]
+    }
+
+    lockedCount := 0
+    q := []int{num}
+
+    for len(q) > 0 {
+        node = q[0]
+        q = q[1:]
+        if this.locked[node] != 0 {
+            this.locked[node] = 0
+            lockedCount++
+        }
+        q = append(q, this.child[node]...)
+    }
+
+    if lockedCount > 0 {
+        this.locked[num] = user
+        return true
+    }
+    return false
+}
+```
+
+```kotlin
+class LockingTree(private val parent: IntArray) {
+    private val child: Array<MutableList<Int>> = Array(parent.size) { mutableListOf() }
+    private val locked = IntArray(parent.size)
+
+    init {
+        for (node in 1 until parent.size) {
+            child[parent[node]].add(node)
+        }
+    }
+
+    fun lock(num: Int, user: Int): Boolean {
+        if (locked[num] != 0) {
+            return false
+        }
+        locked[num] = user
+        return true
+    }
+
+    fun unlock(num: Int, user: Int): Boolean {
+        if (locked[num] != user) {
+            return false
+        }
+        locked[num] = 0
+        return true
+    }
+
+    fun upgrade(num: Int, user: Int): Boolean {
+        var node = num
+        while (node != -1) {
+            if (locked[node] != 0) {
+                return false
+            }
+            node = parent[node]
+        }
+
+        var lockedCount = 0
+        val q = ArrayDeque<Int>()
+        q.add(num)
+
+        while (q.isNotEmpty()) {
+            node = q.removeFirst()
+            if (locked[node] != 0) {
+                locked[node] = 0
+                lockedCount++
+            }
+            q.addAll(child[node])
+        }
+
+        if (lockedCount > 0) {
+            locked[num] = user
+            return true
+        }
+        return false
+    }
+}
+```
+
+```swift
+class LockingTree {
+    private var parent: [Int]
+    private var child: [[Int]]
+    private var locked: [Int]
+
+    init(_ parent: [Int]) {
+        self.parent = parent
+        let n = parent.count
+        self.child = Array(repeating: [Int](), count: n)
+        self.locked = Array(repeating: 0, count: n)
+
+        for node in 1..<n {
+            self.child[parent[node]].append(node)
+        }
+    }
+
+    func lock(_ num: Int, _ user: Int) -> Bool {
+        if locked[num] != 0 {
+            return false
+        }
+        locked[num] = user
+        return true
+    }
+
+    func unlock(_ num: Int, _ user: Int) -> Bool {
+        if locked[num] != user {
+            return false
+        }
+        locked[num] = 0
+        return true
+    }
+
+    func upgrade(_ num: Int, _ user: Int) -> Bool {
+        var node = num
+        while node != -1 {
+            if locked[node] != 0 {
+                return false
+            }
+            node = parent[node]
+        }
+
+        var lockedCount = 0
+        var q = [num]
+
+        while !q.isEmpty {
+            node = q.removeFirst()
+            if locked[node] != 0 {
+                locked[node] = 0
+                lockedCount += 1
+            }
+            q.append(contentsOf: child[node])
+        }
+
+        if lockedCount > 0 {
+            locked[num] = user
+            return true
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,6 +1307,265 @@ class LockingTree {
             return true;
         }
         return false;
+    }
+}
+```
+
+```csharp
+public class LockingTree {
+    private int[] parent;
+    private List<int>[] child;
+    private int[] locked;
+
+    public LockingTree(int[] parent) {
+        this.parent = parent;
+        int n = parent.Length;
+        child = new List<int>[n];
+        locked = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            child[i] = new List<int>();
+        }
+        for (int node = 1; node < n; node++) {
+            child[parent[node]].Add(node);
+        }
+    }
+
+    public bool Lock(int num, int user) {
+        if (locked[num] != 0) {
+            return false;
+        }
+        locked[num] = user;
+        return true;
+    }
+
+    public bool Unlock(int num, int user) {
+        if (locked[num] != user) {
+            return false;
+        }
+        locked[num] = 0;
+        return true;
+    }
+
+    public bool Upgrade(int num, int user) {
+        int node = num;
+        while (node != -1) {
+            if (locked[node] != 0) {
+                return false;
+            }
+            node = parent[node];
+        }
+
+        int lockedCount = 0;
+        Stack<int> stack = new Stack<int>();
+        stack.Push(num);
+
+        while (stack.Count > 0) {
+            node = stack.Pop();
+            if (locked[node] != 0) {
+                locked[node] = 0;
+                lockedCount++;
+            }
+            foreach (int nei in child[node]) {
+                stack.Push(nei);
+            }
+        }
+
+        if (lockedCount > 0) {
+            locked[num] = user;
+            return true;
+        }
+        return false;
+    }
+}
+```
+
+```go
+type LockingTree struct {
+    parent []int
+    child  [][]int
+    locked []int
+}
+
+func Constructor(parent []int) LockingTree {
+    n := len(parent)
+    child := make([][]int, n)
+    for i := range child {
+        child[i] = []int{}
+    }
+    for node := 1; node < n; node++ {
+        child[parent[node]] = append(child[parent[node]], node)
+    }
+    return LockingTree{
+        parent: parent,
+        child:  child,
+        locked: make([]int, n),
+    }
+}
+
+func (this *LockingTree) Lock(num int, user int) bool {
+    if this.locked[num] != 0 {
+        return false
+    }
+    this.locked[num] = user
+    return true
+}
+
+func (this *LockingTree) Unlock(num int, user int) bool {
+    if this.locked[num] != user {
+        return false
+    }
+    this.locked[num] = 0
+    return true
+}
+
+func (this *LockingTree) Upgrade(num int, user int) bool {
+    node := num
+    for node != -1 {
+        if this.locked[node] != 0 {
+            return false
+        }
+        node = this.parent[node]
+    }
+
+    lockedCount := 0
+    stack := []int{num}
+
+    for len(stack) > 0 {
+        node = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        if this.locked[node] != 0 {
+            this.locked[node] = 0
+            lockedCount++
+        }
+        stack = append(stack, this.child[node]...)
+    }
+
+    if lockedCount > 0 {
+        this.locked[num] = user
+        return true
+    }
+    return false
+}
+```
+
+```kotlin
+class LockingTree(private val parent: IntArray) {
+    private val child: Array<MutableList<Int>> = Array(parent.size) { mutableListOf() }
+    private val locked = IntArray(parent.size)
+
+    init {
+        for (node in 1 until parent.size) {
+            child[parent[node]].add(node)
+        }
+    }
+
+    fun lock(num: Int, user: Int): Boolean {
+        if (locked[num] != 0) {
+            return false
+        }
+        locked[num] = user
+        return true
+    }
+
+    fun unlock(num: Int, user: Int): Boolean {
+        if (locked[num] != user) {
+            return false
+        }
+        locked[num] = 0
+        return true
+    }
+
+    fun upgrade(num: Int, user: Int): Boolean {
+        var node = num
+        while (node != -1) {
+            if (locked[node] != 0) {
+                return false
+            }
+            node = parent[node]
+        }
+
+        var lockedCount = 0
+        val stack = ArrayDeque<Int>()
+        stack.add(num)
+
+        while (stack.isNotEmpty()) {
+            node = stack.removeLast()
+            if (locked[node] != 0) {
+                locked[node] = 0
+                lockedCount++
+            }
+            stack.addAll(child[node])
+        }
+
+        if (lockedCount > 0) {
+            locked[num] = user
+            return true
+        }
+        return false
+    }
+}
+```
+
+```swift
+class LockingTree {
+    private var parent: [Int]
+    private var child: [[Int]]
+    private var locked: [Int]
+
+    init(_ parent: [Int]) {
+        self.parent = parent
+        let n = parent.count
+        self.child = Array(repeating: [Int](), count: n)
+        self.locked = Array(repeating: 0, count: n)
+
+        for node in 1..<n {
+            self.child[parent[node]].append(node)
+        }
+    }
+
+    func lock(_ num: Int, _ user: Int) -> Bool {
+        if locked[num] != 0 {
+            return false
+        }
+        locked[num] = user
+        return true
+    }
+
+    func unlock(_ num: Int, _ user: Int) -> Bool {
+        if locked[num] != user {
+            return false
+        }
+        locked[num] = 0
+        return true
+    }
+
+    func upgrade(_ num: Int, _ user: Int) -> Bool {
+        var node = num
+        while node != -1 {
+            if locked[node] != 0 {
+                return false
+            }
+            node = parent[node]
+        }
+
+        var lockedCount = 0
+        var stack = [num]
+
+        while !stack.isEmpty {
+            node = stack.removeLast()
+            if locked[node] != 0 {
+                locked[node] = 0
+                lockedCount += 1
+            }
+            stack.append(contentsOf: child[node])
+        }
+
+        if lockedCount > 0 {
+            locked[num] = user
+            return true
+        }
+        return false
     }
 }
 ```

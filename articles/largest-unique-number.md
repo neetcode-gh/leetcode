@@ -122,17 +122,17 @@ class Solution {
      */
     largestUniqueNumber(nums) {
         const n = nums.length;
-        
+
         // If there's only one element, it's unique by default
         if (n === 1) {
             return nums[0];
         }
-        
+
         nums.sort((a, b) => b - a);
-        
+
         // Start from the beginning (largest numbers)
         let currentIndex = 0;
-        
+
         while (currentIndex < n) {
             // If it's the first element or different from the next one, it's unique
             if (
@@ -141,7 +141,7 @@ class Solution {
             ) {
                 return nums[currentIndex];
             }
-            
+
             // Skip duplicates
             while (
                 currentIndex < n - 1
@@ -149,12 +149,150 @@ class Solution {
             ) {
                 currentIndex++;
             }
-            
+
             // Move to the next unique number
             currentIndex++;
         }
-        
+
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestUniqueNumber(int[] nums) {
+        int n = nums.Length;
+
+        // If there's only one element, it's unique by default
+        if (n == 1) {
+            return nums[0];
+        }
+
+        Array.Sort(nums);
+
+        // Start from the end (largest numbers)
+        int currentIndex = n - 1;
+
+        while (currentIndex >= 0) {
+            // If it's the first element or different from the previous one, it's unique
+            if (currentIndex == 0 || nums[currentIndex] != nums[currentIndex - 1]) {
+                return nums[currentIndex];
+            }
+
+            // Skip duplicates
+            while (currentIndex > 0 && nums[currentIndex] == nums[currentIndex - 1]) {
+                currentIndex--;
+            }
+
+            // Move to the next unique number
+            currentIndex--;
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func largestUniqueNumber(nums []int) int {
+    n := len(nums)
+
+    // If there's only one element, it's unique by default
+    if n == 1 {
+        return nums[0]
+    }
+
+    sort.Sort(sort.Reverse(sort.IntSlice(nums)))
+
+    // Start from the beginning (largest numbers)
+    currentIndex := 0
+
+    for currentIndex < n {
+        // If it's the last element or different from the next one, it's unique
+        if currentIndex == n-1 || nums[currentIndex] != nums[currentIndex+1] {
+            return nums[currentIndex]
+        }
+
+        // Skip duplicates
+        for currentIndex < n-1 && nums[currentIndex] == nums[currentIndex+1] {
+            currentIndex++
+        }
+
+        // Move to the next unique number
+        currentIndex++
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun largestUniqueNumber(nums: IntArray): Int {
+        val n = nums.size
+
+        // If there's only one element, it's unique by default
+        if (n == 1) {
+            return nums[0]
+        }
+
+        nums.sortDescending()
+
+        // Start from the beginning (largest numbers)
+        var currentIndex = 0
+
+        while (currentIndex < n) {
+            // If it's the last element or different from the next one, it's unique
+            if (currentIndex == n - 1 || nums[currentIndex] != nums[currentIndex + 1]) {
+                return nums[currentIndex]
+            }
+
+            // Skip duplicates
+            while (currentIndex < n - 1 && nums[currentIndex] == nums[currentIndex + 1]) {
+                currentIndex++
+            }
+
+            // Move to the next unique number
+            currentIndex++
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestUniqueNumber(_ nums: [Int]) -> Int {
+        let n = nums.count
+
+        // If there's only one element, it's unique by default
+        if n == 1 {
+            return nums[0]
+        }
+
+        let sorted = nums.sorted(by: >)
+
+        // Start from the beginning (largest numbers)
+        var currentIndex = 0
+
+        while currentIndex < n {
+            // If it's the last element or different from the next one, it's unique
+            if currentIndex == n - 1 || sorted[currentIndex] != sorted[currentIndex + 1] {
+                return sorted[currentIndex]
+            }
+
+            // Skip duplicates
+            while currentIndex < n - 1 && sorted[currentIndex] == sorted[currentIndex + 1] {
+                currentIndex += 1
+            }
+
+            // Move to the next unique number
+            currentIndex += 1
+        }
+
+        return -1
     }
 }
 ```
@@ -274,8 +412,118 @@ class Solution {
                 return Number(num);
             }
         }
-        
+
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestUniqueNumber(int[] nums) {
+        // Use a SortedDictionary to store numbers and their frequencies
+        SortedDictionary<int, int> frequencyMap = new SortedDictionary<int, int>();
+
+        // Populate the frequencyMap
+        foreach (int num in nums) {
+            if (frequencyMap.ContainsKey(num)) {
+                frequencyMap[num]++;
+            } else {
+                frequencyMap[num] = 1;
+            }
+        }
+
+        // Initialize the result to -1 (default if no unique number is found)
+        int largestUnique = -1;
+
+        // Iterate through the map in reverse order (largest to smallest)
+        foreach (int num in frequencyMap.Keys.Reverse()) {
+            // If the frequency is 1, we've found our largest unique number
+            if (frequencyMap[num] == 1) {
+                largestUnique = num;
+                break;
+            }
+        }
+
+        return largestUnique;
+    }
+}
+```
+
+```go
+func largestUniqueNumber(nums []int) int {
+    // Create a frequency map
+    frequencyMap := make(map[int]int)
+    for _, num := range nums {
+        frequencyMap[num]++
+    }
+
+    // Get all keys and sort them in descending order
+    keys := make([]int, 0, len(frequencyMap))
+    for k := range frequencyMap {
+        keys = append(keys, k)
+    }
+    sort.Sort(sort.Reverse(sort.IntSlice(keys)))
+
+    // Find the largest unique number
+    for _, num := range keys {
+        if frequencyMap[num] == 1 {
+            return num
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun largestUniqueNumber(nums: IntArray): Int {
+        // Use a TreeMap to store numbers and their frequencies
+        val frequencyMap = sortedMapOf<Int, Int>()
+
+        // Populate the frequencyMap
+        for (num in nums) {
+            frequencyMap[num] = frequencyMap.getOrDefault(num, 0) + 1
+        }
+
+        // Initialize the result to -1 (default if no unique number is found)
+        var largestUnique = -1
+
+        // Iterate through the map in reverse order (largest to smallest)
+        for (num in frequencyMap.keys.reversed()) {
+            // If the frequency is 1, we've found our largest unique number
+            if (frequencyMap[num] == 1) {
+                largestUnique = num
+                break
+            }
+        }
+
+        return largestUnique
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestUniqueNumber(_ nums: [Int]) -> Int {
+        // Create a frequency map
+        var frequencyMap = [Int: Int]()
+        for num in nums {
+            frequencyMap[num, default: 0] += 1
+        }
+
+        // Sort keys in descending order
+        let sortedKeys = frequencyMap.keys.sorted(by: >)
+
+        // Find the largest unique number
+        for num in sortedKeys {
+            if frequencyMap[num] == 1 {
+                return num
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -387,6 +635,112 @@ class Solution {
             }
         }
         return largestUnique;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestUniqueNumber(int[] nums) {
+        // Create a Dictionary to store the frequency of each number
+        Dictionary<int, int> frequencyMap = new Dictionary<int, int>();
+
+        // Populate the frequencyMap
+        foreach (int num in nums) {
+            if (frequencyMap.ContainsKey(num)) {
+                frequencyMap[num]++;
+            } else {
+                frequencyMap[num] = 1;
+            }
+        }
+
+        // Initialize the result to -1 (default if no unique number is found)
+        int largestUnique = -1;
+
+        foreach (int num in frequencyMap.Keys) {
+            // Check if the number appears only once and is larger than the current largestUnique
+            if (frequencyMap[num] == 1 && num > largestUnique) {
+                largestUnique = num;
+            }
+        }
+
+        return largestUnique;
+    }
+}
+```
+
+```go
+func largestUniqueNumber(nums []int) int {
+    // Create a map to store the frequency of each number
+    frequencyMap := make(map[int]int)
+
+    // Populate the frequencyMap
+    for _, num := range nums {
+        frequencyMap[num]++
+    }
+
+    // Initialize the result to -1 (default if no unique number is found)
+    largestUnique := -1
+
+    for num, freq := range frequencyMap {
+        // Check if the number appears only once and is larger than the current largestUnique
+        if freq == 1 && num > largestUnique {
+            largestUnique = num
+        }
+    }
+
+    return largestUnique
+}
+```
+
+```kotlin
+class Solution {
+    fun largestUniqueNumber(nums: IntArray): Int {
+        // Create a HashMap to store the frequency of each number
+        val frequencyMap = mutableMapOf<Int, Int>()
+
+        // Populate the frequencyMap
+        for (num in nums) {
+            frequencyMap[num] = frequencyMap.getOrDefault(num, 0) + 1
+        }
+
+        // Initialize the result to -1 (default if no unique number is found)
+        var largestUnique = -1
+
+        for ((num, freq) in frequencyMap) {
+            // Check if the number appears only once and is larger than the current largestUnique
+            if (freq == 1 && num > largestUnique) {
+                largestUnique = num
+            }
+        }
+
+        return largestUnique
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestUniqueNumber(_ nums: [Int]) -> Int {
+        // Create a Dictionary to store the frequency of each number
+        var frequencyMap = [Int: Int]()
+
+        // Populate the frequencyMap
+        for num in nums {
+            frequencyMap[num, default: 0] += 1
+        }
+
+        // Initialize the result to -1 (default if no unique number is found)
+        var largestUnique = -1
+
+        for (num, freq) in frequencyMap {
+            // Check if the number appears only once and is larger than the current largestUnique
+            if freq == 1 && num > largestUnique {
+                largestUnique = num
+            }
+        }
+
+        return largestUnique
     }
 }
 ```

@@ -69,6 +69,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long InterchangeableRectangles(int[][] rectangles) {
+        long res = 0;
+        for (int i = 1; i < rectangles.Length; i++) {
+            for (int j = 0; j < i; j++) {
+                if ((double)rectangles[i][0] / rectangles[i][1] ==
+                    (double)rectangles[j][0] / rectangles[j][1]) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func interchangeableRectangles(rectangles [][]int) int64 {
+    var res int64 = 0
+    for i := 1; i < len(rectangles); i++ {
+        for j := 0; j < i; j++ {
+            if float64(rectangles[i][0])/float64(rectangles[i][1]) ==
+               float64(rectangles[j][0])/float64(rectangles[j][1]) {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun interchangeableRectangles(rectangles: Array<IntArray>): Long {
+        var res = 0L
+        for (i in 1 until rectangles.size) {
+            for (j in 0 until i) {
+                if (rectangles[i][0].toDouble() / rectangles[i][1] ==
+                    rectangles[j][0].toDouble() / rectangles[j][1]) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func interchangeableRectangles(_ rectangles: [[Int]]) -> Int {
+        var res = 0
+        for i in 1..<rectangles.count {
+            for j in 0..<i {
+                if Double(rectangles[i][0]) / Double(rectangles[i][1]) ==
+                   Double(rectangles[j][0]) / Double(rectangles[j][1]) {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -161,6 +227,85 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long InterchangeableRectangles(int[][] rectangles) {
+        var count = new Dictionary<double, int>();
+        foreach (var rect in rectangles) {
+            double ratio = (double)rect[0] / rect[1];
+            if (!count.ContainsKey(ratio)) count[ratio] = 0;
+            count[ratio]++;
+        }
+
+        long res = 0;
+        foreach (var c in count.Values) {
+            if (c > 1) {
+                res += (long)c * (c - 1) / 2;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func interchangeableRectangles(rectangles [][]int) int64 {
+    count := make(map[float64]int)
+    for _, rect := range rectangles {
+        ratio := float64(rect[0]) / float64(rect[1])
+        count[ratio]++
+    }
+
+    var res int64 = 0
+    for _, c := range count {
+        if c > 1 {
+            res += int64(c) * int64(c-1) / 2
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun interchangeableRectangles(rectangles: Array<IntArray>): Long {
+        val count = HashMap<Double, Int>()
+        for (rect in rectangles) {
+            val ratio = rect[0].toDouble() / rect[1]
+            count[ratio] = count.getOrDefault(ratio, 0) + 1
+        }
+
+        var res = 0L
+        for (c in count.values) {
+            if (c > 1) {
+                res += c.toLong() * (c - 1) / 2
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func interchangeableRectangles(_ rectangles: [[Int]]) -> Int {
+        var count = [Double: Int]()
+        for rect in rectangles {
+            let ratio = Double(rect[0]) / Double(rect[1])
+            count[ratio, default: 0] += 1
+        }
+
+        var res = 0
+        for c in count.values {
+            if c > 1 {
+                res += c * (c - 1) / 2
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,6 +376,68 @@ class Solution {
             count.set(ratio, (count.get(ratio) || 0) + 1);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long InterchangeableRectangles(int[][] rectangles) {
+        var count = new Dictionary<double, int>();
+        long res = 0;
+        foreach (var rect in rectangles) {
+            double ratio = (double)rect[0] / rect[1];
+            if (count.ContainsKey(ratio)) {
+                res += count[ratio];
+                count[ratio]++;
+            } else {
+                count[ratio] = 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func interchangeableRectangles(rectangles [][]int) int64 {
+    count := make(map[float64]int)
+    var res int64 = 0
+    for _, rect := range rectangles {
+        ratio := float64(rect[0]) / float64(rect[1])
+        res += int64(count[ratio])
+        count[ratio]++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun interchangeableRectangles(rectangles: Array<IntArray>): Long {
+        val count = HashMap<Double, Int>()
+        var res = 0L
+        for (rect in rectangles) {
+            val ratio = rect[0].toDouble() / rect[1]
+            res += count.getOrDefault(ratio, 0)
+            count[ratio] = count.getOrDefault(ratio, 0) + 1
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func interchangeableRectangles(_ rectangles: [[Int]]) -> Int {
+        var count = [Double: Int]()
+        var res = 0
+        for rect in rectangles {
+            let ratio = Double(rect[0]) / Double(rect[1])
+            res += count[ratio, default: 0]
+            count[ratio, default: 0] += 1
+        }
+        return res
     }
 }
 ```
@@ -358,6 +565,133 @@ class Solution {
             count.set(key, (count.get(key) || 0) + 1);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private long Hash(int a, int b) {
+        long mask = a;
+        mask |= ((long)b << 31);
+        return mask;
+    }
+
+    private int Gcd(int a, int b) {
+        while (b != 0) {
+            a %= b;
+            int temp = a;
+            a = b;
+            b = temp;
+        }
+        return a;
+    }
+
+    public long InterchangeableRectangles(int[][] rectangles) {
+        long res = 0;
+        var count = new Dictionary<long, int>();
+        foreach (var rect in rectangles) {
+            int gcd = Gcd(rect[0], rect[1]);
+            long key = Hash(rect[0] / gcd, rect[1] / gcd);
+            if (count.ContainsKey(key)) {
+                res += count[key];
+                count[key]++;
+            } else {
+                count[key] = 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func interchangeableRectangles(rectangles [][]int) int64 {
+    hash := func(a, b int) int64 {
+        return int64(a) | (int64(b) << 31)
+    }
+
+    gcd := func(a, b int) int {
+        for b != 0 {
+            a, b = b, a%b
+        }
+        return a
+    }
+
+    var res int64 = 0
+    count := make(map[int64]int)
+    for _, rect := range rectangles {
+        g := gcd(rect[0], rect[1])
+        key := hash(rect[0]/g, rect[1]/g)
+        res += int64(count[key])
+        count[key]++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private fun hash(a: Int, b: Int): Long {
+        var mask = a.toLong()
+        mask = mask or (b.toLong() shl 31)
+        return mask
+    }
+
+    private fun gcd(a: Int, b: Int): Int {
+        var x = a
+        var y = b
+        while (y != 0) {
+            val temp = x % y
+            x = y
+            y = temp
+        }
+        return x
+    }
+
+    fun interchangeableRectangles(rectangles: Array<IntArray>): Long {
+        var res = 0L
+        val count = HashMap<Long, Int>()
+        for (rect in rectangles) {
+            val g = gcd(rect[0], rect[1])
+            val key = hash(rect[0] / g, rect[1] / g)
+            res += count.getOrDefault(key, 0)
+            count[key] = count.getOrDefault(key, 0) + 1
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private func hash(_ a: Int, _ b: Int) -> Int {
+        var mask = a
+        mask |= (b << 31)
+        return mask
+    }
+
+    private func gcd(_ a: Int, _ b: Int) -> Int {
+        var x = a
+        var y = b
+        while y != 0 {
+            let temp = x % y
+            x = y
+            y = temp
+        }
+        return x
+    }
+
+    func interchangeableRectangles(_ rectangles: [[Int]]) -> Int {
+        var res = 0
+        var count = [Int: Int]()
+        for rect in rectangles {
+            let g = gcd(rect[0], rect[1])
+            let key = hash(rect[0] / g, rect[1] / g)
+            res += count[key, default: 0]
+            count[key, default: 0] += 1
+        }
+        return res
     }
 }
 ```

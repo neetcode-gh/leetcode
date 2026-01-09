@@ -178,6 +178,231 @@ public:
 };
 ```
 
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} workers
+     * @param {number[][]} bikes
+     * @return {number[]}
+     */
+    assignBikes(workers, bikes) {
+        const findDistance = (workerLoc, bikeLoc) => {
+            return Math.abs(workerLoc[0] - bikeLoc[0]) + Math.abs(workerLoc[1] - bikeLoc[1]);
+        };
+
+        const allTriplets = [];
+        for (let worker = 0; worker < workers.length; worker++) {
+            for (let bike = 0; bike < bikes.length; bike++) {
+                const distance = findDistance(workers[worker], bikes[bike]);
+                allTriplets.push([distance, worker, bike]);
+            }
+        }
+
+        allTriplets.sort((a, b) => {
+            if (a[0] !== b[0]) return a[0] - b[0];
+            if (a[1] !== b[1]) return a[1] - b[1];
+            return a[2] - b[2];
+        });
+
+        const bikeStatus = new Array(bikes.length).fill(false);
+        const workerStatus = new Array(workers.length).fill(-1);
+        let pairCount = 0;
+
+        for (const [distance, worker, bike] of allTriplets) {
+            if (workerStatus[worker] === -1 && !bikeStatus[bike]) {
+                bikeStatus[bike] = true;
+                workerStatus[worker] = bike;
+                pairCount++;
+                if (pairCount === workers.length) {
+                    return workerStatus;
+                }
+            }
+        }
+
+        return workerStatus;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] AssignBikes(int[][] workers, int[][] bikes) {
+        int FindDistance(int[] worker, int[] bike) {
+            return Math.Abs(worker[0] - bike[0]) + Math.Abs(worker[1] - bike[1]);
+        }
+
+        var allTriplets = new List<(int dist, int worker, int bike)>();
+        for (int worker = 0; worker < workers.Length; worker++) {
+            for (int bike = 0; bike < bikes.Length; bike++) {
+                int distance = FindDistance(workers[worker], bikes[bike]);
+                allTriplets.Add((distance, worker, bike));
+            }
+        }
+
+        allTriplets.Sort((a, b) => {
+            if (a.dist != b.dist) return a.dist.CompareTo(b.dist);
+            if (a.worker != b.worker) return a.worker.CompareTo(b.worker);
+            return a.bike.CompareTo(b.bike);
+        });
+
+        bool[] bikeStatus = new bool[bikes.Length];
+        int[] workerStatus = new int[workers.Length];
+        Array.Fill(workerStatus, -1);
+        int pairCount = 0;
+
+        foreach (var triplet in allTriplets) {
+            if (workerStatus[triplet.worker] == -1 && !bikeStatus[triplet.bike]) {
+                bikeStatus[triplet.bike] = true;
+                workerStatus[triplet.worker] = triplet.bike;
+                pairCount++;
+                if (pairCount == workers.Length) {
+                    return workerStatus;
+                }
+            }
+        }
+
+        return workerStatus;
+    }
+}
+```
+
+```go
+func assignBikes(workers [][]int, bikes [][]int) []int {
+    findDistance := func(worker, bike []int) int {
+        return abs(worker[0]-bike[0]) + abs(worker[1]-bike[1])
+    }
+
+    type triplet struct {
+        dist, worker, bike int
+    }
+
+    allTriplets := []triplet{}
+    for worker := 0; worker < len(workers); worker++ {
+        for bike := 0; bike < len(bikes); bike++ {
+            distance := findDistance(workers[worker], bikes[bike])
+            allTriplets = append(allTriplets, triplet{distance, worker, bike})
+        }
+    }
+
+    sort.Slice(allTriplets, func(i, j int) bool {
+        if allTriplets[i].dist != allTriplets[j].dist {
+            return allTriplets[i].dist < allTriplets[j].dist
+        }
+        if allTriplets[i].worker != allTriplets[j].worker {
+            return allTriplets[i].worker < allTriplets[j].worker
+        }
+        return allTriplets[i].bike < allTriplets[j].bike
+    })
+
+    bikeStatus := make([]bool, len(bikes))
+    workerStatus := make([]int, len(workers))
+    for i := range workerStatus {
+        workerStatus[i] = -1
+    }
+    pairCount := 0
+
+    for _, t := range allTriplets {
+        if workerStatus[t.worker] == -1 && !bikeStatus[t.bike] {
+            bikeStatus[t.bike] = true
+            workerStatus[t.worker] = t.bike
+            pairCount++
+            if pairCount == len(workers) {
+                return workerStatus
+            }
+        }
+    }
+
+    return workerStatus
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun assignBikes(workers: Array<IntArray>, bikes: Array<IntArray>): IntArray {
+        fun findDistance(worker: IntArray, bike: IntArray): Int {
+            return kotlin.math.abs(worker[0] - bike[0]) + kotlin.math.abs(worker[1] - bike[1])
+        }
+
+        data class Triplet(val dist: Int, val worker: Int, val bike: Int)
+
+        val allTriplets = mutableListOf<Triplet>()
+        for (worker in workers.indices) {
+            for (bike in bikes.indices) {
+                val distance = findDistance(workers[worker], bikes[bike])
+                allTriplets.add(Triplet(distance, worker, bike))
+            }
+        }
+
+        allTriplets.sortWith(compareBy({ it.dist }, { it.worker }, { it.bike }))
+
+        val bikeStatus = BooleanArray(bikes.size)
+        val workerStatus = IntArray(workers.size) { -1 }
+        var pairCount = 0
+
+        for (triplet in allTriplets) {
+            if (workerStatus[triplet.worker] == -1 && !bikeStatus[triplet.bike]) {
+                bikeStatus[triplet.bike] = true
+                workerStatus[triplet.worker] = triplet.bike
+                pairCount++
+                if (pairCount == workers.size) {
+                    return workerStatus
+                }
+            }
+        }
+
+        return workerStatus
+    }
+}
+```
+
+```swift
+class Solution {
+    func assignBikes(_ workers: [[Int]], _ bikes: [[Int]]) -> [Int] {
+        func findDistance(_ worker: [Int], _ bike: [Int]) -> Int {
+            return abs(worker[0] - bike[0]) + abs(worker[1] - bike[1])
+        }
+
+        var allTriplets: [(dist: Int, worker: Int, bike: Int)] = []
+        for worker in 0..<workers.count {
+            for bike in 0..<bikes.count {
+                let distance = findDistance(workers[worker], bikes[bike])
+                allTriplets.append((distance, worker, bike))
+            }
+        }
+
+        allTriplets.sort { a, b in
+            if a.dist != b.dist { return a.dist < b.dist }
+            if a.worker != b.worker { return a.worker < b.worker }
+            return a.bike < b.bike
+        }
+
+        var bikeStatus = [Bool](repeating: false, count: bikes.count)
+        var workerStatus = [Int](repeating: -1, count: workers.count)
+        var pairCount = 0
+
+        for triplet in allTriplets {
+            if workerStatus[triplet.worker] == -1 && !bikeStatus[triplet.bike] {
+                bikeStatus[triplet.bike] = true
+                workerStatus[triplet.worker] = triplet.bike
+                pairCount += 1
+                if pairCount == workers.count {
+                    return workerStatus
+                }
+            }
+        }
+
+        return workerStatus
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +618,183 @@ class Solution {
         }
         
         return workerStatus;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] AssignBikes(int[][] workers, int[][] bikes) {
+        int FindDistance(int[] worker, int[] bike) {
+            return Math.Abs(worker[0] - bike[0]) + Math.Abs(worker[1] - bike[1]);
+        }
+
+        int minDist = int.MaxValue;
+        var distToPairs = new Dictionary<int, List<(int worker, int bike)>>();
+
+        for (int worker = 0; worker < workers.Length; worker++) {
+            for (int bike = 0; bike < bikes.Length; bike++) {
+                int distance = FindDistance(workers[worker], bikes[bike]);
+                if (!distToPairs.ContainsKey(distance)) {
+                    distToPairs[distance] = new List<(int, int)>();
+                }
+                distToPairs[distance].Add((worker, bike));
+                minDist = Math.Min(minDist, distance);
+            }
+        }
+
+        int currDist = minDist;
+        bool[] bikeStatus = new bool[bikes.Length];
+        int[] workerStatus = new int[workers.Length];
+        Array.Fill(workerStatus, -1);
+        int pairCount = 0;
+
+        while (pairCount < workers.Length) {
+            if (distToPairs.ContainsKey(currDist)) {
+                foreach (var pair in distToPairs[currDist]) {
+                    if (workerStatus[pair.worker] == -1 && !bikeStatus[pair.bike]) {
+                        bikeStatus[pair.bike] = true;
+                        workerStatus[pair.worker] = pair.bike;
+                        pairCount++;
+                    }
+                }
+            }
+            currDist++;
+        }
+
+        return workerStatus;
+    }
+}
+```
+
+```go
+func assignBikes(workers [][]int, bikes [][]int) []int {
+    findDistance := func(worker, bike []int) int {
+        return abs(worker[0]-bike[0]) + abs(worker[1]-bike[1])
+    }
+
+    minDist := 1 << 30
+    distToPairs := make(map[int][][2]int)
+
+    for worker := 0; worker < len(workers); worker++ {
+        for bike := 0; bike < len(bikes); bike++ {
+            distance := findDistance(workers[worker], bikes[bike])
+            distToPairs[distance] = append(distToPairs[distance], [2]int{worker, bike})
+            if distance < minDist {
+                minDist = distance
+            }
+        }
+    }
+
+    currDist := minDist
+    bikeStatus := make([]bool, len(bikes))
+    workerStatus := make([]int, len(workers))
+    for i := range workerStatus {
+        workerStatus[i] = -1
+    }
+    pairCount := 0
+
+    for pairCount < len(workers) {
+        if pairs, exists := distToPairs[currDist]; exists {
+            for _, pair := range pairs {
+                worker, bike := pair[0], pair[1]
+                if workerStatus[worker] == -1 && !bikeStatus[bike] {
+                    bikeStatus[bike] = true
+                    workerStatus[worker] = bike
+                    pairCount++
+                }
+            }
+        }
+        currDist++
+    }
+
+    return workerStatus
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun assignBikes(workers: Array<IntArray>, bikes: Array<IntArray>): IntArray {
+        fun findDistance(worker: IntArray, bike: IntArray): Int {
+            return kotlin.math.abs(worker[0] - bike[0]) + kotlin.math.abs(worker[1] - bike[1])
+        }
+
+        var minDist = Int.MAX_VALUE
+        val distToPairs = mutableMapOf<Int, MutableList<Pair<Int, Int>>>()
+
+        for (worker in workers.indices) {
+            for (bike in bikes.indices) {
+                val distance = findDistance(workers[worker], bikes[bike])
+                distToPairs.getOrPut(distance) { mutableListOf() }.add(worker to bike)
+                minDist = minOf(minDist, distance)
+            }
+        }
+
+        var currDist = minDist
+        val bikeStatus = BooleanArray(bikes.size)
+        val workerStatus = IntArray(workers.size) { -1 }
+        var pairCount = 0
+
+        while (pairCount < workers.size) {
+            distToPairs[currDist]?.forEach { (worker, bike) ->
+                if (workerStatus[worker] == -1 && !bikeStatus[bike]) {
+                    bikeStatus[bike] = true
+                    workerStatus[worker] = bike
+                    pairCount++
+                }
+            }
+            currDist++
+        }
+
+        return workerStatus
+    }
+}
+```
+
+```swift
+class Solution {
+    func assignBikes(_ workers: [[Int]], _ bikes: [[Int]]) -> [Int] {
+        func findDistance(_ worker: [Int], _ bike: [Int]) -> Int {
+            return abs(worker[0] - bike[0]) + abs(worker[1] - bike[1])
+        }
+
+        var minDist = Int.max
+        var distToPairs = [Int: [(worker: Int, bike: Int)]]()
+
+        for worker in 0..<workers.count {
+            for bike in 0..<bikes.count {
+                let distance = findDistance(workers[worker], bikes[bike])
+                distToPairs[distance, default: []].append((worker, bike))
+                minDist = min(minDist, distance)
+            }
+        }
+
+        var currDist = minDist
+        var bikeStatus = [Bool](repeating: false, count: bikes.count)
+        var workerStatus = [Int](repeating: -1, count: workers.count)
+        var pairCount = 0
+
+        while pairCount < workers.count {
+            if let pairs = distToPairs[currDist] {
+                for pair in pairs {
+                    if workerStatus[pair.worker] == -1 && !bikeStatus[pair.bike] {
+                        bikeStatus[pair.bike] = true
+                        workerStatus[pair.worker] = pair.bike
+                        pairCount += 1
+                    }
+                }
+            }
+            currDist += 1
+        }
+
+        return workerStatus
     }
 }
 ```
@@ -624,9 +1026,296 @@ public:
             }
         }
         
-        return workerStatus;       
+        return workerStatus;
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} workers
+     * @param {number[][]} bikes
+     * @return {number[]}
+     */
+    assignBikes(workers, bikes) {
+        const findDistance = (workerLoc, bikeLoc) => {
+            return Math.abs(workerLoc[0] - bikeLoc[0]) + Math.abs(workerLoc[1] - bikeLoc[1]);
+        };
+
+        const workerToBikeList = [];
+        const pq = new MinPriorityQueue({
+            compare: (a, b) => {
+                if (a[0] !== b[0]) return a[0] - b[0];
+                if (a[1] !== b[1]) return a[1] - b[1];
+                return a[2] - b[2];
+            }
+        });
+
+        for (let worker = 0; worker < workers.length; worker++) {
+            const currWorkerPairs = [];
+            for (let bike = 0; bike < bikes.length; bike++) {
+                const distance = findDistance(workers[worker], bikes[bike]);
+                currWorkerPairs.push([distance, worker, bike]);
+            }
+            currWorkerPairs.sort((a, b) => {
+                if (a[0] !== b[0]) return b[0] - a[0];
+                if (a[1] !== b[1]) return b[1] - a[1];
+                return b[2] - a[2];
+            });
+            pq.enqueue(currWorkerPairs.pop());
+            workerToBikeList.push(currWorkerPairs);
+        }
+
+        const bikeStatus = new Array(bikes.length).fill(false);
+        const workerStatus = new Array(workers.length).fill(-1);
+
+        while (!pq.isEmpty()) {
+            const [distance, worker, bike] = pq.dequeue();
+
+            if (!bikeStatus[bike]) {
+                bikeStatus[bike] = true;
+                workerStatus[worker] = bike;
+            } else {
+                const nextClosestBike = workerToBikeList[worker].pop();
+                pq.enqueue(nextClosestBike);
+            }
+        }
+
+        return workerStatus;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] AssignBikes(int[][] workers, int[][] bikes) {
+        int FindDistance(int[] worker, int[] bike) {
+            return Math.Abs(worker[0] - bike[0]) + Math.Abs(worker[1] - bike[1]);
+        }
+
+        var workerToBikeList = new List<List<(int dist, int worker, int bike)>>();
+        var pq = new PriorityQueue<(int dist, int worker, int bike), (int, int, int)>();
+
+        for (int worker = 0; worker < workers.Length; worker++) {
+            var currWorkerPairs = new List<(int, int, int)>();
+            for (int bike = 0; bike < bikes.Length; bike++) {
+                int distance = FindDistance(workers[worker], bikes[bike]);
+                currWorkerPairs.Add((distance, worker, bike));
+            }
+            currWorkerPairs.Sort((a, b) => {
+                if (a.Item1 != b.Item1) return b.Item1.CompareTo(a.Item1);
+                if (a.Item2 != b.Item2) return b.Item2.CompareTo(a.Item2);
+                return b.Item3.CompareTo(a.Item3);
+            });
+            var closest = currWorkerPairs[currWorkerPairs.Count - 1];
+            currWorkerPairs.RemoveAt(currWorkerPairs.Count - 1);
+            pq.Enqueue(closest, closest);
+            workerToBikeList.Add(currWorkerPairs);
+        }
+
+        bool[] bikeStatus = new bool[bikes.Length];
+        int[] workerStatus = new int[workers.Length];
+        Array.Fill(workerStatus, -1);
+
+        while (pq.Count > 0) {
+            var (dist, worker, bike) = pq.Dequeue();
+
+            if (!bikeStatus[bike]) {
+                bikeStatus[bike] = true;
+                workerStatus[worker] = bike;
+            } else {
+                var list = workerToBikeList[worker];
+                var nextClosest = list[list.Count - 1];
+                list.RemoveAt(list.Count - 1);
+                pq.Enqueue(nextClosest, nextClosest);
+            }
+        }
+
+        return workerStatus;
+    }
+}
+```
+
+```go
+func assignBikes(workers [][]int, bikes [][]int) []int {
+    findDistance := func(worker, bike []int) int {
+        return abs(worker[0]-bike[0]) + abs(worker[1]-bike[1])
+    }
+
+    type triplet struct {
+        dist, worker, bike int
+    }
+
+    workerToBikeList := make([][]triplet, len(workers))
+    pq := &minHeap{}
+    heap.Init(pq)
+
+    for worker := 0; worker < len(workers); worker++ {
+        var currWorkerPairs []triplet
+        for bike := 0; bike < len(bikes); bike++ {
+            distance := findDistance(workers[worker], bikes[bike])
+            currWorkerPairs = append(currWorkerPairs, triplet{distance, worker, bike})
+        }
+        sort.Slice(currWorkerPairs, func(i, j int) bool {
+            if currWorkerPairs[i].dist != currWorkerPairs[j].dist {
+                return currWorkerPairs[i].dist > currWorkerPairs[j].dist
+            }
+            if currWorkerPairs[i].worker != currWorkerPairs[j].worker {
+                return currWorkerPairs[i].worker > currWorkerPairs[j].worker
+            }
+            return currWorkerPairs[i].bike > currWorkerPairs[j].bike
+        })
+        heap.Push(pq, currWorkerPairs[len(currWorkerPairs)-1])
+        workerToBikeList[worker] = currWorkerPairs[:len(currWorkerPairs)-1]
+    }
+
+    bikeStatus := make([]bool, len(bikes))
+    workerStatus := make([]int, len(workers))
+    for i := range workerStatus {
+        workerStatus[i] = -1
+    }
+
+    for pq.Len() > 0 {
+        t := heap.Pop(pq).(triplet)
+
+        if !bikeStatus[t.bike] {
+            bikeStatus[t.bike] = true
+            workerStatus[t.worker] = t.bike
+        } else {
+            list := workerToBikeList[t.worker]
+            nextClosest := list[len(list)-1]
+            workerToBikeList[t.worker] = list[:len(list)-1]
+            heap.Push(pq, nextClosest)
+        }
+    }
+
+    return workerStatus
+}
+
+type minHeap []struct{ dist, worker, bike int }
+
+func (h minHeap) Len() int { return len(h) }
+func (h minHeap) Less(i, j int) bool {
+    if h[i].dist != h[j].dist {
+        return h[i].dist < h[j].dist
+    }
+    if h[i].worker != h[j].worker {
+        return h[i].worker < h[j].worker
+    }
+    return h[i].bike < h[j].bike
+}
+func (h minHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *minHeap) Push(x interface{}) { *h = append(*h, x.(struct{ dist, worker, bike int })) }
+func (h *minHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun assignBikes(workers: Array<IntArray>, bikes: Array<IntArray>): IntArray {
+        fun findDistance(worker: IntArray, bike: IntArray): Int {
+            return kotlin.math.abs(worker[0] - bike[0]) + kotlin.math.abs(worker[1] - bike[1])
+        }
+
+        data class Triplet(val dist: Int, val worker: Int, val bike: Int)
+
+        val workerToBikeList = mutableListOf<MutableList<Triplet>>()
+        val pq = PriorityQueue<Triplet>(compareBy({ it.dist }, { it.worker }, { it.bike }))
+
+        for (worker in workers.indices) {
+            val currWorkerPairs = mutableListOf<Triplet>()
+            for (bike in bikes.indices) {
+                val distance = findDistance(workers[worker], bikes[bike])
+                currWorkerPairs.add(Triplet(distance, worker, bike))
+            }
+            currWorkerPairs.sortWith(compareByDescending<Triplet> { it.dist }
+                .thenByDescending { it.worker }
+                .thenByDescending { it.bike })
+            pq.add(currWorkerPairs.removeLast())
+            workerToBikeList.add(currWorkerPairs)
+        }
+
+        val bikeStatus = BooleanArray(bikes.size)
+        val workerStatus = IntArray(workers.size) { -1 }
+
+        while (pq.isNotEmpty()) {
+            val (dist, worker, bike) = pq.poll()
+
+            if (!bikeStatus[bike]) {
+                bikeStatus[bike] = true
+                workerStatus[worker] = bike
+            } else {
+                val nextClosestBike = workerToBikeList[worker].removeLast()
+                pq.add(nextClosestBike)
+            }
+        }
+
+        return workerStatus
+    }
+}
+```
+
+```swift
+class Solution {
+    func assignBikes(_ workers: [[Int]], _ bikes: [[Int]]) -> [Int] {
+        func findDistance(_ worker: [Int], _ bike: [Int]) -> Int {
+            return abs(worker[0] - bike[0]) + abs(worker[1] - bike[1])
+        }
+
+        var workerToBikeList = [[(dist: Int, worker: Int, bike: Int)]]()
+        var pq = [(dist: Int, worker: Int, bike: Int)]()
+
+        for worker in 0..<workers.count {
+            var currWorkerPairs = [(dist: Int, worker: Int, bike: Int)]()
+            for bike in 0..<bikes.count {
+                let distance = findDistance(workers[worker], bikes[bike])
+                currWorkerPairs.append((distance, worker, bike))
+            }
+            currWorkerPairs.sort { a, b in
+                if a.dist != b.dist { return a.dist > b.dist }
+                if a.worker != b.worker { return a.worker > b.worker }
+                return a.bike > b.bike
+            }
+            pq.append(currWorkerPairs.removeLast())
+            workerToBikeList.append(currWorkerPairs)
+        }
+
+        var bikeStatus = [Bool](repeating: false, count: bikes.count)
+        var workerStatus = [Int](repeating: -1, count: workers.count)
+
+        while !pq.isEmpty {
+            pq.sort { a, b in
+                if a.dist != b.dist { return a.dist < b.dist }
+                if a.worker != b.worker { return a.worker < b.worker }
+                return a.bike < b.bike
+            }
+            let t = pq.removeFirst()
+
+            if !bikeStatus[t.bike] {
+                bikeStatus[t.bike] = true
+                workerStatus[t.worker] = t.bike
+            } else {
+                let nextClosestBike = workerToBikeList[t.worker].removeLast()
+                pq.append(nextClosestBike)
+            }
+        }
+
+        return workerStatus
+    }
+}
 ```
 
 ::tabs-end

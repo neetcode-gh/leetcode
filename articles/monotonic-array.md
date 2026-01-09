@@ -109,6 +109,112 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsMonotonic(int[] nums) {
+        int n = nums.Length;
+        bool increase = true;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] < nums[i - 1]) {
+                increase = false;
+                break;
+            }
+        }
+        if (increase) {
+            return true;
+        }
+
+        bool decrease = true;
+        for (int i = 1; i < n; i++) {
+            if (nums[i] > nums[i - 1]) {
+                decrease = false;
+                break;
+            }
+        }
+        return decrease;
+    }
+}
+```
+
+```go
+func isMonotonic(nums []int) bool {
+    n := len(nums)
+    increase := true
+    for i := 1; i < n; i++ {
+        if nums[i] < nums[i-1] {
+            increase = false
+            break
+        }
+    }
+    if increase {
+        return true
+    }
+
+    decrease := true
+    for i := 1; i < n; i++ {
+        if nums[i] > nums[i-1] {
+            decrease = false
+            break
+        }
+    }
+    return decrease
+}
+```
+
+```kotlin
+class Solution {
+    fun isMonotonic(nums: IntArray): Boolean {
+        val n = nums.size
+        var increase = true
+        for (i in 1 until n) {
+            if (nums[i] < nums[i - 1]) {
+                increase = false
+                break
+            }
+        }
+        if (increase) {
+            return true
+        }
+
+        var decrease = true
+        for (i in 1 until n) {
+            if (nums[i] > nums[i - 1]) {
+                decrease = false
+                break
+            }
+        }
+        return decrease
+    }
+}
+```
+
+```swift
+class Solution {
+    func isMonotonic(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        var increase = true
+        for i in 1..<n {
+            if nums[i] < nums[i - 1] {
+                increase = false
+                break
+            }
+        }
+        if increase {
+            return true
+        }
+
+        var decrease = true
+        for i in 1..<n {
+            if nums[i] > nums[i - 1] {
+                decrease = false
+                break
+            }
+        }
+        return decrease
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -212,6 +318,96 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsMonotonic(int[] nums) {
+        int n = nums.Length;
+        if (nums[0] <= nums[n - 1]) {
+            for (int i = 1; i < n; i++) {
+                if (nums[i] < nums[i - 1]) {
+                    return false;
+                }
+            }
+            return true;
+        } else {
+            for (int i = 1; i < n; i++) {
+                if (nums[i] > nums[i - 1]) {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+}
+```
+
+```go
+func isMonotonic(nums []int) bool {
+    n := len(nums)
+    if nums[0] <= nums[n-1] {
+        for i := 1; i < n; i++ {
+            if nums[i] < nums[i-1] {
+                return false
+            }
+        }
+        return true
+    } else {
+        for i := 1; i < n; i++ {
+            if nums[i] > nums[i-1] {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun isMonotonic(nums: IntArray): Boolean {
+        val n = nums.size
+        if (nums[0] <= nums[n - 1]) {
+            for (i in 1 until n) {
+                if (nums[i] < nums[i - 1]) {
+                    return false
+                }
+            }
+            return true
+        } else {
+            for (i in 1 until n) {
+                if (nums[i] > nums[i - 1]) {
+                    return false
+                }
+            }
+            return true
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func isMonotonic(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        if nums[0] <= nums[n - 1] {
+            for i in 1..<n {
+                if nums[i] < nums[i - 1] {
+                    return false
+                }
+            }
+            return true
+        } else {
+            for i in 1..<n {
+                if nums[i] > nums[i - 1] {
+                    return false
+                }
+            }
+            return true
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +490,78 @@ class Solution {
             }
         }
         return increase || decrease;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsMonotonic(int[] nums) {
+        bool increase = true, decrease = true;
+
+        for (int i = 0; i < nums.Length - 1; i++) {
+            if (!(nums[i] <= nums[i + 1])) {
+                increase = false;
+            }
+            if (!(nums[i] >= nums[i + 1])) {
+                decrease = false;
+            }
+        }
+        return increase || decrease;
+    }
+}
+```
+
+```go
+func isMonotonic(nums []int) bool {
+    increase, decrease := true, true
+
+    for i := 0; i < len(nums)-1; i++ {
+        if !(nums[i] <= nums[i+1]) {
+            increase = false
+        }
+        if !(nums[i] >= nums[i+1]) {
+            decrease = false
+        }
+    }
+    return increase || decrease
+}
+```
+
+```kotlin
+class Solution {
+    fun isMonotonic(nums: IntArray): Boolean {
+        var increase = true
+        var decrease = true
+
+        for (i in 0 until nums.size - 1) {
+            if (!(nums[i] <= nums[i + 1])) {
+                increase = false
+            }
+            if (!(nums[i] >= nums[i + 1])) {
+                decrease = false
+            }
+        }
+        return increase || decrease
+    }
+}
+```
+
+```swift
+class Solution {
+    func isMonotonic(_ nums: [Int]) -> Bool {
+        var increase = true
+        var decrease = true
+
+        for i in 0..<(nums.count - 1) {
+            if !(nums[i] <= nums[i + 1]) {
+                increase = false
+            }
+            if !(nums[i] >= nums[i + 1]) {
+                decrease = false
+            }
+        }
+        return increase || decrease
     }
 }
 ```

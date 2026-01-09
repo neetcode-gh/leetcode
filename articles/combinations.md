@@ -130,6 +130,83 @@ public class Solution {
 }
 ```
 
+```go
+func combine(n int, k int) [][]int {
+    res := [][]int{}
+
+    var backtrack func(i int, comb []int)
+    backtrack = func(i int, comb []int) {
+        if i > n {
+            if len(comb) == k {
+                temp := make([]int, len(comb))
+                copy(temp, comb)
+                res = append(res, temp)
+            }
+            return
+        }
+
+        comb = append(comb, i)
+        backtrack(i+1, comb)
+        comb = comb[:len(comb)-1]
+        backtrack(i+1, comb)
+    }
+
+    backtrack(1, []int{})
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combine(n: Int, k: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+
+        fun backtrack(i: Int, comb: MutableList<Int>) {
+            if (i > n) {
+                if (comb.size == k) {
+                    res.add(ArrayList(comb))
+                }
+                return
+            }
+
+            comb.add(i)
+            backtrack(i + 1, comb)
+            comb.removeAt(comb.size - 1)
+            backtrack(i + 1, comb)
+        }
+
+        backtrack(1, mutableListOf())
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func combine(_ n: Int, _ k: Int) -> [[Int]] {
+        var res = [[Int]]()
+
+        func backtrack(_ i: Int, _ comb: inout [Int]) {
+            if i > n {
+                if comb.count == k {
+                    res.append(comb)
+                }
+                return
+            }
+
+            comb.append(i)
+            backtrack(i + 1, &comb)
+            comb.removeLast()
+            backtrack(i + 1, &comb)
+        }
+
+        var comb = [Int]()
+        backtrack(1, &comb)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,6 +342,80 @@ public class Solution {
 
         Backtrack(1, new List<int>());
         return res;
+    }
+}
+```
+
+```go
+func combine(n int, k int) [][]int {
+    res := [][]int{}
+
+    var backtrack func(start int, comb []int)
+    backtrack = func(start int, comb []int) {
+        if len(comb) == k {
+            temp := make([]int, len(comb))
+            copy(temp, comb)
+            res = append(res, temp)
+            return
+        }
+
+        for i := start; i <= n; i++ {
+            comb = append(comb, i)
+            backtrack(i+1, comb)
+            comb = comb[:len(comb)-1]
+        }
+    }
+
+    backtrack(1, []int{})
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combine(n: Int, k: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+
+        fun backtrack(start: Int, comb: MutableList<Int>) {
+            if (comb.size == k) {
+                res.add(ArrayList(comb))
+                return
+            }
+
+            for (i in start..n) {
+                comb.add(i)
+                backtrack(i + 1, comb)
+                comb.removeAt(comb.size - 1)
+            }
+        }
+
+        backtrack(1, mutableListOf())
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func combine(_ n: Int, _ k: Int) -> [[Int]] {
+        var res = [[Int]]()
+
+        func backtrack(_ start: Int, _ comb: inout [Int]) {
+            if comb.count == k {
+                res.append(comb)
+                return
+            }
+
+            for i in start...n {
+                comb.append(i)
+                backtrack(i + 1, &comb)
+                comb.removeLast()
+            }
+        }
+
+        var comb = [Int]()
+        backtrack(1, &comb)
+        return res
     }
 }
 ```
@@ -424,6 +575,87 @@ public class Solution {
 }
 ```
 
+```go
+func combine(n int, k int) [][]int {
+    res := [][]int{}
+    comb := make([]int, k)
+    i := 0
+
+    for i >= 0 {
+        comb[i]++
+        if comb[i] > n {
+            i--
+            continue
+        }
+
+        if i == k-1 {
+            temp := make([]int, k)
+            copy(temp, comb)
+            res = append(res, temp)
+        } else {
+            i++
+            comb[i] = comb[i-1]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combine(n: Int, k: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        val comb = IntArray(k)
+        var i = 0
+
+        while (i >= 0) {
+            comb[i]++
+            if (comb[i] > n) {
+                i--
+                continue
+            }
+
+            if (i == k - 1) {
+                res.add(comb.toList())
+            } else {
+                i++
+                comb[i] = comb[i - 1]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func combine(_ n: Int, _ k: Int) -> [[Int]] {
+        var res = [[Int]]()
+        var comb = [Int](repeating: 0, count: k)
+        var i = 0
+
+        while i >= 0 {
+            comb[i] += 1
+            if comb[i] > n {
+                i -= 1
+                continue
+            }
+
+            if i == k - 1 {
+                res.append(comb)
+            } else {
+                i += 1
+                comb[i] = comb[i - 1]
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,6 +772,64 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func combine(n int, k int) [][]int {
+    res := [][]int{}
+    for mask := 0; mask < (1 << n); mask++ {
+        comb := []int{}
+        for bit := 0; bit < n; bit++ {
+            if mask&(1<<bit) != 0 {
+                comb = append(comb, bit+1)
+            }
+        }
+        if len(comb) == k {
+            res = append(res, comb)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combine(n: Int, k: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        for (mask in 0 until (1 shl n)) {
+            val comb = mutableListOf<Int>()
+            for (bit in 0 until n) {
+                if (mask and (1 shl bit) != 0) {
+                    comb.add(bit + 1)
+                }
+            }
+            if (comb.size == k) {
+                res.add(comb)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func combine(_ n: Int, _ k: Int) -> [[Int]] {
+        var res = [[Int]]()
+        for mask in 0..<(1 << n) {
+            var comb = [Int]()
+            for bit in 0..<n {
+                if mask & (1 << bit) != 0 {
+                    comb.append(bit + 1)
+                }
+            }
+            if comb.count == k {
+                res.append(comb)
+            }
+        }
+        return res
     }
 }
 ```

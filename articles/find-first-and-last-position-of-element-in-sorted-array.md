@@ -102,6 +102,67 @@ public class Solution {
 }
 ```
 
+```go
+func searchRange(nums []int, target int) []int {
+    res := []int{-1, -1}
+
+    for i, num := range nums {
+        if num == target {
+            if res[0] == -1 {
+                res[0] = i
+                res[1] = i
+            } else {
+                res[1] = i
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun searchRange(nums: IntArray, target: Int): IntArray {
+        val res = intArrayOf(-1, -1)
+
+        for (i in nums.indices) {
+            if (nums[i] == target) {
+                if (res[0] == -1) {
+                    res[0] = i
+                    res[1] = i
+                } else {
+                    res[1] = i
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+        var res = [-1, -1]
+
+        for i in 0..<nums.count {
+            if nums[i] == target {
+                if res[0] == -1 {
+                    res[0] = i
+                    res[1] = i
+                } else {
+                    res[1] = i
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -275,6 +336,98 @@ public class Solution {
 }
 ```
 
+```go
+func searchRange(nums []int, target int) []int {
+    left := binarySearch(nums, target, true)
+    right := binarySearch(nums, target, false)
+    return []int{left, right}
+}
+
+func binarySearch(nums []int, target int, leftBias bool) int {
+    l, r, i := 0, len(nums)-1, -1
+    for l <= r {
+        m := (l + r) / 2
+        if target > nums[m] {
+            l = m + 1
+        } else if target < nums[m] {
+            r = m - 1
+        } else {
+            i = m
+            if leftBias {
+                r = m - 1
+            } else {
+                l = m + 1
+            }
+        }
+    }
+    return i
+}
+```
+
+```kotlin
+class Solution {
+    fun searchRange(nums: IntArray, target: Int): IntArray {
+        val left = binarySearch(nums, target, true)
+        val right = binarySearch(nums, target, false)
+        return intArrayOf(left, right)
+    }
+
+    private fun binarySearch(nums: IntArray, target: Int, leftBias: Boolean): Int {
+        var l = 0
+        var r = nums.size - 1
+        var i = -1
+        while (l <= r) {
+            val m = (l + r) / 2
+            if (target > nums[m]) {
+                l = m + 1
+            } else if (target < nums[m]) {
+                r = m - 1
+            } else {
+                i = m
+                if (leftBias) {
+                    r = m - 1
+                } else {
+                    l = m + 1
+                }
+            }
+        }
+        return i
+    }
+}
+```
+
+```swift
+class Solution {
+    func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+        let left = binarySearch(nums, target, true)
+        let right = binarySearch(nums, target, false)
+        return [left, right]
+    }
+
+    private func binarySearch(_ nums: [Int], _ target: Int, _ leftBias: Bool) -> Int {
+        var l = 0
+        var r = nums.count - 1
+        var i = -1
+        while l <= r {
+            let m = (l + r) / 2
+            if target > nums[m] {
+                l = m + 1
+            } else if target < nums[m] {
+                r = m - 1
+            } else {
+                i = m
+                if leftBias {
+                    r = m - 1
+                } else {
+                    l = m + 1
+                }
+            }
+        }
+        return i
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -431,6 +584,90 @@ public class Solution {
 }
 ```
 
+```go
+func searchRange(nums []int, target int) []int {
+    n := len(nums)
+
+    binarySearch := func(t int) int {
+        l, r := 0, n
+        for l < r {
+            m := l + (r-l)/2
+            if nums[m] >= t {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return l
+    }
+
+    start := binarySearch(target)
+    if start == n || nums[start] != target {
+        return []int{-1, -1}
+    }
+
+    return []int{start, binarySearch(target+1) - 1}
+}
+```
+
+```kotlin
+class Solution {
+    fun searchRange(nums: IntArray, target: Int): IntArray {
+        val n = nums.size
+
+        fun binarySearch(t: Int): Int {
+            var l = 0
+            var r = n
+            while (l < r) {
+                val m = l + (r - l) / 2
+                if (nums[m] >= t) {
+                    r = m
+                } else {
+                    l = m + 1
+                }
+            }
+            return l
+        }
+
+        val start = binarySearch(target)
+        if (start == n || nums[start] != target) {
+            return intArrayOf(-1, -1)
+        }
+
+        return intArrayOf(start, binarySearch(target + 1) - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+        let n = nums.count
+
+        func binarySearch(_ t: Int) -> Int {
+            var l = 0
+            var r = n
+            while l < r {
+                let m = l + (r - l) / 2
+                if nums[m] >= t {
+                    r = m
+                } else {
+                    l = m + 1
+                }
+            }
+            return l
+        }
+
+        let start = binarySearch(target)
+        if start == n || nums[start] != target {
+            return [-1, -1]
+        }
+
+        return [start, binarySearch(target + 1) - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -541,6 +778,50 @@ public class Solution {
         }
 
         return new int[] { first, last };
+    }
+}
+```
+
+```go
+func searchRange(nums []int, target int) []int {
+    left := sort.SearchInts(nums, target)
+    if left >= len(nums) || nums[left] != target {
+        return []int{-1, -1}
+    }
+
+    right := sort.SearchInts(nums, target+1) - 1
+    return []int{left, right}
+}
+```
+
+```kotlin
+class Solution {
+    fun searchRange(nums: IntArray, target: Int): IntArray {
+        val left = nums.binarySearch(target).let {
+            if (it < 0) return intArrayOf(-1, -1)
+            var idx = it
+            while (idx > 0 && nums[idx - 1] == target) idx--
+            idx
+        }
+
+        var right = left
+        while (right < nums.size - 1 && nums[right + 1] == target) right++
+
+        return intArrayOf(left, right)
+    }
+}
+```
+
+```swift
+class Solution {
+    func searchRange(_ nums: [Int], _ target: Int) -> [Int] {
+        guard let idx = nums.firstIndex(of: target) else {
+            return [-1, -1]
+        }
+        guard let lastIdx = nums.lastIndex(of: target) else {
+            return [-1, -1]
+        }
+        return [idx, lastIdx]
     }
 }
 ```

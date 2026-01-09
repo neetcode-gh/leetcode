@@ -119,6 +119,72 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func middleNode(head *ListNode) *ListNode {
+    arr := []*ListNode{}
+    cur := head
+    for cur != nil {
+        arr = append(arr, cur)
+        cur = cur.Next
+    }
+    return arr[len(arr)/2]
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun middleNode(head: ListNode?): ListNode? {
+        val arr = mutableListOf<ListNode>()
+        var cur = head
+        while (cur != null) {
+            arr.add(cur)
+            cur = cur.next
+        }
+        return arr[arr.size / 2]
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func middleNode(_ head: ListNode?) -> ListNode? {
+        var arr = [ListNode]()
+        var cur = head
+        while cur != nil {
+            arr.append(cur!)
+            cur = cur?.next
+        }
+        return arr[arr.count / 2]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,6 +349,93 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func middleNode(head *ListNode) *ListNode {
+    n := 0
+    cur := head
+    for cur != nil {
+        cur = cur.Next
+        n++
+    }
+
+    n /= 2
+    cur = head
+    for n > 0 {
+        n--
+        cur = cur.Next
+    }
+    return cur
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun middleNode(head: ListNode?): ListNode? {
+        var n = 0
+        var cur = head
+        while (cur != null) {
+            cur = cur.next
+            n++
+        }
+
+        n /= 2
+        cur = head
+        while (n > 0) {
+            n--
+            cur = cur?.next
+        }
+        return cur
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func middleNode(_ head: ListNode?) -> ListNode? {
+        var n = 0
+        var cur = head
+        while cur != nil {
+            cur = cur?.next
+            n += 1
+        }
+
+        n /= 2
+        cur = head
+        while n > 0 {
+            n -= 1
+            cur = cur?.next
+        }
+        return cur
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -410,6 +563,71 @@ public class Solution {
             fast = fast.next.next;
         }
         return slow;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func middleNode(head *ListNode) *ListNode {
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+    return slow
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun middleNode(head: ListNode?): ListNode? {
+        var slow = head
+        var fast = head
+        while (fast != null && fast.next != null) {
+            slow = slow?.next
+            fast = fast.next?.next
+        }
+        return slow
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func middleNode(_ head: ListNode?) -> ListNode? {
+        var slow = head
+        var fast = head
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next?.next
+        }
+        return slow
     }
 }
 ```

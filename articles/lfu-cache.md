@@ -294,6 +294,185 @@ public class LFUCache {
 }
 ```
 
+```go
+type Node struct {
+    value     int
+    freq      int
+    timestamp int
+}
+
+type LFUCache struct {
+    capacity  int
+    timestamp int
+    cache     map[int]*Node
+}
+
+func Constructor(capacity int) LFUCache {
+    return LFUCache{
+        capacity:  capacity,
+        timestamp: 0,
+        cache:     make(map[int]*Node),
+    }
+}
+
+func (this *LFUCache) Get(key int) int {
+    if node, exists := this.cache[key]; exists {
+        node.freq++
+        this.timestamp++
+        node.timestamp = this.timestamp
+        return node.value
+    }
+    return -1
+}
+
+func (this *LFUCache) Put(key int, value int) {
+    if this.capacity <= 0 {
+        return
+    }
+
+    this.timestamp++
+    if node, exists := this.cache[key]; exists {
+        node.value = value
+        node.freq++
+        node.timestamp = this.timestamp
+        return
+    }
+
+    if len(this.cache) >= this.capacity {
+        minFreq := math.MaxInt32
+        minTimestamp := math.MaxInt32
+        lfuKey := -1
+
+        for k, node := range this.cache {
+            if node.freq < minFreq || (node.freq == minFreq && node.timestamp < minTimestamp) {
+                minFreq = node.freq
+                minTimestamp = node.timestamp
+                lfuKey = k
+            }
+        }
+
+        if lfuKey != -1 {
+            delete(this.cache, lfuKey)
+        }
+    }
+
+    this.cache[key] = &Node{value: value, freq: 1, timestamp: this.timestamp}
+}
+```
+
+```kotlin
+class Node(var value: Int, var freq: Int, var timestamp: Int)
+
+class LFUCache(private val capacity: Int) {
+    private var timestamp = 0
+    private val cache = HashMap<Int, Node>()
+
+    fun get(key: Int): Int {
+        val node = cache[key] ?: return -1
+        node.freq++
+        node.timestamp = ++timestamp
+        return node.value
+    }
+
+    fun put(key: Int, value: Int) {
+        if (capacity <= 0) return
+
+        timestamp++
+        cache[key]?.let { node ->
+            node.value = value
+            node.freq++
+            node.timestamp = timestamp
+            return
+        }
+
+        if (cache.size >= capacity) {
+            var minFreq = Int.MAX_VALUE
+            var minTimestamp = Int.MAX_VALUE
+            var lfuKey: Int? = null
+
+            for ((k, node) in cache) {
+                if (node.freq < minFreq || (node.freq == minFreq && node.timestamp < minTimestamp)) {
+                    minFreq = node.freq
+                    minTimestamp = node.timestamp
+                    lfuKey = k
+                }
+            }
+
+            lfuKey?.let { cache.remove(it) }
+        }
+
+        cache[key] = Node(value, 1, timestamp)
+    }
+}
+```
+
+```swift
+class Node {
+    var value: Int
+    var freq: Int
+    var timestamp: Int
+
+    init(_ value: Int, _ freq: Int, _ timestamp: Int) {
+        self.value = value
+        self.freq = freq
+        self.timestamp = timestamp
+    }
+}
+
+class LFUCache {
+    private var capacity: Int
+    private var timestamp: Int
+    private var cache: [Int: Node]
+
+    init(_ capacity: Int) {
+        self.capacity = capacity
+        self.timestamp = 0
+        self.cache = [:]
+    }
+
+    func get(_ key: Int) -> Int {
+        guard let node = cache[key] else { return -1 }
+
+        node.freq += 1
+        timestamp += 1
+        node.timestamp = timestamp
+        return node.value
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        if capacity <= 0 { return }
+
+        timestamp += 1
+        if let node = cache[key] {
+            node.value = value
+            node.freq += 1
+            node.timestamp = timestamp
+            return
+        }
+
+        if cache.count >= capacity {
+            var minFreq = Int.max
+            var minTimestamp = Int.max
+            var lfuKey: Int? = nil
+
+            for (k, node) in cache {
+                if node.freq < minFreq || (node.freq == minFreq && node.timestamp < minTimestamp) {
+                    minFreq = node.freq
+                    minTimestamp = node.timestamp
+                    lfuKey = k
+                }
+            }
+
+            if let key = lfuKey {
+                cache.removeValue(forKey: key)
+            }
+        }
+
+        cache[key] = Node(value, 1, timestamp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -892,6 +1071,335 @@ public class LFUCache {
         }
         Counter(key);
         lfuCount = Math.Min(lfuCount, countMap[key]);
+    }
+}
+```
+
+```go
+type ListNode struct {
+    val  int
+    prev *ListNode
+    next *ListNode
+}
+
+type LinkedList struct {
+    left  *ListNode
+    right *ListNode
+    mp    map[int]*ListNode
+}
+
+func NewLinkedList() *LinkedList {
+    left := &ListNode{val: 0}
+    right := &ListNode{val: 0, prev: left}
+    left.next = right
+    return &LinkedList{
+        left:  left,
+        right: right,
+        mp:    make(map[int]*ListNode),
+    }
+}
+
+func (ll *LinkedList) length() int {
+    return len(ll.mp)
+}
+
+func (ll *LinkedList) pushRight(val int) {
+    node := &ListNode{val: val, prev: ll.right.prev, next: ll.right}
+    ll.mp[val] = node
+    ll.right.prev.next = node
+    ll.right.prev = node
+}
+
+func (ll *LinkedList) pop(val int) {
+    if node, exists := ll.mp[val]; exists {
+        prev, next := node.prev, node.next
+        prev.next = next
+        next.prev = prev
+        delete(ll.mp, val)
+    }
+}
+
+func (ll *LinkedList) popLeft() int {
+    res := ll.left.next.val
+    ll.pop(res)
+    return res
+}
+
+type LFUCache struct {
+    capacity int
+    lfuCount int
+    valMap   map[int]int
+    countMap map[int]int
+    listMap  map[int]*LinkedList
+}
+
+func Constructor(capacity int) LFUCache {
+    listMap := make(map[int]*LinkedList)
+    listMap[0] = NewLinkedList()
+    return LFUCache{
+        capacity: capacity,
+        lfuCount: 0,
+        valMap:   make(map[int]int),
+        countMap: make(map[int]int),
+        listMap:  listMap,
+    }
+}
+
+func (this *LFUCache) counter(key int) {
+    count := this.countMap[key]
+    this.countMap[key] = count + 1
+
+    if _, exists := this.listMap[count]; !exists {
+        this.listMap[count] = NewLinkedList()
+    }
+    this.listMap[count].pop(key)
+
+    if _, exists := this.listMap[count+1]; !exists {
+        this.listMap[count+1] = NewLinkedList()
+    }
+    this.listMap[count+1].pushRight(key)
+
+    if count == this.lfuCount && this.listMap[count].length() == 0 {
+        this.lfuCount++
+    }
+}
+
+func (this *LFUCache) Get(key int) int {
+    if _, exists := this.valMap[key]; !exists {
+        return -1
+    }
+    this.counter(key)
+    return this.valMap[key]
+}
+
+func (this *LFUCache) Put(key int, value int) {
+    if this.capacity == 0 {
+        return
+    }
+
+    if _, exists := this.valMap[key]; !exists && len(this.valMap) == this.capacity {
+        toRemove := this.listMap[this.lfuCount].popLeft()
+        delete(this.valMap, toRemove)
+        delete(this.countMap, toRemove)
+    }
+
+    this.valMap[key] = value
+    if _, exists := this.countMap[key]; !exists {
+        this.countMap[key] = 0
+        this.listMap[0].pushRight(key)
+        this.lfuCount = 0
+    }
+    this.counter(key)
+}
+```
+
+```kotlin
+class ListNode(var `val`: Int) {
+    var prev: ListNode? = null
+    var next: ListNode? = null
+
+    constructor(`val`: Int, prev: ListNode?, next: ListNode?) : this(`val`) {
+        this.prev = prev
+        this.next = next
+    }
+}
+
+class DoublyLinkedList {
+    private val left = ListNode(0)
+    private val right = ListNode(0, left, null)
+    private val map = HashMap<Int, ListNode>()
+
+    init {
+        left.next = right
+    }
+
+    fun length(): Int = map.size
+
+    fun pushRight(`val`: Int) {
+        val node = ListNode(`val`, right.prev, right)
+        map[`val`] = node
+        right.prev?.next = node
+        right.prev = node
+    }
+
+    fun pop(`val`: Int) {
+        map[`val`]?.let { node ->
+            val prev = node.prev
+            val next = node.next
+            prev?.next = next
+            next?.prev = prev
+            map.remove(`val`)
+        }
+    }
+
+    fun popLeft(): Int {
+        val res = left.next!!.`val`
+        pop(res)
+        return res
+    }
+}
+
+class LFUCache(private val capacity: Int) {
+    private var lfuCount = 0
+    private val valMap = HashMap<Int, Int>()
+    private val countMap = HashMap<Int, Int>()
+    private val listMap = HashMap<Int, DoublyLinkedList>()
+
+    init {
+        listMap[0] = DoublyLinkedList()
+    }
+
+    private fun counter(key: Int) {
+        val count = countMap[key]!!
+        countMap[key] = count + 1
+
+        listMap.getOrPut(count) { DoublyLinkedList() }.pop(key)
+        listMap.getOrPut(count + 1) { DoublyLinkedList() }.pushRight(key)
+
+        if (count == lfuCount && listMap[count]!!.length() == 0) {
+            lfuCount++
+        }
+    }
+
+    fun get(key: Int): Int {
+        if (!valMap.containsKey(key)) {
+            return -1
+        }
+        counter(key)
+        return valMap[key]!!
+    }
+
+    fun put(key: Int, value: Int) {
+        if (capacity == 0) return
+
+        if (!valMap.containsKey(key) && valMap.size == capacity) {
+            val toRemove = listMap[lfuCount]!!.popLeft()
+            valMap.remove(toRemove)
+            countMap.remove(toRemove)
+        }
+
+        valMap[key] = value
+        if (!countMap.containsKey(key)) {
+            countMap[key] = 0
+            listMap[0]!!.pushRight(key)
+            lfuCount = 0
+        }
+        counter(key)
+    }
+}
+```
+
+```swift
+class ListNode {
+    var val: Int
+    var prev: ListNode?
+    var next: ListNode?
+
+    init(_ val: Int, _ prev: ListNode? = nil, _ next: ListNode? = nil) {
+        self.val = val
+        self.prev = prev
+        self.next = next
+    }
+}
+
+class LinkedList {
+    private var left: ListNode
+    private var right: ListNode
+    private var map: [Int: ListNode]
+
+    init() {
+        left = ListNode(0)
+        right = ListNode(0, left, nil)
+        left.next = right
+        map = [:]
+    }
+
+    func length() -> Int {
+        return map.count
+    }
+
+    func pushRight(_ val: Int) {
+        let node = ListNode(val, right.prev, right)
+        map[val] = node
+        right.prev?.next = node
+        right.prev = node
+    }
+
+    func pop(_ val: Int) {
+        if let node = map[val] {
+            let prev = node.prev
+            let next = node.next
+            prev?.next = next
+            next?.prev = prev
+            map.removeValue(forKey: val)
+        }
+    }
+
+    func popLeft() -> Int {
+        let res = left.next!.val
+        pop(res)
+        return res
+    }
+}
+
+class LFUCache {
+    private var capacity: Int
+    private var lfuCount: Int
+    private var valMap: [Int: Int]
+    private var countMap: [Int: Int]
+    private var listMap: [Int: LinkedList]
+
+    init(_ capacity: Int) {
+        self.capacity = capacity
+        self.lfuCount = 0
+        self.valMap = [:]
+        self.countMap = [:]
+        self.listMap = [0: LinkedList()]
+    }
+
+    private func counter(_ key: Int) {
+        let count = countMap[key]!
+        countMap[key] = count + 1
+
+        if listMap[count] == nil {
+            listMap[count] = LinkedList()
+        }
+        listMap[count]!.pop(key)
+
+        if listMap[count + 1] == nil {
+            listMap[count + 1] = LinkedList()
+        }
+        listMap[count + 1]!.pushRight(key)
+
+        if count == lfuCount && listMap[count]!.length() == 0 {
+            lfuCount += 1
+        }
+    }
+
+    func get(_ key: Int) -> Int {
+        guard let value = valMap[key] else {
+            return -1
+        }
+        counter(key)
+        return value
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        if capacity == 0 { return }
+
+        if valMap[key] == nil && valMap.count == capacity {
+            let toRemove = listMap[lfuCount]!.popLeft()
+            valMap.removeValue(forKey: toRemove)
+            countMap.removeValue(forKey: toRemove)
+        }
+
+        valMap[key] = value
+        if countMap[key] == nil {
+            countMap[key] = 0
+            listMap[0]!.pushRight(key)
+            lfuCount = 0
+        }
+        counter(key)
     }
 }
 ```

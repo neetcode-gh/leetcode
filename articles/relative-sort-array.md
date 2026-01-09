@@ -98,6 +98,101 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RelativeSortArray(int[] arr1, int[] arr2) {
+        var res = new List<int>();
+
+        foreach (int num2 in arr2) {
+            for (int i = 0; i < arr1.Length; i++) {
+                if (arr1[i] == num2) {
+                    res.Add(arr1[i]);
+                    arr1[i] = -1;
+                }
+            }
+        }
+
+        Array.Sort(arr1);
+        for (int i = res.Count; i < arr1.Length; i++) {
+            res.Add(arr1[i]);
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func relativeSortArray(arr1 []int, arr2 []int) []int {
+    res := []int{}
+
+    for _, num2 := range arr2 {
+        for i := 0; i < len(arr1); i++ {
+            if arr1[i] == num2 {
+                res = append(res, arr1[i])
+                arr1[i] = -1
+            }
+        }
+    }
+
+    sort.Ints(arr1)
+    for i := len(res); i < len(arr1); i++ {
+        res = append(res, arr1[i])
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun relativeSortArray(arr1: IntArray, arr2: IntArray): IntArray {
+        val res = mutableListOf<Int>()
+
+        for (num2 in arr2) {
+            for (i in arr1.indices) {
+                if (arr1[i] == num2) {
+                    res.add(arr1[i])
+                    arr1[i] = -1
+                }
+            }
+        }
+
+        arr1.sort()
+        for (i in res.size until arr1.size) {
+            res.add(arr1[i])
+        }
+
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func relativeSortArray(_ arr1: [Int], _ arr2: [Int]) -> [Int] {
+        var arr1 = arr1
+        var res = [Int]()
+
+        for num2 in arr2 {
+            for i in 0..<arr1.count {
+                if arr1[i] == num2 {
+                    res.append(arr1[i])
+                    arr1[i] = -1
+                }
+            }
+        }
+
+        arr1.sort()
+        for i in res.count..<arr1.count {
+            res.append(arr1[i])
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,6 +311,117 @@ class Solution {
         }
 
         return res.concat(end);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] RelativeSortArray(int[] arr1, int[] arr2) {
+        var arr2Set = new HashSet<int>(arr2);
+        var count = new Dictionary<int, int>();
+        var end = new List<int>();
+
+        foreach (int num in arr1) {
+            if (!arr2Set.Contains(num)) end.Add(num);
+            count[num] = count.GetValueOrDefault(num, 0) + 1;
+        }
+
+        end.Sort();
+        var res = new List<int>();
+
+        foreach (int num in arr2) {
+            for (int i = 0; i < count[num]; i++) {
+                res.Add(num);
+            }
+        }
+
+        res.AddRange(end);
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func relativeSortArray(arr1 []int, arr2 []int) []int {
+    arr2Set := make(map[int]bool)
+    for _, num := range arr2 {
+        arr2Set[num] = true
+    }
+
+    count := make(map[int]int)
+    var end []int
+    for _, num := range arr1 {
+        if !arr2Set[num] {
+            end = append(end, num)
+        }
+        count[num]++
+    }
+
+    sort.Ints(end)
+    var res []int
+    for _, num := range arr2 {
+        for i := 0; i < count[num]; i++ {
+            res = append(res, num)
+        }
+    }
+
+    return append(res, end...)
+}
+```
+
+```kotlin
+class Solution {
+    fun relativeSortArray(arr1: IntArray, arr2: IntArray): IntArray {
+        val arr2Set = arr2.toSet()
+        val count = mutableMapOf<Int, Int>()
+        val end = mutableListOf<Int>()
+
+        for (num in arr1) {
+            if (num !in arr2Set) end.add(num)
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        end.sort()
+        val res = mutableListOf<Int>()
+
+        for (num in arr2) {
+            repeat(count[num]!!) {
+                res.add(num)
+            }
+        }
+
+        res.addAll(end)
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func relativeSortArray(_ arr1: [Int], _ arr2: [Int]) -> [Int] {
+        let arr2Set = Set(arr2)
+        var count = [Int: Int]()
+        var end = [Int]()
+
+        for num in arr1 {
+            if !arr2Set.contains(num) {
+                end.append(num)
+            }
+            count[num, default: 0] += 1
+        }
+
+        end.sort()
+        var res = [Int]()
+
+        for num in arr2 {
+            for _ in 0..<count[num]! {
+                res.append(num)
+            }
+        }
+
+        res.append(contentsOf: end)
+        return res
     }
 }
 ```
@@ -349,6 +555,122 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RelativeSortArray(int[] arr1, int[] arr2) {
+        var count = new Dictionary<int, int>();
+        foreach (int num in arr1) {
+            count[num] = count.GetValueOrDefault(num, 0) + 1;
+        }
+
+        var res = new List<int>();
+        foreach (int num in arr2) {
+            for (int i = 0; i < count[num]; i++) {
+                res.Add(num);
+            }
+            count.Remove(num);
+        }
+
+        var remaining = count.Keys.ToList();
+        remaining.Sort();
+        foreach (int num in remaining) {
+            for (int i = 0; i < count[num]; i++) {
+                res.Add(num);
+            }
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func relativeSortArray(arr1 []int, arr2 []int) []int {
+    count := make(map[int]int)
+    for _, num := range arr1 {
+        count[num]++
+    }
+
+    var res []int
+    for _, num := range arr2 {
+        for i := 0; i < count[num]; i++ {
+            res = append(res, num)
+        }
+        delete(count, num)
+    }
+
+    var remaining []int
+    for num := range count {
+        remaining = append(remaining, num)
+    }
+    sort.Ints(remaining)
+
+    for _, num := range remaining {
+        for i := 0; i < count[num]; i++ {
+            res = append(res, num)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun relativeSortArray(arr1: IntArray, arr2: IntArray): IntArray {
+        val count = mutableMapOf<Int, Int>()
+        for (num in arr1) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val res = mutableListOf<Int>()
+        for (num in arr2) {
+            repeat(count[num]!!) {
+                res.add(num)
+            }
+            count.remove(num)
+        }
+
+        val remaining = count.keys.sorted()
+        for (num in remaining) {
+            repeat(count[num]!!) {
+                res.add(num)
+            }
+        }
+
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func relativeSortArray(_ arr1: [Int], _ arr2: [Int]) -> [Int] {
+        var count = [Int: Int]()
+        for num in arr1 {
+            count[num, default: 0] += 1
+        }
+
+        var res = [Int]()
+        for num in arr2 {
+            for _ in 0..<count[num]! {
+                res.append(num)
+            }
+            count.removeValue(forKey: num)
+        }
+
+        let remaining = count.keys.sorted()
+        for num in remaining {
+            for _ in 0..<count[num]! {
+                res.append(num)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -457,6 +779,113 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RelativeSortArray(int[] arr1, int[] arr2) {
+        int max = arr1.Max();
+        int[] count = new int[max + 1];
+
+        foreach (int num in arr1) count[num]++;
+
+        var res = new List<int>();
+        foreach (int num in arr2) {
+            while (count[num]-- > 0) res.Add(num);
+        }
+
+        for (int num = 0; num < count.Length; num++) {
+            while (count[num]-- > 0) res.Add(num);
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
+```go
+func relativeSortArray(arr1 []int, arr2 []int) []int {
+    maxVal := 0
+    for _, num := range arr1 {
+        if num > maxVal {
+            maxVal = num
+        }
+    }
+
+    count := make([]int, maxVal+1)
+    for _, num := range arr1 {
+        count[num]++
+    }
+
+    var res []int
+    for _, num := range arr2 {
+        for count[num] > 0 {
+            res = append(res, num)
+            count[num]--
+        }
+    }
+
+    for num := 0; num <= maxVal; num++ {
+        for count[num] > 0 {
+            res = append(res, num)
+            count[num]--
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun relativeSortArray(arr1: IntArray, arr2: IntArray): IntArray {
+        val max = arr1.maxOrNull()!!
+        val count = IntArray(max + 1)
+
+        for (num in arr1) count[num]++
+
+        val res = mutableListOf<Int>()
+        for (num in arr2) {
+            while (count[num]-- > 0) res.add(num)
+        }
+
+        for (num in 0..max) {
+            while (count[num]-- > 0) res.add(num)
+        }
+
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func relativeSortArray(_ arr1: [Int], _ arr2: [Int]) -> [Int] {
+        let maxVal = arr1.max()!
+        var count = [Int](repeating: 0, count: maxVal + 1)
+
+        for num in arr1 {
+            count[num] += 1
+        }
+
+        var res = [Int]()
+        for num in arr2 {
+            while count[num] > 0 {
+                res.append(num)
+                count[num] -= 1
+            }
+        }
+
+        for num in 0...maxVal {
+            while count[num] > 0 {
+                res.append(num)
+                count[num] -= 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -537,6 +966,74 @@ class Solution {
             const ib = index.has(b) ? index.get(b) : 1000 + b;
             return ia - ib;
         });
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] RelativeSortArray(int[] arr1, int[] arr2) {
+        var index = new Dictionary<int, int>();
+        for (int i = 0; i < arr2.Length; i++) {
+            index[arr2[i]] = i;
+        }
+
+        return arr1.OrderBy(x => index.ContainsKey(x) ? index[x] : 1000 + x).ToArray();
+    }
+}
+```
+
+```go
+func relativeSortArray(arr1 []int, arr2 []int) []int {
+    index := make(map[int]int)
+    for i, num := range arr2 {
+        index[num] = i
+    }
+
+    sort.Slice(arr1, func(i, j int) bool {
+        ia, okA := index[arr1[i]]
+        ib, okB := index[arr1[j]]
+        if !okA {
+            ia = 1000 + arr1[i]
+        }
+        if !okB {
+            ib = 1000 + arr1[j]
+        }
+        return ia < ib
+    })
+
+    return arr1
+}
+```
+
+```kotlin
+class Solution {
+    fun relativeSortArray(arr1: IntArray, arr2: IntArray): IntArray {
+        val index = mutableMapOf<Int, Int>()
+        arr2.forEachIndexed { i, num -> index[num] = i }
+
+        return arr1.sortedWith { a, b ->
+            val ia = index[a] ?: (1000 + a)
+            val ib = index[b] ?: (1000 + b)
+            ia - ib
+        }.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func relativeSortArray(_ arr1: [Int], _ arr2: [Int]) -> [Int] {
+        var index = [Int: Int]()
+        for (i, num) in arr2.enumerated() {
+            index[num] = i
+        }
+
+        return arr1.sorted { a, b in
+            let ia = index[a] ?? (1000 + a)
+            let ib = index[b] ?? (1000 + b)
+            return ia < ib
+        }
     }
 }
 ```

@@ -87,6 +87,61 @@ public class Solution {
 }
 ```
 
+```go
+func canConstruct(ransomNote string, magazine string) bool {
+    mag := []rune(magazine)
+
+    for _, c := range ransomNote {
+        found := false
+        for i, m := range mag {
+            if m == c {
+                mag = append(mag[:i], mag[i+1:]...)
+                found = true
+                break
+            }
+        }
+        if !found {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canConstruct(ransomNote: String, magazine: String): Boolean {
+        val mag = magazine.toMutableList()
+
+        for (c in ransomNote) {
+            if (!mag.contains(c)) return false
+            mag.remove(c)
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func canConstruct(_ ransomNote: String, _ magazine: String) -> Bool {
+        var mag = Array(magazine)
+
+        for c in ransomNote {
+            if let idx = mag.firstIndex(of: c) {
+                mag.remove(at: idx)
+            } else {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,6 +268,75 @@ public class Solution {
 }
 ```
 
+```go
+func canConstruct(ransomNote string, magazine string) bool {
+    countR := make([]int, 26)
+    countM := make([]int, 26)
+
+    for _, c := range ransomNote {
+        countR[c-'a']++
+    }
+
+    for _, c := range magazine {
+        countM[c-'a']++
+    }
+
+    for i := 0; i < 26; i++ {
+        if countM[i] < countR[i] {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canConstruct(ransomNote: String, magazine: String): Boolean {
+        val countR = IntArray(26)
+        val countM = IntArray(26)
+
+        for (c in ransomNote) {
+            countR[c - 'a']++
+        }
+
+        for (c in magazine) {
+            countM[c - 'a']++
+        }
+
+        for (i in 0 until 26) {
+            if (countM[i] < countR[i]) return false
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func canConstruct(_ ransomNote: String, _ magazine: String) -> Bool {
+        var countR = [Int](repeating: 0, count: 26)
+        var countM = [Int](repeating: 0, count: 26)
+
+        for c in ransomNote.unicodeScalars {
+            countR[Int(c.value) - Int(Character("a").asciiValue!)] += 1
+        }
+
+        for c in magazine.unicodeScalars {
+            countM[Int(c.value) - Int(Character("a").asciiValue!)] += 1
+        }
+
+        for i in 0..<26 {
+            if countM[i] < countR[i] { return false }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -305,6 +429,55 @@ public class Solution {
             if (--count[c - 'a'] < 0) return false;
         }
         return true;
+    }
+}
+```
+
+```go
+func canConstruct(ransomNote string, magazine string) bool {
+    count := make([]int, 26)
+    for _, c := range magazine {
+        count[c-'a']++
+    }
+    for _, c := range ransomNote {
+        count[c-'a']--
+        if count[c-'a'] < 0 {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canConstruct(ransomNote: String, magazine: String): Boolean {
+        val count = IntArray(26)
+        for (c in magazine) {
+            count[c - 'a']++
+        }
+        for (c in ransomNote) {
+            if (--count[c - 'a'] < 0) return false
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func canConstruct(_ ransomNote: String, _ magazine: String) -> Bool {
+        var count = [Int](repeating: 0, count: 26)
+        let aValue = Int(Character("a").asciiValue!)
+
+        for c in magazine.unicodeScalars {
+            count[Int(c.value) - aValue] += 1
+        }
+        for c in ransomNote.unicodeScalars {
+            count[Int(c.value) - aValue] -= 1
+            if count[Int(c.value) - aValue] < 0 { return false }
+        }
+        return true
     }
 }
 ```

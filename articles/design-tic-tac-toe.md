@@ -171,15 +171,15 @@ class TicTacToe {
         this.n = n;
     }
 
-    /** 
-     * @param {number} row 
-     * @param {number} col 
+    /**
+     * @param {number} row
+     * @param {number} col
      * @param {number} player
      * @return {number}
      */
     move(row, col, player) {
         this.board[row][col] = player;
-        
+
         // check if the player wins
         if ((this.checkRow(row, player)) ||
             (this.checkColumn(col, player)) ||
@@ -187,11 +187,11 @@ class TicTacToe {
             (col === this.n - row - 1 && this.checkAntiDiagonal(player))) {
             return player;
         }
-        
+
         // No one wins
         return 0;
     }
-    
+
     checkDiagonal(player) {
         for (let row = 0; row < this.n; row++) {
             if (this.board[row][row] !== player) {
@@ -200,7 +200,7 @@ class TicTacToe {
         }
         return true;
     }
-    
+
     checkAntiDiagonal(player) {
         for (let row = 0; row < this.n; row++) {
             if (this.board[row][this.n - row - 1] !== player) {
@@ -209,7 +209,7 @@ class TicTacToe {
         }
         return true;
     }
-    
+
     checkColumn(col, player) {
         for (let row = 0; row < this.n; row++) {
             if (this.board[row][col] !== player) {
@@ -218,7 +218,7 @@ class TicTacToe {
         }
         return true;
     }
-    
+
     checkRow(row, player) {
         for (let col = 0; col < this.n; col++) {
             if (this.board[row][col] !== player) {
@@ -226,6 +226,216 @@ class TicTacToe {
             }
         }
         return true;
+    }
+}
+```
+
+```csharp
+public class TicTacToe {
+    private int[,] board;
+    private int n;
+
+    public TicTacToe(int n) {
+        board = new int[n, n];
+        this.n = n;
+    }
+
+    public int Move(int row, int col, int player) {
+        board[row, col] = player;
+        if (CheckRow(row, player) ||
+            CheckColumn(col, player) ||
+            (row == col && CheckDiagonal(player)) ||
+            (col == n - row - 1 && CheckAntiDiagonal(player))) {
+            return player;
+        }
+        return 0;
+    }
+
+    private bool CheckDiagonal(int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row, row] != player) return false;
+        }
+        return true;
+    }
+
+    private bool CheckAntiDiagonal(int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row, n - row - 1] != player) return false;
+        }
+        return true;
+    }
+
+    private bool CheckColumn(int col, int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row, col] != player) return false;
+        }
+        return true;
+    }
+
+    private bool CheckRow(int row, int player) {
+        for (int col = 0; col < n; col++) {
+            if (board[row, col] != player) return false;
+        }
+        return true;
+    }
+}
+```
+
+```go
+type TicTacToe struct {
+    board [][]int
+    n     int
+}
+
+func Constructor(n int) TicTacToe {
+    board := make([][]int, n)
+    for i := range board {
+        board[i] = make([]int, n)
+    }
+    return TicTacToe{board: board, n: n}
+}
+
+func (this *TicTacToe) Move(row int, col int, player int) int {
+    this.board[row][col] = player
+    if this.checkRow(row, player) ||
+        this.checkColumn(col, player) ||
+        (row == col && this.checkDiagonal(player)) ||
+        (col == this.n-row-1 && this.checkAntiDiagonal(player)) {
+        return player
+    }
+    return 0
+}
+
+func (this *TicTacToe) checkDiagonal(player int) bool {
+    for row := 0; row < this.n; row++ {
+        if this.board[row][row] != player {
+            return false
+        }
+    }
+    return true
+}
+
+func (this *TicTacToe) checkAntiDiagonal(player int) bool {
+    for row := 0; row < this.n; row++ {
+        if this.board[row][this.n-row-1] != player {
+            return false
+        }
+    }
+    return true
+}
+
+func (this *TicTacToe) checkColumn(col int, player int) bool {
+    for row := 0; row < this.n; row++ {
+        if this.board[row][col] != player {
+            return false
+        }
+    }
+    return true
+}
+
+func (this *TicTacToe) checkRow(row int, player int) bool {
+    for col := 0; col < this.n; col++ {
+        if this.board[row][col] != player {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class TicTacToe(n: Int) {
+    private val board = Array(n) { IntArray(n) }
+    private val n = n
+
+    fun move(row: Int, col: Int, player: Int): Int {
+        board[row][col] = player
+        if (checkRow(row, player) ||
+            checkColumn(col, player) ||
+            (row == col && checkDiagonal(player)) ||
+            (col == n - row - 1 && checkAntiDiagonal(player))) {
+            return player
+        }
+        return 0
+    }
+
+    private fun checkDiagonal(player: Int): Boolean {
+        for (row in 0 until n) {
+            if (board[row][row] != player) return false
+        }
+        return true
+    }
+
+    private fun checkAntiDiagonal(player: Int): Boolean {
+        for (row in 0 until n) {
+            if (board[row][n - row - 1] != player) return false
+        }
+        return true
+    }
+
+    private fun checkColumn(col: Int, player: Int): Boolean {
+        for (row in 0 until n) {
+            if (board[row][col] != player) return false
+        }
+        return true
+    }
+
+    private fun checkRow(row: Int, player: Int): Boolean {
+        for (col in 0 until n) {
+            if (board[row][col] != player) return false
+        }
+        return true
+    }
+}
+```
+
+```swift
+class TicTacToe {
+    private var board: [[Int]]
+    private var n: Int
+
+    init(_ n: Int) {
+        self.board = Array(repeating: Array(repeating: 0, count: n), count: n)
+        self.n = n
+    }
+
+    func move(_ row: Int, _ col: Int, _ player: Int) -> Int {
+        board[row][col] = player
+        if checkRow(row, player) ||
+            checkColumn(col, player) ||
+            (row == col && checkDiagonal(player)) ||
+            (col == n - row - 1 && checkAntiDiagonal(player)) {
+            return player
+        }
+        return 0
+    }
+
+    private func checkDiagonal(_ player: Int) -> Bool {
+        for row in 0..<n {
+            if board[row][row] != player { return false }
+        }
+        return true
+    }
+
+    private func checkAntiDiagonal(_ player: Int) -> Bool {
+        for row in 0..<n {
+            if board[row][n - row - 1] != player { return false }
+        }
+        return true
+    }
+
+    private func checkColumn(_ col: Int, _ player: Int) -> Bool {
+        for row in 0..<n {
+            if board[row][col] != player { return false }
+        }
+        return true
+    }
+
+    private func checkRow(_ row: Int, _ player: Int) -> Bool {
+        for col in 0..<n {
+            if board[row][col] != player { return false }
+        }
+        return true
     }
 }
 ```
@@ -376,7 +586,7 @@ public:
 
 ```javascript
 class TicTacToe {
-    
+
     /**
      * @param {number} n
      */
@@ -386,32 +596,32 @@ class TicTacToe {
         this.diagonal = 0;
         this.antiDiagonal = 0;
     }
-    
-    /** 
-     * @param {number} row 
-     * @param {number} col 
+
+    /**
+     * @param {number} row
+     * @param {number} col
      * @param {number} player
      * @return {number}
      */
     move(row, col, player) {
         let currentPlayer = (player === 1) ? 1 : -1;
-        
+
         // update currentPlayer in rows and cols arrays
         this.rows[row] += currentPlayer;
         this.cols[col] += currentPlayer;
-        
+
         // update diagonal
         if (row === col) {
             this.diagonal += currentPlayer;
         }
-        
+
         // update anti diagonal
         if (col === (this.cols.length - row - 1)) {
             this.antiDiagonal += currentPlayer;
         }
-        
+
         let n = this.rows.length;
-        
+
         // check if the current player wins
         if (Math.abs(this.rows[row]) === n ||
             Math.abs(this.cols[col]) === n ||
@@ -419,9 +629,174 @@ class TicTacToe {
             Math.abs(this.antiDiagonal) === n) {
             return player;
         }
-        
+
         // No one wins
         return 0;
+    }
+}
+```
+
+```csharp
+public class TicTacToe {
+    private int[] rows;
+    private int[] cols;
+    private int diagonal;
+    private int antiDiagonal;
+
+    public TicTacToe(int n) {
+        rows = new int[n];
+        cols = new int[n];
+    }
+
+    public int Move(int row, int col, int player) {
+        int currentPlayer = (player == 1) ? 1 : -1;
+
+        rows[row] += currentPlayer;
+        cols[col] += currentPlayer;
+
+        if (row == col) {
+            diagonal += currentPlayer;
+        }
+
+        if (col == cols.Length - row - 1) {
+            antiDiagonal += currentPlayer;
+        }
+
+        int n = rows.Length;
+        if (Math.Abs(rows[row]) == n ||
+            Math.Abs(cols[col]) == n ||
+            Math.Abs(diagonal) == n ||
+            Math.Abs(antiDiagonal) == n) {
+            return player;
+        }
+
+        return 0;
+    }
+}
+```
+
+```go
+type TicTacToe struct {
+    rows         []int
+    cols         []int
+    diagonal     int
+    antiDiagonal int
+}
+
+func Constructor(n int) TicTacToe {
+    return TicTacToe{
+        rows: make([]int, n),
+        cols: make([]int, n),
+    }
+}
+
+func (this *TicTacToe) Move(row int, col int, player int) int {
+    currentPlayer := 1
+    if player != 1 {
+        currentPlayer = -1
+    }
+
+    this.rows[row] += currentPlayer
+    this.cols[col] += currentPlayer
+
+    if row == col {
+        this.diagonal += currentPlayer
+    }
+
+    if col == len(this.cols)-row-1 {
+        this.antiDiagonal += currentPlayer
+    }
+
+    n := len(this.rows)
+    if abs(this.rows[row]) == n ||
+        abs(this.cols[col]) == n ||
+        abs(this.diagonal) == n ||
+        abs(this.antiDiagonal) == n {
+        return player
+    }
+
+    return 0
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class TicTacToe(n: Int) {
+    private val rows = IntArray(n)
+    private val cols = IntArray(n)
+    private var diagonal = 0
+    private var antiDiagonal = 0
+
+    fun move(row: Int, col: Int, player: Int): Int {
+        val currentPlayer = if (player == 1) 1 else -1
+
+        rows[row] += currentPlayer
+        cols[col] += currentPlayer
+
+        if (row == col) {
+            diagonal += currentPlayer
+        }
+
+        if (col == cols.size - row - 1) {
+            antiDiagonal += currentPlayer
+        }
+
+        val n = rows.size
+        if (kotlin.math.abs(rows[row]) == n ||
+            kotlin.math.abs(cols[col]) == n ||
+            kotlin.math.abs(diagonal) == n ||
+            kotlin.math.abs(antiDiagonal) == n) {
+            return player
+        }
+
+        return 0
+    }
+}
+```
+
+```swift
+class TicTacToe {
+    private var rows: [Int]
+    private var cols: [Int]
+    private var diagonal: Int
+    private var antiDiagonal: Int
+
+    init(_ n: Int) {
+        rows = [Int](repeating: 0, count: n)
+        cols = [Int](repeating: 0, count: n)
+        diagonal = 0
+        antiDiagonal = 0
+    }
+
+    func move(_ row: Int, _ col: Int, _ player: Int) -> Int {
+        let currentPlayer = (player == 1) ? 1 : -1
+
+        rows[row] += currentPlayer
+        cols[col] += currentPlayer
+
+        if row == col {
+            diagonal += currentPlayer
+        }
+
+        if col == cols.count - row - 1 {
+            antiDiagonal += currentPlayer
+        }
+
+        let n = rows.count
+        if abs(rows[row]) == n ||
+            abs(cols[col]) == n ||
+            abs(diagonal) == n ||
+            abs(antiDiagonal) == n {
+            return player
+        }
+
+        return 0
     }
 }
 ```

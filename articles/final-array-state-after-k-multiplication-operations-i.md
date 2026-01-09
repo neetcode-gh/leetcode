@@ -94,6 +94,59 @@ public class Solution {
 }
 ```
 
+```go
+func getFinalState(nums []int, k int, multiplier int) []int {
+    n := len(nums)
+    for i := 0; i < k; i++ {
+        minIdx := 0
+        for j := 1; j < n; j++ {
+            if nums[j] < nums[minIdx] {
+                minIdx = j
+            }
+        }
+        nums[minIdx] *= multiplier
+    }
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun getFinalState(nums: IntArray, k: Int, multiplier: Int): IntArray {
+        val n = nums.size
+        repeat(k) {
+            var minIdx = 0
+            for (i in 1 until n) {
+                if (nums[i] < nums[minIdx]) {
+                    minIdx = i
+                }
+            }
+            nums[minIdx] *= multiplier
+        }
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func getFinalState(_ nums: [Int], _ k: Int, _ multiplier: Int) -> [Int] {
+        var nums = nums
+        let n = nums.count
+        for _ in 0..<k {
+            var minIdx = 0
+            for i in 1..<n {
+                if nums[i] < nums[minIdx] {
+                    minIdx = i
+                }
+            }
+            nums[minIdx] *= multiplier
+        }
+        return nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -236,11 +289,111 @@ public class Solution {
 }
 ```
 
+```go
+import "container/heap"
+
+type MinHeap struct {
+    indices []int
+    values  []int
+}
+
+func (h MinHeap) Len() int { return len(h.indices) }
+func (h MinHeap) Less(i, j int) bool {
+    if h.values[h.indices[i]] != h.values[h.indices[j]] {
+        return h.values[h.indices[i]] < h.values[h.indices[j]]
+    }
+    return h.indices[i] < h.indices[j]
+}
+func (h MinHeap) Swap(i, j int) { h.indices[i], h.indices[j] = h.indices[j], h.indices[i] }
+func (h *MinHeap) Push(x interface{}) { h.indices = append(h.indices, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := h.indices
+    n := len(old)
+    x := old[n-1]
+    h.indices = old[0 : n-1]
+    return x
+}
+
+func getFinalState(nums []int, k int, multiplier int) []int {
+    n := len(nums)
+    res := make([]int, n)
+    copy(res, nums)
+
+    h := &MinHeap{indices: make([]int, 0, n), values: res}
+    for i := 0; i < n; i++ {
+        heap.Push(h, i)
+    }
+
+    for i := 0; i < k; i++ {
+        idx := heap.Pop(h).(int)
+        res[idx] *= multiplier
+        heap.Push(h, idx)
+    }
+
+    return res
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class Solution {
+    fun getFinalState(nums: IntArray, k: Int, multiplier: Int): IntArray {
+        val n = nums.size
+        val res = nums.copyOf()
+
+        val minHeap = PriorityQueue<Int>(compareBy({ res[it] }, { it }))
+        for (i in 0 until n) {
+            minHeap.add(i)
+        }
+
+        repeat(k) {
+            val i = minHeap.poll()
+            res[i] *= multiplier
+            minHeap.add(i)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func getFinalState(_ nums: [Int], _ k: Int, _ multiplier: Int) -> [Int] {
+        var res = nums
+        let n = res.count
+        var heap = [(Int, Int)]()
+
+        for i in 0..<n {
+            heap.append((res[i], i))
+        }
+        heap.sort { ($0.0, $0.1) < ($1.0, $1.1) }
+
+        for _ in 0..<k {
+            let (_, i) = heap.removeFirst()
+            res[i] *= multiplier
+            let newVal = res[i]
+            var insertIdx = heap.count
+            for j in 0..<heap.count {
+                if (newVal, i) < (heap[j].0, heap[j].1) {
+                    insertIdx = j
+                    break
+                }
+            }
+            heap.insert((newVal, i), at: insertIdx)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: 
+* Time complexity:
     - $O(n + k \log n)$ in Python.
     - $O(n \log n + k \log n)$ in other languages.
 

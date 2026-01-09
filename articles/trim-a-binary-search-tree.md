@@ -122,6 +122,93 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func trimBST(root *TreeNode, low int, high int) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    if root.Val > high {
+        return trimBST(root.Left, low, high)
+    }
+    if root.Val < low {
+        return trimBST(root.Right, low, high)
+    }
+
+    root.Left = trimBST(root.Left, low, high)
+    root.Right = trimBST(root.Right, low, high)
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun trimBST(root: TreeNode?, low: Int, high: Int): TreeNode? {
+        if (root == null) return null
+
+        if (root.`val` > high) {
+            return trimBST(root.left, low, high)
+        }
+        if (root.`val` < low) {
+            return trimBST(root.right, low, high)
+        }
+
+        root.left = trimBST(root.left, low, high)
+        root.right = trimBST(root.right, low, high)
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func trimBST(_ root: TreeNode?, _ low: Int, _ high: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        if root.val > high {
+            return trimBST(root.left, low, high)
+        }
+        if root.val < low {
+            return trimBST(root.right, low, high)
+        }
+
+        root.left = trimBST(root.left, low, high)
+        root.right = trimBST(root.right, low, high)
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +400,146 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func trimBST(root *TreeNode, low int, high int) *TreeNode {
+    for root != nil && (root.Val < low || root.Val > high) {
+        if root.Val < low {
+            root = root.Right
+        } else {
+            root = root.Left
+        }
+    }
+
+    stack := []*TreeNode{root}
+
+    for len(stack) > 0 {
+        node := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        if node == nil {
+            continue
+        }
+
+        leftOut := node.Left != nil && node.Left.Val < low
+        rightOut := node.Right != nil && node.Right.Val > high
+
+        if leftOut {
+            node.Left = node.Left.Right
+        }
+        if rightOut {
+            node.Right = node.Right.Left
+        }
+
+        if leftOut || rightOut {
+            stack = append(stack, node)
+        } else {
+            if node.Left != nil {
+                stack = append(stack, node.Left)
+            }
+            if node.Right != nil {
+                stack = append(stack, node.Right)
+            }
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun trimBST(root: TreeNode?, low: Int, high: Int): TreeNode? {
+        var root = root
+        while (root != null && (root.`val` < low || root.`val` > high)) {
+            root = if (root.`val` < low) root.right else root.left
+        }
+
+        val stack = ArrayDeque<TreeNode?>()
+        stack.addLast(root)
+
+        while (stack.isNotEmpty()) {
+            val node = stack.removeLast() ?: continue
+
+            val leftOut = node.left != null && node.left!!.`val` < low
+            val rightOut = node.right != null && node.right!!.`val` > high
+
+            if (leftOut) node.left = node.left?.right
+            if (rightOut) node.right = node.right?.left
+
+            if (leftOut || rightOut) {
+                stack.addLast(node)
+            } else {
+                node.left?.let { stack.addLast(it) }
+                node.right?.let { stack.addLast(it) }
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func trimBST(_ root: TreeNode?, _ low: Int, _ high: Int) -> TreeNode? {
+        var root = root
+        while root != nil && (root!.val < low || root!.val > high) {
+            root = root!.val < low ? root!.right : root!.left
+        }
+
+        var stack: [TreeNode?] = [root]
+
+        while !stack.isEmpty {
+            guard let node = stack.removeLast() else { continue }
+
+            let leftOut = node.left != nil && node.left!.val < low
+            let rightOut = node.right != nil && node.right!.val > high
+
+            if leftOut { node.left = node.left?.right }
+            if rightOut { node.right = node.right?.left }
+
+            if leftOut || rightOut {
+                stack.append(node)
+            } else {
+                if node.left != nil { stack.append(node.left) }
+                if node.right != nil { stack.append(node.right) }
+            }
+        }
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -476,6 +703,124 @@ class Solution {
         }
 
         return tmpRoot;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func trimBST(root *TreeNode, low int, high int) *TreeNode {
+    for root != nil && (root.Val < low || root.Val > high) {
+        if root.Val < low {
+            root = root.Right
+        } else {
+            root = root.Left
+        }
+    }
+
+    tmpRoot := root
+    for root != nil {
+        for root.Left != nil && root.Left.Val < low {
+            root.Left = root.Left.Right
+        }
+        root = root.Left
+    }
+
+    root = tmpRoot
+    for root != nil {
+        for root.Right != nil && root.Right.Val > high {
+            root.Right = root.Right.Left
+        }
+        root = root.Right
+    }
+
+    return tmpRoot
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun trimBST(root: TreeNode?, low: Int, high: Int): TreeNode? {
+        var root = root
+        while (root != null && (root.`val` < low || root.`val` > high)) {
+            root = if (root.`val` < low) root.right else root.left
+        }
+
+        val tmpRoot = root
+        while (root != null) {
+            while (root.left != null && root.left!!.`val` < low) {
+                root.left = root.left?.right
+            }
+            root = root.left
+        }
+
+        root = tmpRoot
+        while (root != null) {
+            while (root.right != null && root.right!!.`val` > high) {
+                root.right = root.right?.left
+            }
+            root = root.right
+        }
+
+        return tmpRoot
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func trimBST(_ root: TreeNode?, _ low: Int, _ high: Int) -> TreeNode? {
+        var root = root
+        while root != nil && (root!.val < low || root!.val > high) {
+            root = root!.val < low ? root!.right : root!.left
+        }
+
+        let tmpRoot = root
+        while root != nil {
+            while root!.left != nil && root!.left!.val < low {
+                root!.left = root!.left?.right
+            }
+            root = root!.left
+        }
+
+        root = tmpRoot
+        while root != nil {
+            while root!.right != nil && root!.right!.val > high {
+                root!.right = root!.right?.left
+            }
+            root = root!.right
+        }
+
+        return tmpRoot
     }
 }
 ```

@@ -99,6 +99,84 @@ class Solution {
 }
 ```
 
+```go
+func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for i := 0; i < n; i++ {
+        if i != headID {
+            adj[manager[i]] = append(adj[manager[i]], i)
+        }
+    }
+
+    var dfs func(node int) int
+    dfs = func(node int) int {
+        res := 0
+        for _, child := range adj[node] {
+            res = max(res, informTime[node]+dfs(child))
+        }
+        return res
+    }
+
+    return dfs(headID)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfMinutes(n: Int, headID: Int, manager: IntArray, informTime: IntArray): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (i in 0 until n) {
+            if (i != headID) {
+                adj[manager[i]].add(i)
+            }
+        }
+
+        fun dfs(node: Int): Int {
+            var res = 0
+            for (child in adj[node]) {
+                res = maxOf(res, informTime[node] + dfs(child))
+            }
+            return res
+        }
+
+        return dfs(headID)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfMinutes(_ n: Int, _ headID: Int, _ manager: [Int], _ informTime: [Int]) -> Int {
+        var adj = [[Int]](repeating: [Int](), count: n)
+        for i in 0..<n {
+            if i != headID {
+                adj[manager[i]].append(i)
+            }
+        }
+
+        func dfs(_ node: Int) -> Int {
+            var res = 0
+            for child in adj[node] {
+                res = max(res, informTime[node] + dfs(child))
+            }
+            return res
+        }
+
+        return dfs(headID)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -214,6 +292,83 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
+    adj := make(map[int][]int)
+    for i := 0; i < n; i++ {
+        adj[manager[i]] = append(adj[manager[i]], i)
+    }
+
+    queue := [][2]int{{headID, 0}} // {id, time}
+    res := 0
+
+    for len(queue) > 0 {
+        curr := queue[0]
+        queue = queue[1:]
+        id, time := curr[0], curr[1]
+        if time > res {
+            res = time
+        }
+        for _, emp := range adj[id] {
+            queue = append(queue, [2]int{emp, time + informTime[id]})
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfMinutes(n: Int, headID: Int, manager: IntArray, informTime: IntArray): Int {
+        val adj = mutableMapOf<Int, MutableList<Int>>()
+        for (i in 0 until n) {
+            adj.getOrPut(manager[i]) { mutableListOf() }.add(i)
+        }
+
+        val queue: Queue<Pair<Int, Int>> = LinkedList()
+        queue.add(Pair(headID, 0))
+        var res = 0
+
+        while (queue.isNotEmpty()) {
+            val (id, time) = queue.poll()
+            res = maxOf(res, time)
+            adj[id]?.forEach { emp ->
+                queue.add(Pair(emp, time + informTime[id]))
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfMinutes(_ n: Int, _ headID: Int, _ manager: [Int], _ informTime: [Int]) -> Int {
+        var adj = [Int: [Int]]()
+        for i in 0..<n {
+            adj[manager[i], default: []].append(i)
+        }
+
+        var queue = [(headID, 0)] // (id, time)
+        var res = 0
+
+        while !queue.isEmpty {
+            let (id, time) = queue.removeFirst()
+            res = max(res, time)
+            if let employees = adj[id] {
+                for emp in employees {
+                    queue.append((emp, time + informTime[id]))
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -375,6 +530,115 @@ class Solution {
 }
 ```
 
+```go
+func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
+    indegree := make([]int, n)
+    time := make([]int, n)
+
+    for i := 0; i < n; i++ {
+        if manager[i] != -1 {
+            indegree[manager[i]]++
+        }
+    }
+
+    queue := []int{}
+    for i := 0; i < n; i++ {
+        if indegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        time[node] += informTime[node]
+        if manager[node] != -1 {
+            if time[node] > time[manager[node]] {
+                time[manager[node]] = time[node]
+            }
+            indegree[manager[node]]--
+            if indegree[manager[node]] == 0 {
+                queue = append(queue, manager[node])
+            }
+        }
+    }
+
+    return time[headID]
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfMinutes(n: Int, headID: Int, manager: IntArray, informTime: IntArray): Int {
+        val indegree = IntArray(n)
+        val time = IntArray(n)
+
+        for (i in 0 until n) {
+            if (manager[i] != -1) {
+                indegree[manager[i]]++
+            }
+        }
+
+        val queue: Queue<Int> = LinkedList()
+        for (i in 0 until n) {
+            if (indegree[i] == 0) {
+                queue.add(i)
+            }
+        }
+
+        while (queue.isNotEmpty()) {
+            val node = queue.poll()
+            time[node] += informTime[node]
+            if (manager[node] != -1) {
+                time[manager[node]] = maxOf(time[manager[node]], time[node])
+                indegree[manager[node]]--
+                if (indegree[manager[node]] == 0) {
+                    queue.add(manager[node])
+                }
+            }
+        }
+
+        return time[headID]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfMinutes(_ n: Int, _ headID: Int, _ manager: [Int], _ informTime: [Int]) -> Int {
+        var indegree = [Int](repeating: 0, count: n)
+        var time = [Int](repeating: 0, count: n)
+
+        for i in 0..<n {
+            if manager[i] != -1 {
+                indegree[manager[i]] += 1
+            }
+        }
+
+        var queue = [Int]()
+        for i in 0..<n {
+            if indegree[i] == 0 {
+                queue.append(i)
+            }
+        }
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            time[node] += informTime[node]
+            if manager[node] != -1 {
+                time[manager[node]] = max(time[manager[node]], time[node])
+                indegree[manager[node]] -= 1
+                if indegree[manager[node]] == 0 {
+                    queue.append(manager[node])
+                }
+            }
+        }
+
+        return time[headID]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -467,6 +731,70 @@ class Solution {
             res = Math.max(res, dfs(node));
         }
         return res;
+    }
+}
+```
+
+```go
+func numOfMinutes(n int, headID int, manager []int, informTime []int) int {
+    var dfs func(node int) int
+    dfs = func(node int) int {
+        if manager[node] != -1 {
+            informTime[node] += dfs(manager[node])
+            manager[node] = -1
+        }
+        return informTime[node]
+    }
+
+    res := 0
+    for node := 0; node < n; node++ {
+        if val := dfs(node); val > res {
+            res = val
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfMinutes(n: Int, headID: Int, manager: IntArray, informTime: IntArray): Int {
+        fun dfs(node: Int): Int {
+            if (manager[node] != -1) {
+                informTime[node] += dfs(manager[node])
+                manager[node] = -1
+            }
+            return informTime[node]
+        }
+
+        var res = 0
+        for (node in 0 until n) {
+            res = maxOf(res, dfs(node))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfMinutes(_ n: Int, _ headID: Int, _ manager: [Int], _ informTime: [Int]) -> Int {
+        var manager = manager
+        var informTime = informTime
+
+        func dfs(_ node: Int) -> Int {
+            if manager[node] != -1 {
+                informTime[node] += dfs(manager[node])
+                manager[node] = -1
+            }
+            return informTime[node]
+        }
+
+        var res = 0
+        for node in 0..<n {
+            res = max(res, dfs(node))
+        }
+        return res
     }
 }
 ```

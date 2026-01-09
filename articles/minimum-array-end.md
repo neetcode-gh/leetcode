@@ -65,6 +65,40 @@ public class Solution {
 }
 ```
 
+```go
+func minEnd(n int, x int) int64 {
+    res := int64(x)
+    for i := 0; i < n-1; i++ {
+        res = (res + 1) | int64(x)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minEnd(n: Int, x: Int): Long {
+        var res = x.toLong()
+        for (i in 0 until n - 1) {
+            res = (res + 1) or x.toLong()
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minEnd(_ n: Int, _ x: Int) -> Int {
+        var res = x
+        for _ in 0..<(n - 1) {
+            res = (res + 1) | x
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -258,6 +292,111 @@ public class Solution {
 }
 ```
 
+```go
+func minEnd(n int, x int) int64 {
+    var res int64 = 0
+    n -= 1
+
+    xBin := make([]int, 64)
+    nBin := make([]int, 64)
+
+    for i := 0; i < 32; i++ {
+        xBin[i] = (x >> i) & 1
+        nBin[i] = (n >> i) & 1
+    }
+
+    iX, iN := 0, 0
+    for iX < 63 {
+        for iX < 63 && xBin[iX] != 0 {
+            iX++
+        }
+        xBin[iX] = nBin[iN]
+        iX++
+        iN++
+    }
+
+    for i := 0; i < 64; i++ {
+        if xBin[i] == 1 {
+            res += int64(1) << i
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minEnd(n: Int, x: Int): Long {
+        var res: Long = 0
+        var nVal = n - 1
+
+        val xBin = IntArray(64)
+        val nBin = IntArray(64)
+
+        for (i in 0 until 32) {
+            xBin[i] = (x shr i) and 1
+            nBin[i] = (nVal shr i) and 1
+        }
+
+        var iX = 0
+        var iN = 0
+        while (iX < 63) {
+            while (iX < 63 && xBin[iX] != 0) {
+                iX++
+            }
+            xBin[iX] = nBin[iN]
+            iX++
+            iN++
+        }
+
+        for (i in 0 until 64) {
+            if (xBin[i] == 1) {
+                res += 1L shl i
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minEnd(_ n: Int, _ x: Int) -> Int {
+        var res: Int64 = 0
+        var nVal = n - 1
+
+        var xBin = [Int](repeating: 0, count: 64)
+        var nBin = [Int](repeating: 0, count: 64)
+
+        for i in 0..<32 {
+            xBin[i] = (x >> i) & 1
+            nBin[i] = (nVal >> i) & 1
+        }
+
+        var iX = 0
+        var iN = 0
+        while iX < 63 {
+            while iX < 63 && xBin[iX] != 0 {
+                iX += 1
+            }
+            xBin[iX] = nBin[iN]
+            iX += 1
+            iN += 1
+        }
+
+        for i in 0..<64 {
+            if xBin[i] == 1 {
+                res += Int64(1) << i
+            }
+        }
+
+        return Int(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -380,6 +519,73 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func minEnd(n int, x int) int64 {
+    res := int64(x)
+    var iX int64 = 1
+    var iN int64 = 1
+    nMinus1 := int64(n - 1)
+
+    for iN <= nMinus1 {
+        if iX&int64(x) == 0 {
+            if iN&nMinus1 != 0 {
+                res |= iX
+            }
+            iN <<= 1
+        }
+        iX <<= 1
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minEnd(n: Int, x: Int): Long {
+        var res = x.toLong()
+        var iX: Long = 1
+        var iN: Long = 1
+        val nMinus1 = (n - 1).toLong()
+
+        while (iN <= nMinus1) {
+            if ((iX and x.toLong()) == 0L) {
+                if ((iN and nMinus1) != 0L) {
+                    res = res or iX
+                }
+                iN = iN shl 1
+            }
+            iX = iX shl 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minEnd(_ n: Int, _ x: Int) -> Int {
+        var res = Int64(x)
+        var iX: Int64 = 1
+        var iN: Int64 = 1
+        let nMinus1 = Int64(n - 1)
+
+        while iN <= nMinus1 {
+            if iX & Int64(x) == 0 {
+                if iN & nMinus1 != 0 {
+                    res |= iX
+                }
+                iN <<= 1
+            }
+            iX <<= 1
+        }
+
+        return Int(res)
     }
 }
 ```

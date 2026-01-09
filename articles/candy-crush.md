@@ -228,24 +228,24 @@ class Solution {
     candyCrush(board) {
         this.m = board.length;
         this.n = board[0].length;
-        
+
         let crushedSet = this.find(board);
         while (crushedSet.size > 0) {
             this.crush(board, crushedSet);
             this.drop(board);
             crushedSet = this.find(board);
         }
-        
+
         return board;
     }
-    
+
     /**
      * @param {number[][]} board
      * @return {Set<string>}
      */
     find(board) {
         let crushedSet = new Set();
-        
+
         // Check vertically adjacent candies
         for (let r = 1; r < this.m - 1; r++) {
             for (let c = 0; c < this.n; c++) {
@@ -259,7 +259,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Check horizontally adjacent candies
         for (let r = 0; r < this.m; r++) {
             for (let c = 1; c < this.n - 1; c++) {
@@ -273,10 +273,10 @@ class Solution {
                 }
             }
         }
-        
+
         return crushedSet;
     }
-    
+
     /**
      * @param {number[][]} board
      * @param {Set<string>} crushedSet
@@ -288,7 +288,7 @@ class Solution {
             board[r][c] = 0;
         }
     }
-    
+
     /**
      * @param {number[][]} board
      * @return {void}
@@ -296,7 +296,7 @@ class Solution {
     drop(board) {
         for (let c = 0; c < this.n; c++) {
             let lowestZero = -1;
-            
+
             // Iterate over each column
             for (let r = this.m - 1; r >= 0; r--) {
                 if (board[r][c] === 0) {
@@ -306,6 +306,300 @@ class Solution {
                     board[r][c] = board[lowestZero][c];
                     board[lowestZero][c] = temp;
                     lowestZero--;
+                }
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    int m, n;
+
+    public int[][] CandyCrush(int[][] board) {
+        m = board.Length;
+        n = board[0].Length;
+
+        var crushedSet = Find(board);
+        while (crushedSet.Count > 0) {
+            Crush(board, crushedSet);
+            Drop(board);
+            crushedSet = Find(board);
+        }
+
+        return board;
+    }
+
+    private HashSet<(int, int)> Find(int[][] board) {
+        var crushedSet = new HashSet<(int, int)>();
+
+        // Check vertically adjacent candies
+        for (int r = 1; r < m - 1; r++) {
+            for (int c = 0; c < n; c++) {
+                if (board[r][c] == 0) continue;
+                if (board[r][c] == board[r - 1][c] && board[r][c] == board[r + 1][c]) {
+                    crushedSet.Add((r, c));
+                    crushedSet.Add((r - 1, c));
+                    crushedSet.Add((r + 1, c));
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for (int r = 0; r < m; r++) {
+            for (int c = 1; c < n - 1; c++) {
+                if (board[r][c] == 0) continue;
+                if (board[r][c] == board[r][c - 1] && board[r][c] == board[r][c + 1]) {
+                    crushedSet.Add((r, c));
+                    crushedSet.Add((r, c - 1));
+                    crushedSet.Add((r, c + 1));
+                }
+            }
+        }
+
+        return crushedSet;
+    }
+
+    private void Crush(int[][] board, HashSet<(int, int)> crushedSet) {
+        foreach (var (r, c) in crushedSet) {
+            board[r][c] = 0;
+        }
+    }
+
+    private void Drop(int[][] board) {
+        for (int c = 0; c < n; c++) {
+            int lowestZero = -1;
+
+            for (int r = m - 1; r >= 0; r--) {
+                if (board[r][c] == 0) {
+                    lowestZero = Math.Max(lowestZero, r);
+                } else if (lowestZero >= 0) {
+                    int temp = board[r][c];
+                    board[r][c] = board[lowestZero][c];
+                    board[lowestZero][c] = temp;
+                    lowestZero--;
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+func candyCrush(board [][]int) [][]int {
+    m, n := len(board), len(board[0])
+
+    find := func() map[[2]int]bool {
+        crushedSet := make(map[[2]int]bool)
+
+        // Check vertically adjacent candies
+        for r := 1; r < m-1; r++ {
+            for c := 0; c < n; c++ {
+                if board[r][c] == 0 {
+                    continue
+                }
+                if board[r][c] == board[r-1][c] && board[r][c] == board[r+1][c] {
+                    crushedSet[[2]int{r, c}] = true
+                    crushedSet[[2]int{r - 1, c}] = true
+                    crushedSet[[2]int{r + 1, c}] = true
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for r := 0; r < m; r++ {
+            for c := 1; c < n-1; c++ {
+                if board[r][c] == 0 {
+                    continue
+                }
+                if board[r][c] == board[r][c-1] && board[r][c] == board[r][c+1] {
+                    crushedSet[[2]int{r, c}] = true
+                    crushedSet[[2]int{r, c - 1}] = true
+                    crushedSet[[2]int{r, c + 1}] = true
+                }
+            }
+        }
+
+        return crushedSet
+    }
+
+    crush := func(crushedSet map[[2]int]bool) {
+        for pos := range crushedSet {
+            board[pos[0]][pos[1]] = 0
+        }
+    }
+
+    drop := func() {
+        for c := 0; c < n; c++ {
+            lowestZero := -1
+
+            for r := m - 1; r >= 0; r-- {
+                if board[r][c] == 0 {
+                    if r > lowestZero {
+                        lowestZero = r
+                    }
+                } else if lowestZero >= 0 {
+                    board[r][c], board[lowestZero][c] = board[lowestZero][c], board[r][c]
+                    lowestZero--
+                }
+            }
+        }
+    }
+
+    crushedSet := find()
+    for len(crushedSet) > 0 {
+        crush(crushedSet)
+        drop()
+        crushedSet = find()
+    }
+
+    return board
+}
+```
+
+```kotlin
+class Solution {
+    private var m = 0
+    private var n = 0
+
+    fun candyCrush(board: Array<IntArray>): Array<IntArray> {
+        m = board.size
+        n = board[0].size
+
+        var crushedSet = find(board)
+        while (crushedSet.isNotEmpty()) {
+            crush(board, crushedSet)
+            drop(board)
+            crushedSet = find(board)
+        }
+
+        return board
+    }
+
+    private fun find(board: Array<IntArray>): Set<Pair<Int, Int>> {
+        val crushedSet = mutableSetOf<Pair<Int, Int>>()
+
+        // Check vertically adjacent candies
+        for (r in 1 until m - 1) {
+            for (c in 0 until n) {
+                if (board[r][c] == 0) continue
+                if (board[r][c] == board[r - 1][c] && board[r][c] == board[r + 1][c]) {
+                    crushedSet.add(Pair(r, c))
+                    crushedSet.add(Pair(r - 1, c))
+                    crushedSet.add(Pair(r + 1, c))
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for (r in 0 until m) {
+            for (c in 1 until n - 1) {
+                if (board[r][c] == 0) continue
+                if (board[r][c] == board[r][c - 1] && board[r][c] == board[r][c + 1]) {
+                    crushedSet.add(Pair(r, c))
+                    crushedSet.add(Pair(r, c - 1))
+                    crushedSet.add(Pair(r, c + 1))
+                }
+            }
+        }
+
+        return crushedSet
+    }
+
+    private fun crush(board: Array<IntArray>, crushedSet: Set<Pair<Int, Int>>) {
+        for ((r, c) in crushedSet) {
+            board[r][c] = 0
+        }
+    }
+
+    private fun drop(board: Array<IntArray>) {
+        for (c in 0 until n) {
+            var lowestZero = -1
+
+            for (r in m - 1 downTo 0) {
+                if (board[r][c] == 0) {
+                    lowestZero = maxOf(lowestZero, r)
+                } else if (lowestZero >= 0) {
+                    val temp = board[r][c]
+                    board[r][c] = board[lowestZero][c]
+                    board[lowestZero][c] = temp
+                    lowestZero--
+                }
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    private var m = 0
+    private var n = 0
+
+    func candyCrush(_ board: [[Int]]) -> [[Int]] {
+        var board = board
+        m = board.count
+        n = board[0].count
+
+        var crushedSet = find(board)
+        while !crushedSet.isEmpty {
+            crush(&board, crushedSet)
+            drop(&board)
+            crushedSet = find(board)
+        }
+
+        return board
+    }
+
+    private func find(_ board: [[Int]]) -> Set<[Int]> {
+        var crushedSet = Set<[Int]>()
+
+        // Check vertically adjacent candies
+        for r in 1..<(m - 1) {
+            for c in 0..<n {
+                if board[r][c] == 0 { continue }
+                if board[r][c] == board[r - 1][c] && board[r][c] == board[r + 1][c] {
+                    crushedSet.insert([r, c])
+                    crushedSet.insert([r - 1, c])
+                    crushedSet.insert([r + 1, c])
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for r in 0..<m {
+            for c in 1..<(n - 1) {
+                if board[r][c] == 0 { continue }
+                if board[r][c] == board[r][c - 1] && board[r][c] == board[r][c + 1] {
+                    crushedSet.insert([r, c])
+                    crushedSet.insert([r, c - 1])
+                    crushedSet.insert([r, c + 1])
+                }
+            }
+        }
+
+        return crushedSet
+    }
+
+    private func crush(_ board: inout [[Int]], _ crushedSet: Set<[Int]>) {
+        for pos in crushedSet {
+            board[pos[0]][pos[1]] = 0
+        }
+    }
+
+    private func drop(_ board: inout [[Int]]) {
+        for c in 0..<n {
+            var lowestZero = -1
+
+            for r in stride(from: m - 1, through: 0, by: -1) {
+                if board[r][c] == 0 {
+                    lowestZero = max(lowestZero, r)
+                } else if lowestZero >= 0 {
+                    let temp = board[r][c]
+                    board[r][c] = board[lowestZero][c]
+                    board[lowestZero][c] = temp
+                    lowestZero -= 1
                 }
             }
         }
@@ -557,22 +851,22 @@ class Solution {
     candyCrush(board) {
         this.m = board.length;
         this.n = board[0].length;
-        
+
         // Continue with the three steps until we can no longer find any crushable candies.
         while (!this.findAndCrush(board)) {
             this.drop(board);
         }
-        
+
         return board;
     }
-    
+
     /**
      * @param {number[][]} board
      * @return {boolean}
      */
     findAndCrush(board) {
         let complete = true;
-        
+
         // Check vertically adjacent candies
         for (let r = 1; r < this.m - 1; r++) {
             for (let c = 0; c < this.n; c++) {
@@ -587,7 +881,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Check horizontally adjacent candies
         for (let r = 0; r < this.m; r++) {
             for (let c = 1; c < this.n - 1; c++) {
@@ -602,7 +896,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Set the value of each candy to be crushed as 0
         for (let r = 0; r < this.m; r++) {
             for (let c = 0; c < this.n; c++) {
@@ -611,10 +905,10 @@ class Solution {
                 }
             }
         }
-        
+
         return complete;
     }
-    
+
     /**
      * @param {number[][]} board
      * @return {void}
@@ -622,7 +916,7 @@ class Solution {
     drop(board) {
         for (let c = 0; c < this.n; c++) {
             let lowestZero = -1;
-            
+
             // Iterate over each column
             for (let r = this.m - 1; r >= 0; r--) {
                 if (board[r][c] === 0) {
@@ -637,7 +931,319 @@ class Solution {
         }
     }
 }
+```
 
+```csharp
+public class Solution {
+    int m, n;
+
+    public int[][] CandyCrush(int[][] board) {
+        m = board.Length;
+        n = board[0].Length;
+
+        while (!FindAndCrush(board)) {
+            Drop(board);
+        }
+
+        return board;
+    }
+
+    private bool FindAndCrush(int[][] board) {
+        bool complete = true;
+
+        // Check vertically adjacent candies
+        for (int r = 1; r < m - 1; r++) {
+            for (int c = 0; c < n; c++) {
+                if (board[r][c] == 0) continue;
+                if (Math.Abs(board[r][c]) == Math.Abs(board[r - 1][c]) &&
+                    Math.Abs(board[r][c]) == Math.Abs(board[r + 1][c])) {
+                    board[r][c] = -Math.Abs(board[r][c]);
+                    board[r - 1][c] = -Math.Abs(board[r - 1][c]);
+                    board[r + 1][c] = -Math.Abs(board[r + 1][c]);
+                    complete = false;
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for (int r = 0; r < m; r++) {
+            for (int c = 1; c < n - 1; c++) {
+                if (board[r][c] == 0) continue;
+                if (Math.Abs(board[r][c]) == Math.Abs(board[r][c - 1]) &&
+                    Math.Abs(board[r][c]) == Math.Abs(board[r][c + 1])) {
+                    board[r][c] = -Math.Abs(board[r][c]);
+                    board[r][c - 1] = -Math.Abs(board[r][c - 1]);
+                    board[r][c + 1] = -Math.Abs(board[r][c + 1]);
+                    complete = false;
+                }
+            }
+        }
+
+        // Set the value of each candy to be crushed as 0
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                if (board[r][c] < 0) {
+                    board[r][c] = 0;
+                }
+            }
+        }
+
+        return complete;
+    }
+
+    private void Drop(int[][] board) {
+        for (int c = 0; c < n; c++) {
+            int lowestZero = -1;
+
+            for (int r = m - 1; r >= 0; r--) {
+                if (board[r][c] == 0) {
+                    lowestZero = Math.Max(lowestZero, r);
+                } else if (lowestZero >= 0) {
+                    int temp = board[r][c];
+                    board[r][c] = board[lowestZero][c];
+                    board[lowestZero][c] = temp;
+                    lowestZero--;
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+func candyCrush(board [][]int) [][]int {
+    m, n := len(board), len(board[0])
+
+    abs := func(x int) int {
+        if x < 0 {
+            return -x
+        }
+        return x
+    }
+
+    findAndCrush := func() bool {
+        complete := true
+
+        // Check vertically adjacent candies
+        for r := 1; r < m-1; r++ {
+            for c := 0; c < n; c++ {
+                if board[r][c] == 0 {
+                    continue
+                }
+                if abs(board[r][c]) == abs(board[r-1][c]) && abs(board[r][c]) == abs(board[r+1][c]) {
+                    board[r][c] = -abs(board[r][c])
+                    board[r-1][c] = -abs(board[r-1][c])
+                    board[r+1][c] = -abs(board[r+1][c])
+                    complete = false
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for r := 0; r < m; r++ {
+            for c := 1; c < n-1; c++ {
+                if board[r][c] == 0 {
+                    continue
+                }
+                if abs(board[r][c]) == abs(board[r][c-1]) && abs(board[r][c]) == abs(board[r][c+1]) {
+                    board[r][c] = -abs(board[r][c])
+                    board[r][c-1] = -abs(board[r][c-1])
+                    board[r][c+1] = -abs(board[r][c+1])
+                    complete = false
+                }
+            }
+        }
+
+        // Set the value of each candy to be crushed as 0
+        for r := 0; r < m; r++ {
+            for c := 0; c < n; c++ {
+                if board[r][c] < 0 {
+                    board[r][c] = 0
+                }
+            }
+        }
+
+        return complete
+    }
+
+    drop := func() {
+        for c := 0; c < n; c++ {
+            lowestZero := -1
+
+            for r := m - 1; r >= 0; r-- {
+                if board[r][c] == 0 {
+                    if r > lowestZero {
+                        lowestZero = r
+                    }
+                } else if lowestZero >= 0 {
+                    board[r][c], board[lowestZero][c] = board[lowestZero][c], board[r][c]
+                    lowestZero--
+                }
+            }
+        }
+    }
+
+    for !findAndCrush() {
+        drop()
+    }
+
+    return board
+}
+```
+
+```kotlin
+class Solution {
+    private var m = 0
+    private var n = 0
+
+    fun candyCrush(board: Array<IntArray>): Array<IntArray> {
+        m = board.size
+        n = board[0].size
+
+        while (!findAndCrush(board)) {
+            drop(board)
+        }
+
+        return board
+    }
+
+    private fun findAndCrush(board: Array<IntArray>): Boolean {
+        var complete = true
+
+        // Check vertically adjacent candies
+        for (r in 1 until m - 1) {
+            for (c in 0 until n) {
+                if (board[r][c] == 0) continue
+                if (kotlin.math.abs(board[r][c]) == kotlin.math.abs(board[r - 1][c]) &&
+                    kotlin.math.abs(board[r][c]) == kotlin.math.abs(board[r + 1][c])) {
+                    board[r][c] = -kotlin.math.abs(board[r][c])
+                    board[r - 1][c] = -kotlin.math.abs(board[r - 1][c])
+                    board[r + 1][c] = -kotlin.math.abs(board[r + 1][c])
+                    complete = false
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for (r in 0 until m) {
+            for (c in 1 until n - 1) {
+                if (board[r][c] == 0) continue
+                if (kotlin.math.abs(board[r][c]) == kotlin.math.abs(board[r][c - 1]) &&
+                    kotlin.math.abs(board[r][c]) == kotlin.math.abs(board[r][c + 1])) {
+                    board[r][c] = -kotlin.math.abs(board[r][c])
+                    board[r][c - 1] = -kotlin.math.abs(board[r][c - 1])
+                    board[r][c + 1] = -kotlin.math.abs(board[r][c + 1])
+                    complete = false
+                }
+            }
+        }
+
+        // Set the value of each candy to be crushed as 0
+        for (r in 0 until m) {
+            for (c in 0 until n) {
+                if (board[r][c] < 0) {
+                    board[r][c] = 0
+                }
+            }
+        }
+
+        return complete
+    }
+
+    private fun drop(board: Array<IntArray>) {
+        for (c in 0 until n) {
+            var lowestZero = -1
+
+            for (r in m - 1 downTo 0) {
+                if (board[r][c] == 0) {
+                    lowestZero = maxOf(lowestZero, r)
+                } else if (lowestZero >= 0) {
+                    val temp = board[r][c]
+                    board[r][c] = board[lowestZero][c]
+                    board[lowestZero][c] = temp
+                    lowestZero--
+                }
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    private var m = 0
+    private var n = 0
+
+    func candyCrush(_ board: [[Int]]) -> [[Int]] {
+        var board = board
+        m = board.count
+        n = board[0].count
+
+        while !findAndCrush(&board) {
+            drop(&board)
+        }
+
+        return board
+    }
+
+    private func findAndCrush(_ board: inout [[Int]]) -> Bool {
+        var complete = true
+
+        // Check vertically adjacent candies
+        for r in 1..<(m - 1) {
+            for c in 0..<n {
+                if board[r][c] == 0 { continue }
+                if abs(board[r][c]) == abs(board[r - 1][c]) && abs(board[r][c]) == abs(board[r + 1][c]) {
+                    board[r][c] = -abs(board[r][c])
+                    board[r - 1][c] = -abs(board[r - 1][c])
+                    board[r + 1][c] = -abs(board[r + 1][c])
+                    complete = false
+                }
+            }
+        }
+
+        // Check horizontally adjacent candies
+        for r in 0..<m {
+            for c in 1..<(n - 1) {
+                if board[r][c] == 0 { continue }
+                if abs(board[r][c]) == abs(board[r][c - 1]) && abs(board[r][c]) == abs(board[r][c + 1]) {
+                    board[r][c] = -abs(board[r][c])
+                    board[r][c - 1] = -abs(board[r][c - 1])
+                    board[r][c + 1] = -abs(board[r][c + 1])
+                    complete = false
+                }
+            }
+        }
+
+        // Set the value of each candy to be crushed as 0
+        for r in 0..<m {
+            for c in 0..<n {
+                if board[r][c] < 0 {
+                    board[r][c] = 0
+                }
+            }
+        }
+
+        return complete
+    }
+
+    private func drop(_ board: inout [[Int]]) {
+        for c in 0..<n {
+            var lowestZero = -1
+
+            for r in stride(from: m - 1, through: 0, by: -1) {
+                if board[r][c] == 0 {
+                    lowestZero = max(lowestZero, r)
+                } else if lowestZero >= 0 {
+                    let temp = board[r][c]
+                    board[r][c] = board[lowestZero][c]
+                    board[lowestZero][c] = temp
+                    lowestZero -= 1
+                }
+            }
+        }
+    }
+}
 ```
 
 ::tabs-end

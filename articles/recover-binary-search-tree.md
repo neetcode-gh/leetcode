@@ -276,6 +276,170 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func recoverTree(root *TreeNode) {
+    var dfs func(node1 *TreeNode) bool
+    var dfs1 func(node1, node2 *TreeNode) bool
+
+    isBST := func(node *TreeNode) bool {
+        type item struct {
+            n          *TreeNode
+            min, max   int64
+        }
+        q := []item{{node, math.MinInt64, math.MaxInt64}}
+        for len(q) > 0 {
+            cur := q[0]
+            q = q[1:]
+            if cur.n == nil {
+                continue
+            }
+            val := int64(cur.n.Val)
+            if val <= cur.min || val >= cur.max {
+                return false
+            }
+            q = append(q, item{cur.n.Left, cur.min, val})
+            q = append(q, item{cur.n.Right, val, cur.max})
+        }
+        return true
+    }
+
+    dfs1 = func(node1, node2 *TreeNode) bool {
+        if node2 == nil || node1 == node2 {
+            return false
+        }
+        node1.Val, node2.Val = node2.Val, node1.Val
+        if isBST(root) {
+            return true
+        }
+        node1.Val, node2.Val = node2.Val, node1.Val
+        return dfs1(node1, node2.Left) || dfs1(node1, node2.Right)
+    }
+
+    dfs = func(node1 *TreeNode) bool {
+        if node1 == nil {
+            return false
+        }
+        if dfs1(node1, root) {
+            return true
+        }
+        return dfs(node1.Left) || dfs(node1.Right)
+    }
+
+    dfs(root)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun recoverTree(root: TreeNode?): Unit {
+        fun isBST(node: TreeNode?): Boolean {
+            val q = ArrayDeque<Triple<TreeNode?, Long, Long>>()
+            q.add(Triple(node, Long.MIN_VALUE, Long.MAX_VALUE))
+            while (q.isNotEmpty()) {
+                val (cur, min, max) = q.removeFirst()
+                if (cur == null) continue
+                val v = cur.`val`.toLong()
+                if (v <= min || v >= max) return false
+                q.add(Triple(cur.left, min, v))
+                q.add(Triple(cur.right, v, max))
+            }
+            return true
+        }
+
+        fun dfs1(node1: TreeNode, node2: TreeNode?): Boolean {
+            if (node2 == null || node1 === node2) return false
+            val tmp = node1.`val`
+            node1.`val` = node2.`val`
+            node2.`val` = tmp
+            if (isBST(root)) return true
+            node2.`val` = node1.`val`
+            node1.`val` = tmp
+            return dfs1(node1, node2.left) || dfs1(node1, node2.right)
+        }
+
+        fun dfs(node1: TreeNode?): Boolean {
+            if (node1 == null) return false
+            if (dfs1(node1, root)) return true
+            return dfs(node1.left) || dfs(node1.right)
+        }
+
+        dfs(root)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func recoverTree(_ root: TreeNode?) {
+        func isBST(_ node: TreeNode?) -> Bool {
+            var q: [(TreeNode?, Int64, Int64)] = [(node, Int64.min, Int64.max)]
+            while !q.isEmpty {
+                let (cur, minVal, maxVal) = q.removeFirst()
+                guard let cur = cur else { continue }
+                let v = Int64(cur.val)
+                if v <= minVal || v >= maxVal { return false }
+                q.append((cur.left, minVal, v))
+                q.append((cur.right, v, maxVal))
+            }
+            return true
+        }
+
+        func dfs1(_ node1: TreeNode, _ node2: TreeNode?) -> Bool {
+            guard let node2 = node2 else { return false }
+            if node1 === node2 { return false }
+            let tmp = node1.val
+            node1.val = node2.val
+            node2.val = tmp
+            if isBST(root) { return true }
+            node2.val = node1.val
+            node1.val = tmp
+            return dfs1(node1, node2.left) || dfs1(node1, node2.right)
+        }
+
+        func dfs(_ node1: TreeNode?) -> Bool {
+            guard let node1 = node1 else { return false }
+            if dfs1(node1, root) { return true }
+            return dfs(node1.left) || dfs(node1.right)
+        }
+
+        _ = dfs(root)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -492,6 +656,132 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func recoverTree(root *TreeNode) {
+    var arr []*TreeNode
+    var inorder func(node *TreeNode)
+    inorder = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        inorder(node.Left)
+        arr = append(arr, node)
+        inorder(node.Right)
+    }
+
+    inorder(root)
+
+    var node1, node2 *TreeNode
+    for i := 0; i < len(arr)-1; i++ {
+        if arr[i].Val > arr[i+1].Val {
+            node2 = arr[i+1]
+            if node1 == nil {
+                node1 = arr[i]
+            } else {
+                break
+            }
+        }
+    }
+
+    node1.Val, node2.Val = node2.Val, node1.Val
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun recoverTree(root: TreeNode?): Unit {
+        val arr = mutableListOf<TreeNode>()
+
+        fun inorder(node: TreeNode?) {
+            if (node == null) return
+            inorder(node.left)
+            arr.add(node)
+            inorder(node.right)
+        }
+
+        inorder(root)
+
+        var node1: TreeNode? = null
+        var node2: TreeNode? = null
+        for (i in 0 until arr.size - 1) {
+            if (arr[i].`val` > arr[i + 1].`val`) {
+                node2 = arr[i + 1]
+                if (node1 == null) node1 = arr[i]
+                else break
+            }
+        }
+
+        val temp = node1!!.`val`
+        node1.`val` = node2!!.`val`
+        node2.`val` = temp
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func recoverTree(_ root: TreeNode?) {
+        var arr = [TreeNode]()
+
+        func inorder(_ node: TreeNode?) {
+            guard let node = node else { return }
+            inorder(node.left)
+            arr.append(node)
+            inorder(node.right)
+        }
+
+        inorder(root)
+
+        var node1: TreeNode? = nil
+        var node2: TreeNode? = nil
+        for i in 0..<(arr.count - 1) {
+            if arr[i].val > arr[i + 1].val {
+                node2 = arr[i + 1]
+                if node1 == nil { node1 = arr[i] }
+                else { break }
+            }
+        }
+
+        let temp = node1!.val
+        node1!.val = node2!.val
+        node2!.val = temp
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -698,6 +988,134 @@ public class Solution {
         int temp = node1.val;
         node1.val = node2.val;
         node2.val = temp;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func recoverTree(root *TreeNode) {
+    var stack []*TreeNode
+    var node1, node2, prev *TreeNode
+    curr := root
+
+    for len(stack) > 0 || curr != nil {
+        for curr != nil {
+            stack = append(stack, curr)
+            curr = curr.Left
+        }
+
+        curr = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        if prev != nil && prev.Val > curr.Val {
+            node2 = curr
+            if node1 == nil {
+                node1 = prev
+            } else {
+                break
+            }
+        }
+        prev = curr
+        curr = curr.Right
+    }
+
+    node1.Val, node2.Val = node2.Val, node1.Val
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun recoverTree(root: TreeNode?): Unit {
+        val stack = ArrayDeque<TreeNode>()
+        var node1: TreeNode? = null
+        var node2: TreeNode? = null
+        var prev: TreeNode? = null
+        var curr = root
+
+        while (stack.isNotEmpty() || curr != null) {
+            while (curr != null) {
+                stack.addLast(curr)
+                curr = curr.left
+            }
+
+            curr = stack.removeLast()
+            if (prev != null && prev.`val` > curr!!.`val`) {
+                node2 = curr
+                if (node1 == null) node1 = prev
+                else break
+            }
+            prev = curr
+            curr = curr?.right
+        }
+
+        val temp = node1!!.`val`
+        node1.`val` = node2!!.`val`
+        node2.`val` = temp
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func recoverTree(_ root: TreeNode?) {
+        var stack = [TreeNode]()
+        var node1: TreeNode? = nil
+        var node2: TreeNode? = nil
+        var prev: TreeNode? = nil
+        var curr = root
+
+        while !stack.isEmpty || curr != nil {
+            while curr != nil {
+                stack.append(curr!)
+                curr = curr!.left
+            }
+
+            curr = stack.removeLast()
+            if prev != nil && prev!.val > curr!.val {
+                node2 = curr
+                if node1 == nil { node1 = prev }
+                else { break }
+            }
+            prev = curr
+            curr = curr?.right
+        }
+
+        let temp = node1!.val
+        node1!.val = node2!.val
+        node2!.val = temp
     }
 }
 ```
@@ -970,6 +1388,169 @@ public class Solution {
         int temp = node1.val;
         node1.val = node2.val;
         node2.val = temp;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func recoverTree(root *TreeNode) {
+    var node1, node2, prev *TreeNode
+    curr := root
+
+    for curr != nil {
+        if curr.Left == nil {
+            if prev != nil && prev.Val > curr.Val {
+                node2 = curr
+                if node1 == nil {
+                    node1 = prev
+                }
+            }
+            prev = curr
+            curr = curr.Right
+        } else {
+            pred := curr.Left
+            for pred.Right != nil && pred.Right != curr {
+                pred = pred.Right
+            }
+
+            if pred.Right == nil {
+                pred.Right = curr
+                curr = curr.Left
+            } else {
+                pred.Right = nil
+                if prev != nil && prev.Val > curr.Val {
+                    node2 = curr
+                    if node1 == nil {
+                        node1 = prev
+                    }
+                }
+                prev = curr
+                curr = curr.Right
+            }
+        }
+    }
+
+    node1.Val, node2.Val = node2.Val, node1.Val
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun recoverTree(root: TreeNode?): Unit {
+        var node1: TreeNode? = null
+        var node2: TreeNode? = null
+        var prev: TreeNode? = null
+        var curr = root
+
+        while (curr != null) {
+            if (curr.left == null) {
+                if (prev != null && prev.`val` > curr.`val`) {
+                    node2 = curr
+                    if (node1 == null) node1 = prev
+                }
+                prev = curr
+                curr = curr.right
+            } else {
+                var pred = curr.left
+                while (pred?.right != null && pred.right != curr) {
+                    pred = pred.right
+                }
+
+                if (pred?.right == null) {
+                    pred?.right = curr
+                    curr = curr.left
+                } else {
+                    pred.right = null
+                    if (prev != null && prev.`val` > curr.`val`) {
+                        node2 = curr
+                        if (node1 == null) node1 = prev
+                    }
+                    prev = curr
+                    curr = curr.right
+                }
+            }
+        }
+
+        val temp = node1!!.`val`
+        node1.`val` = node2!!.`val`
+        node2.`val` = temp
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func recoverTree(_ root: TreeNode?) {
+        var node1: TreeNode? = nil
+        var node2: TreeNode? = nil
+        var prev: TreeNode? = nil
+        var curr = root
+
+        while curr != nil {
+            if curr!.left == nil {
+                if prev != nil && prev!.val > curr!.val {
+                    node2 = curr
+                    if node1 == nil { node1 = prev }
+                }
+                prev = curr
+                curr = curr!.right
+            } else {
+                var pred = curr!.left
+                while pred?.right != nil && pred?.right !== curr {
+                    pred = pred?.right
+                }
+
+                if pred?.right == nil {
+                    pred?.right = curr
+                    curr = curr!.left
+                } else {
+                    pred?.right = nil
+                    if prev != nil && prev!.val > curr!.val {
+                        node2 = curr
+                        if node1 == nil { node1 = prev }
+                    }
+                    prev = curr
+                    curr = curr!.right
+                }
+            }
+        }
+
+        let temp = node1!.val
+        node1!.val = node2!.val
+        node2!.val = temp
     }
 }
 ```

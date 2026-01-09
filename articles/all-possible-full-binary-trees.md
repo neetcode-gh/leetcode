@@ -165,6 +165,170 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<TreeNode> AllPossibleFBT(int n) {
+        return Backtrack(n);
+    }
+
+    private IList<TreeNode> Backtrack(int n) {
+        if (n == 0) {
+            return new List<TreeNode>();
+        }
+        if (n == 1) {
+            return new List<TreeNode> { new TreeNode(0) };
+        }
+
+        List<TreeNode> res = new List<TreeNode>();
+        for (int l = 0; l < n; l++) {
+            int r = n - 1 - l;
+            IList<TreeNode> leftTrees = Backtrack(l);
+            IList<TreeNode> rightTrees = Backtrack(r);
+
+            foreach (TreeNode t1 in leftTrees) {
+                foreach (TreeNode t2 in rightTrees) {
+                    res.Add(new TreeNode(0, t1, t2));
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func allPossibleFBT(n int) []*TreeNode {
+    var backtrack func(n int) []*TreeNode
+    backtrack = func(n int) []*TreeNode {
+        if n == 0 {
+            return []*TreeNode{}
+        }
+        if n == 1 {
+            return []*TreeNode{{Val: 0}}
+        }
+
+        res := []*TreeNode{}
+        for l := 0; l < n; l++ {
+            r := n - 1 - l
+            leftTrees := backtrack(l)
+            rightTrees := backtrack(r)
+
+            for _, t1 := range leftTrees {
+                for _, t2 := range rightTrees {
+                    res = append(res, &TreeNode{Val: 0, Left: t1, Right: t2})
+                }
+            }
+        }
+        return res
+    }
+
+    return backtrack(n)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun allPossibleFBT(n: Int): List<TreeNode?> {
+        fun backtrack(n: Int): List<TreeNode?> {
+            if (n == 0) return emptyList()
+            if (n == 1) return listOf(TreeNode(0))
+
+            val res = mutableListOf<TreeNode?>()
+            for (l in 0 until n) {
+                val r = n - 1 - l
+                val leftTrees = backtrack(l)
+                val rightTrees = backtrack(r)
+
+                for (t1 in leftTrees) {
+                    for (t2 in rightTrees) {
+                        res.add(TreeNode(0).apply {
+                            left = t1
+                            right = t2
+                        })
+                    }
+                }
+            }
+            return res
+        }
+
+        return backtrack(n)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func allPossibleFBT(_ n: Int) -> [TreeNode?] {
+        func backtrack(_ n: Int) -> [TreeNode?] {
+            if n == 0 { return [] }
+            if n == 1 { return [TreeNode(0)] }
+
+            var res = [TreeNode?]()
+            for l in 0..<n {
+                let r = n - 1 - l
+                let leftTrees = backtrack(l)
+                let rightTrees = backtrack(r)
+
+                for t1 in leftTrees {
+                    for t2 in rightTrees {
+                        res.append(TreeNode(0, t1, t2))
+                    }
+                }
+            }
+            return res
+        }
+
+        return backtrack(n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -318,6 +482,99 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<TreeNode> AllPossibleFBT(int n) {
+        if (n % 2 == 0) {
+            return new List<TreeNode>();
+        }
+        if (n == 1) {
+            return new List<TreeNode> { new TreeNode(0) };
+        }
+
+        List<TreeNode> res = new List<TreeNode>();
+        for (int left = 1; left < n; left += 2) {
+            IList<TreeNode> leftSubTree = AllPossibleFBT(left);
+            IList<TreeNode> rightSubTree = AllPossibleFBT(n - 1 - left);
+            foreach (TreeNode l in leftSubTree) {
+                foreach (TreeNode r in rightSubTree) {
+                    res.Add(new TreeNode(0, l, r));
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func allPossibleFBT(n int) []*TreeNode {
+    if n%2 == 0 {
+        return []*TreeNode{}
+    }
+    if n == 1 {
+        return []*TreeNode{{Val: 0}}
+    }
+
+    res := []*TreeNode{}
+    for left := 1; left < n; left += 2 {
+        leftSubTree := allPossibleFBT(left)
+        rightSubTree := allPossibleFBT(n - 1 - left)
+        for _, l := range leftSubTree {
+            for _, r := range rightSubTree {
+                res = append(res, &TreeNode{Val: 0, Left: l, Right: r})
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun allPossibleFBT(n: Int): List<TreeNode?> {
+        if (n % 2 == 0) return emptyList()
+        if (n == 1) return listOf(TreeNode(0))
+
+        val res = mutableListOf<TreeNode?>()
+        for (left in 1 until n step 2) {
+            val leftSubTree = allPossibleFBT(left)
+            val rightSubTree = allPossibleFBT(n - 1 - left)
+            for (l in leftSubTree) {
+                for (r in rightSubTree) {
+                    res.add(TreeNode(0).apply {
+                        this.left = l
+                        right = r
+                    })
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func allPossibleFBT(_ n: Int) -> [TreeNode?] {
+        if n % 2 == 0 { return [] }
+        if n == 1 { return [TreeNode(0)] }
+
+        var res = [TreeNode?]()
+        for left in stride(from: 1, to: n, by: 2) {
+            let leftSubTree = allPossibleFBT(left)
+            let rightSubTree = allPossibleFBT(n - 1 - left)
+            for l in leftSubTree {
+                for r in rightSubTree {
+                    res.append(TreeNode(0, l, r))
+                }
+            }
+        }
+        return res
     }
 }
 ```
@@ -517,6 +774,141 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private IList<TreeNode>[] dp;
+
+    public IList<TreeNode> AllPossibleFBT(int n) {
+        dp = new IList<TreeNode>[n + 1];
+        return Dfs(n);
+    }
+
+    private IList<TreeNode> Dfs(int n) {
+        if (n % 2 == 0) {
+            return new List<TreeNode>();
+        }
+        if (n == 1) {
+            return new List<TreeNode> { new TreeNode(0) };
+        }
+        if (dp[n] != null) {
+            return dp[n];
+        }
+
+        List<TreeNode> res = new List<TreeNode>();
+        for (int left = 1; left < n; left += 2) {
+            IList<TreeNode> leftSubTree = Dfs(left);
+            IList<TreeNode> rightSubTree = Dfs(n - 1 - left);
+            foreach (TreeNode l in leftSubTree) {
+                foreach (TreeNode r in rightSubTree) {
+                    res.Add(new TreeNode(0, l, r));
+                }
+            }
+        }
+
+        dp[n] = res;
+        return res;
+    }
+}
+```
+
+```go
+func allPossibleFBT(n int) []*TreeNode {
+    dp := make([][]*TreeNode, n+1)
+
+    var dfs func(n int) []*TreeNode
+    dfs = func(n int) []*TreeNode {
+        if n%2 == 0 {
+            return []*TreeNode{}
+        }
+        if n == 1 {
+            return []*TreeNode{{Val: 0}}
+        }
+        if dp[n] != nil {
+            return dp[n]
+        }
+
+        res := []*TreeNode{}
+        for left := 1; left < n; left += 2 {
+            leftSubTree := dfs(left)
+            rightSubTree := dfs(n - 1 - left)
+            for _, l := range leftSubTree {
+                for _, r := range rightSubTree {
+                    res = append(res, &TreeNode{Val: 0, Left: l, Right: r})
+                }
+            }
+        }
+
+        dp[n] = res
+        return res
+    }
+
+    return dfs(n)
+}
+```
+
+```kotlin
+class Solution {
+    fun allPossibleFBT(n: Int): List<TreeNode?> {
+        val dp = arrayOfNulls<List<TreeNode?>>(n + 1)
+
+        fun dfs(n: Int): List<TreeNode?> {
+            if (n % 2 == 0) return emptyList()
+            if (n == 1) return listOf(TreeNode(0))
+            if (dp[n] != null) return dp[n]!!
+
+            val res = mutableListOf<TreeNode?>()
+            for (left in 1 until n step 2) {
+                val leftSubTree = dfs(left)
+                val rightSubTree = dfs(n - 1 - left)
+                for (l in leftSubTree) {
+                    for (r in rightSubTree) {
+                        res.add(TreeNode(0).apply {
+                            this.left = l
+                            right = r
+                        })
+                    }
+                }
+            }
+
+            dp[n] = res
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func allPossibleFBT(_ n: Int) -> [TreeNode?] {
+        var dp = [[TreeNode?]?](repeating: nil, count: n + 1)
+
+        func dfs(_ n: Int) -> [TreeNode?] {
+            if n % 2 == 0 { return [] }
+            if n == 1 { return [TreeNode(0)] }
+            if let cached = dp[n] { return cached }
+
+            var res = [TreeNode?]()
+            for left in stride(from: 1, to: n, by: 2) {
+                let leftSubTree = dfs(left)
+                let rightSubTree = dfs(n - 1 - left)
+                for l in leftSubTree {
+                    for r in rightSubTree {
+                        res.append(TreeNode(0, l, r))
+                    }
+                }
+            }
+
+            dp[n] = res
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,6 +1073,121 @@ class Solution {
         }
 
         return dp[n];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<TreeNode> AllPossibleFBT(int n) {
+        if (n % 2 == 0) {
+            return new List<TreeNode>();
+        }
+
+        IList<TreeNode>[] dp = new IList<TreeNode>[n + 1];
+        for (int i = 0; i <= n; i++) {
+            dp[i] = new List<TreeNode>();
+        }
+        dp[1].Add(new TreeNode(0));
+
+        for (int nodes = 3; nodes <= n; nodes += 2) {
+            List<TreeNode> res = new List<TreeNode>();
+            for (int left = 1; left < nodes; left += 2) {
+                int right = nodes - 1 - left;
+                foreach (TreeNode t1 in dp[left]) {
+                    foreach (TreeNode t2 in dp[right]) {
+                        res.Add(new TreeNode(0, t1, t2));
+                    }
+                }
+            }
+            dp[nodes] = res;
+        }
+
+        return dp[n];
+    }
+}
+```
+
+```go
+func allPossibleFBT(n int) []*TreeNode {
+    if n%2 == 0 {
+        return []*TreeNode{}
+    }
+
+    dp := make([][]*TreeNode, n+1)
+    for i := range dp {
+        dp[i] = []*TreeNode{}
+    }
+    dp[1] = []*TreeNode{{Val: 0}}
+
+    for nodes := 3; nodes <= n; nodes += 2 {
+        res := []*TreeNode{}
+        for left := 1; left < nodes; left += 2 {
+            right := nodes - 1 - left
+            for _, t1 := range dp[left] {
+                for _, t2 := range dp[right] {
+                    res = append(res, &TreeNode{Val: 0, Left: t1, Right: t2})
+                }
+            }
+        }
+        dp[nodes] = res
+    }
+
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun allPossibleFBT(n: Int): List<TreeNode?> {
+        if (n % 2 == 0) return emptyList()
+
+        val dp = Array<MutableList<TreeNode?>>(n + 1) { mutableListOf() }
+        dp[1].add(TreeNode(0))
+
+        for (nodes in 3..n step 2) {
+            val res = mutableListOf<TreeNode?>()
+            for (left in 1 until nodes step 2) {
+                val right = nodes - 1 - left
+                for (t1 in dp[left]) {
+                    for (t2 in dp[right]) {
+                        res.add(TreeNode(0).apply {
+                            this.left = t1
+                            this.right = t2
+                        })
+                    }
+                }
+            }
+            dp[nodes] = res
+        }
+
+        return dp[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func allPossibleFBT(_ n: Int) -> [TreeNode?] {
+        if n % 2 == 0 { return [] }
+
+        var dp = [[TreeNode?]](repeating: [], count: n + 1)
+        dp[1] = [TreeNode(0)]
+
+        for nodes in stride(from: 3, through: n, by: 2) {
+            var res = [TreeNode?]()
+            for left in stride(from: 1, to: nodes, by: 2) {
+                let right = nodes - 1 - left
+                for t1 in dp[left] {
+                    for t2 in dp[right] {
+                        res.append(TreeNode(0, t1, t2))
+                    }
+                }
+            }
+            dp[nodes] = res
+        }
+
+        return dp[n]
     }
 }
 ```

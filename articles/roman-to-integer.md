@@ -113,6 +113,68 @@ public class Solution {
 }
 ```
 
+```go
+func romanToInt(s string) int {
+    roman := map[byte]int{
+        'I': 1, 'V': 5, 'X': 10,
+        'L': 50, 'C': 100, 'D': 500, 'M': 1000,
+    }
+
+    res := 0
+    for i := 0; i < len(s); i++ {
+        if i+1 < len(s) && roman[s[i]] < roman[s[i+1]] {
+            res -= roman[s[i]]
+        } else {
+            res += roman[s[i]]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun romanToInt(s: String): Int {
+        val roman = mapOf(
+            'I' to 1, 'V' to 5, 'X' to 10,
+            'L' to 50, 'C' to 100, 'D' to 500, 'M' to 1000
+        )
+
+        var res = 0
+        for (i in s.indices) {
+            if (i + 1 < s.length && roman[s[i]]!! < roman[s[i + 1]]!!) {
+                res -= roman[s[i]]!!
+            } else {
+                res += roman[s[i]]!!
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func romanToInt(_ s: String) -> Int {
+        let roman: [Character: Int] = [
+            "I": 1, "V": 5, "X": 10,
+            "L": 50, "C": 100, "D": 500, "M": 1000
+        ]
+
+        let chars = Array(s)
+        var res = 0
+        for i in 0..<chars.count {
+            if i + 1 < chars.count && roman[chars[i]]! < roman[chars[i + 1]]! {
+                res -= roman[chars[i]]!
+            } else {
+                res += roman[chars[i]]!
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -69,7 +69,7 @@ class Solution {
     anagramMappings(nums1, nums2) {
         // Array to store the anagram mappings.
         const mappings = new Array(nums1.length);
-        
+
         for (let i = 0; i < nums1.length; i++) {
             for (let j = 0; j < nums2.length; j++) {
                 // Store the corresponding index of number in the second array.
@@ -80,6 +80,64 @@ class Solution {
             }
         }
         return mappings;
+    }
+}
+```
+
+```go
+func anagramMappings(nums1 []int, nums2 []int) []int {
+    // Slice to store the anagram mappings.
+    mappings := make([]int, len(nums1))
+
+    for i := 0; i < len(nums1); i++ {
+        for j := 0; j < len(nums2); j++ {
+            // Store the corresponding index of number in the second slice.
+            if nums1[i] == nums2[j] {
+                mappings[i] = j
+                break
+            }
+        }
+    }
+    return mappings
+}
+```
+
+```kotlin
+class Solution {
+    fun anagramMappings(nums1: IntArray, nums2: IntArray): IntArray {
+        // Array to store the anagram mappings.
+        val mappings = IntArray(nums1.size)
+
+        for (i in nums1.indices) {
+            for (j in nums2.indices) {
+                // Store the corresponding index of number in the second array.
+                if (nums1[i] == nums2[j]) {
+                    mappings[i] = j
+                    break
+                }
+            }
+        }
+        return mappings
+    }
+}
+```
+
+```swift
+class Solution {
+    func anagramMappings(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        // Array to store the anagram mappings.
+        var mappings = [Int](repeating: 0, count: nums1.count)
+
+        for i in 0..<nums1.count {
+            for j in 0..<nums2.count {
+                // Store the corresponding index of number in the second array.
+                if nums1[i] == nums2[j] {
+                    mappings[i] = j
+                    break
+                }
+            }
+        }
+        return mappings
     }
 }
 ```
@@ -177,6 +235,64 @@ class Solution {
         }
 
         return mappings;
+    }
+}
+```
+
+```go
+func anagramMappings(nums1 []int, nums2 []int) []int {
+    // Store the index corresponding to the value in the second slice.
+    valueToPos := make(map[int]int)
+    for i := 0; i < len(nums2); i++ {
+        valueToPos[nums2[i]] = i
+    }
+
+    // Slice to store the anagram mappings.
+    mappings := make([]int, len(nums1))
+    for i := 0; i < len(nums1); i++ {
+        mappings[i] = valueToPos[nums1[i]]
+    }
+
+    return mappings
+}
+```
+
+```kotlin
+class Solution {
+    fun anagramMappings(nums1: IntArray, nums2: IntArray): IntArray {
+        // Store the index corresponding to the value in the second array.
+        val valueToPos = HashMap<Int, Int>()
+        for (i in nums2.indices) {
+            valueToPos[nums2[i]] = i
+        }
+
+        // Array to store the anagram mappings.
+        val mappings = IntArray(nums1.size)
+        for (i in nums1.indices) {
+            mappings[i] = valueToPos[nums1[i]]!!
+        }
+
+        return mappings
+    }
+}
+```
+
+```swift
+class Solution {
+    func anagramMappings(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        // Store the index corresponding to the value in the second array.
+        var valueToPos = [Int: Int]()
+        for i in 0..<nums2.count {
+            valueToPos[nums2[i]] = i
+        }
+
+        // Array to store the anagram mappings.
+        var mappings = [Int](repeating: 0, count: nums1.count)
+        for i in 0..<nums1.count {
+            mappings[i] = valueToPos[nums1[i]]!
+        }
+
+        return mappings
     }
 }
 ```
@@ -288,26 +404,113 @@ class Solution {
     anagramMappings(nums1, nums2) {
         const bitsToShift = 7;
         const numToGetLastBits = (1 << bitsToShift) - 1;
-        
+
         // Store the index within the integer itself.
         for (let i = 0; i < nums1.length; i++) {
             nums1[i] = (nums1[i] << bitsToShift) + i;
             nums2[i] = (nums2[i] << bitsToShift) + i;
         }
-        
+
         // Sort both arrays so that the original integers end up at the same index.
         nums1.sort((a, b) => a - b);
         nums2.sort((a, b) => a - b);
-        
+
         // Array to store the anagram mappings.
         const mappings = new Array(nums1.length);
-        
+
         for (let i = 0; i < nums1.length; i++) {
             // Store the index in the second array corresponding to the integer index in the first array.
             mappings[nums1[i] & numToGetLastBits] = (nums2[i] & numToGetLastBits);
         }
-        
+
         return mappings;
+    }
+}
+```
+
+```go
+func anagramMappings(nums1 []int, nums2 []int) []int {
+    bitsToShift := 7
+    numToGetLastBits := (1 << bitsToShift) - 1
+
+    // Store the index within the integer itself.
+    for i := 0; i < len(nums1); i++ {
+        nums1[i] = (nums1[i] << bitsToShift) + i
+        nums2[i] = (nums2[i] << bitsToShift) + i
+    }
+
+    // Sort both slices so that the original integers end up at the same index.
+    sort.Ints(nums1)
+    sort.Ints(nums2)
+
+    // Slice to store the anagram mappings.
+    mappings := make([]int, len(nums1))
+
+    for i := 0; i < len(nums1); i++ {
+        // Store the index in the second slice corresponding to the integer index in the first slice.
+        mappings[nums1[i] & numToGetLastBits] = nums2[i] & numToGetLastBits
+    }
+
+    return mappings
+}
+```
+
+```kotlin
+class Solution {
+    fun anagramMappings(nums1: IntArray, nums2: IntArray): IntArray {
+        val bitsToShift = 7
+        val numToGetLastBits = (1 shl bitsToShift) - 1
+
+        // Store the index within the integer itself.
+        for (i in nums1.indices) {
+            nums1[i] = (nums1[i] shl bitsToShift) + i
+            nums2[i] = (nums2[i] shl bitsToShift) + i
+        }
+
+        // Sort both arrays so that the original integers end up at the same index.
+        nums1.sort()
+        nums2.sort()
+
+        // Array to store the anagram mappings.
+        val mappings = IntArray(nums1.size)
+
+        for (i in nums1.indices) {
+            // Store the index in the second array corresponding to the integer index in the first array.
+            mappings[nums1[i] and numToGetLastBits] = nums2[i] and numToGetLastBits
+        }
+
+        return mappings
+    }
+}
+```
+
+```swift
+class Solution {
+    func anagramMappings(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var nums1 = nums1
+        var nums2 = nums2
+        let bitsToShift = 7
+        let numToGetLastBits = (1 << bitsToShift) - 1
+
+        // Store the index within the integer itself.
+        for i in 0..<nums1.count {
+            nums1[i] = (nums1[i] << bitsToShift) + i
+            nums2[i] = (nums2[i] << bitsToShift) + i
+        }
+
+        // Sort both arrays so that the original integers end up at the same index.
+        nums1.sort()
+        nums2.sort()
+
+        // Array to store the anagram mappings.
+        var mappings = [Int](repeating: 0, count: nums1.count)
+
+        for i in 0..<nums1.count {
+            // Store the index in the second array corresponding to the integer index in the first array.
+            mappings[nums1[i] & numToGetLastBits] = nums2[i] & numToGetLastBits
+        }
+
+        return mappings
     }
 }
 ```

@@ -257,6 +257,150 @@ public class Solution {
 }
 ```
 
+```go
+func sortArray(nums []int) []int {
+    quickSort(nums, 0, len(nums)-1)
+    return nums
+}
+
+func quickSort(nums []int, left, right int) {
+    if right <= left+1 {
+        if right == left+1 && nums[right] < nums[left] {
+            nums[left], nums[right] = nums[right], nums[left]
+        }
+        return
+    }
+
+    j := partition(nums, left, right)
+    quickSort(nums, left, j-1)
+    quickSort(nums, j+1, right)
+}
+
+func partition(nums []int, left, right int) int {
+    mid := (left + right) >> 1
+    nums[mid], nums[left+1] = nums[left+1], nums[mid]
+
+    if nums[left] > nums[right] {
+        nums[left], nums[right] = nums[right], nums[left]
+    }
+    if nums[left+1] > nums[right] {
+        nums[left+1], nums[right] = nums[right], nums[left+1]
+    }
+    if nums[left] > nums[left+1] {
+        nums[left], nums[left+1] = nums[left+1], nums[left]
+    }
+
+    pivot := nums[left+1]
+    i := left + 1
+    j := right
+
+    for {
+        for i++; nums[i] < pivot; i++ {}
+        for j--; nums[j] > pivot; j-- {}
+        if i > j {
+            break
+        }
+        nums[i], nums[j] = nums[j], nums[i]
+    }
+
+    nums[left+1], nums[j] = nums[j], nums[left+1]
+    return j
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArray(nums: IntArray): IntArray {
+        quickSort(nums, 0, nums.size - 1)
+        return nums
+    }
+
+    private fun quickSort(nums: IntArray, left: Int, right: Int) {
+        if (right <= left + 1) {
+            if (right == left + 1 && nums[right] < nums[left]) {
+                nums[left] = nums[right].also { nums[right] = nums[left] }
+            }
+            return
+        }
+
+        val j = partition(nums, left, right)
+        quickSort(nums, left, j - 1)
+        quickSort(nums, j + 1, right)
+    }
+
+    private fun partition(nums: IntArray, left: Int, right: Int): Int {
+        val mid = (left + right) shr 1
+        nums[mid] = nums[left + 1].also { nums[left + 1] = nums[mid] }
+
+        if (nums[left] > nums[right]) nums[left] = nums[right].also { nums[right] = nums[left] }
+        if (nums[left + 1] > nums[right]) nums[left + 1] = nums[right].also { nums[right] = nums[left + 1] }
+        if (nums[left] > nums[left + 1]) nums[left] = nums[left + 1].also { nums[left + 1] = nums[left] }
+
+        val pivot = nums[left + 1]
+        var i = left + 1
+        var j = right
+
+        while (true) {
+            while (nums[++i] < pivot) {}
+            while (nums[--j] > pivot) {}
+            if (i > j) break
+            nums[i] = nums[j].also { nums[j] = nums[i] }
+        }
+
+        nums[left + 1] = nums[j]
+        nums[j] = pivot
+        return j
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        quickSort(&nums, 0, nums.count - 1)
+        return nums
+    }
+
+    private func quickSort(_ nums: inout [Int], _ left: Int, _ right: Int) {
+        if right <= left + 1 {
+            if right == left + 1 && nums[right] < nums[left] {
+                nums.swapAt(left, right)
+            }
+            return
+        }
+
+        let j = partition(&nums, left, right)
+        quickSort(&nums, left, j - 1)
+        quickSort(&nums, j + 1, right)
+    }
+
+    private func partition(_ nums: inout [Int], _ left: Int, _ right: Int) -> Int {
+        let mid = (left + right) >> 1
+        nums.swapAt(mid, left + 1)
+
+        if nums[left] > nums[right] { nums.swapAt(left, right) }
+        if nums[left + 1] > nums[right] { nums.swapAt(left + 1, right) }
+        if nums[left] > nums[left + 1] { nums.swapAt(left, left + 1) }
+
+        let pivot = nums[left + 1]
+        var i = left + 1
+        var j = right
+
+        while true {
+            repeat { i += 1 } while nums[i] < pivot
+            repeat { j -= 1 } while nums[j] > pivot
+            if i > j { break }
+            nums.swapAt(i, j)
+        }
+
+        nums[left + 1] = nums[j]
+        nums[j] = pivot
+        return j
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -486,6 +630,134 @@ public class Solution {
 
         while (k < right.Length) {
             arr[i++] = right[k++];
+        }
+    }
+}
+```
+
+```go
+func sortArray(nums []int) []int {
+    mergeSort(nums, 0, len(nums)-1)
+    return nums
+}
+
+func mergeSort(arr []int, l, r int) {
+    if l >= r {
+        return
+    }
+    m := (l + r) / 2
+    mergeSort(arr, l, m)
+    mergeSort(arr, m+1, r)
+    merge(arr, l, m, r)
+}
+
+func merge(arr []int, l, m, r int) {
+    left := make([]int, m-l+1)
+    right := make([]int, r-m)
+    copy(left, arr[l:m+1])
+    copy(right, arr[m+1:r+1])
+
+    i, j, k := 0, 0, l
+    for i < len(left) && j < len(right) {
+        if left[i] <= right[j] {
+            arr[k] = left[i]
+            i++
+        } else {
+            arr[k] = right[j]
+            j++
+        }
+        k++
+    }
+    for i < len(left) {
+        arr[k] = left[i]
+        i++
+        k++
+    }
+    for j < len(right) {
+        arr[k] = right[j]
+        j++
+        k++
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArray(nums: IntArray): IntArray {
+        mergeSort(nums, 0, nums.size - 1)
+        return nums
+    }
+
+    private fun mergeSort(arr: IntArray, l: Int, r: Int) {
+        if (l >= r) return
+        val m = (l + r) / 2
+        mergeSort(arr, l, m)
+        mergeSort(arr, m + 1, r)
+        merge(arr, l, m, r)
+    }
+
+    private fun merge(arr: IntArray, l: Int, m: Int, r: Int) {
+        val left = arr.sliceArray(l..m)
+        val right = arr.sliceArray(m + 1..r)
+
+        var i = 0
+        var j = 0
+        var k = l
+
+        while (i < left.size && j < right.size) {
+            if (left[i] <= right[j]) {
+                arr[k++] = left[i++]
+            } else {
+                arr[k++] = right[j++]
+            }
+        }
+        while (i < left.size) arr[k++] = left[i++]
+        while (j < right.size) arr[k++] = right[j++]
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        mergeSort(&nums, 0, nums.count - 1)
+        return nums
+    }
+
+    private func mergeSort(_ arr: inout [Int], _ l: Int, _ r: Int) {
+        if l >= r { return }
+        let m = (l + r) / 2
+        mergeSort(&arr, l, m)
+        mergeSort(&arr, m + 1, r)
+        merge(&arr, l, m, r)
+    }
+
+    private func merge(_ arr: inout [Int], _ l: Int, _ m: Int, _ r: Int) {
+        let left = Array(arr[l...m])
+        let right = Array(arr[m+1...r])
+
+        var i = 0, j = 0, k = l
+
+        while i < left.count && j < right.count {
+            if left[i] <= right[j] {
+                arr[k] = left[i]
+                i += 1
+            } else {
+                arr[k] = right[j]
+                j += 1
+            }
+            k += 1
+        }
+        while i < left.count {
+            arr[k] = left[i]
+            i += 1
+            k += 1
+        }
+        while j < right.count {
+            arr[k] = right[j]
+            j += 1
+            k += 1
         }
     }
 }
@@ -721,6 +993,116 @@ public class Solution {
 }
 ```
 
+```go
+func sortArray(nums []int) []int {
+    heapSort(nums)
+    return nums
+}
+
+func heapify(arr []int, n, i int) {
+    l := (i << 1) + 1
+    r := (i << 1) + 2
+    largestNode := i
+
+    if l < n && arr[l] > arr[largestNode] {
+        largestNode = l
+    }
+    if r < n && arr[r] > arr[largestNode] {
+        largestNode = r
+    }
+    if largestNode != i {
+        arr[i], arr[largestNode] = arr[largestNode], arr[i]
+        heapify(arr, n, largestNode)
+    }
+}
+
+func heapSort(arr []int) {
+    n := len(arr)
+    for i := n/2 - 1; i >= 0; i-- {
+        heapify(arr, n, i)
+    }
+    for i := n - 1; i > 0; i-- {
+        arr[0], arr[i] = arr[i], arr[0]
+        heapify(arr, i, 0)
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArray(nums: IntArray): IntArray {
+        heapSort(nums)
+        return nums
+    }
+
+    private fun heapify(arr: IntArray, n: Int, i: Int) {
+        val l = (i shl 1) + 1
+        val r = (i shl 1) + 2
+        var largestNode = i
+
+        if (l < n && arr[l] > arr[largestNode]) {
+            largestNode = l
+        }
+        if (r < n && arr[r] > arr[largestNode]) {
+            largestNode = r
+        }
+        if (largestNode != i) {
+            arr[i] = arr[largestNode].also { arr[largestNode] = arr[i] }
+            heapify(arr, n, largestNode)
+        }
+    }
+
+    private fun heapSort(arr: IntArray) {
+        val n = arr.size
+        for (i in n / 2 - 1 downTo 0) {
+            heapify(arr, n, i)
+        }
+        for (i in n - 1 downTo 1) {
+            arr[0] = arr[i].also { arr[i] = arr[0] }
+            heapify(arr, i, 0)
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        heapSort(&nums)
+        return nums
+    }
+
+    private func heapify(_ arr: inout [Int], _ n: Int, _ i: Int) {
+        let l = (i << 1) + 1
+        let r = (i << 1) + 2
+        var largestNode = i
+
+        if l < n && arr[l] > arr[largestNode] {
+            largestNode = l
+        }
+        if r < n && arr[r] > arr[largestNode] {
+            largestNode = r
+        }
+        if largestNode != i {
+            arr.swapAt(i, largestNode)
+            heapify(&arr, n, largestNode)
+        }
+    }
+
+    private func heapSort(_ arr: inout [Int]) {
+        let n = arr.count
+        for i in stride(from: n / 2 - 1, through: 0, by: -1) {
+            heapify(&arr, n, i)
+        }
+        for i in stride(from: n - 1, through: 1, by: -1) {
+            arr.swapAt(0, i)
+            heapify(&arr, i, 0)
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -877,6 +1259,99 @@ public class Solution {
             if (!count.ContainsKey(val)) continue;
             while (count[val]-- > 0) {
                 nums[index++] = val;
+            }
+        }
+    }
+}
+```
+
+```go
+func sortArray(nums []int) []int {
+    countingSort(nums)
+    return nums
+}
+
+func countingSort(nums []int) {
+    count := make(map[int]int)
+    minVal, maxVal := nums[0], nums[0]
+
+    for _, val := range nums {
+        count[val]++
+        if val < minVal {
+            minVal = val
+        }
+        if val > maxVal {
+            maxVal = val
+        }
+    }
+
+    index := 0
+    for val := minVal; val <= maxVal; val++ {
+        for count[val] > 0 {
+            nums[index] = val
+            index++
+            count[val]--
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArray(nums: IntArray): IntArray {
+        countingSort(nums)
+        return nums
+    }
+
+    private fun countingSort(nums: IntArray) {
+        val count = HashMap<Int, Int>()
+        var minVal = Int.MAX_VALUE
+        var maxVal = Int.MIN_VALUE
+
+        for (v in nums) {
+            count[v] = count.getOrDefault(v, 0) + 1
+            minVal = minOf(minVal, v)
+            maxVal = maxOf(maxVal, v)
+        }
+
+        var index = 0
+        for (v in minVal..maxVal) {
+            var c = count.getOrDefault(v, 0)
+            while (c > 0) {
+                nums[index++] = v
+                c--
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        countingSort(&nums)
+        return nums
+    }
+
+    private func countingSort(_ nums: inout [Int]) {
+        var count = [Int: Int]()
+        var minVal = Int.max
+        var maxVal = Int.min
+
+        for val in nums {
+            count[val, default: 0] += 1
+            minVal = min(minVal, val)
+            maxVal = max(maxVal, val)
+        }
+
+        var index = 0
+        for val in minVal...maxVal {
+            var c = count[val] ?? 0
+            while c > 0 {
+                nums[index] = val
+                index += 1
+                c -= 1
             }
         }
     }
@@ -1214,6 +1689,180 @@ public class Solution {
 }
 ```
 
+```go
+func sortArray(nums []int) []int {
+    var negatives, positives []int
+
+    for _, num := range nums {
+        if num < 0 {
+            negatives = append(negatives, -num)
+        } else {
+            positives = append(positives, num)
+        }
+    }
+
+    if len(negatives) > 0 {
+        radixSort(negatives)
+        for i, j := 0, len(negatives)-1; i < j; i, j = i+1, j-1 {
+            negatives[i], negatives[j] = negatives[j], negatives[i]
+        }
+        for i := range negatives {
+            negatives[i] = -negatives[i]
+        }
+    }
+
+    if len(positives) > 0 {
+        radixSort(positives)
+    }
+
+    return append(negatives, positives...)
+}
+
+func radixSort(arr []int) {
+    maxElement := 0
+    for _, num := range arr {
+        if num > maxElement {
+            maxElement = num
+        }
+    }
+
+    d := 1
+    for maxElement/d > 0 {
+        countSort(arr, d)
+        d *= 10
+    }
+}
+
+func countSort(arr []int, d int) {
+    n := len(arr)
+    count := make([]int, 10)
+    for _, num := range arr {
+        count[(num/d)%10]++
+    }
+    for i := 1; i < 10; i++ {
+        count[i] += count[i-1]
+    }
+
+    res := make([]int, n)
+    for i := n - 1; i >= 0; i-- {
+        idx := (arr[i] / d) % 10
+        res[count[idx]-1] = arr[i]
+        count[idx]--
+    }
+
+    copy(arr, res)
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArray(nums: IntArray): IntArray {
+        val negatives = mutableListOf<Int>()
+        val positives = mutableListOf<Int>()
+
+        for (num in nums) {
+            if (num < 0) negatives.add(-num)
+            else positives.add(num)
+        }
+
+        if (negatives.isNotEmpty()) {
+            radixSort(negatives)
+            negatives.reverse()
+            for (i in negatives.indices) {
+                negatives[i] = -negatives[i]
+            }
+        }
+
+        if (positives.isNotEmpty()) {
+            radixSort(positives)
+        }
+
+        return (negatives + positives).toIntArray()
+    }
+
+    private fun radixSort(arr: MutableList<Int>) {
+        val maxElement = arr.maxOrNull() ?: return
+        var d = 1
+        while (maxElement / d > 0) {
+            countSort(arr, d)
+            d *= 10
+        }
+    }
+
+    private fun countSort(arr: MutableList<Int>, d: Int) {
+        val n = arr.size
+        val count = IntArray(10)
+        for (num in arr) {
+            count[(num / d) % 10]++
+        }
+        for (i in 1 until 10) {
+            count[i] += count[i - 1]
+        }
+
+        val res = IntArray(n)
+        for (i in n - 1 downTo 0) {
+            val idx = (arr[i] / d) % 10
+            res[count[idx] - 1] = arr[i]
+            count[idx]--
+        }
+
+        for (i in 0 until n) {
+            arr[i] = res[i]
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArray(_ nums: [Int]) -> [Int] {
+        var negatives = nums.filter { $0 < 0 }.map { -$0 }
+        var positives = nums.filter { $0 >= 0 }
+
+        if !negatives.isEmpty {
+            radixSort(&negatives)
+            negatives.reverse()
+            negatives = negatives.map { -$0 }
+        }
+
+        if !positives.isEmpty {
+            radixSort(&positives)
+        }
+
+        return negatives + positives
+    }
+
+    private func radixSort(_ arr: inout [Int]) {
+        guard let maxElement = arr.max() else { return }
+        var d = 1
+        while maxElement / d > 0 {
+            countSort(&arr, d)
+            d *= 10
+        }
+    }
+
+    private func countSort(_ arr: inout [Int], _ d: Int) {
+        let n = arr.count
+        var count = [Int](repeating: 0, count: 10)
+        for num in arr {
+            count[(num / d) % 10] += 1
+        }
+        for i in 1..<10 {
+            count[i] += count[i - 1]
+        }
+
+        var res = [Int](repeating: 0, count: n)
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            let idx = (arr[i] / d) % 10
+            res[count[idx] - 1] = arr[i]
+            count[idx] -= 1
+        }
+
+        arr = res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1360,6 +2009,88 @@ public class Solution {
                 nums[j + gap] = tmp;
             }
             gap /= 2;
+        }
+    }
+}
+```
+
+```go
+func sortArray(nums []int) []int {
+    n := len(nums)
+    if n == 1 {
+        return nums
+    }
+    shellSort(nums, n)
+    return nums
+}
+
+func shellSort(nums []int, n int) {
+    gap := n / 2
+    for gap >= 1 {
+        for i := gap; i < n; i++ {
+            tmp := nums[i]
+            j := i - gap
+            for j >= 0 && nums[j] > tmp {
+                nums[j+gap] = nums[j]
+                j -= gap
+            }
+            nums[j+gap] = tmp
+        }
+        gap /= 2
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArray(nums: IntArray): IntArray {
+        val n = nums.size
+        if (n == 1) return nums
+        shellSort(nums, n)
+        return nums
+    }
+
+    private fun shellSort(nums: IntArray, n: Int) {
+        var gap = n / 2
+        while (gap >= 1) {
+            for (i in gap until n) {
+                val tmp = nums[i]
+                var j = i - gap
+                while (j >= 0 && nums[j] > tmp) {
+                    nums[j + gap] = nums[j]
+                    j -= gap
+                }
+                nums[j + gap] = tmp
+            }
+            gap /= 2
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        let n = nums.count
+        if n == 1 { return nums }
+        shellSort(&nums, n)
+        return nums
+    }
+
+    private func shellSort(_ nums: inout [Int], _ n: Int) {
+        var gap = n / 2
+        while gap >= 1 {
+            for i in gap..<n {
+                let tmp = nums[i]
+                var j = i - gap
+                while j >= 0 && nums[j] > tmp {
+                    nums[j + gap] = nums[j]
+                    j -= gap
+                }
+                nums[j + gap] = tmp
+            }
+            gap /= 2
         }
     }
 }

@@ -98,6 +98,100 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MissingNumber(int[] arr) {
+        int n = arr.Length;
+
+        // Get the difference `difference`.
+        int difference = (arr[n - 1] - arr[0]) / n;
+
+        // The expected element equals the starting element.
+        int expected = arr[0];
+
+        foreach (int val in arr) {
+            // Return the expected value that doesn't match val.
+            if (val != expected) return expected;
+
+            // Next element will be expected element + `difference`.
+            expected += difference;
+        }
+        return expected;
+    }
+}
+```
+
+```go
+func missingNumber(arr []int) int {
+    n := len(arr)
+
+    // Get the difference `difference`.
+    difference := (arr[n-1] - arr[0]) / n
+
+    // The expected element equals the starting element.
+    expected := arr[0]
+
+    for _, val := range arr {
+        // Return the expected value that doesn't match val.
+        if val != expected {
+            return expected
+        }
+
+        // Next element will be expected element + `difference`.
+        expected += difference
+    }
+    return expected
+}
+```
+
+```kotlin
+class Solution {
+    fun missingNumber(arr: IntArray): Int {
+        val n = arr.size
+
+        // Get the difference `difference`.
+        val difference = (arr[n - 1] - arr[0]) / n
+
+        // The expected element equals the starting element.
+        var expected = arr[0]
+
+        for (value in arr) {
+            // Return the expected value that doesn't match val.
+            if (value != expected) return expected
+
+            // Next element will be expected element + `difference`.
+            expected += difference
+        }
+        return expected
+    }
+}
+```
+
+```swift
+class Solution {
+    func missingNumber(_ arr: [Int]) -> Int {
+        let n = arr.count
+
+        // Get the difference `difference`.
+        let difference = (arr[n - 1] - arr[0]) / n
+
+        // The expected element equals the starting element.
+        var expected = arr[0]
+
+        for val in arr {
+            // Return the expected value that doesn't match val.
+            if val != expected {
+                return expected
+            }
+
+            // Next element will be expected element + `difference`.
+            expected += difference
+        }
+        return expected
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,6 +334,127 @@ class Solution {
         // Index `lo` will be the position with the first incorrect number.
         // Return the value that was supposed to be at this index.
         return arr[0] + difference * lo;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MissingNumber(int[] arr) {
+        int n = arr.Length;
+
+        // Get the difference `difference`.
+        int difference = (arr[n - 1] - arr[0]) / n;
+        int lo = 0;
+        int hi = n - 1;
+
+        // Basic binary search template.
+        while (lo < hi) {
+            int mid = (lo + hi) / 2;
+
+            // All numbers up to `mid` have no missing number, so search on the right side.
+            if (arr[mid] == arr[0] + mid * difference) {
+                lo = mid + 1;
+            }
+            // A number is missing before `mid` inclusive of `mid` itself.
+            else {
+                hi = mid;
+            }
+        }
+
+        // Index `lo` will be the position with the first incorrect number.
+        // Return the value that was supposed to be at this index.
+        return arr[0] + difference * lo;
+    }
+}
+```
+
+```go
+func missingNumber(arr []int) int {
+    n := len(arr)
+
+    // Get the difference `difference`.
+    difference := (arr[n-1] - arr[0]) / n
+    lo := 0
+    hi := n - 1
+
+    // Basic binary search template.
+    for lo < hi {
+        mid := (lo + hi) / 2
+
+        // All numbers up to `mid` have no missing number, so search on the right side.
+        if arr[mid] == arr[0]+mid*difference {
+            lo = mid + 1
+        } else {
+            // A number is missing before `mid` inclusive of `mid` itself.
+            hi = mid
+        }
+    }
+
+    // Index `lo` will be the position with the first incorrect number.
+    // Return the value that was supposed to be at this index.
+    return arr[0] + difference*lo
+}
+```
+
+```kotlin
+class Solution {
+    fun missingNumber(arr: IntArray): Int {
+        val n = arr.size
+
+        // Get the difference `difference`.
+        val difference = (arr[n - 1] - arr[0]) / n
+        var lo = 0
+        var hi = n - 1
+
+        // Basic binary search template.
+        while (lo < hi) {
+            val mid = (lo + hi) / 2
+
+            // All numbers up to `mid` have no missing number, so search on the right side.
+            if (arr[mid] == arr[0] + mid * difference) {
+                lo = mid + 1
+            }
+            // A number is missing before `mid` inclusive of `mid` itself.
+            else {
+                hi = mid
+            }
+        }
+
+        // Index `lo` will be the position with the first incorrect number.
+        // Return the value that was supposed to be at this index.
+        return arr[0] + difference * lo
+    }
+}
+```
+
+```swift
+class Solution {
+    func missingNumber(_ arr: [Int]) -> Int {
+        let n = arr.count
+
+        // Get the difference `difference`.
+        let difference = (arr[n - 1] - arr[0]) / n
+        var lo = 0
+        var hi = n - 1
+
+        // Basic binary search template.
+        while lo < hi {
+            let mid = (lo + hi) / 2
+
+            // All numbers up to `mid` have no missing number, so search on the right side.
+            if arr[mid] == arr[0] + mid * difference {
+                lo = mid + 1
+            }
+            // A number is missing before `mid` inclusive of `mid` itself.
+            else {
+                hi = mid
+            }
+        }
+
+        // Index `lo` will be the position with the first incorrect number.
+        // Return the value that was supposed to be at this index.
+        return arr[0] + difference * lo
     }
 }
 ```

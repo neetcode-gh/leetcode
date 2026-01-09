@@ -160,6 +160,100 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func rob(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    res := root.Val
+    if root.Left != nil {
+        res += rob(root.Left.Left) + rob(root.Left.Right)
+    }
+    if root.Right != nil {
+        res += rob(root.Right.Left) + rob(root.Right.Right)
+    }
+
+    return max(res, rob(root.Left)+rob(root.Right))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun rob(root: TreeNode?): Int {
+        if (root == null) return 0
+
+        var res = root.`val`
+        if (root.left != null) {
+            res += rob(root.left?.left) + rob(root.left?.right)
+        }
+        if (root.right != null) {
+            res += rob(root.right?.left) + rob(root.right?.right)
+        }
+
+        return maxOf(res, rob(root.left) + rob(root.right))
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func rob(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+
+        var res = root.val
+        if let left = root.left {
+            res += rob(left.left) + rob(left.right)
+        }
+        if let right = root.right {
+            res += rob(right.left) + rob(right.right)
+        }
+
+        return max(res, rob(root.left) + rob(root.right))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -371,6 +465,133 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func rob(root *TreeNode) int {
+    cache := make(map[*TreeNode]int)
+
+    var dfs func(node *TreeNode) int
+    dfs = func(node *TreeNode) int {
+        if node == nil {
+            return 0
+        }
+        if val, ok := cache[node]; ok {
+            return val
+        }
+
+        res := node.Val
+        if node.Left != nil {
+            res += dfs(node.Left.Left) + dfs(node.Left.Right)
+        }
+        if node.Right != nil {
+            res += dfs(node.Right.Left) + dfs(node.Right.Right)
+        }
+
+        res = max(res, dfs(node.Left)+dfs(node.Right))
+        cache[node] = res
+        return res
+    }
+
+    return dfs(root)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private val cache = HashMap<TreeNode?, Int>()
+
+    fun rob(root: TreeNode?): Int {
+        return dfs(root)
+    }
+
+    private fun dfs(root: TreeNode?): Int {
+        if (root == null) return 0
+        if (cache.containsKey(root)) return cache[root]!!
+
+        var res = root.`val`
+        if (root.left != null) {
+            res += dfs(root.left?.left) + dfs(root.left?.right)
+        }
+        if (root.right != null) {
+            res += dfs(root.right?.left) + dfs(root.right?.right)
+        }
+
+        res = maxOf(res, dfs(root.left) + dfs(root.right))
+        cache[root] = res
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func rob(_ root: TreeNode?) -> Int {
+        var cache = [ObjectIdentifier: Int]()
+
+        func dfs(_ node: TreeNode?) -> Int {
+            guard let node = node else { return 0 }
+            let id = ObjectIdentifier(node)
+            if let cached = cache[id] {
+                return cached
+            }
+
+            var res = node.val
+            if let left = node.left {
+                res += dfs(left.left) + dfs(left.right)
+            }
+            if let right = node.right {
+                res += dfs(right.left) + dfs(right.right)
+            }
+
+            res = max(res, dfs(node.left) + dfs(node.right))
+            cache[id] = res
+            return res
+        }
+
+        return dfs(root)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +772,113 @@ public class Solution {
         int withoutRoot = Math.Max(left.withRoot, left.withoutRoot) + Math.Max(right.withRoot, right.withoutRoot);
 
         return (withRoot, withoutRoot);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func rob(root *TreeNode) int {
+    result := dfs(root)
+    return max(result[0], result[1])
+}
+
+func dfs(root *TreeNode) [2]int {
+    if root == nil {
+        return [2]int{0, 0}
+    }
+
+    leftPair := dfs(root.Left)
+    rightPair := dfs(root.Right)
+
+    withRoot := root.Val + leftPair[1] + rightPair[1]
+    withoutRoot := max(leftPair[0], leftPair[1]) + max(rightPair[0], rightPair[1])
+
+    return [2]int{withRoot, withoutRoot}
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun rob(root: TreeNode?): Int {
+        val result = dfs(root)
+        return maxOf(result[0], result[1])
+    }
+
+    private fun dfs(root: TreeNode?): IntArray {
+        if (root == null) {
+            return intArrayOf(0, 0)
+        }
+
+        val leftPair = dfs(root.left)
+        val rightPair = dfs(root.right)
+
+        val withRoot = root.`val` + leftPair[1] + rightPair[1]
+        val withoutRoot = maxOf(leftPair[0], leftPair[1]) + maxOf(rightPair[0], rightPair[1])
+
+        return intArrayOf(withRoot, withoutRoot)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func rob(_ root: TreeNode?) -> Int {
+        let result = dfs(root)
+        return max(result.0, result.1)
+    }
+
+    private func dfs(_ root: TreeNode?) -> (Int, Int) {
+        guard let root = root else {
+            return (0, 0)
+        }
+
+        let leftPair = dfs(root.left)
+        let rightPair = dfs(root.right)
+
+        let withRoot = root.val + leftPair.1 + rightPair.1
+        let withoutRoot = max(leftPair.0, leftPair.1) + max(rightPair.0, rightPair.1)
+
+        return (withRoot, withoutRoot)
     }
 }
 ```

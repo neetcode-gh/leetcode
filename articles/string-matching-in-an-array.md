@@ -137,6 +137,52 @@ func stringMatching(words []string) []string {
 }
 ```
 
+```kotlin
+class Solution {
+    fun stringMatching(words: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+
+        for (i in words.indices) {
+            for (j in words.indices) {
+                if (i == j) {
+                    continue
+                }
+
+                if (words[j].contains(words[i])) {
+                    res.add(words[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func stringMatching(_ words: [String]) -> [String] {
+        var res = [String]()
+
+        for i in 0..<words.count {
+            for j in 0..<words.count {
+                if i == j {
+                    continue
+                }
+
+                if words[j].contains(words[i]) {
+                    res.append(words[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,6 +319,46 @@ func stringMatching(words []string) []string {
     }
 
     return res
+}
+```
+
+```kotlin
+class Solution {
+    fun stringMatching(words: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+        val sortedWords = words.sortedBy { it.length }
+
+        for (i in sortedWords.indices) {
+            for (j in i + 1 until sortedWords.size) {
+                if (sortedWords[j].contains(sortedWords[i])) {
+                    res.add(sortedWords[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func stringMatching(_ words: [String]) -> [String] {
+        var res = [String]()
+        let sortedWords = words.sorted { $0.count < $1.count }
+
+        for i in 0..<sortedWords.count {
+            for j in (i + 1)..<sortedWords.count {
+                if sortedWords[j].contains(sortedWords[i]) {
+                    res.append(sortedWords[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
 }
 ```
 
@@ -633,6 +719,128 @@ func stringMatching(words []string) []string {
     }
 
     return res
+}
+```
+
+```kotlin
+class Solution {
+    fun stringMatching(words: Array<String>): List<String> {
+        fun kmp(word1: String, word2: String): Int {
+            val lps = IntArray(word2.length)
+            var prevLPS = 0
+            var i = 1
+
+            while (i < word2.length) {
+                if (word2[i] == word2[prevLPS]) {
+                    lps[i] = prevLPS + 1
+                    prevLPS++
+                    i++
+                } else if (prevLPS == 0) {
+                    lps[i] = 0
+                    i++
+                } else {
+                    prevLPS = lps[prevLPS - 1]
+                }
+            }
+
+            i = 0
+            var j = 0
+            while (i < word1.length) {
+                if (word1[i] == word2[j]) {
+                    i++
+                    j++
+                } else {
+                    if (j == 0) {
+                        i++
+                    } else {
+                        j = lps[j - 1]
+                    }
+                }
+
+                if (j == word2.length) {
+                    return i - word2.length
+                }
+            }
+
+            return -1
+        }
+
+        val res = mutableListOf<String>()
+        val sortedWords = words.sortedBy { it.length }
+
+        for (i in sortedWords.indices) {
+            for (j in i + 1 until sortedWords.size) {
+                if (kmp(sortedWords[j], sortedWords[i]) != -1) {
+                    res.add(sortedWords[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func stringMatching(_ words: [String]) -> [String] {
+        func kmp(_ word1: String, _ word2: String) -> Int {
+            let arr1 = Array(word1)
+            let arr2 = Array(word2)
+            var lps = [Int](repeating: 0, count: arr2.count)
+            var prevLPS = 0
+            var i = 1
+
+            while i < arr2.count {
+                if arr2[i] == arr2[prevLPS] {
+                    lps[i] = prevLPS + 1
+                    prevLPS += 1
+                    i += 1
+                } else if prevLPS == 0 {
+                    lps[i] = 0
+                    i += 1
+                } else {
+                    prevLPS = lps[prevLPS - 1]
+                }
+            }
+
+            i = 0
+            var j = 0
+            while i < arr1.count {
+                if arr1[i] == arr2[j] {
+                    i += 1
+                    j += 1
+                } else {
+                    if j == 0 {
+                        i += 1
+                    } else {
+                        j = lps[j - 1]
+                    }
+                }
+
+                if j == arr2.count {
+                    return i - arr2.count
+                }
+            }
+
+            return -1
+        }
+
+        var res = [String]()
+        let sortedWords = words.sorted { $0.count < $1.count }
+
+        for i in 0..<sortedWords.count {
+            for j in (i + 1)..<sortedWords.count {
+                if kmp(sortedWords[j], sortedWords[i]) != -1 {
+                    res.append(sortedWords[i])
+                    break
+                }
+            }
+        }
+
+        return res
+    }
 }
 ```
 

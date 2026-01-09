@@ -145,6 +145,162 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int INF = int.MaxValue / 2;
+    private string s;
+    private int[,,,] dp;
+
+    public int GetLengthOfOptimalCompression(string s, int k) {
+        this.s = s;
+        int n = s.Length;
+        dp = new int[n + 1, k + 1, 27, n + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                for (int p = 0; p < 27; p++) {
+                    for (int c = 0; c <= n; c++) {
+                        dp[i, j, p, c] = -1;
+                    }
+                }
+            }
+        }
+        return Count(0, k, 26, 0);
+    }
+
+    private int Count(int i, int k, int prev, int prevCnt) {
+        if (k < 0) return INF;
+        if (i == s.Length) return 0;
+        if (dp[i, k, prev, prevCnt] != -1) return dp[i, k, prev, prevCnt];
+
+        int res;
+        if (prev == (s[i] - 'a')) {
+            int incr = (prevCnt == 1 || prevCnt == 9 || prevCnt == 99) ? 1 : 0;
+            res = incr + Count(i + 1, k, prev, prevCnt + 1);
+        } else {
+            res = 1 + Count(i + 1, k, s[i] - 'a', 1);
+            if (k > 0) {
+                res = Math.Min(res, Count(i + 1, k - 1, prev, prevCnt));
+            }
+        }
+
+        return dp[i, k, prev, prevCnt] = res;
+    }
+}
+```
+
+```go
+func getLengthOfOptimalCompression(s string, k int) int {
+    const INF = 1 << 30
+    n := len(s)
+    dp := make(map[string]int)
+
+    var count func(i, k, prev, prevCnt int) int
+    count = func(i, k, prev, prevCnt int) int {
+        if k < 0 {
+            return INF
+        }
+        if i == n {
+            return 0
+        }
+        key := fmt.Sprintf("%d,%d,%d,%d", i, k, prev, prevCnt)
+        if val, ok := dp[key]; ok {
+            return val
+        }
+
+        var res int
+        if prev == int(s[i]-'a') {
+            incr := 0
+            if prevCnt == 1 || prevCnt == 9 || prevCnt == 99 {
+                incr = 1
+            }
+            res = incr + count(i+1, k, prev, prevCnt+1)
+        } else {
+            res = 1 + count(i+1, k, int(s[i]-'a'), 1)
+            if k > 0 {
+                res = min(res, count(i+1, k-1, prev, prevCnt))
+            }
+        }
+
+        dp[key] = res
+        return res
+    }
+
+    return count(0, k, 26, 0)
+}
+```
+
+```kotlin
+class Solution {
+    private val INF = Int.MAX_VALUE / 2
+    private lateinit var s: String
+    private lateinit var dp: Array<Array<Array<IntArray>>>
+
+    fun getLengthOfOptimalCompression(s: String, k: Int): Int {
+        this.s = s
+        val n = s.length
+        dp = Array(n + 1) { Array(k + 1) { Array(27) { IntArray(n + 1) { -1 } } } }
+        return count(0, k, 26, 0)
+    }
+
+    private fun count(i: Int, k: Int, prev: Int, prevCnt: Int): Int {
+        if (k < 0) return INF
+        if (i == s.length) return 0
+        if (dp[i][k][prev][prevCnt] != -1) return dp[i][k][prev][prevCnt]
+
+        val res: Int
+        if (prev == s[i] - 'a') {
+            val incr = if (prevCnt == 1 || prevCnt == 9 || prevCnt == 99) 1 else 0
+            res = incr + count(i + 1, k, prev, prevCnt + 1)
+        } else {
+            var temp = 1 + count(i + 1, k, s[i] - 'a', 1)
+            if (k > 0) {
+                temp = minOf(temp, count(i + 1, k - 1, prev, prevCnt))
+            }
+            res = temp
+        }
+
+        dp[i][k][prev][prevCnt] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private let INF = Int.max / 2
+    private var s: [Character] = []
+    private var dp: [[[[Int]]]] = []
+
+    func getLengthOfOptimalCompression(_ s: String, _ k: Int) -> Int {
+        self.s = Array(s)
+        let n = s.count
+        dp = Array(repeating: Array(repeating: Array(repeating: Array(repeating: -1, count: n + 1), count: 27), count: k + 1), count: n + 1)
+        return count(0, k, 26, 0)
+    }
+
+    private func count(_ i: Int, _ k: Int, _ prev: Int, _ prevCnt: Int) -> Int {
+        if k < 0 { return INF }
+        if i == s.count { return 0 }
+        if dp[i][k][prev][prevCnt] != -1 { return dp[i][k][prev][prevCnt] }
+
+        var res: Int
+        let curr = Int(s[i].asciiValue! - Character("a").asciiValue!)
+        if prev == curr {
+            let incr = (prevCnt == 1 || prevCnt == 9 || prevCnt == 99) ? 1 : 0
+            res = incr + count(i + 1, k, prev, prevCnt + 1)
+        } else {
+            res = 1 + count(i + 1, k, curr, 1)
+            if k > 0 {
+                res = min(res, count(i + 1, k - 1, prev, prevCnt))
+            }
+        }
+
+        dp[i][k][prev][prevCnt] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -303,6 +459,167 @@ class Solution {
         };
 
         return dfs(0, k);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int n;
+    private int[,] dp;
+
+    public int GetLengthOfOptimalCompression(string s, int k) {
+        n = s.Length;
+        dp = new int[n + 1, k + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, k, s);
+    }
+
+    private int Dfs(int i, int k, string s) {
+        if (n - i <= k) return 0;
+        if (dp[i, k] != -1) return dp[i, k];
+
+        int res = 150;
+        if (k > 0) res = Dfs(i + 1, k - 1, s);
+
+        int freq = 0, delCnt = 0, compLen = 1;
+        for (int j = i; j < n; j++) {
+            if (s[i] == s[j]) {
+                if (freq == 1 || freq == 9 || freq == 99) compLen++;
+                freq++;
+            } else {
+                delCnt++;
+                if (delCnt > k) break;
+            }
+            res = Math.Min(res, compLen + Dfs(j + 1, k - delCnt, s));
+        }
+        dp[i, k] = res;
+        return res;
+    }
+}
+```
+
+```go
+func getLengthOfOptimalCompression(s string, k int) int {
+    n := len(s)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, k int) int
+    dfs = func(i, k int) int {
+        if n-i <= k {
+            return 0
+        }
+        if dp[i][k] != -1 {
+            return dp[i][k]
+        }
+
+        res := 150
+        if k > 0 {
+            res = dfs(i+1, k-1)
+        }
+
+        freq, delCnt, compLen := 0, 0, 1
+        for j := i; j < n; j++ {
+            if s[i] == s[j] {
+                if freq == 1 || freq == 9 || freq == 99 {
+                    compLen++
+                }
+                freq++
+            } else {
+                delCnt++
+                if delCnt > k {
+                    break
+                }
+            }
+            res = min(res, compLen+dfs(j+1, k-delCnt))
+        }
+        dp[i][k] = res
+        return res
+    }
+
+    return dfs(0, k)
+}
+```
+
+```kotlin
+class Solution {
+    private var n = 0
+    private lateinit var dp: Array<IntArray>
+
+    fun getLengthOfOptimalCompression(s: String, k: Int): Int {
+        n = s.length
+        dp = Array(n + 1) { IntArray(k + 1) { -1 } }
+        return dfs(0, k, s)
+    }
+
+    private fun dfs(i: Int, k: Int, s: String): Int {
+        if (n - i <= k) return 0
+        if (dp[i][k] != -1) return dp[i][k]
+
+        var res = 150
+        if (k > 0) res = dfs(i + 1, k - 1, s)
+
+        var freq = 0
+        var delCnt = 0
+        var compLen = 1
+        for (j in i until n) {
+            if (s[i] == s[j]) {
+                if (freq == 1 || freq == 9 || freq == 99) compLen++
+                freq++
+            } else {
+                delCnt++
+                if (delCnt > k) break
+            }
+            res = minOf(res, compLen + dfs(j + 1, k - delCnt, s))
+        }
+        dp[i][k] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var n = 0
+    private var dp: [[Int]] = []
+
+    func getLengthOfOptimalCompression(_ s: String, _ k: Int) -> Int {
+        let sArr = Array(s)
+        n = sArr.count
+        dp = Array(repeating: Array(repeating: -1, count: k + 1), count: n + 1)
+        return dfs(0, k, sArr)
+    }
+
+    private func dfs(_ i: Int, _ k: Int, _ s: [Character]) -> Int {
+        if n - i <= k { return 0 }
+        if dp[i][k] != -1 { return dp[i][k] }
+
+        var res = 150
+        if k > 0 { res = dfs(i + 1, k - 1, s) }
+
+        var freq = 0, delCnt = 0, compLen = 1
+        for j in i..<n {
+            if s[i] == s[j] {
+                if freq == 1 || freq == 9 || freq == 99 { compLen += 1 }
+                freq += 1
+            } else {
+                delCnt += 1
+                if delCnt > k { break }
+            }
+            res = min(res, compLen + dfs(j + 1, k - delCnt, s))
+        }
+        dp[i][k] = res
+        return res
     }
 }
 ```
@@ -474,6 +791,167 @@ class Solution {
         }
 
         return dp[0][k];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int GetLengthOfOptimalCompression(string s, int k) {
+        int n = s.Length;
+        int[,] dp = new int[n + 1, k + 1];
+
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = 150;
+            }
+        }
+
+        for (int remK = 0; remK <= k; remK++) {
+            dp[n, remK] = 0;
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int remK = 0; remK <= k; remK++) {
+                if (remK > 0) {
+                    dp[i, remK] = dp[i + 1, remK - 1];
+                }
+
+                int freq = 0, delCnt = 0, compLen = 1;
+                for (int j = i; j < n; j++) {
+                    if (s[i] == s[j]) {
+                        if (freq == 1 || freq == 9 || freq == 99) {
+                            compLen++;
+                        }
+                        freq++;
+                    } else {
+                        delCnt++;
+                        if (delCnt > remK) break;
+                    }
+                    dp[i, remK] = Math.Min(dp[i, remK], compLen + dp[j + 1, remK - delCnt]);
+                }
+            }
+        }
+
+        return dp[0, k];
+    }
+}
+```
+
+```go
+func getLengthOfOptimalCompression(s string, k int) int {
+    n := len(s)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+        for j := range dp[i] {
+            dp[i][j] = 150
+        }
+    }
+
+    for remK := 0; remK <= k; remK++ {
+        dp[n][remK] = 0
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for remK := 0; remK <= k; remK++ {
+            if remK > 0 {
+                dp[i][remK] = dp[i+1][remK-1]
+            }
+
+            freq, delCnt, compLen := 0, 0, 1
+            for j := i; j < n; j++ {
+                if s[i] == s[j] {
+                    if freq == 1 || freq == 9 || freq == 99 {
+                        compLen++
+                    }
+                    freq++
+                } else {
+                    delCnt++
+                    if delCnt > remK {
+                        break
+                    }
+                }
+                dp[i][remK] = min(dp[i][remK], compLen+dp[j+1][remK-delCnt])
+            }
+        }
+    }
+
+    return dp[0][k]
+}
+```
+
+```kotlin
+class Solution {
+    fun getLengthOfOptimalCompression(s: String, k: Int): Int {
+        val n = s.length
+        val dp = Array(n + 1) { IntArray(k + 1) { 150 } }
+
+        for (remK in 0..k) {
+            dp[n][remK] = 0
+        }
+
+        for (i in n - 1 downTo 0) {
+            for (remK in 0..k) {
+                if (remK > 0) {
+                    dp[i][remK] = dp[i + 1][remK - 1]
+                }
+
+                var freq = 0
+                var delCnt = 0
+                var compLen = 1
+                for (j in i until n) {
+                    if (s[i] == s[j]) {
+                        if (freq == 1 || freq == 9 || freq == 99) compLen++
+                        freq++
+                    } else {
+                        delCnt++
+                        if (delCnt > remK) break
+                    }
+                    dp[i][remK] = minOf(dp[i][remK], compLen + dp[j + 1][remK - delCnt])
+                }
+            }
+        }
+
+        return dp[0][k]
+    }
+}
+```
+
+```swift
+class Solution {
+    func getLengthOfOptimalCompression(_ s: String, _ k: Int) -> Int {
+        let sArr = Array(s)
+        let n = sArr.count
+        var dp = Array(repeating: Array(repeating: 150, count: k + 1), count: n + 1)
+
+        for remK in 0...k {
+            dp[n][remK] = 0
+        }
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for remK in 0...k {
+                if remK > 0 {
+                    dp[i][remK] = dp[i + 1][remK - 1]
+                }
+
+                var freq = 0, delCnt = 0, compLen = 1
+                for j in i..<n {
+                    if sArr[i] == sArr[j] {
+                        if freq == 1 || freq == 9 || freq == 99 {
+                            compLen += 1
+                        }
+                        freq += 1
+                    } else {
+                        delCnt += 1
+                        if delCnt > remK { break }
+                    }
+                    dp[i][remK] = min(dp[i][remK], compLen + dp[j + 1][remK - delCnt])
+                }
+            }
+        }
+
+        return dp[0][k]
     }
 }
 ```

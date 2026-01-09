@@ -128,6 +128,88 @@ public class Solution {
 }
 ```
 
+```go
+func cherryPickup(grid [][]int) int {
+    n := len(grid)
+    var dfs func(r1, c1, r2, c2 int) int
+    dfs = func(r1, c1, r2, c2 int) int {
+        if r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+            return -1000
+        }
+        if r1 == n-1 && c1 == n-1 && r2 == n-1 && c2 == n-1 {
+            return grid[r1][c1]
+        }
+        res := dfs(r1+1, c1, r2+1, c2)
+        res = max(res, dfs(r1+1, c1, r2, c2+1))
+        res = max(res, dfs(r1, c1+1, r2+1, c2))
+        res = max(res, dfs(r1, c1+1, r2, c2+1))
+        res += grid[r1][c1] + grid[r2][c2]
+        if r1 == r2 && c1 == c2 {
+            res -= grid[r1][c1]
+        }
+        return res
+    }
+    return max(0, dfs(0, 0, 0, 0))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val n = grid.size
+        fun dfs(r1: Int, c1: Int, r2: Int, c2: Int): Int {
+            if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1) {
+                return -1000
+            }
+            if (r1 == n - 1 && c1 == n - 1 && r2 == n - 1 && c2 == n - 1) {
+                return grid[r1][c1]
+            }
+            var res = dfs(r1 + 1, c1, r2 + 1, c2)
+            res = maxOf(res, dfs(r1 + 1, c1, r2, c2 + 1))
+            res = maxOf(res, dfs(r1, c1 + 1, r2 + 1, c2))
+            res = maxOf(res, dfs(r1, c1 + 1, r2, c2 + 1))
+            res += grid[r1][c1] + grid[r2][c2]
+            if (r1 == r2 && c1 == c2) res -= grid[r1][c1]
+            return res
+        }
+        return maxOf(0, dfs(0, 0, 0, 0))
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        func dfs(_ r1: Int, _ c1: Int, _ r2: Int, _ c2: Int) -> Int {
+            if r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+                return -1000
+            }
+            if r1 == n - 1 && c1 == n - 1 && r2 == n - 1 && c2 == n - 1 {
+                return grid[r1][c1]
+            }
+            var res = dfs(r1 + 1, c1, r2 + 1, c2)
+            res = max(res, dfs(r1 + 1, c1, r2, c2 + 1))
+            res = max(res, dfs(r1, c1 + 1, r2 + 1, c2))
+            res = max(res, dfs(r1, c1 + 1, r2, c2 + 1))
+            res += grid[r1][c1] + grid[r2][c2]
+            if r1 == r2 && c1 == c2 {
+                res -= grid[r1][c1]
+            }
+            return res
+        }
+        return max(0, dfs(0, 0, 0, 0))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +411,118 @@ public class Solution {
         if (r1 == r2 && c1 == c2) res -= grid[r1][c1];
         dp[r1,c1,r2,c2] = res;
         return res;
+    }
+}
+```
+
+```go
+func cherryPickup(grid [][]int) int {
+    n := len(grid)
+    dp := make([][][][]int, n)
+    for i := range dp {
+        dp[i] = make([][][]int, n)
+        for j := range dp[i] {
+            dp[i][j] = make([][]int, n)
+            for k := range dp[i][j] {
+                dp[i][j][k] = make([]int, n)
+                for l := range dp[i][j][k] {
+                    dp[i][j][k][l] = -1 << 30
+                }
+            }
+        }
+    }
+
+    var dfs func(r1, c1, r2, c2 int) int
+    dfs = func(r1, c1, r2, c2 int) int {
+        if r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+            return -1000
+        }
+        if r1 == n-1 && c1 == n-1 && r2 == n-1 && c2 == n-1 {
+            return grid[r1][c1]
+        }
+        if dp[r1][c1][r2][c2] != -1<<30 {
+            return dp[r1][c1][r2][c2]
+        }
+        res := dfs(r1+1, c1, r2+1, c2)
+        res = max(res, dfs(r1+1, c1, r2, c2+1))
+        res = max(res, dfs(r1, c1+1, r2+1, c2))
+        res = max(res, dfs(r1, c1+1, r2, c2+1))
+        res += grid[r1][c1] + grid[r2][c2]
+        if r1 == r2 && c1 == c2 {
+            res -= grid[r1][c1]
+        }
+        dp[r1][c1][r2][c2] = res
+        return res
+    }
+    return max(0, dfs(0, 0, 0, 0))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val dp = Array(n) { Array(n) { Array(n) { IntArray(n) { Int.MIN_VALUE } } } }
+
+        fun dfs(r1: Int, c1: Int, r2: Int, c2: Int): Int {
+            if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1) {
+                return -1000
+            }
+            if (r1 == n - 1 && c1 == n - 1 && r2 == n - 1 && c2 == n - 1) {
+                return grid[r1][c1]
+            }
+            if (dp[r1][c1][r2][c2] != Int.MIN_VALUE) {
+                return dp[r1][c1][r2][c2]
+            }
+            var res = dfs(r1 + 1, c1, r2 + 1, c2)
+            res = maxOf(res, dfs(r1 + 1, c1, r2, c2 + 1))
+            res = maxOf(res, dfs(r1, c1 + 1, r2 + 1, c2))
+            res = maxOf(res, dfs(r1, c1 + 1, r2, c2 + 1))
+            res += grid[r1][c1] + grid[r2][c2]
+            if (r1 == r2 && c1 == c2) res -= grid[r1][c1]
+            dp[r1][c1][r2][c2] = res
+            return res
+        }
+        return maxOf(0, dfs(0, 0, 0, 0))
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var dp = Array(repeating: Array(repeating: Array(repeating: Array(repeating: Int.min, count: n), count: n), count: n), count: n)
+
+        func dfs(_ r1: Int, _ c1: Int, _ r2: Int, _ c2: Int) -> Int {
+            if r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+                return -1000
+            }
+            if r1 == n - 1 && c1 == n - 1 && r2 == n - 1 && c2 == n - 1 {
+                return grid[r1][c1]
+            }
+            if dp[r1][c1][r2][c2] != Int.min {
+                return dp[r1][c1][r2][c2]
+            }
+            var res = dfs(r1 + 1, c1, r2 + 1, c2)
+            res = max(res, dfs(r1 + 1, c1, r2, c2 + 1))
+            res = max(res, dfs(r1, c1 + 1, r2 + 1, c2))
+            res = max(res, dfs(r1, c1 + 1, r2, c2 + 1))
+            res += grid[r1][c1] + grid[r2][c2]
+            if r1 == r2 && c1 == c2 {
+                res -= grid[r1][c1]
+            }
+            dp[r1][c1][r2][c2] = res
+            return res
+        }
+        return max(0, dfs(0, 0, 0, 0))
     }
 }
 ```
@@ -541,6 +735,118 @@ public class Solution {
 }
 ```
 
+```go
+func cherryPickup(grid [][]int) int {
+    n := len(grid)
+    dp := make([][][]int, n)
+    for i := range dp {
+        dp[i] = make([][]int, n)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, n)
+            for k := range dp[i][j] {
+                dp[i][j][k] = -1 << 30
+            }
+        }
+    }
+
+    var dfs func(r1, c1, r2 int) int
+    dfs = func(r1, c1, r2 int) int {
+        c2 := r1 + c1 - r2
+        if r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+            return -1000
+        }
+        if r1 == n-1 && c1 == n-1 {
+            return grid[r1][c1]
+        }
+        if dp[r1][c1][r2] != -1<<30 {
+            return dp[r1][c1][r2]
+        }
+        res := dfs(r1+1, c1, r2+1)
+        res = max(res, dfs(r1+1, c1, r2))
+        res = max(res, dfs(r1, c1+1, r2+1))
+        res = max(res, dfs(r1, c1+1, r2))
+        res += grid[r1][c1]
+        if !(r1 == r2 && c1 == c2) {
+            res += grid[r2][c2]
+        }
+        dp[r1][c1][r2] = res
+        return res
+    }
+    return max(0, dfs(0, 0, 0))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val dp = Array(n) { Array(n) { IntArray(n) { Int.MIN_VALUE } } }
+
+        fun dfs(r1: Int, c1: Int, r2: Int): Int {
+            val c2 = r1 + c1 - r2
+            if (r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1) {
+                return -1000
+            }
+            if (r1 == n - 1 && c1 == n - 1) {
+                return grid[r1][c1]
+            }
+            if (dp[r1][c1][r2] != Int.MIN_VALUE) {
+                return dp[r1][c1][r2]
+            }
+            var res = dfs(r1 + 1, c1, r2 + 1)
+            res = maxOf(res, dfs(r1 + 1, c1, r2))
+            res = maxOf(res, dfs(r1, c1 + 1, r2 + 1))
+            res = maxOf(res, dfs(r1, c1 + 1, r2))
+            res += grid[r1][c1]
+            if (!(r1 == r2 && c1 == c2)) res += grid[r2][c2]
+            dp[r1][c1][r2] = res
+            return res
+        }
+        return maxOf(0, dfs(0, 0, 0))
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var dp = Array(repeating: Array(repeating: Array(repeating: Int.min, count: n), count: n), count: n)
+
+        func dfs(_ r1: Int, _ c1: Int, _ r2: Int) -> Int {
+            let c2 = r1 + c1 - r2
+            if r1 >= n || c1 >= n || r2 >= n || c2 >= n || grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+                return -1000
+            }
+            if r1 == n - 1 && c1 == n - 1 {
+                return grid[r1][c1]
+            }
+            if dp[r1][c1][r2] != Int.min {
+                return dp[r1][c1][r2]
+            }
+            var res = dfs(r1 + 1, c1, r2 + 1)
+            res = max(res, dfs(r1 + 1, c1, r2))
+            res = max(res, dfs(r1, c1 + 1, r2 + 1))
+            res = max(res, dfs(r1, c1 + 1, r2))
+            res += grid[r1][c1]
+            if !(r1 == r2 && c1 == c2) {
+                res += grid[r2][c2]
+            }
+            dp[r1][c1][r2] = res
+            return res
+        }
+        return max(0, dfs(0, 0, 0))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -739,6 +1045,139 @@ public class Solution {
 }
 ```
 
+```go
+func cherryPickup(grid [][]int) int {
+    n := len(grid)
+    dp := make([][][]int, n)
+    for i := range dp {
+        dp[i] = make([][]int, n)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, n)
+            for k := range dp[i][j] {
+                dp[i][j][k] = -1000000000
+            }
+        }
+    }
+
+    for r1 := n - 1; r1 >= 0; r1-- {
+        for c1 := n - 1; c1 >= 0; c1-- {
+            for r2 := n - 1; r2 >= 0; r2-- {
+                c2 := r1 + c1 - r2
+                if c2 < 0 || c2 >= n {
+                    continue
+                }
+                if grid[r1][c1] == -1 || grid[r2][c2] == -1 {
+                    continue
+                }
+
+                if r1 == n-1 && c1 == n-1 {
+                    dp[r1][c1][r2] = grid[r1][c1]
+                } else {
+                    res := -1000000000
+                    if r1+1 < n && r2+1 < n {
+                        res = max(res, dp[r1+1][c1][r2+1])
+                    }
+                    if r1+1 < n {
+                        res = max(res, dp[r1+1][c1][r2])
+                    }
+                    if c1+1 < n && r2+1 < n {
+                        res = max(res, dp[r1][c1+1][r2+1])
+                    }
+                    if c1+1 < n {
+                        res = max(res, dp[r1][c1+1][r2])
+                    }
+                    if res == -1000000000 {
+                        continue
+                    }
+                    res += grid[r1][c1]
+                    if r1 != r2 || c1 != c2 {
+                        res += grid[r2][c2]
+                    }
+                    dp[r1][c1][r2] = res
+                }
+            }
+        }
+    }
+    return max(0, dp[0][0][0])
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val dp = Array(n) { Array(n) { IntArray(n) { Int.MIN_VALUE / 2 } } }
+
+        for (r1 in n - 1 downTo 0) {
+            for (c1 in n - 1 downTo 0) {
+                for (r2 in n - 1 downTo 0) {
+                    val c2 = r1 + c1 - r2
+                    if (c2 < 0 || c2 >= n) continue
+                    if (grid[r1][c1] == -1 || grid[r2][c2] == -1) continue
+
+                    if (r1 == n - 1 && c1 == n - 1) {
+                        dp[r1][c1][r2] = grid[r1][c1]
+                    } else {
+                        var res = Int.MIN_VALUE / 2
+                        if (r1 + 1 < n && r2 + 1 < n) res = maxOf(res, dp[r1 + 1][c1][r2 + 1])
+                        if (r1 + 1 < n) res = maxOf(res, dp[r1 + 1][c1][r2])
+                        if (c1 + 1 < n && r2 + 1 < n) res = maxOf(res, dp[r1][c1 + 1][r2 + 1])
+                        if (c1 + 1 < n) res = maxOf(res, dp[r1][c1 + 1][r2])
+                        if (res == Int.MIN_VALUE / 2) continue
+                        res += grid[r1][c1]
+                        if (r1 != r2 || c1 != c2) res += grid[r2][c2]
+                        dp[r1][c1][r2] = res
+                    }
+                }
+            }
+        }
+        return maxOf(0, dp[0][0][0])
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        let minVal = Int.min / 2
+        var dp = Array(repeating: Array(repeating: Array(repeating: minVal, count: n), count: n), count: n)
+
+        for r1 in stride(from: n - 1, through: 0, by: -1) {
+            for c1 in stride(from: n - 1, through: 0, by: -1) {
+                for r2 in stride(from: n - 1, through: 0, by: -1) {
+                    let c2 = r1 + c1 - r2
+                    if c2 < 0 || c2 >= n { continue }
+                    if grid[r1][c1] == -1 || grid[r2][c2] == -1 { continue }
+
+                    if r1 == n - 1 && c1 == n - 1 {
+                        dp[r1][c1][r2] = grid[r1][c1]
+                    } else {
+                        var res = minVal
+                        if r1 + 1 < n && r2 + 1 < n { res = max(res, dp[r1 + 1][c1][r2 + 1]) }
+                        if r1 + 1 < n { res = max(res, dp[r1 + 1][c1][r2]) }
+                        if c1 + 1 < n && r2 + 1 < n { res = max(res, dp[r1][c1 + 1][r2 + 1]) }
+                        if c1 + 1 < n { res = max(res, dp[r1][c1 + 1][r2]) }
+                        if res == minVal { continue }
+                        res += grid[r1][c1]
+                        if r1 != r2 || c1 != c2 { res += grid[r2][c2] }
+                        dp[r1][c1][r2] = res
+                    }
+                }
+            }
+        }
+        return max(0, dp[0][0][0])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -925,6 +1364,140 @@ public class Solution {
         }
 
         return Math.Max(0, prev[n - 1][n - 1]);
+    }
+}
+```
+
+```go
+func cherryPickup(grid [][]int) int {
+    n := len(grid)
+    prev := make([][]int, n)
+    for i := range prev {
+        prev[i] = make([]int, n)
+        for j := range prev[i] {
+            prev[i][j] = -1 << 30
+        }
+    }
+    prev[0][0] = grid[0][0]
+
+    for k := 1; k < 2*n-1; k++ {
+        dp := make([][]int, n)
+        for i := range dp {
+            dp[i] = make([]int, n)
+            for j := range dp[i] {
+                dp[i][j] = -1 << 30
+            }
+        }
+        for r1 := max(0, k-(n-1)); r1 <= min(n-1, k); r1++ {
+            c1 := k - r1
+            if c1 >= n || grid[r1][c1] == -1 {
+                continue
+            }
+            for r2 := max(0, k-(n-1)); r2 <= min(n-1, k); r2++ {
+                c2 := k - r2
+                if c2 >= n || grid[r2][c2] == -1 {
+                    continue
+                }
+                val := prev[r1][r2]
+                if r1 > 0 {
+                    val = max(val, prev[r1-1][r2])
+                }
+                if r2 > 0 {
+                    val = max(val, prev[r1][r2-1])
+                }
+                if r1 > 0 && r2 > 0 {
+                    val = max(val, prev[r1-1][r2-1])
+                }
+                if val < 0 {
+                    continue
+                }
+                val += grid[r1][c1]
+                if r1 != r2 {
+                    val += grid[r2][c2]
+                }
+                dp[r1][r2] = val
+            }
+        }
+        prev = dp
+    }
+    return max(0, prev[n-1][n-1])
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun cherryPickup(grid: Array<IntArray>): Int {
+        val n = grid.size
+        var prev = Array(n) { IntArray(n) { Int.MIN_VALUE } }
+        prev[0][0] = grid[0][0]
+
+        for (k in 1 until 2 * n - 1) {
+            val dp = Array(n) { IntArray(n) { Int.MIN_VALUE } }
+            for (r1 in maxOf(0, k - (n - 1))..minOf(n - 1, k)) {
+                val c1 = k - r1
+                if (c1 >= n || grid[r1][c1] == -1) continue
+                for (r2 in maxOf(0, k - (n - 1))..minOf(n - 1, k)) {
+                    val c2 = k - r2
+                    if (c2 >= n || grid[r2][c2] == -1) continue
+                    var value = prev[r1][r2]
+                    if (r1 > 0) value = maxOf(value, prev[r1 - 1][r2])
+                    if (r2 > 0) value = maxOf(value, prev[r1][r2 - 1])
+                    if (r1 > 0 && r2 > 0) value = maxOf(value, prev[r1 - 1][r2 - 1])
+                    if (value < 0) continue
+                    value += grid[r1][c1]
+                    if (r1 != r2) value += grid[r2][c2]
+                    dp[r1][r2] = value
+                }
+            }
+            prev = dp
+        }
+        return maxOf(0, prev[n - 1][n - 1])
+    }
+}
+```
+
+```swift
+class Solution {
+    func cherryPickup(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var prev = Array(repeating: Array(repeating: Int.min, count: n), count: n)
+        prev[0][0] = grid[0][0]
+
+        for k in 1..<(2 * n - 1) {
+            var dp = Array(repeating: Array(repeating: Int.min, count: n), count: n)
+            for r1 in max(0, k - (n - 1))...min(n - 1, k) {
+                let c1 = k - r1
+                if c1 >= n || grid[r1][c1] == -1 { continue }
+                for r2 in max(0, k - (n - 1))...min(n - 1, k) {
+                    let c2 = k - r2
+                    if c2 >= n || grid[r2][c2] == -1 { continue }
+                    var val = prev[r1][r2]
+                    if r1 > 0 { val = max(val, prev[r1 - 1][r2]) }
+                    if r2 > 0 { val = max(val, prev[r1][r2 - 1]) }
+                    if r1 > 0 && r2 > 0 { val = max(val, prev[r1 - 1][r2 - 1]) }
+                    if val < 0 { continue }
+                    val += grid[r1][c1]
+                    if r1 != r2 { val += grid[r2][c2] }
+                    dp[r1][r2] = val
+                }
+            }
+            prev = dp
+        }
+        return max(0, prev[n - 1][n - 1])
     }
 }
 ```

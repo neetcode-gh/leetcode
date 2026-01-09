@@ -86,6 +86,62 @@ public class Solution {
 }
 ```
 
+```go
+func minimumDifference(nums []int, k int) int {
+    sort.Ints(nums)
+    l, r := 0, k-1
+    res := math.MaxInt32
+
+    for r < len(nums) {
+        if nums[r]-nums[l] < res {
+            res = nums[r] - nums[l]
+        }
+        l++
+        r++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumDifference(nums: IntArray, k: Int): Int {
+        nums.sort()
+        var l = 0
+        var r = k - 1
+        var res = Int.MAX_VALUE
+
+        while (r < nums.size) {
+            res = minOf(res, nums[r] - nums[l])
+            l++
+            r++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumDifference(_ nums: [Int], _ k: Int) -> Int {
+        let nums = nums.sorted()
+        var l = 0
+        var r = k - 1
+        var res = Int.max
+
+        while r < nums.count {
+            res = min(res, nums[r] - nums[l])
+            l += 1
+            r += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

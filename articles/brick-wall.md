@@ -136,6 +136,146 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LeastBricks(IList<IList<int>> wall) {
+        int n = wall.Count;
+        int m = 0;
+        foreach (int brick in wall[0]) {
+            m += brick;
+        }
+
+        List<HashSet<int>> gaps = new List<HashSet<int>>();
+        for (int i = 0; i < n; i++) {
+            gaps.Add(new HashSet<int>());
+            int gap = 0;
+            foreach (int brick in wall[i]) {
+                gap += brick;
+                gaps[i].Add(gap);
+            }
+        }
+
+        int res = n;
+        for (int line = 1; line < m; line++) {
+            int cuts = 0;
+            for (int i = 0; i < n; i++) {
+                if (!gaps[i].Contains(line)) {
+                    cuts++;
+                }
+            }
+            res = Math.Min(res, cuts);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func leastBricks(wall [][]int) int {
+    n := len(wall)
+    m := 0
+    for _, brick := range wall[0] {
+        m += brick
+    }
+
+    gaps := make([]map[int]bool, n)
+    for i := 0; i < n; i++ {
+        gaps[i] = make(map[int]bool)
+        gap := 0
+        for _, brick := range wall[i] {
+            gap += brick
+            gaps[i][gap] = true
+        }
+    }
+
+    res := n
+    for line := 1; line < m; line++ {
+        cuts := 0
+        for i := 0; i < n; i++ {
+            if !gaps[i][line] {
+                cuts++
+            }
+        }
+        if cuts < res {
+            res = cuts
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun leastBricks(wall: List<List<Int>>): Int {
+        val n = wall.size
+        var m = 0
+        for (brick in wall[0]) {
+            m += brick
+        }
+
+        val gaps = Array(n) { mutableSetOf<Int>() }
+        for (i in 0 until n) {
+            var gap = 0
+            for (brick in wall[i]) {
+                gap += brick
+                gaps[i].add(gap)
+            }
+        }
+
+        var res = n
+        for (line in 1 until m) {
+            var cuts = 0
+            for (i in 0 until n) {
+                if (line !in gaps[i]) {
+                    cuts++
+                }
+            }
+            res = minOf(res, cuts)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func leastBricks(_ wall: [[Int]]) -> Int {
+        let n = wall.count
+        var m = 0
+        for brick in wall[0] {
+            m += brick
+        }
+
+        var gaps = [[Int]: Set<Int>]()
+        for i in 0..<n {
+            var gapSet = Set<Int>()
+            var gap = 0
+            for brick in wall[i] {
+                gap += brick
+                gapSet.insert(gap)
+            }
+            gaps[[i]] = gapSet
+        }
+
+        var res = n
+        for line in 1..<m {
+            var cuts = 0
+            for i in 0..<n {
+                if !(gaps[[i]]?.contains(line) ?? false) {
+                    cuts += 1
+                }
+            }
+            res = min(res, cuts)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,6 +371,92 @@ class Solution {
             }
         }
         return wall.length - Math.max(...countGap.values());
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LeastBricks(IList<IList<int>> wall) {
+        Dictionary<int, int> countGap = new Dictionary<int, int>();
+        countGap[0] = 0;
+
+        foreach (var row in wall) {
+            int total = 0;
+            for (int i = 0; i < row.Count - 1; i++) {
+                total += row[i];
+                if (!countGap.ContainsKey(total)) {
+                    countGap[total] = 0;
+                }
+                countGap[total]++;
+            }
+        }
+
+        int maxGaps = 0;
+        foreach (int count in countGap.Values) {
+            maxGaps = Math.Max(maxGaps, count);
+        }
+
+        return wall.Count - maxGaps;
+    }
+}
+```
+
+```go
+func leastBricks(wall [][]int) int {
+    countGap := map[int]int{0: 0}
+
+    for _, row := range wall {
+        total := 0
+        for i := 0; i < len(row)-1; i++ {
+            total += row[i]
+            countGap[total]++
+        }
+    }
+
+    maxGaps := 0
+    for _, count := range countGap {
+        if count > maxGaps {
+            maxGaps = count
+        }
+    }
+
+    return len(wall) - maxGaps
+}
+```
+
+```kotlin
+class Solution {
+    fun leastBricks(wall: List<List<Int>>): Int {
+        val countGap = mutableMapOf(0 to 0)
+
+        for (row in wall) {
+            var total = 0
+            for (i in 0 until row.size - 1) {
+                total += row[i]
+                countGap[total] = countGap.getOrDefault(total, 0) + 1
+            }
+        }
+
+        return wall.size - countGap.values.maxOrNull()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func leastBricks(_ wall: [[Int]]) -> Int {
+        var countGap = [0: 0]
+
+        for row in wall {
+            var total = 0
+            for i in 0..<(row.count - 1) {
+                total += row[i]
+                countGap[total, default: 0] += 1
+            }
+        }
+
+        return wall.count - countGap.values.max()!
     }
 }
 ```

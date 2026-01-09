@@ -100,6 +100,102 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] DeckRevealedIncreasing(int[] deck) {
+        Array.Sort(deck);
+        int n = deck.Length;
+        int[] res = new int[n];
+        Queue<int> q = new Queue<int>();
+
+        for (int i = 0; i < n; i++) {
+            q.Enqueue(i);
+        }
+
+        foreach (int num in deck) {
+            int i = q.Dequeue();
+            res[i] = num;
+            if (q.Count > 0) {
+                q.Enqueue(q.Dequeue());
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func deckRevealedIncreasing(deck []int) []int {
+    sort.Ints(deck)
+    n := len(deck)
+    res := make([]int, n)
+    q := []int{}
+
+    for i := 0; i < n; i++ {
+        q = append(q, i)
+    }
+
+    for _, num := range deck {
+        i := q[0]
+        q = q[1:]
+        res[i] = num
+        if len(q) > 0 {
+            q = append(q, q[0])
+            q = q[1:]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun deckRevealedIncreasing(deck: IntArray): IntArray {
+        deck.sort()
+        val n = deck.size
+        val res = IntArray(n)
+        val q = ArrayDeque<Int>()
+
+        for (i in 0 until n) {
+            q.add(i)
+        }
+
+        for (num in deck) {
+            val i = q.removeFirst()
+            res[i] = num
+            if (q.isNotEmpty()) {
+                q.add(q.removeFirst())
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func deckRevealedIncreasing(_ deck: [Int]) -> [Int] {
+        let sortedDeck = deck.sorted()
+        let n = sortedDeck.count
+        var res = [Int](repeating: 0, count: n)
+        var q = Array(0..<n)
+
+        for num in sortedDeck {
+            let i = q.removeFirst()
+            res[i] = num
+            if !q.isEmpty {
+                q.append(q.removeFirst())
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -194,6 +290,94 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] DeckRevealedIncreasing(int[] deck) {
+        Array.Sort(deck);
+        Queue<int> q = new Queue<int>();
+
+        for (int i = deck.Length - 1; i >= 0; i--) {
+            if (q.Count > 0) {
+                q.Enqueue(q.Dequeue());
+            }
+            q.Enqueue(deck[i]);
+        }
+
+        int[] res = new int[deck.Length];
+        for (int i = deck.Length - 1; i >= 0; i--) {
+            res[i] = q.Dequeue();
+        }
+        return res;
+    }
+}
+```
+
+```go
+func deckRevealedIncreasing(deck []int) []int {
+    sort.Ints(deck)
+    q := []int{}
+
+    for i := len(deck) - 1; i >= 0; i-- {
+        if len(q) > 0 {
+            q = append(q, q[0])
+            q = q[1:]
+        }
+        q = append(q, deck[i])
+    }
+
+    res := make([]int, len(deck))
+    for i := len(deck) - 1; i >= 0; i-- {
+        res[i] = q[0]
+        q = q[1:]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun deckRevealedIncreasing(deck: IntArray): IntArray {
+        deck.sort()
+        val q = ArrayDeque<Int>()
+
+        for (i in deck.size - 1 downTo 0) {
+            if (q.isNotEmpty()) {
+                q.add(q.removeFirst())
+            }
+            q.add(deck[i])
+        }
+
+        val res = IntArray(deck.size)
+        for (i in deck.size - 1 downTo 0) {
+            res[i] = q.removeFirst()
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func deckRevealedIncreasing(_ deck: [Int]) -> [Int] {
+        let sortedDeck = deck.sorted()
+        var q = [Int]()
+
+        for i in stride(from: sortedDeck.count - 1, through: 0, by: -1) {
+            if !q.isEmpty {
+                q.append(q.removeFirst())
+            }
+            q.append(sortedDeck[i])
+        }
+
+        var res = [Int](repeating: 0, count: deck.count)
+        for i in stride(from: deck.count - 1, through: 0, by: -1) {
+            res[i] = q.removeFirst()
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +461,73 @@ class Solution {
             res.push(dq.popFront());
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] DeckRevealedIncreasing(int[] deck) {
+        int n = deck.Length;
+        Array.Sort(deck);
+        LinkedList<int> dq = new LinkedList<int>();
+        dq.AddLast(deck[n - 1]);
+
+        for (int i = n - 2; i >= 0; i--) {
+            dq.AddFirst(dq.Last.Value);
+            dq.RemoveLast();
+            dq.AddFirst(deck[i]);
+        }
+
+        return dq.ToArray();
+    }
+}
+```
+
+```go
+func deckRevealedIncreasing(deck []int) []int {
+    sort.Ints(deck)
+    n := len(deck)
+    dq := []int{deck[n-1]}
+
+    for i := n - 2; i >= 0; i-- {
+        dq = append([]int{dq[len(dq)-1]}, dq[:len(dq)-1]...)
+        dq = append([]int{deck[i]}, dq...)
+    }
+
+    return dq
+}
+```
+
+```kotlin
+class Solution {
+    fun deckRevealedIncreasing(deck: IntArray): IntArray {
+        deck.sort()
+        val dq = ArrayDeque<Int>()
+        dq.addLast(deck[deck.size - 1])
+
+        for (i in deck.size - 2 downTo 0) {
+            dq.addFirst(dq.removeLast())
+            dq.addFirst(deck[i])
+        }
+
+        return dq.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func deckRevealedIncreasing(_ deck: [Int]) -> [Int] {
+        var sortedDeck = deck.sorted()
+        var dq = [sortedDeck.removeLast()]
+
+        for i in stride(from: sortedDeck.count - 1, through: 0, by: -1) {
+            dq.insert(dq.removeLast(), at: 0)
+            dq.insert(sortedDeck[i], at: 0)
+        }
+
+        return dq
     }
 }
 ```
@@ -393,6 +644,105 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] DeckRevealedIncreasing(int[] deck) {
+        int n = deck.Length;
+        int[] res = new int[n];
+        bool skip = false;
+        int deckIndex = 0, i = 0;
+
+        Array.Sort(deck);
+
+        while (deckIndex < n) {
+            if (res[i] == 0) {
+                if (!skip) {
+                    res[i] = deck[deckIndex++];
+                }
+                skip = !skip;
+            }
+            i = (i + 1) % n;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func deckRevealedIncreasing(deck []int) []int {
+    sort.Ints(deck)
+    n := len(deck)
+    res := make([]int, n)
+    skip := false
+    deckIndex, i := 0, 0
+
+    for deckIndex < n {
+        if res[i] == 0 {
+            if !skip {
+                res[i] = deck[deckIndex]
+                deckIndex++
+            }
+            skip = !skip
+        }
+        i = (i + 1) % n
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun deckRevealedIncreasing(deck: IntArray): IntArray {
+        deck.sort()
+        val n = deck.size
+        val res = IntArray(n)
+        var skip = false
+        var deckIndex = 0
+        var i = 0
+
+        while (deckIndex < n) {
+            if (res[i] == 0) {
+                if (!skip) {
+                    res[i] = deck[deckIndex++]
+                }
+                skip = !skip
+            }
+            i = (i + 1) % n
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func deckRevealedIncreasing(_ deck: [Int]) -> [Int] {
+        var sortedDeck = deck.sorted()
+        let n = sortedDeck.count
+        var res = [Int](repeating: 0, count: n)
+        var skip = false
+        var deckIndex = 0
+        var i = 0
+
+        while deckIndex < n {
+            if res[i] == 0 {
+                if !skip {
+                    res[i] = sortedDeck[deckIndex]
+                    deckIndex += 1
+                }
+                skip = !skip
+            }
+            i = (i + 1) % n
+        }
+
+        return res
     }
 }
 ```

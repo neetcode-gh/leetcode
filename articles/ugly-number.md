@@ -87,6 +87,58 @@ public class Solution {
 }
 ```
 
+```go
+func isUgly(n int) bool {
+    if n <= 0 {
+        return false
+    }
+
+    for _, p := range []int{2, 3, 5} {
+        for n % p == 0 {
+            n /= p
+        }
+    }
+
+    return n == 1
+}
+```
+
+```kotlin
+class Solution {
+    fun isUgly(n: Int): Boolean {
+        if (n <= 0) return false
+
+        var num = n
+        for (p in listOf(2, 3, 5)) {
+            while (num % p == 0) {
+                num /= p
+            }
+        }
+
+        return num == 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func isUgly(_ n: Int) -> Bool {
+        if n <= 0 {
+            return false
+        }
+
+        var num = n
+        for p in [2, 3, 5] {
+            while num % p == 0 {
+                num /= p
+            }
+        }
+
+        return num == 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

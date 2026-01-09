@@ -59,6 +59,60 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfFour(int n) {
+        if (n == 1) {
+            return true;
+        }
+        if (n <= 0 || n % 4 != 0) {
+            return false;
+        }
+        return IsPowerOfFour(n / 4);
+    }
+}
+```
+
+```go
+func isPowerOfFour(n int) bool {
+    if n == 1 {
+        return true
+    }
+    if n <= 0 || n%4 != 0 {
+        return false
+    }
+    return isPowerOfFour(n / 4)
+}
+```
+
+```kotlin
+class Solution {
+    fun isPowerOfFour(n: Int): Boolean {
+        if (n == 1) {
+            return true
+        }
+        if (n <= 0 || n % 4 != 0) {
+            return false
+        }
+        return isPowerOfFour(n / 4)
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPowerOfFour(_ n: Int) -> Bool {
+        if n == 1 {
+            return true
+        }
+        if n <= 0 || n % 4 != 0 {
+            return false
+        }
+        return isPowerOfFour(n / 4)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -136,6 +190,74 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfFour(int n) {
+        if (n < 0) return false;
+
+        while (n > 1) {
+            if (n % 4 != 0) return false;
+            n /= 4;
+        }
+
+        return n == 1;
+    }
+}
+```
+
+```go
+func isPowerOfFour(n int) bool {
+    if n < 0 {
+        return false
+    }
+
+    for n > 1 {
+        if n%4 != 0 {
+            return false
+        }
+        n /= 4
+    }
+
+    return n == 1
+}
+```
+
+```kotlin
+class Solution {
+    fun isPowerOfFour(n: Int): Boolean {
+        if (n < 0) return false
+
+        var num = n
+        while (num > 1) {
+            if (num % 4 != 0) return false
+            num /= 4
+        }
+
+        return num == 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPowerOfFour(_ n: Int) -> Bool {
+        if n < 0 {
+            return false
+        }
+
+        var num = n
+        while num > 1 {
+            if num % 4 != 0 {
+                return false
+            }
+            num /= 4
+        }
+
+        return num == 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -180,6 +302,40 @@ class Solution {
      */
     isPowerOfFour(n) {
         return n > 0 && (Math.log(n) / Math.log(4)) % 1 === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPowerOfFour(int n) {
+        return n > 0 && Math.Log(n) / Math.Log(4) % 1 == 0;
+    }
+}
+```
+
+```go
+func isPowerOfFour(n int) bool {
+    if n <= 0 {
+        return false
+    }
+    logVal := math.Log(float64(n)) / math.Log(4)
+    return math.Mod(logVal, 1) == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun isPowerOfFour(n: Int): Boolean {
+        return n > 0 && Math.log(n.toDouble()) / Math.log(4.0) % 1 == 0.0
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPowerOfFour(_ n: Int) -> Bool {
+        return n > 0 && log(Double(n)) / log(4.0).truncatingRemainder(dividingBy: 1) == 0
     }
 }
 ```
@@ -263,6 +419,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfFour(int n) {
+        if (n < 0) return false;
+
+        for (int i = 0; i < 32; i += 2) {
+            if (n == (1 << i)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
+```go
+func isPowerOfFour(n int) bool {
+    if n < 0 {
+        return false
+    }
+
+    for i := 0; i < 32; i += 2 {
+        if n == (1 << i) {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun isPowerOfFour(n: Int): Boolean {
+        if (n < 0) return false
+
+        for (i in 0 until 32 step 2) {
+            if (n == (1 shl i)) {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPowerOfFour(_ n: Int) -> Bool {
+        if n < 0 {
+            return false
+        }
+
+        for i in stride(from: 0, to: 32, by: 2) {
+            if n == (1 << i) {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -311,6 +533,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfFour(int n) {
+        return n > 0 && (n & (n - 1)) == 0 && (n & 0x55555555) == n;
+    }
+}
+```
+
+```go
+func isPowerOfFour(n int) bool {
+    return n > 0 && (n&(n-1)) == 0 && (n&0x55555555) == n
+}
+```
+
+```kotlin
+class Solution {
+    fun isPowerOfFour(n: Int): Boolean {
+        return n > 0 && (n and (n - 1)) == 0 && (n and 0x55555555) == n
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPowerOfFour(_ n: Int) -> Bool {
+        return n > 0 && (n & (n - 1)) == 0 && (n & 0x55555555) == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +607,36 @@ class Solution {
      */
     isPowerOfFour(n) {
         return n > 0 && (n & (n - 1)) === 0 && n % 3 == 1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPowerOfFour(int n) {
+        return n > 0 && (n & (n - 1)) == 0 && (n % 3 == 1);
+    }
+}
+```
+
+```go
+func isPowerOfFour(n int) bool {
+    return n > 0 && (n&(n-1)) == 0 && n%3 == 1
+}
+```
+
+```kotlin
+class Solution {
+    fun isPowerOfFour(n: Int): Boolean {
+        return n > 0 && (n and (n - 1)) == 0 && n % 3 == 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPowerOfFour(_ n: Int) -> Bool {
+        return n > 0 && (n & (n - 1)) == 0 && n % 3 == 1
     }
 }
 ```

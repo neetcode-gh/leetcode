@@ -58,6 +58,50 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string ReverseWords(string s) {
+        string[] words = s.Split(' ');
+        for (int i = 0; i < words.Length; i++) {
+            char[] arr = words[i].ToCharArray();
+            Array.Reverse(arr);
+            words[i] = new string(arr);
+        }
+        return string.Join(" ", words);
+    }
+}
+```
+
+```go
+func reverseWords(s string) string {
+    words := strings.Split(s, " ")
+    for i, word := range words {
+        runes := []rune(word)
+        for l, r := 0, len(runes)-1; l < r; l, r = l+1, r-1 {
+            runes[l], runes[r] = runes[r], runes[l]
+        }
+        words[i] = string(runes)
+    }
+    return strings.Join(words, " ")
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseWords(s: String): String {
+        return s.split(" ").joinToString(" ") { it.reversed() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseWords(_ s: String) -> String {
+        return s.split(separator: " ").map { String($0.reversed()) }.joined(separator: " ")
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -159,6 +203,93 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string ReverseWords(string s) {
+        string tmpStr = "";
+        var res = new System.Text.StringBuilder();
+
+        for (int r = 0; r <= s.Length; r++) {
+            if (r == s.Length || s[r] == ' ') {
+                res.Append(tmpStr);
+                tmpStr = "";
+                if (r != s.Length) {
+                    res.Append(" ");
+                }
+            } else {
+                tmpStr = s[r] + tmpStr;
+            }
+        }
+        return res.ToString();
+    }
+}
+```
+
+```go
+func reverseWords(s string) string {
+    tmpStr := ""
+    res := ""
+
+    for r := 0; r <= len(s); r++ {
+        if r == len(s) || s[r] == ' ' {
+            res += tmpStr
+            tmpStr = ""
+            if r != len(s) {
+                res += " "
+            }
+        } else {
+            tmpStr = string(s[r]) + tmpStr
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseWords(s: String): String {
+        var tmpStr = ""
+        val res = StringBuilder()
+
+        for (r in 0..s.length) {
+            if (r == s.length || s[r] == ' ') {
+                res.append(tmpStr)
+                tmpStr = ""
+                if (r != s.length) {
+                    res.append(" ")
+                }
+            } else {
+                tmpStr = s[r] + tmpStr
+            }
+        }
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseWords(_ s: String) -> String {
+        var tmpStr = ""
+        var res = ""
+        let chars = Array(s)
+
+        for r in 0...chars.count {
+            if r == chars.count || chars[r] == " " {
+                res += tmpStr
+                tmpStr = ""
+                if r != chars.count {
+                    res += " "
+                }
+            } else {
+                tmpStr = String(chars[r]) + tmpStr
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,6 +385,96 @@ class Solution {
             }
         }
         return chars.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string ReverseWords(string s) {
+        char[] chars = s.ToCharArray();
+        int l = 0;
+        for (int r = 0; r <= chars.Length; r++) {
+            if (r == chars.Length || chars[r] == ' ') {
+                int tempL = l, tempR = r - 1;
+                while (tempL < tempR) {
+                    char temp = chars[tempL];
+                    chars[tempL] = chars[tempR];
+                    chars[tempR] = temp;
+                    tempL++;
+                    tempR--;
+                }
+                l = r + 1;
+            }
+        }
+        return new string(chars);
+    }
+}
+```
+
+```go
+func reverseWords(s string) string {
+    chars := []byte(s)
+    l := 0
+    for r := 0; r <= len(chars); r++ {
+        if r == len(chars) || chars[r] == ' ' {
+            tempL, tempR := l, r-1
+            for tempL < tempR {
+                chars[tempL], chars[tempR] = chars[tempR], chars[tempL]
+                tempL++
+                tempR--
+            }
+            l = r + 1
+        }
+    }
+    return string(chars)
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseWords(s: String): String {
+        val chars = s.toCharArray()
+        var l = 0
+        for (r in 0..chars.size) {
+            if (r == chars.size || chars[r] == ' ') {
+                var tempL = l
+                var tempR = r - 1
+                while (tempL < tempR) {
+                    val temp = chars[tempL]
+                    chars[tempL] = chars[tempR]
+                    chars[tempR] = temp
+                    tempL++
+                    tempR--
+                }
+                l = r + 1
+            }
+        }
+        return String(chars)
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseWords(_ s: String) -> String {
+        var chars = Array(s)
+        var l = 0
+        for r in 0...chars.count {
+            if r == chars.count || chars[r] == " " {
+                var tempL = l
+                var tempR = r - 1
+                while tempL < tempR {
+                    let temp = chars[tempL]
+                    chars[tempL] = chars[tempR]
+                    chars[tempR] = temp
+                    tempL += 1
+                    tempR -= 1
+                }
+                l = r + 1
+            }
+        }
+        return String(chars)
     }
 }
 ```
@@ -379,6 +600,133 @@ class Solution {
             }
         }
         return arr.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string ReverseWords(string s) {
+        char[] arr = s.ToCharArray();
+        int n = arr.Length;
+
+        for (int i = 0; i < n; i++) {
+            if (arr[i] != ' ') {
+                int j = i;
+                while (j < n && arr[j] != ' ') {
+                    j++;
+                }
+                Reverse(arr, i, j - 1);
+                i = j;
+            }
+        }
+        return new string(arr);
+    }
+
+    private void Reverse(char[] arr, int i, int j) {
+        while (i < j) {
+            char temp = arr[i];
+            arr[i] = arr[j];
+            arr[j] = temp;
+            i++;
+            j--;
+        }
+    }
+}
+```
+
+```go
+func reverseWords(s string) string {
+    arr := []byte(s)
+    n := len(arr)
+
+    reverse := func(i, j int) {
+        for i < j {
+            arr[i], arr[j] = arr[j], arr[i]
+            i++
+            j--
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        if arr[i] != ' ' {
+            j := i
+            for j < n && arr[j] != ' ' {
+                j++
+            }
+            reverse(i, j-1)
+            i = j
+        }
+    }
+    return string(arr)
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseWords(s: String): String {
+        val arr = s.toCharArray()
+        val n = arr.size
+
+        fun reverse(i: Int, j: Int) {
+            var l = i
+            var r = j
+            while (l < r) {
+                val temp = arr[l]
+                arr[l] = arr[r]
+                arr[r] = temp
+                l++
+                r--
+            }
+        }
+
+        var i = 0
+        while (i < n) {
+            if (arr[i] != ' ') {
+                var j = i
+                while (j < n && arr[j] != ' ') {
+                    j++
+                }
+                reverse(i, j - 1)
+                i = j
+            }
+            i++
+        }
+        return String(arr)
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseWords(_ s: String) -> String {
+        var arr = Array(s)
+        let n = arr.count
+
+        func reverse(_ i: Int, _ j: Int) {
+            var l = i, r = j
+            while l < r {
+                let temp = arr[l]
+                arr[l] = arr[r]
+                arr[r] = temp
+                l += 1
+                r -= 1
+            }
+        }
+
+        var i = 0
+        while i < n {
+            if arr[i] != " " {
+                var j = i
+                while j < n && arr[j] != " " {
+                    j += 1
+                }
+                reverse(i, j - 1)
+                i = j
+            }
+            i += 1
+        }
+        return String(arr)
     }
 }
 ```

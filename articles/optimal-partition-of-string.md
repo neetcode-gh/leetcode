@@ -71,6 +71,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int PartitionString(string s) {
+        HashSet<char> curSet = new HashSet<char>();
+        int res = 1;
+        foreach (char c in s) {
+            if (curSet.Contains(c)) {
+                res++;
+                curSet.Clear();
+            }
+            curSet.Add(c);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func partitionString(s string) int {
+    curSet := make(map[rune]bool)
+    res := 1
+    for _, c := range s {
+        if curSet[c] {
+            res++
+            curSet = make(map[rune]bool)
+        }
+        curSet[c] = true
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun partitionString(s: String): Int {
+        val curSet = HashSet<Char>()
+        var res = 1
+        for (c in s) {
+            if (c in curSet) {
+                res++
+                curSet.clear()
+            }
+            curSet.add(c)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func partitionString(_ s: String) -> Int {
+        var curSet = Set<Character>()
+        var res = 1
+        for c in s {
+            if curSet.contains(c) {
+                res += 1
+                curSet.removeAll()
+            }
+            curSet.insert(c)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -160,6 +226,83 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int PartitionString(string s) {
+        int[] lastIdx = new int[26];
+        Array.Fill(lastIdx, -1);
+        int res = 1, start = 0;
+        for (int i = 0; i < s.Length; i++) {
+            int j = s[i] - 'a';
+            if (lastIdx[j] >= start) {
+                start = i;
+                res++;
+            }
+            lastIdx[j] = i;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func partitionString(s string) int {
+    lastIdx := make([]int, 26)
+    for i := range lastIdx {
+        lastIdx[i] = -1
+    }
+    res, start := 1, 0
+    for i, c := range s {
+        j := int(c - 'a')
+        if lastIdx[j] >= start {
+            start = i
+            res++
+        }
+        lastIdx[j] = i
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun partitionString(s: String): Int {
+        val lastIdx = IntArray(26) { -1 }
+        var res = 1
+        var start = 0
+        for (i in s.indices) {
+            val j = s[i] - 'a'
+            if (lastIdx[j] >= start) {
+                start = i
+                res++
+            }
+            lastIdx[j] = i
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func partitionString(_ s: String) -> Int {
+        var lastIdx = [Int](repeating: -1, count: 26)
+        var res = 1
+        var start = 0
+        let chars = Array(s)
+        for i in 0..<chars.count {
+            let j = Int(chars[i].asciiValue! - Character("a").asciiValue!)
+            if lastIdx[j] >= start {
+                start = i
+                res += 1
+            }
+            lastIdx[j] = i
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,6 +383,74 @@ class Solution {
             mask |= 1 << i;
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int PartitionString(string s) {
+        int res = 1, mask = 0;
+        foreach (char c in s) {
+            int i = c - 'a';
+            if ((mask & (1 << i)) != 0) {
+                mask = 0;
+                res++;
+            }
+            mask |= (1 << i);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func partitionString(s string) int {
+    res, mask := 1, 0
+    for _, c := range s {
+        i := int(c - 'a')
+        if mask&(1<<i) != 0 {
+            mask = 0
+            res++
+        }
+        mask |= 1 << i
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun partitionString(s: String): Int {
+        var res = 1
+        var mask = 0
+        for (c in s) {
+            val i = c - 'a'
+            if (mask and (1 shl i) != 0) {
+                mask = 0
+                res++
+            }
+            mask = mask or (1 shl i)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func partitionString(_ s: String) -> Int {
+        var res = 1
+        var mask = 0
+        for c in s {
+            let i = Int(c.asciiValue! - Character("a").asciiValue!)
+            if mask & (1 << i) != 0 {
+                mask = 0
+                res += 1
+            }
+            mask |= 1 << i
+        }
+        return res
     }
 }
 ```

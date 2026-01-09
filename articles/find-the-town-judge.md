@@ -113,6 +113,70 @@ public class Solution {
 }
 ```
 
+```go
+func findJudge(n int, trust [][]int) int {
+    incoming := make([]int, n+1)
+    outgoing := make([]int, n+1)
+
+    for _, t := range trust {
+        outgoing[t[0]]++
+        incoming[t[1]]++
+    }
+
+    for i := 1; i <= n; i++ {
+        if outgoing[i] == 0 && incoming[i] == n-1 {
+            return i
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findJudge(n: Int, trust: Array<IntArray>): Int {
+        val incoming = IntArray(n + 1)
+        val outgoing = IntArray(n + 1)
+
+        for (t in trust) {
+            outgoing[t[0]]++
+            incoming[t[1]]++
+        }
+
+        for (i in 1..n) {
+            if (outgoing[i] == 0 && incoming[i] == n - 1) {
+                return i
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findJudge(_ n: Int, _ trust: [[Int]]) -> Int {
+        var incoming = [Int](repeating: 0, count: n + 1)
+        var outgoing = [Int](repeating: 0, count: n + 1)
+
+        for t in trust {
+            outgoing[t[0]] += 1
+            incoming[t[1]] += 1
+        }
+
+        for i in 1...n {
+            if outgoing[i] == 0 && incoming[i] == n - 1 {
+                return i
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,6 +295,67 @@ public class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```go
+func findJudge(n int, trust [][]int) int {
+    delta := make([]int, n+1)
+
+    for _, t := range trust {
+        delta[t[0]]--
+        delta[t[1]]++
+    }
+
+    for i := 1; i <= n; i++ {
+        if delta[i] == n-1 {
+            return i
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findJudge(n: Int, trust: Array<IntArray>): Int {
+        val delta = IntArray(n + 1)
+
+        for (t in trust) {
+            delta[t[0]]--
+            delta[t[1]]++
+        }
+
+        for (i in 1..n) {
+            if (delta[i] == n - 1) {
+                return i
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findJudge(_ n: Int, _ trust: [[Int]]) -> Int {
+        var delta = [Int](repeating: 0, count: n + 1)
+
+        for t in trust {
+            delta[t[0]] -= 1
+            delta[t[1]] += 1
+        }
+
+        for i in 1...n {
+            if delta[i] == n - 1 {
+                return i
+            }
+        }
+
+        return -1
     }
 }
 ```

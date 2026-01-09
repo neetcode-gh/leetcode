@@ -92,6 +92,92 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> SequentialDigits(int low, int high) {
+        var res = new List<int>();
+        for (int num = low; num <= high; num++) {
+            string s = num.ToString();
+            bool flag = true;
+            for (int i = 1; i < s.Length; i++) {
+                if (s[i] - s[i - 1] != 1) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                res.Add(num);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func sequentialDigits(low int, high int) []int {
+    res := []int{}
+    for num := low; num <= high; num++ {
+        s := strconv.Itoa(num)
+        flag := true
+        for i := 1; i < len(s); i++ {
+            if s[i]-s[i-1] != 1 {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            res = append(res, num)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sequentialDigits(low: Int, high: Int): List<Int> {
+        val res = mutableListOf<Int>()
+        for (num in low..high) {
+            val s = num.toString()
+            var flag = true
+            for (i in 1 until s.length) {
+                if (s[i] - s[i - 1] != 1) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) {
+                res.add(num)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func sequentialDigits(_ low: Int, _ high: Int) -> [Int] {
+        var res = [Int]()
+        for num in low...high {
+            let s = Array(String(num))
+            var flag = true
+            for i in 1..<s.count {
+                if Int(s[i].asciiValue!) - Int(s[i - 1].asciiValue!) != 1 {
+                    flag = false
+                    break
+                }
+            }
+            if flag {
+                res.append(num)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -209,6 +295,115 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> SequentialDigits(int low, int high) {
+        var res = new List<int>();
+        int lowDigit = low.ToString().Length;
+        int highDigit = high.ToString().Length;
+
+        for (int digits = lowDigit; digits <= highDigit; digits++) {
+            for (int start = 1; start < 10; start++) {
+                if (start + digits > 10) {
+                    break;
+                }
+                int num = start;
+                int prev = start;
+                for (int i = 1; i < digits; i++) {
+                    num = num * 10 + (++prev);
+                }
+                if (num >= low && num <= high) {
+                    res.Add(num);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func sequentialDigits(low int, high int) []int {
+    res := []int{}
+    lowDigit := len(strconv.Itoa(low))
+    highDigit := len(strconv.Itoa(high))
+
+    for digits := lowDigit; digits <= highDigit; digits++ {
+        for start := 1; start < 10; start++ {
+            if start+digits > 10 {
+                break
+            }
+            num := start
+            prev := start
+            for i := 1; i < digits; i++ {
+                prev++
+                num = num*10 + prev
+            }
+            if num >= low && num <= high {
+                res = append(res, num)
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sequentialDigits(low: Int, high: Int): List<Int> {
+        val res = mutableListOf<Int>()
+        val lowDigit = low.toString().length
+        val highDigit = high.toString().length
+
+        for (digits in lowDigit..highDigit) {
+            for (start in 1..9) {
+                if (start + digits > 10) {
+                    break
+                }
+                var num = start
+                var prev = start
+                for (i in 1 until digits) {
+                    prev++
+                    num = num * 10 + prev
+                }
+                if (num in low..high) {
+                    res.add(num)
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func sequentialDigits(_ low: Int, _ high: Int) -> [Int] {
+        var res = [Int]()
+        let lowDigit = String(low).count
+        let highDigit = String(high).count
+
+        for digits in lowDigit...highDigit {
+            for start in 1..<10 {
+                if start + digits > 10 {
+                    break
+                }
+                var num = start
+                var prev = start
+                for _ in 1..<digits {
+                    prev += 1
+                    num = num * 10 + prev
+                }
+                if num >= low && num <= high {
+                    res.append(num)
+                }
+            }
+        }
+        return res
     }
 }
 ```
@@ -341,6 +536,122 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> SequentialDigits(int low, int high) {
+        var res = new List<int>();
+        var queue = new Queue<int>();
+
+        for (int i = 1; i < 10; i++) {
+            queue.Enqueue(i);
+        }
+
+        while (queue.Count > 0) {
+            int n = queue.Dequeue();
+            if (n > high) {
+                continue;
+            }
+            if (n >= low && n <= high) {
+                res.Add(n);
+            }
+            int ones = n % 10;
+            if (ones < 9) {
+                queue.Enqueue(n * 10 + (ones + 1));
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func sequentialDigits(low int, high int) []int {
+    res := []int{}
+    queue := []int{}
+
+    for i := 1; i < 10; i++ {
+        queue = append(queue, i)
+    }
+
+    for len(queue) > 0 {
+        n := queue[0]
+        queue = queue[1:]
+
+        if n > high {
+            continue
+        }
+        if n >= low && n <= high {
+            res = append(res, n)
+        }
+        ones := n % 10
+        if ones < 9 {
+            queue = append(queue, n*10+(ones+1))
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sequentialDigits(low: Int, high: Int): List<Int> {
+        val res = mutableListOf<Int>()
+        val queue = ArrayDeque<Int>()
+
+        for (i in 1..9) {
+            queue.add(i)
+        }
+
+        while (queue.isNotEmpty()) {
+            val n = queue.removeFirst()
+            if (n > high) {
+                continue
+            }
+            if (n in low..high) {
+                res.add(n)
+            }
+            val ones = n % 10
+            if (ones < 9) {
+                queue.add(n * 10 + (ones + 1))
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func sequentialDigits(_ low: Int, _ high: Int) -> [Int] {
+        var res = [Int]()
+        var queue = [Int]()
+
+        for i in 1..<10 {
+            queue.append(i)
+        }
+
+        while !queue.isEmpty {
+            let n = queue.removeFirst()
+            if n > high {
+                continue
+            }
+            if n >= low && n <= high {
+                res.append(n)
+            }
+            let ones = n % 10
+            if ones < 9 {
+                queue.append(n * 10 + (ones + 1))
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,6 +775,115 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> SequentialDigits(int low, int high) {
+        var res = new List<int>();
+
+        void Dfs(int num) {
+            if (num > high) {
+                return;
+            }
+            if (num >= low) {
+                res.Add(num);
+            }
+            int lastDigit = num % 10;
+            if (lastDigit < 9) {
+                Dfs(num * 10 + (lastDigit + 1));
+            }
+        }
+
+        for (int i = 1; i < 10; i++) {
+            Dfs(i);
+        }
+
+        res.Sort();
+        return res;
+    }
+}
+```
+
+```go
+func sequentialDigits(low int, high int) []int {
+    res := []int{}
+
+    var dfs func(num int)
+    dfs = func(num int) {
+        if num > high {
+            return
+        }
+        if num >= low {
+            res = append(res, num)
+        }
+        lastDigit := num % 10
+        if lastDigit < 9 {
+            dfs(num*10 + (lastDigit + 1))
+        }
+    }
+
+    for i := 1; i < 10; i++ {
+        dfs(i)
+    }
+
+    sort.Ints(res)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sequentialDigits(low: Int, high: Int): List<Int> {
+        val res = mutableListOf<Int>()
+
+        fun dfs(num: Int) {
+            if (num > high) {
+                return
+            }
+            if (num >= low) {
+                res.add(num)
+            }
+            val lastDigit = num % 10
+            if (lastDigit < 9) {
+                dfs(num * 10 + (lastDigit + 1))
+            }
+        }
+
+        for (i in 1..9) {
+            dfs(i)
+        }
+
+        return res.sorted()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sequentialDigits(_ low: Int, _ high: Int) -> [Int] {
+        var res = [Int]()
+
+        func dfs(_ num: Int) {
+            if num > high {
+                return
+            }
+            if num >= low {
+                res.append(num)
+            }
+            let lastDigit = num % 10
+            if lastDigit < 9 {
+                dfs(num * 10 + (lastDigit + 1))
+            }
+        }
+
+        for i in 1..<10 {
+            dfs(i)
+        }
+
+        return res.sorted()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -565,6 +985,96 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> SequentialDigits(int low, int high) {
+        string nums = "123456789";
+        var res = new List<int>();
+
+        for (int d = 2; d <= 9; d++) {
+            for (int i = 0; i <= 9 - d; i++) {
+                int num = int.Parse(nums.Substring(i, d));
+                if (num > high) {
+                    break;
+                }
+                if (num >= low && num <= high) {
+                    res.Add(num);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func sequentialDigits(low int, high int) []int {
+    nums := "123456789"
+    res := []int{}
+
+    for d := 2; d <= 9; d++ {
+        for i := 0; i <= 9-d; i++ {
+            num, _ := strconv.Atoi(nums[i : i+d])
+            if num > high {
+                break
+            }
+            if num >= low && num <= high {
+                res = append(res, num)
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sequentialDigits(low: Int, high: Int): List<Int> {
+        val nums = "123456789"
+        val res = mutableListOf<Int>()
+
+        for (d in 2..9) {
+            for (i in 0..(9 - d)) {
+                val num = nums.substring(i, i + d).toInt()
+                if (num > high) {
+                    break
+                }
+                if (num in low..high) {
+                    res.add(num)
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func sequentialDigits(_ low: Int, _ high: Int) -> [Int] {
+        let nums = Array("123456789")
+        var res = [Int]()
+
+        for d in 2...9 {
+            for i in 0...(9 - d) {
+                let num = Int(String(nums[i..<(i + d)]))!
+                if num > high {
+                    break
+                }
+                if num >= low && num <= high {
+                    res.append(num)
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

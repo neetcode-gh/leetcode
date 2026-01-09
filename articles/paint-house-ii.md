@@ -88,6 +88,257 @@ class Solution {
 }
 ```
 
+```cpp
+class Solution {
+private:
+    int n, k;
+    vector<vector<int>> costs;
+    unordered_map<string, int> memo;
+
+    int memoSolve(int houseNumber, int color) {
+        if (houseNumber == n - 1) {
+            return costs[houseNumber][color];
+        }
+
+        string key = to_string(houseNumber) + " " + to_string(color);
+        if (memo.find(key) != memo.end()) {
+            return memo[key];
+        }
+
+        int minRemainingCost = INT_MAX;
+        for (int nextColor = 0; nextColor < k; nextColor++) {
+            if (color == nextColor) continue;
+            int currentRemainingCost = memoSolve(houseNumber + 1, nextColor);
+            minRemainingCost = min(currentRemainingCost, minRemainingCost);
+        }
+        int totalCost = costs[houseNumber][color] + minRemainingCost;
+        memo[key] = totalCost;
+        return totalCost;
+    }
+
+public:
+    int minCostII(vector<vector<int>>& costs) {
+        if (costs.empty()) return 0;
+        this->costs = costs;
+        n = costs.size();
+        k = costs[0].size();
+
+        int minCost = INT_MAX;
+        for (int color = 0; color < k; color++) {
+            minCost = min(minCost, memoSolve(0, color));
+        }
+        return minCost;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs) {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+        const memo = new Map();
+
+        const memoSolve = (houseNumber, color) => {
+            if (houseNumber === n - 1) {
+                return costs[houseNumber][color];
+            }
+
+            const key = `${houseNumber} ${color}`;
+            if (memo.has(key)) {
+                return memo.get(key);
+            }
+
+            let minRemainingCost = Infinity;
+            for (let nextColor = 0; nextColor < k; nextColor++) {
+                if (color === nextColor) continue;
+                let currentRemainingCost = memoSolve(houseNumber + 1, nextColor);
+                minRemainingCost = Math.min(currentRemainingCost, minRemainingCost);
+            }
+            const totalCost = costs[houseNumber][color] + minRemainingCost;
+            memo.set(key, totalCost);
+            return totalCost;
+        };
+
+        let minCost = Infinity;
+        for (let color = 0; color < k; color++) {
+            minCost = Math.min(minCost, memoSolve(0, color));
+        }
+        return minCost;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int n, k;
+    private int[][] costs;
+    private Dictionary<string, int> memo;
+
+    public int MinCostII(int[][] costs) {
+        if (costs.Length == 0) return 0;
+        this.costs = costs;
+        n = costs.Length;
+        k = costs[0].Length;
+        memo = new Dictionary<string, int>();
+
+        int minCost = int.MaxValue;
+        for (int color = 0; color < k; color++) {
+            minCost = Math.Min(minCost, MemoSolve(0, color));
+        }
+        return minCost;
+    }
+
+    private int MemoSolve(int houseNumber, int color) {
+        if (houseNumber == n - 1) {
+            return costs[houseNumber][color];
+        }
+
+        string key = $"{houseNumber} {color}";
+        if (memo.ContainsKey(key)) {
+            return memo[key];
+        }
+
+        int minRemainingCost = int.MaxValue;
+        for (int nextColor = 0; nextColor < k; nextColor++) {
+            if (color == nextColor) continue;
+            int currentRemainingCost = MemoSolve(houseNumber + 1, nextColor);
+            minRemainingCost = Math.Min(currentRemainingCost, minRemainingCost);
+        }
+        int totalCost = costs[houseNumber][color] + minRemainingCost;
+        memo[key] = totalCost;
+        return totalCost;
+    }
+}
+```
+
+```go
+func minCostII(costs [][]int) int {
+    n := len(costs)
+    if n == 0 {
+        return 0
+    }
+    k := len(costs[0])
+    memo := make(map[string]int)
+
+    var memoSolve func(houseNumber, color int) int
+    memoSolve = func(houseNumber, color int) int {
+        if houseNumber == n-1 {
+            return costs[houseNumber][color]
+        }
+
+        key := fmt.Sprintf("%d %d", houseNumber, color)
+        if val, ok := memo[key]; ok {
+            return val
+        }
+
+        minRemainingCost := math.MaxInt32
+        for nextColor := 0; nextColor < k; nextColor++ {
+            if color == nextColor {
+                continue
+            }
+            currentRemainingCost := memoSolve(houseNumber+1, nextColor)
+            if currentRemainingCost < minRemainingCost {
+                minRemainingCost = currentRemainingCost
+            }
+        }
+        totalCost := costs[houseNumber][color] + minRemainingCost
+        memo[key] = totalCost
+        return totalCost
+    }
+
+    minCost := math.MaxInt32
+    for color := 0; color < k; color++ {
+        cost := memoSolve(0, color)
+        if cost < minCost {
+            minCost = cost
+        }
+    }
+    return minCost
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostII(costs: Array<IntArray>): Int {
+        val n = costs.size
+        if (n == 0) return 0
+        val k = costs[0].size
+        val memo = HashMap<String, Int>()
+
+        fun memoSolve(houseNumber: Int, color: Int): Int {
+            if (houseNumber == n - 1) {
+                return costs[houseNumber][color]
+            }
+
+            val key = "$houseNumber $color"
+            if (key in memo) {
+                return memo[key]!!
+            }
+
+            var minRemainingCost = Int.MAX_VALUE
+            for (nextColor in 0 until k) {
+                if (color == nextColor) continue
+                val currentRemainingCost = memoSolve(houseNumber + 1, nextColor)
+                minRemainingCost = minOf(currentRemainingCost, minRemainingCost)
+            }
+            val totalCost = costs[houseNumber][color] + minRemainingCost
+            memo[key] = totalCost
+            return totalCost
+        }
+
+        var minCost = Int.MAX_VALUE
+        for (color in 0 until k) {
+            minCost = minOf(minCost, memoSolve(0, color))
+        }
+        return minCost
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCostII(_ costs: [[Int]]) -> Int {
+        let n = costs.count
+        if n == 0 { return 0 }
+        let k = costs[0].count
+        var memo = [String: Int]()
+
+        func memoSolve(_ houseNumber: Int, _ color: Int) -> Int {
+            if houseNumber == n - 1 {
+                return costs[houseNumber][color]
+            }
+
+            let key = "\(houseNumber) \(color)"
+            if let val = memo[key] {
+                return val
+            }
+
+            var minRemainingCost = Int.max
+            for nextColor in 0..<k {
+                if color == nextColor { continue }
+                let currentRemainingCost = memoSolve(houseNumber + 1, nextColor)
+                minRemainingCost = min(currentRemainingCost, minRemainingCost)
+            }
+            let totalCost = costs[houseNumber][color] + minRemainingCost
+            memo[key] = totalCost
+            return totalCost
+        }
+
+        var minCost = Int.max
+        for color in 0..<k {
+            minCost = min(minCost, memoSolve(0, color))
+        }
+        return minCost
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -149,6 +400,168 @@ class Solution {
         }
 
         return min;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int minCostII(vector<vector<int>>& costs) {
+        if (costs.empty()) return 0;
+        int k = costs[0].size();
+        int n = costs.size();
+
+        for (int house = 1; house < n; house++) {
+            for (int color = 0; color < k; color++) {
+                int minCost = INT_MAX;
+                for (int previousColor = 0; previousColor < k; previousColor++) {
+                    if (color == previousColor) continue;
+                    minCost = min(minCost, costs[house - 1][previousColor]);
+                }
+                costs[house][color] += minCost;
+            }
+        }
+
+        int minVal = INT_MAX;
+        for (int c : costs[n - 1]) {
+            minVal = min(minVal, c);
+        }
+        return minVal;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs) {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+
+        for (let house = 1; house < n; house++) {
+            for (let color = 0; color < k; color++) {
+                let minCost = Infinity;
+                for (let previousColor = 0; previousColor < k; previousColor++) {
+                    if (color === previousColor) continue;
+                    minCost = Math.min(minCost, costs[house - 1][previousColor]);
+                }
+                costs[house][color] += minCost;
+            }
+        }
+
+        return Math.min(...costs[n - 1]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCostII(int[][] costs) {
+        if (costs.Length == 0) return 0;
+        int k = costs[0].Length;
+        int n = costs.Length;
+
+        for (int house = 1; house < n; house++) {
+            for (int color = 0; color < k; color++) {
+                int minCost = int.MaxValue;
+                for (int previousColor = 0; previousColor < k; previousColor++) {
+                    if (color == previousColor) continue;
+                    minCost = Math.Min(minCost, costs[house - 1][previousColor]);
+                }
+                costs[house][color] += minCost;
+            }
+        }
+
+        int minVal = int.MaxValue;
+        foreach (int c in costs[n - 1]) {
+            minVal = Math.Min(minVal, c);
+        }
+        return minVal;
+    }
+}
+```
+
+```go
+func minCostII(costs [][]int) int {
+    n := len(costs)
+    if n == 0 {
+        return 0
+    }
+    k := len(costs[0])
+
+    for house := 1; house < n; house++ {
+        for color := 0; color < k; color++ {
+            minCost := math.MaxInt32
+            for previousColor := 0; previousColor < k; previousColor++ {
+                if color == previousColor {
+                    continue
+                }
+                if costs[house-1][previousColor] < minCost {
+                    minCost = costs[house-1][previousColor]
+                }
+            }
+            costs[house][color] += minCost
+        }
+    }
+
+    minVal := math.MaxInt32
+    for _, c := range costs[n-1] {
+        if c < minVal {
+            minVal = c
+        }
+    }
+    return minVal
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostII(costs: Array<IntArray>): Int {
+        val n = costs.size
+        if (n == 0) return 0
+        val k = costs[0].size
+
+        for (house in 1 until n) {
+            for (color in 0 until k) {
+                var minCost = Int.MAX_VALUE
+                for (previousColor in 0 until k) {
+                    if (color == previousColor) continue
+                    minCost = minOf(minCost, costs[house - 1][previousColor])
+                }
+                costs[house][color] += minCost
+            }
+        }
+
+        return costs[n - 1].minOrNull() ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCostII(_ costs: [[Int]]) -> Int {
+        var costs = costs
+        let n = costs.count
+        if n == 0 { return 0 }
+        let k = costs[0].count
+
+        for house in 1..<n {
+            for color in 0..<k {
+                var minCost = Int.max
+                for previousColor in 0..<k {
+                    if color == previousColor { continue }
+                    minCost = min(minCost, costs[house - 1][previousColor])
+                }
+                costs[house][color] += minCost
+            }
+        }
+
+        return costs[n - 1].min() ?? 0
     }
 }
 ```
@@ -221,6 +634,192 @@ class Solution {
             min = Math.min(min, c);
         }
         return min;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int minCostII(vector<vector<int>>& costs) {
+        if (costs.empty()) return 0;
+        int k = costs[0].size();
+        int n = costs.size();
+
+        vector<int> previousRow = costs[0];
+
+        for (int house = 1; house < n; house++) {
+            vector<int> currentRow(k, 0);
+            for (int color = 0; color < k; color++) {
+                int minCost = INT_MAX;
+                for (int previousColor = 0; previousColor < k; previousColor++) {
+                    if (color == previousColor) continue;
+                    minCost = min(minCost, previousRow[previousColor]);
+                }
+                currentRow[color] = costs[house][color] + minCost;
+            }
+            previousRow = currentRow;
+        }
+
+        int minVal = INT_MAX;
+        for (int c : previousRow) {
+            minVal = min(minVal, c);
+        }
+        return minVal;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs) {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+
+        let previousRow = [...costs[0]];
+
+        for (let house = 1; house < n; house++) {
+            const currentRow = new Array(k).fill(0);
+            for (let color = 0; color < k; color++) {
+                let minCost = Infinity;
+                for (let previousColor = 0; previousColor < k; previousColor++) {
+                    if (color === previousColor) continue;
+                    minCost = Math.min(minCost, previousRow[previousColor]);
+                }
+                currentRow[color] = costs[house][color] + minCost;
+            }
+            previousRow = currentRow;
+        }
+
+        return Math.min(...previousRow);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCostII(int[][] costs) {
+        if (costs.Length == 0) return 0;
+        int k = costs[0].Length;
+        int n = costs.Length;
+
+        int[] previousRow = (int[])costs[0].Clone();
+
+        for (int house = 1; house < n; house++) {
+            int[] currentRow = new int[k];
+            for (int color = 0; color < k; color++) {
+                int minCost = int.MaxValue;
+                for (int previousColor = 0; previousColor < k; previousColor++) {
+                    if (color == previousColor) continue;
+                    minCost = Math.Min(minCost, previousRow[previousColor]);
+                }
+                currentRow[color] = costs[house][color] + minCost;
+            }
+            previousRow = currentRow;
+        }
+
+        int minVal = int.MaxValue;
+        foreach (int c in previousRow) {
+            minVal = Math.Min(minVal, c);
+        }
+        return minVal;
+    }
+}
+```
+
+```go
+func minCostII(costs [][]int) int {
+    n := len(costs)
+    if n == 0 {
+        return 0
+    }
+    k := len(costs[0])
+
+    previousRow := make([]int, k)
+    copy(previousRow, costs[0])
+
+    for house := 1; house < n; house++ {
+        currentRow := make([]int, k)
+        for color := 0; color < k; color++ {
+            minCost := math.MaxInt32
+            for previousColor := 0; previousColor < k; previousColor++ {
+                if color == previousColor {
+                    continue
+                }
+                if previousRow[previousColor] < minCost {
+                    minCost = previousRow[previousColor]
+                }
+            }
+            currentRow[color] = costs[house][color] + minCost
+        }
+        previousRow = currentRow
+    }
+
+    minVal := math.MaxInt32
+    for _, c := range previousRow {
+        if c < minVal {
+            minVal = c
+        }
+    }
+    return minVal
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostII(costs: Array<IntArray>): Int {
+        val n = costs.size
+        if (n == 0) return 0
+        val k = costs[0].size
+
+        var previousRow = costs[0].clone()
+
+        for (house in 1 until n) {
+            val currentRow = IntArray(k)
+            for (color in 0 until k) {
+                var minCost = Int.MAX_VALUE
+                for (previousColor in 0 until k) {
+                    if (color == previousColor) continue
+                    minCost = minOf(minCost, previousRow[previousColor])
+                }
+                currentRow[color] = costs[house][color] + minCost
+            }
+            previousRow = currentRow
+        }
+
+        return previousRow.minOrNull() ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCostII(_ costs: [[Int]]) -> Int {
+        let n = costs.count
+        if n == 0 { return 0 }
+        let k = costs[0].count
+
+        var previousRow = costs[0]
+
+        for house in 1..<n {
+            var currentRow = [Int](repeating: 0, count: k)
+            for color in 0..<k {
+                var minCost = Int.max
+                for previousColor in 0..<k {
+                    if color == previousColor { continue }
+                    minCost = min(minCost, previousRow[previousColor])
+                }
+                currentRow[color] = costs[house][color] + minCost
+            }
+            previousRow = currentRow
+        }
+
+        return previousRow.min() ?? 0
     }
 }
 ```
@@ -368,18 +967,18 @@ class Solution {
     minCostII(costs) {
         const n = costs.length;
         if (n === 0) return 0;
-        
+
         const k = costs[0].length;
-        
+
         for (let house = 1; house < n; house++) {
             // Find the colors with the minimum and second to minimum
             // in the previous row.
             let minColor = null;
             let secondMinColor = null;
-            
+
             for (let color = 0; color < k; color++) {
                 const cost = costs[house - 1][color];
-                
+
                 if (minColor === null || cost < costs[house - 1][minColor]) {
                     secondMinColor = minColor;
                     minColor = color;
@@ -387,7 +986,7 @@ class Solution {
                     secondMinColor = color;
                 }
             }
-            
+
             // And now update the costs for the current row.
             for (let color = 0; color < k; color++) {
                 if (color === minColor) {
@@ -397,9 +996,154 @@ class Solution {
                 }
             }
         }
-        
+
         // The answer will now be the minimum of the last row.
         return Math.min(...costs[n - 1]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCostII(int[][] costs) {
+        if (costs.Length == 0) return 0;
+        int k = costs[0].Length;
+        int n = costs.Length;
+
+        for (int house = 1; house < n; house++) {
+            int minColor = -1, secondMinColor = -1;
+            for (int color = 0; color < k; color++) {
+                int cost = costs[house - 1][color];
+                if (minColor == -1 || cost < costs[house - 1][minColor]) {
+                    secondMinColor = minColor;
+                    minColor = color;
+                } else if (secondMinColor == -1 || cost < costs[house - 1][secondMinColor]) {
+                    secondMinColor = color;
+                }
+            }
+
+            for (int color = 0; color < k; color++) {
+                if (color == minColor) {
+                    costs[house][color] += costs[house - 1][secondMinColor];
+                } else {
+                    costs[house][color] += costs[house - 1][minColor];
+                }
+            }
+        }
+
+        int minVal = int.MaxValue;
+        foreach (int c in costs[n - 1]) {
+            minVal = Math.Min(minVal, c);
+        }
+        return minVal;
+    }
+}
+```
+
+```go
+func minCostII(costs [][]int) int {
+    n := len(costs)
+    if n == 0 {
+        return 0
+    }
+    k := len(costs[0])
+
+    for house := 1; house < n; house++ {
+        minColor, secondMinColor := -1, -1
+        for color := 0; color < k; color++ {
+            cost := costs[house-1][color]
+            if minColor == -1 || cost < costs[house-1][minColor] {
+                secondMinColor = minColor
+                minColor = color
+            } else if secondMinColor == -1 || cost < costs[house-1][secondMinColor] {
+                secondMinColor = color
+            }
+        }
+
+        for color := 0; color < k; color++ {
+            if color == minColor {
+                costs[house][color] += costs[house-1][secondMinColor]
+            } else {
+                costs[house][color] += costs[house-1][minColor]
+            }
+        }
+    }
+
+    minVal := math.MaxInt32
+    for _, c := range costs[n-1] {
+        if c < minVal {
+            minVal = c
+        }
+    }
+    return minVal
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostII(costs: Array<IntArray>): Int {
+        val n = costs.size
+        if (n == 0) return 0
+        val k = costs[0].size
+
+        for (house in 1 until n) {
+            var minColor = -1
+            var secondMinColor = -1
+            for (color in 0 until k) {
+                val cost = costs[house - 1][color]
+                if (minColor == -1 || cost < costs[house - 1][minColor]) {
+                    secondMinColor = minColor
+                    minColor = color
+                } else if (secondMinColor == -1 || cost < costs[house - 1][secondMinColor]) {
+                    secondMinColor = color
+                }
+            }
+
+            for (color in 0 until k) {
+                if (color == minColor) {
+                    costs[house][color] += costs[house - 1][secondMinColor]
+                } else {
+                    costs[house][color] += costs[house - 1][minColor]
+                }
+            }
+        }
+
+        return costs[n - 1].minOrNull() ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCostII(_ costs: [[Int]]) -> Int {
+        var costs = costs
+        let n = costs.count
+        if n == 0 { return 0 }
+        let k = costs[0].count
+
+        for house in 1..<n {
+            var minColor = -1
+            var secondMinColor = -1
+            for color in 0..<k {
+                let cost = costs[house - 1][color]
+                if minColor == -1 || cost < costs[house - 1][minColor] {
+                    secondMinColor = minColor
+                    minColor = color
+                } else if secondMinColor == -1 || cost < costs[house - 1][secondMinColor] {
+                    secondMinColor = color
+                }
+            }
+
+            for color in 0..<k {
+                if color == minColor {
+                    costs[house][color] += costs[house - 1][secondMinColor]
+                } else {
+                    costs[house][color] += costs[house - 1][minColor]
+                }
+            }
+        }
+
+        return costs[n - 1].min() ?? 0
     }
 }
 ```
@@ -516,6 +1260,287 @@ class Solution {
         }
 
         return prevMin;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int minCostII(vector<vector<int>>& costs) {
+        if (costs.empty()) return 0;
+        int k = costs[0].size();
+        int n = costs.size();
+
+        int prevMin = -1, prevSecondMin = -1, prevMinColor = -1;
+        for (int color = 0; color < k; color++) {
+            int cost = costs[0][color];
+            if (prevMin == -1 || cost < prevMin) {
+                prevSecondMin = prevMin;
+                prevMinColor = color;
+                prevMin = cost;
+            } else if (prevSecondMin == -1 || cost < prevSecondMin) {
+                prevSecondMin = cost;
+            }
+        }
+
+        for (int house = 1; house < n; house++) {
+            int minCost = -1, secondMin = -1, minColor = -1;
+            for (int color = 0; color < k; color++) {
+                int cost = costs[house][color];
+                if (color == prevMinColor) {
+                    cost += prevSecondMin;
+                } else {
+                    cost += prevMin;
+                }
+                if (minCost == -1 || cost < minCost) {
+                    secondMin = minCost;
+                    minColor = color;
+                    minCost = cost;
+                } else if (secondMin == -1 || cost < secondMin) {
+                    secondMin = cost;
+                }
+            }
+            prevMin = minCost;
+            prevSecondMin = secondMin;
+            prevMinColor = minColor;
+        }
+
+        return prevMin;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[][]} costs
+     * @return {number}
+     */
+    minCostII(costs) {
+        const n = costs.length;
+        if (n === 0) return 0;
+        const k = costs[0].length;
+
+        let prevMin = null, prevSecondMin = null, prevMinColor = null;
+        for (let color = 0; color < k; color++) {
+            const cost = costs[0][color];
+            if (prevMin === null || cost < prevMin) {
+                prevSecondMin = prevMin;
+                prevMinColor = color;
+                prevMin = cost;
+            } else if (prevSecondMin === null || cost < prevSecondMin) {
+                prevSecondMin = cost;
+            }
+        }
+
+        for (let house = 1; house < n; house++) {
+            let min = null, secondMin = null, minColor = null;
+            for (let color = 0; color < k; color++) {
+                let cost = costs[house][color];
+                if (color === prevMinColor) {
+                    cost += prevSecondMin;
+                } else {
+                    cost += prevMin;
+                }
+                if (min === null || cost < min) {
+                    secondMin = min;
+                    minColor = color;
+                    min = cost;
+                } else if (secondMin === null || cost < secondMin) {
+                    secondMin = cost;
+                }
+            }
+            prevMin = min;
+            prevSecondMin = secondMin;
+            prevMinColor = minColor;
+        }
+
+        return prevMin;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCostII(int[][] costs) {
+        if (costs.Length == 0) return 0;
+        int k = costs[0].Length;
+        int n = costs.Length;
+
+        int prevMin = -1, prevSecondMin = -1, prevMinColor = -1;
+        for (int color = 0; color < k; color++) {
+            int cost = costs[0][color];
+            if (prevMin == -1 || cost < prevMin) {
+                prevSecondMin = prevMin;
+                prevMinColor = color;
+                prevMin = cost;
+            } else if (prevSecondMin == -1 || cost < prevSecondMin) {
+                prevSecondMin = cost;
+            }
+        }
+
+        for (int house = 1; house < n; house++) {
+            int minCost = -1, secondMin = -1, minColor = -1;
+            for (int color = 0; color < k; color++) {
+                int cost = costs[house][color];
+                if (color == prevMinColor) {
+                    cost += prevSecondMin;
+                } else {
+                    cost += prevMin;
+                }
+                if (minCost == -1 || cost < minCost) {
+                    secondMin = minCost;
+                    minColor = color;
+                    minCost = cost;
+                } else if (secondMin == -1 || cost < secondMin) {
+                    secondMin = cost;
+                }
+            }
+            prevMin = minCost;
+            prevSecondMin = secondMin;
+            prevMinColor = minColor;
+        }
+
+        return prevMin;
+    }
+}
+```
+
+```go
+func minCostII(costs [][]int) int {
+    n := len(costs)
+    if n == 0 {
+        return 0
+    }
+    k := len(costs[0])
+
+    prevMin, prevSecondMin, prevMinColor := -1, -1, -1
+    for color := 0; color < k; color++ {
+        cost := costs[0][color]
+        if prevMin == -1 || cost < prevMin {
+            prevSecondMin = prevMin
+            prevMinColor = color
+            prevMin = cost
+        } else if prevSecondMin == -1 || cost < prevSecondMin {
+            prevSecondMin = cost
+        }
+    }
+
+    for house := 1; house < n; house++ {
+        minCost, secondMin, minColor := -1, -1, -1
+        for color := 0; color < k; color++ {
+            cost := costs[house][color]
+            if color == prevMinColor {
+                cost += prevSecondMin
+            } else {
+                cost += prevMin
+            }
+            if minCost == -1 || cost < minCost {
+                secondMin = minCost
+                minColor = color
+                minCost = cost
+            } else if secondMin == -1 || cost < secondMin {
+                secondMin = cost
+            }
+        }
+        prevMin = minCost
+        prevSecondMin = secondMin
+        prevMinColor = minColor
+    }
+
+    return prevMin
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostII(costs: Array<IntArray>): Int {
+        val n = costs.size
+        if (n == 0) return 0
+        val k = costs[0].size
+
+        var prevMin = -1
+        var prevSecondMin = -1
+        var prevMinColor = -1
+        for (color in 0 until k) {
+            val cost = costs[0][color]
+            if (prevMin == -1 || cost < prevMin) {
+                prevSecondMin = prevMin
+                prevMinColor = color
+                prevMin = cost
+            } else if (prevSecondMin == -1 || cost < prevSecondMin) {
+                prevSecondMin = cost
+            }
+        }
+
+        for (house in 1 until n) {
+            var minCost = -1
+            var secondMin = -1
+            var minColor = -1
+            for (color in 0 until k) {
+                var cost = costs[house][color]
+                cost += if (color == prevMinColor) prevSecondMin else prevMin
+                if (minCost == -1 || cost < minCost) {
+                    secondMin = minCost
+                    minColor = color
+                    minCost = cost
+                } else if (secondMin == -1 || cost < secondMin) {
+                    secondMin = cost
+                }
+            }
+            prevMin = minCost
+            prevSecondMin = secondMin
+            prevMinColor = minColor
+        }
+
+        return prevMin
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCostII(_ costs: [[Int]]) -> Int {
+        let n = costs.count
+        if n == 0 { return 0 }
+        let k = costs[0].count
+
+        var prevMin = -1
+        var prevSecondMin = -1
+        var prevMinColor = -1
+        for color in 0..<k {
+            let cost = costs[0][color]
+            if prevMin == -1 || cost < prevMin {
+                prevSecondMin = prevMin
+                prevMinColor = color
+                prevMin = cost
+            } else if prevSecondMin == -1 || cost < prevSecondMin {
+                prevSecondMin = cost
+            }
+        }
+
+        for house in 1..<n {
+            var minCost = -1
+            var secondMin = -1
+            var minColor = -1
+            for color in 0..<k {
+                var cost = costs[house][color]
+                cost += (color == prevMinColor) ? prevSecondMin : prevMin
+                if minCost == -1 || cost < minCost {
+                    secondMin = minCost
+                    minColor = color
+                    minCost = cost
+                } else if secondMin == -1 || cost < secondMin {
+                    secondMin = cost
+                }
+            }
+            prevMin = minCost
+            prevSecondMin = secondMin
+            prevMinColor = minColor
+        }
+
+        return prevMin
     }
 }
 ```

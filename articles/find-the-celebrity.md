@@ -69,6 +69,121 @@ function solution(knows) {
 }
 ```
 
+```csharp
+/* The Knows API is defined in the parent class Relation.
+      bool Knows(int a, int b); */
+
+public class Solution : Relation {
+    private int numberOfPeople;
+
+    public int FindCelebrity(int n) {
+        numberOfPeople = n;
+        for (int i = 0; i < n; i++) {
+            if (IsCelebrity(i)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
+    private bool IsCelebrity(int i) {
+        for (int j = 0; j < numberOfPeople; j++) {
+            if (i == j) continue;
+            if (Knows(i, j) || !Knows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+/* The knows API is already defined for you.
+      knows := func(a, b int) bool */
+
+func solution(knows func(a, b int) bool) func(n int) int {
+    return func(n int) int {
+        isCelebrity := func(i int) bool {
+            for j := 0; j < n; j++ {
+                if i == j {
+                    continue
+                }
+                if knows(i, j) || !knows(j, i) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        for i := 0; i < n; i++ {
+            if isCelebrity(i) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```kotlin
+/* The knows API is defined in the parent class Relation.
+      fun knows(a: Int, b: Int): Boolean */
+
+class Solution : Relation() {
+    private var numberOfPeople = 0
+
+    override fun findCelebrity(n: Int): Int {
+        numberOfPeople = n
+        for (i in 0 until n) {
+            if (isCelebrity(i)) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    private fun isCelebrity(i: Int): Boolean {
+        for (j in 0 until numberOfPeople) {
+            if (i == j) continue
+            if (knows(i, j) || !knows(j, i)) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+/* The knows API is defined in the parent class Relation.
+      func knows(_ a: Int, _ b: Int) -> Bool */
+
+class Solution : Relation {
+    private var numberOfPeople = 0
+
+    func findCelebrity(_ n: Int) -> Int {
+        numberOfPeople = n
+        for i in 0..<n {
+            if isCelebrity(i) {
+                return i
+            }
+        }
+        return -1
+    }
+
+    private func isCelebrity(_ i: Int) -> Bool {
+        for j in 0..<numberOfPeople {
+            if i == j { continue }
+            if knows(i, j) || !knows(j, i) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -198,6 +313,137 @@ function solution(knows) {
 }
 ```
 
+```csharp
+/* The Knows API is defined in the parent class Relation.
+      bool Knows(int a, int b); */
+
+public class Solution : Relation {
+    private int numberOfPeople;
+
+    public int FindCelebrity(int n) {
+        numberOfPeople = n;
+        int celebrityCandidate = 0;
+        for (int i = 0; i < n; i++) {
+            if (Knows(celebrityCandidate, i)) {
+                celebrityCandidate = i;
+            }
+        }
+        if (IsCelebrity(celebrityCandidate)) {
+            return celebrityCandidate;
+        }
+        return -1;
+    }
+
+    private bool IsCelebrity(int i) {
+        for (int j = 0; j < numberOfPeople; j++) {
+            if (i == j) continue;
+            if (Knows(i, j) || !Knows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+/* The knows API is already defined for you.
+      knows := func(a, b int) bool */
+
+func solution(knows func(a, b int) bool) func(n int) int {
+    return func(n int) int {
+        isCelebrity := func(i int) bool {
+            for j := 0; j < n; j++ {
+                if i == j {
+                    continue
+                }
+                if knows(i, j) || !knows(j, i) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        celebrityCandidate := 0
+        for i := 1; i < n; i++ {
+            if knows(celebrityCandidate, i) {
+                celebrityCandidate = i
+            }
+        }
+        if isCelebrity(celebrityCandidate) {
+            return celebrityCandidate
+        }
+        return -1
+    }
+}
+```
+
+```kotlin
+/* The knows API is defined in the parent class Relation.
+      fun knows(a: Int, b: Int): Boolean */
+
+class Solution : Relation() {
+    private var numberOfPeople = 0
+
+    override fun findCelebrity(n: Int): Int {
+        numberOfPeople = n
+        var celebrityCandidate = 0
+        for (i in 0 until n) {
+            if (knows(celebrityCandidate, i)) {
+                celebrityCandidate = i
+            }
+        }
+        if (isCelebrity(celebrityCandidate)) {
+            return celebrityCandidate
+        }
+        return -1
+    }
+
+    private fun isCelebrity(i: Int): Boolean {
+        for (j in 0 until numberOfPeople) {
+            if (i == j) continue
+            if (knows(i, j) || !knows(j, i)) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+/* The knows API is defined in the parent class Relation.
+      func knows(_ a: Int, _ b: Int) -> Bool */
+
+class Solution : Relation {
+    private var numberOfPeople = 0
+
+    func findCelebrity(_ n: Int) -> Int {
+        numberOfPeople = n
+        var celebrityCandidate = 0
+        for i in 1..<n {
+            if knows(celebrityCandidate, i) {
+                celebrityCandidate = i
+            }
+        }
+        if isCelebrity(celebrityCandidate) {
+            return celebrityCandidate
+        }
+        return -1
+    }
+
+    private func isCelebrity(_ i: Int) -> Bool {
+        for j in 0..<numberOfPeople {
+            if i == j { continue }
+            if knows(i, j) || !knows(j, i) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,6 +566,173 @@ function solution(knows) {
             return celebrityCandidate;
         }
         return -1;
+    }
+}
+```
+
+```csharp
+/* The Knows API is defined in the parent class Relation.
+      bool Knows(int a, int b); */
+
+public class Solution : Relation {
+    private int numberOfPeople;
+    private Dictionary<(int, int), bool> cache = new Dictionary<(int, int), bool>();
+
+    private bool CachedKnows(int a, int b) {
+        if (!cache.ContainsKey((a, b))) {
+            cache[(a, b)] = Knows(a, b);
+        }
+        return cache[(a, b)];
+    }
+
+    public int FindCelebrity(int n) {
+        numberOfPeople = n;
+        int celebrityCandidate = 0;
+        for (int i = 0; i < n; i++) {
+            if (CachedKnows(celebrityCandidate, i)) {
+                celebrityCandidate = i;
+            }
+        }
+        if (IsCelebrity(celebrityCandidate)) {
+            return celebrityCandidate;
+        }
+        return -1;
+    }
+
+    private bool IsCelebrity(int i) {
+        for (int j = 0; j < numberOfPeople; j++) {
+            if (i == j) continue;
+            if (CachedKnows(i, j) || !CachedKnows(j, i)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+/* The knows API is already defined for you.
+      knows := func(a, b int) bool */
+
+func solution(knows func(a, b int) bool) func(n int) int {
+    cache := make(map[[2]int]bool)
+
+    cachedKnows := func(a, b int) bool {
+        key := [2]int{a, b}
+        if val, ok := cache[key]; ok {
+            return val
+        }
+        result := knows(a, b)
+        cache[key] = result
+        return result
+    }
+
+    return func(n int) int {
+        isCelebrity := func(i int) bool {
+            for j := 0; j < n; j++ {
+                if i == j {
+                    continue
+                }
+                if cachedKnows(i, j) || !cachedKnows(j, i) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        celebrityCandidate := 0
+        for i := 1; i < n; i++ {
+            if cachedKnows(celebrityCandidate, i) {
+                celebrityCandidate = i
+            }
+        }
+        if isCelebrity(celebrityCandidate) {
+            return celebrityCandidate
+        }
+        return -1
+    }
+}
+```
+
+```kotlin
+/* The knows API is defined in the parent class Relation.
+      fun knows(a: Int, b: Int): Boolean */
+
+class Solution : Relation() {
+    private var numberOfPeople = 0
+    private val cache = HashMap<Pair<Int, Int>, Boolean>()
+
+    private fun cachedKnows(a: Int, b: Int): Boolean {
+        return cache.getOrPut(Pair(a, b)) { knows(a, b) }
+    }
+
+    override fun findCelebrity(n: Int): Int {
+        numberOfPeople = n
+        var celebrityCandidate = 0
+        for (i in 0 until n) {
+            if (cachedKnows(celebrityCandidate, i)) {
+                celebrityCandidate = i
+            }
+        }
+        if (isCelebrity(celebrityCandidate)) {
+            return celebrityCandidate
+        }
+        return -1
+    }
+
+    private fun isCelebrity(i: Int): Boolean {
+        for (j in 0 until numberOfPeople) {
+            if (i == j) continue
+            if (cachedKnows(i, j) || !cachedKnows(j, i)) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+/* The knows API is defined in the parent class Relation.
+      func knows(_ a: Int, _ b: Int) -> Bool */
+
+class Solution : Relation {
+    private var numberOfPeople = 0
+    private var cache = [String: Bool]()
+
+    private func cachedKnows(_ a: Int, _ b: Int) -> Bool {
+        let key = "\(a),\(b)"
+        if let cached = cache[key] {
+            return cached
+        }
+        let result = knows(a, b)
+        cache[key] = result
+        return result
+    }
+
+    func findCelebrity(_ n: Int) -> Int {
+        numberOfPeople = n
+        var celebrityCandidate = 0
+        for i in 1..<n {
+            if cachedKnows(celebrityCandidate, i) {
+                celebrityCandidate = i
+            }
+        }
+        if isCelebrity(celebrityCandidate) {
+            return celebrityCandidate
+        }
+        return -1
+    }
+
+    private func isCelebrity(_ i: Int) -> Bool {
+        for j in 0..<numberOfPeople {
+            if i == j { continue }
+            if cachedKnows(i, j) || !cachedKnows(j, i) {
+                return false
+            }
+        }
+        return true
     }
 }
 ```

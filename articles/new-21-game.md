@@ -145,6 +145,99 @@ public class Solution {
 }
 ```
 
+```go
+func new21Game(n int, k int, maxPts int) float64 {
+    if k == 0 {
+        return 1.0
+    }
+    dp := make([]float64, k)
+    for i := range dp {
+        dp[i] = -1.0
+    }
+
+    var dfs func(score int) float64
+    dfs = func(score int) float64 {
+        if score >= k {
+            if score <= n {
+                return 1.0
+            }
+            return 0.0
+        }
+        if dp[score] != -1.0 {
+            return dp[score]
+        }
+
+        prob := 0.0
+        for i := 1; i <= maxPts; i++ {
+            prob += dfs(score + i)
+        }
+
+        dp[score] = prob / float64(maxPts)
+        return dp[score]
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: DoubleArray
+
+    fun new21Game(n: Int, k: Int, maxPts: Int): Double {
+        if (k == 0) return 1.0
+        dp = DoubleArray(k) { -1.0 }
+        return dfs(0, n, k, maxPts)
+    }
+
+    private fun dfs(score: Int, n: Int, k: Int, maxPts: Int): Double {
+        if (score >= k) {
+            return if (score <= n) 1.0 else 0.0
+        }
+        if (dp[score] != -1.0) {
+            return dp[score]
+        }
+
+        var prob = 0.0
+        for (i in 1..maxPts) {
+            prob += dfs(score + i, n, k, maxPts)
+        }
+
+        dp[score] = prob / maxPts
+        return dp[score]
+    }
+}
+```
+
+```swift
+class Solution {
+    var dp: [Double] = []
+
+    func new21Game(_ n: Int, _ k: Int, _ maxPts: Int) -> Double {
+        if k == 0 { return 1.0 }
+        dp = Array(repeating: -1.0, count: k)
+        return dfs(0, n, k, maxPts)
+    }
+
+    private func dfs(_ score: Int, _ n: Int, _ k: Int, _ maxPts: Int) -> Double {
+        if score >= k {
+            return score <= n ? 1.0 : 0.0
+        }
+        if dp[score] != -1.0 {
+            return dp[score]
+        }
+
+        var prob = 0.0
+        for i in 1...maxPts {
+            prob += dfs(score + i, n, k, maxPts)
+        }
+
+        dp[score] = prob / Double(maxPts)
+        return dp[score]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +406,109 @@ public class Solution {
 }
 ```
 
+```go
+func new21Game(n int, k int, maxPts int) float64 {
+    if k == 0 {
+        return 1.0
+    }
+    dp := make([]float64, k+maxPts)
+    for i := range dp {
+        dp[i] = -1.0
+    }
+
+    var dfs func(score int) float64
+    dfs = func(score int) float64 {
+        if score == k-1 {
+            return float64(min(n-k+1, maxPts)) / float64(maxPts)
+        }
+        if score > n {
+            return 0.0
+        }
+        if score >= k {
+            return 1.0
+        }
+        if dp[score] != -1.0 {
+            return dp[score]
+        }
+
+        dp[score] = dfs(score + 1)
+        dp[score] -= (dfs(score+1+maxPts) - dfs(score+1)) / float64(maxPts)
+        return dp[score]
+    }
+
+    return dfs(0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: DoubleArray
+
+    fun new21Game(n: Int, k: Int, maxPts: Int): Double {
+        if (k == 0) return 1.0
+        dp = DoubleArray(k + maxPts) { -1.0 }
+        return dfs(0, n, k, maxPts)
+    }
+
+    private fun dfs(score: Int, n: Int, k: Int, maxPts: Int): Double {
+        if (score == k - 1) {
+            return minOf(n - k + 1, maxPts).toDouble() / maxPts
+        }
+        if (score > n) {
+            return 0.0
+        }
+        if (score >= k) {
+            return 1.0
+        }
+        if (dp[score] != -1.0) {
+            return dp[score]
+        }
+
+        dp[score] = dfs(score + 1, n, k, maxPts)
+        dp[score] -= (dfs(score + 1 + maxPts, n, k, maxPts) - dfs(score + 1, n, k, maxPts)) / maxPts
+        return dp[score]
+    }
+}
+```
+
+```swift
+class Solution {
+    var dp: [Double] = []
+
+    func new21Game(_ n: Int, _ k: Int, _ maxPts: Int) -> Double {
+        if k == 0 { return 1.0 }
+        dp = Array(repeating: -1.0, count: k + maxPts)
+        return dfs(0, n, k, maxPts)
+    }
+
+    private func dfs(_ score: Int, _ n: Int, _ k: Int, _ maxPts: Int) -> Double {
+        if score == k - 1 {
+            return Double(min(n - k + 1, maxPts)) / Double(maxPts)
+        }
+        if score > n {
+            return 0.0
+        }
+        if score >= k {
+            return 1.0
+        }
+        if dp[score] != -1.0 {
+            return dp[score]
+        }
+
+        dp[score] = dfs(score + 1, n, k, maxPts)
+        dp[score] -= (dfs(score + 1 + maxPts, n, k, maxPts) - dfs(score + 1, n, k, maxPts)) / Double(maxPts)
+        return dp[score]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -441,6 +637,76 @@ public class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```go
+func new21Game(n int, k int, maxPts int) float64 {
+    dp := make([]float64, n+1)
+    dp[0] = 1.0
+
+    for score := 1; score <= n; score++ {
+        for draw := 1; draw <= maxPts; draw++ {
+            if score-draw >= 0 && score-draw < k {
+                dp[score] += dp[score-draw] / float64(maxPts)
+            }
+        }
+    }
+
+    result := 0.0
+    for i := k; i <= n; i++ {
+        result += dp[i]
+    }
+
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun new21Game(n: Int, k: Int, maxPts: Int): Double {
+        val dp = DoubleArray(n + 1)
+        dp[0] = 1.0
+
+        for (score in 1..n) {
+            for (draw in 1..maxPts) {
+                if (score - draw >= 0 && score - draw < k) {
+                    dp[score] += dp[score - draw] / maxPts
+                }
+            }
+        }
+
+        var result = 0.0
+        for (i in k..n) {
+            result += dp[i]
+        }
+
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func new21Game(_ n: Int, _ k: Int, _ maxPts: Int) -> Double {
+        var dp = Array(repeating: 0.0, count: n + 1)
+        dp[0] = 1.0
+
+        for score in 1...n {
+            for draw in 1...maxPts {
+                if score - draw >= 0 && score - draw < k {
+                    dp[score] += dp[score - draw] / Double(maxPts)
+                }
+            }
+        }
+
+        var result = 0.0
+        for i in k...n {
+            result += dp[i]
+        }
+
+        return result
     }
 }
 ```
@@ -579,6 +845,82 @@ public class Solution {
             windowSum += dp[i] - remove;
         }
         return dp[0];
+    }
+}
+```
+
+```go
+func new21Game(n int, k int, maxPts int) float64 {
+    if k == 0 {
+        return 1.0
+    }
+    windowSum := 0.0
+    for i := k; i < k+maxPts; i++ {
+        if i <= n {
+            windowSum += 1.0
+        }
+    }
+    dp := make(map[int]float64)
+    for i := k - 1; i >= 0; i-- {
+        dp[i] = windowSum / float64(maxPts)
+        remove := 0.0
+        if i+maxPts <= n {
+            if val, ok := dp[i+maxPts]; ok {
+                remove = val
+            } else {
+                remove = 1.0
+            }
+        }
+        windowSum += dp[i] - remove
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun new21Game(n: Int, k: Int, maxPts: Int): Double {
+        if (k == 0) {
+            return 1.0
+        }
+        var windowSum = 0.0
+        for (i in k until k + maxPts) {
+            windowSum += if (i <= n) 1.0 else 0.0
+        }
+        val dp = HashMap<Int, Double>()
+        for (i in k - 1 downTo 0) {
+            dp[i] = windowSum / maxPts
+            var remove = 0.0
+            if (i + maxPts <= n) {
+                remove = dp[i + maxPts] ?: 1.0
+            }
+            windowSum += dp[i]!! - remove
+        }
+        return dp[0]!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func new21Game(_ n: Int, _ k: Int, _ maxPts: Int) -> Double {
+        if k == 0 {
+            return 1.0
+        }
+        var windowSum = 0.0
+        for i in k..<(k + maxPts) {
+            windowSum += i <= n ? 1.0 : 0.0
+        }
+        var dp = [Int: Double]()
+        for i in stride(from: k - 1, through: 0, by: -1) {
+            dp[i] = windowSum / Double(maxPts)
+            var remove = 0.0
+            if i + maxPts <= n {
+                remove = dp[i + maxPts] ?? 1.0
+            }
+            windowSum += dp[i]! - remove
+        }
+        return dp[0]!
     }
 }
 ```

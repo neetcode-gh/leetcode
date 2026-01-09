@@ -96,6 +96,105 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindLeastNumOfUniqueInts(int[] arr, int k) {
+        Dictionary<int, int> freqMap = new Dictionary<int, int>();
+        foreach (int num in arr) {
+            if (!freqMap.ContainsKey(num)) freqMap[num] = 0;
+            freqMap[num]++;
+        }
+
+        List<int> freq = new List<int>(freqMap.Values);
+        freq.Sort();
+
+        int n = freq.Count;
+        for (int i = 0; i < n; i++) {
+            if (k >= freq[i]) {
+                k -= freq[i];
+            } else {
+                return n - i;
+            }
+        }
+        return 0;
+    }
+}
+```
+
+```go
+func findLeastNumOfUniqueInts(arr []int, k int) int {
+    freqMap := make(map[int]int)
+    for _, num := range arr {
+        freqMap[num]++
+    }
+
+    freq := make([]int, 0, len(freqMap))
+    for _, count := range freqMap {
+        freq = append(freq, count)
+    }
+
+    sort.Ints(freq)
+
+    n := len(freq)
+    for i := 0; i < n; i++ {
+        if k >= freq[i] {
+            k -= freq[i]
+        } else {
+            return n - i
+        }
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun findLeastNumOfUniqueInts(arr: IntArray, k: Int): Int {
+        var remaining = k
+        val freqMap = HashMap<Int, Int>()
+        for (num in arr) {
+            freqMap[num] = freqMap.getOrDefault(num, 0) + 1
+        }
+
+        val freq = freqMap.values.sorted()
+
+        val n = freq.size
+        for (i in 0 until n) {
+            if (remaining >= freq[i]) {
+                remaining -= freq[i]
+            } else {
+                return n - i
+            }
+        }
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLeastNumOfUniqueInts(_ arr: [Int], _ k: Int) -> Int {
+        var k = k
+        var freqMap = [Int: Int]()
+        for num in arr {
+            freqMap[num, default: 0] += 1
+        }
+
+        let freq = freqMap.values.sorted()
+
+        let n = freq.count
+        for i in 0..<n {
+            if k >= freq[i] {
+                k -= freq[i]
+            } else {
+                return n - i
+            }
+        }
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,6 +299,126 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindLeastNumOfUniqueInts(int[] arr, int k) {
+        Dictionary<int, int> freqMap = new Dictionary<int, int>();
+        foreach (int num in arr) {
+            if (!freqMap.ContainsKey(num)) freqMap[num] = 0;
+            freqMap[num]++;
+        }
+
+        PriorityQueue<int, int> minHeap = new PriorityQueue<int, int>();
+        foreach (int f in freqMap.Values) {
+            minHeap.Enqueue(f, f);
+        }
+
+        int res = minHeap.Count;
+        while (k > 0 && minHeap.Count > 0) {
+            int f = minHeap.Dequeue();
+            if (k >= f) {
+                k -= f;
+                res--;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findLeastNumOfUniqueInts(arr []int, k int) int {
+    freqMap := make(map[int]int)
+    for _, num := range arr {
+        freqMap[num]++
+    }
+
+    minHeap := &IntHeap{}
+    heap.Init(minHeap)
+    for _, count := range freqMap {
+        heap.Push(minHeap, count)
+    }
+
+    res := minHeap.Len()
+    for k > 0 && minHeap.Len() > 0 {
+        f := heap.Pop(minHeap).(int)
+        if k >= f {
+            k -= f
+            res--
+        }
+    }
+    return res
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findLeastNumOfUniqueInts(arr: IntArray, k: Int): Int {
+        var remaining = k
+        val freqMap = HashMap<Int, Int>()
+        for (num in arr) {
+            freqMap[num] = freqMap.getOrDefault(num, 0) + 1
+        }
+
+        val minHeap = PriorityQueue<Int>()
+        for (f in freqMap.values) {
+            minHeap.offer(f)
+        }
+
+        var res = minHeap.size
+        while (remaining > 0 && minHeap.isNotEmpty()) {
+            val f = minHeap.poll()
+            if (remaining >= f) {
+                remaining -= f
+                res--
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLeastNumOfUniqueInts(_ arr: [Int], _ k: Int) -> Int {
+        var k = k
+        var freqMap = [Int: Int]()
+        for num in arr {
+            freqMap[num, default: 0] += 1
+        }
+
+        var minHeap = Heap<Int>()
+        for f in freqMap.values {
+            minHeap.insert(f)
+        }
+
+        var res = minHeap.count
+        while k > 0 && !minHeap.isEmpty {
+            let f = minHeap.removeMin()
+            if k >= f {
+                k -= f
+                res -= 1
+            }
+        }
+        return res
     }
 }
 ```
@@ -331,6 +550,127 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindLeastNumOfUniqueInts(int[] arr, int k) {
+        Dictionary<int, int> freqMap = new Dictionary<int, int>();
+        foreach (int num in arr) {
+            if (!freqMap.ContainsKey(num)) freqMap[num] = 0;
+            freqMap[num]++;
+        }
+
+        int[] freqList = new int[arr.Length + 1];
+        foreach (int f in freqMap.Values) {
+            freqList[f]++;
+        }
+
+        int res = freqMap.Count;
+        for (int f = 1; f < freqList.Length; f++) {
+            int remove = freqList[f];
+            if (k >= f * remove) {
+                k -= f * remove;
+                res -= remove;
+            } else {
+                remove = k / f;
+                res -= remove;
+                break;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findLeastNumOfUniqueInts(arr []int, k int) int {
+    freqMap := make(map[int]int)
+    for _, num := range arr {
+        freqMap[num]++
+    }
+
+    freqList := make([]int, len(arr)+1)
+    for _, f := range freqMap {
+        freqList[f]++
+    }
+
+    res := len(freqMap)
+    for f := 1; f < len(freqList); f++ {
+        remove := freqList[f]
+        if k >= f*remove {
+            k -= f * remove
+            res -= remove
+        } else {
+            remove = k / f
+            res -= remove
+            break
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findLeastNumOfUniqueInts(arr: IntArray, k: Int): Int {
+        var remaining = k
+        val freqMap = HashMap<Int, Int>()
+        for (num in arr) {
+            freqMap[num] = freqMap.getOrDefault(num, 0) + 1
+        }
+
+        val freqList = IntArray(arr.size + 1)
+        for (f in freqMap.values) {
+            freqList[f]++
+        }
+
+        var res = freqMap.size
+        for (f in 1 until freqList.size) {
+            var remove = freqList[f]
+            if (remaining >= f * remove) {
+                remaining -= f * remove
+                res -= remove
+            } else {
+                remove = remaining / f
+                res -= remove
+                break
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findLeastNumOfUniqueInts(_ arr: [Int], _ k: Int) -> Int {
+        var k = k
+        var freqMap = [Int: Int]()
+        for num in arr {
+            freqMap[num, default: 0] += 1
+        }
+
+        var freqList = [Int](repeating: 0, count: arr.count + 1)
+        for f in freqMap.values {
+            freqList[f] += 1
+        }
+
+        var res = freqMap.count
+        for f in 1..<freqList.count {
+            var remove = freqList[f]
+            if k >= f * remove {
+                k -= f * remove
+                res -= remove
+            } else {
+                remove = k / f
+                res -= remove
+                break
+            }
+        }
+        return res
     }
 }
 ```

@@ -115,6 +115,90 @@ class Solution {
 }
 ```
 
+```go
+func timeRequiredToBuy(tickets []int, k int) int {
+    n := len(tickets)
+    queue := make([]int, 0, n)
+
+    for i := 0; i < n; i++ {
+        queue = append(queue, i)
+    }
+
+    time := 0
+    for len(queue) > 0 {
+        time++
+        cur := queue[0]
+        queue = queue[1:]
+        tickets[cur]--
+        if tickets[cur] == 0 {
+            if cur == k {
+                return time
+            }
+        } else {
+            queue = append(queue, cur)
+        }
+    }
+    return time
+}
+```
+
+```kotlin
+class Solution {
+    fun timeRequiredToBuy(tickets: IntArray, k: Int): Int {
+        val n = tickets.size
+        val queue: Queue<Int> = LinkedList()
+
+        for (i in 0 until n) {
+            queue.add(i)
+        }
+
+        var time = 0
+        while (queue.isNotEmpty()) {
+            time++
+            val cur = queue.poll()
+            tickets[cur]--
+            if (tickets[cur] == 0) {
+                if (cur == k) {
+                    return time
+                }
+            } else {
+                queue.add(cur)
+            }
+        }
+        return time
+    }
+}
+```
+
+```swift
+class Solution {
+    func timeRequiredToBuy(_ tickets: [Int], _ k: Int) -> Int {
+        var tickets = tickets
+        let n = tickets.count
+        var queue = [Int]()
+
+        for i in 0..<n {
+            queue.append(i)
+        }
+
+        var time = 0
+        while !queue.isEmpty {
+            time += 1
+            let cur = queue.removeFirst()
+            tickets[cur] -= 1
+            if tickets[cur] == 0 {
+                if cur == k {
+                    return time
+                }
+            } else {
+                queue.append(cur)
+            }
+        }
+        return time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -232,6 +316,77 @@ class Solution {
 }
 ```
 
+```go
+func timeRequiredToBuy(tickets []int, k int) int {
+    n := len(tickets)
+    idx := 0
+
+    time := 0
+    for {
+        time++
+        tickets[idx]--
+        if tickets[idx] == 0 {
+            if idx == k {
+                return time
+            }
+        }
+        idx = (idx + 1) % n
+        for tickets[idx] == 0 {
+            idx = (idx + 1) % n
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun timeRequiredToBuy(tickets: IntArray, k: Int): Int {
+        val n = tickets.size
+        var idx = 0
+
+        var time = 0
+        while (true) {
+            time++
+            tickets[idx]--
+            if (tickets[idx] == 0) {
+                if (idx == k) {
+                    return time
+                }
+            }
+            idx = (idx + 1) % n
+            while (tickets[idx] == 0) {
+                idx = (idx + 1) % n
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func timeRequiredToBuy(_ tickets: [Int], _ k: Int) -> Int {
+        var tickets = tickets
+        let n = tickets.count
+        var idx = 0
+
+        var time = 0
+        while true {
+            time += 1
+            tickets[idx] -= 1
+            if tickets[idx] == 0 {
+                if idx == k {
+                    return time
+                }
+            }
+            idx = (idx + 1) % n
+            while tickets[idx] == 0 {
+                idx = (idx + 1) % n
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -317,6 +472,65 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func timeRequiredToBuy(tickets []int, k int) int {
+    res := 0
+
+    for i := 0; i < len(tickets); i++ {
+        if i <= k {
+            res += min(tickets[i], tickets[k])
+        } else {
+            res += min(tickets[i], tickets[k]-1)
+        }
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun timeRequiredToBuy(tickets: IntArray, k: Int): Int {
+        var res = 0
+
+        for (i in tickets.indices) {
+            res += if (i <= k) {
+                minOf(tickets[i], tickets[k])
+            } else {
+                minOf(tickets[i], tickets[k] - 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func timeRequiredToBuy(_ tickets: [Int], _ k: Int) -> Int {
+        var res = 0
+
+        for i in 0..<tickets.count {
+            if i <= k {
+                res += min(tickets[i], tickets[k])
+            } else {
+                res += min(tickets[i], tickets[k] - 1)
+            }
+        }
+
+        return res
     }
 }
 ```

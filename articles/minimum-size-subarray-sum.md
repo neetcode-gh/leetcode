@@ -117,6 +117,75 @@ public class Solution {
 }
 ```
 
+```go
+func minSubArrayLen(target int, nums []int) int {
+    n := len(nums)
+    res := n + 1
+
+    for i := 0; i < n; i++ {
+        curSum := 0
+        for j := i; j < n; j++ {
+            curSum += nums[j]
+            if curSum >= target {
+                if j-i+1 < res {
+                    res = j - i + 1
+                }
+                break
+            }
+        }
+    }
+
+    if res == n+1 {
+        return 0
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minSubArrayLen(target: Int, nums: IntArray): Int {
+        val n = nums.size
+        var res = Int.MAX_VALUE
+
+        for (i in 0 until n) {
+            var curSum = 0
+            for (j in i until n) {
+                curSum += nums[j]
+                if (curSum >= target) {
+                    res = minOf(res, j - i + 1)
+                    break
+                }
+            }
+        }
+
+        return if (res == Int.MAX_VALUE) 0 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minSubArrayLen(_ target: Int, _ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = Int.max
+
+        for i in 0..<n {
+            var curSum = 0
+            for j in i..<n {
+                curSum += nums[j]
+                if curSum >= target {
+                    res = min(res, j - i + 1)
+                    break
+                }
+            }
+        }
+
+        return res == Int.max ? 0 : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -229,6 +298,71 @@ public class Solution {
         }
 
         return res == int.MaxValue ? 0 : res;
+    }
+}
+```
+
+```go
+func minSubArrayLen(target int, nums []int) int {
+    l, total := 0, 0
+    res := len(nums) + 1
+
+    for r := 0; r < len(nums); r++ {
+        total += nums[r]
+        for total >= target {
+            if r-l+1 < res {
+                res = r - l + 1
+            }
+            total -= nums[l]
+            l++
+        }
+    }
+
+    if res == len(nums)+1 {
+        return 0
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minSubArrayLen(target: Int, nums: IntArray): Int {
+        var l = 0
+        var total = 0
+        var res = Int.MAX_VALUE
+
+        for (r in nums.indices) {
+            total += nums[r]
+            while (total >= target) {
+                res = minOf(res, r - l + 1)
+                total -= nums[l]
+                l++
+            }
+        }
+
+        return if (res == Int.MAX_VALUE) 0 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minSubArrayLen(_ target: Int, _ nums: [Int]) -> Int {
+        var l = 0
+        var total = 0
+        var res = Int.max
+
+        for r in 0..<nums.count {
+            total += nums[r]
+            while total >= target {
+                res = min(res, r - l + 1)
+                total -= nums[l]
+                l += 1
+            }
+        }
+
+        return res == Int.max ? 0 : res
     }
 }
 ```
@@ -399,6 +533,101 @@ public class Solution {
         }
 
         return res % (n + 1);
+    }
+}
+```
+
+```go
+func minSubArrayLen(target int, nums []int) int {
+    n := len(nums)
+    prefixSum := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        prefixSum[i+1] = prefixSum[i] + nums[i]
+    }
+
+    res := n + 1
+    for i := 0; i < n; i++ {
+        l, r := i, n
+        for l < r {
+            mid := (l + r) / 2
+            curSum := prefixSum[mid+1] - prefixSum[i]
+            if curSum >= target {
+                r = mid
+            } else {
+                l = mid + 1
+            }
+        }
+        if l != n {
+            if l-i+1 < res {
+                res = l - i + 1
+            }
+        }
+    }
+
+    return res % (n + 1)
+}
+```
+
+```kotlin
+class Solution {
+    fun minSubArrayLen(target: Int, nums: IntArray): Int {
+        val n = nums.size
+        val prefixSum = IntArray(n + 1)
+        for (i in 0 until n) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        var res = n + 1
+        for (i in 0 until n) {
+            var l = i
+            var r = n
+            while (l < r) {
+                val mid = (l + r) / 2
+                val curSum = prefixSum[mid + 1] - prefixSum[i]
+                if (curSum >= target) {
+                    r = mid
+                } else {
+                    l = mid + 1
+                }
+            }
+            if (l != n) {
+                res = minOf(res, l - i + 1)
+            }
+        }
+
+        return res % (n + 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minSubArrayLen(_ target: Int, _ nums: [Int]) -> Int {
+        let n = nums.count
+        var prefixSum = [Int](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        var res = n + 1
+        for i in 0..<n {
+            var l = i
+            var r = n
+            while l < r {
+                let mid = (l + r) / 2
+                let curSum = prefixSum[mid + 1] - prefixSum[i]
+                if curSum >= target {
+                    r = mid
+                } else {
+                    l = mid + 1
+                }
+            }
+            if l != n {
+                res = min(res, l - i + 1)
+            }
+        }
+
+        return res % (n + 1)
     }
 }
 ```

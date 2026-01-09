@@ -165,6 +165,104 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
+    if root1 == nil && root2 == nil {
+        return nil
+    }
+
+    v1, v2 := 0, 0
+    var left1, right1, left2, right2 *TreeNode
+    if root1 != nil {
+        v1 = root1.Val
+        left1 = root1.Left
+        right1 = root1.Right
+    }
+    if root2 != nil {
+        v2 = root2.Val
+        left2 = root2.Left
+        right2 = root2.Right
+    }
+
+    root := &TreeNode{Val: v1 + v2}
+    root.Left = mergeTrees(left1, left2)
+    root.Right = mergeTrees(right1, right2)
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun mergeTrees(root1: TreeNode?, root2: TreeNode?): TreeNode? {
+        if (root1 == null && root2 == null) {
+            return null
+        }
+
+        val v1 = root1?.`val` ?: 0
+        val v2 = root2?.`val` ?: 0
+        val root = TreeNode(v1 + v2)
+
+        root.left = mergeTrees(root1?.left, root2?.left)
+        root.right = mergeTrees(root1?.right, root2?.right)
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func mergeTrees(_ root1: TreeNode?, _ root2: TreeNode?) -> TreeNode? {
+        if root1 == nil && root2 == nil {
+            return nil
+        }
+
+        let v1 = root1?.val ?? 0
+        let v2 = root2?.val ?? 0
+        let root = TreeNode(v1 + v2)
+
+        root.left = mergeTrees(root1?.left, root2?.left)
+        root.right = mergeTrees(root1?.right, root2?.right)
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +411,87 @@ public class Solution {
         root1.left = MergeTrees(root1.left, root2.left);
         root1.right = MergeTrees(root1.right, root2.right);
         return root1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
+    if root1 == nil {
+        return root2
+    }
+    if root2 == nil {
+        return root1
+    }
+
+    root1.Val += root2.Val
+    root1.Left = mergeTrees(root1.Left, root2.Left)
+    root1.Right = mergeTrees(root1.Right, root2.Right)
+    return root1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun mergeTrees(root1: TreeNode?, root2: TreeNode?): TreeNode? {
+        if (root1 == null) return root2
+        if (root2 == null) return root1
+
+        root1.`val` += root2.`val`
+        root1.left = mergeTrees(root1.left, root2.left)
+        root1.right = mergeTrees(root1.right, root2.right)
+        return root1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func mergeTrees(_ root1: TreeNode?, _ root2: TreeNode?) -> TreeNode? {
+        if root1 == nil {
+            return root2
+        }
+        if root2 == nil {
+            return root1
+        }
+
+        root1!.val += root2!.val
+        root1!.left = mergeTrees(root1?.left, root2?.left)
+        root1!.right = mergeTrees(root1?.right, root2?.right)
+        return root1
     }
 }
 ```
@@ -574,6 +753,156 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
+    if root1 == nil {
+        return root2
+    }
+    if root2 == nil {
+        return root1
+    }
+
+    root := &TreeNode{Val: root1.Val + root2.Val}
+    stack := [][3]*TreeNode{{root1, root2, root}}
+
+    for len(stack) > 0 {
+        top := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        node1, node2, node := top[0], top[1], top[2]
+
+        if node1.Left != nil && node2.Left != nil {
+            node.Left = &TreeNode{Val: node1.Left.Val + node2.Left.Val}
+            stack = append(stack, [3]*TreeNode{node1.Left, node2.Left, node.Left})
+        } else if node1.Left == nil {
+            node.Left = node2.Left
+        } else {
+            node.Left = node1.Left
+        }
+
+        if node1.Right != nil && node2.Right != nil {
+            node.Right = &TreeNode{Val: node1.Right.Val + node2.Right.Val}
+            stack = append(stack, [3]*TreeNode{node1.Right, node2.Right, node.Right})
+        } else if node1.Right == nil {
+            node.Right = node2.Right
+        } else {
+            node.Right = node1.Right
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun mergeTrees(root1: TreeNode?, root2: TreeNode?): TreeNode? {
+        if (root1 == null) return root2
+        if (root2 == null) return root1
+
+        val root = TreeNode(root1.`val` + root2.`val`)
+        val stack = ArrayDeque<Triple<TreeNode, TreeNode, TreeNode>>()
+        stack.addLast(Triple(root1, root2, root))
+
+        while (stack.isNotEmpty()) {
+            val (node1, node2, node) = stack.removeLast()
+
+            if (node1.left != null && node2.left != null) {
+                node.left = TreeNode(node1.left!!.`val` + node2.left!!.`val`)
+                stack.addLast(Triple(node1.left!!, node2.left!!, node.left!!))
+            } else if (node1.left == null) {
+                node.left = node2.left
+            } else {
+                node.left = node1.left
+            }
+
+            if (node1.right != null && node2.right != null) {
+                node.right = TreeNode(node1.right!!.`val` + node2.right!!.`val`)
+                stack.addLast(Triple(node1.right!!, node2.right!!, node.right!!))
+            } else if (node1.right == null) {
+                node.right = node2.right
+            } else {
+                node.right = node1.right
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func mergeTrees(_ root1: TreeNode?, _ root2: TreeNode?) -> TreeNode? {
+        if root1 == nil {
+            return root2
+        }
+        if root2 == nil {
+            return root1
+        }
+
+        let root = TreeNode(root1!.val + root2!.val)
+        var stack: [(TreeNode, TreeNode, TreeNode)] = [(root1!, root2!, root)]
+
+        while !stack.isEmpty {
+            let (node1, node2, node) = stack.removeLast()
+
+            if node1.left != nil && node2.left != nil {
+                node.left = TreeNode(node1.left!.val + node2.left!.val)
+                stack.append((node1.left!, node2.left!, node.left!))
+            } else if node1.left == nil {
+                node.left = node2.left
+            } else {
+                node.left = node1.left
+            }
+
+            if node1.right != nil && node2.right != nil {
+                node.right = TreeNode(node1.right!.val + node2.right!.val)
+                stack.append((node1.right!, node2.right!, node.right!))
+            } else if node1.right == nil {
+                node.right = node2.right
+            } else {
+                node.right = node1.right
+            }
+        }
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -814,6 +1143,144 @@ public class Solution {
         }
 
         return root1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func mergeTrees(root1 *TreeNode, root2 *TreeNode) *TreeNode {
+    if root1 == nil {
+        return root2
+    }
+    if root2 == nil {
+        return root1
+    }
+
+    stack := [][2]*TreeNode{{root1, root2}}
+
+    for len(stack) > 0 {
+        top := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        node1, node2 := top[0], top[1]
+        if node1 == nil || node2 == nil {
+            continue
+        }
+
+        node1.Val += node2.Val
+
+        if node1.Left != nil && node2.Left != nil {
+            stack = append(stack, [2]*TreeNode{node1.Left, node2.Left})
+        } else if node1.Left == nil {
+            node1.Left = node2.Left
+        }
+
+        if node1.Right != nil && node2.Right != nil {
+            stack = append(stack, [2]*TreeNode{node1.Right, node2.Right})
+        } else if node1.Right == nil {
+            node1.Right = node2.Right
+        }
+    }
+
+    return root1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun mergeTrees(root1: TreeNode?, root2: TreeNode?): TreeNode? {
+        if (root1 == null) return root2
+        if (root2 == null) return root1
+
+        val stack = ArrayDeque<Pair<TreeNode, TreeNode>>()
+        stack.addLast(Pair(root1, root2))
+
+        while (stack.isNotEmpty()) {
+            val (node1, node2) = stack.removeLast()
+
+            node1.`val` += node2.`val`
+
+            if (node1.left != null && node2.left != null) {
+                stack.addLast(Pair(node1.left!!, node2.left!!))
+            } else if (node1.left == null) {
+                node1.left = node2.left
+            }
+
+            if (node1.right != null && node2.right != null) {
+                stack.addLast(Pair(node1.right!!, node2.right!!))
+            } else if (node1.right == null) {
+                node1.right = node2.right
+            }
+        }
+
+        return root1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func mergeTrees(_ root1: TreeNode?, _ root2: TreeNode?) -> TreeNode? {
+        if root1 == nil {
+            return root2
+        }
+        if root2 == nil {
+            return root1
+        }
+
+        var stack: [(TreeNode, TreeNode)] = [(root1!, root2!)]
+
+        while !stack.isEmpty {
+            let (node1, node2) = stack.removeLast()
+
+            node1.val += node2.val
+
+            if node1.left != nil && node2.left != nil {
+                stack.append((node1.left!, node2.left!))
+            } else if node1.left == nil {
+                node1.left = node2.left
+            }
+
+            if node1.right != nil && node2.right != nil {
+                stack.append((node1.right!, node2.right!))
+            } else if node1.right == nil {
+                node1.right = node2.right
+            }
+        }
+
+        return root1
     }
 }
 ```

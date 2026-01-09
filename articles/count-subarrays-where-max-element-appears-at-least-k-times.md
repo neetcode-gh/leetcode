@@ -105,6 +105,109 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long CountSubarrays(int[] nums, int k) {
+        int n = nums.Length;
+        long res = 0;
+        int maxi = nums.Max();
+
+        for (int i = 0; i < n; i++) {
+            int cnt = 0;
+            for (int j = i; j < n; j++) {
+                if (nums[j] == maxi) {
+                    cnt++;
+                }
+
+                if (cnt >= k) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countSubarrays(nums []int, k int) int64 {
+    n := len(nums)
+    var res int64 = 0
+    maxi := nums[0]
+    for _, num := range nums {
+        if num > maxi {
+            maxi = num
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        cnt := 0
+        for j := i; j < n; j++ {
+            if nums[j] == maxi {
+                cnt++
+            }
+
+            if cnt >= k {
+                res++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubarrays(nums: IntArray, k: Int): Long {
+        val n = nums.size
+        var res = 0L
+        val maxi = nums.max()
+
+        for (i in 0 until n) {
+            var cnt = 0
+            for (j in i until n) {
+                if (nums[j] == maxi) {
+                    cnt++
+                }
+
+                if (cnt >= k) {
+                    res++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubarrays(_ nums: [Int], _ k: Int) -> Int {
+        let n = nums.count
+        var res = 0
+        let maxi = nums.max()!
+
+        for i in 0..<n {
+            var cnt = 0
+            for j in i..<n {
+                if nums[j] == maxi {
+                    cnt += 1
+                }
+
+                if cnt >= k {
+                    res += 1
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -236,6 +339,125 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long CountSubarrays(int[] nums, int k) {
+        int maxN = nums.Max(), maxCnt = 0, l = 0;
+        long res = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            if (nums[r] == maxN) {
+                maxCnt++;
+            }
+
+            while (maxCnt > k || (l <= r && maxCnt == k && nums[l] != maxN)) {
+                if (nums[l] == maxN) {
+                    maxCnt--;
+                }
+                l++;
+            }
+
+            if (maxCnt == k) {
+                res += l + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countSubarrays(nums []int, k int) int64 {
+    maxN := nums[0]
+    for _, num := range nums {
+        if num > maxN {
+            maxN = num
+        }
+    }
+    maxCnt, l := 0, 0
+    var res int64 = 0
+
+    for r := 0; r < len(nums); r++ {
+        if nums[r] == maxN {
+            maxCnt++
+        }
+
+        for maxCnt > k || (l <= r && maxCnt == k && nums[l] != maxN) {
+            if nums[l] == maxN {
+                maxCnt--
+            }
+            l++
+        }
+
+        if maxCnt == k {
+            res += int64(l + 1)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubarrays(nums: IntArray, k: Int): Long {
+        val maxN = nums.max()
+        var maxCnt = 0
+        var l = 0
+        var res = 0L
+
+        for (r in nums.indices) {
+            if (nums[r] == maxN) {
+                maxCnt++
+            }
+
+            while (maxCnt > k || (l <= r && maxCnt == k && nums[l] != maxN)) {
+                if (nums[l] == maxN) {
+                    maxCnt--
+                }
+                l++
+            }
+
+            if (maxCnt == k) {
+                res += l + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubarrays(_ nums: [Int], _ k: Int) -> Int {
+        let maxN = nums.max()!
+        var maxCnt = 0, l = 0
+        var res = 0
+
+        for r in 0..<nums.count {
+            if nums[r] == maxN {
+                maxCnt += 1
+            }
+
+            while maxCnt > k || (l <= r && maxCnt == k && nums[l] != maxN) {
+                if nums[l] == maxN {
+                    maxCnt -= 1
+                }
+                l += 1
+            }
+
+            if maxCnt == k {
+                res += l + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +569,109 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long CountSubarrays(int[] nums, int k) {
+        int max_n = nums.Max(), max_cnt = 0, l = 0;
+        long res = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            if (nums[r] == max_n) {
+                max_cnt++;
+            }
+            while (max_cnt == k) {
+                if (nums[l] == max_n) {
+                    max_cnt--;
+                }
+                l++;
+            }
+            res += l;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countSubarrays(nums []int, k int) int64 {
+    maxN := nums[0]
+    for _, num := range nums {
+        if num > maxN {
+            maxN = num
+        }
+    }
+    maxCnt, l := 0, 0
+    var res int64 = 0
+
+    for r := 0; r < len(nums); r++ {
+        if nums[r] == maxN {
+            maxCnt++
+        }
+        for maxCnt == k {
+            if nums[l] == maxN {
+                maxCnt--
+            }
+            l++
+        }
+        res += int64(l)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubarrays(nums: IntArray, k: Int): Long {
+        val maxN = nums.max()
+        var maxCnt = 0
+        var l = 0
+        var res = 0L
+
+        for (r in nums.indices) {
+            if (nums[r] == maxN) {
+                maxCnt++
+            }
+            while (maxCnt == k) {
+                if (nums[l] == maxN) {
+                    maxCnt--
+                }
+                l++
+            }
+            res += l
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubarrays(_ nums: [Int], _ k: Int) -> Int {
+        let maxN = nums.max()!
+        var maxCnt = 0, l = 0
+        var res = 0
+
+        for r in 0..<nums.count {
+            if nums[r] == maxN {
+                maxCnt += 1
+            }
+            while maxCnt == k {
+                if nums[l] == maxN {
+                    maxCnt -= 1
+                }
+                l += 1
+            }
+            res += l
+        }
+
+        return res
     }
 }
 ```
@@ -468,6 +793,109 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long CountSubarrays(int[] nums, int k) {
+        int n = nums.Length;
+        int max_n = nums.Max();
+        List<int> max_indexes = new List<int> { -1 };
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] == max_n) {
+                max_indexes.Add(i);
+            }
+        }
+
+        long res = 0;
+        for (int i = 1; i <= max_indexes.Count - k; i++) {
+            long cur = (max_indexes[i] - max_indexes[i - 1]);
+            cur *= (n - max_indexes[i + k - 1]);
+            res += cur;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countSubarrays(nums []int, k int) int64 {
+    n := len(nums)
+    maxN := nums[0]
+    for _, num := range nums {
+        if num > maxN {
+            maxN = num
+        }
+    }
+    maxIndexes := []int{-1}
+
+    for i := 0; i < n; i++ {
+        if nums[i] == maxN {
+            maxIndexes = append(maxIndexes, i)
+        }
+    }
+
+    var res int64 = 0
+    for i := 1; i <= len(maxIndexes)-k; i++ {
+        cur := int64(maxIndexes[i] - maxIndexes[i-1])
+        cur *= int64(n - maxIndexes[i+k-1])
+        res += cur
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubarrays(nums: IntArray, k: Int): Long {
+        val n = nums.size
+        val maxN = nums.max()
+        val maxIndexes = mutableListOf(-1)
+
+        for (i in 0 until n) {
+            if (nums[i] == maxN) {
+                maxIndexes.add(i)
+            }
+        }
+
+        var res = 0L
+        for (i in 1..maxIndexes.size - k) {
+            val cur = (maxIndexes[i] - maxIndexes[i - 1]).toLong() *
+                      (n - maxIndexes[i + k - 1])
+            res += cur
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubarrays(_ nums: [Int], _ k: Int) -> Int {
+        let n = nums.count
+        let maxN = nums.max()!
+        var maxIndexes = [-1]
+
+        for i in 0..<n {
+            if nums[i] == maxN {
+                maxIndexes.append(i)
+            }
+        }
+
+        var res = 0
+        for i in 1...(maxIndexes.count - k) {
+            let cur = (maxIndexes[i] - maxIndexes[i - 1]) *
+                      (n - maxIndexes[i + k - 1])
+            res += cur
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -585,6 +1013,113 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long CountSubarrays(int[] nums, int k) {
+        int maxN = nums.Max();
+        Queue<int> maxIndexes = new Queue<int>();
+        long res = 0;
+
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] == maxN) {
+                maxIndexes.Enqueue(i);
+            }
+
+            if (maxIndexes.Count > k) {
+                maxIndexes.Dequeue();
+            }
+
+            if (maxIndexes.Count == k) {
+                res += maxIndexes.Peek() + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countSubarrays(nums []int, k int) int64 {
+    maxN := nums[0]
+    for _, num := range nums {
+        if num > maxN {
+            maxN = num
+        }
+    }
+    maxIndexes := []int{}
+    var res int64 = 0
+
+    for i := 0; i < len(nums); i++ {
+        if nums[i] == maxN {
+            maxIndexes = append(maxIndexes, i)
+        }
+
+        if len(maxIndexes) > k {
+            maxIndexes = maxIndexes[1:]
+        }
+
+        if len(maxIndexes) == k {
+            res += int64(maxIndexes[0] + 1)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubarrays(nums: IntArray, k: Int): Long {
+        val maxN = nums.max()
+        val maxIndexes = ArrayDeque<Int>()
+        var res = 0L
+
+        for (i in nums.indices) {
+            if (nums[i] == maxN) {
+                maxIndexes.addLast(i)
+            }
+
+            if (maxIndexes.size > k) {
+                maxIndexes.removeFirst()
+            }
+
+            if (maxIndexes.size == k) {
+                res += maxIndexes.first() + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubarrays(_ nums: [Int], _ k: Int) -> Int {
+        let maxN = nums.max()!
+        var maxIndexes = [Int]()
+        var res = 0
+
+        for i in 0..<nums.count {
+            if nums[i] == maxN {
+                maxIndexes.append(i)
+            }
+
+            if maxIndexes.count > k {
+                maxIndexes.removeFirst()
+            }
+
+            if maxIndexes.count == k {
+                res += maxIndexes[0] + 1
+            }
+        }
+
+        return res
     }
 }
 ```

@@ -94,6 +94,94 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LongestMonotonicSubarray(int[] nums) {
+        int n = nums.Length;
+        int res = 1;
+
+        for (int i = 0; i < n - 1; i++) {
+            int curLen = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (nums[j] == nums[j - 1] || ((nums[i] < nums[i + 1]) != (nums[j - 1] < nums[j]))) {
+                    break;
+                }
+                curLen++;
+            }
+            res = Math.Max(res, curLen);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func longestMonotonicSubarray(nums []int) int {
+    n := len(nums)
+    res := 1
+
+    for i := 0; i < n-1; i++ {
+        curLen := 1
+        for j := i + 1; j < n; j++ {
+            if nums[j] == nums[j-1] || ((nums[i] < nums[i+1]) != (nums[j-1] < nums[j])) {
+                break
+            }
+            curLen++
+        }
+        if curLen > res {
+            res = curLen
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestMonotonicSubarray(nums: IntArray): Int {
+        val n = nums.size
+        var res = 1
+
+        for (i in 0 until n - 1) {
+            var curLen = 1
+            for (j in i + 1 until n) {
+                if (nums[j] == nums[j - 1] || ((nums[i] < nums[i + 1]) != (nums[j - 1] < nums[j]))) {
+                    break
+                }
+                curLen++
+            }
+            res = maxOf(res, curLen)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestMonotonicSubarray(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = 1
+
+        for i in 0..<(n - 1) {
+            var curLen = 1
+            for j in (i + 1)..<n {
+                if nums[j] == nums[j - 1] || ((nums[i] < nums[i + 1]) != (nums[j - 1] < nums[j])) {
+                    break
+                }
+                curLen += 1
+            }
+            res = max(res, curLen)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -242,6 +330,142 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LongestMonotonicSubarray(int[] nums) {
+        int cur = 1;
+        int res = 1;
+        int increasing = 0;
+
+        for (int i = 1; i < nums.Length; i++) {
+            if (nums[i - 1] < nums[i]) {
+                if (increasing > 0) {
+                    cur++;
+                } else {
+                    cur = 2;
+                    increasing = 1;
+                }
+            } else if (nums[i - 1] > nums[i]) {
+                if (increasing < 0) {
+                    cur++;
+                } else {
+                    cur = 2;
+                    increasing = -1;
+                }
+            } else {
+                cur = 1;
+                increasing = 0;
+            }
+            res = Math.Max(res, cur);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func longestMonotonicSubarray(nums []int) int {
+    cur := 1
+    res := 1
+    increasing := 0
+
+    for i := 1; i < len(nums); i++ {
+        if nums[i-1] < nums[i] {
+            if increasing > 0 {
+                cur++
+            } else {
+                cur = 2
+                increasing = 1
+            }
+        } else if nums[i-1] > nums[i] {
+            if increasing < 0 {
+                cur++
+            } else {
+                cur = 2
+                increasing = -1
+            }
+        } else {
+            cur = 1
+            increasing = 0
+        }
+        if cur > res {
+            res = cur
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestMonotonicSubarray(nums: IntArray): Int {
+        var cur = 1
+        var res = 1
+        var increasing = 0
+
+        for (i in 1 until nums.size) {
+            if (nums[i - 1] < nums[i]) {
+                if (increasing > 0) {
+                    cur++
+                } else {
+                    cur = 2
+                    increasing = 1
+                }
+            } else if (nums[i - 1] > nums[i]) {
+                if (increasing < 0) {
+                    cur++
+                } else {
+                    cur = 2
+                    increasing = -1
+                }
+            } else {
+                cur = 1
+                increasing = 0
+            }
+            res = maxOf(res, cur)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestMonotonicSubarray(_ nums: [Int]) -> Int {
+        var cur = 1
+        var res = 1
+        var increasing = 0
+
+        for i in 1..<nums.count {
+            if nums[i - 1] < nums[i] {
+                if increasing > 0 {
+                    cur += 1
+                } else {
+                    cur = 2
+                    increasing = 1
+                }
+            } else if nums[i - 1] > nums[i] {
+                if increasing < 0 {
+                    cur += 1
+                } else {
+                    cur = 2
+                    increasing = -1
+                }
+            } else {
+                cur = 1
+                increasing = 0
+            }
+            res = max(res, cur)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,6 +574,107 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LongestMonotonicSubarray(int[] nums) {
+        int inc = 1, dec = 1, res = 1;
+
+        for (int i = 1; i < nums.Length; i++) {
+            if (nums[i] == nums[i - 1]) {
+                inc = dec = 1;
+            } else if (nums[i] > nums[i - 1]) {
+                inc = inc + 1;
+                dec = 1;
+            } else {
+                inc = 1;
+                dec = dec + 1;
+            }
+            res = Math.Max(res, Math.Max(inc, dec));
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func longestMonotonicSubarray(nums []int) int {
+    inc, dec, res := 1, 1, 1
+
+    for i := 1; i < len(nums); i++ {
+        if nums[i] == nums[i-1] {
+            inc, dec = 1, 1
+        } else if nums[i] > nums[i-1] {
+            inc = inc + 1
+            dec = 1
+        } else {
+            inc = 1
+            dec = dec + 1
+        }
+        if inc > res {
+            res = inc
+        }
+        if dec > res {
+            res = dec
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestMonotonicSubarray(nums: IntArray): Int {
+        var inc = 1
+        var dec = 1
+        var res = 1
+
+        for (i in 1 until nums.size) {
+            if (nums[i] == nums[i - 1]) {
+                inc = 1
+                dec = 1
+            } else if (nums[i] > nums[i - 1]) {
+                inc = inc + 1
+                dec = 1
+            } else {
+                inc = 1
+                dec = dec + 1
+            }
+            res = maxOf(res, inc, dec)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestMonotonicSubarray(_ nums: [Int]) -> Int {
+        var inc = 1
+        var dec = 1
+        var res = 1
+
+        for i in 1..<nums.count {
+            if nums[i] == nums[i - 1] {
+                inc = 1
+                dec = 1
+            } else if nums[i] > nums[i - 1] {
+                inc = inc + 1
+                dec = 1
+            } else {
+                inc = 1
+                dec = dec + 1
+            }
+            res = max(res, max(inc, dec))
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -449,6 +774,96 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LongestMonotonicSubarray(int[] nums) {
+        int curLen = 1, res = 1;
+
+        for (int i = 1; i < nums.Length; i++) {
+            if (nums[i] == nums[i - 1] ||
+                ((nums[i - curLen] < nums[i - curLen + 1]) != (nums[i - 1] < nums[i]))) {
+                curLen = (nums[i] == nums[i - 1]) ? 1 : 2;
+                continue;
+            }
+
+            curLen++;
+            res = Math.Max(res, curLen);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func longestMonotonicSubarray(nums []int) int {
+    curLen, res := 1, 1
+
+    for i := 1; i < len(nums); i++ {
+        if nums[i] == nums[i-1] ||
+            ((nums[i-curLen] < nums[i-curLen+1]) != (nums[i-1] < nums[i])) {
+            if nums[i] == nums[i-1] {
+                curLen = 1
+            } else {
+                curLen = 2
+            }
+            continue
+        }
+
+        curLen++
+        if curLen > res {
+            res = curLen
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestMonotonicSubarray(nums: IntArray): Int {
+        var curLen = 1
+        var res = 1
+
+        for (i in 1 until nums.size) {
+            if (nums[i] == nums[i - 1] ||
+                ((nums[i - curLen] < nums[i - curLen + 1]) != (nums[i - 1] < nums[i]))) {
+                curLen = if (nums[i] == nums[i - 1]) 1 else 2
+                continue
+            }
+
+            curLen++
+            res = maxOf(res, curLen)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestMonotonicSubarray(_ nums: [Int]) -> Int {
+        var curLen = 1
+        var res = 1
+
+        for i in 1..<nums.count {
+            if nums[i] == nums[i - 1] ||
+                ((nums[i - curLen] < nums[i - curLen + 1]) != (nums[i - 1] < nums[i])) {
+                curLen = (nums[i] == nums[i - 1]) ? 1 : 2
+                continue
+            }
+
+            curLen += 1
+            res = max(res, curLen)
+        }
+
+        return res
     }
 }
 ```

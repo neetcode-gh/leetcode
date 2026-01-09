@@ -146,6 +146,97 @@ public class Solution {
 }
 ```
 
+```go
+func makesquare(matchsticks []int) bool {
+    sum := 0
+    for _, m := range matchsticks {
+        sum += m
+    }
+    if sum%4 != 0 {
+        return false
+    }
+
+    sides := make([]int, 4)
+
+    var dfs func(i int) bool
+    dfs = func(i int) bool {
+        if i == len(matchsticks) {
+            return sides[0] == sides[1] && sides[1] == sides[2] && sides[2] == sides[3]
+        }
+
+        for j := 0; j < 4; j++ {
+            sides[j] += matchsticks[i]
+            if dfs(i + 1) {
+                return true
+            }
+            sides[j] -= matchsticks[i]
+        }
+
+        return false
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun makesquare(matchsticks: IntArray): Boolean {
+        val sum = matchsticks.sum()
+        if (sum % 4 != 0) return false
+
+        val sides = IntArray(4)
+
+        fun dfs(i: Int): Boolean {
+            if (i == matchsticks.size) {
+                return sides[0] == sides[1] && sides[1] == sides[2] && sides[2] == sides[3]
+            }
+
+            for (j in 0 until 4) {
+                sides[j] += matchsticks[i]
+                if (dfs(i + 1)) return true
+                sides[j] -= matchsticks[i]
+            }
+
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func makesquare(_ matchsticks: [Int]) -> Bool {
+        let sum = matchsticks.reduce(0, +)
+        if sum % 4 != 0 {
+            return false
+        }
+
+        var sides = [Int](repeating: 0, count: 4)
+
+        func dfs(_ i: Int) -> Bool {
+            if i == matchsticks.count {
+                return sides[0] == sides[1] && sides[1] == sides[2] && sides[2] == sides[3]
+            }
+
+            for j in 0..<4 {
+                sides[j] += matchsticks[i]
+                if dfs(i + 1) {
+                    return true
+                }
+                sides[j] -= matchsticks[i]
+            }
+
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -338,6 +429,119 @@ public class Solution {
         }
 
         return Dfs(0);
+    }
+}
+```
+
+```go
+func makesquare(matchsticks []int) bool {
+    totalLength := 0
+    for _, m := range matchsticks {
+        totalLength += m
+    }
+    if totalLength%4 != 0 {
+        return false
+    }
+
+    length := totalLength / 4
+    sides := make([]int, 4)
+    sort.Sort(sort.Reverse(sort.IntSlice(matchsticks)))
+
+    var dfs func(index int) bool
+    dfs = func(index int) bool {
+        if index == len(matchsticks) {
+            return true
+        }
+
+        for i := 0; i < 4; i++ {
+            if sides[i]+matchsticks[index] <= length {
+                sides[i] += matchsticks[index]
+                if dfs(index + 1) {
+                    return true
+                }
+                sides[i] -= matchsticks[index]
+            }
+
+            if sides[i] == 0 {
+                break
+            }
+        }
+
+        return false
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun makesquare(matchsticks: IntArray): Boolean {
+        val totalLength = matchsticks.sum()
+        if (totalLength % 4 != 0) return false
+
+        val length = totalLength / 4
+        val sides = IntArray(4)
+        matchsticks.sortDescending()
+
+        fun dfs(index: Int): Boolean {
+            if (index == matchsticks.size) {
+                return true
+            }
+
+            for (i in 0 until 4) {
+                if (sides[i] + matchsticks[index] <= length) {
+                    sides[i] += matchsticks[index]
+                    if (dfs(index + 1)) return true
+                    sides[i] -= matchsticks[index]
+                }
+
+                if (sides[i] == 0) break
+            }
+
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func makesquare(_ matchsticks: [Int]) -> Bool {
+        let totalLength = matchsticks.reduce(0, +)
+        if totalLength % 4 != 0 {
+            return false
+        }
+
+        let length = totalLength / 4
+        var sides = [Int](repeating: 0, count: 4)
+        let sortedMatchsticks = matchsticks.sorted(by: >)
+
+        func dfs(_ index: Int) -> Bool {
+            if index == sortedMatchsticks.count {
+                return true
+            }
+
+            for i in 0..<4 {
+                if sides[i] + sortedMatchsticks[index] <= length {
+                    sides[i] += sortedMatchsticks[index]
+                    if dfs(index + 1) {
+                        return true
+                    }
+                    sides[i] -= sortedMatchsticks[index]
+                }
+
+                if sides[i] == 0 {
+                    break
+                }
+            }
+
+            return false
+        }
+
+        return dfs(0)
     }
 }
 ```
@@ -578,6 +782,151 @@ public class Solution {
         }
 
         return Dfs((1 << n) - 1) != -1;
+    }
+}
+```
+
+```go
+func makesquare(matchsticks []int) bool {
+    totalLength := 0
+    maxVal := 0
+    for _, m := range matchsticks {
+        totalLength += m
+        if m > maxVal {
+            maxVal = m
+        }
+    }
+    if totalLength%4 != 0 {
+        return false
+    }
+
+    length := totalLength / 4
+    if maxVal > length {
+        return false
+    }
+
+    n := len(matchsticks)
+    dp := make([]int, 1<<n)
+    for i := range dp {
+        dp[i] = math.MinInt32
+    }
+    sort.Sort(sort.Reverse(sort.IntSlice(matchsticks)))
+
+    var dfs func(mask int) int
+    dfs = func(mask int) int {
+        if mask == 0 {
+            return 0
+        }
+        if dp[mask] != math.MinInt32 {
+            return dp[mask]
+        }
+
+        for i := 0; i < n; i++ {
+            if mask&(1<<i) != 0 {
+                res := dfs(mask ^ (1 << i))
+                if res >= 0 && res+matchsticks[i] <= length {
+                    dp[mask] = (res + matchsticks[i]) % length
+                    return dp[mask]
+                }
+                if mask == (1<<n)-1 {
+                    dp[mask] = -1
+                    return -1
+                }
+            }
+        }
+
+        dp[mask] = -1
+        return dp[mask]
+    }
+
+    return dfs((1<<n)-1) == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun makesquare(matchsticks: IntArray): Boolean {
+        val totalLength = matchsticks.sum()
+        if (totalLength % 4 != 0) return false
+
+        val length = totalLength / 4
+        if (matchsticks.max() > length) return false
+
+        val n = matchsticks.size
+        val dp = IntArray(1 shl n) { Int.MIN_VALUE }
+        matchsticks.sortDescending()
+
+        fun dfs(mask: Int): Int {
+            if (mask == 0) return 0
+            if (dp[mask] != Int.MIN_VALUE) return dp[mask]
+
+            for (i in 0 until n) {
+                if (mask and (1 shl i) != 0) {
+                    val res = dfs(mask xor (1 shl i))
+                    if (res >= 0 && res + matchsticks[i] <= length) {
+                        dp[mask] = (res + matchsticks[i]) % length
+                        return dp[mask]
+                    }
+                    if (mask == (1 shl n) - 1) {
+                        dp[mask] = -1
+                        return -1
+                    }
+                }
+            }
+
+            dp[mask] = -1
+            return dp[mask]
+        }
+
+        return dfs((1 shl n) - 1) == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func makesquare(_ matchsticks: [Int]) -> Bool {
+        let totalLength = matchsticks.reduce(0, +)
+        if totalLength % 4 != 0 {
+            return false
+        }
+
+        let length = totalLength / 4
+        if matchsticks.max()! > length {
+            return false
+        }
+
+        let sortedMatchsticks = matchsticks.sorted(by: >)
+        let n = sortedMatchsticks.count
+        var dp = [Int](repeating: Int.min, count: 1 << n)
+
+        func dfs(_ mask: Int) -> Int {
+            if mask == 0 {
+                return 0
+            }
+            if dp[mask] != Int.min {
+                return dp[mask]
+            }
+
+            for i in 0..<n {
+                if mask & (1 << i) != 0 {
+                    let res = dfs(mask ^ (1 << i))
+                    if res >= 0 && res + sortedMatchsticks[i] <= length {
+                        dp[mask] = (res + sortedMatchsticks[i]) % length
+                        return dp[mask]
+                    }
+                    if mask == (1 << n) - 1 {
+                        dp[mask] = -1
+                        return -1
+                    }
+                }
+            }
+
+            dp[mask] = -1
+            return dp[mask]
+        }
+
+        return dfs((1 << n) - 1) == 0
     }
 }
 ```

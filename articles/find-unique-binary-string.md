@@ -99,6 +99,116 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string FindDifferentBinaryString(string[] nums) {
+        HashSet<string> strSet = new HashSet<string>(nums);
+        return Backtrack(0, new char[nums.Length], strSet, nums.Length);
+    }
+
+    private string Backtrack(int i, char[] cur, HashSet<string> strSet, int n) {
+        if (i == n) {
+            string res = new string(cur);
+            return strSet.Contains(res) ? null : res;
+        }
+
+        cur[i] = '0';
+        string result = Backtrack(i + 1, cur, strSet, n);
+        if (result != null) return result;
+
+        cur[i] = '1';
+        return Backtrack(i + 1, cur, strSet, n);
+    }
+}
+```
+
+```go
+func findDifferentBinaryString(nums []string) string {
+    strSet := make(map[string]bool)
+    for _, s := range nums {
+        strSet[s] = true
+    }
+    n := len(nums)
+    cur := make([]byte, n)
+    for i := range cur {
+        cur[i] = '0'
+    }
+
+    var backtrack func(i int) string
+    backtrack = func(i int) string {
+        if i == n {
+            res := string(cur)
+            if !strSet[res] {
+                return res
+            }
+            return ""
+        }
+
+        res := backtrack(i + 1)
+        if res != "" {
+            return res
+        }
+
+        cur[i] = '1'
+        return backtrack(i + 1)
+    }
+
+    return backtrack(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifferentBinaryString(nums: Array<String>): String {
+        val strSet = nums.toHashSet()
+        val n = nums.size
+
+        fun backtrack(i: Int, cur: CharArray): String? {
+            if (i == n) {
+                val res = String(cur)
+                return if (res in strSet) null else res
+            }
+
+            cur[i] = '0'
+            val res = backtrack(i + 1, cur)
+            if (res != null) return res
+
+            cur[i] = '1'
+            return backtrack(i + 1, cur)
+        }
+
+        return backtrack(0, CharArray(n) { '0' })!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifferentBinaryString(_ nums: [String]) -> String {
+        let strSet = Set(nums)
+        let n = nums.count
+        var cur = [Character](repeating: "0", count: n)
+
+        func backtrack(_ i: Int) -> String? {
+            if i == n {
+                let res = String(cur)
+                return strSet.contains(res) ? nil : res
+            }
+
+            cur[i] = "0"
+            if let res = backtrack(i + 1) {
+                return res
+            }
+
+            cur[i] = "1"
+            return backtrack(i + 1)
+        }
+
+        return backtrack(0)!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -198,6 +308,82 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string FindDifferentBinaryString(string[] nums) {
+        HashSet<string> strSet = new HashSet<string>(nums);
+        int n = nums.Length;
+
+        for (int num = 0; num < n + 1; num++) {
+            string res = Convert.ToString(num, 2).PadLeft(n, '0');
+            if (!strSet.Contains(res)) {
+                return res;
+            }
+        }
+
+        return "";
+    }
+}
+```
+
+```go
+func findDifferentBinaryString(nums []string) string {
+    strSet := make(map[string]bool)
+    for _, s := range nums {
+        strSet[s] = true
+    }
+    n := len(nums)
+
+    for num := 0; num <= n; num++ {
+        res := fmt.Sprintf("%0*b", n, num)
+        if !strSet[res] {
+            return res
+        }
+    }
+
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifferentBinaryString(nums: Array<String>): String {
+        val strSet = nums.toHashSet()
+        val n = nums.size
+
+        for (num in 0..n) {
+            val res = Integer.toBinaryString(num).padStart(n, '0')
+            if (res !in strSet) {
+                return res
+            }
+        }
+
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifferentBinaryString(_ nums: [String]) -> String {
+        let strSet = Set(nums)
+        let n = nums.count
+
+        for num in 0...n {
+            var res = String(num, radix: 2)
+            while res.count < n {
+                res = "0" + res
+            }
+            if !strSet.contains(res) {
+                return res
+            }
+        }
+
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -260,6 +446,57 @@ class Solution {
             res.push(nums[i][i] === '0' ? '1' : '0');
         }
         return res.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string FindDifferentBinaryString(string[] nums) {
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < nums.Length; i++) {
+            res.Append(nums[i][i] == '0' ? '1' : '0');
+        }
+        return res.ToString();
+    }
+}
+```
+
+```go
+func findDifferentBinaryString(nums []string) string {
+    res := make([]byte, len(nums))
+    for i := 0; i < len(nums); i++ {
+        if nums[i][i] == '0' {
+            res[i] = '1'
+        } else {
+            res[i] = '0'
+        }
+    }
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifferentBinaryString(nums: Array<String>): String {
+        val res = StringBuilder()
+        for (i in nums.indices) {
+            res.append(if (nums[i][i] == '0') '1' else '0')
+        }
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifferentBinaryString(_ nums: [String]) -> String {
+        var res = ""
+        for i in 0..<nums.count {
+            let index = nums[i].index(nums[i].startIndex, offsetBy: i)
+            res += nums[i][index] == "0" ? "1" : "0"
+        }
+        return res
     }
 }
 ```
@@ -351,6 +588,93 @@ class Solution {
             ).join('');
             if (!strSet.has(res)) {
                 return res;
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private Random random = new Random();
+
+    public string FindDifferentBinaryString(string[] nums) {
+        HashSet<string> strSet = new HashSet<string>(nums);
+        int n = nums.Length;
+
+        while (true) {
+            StringBuilder res = new StringBuilder();
+            for (int i = 0; i < n; i++) {
+                res.Append(random.Next(2) == 0 ? '0' : '1');
+            }
+            string result = res.ToString();
+            if (!strSet.Contains(result)) {
+                return result;
+            }
+        }
+    }
+}
+```
+
+```go
+func findDifferentBinaryString(nums []string) string {
+    strSet := make(map[string]bool)
+    for _, s := range nums {
+        strSet[s] = true
+    }
+    n := len(nums)
+
+    for {
+        res := make([]byte, n)
+        for i := 0; i < n; i++ {
+            if rand.Intn(2) == 0 {
+                res[i] = '0'
+            } else {
+                res[i] = '1'
+            }
+        }
+        result := string(res)
+        if !strSet[result] {
+            return result
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifferentBinaryString(nums: Array<String>): String {
+        val strSet = nums.toHashSet()
+        val n = nums.size
+        val random = java.util.Random()
+
+        while (true) {
+            val res = StringBuilder()
+            for (i in 0 until n) {
+                res.append(if (random.nextBoolean()) '1' else '0')
+            }
+            val result = res.toString()
+            if (result !in strSet) {
+                return result
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifferentBinaryString(_ nums: [String]) -> String {
+        let strSet = Set(nums)
+        let n = nums.count
+
+        while true {
+            var res = ""
+            for _ in 0..<n {
+                res += Bool.random() ? "1" : "0"
+            }
+            if !strSet.contains(res) {
+                return res
             }
         }
     }
@@ -674,6 +998,278 @@ class Solution {
         }
 
         return res.join('');
+    }
+}
+```
+
+```csharp
+public class Node {
+    public Node[] children = new Node[2];
+
+    public bool ContainsBit(int bit) {
+        return children[bit] != null;
+    }
+
+    public void Put(int bit) {
+        children[bit] = new Node();
+    }
+
+    public Node Get(int bit) {
+        return children[bit];
+    }
+}
+
+public class Trie {
+    public Node root = new Node();
+
+    public void Insert(string s) {
+        Node curr = root;
+        foreach (char c in s) {
+            int bit = c - '0';
+            if (!curr.ContainsBit(bit)) {
+                curr.Put(bit);
+            }
+            curr = curr.Get(bit);
+        }
+    }
+
+    public bool Search(StringBuilder res, Node curr) {
+        while (curr.ContainsBit(0) || curr.ContainsBit(1)) {
+            if (!curr.ContainsBit(0)) {
+                res.Append('0');
+                return true;
+            }
+            if (!curr.ContainsBit(1)) {
+                res.Append('1');
+                return true;
+            }
+
+            res.Append('1');
+            curr = curr.Get(1);
+        }
+        return false;
+    }
+}
+
+public class Solution {
+    public string FindDifferentBinaryString(string[] nums) {
+        Trie trie = new Trie();
+        foreach (string s in nums) {
+            trie.Insert(s);
+        }
+
+        StringBuilder res = new StringBuilder();
+        trie.Search(res, trie.root);
+
+        while (res.Length < nums.Length) {
+            res.Append('1');
+        }
+
+        return res.ToString();
+    }
+}
+```
+
+```go
+type Node struct {
+    children [2]*Node
+}
+
+func (n *Node) containsBit(bit int) bool {
+    return n.children[bit] != nil
+}
+
+func (n *Node) put(bit int) {
+    n.children[bit] = &Node{}
+}
+
+func (n *Node) get(bit int) *Node {
+    return n.children[bit]
+}
+
+type Trie struct {
+    root *Node
+}
+
+func newTrie() *Trie {
+    return &Trie{root: &Node{}}
+}
+
+func (t *Trie) insert(s string) {
+    curr := t.root
+    for _, c := range s {
+        bit := int(c - '0')
+        if !curr.containsBit(bit) {
+            curr.put(bit)
+        }
+        curr = curr.get(bit)
+    }
+}
+
+func (t *Trie) search(res *[]byte, curr *Node) bool {
+    for curr.containsBit(0) || curr.containsBit(1) {
+        if !curr.containsBit(0) {
+            *res = append(*res, '0')
+            return true
+        }
+        if !curr.containsBit(1) {
+            *res = append(*res, '1')
+            return true
+        }
+
+        *res = append(*res, '1')
+        curr = curr.get(1)
+    }
+    return false
+}
+
+func findDifferentBinaryString(nums []string) string {
+    trie := newTrie()
+    for _, s := range nums {
+        trie.insert(s)
+    }
+
+    res := []byte{}
+    trie.search(&res, trie.root)
+
+    for len(res) < len(nums) {
+        res = append(res, '1')
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Node {
+    val children = arrayOfNulls<Node>(2)
+
+    fun containsBit(bit: Int): Boolean = children[bit] != null
+
+    fun put(bit: Int) {
+        children[bit] = Node()
+    }
+
+    fun get(bit: Int): Node? = children[bit]
+}
+
+class Trie {
+    val root = Node()
+
+    fun insert(s: String) {
+        var curr = root
+        for (c in s) {
+            val bit = c - '0'
+            if (!curr.containsBit(bit)) {
+                curr.put(bit)
+            }
+            curr = curr.get(bit)!!
+        }
+    }
+
+    fun search(res: StringBuilder, curr: Node): Boolean {
+        var node = curr
+        while (node.containsBit(0) || node.containsBit(1)) {
+            if (!node.containsBit(0)) {
+                res.append('0')
+                return true
+            }
+            if (!node.containsBit(1)) {
+                res.append('1')
+                return true
+            }
+
+            res.append('1')
+            node = node.get(1)!!
+        }
+        return false
+    }
+}
+
+class Solution {
+    fun findDifferentBinaryString(nums: Array<String>): String {
+        val trie = Trie()
+        for (s in nums) {
+            trie.insert(s)
+        }
+
+        val res = StringBuilder()
+        trie.search(res, trie.root)
+
+        while (res.length < nums.size) {
+            res.append('1')
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Node {
+    var children: [Node?] = [nil, nil]
+
+    func containsBit(_ bit: Int) -> Bool {
+        return children[bit] != nil
+    }
+
+    func put(_ bit: Int) {
+        children[bit] = Node()
+    }
+
+    func get(_ bit: Int) -> Node? {
+        return children[bit]
+    }
+}
+
+class Trie {
+    var root = Node()
+
+    func insert(_ s: String) {
+        var curr = root
+        for c in s {
+            let bit = c == "1" ? 1 : 0
+            if !curr.containsBit(bit) {
+                curr.put(bit)
+            }
+            curr = curr.get(bit)!
+        }
+    }
+
+    func search(_ res: inout [Character], _ curr: Node) -> Bool {
+        var node = curr
+        while node.containsBit(0) || node.containsBit(1) {
+            if !node.containsBit(0) {
+                res.append("0")
+                return true
+            }
+            if !node.containsBit(1) {
+                res.append("1")
+                return true
+            }
+
+            res.append("1")
+            node = node.get(1)!
+        }
+        return false
+    }
+}
+
+class Solution {
+    func findDifferentBinaryString(_ nums: [String]) -> String {
+        let trie = Trie()
+        for s in nums {
+            trie.insert(s)
+        }
+
+        var res = [Character]()
+        _ = trie.search(&res, trie.root)
+
+        while res.count < nums.count {
+            res.append("1")
+        }
+
+        return String(res)
     }
 }
 ```

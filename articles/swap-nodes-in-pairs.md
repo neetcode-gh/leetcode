@@ -146,6 +146,157 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapPairs(ListNode head) {
+        if (head == null) return null;
+
+        var arr = new List<ListNode>();
+        var cur = head;
+
+        while (cur != null) {
+            arr.Add(cur);
+            cur = cur.next;
+        }
+
+        for (int i = 0; i + 1 < arr.Count; i += 2) {
+            (arr[i], arr[i + 1]) = (arr[i + 1], arr[i]);
+        }
+
+        for (int i = 0; i + 1 < arr.Count; i++) {
+            arr[i].next = arr[i + 1];
+        }
+
+        arr[arr.Count - 1].next = null;
+        return arr[0];
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapPairs(head *ListNode) *ListNode {
+    if head == nil {
+        return nil
+    }
+
+    arr := []*ListNode{}
+    cur := head
+
+    for cur != nil {
+        arr = append(arr, cur)
+        cur = cur.Next
+    }
+
+    for i := 0; i+1 < len(arr); i += 2 {
+        arr[i], arr[i+1] = arr[i+1], arr[i]
+    }
+
+    for i := 0; i+1 < len(arr); i++ {
+        arr[i].Next = arr[i+1]
+    }
+
+    arr[len(arr)-1].Next = nil
+    return arr[0]
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapPairs(head: ListNode?): ListNode? {
+        if (head == null) return null
+
+        val arr = mutableListOf<ListNode>()
+        var cur = head
+
+        while (cur != null) {
+            arr.add(cur)
+            cur = cur.next
+        }
+
+        var i = 0
+        while (i + 1 < arr.size) {
+            val temp = arr[i]
+            arr[i] = arr[i + 1]
+            arr[i + 1] = temp
+            i += 2
+        }
+
+        for (j in 0 until arr.size - 1) {
+            arr[j].next = arr[j + 1]
+        }
+
+        arr[arr.size - 1].next = null
+        return arr[0]
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapPairs(_ head: ListNode?) -> ListNode? {
+        guard let head = head else { return nil }
+
+        var arr = [ListNode]()
+        var cur: ListNode? = head
+
+        while let node = cur {
+            arr.append(node)
+            cur = node.next
+        }
+
+        var i = 0
+        while i + 1 < arr.count {
+            arr.swapAt(i, i + 1)
+            i += 2
+        }
+
+        for j in 0..<(arr.count - 1) {
+            arr[j].next = arr[j + 1]
+        }
+
+        arr[arr.count - 1].next = nil
+        return arr[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -258,6 +409,109 @@ class Solution {
         nxt.next = cur;
 
         return nxt;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapPairs(ListNode head) {
+        if (head == null || head.next == null) {
+            return head;
+        }
+
+        ListNode cur = head;
+        ListNode nxt = head.next;
+        cur.next = SwapPairs(nxt.next);
+        nxt.next = cur;
+
+        return nxt;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapPairs(head *ListNode) *ListNode {
+    if head == nil || head.Next == nil {
+        return head
+    }
+
+    cur := head
+    nxt := head.Next
+    cur.Next = swapPairs(nxt.Next)
+    nxt.Next = cur
+
+    return nxt
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapPairs(head: ListNode?): ListNode? {
+        if (head == null || head.next == null) {
+            return head
+        }
+
+        val cur = head
+        val nxt = head.next
+        cur.next = swapPairs(nxt?.next)
+        nxt?.next = cur
+
+        return nxt
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapPairs(_ head: ListNode?) -> ListNode? {
+        if head == nil || head?.next == nil {
+            return head
+        }
+
+        let cur = head
+        let nxt = head?.next
+        cur?.next = swapPairs(nxt?.next)
+        nxt?.next = cur
+
+        return nxt
     }
 }
 ```
@@ -408,6 +662,143 @@ class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapPairs(ListNode head) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode prev = dummy, curr = head;
+
+        while (curr != null && curr.next != null) {
+            ListNode nxtPair = curr.next.next;
+            ListNode second = curr.next;
+
+            // Reverse this pair
+            second.next = curr;
+            curr.next = nxtPair;
+            prev.next = second;
+
+            // Update pointers
+            prev = curr;
+            curr = nxtPair;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapPairs(head *ListNode) *ListNode {
+    dummy := &ListNode{Val: 0, Next: head}
+    prev, curr := dummy, head
+
+    for curr != nil && curr.Next != nil {
+        nxtPair := curr.Next.Next
+        second := curr.Next
+
+        // Reverse this pair
+        second.Next = curr
+        curr.Next = nxtPair
+        prev.Next = second
+
+        // Update pointers
+        prev = curr
+        curr = nxtPair
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapPairs(head: ListNode?): ListNode? {
+        val dummy = ListNode(0).apply { next = head }
+        var prev: ListNode? = dummy
+        var curr = head
+
+        while (curr != null && curr.next != null) {
+            val nxtPair = curr.next?.next
+            val second = curr.next
+
+            // Reverse this pair
+            second?.next = curr
+            curr.next = nxtPair
+            prev?.next = second
+
+            // Update pointers
+            prev = curr
+            curr = nxtPair
+        }
+
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapPairs(_ head: ListNode?) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var prev: ListNode? = dummy
+        var curr = head
+
+        while curr != nil && curr?.next != nil {
+            let nxtPair = curr?.next?.next
+            let second = curr?.next
+
+            // Reverse this pair
+            second?.next = curr
+            curr?.next = nxtPair
+            prev?.next = second
+
+            // Update pointers
+            prev = curr
+            curr = nxtPair
+        }
+
+        return dummy.next
     }
 }
 ```

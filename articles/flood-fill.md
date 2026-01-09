@@ -116,6 +116,76 @@ public class Solution {
 }
 ```
 
+```go
+func floodFill(image [][]int, sr int, sc int, color int) [][]int {
+    orig := image[sr][sc]
+    if orig == color {
+        return image
+    }
+    m, n := len(image), len(image[0])
+
+    var dfs func(r, c int)
+    dfs = func(r, c int) {
+        if r < 0 || r >= m || c < 0 || c >= n || image[r][c] != orig {
+            return
+        }
+        image[r][c] = color
+        dfs(r+1, c)
+        dfs(r-1, c)
+        dfs(r, c+1)
+        dfs(r, c-1)
+    }
+
+    dfs(sr, sc)
+    return image
+}
+```
+
+```kotlin
+class Solution {
+    fun floodFill(image: Array<IntArray>, sr: Int, sc: Int, color: Int): Array<IntArray> {
+        val orig = image[sr][sc]
+        if (orig == color) return image
+        val m = image.size
+        val n = image[0].size
+
+        fun dfs(r: Int, c: Int) {
+            if (r < 0 || r >= m || c < 0 || c >= n || image[r][c] != orig) return
+            image[r][c] = color
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+        }
+
+        dfs(sr, sc)
+        return image
+    }
+}
+```
+
+```swift
+class Solution {
+    func floodFill(_ image: inout [[Int]], _ sr: Int, _ sc: Int, _ color: Int) -> [[Int]] {
+        let orig = image[sr][sc]
+        if orig == color { return image }
+        let m = image.count, n = image[0].count
+
+        func dfs(_ r: Int, _ c: Int) {
+            if r < 0 || r >= m || c < 0 || c >= n || image[r][c] != orig { return }
+            image[r][c] = color
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
+        }
+
+        dfs(sr, sc)
+        return image
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,6 +332,86 @@ public class Solution {
             }
         }
         return image;
+    }
+}
+```
+
+```go
+func floodFill(image [][]int, sr int, sc int, color int) [][]int {
+    orig := image[sr][sc]
+    if orig == color {
+        return image
+    }
+    m, n := len(image), len(image[0])
+    q := [][]int{{sr, sc}}
+    image[sr][sc] = color
+    dirs := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+
+    for len(q) > 0 {
+        cell := q[0]
+        q = q[1:]
+        r, c := cell[0], cell[1]
+        for _, d := range dirs {
+            nr, nc := r+d[0], c+d[1]
+            if nr >= 0 && nr < m && nc >= 0 && nc < n && image[nr][nc] == orig {
+                image[nr][nc] = color
+                q = append(q, []int{nr, nc})
+            }
+        }
+    }
+    return image
+}
+```
+
+```kotlin
+class Solution {
+    fun floodFill(image: Array<IntArray>, sr: Int, sc: Int, color: Int): Array<IntArray> {
+        val orig = image[sr][sc]
+        if (orig == color) return image
+        val m = image.size
+        val n = image[0].size
+        val q: Queue<IntArray> = LinkedList()
+        q.add(intArrayOf(sr, sc))
+        image[sr][sc] = color
+        val dirs = arrayOf(intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1))
+
+        while (q.isNotEmpty()) {
+            val (r, c) = q.poll()
+            for (d in dirs) {
+                val nr = r + d[0]
+                val nc = c + d[1]
+                if (nr in 0 until m && nc in 0 until n && image[nr][nc] == orig) {
+                    image[nr][nc] = color
+                    q.add(intArrayOf(nr, nc))
+                }
+            }
+        }
+        return image
+    }
+}
+```
+
+```swift
+class Solution {
+    func floodFill(_ image: inout [[Int]], _ sr: Int, _ sc: Int, _ color: Int) -> [[Int]] {
+        let orig = image[sr][sc]
+        if orig == color { return image }
+        let m = image.count, n = image[0].count
+        var q = [(sr, sc)]
+        image[sr][sc] = color
+        let dirs = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        while !q.isEmpty {
+            let (r, c) = q.removeFirst()
+            for (dr, dc) in dirs {
+                let nr = r + dr, nc = c + dc
+                if nr >= 0 && nr < m && nc >= 0 && nc < n && image[nr][nc] == orig {
+                    image[nr][nc] = color
+                    q.append((nr, nc))
+                }
+            }
+        }
+        return image
     }
 }
 ```

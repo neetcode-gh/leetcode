@@ -134,6 +134,102 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
+    cur := list1
+    arr := []*ListNode{}
+
+    for cur != nil {
+        arr = append(arr, cur)
+        cur = cur.Next
+    }
+
+    arr[a-1].Next = list2
+    cur = list2
+
+    for cur.Next != nil {
+        cur = cur.Next
+    }
+
+    cur.Next = arr[b+1]
+    return list1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun mergeInBetween(list1: ListNode?, a: Int, b: Int, list2: ListNode?): ListNode? {
+        var cur = list1
+        val arr = mutableListOf<ListNode>()
+
+        while (cur != null) {
+            arr.add(cur)
+            cur = cur.next
+        }
+
+        arr[a - 1].next = list2
+        cur = list2
+
+        while (cur?.next != null) {
+            cur = cur.next
+        }
+
+        cur?.next = arr[b + 1]
+        return list1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeInBetween(_ list1: ListNode?, _ a: Int, _ b: Int, _ list2: ListNode?) -> ListNode? {
+        var cur = list1
+        var arr = [ListNode]()
+
+        while cur != nil {
+            arr.append(cur!)
+            cur = cur?.next
+        }
+
+        arr[a - 1].next = list2
+        cur = list2
+
+        while cur?.next != nil {
+            cur = cur?.next
+        }
+
+        cur?.next = arr[b + 1]
+        return list1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -300,6 +396,116 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
+    curr := list1
+    i := 0
+
+    for i < a-1 {
+        curr = curr.Next
+        i++
+    }
+    head := curr
+
+    for i <= b {
+        curr = curr.Next
+        i++
+    }
+    head.Next = list2
+
+    for list2.Next != nil {
+        list2 = list2.Next
+    }
+    list2.Next = curr
+
+    return list1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun mergeInBetween(list1: ListNode?, a: Int, b: Int, list2: ListNode?): ListNode? {
+        var curr = list1
+        var i = 0
+
+        while (i < a - 1) {
+            curr = curr?.next
+            i++
+        }
+        val head = curr
+
+        while (i <= b) {
+            curr = curr?.next
+            i++
+        }
+        head?.next = list2
+
+        var tail = list2
+        while (tail?.next != null) {
+            tail = tail.next
+        }
+        tail?.next = curr
+
+        return list1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeInBetween(_ list1: ListNode?, _ a: Int, _ b: Int, _ list2: ListNode?) -> ListNode? {
+        var curr = list1
+        var i = 0
+
+        while i < a - 1 {
+            curr = curr?.next
+            i += 1
+        }
+        let head = curr
+
+        while i <= b {
+            curr = curr?.next
+            i += 1
+        }
+        head?.next = list2
+
+        var tail = list2
+        while tail?.next != nil {
+            tail = tail?.next
+        }
+        tail?.next = curr
+
+        return list1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -447,6 +653,107 @@ class Solution {
 
         this.mergeInBetween(list1.next, a - 1, b - 1, list2);
         return list1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeInBetween(list1 *ListNode, a int, b int, list2 *ListNode) *ListNode {
+    if a == 1 {
+        nxt := list1.Next
+        list1.Next = list2
+
+        for list2.Next != nil {
+            list2 = list2.Next
+        }
+        mergeInBetween(nxt, 0, b-1, list2)
+        return list1
+    }
+
+    if b == 0 {
+        list2.Next = list1.Next
+        return list1
+    }
+
+    mergeInBetween(list1.Next, a-1, b-1, list2)
+    return list1
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun mergeInBetween(list1: ListNode?, a: Int, b: Int, list2: ListNode?): ListNode? {
+        if (a == 1) {
+            val nxt = list1?.next
+            list1?.next = list2
+
+            var tail = list2
+            while (tail?.next != null) {
+                tail = tail.next
+            }
+            mergeInBetween(nxt, 0, b - 1, tail)
+            return list1
+        }
+
+        if (b == 0) {
+            list2?.next = list1?.next
+            return list1
+        }
+
+        mergeInBetween(list1?.next, a - 1, b - 1, list2)
+        return list1
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeInBetween(_ list1: ListNode?, _ a: Int, _ b: Int, _ list2: ListNode?) -> ListNode? {
+        if a == 1 {
+            let nxt = list1?.next
+            list1?.next = list2
+
+            var tail = list2
+            while tail?.next != nil {
+                tail = tail?.next
+            }
+            _ = mergeInBetween(nxt, 0, b - 1, tail)
+            return list1
+        }
+
+        if b == 0 {
+            list2?.next = list1?.next
+            return list1
+        }
+
+        _ = mergeInBetween(list1?.next, a - 1, b - 1, list2)
+        return list1
     }
 }
 ```

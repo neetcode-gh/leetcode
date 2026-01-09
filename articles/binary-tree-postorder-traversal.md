@@ -157,6 +157,88 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func postorderTraversal(root *TreeNode) []int {
+    res := []int{}
+    var postorder func(node *TreeNode)
+    postorder = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        postorder(node.Left)
+        postorder(node.Right)
+        res = append(res, node.Val)
+    }
+    postorder(root)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun postorderTraversal(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        fun postorder(node: TreeNode?) {
+            if (node == null) return
+            postorder(node.left)
+            postorder(node.right)
+            res.add(node.`val`)
+        }
+        postorder(root)
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func postorderTraversal(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        func postorder(_ node: TreeNode?) {
+            guard let node = node else { return }
+            postorder(node.left)
+            postorder(node.right)
+            res.append(node.val)
+        }
+        postorder(root)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +468,119 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func postorderTraversal(root *TreeNode) []int {
+    type stackItem struct {
+        node  *TreeNode
+        visit bool
+    }
+    stack := []stackItem{{root, false}}
+    res := []int{}
+
+    for len(stack) > 0 {
+        item := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        if item.node != nil {
+            if item.visit {
+                res = append(res, item.node.Val)
+            } else {
+                stack = append(stack, stackItem{item.node, true})
+                stack = append(stack, stackItem{item.node.Right, false})
+                stack = append(stack, stackItem{item.node.Left, false})
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun postorderTraversal(root: TreeNode?): List<Int> {
+        val stack = ArrayDeque<Pair<TreeNode?, Boolean>>()
+        val res = mutableListOf<Int>()
+
+        stack.addLast(Pair(root, false))
+
+        while (stack.isNotEmpty()) {
+            val (cur, v) = stack.removeLast()
+
+            if (cur != null) {
+                if (v) {
+                    res.add(cur.`val`)
+                } else {
+                    stack.addLast(Pair(cur, true))
+                    stack.addLast(Pair(cur.right, false))
+                    stack.addLast(Pair(cur.left, false))
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func postorderTraversal(_ root: TreeNode?) -> [Int] {
+        var stack: [(TreeNode?, Bool)] = [(root, false)]
+        var res = [Int]()
+
+        while !stack.isEmpty {
+            let (cur, v) = stack.removeLast()
+
+            if let cur = cur {
+                if v {
+                    res.append(cur.val)
+                } else {
+                    stack.append((cur, true))
+                    stack.append((cur.right, false))
+                    stack.append((cur.left, false))
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -574,6 +769,112 @@ public class Solution {
 
         res.Reverse();
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func postorderTraversal(root *TreeNode) []int {
+    res := []int{}
+    stack := []*TreeNode{}
+    cur := root
+
+    for cur != nil || len(stack) > 0 {
+        if cur != nil {
+            res = append(res, cur.Val)
+            stack = append(stack, cur)
+            cur = cur.Right
+        } else {
+            cur = stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            cur = cur.Left
+        }
+    }
+
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun postorderTraversal(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        val stack = ArrayDeque<TreeNode>()
+        var cur = root
+
+        while (cur != null || stack.isNotEmpty()) {
+            if (cur != null) {
+                res.add(cur.`val`)
+                stack.addLast(cur)
+                cur = cur.right
+            } else {
+                cur = stack.removeLast()
+                cur = cur.left
+            }
+        }
+
+        res.reverse()
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func postorderTraversal(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        var stack = [TreeNode]()
+        var cur = root
+
+        while cur != nil || !stack.isEmpty {
+            if cur != nil {
+                res.append(cur!.val)
+                stack.append(cur!)
+                cur = cur?.right
+            } else {
+                cur = stack.removeLast()
+                cur = cur?.left
+            }
+        }
+
+        res.reverse()
+        return res
     }
 }
 ```
@@ -808,6 +1109,138 @@ public class Solution {
 
         res.Reverse();
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func postorderTraversal(root *TreeNode) []int {
+    res := []int{}
+    cur := root
+
+    for cur != nil {
+        if cur.Right == nil {
+            res = append(res, cur.Val)
+            cur = cur.Left
+        } else {
+            prev := cur.Right
+            for prev.Left != nil && prev.Left != cur {
+                prev = prev.Left
+            }
+
+            if prev.Left == nil {
+                res = append(res, cur.Val)
+                prev.Left = cur
+                cur = cur.Right
+            } else {
+                prev.Left = nil
+                cur = cur.Left
+            }
+        }
+    }
+
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun postorderTraversal(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        var cur = root
+
+        while (cur != null) {
+            if (cur.right == null) {
+                res.add(cur.`val`)
+                cur = cur.left
+            } else {
+                var prev = cur.right
+                while (prev?.left != null && prev.left != cur) {
+                    prev = prev.left
+                }
+
+                if (prev?.left == null) {
+                    res.add(cur.`val`)
+                    prev?.left = cur
+                    cur = cur.right
+                } else {
+                    prev.left = null
+                    cur = cur.left
+                }
+            }
+        }
+
+        res.reverse()
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func postorderTraversal(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        var cur = root
+
+        while cur != nil {
+            if cur?.right == nil {
+                res.append(cur!.val)
+                cur = cur?.left
+            } else {
+                var prev = cur?.right
+                while prev?.left != nil && prev?.left !== cur {
+                    prev = prev?.left
+                }
+
+                if prev?.left == nil {
+                    res.append(cur!.val)
+                    prev?.left = cur
+                    cur = cur?.right
+                } else {
+                    prev?.left = nil
+                    cur = cur?.left
+                }
+            }
+        }
+
+        res.reverse()
+        return res
     }
 }
 ```

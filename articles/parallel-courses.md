@@ -139,17 +139,17 @@ class Solution {
     minimumSemesters(n, relations) {
         const graph = {};
         const inCount = {}; // or in-degree
-        
+
         for (let i = 1; i <= n; i++) {
             graph[i] = [];
             inCount[i] = 0;
         }
-        
+
         for (const [startNode, endNode] of relations) {
             graph[startNode].push(endNode);
             inCount[endNode]++;
         }
-        
+
         let queue = [];
         // we use list here since we are not
         // popping from the front in this code
@@ -158,7 +158,7 @@ class Solution {
                 queue.push(node);
             }
         }
-        
+
         let step = 0;
         let studiedCount = 0;
         // start learning with BFS
@@ -166,11 +166,11 @@ class Solution {
             // start new semester
             step++;
             const nextQueue = [];
-            
+
             for (const node of queue) {
                 studiedCount++;
                 const endNodes = graph[node];
-                
+
                 for (const endNode of endNodes) {
                     inCount[endNode]--;
                     // if all prerequisite courses learned
@@ -179,11 +179,178 @@ class Solution {
                     }
                 }
             }
-            
+
             queue = nextQueue;
         }
-        
+
         return studiedCount === n ? step : -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumSemesters(int N, int[][] relations) {
+        int[] inCount = new int[N + 1];
+        List<List<int>> graph = new List<List<int>>();
+        for (int i = 0; i <= N; i++) {
+            graph.Add(new List<int>());
+        }
+
+        foreach (var relation in relations) {
+            graph[relation[0]].Add(relation[1]);
+            inCount[relation[1]]++;
+        }
+
+        int step = 0;
+        int studiedCount = 0;
+        List<int> bfsQueue = new List<int>();
+        for (int node = 1; node <= N; node++) {
+            if (inCount[node] == 0) {
+                bfsQueue.Add(node);
+            }
+        }
+
+        while (bfsQueue.Count > 0) {
+            step++;
+            List<int> nextQueue = new List<int>();
+            foreach (int node in bfsQueue) {
+                studiedCount++;
+                foreach (int endNode in graph[node]) {
+                    inCount[endNode]--;
+                    if (inCount[endNode] == 0) {
+                        nextQueue.Add(endNode);
+                    }
+                }
+            }
+            bfsQueue = nextQueue;
+        }
+
+        return studiedCount == N ? step : -1;
+    }
+}
+```
+
+```go
+func minimumSemesters(n int, relations [][]int) int {
+    graph := make([][]int, n+1)
+    inCount := make([]int, n+1)
+    for i := range graph {
+        graph[i] = []int{}
+    }
+
+    for _, relation := range relations {
+        graph[relation[0]] = append(graph[relation[0]], relation[1])
+        inCount[relation[1]]++
+    }
+
+    step := 0
+    studiedCount := 0
+    queue := []int{}
+    for node := 1; node <= n; node++ {
+        if inCount[node] == 0 {
+            queue = append(queue, node)
+        }
+    }
+
+    for len(queue) > 0 {
+        step++
+        nextQueue := []int{}
+        for _, node := range queue {
+            studiedCount++
+            for _, endNode := range graph[node] {
+                inCount[endNode]--
+                if inCount[endNode] == 0 {
+                    nextQueue = append(nextQueue, endNode)
+                }
+            }
+        }
+        queue = nextQueue
+    }
+
+    if studiedCount == n {
+        return step
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumSemesters(n: Int, relations: Array<IntArray>): Int {
+        val graph = Array(n + 1) { mutableListOf<Int>() }
+        val inCount = IntArray(n + 1)
+
+        for (relation in relations) {
+            graph[relation[0]].add(relation[1])
+            inCount[relation[1]]++
+        }
+
+        var step = 0
+        var studiedCount = 0
+        var queue = mutableListOf<Int>()
+        for (node in 1..n) {
+            if (inCount[node] == 0) {
+                queue.add(node)
+            }
+        }
+
+        while (queue.isNotEmpty()) {
+            step++
+            val nextQueue = mutableListOf<Int>()
+            for (node in queue) {
+                studiedCount++
+                for (endNode in graph[node]) {
+                    inCount[endNode]--
+                    if (inCount[endNode] == 0) {
+                        nextQueue.add(endNode)
+                    }
+                }
+            }
+            queue = nextQueue
+        }
+
+        return if (studiedCount == n) step else -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumSemesters(_ n: Int, _ relations: [[Int]]) -> Int {
+        var graph = [[Int]](repeating: [], count: n + 1)
+        var inCount = [Int](repeating: 0, count: n + 1)
+
+        for relation in relations {
+            graph[relation[0]].append(relation[1])
+            inCount[relation[1]] += 1
+        }
+
+        var step = 0
+        var studiedCount = 0
+        var queue = [Int]()
+        for node in 1...n {
+            if inCount[node] == 0 {
+                queue.append(node)
+            }
+        }
+
+        while !queue.isEmpty {
+            step += 1
+            var nextQueue = [Int]()
+            for node in queue {
+                studiedCount += 1
+                for endNode in graph[node] {
+                    inCount[endNode] -= 1
+                    if inCount[endNode] == 0 {
+                        nextQueue.append(endNode)
+                    }
+                }
+            }
+            queue = nextQueue
+        }
+
+        return studiedCount == n ? step : -1
     }
 }
 ```
@@ -384,6 +551,297 @@ private:
 };
 ```
 
+```javascript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @return {number}
+     */
+    minimumSemesters(n, relations) {
+        const graph = {};
+        for (let i = 1; i <= n; i++) {
+            graph[i] = [];
+        }
+        for (const [startNode, endNode] of relations) {
+            graph[startNode].push(endNode);
+        }
+
+        const visited = {};
+
+        const dfsCheckCycle = (node) => {
+            if (visited[node] !== undefined) {
+                return visited[node];
+            }
+            visited[node] = -1;
+            for (const endNode of graph[node]) {
+                if (dfsCheckCycle(endNode) === -1) {
+                    return -1;
+                }
+            }
+            visited[node] = 1;
+            return 1;
+        };
+
+        for (let node = 1; node <= n; node++) {
+            if (dfsCheckCycle(node) === -1) {
+                return -1;
+            }
+        }
+
+        const visitedLength = {};
+
+        const dfsMaxPath = (node) => {
+            if (visitedLength[node] !== undefined) {
+                return visitedLength[node];
+            }
+            let maxLength = 1;
+            for (const endNode of graph[node]) {
+                const length = dfsMaxPath(endNode);
+                maxLength = Math.max(length + 1, maxLength);
+            }
+            visitedLength[node] = maxLength;
+            return maxLength;
+        };
+
+        let maxLength = 1;
+        for (let node = 1; node <= n; node++) {
+            const length = dfsMaxPath(node);
+            maxLength = Math.max(length, maxLength);
+        }
+        return maxLength;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumSemesters(int N, int[][] relations) {
+        List<List<int>> graph = new List<List<int>>();
+        for (int i = 0; i <= N; i++) {
+            graph.Add(new List<int>());
+        }
+        foreach (var relation in relations) {
+            graph[relation[0]].Add(relation[1]);
+        }
+
+        int[] visited = new int[N + 1];
+        for (int node = 1; node <= N; node++) {
+            if (DfsCheckCycle(node, graph, visited) == -1) {
+                return -1;
+            }
+        }
+
+        int[] visitedLength = new int[N + 1];
+        int maxLength = 1;
+        for (int node = 1; node <= N; node++) {
+            int length = DfsMaxPath(node, graph, visitedLength);
+            maxLength = Math.Max(length, maxLength);
+        }
+        return maxLength;
+    }
+
+    private int DfsCheckCycle(int node, List<List<int>> graph, int[] visited) {
+        if (visited[node] != 0) {
+            return visited[node];
+        }
+        visited[node] = -1;
+        foreach (int endNode in graph[node]) {
+            if (DfsCheckCycle(endNode, graph, visited) == -1) {
+                return -1;
+            }
+        }
+        visited[node] = 1;
+        return 1;
+    }
+
+    private int DfsMaxPath(int node, List<List<int>> graph, int[] visitedLength) {
+        if (visitedLength[node] != 0) {
+            return visitedLength[node];
+        }
+        int maxLength = 1;
+        foreach (int endNode in graph[node]) {
+            int length = DfsMaxPath(endNode, graph, visitedLength);
+            maxLength = Math.Max(length + 1, maxLength);
+        }
+        visitedLength[node] = maxLength;
+        return maxLength;
+    }
+}
+```
+
+```go
+func minimumSemesters(n int, relations [][]int) int {
+    graph := make([][]int, n+1)
+    for i := range graph {
+        graph[i] = []int{}
+    }
+    for _, relation := range relations {
+        graph[relation[0]] = append(graph[relation[0]], relation[1])
+    }
+
+    visited := make([]int, n+1)
+
+    var dfsCheckCycle func(node int) int
+    dfsCheckCycle = func(node int) int {
+        if visited[node] != 0 {
+            return visited[node]
+        }
+        visited[node] = -1
+        for _, endNode := range graph[node] {
+            if dfsCheckCycle(endNode) == -1 {
+                return -1
+            }
+        }
+        visited[node] = 1
+        return 1
+    }
+
+    for node := 1; node <= n; node++ {
+        if dfsCheckCycle(node) == -1 {
+            return -1
+        }
+    }
+
+    visitedLength := make([]int, n+1)
+
+    var dfsMaxPath func(node int) int
+    dfsMaxPath = func(node int) int {
+        if visitedLength[node] != 0 {
+            return visitedLength[node]
+        }
+        maxLength := 1
+        for _, endNode := range graph[node] {
+            length := dfsMaxPath(endNode)
+            if length+1 > maxLength {
+                maxLength = length + 1
+            }
+        }
+        visitedLength[node] = maxLength
+        return maxLength
+    }
+
+    maxLength := 1
+    for node := 1; node <= n; node++ {
+        length := dfsMaxPath(node)
+        if length > maxLength {
+            maxLength = length
+        }
+    }
+    return maxLength
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumSemesters(n: Int, relations: Array<IntArray>): Int {
+        val graph = Array(n + 1) { mutableListOf<Int>() }
+        for (relation in relations) {
+            graph[relation[0]].add(relation[1])
+        }
+
+        val visited = IntArray(n + 1)
+
+        fun dfsCheckCycle(node: Int): Int {
+            if (visited[node] != 0) {
+                return visited[node]
+            }
+            visited[node] = -1
+            for (endNode in graph[node]) {
+                if (dfsCheckCycle(endNode) == -1) {
+                    return -1
+                }
+            }
+            visited[node] = 1
+            return 1
+        }
+
+        for (node in 1..n) {
+            if (dfsCheckCycle(node) == -1) {
+                return -1
+            }
+        }
+
+        val visitedLength = IntArray(n + 1)
+
+        fun dfsMaxPath(node: Int): Int {
+            if (visitedLength[node] != 0) {
+                return visitedLength[node]
+            }
+            var maxLength = 1
+            for (endNode in graph[node]) {
+                val length = dfsMaxPath(endNode)
+                maxLength = maxOf(length + 1, maxLength)
+            }
+            visitedLength[node] = maxLength
+            return maxLength
+        }
+
+        var maxLength = 1
+        for (node in 1..n) {
+            val length = dfsMaxPath(node)
+            maxLength = maxOf(length, maxLength)
+        }
+        return maxLength
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumSemesters(_ n: Int, _ relations: [[Int]]) -> Int {
+        var graph = [[Int]](repeating: [], count: n + 1)
+        for relation in relations {
+            graph[relation[0]].append(relation[1])
+        }
+
+        var visited = [Int](repeating: 0, count: n + 1)
+
+        func dfsCheckCycle(_ node: Int) -> Int {
+            if visited[node] != 0 {
+                return visited[node]
+            }
+            visited[node] = -1
+            for endNode in graph[node] {
+                if dfsCheckCycle(endNode) == -1 {
+                    return -1
+                }
+            }
+            visited[node] = 1
+            return 1
+        }
+
+        for node in 1...n {
+            if dfsCheckCycle(node) == -1 {
+                return -1
+            }
+        }
+
+        var visitedLength = [Int](repeating: 0, count: n + 1)
+
+        func dfsMaxPath(_ node: Int) -> Int {
+            if visitedLength[node] != 0 {
+                return visitedLength[node]
+            }
+            var maxLength = 1
+            for endNode in graph[node] {
+                let length = dfsMaxPath(endNode)
+                maxLength = max(length + 1, maxLength)
+            }
+            visitedLength[node] = maxLength
+            return maxLength
+        }
+
+        var maxLength = 1
+        for node in 1...n {
+            let length = dfsMaxPath(node)
+            maxLength = max(length, maxLength)
+        }
+        return maxLength
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,6 +990,222 @@ private:
         return maxLength;
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number} n
+     * @param {number[][]} relations
+     * @return {number}
+     */
+    minimumSemesters(n, relations) {
+        const graph = {};
+        for (let i = 1; i <= n; i++) {
+            graph[i] = [];
+        }
+        for (const [startNode, endNode] of relations) {
+            graph[startNode].push(endNode);
+        }
+
+        const visited = {};
+
+        const dfs = (node) => {
+            if (visited[node] !== undefined) {
+                return visited[node];
+            }
+            visited[node] = -1;
+            let maxLength = 1;
+            for (const endNode of graph[node]) {
+                const length = dfs(endNode);
+                if (length === -1) {
+                    return -1;
+                }
+                maxLength = Math.max(length + 1, maxLength);
+            }
+            visited[node] = maxLength;
+            return maxLength;
+        };
+
+        let maxLength = -1;
+        for (let node = 1; node <= n; node++) {
+            const length = dfs(node);
+            if (length === -1) {
+                return -1;
+            }
+            maxLength = Math.max(length, maxLength);
+        }
+        return maxLength;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumSemesters(int N, int[][] relations) {
+        List<List<int>> graph = new List<List<int>>();
+        for (int i = 0; i <= N; i++) {
+            graph.Add(new List<int>());
+        }
+        foreach (var relation in relations) {
+            graph[relation[0]].Add(relation[1]);
+        }
+
+        int[] visited = new int[N + 1];
+        int maxLength = 1;
+        for (int node = 1; node <= N; node++) {
+            int length = Dfs(node, graph, visited);
+            if (length == -1) {
+                return -1;
+            }
+            maxLength = Math.Max(length, maxLength);
+        }
+        return maxLength;
+    }
+
+    private int Dfs(int node, List<List<int>> graph, int[] visited) {
+        if (visited[node] != 0) {
+            return visited[node];
+        }
+        visited[node] = -1;
+        int maxLength = 1;
+        foreach (int endNode in graph[node]) {
+            int length = Dfs(endNode, graph, visited);
+            if (length == -1) {
+                return -1;
+            }
+            maxLength = Math.Max(length + 1, maxLength);
+        }
+        visited[node] = maxLength;
+        return maxLength;
+    }
+}
+```
+
+```go
+func minimumSemesters(n int, relations [][]int) int {
+    graph := make([][]int, n+1)
+    for i := range graph {
+        graph[i] = []int{}
+    }
+    for _, relation := range relations {
+        graph[relation[0]] = append(graph[relation[0]], relation[1])
+    }
+
+    visited := make([]int, n+1)
+
+    var dfs func(node int) int
+    dfs = func(node int) int {
+        if visited[node] != 0 {
+            return visited[node]
+        }
+        visited[node] = -1
+        maxLength := 1
+        for _, endNode := range graph[node] {
+            length := dfs(endNode)
+            if length == -1 {
+                return -1
+            }
+            if length+1 > maxLength {
+                maxLength = length + 1
+            }
+        }
+        visited[node] = maxLength
+        return maxLength
+    }
+
+    maxLength := -1
+    for node := 1; node <= n; node++ {
+        length := dfs(node)
+        if length == -1 {
+            return -1
+        }
+        if length > maxLength {
+            maxLength = length
+        }
+    }
+    return maxLength
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumSemesters(n: Int, relations: Array<IntArray>): Int {
+        val graph = Array(n + 1) { mutableListOf<Int>() }
+        for (relation in relations) {
+            graph[relation[0]].add(relation[1])
+        }
+
+        val visited = IntArray(n + 1)
+
+        fun dfs(node: Int): Int {
+            if (visited[node] != 0) {
+                return visited[node]
+            }
+            visited[node] = -1
+            var maxLength = 1
+            for (endNode in graph[node]) {
+                val length = dfs(endNode)
+                if (length == -1) {
+                    return -1
+                }
+                maxLength = maxOf(length + 1, maxLength)
+            }
+            visited[node] = maxLength
+            return maxLength
+        }
+
+        var maxLength = -1
+        for (node in 1..n) {
+            val length = dfs(node)
+            if (length == -1) {
+                return -1
+            }
+            maxLength = maxOf(length, maxLength)
+        }
+        return maxLength
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumSemesters(_ n: Int, _ relations: [[Int]]) -> Int {
+        var graph = [[Int]](repeating: [], count: n + 1)
+        for relation in relations {
+            graph[relation[0]].append(relation[1])
+        }
+
+        var visited = [Int](repeating: 0, count: n + 1)
+
+        func dfs(_ node: Int) -> Int {
+            if visited[node] != 0 {
+                return visited[node]
+            }
+            visited[node] = -1
+            var maxLength = 1
+            for endNode in graph[node] {
+                let length = dfs(endNode)
+                if length == -1 {
+                    return -1
+                }
+                maxLength = max(length + 1, maxLength)
+            }
+            visited[node] = maxLength
+            return maxLength
+        }
+
+        var maxLength = -1
+        for node in 1...n {
+            let length = dfs(node)
+            if length == -1 {
+                return -1
+            }
+            maxLength = max(length, maxLength)
+        }
+        return maxLength
+    }
+}
 ```
 
 ::tabs-end

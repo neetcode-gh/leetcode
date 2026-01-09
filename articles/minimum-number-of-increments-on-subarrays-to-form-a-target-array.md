@@ -126,6 +126,82 @@ public class Solution {
 }
 ```
 
+```go
+func minNumberOperations(target []int) int {
+    var rec func(l, r, h int) int
+    rec = func(l, r, h int) int {
+        if l > r {
+            return 0
+        }
+
+        minIdx := l
+        for i := l + 1; i <= r; i++ {
+            if target[i] < target[minIdx] {
+                minIdx = i
+            }
+        }
+
+        res := target[minIdx] - h
+        res += rec(l, minIdx-1, target[minIdx])
+        res += rec(minIdx+1, r, target[minIdx])
+
+        return res
+    }
+
+    return rec(0, len(target)-1, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun minNumberOperations(target: IntArray): Int {
+        fun rec(l: Int, r: Int, h: Int): Int {
+            if (l > r) return 0
+
+            var minIdx = l
+            for (i in l + 1..r) {
+                if (target[i] < target[minIdx]) {
+                    minIdx = i
+                }
+            }
+
+            var res = target[minIdx] - h
+            res += rec(l, minIdx - 1, target[minIdx])
+            res += rec(minIdx + 1, r, target[minIdx])
+
+            return res
+        }
+
+        return rec(0, target.size - 1, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minNumberOperations(_ target: [Int]) -> Int {
+        func rec(_ l: Int, _ r: Int, _ h: Int) -> Int {
+            if l > r { return 0 }
+
+            var minIdx = l
+            for i in (l + 1)...r {
+                if target[i] < target[minIdx] {
+                    minIdx = i
+                }
+            }
+
+            var res = target[minIdx] - h
+            res += rec(l, minIdx - 1, target[minIdx])
+            res += rec(minIdx + 1, r, target[minIdx])
+
+            return res
+        }
+
+        return rec(0, target.count - 1, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -476,6 +552,222 @@ public class Solution {
 }
 ```
 
+```go
+const INF = int(^uint(0) >> 1)
+
+type SegmentTree struct {
+    A    []int
+    tree []int
+    n    int
+}
+
+func NewSegmentTree(arr []int) *SegmentTree {
+    n := len(arr)
+    pow2 := 1
+    for pow2 < n {
+        pow2 <<= 1
+    }
+
+    A := make([]int, pow2)
+    copy(A, arr)
+    for i := len(arr); i < pow2; i++ {
+        A[i] = INF
+    }
+
+    tree := make([]int, 2*pow2)
+    st := &SegmentTree{A: A, tree: tree, n: pow2}
+    st.build()
+    return st
+}
+
+func (st *SegmentTree) build() {
+    for i := 0; i < st.n; i++ {
+        st.tree[st.n+i] = i
+    }
+    for i := st.n - 1; i > 0; i-- {
+        a := st.tree[i<<1]
+        b := st.tree[(i<<1)|1]
+        if st.A[a] <= st.A[b] {
+            st.tree[i] = a
+        } else {
+            st.tree[i] = b
+        }
+    }
+}
+
+func (st *SegmentTree) Query(ql, qh int) int {
+    return st.query(1, 0, st.n-1, ql, qh)
+}
+
+func (st *SegmentTree) query(node, l, h, ql, qh int) int {
+    if ql > h || qh < l {
+        return -1
+    }
+    if l >= ql && h <= qh {
+        return st.tree[node]
+    }
+    mid := (l + h) >> 1
+    a := st.query(node<<1, l, mid, ql, qh)
+    b := st.query((node<<1)|1, mid+1, h, ql, qh)
+    if a == -1 {
+        return b
+    }
+    if b == -1 {
+        return a
+    }
+    if st.A[a] <= st.A[b] {
+        return a
+    }
+    return b
+}
+
+func minNumberOperations(target []int) int {
+    seg := NewSegmentTree(target)
+
+    var rec func(l, r, h int) int
+    rec = func(l, r, h int) int {
+        if l > r {
+            return 0
+        }
+        minIdx := seg.Query(l, r)
+        res := target[minIdx] - h
+        res += rec(l, minIdx-1, target[minIdx])
+        res += rec(minIdx+1, r, target[minIdx])
+        return res
+    }
+
+    return rec(0, len(target)-1, 0)
+}
+```
+
+```kotlin
+class SegmentTree(arr: IntArray) {
+    private val A: IntArray
+    private val tree: IntArray
+    private val n: Int
+
+    init {
+        var pow2 = 1
+        while (pow2 < arr.size) pow2 = pow2 shl 1
+        n = pow2
+
+        A = IntArray(n) { Int.MAX_VALUE }
+        arr.copyInto(A)
+
+        tree = IntArray(2 * n)
+        build()
+    }
+
+    private fun build() {
+        for (i in 0 until n) {
+            tree[n + i] = i
+        }
+        for (i in n - 1 downTo 1) {
+            val a = tree[i shl 1]
+            val b = tree[(i shl 1) or 1]
+            tree[i] = if (A[a] <= A[b]) a else b
+        }
+    }
+
+    fun query(ql: Int, qh: Int): Int {
+        return query(1, 0, n - 1, ql, qh)
+    }
+
+    private fun query(node: Int, l: Int, h: Int, ql: Int, qh: Int): Int {
+        if (ql > h || qh < l) return -1
+        if (l >= ql && h <= qh) return tree[node]
+        val mid = (l + h) shr 1
+        val a = query(node shl 1, l, mid, ql, qh)
+        val b = query((node shl 1) or 1, mid + 1, h, ql, qh)
+        if (a == -1) return b
+        if (b == -1) return a
+        return if (A[a] <= A[b]) a else b
+    }
+}
+
+class Solution {
+    fun minNumberOperations(target: IntArray): Int {
+        val seg = SegmentTree(target)
+
+        fun rec(l: Int, r: Int, h: Int): Int {
+            if (l > r) return 0
+            val minIdx = seg.query(l, r)
+            var res = target[minIdx] - h
+            res += rec(l, minIdx - 1, target[minIdx])
+            res += rec(minIdx + 1, r, target[minIdx])
+            return res
+        }
+
+        return rec(0, target.size - 1, 0)
+    }
+}
+```
+
+```swift
+class SegmentTree {
+    private var A: [Int]
+    private var tree: [Int]
+    private var n: Int
+
+    init(_ arr: [Int]) {
+        var pow2 = 1
+        while pow2 < arr.count { pow2 <<= 1 }
+        n = pow2
+
+        A = Array(repeating: Int.max, count: n)
+        for i in 0..<arr.count {
+            A[i] = arr[i]
+        }
+
+        tree = Array(repeating: 0, count: 2 * n)
+        build()
+    }
+
+    private func build() {
+        for i in 0..<n {
+            tree[n + i] = i
+        }
+        for i in stride(from: n - 1, through: 1, by: -1) {
+            let a = tree[i << 1]
+            let b = tree[(i << 1) | 1]
+            tree[i] = A[a] <= A[b] ? a : b
+        }
+    }
+
+    func query(_ ql: Int, _ qh: Int) -> Int {
+        return queryHelper(1, 0, n - 1, ql, qh)
+    }
+
+    private func queryHelper(_ node: Int, _ l: Int, _ h: Int, _ ql: Int, _ qh: Int) -> Int {
+        if ql > h || qh < l { return -1 }
+        if l >= ql && h <= qh { return tree[node] }
+        let mid = (l + h) >> 1
+        let a = queryHelper(node << 1, l, mid, ql, qh)
+        let b = queryHelper((node << 1) | 1, mid + 1, h, ql, qh)
+        if a == -1 { return b }
+        if b == -1 { return a }
+        return A[a] <= A[b] ? a : b
+    }
+}
+
+class Solution {
+    func minNumberOperations(_ target: [Int]) -> Int {
+        let seg = SegmentTree(target)
+
+        func rec(_ l: Int, _ r: Int, _ h: Int) -> Int {
+            if l > r { return 0 }
+            let minIdx = seg.query(l, r)
+            var res = target[minIdx] - h
+            res += rec(l, minIdx - 1, target[minIdx])
+            res += rec(minIdx + 1, r, target[minIdx])
+            return res
+        }
+
+        return rec(0, target.count - 1, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,6 +839,42 @@ public class Solution {
             res += Math.Max(target[i] - target[i - 1], 0);
         }
         return res;
+    }
+}
+```
+
+```go
+func minNumberOperations(target []int) int {
+    res := target[0]
+    for i := 1; i < len(target); i++ {
+        if target[i] > target[i-1] {
+            res += target[i] - target[i-1]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minNumberOperations(target: IntArray): Int {
+        var res = target[0]
+        for (i in 1 until target.size) {
+            res += maxOf(target[i] - target[i - 1], 0)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minNumberOperations(_ target: [Int]) -> Int {
+        var res = target[0]
+        for i in 1..<target.count {
+            res += max(target[i] - target[i - 1], 0)
+        }
+        return res
     }
 }
 ```

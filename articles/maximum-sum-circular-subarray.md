@@ -98,6 +98,63 @@ public class Solution {
 }
 ```
 
+```go
+func maxSubarraySumCircular(nums []int) int {
+    n := len(nums)
+    res := nums[0]
+
+    for i := 0; i < n; i++ {
+        curSum := 0
+        for j := i; j < i+n; j++ {
+            curSum += nums[j%n]
+            if curSum > res {
+                res = curSum
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubarraySumCircular(nums: IntArray): Int {
+        val n = nums.size
+        var res = nums[0]
+
+        for (i in 0 until n) {
+            var curSum = 0
+            for (j in i until i + n) {
+                curSum += nums[j % n]
+                res = maxOf(res, curSum)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubarraySumCircular(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = nums[0]
+
+        for i in 0..<n {
+            var curSum = 0
+            for j in i..<(i + n) {
+                curSum += nums[j % n]
+                res = max(res, curSum)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -266,6 +323,104 @@ public class Solution {
 }
 ```
 
+```go
+func maxSubarraySumCircular(nums []int) int {
+    n := len(nums)
+    rightMax := make([]int, n)
+    rightMax[n-1] = nums[n-1]
+    suffixSum := nums[n-1]
+
+    for i := n - 2; i >= 0; i-- {
+        suffixSum += nums[i]
+        rightMax[i] = max(rightMax[i+1], suffixSum)
+    }
+
+    maxSum := nums[0]
+    curMax := 0
+    prefixSum := 0
+
+    for i := 0; i < n; i++ {
+        curMax = max(curMax, 0) + nums[i]
+        maxSum = max(maxSum, curMax)
+        prefixSum += nums[i]
+        if i+1 < n {
+            maxSum = max(maxSum, prefixSum+rightMax[i+1])
+        }
+    }
+
+    return maxSum
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubarraySumCircular(nums: IntArray): Int {
+        val n = nums.size
+        val rightMax = IntArray(n)
+        rightMax[n - 1] = nums[n - 1]
+        var suffixSum = nums[n - 1]
+
+        for (i in n - 2 downTo 0) {
+            suffixSum += nums[i]
+            rightMax[i] = maxOf(rightMax[i + 1], suffixSum)
+        }
+
+        var maxSum = nums[0]
+        var curMax = 0
+        var prefixSum = 0
+
+        for (i in 0 until n) {
+            curMax = maxOf(curMax, 0) + nums[i]
+            maxSum = maxOf(maxSum, curMax)
+            prefixSum += nums[i]
+            if (i + 1 < n) {
+                maxSum = maxOf(maxSum, prefixSum + rightMax[i + 1])
+            }
+        }
+
+        return maxSum
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubarraySumCircular(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var rightMax = [Int](repeating: 0, count: n)
+        rightMax[n - 1] = nums[n - 1]
+        var suffixSum = nums[n - 1]
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            suffixSum += nums[i]
+            rightMax[i] = max(rightMax[i + 1], suffixSum)
+        }
+
+        var maxSum = nums[0]
+        var curMax = 0
+        var prefixSum = 0
+
+        for i in 0..<n {
+            curMax = max(curMax, 0) + nums[i]
+            maxSum = max(maxSum, curMax)
+            prefixSum += nums[i]
+            if i + 1 < n {
+                maxSum = max(maxSum, prefixSum + rightMax[i + 1])
+            }
+        }
+
+        return maxSum
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -378,6 +533,84 @@ public class Solution {
         }
 
         return globMax > 0 ? Math.Max(globMax, total - globMin) : globMax;
+    }
+}
+```
+
+```go
+func maxSubarraySumCircular(nums []int) int {
+    globMax, globMin := nums[0], nums[0]
+    curMax, curMin, total := 0, 0, 0
+
+    for _, num := range nums {
+        curMax = max(curMax+num, num)
+        curMin = min(curMin+num, num)
+        total += num
+        globMax = max(globMax, curMax)
+        globMin = min(globMin, curMin)
+    }
+
+    if globMax > 0 {
+        return max(globMax, total-globMin)
+    }
+    return globMax
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubarraySumCircular(nums: IntArray): Int {
+        var globMax = nums[0]
+        var globMin = nums[0]
+        var curMax = 0
+        var curMin = 0
+        var total = 0
+
+        for (num in nums) {
+            curMax = maxOf(curMax + num, num)
+            curMin = minOf(curMin + num, num)
+            total += num
+            globMax = maxOf(globMax, curMax)
+            globMin = minOf(globMin, curMin)
+        }
+
+        return if (globMax > 0) maxOf(globMax, total - globMin) else globMax
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubarraySumCircular(_ nums: [Int]) -> Int {
+        var globMax = nums[0]
+        var globMin = nums[0]
+        var curMax = 0
+        var curMin = 0
+        var total = 0
+
+        for num in nums {
+            curMax = max(curMax + num, num)
+            curMin = min(curMin + num, num)
+            total += num
+            globMax = max(globMax, curMax)
+            globMin = min(globMin, curMin)
+        }
+
+        return globMax > 0 ? max(globMax, total - globMin) : globMax
     }
 }
 ```

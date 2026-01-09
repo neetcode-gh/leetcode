@@ -83,6 +83,75 @@ class Codec {
 }
 ```
 
+```csharp
+public class Codec {
+    private List<string> urls = new List<string>();
+
+    public string encode(string longUrl) {
+        urls.Add(longUrl);
+        return "http://tinyurl.com/" + (urls.Count - 1);
+    }
+
+    public string decode(string shortUrl) {
+        int index = int.Parse(shortUrl.Substring(shortUrl.LastIndexOf('/') + 1));
+        return urls[index];
+    }
+}
+```
+
+```go
+type Codec struct {
+    urls []string
+}
+
+func Constructor() Codec {
+    return Codec{urls: []string{}}
+}
+
+func (this *Codec) encode(longUrl string) string {
+    this.urls = append(this.urls, longUrl)
+    return "http://tinyurl.com/" + strconv.Itoa(len(this.urls)-1)
+}
+
+func (this *Codec) decode(shortUrl string) string {
+    parts := strings.Split(shortUrl, "/")
+    index, _ := strconv.Atoi(parts[len(parts)-1])
+    return this.urls[index]
+}
+```
+
+```kotlin
+class Codec {
+    private val urls = mutableListOf<String>()
+
+    fun encode(longUrl: String): String {
+        urls.add(longUrl)
+        return "http://tinyurl.com/${urls.size - 1}"
+    }
+
+    fun decode(shortUrl: String): String {
+        val index = shortUrl.substringAfterLast('/').toInt()
+        return urls[index]
+    }
+}
+```
+
+```swift
+class Codec {
+    private var urls = [String]()
+
+    func encode(_ longUrl: String) -> String {
+        urls.append(longUrl)
+        return "http://tinyurl.com/\(urls.count - 1)"
+    }
+
+    func decode(_ shortUrl: String) -> String {
+        let index = Int(shortUrl.split(separator: "/").last!)!
+        return urls[index]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -185,6 +254,82 @@ class Codec {
     decode(shortUrl) {
         const urlId = parseInt(shortUrl.split('/').pop(), 10);
         return this.urlMap[urlId];
+    }
+}
+```
+
+```csharp
+public class Codec {
+    private Dictionary<int, string> urlMap = new Dictionary<int, string>();
+    private int id = 0;
+
+    public string encode(string longUrl) {
+        urlMap[id] = longUrl;
+        return "http://tinyurl.com/" + id++;
+    }
+
+    public string decode(string shortUrl) {
+        int urlId = int.Parse(shortUrl.Substring(shortUrl.LastIndexOf('/') + 1));
+        return urlMap[urlId];
+    }
+}
+```
+
+```go
+type Codec struct {
+    urlMap map[int]string
+    id     int
+}
+
+func Constructor() Codec {
+    return Codec{urlMap: make(map[int]string), id: 0}
+}
+
+func (this *Codec) encode(longUrl string) string {
+    this.urlMap[this.id] = longUrl
+    this.id++
+    return "http://tinyurl.com/" + strconv.Itoa(this.id-1)
+}
+
+func (this *Codec) decode(shortUrl string) string {
+    parts := strings.Split(shortUrl, "/")
+    urlId, _ := strconv.Atoi(parts[len(parts)-1])
+    return this.urlMap[urlId]
+}
+```
+
+```kotlin
+class Codec {
+    private val urlMap = mutableMapOf<Int, String>()
+    private var id = 0
+
+    fun encode(longUrl: String): String {
+        urlMap[id] = longUrl
+        return "http://tinyurl.com/${id++}"
+    }
+
+    fun decode(shortUrl: String): String {
+        val urlId = shortUrl.substringAfterLast('/').toInt()
+        return urlMap[urlId]!!
+    }
+}
+```
+
+```swift
+class Codec {
+    private var urlMap = [Int: String]()
+    private var id = 0
+
+    func encode(_ longUrl: String) -> String {
+        urlMap[id] = longUrl
+        let shortUrl = "http://tinyurl.com/\(id)"
+        id += 1
+        return shortUrl
+    }
+
+    func decode(_ shortUrl: String) -> String {
+        let urlId = Int(shortUrl.split(separator: "/").last!)!
+        return urlMap[urlId]!
     }
 }
 ```
@@ -298,6 +443,98 @@ class Codec {
      */
     decode(shortUrl) {
         return this.decodeMap.get(shortUrl);
+    }
+}
+```
+
+```csharp
+public class Codec {
+    private Dictionary<string, string> encodeMap = new Dictionary<string, string>();
+    private Dictionary<string, string> decodeMap = new Dictionary<string, string>();
+    private string baseUrl = "http://tinyurl.com/";
+
+    public string encode(string longUrl) {
+        if (!encodeMap.ContainsKey(longUrl)) {
+            string shortUrl = baseUrl + (encodeMap.Count + 1);
+            encodeMap[longUrl] = shortUrl;
+            decodeMap[shortUrl] = longUrl;
+        }
+        return encodeMap[longUrl];
+    }
+
+    public string decode(string shortUrl) {
+        return decodeMap[shortUrl];
+    }
+}
+```
+
+```go
+type Codec struct {
+    encodeMap map[string]string
+    decodeMap map[string]string
+    base      string
+}
+
+func Constructor() Codec {
+    return Codec{
+        encodeMap: make(map[string]string),
+        decodeMap: make(map[string]string),
+        base:      "http://tinyurl.com/",
+    }
+}
+
+func (this *Codec) encode(longUrl string) string {
+    if _, exists := this.encodeMap[longUrl]; !exists {
+        shortUrl := this.base + strconv.Itoa(len(this.encodeMap)+1)
+        this.encodeMap[longUrl] = shortUrl
+        this.decodeMap[shortUrl] = longUrl
+    }
+    return this.encodeMap[longUrl]
+}
+
+func (this *Codec) decode(shortUrl string) string {
+    return this.decodeMap[shortUrl]
+}
+```
+
+```kotlin
+class Codec {
+    private val encodeMap = mutableMapOf<String, String>()
+    private val decodeMap = mutableMapOf<String, String>()
+    private val base = "http://tinyurl.com/"
+
+    fun encode(longUrl: String): String {
+        if (longUrl !in encodeMap) {
+            val shortUrl = base + (encodeMap.size + 1)
+            encodeMap[longUrl] = shortUrl
+            decodeMap[shortUrl] = longUrl
+        }
+        return encodeMap[longUrl]!!
+    }
+
+    fun decode(shortUrl: String): String {
+        return decodeMap[shortUrl]!!
+    }
+}
+```
+
+```swift
+class Codec {
+    private var encodeMap = [String: String]()
+    private var decodeMap = [String: String]()
+    private let base = "http://tinyurl.com/"
+
+    func encode(_ longUrl: String) -> String {
+        if encodeMap[longUrl] == nil {
+            let shortUrl = base + String(encodeMap.count + 1)
+            encodeMap[longUrl] = shortUrl
+            decodeMap[shortUrl] = longUrl
+        }
+        return encodeMap[longUrl]!
+    }
+
+    func decode(_ shortUrl: String) -> String {
+        return decodeMap[shortUrl]!
     }
 }
 ```

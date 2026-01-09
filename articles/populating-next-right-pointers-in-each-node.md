@@ -232,6 +232,89 @@ public class Solution {
 }
 ```
 
+```go
+func connect(root *Node) *Node {
+    if root == nil {
+        return nil
+    }
+
+    q := []*Node{root}
+
+    for len(q) > 0 {
+        levelSize := len(q)
+        for i := 0; i < levelSize; i++ {
+            node := q[0]
+            q = q[1:]
+            if i < levelSize-1 {
+                node.Next = q[0]
+            }
+            if node.Left != nil {
+                q = append(q, node.Left)
+            }
+            if node.Right != nil {
+                q = append(q, node.Right)
+            }
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+class Solution {
+    fun connect(root: Node?): Node? {
+        if (root == null) return null
+
+        val q: Queue<Node> = LinkedList()
+        q.offer(root)
+
+        while (q.isNotEmpty()) {
+            val levelSize = q.size
+            for (i in 0 until levelSize) {
+                val node = q.poll()
+                if (i < levelSize - 1) {
+                    node.next = q.peek()
+                }
+                node.left?.let { q.offer(it) }
+                node.right?.let { q.offer(it) }
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+class Solution {
+    func connect(_ root: Node?) -> Node? {
+        guard let root = root else { return nil }
+
+        var queue = [Node]()
+        queue.append(root)
+
+        while !queue.isEmpty {
+            let levelSize = queue.count
+            for i in 0..<levelSize {
+                let node = queue.removeFirst()
+                if i < levelSize - 1 {
+                    node.next = queue.first
+                }
+                if let left = node.left {
+                    queue.append(left)
+                }
+                if let right = node.right {
+                    queue.append(right)
+                }
+            }
+        }
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -457,6 +540,82 @@ public class Solution {
 }
 ```
 
+```go
+func connect(root *Node) *Node {
+    mp := make(map[int]*Node)
+
+    var dfs func(node *Node, depth int)
+    dfs = func(node *Node, depth int) {
+        if node == nil {
+            return
+        }
+
+        if _, exists := mp[depth]; !exists {
+            mp[depth] = node
+        } else {
+            mp[depth].Next = node
+            mp[depth] = node
+        }
+
+        dfs(node.Left, depth+1)
+        dfs(node.Right, depth+1)
+    }
+
+    dfs(root, 0)
+    return root
+}
+```
+
+```kotlin
+class Solution {
+    fun connect(root: Node?): Node? {
+        val mp = HashMap<Int, Node>()
+
+        fun dfs(node: Node?, depth: Int) {
+            if (node == null) return
+
+            if (!mp.containsKey(depth)) {
+                mp[depth] = node
+            } else {
+                mp[depth]!!.next = node
+                mp[depth] = node
+            }
+
+            dfs(node.left, depth + 1)
+            dfs(node.right, depth + 1)
+        }
+
+        dfs(root, 0)
+        return root
+    }
+}
+```
+
+```swift
+class Solution {
+    func connect(_ root: Node?) -> Node? {
+        var mp = [Int: Node]()
+
+        func dfs(_ node: Node?, _ depth: Int) {
+            guard let node = node else { return }
+
+            if mp[depth] == nil {
+                mp[depth] = node
+            } else {
+                mp[depth]!.next = node
+                mp[depth] = node
+            }
+
+            dfs(node.left, depth + 1)
+            dfs(node.right, depth + 1)
+        }
+
+        dfs(root, 0)
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -653,6 +812,66 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+func connect(root *Node) *Node {
+    if root == nil {
+        return root
+    }
+
+    if root.Left != nil {
+        root.Left.Next = root.Right
+        if root.Next != nil {
+            root.Right.Next = root.Next.Left
+        }
+
+        connect(root.Left)
+        connect(root.Right)
+    }
+
+    return root
+}
+```
+
+```kotlin
+class Solution {
+    fun connect(root: Node?): Node? {
+        if (root == null) return root
+
+        root.left?.let {
+            it.next = root.right
+            root.next?.let { next ->
+                root.right?.next = next.left
+            }
+
+            connect(root.left)
+            connect(root.right)
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+class Solution {
+    func connect(_ root: Node?) -> Node? {
+        guard let root = root else { return nil }
+
+        if let left = root.left {
+            left.next = root.right
+            if let next = root.next {
+                root.right?.next = next.left
+            }
+
+            connect(root.left)
+            connect(root.right)
+        }
+
+        return root
     }
 }
 ```
@@ -875,6 +1094,84 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+func connect(root *Node) *Node {
+    if root == nil {
+        return nil
+    }
+
+    cur := root
+    nxt := root.Left
+
+    for cur != nil && nxt != nil {
+        cur.Left.Next = cur.Right
+        if cur.Next != nil {
+            cur.Right.Next = cur.Next.Left
+        }
+
+        cur = cur.Next
+        if cur == nil {
+            cur = nxt
+            nxt = cur.Left
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+class Solution {
+    fun connect(root: Node?): Node? {
+        if (root == null) return null
+
+        var cur: Node? = root
+        var nxt: Node? = root.left
+
+        while (cur != null && nxt != null) {
+            cur.left?.next = cur.right
+            cur.next?.let {
+                cur.right?.next = it.left
+            }
+
+            cur = cur.next
+            if (cur == null) {
+                cur = nxt
+                nxt = cur?.left
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+class Solution {
+    func connect(_ root: Node?) -> Node? {
+        guard let root = root else { return nil }
+
+        var cur: Node? = root
+        var nxt: Node? = root.left
+
+        while cur != nil && nxt != nil {
+            cur?.left?.next = cur?.right
+            if let next = cur?.next {
+                cur?.right?.next = next.left
+            }
+
+            cur = cur?.next
+            if cur == nil {
+                cur = nxt
+                nxt = cur?.left
+            }
+        }
+
+        return root
     }
 }
 ```

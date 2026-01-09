@@ -143,6 +143,88 @@ public class Solution {
 }
 ```
 
+```go
+func compress(chars []byte) int {
+    n := len(chars)
+    s := ""
+
+    i := 0
+    for i < n {
+        s += string(chars[i])
+        j := i + 1
+        for j < n && chars[i] == chars[j] {
+            j++
+        }
+
+        if j-i > 1 {
+            s += strconv.Itoa(j - i)
+        }
+        i = j
+    }
+
+    for i := 0; i < len(s); i++ {
+        chars[i] = s[i]
+    }
+    return len(s)
+}
+```
+
+```kotlin
+class Solution {
+    fun compress(chars: CharArray): Int {
+        val n = chars.size
+        val sb = StringBuilder()
+
+        var i = 0
+        while (i < n) {
+            sb.append(chars[i])
+            var j = i + 1
+            while (j < n && chars[i] == chars[j]) {
+                j++
+            }
+
+            if (j - i > 1) {
+                sb.append(j - i)
+            }
+            i = j
+        }
+
+        for (idx in sb.indices) {
+            chars[idx] = sb[idx]
+        }
+        return sb.length
+    }
+}
+```
+
+```swift
+class Solution {
+    func compress(_ chars: inout [Character]) -> Int {
+        let n = chars.count
+        var s = ""
+
+        var i = 0
+        while i < n {
+            s += String(chars[i])
+            var j = i + 1
+            while j < n && chars[i] == chars[j] {
+                j += 1
+            }
+
+            if j - i > 1 {
+                s += String(j - i)
+            }
+            i = j
+        }
+
+        for (idx, char) in s.enumerated() {
+            chars[idx] = char
+        }
+        return s.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -282,6 +364,91 @@ public class Solution {
         }
 
         return k;
+    }
+}
+```
+
+```go
+func compress(chars []byte) int {
+    n := len(chars)
+    k, i := 0, 0
+
+    for i < n {
+        chars[k] = chars[i]
+        k++
+        j := i + 1
+        for j < n && chars[i] == chars[j] {
+            j++
+        }
+
+        if j-i > 1 {
+            cnt := strconv.Itoa(j - i)
+            for _, c := range cnt {
+                chars[k] = byte(c)
+                k++
+            }
+        }
+        i = j
+    }
+
+    return k
+}
+```
+
+```kotlin
+class Solution {
+    fun compress(chars: CharArray): Int {
+        val n = chars.size
+        var k = 0
+        var i = 0
+
+        while (i < n) {
+            chars[k++] = chars[i]
+            var j = i + 1
+            while (j < n && chars[i] == chars[j]) {
+                j++
+            }
+
+            if (j - i > 1) {
+                val cnt = (j - i).toString()
+                for (c in cnt) {
+                    chars[k++] = c
+                }
+            }
+            i = j
+        }
+
+        return k
+    }
+}
+```
+
+```swift
+class Solution {
+    func compress(_ chars: inout [Character]) -> Int {
+        let n = chars.count
+        var k = 0
+        var i = 0
+
+        while i < n {
+            chars[k] = chars[i]
+            k += 1
+            var j = i + 1
+            while j < n && chars[i] == chars[j] {
+                j += 1
+            }
+
+            if j - i > 1 {
+                let cnt = String(j - i)
+                for c in cnt {
+                    chars[k] = c
+                    k += 1
+                }
+            }
+            i = j
+        }
+
+        return k
     }
 }
 ```

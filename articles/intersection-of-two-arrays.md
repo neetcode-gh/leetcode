@@ -93,6 +93,59 @@ public class Solution {
 }
 ```
 
+```go
+func intersection(nums1 []int, nums2 []int) []int {
+    res := make(map[int]bool)
+    for _, i := range nums1 {
+        for _, j := range nums2 {
+            if i == j {
+                res[i] = true
+                break
+            }
+        }
+    }
+    result := []int{}
+    for k := range res {
+        result = append(result, k)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        val res = mutableSetOf<Int>()
+        for (i in nums1) {
+            for (j in nums2) {
+                if (i == j) {
+                    res.add(i)
+                    break
+                }
+            }
+        }
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var res = Set<Int>()
+        for i in nums1 {
+            for j in nums2 {
+                if i == j {
+                    res.insert(i)
+                    break
+                }
+            }
+        }
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,6 +307,96 @@ public class Solution {
 }
 ```
 
+```go
+func intersection(nums1 []int, nums2 []int) []int {
+    sort.Ints(nums1)
+    sort.Ints(nums2)
+
+    n, m := len(nums1), len(nums2)
+    res := []int{}
+    i, j := 0, 0
+
+    for i < n && j < m {
+        for j < m && nums2[j] < nums1[i] {
+            j++
+        }
+        if j < m {
+            if nums1[i] == nums2[j] {
+                res = append(res, nums1[i])
+            }
+            i++
+            for i < n && nums1[i] == nums1[i-1] {
+                i++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        nums1.sort()
+        nums2.sort()
+
+        val n = nums1.size
+        val m = nums2.size
+        val res = mutableListOf<Int>()
+        var i = 0
+        var j = 0
+
+        while (i < n && j < m) {
+            while (j < m && nums2[j] < nums1[i]) {
+                j++
+            }
+            if (j < m) {
+                if (nums1[i] == nums2[j]) {
+                    res.add(nums1[i])
+                }
+                i++
+                while (i < n && nums1[i] == nums1[i - 1]) {
+                    i++
+                }
+            }
+        }
+
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var nums1 = nums1.sorted()
+        var nums2 = nums2.sorted()
+
+        let n = nums1.count, m = nums2.count
+        var res = [Int]()
+        var i = 0, j = 0
+
+        while i < n && j < m {
+            while j < m && nums2[j] < nums1[i] {
+                j += 1
+            }
+            if j < m {
+                if nums1[i] == nums2[j] {
+                    res.append(nums1[i])
+                }
+                i += 1
+                while i < n && nums1[i] == nums1[i - 1] {
+                    i += 1
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,6 +504,62 @@ public class Solution {
         }
 
         return res.ToArray();
+    }
+}
+```
+
+```go
+func intersection(nums1 []int, nums2 []int) []int {
+    set1 := make(map[int]bool)
+    for _, num := range nums1 {
+        set1[num] = true
+    }
+
+    set2 := make(map[int]bool)
+    for _, num := range nums2 {
+        set2[num] = true
+    }
+
+    res := []int{}
+    for num := range set1 {
+        if set2[num] {
+            res = append(res, num)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        val set1 = nums1.toSet()
+        val set2 = nums2.toSet()
+
+        val res = mutableListOf<Int>()
+        for (num in set1) {
+            if (num in set2) {
+                res.add(num)
+            }
+        }
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        let set1 = Set(nums1)
+        let set2 = Set(nums2)
+
+        var res = [Int]()
+        for num in set1 {
+            if set2.contains(num) {
+                res.append(num)
+            }
+        }
+        return res
     }
 }
 ```
@@ -483,6 +682,64 @@ public class Solution {
 }
 ```
 
+```go
+func intersection(nums1 []int, nums2 []int) []int {
+    seen := make(map[int]int)
+    for _, num := range nums1 {
+        seen[num] = 1
+    }
+
+    res := []int{}
+    for _, num := range nums2 {
+        if seen[num] == 1 {
+            seen[num] = 0
+            res = append(res, num)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        val seen = mutableMapOf<Int, Int>()
+        for (num in nums1) {
+            seen[num] = 1
+        }
+
+        val res = mutableListOf<Int>()
+        for (num in nums2) {
+            if (seen[num] == 1) {
+                seen[num] = 0
+                res.add(num)
+            }
+        }
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var seen = [Int: Int]()
+        for num in nums1 {
+            seen[num] = 1
+        }
+
+        var res = [Int]()
+        for num in nums2 {
+            if seen[num] == 1 {
+                seen[num] = 0
+                res.append(num)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +847,58 @@ public class Solution {
 }
 ```
 
+```go
+func intersection(nums1 []int, nums2 []int) []int {
+    seen := make(map[int]bool)
+    for _, num := range nums1 {
+        seen[num] = true
+    }
+
+    res := []int{}
+    for _, num := range nums2 {
+        if seen[num] {
+            res = append(res, num)
+            delete(seen, num)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        val seen = nums1.toMutableSet()
+        val res = mutableListOf<Int>()
+
+        for (num in nums2) {
+            if (num in seen) {
+                res.add(num)
+                seen.remove(num)
+            }
+        }
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var seen = Set(nums1)
+        var res = [Int]()
+
+        for num in nums2 {
+            if seen.contains(num) {
+                res.append(num)
+                seen.remove(num)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -668,6 +977,48 @@ public class Solution {
         HashSet<int> set2 = new HashSet<int>(nums2);
         set1.IntersectWith(set2);
         return set1.ToArray();
+    }
+}
+```
+
+```go
+func intersection(nums1 []int, nums2 []int) []int {
+    set1 := make(map[int]bool)
+    for _, num := range nums1 {
+        set1[num] = true
+    }
+
+    set2 := make(map[int]bool)
+    for _, num := range nums2 {
+        set2[num] = true
+    }
+
+    res := []int{}
+    for num := range set1 {
+        if set2[num] {
+            res = append(res, num)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intersection(nums1: IntArray, nums2: IntArray): IntArray {
+        val set1 = nums1.toSet()
+        val set2 = nums2.toSet()
+        return set1.intersect(set2).toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intersection(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        let set1 = Set(nums1)
+        let set2 = Set(nums2)
+        return Array(set1.intersection(set2))
     }
 }
 ```

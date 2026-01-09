@@ -116,15 +116,15 @@ class Solution {
         if (k > 26) {
             return 0;
         }
-        
+
         let answer = 0;
         const n = s.length;
-        
+
         for (let i = 0; i < n - k + 1; i++) {
             // Initializing an empty frequency array
             const freq = new Array(26).fill(0);
             let hasRepeats = false;
-            
+
             for (let j = i; j < i + k; j++) {
                 const currChar = s[j].charCodeAt(0) - 'a'.charCodeAt(0);
                 // Incrementing the frequency of current character
@@ -135,15 +135,157 @@ class Solution {
                     break;
                 }
             }
-            
+
             // If the substring does not have any repeated characters,
             // we increment the answer
             if (!hasRepeats) {
                 answer++;
             }
         }
-        
+
         return answer;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumKLenSubstrNoRepeats(string s, int k) {
+        if (k > 26) return 0;
+        int answer = 0;
+        int n = s.Length;
+
+        for (int i = 0; i <= n - k; i++) {
+            // Initializing an empty frequency array
+            int[] freq = new int[26];
+            bool isUnique = true;
+
+            for (int j = i; j < i + k; j++) {
+                char ch = s[j];
+                // Incrementing the frequency of current character
+                freq[ch - 'a']++;
+                // If a repeated character is found, we stop the loop
+                if (freq[ch - 'a'] > 1) {
+                    isUnique = false;
+                    break;
+                }
+            }
+
+            // If the substring does not have any repeated characters,
+            // we increment the answer
+            if (isUnique) {
+                answer++;
+            }
+        }
+
+        return answer;
+    }
+}
+```
+
+```go
+func numKLenSubstrNoRepeats(s string, k int) int {
+    if k > 26 {
+        return 0
+    }
+    answer := 0
+    n := len(s)
+
+    for i := 0; i <= n-k; i++ {
+        // Initializing an empty frequency array
+        freq := make([]int, 26)
+        isUnique := true
+
+        for j := i; j < i+k; j++ {
+            currChar := s[j] - 'a'
+            // Incrementing the frequency of current character
+            freq[currChar]++
+            // If a repeated character is found, we stop the loop
+            if freq[currChar] > 1 {
+                isUnique = false
+                break
+            }
+        }
+
+        // If the substring does not have any repeated characters,
+        // we increment the answer
+        if isUnique {
+            answer++
+        }
+    }
+
+    return answer
+}
+```
+
+```kotlin
+class Solution {
+    fun numKLenSubstrNoRepeats(s: String, k: Int): Int {
+        if (k > 26) return 0
+        var answer = 0
+        val n = s.length
+
+        for (i in 0..n - k) {
+            // Initializing an empty frequency array
+            val freq = IntArray(26)
+            var isUnique = true
+
+            for (j in i until i + k) {
+                val currChar = s[j] - 'a'
+                // Incrementing the frequency of current character
+                freq[currChar]++
+                // If a repeated character is found, we stop the loop
+                if (freq[currChar] > 1) {
+                    isUnique = false
+                    break
+                }
+            }
+
+            // If the substring does not have any repeated characters,
+            // we increment the answer
+            if (isUnique) {
+                answer++
+            }
+        }
+
+        return answer
+    }
+}
+```
+
+```swift
+class Solution {
+    func numKLenSubstrNoRepeats(_ s: String, _ k: Int) -> Int {
+        if k > 26 { return 0 }
+        var answer = 0
+        let n = s.count
+        let chars = Array(s)
+        let aAscii = Character("a").asciiValue!
+
+        for i in 0...(n - k) {
+            // Initializing an empty frequency array
+            var freq = [Int](repeating: 0, count: 26)
+            var isUnique = true
+
+            for j in i..<(i + k) {
+                let currChar = Int(chars[j].asciiValue! - aAscii)
+                // Incrementing the frequency of current character
+                freq[currChar] += 1
+                // If a repeated character is found, we stop the loop
+                if freq[currChar] > 1 {
+                    isUnique = false
+                    break
+                }
+            }
+
+            // If the substring does not have any repeated characters,
+            // we increment the answer
+            if isUnique {
+                answer += 1
+            }
+        }
+
+        return answer
     }
 }
 ```
@@ -317,23 +459,23 @@ class Solution {
         if (k > 26) {
             return 0;
         }
-        
+
         let answer = 0;
         const n = s.length;
         // Initializing the left and right pointers
         let left = 0, right = 0;
         // Initializing an empty frequency array
         const freq = new Array(26).fill(0);
-        
+
         // Function to obtain the index of a character according to the alphabet
         const getVal = (ch) => {
             return ch.charCodeAt(0) - 'a'.charCodeAt(0);
         };
-        
+
         while (right < n) {
             // Add the current character in the frequency array
             freq[getVal(s[right])]++;
-            
+
             // If the current character appears more than once in the frequency array
             // keep contracting the window and removing characters from the
             // frequency array till the frequency of the current character becomes 1.
@@ -341,7 +483,7 @@ class Solution {
                 freq[getVal(s[left])]--;
                 left++;
             }
-            
+
             // Check if the length of the current unique substring is equal to k
             if (right - left + 1 === k) {
                 answer++;
@@ -350,12 +492,195 @@ class Solution {
                 freq[getVal(s[left])]--;
                 left++;
             }
-            
+
             // Expand the window
             right++;
         }
-        
+
         return answer;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumKLenSubstrNoRepeats(string s, int k) {
+        // We can reuse the condition from the first approach
+        // as for k > 26, there can be no substrings with only unique characters
+        if (k > 26) return 0;
+
+        int answer = 0;
+        int n = s.Length;
+        // Initializing the left and right pointers
+        int left = 0, right = 0;
+        // Initializing an empty frequency array
+        int[] freq = new int[26];
+
+        while (right < n) {
+            // Add the current character in the frequency array
+            freq[s[right] - 'a']++;
+
+            // If the current character appears more than once in the frequency array
+            // keep contracting the window and removing characters from the
+            // frequency array till the frequency of the current character becomes 1.
+            while (freq[s[right] - 'a'] > 1) {
+                freq[s[left] - 'a']--;
+                left++;
+            }
+
+            // Check if the length of the current unique substring is equal to k
+            if (right - left + 1 == k) {
+                answer++;
+                // Contract the window and remove the leftmost character from the
+                // frequency array
+                freq[s[left] - 'a']--;
+                left++;
+            }
+
+            // Expand the window
+            right++;
+        }
+
+        return answer;
+    }
+}
+```
+
+```go
+func numKLenSubstrNoRepeats(s string, k int) int {
+    // We can reuse the condition from the first approach
+    // as for k > 26, there can be no substrings with only unique characters
+    if k > 26 {
+        return 0
+    }
+
+    answer := 0
+    n := len(s)
+    // Initializing the left and right pointers
+    left, right := 0, 0
+    // Initializing an empty frequency array
+    freq := make([]int, 26)
+
+    for right < n {
+        // Add the current character in the frequency array
+        freq[s[right]-'a']++
+
+        // If the current character appears more than once in the frequency array
+        // keep contracting the window and removing characters from the
+        // frequency array till the frequency of the current character becomes 1.
+        for freq[s[right]-'a'] > 1 {
+            freq[s[left]-'a']--
+            left++
+        }
+
+        // Check if the length of the current unique substring is equal to k
+        if right-left+1 == k {
+            answer++
+            // Contract the window and remove the leftmost character from the
+            // frequency array
+            freq[s[left]-'a']--
+            left++
+        }
+
+        // Expand the window
+        right++
+    }
+
+    return answer
+}
+```
+
+```kotlin
+class Solution {
+    fun numKLenSubstrNoRepeats(s: String, k: Int): Int {
+        // We can reuse the condition from the first approach
+        // as for k > 26, there can be no substrings with only unique characters
+        if (k > 26) return 0
+
+        var answer = 0
+        val n = s.length
+        // Initializing the left and right pointers
+        var left = 0
+        var right = 0
+        // Initializing an empty frequency array
+        val freq = IntArray(26)
+
+        while (right < n) {
+            // Add the current character in the frequency array
+            freq[s[right] - 'a']++
+
+            // If the current character appears more than once in the frequency array
+            // keep contracting the window and removing characters from the
+            // frequency array till the frequency of the current character becomes 1.
+            while (freq[s[right] - 'a'] > 1) {
+                freq[s[left] - 'a']--
+                left++
+            }
+
+            // Check if the length of the current unique substring is equal to k
+            if (right - left + 1 == k) {
+                answer++
+                // Contract the window and remove the leftmost character from the
+                // frequency array
+                freq[s[left] - 'a']--
+                left++
+            }
+
+            // Expand the window
+            right++
+        }
+
+        return answer
+    }
+}
+```
+
+```swift
+class Solution {
+    func numKLenSubstrNoRepeats(_ s: String, _ k: Int) -> Int {
+        // We can reuse the condition from the first approach
+        // as for k > 26, there can be no substrings with only unique characters
+        if k > 26 { return 0 }
+
+        var answer = 0
+        let chars = Array(s)
+        let n = chars.count
+        // Initializing the left and right pointers
+        var left = 0
+        var right = 0
+        // Initializing an empty frequency array
+        var freq = [Int](repeating: 0, count: 26)
+        let aAscii = Character("a").asciiValue!
+
+        while right < n {
+            // Add the current character in the frequency array
+            let rightIdx = Int(chars[right].asciiValue! - aAscii)
+            freq[rightIdx] += 1
+
+            // If the current character appears more than once in the frequency array
+            // keep contracting the window and removing characters from the
+            // frequency array till the frequency of the current character becomes 1.
+            while freq[rightIdx] > 1 {
+                let leftIdx = Int(chars[left].asciiValue! - aAscii)
+                freq[leftIdx] -= 1
+                left += 1
+            }
+
+            // Check if the length of the current unique substring is equal to k
+            if right - left + 1 == k {
+                answer += 1
+                // Contract the window and remove the leftmost character from the
+                // frequency array
+                let leftIdx = Int(chars[left].asciiValue! - aAscii)
+                freq[leftIdx] -= 1
+                left += 1
+            }
+
+            // Expand the window
+            right += 1
+        }
+
+        return answer
     }
 }
 ```

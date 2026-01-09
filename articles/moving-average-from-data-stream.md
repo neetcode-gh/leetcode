@@ -75,20 +75,108 @@ class MovingAverage {
         this.queue = [];
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {number}
      */
     next(val) {
         const size = this.size;
         const queue = this.queue;
-        
+
         queue.push(val);
-        
+
         // calculate the sum of the moving window
         const windowSum = queue.slice(-size).reduce((sum, num) => sum + num, 0);
-        
+
         return windowSum / Math.min(queue.length, size);
+    }
+}
+```
+
+```csharp
+public class MovingAverage {
+    private int size;
+    private List<int> queue;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.queue = new List<int>();
+    }
+
+    public double Next(int val) {
+        queue.Add(val);
+        // calculate the sum of the moving window
+        int windowSum = 0;
+        for (int i = Math.Max(0, queue.Count - size); i < queue.Count; i++) {
+            windowSum += queue[i];
+        }
+        return (double)windowSum / Math.Min(queue.Count, size);
+    }
+}
+```
+
+```go
+type MovingAverage struct {
+    size  int
+    queue []int
+}
+
+func Constructor(size int) MovingAverage {
+    return MovingAverage{size: size, queue: []int{}}
+}
+
+func (ma *MovingAverage) Next(val int) float64 {
+    ma.queue = append(ma.queue, val)
+    start := len(ma.queue) - ma.size
+    if start < 0 {
+        start = 0
+    }
+    windowSum := 0
+    for i := start; i < len(ma.queue); i++ {
+        windowSum += ma.queue[i]
+    }
+    count := len(ma.queue)
+    if count > ma.size {
+        count = ma.size
+    }
+    return float64(windowSum) / float64(count)
+}
+```
+
+```kotlin
+class MovingAverage(private val size: Int) {
+    private val queue = mutableListOf<Int>()
+
+    fun next(value: Int): Double {
+        queue.add(value)
+        val start = maxOf(0, queue.size - size)
+        var windowSum = 0
+        for (i in start until queue.size) {
+            windowSum += queue[i]
+        }
+        return windowSum.toDouble() / minOf(queue.size, size)
+    }
+}
+```
+
+```swift
+class MovingAverage {
+    private var size: Int
+    private var queue: [Int]
+
+    init(_ size: Int) {
+        self.size = size
+        self.queue = []
+    }
+
+    func next(_ val: Int) -> Double {
+        queue.append(val)
+        let start = max(0, queue.count - size)
+        var windowSum = 0
+        for i in start..<queue.count {
+            windowSum += queue[i]
+        }
+        return Double(windowSum) / Double(min(queue.count, size))
     }
 }
 ```
@@ -173,6 +261,115 @@ public:
     }
 };
 ```
+
+```javascript
+class MovingAverage {
+    constructor(size) {
+        this.size = size;
+        this.queue = [];
+        this.windowSum = 0;
+        this.count = 0;
+    }
+
+    next(val) {
+        this.count++;
+        this.queue.push(val);
+        let tail = this.count > this.size ? this.queue.shift() : 0;
+        this.windowSum = this.windowSum - tail + val;
+        return this.windowSum / Math.min(this.size, this.count);
+    }
+}
+```
+
+```csharp
+public class MovingAverage {
+    private int size, windowSum = 0, count = 0;
+    private Queue<int> queue;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.queue = new Queue<int>();
+    }
+
+    public double Next(int val) {
+        count++;
+        queue.Enqueue(val);
+        int tail = count > size ? queue.Dequeue() : 0;
+        windowSum = windowSum - tail + val;
+        return (double)windowSum / Math.Min(size, count);
+    }
+}
+```
+
+```go
+type MovingAverage struct {
+    size      int
+    queue     []int
+    windowSum int
+    count     int
+}
+
+func Constructor(size int) MovingAverage {
+    return MovingAverage{size: size, queue: []int{}, windowSum: 0, count: 0}
+}
+
+func (ma *MovingAverage) Next(val int) float64 {
+    ma.count++
+    ma.queue = append(ma.queue, val)
+    tail := 0
+    if ma.count > ma.size {
+        tail = ma.queue[0]
+        ma.queue = ma.queue[1:]
+    }
+    ma.windowSum = ma.windowSum - tail + val
+    count := ma.size
+    if ma.count < ma.size {
+        count = ma.count
+    }
+    return float64(ma.windowSum) / float64(count)
+}
+```
+
+```kotlin
+class MovingAverage(private val size: Int) {
+    private val queue = ArrayDeque<Int>()
+    private var windowSum = 0
+    private var count = 0
+
+    fun next(value: Int): Double {
+        count++
+        queue.addLast(value)
+        val tail = if (count > size) queue.removeFirst() else 0
+        windowSum = windowSum - tail + value
+        return windowSum.toDouble() / minOf(size, count)
+    }
+}
+```
+
+```swift
+class MovingAverage {
+    private var size: Int
+    private var queue: [Int]
+    private var windowSum: Int
+    private var count: Int
+
+    init(_ size: Int) {
+        self.size = size
+        self.queue = []
+        self.windowSum = 0
+        self.count = 0
+    }
+
+    func next(_ val: Int) -> Double {
+        count += 1
+        queue.append(val)
+        let tail = count > size ? queue.removeFirst() : 0
+        windowSum = windowSum - tail + val
+        return Double(windowSum) / Double(min(size, count))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -282,22 +479,121 @@ class MovingAverage {
         this.count = 0;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {number}
      */
     next(val) {
         this.count += 1;
-        
+
         // calculate the new sum by shifting the window
         const tail = (this.head + 1) % this.size;
         this.windowSum = this.windowSum - this.queue[tail] + val;
-        
+
         // move on to the next head
         this.head = (this.head + 1) % this.size;
         this.queue[this.head] = val;
-        
+
         return this.windowSum / Math.min(this.size, this.count);
+    }
+}
+```
+
+```csharp
+public class MovingAverage {
+    private int size, head = 0, windowSum = 0, count = 0;
+    private int[] queue;
+
+    public MovingAverage(int size) {
+        this.size = size;
+        this.queue = new int[size];
+    }
+
+    public double Next(int val) {
+        count++;
+        int tail = (head + 1) % size;
+        windowSum = windowSum - queue[tail] + val;
+        head = (head + 1) % size;
+        queue[head] = val;
+        return (double)windowSum / Math.Min(size, count);
+    }
+}
+```
+
+```go
+type MovingAverage struct {
+    size      int
+    queue     []int
+    head      int
+    windowSum int
+    count     int
+}
+
+func Constructor(size int) MovingAverage {
+    return MovingAverage{
+        size:      size,
+        queue:     make([]int, size),
+        head:      0,
+        windowSum: 0,
+        count:     0,
+    }
+}
+
+func (ma *MovingAverage) Next(val int) float64 {
+    ma.count++
+    tail := (ma.head + 1) % ma.size
+    ma.windowSum = ma.windowSum - ma.queue[tail] + val
+    ma.head = (ma.head + 1) % ma.size
+    ma.queue[ma.head] = val
+    count := ma.size
+    if ma.count < ma.size {
+        count = ma.count
+    }
+    return float64(ma.windowSum) / float64(count)
+}
+```
+
+```kotlin
+class MovingAverage(private val size: Int) {
+    private val queue = IntArray(size)
+    private var head = 0
+    private var windowSum = 0
+    private var count = 0
+
+    fun next(value: Int): Double {
+        count++
+        val tail = (head + 1) % size
+        windowSum = windowSum - queue[tail] + value
+        head = (head + 1) % size
+        queue[head] = value
+        return windowSum.toDouble() / minOf(size, count)
+    }
+}
+```
+
+```swift
+class MovingAverage {
+    private var size: Int
+    private var queue: [Int]
+    private var head: Int
+    private var windowSum: Int
+    private var count: Int
+
+    init(_ size: Int) {
+        self.size = size
+        self.queue = [Int](repeating: 0, count: size)
+        self.head = 0
+        self.windowSum = 0
+        self.count = 0
+    }
+
+    func next(_ val: Int) -> Double {
+        count += 1
+        let tail = (head + 1) % size
+        windowSum = windowSum - queue[tail] + val
+        head = (head + 1) % size
+        queue[head] = val
+        return Double(windowSum) / Double(min(size, count))
     }
 }
 ```

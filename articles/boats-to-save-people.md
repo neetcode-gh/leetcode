@@ -96,6 +96,62 @@ public class Solution {
 }
 ```
 
+```go
+func numRescueBoats(people []int, limit int) int {
+    sort.Ints(people)
+    res, l, r := 0, 0, len(people)-1
+    for l <= r {
+        remain := limit - people[r]
+        r--
+        res++
+        if l <= r && remain >= people[l] {
+            l++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numRescueBoats(people: IntArray, limit: Int): Int {
+        people.sort()
+        var res = 0
+        var l = 0
+        var r = people.size - 1
+        while (l <= r) {
+            val remain = limit - people[r]
+            r--
+            res++
+            if (l <= r && remain >= people[l]) {
+                l++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numRescueBoats(_ people: [Int], _ limit: Int) -> Int {
+        var people = people.sorted()
+        var res = 0
+        var l = 0
+        var r = people.count - 1
+        while l <= r {
+            let remain = limit - people[r]
+            r -= 1
+            res += 1
+            if l <= r && remain >= people[l] {
+                l += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -271,6 +327,115 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numRescueBoats(people []int, limit int) int {
+    m := 0
+    for _, p := range people {
+        if p > m {
+            m = p
+        }
+    }
+
+    count := make([]int, m+1)
+    for _, p := range people {
+        count[p]++
+    }
+
+    idx, i := 0, 1
+    for idx < len(people) {
+        for count[i] == 0 {
+            i++
+        }
+        people[idx] = i
+        count[i]--
+        idx++
+    }
+
+    res, l, r := 0, 0, len(people)-1
+    for l <= r {
+        remain := limit - people[r]
+        r--
+        res++
+        if l <= r && remain >= people[l] {
+            l++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numRescueBoats(people: IntArray, limit: Int): Int {
+        val m = people.maxOrNull() ?: 0
+        val count = IntArray(m + 1)
+        for (p in people) {
+            count[p]++
+        }
+
+        var idx = 0
+        var i = 1
+        while (idx < people.size) {
+            while (count[i] == 0) {
+                i++
+            }
+            people[idx++] = i
+            count[i]--
+        }
+
+        var res = 0
+        var l = 0
+        var r = people.size - 1
+        while (l <= r) {
+            val remain = limit - people[r]
+            r--
+            res++
+            if (l <= r && remain >= people[l]) {
+                l++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numRescueBoats(_ people: [Int], _ limit: Int) -> Int {
+        var people = people
+        let m = people.max() ?? 0
+        var count = [Int](repeating: 0, count: m + 1)
+        for p in people {
+            count[p] += 1
+        }
+
+        var idx = 0
+        var i = 1
+        while idx < people.count {
+            while count[i] == 0 {
+                i += 1
+            }
+            people[idx] = i
+            count[i] -= 1
+            idx += 1
+        }
+
+        var res = 0
+        var l = 0
+        var r = people.count - 1
+        while l <= r {
+            let remain = limit - people[r]
+            r -= 1
+            res += 1
+            if l <= r && remain >= people[l] {
+                l += 1
+            }
+        }
+        return res
     }
 }
 ```

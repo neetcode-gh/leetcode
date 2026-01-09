@@ -88,6 +88,99 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindMinArrowShots(int[][] points) {
+        Array.Sort(points, (a, b) => a[0].CompareTo(b[0]));
+        int res = points.Length, prevEnd = points[0][1];
+
+        for (int i = 1; i < points.Length; i++) {
+            int[] curr = points[i];
+            if (curr[0] <= prevEnd) {
+                res--;
+                prevEnd = Math.Min(curr[1], prevEnd);
+            } else {
+                prevEnd = curr[1];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findMinArrowShots(points [][]int) int {
+    sort.Slice(points, func(i, j int) bool {
+        return points[i][0] < points[j][0]
+    })
+    res, prevEnd := len(points), points[0][1]
+
+    for i := 1; i < len(points); i++ {
+        curr := points[i]
+        if curr[0] <= prevEnd {
+            res--
+            prevEnd = min(curr[1], prevEnd)
+        } else {
+            prevEnd = curr[1]
+        }
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun findMinArrowShots(points: Array<IntArray>): Int {
+        points.sortBy { it[0] }
+        var res = points.size
+        var prevEnd = points[0][1]
+
+        for (i in 1 until points.size) {
+            val curr = points[i]
+            if (curr[0] <= prevEnd) {
+                res--
+                prevEnd = minOf(curr[1], prevEnd)
+            } else {
+                prevEnd = curr[1]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMinArrowShots(_ points: [[Int]]) -> Int {
+        let sortedPoints = points.sorted { $0[0] < $1[0] }
+        var res = sortedPoints.count
+        var prevEnd = sortedPoints[0][1]
+
+        for i in 1..<sortedPoints.count {
+            let curr = sortedPoints[i]
+            if curr[0] <= prevEnd {
+                res -= 1
+                prevEnd = min(curr[1], prevEnd)
+            } else {
+                prevEnd = curr[1]
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +266,80 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindMinArrowShots(int[][] points) {
+        Array.Sort(points, (a, b) => a[1].CompareTo(b[1]));
+        int res = 1, prevEnd = points[0][1];
+
+        for (int i = 1; i < points.Length; i++) {
+            if (points[i][0] > prevEnd) {
+                prevEnd = points[i][1];
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findMinArrowShots(points [][]int) int {
+    sort.Slice(points, func(i, j int) bool {
+        return points[i][1] < points[j][1]
+    })
+    res, prevEnd := 1, points[0][1]
+
+    for i := 1; i < len(points); i++ {
+        if points[i][0] > prevEnd {
+            prevEnd = points[i][1]
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findMinArrowShots(points: Array<IntArray>): Int {
+        points.sortBy { it[1] }
+        var res = 1
+        var prevEnd = points[0][1]
+
+        for (i in 1 until points.size) {
+            if (points[i][0] > prevEnd) {
+                prevEnd = points[i][1]
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMinArrowShots(_ points: [[Int]]) -> Int {
+        let sortedPoints = points.sorted { $0[1] < $1[1] }
+        var res = 1
+        var prevEnd = sortedPoints[0][1]
+
+        for i in 1..<sortedPoints.count {
+            if sortedPoints[i][0] > prevEnd {
+                prevEnd = sortedPoints[i][1]
+                res += 1
+            }
+        }
+
+        return res
     }
 }
 ```

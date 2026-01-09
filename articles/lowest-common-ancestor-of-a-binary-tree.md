@@ -176,6 +176,110 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    var lca *TreeNode
+
+    var dfs func(node *TreeNode) (bool, bool)
+    dfs = func(node *TreeNode) (bool, bool) {
+        if node == nil || lca != nil {
+            return false, false
+        }
+        leftP, leftQ := dfs(node.Left)
+        rightP, rightQ := dfs(node.Right)
+        foundP := leftP || rightP || node == p
+        foundQ := leftQ || rightQ || node == q
+        if foundP && foundQ && lca == nil {
+            lca = node
+        }
+        return foundP, foundQ
+    }
+
+    dfs(root)
+    return lca
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var lca: TreeNode? = null
+
+    fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {
+        lca = null
+        dfs(root, p, q)
+        return lca
+    }
+
+    private fun dfs(node: TreeNode?, p: TreeNode?, q: TreeNode?): Pair<Boolean, Boolean> {
+        if (node == null || lca != null) {
+            return Pair(false, false)
+        }
+        val left = dfs(node.left, p, q)
+        val right = dfs(node.right, p, q)
+        val foundP = left.first || right.first || node === p
+        val foundQ = left.second || right.second || node === q
+        if (foundP && foundQ && lca == null) {
+            lca = node
+        }
+        return Pair(foundP, foundQ)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+class Solution {
+    private var lca: TreeNode? = nil
+
+    func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> TreeNode? {
+        lca = nil
+        dfs(root, p, q)
+        return lca
+    }
+
+    private func dfs(_ node: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> (Bool, Bool) {
+        guard let node = node, lca == nil else {
+            return (false, false)
+        }
+        let left = dfs(node.left, p, q)
+        let right = dfs(node.right, p, q)
+        let foundP = left.0 || right.0 || node === p
+        let foundQ = left.1 || right.1 || node === q
+        if foundP && foundQ && lca == nil {
+            lca = node
+        }
+        return (foundP, foundQ)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +417,83 @@ public class Solution {
             return root;
         }
         return left ?? right;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    if root == nil || root == p || root == q {
+        return root
+    }
+    left := lowestCommonAncestor(root.Left, p, q)
+    right := lowestCommonAncestor(root.Right, p, q)
+    if left != nil && right != nil {
+        return root
+    }
+    if left != nil {
+        return left
+    }
+    return right
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {
+        if (root == null || root === p || root === q) {
+            return root
+        }
+        val left = lowestCommonAncestor(root.left, p, q)
+        val right = lowestCommonAncestor(root.right, p, q)
+        if (left != null && right != null) {
+            return root
+        }
+        return left ?: right
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+class Solution {
+    func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> TreeNode? {
+        if root == nil || root === p || root === q {
+            return root
+        }
+        let left = lowestCommonAncestor(root?.left, p, q)
+        let right = lowestCommonAncestor(root?.right, p, q)
+        if left != nil && right != nil {
+            return root
+        }
+        return left ?? right
     }
 }
 ```
@@ -534,6 +715,157 @@ public class Solution {
             q = parent[q];
         }
         return q;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func lowestCommonAncestor(root, p, q *TreeNode) *TreeNode {
+    if root == nil {
+        return nil
+    }
+    parent := make(map[*TreeNode]*TreeNode)
+    parent[root] = nil
+    queue := []*TreeNode{root}
+
+    for _, hasP := parent[p]; !hasP; _, hasP = parent[p] {
+        if _, hasQ := parent[q]; hasQ {
+            break
+        }
+        node := queue[0]
+        queue = queue[1:]
+        if node.Left != nil {
+            parent[node.Left] = node
+            queue = append(queue, node.Left)
+        }
+        if node.Right != nil {
+            parent[node.Right] = node
+            queue = append(queue, node.Right)
+        }
+    }
+    for _, hasQ := parent[q]; !hasQ; _, hasQ = parent[q] {
+        node := queue[0]
+        queue = queue[1:]
+        if node.Left != nil {
+            parent[node.Left] = node
+            queue = append(queue, node.Left)
+        }
+        if node.Right != nil {
+            parent[node.Right] = node
+            queue = append(queue, node.Right)
+        }
+    }
+
+    ancestors := make(map[*TreeNode]bool)
+    for p != nil {
+        ancestors[p] = true
+        p = parent[p]
+    }
+    for !ancestors[q] {
+        q = parent[q]
+    }
+    return q
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun lowestCommonAncestor(root: TreeNode?, p: TreeNode?, q: TreeNode?): TreeNode? {
+        if (root == null) return null
+        val parent = HashMap<TreeNode, TreeNode?>()
+        val queue: java.util.Queue<TreeNode> = java.util.LinkedList()
+        parent[root] = null
+        queue.add(root)
+
+        var pNode = p
+        var qNode = q
+
+        while (!parent.containsKey(pNode) || !parent.containsKey(qNode)) {
+            val node = queue.poll()
+            node.left?.let {
+                parent[it] = node
+                queue.add(it)
+            }
+            node.right?.let {
+                parent[it] = node
+                queue.add(it)
+            }
+        }
+
+        val ancestors = HashSet<TreeNode>()
+        while (pNode != null) {
+            ancestors.add(pNode)
+            pNode = parent[pNode]
+        }
+        while (qNode !in ancestors) {
+            qNode = parent[qNode]
+        }
+        return qNode
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+class Solution {
+    func lowestCommonAncestor(_ root: TreeNode?, _ p: TreeNode?, _ q: TreeNode?) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        var parent: [ObjectIdentifier: TreeNode?] = [ObjectIdentifier(root): nil]
+        var queue: [TreeNode] = [root]
+
+        var pNode = p
+        var qNode = q
+
+        while (pNode == nil || parent[ObjectIdentifier(pNode!)] == nil && pNode !== root) ||
+              (qNode == nil || parent[ObjectIdentifier(qNode!)] == nil && qNode !== root) {
+            let node = queue.removeFirst()
+            if let left = node.left {
+                parent[ObjectIdentifier(left)] = node
+                queue.append(left)
+            }
+            if let right = node.right {
+                parent[ObjectIdentifier(right)] = node
+                queue.append(right)
+            }
+        }
+
+        var ancestors = Set<ObjectIdentifier>()
+        while let pn = pNode {
+            ancestors.insert(ObjectIdentifier(pn))
+            pNode = parent[ObjectIdentifier(pn)] ?? nil
+        }
+        while let qn = qNode, !ancestors.contains(ObjectIdentifier(qn)) {
+            qNode = parent[ObjectIdentifier(qn)] ?? nil
+        }
+        return qNode
     }
 }
 ```

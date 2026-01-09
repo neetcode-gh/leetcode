@@ -77,6 +77,151 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinKnightMoves(int x, int y) {
+        // the offsets in the eight directions
+        int[][] offsets = new int[][] {
+            new int[]{1, 2}, new int[]{2, 1}, new int[]{2, -1}, new int[]{1, -2},
+            new int[]{-1, -2}, new int[]{-2, -1}, new int[]{-2, 1}, new int[]{-1, 2}
+        };
+
+        bool[,] visited = new bool[607, 607];
+        Queue<int[]> queue = new Queue<int[]>();
+        queue.Enqueue(new int[]{0, 0});
+        int steps = 0;
+
+        while (queue.Count > 0) {
+            int currLevelSize = queue.Count;
+            for (int i = 0; i < currLevelSize; i++) {
+                int[] curr = queue.Dequeue();
+                if (curr[0] == x && curr[1] == y) {
+                    return steps;
+                }
+
+                foreach (int[] offset in offsets) {
+                    int[] next = new int[]{curr[0] + offset[0], curr[1] + offset[1]};
+                    if (!visited[next[0] + 302, next[1] + 302]) {
+                        visited[next[0] + 302, next[1] + 302] = true;
+                        queue.Enqueue(next);
+                    }
+                }
+            }
+            steps++;
+        }
+        return steps;
+    }
+}
+```
+
+```go
+func minKnightMoves(x int, y int) int {
+    // the offsets in the eight directions
+    offsets := [][]int{{1, 2}, {2, 1}, {2, -1}, {1, -2},
+                       {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}}
+
+    visited := make([][]bool, 607)
+    for i := range visited {
+        visited[i] = make([]bool, 607)
+    }
+
+    queue := [][]int{{0, 0}}
+    steps := 0
+
+    for len(queue) > 0 {
+        currLevelSize := len(queue)
+        for i := 0; i < currLevelSize; i++ {
+            curr := queue[0]
+            queue = queue[1:]
+            if curr[0] == x && curr[1] == y {
+                return steps
+            }
+
+            for _, offset := range offsets {
+                next := []int{curr[0] + offset[0], curr[1] + offset[1]}
+                if !visited[next[0]+302][next[1]+302] {
+                    visited[next[0]+302][next[1]+302] = true
+                    queue = append(queue, next)
+                }
+            }
+        }
+        steps++
+    }
+    return steps
+}
+```
+
+```kotlin
+class Solution {
+    fun minKnightMoves(x: Int, y: Int): Int {
+        // the offsets in the eight directions
+        val offsets = arrayOf(
+            intArrayOf(1, 2), intArrayOf(2, 1), intArrayOf(2, -1), intArrayOf(1, -2),
+            intArrayOf(-1, -2), intArrayOf(-2, -1), intArrayOf(-2, 1), intArrayOf(-1, 2)
+        )
+
+        val visited = Array(607) { BooleanArray(607) }
+        val queue = ArrayDeque<IntArray>()
+        queue.addLast(intArrayOf(0, 0))
+        var steps = 0
+
+        while (queue.isNotEmpty()) {
+            val currLevelSize = queue.size
+            repeat(currLevelSize) {
+                val curr = queue.removeFirst()
+                if (curr[0] == x && curr[1] == y) {
+                    return steps
+                }
+
+                for (offset in offsets) {
+                    val next = intArrayOf(curr[0] + offset[0], curr[1] + offset[1])
+                    if (!visited[next[0] + 302][next[1] + 302]) {
+                        visited[next[0] + 302][next[1] + 302] = true
+                        queue.addLast(next)
+                    }
+                }
+            }
+            steps++
+        }
+        return steps
+    }
+}
+```
+
+```swift
+class Solution {
+    func minKnightMoves(_ x: Int, _ y: Int) -> Int {
+        // the offsets in the eight directions
+        let offsets = [(1, 2), (2, 1), (2, -1), (1, -2),
+                       (-1, -2), (-2, -1), (-2, 1), (-1, 2)]
+
+        var visited = Array(repeating: Array(repeating: false, count: 607), count: 607)
+        var queue = [(0, 0)]
+        var steps = 0
+
+        while !queue.isEmpty {
+            let currLevelSize = queue.count
+            for _ in 0..<currLevelSize {
+                let curr = queue.removeFirst()
+                if curr.0 == x && curr.1 == y {
+                    return steps
+                }
+
+                for offset in offsets {
+                    let next = (curr.0 + offset.0, curr.1 + offset.1)
+                    if !visited[next.0 + 302][next.1 + 302] {
+                        visited[next.0 + 302][next.1 + 302] = true
+                        queue.append(next)
+                    }
+                }
+            }
+            steps += 1
+        }
+        return steps
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -188,6 +333,226 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinKnightMoves(int x, int y) {
+        // the offsets in the eight directions
+        int[][] offsets = new int[][] {
+            new int[]{1, 2}, new int[]{2, 1}, new int[]{2, -1}, new int[]{1, -2},
+            new int[]{-1, -2}, new int[]{-2, -1}, new int[]{-2, 1}, new int[]{-1, 2}
+        };
+
+        // data structures needed to move from the origin point
+        Queue<int[]> originQueue = new Queue<int[]>();
+        originQueue.Enqueue(new int[]{0, 0, 0});
+        Dictionary<string, int> originDistance = new Dictionary<string, int>();
+        originDistance["0,0"] = 0;
+
+        // data structures needed to move from the target point
+        Queue<int[]> targetQueue = new Queue<int[]>();
+        targetQueue.Enqueue(new int[]{x, y, 0});
+        Dictionary<string, int> targetDistance = new Dictionary<string, int>();
+        targetDistance[$"{x},{y}"] = 0;
+
+        while (true) {
+            // check if we reach the circle of target
+            int[] origin = originQueue.Dequeue();
+            string originXY = $"{origin[0]},{origin[1]}";
+            if (targetDistance.ContainsKey(originXY)) {
+                return origin[2] + targetDistance[originXY];
+            }
+
+            // check if we reach the circle of origin
+            int[] target = targetQueue.Dequeue();
+            string targetXY = $"{target[0]},{target[1]}";
+            if (originDistance.ContainsKey(targetXY)) {
+                return target[2] + originDistance[targetXY];
+            }
+
+            foreach (int[] offset in offsets) {
+                // expand the circle of origin
+                int[] nextOrigin = new int[]{origin[0] + offset[0], origin[1] + offset[1]};
+                string nextOriginXY = $"{nextOrigin[0]},{nextOrigin[1]}";
+                if (!originDistance.ContainsKey(nextOriginXY)) {
+                    originQueue.Enqueue(new int[]{nextOrigin[0], nextOrigin[1], origin[2] + 1});
+                    originDistance[nextOriginXY] = origin[2] + 1;
+                }
+
+                // expand the circle of target
+                int[] nextTarget = new int[]{target[0] + offset[0], target[1] + offset[1]};
+                string nextTargetXY = $"{nextTarget[0]},{nextTarget[1]}";
+                if (!targetDistance.ContainsKey(nextTargetXY)) {
+                    targetQueue.Enqueue(new int[]{nextTarget[0], nextTarget[1], target[2] + 1});
+                    targetDistance[nextTargetXY] = target[2] + 1;
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+func minKnightMoves(x int, y int) int {
+    // the offsets in the eight directions
+    offsets := [][]int{{1, 2}, {2, 1}, {2, -1}, {1, -2},
+                       {-1, -2}, {-2, -1}, {-2, 1}, {-1, 2}}
+
+    // data structures needed to move from the origin point
+    originQueue := [][]int{{0, 0, 0}}
+    originDistance := make(map[string]int)
+    originDistance["0,0"] = 0
+
+    // data structures needed to move from the target point
+    targetQueue := [][]int{{x, y, 0}}
+    targetDistance := make(map[string]int)
+    targetDistance[fmt.Sprintf("%d,%d", x, y)] = 0
+
+    for {
+        // check if we reach the circle of target
+        origin := originQueue[0]
+        originQueue = originQueue[1:]
+        originXY := fmt.Sprintf("%d,%d", origin[0], origin[1])
+        if dist, ok := targetDistance[originXY]; ok {
+            return origin[2] + dist
+        }
+
+        // check if we reach the circle of origin
+        target := targetQueue[0]
+        targetQueue = targetQueue[1:]
+        targetXY := fmt.Sprintf("%d,%d", target[0], target[1])
+        if dist, ok := originDistance[targetXY]; ok {
+            return target[2] + dist
+        }
+
+        for _, offset := range offsets {
+            // expand the circle of origin
+            nextOrigin := []int{origin[0] + offset[0], origin[1] + offset[1]}
+            nextOriginXY := fmt.Sprintf("%d,%d", nextOrigin[0], nextOrigin[1])
+            if _, ok := originDistance[nextOriginXY]; !ok {
+                originQueue = append(originQueue, []int{nextOrigin[0], nextOrigin[1], origin[2] + 1})
+                originDistance[nextOriginXY] = origin[2] + 1
+            }
+
+            // expand the circle of target
+            nextTarget := []int{target[0] + offset[0], target[1] + offset[1]}
+            nextTargetXY := fmt.Sprintf("%d,%d", nextTarget[0], nextTarget[1])
+            if _, ok := targetDistance[nextTargetXY]; !ok {
+                targetQueue = append(targetQueue, []int{nextTarget[0], nextTarget[1], target[2] + 1})
+                targetDistance[nextTargetXY] = target[2] + 1
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun minKnightMoves(x: Int, y: Int): Int {
+        // the offsets in the eight directions
+        val offsets = arrayOf(
+            intArrayOf(1, 2), intArrayOf(2, 1), intArrayOf(2, -1), intArrayOf(1, -2),
+            intArrayOf(-1, -2), intArrayOf(-2, -1), intArrayOf(-2, 1), intArrayOf(-1, 2)
+        )
+
+        // data structures needed to move from the origin point
+        val originQueue = ArrayDeque<IntArray>()
+        originQueue.addLast(intArrayOf(0, 0, 0))
+        val originDistance = hashMapOf("0,0" to 0)
+
+        // data structures needed to move from the target point
+        val targetQueue = ArrayDeque<IntArray>()
+        targetQueue.addLast(intArrayOf(x, y, 0))
+        val targetDistance = hashMapOf("$x,$y" to 0)
+
+        while (true) {
+            // check if we reach the circle of target
+            val origin = originQueue.removeFirst()
+            val originXY = "${origin[0]},${origin[1]}"
+            if (originXY in targetDistance) {
+                return origin[2] + targetDistance[originXY]!!
+            }
+
+            // check if we reach the circle of origin
+            val target = targetQueue.removeFirst()
+            val targetXY = "${target[0]},${target[1]}"
+            if (targetXY in originDistance) {
+                return target[2] + originDistance[targetXY]!!
+            }
+
+            for (offset in offsets) {
+                // expand the circle of origin
+                val nextOrigin = intArrayOf(origin[0] + offset[0], origin[1] + offset[1])
+                val nextOriginXY = "${nextOrigin[0]},${nextOrigin[1]}"
+                if (nextOriginXY !in originDistance) {
+                    originQueue.addLast(intArrayOf(nextOrigin[0], nextOrigin[1], origin[2] + 1))
+                    originDistance[nextOriginXY] = origin[2] + 1
+                }
+
+                // expand the circle of target
+                val nextTarget = intArrayOf(target[0] + offset[0], target[1] + offset[1])
+                val nextTargetXY = "${nextTarget[0]},${nextTarget[1]}"
+                if (nextTargetXY !in targetDistance) {
+                    targetQueue.addLast(intArrayOf(nextTarget[0], nextTarget[1], target[2] + 1))
+                    targetDistance[nextTargetXY] = target[2] + 1
+                }
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func minKnightMoves(_ x: Int, _ y: Int) -> Int {
+        // the offsets in the eight directions
+        let offsets = [(1, 2), (2, 1), (2, -1), (1, -2),
+                       (-1, -2), (-2, -1), (-2, 1), (-1, 2)]
+
+        // data structures needed to move from the origin point
+        var originQueue = [(0, 0, 0)]
+        var originDistance = ["0,0": 0]
+
+        // data structures needed to move from the target point
+        var targetQueue = [(x, y, 0)]
+        var targetDistance = ["\(x),\(y)": 0]
+
+        while true {
+            // check if we reach the circle of target
+            let origin = originQueue.removeFirst()
+            let originXY = "\(origin.0),\(origin.1)"
+            if let dist = targetDistance[originXY] {
+                return origin.2 + dist
+            }
+
+            // check if we reach the circle of origin
+            let target = targetQueue.removeFirst()
+            let targetXY = "\(target.0),\(target.1)"
+            if let dist = originDistance[targetXY] {
+                return target.2 + dist
+            }
+
+            for offset in offsets {
+                // expand the circle of origin
+                let nextOrigin = (origin.0 + offset.0, origin.1 + offset.1)
+                let nextOriginXY = "\(nextOrigin.0),\(nextOrigin.1)"
+                if originDistance[nextOriginXY] == nil {
+                    originQueue.append((nextOrigin.0, nextOrigin.1, origin.2 + 1))
+                    originDistance[nextOriginXY] = origin.2 + 1
+                }
+
+                // expand the circle of target
+                let nextTarget = (target.0 + offset.0, target.1 + offset.1)
+                let nextTargetXY = "\(nextTarget.0),\(nextTarget.1)"
+                if targetDistance[nextTargetXY] == nil {
+                    targetQueue.append((nextTarget.0, nextTarget.1, target.2 + 1))
+                    targetDistance[nextTargetXY] = target.2 + 1
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,13 +654,13 @@ class Solution {
      */
     minKnightMoves(x, y) {
         const memo = new Map();
-        
+
         const dfs = (x, y) => {
             const key = `${x},${y}`;
             if (memo.has(key)) {
                 return memo.get(key);
             }
-            
+
             if (x + y === 0) {
                 return 0;
             } else if (x + y === 2) {
@@ -307,8 +672,134 @@ class Solution {
                 return ret;
             }
         };
-        
+
         return dfs(Math.abs(x), Math.abs(y));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private Dictionary<string, int> memo = new Dictionary<string, int>();
+
+    public int MinKnightMoves(int x, int y) {
+        return Dfs(Math.Abs(x), Math.Abs(y));
+    }
+
+    private int Dfs(int x, int y) {
+        string key = $"{x},{y}";
+        if (memo.ContainsKey(key)) {
+            return memo[key];
+        }
+
+        if (x + y == 0) {
+            return 0;
+        } else if (x + y == 2) {
+            return 2;
+        } else {
+            int ret = Math.Min(Dfs(Math.Abs(x - 1), Math.Abs(y - 2)),
+                              Dfs(Math.Abs(x - 2), Math.Abs(y - 1))) + 1;
+            memo[key] = ret;
+            return ret;
+        }
+    }
+}
+```
+
+```go
+func minKnightMoves(x int, y int) int {
+    memo := make(map[string]int)
+
+    var dfs func(x, y int) int
+    dfs = func(x, y int) int {
+        key := fmt.Sprintf("%d,%d", x, y)
+        if val, ok := memo[key]; ok {
+            return val
+        }
+
+        if x+y == 0 {
+            return 0
+        } else if x+y == 2 {
+            return 2
+        } else {
+            ret := min(dfs(abs(x-1), abs(y-2)), dfs(abs(x-2), abs(y-1))) + 1
+            memo[key] = ret
+            return ret
+        }
+    }
+
+    return dfs(abs(x), abs(y))
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private val memo = hashMapOf<String, Int>()
+
+    fun minKnightMoves(x: Int, y: Int): Int {
+        return dfs(kotlin.math.abs(x), kotlin.math.abs(y))
+    }
+
+    private fun dfs(x: Int, y: Int): Int {
+        val key = "$x,$y"
+        if (key in memo) {
+            return memo[key]!!
+        }
+
+        if (x + y == 0) {
+            return 0
+        } else if (x + y == 2) {
+            return 2
+        } else {
+            val ret = minOf(
+                dfs(kotlin.math.abs(x - 1), kotlin.math.abs(y - 2)),
+                dfs(kotlin.math.abs(x - 2), kotlin.math.abs(y - 1))
+            ) + 1
+            memo[key] = ret
+            return ret
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    private var memo = [String: Int]()
+
+    func minKnightMoves(_ x: Int, _ y: Int) -> Int {
+        return dfs(abs(x), abs(y))
+    }
+
+    private func dfs(_ x: Int, _ y: Int) -> Int {
+        let key = "\(x),\(y)"
+        if let val = memo[key] {
+            return val
+        }
+
+        if x + y == 0 {
+            return 0
+        } else if x + y == 2 {
+            return 2
+        } else {
+            let ret = min(dfs(abs(x - 1), abs(y - 2)),
+                         dfs(abs(x - 2), abs(y - 1))) + 1
+            memo[key] = ret
+            return ret
+        }
     }
 }
 ```

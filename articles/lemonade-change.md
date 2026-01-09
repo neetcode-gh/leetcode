@@ -154,6 +154,96 @@ public class Solution {
 }
 ```
 
+```go
+func lemonadeChange(bills []int) bool {
+    five, ten := 0, 0
+    for _, b := range bills {
+        if b == 5 {
+            five++
+        } else if b == 10 {
+            ten++
+            if five > 0 {
+                five--
+            } else {
+                return false
+            }
+        } else {
+            if five > 0 && ten > 0 {
+                five--
+                ten--
+            } else if five >= 3 {
+                five -= 3
+            } else {
+                return false
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun lemonadeChange(bills: IntArray): Boolean {
+        var five = 0
+        var ten = 0
+        for (b in bills) {
+            if (b == 5) {
+                five++
+            } else if (b == 10) {
+                ten++
+                if (five > 0) {
+                    five--
+                } else {
+                    return false
+                }
+            } else {
+                if (five > 0 && ten > 0) {
+                    five--
+                    ten--
+                } else if (five >= 3) {
+                    five -= 3
+                } else {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func lemonadeChange(_ bills: [Int]) -> Bool {
+        var five = 0
+        var ten = 0
+        for b in bills {
+            if b == 5 {
+                five += 1
+            } else if b == 10 {
+                ten += 1
+                if five > 0 {
+                    five -= 1
+                } else {
+                    return false
+                }
+            } else {
+                if five > 0 && ten > 0 {
+                    five -= 1
+                    ten -= 1
+                } else if five >= 3 {
+                    five -= 3
+                } else {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,6 +378,81 @@ public class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```go
+func lemonadeChange(bills []int) bool {
+    five, ten := 0, 0
+    for _, b := range bills {
+        if b == 5 {
+            five++
+        } else if b == 10 {
+            five--
+            ten++
+        } else if ten > 0 {
+            five--
+            ten--
+        } else {
+            five -= 3
+        }
+        if five < 0 {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun lemonadeChange(bills: IntArray): Boolean {
+        var five = 0
+        var ten = 0
+        for (b in bills) {
+            if (b == 5) {
+                five++
+            } else if (b == 10) {
+                five--
+                ten++
+            } else if (ten > 0) {
+                five--
+                ten--
+            } else {
+                five -= 3
+            }
+            if (five < 0) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func lemonadeChange(_ bills: [Int]) -> Bool {
+        var five = 0
+        var ten = 0
+        for b in bills {
+            if b == 5 {
+                five += 1
+            } else if b == 10 {
+                five -= 1
+                ten += 1
+            } else if ten > 0 {
+                five -= 1
+                ten -= 1
+            } else {
+                five -= 3
+            }
+            if five < 0 {
+                return false
+            }
+        }
+        return true
     }
 }
 ```

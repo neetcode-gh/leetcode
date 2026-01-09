@@ -162,6 +162,171 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode[] SplitListToParts(ListNode head, int k) {
+        List<ListNode> arr = new List<ListNode>();
+        for (ListNode cur = head; cur != null; cur = cur.next) {
+            arr.Add(cur);
+        }
+
+        int N = arr.Count;
+        int baseLen = N / k, remainder = N % k;
+
+        ListNode[] res = new ListNode[k];
+        int start = 0;
+        for (int i = 0; i < k; i++) {
+            if (start < N) {
+                res[i] = arr[start];
+                int tail = start + baseLen - 1;
+                if (remainder > 0) {
+                    tail++;
+                    remainder--;
+                }
+                arr[tail].next = null;
+                start = tail + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func splitListToParts(head *ListNode, k int) []*ListNode {
+    arr := []*ListNode{}
+    for cur := head; cur != nil; cur = cur.Next {
+        arr = append(arr, cur)
+    }
+
+    N := len(arr)
+    baseLen, remainder := N/k, N%k
+
+    res := make([]*ListNode, k)
+    start := 0
+    for i := 0; i < k; i++ {
+        if start < N {
+            res[i] = arr[start]
+            tail := start + baseLen - 1
+            if remainder > 0 {
+                tail++
+                remainder--
+            }
+            arr[tail].Next = nil
+            start = tail + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun splitListToParts(head: ListNode?, k: Int): Array<ListNode?> {
+        val arr = mutableListOf<ListNode>()
+        var cur = head
+        while (cur != null) {
+            arr.add(cur)
+            cur = cur.next
+        }
+
+        val N = arr.size
+        var baseLen = N / k
+        var remainder = N % k
+
+        val res = arrayOfNulls<ListNode>(k)
+        var start = 0
+        for (i in 0 until k) {
+            if (start < N) {
+                res[i] = arr[start]
+                var tail = start + baseLen - 1
+                if (remainder > 0) {
+                    tail++
+                    remainder--
+                }
+                arr[tail].next = null
+                start = tail + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func splitListToParts(_ head: ListNode?, _ k: Int) -> [ListNode?] {
+        var arr = [ListNode]()
+        var cur = head
+        while let node = cur {
+            arr.append(node)
+            cur = node.next
+        }
+
+        let N = arr.count
+        let baseLen = N / k
+        var remainder = N % k
+
+        var res = [ListNode?](repeating: nil, count: k)
+        var start = 0
+        for i in 0..<k {
+            if start < N {
+                res[i] = arr[start]
+                var tail = start + baseLen - 1
+                if remainder > 0 {
+                    tail += 1
+                    remainder -= 1
+                }
+                arr[tail].next = nil
+                start = tail + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,6 +497,179 @@ class Solution {
             remainder--;
         }
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode[] SplitListToParts(ListNode head, int k) {
+        int length = 0;
+        ListNode curr = head;
+        while (curr != null) {
+            curr = curr.next;
+            length++;
+        }
+
+        int baseLen = length / k, remainder = length % k;
+        ListNode[] res = new ListNode[k];
+        curr = head;
+
+        for (int i = 0; i < k; i++) {
+            res[i] = curr;
+            for (int j = 0; j < baseLen - 1 + (remainder > 0 ? 1 : 0); j++) {
+                if (curr == null) break;
+                curr = curr.next;
+            }
+            if (curr != null) {
+                ListNode temp = curr.next;
+                curr.next = null;
+                curr = temp;
+            }
+            remainder--;
+        }
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func splitListToParts(head *ListNode, k int) []*ListNode {
+    length := 0
+    curr := head
+    for curr != nil {
+        curr = curr.Next
+        length++
+    }
+
+    baseLen, remainder := length/k, length%k
+    res := make([]*ListNode, k)
+    curr = head
+
+    for i := 0; i < k; i++ {
+        res[i] = curr
+        extra := 0
+        if remainder > 0 {
+            extra = 1
+        }
+        for j := 0; j < baseLen-1+extra; j++ {
+            if curr == nil {
+                break
+            }
+            curr = curr.Next
+        }
+        if curr != nil {
+            temp := curr.Next
+            curr.Next = nil
+            curr = temp
+        }
+        remainder--
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun splitListToParts(head: ListNode?, k: Int): Array<ListNode?> {
+        var length = 0
+        var curr = head
+        while (curr != null) {
+            curr = curr.next
+            length++
+        }
+
+        val baseLen = length / k
+        var remainder = length % k
+        val res = arrayOfNulls<ListNode>(k)
+        curr = head
+
+        for (i in 0 until k) {
+            res[i] = curr
+            val extra = if (remainder > 0) 1 else 0
+            for (j in 0 until baseLen - 1 + extra) {
+                if (curr == null) break
+                curr = curr.next
+            }
+            if (curr != null) {
+                val temp = curr.next
+                curr.next = null
+                curr = temp
+            }
+            remainder--
+        }
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func splitListToParts(_ head: ListNode?, _ k: Int) -> [ListNode?] {
+        var length = 0
+        var curr = head
+        while curr != nil {
+            curr = curr?.next
+            length += 1
+        }
+
+        let baseLen = length / k
+        var remainder = length % k
+        var res = [ListNode?](repeating: nil, count: k)
+        curr = head
+
+        for i in 0..<k {
+            res[i] = curr
+            let extra = remainder > 0 ? 1 : 0
+            for _ in 0..<(baseLen - 1 + extra) {
+                if curr == nil { break }
+                curr = curr?.next
+            }
+            if curr != nil {
+                let temp = curr?.next
+                curr?.next = nil
+                curr = temp
+            }
+            remainder -= 1
+        }
+        return res
     }
 }
 ```

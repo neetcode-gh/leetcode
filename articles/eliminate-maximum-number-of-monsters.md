@@ -98,6 +98,102 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int EliminateMaximum(int[] dist, int[] speed) {
+        int n = dist.Length;
+        int[] minReach = new int[n];
+
+        for (int i = 0; i < n; i++) {
+            minReach[i] = (int)Math.Ceiling((double)dist[i] / speed[i]);
+        }
+
+        Array.Sort(minReach);
+
+        int res = 0;
+        for (int minute = 0; minute < n; minute++) {
+            if (minute >= minReach[minute]) {
+                return res;
+            }
+            res++;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func eliminateMaximum(dist []int, speed []int) int {
+    n := len(dist)
+    minReach := make([]int, n)
+
+    for i := 0; i < n; i++ {
+        minReach[i] = (dist[i] + speed[i] - 1) / speed[i]
+    }
+
+    sort.Ints(minReach)
+
+    res := 0
+    for minute := 0; minute < n; minute++ {
+        if minute >= minReach[minute] {
+            return res
+        }
+        res++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun eliminateMaximum(dist: IntArray, speed: IntArray): Int {
+        val n = dist.size
+        val minReach = IntArray(n) { i ->
+            (dist[i] + speed[i] - 1) / speed[i]
+        }
+
+        minReach.sort()
+
+        var res = 0
+        for (minute in 0 until n) {
+            if (minute >= minReach[minute]) {
+                return res
+            }
+            res++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func eliminateMaximum(_ dist: [Int], _ speed: [Int]) -> Int {
+        let n = dist.count
+        var minReach = [Int](repeating: 0, count: n)
+
+        for i in 0..<n {
+            minReach[i] = (dist[i] + speed[i] - 1) / speed[i]
+        }
+
+        minReach.sort()
+
+        var res = 0
+        for minute in 0..<n {
+            if minute >= minReach[minute] {
+                return res
+            }
+            res += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

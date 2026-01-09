@@ -136,6 +136,144 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool SplitString(string s) {
+        return Dfs(s, 0, new List<long>());
+    }
+
+    private bool IsValid(List<long> splits) {
+        for (int i = 1; i < splits.Count; i++) {
+            if (splits[i] != splits[i - 1] - 1) {
+                return false;
+            }
+        }
+        return splits.Count > 1;
+    }
+
+    private bool Dfs(string s, int i, List<long> splits) {
+        if (i == s.Length) {
+            return IsValid(splits);
+        }
+        long num = 0;
+        for (int j = i; j < s.Length; j++) {
+            num = num * 10 + (s[j] - '0');
+            splits.Add(num);
+            if (Dfs(s, j + 1, splits)) {
+                return true;
+            }
+            splits.RemoveAt(splits.Count - 1);
+        }
+        return false;
+    }
+}
+```
+
+```go
+func splitString(s string) bool {
+    n := len(s)
+
+    var isValid func(splits []int64) bool
+    isValid = func(splits []int64) bool {
+        for i := 1; i < len(splits); i++ {
+            if splits[i] != splits[i-1]-1 {
+                return false
+            }
+        }
+        return len(splits) > 1
+    }
+
+    var dfs func(i int, splits []int64) bool
+    dfs = func(i int, splits []int64) bool {
+        if i == n {
+            return isValid(splits)
+        }
+        var num int64 = 0
+        for j := i; j < n; j++ {
+            num = num*10 + int64(s[j]-'0')
+            splits = append(splits, num)
+            if dfs(j+1, splits) {
+                return true
+            }
+            splits = splits[:len(splits)-1]
+        }
+        return false
+    }
+
+    return dfs(0, []int64{})
+}
+```
+
+```kotlin
+class Solution {
+    fun splitString(s: String): Boolean {
+        return dfs(s, 0, mutableListOf())
+    }
+
+    private fun isValid(splits: List<Long>): Boolean {
+        for (i in 1 until splits.size) {
+            if (splits[i] != splits[i - 1] - 1) {
+                return false
+            }
+        }
+        return splits.size > 1
+    }
+
+    private fun dfs(s: String, i: Int, splits: MutableList<Long>): Boolean {
+        if (i == s.length) {
+            return isValid(splits)
+        }
+        var num = 0L
+        for (j in i until s.length) {
+            num = num * 10 + (s[j] - '0')
+            splits.add(num)
+            if (dfs(s, j + 1, splits)) {
+                return true
+            }
+            splits.removeAt(splits.size - 1)
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitString(_ s: String) -> Bool {
+        let chars = Array(s)
+        let n = chars.count
+
+        func isValid(_ splits: [Int64]) -> Bool {
+            for i in 1..<splits.count {
+                if splits[i] != splits[i - 1] - 1 {
+                    return false
+                }
+            }
+            return splits.count > 1
+        }
+
+        func dfs(_ i: Int, _ splits: inout [Int64]) -> Bool {
+            if i == n {
+                return isValid(splits)
+            }
+            var num: Int64 = 0
+            for j in i..<n {
+                num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                splits.append(num)
+                if dfs(j + 1, &splits) {
+                    return true
+                }
+                splits.removeLast()
+            }
+            return false
+        }
+
+        var splits = [Int64]()
+        return dfs(0, &splits)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,6 +403,130 @@ class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool SplitString(string s) {
+        int n = s.Length;
+        long val = 0;
+        for (int i = 0; i < n - 1; i++) {
+            val = val * 10 + (s[i] - '0');
+            if (Dfs(s, i + 1, val)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool Dfs(string s, int index, long prev) {
+        if (index == s.Length) {
+            return true;
+        }
+        long num = 0;
+        for (int j = index; j < s.Length; j++) {
+            num = num * 10 + (s[j] - '0');
+            if (num + 1 == prev && Dfs(s, j + 1, num)) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+```go
+func splitString(s string) bool {
+    n := len(s)
+
+    var dfs func(index int, prev int64) bool
+    dfs = func(index int, prev int64) bool {
+        if index == n {
+            return true
+        }
+        var num int64 = 0
+        for j := index; j < n; j++ {
+            num = num*10 + int64(s[j]-'0')
+            if num+1 == prev && dfs(j+1, num) {
+                return true
+            }
+        }
+        return false
+    }
+
+    var val int64 = 0
+    for i := 0; i < n-1; i++ {
+        val = val*10 + int64(s[i]-'0')
+        if dfs(i+1, val) {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun splitString(s: String): Boolean {
+        val n = s.length
+        var value = 0L
+        for (i in 0 until n - 1) {
+            value = value * 10 + (s[i] - '0')
+            if (dfs(s, i + 1, value)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun dfs(s: String, index: Int, prev: Long): Boolean {
+        if (index == s.length) {
+            return true
+        }
+        var num = 0L
+        for (j in index until s.length) {
+            num = num * 10 + (s[j] - '0')
+            if (num + 1 == prev && dfs(s, j + 1, num)) {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitString(_ s: String) -> Bool {
+        let chars = Array(s)
+        let n = chars.count
+
+        func dfs(_ index: Int, _ prev: Int64) -> Bool {
+            if index == n {
+                return true
+            }
+            var num: Int64 = 0
+            for j in index..<n {
+                num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                if num + 1 == prev && dfs(j + 1, num) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        var val: Int64 = 0
+        for i in 0..<(n - 1) {
+            val = val * 10 + Int64(chars[i].asciiValue! - Character("0").asciiValue!)
+            if dfs(i + 1, val) {
+                return true
+            }
+        }
+
+        return false
     }
 }
 ```
@@ -409,6 +671,142 @@ class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool SplitString(string s) {
+        int n = s.Length;
+        long val = 0;
+        for (int i = 0; i < n - 1; i++) {
+            val = val * 10 + (s[i] - '0');
+            if (Dfs(s, i + 1, val)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool Dfs(string s, int index, long prev) {
+        if (index == s.Length) {
+            return true;
+        }
+        long num = 0;
+        for (int j = index; j < s.Length; j++) {
+            num = num * 10 + (s[j] - '0');
+            if (num + 1 == prev && Dfs(s, j + 1, num)) {
+                return true;
+            }
+            if (num >= prev) {
+                break;
+            }
+        }
+        return false;
+    }
+}
+```
+
+```go
+func splitString(s string) bool {
+    n := len(s)
+
+    var dfs func(index int, prev int64) bool
+    dfs = func(index int, prev int64) bool {
+        if index == n {
+            return true
+        }
+        var num int64 = 0
+        for j := index; j < n; j++ {
+            num = num*10 + int64(s[j]-'0')
+            if num+1 == prev && dfs(j+1, num) {
+                return true
+            }
+            if num >= prev {
+                break
+            }
+        }
+        return false
+    }
+
+    var val int64 = 0
+    for i := 0; i < n-1; i++ {
+        val = val*10 + int64(s[i]-'0')
+        if dfs(i+1, val) {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun splitString(s: String): Boolean {
+        val n = s.length
+        var value = 0L
+        for (i in 0 until n - 1) {
+            value = value * 10 + (s[i] - '0')
+            if (dfs(s, i + 1, value)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun dfs(s: String, index: Int, prev: Long): Boolean {
+        if (index == s.length) {
+            return true
+        }
+        var num = 0L
+        for (j in index until s.length) {
+            num = num * 10 + (s[j] - '0')
+            if (num + 1 == prev && dfs(s, j + 1, num)) {
+                return true
+            }
+            if (num >= prev) {
+                break
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitString(_ s: String) -> Bool {
+        let chars = Array(s)
+        let n = chars.count
+
+        func dfs(_ index: Int, _ prev: Int64) -> Bool {
+            if index == n {
+                return true
+            }
+            var num: Int64 = 0
+            for j in index..<n {
+                num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                if num + 1 == prev && dfs(j + 1, num) {
+                    return true
+                }
+                if num >= prev {
+                    break
+                }
+            }
+            return false
+        }
+
+        var val: Int64 = 0
+        for i in 0..<(n - 1) {
+            val = val * 10 + Int64(chars[i].asciiValue! - Character("0").asciiValue!)
+            if dfs(i + 1, val) {
+                return true
+            }
+        }
+
+        return false
     }
 }
 ```
@@ -558,6 +956,151 @@ class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool SplitString(string s) {
+        int n = s.Length;
+        var stack = new Stack<long[]>();
+        long val = 0;
+
+        for (int i = 0; i < n - 1; i++) {
+            val = val * 10 + (s[i] - '0');
+            stack.Push(new long[] { i + 1, val });
+
+            while (stack.Count > 0) {
+                long[] top = stack.Pop();
+                int index = (int)top[0];
+                long prev = top[1];
+                long num = 0;
+
+                for (int j = index; j < n; j++) {
+                    num = num * 10 + (s[j] - '0');
+                    if (num + 1 == prev) {
+                        if (j + 1 == n) {
+                            return true;
+                        }
+                        stack.Push(new long[] { j + 1, num });
+                    } else if (num >= prev) {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return false;
+    }
+}
+```
+
+```go
+func splitString(s string) bool {
+    n := len(s)
+    type pair struct {
+        index int
+        prev  int64
+    }
+    stack := []pair{}
+    var val int64 = 0
+
+    for i := 0; i < n-1; i++ {
+        val = val*10 + int64(s[i]-'0')
+        stack = append(stack, pair{i + 1, val})
+
+        for len(stack) > 0 {
+            top := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            index, prev := top.index, top.prev
+            var num int64 = 0
+
+            for j := index; j < n; j++ {
+                num = num*10 + int64(s[j]-'0')
+                if num+1 == prev {
+                    if j+1 == n {
+                        return true
+                    }
+                    stack = append(stack, pair{j + 1, num})
+                } else if num >= prev {
+                    break
+                }
+            }
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun splitString(s: String): Boolean {
+        val n = s.length
+        val stack = ArrayDeque<LongArray>()
+        var value = 0L
+
+        for (i in 0 until n - 1) {
+            value = value * 10 + (s[i] - '0')
+            stack.addLast(longArrayOf((i + 1).toLong(), value))
+
+            while (stack.isNotEmpty()) {
+                val top = stack.removeLast()
+                val index = top[0].toInt()
+                val prev = top[1]
+                var num = 0L
+
+                for (j in index until n) {
+                    num = num * 10 + (s[j] - '0')
+                    if (num + 1 == prev) {
+                        if (j + 1 == n) {
+                            return true
+                        }
+                        stack.addLast(longArrayOf((j + 1).toLong(), num))
+                    } else if (num >= prev) {
+                        break
+                    }
+                }
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func splitString(_ s: String) -> Bool {
+        let chars = Array(s)
+        let n = chars.count
+        var stack = [(Int, Int64)]()
+        var val: Int64 = 0
+
+        for i in 0..<(n - 1) {
+            val = val * 10 + Int64(chars[i].asciiValue! - Character("0").asciiValue!)
+            stack.append((i + 1, val))
+
+            while !stack.isEmpty {
+                let (index, prev) = stack.removeLast()
+                var num: Int64 = 0
+
+                for j in index..<n {
+                    num = num * 10 + Int64(chars[j].asciiValue! - Character("0").asciiValue!)
+                    if num + 1 == prev {
+                        if j + 1 == n {
+                            return true
+                        }
+                        stack.append((j + 1, num))
+                    } else if num >= prev {
+                        break
+                    }
+                }
+            }
+        }
+
+        return false
     }
 }
 ```

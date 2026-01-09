@@ -77,6 +77,87 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountElements(int[] arr) {
+        int count = 0;
+        foreach (int x in arr) {
+            if (IntegerInArray(arr, x + 1)) {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private bool IntegerInArray(int[] arr, int target) {
+        foreach (int x in arr) {
+            if (x == target) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+```go
+func countElements(arr []int) int {
+    count := 0
+    for _, x := range arr {
+        if integerInArray(arr, x+1) {
+            count++
+        }
+    }
+    return count
+}
+
+func integerInArray(arr []int, target int) bool {
+    for _, x := range arr {
+        if x == target {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun countElements(arr: IntArray): Int {
+        var count = 0
+        for (x in arr) {
+            if (integerInArray(arr, x + 1)) {
+                count++
+            }
+        }
+        return count
+    }
+
+    private fun integerInArray(arr: IntArray, target: Int): Boolean {
+        for (x in arr) {
+            if (x == target) {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func countElements(_ arr: [Int]) -> Int {
+        var count = 0
+        for x in arr {
+            if arr.contains(x + 1) {
+                count += 1
+            }
+        }
+        return count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -152,6 +233,67 @@ class Solution {
             }
         }
         return count;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountElements(int[] arr) {
+        HashSet<int> hashSet = new HashSet<int>(arr);
+        int count = 0;
+        foreach (int x in arr) {
+            if (hashSet.Contains(x + 1)) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+```
+
+```go
+func countElements(arr []int) int {
+    hashSet := make(map[int]bool)
+    for _, x := range arr {
+        hashSet[x] = true
+    }
+    count := 0
+    for _, x := range arr {
+        if hashSet[x+1] {
+            count++
+        }
+    }
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    fun countElements(arr: IntArray): Int {
+        val hashSet = arr.toHashSet()
+        var count = 0
+        for (x in arr) {
+            if (hashSet.contains(x + 1)) {
+                count++
+            }
+        }
+        return count
+    }
+}
+```
+
+```swift
+class Solution {
+    func countElements(_ arr: [Int]) -> Int {
+        let hashSet = Set(arr)
+        var count = 0
+        for x in arr {
+            if hashSet.contains(x + 1) {
+                count += 1
+            }
+        }
+        return count
     }
 }
 ```
@@ -247,6 +389,84 @@ class Solution {
             runLength++;
         }
         return count;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountElements(int[] arr) {
+        Array.Sort(arr);
+        int count = 0;
+        int runLength = 1;
+        for (int i = 1; i < arr.Length; i++) {
+            if (arr[i - 1] != arr[i]) {
+                if (arr[i - 1] + 1 == arr[i]) {
+                    count += runLength;
+                }
+                runLength = 0;
+            }
+            runLength++;
+        }
+        return count;
+    }
+}
+```
+
+```go
+func countElements(arr []int) int {
+    sort.Ints(arr)
+    count := 0
+    runLength := 1
+    for i := 1; i < len(arr); i++ {
+        if arr[i-1] != arr[i] {
+            if arr[i-1]+1 == arr[i] {
+                count += runLength
+            }
+            runLength = 0
+        }
+        runLength++
+    }
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    fun countElements(arr: IntArray): Int {
+        arr.sort()
+        var count = 0
+        var runLength = 1
+        for (i in 1 until arr.size) {
+            if (arr[i - 1] != arr[i]) {
+                if (arr[i - 1] + 1 == arr[i]) {
+                    count += runLength
+                }
+                runLength = 0
+            }
+            runLength++
+        }
+        return count
+    }
+}
+```
+
+```swift
+class Solution {
+    func countElements(_ arr: [Int]) -> Int {
+        let sortedArr = arr.sorted()
+        var count = 0
+        var runLength = 1
+        for i in 1..<sortedArr.count {
+            if sortedArr[i - 1] != sortedArr[i] {
+                if sortedArr[i - 1] + 1 == sortedArr[i] {
+                    count += runLength
+                }
+                runLength = 0
+            }
+            runLength += 1
+        }
+        return count
     }
 }
 ```

@@ -124,6 +124,125 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool WordPattern(string pattern, string s) {
+        string[] words = s.Split(' ');
+        if (pattern.Length != words.Length) {
+            return false;
+        }
+
+        Dictionary<char, string> charToWord = new Dictionary<char, string>();
+        Dictionary<string, char> wordToChar = new Dictionary<string, char>();
+
+        for (int i = 0; i < pattern.Length; i++) {
+            char c = pattern[i];
+            string w = words[i];
+
+            if (charToWord.ContainsKey(c) && charToWord[c] != w) {
+                return false;
+            }
+            if (wordToChar.ContainsKey(w) && wordToChar[w] != c) {
+                return false;
+            }
+
+            charToWord[c] = w;
+            wordToChar[w] = c;
+        }
+        return true;
+    }
+}
+```
+
+```go
+func wordPattern(pattern string, s string) bool {
+    words := strings.Split(s, " ")
+    if len(pattern) != len(words) {
+        return false
+    }
+
+    charToWord := make(map[byte]string)
+    wordToChar := make(map[string]byte)
+
+    for i := 0; i < len(pattern); i++ {
+        c := pattern[i]
+        w := words[i]
+
+        if val, ok := charToWord[c]; ok && val != w {
+            return false
+        }
+        if val, ok := wordToChar[w]; ok && val != c {
+            return false
+        }
+
+        charToWord[c] = w
+        wordToChar[w] = c
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun wordPattern(pattern: String, s: String): Boolean {
+        val words = s.split(" ")
+        if (pattern.length != words.size) {
+            return false
+        }
+
+        val charToWord = HashMap<Char, String>()
+        val wordToChar = HashMap<String, Char>()
+
+        for (i in pattern.indices) {
+            val c = pattern[i]
+            val w = words[i]
+
+            if (charToWord.containsKey(c) && charToWord[c] != w) {
+                return false
+            }
+            if (wordToChar.containsKey(w) && wordToChar[w] != c) {
+                return false
+            }
+
+            charToWord[c] = w
+            wordToChar[w] = c
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordPattern(_ pattern: String, _ s: String) -> Bool {
+        let words = s.split(separator: " ").map { String($0) }
+        if pattern.count != words.count {
+            return false
+        }
+
+        var charToWord = [Character: String]()
+        var wordToChar = [String: Character]()
+        let patternArray = Array(pattern)
+
+        for i in 0..<patternArray.count {
+            let c = patternArray[i]
+            let w = words[i]
+
+            if let mapped = charToWord[c], mapped != w {
+                return false
+            }
+            if let mapped = wordToChar[w], mapped != c {
+                return false
+            }
+
+            charToWord[c] = w
+            wordToChar[w] = c
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,6 +354,116 @@ class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool WordPattern(string pattern, string s) {
+        var charToWord = new Dictionary<char, int>();
+        var wordToChar = new Dictionary<string, int>();
+        string[] words = s.Split(' ');
+
+        if (words.Length != pattern.Length) return false;
+
+        for (int i = 0; i < pattern.Length; i++) {
+            charToWord.TryGetValue(pattern[i], out int charIdx);
+            wordToChar.TryGetValue(words[i], out int wordIdx);
+
+            if (charIdx != wordIdx) {
+                return false;
+            }
+
+            charToWord[pattern[i]] = i + 1;
+            wordToChar[words[i]] = i + 1;
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func wordPattern(pattern string, s string) bool {
+    charToWord := make(map[byte]int)
+    wordToChar := make(map[string]int)
+    words := strings.Split(s, " ")
+
+    if len(pattern) != len(words) {
+        return false
+    }
+
+    for i := 0; i < len(words); i++ {
+        c := pattern[i]
+        word := words[i]
+
+        if charToWord[c] != wordToChar[word] {
+            return false
+        }
+
+        charToWord[c] = i + 1
+        wordToChar[word] = i + 1
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun wordPattern(pattern: String, s: String): Boolean {
+        val charToWord = HashMap<Char, Int>()
+        val wordToChar = HashMap<String, Int>()
+        val words = s.split(" ")
+
+        if (words.size != pattern.length) return false
+
+        for (i in pattern.indices) {
+            val charIdx = charToWord.getOrDefault(pattern[i], 0)
+            val wordIdx = wordToChar.getOrDefault(words[i], 0)
+
+            if (charIdx != wordIdx) {
+                return false
+            }
+
+            charToWord[pattern[i]] = i + 1
+            wordToChar[words[i]] = i + 1
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordPattern(_ pattern: String, _ s: String) -> Bool {
+        var charToWord = [Character: Int]()
+        var wordToChar = [String: Int]()
+        let words = s.split(separator: " ").map { String($0) }
+        let patternArray = Array(pattern)
+
+        if patternArray.count != words.count {
+            return false
+        }
+
+        for i in 0..<words.count {
+            let c = patternArray[i]
+            let word = words[i]
+
+            let charIdx = charToWord[c] ?? 0
+            let wordIdx = wordToChar[word] ?? 0
+
+            if charIdx != wordIdx {
+                return false
+            }
+
+            charToWord[c] = i + 1
+            wordToChar[word] = i + 1
+        }
+
+        return true
     }
 }
 ```
@@ -374,6 +603,129 @@ class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool WordPattern(string pattern, string s) {
+        string[] words = s.Split(' ');
+        if (pattern.Length != words.Length) return false;
+
+        Dictionary<char, int> charToWord = new Dictionary<char, int>();
+        HashSet<string> store = new HashSet<string>();
+
+        for (int i = 0; i < pattern.Length; i++) {
+            char c = pattern[i];
+
+            if (charToWord.ContainsKey(c)) {
+                if (words[charToWord[c]] != words[i]) {
+                    return false;
+                }
+            } else {
+                if (store.Contains(words[i])) {
+                    return false;
+                }
+                charToWord[c] = i;
+                store.Add(words[i]);
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func wordPattern(pattern string, s string) bool {
+    words := strings.Split(s, " ")
+    if len(pattern) != len(words) {
+        return false
+    }
+
+    charToWord := make(map[byte]int)
+    store := make(map[string]bool)
+
+    for i := 0; i < len(pattern); i++ {
+        c := pattern[i]
+
+        if idx, ok := charToWord[c]; ok {
+            if words[idx] != words[i] {
+                return false
+            }
+        } else {
+            if store[words[i]] {
+                return false
+            }
+            charToWord[c] = i
+            store[words[i]] = true
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun wordPattern(pattern: String, s: String): Boolean {
+        val words = s.split(" ")
+        if (pattern.length != words.size) return false
+
+        val charToWord = HashMap<Char, Int>()
+        val store = HashSet<String>()
+
+        for (i in pattern.indices) {
+            val c = pattern[i]
+
+            if (charToWord.containsKey(c)) {
+                if (words[charToWord[c]!!] != words[i]) {
+                    return false
+                }
+            } else {
+                if (store.contains(words[i])) {
+                    return false
+                }
+                charToWord[c] = i
+                store.add(words[i])
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordPattern(_ pattern: String, _ s: String) -> Bool {
+        let words = s.split(separator: " ").map { String($0) }
+        let patternArray = Array(pattern)
+        if patternArray.count != words.count {
+            return false
+        }
+
+        var charToWord = [Character: Int]()
+        var store = Set<String>()
+
+        for i in 0..<patternArray.count {
+            let c = patternArray[i]
+
+            if let idx = charToWord[c] {
+                if words[idx] != words[i] {
+                    return false
+                }
+            } else {
+                if store.contains(words[i]) {
+                    return false
+                }
+                charToWord[c] = i
+                store.insert(words[i])
+            }
+        }
+
+        return true
     }
 }
 ```
@@ -519,6 +871,131 @@ class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool WordPattern(string pattern, string s) {
+        string[] words = s.Split(' ');
+        if (pattern.Length != words.Length) {
+            return false;
+        }
+
+        Dictionary<char, int> charToWord = new Dictionary<char, int>();
+        for (int i = 0; i < pattern.Length; i++) {
+            char c = pattern[i];
+            string w = words[i];
+
+            if (charToWord.ContainsKey(c)) {
+                if (words[charToWord[c]] != w) {
+                    return false;
+                }
+            } else {
+                foreach (var entry in charToWord) {
+                    if (words[entry.Value] == w) {
+                        return false;
+                    }
+                }
+                charToWord[c] = i;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func wordPattern(pattern string, s string) bool {
+    words := strings.Split(s, " ")
+    if len(pattern) != len(words) {
+        return false
+    }
+
+    charToWord := make(map[byte]int)
+    for i := 0; i < len(pattern); i++ {
+        c := pattern[i]
+        w := words[i]
+
+        if idx, ok := charToWord[c]; ok {
+            if words[idx] != w {
+                return false
+            }
+        } else {
+            for _, val := range charToWord {
+                if words[val] == w {
+                    return false
+                }
+            }
+            charToWord[c] = i
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun wordPattern(pattern: String, s: String): Boolean {
+        val words = s.split(" ")
+        if (pattern.length != words.size) {
+            return false
+        }
+
+        val charToWord = HashMap<Char, Int>()
+        for (i in pattern.indices) {
+            val c = pattern[i]
+            val w = words[i]
+
+            if (charToWord.containsKey(c)) {
+                if (words[charToWord[c]!!] != w) {
+                    return false
+                }
+            } else {
+                for ((_, idx) in charToWord) {
+                    if (words[idx] == w) {
+                        return false
+                    }
+                }
+                charToWord[c] = i
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordPattern(_ pattern: String, _ s: String) -> Bool {
+        let words = s.split(separator: " ").map { String($0) }
+        let patternArray = Array(pattern)
+        if patternArray.count != words.count {
+            return false
+        }
+
+        var charToWord = [Character: Int]()
+        for i in 0..<patternArray.count {
+            let c = patternArray[i]
+            let w = words[i]
+
+            if let idx = charToWord[c] {
+                if words[idx] != w {
+                    return false
+                }
+            } else {
+                for (_, idx) in charToWord {
+                    if words[idx] == w {
+                        return false
+                    }
+                }
+                charToWord[c] = i
+            }
+        }
+
+        return true
     }
 }
 ```

@@ -135,6 +135,141 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1000000007;
+    private int[,,] cache;
+
+    public int CheckRecord(int n) {
+        cache = new int[n + 1, 2, 3];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 3; k++) {
+                    cache[i, j, k] = -1;
+                }
+            }
+        }
+        return Dfs(n, 0, 0);
+    }
+
+    private int Dfs(int i, int cntA, int cntL) {
+        if (i == 0) return 1;
+        if (cache[i, cntA, cntL] != -1) return cache[i, cntA, cntL];
+
+        int res = Dfs(i - 1, cntA, 0) % MOD;
+
+        if (cntA == 0) {
+            res = (res + Dfs(i - 1, 1, 0)) % MOD;
+        }
+
+        if (cntL < 2) {
+            res = (res + Dfs(i - 1, cntA, cntL + 1)) % MOD;
+        }
+
+        cache[i, cntA, cntL] = res;
+        return res;
+    }
+}
+```
+
+```go
+func checkRecord(n int) int {
+    const MOD = 1000000007
+    cache := make([][][]int, n+1)
+    for i := range cache {
+        cache[i] = make([][]int, 2)
+        for j := range cache[i] {
+            cache[i][j] = []int{-1, -1, -1}
+        }
+    }
+
+    var dfs func(i, cntA, cntL int) int
+    dfs = func(i, cntA, cntL int) int {
+        if i == 0 {
+            return 1
+        }
+        if cache[i][cntA][cntL] != -1 {
+            return cache[i][cntA][cntL]
+        }
+
+        res := dfs(i-1, cntA, 0) % MOD
+
+        if cntA == 0 {
+            res = (res + dfs(i-1, 1, 0)) % MOD
+        }
+
+        if cntL < 2 {
+            res = (res + dfs(i-1, cntA, cntL+1)) % MOD
+        }
+
+        cache[i][cntA][cntL] = res
+        return res
+    }
+
+    return dfs(n, 0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007
+    private lateinit var cache: Array<Array<IntArray>>
+
+    fun checkRecord(n: Int): Int {
+        cache = Array(n + 1) { Array(2) { IntArray(3) { -1 } } }
+        return dfs(n, 0, 0)
+    }
+
+    private fun dfs(i: Int, cntA: Int, cntL: Int): Int {
+        if (i == 0) return 1
+        if (cache[i][cntA][cntL] != -1) return cache[i][cntA][cntL]
+
+        var res = dfs(i - 1, cntA, 0) % MOD
+
+        if (cntA == 0) {
+            res = (res + dfs(i - 1, 1, 0)) % MOD
+        }
+
+        if (cntL < 2) {
+            res = (res + dfs(i - 1, cntA, cntL + 1)) % MOD
+        }
+
+        cache[i][cntA][cntL] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private let MOD = 1000000007
+    private var cache: [[[Int]]] = []
+
+    func checkRecord(_ n: Int) -> Int {
+        cache = Array(repeating: Array(repeating: Array(repeating: -1, count: 3), count: 2), count: n + 1)
+        return dfs(n, 0, 0)
+    }
+
+    private func dfs(_ i: Int, _ cntA: Int, _ cntL: Int) -> Int {
+        if i == 0 { return 1 }
+        if cache[i][cntA][cntL] != -1 { return cache[i][cntA][cntL] }
+
+        var res = dfs(i - 1, cntA, 0) % MOD
+
+        if cntA == 0 {
+            res = (res + dfs(i - 1, 1, 0)) % MOD
+        }
+
+        if cntL < 2 {
+            res = (res + dfs(i - 1, cntA, cntL + 1)) % MOD
+        }
+
+        cache[i][cntA][cntL] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +482,199 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1000000007;
+    private int[,] baseCase = { { 1, 1, 0 }, { 1, 0, 0 } };
+    private int[,,] cache;
+
+    public int CheckRecord(int n) {
+        cache = new int[n + 1, 2, 3];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j < 2; j++) {
+                for (int k = 0; k < 3; k++) {
+                    cache[i, j, k] = -1;
+                }
+            }
+        }
+        int[,] result = Count(n);
+        int total = 0;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                total = (total + result[i, j]) % MOD;
+            }
+        }
+        return total;
+    }
+
+    private int[,] Count(int n) {
+        if (n == 1) return baseCase;
+        if (cache[n, 0, 0] != -1) {
+            return new int[,] {
+                { cache[n, 0, 0], cache[n, 0, 1], cache[n, 0, 2] },
+                { cache[n, 1, 0], cache[n, 1, 1], cache[n, 1, 2] }
+            };
+        }
+
+        int[,] prev = Count(n - 1);
+
+        // Choose P
+        cache[n, 0, 0] = ((prev[0, 0] + prev[0, 1]) % MOD + prev[0, 2]) % MOD;
+        cache[n, 1, 0] = ((prev[1, 0] + prev[1, 1]) % MOD + prev[1, 2]) % MOD;
+
+        // Choose L
+        cache[n, 0, 1] = prev[0, 0];
+        cache[n, 0, 2] = prev[0, 1];
+        cache[n, 1, 1] = prev[1, 0];
+        cache[n, 1, 2] = prev[1, 1];
+
+        // Choose A
+        cache[n, 1, 0] = (cache[n, 1, 0] + ((prev[0, 0] + prev[0, 1]) % MOD + prev[0, 2]) % MOD) % MOD;
+
+        return new int[,] {
+            { cache[n, 0, 0], cache[n, 0, 1], cache[n, 0, 2] },
+            { cache[n, 1, 0], cache[n, 1, 1], cache[n, 1, 2] }
+        };
+    }
+}
+```
+
+```go
+func checkRecord(n int) int {
+    const MOD = 1000000007
+    baseCase := [][]int{{1, 1, 0}, {1, 0, 0}}
+    cache := make([][][]int, n+1)
+    for i := range cache {
+        cache[i] = make([][]int, 2)
+        for j := range cache[i] {
+            cache[i][j] = []int{-1, -1, -1}
+        }
+    }
+
+    var count func(n int) [][]int
+    count = func(n int) [][]int {
+        if n == 1 {
+            return baseCase
+        }
+        if cache[n][0][0] != -1 {
+            return cache[n]
+        }
+
+        prev := count(n - 1)
+        res := cache[n]
+
+        // Choose P
+        res[0][0] = ((prev[0][0]+prev[0][1])%MOD + prev[0][2]) % MOD
+        res[1][0] = ((prev[1][0]+prev[1][1])%MOD + prev[1][2]) % MOD
+
+        // Choose L
+        res[0][1] = prev[0][0]
+        res[0][2] = prev[0][1]
+        res[1][1] = prev[1][0]
+        res[1][2] = prev[1][1]
+
+        // Choose A
+        res[1][0] = (res[1][0] + ((prev[0][0]+prev[0][1])%MOD+prev[0][2])%MOD) % MOD
+
+        return res
+    }
+
+    result := count(n)
+    total := 0
+    for _, row := range result {
+        for _, val := range row {
+            total = (total + val) % MOD
+        }
+    }
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007
+    private val baseCase = arrayOf(intArrayOf(1, 1, 0), intArrayOf(1, 0, 0))
+    private lateinit var cache: Array<Array<IntArray>>
+
+    fun checkRecord(n: Int): Int {
+        cache = Array(n + 1) { Array(2) { IntArray(3) { -1 } } }
+        val result = count(n)
+        var total = 0
+        for (row in result) {
+            for (value in row) {
+                total = (total + value) % MOD
+            }
+        }
+        return total
+    }
+
+    private fun count(n: Int): Array<IntArray> {
+        if (n == 1) return baseCase
+        if (cache[n][0][0] != -1) return cache[n]
+
+        val prev = count(n - 1)
+        val res = cache[n]
+
+        // Choose P
+        res[0][0] = ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD
+        res[1][0] = ((prev[1][0] + prev[1][1]) % MOD + prev[1][2]) % MOD
+
+        // Choose L
+        res[0][1] = prev[0][0]
+        res[0][2] = prev[0][1]
+        res[1][1] = prev[1][0]
+        res[1][2] = prev[1][1]
+
+        // Choose A
+        res[1][0] = (res[1][0] + ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD) % MOD
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private let MOD = 1000000007
+    private let baseCase = [[1, 1, 0], [1, 0, 0]]
+    private var cache: [[[Int]]] = []
+
+    func checkRecord(_ n: Int) -> Int {
+        cache = Array(repeating: Array(repeating: Array(repeating: -1, count: 3), count: 2), count: n + 1)
+        let result = count(n)
+        var total = 0
+        for row in result {
+            for val in row {
+                total = (total + val) % MOD
+            }
+        }
+        return total
+    }
+
+    private func count(_ n: Int) -> [[Int]] {
+        if n == 1 { return baseCase }
+        if cache[n][0][0] != -1 { return cache[n] }
+
+        let prev = count(n - 1)
+
+        // Choose P
+        cache[n][0][0] = ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD
+        cache[n][1][0] = ((prev[1][0] + prev[1][1]) % MOD + prev[1][2]) % MOD
+
+        // Choose L
+        cache[n][0][1] = prev[0][0]
+        cache[n][0][2] = prev[0][1]
+        cache[n][1][1] = prev[1][0]
+        cache[n][1][2] = prev[1][1]
+
+        // Choose A
+        cache[n][1][0] = (cache[n][1][0] + ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD) % MOD
+
+        return cache[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,6 +837,166 @@ class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CheckRecord(int n) {
+        const int MOD = 1000000007;
+        int[,,] dp = new int[n + 1, 2, 3];
+
+        dp[0, 0, 0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            for (int cntA = 0; cntA < 2; cntA++) {
+                for (int cntL = 0; cntL < 3; cntL++) {
+                    // Choose P
+                    dp[i, cntA, 0] = (dp[i, cntA, 0] + dp[i - 1, cntA, cntL]) % MOD;
+
+                    // Choose A
+                    if (cntA > 0) {
+                        dp[i, cntA, 0] = (dp[i, cntA, 0] + dp[i - 1, cntA - 1, cntL]) % MOD;
+                    }
+
+                    // Choose L
+                    if (cntL > 0) {
+                        dp[i, cntA, cntL] = (dp[i, cntA, cntL] + dp[i - 1, cntA, cntL - 1]) % MOD;
+                    }
+                }
+            }
+        }
+
+        int result = 0;
+        for (int cntA = 0; cntA < 2; cntA++) {
+            for (int cntL = 0; cntL < 3; cntL++) {
+                result = (result + dp[n, cntA, cntL]) % MOD;
+            }
+        }
+
+        return result;
+    }
+}
+```
+
+```go
+func checkRecord(n int) int {
+    const MOD = 1000000007
+    dp := make([][][]int, n+1)
+    for i := range dp {
+        dp[i] = make([][]int, 2)
+        for j := range dp[i] {
+            dp[i][j] = make([]int, 3)
+        }
+    }
+
+    dp[0][0][0] = 1
+
+    for i := 1; i <= n; i++ {
+        for cntA := 0; cntA < 2; cntA++ {
+            for cntL := 0; cntL < 3; cntL++ {
+                // Choose P
+                dp[i][cntA][0] = (dp[i][cntA][0] + dp[i-1][cntA][cntL]) % MOD
+
+                // Choose A
+                if cntA > 0 {
+                    dp[i][cntA][0] = (dp[i][cntA][0] + dp[i-1][cntA-1][cntL]) % MOD
+                }
+
+                // Choose L
+                if cntL > 0 {
+                    dp[i][cntA][cntL] = (dp[i][cntA][cntL] + dp[i-1][cntA][cntL-1]) % MOD
+                }
+            }
+        }
+    }
+
+    result := 0
+    for cntA := 0; cntA < 2; cntA++ {
+        for cntL := 0; cntL < 3; cntL++ {
+            result = (result + dp[n][cntA][cntL]) % MOD
+        }
+    }
+
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun checkRecord(n: Int): Int {
+        val MOD = 1000000007
+        val dp = Array(n + 1) { Array(2) { IntArray(3) } }
+
+        dp[0][0][0] = 1
+
+        for (i in 1..n) {
+            for (cntA in 0 until 2) {
+                for (cntL in 0 until 3) {
+                    // Choose P
+                    dp[i][cntA][0] = (dp[i][cntA][0] + dp[i - 1][cntA][cntL]) % MOD
+
+                    // Choose A
+                    if (cntA > 0) {
+                        dp[i][cntA][0] = (dp[i][cntA][0] + dp[i - 1][cntA - 1][cntL]) % MOD
+                    }
+
+                    // Choose L
+                    if (cntL > 0) {
+                        dp[i][cntA][cntL] = (dp[i][cntA][cntL] + dp[i - 1][cntA][cntL - 1]) % MOD
+                    }
+                }
+            }
+        }
+
+        var result = 0
+        for (cntA in 0 until 2) {
+            for (cntL in 0 until 3) {
+                result = (result + dp[n][cntA][cntL]) % MOD
+            }
+        }
+
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkRecord(_ n: Int) -> Int {
+        let MOD = 1000000007
+        var dp = Array(repeating: Array(repeating: Array(repeating: 0, count: 3), count: 2), count: n + 1)
+
+        dp[0][0][0] = 1
+
+        for i in 1...n {
+            for cntA in 0..<2 {
+                for cntL in 0..<3 {
+                    // Choose P
+                    dp[i][cntA][0] = (dp[i][cntA][0] + dp[i - 1][cntA][cntL]) % MOD
+
+                    // Choose A
+                    if cntA > 0 {
+                        dp[i][cntA][0] = (dp[i][cntA][0] + dp[i - 1][cntA - 1][cntL]) % MOD
+                    }
+
+                    // Choose L
+                    if cntL > 0 {
+                        dp[i][cntA][cntL] = (dp[i][cntA][cntL] + dp[i - 1][cntA][cntL - 1]) % MOD
+                    }
+                }
+            }
+        }
+
+        var result = 0
+        for cntA in 0..<2 {
+            for cntL in 0..<3 {
+                result = (result + dp[n][cntA][cntL]) % MOD
+            }
+        }
+
+        return result
     }
 }
 ```
@@ -680,6 +1168,158 @@ class Solution {
             }
         }
         return total;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CheckRecord(int n) {
+        if (n == 1) return 3;
+
+        const int MOD = 1000000007;
+        int[,] dp = { { 1, 1, 0 }, { 1, 0, 0 } };
+
+        for (int i = 0; i < n - 1; i++) {
+            int[,] ndp = new int[2, 3];
+
+            // Choose P
+            ndp[0, 0] = ((dp[0, 0] + dp[0, 1]) % MOD + dp[0, 2]) % MOD;
+            ndp[1, 0] = ((dp[1, 0] + dp[1, 1]) % MOD + dp[1, 2]) % MOD;
+
+            // Choose L
+            ndp[0, 1] = dp[0, 0];
+            ndp[1, 1] = dp[1, 0];
+            ndp[0, 2] = dp[0, 1];
+            ndp[1, 2] = dp[1, 1];
+
+            // Choose A
+            ndp[1, 0] = (ndp[1, 0] + ((dp[0, 0] + dp[0, 1]) % MOD + dp[0, 2]) % MOD) % MOD;
+
+            dp = ndp;
+        }
+
+        int total = 0;
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 3; j++) {
+                total = (total + dp[i, j]) % MOD;
+            }
+        }
+        return total;
+    }
+}
+```
+
+```go
+func checkRecord(n int) int {
+    if n == 1 {
+        return 3
+    }
+
+    const MOD = 1000000007
+    dp := [][]int{{1, 1, 0}, {1, 0, 0}}
+
+    for i := 0; i < n-1; i++ {
+        ndp := [][]int{{0, 0, 0}, {0, 0, 0}}
+
+        // Choose P
+        ndp[0][0] = ((dp[0][0]+dp[0][1])%MOD + dp[0][2]) % MOD
+        ndp[1][0] = ((dp[1][0]+dp[1][1])%MOD + dp[1][2]) % MOD
+
+        // Choose L
+        ndp[0][1] = dp[0][0]
+        ndp[1][1] = dp[1][0]
+        ndp[0][2] = dp[0][1]
+        ndp[1][2] = dp[1][1]
+
+        // Choose A
+        ndp[1][0] = (ndp[1][0] + ((dp[0][0]+dp[0][1])%MOD+dp[0][2])%MOD) % MOD
+
+        dp = ndp
+    }
+
+    total := 0
+    for _, row := range dp {
+        for _, val := range row {
+            total = (total + val) % MOD
+        }
+    }
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun checkRecord(n: Int): Int {
+        if (n == 1) return 3
+
+        val MOD = 1000000007
+        var dp = arrayOf(intArrayOf(1, 1, 0), intArrayOf(1, 0, 0))
+
+        for (i in 0 until n - 1) {
+            val ndp = arrayOf(IntArray(3), IntArray(3))
+
+            // Choose P
+            ndp[0][0] = ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD
+            ndp[1][0] = ((dp[1][0] + dp[1][1]) % MOD + dp[1][2]) % MOD
+
+            // Choose L
+            ndp[0][1] = dp[0][0]
+            ndp[1][1] = dp[1][0]
+            ndp[0][2] = dp[0][1]
+            ndp[1][2] = dp[1][1]
+
+            // Choose A
+            ndp[1][0] = (ndp[1][0] + ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD) % MOD
+
+            dp = ndp
+        }
+
+        var total = 0
+        for (row in dp) {
+            for (value in row) {
+                total = (total + value) % MOD
+            }
+        }
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkRecord(_ n: Int) -> Int {
+        if n == 1 { return 3 }
+
+        let MOD = 1000000007
+        var dp = [[1, 1, 0], [1, 0, 0]]
+
+        for _ in 0..<(n - 1) {
+            var ndp = [[0, 0, 0], [0, 0, 0]]
+
+            // Choose P
+            ndp[0][0] = ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD
+            ndp[1][0] = ((dp[1][0] + dp[1][1]) % MOD + dp[1][2]) % MOD
+
+            // Choose L
+            ndp[0][1] = dp[0][0]
+            ndp[1][1] = dp[1][0]
+            ndp[0][2] = dp[0][1]
+            ndp[1][2] = dp[1][1]
+
+            // Choose A
+            ndp[1][0] = (ndp[1][0] + ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD) % MOD
+
+            dp = ndp
+        }
+
+        var total = 0
+        for row in dp {
+            for val in row {
+                total = (total + val) % MOD
+            }
+        }
+        return total
     }
 }
 ```
@@ -857,6 +1497,181 @@ class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CheckRecord(int n) {
+        const int MOD = 1000000007;
+        int[,] dp = new int[2, 3];
+
+        dp[0, 0] = 1;
+
+        for (int i = 1; i <= n; i++) {
+            int[,] nextDp = new int[2, 3];
+
+            for (int cntA = 0; cntA < 2; cntA++) {
+                for (int cntL = 0; cntL < 3; cntL++) {
+                    // Choose P
+                    nextDp[cntA, 0] = (nextDp[cntA, 0] + dp[cntA, cntL]) % MOD;
+
+                    // Choose A
+                    if (cntA > 0) {
+                        nextDp[cntA, 0] = (nextDp[cntA, 0] + dp[cntA - 1, cntL]) % MOD;
+                    }
+
+                    // Choose L
+                    if (cntL > 0) {
+                        nextDp[cntA, cntL] = (nextDp[cntA, cntL] + dp[cntA, cntL - 1]) % MOD;
+                    }
+                }
+            }
+
+            dp = nextDp;
+        }
+
+        int result = 0;
+        for (int cntA = 0; cntA < 2; cntA++) {
+            for (int cntL = 0; cntL < 3; cntL++) {
+                result = (result + dp[cntA, cntL]) % MOD;
+            }
+        }
+        return result;
+    }
+}
+```
+
+```go
+func checkRecord(n int) int {
+    const MOD = 1000000007
+    dp := make([][]int, 2)
+    for i := range dp {
+        dp[i] = make([]int, 3)
+    }
+
+    dp[0][0] = 1
+
+    for i := 1; i <= n; i++ {
+        nextDp := make([][]int, 2)
+        for j := range nextDp {
+            nextDp[j] = make([]int, 3)
+        }
+
+        for cntA := 0; cntA < 2; cntA++ {
+            for cntL := 0; cntL < 3; cntL++ {
+                // Choose P
+                nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA][cntL]) % MOD
+
+                // Choose A
+                if cntA > 0 {
+                    nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA-1][cntL]) % MOD
+                }
+
+                // Choose L
+                if cntL > 0 {
+                    nextDp[cntA][cntL] = (nextDp[cntA][cntL] + dp[cntA][cntL-1]) % MOD
+                }
+            }
+        }
+
+        dp = nextDp
+    }
+
+    result := 0
+    for cntA := 0; cntA < 2; cntA++ {
+        for cntL := 0; cntL < 3; cntL++ {
+            result = (result + dp[cntA][cntL]) % MOD
+        }
+    }
+
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun checkRecord(n: Int): Int {
+        val MOD = 1000000007
+        var dp = Array(2) { IntArray(3) }
+
+        dp[0][0] = 1
+
+        for (i in 1..n) {
+            val nextDp = Array(2) { IntArray(3) }
+
+            for (cntA in 0 until 2) {
+                for (cntL in 0 until 3) {
+                    // Choose P
+                    nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA][cntL]) % MOD
+
+                    // Choose A
+                    if (cntA > 0) {
+                        nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA - 1][cntL]) % MOD
+                    }
+
+                    // Choose L
+                    if (cntL > 0) {
+                        nextDp[cntA][cntL] = (nextDp[cntA][cntL] + dp[cntA][cntL - 1]) % MOD
+                    }
+                }
+            }
+
+            dp = nextDp
+        }
+
+        var result = 0
+        for (cntA in 0 until 2) {
+            for (cntL in 0 until 3) {
+                result = (result + dp[cntA][cntL]) % MOD
+            }
+        }
+
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkRecord(_ n: Int) -> Int {
+        let MOD = 1000000007
+        var dp = Array(repeating: Array(repeating: 0, count: 3), count: 2)
+
+        dp[0][0] = 1
+
+        for _ in 1...n {
+            var nextDp = Array(repeating: Array(repeating: 0, count: 3), count: 2)
+
+            for cntA in 0..<2 {
+                for cntL in 0..<3 {
+                    // Choose P
+                    nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA][cntL]) % MOD
+
+                    // Choose A
+                    if cntA > 0 {
+                        nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA - 1][cntL]) % MOD
+                    }
+
+                    // Choose L
+                    if cntL > 0 {
+                        nextDp[cntA][cntL] = (nextDp[cntA][cntL] + dp[cntA][cntL - 1]) % MOD
+                    }
+                }
+            }
+
+            dp = nextDp
+        }
+
+        var result = 0
+        for cntA in 0..<2 {
+            for cntL in 0..<3 {
+                result = (result + dp[cntA][cntL]) % MOD
+            }
+        }
+
+        return result
     }
 }
 ```

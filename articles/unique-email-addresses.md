@@ -110,6 +110,44 @@ func numUniqueEmails(emails []string) int {
 }
 ```
 
+```kotlin
+class Solution {
+    fun numUniqueEmails(emails: Array<String>): Int {
+        val unique = HashSet<String>()
+
+        for (e in emails) {
+            val parts = e.split("@")
+            var local = parts[0]
+            val domain = parts[1]
+
+            local = local.split("+")[0]
+            local = local.replace(".", "")
+            unique.add("$local@$domain")
+        }
+        return unique.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func numUniqueEmails(_ emails: [String]) -> Int {
+        var unique = Set<String>()
+
+        for e in emails {
+            let parts = e.split(separator: "@")
+            var local = String(parts[0])
+            let domain = String(parts[1])
+
+            local = String(local.split(separator: "+")[0])
+            local = local.replacingOccurrences(of: ".", with: "")
+            unique.insert("\(local)@\(domain)")
+        }
+        return unique.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -281,6 +319,60 @@ func numUniqueEmails(emails []string) int {
     }
 
     return len(unique)
+}
+```
+
+```kotlin
+class Solution {
+    fun numUniqueEmails(emails: Array<String>): Int {
+        val unique = HashSet<String>()
+
+        for (e in emails) {
+            var i = 0
+            val local = StringBuilder()
+            while (i < e.length && e[i] != '@' && e[i] != '+') {
+                if (e[i] != '.') {
+                    local.append(e[i])
+                }
+                i++
+            }
+
+            while (i < e.length && e[i] != '@') {
+                i++
+            }
+            val domain = e.substring(i + 1)
+            unique.add("$local@$domain")
+        }
+        return unique.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func numUniqueEmails(_ emails: [String]) -> Int {
+        var unique = Set<String>()
+
+        for e in emails {
+            let chars = Array(e)
+            var i = 0
+            var local = ""
+
+            while i < chars.count && chars[i] != "@" && chars[i] != "+" {
+                if chars[i] != "." {
+                    local.append(chars[i])
+                }
+                i += 1
+            }
+
+            while i < chars.count && chars[i] != "@" {
+                i += 1
+            }
+            let domain = String(chars[(i + 1)...])
+            unique.insert("\(local)@\(domain)")
+        }
+        return unique.count
+    }
 }
 ```
 

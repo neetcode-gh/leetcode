@@ -178,6 +178,113 @@ public class Solution {
 }
 ```
 
+```go
+func calculate(s string) int {
+    s = strings.ReplaceAll(s, " ", "")
+    stack := []int{}
+    num := 0
+    op := byte('+')
+
+    for i := 0; i < len(s); i++ {
+        ch := s[i]
+        if ch >= '0' && ch <= '9' {
+            num = num*10 + int(ch-'0')
+        }
+        if (ch < '0' || ch > '9') || i == len(s)-1 {
+            switch op {
+            case '+':
+                stack = append(stack, num)
+            case '-':
+                stack = append(stack, -num)
+            case '*':
+                prev := stack[len(stack)-1]
+                stack = stack[:len(stack)-1]
+                stack = append(stack, prev*num)
+            case '/':
+                prev := stack[len(stack)-1]
+                stack = stack[:len(stack)-1]
+                stack = append(stack, prev/num)
+            }
+            op = ch
+            num = 0
+        }
+    }
+
+    res := 0
+    for _, v := range stack {
+        res += v
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun calculate(s: String): Int {
+        val str = s.replace(" ", "")
+        val stack = mutableListOf<Int>()
+        var num = 0
+        var op = '+'
+
+        for (i in str.indices) {
+            val ch = str[i]
+            if (ch.isDigit()) {
+                num = num * 10 + (ch - '0')
+            }
+            if (!ch.isDigit() || i == str.length - 1) {
+                when (op) {
+                    '+' -> stack.add(num)
+                    '-' -> stack.add(-num)
+                    '*' -> stack.add(stack.removeLast() * num)
+                    '/' -> stack.add(stack.removeLast() / num)
+                }
+                op = ch
+                num = 0
+            }
+        }
+
+        return stack.sum()
+    }
+}
+```
+
+```swift
+class Solution {
+    func calculate(_ s: String) -> Int {
+        let str = s.filter { $0 != " " }
+        let chars = Array(str)
+        var stack = [Int]()
+        var num = 0
+        var op: Character = "+"
+
+        for i in 0..<chars.count {
+            let ch = chars[i]
+            if ch.isNumber {
+                num = num * 10 + Int(String(ch))!
+            }
+            if !ch.isNumber || i == chars.count - 1 {
+                switch op {
+                case "+":
+                    stack.append(num)
+                case "-":
+                    stack.append(-num)
+                case "*":
+                    stack.append(stack.removeLast() * num)
+                case "/":
+                    stack.append(stack.removeLast() / num)
+                default:
+                    break
+                }
+                op = ch
+                num = 0
+            }
+        }
+
+        return stack.reduce(0, +)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -392,6 +499,132 @@ public class Solution {
         }
         total += prev;
         return total;
+    }
+}
+```
+
+```go
+func calculate(s string) int {
+    total, prev, num := 0, 0, 0
+    op := byte('+')
+    n := len(s)
+    i := 0
+
+    for i <= n {
+        var ch byte
+        if i < n {
+            ch = s[i]
+        } else {
+            ch = '+'
+        }
+        if ch == ' ' {
+            i++
+            continue
+        }
+        if ch >= '0' && ch <= '9' {
+            num = num*10 + int(ch-'0')
+        } else {
+            switch op {
+            case '+':
+                total += prev
+                prev = num
+            case '-':
+                total += prev
+                prev = -num
+            case '*':
+                prev = prev * num
+            default:
+                prev = prev / num
+            }
+            op = ch
+            num = 0
+        }
+        i++
+    }
+    total += prev
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun calculate(s: String): Int {
+        var total = 0
+        var prev = 0
+        var num = 0
+        var op = '+'
+        val n = s.length
+        var i = 0
+
+        while (i <= n) {
+            val ch = if (i < n) s[i] else '+'
+            if (ch == ' ') {
+                i++
+                continue
+            }
+            if (ch.isDigit()) {
+                num = num * 10 + (ch - '0')
+            } else {
+                when (op) {
+                    '+' -> {
+                        total += prev
+                        prev = num
+                    }
+                    '-' -> {
+                        total += prev
+                        prev = -num
+                    }
+                    '*' -> prev *= num
+                    else -> prev /= num
+                }
+                op = ch
+                num = 0
+            }
+            i++
+        }
+        total += prev
+        return total
+    }
+}
+```
+
+```swift
+class Solution {
+    func calculate(_ s: String) -> Int {
+        var total = 0, prev = 0, num = 0
+        var op: Character = "+"
+        let chars = Array(s)
+        let n = chars.count
+        var i = 0
+
+        while i <= n {
+            let ch: Character = i < n ? chars[i] : "+"
+            if ch == " " {
+                i += 1
+                continue
+            }
+            if ch.isNumber {
+                num = num * 10 + Int(String(ch))!
+            } else {
+                switch op {
+                case "+":
+                    total += prev
+                    prev = num
+                case "-":
+                    total += prev
+                    prev = -num
+                case "*":
+                    prev = prev * num
+                default:
+                    prev = prev / num
+                }
+                op = ch
+                num = 0
+            }
+            i += 1
+        }
+        total += prev
+        return total
     }
 }
 ```

@@ -133,6 +133,121 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private static readonly int MOD = 1000000007;
+    private static readonly int[][] jumps = new int[][] {
+        new[] {4, 6}, new[] {6, 8}, new[] {7, 9}, new[] {4, 8}, new[] {0, 3, 9},
+        new int[] {}, new[] {0, 1, 7}, new[] {2, 6}, new[] {1, 3}, new[] {2, 4}
+    };
+
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+        int res = 0;
+        for (int d = 0; d < 10; d++) {
+            res = (res + Dfs(n - 1, d)) % MOD;
+        }
+        return res;
+    }
+
+    private int Dfs(int n, int d) {
+        if (n == 0) return 1;
+        int res = 0;
+        foreach (int next in jumps[d]) {
+            res = (res + Dfs(n - 1, next)) % MOD;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func knightDialer(n int) int {
+    if n == 1 {
+        return 10
+    }
+    MOD := 1000000007
+    jumps := [][]int{
+        {4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9},
+        {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4},
+    }
+
+    var dfs func(n, d int) int
+    dfs = func(n, d int) int {
+        if n == 0 {
+            return 1
+        }
+        res := 0
+        for _, next := range jumps[d] {
+            res = (res + dfs(n-1, next)) % MOD
+        }
+        return res
+    }
+
+    res := 0
+    for d := 0; d < 10; d++ {
+        res = (res + dfs(n-1, d)) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007
+    private val jumps = arrayOf(
+        intArrayOf(4, 6), intArrayOf(6, 8), intArrayOf(7, 9), intArrayOf(4, 8), intArrayOf(0, 3, 9),
+        intArrayOf(), intArrayOf(0, 1, 7), intArrayOf(2, 6), intArrayOf(1, 3), intArrayOf(2, 4)
+    )
+
+    fun knightDialer(n: Int): Int {
+        if (n == 1) return 10
+        var res = 0
+        for (d in 0 until 10) {
+            res = (res + dfs(n - 1, d)) % MOD
+        }
+        return res
+    }
+
+    private fun dfs(n: Int, d: Int): Int {
+        if (n == 0) return 1
+        var res = 0
+        for (next in jumps[d]) {
+            res = (res + dfs(n - 1, next)) % MOD
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    let MOD = 1000000007
+    let jumps = [
+        [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
+        [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+    ]
+
+    func knightDialer(_ n: Int) -> Int {
+        if n == 1 { return 10 }
+        var res = 0
+        for d in 0..<10 {
+            res = (res + dfs(n - 1, d)) % MOD
+        }
+        return res
+    }
+
+    private func dfs(_ n: Int, _ d: Int) -> Int {
+        if n == 0 { return 1 }
+        var res = 0
+        for next in jumps[d] {
+            res = (res + dfs(n - 1, next)) % MOD
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,6 +406,151 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private static readonly int MOD = 1000000007;
+    private static readonly int[][] jumps = new int[][] {
+        new[] {4, 6}, new[] {6, 8}, new[] {7, 9}, new[] {4, 8}, new[] {0, 3, 9},
+        new int[] {}, new[] {0, 1, 7}, new[] {2, 6}, new[] {1, 3}, new[] {2, 4}
+    };
+    private int[,] dp;
+
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+        dp = new int[10, n + 1];
+        for (int i = 0; i < 10; i++)
+            for (int j = 0; j <= n; j++)
+                dp[i, j] = -1;
+
+        int res = 0;
+        for (int d = 0; d < 10; d++) {
+            res = (res + Dfs(n - 1, d)) % MOD;
+        }
+        return res;
+    }
+
+    private int Dfs(int n, int d) {
+        if (n == 0) return 1;
+        if (dp[d, n] != -1) return dp[d, n];
+
+        dp[d, n] = 0;
+        foreach (int next in jumps[d]) {
+            dp[d, n] = (dp[d, n] + Dfs(n - 1, next)) % MOD;
+        }
+        return dp[d, n];
+    }
+}
+```
+
+```go
+func knightDialer(n int) int {
+    if n == 1 {
+        return 10
+    }
+    MOD := 1000000007
+    jumps := [][]int{
+        {4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9},
+        {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4},
+    }
+
+    dp := make([][]int, 10)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(n, d int) int
+    dfs = func(n, d int) int {
+        if n == 0 {
+            return 1
+        }
+        if dp[d][n] != -1 {
+            return dp[d][n]
+        }
+
+        dp[d][n] = 0
+        for _, next := range jumps[d] {
+            dp[d][n] = (dp[d][n] + dfs(n-1, next)) % MOD
+        }
+        return dp[d][n]
+    }
+
+    res := 0
+    for d := 0; d < 10; d++ {
+        res = (res + dfs(n-1, d)) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007
+    private val jumps = arrayOf(
+        intArrayOf(4, 6), intArrayOf(6, 8), intArrayOf(7, 9), intArrayOf(4, 8), intArrayOf(0, 3, 9),
+        intArrayOf(), intArrayOf(0, 1, 7), intArrayOf(2, 6), intArrayOf(1, 3), intArrayOf(2, 4)
+    )
+    private lateinit var dp: Array<IntArray>
+
+    fun knightDialer(n: Int): Int {
+        if (n == 1) return 10
+        dp = Array(10) { IntArray(n + 1) { -1 } }
+
+        var res = 0
+        for (d in 0 until 10) {
+            res = (res + dfs(n - 1, d)) % MOD
+        }
+        return res
+    }
+
+    private fun dfs(n: Int, d: Int): Int {
+        if (n == 0) return 1
+        if (dp[d][n] != -1) return dp[d][n]
+
+        dp[d][n] = 0
+        for (next in jumps[d]) {
+            dp[d][n] = (dp[d][n] + dfs(n - 1, next)) % MOD
+        }
+        return dp[d][n]
+    }
+}
+```
+
+```swift
+class Solution {
+    let MOD = 1000000007
+    let jumps = [
+        [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
+        [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+    ]
+    var dp: [[Int]] = []
+
+    func knightDialer(_ n: Int) -> Int {
+        if n == 1 { return 10 }
+        dp = Array(repeating: Array(repeating: -1, count: n + 1), count: 10)
+
+        var res = 0
+        for d in 0..<10 {
+            res = (res + dfs(n - 1, d)) % MOD
+        }
+        return res
+    }
+
+    private func dfs(_ n: Int, _ d: Int) -> Int {
+        if n == 0 { return 1 }
+        if dp[d][n] != -1 { return dp[d][n] }
+
+        dp[d][n] = 0
+        for next in jumps[d] {
+            dp[d][n] = (dp[d][n] + dfs(n - 1, next)) % MOD
+        }
+        return dp[d][n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -440,6 +700,130 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private static readonly int MOD = 1000000007;
+    private static readonly int[][] jumps = new int[][] {
+        new[] {4, 6}, new[] {6, 8}, new[] {7, 9}, new[] {4, 8}, new[] {0, 3, 9},
+        new int[] {}, new[] {0, 1, 7}, new[] {2, 6}, new[] {1, 3}, new[] {2, 4}
+    };
+
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+
+        int[,] dp = new int[10, n + 1];
+        for (int d = 0; d < 10; d++) dp[d, 0] = 1;
+
+        for (int step = 1; step < n; step++) {
+            for (int d = 0; d < 10; d++) {
+                foreach (int j in jumps[d]) {
+                    dp[d, step] = (dp[d, step] + dp[j, step - 1]) % MOD;
+                }
+            }
+        }
+
+        int res = 0;
+        for (int d = 0; d < 10; d++) {
+            res = (res + dp[d, n - 1]) % MOD;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func knightDialer(n int) int {
+    if n == 1 {
+        return 10
+    }
+    MOD := 1000000007
+    jumps := [][]int{
+        {4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9},
+        {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4},
+    }
+
+    dp := make([][]int, 10)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        dp[i][0] = 1
+    }
+
+    for step := 1; step < n; step++ {
+        for d := 0; d < 10; d++ {
+            for _, j := range jumps[d] {
+                dp[d][step] = (dp[d][step] + dp[j][step-1]) % MOD
+            }
+        }
+    }
+
+    res := 0
+    for d := 0; d < 10; d++ {
+        res = (res + dp[d][n-1]) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun knightDialer(n: Int): Int {
+        if (n == 1) return 10
+        val MOD = 1000000007
+        val jumps = arrayOf(
+            intArrayOf(4, 6), intArrayOf(6, 8), intArrayOf(7, 9), intArrayOf(4, 8), intArrayOf(0, 3, 9),
+            intArrayOf(), intArrayOf(0, 1, 7), intArrayOf(2, 6), intArrayOf(1, 3), intArrayOf(2, 4)
+        )
+
+        val dp = Array(10) { IntArray(n + 1) }
+        for (d in 0 until 10) dp[d][0] = 1
+
+        for (step in 1 until n) {
+            for (d in 0 until 10) {
+                for (j in jumps[d]) {
+                    dp[d][step] = (dp[d][step] + dp[j][step - 1]) % MOD
+                }
+            }
+        }
+
+        var res = 0
+        for (d in 0 until 10) {
+            res = (res + dp[d][n - 1]) % MOD
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func knightDialer(_ n: Int) -> Int {
+        if n == 1 { return 10 }
+        let MOD = 1000000007
+        let jumps = [
+            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
+            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+        ]
+
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: 10)
+        for d in 0..<10 { dp[d][0] = 1 }
+
+        for step in 1..<n {
+            for d in 0..<10 {
+                for j in jumps[d] {
+                    dp[d][step] = (dp[d][step] + dp[j][step - 1]) % MOD
+                }
+            }
+        }
+
+        var res = 0
+        for d in 0..<10 {
+            res = (res + dp[d][n - 1]) % MOD
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -585,6 +969,126 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+        int MOD = 1000000007;
+        int[][] jumps = new int[][] {
+            new[] {4, 6}, new[] {6, 8}, new[] {7, 9}, new[] {4, 8}, new[] {0, 3, 9},
+            new int[] {}, new[] {0, 1, 7}, new[] {2, 6}, new[] {1, 3}, new[] {2, 4}
+        };
+
+        int[] dp = new int[10];
+        Array.Fill(dp, 1);
+
+        for (int step = 0; step < n - 1; step++) {
+            int[] nextDp = new int[10];
+            for (int d = 0; d < 10; d++) {
+                foreach (int j in jumps[d]) {
+                    nextDp[j] = (nextDp[j] + dp[d]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        int res = 0;
+        foreach (int d in dp) {
+            res = (res + d) % MOD;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func knightDialer(n int) int {
+    if n == 1 {
+        return 10
+    }
+    MOD := 1000000007
+    jumps := [][]int{
+        {4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9},
+        {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4},
+    }
+
+    dp := make([]int, 10)
+    for i := range dp {
+        dp[i] = 1
+    }
+
+    for step := 0; step < n-1; step++ {
+        nextDp := make([]int, 10)
+        for d := 0; d < 10; d++ {
+            for _, j := range jumps[d] {
+                nextDp[j] = (nextDp[j] + dp[d]) % MOD
+            }
+        }
+        dp = nextDp
+    }
+
+    res := 0
+    for _, d := range dp {
+        res = (res + d) % MOD
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun knightDialer(n: Int): Int {
+        if (n == 1) return 10
+        val MOD = 1000000007
+        val jumps = arrayOf(
+            intArrayOf(4, 6), intArrayOf(6, 8), intArrayOf(7, 9), intArrayOf(4, 8), intArrayOf(0, 3, 9),
+            intArrayOf(), intArrayOf(0, 1, 7), intArrayOf(2, 6), intArrayOf(1, 3), intArrayOf(2, 4)
+        )
+
+        var dp = IntArray(10) { 1 }
+
+        for (step in 0 until n - 1) {
+            val nextDp = IntArray(10)
+            for (d in 0 until 10) {
+                for (j in jumps[d]) {
+                    nextDp[j] = (nextDp[j] + dp[d]) % MOD
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp.fold(0) { res, d -> (res + d) % MOD }
+    }
+}
+```
+
+```swift
+class Solution {
+    func knightDialer(_ n: Int) -> Int {
+        if n == 1 { return 10 }
+        let MOD = 1000000007
+        let jumps = [
+            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
+            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+        ]
+
+        var dp = [Int](repeating: 1, count: 10)
+
+        for _ in 0..<(n - 1) {
+            var nextDp = [Int](repeating: 0, count: 10)
+            for d in 0..<10 {
+                for j in jumps[d] {
+                    nextDp[j] = (nextDp[j] + dp[d]) % MOD
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp.reduce(0) { ($0 + $1) % MOD }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -689,6 +1193,98 @@ class Solution {
         }
 
         return jumps.reduce((sum, num) => (sum + num) % MOD, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+        int MOD = 1000000007;
+        long[] jumps = {1, 4, 2, 2}; // [D, A, B, C]
+
+        for (int i = 0; i < n - 1; i++) {
+            long[] tmp = new long[4];
+            tmp[0] = jumps[3];
+            tmp[1] = (2 * jumps[2] + 2 * jumps[3]) % MOD;
+            tmp[2] = jumps[1];
+            tmp[3] = (2 * jumps[0] + jumps[1]) % MOD;
+            jumps = tmp;
+        }
+
+        long res = 0;
+        foreach (long num in jumps) {
+            res = (res + num) % MOD;
+        }
+        return (int)res;
+    }
+}
+```
+
+```go
+func knightDialer(n int) int {
+    if n == 1 {
+        return 10
+    }
+    MOD := int64(1000000007)
+    jumps := []int64{1, 4, 2, 2} // [D, A, B, C]
+
+    for i := 0; i < n-1; i++ {
+        tmp := make([]int64, 4)
+        tmp[0] = jumps[3]
+        tmp[1] = (2*jumps[2] + 2*jumps[3]) % MOD
+        tmp[2] = jumps[1]
+        tmp[3] = (2*jumps[0] + jumps[1]) % MOD
+        jumps = tmp
+    }
+
+    var res int64 = 0
+    for _, num := range jumps {
+        res = (res + num) % MOD
+    }
+    return int(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun knightDialer(n: Int): Int {
+        if (n == 1) return 10
+        val MOD = 1000000007L
+        var jumps = longArrayOf(1, 4, 2, 2) // [D, A, B, C]
+
+        for (i in 0 until n - 1) {
+            val tmp = LongArray(4)
+            tmp[0] = jumps[3]
+            tmp[1] = (2 * jumps[2] + 2 * jumps[3]) % MOD
+            tmp[2] = jumps[1]
+            tmp[3] = (2 * jumps[0] + jumps[1]) % MOD
+            jumps = tmp
+        }
+
+        return (jumps.sum() % MOD).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func knightDialer(_ n: Int) -> Int {
+        if n == 1 { return 10 }
+        let MOD = 1000000007
+        var jumps = [1, 4, 2, 2] // [D, A, B, C]
+
+        for _ in 0..<(n - 1) {
+            var tmp = [Int](repeating: 0, count: 4)
+            tmp[0] = jumps[3]
+            tmp[1] = (2 * jumps[2] + 2 * jumps[3]) % MOD
+            tmp[2] = jumps[1]
+            tmp[3] = (2 * jumps[0] + jumps[1]) % MOD
+            jumps = tmp
+        }
+
+        return jumps.reduce(0) { ($0 + $1) % MOD }
     }
 }
 ```
@@ -976,6 +1572,246 @@ class Solution {
         }
 
         return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private const int MOD = 1000000007;
+
+    public int KnightDialer(int n) {
+        if (n == 1) return 10;
+
+        int[][] jumps = new int[][] {
+            new[] {4, 6}, new[] {6, 8}, new[] {7, 9}, new[] {4, 8}, new[] {0, 3, 9},
+            new int[] {}, new[] {0, 1, 7}, new[] {2, 6}, new[] {1, 3}, new[] {2, 4}
+        };
+
+        long[,] mat = new long[10, 10];
+        for (int i = 0; i < 10; i++) {
+            foreach (int j in jumps[i]) {
+                mat[i, j] = 1;
+            }
+        }
+
+        long[,] res = Matpow(mat, n - 1);
+
+        long ans = 0;
+        for (int i = 0; i < 10; i++) {
+            for (int j = 0; j < 10; j++) {
+                ans = (ans + res[i, j]) % MOD;
+            }
+        }
+        return (int)ans;
+    }
+
+    private long[,] Multiply(long[,] a, long[,] b) {
+        int size = 10;
+        long[,] product = new long[size, size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                for (int k = 0; k < size; k++) {
+                    product[i, k] = (product[i, k] + a[i, j] * b[j, k]) % MOD;
+                }
+            }
+        }
+        return product;
+    }
+
+    private long[,] Matpow(long[,] mat, int n) {
+        int size = 10;
+        long[,] res = new long[size, size];
+        for (int i = 0; i < size; i++) res[i, i] = 1;
+
+        while (n > 0) {
+            if ((n & 1) == 1) res = Multiply(res, mat);
+            mat = Multiply(mat, mat);
+            n >>= 1;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func knightDialer(n int) int {
+    if n == 1 {
+        return 10
+    }
+    MOD := int64(1000000007)
+    jumps := [][]int{
+        {4, 6}, {6, 8}, {7, 9}, {4, 8}, {0, 3, 9},
+        {}, {0, 1, 7}, {2, 6}, {1, 3}, {2, 4},
+    }
+
+    multiply := func(a, b [][]int64) [][]int64 {
+        size := 10
+        product := make([][]int64, size)
+        for i := range product {
+            product[i] = make([]int64, size)
+        }
+        for i := 0; i < size; i++ {
+            for j := 0; j < size; j++ {
+                for k := 0; k < size; k++ {
+                    product[i][k] = (product[i][k] + a[i][j]*b[j][k]) % MOD
+                }
+            }
+        }
+        return product
+    }
+
+    matpow := func(mat [][]int64, exp int) [][]int64 {
+        size := 10
+        res := make([][]int64, size)
+        for i := range res {
+            res[i] = make([]int64, size)
+            res[i][i] = 1
+        }
+        for exp > 0 {
+            if exp&1 == 1 {
+                res = multiply(res, mat)
+            }
+            mat = multiply(mat, mat)
+            exp >>= 1
+        }
+        return res
+    }
+
+    mat := make([][]int64, 10)
+    for i := range mat {
+        mat[i] = make([]int64, 10)
+        for _, j := range jumps[i] {
+            mat[i][j] = 1
+        }
+    }
+
+    res := matpow(mat, n-1)
+
+    var ans int64 = 0
+    for i := 0; i < 10; i++ {
+        for j := 0; j < 10; j++ {
+            ans = (ans + res[i][j]) % MOD
+        }
+    }
+    return int(ans)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007L
+
+    fun knightDialer(n: Int): Int {
+        if (n == 1) return 10
+
+        val jumps = arrayOf(
+            intArrayOf(4, 6), intArrayOf(6, 8), intArrayOf(7, 9), intArrayOf(4, 8), intArrayOf(0, 3, 9),
+            intArrayOf(), intArrayOf(0, 1, 7), intArrayOf(2, 6), intArrayOf(1, 3), intArrayOf(2, 4)
+        )
+
+        val mat = Array(10) { LongArray(10) }
+        for (i in 0 until 10) {
+            for (j in jumps[i]) {
+                mat[i][j] = 1L
+            }
+        }
+
+        val res = matpow(mat, n - 1)
+
+        var ans = 0L
+        for (i in 0 until 10) {
+            for (j in 0 until 10) {
+                ans = (ans + res[i][j]) % MOD
+            }
+        }
+        return ans.toInt()
+    }
+
+    private fun multiply(a: Array<LongArray>, b: Array<LongArray>): Array<LongArray> {
+        val size = 10
+        val product = Array(size) { LongArray(size) }
+        for (i in 0 until size) {
+            for (j in 0 until size) {
+                for (k in 0 until size) {
+                    product[i][k] = (product[i][k] + a[i][j] * b[j][k]) % MOD
+                }
+            }
+        }
+        return product
+    }
+
+    private fun matpow(mat: Array<LongArray>, exp: Int): Array<LongArray> {
+        var m = mat
+        var e = exp
+        val size = 10
+        var res = Array(size) { i -> LongArray(size) { if (it == i) 1L else 0L } }
+        while (e > 0) {
+            if (e and 1 == 1) res = multiply(res, m)
+            m = multiply(m, m)
+            e = e shr 1
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    let MOD = 1000000007
+
+    func knightDialer(_ n: Int) -> Int {
+        if n == 1 { return 10 }
+
+        let jumps = [
+            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
+            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+        ]
+
+        var mat = [[Int]](repeating: [Int](repeating: 0, count: 10), count: 10)
+        for i in 0..<10 {
+            for j in jumps[i] {
+                mat[i][j] = 1
+            }
+        }
+
+        let res = matpow(mat, n - 1)
+
+        var ans = 0
+        for i in 0..<10 {
+            for j in 0..<10 {
+                ans = (ans + res[i][j]) % MOD
+            }
+        }
+        return ans
+    }
+
+    private func multiply(_ a: [[Int]], _ b: [[Int]]) -> [[Int]] {
+        let size = 10
+        var product = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+        for i in 0..<size {
+            for j in 0..<size {
+                for k in 0..<size {
+                    product[i][k] = (product[i][k] + a[i][j] * b[j][k]) % MOD
+                }
+            }
+        }
+        return product
+    }
+
+    private func matpow(_ mat: [[Int]], _ exp: Int) -> [[Int]] {
+        var m = mat
+        var e = exp
+        let size = 10
+        var res = [[Int]](repeating: [Int](repeating: 0, count: size), count: size)
+        for i in 0..<size { res[i][i] = 1 }
+
+        while e > 0 {
+            if e & 1 == 1 { res = multiply(res, m) }
+            m = multiply(m, m)
+            e >>= 1
+        }
+        return res
     }
 }
 ```

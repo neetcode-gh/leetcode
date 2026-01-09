@@ -179,6 +179,88 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func preorderTraversal(root *TreeNode) []int {
+    res := []int{}
+    var preorder func(node *TreeNode)
+    preorder = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        res = append(res, node.Val)
+        preorder(node.Left)
+        preorder(node.Right)
+    }
+    preorder(root)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun preorderTraversal(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        fun preorder(node: TreeNode?) {
+            if (node == null) return
+            res.add(node.`val`)
+            preorder(node.left)
+            preorder(node.right)
+        }
+        preorder(root)
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func preorderTraversal(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        func preorder(_ node: TreeNode?) {
+            guard let node = node else { return }
+            res.append(node.val)
+            preorder(node.left)
+            preorder(node.right)
+        }
+        preorder(root)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +466,104 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func preorderTraversal(root *TreeNode) []int {
+    res := []int{}
+    stack := []*TreeNode{}
+    cur := root
+
+    for cur != nil || len(stack) > 0 {
+        if cur != nil {
+            res = append(res, cur.Val)
+            stack = append(stack, cur.Right)
+            cur = cur.Left
+        } else {
+            cur = stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun preorderTraversal(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        val stack = ArrayDeque<TreeNode?>()
+        var cur = root
+
+        while (cur != null || stack.isNotEmpty()) {
+            if (cur != null) {
+                res.add(cur.`val`)
+                stack.addLast(cur.right)
+                cur = cur.left
+            } else {
+                cur = stack.removeLast()
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func preorderTraversal(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        var stack = [TreeNode?]()
+        var cur = root
+
+        while cur != nil || !stack.isEmpty {
+            if cur != nil {
+                res.append(cur!.val)
+                stack.append(cur?.right)
+                cur = cur?.left
+            } else {
+                cur = stack.removeLast()
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -645,6 +825,133 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func preorderTraversal(root *TreeNode) []int {
+    res := []int{}
+    cur := root
+
+    for cur != nil {
+        if cur.Left == nil {
+            res = append(res, cur.Val)
+            cur = cur.Right
+        } else {
+            prev := cur.Left
+            for prev.Right != nil && prev.Right != cur {
+                prev = prev.Right
+            }
+
+            if prev.Right == nil {
+                res = append(res, cur.Val)
+                prev.Right = cur
+                cur = cur.Left
+            } else {
+                prev.Right = nil
+                cur = cur.Right
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun preorderTraversal(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        var cur = root
+
+        while (cur != null) {
+            if (cur.left == null) {
+                res.add(cur.`val`)
+                cur = cur.right
+            } else {
+                var prev = cur.left
+                while (prev?.right != null && prev.right != cur) {
+                    prev = prev.right
+                }
+
+                if (prev?.right == null) {
+                    res.add(cur.`val`)
+                    prev?.right = cur
+                    cur = cur.left
+                } else {
+                    prev.right = null
+                    cur = cur.right
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func preorderTraversal(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        var cur = root
+
+        while cur != nil {
+            if cur?.left == nil {
+                res.append(cur!.val)
+                cur = cur?.right
+            } else {
+                var prev = cur?.left
+                while prev?.right != nil && prev?.right !== cur {
+                    prev = prev?.right
+                }
+
+                if prev?.right == nil {
+                    res.append(cur!.val)
+                    prev?.right = cur
+                    cur = cur?.left
+                } else {
+                    prev?.right = nil
+                    cur = cur?.right
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

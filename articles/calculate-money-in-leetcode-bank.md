@@ -86,6 +86,86 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TotalMoney(int n) {
+        int day = 0, deposit = 1, res = 0;
+
+        while (day < n) {
+            res += deposit;
+            deposit++;
+            day++;
+
+            if (day % 7 == 0) {
+                deposit = 1 + day / 7;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func totalMoney(n int) int {
+    day, deposit, res := 0, 1, 0
+
+    for day < n {
+        res += deposit
+        deposit++
+        day++
+
+        if day%7 == 0 {
+            deposit = 1 + day/7
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalMoney(n: Int): Int {
+        var day = 0
+        var deposit = 1
+        var res = 0
+
+        while (day < n) {
+            res += deposit
+            deposit++
+            day++
+
+            if (day % 7 == 0) {
+                deposit = 1 + day / 7
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalMoney(_ n: Int) -> Int {
+        var day = 0, deposit = 1, res = 0
+
+        while day < n {
+            res += deposit
+            deposit += 1
+            day += 1
+
+            if day % 7 == 0 {
+                deposit = 1 + day / 7
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +253,76 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TotalMoney(int n) {
+        int weeks = n / 7;
+        int low = 28;
+        int high = 28 + 7 * (weeks - 1);
+        int res = weeks * (low + high) / 2;
+
+        int monday = weeks + 1;
+        for (int i = 0; i < n % 7; i++) {
+            res += i + monday;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func totalMoney(n int) int {
+    weeks := n / 7
+    low := 28
+    high := 28 + 7*(weeks-1)
+    res := weeks * (low + high) / 2
+
+    monday := weeks + 1
+    for i := 0; i < n%7; i++ {
+        res += i + monday
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalMoney(n: Int): Int {
+        val weeks = n / 7
+        val low = 28
+        val high = 28 + 7 * (weeks - 1)
+        var res = weeks * (low + high) / 2
+
+        val monday = weeks + 1
+        for (i in 0 until n % 7) {
+            res += i + monday
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalMoney(_ n: Int) -> Int {
+        let weeks = n / 7
+        let low = 28
+        let high = 28 + 7 * (weeks - 1)
+        var res = weeks * (low + high) / 2
+
+        let monday = weeks + 1
+        for i in 0..<(n % 7) {
+            res += i + monday
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -238,6 +388,62 @@ class Solution {
         let res = SUM(weeks - 1) * 7 + weeks * SUM(7);
         res += SUM(n % 7) + weeks * (n % 7);
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int TotalMoney(int n) {
+        int weeks = n / 7;
+        int res = SUM(weeks - 1) * 7 + weeks * SUM(7);
+        res += SUM(n % 7) + weeks * (n % 7);
+        return res;
+    }
+
+    private int SUM(int n) {
+        return (n * (n + 1)) / 2;
+    }
+}
+```
+
+```go
+func totalMoney(n int) int {
+    SUM := func(x int) int {
+        return (x * (x + 1)) / 2
+    }
+
+    weeks := n / 7
+    res := SUM(weeks-1)*7 + weeks*SUM(7)
+    res += SUM(n%7) + weeks*(n%7)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalMoney(n: Int): Int {
+        fun SUM(x: Int) = (x * (x + 1)) / 2
+
+        val weeks = n / 7
+        var res = SUM(weeks - 1) * 7 + weeks * SUM(7)
+        res += SUM(n % 7) + weeks * (n % 7)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalMoney(_ n: Int) -> Int {
+        func SUM(_ x: Int) -> Int {
+            return (x * (x + 1)) / 2
+        }
+
+        let weeks = n / 7
+        var res = SUM(weeks - 1) * 7 + weeks * SUM(7)
+        res += SUM(n % 7) + weeks * (n % 7)
+        return res
     }
 }
 ```

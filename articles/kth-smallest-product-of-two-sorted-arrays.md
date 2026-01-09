@@ -88,6 +88,52 @@ public class Solution {
 }
 ```
 
+```go
+func kthSmallestProduct(nums1 []int, nums2 []int, k int64) int64 {
+    n, m := len(nums1), len(nums2)
+    prod := make([]int64, 0, n*m)
+    for _, x := range nums1 {
+        for _, y := range nums2 {
+            prod = append(prod, int64(x)*int64(y))
+        }
+    }
+    sort.Slice(prod, func(i, j int) bool {
+        return prod[i] < prod[j]
+    })
+    return prod[k-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun kthSmallestProduct(nums1: IntArray, nums2: IntArray, k: Long): Long {
+        val prod = mutableListOf<Long>()
+        for (x in nums1) {
+            for (y in nums2) {
+                prod.add(x.toLong() * y.toLong())
+            }
+        }
+        prod.sort()
+        return prod[(k - 1).toInt()]
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthSmallestProduct(_ nums1: [Int], _ nums2: [Int], _ k: Int64) -> Int64 {
+        var prod = [Int64]()
+        for x in nums1 {
+            for y in nums2 {
+                prod.append(Int64(x) * Int64(y))
+            }
+        }
+        prod.sort()
+        return prod[Int(k) - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -52,6 +52,31 @@ public class Solution {
 }
 ```
 
+```go
+func sortArrayByParity(nums []int) []int {
+    sort.Slice(nums, func(i, j int) bool {
+        return (nums[i] & 1) < (nums[j] & 1)
+    })
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArrayByParity(nums: IntArray): IntArray {
+        return nums.sortedBy { it and 1 }.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArrayByParity(_ nums: [Int]) -> [Int] {
+        return nums.sorted { ($0 & 1) < ($1 & 1) }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,6 +222,83 @@ public class Solution {
 }
 ```
 
+```go
+func sortArrayByParity(nums []int) []int {
+    even := []int{}
+    odd := []int{}
+
+    for _, num := range nums {
+        if num & 1 == 1 {
+            odd = append(odd, num)
+        } else {
+            even = append(even, num)
+        }
+    }
+
+    idx := 0
+    for _, e := range even {
+        nums[idx] = e
+        idx++
+    }
+    for _, o := range odd {
+        nums[idx] = o
+        idx++
+    }
+
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArrayByParity(nums: IntArray): IntArray {
+        val even = mutableListOf<Int>()
+        val odd = mutableListOf<Int>()
+
+        for (num in nums) {
+            if (num and 1 == 1) {
+                odd.add(num)
+            } else {
+                even.add(num)
+            }
+        }
+
+        var idx = 0
+        for (e in even) {
+            nums[idx++] = e
+        }
+        for (o in odd) {
+            nums[idx++] = o
+        }
+
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArrayByParity(_ nums: [Int]) -> [Int] {
+        var even = [Int]()
+        var odd = [Int]()
+
+        for num in nums {
+            if num & 1 == 1 {
+                odd.append(num)
+            } else {
+                even.append(num)
+            }
+        }
+
+        var result = [Int]()
+        result.append(contentsOf: even)
+        result.append(contentsOf: odd)
+
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -300,6 +402,57 @@ public class Solution {
 }
 ```
 
+```go
+func sortArrayByParity(nums []int) []int {
+    i, j := 0, len(nums) - 1
+    for i < j {
+        if nums[i] & 1 == 1 {
+            nums[i], nums[j] = nums[j], nums[i]
+            j--
+        } else {
+            i++
+        }
+    }
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArrayByParity(nums: IntArray): IntArray {
+        var i = 0
+        var j = nums.size - 1
+        while (i < j) {
+            if (nums[i] and 1 == 1) {
+                nums[i] = nums[j].also { nums[j] = nums[i] }
+                j--
+            } else {
+                i++
+            }
+        }
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArrayByParity(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        var i = 0, j = nums.count - 1
+        while i < j {
+            if nums[i] & 1 == 1 {
+                nums.swapAt(i, j)
+                j -= 1
+            } else {
+                i += 1
+            }
+        }
+        return nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +539,50 @@ public class Solution {
             }
         }
         return nums;
+    }
+}
+```
+
+```go
+func sortArrayByParity(nums []int) []int {
+    l := 0
+    for r := 0; r < len(nums); r++ {
+        if nums[r] % 2 == 0 {
+            nums[l], nums[r] = nums[r], nums[l]
+            l++
+        }
+    }
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun sortArrayByParity(nums: IntArray): IntArray {
+        var l = 0
+        for (r in nums.indices) {
+            if (nums[r] % 2 == 0) {
+                nums[l] = nums[r].also { nums[r] = nums[l] }
+                l++
+            }
+        }
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortArrayByParity(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        var l = 0
+        for r in 0..<nums.count {
+            if nums[r] % 2 == 0 {
+                nums.swapAt(l, r)
+                l += 1
+            }
+        }
+        return nums
     }
 }
 ```

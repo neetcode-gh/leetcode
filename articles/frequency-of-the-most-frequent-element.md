@@ -107,6 +107,69 @@ public class Solution {
 }
 ```
 
+```go
+func maxFrequency(nums []int, k int) int {
+    sort.Ints(nums)
+    res := 1
+
+    for i := 0; i < len(nums); i++ {
+        j := i - 1
+        tmpK := k
+
+        for j >= 0 && tmpK-(nums[i]-nums[j]) >= 0 {
+            tmpK -= nums[i] - nums[j]
+            j--
+        }
+        if i-j > res {
+            res = i - j
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        nums.sort()
+        var res = 1
+
+        for (i in nums.indices) {
+            var j = i - 1
+            var tmpK = k.toLong()
+
+            while (j >= 0 && tmpK - (nums[i] - nums[j]) >= 0) {
+                tmpK -= (nums[i] - nums[j])
+                j--
+            }
+            res = maxOf(res, i - j)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        let nums = nums.sorted()
+        var res = 1
+
+        for i in 0..<nums.count {
+            var j = i - 1
+            var tmpK = k
+
+            while j >= 0 && tmpK - (nums[i] - nums[j]) >= 0 {
+                tmpK -= nums[i] - nums[j]
+                j -= 1
+            }
+            res = max(res, i - j)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -270,6 +333,97 @@ public class Solution {
 }
 ```
 
+```go
+func maxFrequency(nums []int, k int) int {
+    sort.Ints(nums)
+    n := len(nums)
+    prefixSum := make([]int64, n+1)
+    for i := 0; i < n; i++ {
+        prefixSum[i+1] = prefixSum[i] + int64(nums[i])
+    }
+
+    res := 1
+    for i := 0; i < n; i++ {
+        left, right := 0, i
+        for left <= right {
+            mid := (left + right) / 2
+            curSum := prefixSum[i+1] - prefixSum[mid]
+            need := int64(i-mid+1)*int64(nums[i]) - curSum
+            if need <= int64(k) {
+                right = mid - 1
+                if i-mid+1 > res {
+                    res = i - mid + 1
+                }
+            } else {
+                left = mid + 1
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        nums.sort()
+        val n = nums.size
+        val prefixSum = LongArray(n + 1)
+        for (i in 0 until n) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        var res = 1
+        for (i in 0 until n) {
+            var left = 0
+            var right = i
+            while (left <= right) {
+                val mid = (left + right) / 2
+                val curSum = prefixSum[i + 1] - prefixSum[mid]
+                val need = (i - mid + 1).toLong() * nums[i] - curSum
+                if (need <= k) {
+                    right = mid - 1
+                    res = maxOf(res, i - mid + 1)
+                } else {
+                    left = mid + 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        let nums = nums.sorted()
+        let n = nums.count
+        var prefixSum = [Int](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        var res = 1
+        for i in 0..<n {
+            var left = 0, right = i
+            while left <= right {
+                let mid = (left + right) / 2
+                let curSum = prefixSum[i + 1] - prefixSum[mid]
+                let need = (i - mid + 1) * nums[i] - curSum
+                if need <= k {
+                    right = mid - 1
+                    res = max(res, i - mid + 1)
+                } else {
+                    left = mid + 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -392,6 +546,71 @@ public class Solution {
 }
 ```
 
+```go
+func maxFrequency(nums []int, k int) int {
+    sort.Ints(nums)
+    var total int64 = 0
+    res, l := 0, 0
+
+    for r := 0; r < len(nums); r++ {
+        total += int64(nums[r])
+        for int64(nums[r])*int64(r-l+1) > total+int64(k) {
+            total -= int64(nums[l])
+            l++
+        }
+        if r-l+1 > res {
+            res = r - l + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        nums.sort()
+        var total = 0L
+        var res = 0
+        var l = 0
+
+        for (r in nums.indices) {
+            total += nums[r]
+            while (nums[r].toLong() * (r - l + 1) > total + k) {
+                total -= nums[l]
+                l++
+            }
+            res = maxOf(res, r - l + 1)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        let nums = nums.sorted()
+        var total = 0
+        var res = 0
+        var l = 0
+
+        for r in 0..<nums.count {
+            total += nums[r]
+            while nums[r] * (r - l + 1) > total + k {
+                total -= nums[l]
+                l += 1
+            }
+            res = max(res, r - l + 1)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -504,6 +723,64 @@ public class Solution {
         }
 
         return nums.Length - l;
+    }
+}
+```
+
+```go
+func maxFrequency(nums []int, k int) int {
+    sort.Ints(nums)
+    var total int64 = 0
+    l := 0
+
+    for r := 0; r < len(nums); r++ {
+        total += int64(nums[r])
+        if int64(r-l+1)*int64(nums[r]) > total+int64(k) {
+            total -= int64(nums[l])
+            l++
+        }
+    }
+
+    return len(nums) - l
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        nums.sort()
+        var total = 0L
+        var l = 0
+
+        for (r in nums.indices) {
+            total += nums[r]
+            if ((r - l + 1).toLong() * nums[r] > total + k) {
+                total -= nums[l]
+                l++
+            }
+        }
+
+        return nums.size - l
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        let nums = nums.sorted()
+        var total = 0
+        var l = 0
+
+        for r in 0..<nums.count {
+            total += nums[r]
+            if (r - l + 1) * nums[r] > total + k {
+                total -= nums[l]
+                l += 1
+            }
+        }
+
+        return nums.count - l
     }
 }
 ```

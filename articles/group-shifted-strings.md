@@ -110,7 +110,7 @@ class Solution {
             }
             return key.join('');
         }
-        
+
         // Create a hash value (hash_key) for each string and append the string
         // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
         const groups = new Map();
@@ -121,9 +121,117 @@ class Solution {
             }
             groups.get(hashKey).push(string);
         }
-        
+
         // Return a list of all of the grouped strings
         return Array.from(groups.values());
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private string GetHash(string s) {
+        var hashKey = new StringBuilder();
+        for (int i = 1; i < s.Length; i++) {
+            hashKey.Append((char)((s[i] - s[i - 1] + 26) % 26 + 'a'));
+        }
+        return hashKey.ToString();
+    }
+
+    public IList<IList<string>> GroupStrings(string[] strings) {
+        var mapHashToList = new Dictionary<string, IList<string>>();
+
+        // Create a hash_value (hashKey) for each string and append the string
+        // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
+        foreach (var str in strings) {
+            var hashKey = GetHash(str);
+            if (!mapHashToList.ContainsKey(hashKey)) {
+                mapHashToList[hashKey] = new List<string>();
+            }
+            mapHashToList[hashKey].Add(str);
+        }
+
+        // Return a list of all of the grouped strings
+        return mapHashToList.Values.ToList<IList<string>>();
+    }
+}
+```
+
+```go
+func groupStrings(strings []string) [][]string {
+    getHash := func(s string) string {
+        hashKey := make([]byte, 0, len(s)-1)
+        for i := 1; i < len(s); i++ {
+            hashKey = append(hashKey, byte((int(s[i])-int(s[i-1])+26)%26+'a'))
+        }
+        return string(hashKey)
+    }
+
+    // Create a hash value (hash_key) for each string and append the string
+    // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
+    mapHashToList := make(map[string][]string)
+    for _, str := range strings {
+        hashKey := getHash(str)
+        mapHashToList[hashKey] = append(mapHashToList[hashKey], str)
+    }
+
+    // Return a list of all of the grouped strings
+    groups := make([][]string, 0, len(mapHashToList))
+    for _, v := range mapHashToList {
+        groups = append(groups, v)
+    }
+    return groups
+}
+```
+
+```kotlin
+class Solution {
+    private fun getHash(s: String): String {
+        val hashKey = StringBuilder()
+        for (i in 1 until s.length) {
+            hashKey.append(((s[i] - s[i - 1] + 26) % 26 + 'a'.code).toChar())
+        }
+        return hashKey.toString()
+    }
+
+    fun groupStrings(strings: Array<String>): List<List<String>> {
+        // Create a hash value (hash_key) for each string and append the string
+        // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
+        val mapHashToList = HashMap<String, MutableList<String>>()
+        for (str in strings) {
+            val hashKey = getHash(str)
+            mapHashToList.getOrPut(hashKey) { mutableListOf() }.add(str)
+        }
+
+        // Return a list of all of the grouped strings
+        return mapHashToList.values.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func groupStrings(_ strings: [String]) -> [[String]] {
+        func getHash(_ s: String) -> String {
+            let chars = Array(s)
+            var hashKey = ""
+            for i in 1..<chars.count {
+                let diff = (Int(chars[i].asciiValue!) - Int(chars[i-1].asciiValue!) + 26) % 26
+                hashKey.append(Character(UnicodeScalar(diff + Int(Character("a").asciiValue!))!))
+            }
+            return hashKey
+        }
+
+        // Create a hash value (hash_key) for each string and append the string
+        // to the list of hash values i.e. mapHashToList["cd"] = ["acf", "gil", "xzc"]
+        var mapHashToList = [String: [String]]()
+        for str in strings {
+            let hashKey = getHash(str)
+            mapHashToList[hashKey, default: []].append(str)
+        }
+
+        // Return a list of all of the grouped strings
+        return Array(mapHashToList.values)
     }
 }
 ```

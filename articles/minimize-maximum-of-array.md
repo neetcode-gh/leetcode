@@ -123,6 +123,131 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimizeArrayValue(int[] nums) {
+        int left = 0, right = nums.Max();
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (IsValid(nums, mid)) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return left;
+    }
+
+    private bool IsValid(int[] nums, int maxVal) {
+        long prefixSum = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            prefixSum += nums[i];
+            if (prefixSum > (long)maxVal * (i + 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func minimizeArrayValue(nums []int) int {
+    isValid := func(maxVal int) bool {
+        var prefixSum int64 = 0
+        for i := 0; i < len(nums); i++ {
+            prefixSum += int64(nums[i])
+            if prefixSum > int64(maxVal)*int64(i+1) {
+                return false
+            }
+        }
+        return true
+    }
+
+    left, right := 0, 0
+    for _, num := range nums {
+        if num > right {
+            right = num
+        }
+    }
+
+    for left < right {
+        mid := left + (right-left)/2
+        if isValid(mid) {
+            right = mid
+        } else {
+            left = mid + 1
+        }
+    }
+
+    return left
+}
+```
+
+```kotlin
+class Solution {
+    fun minimizeArrayValue(nums: IntArray): Int {
+        fun isValid(maxVal: Int): Boolean {
+            var prefixSum: Long = 0
+            for (i in nums.indices) {
+                prefixSum += nums[i]
+                if (prefixSum > maxVal.toLong() * (i + 1)) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        var left = 0
+        var right = nums.max()
+
+        while (left < right) {
+            val mid = left + (right - left) / 2
+            if (isValid(mid)) {
+                right = mid
+            } else {
+                left = mid + 1
+            }
+        }
+
+        return left
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimizeArrayValue(_ nums: [Int]) -> Int {
+        func isValid(_ maxVal: Int) -> Bool {
+            var prefixSum: Int64 = 0
+            for i in 0..<nums.count {
+                prefixSum += Int64(nums[i])
+                if prefixSum > Int64(maxVal) * Int64(i + 1) {
+                    return false
+                }
+            }
+            return true
+        }
+
+        var left = 0
+        var right = nums.max()!
+
+        while left < right {
+            let mid = left + (right - left) / 2
+            if isValid(mid) {
+                right = mid
+            } else {
+                left = mid + 1
+            }
+        }
+
+        return left
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -199,6 +324,72 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimizeArrayValue(int[] nums) {
+        int res = nums[0];
+        long total = nums[0];
+
+        for (int i = 1; i < nums.Length; i++) {
+            total += nums[i];
+            res = Math.Max(res, (int)Math.Ceiling((double)total / (i + 1)));
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minimizeArrayValue(nums []int) int {
+    res := nums[0]
+    total := int64(nums[0])
+
+    for i := 1; i < len(nums); i++ {
+        total += int64(nums[i])
+        ceil := int((total + int64(i)) / int64(i+1))
+        if ceil > res {
+            res = ceil
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minimizeArrayValue(nums: IntArray): Int {
+        var res = nums[0]
+        var total: Long = nums[0].toLong()
+
+        for (i in 1 until nums.size) {
+            total += nums[i]
+            res = maxOf(res, ((total + i) / (i + 1)).toInt())
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimizeArrayValue(_ nums: [Int]) -> Int {
+        var res = nums[0]
+        var total = Int64(nums[0])
+
+        for i in 1..<nums.count {
+            total += Int64(nums[i])
+            let ceil = Int((total + Int64(i)) / Int64(i + 1))
+            res = max(res, ceil)
+        }
+
+        return res
     }
 }
 ```

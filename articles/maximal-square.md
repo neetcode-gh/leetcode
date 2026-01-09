@@ -217,6 +217,136 @@ public class Solution {
 }
 ```
 
+```go
+func maximalSquare(matrix [][]byte) int {
+    m, n := len(matrix), len(matrix[0])
+    res := 0
+
+    for r := 0; r < m; r++ {
+        for c := 0; c < n; c++ {
+            if matrix[r][c] == '0' {
+                continue
+            }
+            k := 1
+            for {
+                if r+k > m || c+k > n {
+                    break
+                }
+                flag := true
+
+                for i := r; i < r+k; i++ {
+                    if matrix[i][c+k-1] == '0' {
+                        flag = false
+                        break
+                    }
+                }
+                for j := c; j < c+k; j++ {
+                    if matrix[r+k-1][j] == '0' {
+                        flag = false
+                        break
+                    }
+                }
+
+                if !flag {
+                    break
+                }
+                if k*k > res {
+                    res = k * k
+                }
+                k++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maximalSquare(matrix: Array<CharArray>): Int {
+        val m = matrix.size
+        val n = matrix[0].size
+        var res = 0
+
+        for (r in 0 until m) {
+            for (c in 0 until n) {
+                if (matrix[r][c] == '0') continue
+                var k = 1
+                while (true) {
+                    if (r + k > m || c + k > n) break
+                    var flag = true
+
+                    for (i in r until r + k) {
+                        if (matrix[i][c + k - 1] == '0') {
+                            flag = false
+                            break
+                        }
+                    }
+                    for (j in c until c + k) {
+                        if (matrix[r + k - 1][j] == '0') {
+                            flag = false
+                            break
+                        }
+                    }
+
+                    if (!flag) break
+                    res = maxOf(res, k * k)
+                    k++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximalSquare(_ matrix: [[Character]]) -> Int {
+        let m = matrix.count, n = matrix[0].count
+        var res = 0
+
+        for r in 0..<m {
+            for c in 0..<n {
+                if matrix[r][c] == "0" {
+                    continue
+                }
+                var k = 1
+                while true {
+                    if r + k > m || c + k > n {
+                        break
+                    }
+                    var flag = true
+
+                    for i in r..<(r + k) {
+                        if matrix[i][c + k - 1] == "0" {
+                            flag = false
+                            break
+                        }
+                    }
+                    for j in c..<(c + k) {
+                        if matrix[r + k - 1][j] == "0" {
+                            flag = false
+                            break
+                        }
+                    }
+
+                    if !flag {
+                        break
+                    }
+                    res = max(res, k * k)
+                    k += 1
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -421,6 +551,130 @@ public class Solution {
 }
 ```
 
+```go
+func maximalSquare(matrix [][]byte) int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    dp := make([][]int, ROWS)
+    for i := range dp {
+        dp[i] = make([]int, COLS)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r >= ROWS || c >= COLS {
+            return 0
+        }
+        if dp[r][c] != -1 {
+            return dp[r][c]
+        }
+        down := dfs(r+1, c)
+        right := dfs(r, c+1)
+        diag := dfs(r+1, c+1)
+        dp[r][c] = 0
+        if matrix[r][c] == '1' {
+            dp[r][c] = 1 + min(down, min(right, diag))
+        }
+        return dp[r][c]
+    }
+
+    dfs(0, 0)
+    maxSquare := 0
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if dp[r][c] > maxSquare {
+                maxSquare = dp[r][c]
+            }
+        }
+    }
+    return maxSquare * maxSquare
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+
+    fun maximalSquare(matrix: Array<CharArray>): Int {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        dp = Array(ROWS) { IntArray(COLS) { -1 } }
+
+        dfs(0, 0, matrix)
+        var maxSquare = 0
+        for (i in 0 until ROWS) {
+            for (j in 0 until COLS) {
+                maxSquare = maxOf(maxSquare, dp[i][j])
+            }
+        }
+        return maxSquare * maxSquare
+    }
+
+    private fun dfs(r: Int, c: Int, matrix: Array<CharArray>): Int {
+        if (r >= matrix.size || c >= matrix[0].size) {
+            return 0
+        }
+        if (dp[r][c] != -1) {
+            return dp[r][c]
+        }
+        val down = dfs(r + 1, c, matrix)
+        val right = dfs(r, c + 1, matrix)
+        val diag = dfs(r + 1, c + 1, matrix)
+        dp[r][c] = 0
+        if (matrix[r][c] == '1') {
+            dp[r][c] = 1 + minOf(down, right, diag)
+        }
+        return dp[r][c]
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp: [[Int]] = []
+
+    func maximalSquare(_ matrix: [[Character]]) -> Int {
+        let ROWS = matrix.count, COLS = matrix[0].count
+        dp = Array(repeating: Array(repeating: -1, count: COLS), count: ROWS)
+
+        dfs(0, 0, matrix)
+        var maxSquare = 0
+        for i in 0..<ROWS {
+            for j in 0..<COLS {
+                maxSquare = max(maxSquare, dp[i][j])
+            }
+        }
+        return maxSquare * maxSquare
+    }
+
+    private func dfs(_ r: Int, _ c: Int, _ matrix: [[Character]]) -> Int {
+        if r >= matrix.count || c >= matrix[0].count {
+            return 0
+        }
+        if dp[r][c] != -1 {
+            return dp[r][c]
+        }
+        let down = dfs(r + 1, c, matrix)
+        let right = dfs(r, c + 1, matrix)
+        let diag = dfs(r + 1, c + 1, matrix)
+        dp[r][c] = 0
+        if matrix[r][c] == "1" {
+            dp[r][c] = 1 + min(down, min(right, diag))
+        }
+        return dp[r][c]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -543,6 +797,80 @@ public class Solution {
         }
 
         return maxSquare * maxSquare;
+    }
+}
+```
+
+```go
+func maximalSquare(matrix [][]byte) int {
+    m, n := len(matrix), len(matrix[0])
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+    maxSquare := 0
+
+    for r := m - 1; r >= 0; r-- {
+        for c := n - 1; c >= 0; c-- {
+            if matrix[r][c] == '1' {
+                dp[r][c] = 1 + min(dp[r+1][c], min(dp[r][c+1], dp[r+1][c+1]))
+                if dp[r][c] > maxSquare {
+                    maxSquare = dp[r][c]
+                }
+            }
+        }
+    }
+
+    return maxSquare * maxSquare
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maximalSquare(matrix: Array<CharArray>): Int {
+        val m = matrix.size
+        val n = matrix[0].size
+        val dp = Array(m + 1) { IntArray(n + 1) }
+        var maxSquare = 0
+
+        for (r in m - 1 downTo 0) {
+            for (c in n - 1 downTo 0) {
+                if (matrix[r][c] == '1') {
+                    dp[r][c] = 1 + minOf(dp[r + 1][c], dp[r][c + 1], dp[r + 1][c + 1])
+                    maxSquare = maxOf(maxSquare, dp[r][c])
+                }
+            }
+        }
+
+        return maxSquare * maxSquare
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximalSquare(_ matrix: [[Character]]) -> Int {
+        let m = matrix.count, n = matrix[0].count
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: m + 1)
+        var maxSquare = 0
+
+        for r in stride(from: m - 1, through: 0, by: -1) {
+            for c in stride(from: n - 1, through: 0, by: -1) {
+                if matrix[r][c] == "1" {
+                    dp[r][c] = 1 + min(dp[r + 1][c], min(dp[r][c + 1], dp[r + 1][c + 1]))
+                    maxSquare = max(maxSquare, dp[r][c])
+                }
+            }
+        }
+
+        return maxSquare * maxSquare
     }
 }
 ```
@@ -689,6 +1017,92 @@ public class Solution {
         }
 
         return maxSquare * maxSquare;
+    }
+}
+```
+
+```go
+func maximalSquare(matrix [][]byte) int {
+    m, n := len(matrix), len(matrix[0])
+    dp := make([]int, n+1)
+    maxSquare := 0
+
+    for r := m - 1; r >= 0; r-- {
+        prev := 0
+        for c := n - 1; c >= 0; c-- {
+            temp := dp[c]
+            if matrix[r][c] == '1' {
+                dp[c] = 1 + min(dp[c], min(dp[c+1], prev))
+                if dp[c] > maxSquare {
+                    maxSquare = dp[c]
+                }
+            } else {
+                dp[c] = 0
+            }
+            prev = temp
+        }
+    }
+
+    return maxSquare * maxSquare
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maximalSquare(matrix: Array<CharArray>): Int {
+        val m = matrix.size
+        val n = matrix[0].size
+        val dp = IntArray(n + 1)
+        var maxSquare = 0
+
+        for (r in m - 1 downTo 0) {
+            var prev = 0
+            for (c in n - 1 downTo 0) {
+                val temp = dp[c]
+                if (matrix[r][c] == '1') {
+                    dp[c] = 1 + minOf(dp[c], dp[c + 1], prev)
+                    maxSquare = maxOf(maxSquare, dp[c])
+                } else {
+                    dp[c] = 0
+                }
+                prev = temp
+            }
+        }
+
+        return maxSquare * maxSquare
+    }
+}
+```
+
+```swift
+class Solution {
+    func maximalSquare(_ matrix: [[Character]]) -> Int {
+        let m = matrix.count, n = matrix[0].count
+        var dp = Array(repeating: 0, count: n + 1)
+        var maxSquare = 0
+
+        for r in stride(from: m - 1, through: 0, by: -1) {
+            var prev = 0
+            for c in stride(from: n - 1, through: 0, by: -1) {
+                let temp = dp[c]
+                if matrix[r][c] == "1" {
+                    dp[c] = 1 + min(dp[c], min(dp[c + 1], prev))
+                    maxSquare = max(maxSquare, dp[c])
+                } else {
+                    dp[c] = 0
+                }
+                prev = temp
+            }
+        }
+
+        return maxSquare * maxSquare
     }
 }
 ```

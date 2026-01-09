@@ -181,6 +181,109 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func insertGreatestCommonDivisors(head *ListNode) *ListNode {
+    gcd := func(a, b int) int {
+        for b > 0 {
+            a, b = b, a%b
+        }
+        return a
+    }
+
+    cur := head
+    for cur.Next != nil {
+        n1, n2 := cur.Val, cur.Next.Val
+        newNode := &ListNode{Val: gcd(n1, n2), Next: cur.Next}
+        cur.Next = newNode
+        cur = newNode.Next
+    }
+
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertGreatestCommonDivisors(head: ListNode?): ListNode? {
+        fun gcd(a: Int, b: Int): Int {
+            var x = a
+            var y = b
+            while (y > 0) {
+                val temp = y
+                y = x % y
+                x = temp
+            }
+            return x
+        }
+
+        var cur = head
+        while (cur?.next != null) {
+            val n1 = cur.`val`
+            val n2 = cur.next!!.`val`
+            val newNode = ListNode(gcd(n1, n2))
+            newNode.next = cur.next
+            cur.next = newNode
+            cur = newNode.next
+        }
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func insertGreatestCommonDivisors(_ head: ListNode?) -> ListNode? {
+        func gcd(_ a: Int, _ b: Int) -> Int {
+            var a = a, b = b
+            while b > 0 {
+                let temp = b
+                b = a % b
+                a = temp
+            }
+            return a
+        }
+
+        var cur = head
+        while cur?.next != nil {
+            let n1 = cur!.val
+            let n2 = cur!.next!.val
+            let newNode = ListNode(gcd(n1, n2), cur!.next)
+            cur!.next = newNode
+            cur = newNode.next
+        }
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

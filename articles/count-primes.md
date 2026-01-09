@@ -102,6 +102,71 @@ public class Solution {
 }
 ```
 
+```go
+func countPrimes(n int) int {
+    res := 0
+    for num := 2; num < n; num++ {
+        isPrime := true
+        for i := 2; i*i <= num; i++ {
+            if num%i == 0 {
+                isPrime = false
+                break
+            }
+        }
+        if isPrime {
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPrimes(n: Int): Int {
+        var res = 0
+        for (num in 2 until n) {
+            var isPrime = true
+            var i = 2
+            while (i * i <= num) {
+                if (num % i == 0) {
+                    isPrime = false
+                    break
+                }
+                i++
+            }
+            if (isPrime) {
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPrimes(_ n: Int) -> Int {
+        var res = 0
+        for num in 2..<n {
+            var isPrime = true
+            var i = 2
+            while i * i <= num {
+                if num % i == 0 {
+                    isPrime = false
+                    break
+                }
+                i += 1
+            }
+            if isPrime {
+                res += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

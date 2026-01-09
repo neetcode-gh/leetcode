@@ -49,23 +49,91 @@ public:
     bool verifyPreorder(vector<int>& preorder) {
         int minLimit = INT_MIN;
         stack<int> stack;
-        
+
         for (int num: preorder) {
             while (!stack.empty() && stack.top() < num) {
                 minLimit = stack.top();
                 stack.pop();
             }
-            
+
             if (num <= minLimit) {
                 return false;
             }
-            
+
             stack.push(num);
         }
-        
+
         return true;
     }
 };
+```
+
+```go
+func verifyPreorder(preorder []int) bool {
+    minLimit := math.MinInt32
+    stack := []int{}
+
+    for _, num := range preorder {
+        for len(stack) > 0 && stack[len(stack)-1] < num {
+            minLimit = stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+        }
+
+        if num <= minLimit {
+            return false
+        }
+
+        stack = append(stack, num)
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun verifyPreorder(preorder: IntArray): Boolean {
+        var minLimit = Int.MIN_VALUE
+        val stack = ArrayDeque<Int>()
+
+        for (num in preorder) {
+            while (stack.isNotEmpty() && stack.last() < num) {
+                minLimit = stack.removeLast()
+            }
+
+            if (num <= minLimit) {
+                return false
+            }
+
+            stack.addLast(num)
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func verifyPreorder(_ preorder: [Int]) -> Bool {
+        var minLimit = Int.min
+        var stack = [Int]()
+
+        for num in preorder {
+            while !stack.isEmpty && stack.last! < num {
+                minLimit = stack.removeLast()
+            }
+
+            if num <= minLimit {
+                return false
+            }
+
+            stack.append(num)
+        }
+
+        return true
+    }
+}
 ```
 
 ::tabs-end
@@ -163,22 +231,95 @@ class Solution {
     verifyPreorder(preorder) {
         let minLimit = -Infinity;
         let i = 0;
-        
+
         for (let num of preorder) {
             while (i > 0 && preorder[i - 1] < num) {
                 minLimit = preorder[i - 1];
                 i--;
             }
-            
+
             if (num <= minLimit) {
                 return false;
             }
-            
+
             preorder[i] = num;
             i++;
         }
-        
+
         return true;
+    }
+}
+```
+
+```go
+func verifyPreorder(preorder []int) bool {
+    minLimit := math.MinInt32
+    i := 0
+
+    for _, num := range preorder {
+        for i > 0 && preorder[i-1] < num {
+            minLimit = preorder[i-1]
+            i--
+        }
+
+        if num <= minLimit {
+            return false
+        }
+
+        preorder[i] = num
+        i++
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun verifyPreorder(preorder: IntArray): Boolean {
+        var minLimit = Int.MIN_VALUE
+        var i = 0
+
+        for (num in preorder) {
+            while (i > 0 && preorder[i - 1] < num) {
+                minLimit = preorder[i - 1]
+                i--
+            }
+
+            if (num <= minLimit) {
+                return false
+            }
+
+            preorder[i] = num
+            i++
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func verifyPreorder(_ preorder: inout [Int]) -> Bool {
+        var minLimit = Int.min
+        var i = 0
+
+        for num in preorder {
+            while i > 0 && preorder[i - 1] < num {
+                minLimit = preorder[i - 1]
+                i -= 1
+            }
+
+            if num <= minLimit {
+                return false
+            }
+
+            preorder[i] = num
+            i += 1
+        }
+
+        return true
     }
 }
 ```
@@ -254,23 +395,96 @@ public:
         int i = 0;
         return helper(preorder, i, INT_MIN, INT_MAX);
     }
-    
+
     bool helper(vector<int>& preorder, int& i, int minLimit, int maxLimit) {
         if (i == preorder.size()) {
             return true;
         }
-        
+
         int root = preorder[i];
         if (root <= minLimit || root >= maxLimit) {
             return false;
         }
-        
+
         i++;
         bool left = helper(preorder, i, minLimit, root);
         bool right = helper(preorder, i, root, maxLimit);
         return left || right;
     }
 };
+```
+
+```go
+func verifyPreorder(preorder []int) bool {
+    i := 0
+    return helper(preorder, &i, math.MinInt32, math.MaxInt32)
+}
+
+func helper(preorder []int, i *int, minLimit, maxLimit int) bool {
+    if *i == len(preorder) {
+        return true
+    }
+
+    root := preorder[*i]
+    if root <= minLimit || root >= maxLimit {
+        return false
+    }
+
+    *i++
+    left := helper(preorder, i, minLimit, root)
+    right := helper(preorder, i, root, maxLimit)
+    return left || right
+}
+```
+
+```kotlin
+class Solution {
+    fun verifyPreorder(preorder: IntArray): Boolean {
+        val i = intArrayOf(0)
+        return helper(preorder, i, Int.MIN_VALUE, Int.MAX_VALUE)
+    }
+
+    private fun helper(preorder: IntArray, i: IntArray, minLimit: Int, maxLimit: Int): Boolean {
+        if (i[0] == preorder.size) {
+            return true
+        }
+
+        val root = preorder[i[0]]
+        if (root <= minLimit || root >= maxLimit) {
+            return false
+        }
+
+        i[0]++
+        val left = helper(preorder, i, minLimit, root)
+        val right = helper(preorder, i, root, maxLimit)
+        return left || right
+    }
+}
+```
+
+```swift
+class Solution {
+    func verifyPreorder(_ preorder: [Int]) -> Bool {
+        var i = 0
+        return helper(preorder, &i, Int.min, Int.max)
+    }
+
+    private func helper(_ preorder: [Int], _ i: inout Int, _ minLimit: Int, _ maxLimit: Int) -> Bool {
+        if i == preorder.count {
+            return true
+        }
+
+        let root = preorder[i]
+        if root <= minLimit || root >= maxLimit {
+            return false
+        }
+
+        i += 1
+        let left = helper(preorder, &i, minLimit, root)
+        let right = helper(preorder, &i, root, maxLimit)
+        return left || right
+    }
+}
 ```
 
 ::tabs-end

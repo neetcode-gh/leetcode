@@ -105,6 +105,102 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindMaxConsecutiveOnes(int[] nums) {
+        int longestSequence = 0;
+
+        for (int left = 0; left < nums.Length; left++) {
+            int numZeroes = 0;
+
+            for (int right = left; right < nums.Length; right++) {
+                if (nums[right] == 0) {
+                    numZeroes++;
+                }
+
+                if (numZeroes <= 1) {
+                    longestSequence = Math.Max(longestSequence, right - left + 1);
+                }
+            }
+        }
+
+        return longestSequence;
+    }
+}
+```
+
+```go
+func findMaxConsecutiveOnes(nums []int) int {
+    longestSequence := 0
+
+    for left := 0; left < len(nums); left++ {
+        numZeroes := 0
+
+        for right := left; right < len(nums); right++ {
+            if nums[right] == 0 {
+                numZeroes++
+            }
+
+            if numZeroes <= 1 {
+                if right-left+1 > longestSequence {
+                    longestSequence = right - left + 1
+                }
+            }
+        }
+    }
+
+    return longestSequence
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxConsecutiveOnes(nums: IntArray): Int {
+        var longestSequence = 0
+
+        for (left in nums.indices) {
+            var numZeroes = 0
+
+            for (right in left until nums.size) {
+                if (nums[right] == 0) {
+                    numZeroes++
+                }
+
+                if (numZeroes <= 1) {
+                    longestSequence = maxOf(longestSequence, right - left + 1)
+                }
+            }
+        }
+
+        return longestSequence
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxConsecutiveOnes(_ nums: [Int]) -> Int {
+        var longestSequence = 0
+
+        for left in 0..<nums.count {
+            var numZeroes = 0
+
+            for right in left..<nums.count {
+                if nums[right] == 0 {
+                    numZeroes += 1
+                }
+
+                if numZeroes <= 1 {
+                    longestSequence = max(longestSequence, right - left + 1)
+                }
+            }
+        }
+
+        return longestSequence
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,6 +346,122 @@ class Solution {
         }
 
         return longestSequence;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindMaxConsecutiveOnes(int[] nums) {
+        int longestSequence = 0;
+        int left = 0;
+        int right = 0;
+        int numZeroes = 0;
+
+        while (right < nums.Length) {
+            if (nums[right] == 0) {
+                numZeroes++;
+            }
+
+            while (numZeroes == 2) {
+                if (nums[left] == 0) {
+                    numZeroes--;
+                }
+                left++;
+            }
+
+            longestSequence = Math.Max(longestSequence, right - left + 1);
+            right++;
+        }
+
+        return longestSequence;
+    }
+}
+```
+
+```go
+func findMaxConsecutiveOnes(nums []int) int {
+    longestSequence := 0
+    left := 0
+    right := 0
+    numZeroes := 0
+
+    for right < len(nums) {
+        if nums[right] == 0 {
+            numZeroes++
+        }
+
+        for numZeroes == 2 {
+            if nums[left] == 0 {
+                numZeroes--
+            }
+            left++
+        }
+
+        if right-left+1 > longestSequence {
+            longestSequence = right - left + 1
+        }
+        right++
+    }
+
+    return longestSequence
+}
+```
+
+```kotlin
+class Solution {
+    fun findMaxConsecutiveOnes(nums: IntArray): Int {
+        var longestSequence = 0
+        var left = 0
+        var right = 0
+        var numZeroes = 0
+
+        while (right < nums.size) {
+            if (nums[right] == 0) {
+                numZeroes++
+            }
+
+            while (numZeroes == 2) {
+                if (nums[left] == 0) {
+                    numZeroes--
+                }
+                left++
+            }
+
+            longestSequence = maxOf(longestSequence, right - left + 1)
+            right++
+        }
+
+        return longestSequence
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMaxConsecutiveOnes(_ nums: [Int]) -> Int {
+        var longestSequence = 0
+        var left = 0
+        var right = 0
+        var numZeroes = 0
+
+        while right < nums.count {
+            if nums[right] == 0 {
+                numZeroes += 1
+            }
+
+            while numZeroes == 2 {
+                if nums[left] == 0 {
+                    numZeroes -= 1
+                }
+                left += 1
+            }
+
+            longestSequence = max(longestSequence, right - left + 1)
+            right += 1
+        }
+
+        return longestSequence
     }
 }
 ```

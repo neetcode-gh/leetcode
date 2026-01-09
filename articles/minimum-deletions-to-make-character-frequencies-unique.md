@@ -97,6 +97,104 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinDeletions(string s) {
+        int[] count = new int[26];
+        foreach (char c in s) {
+            count[c - 'a']++;
+        }
+
+        HashSet<int> usedFreq = new HashSet<int>();
+        int res = 0;
+
+        foreach (int f in count) {
+            int freq = f;
+            while (freq > 0 && usedFreq.Contains(freq)) {
+                freq--;
+                res++;
+            }
+            usedFreq.Add(freq);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minDeletions(s string) int {
+    count := make([]int, 26)
+    for _, c := range s {
+        count[c-'a']++
+    }
+
+    usedFreq := make(map[int]bool)
+    res := 0
+
+    for _, freq := range count {
+        for freq > 0 && usedFreq[freq] {
+            freq--
+            res++
+        }
+        usedFreq[freq] = true
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minDeletions(s: String): Int {
+        val count = IntArray(26)
+        for (c in s) {
+            count[c - 'a']++
+        }
+
+        val usedFreq = HashSet<Int>()
+        var res = 0
+
+        for (f in count) {
+            var freq = f
+            while (freq > 0 && freq in usedFreq) {
+                freq--
+                res++
+            }
+            usedFreq.add(freq)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minDeletions(_ s: String) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        let aVal = Character("a").asciiValue!
+        for c in s {
+            count[Int(c.asciiValue! - aVal)] += 1
+        }
+
+        var usedFreq = Set<Int>()
+        var res = 0
+
+        for f in count {
+            var freq = f
+            while freq > 0 && usedFreq.contains(freq) {
+                freq -= 1
+                res += 1
+            }
+            usedFreq.insert(freq)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -222,6 +320,180 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinDeletions(string s) {
+        Dictionary<char, int> freq = new Dictionary<char, int>();
+        foreach (char c in s) {
+            if (!freq.ContainsKey(c)) freq[c] = 0;
+            freq[c]++;
+        }
+
+        var maxHeap = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b - a));
+        foreach (int f in freq.Values) {
+            maxHeap.Enqueue(f, f);
+        }
+
+        int res = 0;
+        while (maxHeap.Count > 1) {
+            int top = maxHeap.Dequeue();
+            maxHeap.TryPeek(out int peek, out _);
+            if (top == peek) {
+                if (top - 1 > 0) {
+                    maxHeap.Enqueue(top - 1, top - 1);
+                }
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minDeletions(s string) int {
+    freq := make(map[rune]int)
+    for _, c := range s {
+        freq[c]++
+    }
+
+    maxHeap := &MaxHeap{}
+    heap.Init(maxHeap)
+    for _, f := range freq {
+        heap.Push(maxHeap, f)
+    }
+
+    res := 0
+    for maxHeap.Len() > 1 {
+        top := heap.Pop(maxHeap).(int)
+        if (*maxHeap)[0] == top {
+            if top-1 > 0 {
+                heap.Push(maxHeap, top-1)
+            }
+            res++
+        }
+    }
+
+    return res
+}
+
+type MaxHeap []int
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun minDeletions(s: String): Int {
+        val freq = HashMap<Char, Int>()
+        for (c in s) {
+            freq[c] = freq.getOrDefault(c, 0) + 1
+        }
+
+        val maxHeap = PriorityQueue<Int>(Collections.reverseOrder())
+        maxHeap.addAll(freq.values)
+
+        var res = 0
+        while (maxHeap.size > 1) {
+            val top = maxHeap.poll()
+            if (top == maxHeap.peek()) {
+                if (top - 1 > 0) {
+                    maxHeap.add(top - 1)
+                }
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minDeletions(_ s: String) -> Int {
+        var freq = [Character: Int]()
+        for c in s {
+            freq[c, default: 0] += 1
+        }
+
+        var maxHeap = Heap<Int>(sort: >)
+        for f in freq.values {
+            maxHeap.insert(f)
+        }
+
+        var res = 0
+        while maxHeap.count > 1 {
+            let top = maxHeap.remove()!
+            if let peek = maxHeap.peek(), peek == top {
+                if top - 1 > 0 {
+                    maxHeap.insert(top - 1)
+                }
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let sort: (T, T) -> Bool
+
+    init(sort: @escaping (T, T) -> Bool) { self.sort = sort }
+    var count: Int { elements.count }
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !elements.isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && sort(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1, right = 2 * parent + 2
+            var candidate = parent
+            if left < count && sort(elements[left], elements[candidate]) { candidate = left }
+            if right < count && sort(elements[right], elements[candidate]) { candidate = right }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +606,117 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinDeletions(string s) {
+        int[] count = new int[26];
+        foreach (char c in s) {
+            count[c - 'a']++;
+        }
+
+        Array.Sort(count);
+        Array.Reverse(count);
+
+        int res = 0;
+        int maxAllowedFreq = count[0];
+
+        for (int i = 0; i < 26; i++) {
+            if (count[i] > maxAllowedFreq) {
+                res += count[i] - maxAllowedFreq;
+                count[i] = maxAllowedFreq;
+            }
+            maxAllowedFreq = Math.Max(0, count[i] - 1);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minDeletions(s string) int {
+    count := make([]int, 26)
+    for _, c := range s {
+        count[c-'a']++
+    }
+
+    sort.Sort(sort.Reverse(sort.IntSlice(count)))
+
+    res := 0
+    maxAllowedFreq := count[0]
+
+    for i := 0; i < 26; i++ {
+        if count[i] > maxAllowedFreq {
+            res += count[i] - maxAllowedFreq
+            count[i] = maxAllowedFreq
+        }
+        maxAllowedFreq = max(0, count[i]-1)
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minDeletions(s: String): Int {
+        val count = IntArray(26)
+        for (c in s) {
+            count[c - 'a']++
+        }
+
+        count.sortDescending()
+
+        var res = 0
+        var maxAllowedFreq = count[0]
+
+        for (i in 0 until 26) {
+            if (count[i] > maxAllowedFreq) {
+                res += count[i] - maxAllowedFreq
+                count[i] = maxAllowedFreq
+            }
+            maxAllowedFreq = maxOf(0, count[i] - 1)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minDeletions(_ s: String) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        let aVal = Character("a").asciiValue!
+        for c in s {
+            count[Int(c.asciiValue! - aVal)] += 1
+        }
+
+        count.sort(by: >)
+
+        var res = 0
+        var maxAllowedFreq = count[0]
+
+        for i in 0..<26 {
+            if count[i] > maxAllowedFreq {
+                res += count[i] - maxAllowedFreq
+                count[i] = maxAllowedFreq
+            }
+            maxAllowedFreq = max(0, count[i] - 1)
+        }
+
+        return res
     }
 }
 ```

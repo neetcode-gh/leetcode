@@ -154,6 +154,155 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public string SmallestFromLeaf(TreeNode root) {
+        return Dfs(root, "");
+    }
+
+    private string Dfs(TreeNode root, string cur) {
+        if (root == null) return null;
+
+        cur = (char)('a' + root.val) + cur;
+        if (root.left != null && root.right != null) {
+            return Min(Dfs(root.left, cur), Dfs(root.right, cur));
+        }
+
+        if (root.right != null) return Dfs(root.right, cur);
+        if (root.left != null) return Dfs(root.left, cur);
+        return cur;
+    }
+
+    private string Min(string a, string b) {
+        if (a == null) return b;
+        if (b == null) return a;
+        return string.Compare(a, b) < 0 ? a : b;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func smallestFromLeaf(root *TreeNode) string {
+    return dfs(root, "")
+}
+
+func dfs(root *TreeNode, cur string) string {
+    if root == nil {
+        return ""
+    }
+
+    cur = string('a'+rune(root.Val)) + cur
+    if root.Left != nil && root.Right != nil {
+        left := dfs(root.Left, cur)
+        right := dfs(root.Right, cur)
+        if left < right {
+            return left
+        }
+        return right
+    }
+
+    if root.Right != nil {
+        return dfs(root.Right, cur)
+    }
+    if root.Left != nil {
+        return dfs(root.Left, cur)
+    }
+    return cur
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun smallestFromLeaf(root: TreeNode?): String {
+        return dfs(root, "")
+    }
+
+    private fun dfs(root: TreeNode?, cur: String): String {
+        if (root == null) return ""
+
+        val newCur = ('a' + root.`val`) + cur
+        if (root.left != null && root.right != null) {
+            val left = dfs(root.left, newCur)
+            val right = dfs(root.right, newCur)
+            return if (left < right) left else right
+        }
+
+        if (root.right != null) return dfs(root.right, newCur)
+        if (root.left != null) return dfs(root.left, newCur)
+        return newCur
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func smallestFromLeaf(_ root: TreeNode?) -> String {
+        return dfs(root, "")
+    }
+
+    private func dfs(_ root: TreeNode?, _ cur: String) -> String {
+        guard let root = root else { return "" }
+
+        let newCur = String(Character(UnicodeScalar(97 + root.val)!)) + cur
+        if root.left != nil && root.right != nil {
+            let left = dfs(root.left, newCur)
+            let right = dfs(root.right, newCur)
+            return left < right ? left : right
+        }
+
+        if root.right != nil { return dfs(root.right, newCur) }
+        if root.left != nil { return dfs(root.left, newCur) }
+        return newCur
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

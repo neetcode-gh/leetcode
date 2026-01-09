@@ -169,6 +169,123 @@ public class Solution {
 }
 ```
 
+```go
+func maxEnvelopes(envelopes [][]int) int {
+    n := len(envelopes)
+    if n == 0 {
+        return 0
+    }
+    sort.Slice(envelopes, func(i, j int) bool {
+        if envelopes[i][0] != envelopes[j][0] {
+            return envelopes[i][0] < envelopes[j][0]
+        }
+        return envelopes[i][1] > envelopes[j][1]
+    })
+
+    nums := make([]int, n)
+    for i := 0; i < n; i++ {
+        nums[i] = envelopes[i][1]
+    }
+    memo := make([]int, n)
+    for i := range memo {
+        memo[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if memo[i] != -1 {
+            return memo[i]
+        }
+        lis := 1
+        for j := i + 1; j < n; j++ {
+            if nums[i] < nums[j] {
+                lis = max(lis, 1+dfs(j))
+            }
+        }
+        memo[i] = lis
+        return lis
+    }
+
+    result := 0
+    for i := 0; i < n; i++ {
+        result = max(result, dfs(i))
+    }
+    return result
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxEnvelopes(envelopes: Array<IntArray>): Int {
+        val n = envelopes.size
+        if (n == 0) return 0
+        envelopes.sortWith(compareBy({ it[0] }, { -it[1] }))
+
+        val nums = envelopes.map { it[1] }.toIntArray()
+        val memo = IntArray(n) { -1 }
+
+        fun dfs(i: Int): Int {
+            if (memo[i] != -1) return memo[i]
+            var lis = 1
+            for (j in i + 1 until n) {
+                if (nums[i] < nums[j]) {
+                    lis = maxOf(lis, 1 + dfs(j))
+                }
+            }
+            memo[i] = lis
+            return lis
+        }
+
+        var result = 0
+        for (i in 0 until n) {
+            result = maxOf(result, dfs(i))
+        }
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxEnvelopes(_ envelopes: [[Int]]) -> Int {
+        let n = envelopes.count
+        if n == 0 { return 0 }
+        let sorted = envelopes.sorted {
+            if $0[0] != $1[0] { return $0[0] < $1[0] }
+            return $0[1] > $1[1]
+        }
+
+        let nums = sorted.map { $0[1] }
+        var memo = [Int](repeating: -1, count: n)
+
+        func dfs(_ i: Int) -> Int {
+            if memo[i] != -1 { return memo[i] }
+            var lis = 1
+            for j in (i + 1)..<n {
+                if nums[i] < nums[j] {
+                    lis = max(lis, 1 + dfs(j))
+                }
+            }
+            memo[i] = lis
+            return lis
+        }
+
+        var result = 0
+        for i in 0..<n {
+            result = max(result, dfs(i))
+        }
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +416,88 @@ public class Solution {
             ans = Math.Max(ans, LIS[i]);
         }
         return ans;
+    }
+}
+```
+
+```go
+func maxEnvelopes(envelopes [][]int) int {
+    n := len(envelopes)
+    sort.Slice(envelopes, func(i, j int) bool {
+        if envelopes[i][0] != envelopes[j][0] {
+            return envelopes[i][0] < envelopes[j][0]
+        }
+        return envelopes[i][1] > envelopes[j][1]
+    })
+
+    heights := make([]int, n)
+    for i := 0; i < n; i++ {
+        heights[i] = envelopes[i][1]
+    }
+    LIS := make([]int, n)
+    for i := range LIS {
+        LIS[i] = 1
+    }
+    ans := 0
+    for i := n - 1; i >= 0; i-- {
+        for j := i + 1; j < n; j++ {
+            if heights[i] < heights[j] {
+                if 1+LIS[j] > LIS[i] {
+                    LIS[i] = 1 + LIS[j]
+                }
+            }
+        }
+        if LIS[i] > ans {
+            ans = LIS[i]
+        }
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun maxEnvelopes(envelopes: Array<IntArray>): Int {
+        val n = envelopes.size
+        envelopes.sortWith(compareBy({ it[0] }, { -it[1] }))
+
+        val heights = IntArray(n) { envelopes[it][1] }
+        val LIS = IntArray(n) { 1 }
+        var ans = 0
+        for (i in n - 1 downTo 0) {
+            for (j in i + 1 until n) {
+                if (heights[i] < heights[j]) {
+                    LIS[i] = maxOf(LIS[i], 1 + LIS[j])
+                }
+            }
+            ans = maxOf(ans, LIS[i])
+        }
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxEnvelopes(_ envelopes: [[Int]]) -> Int {
+        let n = envelopes.count
+        let sorted = envelopes.sorted {
+            if $0[0] != $1[0] { return $0[0] < $1[0] }
+            return $0[1] > $1[1]
+        }
+
+        let heights = sorted.map { $0[1] }
+        var LIS = [Int](repeating: 1, count: n)
+        var ans = 0
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for j in (i + 1)..<n {
+                if heights[i] < heights[j] {
+                    LIS[i] = max(LIS[i], 1 + LIS[j])
+                }
+            }
+            ans = max(ans, LIS[i])
+        }
+        return ans
     }
 }
 ```
@@ -475,6 +674,103 @@ public class Solution {
         }
 
         return LIS;
+    }
+}
+```
+
+```go
+func maxEnvelopes(envelopes [][]int) int {
+    n := len(envelopes)
+    sort.Slice(envelopes, func(i, j int) bool {
+        if envelopes[i][0] != envelopes[j][0] {
+            return envelopes[i][0] < envelopes[j][0]
+        }
+        return envelopes[i][1] > envelopes[j][1]
+    })
+
+    nums := make([]int, n)
+    for i := 0; i < n; i++ {
+        nums[i] = envelopes[i][1]
+    }
+
+    dp := []int{nums[0]}
+    LIS := 1
+
+    for i := 1; i < n; i++ {
+        if dp[len(dp)-1] < nums[i] {
+            dp = append(dp, nums[i])
+            LIS++
+            continue
+        }
+
+        idx := sort.SearchInts(dp, nums[i])
+        dp[idx] = nums[i]
+    }
+
+    return LIS
+}
+```
+
+```kotlin
+class Solution {
+    fun maxEnvelopes(envelopes: Array<IntArray>): Int {
+        val n = envelopes.size
+        envelopes.sortWith(compareBy({ it[0] }, { -it[1] }))
+
+        val nums = envelopes.map { it[1] }
+        val dp = mutableListOf(nums[0])
+        var LIS = 1
+
+        for (i in 1 until n) {
+            if (dp.last() < nums[i]) {
+                dp.add(nums[i])
+                LIS++
+                continue
+            }
+
+            var idx = dp.binarySearch(nums[i])
+            if (idx < 0) idx = -(idx + 1)
+            dp[idx] = nums[i]
+        }
+
+        return LIS
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxEnvelopes(_ envelopes: [[Int]]) -> Int {
+        let n = envelopes.count
+        let sorted = envelopes.sorted {
+            if $0[0] != $1[0] { return $0[0] < $1[0] }
+            return $0[1] > $1[1]
+        }
+
+        let nums = sorted.map { $0[1] }
+        var dp = [nums[0]]
+        var LIS = 1
+
+        for i in 1..<n {
+            if dp.last! < nums[i] {
+                dp.append(nums[i])
+                LIS += 1
+                continue
+            }
+
+            var left = 0, right = dp.count - 1
+            while left < right {
+                let mid = (left + right) / 2
+                if dp[mid] < nums[i] {
+                    left = mid + 1
+                } else {
+                    right = mid
+                }
+            }
+            dp[left] = nums[i]
+        }
+
+        return LIS
     }
 }
 ```
@@ -872,6 +1168,235 @@ public class Solution {
         int[] heights = new int[n];
         for (int i = 0; i < n; i++) heights[i] = envelopes[i][1];
         return Lis(heights);
+    }
+}
+```
+
+```go
+type SegmentTree struct {
+    n    int
+    tree []int
+}
+
+func NewSegmentTree(N int) *SegmentTree {
+    n := N
+    for n&(n-1) != 0 {
+        n++
+    }
+    return &SegmentTree{
+        n:    n,
+        tree: make([]int, 2*n),
+    }
+}
+
+func (st *SegmentTree) Update(i, val int) {
+    st.tree[st.n+i] = val
+    j := (st.n + i) >> 1
+    for j >= 1 {
+        st.tree[j] = max(st.tree[j<<1], st.tree[j<<1|1])
+        j >>= 1
+    }
+}
+
+func (st *SegmentTree) Query(l, r int) int {
+    if l > r {
+        return 0
+    }
+    res := math.MinInt32
+    l += st.n
+    r += st.n + 1
+    for l < r {
+        if l&1 == 1 {
+            res = max(res, st.tree[l])
+            l++
+        }
+        if r&1 == 1 {
+            r--
+            res = max(res, st.tree[r])
+        }
+        l >>= 1
+        r >>= 1
+    }
+    return res
+}
+
+func maxEnvelopes(envelopes [][]int) int {
+    n := len(envelopes)
+    sort.Slice(envelopes, func(i, j int) bool {
+        if envelopes[i][0] != envelopes[j][0] {
+            return envelopes[i][0] < envelopes[j][0]
+        }
+        return envelopes[i][1] > envelopes[j][1]
+    })
+
+    heights := make([]int, n)
+    for i := 0; i < n; i++ {
+        heights[i] = envelopes[i][1]
+    }
+
+    sortedSet := make(map[int]bool)
+    for _, h := range heights {
+        sortedSet[h] = true
+    }
+    sortedArr := make([]int, 0, len(sortedSet))
+    for h := range sortedSet {
+        sortedArr = append(sortedArr, h)
+    }
+    sort.Ints(sortedArr)
+
+    indexMap := make(map[int]int)
+    for i, h := range sortedArr {
+        indexMap[h] = i
+    }
+
+    segTree := NewSegmentTree(len(sortedArr))
+    LIS := 0
+    for _, h := range heights {
+        idx := indexMap[h]
+        curLIS := segTree.Query(0, idx-1) + 1
+        segTree.Update(idx, curLIS)
+        LIS = max(LIS, curLIS)
+    }
+    return LIS
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class SegmentTree(N: Int) {
+    private var n: Int = N
+    private val tree: IntArray
+
+    init {
+        while (n and (n - 1) != 0) n++
+        tree = IntArray(2 * n)
+    }
+
+    fun update(i: Int, value: Int) {
+        tree[n + i] = value
+        var j = (n + i) shr 1
+        while (j >= 1) {
+            tree[j] = maxOf(tree[j shl 1], tree[j shl 1 or 1])
+            j = j shr 1
+        }
+    }
+
+    fun query(l: Int, r: Int): Int {
+        if (l > r) return 0
+        var res = Int.MIN_VALUE
+        var left = l + n
+        var right = r + n + 1
+        while (left < right) {
+            if (left and 1 == 1) {
+                res = maxOf(res, tree[left])
+                left++
+            }
+            if (right and 1 == 1) {
+                right--
+                res = maxOf(res, tree[right])
+            }
+            left = left shr 1
+            right = right shr 1
+        }
+        return res
+    }
+}
+
+class Solution {
+    fun maxEnvelopes(envelopes: Array<IntArray>): Int {
+        val n = envelopes.size
+        envelopes.sortWith(compareBy({ it[0] }, { -it[1] }))
+
+        val heights = envelopes.map { it[1] }
+        val sortedArr = heights.toSet().sorted()
+        val indexMap = sortedArr.withIndex().associate { it.value to it.index }
+
+        val segTree = SegmentTree(sortedArr.size)
+        var LIS = 0
+        for (h in heights) {
+            val idx = indexMap[h]!!
+            val curLIS = segTree.query(0, idx - 1) + 1
+            segTree.update(idx, curLIS)
+            LIS = maxOf(LIS, curLIS)
+        }
+        return LIS
+    }
+}
+```
+
+```swift
+class SegmentTree {
+    private var n: Int
+    private var tree: [Int]
+
+    init(_ N: Int) {
+        n = N
+        while n & (n - 1) != 0 {
+            n += 1
+        }
+        tree = [Int](repeating: 0, count: 2 * n)
+    }
+
+    func update(_ i: Int, _ val: Int) {
+        tree[n + i] = val
+        var j = (n + i) >> 1
+        while j >= 1 {
+            tree[j] = max(tree[j << 1], tree[j << 1 | 1])
+            j >>= 1
+        }
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        if l > r { return 0 }
+        var res = Int.min
+        var left = l + n
+        var right = r + n + 1
+        while left < right {
+            if left & 1 == 1 {
+                res = max(res, tree[left])
+                left += 1
+            }
+            if right & 1 == 1 {
+                right -= 1
+                res = max(res, tree[right])
+            }
+            left >>= 1
+            right >>= 1
+        }
+        return res
+    }
+}
+
+class Solution {
+    func maxEnvelopes(_ envelopes: [[Int]]) -> Int {
+        let n = envelopes.count
+        let sorted = envelopes.sorted {
+            if $0[0] != $1[0] { return $0[0] < $1[0] }
+            return $0[1] > $1[1]
+        }
+
+        let heights = sorted.map { $0[1] }
+        let sortedArr = Array(Set(heights)).sorted()
+        var indexMap = [Int: Int]()
+        for (i, h) in sortedArr.enumerated() {
+            indexMap[h] = i
+        }
+
+        let segTree = SegmentTree(sortedArr.count)
+        var LIS = 0
+        for h in heights {
+            let idx = indexMap[h]!
+            let curLIS = segTree.query(0, idx - 1) + 1
+            segTree.update(idx, curLIS)
+            LIS = max(LIS, curLIS)
+        }
+        return LIS
     }
 }
 ```

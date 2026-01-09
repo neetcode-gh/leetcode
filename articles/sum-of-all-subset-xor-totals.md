@@ -123,6 +123,81 @@ public class Solution {
 }
 ```
 
+```go
+func subsetXORSum(nums []int) int {
+    res := 0
+
+    var backtrack func(i int, subset []int)
+    backtrack = func(i int, subset []int) {
+        xorr := 0
+        for _, num := range subset {
+            xorr ^= num
+        }
+        res += xorr
+
+        for j := i; j < len(nums); j++ {
+            subset = append(subset, nums[j])
+            backtrack(j+1, subset)
+            subset = subset[:len(subset)-1]
+        }
+    }
+
+    backtrack(0, []int{})
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private var res = 0
+
+    fun subsetXORSum(nums: IntArray): Int {
+        backtrack(0, mutableListOf(), nums)
+        return res
+    }
+
+    private fun backtrack(i: Int, subset: MutableList<Int>, nums: IntArray) {
+        var xorr = 0
+        for (num in subset) {
+            xorr = xorr xor num
+        }
+        res += xorr
+
+        for (j in i until nums.size) {
+            subset.add(nums[j])
+            backtrack(j + 1, subset, nums)
+            subset.removeAt(subset.size - 1)
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func subsetXORSum(_ nums: [Int]) -> Int {
+        var res = 0
+
+        func backtrack(_ i: Int, _ subset: inout [Int]) {
+            var xorr = 0
+            for num in subset {
+                xorr ^= num
+            }
+            res += xorr
+
+            for j in i..<nums.count {
+                subset.append(nums[j])
+                backtrack(j + 1, &subset)
+                subset.removeLast()
+            }
+        }
+
+        var subset = [Int]()
+        backtrack(0, &subset)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -209,6 +284,50 @@ public class Solution {
             return total;
         }
         return Dfs(i + 1, total ^ nums[i], nums) + Dfs(i + 1, total, nums);
+    }
+}
+```
+
+```go
+func subsetXORSum(nums []int) int {
+    var dfs func(i, total int) int
+    dfs = func(i, total int) int {
+        if i == len(nums) {
+            return total
+        }
+        return dfs(i+1, total^nums[i]) + dfs(i+1, total)
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetXORSum(nums: IntArray): Int {
+        fun dfs(i: Int, total: Int): Int {
+            if (i == nums.size) {
+                return total
+            }
+            return dfs(i + 1, total xor nums[i]) + dfs(i + 1, total)
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func subsetXORSum(_ nums: [Int]) -> Int {
+        func dfs(_ i: Int, _ total: Int) -> Int {
+            if i == nums.count {
+                return total
+            }
+            return dfs(i + 1, total ^ nums[i]) + dfs(i + 1, total)
+        }
+
+        return dfs(0, 0)
     }
 }
 ```
@@ -331,6 +450,67 @@ public class Solution {
 }
 ```
 
+```go
+func subsetXORSum(nums []int) int {
+    n := len(nums)
+    res := 0
+
+    for mask := 0; mask < (1 << n); mask++ {
+        xorr := 0
+        for i := 0; i < n; i++ {
+            if mask&(1<<i) != 0 {
+                xorr ^= nums[i]
+            }
+        }
+        res += xorr
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetXORSum(nums: IntArray): Int {
+        val n = nums.size
+        var res = 0
+
+        for (mask in 0 until (1 shl n)) {
+            var xorr = 0
+            for (i in 0 until n) {
+                if (mask and (1 shl i) != 0) {
+                    xorr = xorr xor nums[i]
+                }
+            }
+            res += xorr
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func subsetXORSum(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for mask in 0..<(1 << n) {
+            var xorr = 0
+            for i in 0..<n {
+                if mask & (1 << i) != 0 {
+                    xorr ^= nums[i]
+                }
+            }
+            res += xorr
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,6 +582,40 @@ public class Solution {
             res |= num;
         }
         return res << (nums.Length - 1);
+    }
+}
+```
+
+```go
+func subsetXORSum(nums []int) int {
+    res := 0
+    for _, num := range nums {
+        res |= num
+    }
+    return res << (len(nums) - 1)
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetXORSum(nums: IntArray): Int {
+        var res = 0
+        for (num in nums) {
+            res = res or num
+        }
+        return res shl (nums.size - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func subsetXORSum(_ nums: [Int]) -> Int {
+        var res = 0
+        for num in nums {
+            res |= num
+        }
+        return res << (nums.count - 1)
     }
 }
 ```

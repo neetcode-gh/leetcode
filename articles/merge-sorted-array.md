@@ -64,6 +64,37 @@ public class Solution {
 }
 ```
 
+```go
+func merge(nums1 []int, m int, nums2 []int, n int) {
+    for i := 0; i < n; i++ {
+        nums1[i+m] = nums2[i]
+    }
+    sort.Ints(nums1)
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        for (i in 0 until n) {
+            nums1[i + m] = nums2[i]
+        }
+        nums1.sort()
+    }
+}
+```
+
+```swift
+class Solution {
+    func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        for i in 0..<n {
+            nums1[i + m] = nums2[i]
+        }
+        nums1.sort()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +204,66 @@ public class Solution {
             } else {
                 nums1[idx++] = nums2[j++];
             }
+        }
+    }
+}
+```
+
+```go
+func merge(nums1 []int, m int, nums2 []int, n int) {
+    nums1Copy := make([]int, m)
+    copy(nums1Copy, nums1[:m])
+
+    idx, i, j := 0, 0, 0
+    for idx < m+n {
+        if j >= n || (i < m && nums1Copy[i] <= nums2[j]) {
+            nums1[idx] = nums1Copy[i]
+            i++
+        } else {
+            nums1[idx] = nums2[j]
+            j++
+        }
+        idx++
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        val nums1Copy = nums1.copyOfRange(0, m)
+
+        var idx = 0
+        var i = 0
+        var j = 0
+
+        while (idx < m + n) {
+            if (j >= n || (i < m && nums1Copy[i] <= nums2[j])) {
+                nums1[idx++] = nums1Copy[i++]
+            } else {
+                nums1[idx++] = nums2[j++]
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        let nums1Copy = Array(nums1[0..<m])
+
+        var idx = 0, i = 0, j = 0
+
+        while idx < m + n {
+            if j >= n || (i < m && nums1Copy[i] <= nums2[j]) {
+                nums1[idx] = nums1Copy[i]
+                i += 1
+            } else {
+                nums1[idx] = nums2[j]
+                j += 1
+            }
+            idx += 1
         }
     }
 }
@@ -329,6 +420,89 @@ public class Solution {
 }
 ```
 
+```go
+func merge(nums1 []int, m int, nums2 []int, n int) {
+    last := m + n - 1
+
+    // Merge in reverse order
+    for m > 0 && n > 0 {
+        if nums1[m-1] > nums2[n-1] {
+            nums1[last] = nums1[m-1]
+            m--
+        } else {
+            nums1[last] = nums2[n-1]
+            n--
+        }
+        last--
+    }
+
+    // Fill nums1 with leftover nums2 elements
+    for n > 0 {
+        nums1[last] = nums2[n-1]
+        n--
+        last--
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        var mIdx = m
+        var nIdx = n
+        var last = m + n - 1
+
+        // Merge in reverse order
+        while (mIdx > 0 && nIdx > 0) {
+            if (nums1[mIdx - 1] > nums2[nIdx - 1]) {
+                nums1[last] = nums1[mIdx - 1]
+                mIdx--
+            } else {
+                nums1[last] = nums2[nIdx - 1]
+                nIdx--
+            }
+            last--
+        }
+
+        // Fill nums1 with leftover nums2 elements
+        while (nIdx > 0) {
+            nums1[last] = nums2[nIdx - 1]
+            nIdx--
+            last--
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        var m = m
+        var n = n
+        var last = m + n - 1
+
+        // Merge in reverse order
+        while m > 0 && n > 0 {
+            if nums1[m - 1] > nums2[n - 1] {
+                nums1[last] = nums1[m - 1]
+                m -= 1
+            } else {
+                nums1[last] = nums2[n - 1]
+                n -= 1
+            }
+            last -= 1
+        }
+
+        // Fill nums1 with leftover nums2 elements
+        while n > 0 {
+            nums1[last] = nums2[n - 1]
+            n -= 1
+            last -= 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -436,6 +610,63 @@ public class Solution {
             } else {
                 nums1[last--] = nums2[j--];
             }
+        }
+    }
+}
+```
+
+```go
+func merge(nums1 []int, m int, nums2 []int, n int) {
+    last := m + n - 1
+    i, j := m-1, n-1
+
+    for j >= 0 {
+        if i >= 0 && nums1[i] > nums2[j] {
+            nums1[last] = nums1[i]
+            i--
+        } else {
+            nums1[last] = nums2[j]
+            j--
+        }
+        last--
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(nums1: IntArray, m: Int, nums2: IntArray, n: Int) {
+        var last = m + n - 1
+        var i = m - 1
+        var j = n - 1
+
+        while (j >= 0) {
+            if (i >= 0 && nums1[i] > nums2[j]) {
+                nums1[last--] = nums1[i--]
+            } else {
+                nums1[last--] = nums2[j--]
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func merge(_ nums1: inout [Int], _ m: Int, _ nums2: [Int], _ n: Int) {
+        var last = m + n - 1
+        var i = m - 1
+        var j = n - 1
+
+        while j >= 0 {
+            if i >= 0 && nums1[i] > nums2[j] {
+                nums1[last] = nums1[i]
+                i -= 1
+            } else {
+                nums1[last] = nums2[j]
+                j -= 1
+            }
+            last -= 1
         }
     }
 }

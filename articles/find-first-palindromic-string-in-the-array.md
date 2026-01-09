@@ -57,6 +57,66 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string FirstPalindrome(string[] words) {
+        foreach (string w in words) {
+            char[] arr = w.ToCharArray();
+            Array.Reverse(arr);
+            if (w == new string(arr)) {
+                return w;
+            }
+        }
+        return "";
+    }
+}
+```
+
+```go
+func firstPalindrome(words []string) string {
+    for _, w := range words {
+        if isPalindrome(w) {
+            return w
+        }
+    }
+    return ""
+}
+
+func isPalindrome(s string) bool {
+    runes := []rune(s)
+    for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+        runes[i], runes[j] = runes[j], runes[i]
+    }
+    return s == string(runes)
+}
+```
+
+```kotlin
+class Solution {
+    fun firstPalindrome(words: Array<String>): String {
+        for (w in words) {
+            if (w == w.reversed()) {
+                return w
+            }
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func firstPalindrome(_ words: [String]) -> String {
+        for w in words {
+            if w == String(w.reversed()) {
+                return w
+            }
+        }
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -134,6 +194,75 @@ class Solution {
             }
         }
         return '';
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string FirstPalindrome(string[] words) {
+        foreach (string w in words) {
+            int l = 0, r = w.Length - 1;
+            while (w[l] == w[r]) {
+                if (l >= r) return w;
+                l++;
+                r--;
+            }
+        }
+        return "";
+    }
+}
+```
+
+```go
+func firstPalindrome(words []string) string {
+    for _, w := range words {
+        l, r := 0, len(w)-1
+        for w[l] == w[r] {
+            if l >= r {
+                return w
+            }
+            l++
+            r--
+        }
+    }
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun firstPalindrome(words: Array<String>): String {
+        for (w in words) {
+            var l = 0
+            var r = w.length - 1
+            while (w[l] == w[r]) {
+                if (l >= r) return w
+                l++
+                r--
+            }
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func firstPalindrome(_ words: [String]) -> String {
+        for w in words {
+            let chars = Array(w)
+            var l = 0
+            var r = chars.count - 1
+            while chars[l] == chars[r] {
+                if l >= r {
+                    return w
+                }
+                l += 1
+                r -= 1
+            }
+        }
+        return ""
     }
 }
 ```

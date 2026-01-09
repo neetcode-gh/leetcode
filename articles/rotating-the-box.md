@@ -143,6 +143,95 @@ public class Solution {
 }
 ```
 
+```go
+func rotateTheBox(boxGrid [][]byte) [][]byte {
+    ROWS, COLS := len(boxGrid), len(boxGrid[0])
+
+    for r := ROWS - 1; r >= 0; r-- {
+        for c1 := COLS - 1; c1 >= 0; c1-- {
+            if boxGrid[r][c1] == '#' {
+                c2 := c1 + 1
+                for c2 < COLS && boxGrid[r][c2] == '.' {
+                    c2++
+                }
+                boxGrid[r][c1] = '.'
+                boxGrid[r][c2-1] = '#'
+            }
+        }
+    }
+
+    res := make([][]byte, COLS)
+    for c := 0; c < COLS; c++ {
+        res[c] = make([]byte, ROWS)
+        for r := ROWS - 1; r >= 0; r-- {
+            res[c][ROWS-1-r] = boxGrid[r][c]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun rotateTheBox(boxGrid: Array<CharArray>): Array<CharArray> {
+        val ROWS = boxGrid.size
+        val COLS = boxGrid[0].size
+
+        for (r in ROWS - 1 downTo 0) {
+            for (c1 in COLS - 1 downTo 0) {
+                if (boxGrid[r][c1] == '#') {
+                    var c2 = c1 + 1
+                    while (c2 < COLS && boxGrid[r][c2] == '.') {
+                        c2++
+                    }
+                    boxGrid[r][c1] = '.'
+                    boxGrid[r][c2 - 1] = '#'
+                }
+            }
+        }
+
+        val res = Array(COLS) { CharArray(ROWS) }
+        for (c in 0 until COLS) {
+            for (r in ROWS - 1 downTo 0) {
+                res[c][ROWS - 1 - r] = boxGrid[r][c]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotateTheBox(_ box: [[Character]]) -> [[Character]] {
+        var boxGrid = box
+        let ROWS = boxGrid.count
+        let COLS = boxGrid[0].count
+
+        for r in stride(from: ROWS - 1, through: 0, by: -1) {
+            for c1 in stride(from: COLS - 1, through: 0, by: -1) {
+                if boxGrid[r][c1] == "#" {
+                    var c2 = c1 + 1
+                    while c2 < COLS && boxGrid[r][c2] == "." {
+                        c2 += 1
+                    }
+                    boxGrid[r][c1] = "."
+                    boxGrid[r][c2 - 1] = "#"
+                }
+            }
+        }
+
+        var res = [[Character]](repeating: [Character](repeating: ".", count: ROWS), count: COLS)
+        for c in 0..<COLS {
+            for r in stride(from: ROWS - 1, through: 0, by: -1) {
+                res[c][ROWS - 1 - r] = boxGrid[r][c]
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,6 +391,92 @@ public class Solution {
 }
 ```
 
+```go
+func rotateTheBox(boxGrid [][]byte) [][]byte {
+    ROWS, COLS := len(boxGrid), len(boxGrid[0])
+    for r := 0; r < ROWS; r++ {
+        i := COLS - 1
+        for c := COLS - 1; c >= 0; c-- {
+            if boxGrid[r][c] == '#' {
+                boxGrid[r][c], boxGrid[r][i] = boxGrid[r][i], boxGrid[r][c]
+                i--
+            } else if boxGrid[r][c] == '*' {
+                i = c - 1
+            }
+        }
+    }
+    res := make([][]byte, COLS)
+    for c := 0; c < COLS; c++ {
+        res[c] = make([]byte, ROWS)
+        for r := ROWS - 1; r >= 0; r-- {
+            res[c][ROWS-1-r] = boxGrid[r][c]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun rotateTheBox(boxGrid: Array<CharArray>): Array<CharArray> {
+        val ROWS = boxGrid.size
+        val COLS = boxGrid[0].size
+        for (r in 0 until ROWS) {
+            var i = COLS - 1
+            for (c in COLS - 1 downTo 0) {
+                if (boxGrid[r][c] == '#') {
+                    val tmp = boxGrid[r][c]
+                    boxGrid[r][c] = boxGrid[r][i]
+                    boxGrid[r][i] = tmp
+                    i--
+                } else if (boxGrid[r][c] == '*') {
+                    i = c - 1
+                }
+            }
+        }
+        val res = Array(COLS) { CharArray(ROWS) }
+        for (c in 0 until COLS) {
+            for (r in ROWS - 1 downTo 0) {
+                res[c][ROWS - 1 - r] = boxGrid[r][c]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotateTheBox(_ box: [[Character]]) -> [[Character]] {
+        var boxGrid = box
+        let ROWS = boxGrid.count
+        let COLS = boxGrid[0].count
+        for r in 0..<ROWS {
+            var i = COLS - 1
+            for c in stride(from: COLS - 1, through: 0, by: -1) {
+                if boxGrid[r][c] == "#" {
+                    let tmp = boxGrid[r][c]
+                    boxGrid[r][c] = boxGrid[r][i]
+                    boxGrid[r][i] = tmp
+                    i -= 1
+                } else if boxGrid[r][c] == "*" {
+                    i = c - 1
+                }
+            }
+        }
+        var res = [[Character]]()
+        for c in 0..<COLS {
+            var row = [Character]()
+            for r in stride(from: ROWS - 1, through: 0, by: -1) {
+                row.append(boxGrid[r][c])
+            }
+            res.append(row)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -440,6 +615,84 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func rotateTheBox(boxGrid [][]byte) [][]byte {
+    ROWS, COLS := len(boxGrid), len(boxGrid[0])
+
+    res := make([][]byte, COLS)
+    for c := 0; c < COLS; c++ {
+        res[c] = make([]byte, ROWS)
+        for r := 0; r < ROWS; r++ {
+            res[c][r] = '.'
+        }
+    }
+
+    for r := 0; r < ROWS; r++ {
+        i := COLS - 1
+        for c := COLS - 1; c >= 0; c-- {
+            if boxGrid[r][c] == '#' {
+                res[i][ROWS-r-1] = '#'
+                i--
+            } else if boxGrid[r][c] == '*' {
+                res[c][ROWS-r-1] = '*'
+                i = c - 1
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun rotateTheBox(boxGrid: Array<CharArray>): Array<CharArray> {
+        val ROWS = boxGrid.size
+        val COLS = boxGrid[0].size
+
+        val res = Array(COLS) { CharArray(ROWS) { '.' } }
+
+        for (r in 0 until ROWS) {
+            var i = COLS - 1
+            for (c in COLS - 1 downTo 0) {
+                if (boxGrid[r][c] == '#') {
+                    res[i][ROWS - r - 1] = '#'
+                    i--
+                } else if (boxGrid[r][c] == '*') {
+                    res[c][ROWS - r - 1] = '*'
+                    i = c - 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotateTheBox(_ boxGrid: [[Character]]) -> [[Character]] {
+        let ROWS = boxGrid.count
+        let COLS = boxGrid[0].count
+
+        var res = [[Character]](repeating: [Character](repeating: ".", count: ROWS), count: COLS)
+
+        for r in 0..<ROWS {
+            var i = COLS - 1
+            for c in stride(from: COLS - 1, through: 0, by: -1) {
+                if boxGrid[r][c] == "#" {
+                    res[i][ROWS - r - 1] = "#"
+                    i -= 1
+                } else if boxGrid[r][c] == "*" {
+                    res[c][ROWS - r - 1] = "*"
+                    i = c - 1
+                }
+            }
+        }
+        return res
     }
 }
 ```

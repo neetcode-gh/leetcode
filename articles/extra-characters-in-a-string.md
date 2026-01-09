@@ -128,6 +128,81 @@ public class Solution {
 }
 ```
 
+```go
+func minExtraChar(s string, dictionary []string) int {
+    words := make(map[string]bool)
+    for _, word := range dictionary {
+        words[word] = true
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == len(s) {
+            return 0
+        }
+
+        res := 1 + dfs(i+1)
+        for j := i; j < len(s); j++ {
+            if words[s[i:j+1]] {
+                res = min(res, dfs(j+1))
+            }
+        }
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val words = dictionary.toHashSet()
+
+        fun dfs(i: Int): Int {
+            if (i == s.length) {
+                return 0
+            }
+
+            var res = 1 + dfs(i + 1)
+            for (j in i until s.length) {
+                if (s.substring(i, j + 1) in words) {
+                    res = minOf(res, dfs(j + 1))
+                }
+            }
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        let words = Set(dictionary)
+        let chars = Array(s)
+
+        func dfs(_ i: Int) -> Int {
+            if i == chars.count {
+                return 0
+            }
+
+            var res = 1 + dfs(i + 1)
+            for j in i..<chars.count {
+                if words.contains(String(chars[i...j])) {
+                    res = min(res, dfs(j + 1))
+                }
+            }
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,6 +347,89 @@ public class Solution {
 }
 ```
 
+```go
+func minExtraChar(s string, dictionary []string) int {
+    words := make(map[string]bool)
+    for _, word := range dictionary {
+        words[word] = true
+    }
+    n := len(s)
+    dp := make([]int, n+1)
+    for i := range dp {
+        dp[i] = -1
+    }
+    dp[n] = 0
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if dp[i] != -1 {
+            return dp[i]
+        }
+        res := 1 + dfs(i+1)
+        for j := i; j < n; j++ {
+            if words[s[i:j+1]] {
+                res = min(res, dfs(j+1))
+            }
+        }
+        dp[i] = res
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val words = dictionary.toHashSet()
+        val n = s.length
+        val dp = IntArray(n + 1) { -1 }
+        dp[n] = 0
+
+        fun dfs(i: Int): Int {
+            if (dp[i] != -1) return dp[i]
+            var res = 1 + dfs(i + 1)
+            for (j in i until n) {
+                if (s.substring(i, j + 1) in words) {
+                    res = minOf(res, dfs(j + 1))
+                }
+            }
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        let words = Set(dictionary)
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [Int](repeating: -1, count: n + 1)
+        dp[n] = 0
+
+        func dfs(_ i: Int) -> Int {
+            if dp[i] != -1 { return dp[i] }
+            var res = 1 + dfs(i + 1)
+            for j in i..<n {
+                if words.contains(String(chars[i...j])) {
+                    res = min(res, dfs(j + 1))
+                }
+            }
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -385,6 +543,68 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func minExtraChar(s string, dictionary []string) int {
+    words := make(map[string]bool)
+    for _, word := range dictionary {
+        words[word] = true
+    }
+    n := len(s)
+    dp := make([]int, n+1)
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i] = 1 + dp[i+1]
+        for j := i; j < n; j++ {
+            if words[s[i:j+1]] {
+                dp[i] = min(dp[i], dp[j+1])
+            }
+        }
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val words = dictionary.toHashSet()
+        val n = s.length
+        val dp = IntArray(n + 1)
+
+        for (i in n - 1 downTo 0) {
+            dp[i] = 1 + dp[i + 1]
+            for (j in i until n) {
+                if (s.substring(i, j + 1) in words) {
+                    dp[i] = minOf(dp[i], dp[j + 1])
+                }
+            }
+        }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        let words = Set(dictionary)
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [Int](repeating: 0, count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i] = 1 + dp[i + 1]
+            for j in i..<n {
+                if words.contains(String(chars[i...j])) {
+                    dp[i] = min(dp[i], dp[j + 1])
+                }
+            }
+        }
+        return dp[0]
     }
 }
 ```
@@ -577,6 +797,110 @@ public class Solution {
 }
 ```
 
+```go
+func minExtraChar(s string, dictionary []string) int {
+    dp := make(map[int]int)
+    dp[len(s)] = 0
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if val, ok := dp[i]; ok {
+            return val
+        }
+
+        res := 1 + dfs(i+1)
+        for _, word := range dictionary {
+            if i+len(word) > len(s) {
+                continue
+            }
+
+            flag := true
+            for j := 0; j < len(word); j++ {
+                if s[i+j] != word[j] {
+                    flag = false
+                    break
+                }
+            }
+            if flag {
+                res = min(res, dfs(i+len(word)))
+            }
+        }
+        dp[i] = res
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val dp = mutableMapOf<Int, Int>()
+        dp[s.length] = 0
+
+        fun dfs(i: Int): Int {
+            dp[i]?.let { return it }
+
+            var res = 1 + dfs(i + 1)
+            for (word in dictionary) {
+                if (i + word.length > s.length) continue
+
+                var flag = true
+                for (j in word.indices) {
+                    if (s[i + j] != word[j]) {
+                        flag = false
+                        break
+                    }
+                }
+                if (flag) {
+                    res = minOf(res, dfs(i + word.length))
+                }
+            }
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        var dp = [Int: Int]()
+        let chars = Array(s)
+        dp[chars.count] = 0
+
+        func dfs(_ i: Int) -> Int {
+            if let val = dp[i] { return val }
+
+            var res = 1 + dfs(i + 1)
+            for word in dictionary {
+                let wordChars = Array(word)
+                if i + wordChars.count > chars.count { continue }
+
+                var flag = true
+                for j in 0..<wordChars.count {
+                    if chars[i + j] != wordChars[j] {
+                        flag = false
+                        break
+                    }
+                }
+                if flag {
+                    res = min(res, dfs(i + wordChars.count))
+                }
+            }
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,6 +1016,66 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func minExtraChar(s string, dictionary []string) int {
+    n := len(s)
+    dp := make([]int, n+1)
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i] = 1 + dp[i+1]
+        for _, word := range dictionary {
+            if i+len(word) <= n && s[i:i+len(word)] == word {
+                dp[i] = min(dp[i], dp[i+len(word)])
+            }
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val n = s.length
+        val dp = IntArray(n + 1)
+
+        for (i in n - 1 downTo 0) {
+            dp[i] = 1 + dp[i + 1]
+            for (word in dictionary) {
+                if (i + word.length <= n && s.substring(i, i + word.length) == word) {
+                    dp[i] = minOf(dp[i], dp[i + word.length])
+                }
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [Int](repeating: 0, count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i] = 1 + dp[i + 1]
+            for word in dictionary {
+                let wordChars = Array(word)
+                if i + wordChars.count <= n && String(chars[i..<(i + wordChars.count)]) == word {
+                    dp[i] = min(dp[i], dp[i + wordChars.count])
+                }
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -1009,6 +1393,185 @@ public class Solution {
 }
 ```
 
+```go
+type TrieNode struct {
+    children [26]*TrieNode
+    isWord   bool
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func newTrie() *Trie {
+    return &Trie{root: &TrieNode{}}
+}
+
+func (t *Trie) addWord(word string) {
+    curr := t.root
+    for _, c := range word {
+        idx := c - 'a'
+        if curr.children[idx] == nil {
+            curr.children[idx] = &TrieNode{}
+        }
+        curr = curr.children[idx]
+    }
+    curr.isWord = true
+}
+
+func minExtraChar(s string, dictionary []string) int {
+    trie := newTrie()
+    for _, word := range dictionary {
+        trie.addWord(word)
+    }
+
+    dp := make([]int, len(s)+1)
+    for i := range dp {
+        dp[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == len(s) {
+            return 0
+        }
+        if dp[i] != -1 {
+            return dp[i]
+        }
+
+        res := 1 + dfs(i+1)
+        curr := trie.root
+
+        for j := i; j < len(s); j++ {
+            idx := s[j] - 'a'
+            if curr.children[idx] == nil {
+                break
+            }
+            curr = curr.children[idx]
+            if curr.isWord {
+                res = min(res, dfs(j+1))
+            }
+        }
+
+        dp[i] = res
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = arrayOfNulls<TrieNode>(26)
+    var isWord = false
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun addWord(word: String) {
+        var curr = root
+        for (c in word) {
+            val idx = c - 'a'
+            if (curr.children[idx] == null) {
+                curr.children[idx] = TrieNode()
+            }
+            curr = curr.children[idx]!!
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val trie = Trie()
+        for (word in dictionary) {
+            trie.addWord(word)
+        }
+
+        val dp = IntArray(s.length + 1) { -1 }
+
+        fun dfs(i: Int): Int {
+            if (i == s.length) return 0
+            if (dp[i] != -1) return dp[i]
+
+            var res = 1 + dfs(i + 1)
+            var curr = trie.root
+
+            for (j in i until s.length) {
+                val idx = s[j] - 'a'
+                if (curr.children[idx] == null) break
+                curr = curr.children[idx]!!
+                if (curr.isWord) {
+                    res = minOf(res, dfs(j + 1))
+                }
+            }
+
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [Character: TrieNode]()
+    var isWord = false
+}
+
+class Trie {
+    let root = TrieNode()
+
+    func addWord(_ word: String) {
+        var curr = root
+        for c in word {
+            if curr.children[c] == nil {
+                curr.children[c] = TrieNode()
+            }
+            curr = curr.children[c]!
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        let trie = Trie()
+        for word in dictionary {
+            trie.addWord(word)
+        }
+
+        let chars = Array(s)
+        var dp = [Int](repeating: -1, count: chars.count + 1)
+
+        func dfs(_ i: Int) -> Int {
+            if i == chars.count { return 0 }
+            if dp[i] != -1 { return dp[i] }
+
+            var res = 1 + dfs(i + 1)
+            var curr = trie.root
+
+            for j in i..<chars.count {
+                guard let next = curr.children[chars[j]] else { break }
+                curr = next
+                if curr.isWord {
+                    res = min(res, dfs(j + 1))
+                }
+            }
+
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1289,6 +1852,162 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children [26]*TrieNode
+    isWord   bool
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func newTrie() *Trie {
+    return &Trie{root: &TrieNode{}}
+}
+
+func (t *Trie) addWord(word string) {
+    curr := t.root
+    for _, c := range word {
+        idx := c - 'a'
+        if curr.children[idx] == nil {
+            curr.children[idx] = &TrieNode{}
+        }
+        curr = curr.children[idx]
+    }
+    curr.isWord = true
+}
+
+func minExtraChar(s string, dictionary []string) int {
+    trie := newTrie()
+    for _, word := range dictionary {
+        trie.addWord(word)
+    }
+
+    n := len(s)
+    dp := make([]int, n+1)
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i] = 1 + dp[i+1]
+        curr := trie.root
+
+        for j := i; j < n; j++ {
+            idx := s[j] - 'a'
+            if curr.children[idx] == nil {
+                break
+            }
+            curr = curr.children[idx]
+            if curr.isWord {
+                dp[i] = min(dp[i], dp[j+1])
+            }
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = arrayOfNulls<TrieNode>(26)
+    var isWord = false
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun addWord(word: String) {
+        var curr = root
+        for (c in word) {
+            val idx = c - 'a'
+            if (curr.children[idx] == null) {
+                curr.children[idx] = TrieNode()
+            }
+            curr = curr.children[idx]!!
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    fun minExtraChar(s: String, dictionary: Array<String>): Int {
+        val trie = Trie()
+        for (word in dictionary) {
+            trie.addWord(word)
+        }
+
+        val n = s.length
+        val dp = IntArray(n + 1)
+
+        for (i in n - 1 downTo 0) {
+            dp[i] = 1 + dp[i + 1]
+            var curr = trie.root
+
+            for (j in i until n) {
+                val idx = s[j] - 'a'
+                if (curr.children[idx] == null) break
+                curr = curr.children[idx]!!
+                if (curr.isWord) {
+                    dp[i] = minOf(dp[i], dp[j + 1])
+                }
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [Character: TrieNode]()
+    var isWord = false
+}
+
+class Trie {
+    let root = TrieNode()
+
+    func addWord(_ word: String) {
+        var curr = root
+        for c in word {
+            if curr.children[c] == nil {
+                curr.children[c] = TrieNode()
+            }
+            curr = curr.children[c]!
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    func minExtraChar(_ s: String, _ dictionary: [String]) -> Int {
+        let trie = Trie()
+        for word in dictionary {
+            trie.addWord(word)
+        }
+
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [Int](repeating: 0, count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i] = 1 + dp[i + 1]
+            var curr = trie.root
+
+            for j in i..<n {
+                guard let next = curr.children[chars[j]] else { break }
+                curr = next
+                if curr.isWord {
+                    dp[i] = min(dp[i], dp[j + 1])
+                }
+            }
+        }
+
+        return dp[0]
     }
 }
 ```

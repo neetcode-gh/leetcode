@@ -71,6 +71,40 @@ public class Solution {
 }
 ```
 
+```go
+func findKthNumber(n int, k int) int {
+    nums := make([]string, 0, n)
+    for num := 1; num <= n; num++ {
+        nums = append(nums, strconv.Itoa(num))
+    }
+    sort.Strings(nums)
+    res, _ := strconv.Atoi(nums[k-1])
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findKthNumber(n: Int, k: Int): Int {
+        val nums = (1..n).map { it.toString() }.sorted()
+        return nums[k - 1].toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findKthNumber(_ n: Int, _ k: Int) -> Int {
+        var nums = [String]()
+        for num in 1...n {
+            nums.append(String(num))
+        }
+        nums.sort()
+        return Int(nums[k - 1])!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -238,6 +272,106 @@ public class Solution {
             nei *= 10;
         }
         return res;
+    }
+}
+```
+
+```go
+func findKthNumber(n int, k int) int {
+    count := func(cur int64) int64 {
+        var res int64 = 0
+        nei := cur + 1
+        for cur <= int64(n) {
+            res += min64(nei, int64(n)+1) - cur
+            cur *= 10
+            nei *= 10
+        }
+        return res
+    }
+
+    var cur int64 = 1
+    var i int64 = 1
+    for i < int64(k) {
+        steps := count(cur)
+        if i+steps <= int64(k) {
+            cur++
+            i += steps
+        } else {
+            cur *= 10
+            i++
+        }
+    }
+    return int(cur)
+}
+
+func min64(a, b int64) int64 {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun findKthNumber(n: Int, k: Int): Int {
+        fun count(cur: Long): Long {
+            var c = cur
+            var nei = cur + 1
+            var res = 0L
+            while (c <= n) {
+                res += minOf(nei, n.toLong() + 1) - c
+                c *= 10
+                nei *= 10
+            }
+            return res
+        }
+
+        var cur = 1L
+        var i = 1L
+        while (i < k) {
+            val steps = count(cur)
+            if (i + steps <= k) {
+                cur++
+                i += steps
+            } else {
+                cur *= 10
+                i++
+            }
+        }
+        return cur.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findKthNumber(_ n: Int, _ k: Int) -> Int {
+        func count(_ cur: Int) -> Int {
+            var res = 0
+            var c = cur
+            var nei = cur + 1
+            while c <= n {
+                res += min(nei, n + 1) - c
+                c *= 10
+                nei *= 10
+            }
+            return res
+        }
+
+        var cur = 1
+        var i = 1
+        while i < k {
+            let steps = count(cur)
+            if i + steps <= k {
+                cur += 1
+                i += steps
+            } else {
+                cur *= 10
+                i += 1
+            }
+        }
+        return cur
     }
 }
 ```

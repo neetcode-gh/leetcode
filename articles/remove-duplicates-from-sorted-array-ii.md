@@ -118,6 +118,123 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int n = nums.Length;
+        if (n <= 2) return n;
+        int i = 0;
+        while (i < n - 1) {
+            if (nums[i] == nums[i + 1]) {
+                int j = i + 2, cnt = 0;
+                while (j < n && nums[i] == nums[j]) {
+                    j++;
+                    cnt++;
+                }
+                for (int k = i + 2; k < n; k++) {
+                    if (j >= n) break;
+                    nums[k] = nums[j++];
+                }
+                n -= cnt;
+                i += 2;
+            } else {
+                i++;
+            }
+        }
+        return n;
+    }
+}
+```
+
+```go
+func removeDuplicates(nums []int) int {
+    n := len(nums)
+    if n <= 2 {
+        return n
+    }
+    i := 0
+    for i < n-1 {
+        if nums[i] == nums[i+1] {
+            j, cnt := i+2, 0
+            for j < n && nums[i] == nums[j] {
+                j++
+                cnt++
+            }
+            for k := i + 2; k < n; k++ {
+                if j >= n {
+                    break
+                }
+                nums[k] = nums[j]
+                j++
+            }
+            n -= cnt
+            i += 2
+        } else {
+            i++
+        }
+    }
+    return n
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        var n = nums.size
+        if (n <= 2) return n
+        var i = 0
+        while (i < n - 1) {
+            if (nums[i] == nums[i + 1]) {
+                var j = i + 2
+                var cnt = 0
+                while (j < n && nums[i] == nums[j]) {
+                    j++
+                    cnt++
+                }
+                for (k in i + 2 until n) {
+                    if (j >= n) break
+                    nums[k] = nums[j++]
+                }
+                n -= cnt
+                i += 2
+            } else {
+                i++
+            }
+        }
+        return n
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        var n = nums.count
+        if n <= 2 { return n }
+        var i = 0
+        while i < n - 1 {
+            if nums[i] == nums[i + 1] {
+                var j = i + 2, cnt = 0
+                while j < n && nums[i] == nums[j] {
+                    j += 1
+                    cnt += 1
+                }
+                for k in (i + 2)..<n {
+                    if j >= n { break }
+                    nums[k] = nums[j]
+                    j += 1
+                }
+                n -= cnt
+                i += 2
+            } else {
+                i += 1
+            }
+        }
+        return n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -227,6 +344,109 @@ class Solution {
             }
         }
         return i;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        var count = new Dictionary<int, int>();
+        var arr = new List<int>();
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) {
+                count[num] = 0;
+                arr.Add(num);
+            }
+            count[num]++;
+        }
+
+        int i = 0;
+        foreach (int num in arr) {
+            nums[i++] = num;
+            count[num]--;
+            if (count[num] >= 1) {
+                nums[i++] = num;
+                count[num]--;
+            }
+        }
+        return i;
+    }
+}
+```
+
+```go
+func removeDuplicates(nums []int) int {
+    count := make(map[int]int)
+    var arr []int
+    for _, num := range nums {
+        if count[num] == 0 {
+            arr = append(arr, num)
+        }
+        count[num]++
+    }
+
+    i := 0
+    for _, num := range arr {
+        nums[i] = num
+        i++
+        count[num]--
+        if count[num] >= 1 {
+            nums[i] = num
+            i++
+            count[num]--
+        }
+    }
+    return i
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        val count = linkedMapOf<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        var i = 0
+        for ((num, cnt) in count) {
+            nums[i++] = num
+            count[num] = cnt - 1
+            if (count[num]!! >= 1) {
+                nums[i++] = num
+                count[num] = cnt - 1
+            }
+        }
+        return i
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        var count = [Int: Int]()
+        var arr = [Int]()
+        for num in nums {
+            if count[num] == nil {
+                arr.append(num)
+            }
+            count[num, default: 0] += 1
+        }
+
+        var i = 0
+        for num in arr {
+            nums[i] = num
+            i += 1
+            count[num]! -= 1
+            if count[num]! >= 1 {
+                nums[i] = num
+                i += 1
+                count[num]! -= 1
+            }
+        }
+        return i
     }
 }
 ```
@@ -341,6 +561,108 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int l = 0, r = 0;
+
+        while (r < nums.Length) {
+            int count = 1;
+            while (r + 1 < nums.Length && nums[r] == nums[r + 1]) {
+                r++;
+                count++;
+            }
+
+            for (int i = 0; i < Math.Min(2, count); i++) {
+                nums[l] = nums[r];
+                l++;
+            }
+            r++;
+        }
+
+        return l;
+    }
+}
+```
+
+```go
+func removeDuplicates(nums []int) int {
+    l, r := 0, 0
+
+    for r < len(nums) {
+        count := 1
+        for r+1 < len(nums) && nums[r] == nums[r+1] {
+            r++
+            count++
+        }
+
+        for i := 0; i < min(2, count); i++ {
+            nums[l] = nums[r]
+            l++
+        }
+        r++
+    }
+
+    return l
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        var l = 0
+        var r = 0
+
+        while (r < nums.size) {
+            var count = 1
+            while (r + 1 < nums.size && nums[r] == nums[r + 1]) {
+                r++
+                count++
+            }
+
+            for (i in 0 until minOf(2, count)) {
+                nums[l] = nums[r]
+                l++
+            }
+            r++
+        }
+
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        var l = 0, r = 0
+
+        while r < nums.count {
+            var count = 1
+            while r + 1 < nums.count && nums[r] == nums[r + 1] {
+                r += 1
+                count += 1
+            }
+
+            for _ in 0..<min(2, count) {
+                nums[l] = nums[r]
+                l += 1
+            }
+            r += 1
+        }
+
+        return l
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -411,6 +733,64 @@ class Solution {
             }
         }
         return l;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int l = 0;
+        foreach (int num in nums) {
+            if (l < 2 || num != nums[l - 2]) {
+                nums[l] = num;
+                l++;
+            }
+        }
+        return l;
+    }
+}
+```
+
+```go
+func removeDuplicates(nums []int) int {
+    l := 0
+    for _, num := range nums {
+        if l < 2 || num != nums[l-2] {
+            nums[l] = num
+            l++
+        }
+    }
+    return l
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        var l = 0
+        for (num in nums) {
+            if (l < 2 || num != nums[l - 2]) {
+                nums[l] = num
+                l++
+            }
+        }
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        var l = 0
+        for num in nums {
+            if l < 2 || num != nums[l - 2] {
+                nums[l] = num
+                l += 1
+            }
+        }
+        return l
     }
 }
 ```

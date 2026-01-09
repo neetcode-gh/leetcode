@@ -137,6 +137,86 @@ public class Solution {
 }
 ```
 
+```go
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    visited := make([]bool, n)
+    res := 0
+
+    var dfs func(node int)
+    dfs = func(node int) {
+        visited[node] = true
+        for nei := 0; nei < n; nei++ {
+            if isConnected[node][nei] == 1 && !visited[nei] {
+                dfs(nei)
+            }
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        if !visited[i] {
+            dfs(i)
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findCircleNum(isConnected: Array<IntArray>): Int {
+        val n = isConnected.size
+        val visited = BooleanArray(n)
+        var res = 0
+
+        fun dfs(node: Int) {
+            visited[node] = true
+            for (nei in 0 until n) {
+                if (isConnected[node][nei] == 1 && !visited[nei]) {
+                    dfs(nei)
+                }
+            }
+        }
+
+        for (i in 0 until n) {
+            if (!visited[i]) {
+                dfs(i)
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findCircleNum(_ isConnected: [[Int]]) -> Int {
+        let n = isConnected.count
+        var visited = [Bool](repeating: false, count: n)
+        var res = 0
+
+        func dfs(_ node: Int) {
+            visited[node] = true
+            for nei in 0..<n {
+                if isConnected[node][nei] == 1 && !visited[nei] {
+                    dfs(nei)
+                }
+            }
+        }
+
+        for i in 0..<n {
+            if !visited[i] {
+                dfs(i)
+                res += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +357,84 @@ public class Solution {
                 Dfs(nei, isConnected, n);
             }
         }
+    }
+}
+```
+
+```go
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    res := 0
+
+    var dfs func(node int)
+    dfs = func(node int) {
+        isConnected[node][node] = 0
+        for nei := 0; nei < n; nei++ {
+            if node != nei && isConnected[node][nei] == 1 && isConnected[nei][nei] == 1 {
+                dfs(nei)
+            }
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        if isConnected[i][i] == 1 {
+            dfs(i)
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findCircleNum(isConnected: Array<IntArray>): Int {
+        val n = isConnected.size
+        var res = 0
+
+        fun dfs(node: Int) {
+            isConnected[node][node] = 0
+            for (nei in 0 until n) {
+                if (node != nei && isConnected[node][nei] == 1 && isConnected[nei][nei] == 1) {
+                    dfs(nei)
+                }
+            }
+        }
+
+        for (i in 0 until n) {
+            if (isConnected[i][i] == 1) {
+                dfs(i)
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findCircleNum(_ isConnected: [[Int]]) -> Int {
+        var isConnected = isConnected
+        let n = isConnected.count
+        var res = 0
+
+        func dfs(_ node: Int) {
+            isConnected[node][node] = 0
+            for nei in 0..<n {
+                if node != nei && isConnected[node][nei] == 1 && isConnected[nei][nei] == 1 {
+                    dfs(nei)
+                }
+            }
+        }
+
+        for i in 0..<n {
+            if isConnected[i][i] == 1 {
+                dfs(i)
+                res += 1
+            }
+        }
+        return res
     }
 }
 ```
@@ -434,6 +592,90 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    visited := make([]bool, n)
+    res := 0
+
+    for i := 0; i < n; i++ {
+        if !visited[i] {
+            res++
+            visited[i] = true
+            q := []int{i}
+            for len(q) > 0 {
+                node := q[0]
+                q = q[1:]
+                for nei := 0; nei < n; nei++ {
+                    if isConnected[node][nei] == 1 && !visited[nei] {
+                        visited[nei] = true
+                        q = append(q, nei)
+                    }
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findCircleNum(isConnected: Array<IntArray>): Int {
+        val n = isConnected.size
+        val visited = BooleanArray(n)
+        var res = 0
+
+        for (i in 0 until n) {
+            if (!visited[i]) {
+                res++
+                visited[i] = true
+                val q = ArrayDeque<Int>()
+                q.add(i)
+                while (q.isNotEmpty()) {
+                    val node = q.removeFirst()
+                    for (nei in 0 until n) {
+                        if (isConnected[node][nei] == 1 && !visited[nei]) {
+                            visited[nei] = true
+                            q.add(nei)
+                        }
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findCircleNum(_ isConnected: [[Int]]) -> Int {
+        let n = isConnected.count
+        var visited = [Bool](repeating: false, count: n)
+        var res = 0
+
+        for i in 0..<n {
+            if !visited[i] {
+                res += 1
+                visited[i] = true
+                var q = [i]
+                while !q.isEmpty {
+                    let node = q.removeFirst()
+                    for nei in 0..<n {
+                        if isConnected[node][nei] == 1 && !visited[nei] {
+                            visited[nei] = true
+                            q.append(nei)
+                        }
+                    }
+                }
+            }
+        }
+        return res
     }
 }
 ```
@@ -727,6 +969,162 @@ public class Solution {
                 if (isConnected[i][j] == 1)
                     dsu.Union(i, j);
         return dsu.NumOfComps();
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent     []int
+    Size       []int
+    components int
+}
+
+func NewDSU(n int) *DSU {
+    dsu := &DSU{
+        Parent:     make([]int, n),
+        Size:       make([]int, n),
+        components: n,
+    }
+    for i := 0; i < n; i++ {
+        dsu.Parent[i] = i
+        dsu.Size[i] = 1
+    }
+    return dsu
+}
+
+func (dsu *DSU) Find(node int) int {
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.Find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
+}
+
+func (dsu *DSU) Union(u, v int) bool {
+    pu, pv := dsu.Find(u), dsu.Find(v)
+    if pu == pv {
+        return false
+    }
+    dsu.components--
+    if dsu.Size[pu] >= dsu.Size[pv] {
+        dsu.Size[pu] += dsu.Size[pv]
+        dsu.Parent[pv] = pu
+    } else {
+        dsu.Size[pv] += dsu.Size[pu]
+        dsu.Parent[pu] = pv
+    }
+    return true
+}
+
+func findCircleNum(isConnected [][]int) int {
+    n := len(isConnected)
+    dsu := NewDSU(n)
+    for i := 0; i < n; i++ {
+        for j := 0; j < n; j++ {
+            if isConnected[i][j] == 1 {
+                dsu.Union(i, j)
+            }
+        }
+    }
+    return dsu.components
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n) { it }
+    private val size = IntArray(n) { 1 }
+    var components = n
+        private set
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        val pu = find(u)
+        val pv = find(v)
+        if (pu == pv) return false
+
+        components--
+        if (size[pu] >= size[pv]) {
+            size[pu] += size[pv]
+            parent[pv] = pu
+        } else {
+            size[pv] += size[pu]
+            parent[pu] = pv
+        }
+        return true
+    }
+}
+
+class Solution {
+    fun findCircleNum(isConnected: Array<IntArray>): Int {
+        val n = isConnected.size
+        val dsu = DSU(n)
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                if (isConnected[i][j] == 1) {
+                    dsu.union(i, j)
+                }
+            }
+        }
+        return dsu.components
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+    var components: Int
+
+    init(_ n: Int) {
+        parent = Array(0..<n)
+        size = [Int](repeating: 1, count: n)
+        components = n
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv { return false }
+
+        components -= 1
+        if size[pu] >= size[pv] {
+            size[pu] += size[pv]
+            parent[pv] = pu
+        } else {
+            size[pv] += size[pu]
+            parent[pu] = pv
+        }
+        return true
+    }
+}
+
+class Solution {
+    func findCircleNum(_ isConnected: [[Int]]) -> Int {
+        let n = isConnected.count
+        let dsu = DSU(n)
+        for i in 0..<n {
+            for j in 0..<n {
+                if isConnected[i][j] == 1 {
+                    _ = dsu.union(i, j)
+                }
+            }
+        }
+        return dsu.components
     }
 }
 ```

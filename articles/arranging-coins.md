@@ -69,6 +69,45 @@ public class Solution {
 }
 ```
 
+```go
+func arrangeCoins(n int) int {
+    row := 0
+    for n-row > 0 {
+        row++
+        n -= row
+    }
+    return row
+}
+```
+
+```kotlin
+class Solution {
+    fun arrangeCoins(n: Int): Int {
+        var n = n
+        var row = 0
+        while (n - row > 0) {
+            row++
+            n -= row
+        }
+        return row
+    }
+}
+```
+
+```swift
+class Solution {
+    func arrangeCoins(_ n: Int) -> Int {
+        var n = n
+        var row = 0
+        while n - row > 0 {
+            row += 1
+            n -= row
+        }
+        return row
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -189,6 +228,74 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func arrangeCoins(n int) int {
+    l, r := 1, n
+    res := 0
+
+    for l <= r {
+        mid := l + (r-l)/2
+        coins := int64(mid) * int64(mid+1) / 2
+        if coins > int64(n) {
+            r = mid - 1
+        } else {
+            l = mid + 1
+            if mid > res {
+                res = mid
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun arrangeCoins(n: Int): Int {
+        var l = 1
+        var r = n
+        var res = 0
+
+        while (l <= r) {
+            val mid = l + (r - l) / 2
+            val coins = mid.toLong() * (mid + 1) / 2
+            if (coins > n) {
+                r = mid - 1
+            } else {
+                l = mid + 1
+                res = maxOf(res, mid)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func arrangeCoins(_ n: Int) -> Int {
+        var l = 1
+        var r = n
+        var res = 0
+
+        while l <= r {
+            let mid = l + (r - l) / 2
+            let coins = mid * (mid + 1) / 2
+            if coins > n {
+                r = mid - 1
+            } else {
+                l = mid + 1
+                res = max(res, mid)
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -322,6 +429,78 @@ public class Solution {
 }
 ```
 
+```go
+func arrangeCoins(n int) int {
+    if n <= 3 {
+        if n == 1 {
+            return 1
+        }
+        return n - 1
+    }
+
+    l, r := 1, n/2+1
+    for l < r {
+        mid := (l + r) / 2
+        coins := int64(mid) * int64(mid+1) / 2
+        if coins <= int64(n) {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+
+    return l - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun arrangeCoins(n: Int): Int {
+        if (n <= 3) {
+            return if (n == 1) 1 else n - 1
+        }
+
+        var l = 1
+        var r = n / 2 + 1
+        while (l < r) {
+            val mid = (l + r) / 2
+            val coins = mid.toLong() * (mid + 1) / 2
+            if (coins <= n) {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+
+        return l - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func arrangeCoins(_ n: Int) -> Int {
+        if n <= 3 {
+            return n == 1 ? 1 : n - 1
+        }
+
+        var l = 1
+        var r = n / 2 + 1
+        while l < r {
+            let mid = (l + r) / 2
+            let coins = mid * (mid + 1) / 2
+            if coins <= n {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+
+        return l - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -428,6 +607,58 @@ public class Solution {
 }
 ```
 
+```go
+func arrangeCoins(n int) int {
+    mask := 1 << 15
+    rows := 0
+    for mask > 0 {
+        rows |= mask
+        coins := int64(rows) * int64(rows+1) / 2
+        if coins > int64(n) {
+            rows ^= mask
+        }
+        mask >>= 1
+    }
+    return rows
+}
+```
+
+```kotlin
+class Solution {
+    fun arrangeCoins(n: Int): Int {
+        var mask = 1 shl 15
+        var rows = 0
+        while (mask > 0) {
+            rows = rows or mask
+            val coins = rows.toLong() * (rows + 1) / 2
+            if (coins > n) {
+                rows = rows xor mask
+            }
+            mask = mask shr 1
+        }
+        return rows
+    }
+}
+```
+
+```swift
+class Solution {
+    func arrangeCoins(_ n: Int) -> Int {
+        var mask = 1 << 15
+        var rows = 0
+        while mask > 0 {
+            rows |= mask
+            let coins = rows * (rows + 1) / 2
+            if coins > n {
+                rows ^= mask
+            }
+            mask >>= 1
+        }
+        return rows
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -480,6 +711,28 @@ class Solution {
 public class Solution {
     public int ArrangeCoins(int n) {
         return (int)(Math.Sqrt(2L * n + 0.25) - 0.5);
+    }
+}
+```
+
+```go
+func arrangeCoins(n int) int {
+    return int(math.Sqrt(2*float64(n)+0.25) - 0.5)
+}
+```
+
+```kotlin
+class Solution {
+    fun arrangeCoins(n: Int): Int {
+        return (Math.sqrt(2.0 * n + 0.25) - 0.5).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func arrangeCoins(_ n: Int) -> Int {
+        return Int(sqrt(2.0 * Double(n) + 0.25) - 0.5)
     }
 }
 ```

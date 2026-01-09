@@ -147,6 +147,158 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private void Backtracking(List<int> factors, List<IList<int>> ans) {
+        // Got a solution.
+        if (factors.Count > 1) {
+            ans.Add(new List<int>(factors));
+        }
+
+        int lastFactor = factors[factors.Count - 1];
+        factors.RemoveAt(factors.Count - 1);
+
+        int start = factors.Count == 0 ? 2 : factors[factors.Count - 1];
+        for (int i = start; i <= lastFactor / i; i++) {
+            if (lastFactor % i == 0) {
+                // Add i and lastFactor / i.
+                factors.Add(i);
+                factors.Add(lastFactor / i);
+                Backtracking(factors, ans);
+                // Remove the last 2 elements in factors to restore it after the recursion returns.
+                factors.RemoveAt(factors.Count - 1);
+                factors.RemoveAt(factors.Count - 1);
+            }
+        }
+
+        // Add lastFactor back to factors to restore it.
+        factors.Add(lastFactor);
+    }
+
+    public IList<IList<int>> GetFactors(int n) {
+        List<IList<int>> ans = new List<IList<int>>();
+        Backtracking(new List<int> { n }, ans);
+        return ans;
+    }
+}
+```
+
+```go
+func getFactors(n int) [][]int {
+    ans := [][]int{}
+
+    var backtracking func(factors []int)
+    backtracking = func(factors []int) {
+        // Got a solution.
+        if len(factors) > 1 {
+            tmp := make([]int, len(factors))
+            copy(tmp, factors)
+            ans = append(ans, tmp)
+        }
+
+        lastFactor := factors[len(factors)-1]
+        factors = factors[:len(factors)-1]
+
+        start := 2
+        if len(factors) > 0 {
+            start = factors[len(factors)-1]
+        }
+        for i := start; i <= lastFactor/i; i++ {
+            if lastFactor%i == 0 {
+                // Add i and lastFactor / i.
+                factors = append(factors, i)
+                factors = append(factors, lastFactor/i)
+                backtracking(factors)
+                // Remove the last 2 elements in factors to restore it after the recursion returns.
+                factors = factors[:len(factors)-2]
+            }
+        }
+
+        // Add lastFactor back to factors to restore it.
+        factors = append(factors, lastFactor)
+    }
+
+    backtracking([]int{n})
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    private fun backtracking(factors: MutableList<Int>, ans: MutableList<List<Int>>) {
+        // Got a solution.
+        if (factors.size > 1) {
+            ans.add(factors.toList())
+        }
+
+        val lastFactor = factors.removeAt(factors.size - 1)
+
+        val start = if (factors.isEmpty()) 2 else factors[factors.size - 1]
+        var i = start
+        while (i <= lastFactor / i) {
+            if (lastFactor % i == 0) {
+                // Add i and lastFactor / i.
+                factors.add(i)
+                factors.add(lastFactor / i)
+                backtracking(factors, ans)
+                // Remove the last 2 elements in factors to restore it after the recursion returns.
+                factors.removeAt(factors.size - 1)
+                factors.removeAt(factors.size - 1)
+            }
+            i++
+        }
+
+        // Add lastFactor back to factors to restore it.
+        factors.add(lastFactor)
+    }
+
+    fun getFactors(n: Int): List<List<Int>> {
+        val ans = mutableListOf<List<Int>>()
+        backtracking(mutableListOf(n), ans)
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func getFactors(_ n: Int) -> [[Int]] {
+        var ans = [[Int]]()
+
+        func backtracking(_ factors: inout [Int]) {
+            // Got a solution.
+            if factors.count > 1 {
+                ans.append(factors)
+            }
+
+            let lastFactor = factors.removeLast()
+
+            let start = factors.isEmpty ? 2 : factors[factors.count - 1]
+            var i = start
+            while i <= lastFactor / i {
+                if lastFactor % i == 0 {
+                    // Add i and lastFactor / i.
+                    factors.append(i)
+                    factors.append(lastFactor / i)
+                    backtracking(&factors)
+                    // Remove the last 2 elements in factors to restore it after the recursion returns.
+                    factors.removeLast()
+                    factors.removeLast()
+                }
+                i += 1
+            }
+
+            // Add lastFactor back to factors to restore it.
+            factors.append(lastFactor)
+        }
+
+        var initial = [n]
+        backtracking(&initial)
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +372,155 @@ public:
         return ans;
     }
 };
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number} n
+     * @return {number[][]}
+     */
+    getFactors(n) {
+        const ans = [];
+        const stack = [[n]];
+
+        while (stack.length > 0) {
+            const factors = stack.pop();
+            const lastFactor = factors.pop();
+
+            const start = factors.length === 0 ? 2 : factors[factors.length - 1];
+            for (let i = start; i <= Math.floor(lastFactor / i); i++) {
+                if (lastFactor % i === 0) {
+                    const newFactors = [...factors, i, Math.floor(lastFactor / i)];
+                    stack.push(newFactors);
+                    ans.push(newFactors);
+                }
+            }
+        }
+
+        return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<IList<int>> GetFactors(int n) {
+        List<IList<int>> ans = new List<IList<int>>();
+        Stack<List<int>> stack = new Stack<List<int>>();
+        stack.Push(new List<int> { n });
+
+        while (stack.Count > 0) {
+            List<int> factors = stack.Pop();
+            int lastFactor = factors[factors.Count - 1];
+            factors.RemoveAt(factors.Count - 1);
+
+            int start = factors.Count == 0 ? 2 : factors[factors.Count - 1];
+            for (int i = start; i <= lastFactor / i; i++) {
+                if (lastFactor % i == 0) {
+                    List<int> newFactors = new List<int>(factors);
+                    newFactors.Add(i);
+                    newFactors.Add(lastFactor / i);
+                    stack.Push(newFactors);
+                    ans.Add(new List<int>(newFactors));
+                }
+            }
+        }
+
+        return ans;
+    }
+}
+```
+
+```go
+func getFactors(n int) [][]int {
+    ans := [][]int{}
+    stack := [][]int{{n}}
+
+    for len(stack) > 0 {
+        factors := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        lastFactor := factors[len(factors)-1]
+        factors = factors[:len(factors)-1]
+
+        start := 2
+        if len(factors) > 0 {
+            start = factors[len(factors)-1]
+        }
+        for i := start; i <= lastFactor/i; i++ {
+            if lastFactor%i == 0 {
+                newFactors := make([]int, len(factors))
+                copy(newFactors, factors)
+                newFactors = append(newFactors, i, lastFactor/i)
+                stack = append(stack, newFactors)
+                result := make([]int, len(newFactors))
+                copy(result, newFactors)
+                ans = append(ans, result)
+            }
+        }
+    }
+
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    fun getFactors(n: Int): List<List<Int>> {
+        val ans = mutableListOf<List<Int>>()
+        val stack = ArrayDeque<MutableList<Int>>()
+        stack.add(mutableListOf(n))
+
+        while (stack.isNotEmpty()) {
+            val factors = stack.removeLast()
+            val lastFactor = factors.removeAt(factors.size - 1)
+
+            val start = if (factors.isEmpty()) 2 else factors[factors.size - 1]
+            var i = start
+            while (i <= lastFactor / i) {
+                if (lastFactor % i == 0) {
+                    val newFactors = factors.toMutableList()
+                    newFactors.add(i)
+                    newFactors.add(lastFactor / i)
+                    stack.add(newFactors.toMutableList())
+                    ans.add(newFactors.toList())
+                }
+                i++
+            }
+        }
+
+        return ans
+    }
+}
+```
+
+```swift
+class Solution {
+    func getFactors(_ n: Int) -> [[Int]] {
+        var ans = [[Int]]()
+        var stack = [[n]]
+
+        while !stack.isEmpty {
+            var factors = stack.removeLast()
+            let lastFactor = factors.removeLast()
+
+            let start = factors.isEmpty ? 2 : factors[factors.count - 1]
+            var i = start
+            while i <= lastFactor / i {
+                if lastFactor % i == 0 {
+                    var newFactors = factors
+                    newFactors.append(i)
+                    newFactors.append(lastFactor / i)
+                    stack.append(newFactors)
+                    ans.append(newFactors)
+                }
+                i += 1
+            }
+        }
+
+        return ans
+    }
+}
 ```
 
 ::tabs-end

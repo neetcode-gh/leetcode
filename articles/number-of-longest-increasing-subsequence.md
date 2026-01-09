@@ -119,6 +119,129 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int LIS = 0;
+    private int res = 0;
+
+    public int FindNumberOfLIS(int[] nums) {
+        for (int i = 0; i < nums.Length; i++) {
+            Dfs(nums, i, 1);
+        }
+        return res;
+    }
+
+    private void Dfs(int[] nums, int i, int length) {
+        if (LIS < length) {
+            LIS = length;
+            res = 1;
+        } else if (LIS == length) {
+            res++;
+        }
+
+        for (int j = i + 1; j < nums.Length; j++) {
+            if (nums[j] <= nums[i]) {
+                continue;
+            }
+            Dfs(nums, j, length + 1);
+        }
+    }
+}
+```
+
+```go
+func findNumberOfLIS(nums []int) int {
+    LIS := 0
+    res := 0
+
+    var dfs func(i, length int)
+    dfs = func(i, length int) {
+        if LIS < length {
+            LIS = length
+            res = 1
+        } else if LIS == length {
+            res++
+        }
+
+        for j := i + 1; j < len(nums); j++ {
+            if nums[j] <= nums[i] {
+                continue
+            }
+            dfs(j, length+1)
+        }
+    }
+
+    for i := 0; i < len(nums); i++ {
+        dfs(i, 1)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private var LIS = 0
+    private var res = 0
+
+    fun findNumberOfLIS(nums: IntArray): Int {
+        LIS = 0
+        res = 0
+        for (i in nums.indices) {
+            dfs(nums, i, 1)
+        }
+        return res
+    }
+
+    private fun dfs(nums: IntArray, i: Int, length: Int) {
+        if (LIS < length) {
+            LIS = length
+            res = 1
+        } else if (LIS == length) {
+            res++
+        }
+
+        for (j in i + 1 until nums.size) {
+            if (nums[j] <= nums[i]) {
+                continue
+            }
+            dfs(nums, j, length + 1)
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    private var LIS = 0
+    private var res = 0
+
+    func findNumberOfLIS(_ nums: [Int]) -> Int {
+        LIS = 0
+        res = 0
+        for i in 0..<nums.count {
+            dfs(nums, i, 1)
+        }
+        return res
+    }
+
+    private func dfs(_ nums: [Int], _ i: Int, _ length: Int) {
+        if LIS < length {
+            LIS = length
+            res = 1
+        } else if LIS == length {
+            res += 1
+        }
+
+        for j in (i + 1)..<nums.count {
+            if nums[j] <= nums[i] {
+                continue
+            }
+            dfs(nums, j, length + 1)
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -307,6 +430,192 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] dp;
+
+    public int FindNumberOfLIS(int[] nums) {
+        int n = nums.Length;
+        dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[] { -1, -1 };
+        }
+
+        int lenLIS = 0, res = 0;
+        for (int i = 0; i < n; i++) {
+            Dfs(nums, i);
+            int[] result = dp[i];
+            if (result[0] > lenLIS) {
+                lenLIS = result[0];
+                res = result[1];
+            } else if (result[0] == lenLIS) {
+                res += result[1];
+            }
+        }
+        return res;
+    }
+
+    private void Dfs(int[] nums, int i) {
+        if (dp[i][0] != -1) return;
+
+        int maxLen = 1, maxCnt = 1;
+        for (int j = i + 1; j < nums.Length; j++) {
+            if (nums[j] > nums[i]) {
+                Dfs(nums, j);
+                int[] next = dp[j];
+                if (1 + next[0] > maxLen) {
+                    maxLen = 1 + next[0];
+                    maxCnt = next[1];
+                } else if (1 + next[0] == maxLen) {
+                    maxCnt += next[1];
+                }
+            }
+        }
+
+        dp[i] = new int[] { maxLen, maxCnt };
+    }
+}
+```
+
+```go
+func findNumberOfLIS(nums []int) int {
+    n := len(nums)
+    dp := make([][2]int, n)
+    for i := range dp {
+        dp[i] = [2]int{-1, -1}
+    }
+
+    var dfs func(i int)
+    dfs = func(i int) {
+        if dp[i][0] != -1 {
+            return
+        }
+
+        maxLen, maxCnt := 1, 1
+        for j := i + 1; j < n; j++ {
+            if nums[j] > nums[i] {
+                dfs(j)
+                length, count := dp[j][0], dp[j][1]
+                if 1+length > maxLen {
+                    maxLen = 1 + length
+                    maxCnt = count
+                } else if 1+length == maxLen {
+                    maxCnt += count
+                }
+            }
+        }
+        dp[i] = [2]int{maxLen, maxCnt}
+    }
+
+    lenLIS, res := 0, 0
+    for i := 0; i < n; i++ {
+        dfs(i)
+        maxLen, maxCnt := dp[i][0], dp[i][1]
+        if maxLen > lenLIS {
+            lenLIS = maxLen
+            res = maxCnt
+        } else if maxLen == lenLIS {
+            res += maxCnt
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+
+    fun findNumberOfLIS(nums: IntArray): Int {
+        val n = nums.size
+        dp = Array(n) { intArrayOf(-1, -1) }
+
+        var lenLIS = 0
+        var res = 0
+        for (i in 0 until n) {
+            dfs(nums, i)
+            val (maxLen, maxCnt) = dp[i]
+            if (maxLen > lenLIS) {
+                lenLIS = maxLen
+                res = maxCnt
+            } else if (maxLen == lenLIS) {
+                res += maxCnt
+            }
+        }
+        return res
+    }
+
+    private fun dfs(nums: IntArray, i: Int) {
+        if (dp[i][0] != -1) return
+
+        var maxLen = 1
+        var maxCnt = 1
+        for (j in i + 1 until nums.size) {
+            if (nums[j] > nums[i]) {
+                dfs(nums, j)
+                val (length, count) = dp[j]
+                if (1 + length > maxLen) {
+                    maxLen = 1 + length
+                    maxCnt = count
+                } else if (1 + length == maxLen) {
+                    maxCnt += count
+                }
+            }
+        }
+
+        dp[i] = intArrayOf(maxLen, maxCnt)
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp: [[Int]] = []
+
+    func findNumberOfLIS(_ nums: [Int]) -> Int {
+        let n = nums.count
+        dp = Array(repeating: [-1, -1], count: n)
+
+        var lenLIS = 0
+        var res = 0
+        for i in 0..<n {
+            dfs(nums, i)
+            let maxLen = dp[i][0]
+            let maxCnt = dp[i][1]
+            if maxLen > lenLIS {
+                lenLIS = maxLen
+                res = maxCnt
+            } else if maxLen == lenLIS {
+                res += maxCnt
+            }
+        }
+        return res
+    }
+
+    private func dfs(_ nums: [Int], _ i: Int) {
+        if dp[i][0] != -1 { return }
+
+        var maxLen = 1
+        var maxCnt = 1
+        for j in (i + 1)..<nums.count {
+            if nums[j] > nums[i] {
+                dfs(nums, j)
+                let length = dp[j][0]
+                let count = dp[j][1]
+                if 1 + length > maxLen {
+                    maxLen = 1 + length
+                    maxCnt = count
+                } else if 1 + length == maxLen {
+                    maxCnt += count
+                }
+            }
+        }
+
+        dp[i] = [maxLen, maxCnt]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,6 +764,154 @@ class Solution {
             dp[i] = [maxLen, maxCnt];
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindNumberOfLIS(int[] nums) {
+        int n = nums.Length;
+        int[][] dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[2];
+        }
+        int lenLIS = 0, res = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            int maxLen = 1, maxCnt = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (nums[j] > nums[i]) {
+                    int length = dp[j][0];
+                    int count = dp[j][1];
+                    if (length + 1 > maxLen) {
+                        maxLen = length + 1;
+                        maxCnt = count;
+                    } else if (length + 1 == maxLen) {
+                        maxCnt += count;
+                    }
+                }
+            }
+
+            if (maxLen > lenLIS) {
+                lenLIS = maxLen;
+                res = maxCnt;
+            } else if (maxLen == lenLIS) {
+                res += maxCnt;
+            }
+            dp[i][0] = maxLen;
+            dp[i][1] = maxCnt;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func findNumberOfLIS(nums []int) int {
+    n := len(nums)
+    dp := make([][2]int, n)
+    lenLIS, res := 0, 0
+
+    for i := n - 1; i >= 0; i-- {
+        maxLen, maxCnt := 1, 1
+        for j := i + 1; j < n; j++ {
+            if nums[j] > nums[i] {
+                length, count := dp[j][0], dp[j][1]
+                if length+1 > maxLen {
+                    maxLen = length + 1
+                    maxCnt = count
+                } else if length+1 == maxLen {
+                    maxCnt += count
+                }
+            }
+        }
+
+        if maxLen > lenLIS {
+            lenLIS = maxLen
+            res = maxCnt
+        } else if maxLen == lenLIS {
+            res += maxCnt
+        }
+        dp[i][0] = maxLen
+        dp[i][1] = maxCnt
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findNumberOfLIS(nums: IntArray): Int {
+        val n = nums.size
+        val dp = Array(n) { IntArray(2) }
+        var lenLIS = 0
+        var res = 0
+
+        for (i in n - 1 downTo 0) {
+            var maxLen = 1
+            var maxCnt = 1
+            for (j in i + 1 until n) {
+                if (nums[j] > nums[i]) {
+                    val length = dp[j][0]
+                    val count = dp[j][1]
+                    if (length + 1 > maxLen) {
+                        maxLen = length + 1
+                        maxCnt = count
+                    } else if (length + 1 == maxLen) {
+                        maxCnt += count
+                    }
+                }
+            }
+
+            if (maxLen > lenLIS) {
+                lenLIS = maxLen
+                res = maxCnt
+            } else if (maxLen == lenLIS) {
+                res += maxCnt
+            }
+            dp[i][0] = maxLen
+            dp[i][1] = maxCnt
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findNumberOfLIS(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var dp = Array(repeating: [0, 0], count: n)
+        var lenLIS = 0
+        var res = 0
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            var maxLen = 1
+            var maxCnt = 1
+            for j in (i + 1)..<n {
+                if nums[j] > nums[i] {
+                    let length = dp[j][0]
+                    let count = dp[j][1]
+                    if length + 1 > maxLen {
+                        maxLen = length + 1
+                        maxCnt = count
+                    } else if length + 1 == maxLen {
+                        maxCnt += count
+                    }
+                }
+            }
+
+            if maxLen > lenLIS {
+                lenLIS = maxLen
+                res = maxCnt
+            } else if maxLen == lenLIS {
+                res += maxCnt
+            }
+            dp[i][0] = maxLen
+            dp[i][1] = maxCnt
+        }
+        return res
     }
 }
 ```
@@ -703,6 +1160,249 @@ class Solution {
         }
 
         return dp[dp.length - 1][dp[dp.length - 1].length - 1][1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private List<List<int[]>> dp;
+
+    public int FindNumberOfLIS(int[] nums) {
+        dp = new List<List<int[]>>();
+        var first = new List<int[]> {
+            new int[] { 0, 0 },
+            new int[] { nums[0], 1 }
+        };
+        dp.Add(first);
+
+        int LIS = 1;
+
+        for (int i = 1; i < nums.Length; i++) {
+            int num = nums[i];
+            if (num > dp[dp.Count - 1][dp[dp.Count - 1].Count - 1][0]) {
+                int count = Bs2(LIS - 1, num);
+                var newList = new List<int[]> {
+                    new int[] { 0, 0 },
+                    new int[] { num, count }
+                };
+                dp.Add(newList);
+                LIS++;
+            } else {
+                int j = Bs1(num);
+                int count = Bs2(j - 1, num);
+                var list = dp[j];
+                int[] last = list[list.Count - 1];
+                list.Add(new int[] { num, last[1] + count });
+            }
+        }
+
+        return dp[dp.Count - 1][dp[dp.Count - 1].Count - 1][1];
+    }
+
+    private int Bs1(int num) {
+        int l = 0, r = dp.Count - 1, j = dp.Count - 1;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (dp[mid][dp[mid].Count - 1][0] < num) {
+                l = mid + 1;
+            } else {
+                j = mid;
+                r = mid - 1;
+            }
+        }
+        return j;
+    }
+
+    private int Bs2(int i, int num) {
+        if (i < 0) return 1;
+        int l = 1, r = dp[i].Count - 1, j = 0;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (dp[i][mid][0] >= num) {
+                j = mid;
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        return dp[i][dp[i].Count - 1][1] - dp[i][j][1];
+    }
+}
+```
+
+```go
+func findNumberOfLIS(nums []int) int {
+    dp := [][][2]int{{{0, 0}, {nums[0], 1}}}
+    LIS := 1
+
+    bs1 := func(num int) int {
+        l, r, j := 0, len(dp)-1, len(dp)-1
+        for l <= r {
+            mid := (l + r) / 2
+            if dp[mid][len(dp[mid])-1][0] < num {
+                l = mid + 1
+            } else {
+                j = mid
+                r = mid - 1
+            }
+        }
+        return j
+    }
+
+    bs2 := func(i, num int) int {
+        if i < 0 {
+            return 1
+        }
+        l, r, j := 1, len(dp[i])-1, 0
+        for l <= r {
+            mid := (l + r) / 2
+            if dp[i][mid][0] >= num {
+                j = mid
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+        return dp[i][len(dp[i])-1][1] - dp[i][j][1]
+    }
+
+    for i := 1; i < len(nums); i++ {
+        num := nums[i]
+        if num > dp[len(dp)-1][len(dp[len(dp)-1])-1][0] {
+            count := bs2(LIS-1, num)
+            dp = append(dp, [][2]int{{0, 0}, {num, count}})
+            LIS++
+        } else {
+            j := bs1(num)
+            count := bs2(j-1, num)
+            dp[j] = append(dp[j], [2]int{num, dp[j][len(dp[j])-1][1] + count})
+        }
+    }
+
+    return dp[len(dp)-1][len(dp[len(dp)-1])-1][1]
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: MutableList<MutableList<IntArray>>
+
+    fun findNumberOfLIS(nums: IntArray): Int {
+        dp = mutableListOf(
+            mutableListOf(intArrayOf(0, 0), intArrayOf(nums[0], 1))
+        )
+        var LIS = 1
+
+        for (i in 1 until nums.size) {
+            val num = nums[i]
+            if (num > dp.last().last()[0]) {
+                val count = bs2(LIS - 1, num)
+                dp.add(mutableListOf(intArrayOf(0, 0), intArrayOf(num, count)))
+                LIS++
+            } else {
+                val j = bs1(num)
+                val count = bs2(j - 1, num)
+                val list = dp[j]
+                val last = list.last()
+                list.add(intArrayOf(num, last[1] + count))
+            }
+        }
+
+        return dp.last().last()[1]
+    }
+
+    private fun bs1(num: Int): Int {
+        var l = 0
+        var r = dp.size - 1
+        var j = dp.size - 1
+        while (l <= r) {
+            val mid = (l + r) / 2
+            if (dp[mid].last()[0] < num) {
+                l = mid + 1
+            } else {
+                j = mid
+                r = mid - 1
+            }
+        }
+        return j
+    }
+
+    private fun bs2(i: Int, num: Int): Int {
+        if (i < 0) return 1
+        var l = 1
+        var r = dp[i].size - 1
+        var j = 0
+        while (l <= r) {
+            val mid = (l + r) / 2
+            if (dp[i][mid][0] >= num) {
+                j = mid
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+        return dp[i].last()[1] - dp[i][j][1]
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp: [[[Int]]] = []
+
+    func findNumberOfLIS(_ nums: [Int]) -> Int {
+        dp = [[[0, 0], [nums[0], 1]]]
+        var LIS = 1
+
+        for i in 1..<nums.count {
+            let num = nums[i]
+            if num > dp[dp.count - 1][dp[dp.count - 1].count - 1][0] {
+                let count = bs2(LIS - 1, num)
+                dp.append([[0, 0], [num, count]])
+                LIS += 1
+            } else {
+                let j = bs1(num)
+                let count = bs2(j - 1, num)
+                let last = dp[j][dp[j].count - 1]
+                dp[j].append([num, last[1] + count])
+            }
+        }
+
+        return dp[dp.count - 1][dp[dp.count - 1].count - 1][1]
+    }
+
+    private func bs1(_ num: Int) -> Int {
+        var l = 0
+        var r = dp.count - 1
+        var j = dp.count - 1
+        while l <= r {
+            let mid = (l + r) / 2
+            if dp[mid][dp[mid].count - 1][0] < num {
+                l = mid + 1
+            } else {
+                j = mid
+                r = mid - 1
+            }
+        }
+        return j
+    }
+
+    private func bs2(_ i: Int, _ num: Int) -> Int {
+        if i < 0 { return 1 }
+        var l = 1
+        var r = dp[i].count - 1
+        var j = 0
+        while l <= r {
+            let mid = (l + r) / 2
+            if dp[i][mid][0] >= num {
+                j = mid
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+        return dp[i][dp[i].count - 1][1] - dp[i][j][1]
     }
 }
 ```

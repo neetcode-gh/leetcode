@@ -232,6 +232,137 @@ public class MyCircularQueue {
 }
 ```
 
+```go
+type MyCircularQueue struct {
+    q []int
+    k int
+}
+
+func Constructor(k int) MyCircularQueue {
+    return MyCircularQueue{
+        q: []int{},
+        k: k,
+    }
+}
+
+func (this *MyCircularQueue) EnQueue(value int) bool {
+    if len(this.q) == this.k {
+        return false
+    }
+    this.q = append(this.q, value)
+    return true
+}
+
+func (this *MyCircularQueue) DeQueue() bool {
+    if len(this.q) == 0 {
+        return false
+    }
+    this.q = this.q[1:]
+    return true
+}
+
+func (this *MyCircularQueue) Front() int {
+    if len(this.q) > 0 {
+        return this.q[0]
+    }
+    return -1
+}
+
+func (this *MyCircularQueue) Rear() int {
+    if len(this.q) > 0 {
+        return this.q[len(this.q)-1]
+    }
+    return -1
+}
+
+func (this *MyCircularQueue) IsEmpty() bool {
+    return len(this.q) == 0
+}
+
+func (this *MyCircularQueue) IsFull() bool {
+    return len(this.q) == this.k
+}
+```
+
+```kotlin
+class MyCircularQueue(k: Int) {
+    private val q = mutableListOf<Int>()
+    private val capacity = k
+
+    fun enQueue(value: Int): Boolean {
+        if (q.size == capacity) return false
+        q.add(value)
+        return true
+    }
+
+    fun deQueue(): Boolean {
+        if (q.isEmpty()) return false
+        q.removeAt(0)
+        return true
+    }
+
+    fun Front(): Int {
+        return if (q.isNotEmpty()) q[0] else -1
+    }
+
+    fun Rear(): Int {
+        return if (q.isNotEmpty()) q[q.size - 1] else -1
+    }
+
+    fun isEmpty(): Boolean {
+        return q.isEmpty()
+    }
+
+    fun isFull(): Boolean {
+        return q.size == capacity
+    }
+}
+```
+
+```swift
+class MyCircularQueue {
+    private var q: [Int]
+    private var k: Int
+
+    init(_ k: Int) {
+        self.q = []
+        self.k = k
+    }
+
+    func enQueue(_ value: Int) -> Bool {
+        if q.count == k {
+            return false
+        }
+        q.append(value)
+        return true
+    }
+
+    func deQueue() -> Bool {
+        if q.isEmpty {
+            return false
+        }
+        q.removeFirst()
+        return true
+    }
+
+    func Front() -> Int {
+        return q.isEmpty ? -1 : q[0]
+    }
+
+    func Rear() -> Int {
+        return q.isEmpty ? -1 : q[q.count - 1]
+    }
+
+    func isEmpty() -> Bool {
+        return q.isEmpty
+    }
+
+    func isFull() -> Bool {
+        return q.count == k
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -514,6 +645,161 @@ public class MyCircularQueue {
 
     public bool IsFull() {
         return size == k;
+    }
+}
+```
+
+```go
+type MyCircularQueue struct {
+    q        []int
+    k        int
+    front    int
+    rear     int
+    size     int
+}
+
+func Constructor(k int) MyCircularQueue {
+    return MyCircularQueue{
+        q:     make([]int, k),
+        k:     k,
+        front: 0,
+        rear:  -1,
+        size:  0,
+    }
+}
+
+func (this *MyCircularQueue) EnQueue(value int) bool {
+    if this.IsFull() {
+        return false
+    }
+    this.rear = (this.rear + 1) % this.k
+    this.q[this.rear] = value
+    this.size++
+    return true
+}
+
+func (this *MyCircularQueue) DeQueue() bool {
+    if this.IsEmpty() {
+        return false
+    }
+    this.front = (this.front + 1) % this.k
+    this.size--
+    return true
+}
+
+func (this *MyCircularQueue) Front() int {
+    if this.IsEmpty() {
+        return -1
+    }
+    return this.q[this.front]
+}
+
+func (this *MyCircularQueue) Rear() int {
+    if this.IsEmpty() {
+        return -1
+    }
+    return this.q[this.rear]
+}
+
+func (this *MyCircularQueue) IsEmpty() bool {
+    return this.size == 0
+}
+
+func (this *MyCircularQueue) IsFull() bool {
+    return this.size == this.k
+}
+```
+
+```kotlin
+class MyCircularQueue(k: Int) {
+    private val q = IntArray(k)
+    private val capacity = k
+    private var front = 0
+    private var rear = -1
+    private var size = 0
+
+    fun enQueue(value: Int): Boolean {
+        if (isFull()) return false
+        rear = (rear + 1) % capacity
+        q[rear] = value
+        size++
+        return true
+    }
+
+    fun deQueue(): Boolean {
+        if (isEmpty()) return false
+        front = (front + 1) % capacity
+        size--
+        return true
+    }
+
+    fun Front(): Int {
+        return if (isEmpty()) -1 else q[front]
+    }
+
+    fun Rear(): Int {
+        return if (isEmpty()) -1 else q[rear]
+    }
+
+    fun isEmpty(): Boolean {
+        return size == 0
+    }
+
+    fun isFull(): Boolean {
+        return size == capacity
+    }
+}
+```
+
+```swift
+class MyCircularQueue {
+    private var q: [Int]
+    private var k: Int
+    private var front: Int
+    private var rear: Int
+    private var size: Int
+
+    init(_ k: Int) {
+        self.q = [Int](repeating: 0, count: k)
+        self.k = k
+        self.front = 0
+        self.rear = -1
+        self.size = 0
+    }
+
+    func enQueue(_ value: Int) -> Bool {
+        if isFull() {
+            return false
+        }
+        rear = (rear + 1) % k
+        q[rear] = value
+        size += 1
+        return true
+    }
+
+    func deQueue() -> Bool {
+        if isEmpty() {
+            return false
+        }
+        front = (front + 1) % k
+        size -= 1
+        return true
+    }
+
+    func Front() -> Int {
+        return isEmpty() ? -1 : q[front]
+    }
+
+    func Rear() -> Int {
+        return isEmpty() ? -1 : q[rear]
+    }
+
+    func isEmpty() -> Bool {
+        return size == 0
+    }
+
+    func isFull() -> Bool {
+        return size == k
     }
 }
 ```
@@ -839,6 +1125,191 @@ public class MyCircularQueue {
 
     public bool IsFull() {
         return space == 0;
+    }
+}
+```
+
+```go
+type ListNode struct {
+    val  int
+    next *ListNode
+    prev *ListNode
+}
+
+type MyCircularQueue struct {
+    space int
+    left  *ListNode
+    right *ListNode
+}
+
+func Constructor(k int) MyCircularQueue {
+    left := &ListNode{val: 0}
+    right := &ListNode{val: 0, prev: left}
+    left.next = right
+    return MyCircularQueue{
+        space: k,
+        left:  left,
+        right: right,
+    }
+}
+
+func (this *MyCircularQueue) EnQueue(value int) bool {
+    if this.IsFull() {
+        return false
+    }
+    cur := &ListNode{val: value, next: this.right, prev: this.right.prev}
+    this.right.prev.next = cur
+    this.right.prev = cur
+    this.space--
+    return true
+}
+
+func (this *MyCircularQueue) DeQueue() bool {
+    if this.IsEmpty() {
+        return false
+    }
+    this.left.next = this.left.next.next
+    this.left.next.prev = this.left
+    this.space++
+    return true
+}
+
+func (this *MyCircularQueue) Front() int {
+    if this.IsEmpty() {
+        return -1
+    }
+    return this.left.next.val
+}
+
+func (this *MyCircularQueue) Rear() int {
+    if this.IsEmpty() {
+        return -1
+    }
+    return this.right.prev.val
+}
+
+func (this *MyCircularQueue) IsEmpty() bool {
+    return this.left.next == this.right
+}
+
+func (this *MyCircularQueue) IsFull() bool {
+    return this.space == 0
+}
+```
+
+```kotlin
+class ListNode(
+    var `val`: Int,
+    var next: ListNode? = null,
+    var prev: ListNode? = null
+)
+
+class MyCircularQueue(k: Int) {
+    private var space = k
+    private val left = ListNode(0)
+    private val right = ListNode(0)
+
+    init {
+        left.next = right
+        right.prev = left
+    }
+
+    fun enQueue(value: Int): Boolean {
+        if (isFull()) return false
+        val cur = ListNode(value, right, right.prev)
+        right.prev?.next = cur
+        right.prev = cur
+        space--
+        return true
+    }
+
+    fun deQueue(): Boolean {
+        if (isEmpty()) return false
+        left.next = left.next?.next
+        left.next?.prev = left
+        space++
+        return true
+    }
+
+    fun Front(): Int {
+        return if (isEmpty()) -1 else left.next!!.`val`
+    }
+
+    fun Rear(): Int {
+        return if (isEmpty()) -1 else right.prev!!.`val`
+    }
+
+    fun isEmpty(): Boolean {
+        return left.next == right
+    }
+
+    fun isFull(): Boolean {
+        return space == 0
+    }
+}
+```
+
+```swift
+class ListNode {
+    var val: Int
+    var next: ListNode?
+    var prev: ListNode?
+
+    init(_ val: Int, _ next: ListNode? = nil, _ prev: ListNode? = nil) {
+        self.val = val
+        self.next = next
+        self.prev = prev
+    }
+}
+
+class MyCircularQueue {
+    private var space: Int
+    private var left: ListNode
+    private var right: ListNode
+
+    init(_ k: Int) {
+        space = k
+        left = ListNode(0)
+        right = ListNode(0)
+        left.next = right
+        right.prev = left
+    }
+
+    func enQueue(_ value: Int) -> Bool {
+        if isFull() {
+            return false
+        }
+        let cur = ListNode(value, right, right.prev)
+        right.prev?.next = cur
+        right.prev = cur
+        space -= 1
+        return true
+    }
+
+    func deQueue() -> Bool {
+        if isEmpty() {
+            return false
+        }
+        left.next = left.next?.next
+        left.next?.prev = left
+        space += 1
+        return true
+    }
+
+    func Front() -> Int {
+        return isEmpty() ? -1 : left.next!.val
+    }
+
+    func Rear() -> Int {
+        return isEmpty() ? -1 : right.prev!.val
+    }
+
+    func isEmpty() -> Bool {
+        return left.next === right
+    }
+
+    func isFull() -> Bool {
+        return space == 0
     }
 }
 ```
@@ -1198,6 +1669,210 @@ public class MyCircularQueue {
 
     public bool IsFull() {
         return this.space == 0;
+    }
+}
+```
+
+```go
+type ListNode struct {
+    val  int
+    next *ListNode
+}
+
+type MyCircularQueue struct {
+    space int
+    left  *ListNode
+    right *ListNode
+}
+
+func Constructor(k int) MyCircularQueue {
+    left := &ListNode{val: 0}
+    return MyCircularQueue{
+        space: k,
+        left:  left,
+        right: left,
+    }
+}
+
+func (this *MyCircularQueue) EnQueue(value int) bool {
+    if this.IsFull() {
+        return false
+    }
+
+    cur := &ListNode{val: value}
+    if this.IsEmpty() {
+        this.left.next = cur
+        this.right = cur
+    } else {
+        this.right.next = cur
+        this.right = cur
+    }
+
+    this.space--
+    return true
+}
+
+func (this *MyCircularQueue) DeQueue() bool {
+    if this.IsEmpty() {
+        return false
+    }
+
+    this.left.next = this.left.next.next
+    if this.left.next == nil {
+        this.right = this.left
+    }
+
+    this.space++
+    return true
+}
+
+func (this *MyCircularQueue) Front() int {
+    if this.IsEmpty() {
+        return -1
+    }
+    return this.left.next.val
+}
+
+func (this *MyCircularQueue) Rear() int {
+    if this.IsEmpty() {
+        return -1
+    }
+    return this.right.val
+}
+
+func (this *MyCircularQueue) IsEmpty() bool {
+    return this.left.next == nil
+}
+
+func (this *MyCircularQueue) IsFull() bool {
+    return this.space == 0
+}
+```
+
+```kotlin
+class ListNode(var `val`: Int) {
+    var next: ListNode? = null
+}
+
+class MyCircularQueue(k: Int) {
+    private var space = k
+    private val left = ListNode(0)
+    private var right = left
+
+    fun enQueue(value: Int): Boolean {
+        if (isFull()) return false
+
+        val cur = ListNode(value)
+        if (isEmpty()) {
+            left.next = cur
+            right = cur
+        } else {
+            right.next = cur
+            right = cur
+        }
+
+        space--
+        return true
+    }
+
+    fun deQueue(): Boolean {
+        if (isEmpty()) return false
+
+        left.next = left.next?.next
+        if (left.next == null) {
+            right = left
+        }
+
+        space++
+        return true
+    }
+
+    fun Front(): Int {
+        return if (isEmpty()) -1 else left.next!!.`val`
+    }
+
+    fun Rear(): Int {
+        return if (isEmpty()) -1 else right.`val`
+    }
+
+    fun isEmpty(): Boolean {
+        return left.next == null
+    }
+
+    fun isFull(): Boolean {
+        return space == 0
+    }
+}
+```
+
+```swift
+class ListNode {
+    var val: Int
+    var next: ListNode?
+
+    init(_ val: Int) {
+        self.val = val
+        self.next = nil
+    }
+}
+
+class MyCircularQueue {
+    private var space: Int
+    private var left: ListNode
+    private var right: ListNode
+
+    init(_ k: Int) {
+        space = k
+        left = ListNode(0)
+        right = left
+    }
+
+    func enQueue(_ value: Int) -> Bool {
+        if isFull() {
+            return false
+        }
+
+        let cur = ListNode(value)
+        if isEmpty() {
+            left.next = cur
+            right = cur
+        } else {
+            right.next = cur
+            right = cur
+        }
+
+        space -= 1
+        return true
+    }
+
+    func deQueue() -> Bool {
+        if isEmpty() {
+            return false
+        }
+
+        left.next = left.next?.next
+        if left.next == nil {
+            right = left
+        }
+
+        space += 1
+        return true
+    }
+
+    func Front() -> Int {
+        return isEmpty() ? -1 : left.next!.val
+    }
+
+    func Rear() -> Int {
+        return isEmpty() ? -1 : right.val
+    }
+
+    func isEmpty() -> Bool {
+        return left.next == nil
+    }
+
+    func isFull() -> Bool {
+        return space == 0
     }
 }
 ```

@@ -153,6 +153,97 @@ public class Solution {
 }
 ```
 
+```go
+func mincostTickets(days []int, costs []int) int {
+    n := len(days)
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == n {
+            return 0
+        }
+
+        res := costs[0] + dfs(i+1)
+
+        j := i
+        for j < n && days[j] < days[i]+7 {
+            j++
+        }
+        res = min(res, costs[1]+dfs(j))
+
+        j = i
+        for j < n && days[j] < days[i]+30 {
+            j++
+        }
+        res = min(res, costs[2]+dfs(j))
+
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val n = days.size
+
+        fun dfs(i: Int): Int {
+            if (i == n) return 0
+
+            var res = costs[0] + dfs(i + 1)
+
+            var j = i
+            while (j < n && days[j] < days[i] + 7) {
+                j++
+            }
+            res = minOf(res, costs[1] + dfs(j))
+
+            j = i
+            while (j < n && days[j] < days[i] + 30) {
+                j++
+            }
+            res = minOf(res, costs[2] + dfs(j))
+
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        let n = days.count
+
+        func dfs(_ i: Int) -> Int {
+            if i == n { return 0 }
+
+            var res = costs[0] + dfs(i + 1)
+
+            var j = i
+            while j < n && days[j] < days[i] + 7 {
+                j += 1
+            }
+            res = min(res, costs[1] + dfs(j))
+
+            j = i
+            while j < n && days[j] < days[i] + 30 {
+                j += 1
+            }
+            res = min(res, costs[2] + dfs(j))
+
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -314,6 +405,94 @@ public class Solution {
 }
 ```
 
+```go
+func mincostTickets(days []int, costs []int) int {
+    n := len(days)
+    dp := make([]int, n)
+    for i := range dp {
+        dp[i] = -1
+    }
+
+    durations := []int{1, 7, 30}
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == n {
+            return 0
+        }
+        if dp[i] != -1 {
+            return dp[i]
+        }
+
+        dp[i] = math.MaxInt32
+        j := i
+        for k, d := range durations {
+            for j < n && days[j] < days[i]+d {
+                j++
+            }
+            dp[i] = min(dp[i], costs[k]+dfs(j))
+        }
+        return dp[i]
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val n = days.size
+        val dp = IntArray(n) { -1 }
+        val durations = intArrayOf(1, 7, 30)
+
+        fun dfs(i: Int): Int {
+            if (i == n) return 0
+            if (dp[i] != -1) return dp[i]
+
+            dp[i] = Int.MAX_VALUE
+            var j = i
+            for (k in 0..2) {
+                while (j < n && days[j] < days[i] + durations[k]) {
+                    j++
+                }
+                dp[i] = minOf(dp[i], costs[k] + dfs(j))
+            }
+            return dp[i]
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        let n = days.count
+        var dp = [Int: Int]()
+        let durations = [1, 7, 30]
+
+        func dfs(_ i: Int) -> Int {
+            if i == n { return 0 }
+            if let val = dp[i] { return val }
+
+            dp[i] = Int.max
+            var j = i
+            for k in 0..<3 {
+                while j < n && days[j] < days[i] + durations[k] {
+                    j += 1
+                }
+                dp[i] = min(dp[i]!, costs[k] + dfs(j))
+            }
+            return dp[i]!
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -437,6 +616,73 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func mincostTickets(days []int, costs []int) int {
+    n := len(days)
+    dp := make([]int, n+1)
+    durations := []int{1, 7, 30}
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i] = math.MaxInt32
+        j := i
+        for k := 0; k < 3; k++ {
+            for j < n && days[j] < days[i]+durations[k] {
+                j++
+            }
+            dp[i] = min(dp[i], costs[k]+dp[j])
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val n = days.size
+        val dp = IntArray(n + 1)
+        val durations = intArrayOf(1, 7, 30)
+
+        for (i in n - 1 downTo 0) {
+            dp[i] = Int.MAX_VALUE
+            var j = i
+            for (k in 0..2) {
+                while (j < n && days[j] < days[i] + durations[k]) {
+                    j++
+                }
+                dp[i] = minOf(dp[i], costs[k] + dp[j])
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        let n = days.count
+        var dp = [Int](repeating: 0, count: n + 1)
+        let durations = [1, 7, 30]
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i] = Int.max
+            var j = i
+            for k in 0..<3 {
+                while j < n && days[j] < days[i] + durations[k] {
+                    j += 1
+                }
+                dp[i] = min(dp[i], costs[k] + dp[j])
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -596,6 +842,87 @@ public class Solution {
 }
 ```
 
+```go
+func mincostTickets(days []int, costs []int) int {
+    days = append(days, days[len(days)-1]+30)
+    n := len(days)
+    dp := make([]int, n)
+    last7, last30 := n, n
+
+    for i := n - 2; i >= 0; i-- {
+        dp[i] = dp[i+1] + costs[0]
+
+        for last7 > i+1 && days[last7-1] >= days[i]+7 {
+            last7--
+        }
+        dp[i] = min(dp[i], costs[1]+dp[last7])
+
+        for last30 > i+1 && days[last30-1] >= days[i]+30 {
+            last30--
+        }
+        dp[i] = min(dp[i], costs[2]+dp[last30])
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val newDays = days.toMutableList().apply { add(days.last() + 30) }.toIntArray()
+        val n = newDays.size
+        val dp = IntArray(n)
+        var last7 = n
+        var last30 = n
+
+        for (i in n - 2 downTo 0) {
+            dp[i] = dp[i + 1] + costs[0]
+
+            while (last7 > i + 1 && newDays[last7 - 1] >= newDays[i] + 7) {
+                last7--
+            }
+            dp[i] = minOf(dp[i], costs[1] + dp[last7])
+
+            while (last30 > i + 1 && newDays[last30 - 1] >= newDays[i] + 30) {
+                last30--
+            }
+            dp[i] = minOf(dp[i], costs[2] + dp[last30])
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        var days = days + [days.last! + 30]
+        let n = days.count
+        var dp = [Int](repeating: 0, count: n)
+        var last7 = n
+        var last30 = n
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            dp[i] = dp[i + 1] + costs[0]
+
+            while last7 > i + 1 && days[last7 - 1] >= days[i] + 7 {
+                last7 -= 1
+            }
+            dp[i] = min(dp[i], costs[1] + dp[last7])
+
+            while last30 > i + 1 && days[last30 - 1] >= days[i] + 30 {
+                last30 -= 1
+            }
+            dp[i] = min(dp[i], costs[2] + dp[last30])
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -740,6 +1067,82 @@ public class Solution {
         }
 
         return dp;
+    }
+}
+```
+
+```go
+func mincostTickets(days []int, costs []int) int {
+    dp7 := [][2]int{}
+    dp30 := [][2]int{}
+    dp := 0
+
+    for _, d := range days {
+        for len(dp7) > 0 && dp7[0][0]+7 <= d {
+            dp7 = dp7[1:]
+        }
+        for len(dp30) > 0 && dp30[0][0]+30 <= d {
+            dp30 = dp30[1:]
+        }
+
+        dp7 = append(dp7, [2]int{d, dp + costs[1]})
+        dp30 = append(dp30, [2]int{d, dp + costs[2]})
+
+        dp = min(dp+costs[0], min(dp7[0][1], dp30[0][1]))
+    }
+
+    return dp
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val dp7 = ArrayDeque<IntArray>()
+        val dp30 = ArrayDeque<IntArray>()
+        var dp = 0
+
+        for (d in days) {
+            while (dp7.isNotEmpty() && dp7.first()[0] + 7 <= d) {
+                dp7.removeFirst()
+            }
+            while (dp30.isNotEmpty() && dp30.first()[0] + 30 <= d) {
+                dp30.removeFirst()
+            }
+
+            dp7.addLast(intArrayOf(d, dp + costs[1]))
+            dp30.addLast(intArrayOf(d, dp + costs[2]))
+
+            dp = minOf(dp + costs[0], minOf(dp7.first()[1], dp30.first()[1]))
+        }
+
+        return dp
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        var dp7 = [(Int, Int)]()
+        var dp30 = [(Int, Int)]()
+        var dp = 0
+
+        for d in days {
+            while !dp7.isEmpty && dp7.first!.0 + 7 <= d {
+                dp7.removeFirst()
+            }
+            while !dp30.isEmpty && dp30.first!.0 + 30 <= d {
+                dp30.removeFirst()
+            }
+
+            dp7.append((d, dp + costs[1]))
+            dp30.append((d, dp + costs[2]))
+
+            dp = min(dp + costs[0], min(dp7.first!.1, dp30.first!.1))
+        }
+
+        return dp
     }
 }
 ```
@@ -903,6 +1306,98 @@ public class Solution {
 }
 ```
 
+```go
+func mincostTickets(days []int, costs []int) int {
+    dp7 := [][2]int{}
+    dp30 := [][2]int{}
+    dp := 0
+    last7, last30 := 0, 0
+
+    for i := len(days) - 1; i >= 0; i-- {
+        dp += costs[0]
+
+        for len(dp7) > 0 && dp7[len(dp7)-1][0] >= days[i]+7 {
+            last7 = dp7[len(dp7)-1][1]
+            dp7 = dp7[:len(dp7)-1]
+        }
+        dp = min(dp, costs[1]+last7)
+
+        for len(dp30) > 0 && dp30[len(dp30)-1][0] >= days[i]+30 {
+            last30 = dp30[len(dp30)-1][1]
+            dp30 = dp30[:len(dp30)-1]
+        }
+        dp = min(dp, costs[2]+last30)
+
+        dp7 = append([][2]int{{days[i], dp}}, dp7...)
+        dp30 = append([][2]int{{days[i], dp}}, dp30...)
+    }
+
+    return dp
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val dp7 = ArrayDeque<IntArray>()
+        val dp30 = ArrayDeque<IntArray>()
+        var dp = 0
+        var last7 = 0
+        var last30 = 0
+
+        for (i in days.size - 1 downTo 0) {
+            dp += costs[0]
+
+            while (dp7.isNotEmpty() && dp7.last()[0] >= days[i] + 7) {
+                last7 = dp7.removeLast()[1]
+            }
+            dp = minOf(dp, costs[1] + last7)
+
+            while (dp30.isNotEmpty() && dp30.last()[0] >= days[i] + 30) {
+                last30 = dp30.removeLast()[1]
+            }
+            dp = minOf(dp, costs[2] + last30)
+
+            dp7.addFirst(intArrayOf(days[i], dp))
+            dp30.addFirst(intArrayOf(days[i], dp))
+        }
+
+        return dp
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        var dp7 = [(Int, Int)]()
+        var dp30 = [(Int, Int)]()
+        var dp = 0
+        var last7 = 0
+        var last30 = 0
+
+        for i in stride(from: days.count - 1, through: 0, by: -1) {
+            dp += costs[0]
+
+            while !dp7.isEmpty && dp7.last!.0 >= days[i] + 7 {
+                last7 = dp7.removeLast().1
+            }
+            dp = min(dp, costs[1] + last7)
+
+            while !dp30.isEmpty && dp30.last!.0 >= days[i] + 30 {
+                last30 = dp30.removeLast().1
+            }
+            dp = min(dp, costs[2] + last30)
+
+            dp7.insert((days[i], dp), at: 0)
+            dp30.insert((days[i], dp), at: 0)
+        }
+
+        return dp
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1038,6 +1533,87 @@ public class Solution {
         }
 
         return dp[365];
+    }
+}
+```
+
+```go
+func mincostTickets(days []int, costs []int) int {
+    dp := make([]int, 366)
+    i := 0
+
+    for d := 1; d < 366; d++ {
+        dp[d] = dp[d-1]
+        if i == len(days) {
+            return dp[d]
+        }
+
+        if d == days[i] {
+            dp[d] += costs[0]
+            d7 := d - 7
+            if d7 < 0 {
+                d7 = 0
+            }
+            dp[d] = min(dp[d], costs[1]+dp[d7])
+            d30 := d - 30
+            if d30 < 0 {
+                d30 = 0
+            }
+            dp[d] = min(dp[d], costs[2]+dp[d30])
+            i++
+        }
+    }
+
+    return dp[365]
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val dp = IntArray(366)
+        var i = 0
+
+        for (d in 1..365) {
+            dp[d] = dp[d - 1]
+            if (i == days.size) {
+                return dp[d]
+            }
+
+            if (d == days[i]) {
+                dp[d] += costs[0]
+                dp[d] = minOf(dp[d], costs[1] + dp[maxOf(0, d - 7)])
+                dp[d] = minOf(dp[d], costs[2] + dp[maxOf(0, d - 30)])
+                i++
+            }
+        }
+
+        return dp[365]
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        var dp = [Int](repeating: 0, count: 366)
+        var i = 0
+
+        for d in 1...365 {
+            dp[d] = dp[d - 1]
+            if i == days.count {
+                return dp[d]
+            }
+
+            if d == days[i] {
+                dp[d] += costs[0]
+                dp[d] = min(dp[d], costs[1] + dp[max(0, d - 7)])
+                dp[d] = min(dp[d], costs[2] + dp[max(0, d - 30)])
+                i += 1
+            }
+        }
+
+        return dp[365]
     }
 }
 ```
@@ -1182,6 +1758,86 @@ public class Solution {
         }
 
         return dp[days[days.Length - 1] % 31];
+    }
+}
+```
+
+```go
+func mincostTickets(days []int, costs []int) int {
+    dp := make([]int, 31)
+    i := 0
+
+    for d := 1; d <= 365; d++ {
+        if i >= len(days) {
+            break
+        }
+
+        dp[d%31] = dp[(d-1+31)%31]
+
+        if d == days[i] {
+            dp[d%31] += costs[0]
+            d7 := d - 7
+            if d7 < 0 {
+                d7 = 0
+            }
+            dp[d%31] = min(dp[d%31], costs[1]+dp[d7%31])
+            d30 := d - 30
+            if d30 < 0 {
+                d30 = 0
+            }
+            dp[d%31] = min(dp[d%31], costs[2]+dp[d30%31])
+            i++
+        }
+    }
+
+    return dp[days[len(days)-1]%31]
+}
+```
+
+```kotlin
+class Solution {
+    fun mincostTickets(days: IntArray, costs: IntArray): Int {
+        val dp = IntArray(31)
+        var i = 0
+
+        for (d in 1..365) {
+            if (i >= days.size) break
+
+            dp[d % 31] = dp[(d - 1) % 31]
+
+            if (d == days[i]) {
+                dp[d % 31] += costs[0]
+                dp[d % 31] = minOf(dp[d % 31], costs[1] + dp[maxOf(0, d - 7) % 31])
+                dp[d % 31] = minOf(dp[d % 31], costs[2] + dp[maxOf(0, d - 30) % 31])
+                i++
+            }
+        }
+
+        return dp[days.last() % 31]
+    }
+}
+```
+
+```swift
+class Solution {
+    func mincostTickets(_ days: [Int], _ costs: [Int]) -> Int {
+        var dp = [Int](repeating: 0, count: 31)
+        var i = 0
+
+        for d in 1...365 {
+            if i >= days.count { break }
+
+            dp[d % 31] = dp[(d - 1) % 31]
+
+            if d == days[i] {
+                dp[d % 31] += costs[0]
+                dp[d % 31] = min(dp[d % 31], costs[1] + dp[max(0, d - 7) % 31])
+                dp[d % 31] = min(dp[d % 31], costs[2] + dp[max(0, d - 30) % 31])
+                i += 1
+            }
+        }
+
+        return dp[days.last! % 31]
     }
 }
 ```

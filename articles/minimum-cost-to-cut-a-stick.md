@@ -88,6 +88,86 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinCost(int n, int[] cuts) {
+        return Dfs(0, n, cuts);
+    }
+
+    private int Dfs(int l, int r, int[] cuts) {
+        if (r - l == 1) return 0;
+        int res = int.MaxValue;
+        foreach (int c in cuts) {
+            if (l < c && c < r) {
+                res = Math.Min(res, (r - l) + Dfs(l, c, cuts) + Dfs(c, r, cuts));
+            }
+        }
+        return res == int.MaxValue ? 0 : res;
+    }
+}
+```
+
+```go
+func minCost(n int, cuts []int) int {
+    var dfs func(l, r int) int
+    dfs = func(l, r int) int {
+        if r-l == 1 {
+            return 0
+        }
+        res := math.MaxInt32
+        for _, c := range cuts {
+            if l < c && c < r {
+                cur := (r - l) + dfs(l, c) + dfs(c, r)
+                if cur < res {
+                    res = cur
+                }
+            }
+        }
+        if res == math.MaxInt32 {
+            return 0
+        }
+        return res
+    }
+    return dfs(0, n)
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(n: Int, cuts: IntArray): Int {
+        fun dfs(l: Int, r: Int): Int {
+            if (r - l == 1) return 0
+            var res = Int.MAX_VALUE
+            for (c in cuts) {
+                if (l < c && c < r) {
+                    res = minOf(res, (r - l) + dfs(l, c) + dfs(c, r))
+                }
+            }
+            return if (res == Int.MAX_VALUE) 0 else res
+        }
+        return dfs(0, n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ n: Int, _ cuts: [Int]) -> Int {
+        func dfs(_ l: Int, _ r: Int) -> Int {
+            if r - l == 1 { return 0 }
+            var res = Int.max
+            for c in cuts {
+                if l < c && c < r {
+                    res = min(res, (r - l) + dfs(l, c) + dfs(c, r))
+                }
+            }
+            return res == Int.max ? 0 : res
+        }
+        return dfs(0, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -219,6 +299,119 @@ class Solution {
         };
 
         return dfs(0, n);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private Dictionary<string, int> dp;
+
+    public int MinCost(int n, int[] cuts) {
+        dp = new Dictionary<string, int>();
+        return Dfs(0, n, cuts);
+    }
+
+    private int Dfs(int l, int r, int[] cuts) {
+        if (r - l == 1) return 0;
+        string key = $"{l},{r}";
+        if (dp.ContainsKey(key)) return dp[key];
+
+        int res = int.MaxValue;
+        foreach (int c in cuts) {
+            if (l < c && c < r) {
+                res = Math.Min(res, (r - l) + Dfs(l, c, cuts) + Dfs(c, r, cuts));
+            }
+        }
+        res = res == int.MaxValue ? 0 : res;
+        dp[key] = res;
+        return res;
+    }
+}
+```
+
+```go
+func minCost(n int, cuts []int) int {
+    dp := make(map[string]int)
+
+    var dfs func(l, r int) int
+    dfs = func(l, r int) int {
+        if r-l == 1 {
+            return 0
+        }
+        key := fmt.Sprintf("%d,%d", l, r)
+        if val, ok := dp[key]; ok {
+            return val
+        }
+
+        res := math.MaxInt32
+        for _, c := range cuts {
+            if l < c && c < r {
+                cur := (r - l) + dfs(l, c) + dfs(c, r)
+                if cur < res {
+                    res = cur
+                }
+            }
+        }
+        if res == math.MaxInt32 {
+            res = 0
+        }
+        dp[key] = res
+        return res
+    }
+
+    return dfs(0, n)
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(n: Int, cuts: IntArray): Int {
+        val dp = mutableMapOf<String, Int>()
+
+        fun dfs(l: Int, r: Int): Int {
+            if (r - l == 1) return 0
+            val key = "$l,$r"
+            if (dp.containsKey(key)) return dp[key]!!
+
+            var res = Int.MAX_VALUE
+            for (c in cuts) {
+                if (l < c && c < r) {
+                    res = minOf(res, (r - l) + dfs(l, c) + dfs(c, r))
+                }
+            }
+            res = if (res == Int.MAX_VALUE) 0 else res
+            dp[key] = res
+            return res
+        }
+
+        return dfs(0, n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ n: Int, _ cuts: [Int]) -> Int {
+        var dp = [String: Int]()
+
+        func dfs(_ l: Int, _ r: Int) -> Int {
+            if r - l == 1 { return 0 }
+            let key = "\(l),\(r)"
+            if let val = dp[key] { return val }
+
+            var res = Int.max
+            for c in cuts {
+                if l < c && c < r {
+                    res = min(res, (r - l) + dfs(l, c) + dfs(c, r))
+                }
+            }
+            res = res == Int.max ? 0 : res
+            dp[key] = res
+            return res
+        }
+
+        return dfs(0, n)
     }
 }
 ```
@@ -359,6 +552,127 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int MinCost(int n, int[] cuts) {
+        int m = cuts.Length;
+        Array.Sort(cuts);
+        dp = new int[m + 1, m + 1];
+        for (int i = 0; i <= m; i++) {
+            for (int j = 0; j <= m; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, n, 0, m - 1, cuts);
+    }
+
+    private int Dfs(int l, int r, int i, int j, int[] cuts) {
+        if (i > j) return 0;
+        if (dp[i, j] != -1) return dp[i, j];
+
+        int res = int.MaxValue;
+        for (int mid = i; mid <= j; mid++) {
+            int cur = (r - l) + Dfs(l, cuts[mid], i, mid - 1, cuts) + Dfs(cuts[mid], r, mid + 1, j, cuts);
+            res = Math.Min(res, cur);
+        }
+
+        dp[i, j] = res;
+        return res;
+    }
+}
+```
+
+```go
+func minCost(n int, cuts []int) int {
+    m := len(cuts)
+    sort.Ints(cuts)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, m+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(l, r, i, j int) int
+    dfs = func(l, r, i, j int) int {
+        if i > j {
+            return 0
+        }
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+
+        res := math.MaxInt32
+        for mid := i; mid <= j; mid++ {
+            cur := (r - l) + dfs(l, cuts[mid], i, mid-1) + dfs(cuts[mid], r, mid+1, j)
+            if cur < res {
+                res = cur
+            }
+        }
+
+        dp[i][j] = res
+        return res
+    }
+
+    return dfs(0, n, 0, m-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(n: Int, cuts: IntArray): Int {
+        val m = cuts.size
+        cuts.sort()
+        val dp = Array(m + 1) { IntArray(m + 1) { -1 } }
+
+        fun dfs(l: Int, r: Int, i: Int, j: Int): Int {
+            if (i > j) return 0
+            if (dp[i][j] != -1) return dp[i][j]
+
+            var res = Int.MAX_VALUE
+            for (mid in i..j) {
+                val cur = (r - l) + dfs(l, cuts[mid], i, mid - 1) + dfs(cuts[mid], r, mid + 1, j)
+                res = minOf(res, cur)
+            }
+
+            dp[i][j] = res
+            return res
+        }
+
+        return dfs(0, n, 0, m - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ n: Int, _ cuts: [Int]) -> Int {
+        let m = cuts.count
+        let sortedCuts = cuts.sorted()
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: m + 1), count: m + 1)
+
+        func dfs(_ l: Int, _ r: Int, _ i: Int, _ j: Int) -> Int {
+            if i > j { return 0 }
+            if dp[i][j] != -1 { return dp[i][j] }
+
+            var res = Int.max
+            for mid in i...j {
+                let cur = (r - l) + dfs(l, sortedCuts[mid], i, mid - 1) + dfs(sortedCuts[mid], r, mid + 1, j)
+                res = min(res, cur)
+            }
+
+            dp[i][j] = res
+            return res
+        }
+
+        return dfs(0, n, 0, m - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -475,6 +789,117 @@ class Solution {
         }
 
         return dp[0][m + 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCost(int n, int[] cuts) {
+        int m = cuts.Length;
+        int[] newCuts = new int[m + 2];
+        Array.Copy(cuts, 0, newCuts, 1, m);
+        newCuts[0] = 0;
+        newCuts[m + 1] = n;
+        Array.Sort(newCuts);
+
+        int[,] dp = new int[m + 2, m + 2];
+
+        for (int length = 2; length <= m + 1; length++) {
+            for (int i = 0; i + length <= m + 1; i++) {
+                int j = i + length;
+                dp[i, j] = int.MaxValue;
+                for (int mid = i + 1; mid < j; mid++) {
+                    dp[i, j] = Math.Min(dp[i, j],
+                        newCuts[j] - newCuts[i] + dp[i, mid] + dp[mid, j]);
+                }
+            }
+        }
+
+        return dp[0, m + 1];
+    }
+}
+```
+
+```go
+func minCost(n int, cuts []int) int {
+    m := len(cuts)
+    newCuts := make([]int, m+2)
+    copy(newCuts[1:], cuts)
+    newCuts[0] = 0
+    newCuts[m+1] = n
+    sort.Ints(newCuts)
+
+    dp := make([][]int, m+2)
+    for i := range dp {
+        dp[i] = make([]int, m+2)
+    }
+
+    for length := 2; length <= m+1; length++ {
+        for i := 0; i+length <= m+1; i++ {
+            j := i + length
+            dp[i][j] = math.MaxInt32
+            for mid := i + 1; mid < j; mid++ {
+                val := newCuts[j] - newCuts[i] + dp[i][mid] + dp[mid][j]
+                if val < dp[i][j] {
+                    dp[i][j] = val
+                }
+            }
+        }
+    }
+
+    return dp[0][m+1]
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(n: Int, cuts: IntArray): Int {
+        val m = cuts.size
+        val newCuts = IntArray(m + 2)
+        newCuts[0] = 0
+        newCuts[m + 1] = n
+        for (i in cuts.indices) newCuts[i + 1] = cuts[i]
+        newCuts.sort()
+
+        val dp = Array(m + 2) { IntArray(m + 2) }
+
+        for (length in 2..m + 1) {
+            for (i in 0..m + 1 - length) {
+                val j = i + length
+                dp[i][j] = Int.MAX_VALUE
+                for (mid in i + 1 until j) {
+                    dp[i][j] = minOf(dp[i][j],
+                        newCuts[j] - newCuts[i] + dp[i][mid] + dp[mid][j])
+                }
+            }
+        }
+
+        return dp[0][m + 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ n: Int, _ cuts: [Int]) -> Int {
+        let m = cuts.count
+        var newCuts = [0] + cuts.sorted() + [n]
+
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: m + 2), count: m + 2)
+
+        for length in 2...m + 1 {
+            for i in 0...(m + 1 - length) {
+                let j = i + length
+                dp[i][j] = Int.max
+                for mid in (i + 1)..<j {
+                    dp[i][j] = min(dp[i][j],
+                        newCuts[j] - newCuts[i] + dp[i][mid] + dp[mid][j])
+                }
+            }
+        }
+
+        return dp[0][m + 1]
     }
 }
 ```

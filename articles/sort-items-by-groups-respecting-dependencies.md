@@ -281,6 +281,302 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortItems(int n, int m, int[] group, IList<IList<int>> beforeItems) {
+        for (int i = 0; i < n; i++) {
+            if (group[i] == -1) {
+                group[i] = m++;
+            }
+        }
+
+        List<int>[] itemAdj = new List<int>[n];
+        List<int>[] groupAdj = new List<int>[m];
+        for (int i = 0; i < n; i++) itemAdj[i] = new List<int>();
+        for (int i = 0; i < m; i++) groupAdj[i] = new List<int>();
+
+        for (int i = 0; i < n; i++) {
+            foreach (int parent in beforeItems[i]) {
+                itemAdj[parent].Add(i);
+                if (group[i] != group[parent]) {
+                    groupAdj[group[parent]].Add(group[i]);
+                }
+            }
+        }
+
+        List<int> itm = TopoSort(itemAdj, n);
+        if (itm.Count == 0) return new int[0];
+        List<int> grp = TopoSort(groupAdj, m);
+        if (grp.Count == 0) return new int[0];
+
+        List<int>[] grouping = new List<int>[m];
+        for (int i = 0; i < m; i++) grouping[i] = new List<int>();
+        foreach (int i in itm) {
+            grouping[group[i]].Add(i);
+        }
+
+        List<int> res = new List<int>();
+        foreach (int g in grp) {
+            res.AddRange(grouping[g]);
+        }
+
+        return res.ToArray();
+    }
+
+    private List<int> TopoSort(List<int>[] adj, int N) {
+        int[] visited = new int[N];
+        List<int> topo = new List<int>();
+
+        for (int i = 0; i < N; i++) {
+            if (visited[i] == 0 && Dfs(i, adj, visited, topo)) {
+                return new List<int>();
+            }
+        }
+
+        topo.Reverse();
+        return topo;
+    }
+
+    private bool Dfs(int node, List<int>[] adj, int[] visited, List<int> topo) {
+        if (visited[node] == 1) return true;
+        if (visited[node] == 2) return false;
+        visited[node] = 1;
+        foreach (int neighbor in adj[node]) {
+            if (Dfs(neighbor, adj, visited, topo)) {
+                return true;
+            }
+        }
+        topo.Add(node);
+        visited[node] = 2;
+        return false;
+    }
+}
+```
+
+```go
+func sortItems(n int, m int, group []int, beforeItems [][]int) []int {
+    for i := 0; i < n; i++ {
+        if group[i] == -1 {
+            group[i] = m
+            m++
+        }
+    }
+
+    itemAdj := make([][]int, n)
+    groupAdj := make([][]int, m)
+    for i := 0; i < n; i++ {
+        itemAdj[i] = []int{}
+    }
+    for i := 0; i < m; i++ {
+        groupAdj[i] = []int{}
+    }
+
+    for i := 0; i < n; i++ {
+        for _, parent := range beforeItems[i] {
+            itemAdj[parent] = append(itemAdj[parent], i)
+            if group[i] != group[parent] {
+                groupAdj[group[parent]] = append(groupAdj[group[parent]], group[i])
+            }
+        }
+    }
+
+    itm := topoSort(itemAdj, n)
+    if len(itm) == 0 {
+        return []int{}
+    }
+    grp := topoSort(groupAdj, m)
+    if len(grp) == 0 {
+        return []int{}
+    }
+
+    grouping := make([][]int, m)
+    for i := 0; i < m; i++ {
+        grouping[i] = []int{}
+    }
+    for _, i := range itm {
+        grouping[group[i]] = append(grouping[group[i]], i)
+    }
+
+    res := []int{}
+    for _, g := range grp {
+        res = append(res, grouping[g]...)
+    }
+
+    return res
+}
+
+func topoSort(adj [][]int, N int) []int {
+    visited := make([]int, N)
+    topo := []int{}
+
+    var dfs func(node int) bool
+    dfs = func(node int) bool {
+        if visited[node] == 1 {
+            return true
+        }
+        if visited[node] == 2 {
+            return false
+        }
+        visited[node] = 1
+        for _, neighbor := range adj[node] {
+            if dfs(neighbor) {
+                return true
+            }
+        }
+        topo = append(topo, node)
+        visited[node] = 2
+        return false
+    }
+
+    for i := 0; i < N; i++ {
+        if visited[i] == 0 && dfs(i) {
+            return []int{}
+        }
+    }
+
+    for i, j := 0, len(topo)-1; i < j; i, j = i+1, j-1 {
+        topo[i], topo[j] = topo[j], topo[i]
+    }
+    return topo
+}
+```
+
+```kotlin
+class Solution {
+    fun sortItems(n: Int, m: Int, group: IntArray, beforeItems: List<List<Int>>): IntArray {
+        var mVar = m
+        for (i in 0 until n) {
+            if (group[i] == -1) {
+                group[i] = mVar++
+            }
+        }
+
+        val itemAdj = Array(n) { mutableListOf<Int>() }
+        val groupAdj = Array(mVar) { mutableListOf<Int>() }
+
+        for (i in 0 until n) {
+            for (parent in beforeItems[i]) {
+                itemAdj[parent].add(i)
+                if (group[i] != group[parent]) {
+                    groupAdj[group[parent]].add(group[i])
+                }
+            }
+        }
+
+        val itm = topoSort(itemAdj, n)
+        if (itm.isEmpty()) return intArrayOf()
+        val grp = topoSort(groupAdj, mVar)
+        if (grp.isEmpty()) return intArrayOf()
+
+        val grouping = Array(mVar) { mutableListOf<Int>() }
+        for (i in itm) {
+            grouping[group[i]].add(i)
+        }
+
+        val res = mutableListOf<Int>()
+        for (g in grp) {
+            res.addAll(grouping[g])
+        }
+
+        return res.toIntArray()
+    }
+
+    private fun topoSort(adj: Array<MutableList<Int>>, N: Int): List<Int> {
+        val visited = IntArray(N)
+        val topo = mutableListOf<Int>()
+
+        fun dfs(node: Int): Boolean {
+            if (visited[node] == 1) return true
+            if (visited[node] == 2) return false
+            visited[node] = 1
+            for (neighbor in adj[node]) {
+                if (dfs(neighbor)) return true
+            }
+            topo.add(node)
+            visited[node] = 2
+            return false
+        }
+
+        for (i in 0 until N) {
+            if (visited[i] == 0 && dfs(i)) {
+                return emptyList()
+            }
+        }
+
+        return topo.reversed()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortItems(_ n: Int, _ m: Int, _ group: [Int], _ beforeItems: [[Int]]) -> [Int] {
+        var m = m
+        var group = group
+        for i in 0..<n {
+            if group[i] == -1 {
+                group[i] = m
+                m += 1
+            }
+        }
+
+        var itemAdj = [[Int]](repeating: [], count: n)
+        var groupAdj = [[Int]](repeating: [], count: m)
+
+        for i in 0..<n {
+            for parent in beforeItems[i] {
+                itemAdj[parent].append(i)
+                if group[i] != group[parent] {
+                    groupAdj[group[parent]].append(group[i])
+                }
+            }
+        }
+
+        let itm = topoSort(itemAdj, n)
+        if itm.isEmpty { return [] }
+        let grp = topoSort(groupAdj, m)
+        if grp.isEmpty { return [] }
+
+        var grouping = [[Int]](repeating: [], count: m)
+        for i in itm {
+            grouping[group[i]].append(i)
+        }
+
+        var res = [Int]()
+        for g in grp {
+            res.append(contentsOf: grouping[g])
+        }
+
+        return res
+    }
+
+    private func topoSort(_ adj: [[Int]], _ N: Int) -> [Int] {
+        var visited = [Int](repeating: 0, count: N)
+        var topo = [Int]()
+
+        func dfs(_ node: Int) -> Bool {
+            if visited[node] == 1 { return true }
+            if visited[node] == 2 { return false }
+            visited[node] = 1
+            for neighbor in adj[node] {
+                if dfs(neighbor) { return true }
+            }
+            topo.append(node)
+            visited[node] = 2
+            return false
+        }
+
+        for i in 0..<N {
+            if visited[i] == 0 && dfs(i) {
+                return []
+            }
+        }
+
+        return topo.reversed()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,6 +844,290 @@ class Solution {
         }
 
         return topo.length === N ? topo : [];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SortItems(int n, int m, int[] group, IList<IList<int>> beforeItems) {
+        for (int i = 0; i < n; i++) {
+            if (group[i] == -1) group[i] = m++;
+        }
+
+        List<List<int>> itemAdj = new List<List<int>>();
+        List<List<int>> groupAdj = new List<List<int>>();
+        for (int i = 0; i < n; i++) itemAdj.Add(new List<int>());
+        for (int i = 0; i < m; i++) groupAdj.Add(new List<int>());
+
+        int[] itemIndegree = new int[n];
+        int[] groupIndegree = new int[m];
+
+        for (int i = 0; i < n; i++) {
+            foreach (int par in beforeItems[i]) {
+                itemAdj[par].Add(i);
+                itemIndegree[i]++;
+                if (group[i] != group[par]) {
+                    groupAdj[group[par]].Add(group[i]);
+                    groupIndegree[group[i]]++;
+                }
+            }
+        }
+
+        List<int> itm = TopoSort(itemAdj, itemIndegree, n);
+        if (itm.Count == 0) return new int[0];
+        List<int> grp = TopoSort(groupAdj, groupIndegree, m);
+        if (grp.Count == 0) return new int[0];
+
+        Dictionary<int, List<int>> grouping = new Dictionary<int, List<int>>();
+        foreach (int i in itm) {
+            if (!grouping.ContainsKey(group[i])) grouping[group[i]] = new List<int>();
+            grouping[group[i]].Add(i);
+        }
+
+        List<int> res = new List<int>();
+        foreach (int g in grp) {
+            if (grouping.ContainsKey(g)) res.AddRange(grouping[g]);
+        }
+
+        return res.ToArray();
+    }
+
+    private List<int> TopoSort(List<List<int>> adj, int[] indegree, int N) {
+        Queue<int> q = new Queue<int>();
+        List<int> topo = new List<int>();
+        for (int i = 0; i < N; i++) {
+            if (indegree[i] == 0) q.Enqueue(i);
+        }
+
+        while (q.Count > 0) {
+            int node = q.Dequeue();
+            topo.Add(node);
+            foreach (int neighbor in adj[node]) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) q.Enqueue(neighbor);
+            }
+        }
+
+        return topo.Count == N ? topo : new List<int>();
+    }
+}
+```
+
+```go
+func sortItems(n int, m int, group []int, beforeItems [][]int) []int {
+    for i := 0; i < n; i++ {
+        if group[i] == -1 {
+            group[i] = m
+            m++
+        }
+    }
+
+    itemAdj := make([][]int, n)
+    groupAdj := make([][]int, m)
+    for i := 0; i < n; i++ {
+        itemAdj[i] = []int{}
+    }
+    for i := 0; i < m; i++ {
+        groupAdj[i] = []int{}
+    }
+
+    itemIndegree := make([]int, n)
+    groupIndegree := make([]int, m)
+
+    for i := 0; i < n; i++ {
+        for _, par := range beforeItems[i] {
+            itemAdj[par] = append(itemAdj[par], i)
+            itemIndegree[i]++
+            if group[i] != group[par] {
+                groupAdj[group[par]] = append(groupAdj[group[par]], group[i])
+                groupIndegree[group[i]]++
+            }
+        }
+    }
+
+    itm := topoSort(itemAdj, itemIndegree, n)
+    if len(itm) == 0 {
+        return []int{}
+    }
+    grp := topoSort(groupAdj, groupIndegree, m)
+    if len(grp) == 0 {
+        return []int{}
+    }
+
+    grouping := make(map[int][]int)
+    for _, i := range itm {
+        grouping[group[i]] = append(grouping[group[i]], i)
+    }
+
+    res := []int{}
+    for _, g := range grp {
+        res = append(res, grouping[g]...)
+    }
+
+    return res
+}
+
+func topoSort(adj [][]int, indegree []int, N int) []int {
+    q := []int{}
+    topo := []int{}
+    for i := 0; i < N; i++ {
+        if indegree[i] == 0 {
+            q = append(q, i)
+        }
+    }
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        topo = append(topo, node)
+        for _, neighbor := range adj[node] {
+            indegree[neighbor]--
+            if indegree[neighbor] == 0 {
+                q = append(q, neighbor)
+            }
+        }
+    }
+
+    if len(topo) == N {
+        return topo
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun sortItems(n: Int, m: Int, group: IntArray, beforeItems: List<List<Int>>): IntArray {
+        var mVar = m
+        for (i in 0 until n) {
+            if (group[i] == -1) group[i] = mVar++
+        }
+
+        val itemAdj = MutableList(n) { mutableListOf<Int>() }
+        val groupAdj = MutableList(mVar) { mutableListOf<Int>() }
+        val itemIndegree = IntArray(n)
+        val groupIndegree = IntArray(mVar)
+
+        for (i in 0 until n) {
+            for (par in beforeItems[i]) {
+                itemAdj[par].add(i)
+                itemIndegree[i]++
+                if (group[i] != group[par]) {
+                    groupAdj[group[par]].add(group[i])
+                    groupIndegree[group[i]]++
+                }
+            }
+        }
+
+        val itm = topoSort(itemAdj, itemIndegree, n)
+        if (itm.isEmpty()) return intArrayOf()
+        val grp = topoSort(groupAdj, groupIndegree, mVar)
+        if (grp.isEmpty()) return intArrayOf()
+
+        val grouping = mutableMapOf<Int, MutableList<Int>>()
+        for (i in itm) {
+            grouping.getOrPut(group[i]) { mutableListOf() }.add(i)
+        }
+
+        val res = mutableListOf<Int>()
+        for (g in grp) {
+            grouping[g]?.let { res.addAll(it) }
+        }
+
+        return res.toIntArray()
+    }
+
+    private fun topoSort(adj: MutableList<MutableList<Int>>, indegree: IntArray, N: Int): List<Int> {
+        val q = ArrayDeque<Int>()
+        val topo = mutableListOf<Int>()
+        for (i in 0 until N) {
+            if (indegree[i] == 0) q.add(i)
+        }
+
+        while (q.isNotEmpty()) {
+            val node = q.removeFirst()
+            topo.add(node)
+            for (neighbor in adj[node]) {
+                indegree[neighbor]--
+                if (indegree[neighbor] == 0) q.add(neighbor)
+            }
+        }
+
+        return if (topo.size == N) topo else emptyList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortItems(_ n: Int, _ m: Int, _ group: [Int], _ beforeItems: [[Int]]) -> [Int] {
+        var m = m
+        var group = group
+        for i in 0..<n {
+            if group[i] == -1 {
+                group[i] = m
+                m += 1
+            }
+        }
+
+        var itemAdj = [[Int]](repeating: [], count: n)
+        var groupAdj = [[Int]](repeating: [], count: m)
+        var itemIndegree = [Int](repeating: 0, count: n)
+        var groupIndegree = [Int](repeating: 0, count: m)
+
+        for i in 0..<n {
+            for par in beforeItems[i] {
+                itemAdj[par].append(i)
+                itemIndegree[i] += 1
+                if group[i] != group[par] {
+                    groupAdj[group[par]].append(group[i])
+                    groupIndegree[group[i]] += 1
+                }
+            }
+        }
+
+        let itm = topoSort(itemAdj, &itemIndegree, n)
+        if itm.isEmpty { return [] }
+        let grp = topoSort(groupAdj, &groupIndegree, m)
+        if grp.isEmpty { return [] }
+
+        var grouping = [Int: [Int]]()
+        for i in itm {
+            grouping[group[i], default: []].append(i)
+        }
+
+        var res = [Int]()
+        for g in grp {
+            if let items = grouping[g] {
+                res.append(contentsOf: items)
+            }
+        }
+
+        return res
+    }
+
+    private func topoSort(_ adj: [[Int]], _ indegree: inout [Int], _ N: Int) -> [Int] {
+        var q = [Int]()
+        var topo = [Int]()
+        for i in 0..<N {
+            if indegree[i] == 0 {
+                q.append(i)
+            }
+        }
+
+        while !q.isEmpty {
+            let node = q.removeFirst()
+            topo.append(node)
+            for neighbor in adj[node] {
+                indegree[neighbor] -= 1
+                if indegree[neighbor] == 0 {
+                    q.append(neighbor)
+                }
+            }
+        }
+
+        return topo.count == N ? topo : []
     }
 }
 ```

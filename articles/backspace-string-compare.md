@@ -90,6 +90,89 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool BackspaceCompare(string s, string t) {
+        return Convert(s) == Convert(t);
+    }
+
+    private string Convert(string s) {
+        var res = new List<char>();
+        foreach (char c in s) {
+            if (c == '#') {
+                if (res.Count > 0) {
+                    res.RemoveAt(res.Count - 1);
+                }
+            } else {
+                res.Add(c);
+            }
+        }
+        return new string(res.ToArray());
+    }
+}
+```
+
+```go
+func backspaceCompare(s string, t string) bool {
+    convert := func(str string) string {
+        res := []byte{}
+        for i := 0; i < len(str); i++ {
+            if str[i] == '#' {
+                if len(res) > 0 {
+                    res = res[:len(res)-1]
+                }
+            } else {
+                res = append(res, str[i])
+            }
+        }
+        return string(res)
+    }
+    return convert(s) == convert(t)
+}
+```
+
+```kotlin
+class Solution {
+    fun backspaceCompare(s: String, t: String): Boolean {
+        fun convert(str: String): String {
+            val res = mutableListOf<Char>()
+            for (c in str) {
+                if (c == '#') {
+                    if (res.isNotEmpty()) {
+                        res.removeAt(res.size - 1)
+                    }
+                } else {
+                    res.add(c)
+                }
+            }
+            return res.joinToString("")
+        }
+        return convert(s) == convert(t)
+    }
+}
+```
+
+```swift
+class Solution {
+    func backspaceCompare(_ s: String, _ t: String) -> Bool {
+        func convert(_ str: String) -> String {
+            var res = [Character]()
+            for char in str {
+                if char == "#" {
+                    if !res.isEmpty {
+                        res.removeLast()
+                    }
+                } else {
+                    res.append(char)
+                }
+            }
+            return String(res)
+        }
+        return convert(s) == convert(t)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -194,6 +277,94 @@ class Solution {
             return res.join('');
         };
         return convert(s) === convert(t);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool BackspaceCompare(string s, string t) {
+        return Convert(s) == Convert(t);
+    }
+
+    private string Convert(string s) {
+        var res = new List<char>();
+        int backspace = 0;
+        for (int i = s.Length - 1; i >= 0; i--) {
+            if (s[i] == '#') {
+                backspace++;
+            } else if (backspace > 0) {
+                backspace--;
+            } else {
+                res.Add(s[i]);
+            }
+        }
+        return new string(res.ToArray());
+    }
+}
+```
+
+```go
+func backspaceCompare(s string, t string) bool {
+    convert := func(str string) string {
+        res := []byte{}
+        backspace := 0
+        for i := len(str) - 1; i >= 0; i-- {
+            if str[i] == '#' {
+                backspace++
+            } else if backspace > 0 {
+                backspace--
+            } else {
+                res = append(res, str[i])
+            }
+        }
+        return string(res)
+    }
+    return convert(s) == convert(t)
+}
+```
+
+```kotlin
+class Solution {
+    fun backspaceCompare(s: String, t: String): Boolean {
+        fun convert(str: String): String {
+            val res = mutableListOf<Char>()
+            var backspace = 0
+            for (i in str.length - 1 downTo 0) {
+                if (str[i] == '#') {
+                    backspace++
+                } else if (backspace > 0) {
+                    backspace--
+                } else {
+                    res.add(str[i])
+                }
+            }
+            return res.joinToString("")
+        }
+        return convert(s) == convert(t)
+    }
+}
+```
+
+```swift
+class Solution {
+    func backspaceCompare(_ s: String, _ t: String) -> Bool {
+        func convert(_ str: String) -> String {
+            var res = [Character]()
+            var backspace = 0
+            let chars = Array(str)
+            for i in stride(from: chars.count - 1, through: 0, by: -1) {
+                if chars[i] == "#" {
+                    backspace += 1
+                } else if backspace > 0 {
+                    backspace -= 1
+                } else {
+                    res.append(chars[i])
+                }
+            }
+            return String(res)
+        }
+        return convert(s) == convert(t)
     }
 }
 ```
@@ -374,6 +545,172 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool BackspaceCompare(string s, string t) {
+        int indexS = s.Length - 1, indexT = t.Length - 1;
+
+        while (indexS >= 0 || indexT >= 0) {
+            indexS = NextValidChar(s, indexS);
+            indexT = NextValidChar(t, indexT);
+
+            char charS = indexS >= 0 ? s[indexS] : '\0';
+            char charT = indexT >= 0 ? t[indexT] : '\0';
+
+            if (charS != charT) return false;
+
+            indexS--;
+            indexT--;
+        }
+
+        return true;
+    }
+
+    private int NextValidChar(string str, int index) {
+        int backspace = 0;
+
+        while (index >= 0) {
+            if (str[index] == '#') {
+                backspace++;
+            } else if (backspace > 0) {
+                backspace--;
+            } else {
+                break;
+            }
+            index--;
+        }
+
+        return index;
+    }
+}
+```
+
+```go
+func backspaceCompare(s string, t string) bool {
+    nextValidChar := func(str string, index int) int {
+        backspace := 0
+        for index >= 0 {
+            if str[index] == '#' {
+                backspace++
+            } else if backspace > 0 {
+                backspace--
+            } else {
+                break
+            }
+            index--
+        }
+        return index
+    }
+
+    indexS, indexT := len(s)-1, len(t)-1
+
+    for indexS >= 0 || indexT >= 0 {
+        indexS = nextValidChar(s, indexS)
+        indexT = nextValidChar(t, indexT)
+
+        var charS, charT byte = 0, 0
+        if indexS >= 0 {
+            charS = s[indexS]
+        }
+        if indexT >= 0 {
+            charT = t[indexT]
+        }
+
+        if charS != charT {
+            return false
+        }
+
+        indexS--
+        indexT--
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun backspaceCompare(s: String, t: String): Boolean {
+        fun nextValidChar(str: String, idx: Int): Int {
+            var index = idx
+            var backspace = 0
+            while (index >= 0) {
+                if (str[index] == '#') {
+                    backspace++
+                } else if (backspace > 0) {
+                    backspace--
+                } else {
+                    break
+                }
+                index--
+            }
+            return index
+        }
+
+        var indexS = s.length - 1
+        var indexT = t.length - 1
+
+        while (indexS >= 0 || indexT >= 0) {
+            indexS = nextValidChar(s, indexS)
+            indexT = nextValidChar(t, indexT)
+
+            val charS = if (indexS >= 0) s[indexS] else '\u0000'
+            val charT = if (indexT >= 0) t[indexT] else '\u0000'
+
+            if (charS != charT) return false
+
+            indexS--
+            indexT--
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func backspaceCompare(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+
+        func nextValidChar(_ str: [Character], _ idx: Int) -> Int {
+            var index = idx
+            var backspace = 0
+            while index >= 0 {
+                if str[index] == "#" {
+                    backspace += 1
+                } else if backspace > 0 {
+                    backspace -= 1
+                } else {
+                    break
+                }
+                index -= 1
+            }
+            return index
+        }
+
+        var indexS = sArr.count - 1
+        var indexT = tArr.count - 1
+
+        while indexS >= 0 || indexT >= 0 {
+            indexS = nextValidChar(sArr, indexS)
+            indexT = nextValidChar(tArr, indexT)
+
+            let charS: Character = indexS >= 0 ? sArr[indexS] : "\0"
+            let charT: Character = indexT >= 0 ? tArr[indexT] : "\0"
+
+            if charS != charT { return false }
+
+            indexS -= 1
+            indexT -= 1
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -500,6 +837,126 @@ class Solution {
             }
             indexS--;
             indexT--;
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool BackspaceCompare(string s, string t) {
+        int indexS = s.Length - 1, indexT = t.Length - 1;
+        int backspaceS = 0, backspaceT = 0;
+
+        while (true) {
+            while (indexS >= 0 && (backspaceS > 0 || s[indexS] == '#')) {
+                backspaceS += s[indexS] == '#' ? 1 : -1;
+                indexS--;
+            }
+
+            while (indexT >= 0 && (backspaceT > 0 || t[indexT] == '#')) {
+                backspaceT += t[indexT] == '#' ? 1 : -1;
+                indexT--;
+            }
+
+            if (!(indexS >= 0 && indexT >= 0 && s[indexS] == t[indexT])) {
+                return indexS == -1 && indexT == -1;
+            }
+            indexS--;
+            indexT--;
+        }
+    }
+}
+```
+
+```go
+func backspaceCompare(s string, t string) bool {
+    indexS, indexT := len(s)-1, len(t)-1
+    backspaceS, backspaceT := 0, 0
+
+    for {
+        for indexS >= 0 && (backspaceS > 0 || s[indexS] == '#') {
+            if s[indexS] == '#' {
+                backspaceS++
+            } else {
+                backspaceS--
+            }
+            indexS--
+        }
+
+        for indexT >= 0 && (backspaceT > 0 || t[indexT] == '#') {
+            if t[indexT] == '#' {
+                backspaceT++
+            } else {
+                backspaceT--
+            }
+            indexT--
+        }
+
+        if !(indexS >= 0 && indexT >= 0 && s[indexS] == t[indexT]) {
+            return indexS == -1 && indexT == -1
+        }
+        indexS--
+        indexT--
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun backspaceCompare(s: String, t: String): Boolean {
+        var indexS = s.length - 1
+        var indexT = t.length - 1
+        var backspaceS = 0
+        var backspaceT = 0
+
+        while (true) {
+            while (indexS >= 0 && (backspaceS > 0 || s[indexS] == '#')) {
+                backspaceS += if (s[indexS] == '#') 1 else -1
+                indexS--
+            }
+
+            while (indexT >= 0 && (backspaceT > 0 || t[indexT] == '#')) {
+                backspaceT += if (t[indexT] == '#') 1 else -1
+                indexT--
+            }
+
+            if (!(indexS >= 0 && indexT >= 0 && s[indexS] == t[indexT])) {
+                return indexS == -1 && indexT == -1
+            }
+            indexS--
+            indexT--
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func backspaceCompare(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        var indexS = sArr.count - 1
+        var indexT = tArr.count - 1
+        var backspaceS = 0
+        var backspaceT = 0
+
+        while true {
+            while indexS >= 0 && (backspaceS > 0 || sArr[indexS] == "#") {
+                backspaceS += sArr[indexS] == "#" ? 1 : -1
+                indexS -= 1
+            }
+
+            while indexT >= 0 && (backspaceT > 0 || tArr[indexT] == "#") {
+                backspaceT += tArr[indexT] == "#" ? 1 : -1
+                indexT -= 1
+            }
+
+            if !(indexS >= 0 && indexT >= 0 && sArr[indexS] == tArr[indexT]) {
+                return indexS == -1 && indexT == -1
+            }
+            indexS -= 1
+            indexT -= 1
         }
     }
 }

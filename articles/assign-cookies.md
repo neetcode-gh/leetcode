@@ -138,6 +138,81 @@ public class Solution {
 }
 ```
 
+```go
+func findContentChildren(g []int, s []int) int {
+    sort.Ints(s)
+    res := 0
+
+    for _, greed := range g {
+        minIdx := -1
+        for j := 0; j < len(s); j++ {
+            if s[j] < greed {
+                continue
+            }
+            if minIdx == -1 || s[minIdx] > s[j] {
+                minIdx = j
+            }
+        }
+        if minIdx != -1 {
+            s[minIdx] = -1
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findContentChildren(g: IntArray, s: IntArray): Int {
+        s.sort()
+        var res = 0
+
+        for (greed in g) {
+            var minIdx = -1
+            for (j in s.indices) {
+                if (s[j] < greed) continue
+                if (minIdx == -1 || s[minIdx] > s[j]) {
+                    minIdx = j
+                }
+            }
+            if (minIdx != -1) {
+                s[minIdx] = -1
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findContentChildren(_ g: [Int], _ s: [Int]) -> Int {
+        var s = s.sorted()
+        var res = 0
+
+        for greed in g {
+            var minIdx = -1
+            for j in 0..<s.count {
+                if s[j] < greed { continue }
+                if minIdx == -1 || s[minIdx] > s[j] {
+                    minIdx = j
+                }
+            }
+            if minIdx != -1 {
+                s[minIdx] = -1
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -259,6 +334,67 @@ public class Solution {
 }
 ```
 
+```go
+func findContentChildren(g []int, s []int) int {
+    sort.Ints(g)
+    sort.Ints(s)
+
+    i, j := 0, 0
+    for i < len(g) {
+        for j < len(s) && g[i] > s[j] {
+            j++
+        }
+        if j == len(s) {
+            break
+        }
+        i++
+        j++
+    }
+    return i
+}
+```
+
+```kotlin
+class Solution {
+    fun findContentChildren(g: IntArray, s: IntArray): Int {
+        g.sort()
+        s.sort()
+
+        var i = 0
+        var j = 0
+        while (i < g.size) {
+            while (j < s.size && g[i] > s[j]) {
+                j++
+            }
+            if (j == s.size) break
+            i++
+            j++
+        }
+        return i
+    }
+}
+```
+
+```swift
+class Solution {
+    func findContentChildren(_ g: [Int], _ s: [Int]) -> Int {
+        let g = g.sorted()
+        let s = s.sorted()
+
+        var i = 0, j = 0
+        while i < g.count {
+            while j < s.count && g[i] > s[j] {
+                j += 1
+            }
+            if j == s.count { break }
+            i += 1
+            j += 1
+        }
+        return i
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +491,58 @@ public class Solution {
         }
 
         return i;
+    }
+}
+```
+
+```go
+func findContentChildren(g []int, s []int) int {
+    sort.Ints(g)
+    sort.Ints(s)
+
+    i := 0
+    for j := 0; i < len(g) && j < len(s); j++ {
+        if g[i] <= s[j] {
+            i++
+        }
+    }
+    return i
+}
+```
+
+```kotlin
+class Solution {
+    fun findContentChildren(g: IntArray, s: IntArray): Int {
+        g.sort()
+        s.sort()
+
+        var i = 0
+        var j = 0
+        while (i < g.size && j < s.size) {
+            if (g[i] <= s[j]) {
+                i++
+            }
+            j++
+        }
+        return i
+    }
+}
+```
+
+```swift
+class Solution {
+    func findContentChildren(_ g: [Int], _ s: [Int]) -> Int {
+        let g = g.sorted()
+        let s = s.sorted()
+
+        var i = 0, j = 0
+        while i < g.count && j < s.count {
+            if g[i] <= s[j] {
+                i += 1
+            }
+            j += 1
+        }
+        return i
     }
 }
 ```

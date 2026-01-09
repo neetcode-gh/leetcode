@@ -99,6 +99,62 @@ public class Solution {
 }
 ```
 
+```go
+func mySqrt(x int) int {
+    if x == 0 {
+        return 0
+    }
+
+    res := 1
+    for i := 1; i <= x; i++ {
+        if int64(i)*int64(i) > int64(x) {
+            return res
+        }
+        res = i
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun mySqrt(x: Int): Int {
+        if (x == 0) return 0
+
+        var res = 1
+        for (i in 1..x) {
+            if (i.toLong() * i > x) {
+                return res
+            }
+            res = i
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func mySqrt(_ x: Int) -> Int {
+        if x == 0 {
+            return 0
+        }
+
+        var res = 1
+        for i in 1...x {
+            if i * i > x {
+                return res
+            }
+            res = i
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -151,6 +207,28 @@ class Solution {
 public class Solution {
     public int MySqrt(int x) {
         return (int)Math.Sqrt(x);
+    }
+}
+```
+
+```go
+func mySqrt(x int) int {
+    return int(math.Sqrt(float64(x)))
+}
+```
+
+```kotlin
+class Solution {
+    fun mySqrt(x: Int): Int {
+        return kotlin.math.sqrt(x.toDouble()).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func mySqrt(_ x: Int) -> Int {
+        return Int(Double(x).squareRoot())
     }
 }
 ```
@@ -287,6 +365,77 @@ public class Solution {
 }
 ```
 
+```go
+func mySqrt(x int) int {
+    l, r := 0, x
+    res := 0
+
+    for l <= r {
+        m := l + (r-l)/2
+        if int64(m)*int64(m) > int64(x) {
+            r = m - 1
+        } else if int64(m)*int64(m) < int64(x) {
+            l = m + 1
+            res = m
+        } else {
+            return m
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun mySqrt(x: Int): Int {
+        var l = 0
+        var r = x
+        var res = 0
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            val sq = m.toLong() * m
+
+            when {
+                sq > x -> r = m - 1
+                sq < x -> {
+                    l = m + 1
+                    res = m
+                }
+                else -> return m
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func mySqrt(_ x: Int) -> Int {
+        var l = 0
+        var r = x
+        var res = 0
+
+        while l <= r {
+            let m = l + (r - l) / 2
+            if m * m > x {
+                r = m - 1
+            } else if m * m < x {
+                l = m + 1
+                res = m
+            } else {
+                return m
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -372,6 +521,49 @@ public class Solution {
 }
 ```
 
+```go
+func mySqrt(x int) int {
+    if x < 2 {
+        return x
+    }
+
+    l := mySqrt(x>>2) << 1
+    r := l + 1
+    if int64(r)*int64(r) > int64(x) {
+        return l
+    }
+    return r
+}
+```
+
+```kotlin
+class Solution {
+    fun mySqrt(x: Int): Int {
+        if (x < 2) {
+            return x
+        }
+
+        val l = mySqrt(x shr 2) shl 1
+        val r = l + 1
+        return if (r.toLong() * r > x) l else r
+    }
+}
+```
+
+```swift
+class Solution {
+    func mySqrt(_ x: Int) -> Int {
+        if x < 2 {
+            return x
+        }
+
+        let l = mySqrt(x >> 2) << 1
+        let r = l + 1
+        return r * r > x ? l : r
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,6 +635,40 @@ public class Solution {
             r = (r + x / r) >> 1;
         }
         return (int)r;
+    }
+}
+```
+
+```go
+func mySqrt(x int) int {
+    r := int64(x)
+    for r*r > int64(x) {
+        r = (r + int64(x)/r) >> 1
+    }
+    return int(r)
+}
+```
+
+```kotlin
+class Solution {
+    fun mySqrt(x: Int): Int {
+        var r = x.toLong()
+        while (r * r > x) {
+            r = (r + x / r) shr 1
+        }
+        return r.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func mySqrt(_ x: Int) -> Int {
+        var r = x
+        while r * r > x {
+            r = (r + x / r) >> 1
+        }
+        return r
     }
 }
 ```

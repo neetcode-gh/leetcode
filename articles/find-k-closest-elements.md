@@ -63,6 +63,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        var list = arr.ToList();
+        list.Sort((a, b) => {
+            int diff = Math.Abs(a - x) - Math.Abs(b - x);
+            return diff == 0 ? a.CompareTo(b) : diff;
+        });
+        var result = list.Take(k).ToList();
+        result.Sort();
+        return result;
+    }
+}
+```
+
+```go
+func findClosestElements(arr []int, k int, x int) []int {
+    sort.Slice(arr, func(i, j int) bool {
+        diffI := abs(arr[i] - x)
+        diffJ := abs(arr[j] - x)
+        if diffI == diffJ {
+            return arr[i] < arr[j]
+        }
+        return diffI < diffJ
+    })
+    result := arr[:k]
+    sort.Ints(result)
+    return result
+}
+
+func abs(a int) int {
+    if a < 0 {
+        return -a
+    }
+    return a
+}
+```
+
+```kotlin
+class Solution {
+    fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
+        val sorted = arr.sortedWith(compareBy(
+            { kotlin.math.abs(it - x) },
+            { it }
+        ))
+        return sorted.take(k).sorted()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findClosestElements(_ arr: [Int], _ k: Int, _ x: Int) -> [Int] {
+        let sorted = arr.sorted { a, b in
+            let diffA = abs(a - x)
+            let diffB = abs(b - x)
+            if diffA == diffB {
+                return a < b
+            }
+            return diffA < diffB
+        }
+        return Array(sorted.prefix(k)).sorted()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +286,155 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        int n = arr.Length;
+        int idx = 0;
+        for (int i = 1; i < n; i++) {
+            if (Math.Abs(x - arr[idx]) > Math.Abs(x - arr[i])) {
+                idx = i;
+            }
+        }
+
+        var res = new List<int> { arr[idx] };
+        int l = idx - 1, r = idx + 1;
+
+        while (res.Count < k) {
+            if (l >= 0 && r < n) {
+                if (Math.Abs(x - arr[l]) <= Math.Abs(x - arr[r])) {
+                    res.Add(arr[l--]);
+                } else {
+                    res.Add(arr[r++]);
+                }
+            } else if (l >= 0) {
+                res.Add(arr[l--]);
+            } else if (r < n) {
+                res.Add(arr[r++]);
+            }
+        }
+
+        res.Sort();
+        return res;
+    }
+}
+```
+
+```go
+func findClosestElements(arr []int, k int, x int) []int {
+    n := len(arr)
+    idx := 0
+    for i := 1; i < n; i++ {
+        if abs(x-arr[idx]) > abs(x-arr[i]) {
+            idx = i
+        }
+    }
+
+    res := []int{arr[idx]}
+    l, r := idx-1, idx+1
+
+    for len(res) < k {
+        if l >= 0 && r < n {
+            if abs(x-arr[l]) <= abs(x-arr[r]) {
+                res = append(res, arr[l])
+                l--
+            } else {
+                res = append(res, arr[r])
+                r++
+            }
+        } else if l >= 0 {
+            res = append(res, arr[l])
+            l--
+        } else if r < n {
+            res = append(res, arr[r])
+            r++
+        }
+    }
+
+    sort.Ints(res)
+    return res
+}
+
+func abs(a int) int {
+    if a < 0 {
+        return -a
+    }
+    return a
+}
+```
+
+```kotlin
+class Solution {
+    fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
+        val n = arr.size
+        var idx = 0
+        for (i in 1 until n) {
+            if (kotlin.math.abs(x - arr[idx]) > kotlin.math.abs(x - arr[i])) {
+                idx = i
+            }
+        }
+
+        val res = mutableListOf(arr[idx])
+        var l = idx - 1
+        var r = idx + 1
+
+        while (res.size < k) {
+            when {
+                l >= 0 && r < n -> {
+                    if (kotlin.math.abs(x - arr[l]) <= kotlin.math.abs(x - arr[r])) {
+                        res.add(arr[l--])
+                    } else {
+                        res.add(arr[r++])
+                    }
+                }
+                l >= 0 -> res.add(arr[l--])
+                r < n -> res.add(arr[r++])
+            }
+        }
+
+        return res.sorted()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findClosestElements(_ arr: [Int], _ k: Int, _ x: Int) -> [Int] {
+        let n = arr.count
+        var idx = 0
+        for i in 1..<n {
+            if abs(x - arr[idx]) > abs(x - arr[i]) {
+                idx = i
+            }
+        }
+
+        var res = [arr[idx]]
+        var l = idx - 1
+        var r = idx + 1
+
+        while res.count < k {
+            if l >= 0 && r < n {
+                if abs(x - arr[l]) <= abs(x - arr[r]) {
+                    res.append(arr[l])
+                    l -= 1
+                } else {
+                    res.append(arr[r])
+                    r += 1
+                }
+            } else if l >= 0 {
+                res.append(arr[l])
+                l -= 1
+            } else if r < n {
+                res.append(arr[r])
+                r += 1
+            }
+        }
+
+        return res.sorted()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -306,6 +521,81 @@ class Solution {
             }
         }
         return arr.slice(l, r + 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        int l = 0, r = arr.Length - 1;
+        while (r - l >= k) {
+            if (Math.Abs(x - arr[l]) <= Math.Abs(x - arr[r])) {
+                r--;
+            } else {
+                l++;
+            }
+        }
+        var result = new List<int>();
+        for (int i = l; i <= r; i++) {
+            result.Add(arr[i]);
+        }
+        return result;
+    }
+}
+```
+
+```go
+func findClosestElements(arr []int, k int, x int) []int {
+    l, r := 0, len(arr)-1
+    for r-l >= k {
+        if abs(x-arr[l]) <= abs(x-arr[r]) {
+            r--
+        } else {
+            l++
+        }
+    }
+    return arr[l : r+1]
+}
+
+func abs(a int) int {
+    if a < 0 {
+        return -a
+    }
+    return a
+}
+```
+
+```kotlin
+class Solution {
+    fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
+        var l = 0
+        var r = arr.size - 1
+        while (r - l >= k) {
+            if (kotlin.math.abs(x - arr[l]) <= kotlin.math.abs(x - arr[r])) {
+                r--
+            } else {
+                l++
+            }
+        }
+        return arr.slice(l..r)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findClosestElements(_ arr: [Int], _ k: Int, _ x: Int) -> [Int] {
+        var l = 0
+        var r = arr.count - 1
+        while r - l >= k {
+            if abs(x - arr[l]) <= abs(x - arr[r]) {
+                r -= 1
+            } else {
+                l += 1
+            }
+        }
+        return Array(arr[l...r])
     }
 }
 ```
@@ -458,6 +748,142 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        int l = 0, r = arr.Length - 1;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            if (arr[mid] < x) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        l = l - 1;
+        r = l + 1;
+        while (r - l - 1 < k) {
+            if (l < 0) {
+                r++;
+            } else if (r >= arr.Length) {
+                l--;
+            } else if (Math.Abs(arr[l] - x) <= Math.Abs(arr[r] - x)) {
+                l--;
+            } else {
+                r++;
+            }
+        }
+
+        var result = new List<int>();
+        for (int i = l + 1; i < r; i++) {
+            result.Add(arr[i]);
+        }
+        return result;
+    }
+}
+```
+
+```go
+func findClosestElements(arr []int, k int, x int) []int {
+    l, r := 0, len(arr)-1
+    for l < r {
+        mid := (l + r) / 2
+        if arr[mid] < x {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+
+    l = l - 1
+    r = l + 1
+    for r-l-1 < k {
+        if l < 0 {
+            r++
+        } else if r >= len(arr) {
+            l--
+        } else if abs(arr[l]-x) <= abs(arr[r]-x) {
+            l--
+        } else {
+            r++
+        }
+    }
+
+    return arr[l+1 : r]
+}
+
+func abs(a int) int {
+    if a < 0 {
+        return -a
+    }
+    return a
+}
+```
+
+```kotlin
+class Solution {
+    fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
+        var l = 0
+        var r = arr.size - 1
+        while (l < r) {
+            val mid = (l + r) / 2
+            if (arr[mid] < x) {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+
+        l = l - 1
+        r = l + 1
+        while (r - l - 1 < k) {
+            when {
+                l < 0 -> r++
+                r >= arr.size -> l--
+                kotlin.math.abs(arr[l] - x) <= kotlin.math.abs(arr[r] - x) -> l--
+                else -> r++
+            }
+        }
+
+        return arr.slice(l + 1 until r)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findClosestElements(_ arr: [Int], _ k: Int, _ x: Int) -> [Int] {
+        var l = 0
+        var r = arr.count - 1
+        while l < r {
+            let mid = (l + r) / 2
+            if arr[mid] < x {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+
+        l = l - 1
+        r = l + 1
+        while r - l - 1 < k {
+            if l < 0 {
+                r += 1
+            } else if r >= arr.count {
+                l -= 1
+            } else if abs(arr[l] - x) <= abs(arr[r] - x) {
+                l -= 1
+            } else {
+                r += 1
+            }
+        }
+
+        return Array(arr[(l + 1)..<r])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -545,6 +971,78 @@ class Solution {
             }
         }
         return arr.slice(l, l + k);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> FindClosestElements(int[] arr, int k, int x) {
+        int l = 0, r = arr.Length - k;
+        while (l < r) {
+            int m = (l + r) / 2;
+            if (x - arr[m] > arr[m + k] - x) {
+                l = m + 1;
+            } else {
+                r = m;
+            }
+        }
+        var result = new List<int>();
+        for (int i = l; i < l + k; i++) {
+            result.Add(arr[i]);
+        }
+        return result;
+    }
+}
+```
+
+```go
+func findClosestElements(arr []int, k int, x int) []int {
+    l, r := 0, len(arr)-k
+    for l < r {
+        m := (l + r) / 2
+        if x-arr[m] > arr[m+k]-x {
+            l = m + 1
+        } else {
+            r = m
+        }
+    }
+    return arr[l : l+k]
+}
+```
+
+```kotlin
+class Solution {
+    fun findClosestElements(arr: IntArray, k: Int, x: Int): List<Int> {
+        var l = 0
+        var r = arr.size - k
+        while (l < r) {
+            val m = (l + r) / 2
+            if (x - arr[m] > arr[m + k] - x) {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+        return arr.slice(l until l + k)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findClosestElements(_ arr: [Int], _ k: Int, _ x: Int) -> [Int] {
+        var l = 0
+        var r = arr.count - k
+        while l < r {
+            let m = (l + r) / 2
+            if x - arr[m] > arr[m + k] - x {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+        return Array(arr[l..<(l + k)])
     }
 }
 ```

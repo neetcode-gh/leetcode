@@ -229,6 +229,151 @@ public class Solution {
 }
 ```
 
+```go
+func totalNQueens(n int) int {
+    res := 0
+    board := make([][]byte, n)
+    for i := range board {
+        board[i] = make([]byte, n)
+        for j := range board[i] {
+            board[i][j] = '.'
+        }
+    }
+
+    var isSafe func(r, c int) bool
+    isSafe = func(r, c int) bool {
+        for i := r - 1; i >= 0; i-- {
+            if board[i][c] == 'Q' {
+                return false
+            }
+        }
+        for i, j := r-1, c-1; i >= 0 && j >= 0; i, j = i-1, j-1 {
+            if board[i][j] == 'Q' {
+                return false
+            }
+        }
+        for i, j := r-1, c+1; i >= 0 && j < n; i, j = i-1, j+1 {
+            if board[i][j] == 'Q' {
+                return false
+            }
+        }
+        return true
+    }
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            res++
+            return
+        }
+        for c := 0; c < n; c++ {
+            if isSafe(r, c) {
+                board[r][c] = 'Q'
+                backtrack(r + 1)
+                board[r][c] = '.'
+            }
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private var res = 0
+
+    fun totalNQueens(n: Int): Int {
+        res = 0
+        val board = Array(n) { CharArray(n) { '.' } }
+        backtrack(0, board, n)
+        return res
+    }
+
+    private fun backtrack(r: Int, board: Array<CharArray>, n: Int) {
+        if (r == n) {
+            res++
+            return
+        }
+        for (c in 0 until n) {
+            if (isSafe(r, c, board)) {
+                board[r][c] = 'Q'
+                backtrack(r + 1, board, n)
+                board[r][c] = '.'
+            }
+        }
+    }
+
+    private fun isSafe(r: Int, c: Int, board: Array<CharArray>): Boolean {
+        for (i in r - 1 downTo 0) {
+            if (board[i][c] == 'Q') return false
+        }
+        var i = r - 1
+        var j = c - 1
+        while (i >= 0 && j >= 0) {
+            if (board[i][j] == 'Q') return false
+            i--
+            j--
+        }
+        i = r - 1
+        j = c + 1
+        while (i >= 0 && j < board.size) {
+            if (board[i][j] == 'Q') return false
+            i--
+            j++
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalNQueens(_ n: Int) -> Int {
+        var res = 0
+        var board = [[Character]](repeating: [Character](repeating: ".", count: n), count: n)
+
+        func isSafe(_ r: Int, _ c: Int) -> Bool {
+            for i in stride(from: r - 1, through: 0, by: -1) {
+                if board[i][c] == "Q" { return false }
+            }
+            var i = r - 1, j = c - 1
+            while i >= 0 && j >= 0 {
+                if board[i][j] == "Q" { return false }
+                i -= 1
+                j -= 1
+            }
+            i = r - 1
+            j = c + 1
+            while i >= 0 && j < n {
+                if board[i][j] == "Q" { return false }
+                i -= 1
+                j += 1
+            }
+            return true
+        }
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                res += 1
+                return
+            }
+            for c in 0..<n {
+                if isSafe(r, c) {
+                    board[r][c] = "Q"
+                    backtrack(r + 1)
+                    board[r][c] = "."
+                }
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +578,116 @@ public class Solution {
 }
 ```
 
+```go
+func totalNQueens(n int) int {
+    col := make(map[int]bool)
+    posDiag := make(map[int]bool)
+    negDiag := make(map[int]bool)
+    res := 0
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            res++
+            return
+        }
+
+        for c := 0; c < n; c++ {
+            if col[c] || posDiag[r+c] || negDiag[r-c] {
+                continue
+            }
+
+            col[c] = true
+            posDiag[r+c] = true
+            negDiag[r-c] = true
+
+            backtrack(r + 1)
+
+            delete(col, c)
+            delete(posDiag, r+c)
+            delete(negDiag, r-c)
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalNQueens(n: Int): Int {
+        val col = HashSet<Int>()
+        val posDiag = HashSet<Int>()
+        val negDiag = HashSet<Int>()
+        var res = 0
+
+        fun backtrack(r: Int) {
+            if (r == n) {
+                res++
+                return
+            }
+
+            for (c in 0 until n) {
+                if (c in col || (r + c) in posDiag || (r - c) in negDiag) {
+                    continue
+                }
+
+                col.add(c)
+                posDiag.add(r + c)
+                negDiag.add(r - c)
+
+                backtrack(r + 1)
+
+                col.remove(c)
+                posDiag.remove(r + c)
+                negDiag.remove(r - c)
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalNQueens(_ n: Int) -> Int {
+        var col = Set<Int>()
+        var posDiag = Set<Int>()
+        var negDiag = Set<Int>()
+        var res = 0
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                res += 1
+                return
+            }
+
+            for c in 0..<n {
+                if col.contains(c) || posDiag.contains(r + c) || negDiag.contains(r - c) {
+                    continue
+                }
+
+                col.insert(c)
+                posDiag.insert(r + c)
+                negDiag.insert(r - c)
+
+                backtrack(r + 1)
+
+                col.remove(c)
+                posDiag.remove(r + c)
+                negDiag.remove(r - c)
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -632,6 +887,110 @@ public class Solution {
 }
 ```
 
+```go
+func totalNQueens(n int) int {
+    col := make([]bool, n)
+    posDiag := make([]bool, 2*n)
+    negDiag := make([]bool, 2*n)
+    res := 0
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            res++
+            return
+        }
+        for c := 0; c < n; c++ {
+            if col[c] || posDiag[r+c] || negDiag[r-c+n] {
+                continue
+            }
+            col[c] = true
+            posDiag[r+c] = true
+            negDiag[r-c+n] = true
+
+            backtrack(r + 1)
+
+            col[c] = false
+            posDiag[r+c] = false
+            negDiag[r-c+n] = false
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalNQueens(n: Int): Int {
+        val col = BooleanArray(n)
+        val posDiag = BooleanArray(2 * n)
+        val negDiag = BooleanArray(2 * n)
+        var res = 0
+
+        fun backtrack(r: Int) {
+            if (r == n) {
+                res++
+                return
+            }
+            for (c in 0 until n) {
+                if (col[c] || posDiag[r + c] || negDiag[r - c + n]) {
+                    continue
+                }
+                col[c] = true
+                posDiag[r + c] = true
+                negDiag[r - c + n] = true
+
+                backtrack(r + 1)
+
+                col[c] = false
+                posDiag[r + c] = false
+                negDiag[r - c + n] = false
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalNQueens(_ n: Int) -> Int {
+        var col = [Bool](repeating: false, count: n)
+        var posDiag = [Bool](repeating: false, count: 2 * n)
+        var negDiag = [Bool](repeating: false, count: 2 * n)
+        var res = 0
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                res += 1
+                return
+            }
+            for c in 0..<n {
+                if col[c] || posDiag[r + c] || negDiag[r - c + n] {
+                    continue
+                }
+                col[c] = true
+                posDiag[r + c] = true
+                negDiag[r - c + n] = true
+
+                backtrack(r + 1)
+
+                col[c] = false
+                posDiag[r + c] = false
+                negDiag[r - c + n] = false
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -827,6 +1186,114 @@ public class Solution {
 
         Backtrack(0);
         return res;
+    }
+}
+```
+
+```go
+func totalNQueens(n int) int {
+    col := 0
+    posDiag := 0
+    negDiag := 0
+    res := 0
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            res++
+            return
+        }
+        for c := 0; c < n; c++ {
+            if (col&(1<<c)) != 0 || (posDiag&(1<<(r+c))) != 0 || (negDiag&(1<<(r-c+n))) != 0 {
+                continue
+            }
+            col ^= (1 << c)
+            posDiag ^= (1 << (r + c))
+            negDiag ^= (1 << (r - c + n))
+
+            backtrack(r + 1)
+
+            col ^= (1 << c)
+            posDiag ^= (1 << (r + c))
+            negDiag ^= (1 << (r - c + n))
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun totalNQueens(n: Int): Int {
+        var col = 0
+        var posDiag = 0
+        var negDiag = 0
+        var res = 0
+
+        fun backtrack(r: Int) {
+            if (r == n) {
+                res++
+                return
+            }
+            for (c in 0 until n) {
+                if ((col and (1 shl c)) != 0 ||
+                    (posDiag and (1 shl (r + c))) != 0 ||
+                    (negDiag and (1 shl (r - c + n))) != 0) {
+                    continue
+                }
+                col = col xor (1 shl c)
+                posDiag = posDiag xor (1 shl (r + c))
+                negDiag = negDiag xor (1 shl (r - c + n))
+
+                backtrack(r + 1)
+
+                col = col xor (1 shl c)
+                posDiag = posDiag xor (1 shl (r + c))
+                negDiag = negDiag xor (1 shl (r - c + n))
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func totalNQueens(_ n: Int) -> Int {
+        var col = 0
+        var posDiag = 0
+        var negDiag = 0
+        var res = 0
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                res += 1
+                return
+            }
+            for c in 0..<n {
+                if (col & (1 << c)) != 0 ||
+                   (posDiag & (1 << (r + c))) != 0 ||
+                   (negDiag & (1 << (r - c + n))) != 0 {
+                    continue
+                }
+                col ^= (1 << c)
+                posDiag ^= (1 << (r + c))
+                negDiag ^= (1 << (r - c + n))
+
+                backtrack(r + 1)
+
+                col ^= (1 << c)
+                posDiag ^= (1 << (r + c))
+                negDiag ^= (1 << (r - c + n))
+            }
+        }
+
+        backtrack(0)
+        return res
     }
 }
 ```

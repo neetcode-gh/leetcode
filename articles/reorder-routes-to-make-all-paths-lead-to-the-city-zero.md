@@ -130,6 +130,141 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, List<int>> neighbors;
+    private bool[] visit;
+    private HashSet<string> edges;
+
+    public int MinReorder(int n, int[][] connections) {
+        edges = new HashSet<string>();
+        neighbors = new Dictionary<int, List<int>>();
+        visit = new bool[n];
+        int changes = 0;
+
+        for (int i = 0; i < n; i++) {
+            neighbors[i] = new List<int>();
+        }
+
+        foreach (var conn in connections) {
+            int a = conn[0], b = conn[1];
+            edges.Add($"{a},{b}");
+            neighbors[a].Add(b);
+            neighbors[b].Add(a);
+        }
+
+        void Dfs(int city) {
+            visit[city] = true;
+            foreach (int neighbor in neighbors[city]) {
+                if (visit[neighbor]) continue;
+                if (!edges.Contains($"{neighbor},{city}")) changes++;
+                Dfs(neighbor);
+            }
+        }
+
+        Dfs(0);
+        return changes;
+    }
+}
+```
+
+```go
+func minReorder(n int, connections [][]int) int {
+    edges := make(map[string]bool)
+    neighbors := make([][]int, n)
+    visit := make([]bool, n)
+    changes := 0
+
+    for i := 0; i < n; i++ {
+        neighbors[i] = []int{}
+    }
+
+    for _, conn := range connections {
+        a, b := conn[0], conn[1]
+        edges[fmt.Sprintf("%d,%d", a, b)] = true
+        neighbors[a] = append(neighbors[a], b)
+        neighbors[b] = append(neighbors[b], a)
+    }
+
+    var dfs func(city int)
+    dfs = func(city int) {
+        visit[city] = true
+        for _, neighbor := range neighbors[city] {
+            if visit[neighbor] {
+                continue
+            }
+            if !edges[fmt.Sprintf("%d,%d", neighbor, city)] {
+                changes++
+            }
+            dfs(neighbor)
+        }
+    }
+
+    dfs(0)
+    return changes
+}
+```
+
+```kotlin
+class Solution {
+    fun minReorder(n: Int, connections: Array<IntArray>): Int {
+        val edges = HashSet<String>()
+        val neighbors = Array(n) { mutableListOf<Int>() }
+        val visit = BooleanArray(n)
+        var changes = 0
+
+        for (conn in connections) {
+            val (a, b) = conn[0] to conn[1]
+            edges.add("$a,$b")
+            neighbors[a].add(b)
+            neighbors[b].add(a)
+        }
+
+        fun dfs(city: Int) {
+            visit[city] = true
+            for (neighbor in neighbors[city]) {
+                if (visit[neighbor]) continue
+                if (!edges.contains("$neighbor,$city")) changes++
+                dfs(neighbor)
+            }
+        }
+
+        dfs(0)
+        return changes
+    }
+}
+```
+
+```swift
+class Solution {
+    func minReorder(_ n: Int, _ connections: [[Int]]) -> Int {
+        var edges = Set<String>()
+        var neighbors = [[Int]](repeating: [], count: n)
+        var visit = [Bool](repeating: false, count: n)
+        var changes = 0
+
+        for conn in connections {
+            let a = conn[0], b = conn[1]
+            edges.insert("\(a),\(b)")
+            neighbors[a].append(b)
+            neighbors[b].append(a)
+        }
+
+        func dfs(_ city: Int) {
+            visit[city] = true
+            for neighbor in neighbors[city] {
+                if visit[neighbor] { continue }
+                if !edges.contains("\(neighbor),\(city)") { changes += 1 }
+                dfs(neighbor)
+            }
+        }
+
+        dfs(0)
+        return changes
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,6 +372,116 @@ class Solution {
         };
 
         return dfs(0, -1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinReorder(int n, int[][] connections) {
+        var adj = new List<int>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+
+        foreach (var conn in connections) {
+            adj[conn[0]].Add(conn[1]);
+            adj[conn[1]].Add(-conn[0]);
+        }
+
+        int Dfs(int node, int parent) {
+            int changes = 0;
+            foreach (int nei in adj[node]) {
+                if (Math.Abs(nei) == parent) continue;
+                changes += Dfs(Math.Abs(nei), node) + (nei > 0 ? 1 : 0);
+            }
+            return changes;
+        }
+
+        return Dfs(0, -1);
+    }
+}
+```
+
+```go
+func minReorder(n int, connections [][]int) int {
+    adj := make([][]int, n)
+    for i := 0; i < n; i++ {
+        adj[i] = []int{}
+    }
+
+    for _, conn := range connections {
+        u, v := conn[0], conn[1]
+        adj[u] = append(adj[u], v)
+        adj[v] = append(adj[v], -u)
+    }
+
+    var dfs func(node, parent int) int
+    dfs = func(node, parent int) int {
+        changes := 0
+        for _, nei := range adj[node] {
+            absNei := nei
+            if absNei < 0 {
+                absNei = -absNei
+            }
+            if absNei == parent {
+                continue
+            }
+            add := 0
+            if nei > 0 {
+                add = 1
+            }
+            changes += dfs(absNei, node) + add
+        }
+        return changes
+    }
+
+    return dfs(0, -1)
+}
+```
+
+```kotlin
+class Solution {
+    fun minReorder(n: Int, connections: Array<IntArray>): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+
+        for (conn in connections) {
+            adj[conn[0]].add(conn[1])
+            adj[conn[1]].add(-conn[0])
+        }
+
+        fun dfs(node: Int, parent: Int): Int {
+            var changes = 0
+            for (nei in adj[node]) {
+                if (kotlin.math.abs(nei) == parent) continue
+                changes += dfs(kotlin.math.abs(nei), node) + if (nei > 0) 1 else 0
+            }
+            return changes
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minReorder(_ n: Int, _ connections: [[Int]]) -> Int {
+        var adj = [[Int]](repeating: [], count: n)
+
+        for conn in connections {
+            adj[conn[0]].append(conn[1])
+            adj[conn[1]].append(-conn[0])
+        }
+
+        func dfs(_ node: Int, _ parent: Int) -> Int {
+            var changes = 0
+            for nei in adj[node] {
+                if abs(nei) == parent { continue }
+                changes += dfs(abs(nei), node) + (nei > 0 ? 1 : 0)
+            }
+            return changes
+        }
+
+        return dfs(0, -1)
     }
 }
 ```
@@ -373,6 +618,135 @@ class Solution {
             }
         }
         return changes;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinReorder(int n, int[][] connections) {
+        var adj = new List<int[]>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<int[]>();
+
+        foreach (var conn in connections) {
+            adj[conn[0]].Add(new int[] { conn[1], 1 });
+            adj[conn[1]].Add(new int[] { conn[0], 0 });
+        }
+
+        var visited = new bool[n];
+        var queue = new Queue<int>();
+        queue.Enqueue(0);
+        visited[0] = true;
+        int changes = 0;
+
+        while (queue.Count > 0) {
+            int node = queue.Dequeue();
+            foreach (var edge in adj[node]) {
+                int neighbor = edge[0], isForward = edge[1];
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    changes += isForward;
+                    queue.Enqueue(neighbor);
+                }
+            }
+        }
+        return changes;
+    }
+}
+```
+
+```go
+func minReorder(n int, connections [][]int) int {
+    adj := make([][][2]int, n)
+    for i := 0; i < n; i++ {
+        adj[i] = [][2]int{}
+    }
+
+    for _, conn := range connections {
+        adj[conn[0]] = append(adj[conn[0]], [2]int{conn[1], 1})
+        adj[conn[1]] = append(adj[conn[1]], [2]int{conn[0], 0})
+    }
+
+    visited := make([]bool, n)
+    queue := []int{0}
+    visited[0] = true
+    changes := 0
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        for _, edge := range adj[node] {
+            neighbor, isForward := edge[0], edge[1]
+            if !visited[neighbor] {
+                visited[neighbor] = true
+                changes += isForward
+                queue = append(queue, neighbor)
+            }
+        }
+    }
+    return changes
+}
+```
+
+```kotlin
+class Solution {
+    fun minReorder(n: Int, connections: Array<IntArray>): Int {
+        val adj = Array(n) { mutableListOf<IntArray>() }
+
+        for (conn in connections) {
+            adj[conn[0]].add(intArrayOf(conn[1], 1))
+            adj[conn[1]].add(intArrayOf(conn[0], 0))
+        }
+
+        val visited = BooleanArray(n)
+        val queue = ArrayDeque<Int>()
+        queue.add(0)
+        visited[0] = true
+        var changes = 0
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            for (edge in adj[node]) {
+                val (neighbor, isForward) = edge[0] to edge[1]
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true
+                    changes += isForward
+                    queue.add(neighbor)
+                }
+            }
+        }
+        return changes
+    }
+}
+```
+
+```swift
+class Solution {
+    func minReorder(_ n: Int, _ connections: [[Int]]) -> Int {
+        var adj = [[(Int, Int)]](repeating: [], count: n)
+
+        for conn in connections {
+            adj[conn[0]].append((conn[1], 1))
+            adj[conn[1]].append((conn[0], 0))
+        }
+
+        var visited = [Bool](repeating: false, count: n)
+        var queue = [Int]()
+        queue.append(0)
+        visited[0] = true
+        var changes = 0
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            for (neighbor, isForward) in adj[node] {
+                if !visited[neighbor] {
+                    visited[neighbor] = true
+                    changes += isForward
+                    queue.append(neighbor)
+                }
+            }
+        }
+        return changes
     }
 }
 ```

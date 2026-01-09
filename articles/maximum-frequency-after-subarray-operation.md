@@ -145,6 +145,97 @@ public class Solution {
 }
 ```
 
+```go
+func maxFrequency(nums []int, k int) int {
+    n := len(nums)
+    cntK := 0
+    for _, x := range nums {
+        if x == k {
+            cntK++
+        }
+    }
+    res := cntK
+
+    for num := 1; num <= 50; num++ {
+        if num == k {
+            continue
+        }
+        for i := 0; i < n; i++ {
+            tmp := cntK
+            cnt := 0
+            for j := i; j < n; j++ {
+                if nums[j] == num {
+                    cnt++
+                } else if nums[j] == k {
+                    cntK--
+                }
+                if cnt+cntK > res {
+                    res = cnt + cntK
+                }
+            }
+            cntK = tmp
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        val n = nums.size
+        var cntK = nums.count { it == k }
+        var res = cntK
+
+        for (num in 1..50) {
+            if (num == k) continue
+            for (i in 0 until n) {
+                val tmp = cntK
+                var cnt = 0
+                for (j in i until n) {
+                    if (nums[j] == num) {
+                        cnt++
+                    } else if (nums[j] == k) {
+                        cntK--
+                    }
+                    res = maxOf(res, cnt + cntK)
+                }
+                cntK = tmp
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        let n = nums.count
+        var cntK = nums.filter { $0 == k }.count
+        var res = cntK
+
+        for num in 1...50 {
+            if num == k { continue }
+            for i in 0..<n {
+                let tmp = cntK
+                var cnt = 0
+                for j in i..<n {
+                    if nums[j] == num {
+                        cnt += 1
+                    } else if nums[j] == k {
+                        cntK -= 1
+                    }
+                    res = max(res, cnt + cntK)
+                }
+                cntK = tmp
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -280,6 +371,82 @@ public class Solution {
 }
 ```
 
+```go
+func maxFrequency(nums []int, k int) int {
+    cntK := 0
+    for _, num := range nums {
+        if num == k {
+            cntK++
+        }
+    }
+    res := 0
+
+    for i := 1; i <= 50; i++ {
+        if i == k {
+            continue
+        }
+        cnt := 0
+        for _, num := range nums {
+            if num == i {
+                cnt++
+            }
+            if num == k {
+                cnt--
+            }
+            if cnt < 0 {
+                cnt = 0
+            }
+            if cntK+cnt > res {
+                res = cntK + cnt
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        val cntK = nums.count { it == k }
+        var res = 0
+
+        for (i in 1..50) {
+            if (i == k) continue
+            var cnt = 0
+            for (num in nums) {
+                if (num == i) cnt++
+                if (num == k) cnt--
+                cnt = maxOf(cnt, 0)
+                res = maxOf(res, cntK + cnt)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        let cntK = nums.filter { $0 == k }.count
+        var res = 0
+
+        for i in 1...50 {
+            if i == k { continue }
+            var cnt = 0
+            for num in nums {
+                if num == i { cnt += 1 }
+                if num == k { cnt -= 1 }
+                cnt = max(cnt, 0)
+                res = max(res, cntK + cnt)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -369,6 +536,54 @@ public class Solution {
             res = Math.Max(res, cnt[num] - (cnt.TryGetValue(k, out ck) ? ck : 0));
         }
         return (cnt.TryGetValue(k, out var ckk) ? ckk : 0) + res;
+    }
+}
+```
+
+```go
+func maxFrequency(nums []int, k int) int {
+    cnt := make(map[int]int)
+    res := 0
+    for _, num := range nums {
+        prev := cnt[num]
+        if cnt[k] > prev {
+            prev = cnt[k]
+        }
+        cnt[num] = prev + 1
+        if cnt[num]-cnt[k] > res {
+            res = cnt[num] - cnt[k]
+        }
+    }
+    return cnt[k] + res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxFrequency(nums: IntArray, k: Int): Int {
+        val cnt = mutableMapOf<Int, Int>()
+        var res = 0
+        for (num in nums) {
+            val prev = maxOf(cnt.getOrDefault(num, 0), cnt.getOrDefault(k, 0))
+            cnt[num] = prev + 1
+            res = maxOf(res, cnt[num]!! - cnt.getOrDefault(k, 0))
+        }
+        return cnt.getOrDefault(k, 0) + res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxFrequency(_ nums: [Int], _ k: Int) -> Int {
+        var cnt = [Int: Int]()
+        var res = 0
+        for num in nums {
+            let prev = max(cnt[num, default: 0], cnt[k, default: 0])
+            cnt[num] = prev + 1
+            res = max(res, cnt[num]! - cnt[k, default: 0])
+        }
+        return cnt[k, default: 0] + res
     }
 }
 ```

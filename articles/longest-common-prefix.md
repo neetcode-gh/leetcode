@@ -99,6 +99,62 @@ public class Solution {
 }
 ```
 
+```go
+func longestCommonPrefix(strs []string) string {
+    prefix := strs[0]
+    for i := 1; i < len(strs); i++ {
+        j := 0
+        for j < len(prefix) && j < len(strs[i]) {
+            if prefix[j] != strs[i][j] {
+                break
+            }
+            j++
+        }
+        prefix = prefix[:j]
+    }
+    return prefix
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonPrefix(strs: Array<String>): String {
+        var prefix = strs[0]
+        for (i in 1 until strs.size) {
+            var j = 0
+            while (j < minOf(prefix.length, strs[i].length)) {
+                if (prefix[j] != strs[i][j]) {
+                    break
+                }
+                j++
+            }
+            prefix = prefix.substring(0, j)
+        }
+        return prefix
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestCommonPrefix(_ strs: [String]) -> String {
+        var prefix = Array(strs[0])
+        for i in 1..<strs.count {
+            let s = Array(strs[i])
+            var j = 0
+            while j < min(prefix.count, s.count) {
+                if prefix[j] != s[j] {
+                    break
+                }
+                j += 1
+            }
+            prefix = Array(prefix[0..<j])
+        }
+        return String(prefix)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -185,6 +241,51 @@ public class Solution {
             }
         }
         return strs[0];
+    }
+}
+```
+
+```go
+func longestCommonPrefix(strs []string) string {
+    for i := 0; i < len(strs[0]); i++ {
+        for _, s := range strs {
+            if i == len(s) || s[i] != strs[0][i] {
+                return s[:i]
+            }
+        }
+    }
+    return strs[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonPrefix(strs: Array<String>): String {
+        for (i in strs[0].indices) {
+            for (s in strs) {
+                if (i == s.length || s[i] != strs[0][i]) {
+                    return s.substring(0, i)
+                }
+            }
+        }
+        return strs[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestCommonPrefix(_ strs: [String]) -> String {
+        let first = Array(strs[0])
+        for i in 0..<first.count {
+            for str in strs {
+                let s = Array(str)
+                if i == s.count || s[i] != first[i] {
+                    return String(first[0..<i])
+                }
+            }
+        }
+        return strs[0]
     }
 }
 ```
@@ -298,6 +399,79 @@ public class Solution {
         }
 
         return first;
+    }
+}
+```
+
+```go
+import "sort"
+
+func longestCommonPrefix(strs []string) string {
+    if len(strs) == 1 {
+        return strs[0]
+    }
+
+    sort.Strings(strs)
+    first := strs[0]
+    last := strs[len(strs)-1]
+    n := len(first)
+    if len(last) < n {
+        n = len(last)
+    }
+
+    for i := 0; i < n; i++ {
+        if first[i] != last[i] {
+            return first[:i]
+        }
+    }
+    return first
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonPrefix(strs: Array<String>): String {
+        if (strs.size == 1) {
+            return strs[0]
+        }
+
+        strs.sort()
+        val first = strs[0]
+        val last = strs[strs.size - 1]
+
+        var i = 0
+        while (i < minOf(first.length, last.length)) {
+            if (first[i] != last[i]) {
+                return first.substring(0, i)
+            }
+            i++
+        }
+
+        return first
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestCommonPrefix(_ strs: [String]) -> String {
+        if strs.count == 1 {
+            return strs[0]
+        }
+
+        let sorted = strs.sorted()
+        let first = Array(sorted[0])
+        let last = Array(sorted[sorted.count - 1])
+
+        var i = 0
+        while i < min(first.count, last.count) {
+            if first[i] != last[i] {
+                return String(first[0..<i])
+            }
+            i += 1
+        }
+
+        return sorted[0]
     }
 }
 ```
@@ -607,6 +781,187 @@ public class Solution {
         }
 
         return strs[0].Substring(0, prefixLen);
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children map[byte]*TrieNode
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func NewTrie() *Trie {
+    return &Trie{root: &TrieNode{children: make(map[byte]*TrieNode)}}
+}
+
+func (t *Trie) Insert(word string) {
+    node := t.root
+    for i := 0; i < len(word); i++ {
+        c := word[i]
+        if _, exists := node.children[c]; !exists {
+            node.children[c] = &TrieNode{children: make(map[byte]*TrieNode)}
+        }
+        node = node.children[c]
+    }
+}
+
+func (t *Trie) Lcp(word string, prefixLen int) int {
+    node := t.root
+    length := len(word)
+    if prefixLen < length {
+        length = prefixLen
+    }
+    for i := 0; i < length; i++ {
+        if _, exists := node.children[word[i]]; !exists {
+            return i
+        }
+        node = node.children[word[i]]
+    }
+    if len(word) < prefixLen {
+        return len(word)
+    }
+    return prefixLen
+}
+
+func longestCommonPrefix(strs []string) string {
+    if len(strs) == 1 {
+        return strs[0]
+    }
+
+    mini := 0
+    for i := 1; i < len(strs); i++ {
+        if len(strs[i]) < len(strs[mini]) {
+            mini = i
+        }
+    }
+
+    trie := NewTrie()
+    trie.Insert(strs[mini])
+    prefixLen := len(strs[mini])
+
+    for i := 0; i < len(strs); i++ {
+        prefixLen = trie.Lcp(strs[i], prefixLen)
+    }
+
+    return strs[0][:prefixLen]
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = HashMap<Char, TrieNode>()
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun insert(word: String) {
+        var node = root
+        for (c in word) {
+            if (!node.children.containsKey(c)) {
+                node.children[c] = TrieNode()
+            }
+            node = node.children[c]!!
+        }
+    }
+
+    fun lcp(word: String, prefixLen: Int): Int {
+        var node = root
+        var i = 0
+        while (i < minOf(word.length, prefixLen)) {
+            if (!node.children.containsKey(word[i])) {
+                return i
+            }
+            node = node.children[word[i]]!!
+            i++
+        }
+        return minOf(word.length, prefixLen)
+    }
+}
+
+class Solution {
+    fun longestCommonPrefix(strs: Array<String>): String {
+        if (strs.size == 1) return strs[0]
+
+        var mini = 0
+        for (i in 1 until strs.size) {
+            if (strs[i].length < strs[mini].length) {
+                mini = i
+            }
+        }
+
+        val trie = Trie()
+        trie.insert(strs[mini])
+        var prefixLen = strs[mini].length
+
+        for (i in strs.indices) {
+            prefixLen = trie.lcp(strs[i], prefixLen)
+        }
+
+        return strs[0].substring(0, prefixLen)
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [Character: TrieNode]()
+}
+
+class Trie {
+    var root = TrieNode()
+
+    func insert(_ word: String) {
+        var node = root
+        for c in word {
+            if node.children[c] == nil {
+                node.children[c] = TrieNode()
+            }
+            node = node.children[c]!
+        }
+    }
+
+    func lcp(_ word: String, _ prefixLen: Int) -> Int {
+        var node = root
+        let chars = Array(word)
+        var i = 0
+        while i < min(chars.count, prefixLen) {
+            if node.children[chars[i]] == nil {
+                return i
+            }
+            node = node.children[chars[i]]!
+            i += 1
+        }
+        return min(chars.count, prefixLen)
+    }
+}
+
+class Solution {
+    func longestCommonPrefix(_ strs: [String]) -> String {
+        if strs.count == 1 {
+            return strs[0]
+        }
+
+        var mini = 0
+        for i in 1..<strs.count {
+            if strs[i].count < strs[mini].count {
+                mini = i
+            }
+        }
+
+        let trie = Trie()
+        trie.insert(strs[mini])
+        var prefixLen = strs[mini].count
+
+        for i in 0..<strs.count {
+            prefixLen = trie.lcp(strs[i], prefixLen)
+        }
+
+        return String(strs[0].prefix(prefixLen))
     }
 }
 ```

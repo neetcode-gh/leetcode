@@ -138,6 +138,81 @@ public class Solution {
 }
 ```
 
+```go
+func singleNumber(nums []int) []int {
+    n := len(nums)
+    res := []int{}
+
+    for i := 0; i < n; i++ {
+        flag := true
+        for j := 0; j < n; j++ {
+            if i != j && nums[i] == nums[j] {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            res = append(res, nums[i])
+            if len(res) == 2 {
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): IntArray {
+        val n = nums.size
+        val res = mutableListOf<Int>()
+
+        for (i in 0 until n) {
+            var flag = true
+            for (j in 0 until n) {
+                if (i != j && nums[i] == nums[j]) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) {
+                res.add(nums[i])
+                if (res.size == 2) break
+            }
+        }
+
+        return intArrayOf(res[0], res[1])
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var res = [Int]()
+
+        for i in 0..<n {
+            var flag = true
+            for j in 0..<n {
+                if i != j && nums[i] == nums[j] {
+                    flag = false
+                    break
+                }
+            }
+            if flag {
+                res.append(nums[i])
+                if res.count == 2 { break }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,6 +325,64 @@ public class Solution {
 }
 ```
 
+```go
+func singleNumber(nums []int) []int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    res := []int{}
+    for k, v := range count {
+        if v == 1 {
+            res = append(res, k)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): IntArray {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val res = mutableListOf<Int>()
+        for ((key, value) in count) {
+            if (value == 1) {
+                res.add(key)
+            }
+        }
+
+        return intArrayOf(res[0], res[1])
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> [Int] {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var res = [Int]()
+        for (key, value) in count {
+            if value == 1 {
+                res.append(key)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -356,6 +489,60 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func singleNumber(nums []int) []int {
+    seen := make(map[int]bool)
+    for _, num := range nums {
+        if seen[num] {
+            delete(seen, num)
+        } else {
+            seen[num] = true
+        }
+    }
+
+    res := []int{}
+    for num := range seen {
+        res = append(res, num)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): IntArray {
+        val seen = HashSet<Int>()
+        for (num in nums) {
+            if (num in seen) {
+                seen.remove(num)
+            } else {
+                seen.add(num)
+            }
+        }
+
+        return seen.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> [Int] {
+        var seen = Set<Int>()
+        for num in nums {
+            if seen.contains(num) {
+                seen.remove(num)
+            } else {
+                seen.insert(num)
+            }
+        }
+
+        return Array(seen)
     }
 }
 ```
@@ -471,6 +658,64 @@ public class Solution {
         }
 
         return res.ToArray();
+    }
+}
+```
+
+```go
+func singleNumber(nums []int) []int {
+    sort.Ints(nums)
+    res := []int{}
+    n := len(nums)
+
+    for i := 0; i < n; i++ {
+        if (i > 0 && nums[i] == nums[i-1]) ||
+            (i+1 < n && nums[i] == nums[i+1]) {
+            continue
+        }
+        res = append(res, nums[i])
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): IntArray {
+        nums.sort()
+        val res = mutableListOf<Int>()
+        val n = nums.size
+
+        for (i in 0 until n) {
+            if ((i > 0 && nums[i] == nums[i - 1]) ||
+                (i + 1 < n && nums[i] == nums[i + 1])) {
+                continue
+            }
+            res.add(nums[i])
+        }
+
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> [Int] {
+        let nums = nums.sorted()
+        var res = [Int]()
+        let n = nums.count
+
+        for i in 0..<n {
+            if (i > 0 && nums[i] == nums[i - 1]) ||
+                (i + 1 < n && nums[i] == nums[i + 1]) {
+                continue
+            }
+            res.append(nums[i])
+        }
+
+        return res
     }
 }
 ```
@@ -619,6 +864,86 @@ public class Solution {
 }
 ```
 
+```go
+func singleNumber(nums []int) []int {
+    xorVal := 0
+    for _, num := range nums {
+        xorVal ^= num
+    }
+
+    diffBit := 1
+    for xorVal&diffBit == 0 {
+        diffBit <<= 1
+    }
+
+    a, b := 0, 0
+    for _, num := range nums {
+        if num&diffBit != 0 {
+            a ^= num
+        } else {
+            b ^= num
+        }
+    }
+
+    return []int{a, b}
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): IntArray {
+        var xorVal = 0
+        for (num in nums) {
+            xorVal = xorVal xor num
+        }
+
+        var diffBit = 1
+        while (xorVal and diffBit == 0) {
+            diffBit = diffBit shl 1
+        }
+
+        var a = 0
+        var b = 0
+        for (num in nums) {
+            if (num and diffBit != 0) {
+                a = a xor num
+            } else {
+                b = b xor num
+            }
+        }
+
+        return intArrayOf(a, b)
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> [Int] {
+        var xorVal = 0
+        for num in nums {
+            xorVal ^= num
+        }
+
+        var diffBit = 1
+        while xorVal & diffBit == 0 {
+            diffBit <<= 1
+        }
+
+        var a = 0, b = 0
+        for num in nums {
+            if num & diffBit != 0 {
+                a ^= num
+            } else {
+                b ^= num
+            }
+        }
+
+        return [a, b]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -745,6 +1070,77 @@ public class Solution {
         }
 
         return new int[] { a, b };
+    }
+}
+```
+
+```go
+func singleNumber(nums []int) []int {
+    xorVal := 0
+    for _, num := range nums {
+        xorVal ^= num
+    }
+
+    diffBit := xorVal & -xorVal
+
+    a, b := 0, 0
+    for _, num := range nums {
+        if num&diffBit != 0 {
+            a ^= num
+        } else {
+            b ^= num
+        }
+    }
+
+    return []int{a, b}
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): IntArray {
+        var xorVal = 0
+        for (num in nums) {
+            xorVal = xorVal xor num
+        }
+
+        val diffBit = xorVal and -xorVal
+
+        var a = 0
+        var b = 0
+        for (num in nums) {
+            if (num and diffBit != 0) {
+                a = a xor num
+            } else {
+                b = b xor num
+            }
+        }
+
+        return intArrayOf(a, b)
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> [Int] {
+        var xorVal = 0
+        for num in nums {
+            xorVal ^= num
+        }
+
+        let diffBit = xorVal & -xorVal
+
+        var a = 0, b = 0
+        for num in nums {
+            if num & diffBit != 0 {
+                a ^= num
+            } else {
+                b ^= num
+            }
+        }
+
+        return [a, b]
     }
 }
 ```

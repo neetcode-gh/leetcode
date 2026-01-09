@@ -203,6 +203,243 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private List<char>[][] cache;
+    private int n, m;
+
+    public string ShortestCommonSupersequence(string str1, string str2) {
+        n = str1.Length;
+        m = str2.Length;
+        cache = new List<char>[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            cache[i] = new List<char>[m + 1];
+        }
+
+        List<char> res = Dfs(0, 0, str1, str2);
+        char[] arr = res.ToArray();
+        Array.Reverse(arr);
+        return new string(arr);
+    }
+
+    private List<char> Dfs(int i, int j, string str1, string str2) {
+        if (cache[i][j] != null) return cache[i][j];
+        if (i == n) {
+            List<char> res = new List<char>();
+            for (int k = m - 1; k >= j; k--) {
+                res.Add(str2[k]);
+            }
+            cache[i][j] = res;
+            return res;
+        }
+        if (j == m) {
+            List<char> res = new List<char>();
+            for (int k = n - 1; k >= i; k--) {
+                res.Add(str1[k]);
+            }
+            cache[i][j] = res;
+            return res;
+        }
+
+        List<char> result;
+        if (str1[i] == str2[j]) {
+            result = new List<char>(Dfs(i + 1, j + 1, str1, str2));
+            result.Add(str1[i]);
+        } else {
+            List<char> s1 = Dfs(i + 1, j, str1, str2);
+            List<char> s2 = Dfs(i, j + 1, str1, str2);
+
+            if (s1.Count < s2.Count) {
+                result = new List<char>(s1);
+                result.Add(str1[i]);
+            } else {
+                result = new List<char>(s2);
+                result.Add(str2[j]);
+            }
+        }
+
+        cache[i][j] = result;
+        return result;
+    }
+}
+```
+
+```go
+func shortestCommonSupersequence(str1 string, str2 string) string {
+    n, m := len(str1), len(str2)
+    cache := make([][]string, n+1)
+    cacheSet := make([][]bool, n+1)
+    for i := 0; i <= n; i++ {
+        cache[i] = make([]string, m+1)
+        cacheSet[i] = make([]bool, m+1)
+    }
+
+    var dfs func(i, j int) string
+    dfs = func(i, j int) string {
+        if cacheSet[i][j] {
+            return cache[i][j]
+        }
+        cacheSet[i][j] = true
+
+        if i == n {
+            tail := reverse(str2[j:])
+            cache[i][j] = tail
+            return tail
+        }
+        if j == m {
+            tail := reverse(str1[i:])
+            cache[i][j] = tail
+            return tail
+        }
+
+        if str1[i] == str2[j] {
+            temp := dfs(i+1, j+1) + string(str1[i])
+            cache[i][j] = temp
+        } else {
+            s1 := dfs(i+1, j)
+            s2 := dfs(i, j+1)
+            if len(s1) < len(s2) {
+                cache[i][j] = s1 + string(str1[i])
+            } else {
+                cache[i][j] = s2 + string(str2[j])
+            }
+        }
+        return cache[i][j]
+    }
+
+    res := dfs(0, 0)
+    return reverse(res)
+}
+
+func reverse(s string) string {
+    runes := []rune(s)
+    for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+        runes[i], runes[j] = runes[j], runes[i]
+    }
+    return string(runes)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var cache: Array<Array<MutableList<Char>?>>
+    private var n = 0
+    private var m = 0
+
+    fun shortestCommonSupersequence(str1: String, str2: String): String {
+        n = str1.length
+        m = str2.length
+        cache = Array(n + 1) { arrayOfNulls<MutableList<Char>>(m + 1) }
+
+        val res = dfs(0, 0, str1, str2)
+        return res.reversed().joinToString("")
+    }
+
+    private fun dfs(i: Int, j: Int, str1: String, str2: String): MutableList<Char> {
+        cache[i][j]?.let { return it }
+
+        if (i == n) {
+            val res = mutableListOf<Char>()
+            for (k in m - 1 downTo j) {
+                res.add(str2[k])
+            }
+            cache[i][j] = res
+            return res
+        }
+        if (j == m) {
+            val res = mutableListOf<Char>()
+            for (k in n - 1 downTo i) {
+                res.add(str1[k])
+            }
+            cache[i][j] = res
+            return res
+        }
+
+        val result: MutableList<Char>
+        if (str1[i] == str2[j]) {
+            result = dfs(i + 1, j + 1, str1, str2).toMutableList()
+            result.add(str1[i])
+        } else {
+            val s1 = dfs(i + 1, j, str1, str2)
+            val s2 = dfs(i, j + 1, str1, str2)
+
+            if (s1.size < s2.size) {
+                result = s1.toMutableList()
+                result.add(str1[i])
+            } else {
+                result = s2.toMutableList()
+                result.add(str2[j])
+            }
+        }
+
+        cache[i][j] = result
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    private var cache: [[[Character]?]] = []
+    private var n = 0
+    private var m = 0
+
+    func shortestCommonSupersequence(_ str1: String, _ str2: String) -> String {
+        let s1 = Array(str1)
+        let s2 = Array(str2)
+        n = s1.count
+        m = s2.count
+        cache = Array(repeating: Array(repeating: nil, count: m + 1), count: n + 1)
+
+        let res = dfs(0, 0, s1, s2)
+        return String(res.reversed())
+    }
+
+    private func dfs(_ i: Int, _ j: Int, _ str1: [Character], _ str2: [Character]) -> [Character] {
+        if let cached = cache[i][j] {
+            return cached
+        }
+
+        if i == n {
+            var res = [Character]()
+            for k in stride(from: m - 1, through: j, by: -1) {
+                res.append(str2[k])
+            }
+            cache[i][j] = res
+            return res
+        }
+        if j == m {
+            var res = [Character]()
+            for k in stride(from: n - 1, through: i, by: -1) {
+                res.append(str1[k])
+            }
+            cache[i][j] = res
+            return res
+        }
+
+        var result: [Character]
+        if str1[i] == str2[j] {
+            result = dfs(i + 1, j + 1, str1, str2)
+            result.append(str1[i])
+        } else {
+            let s1 = dfs(i + 1, j, str1, str2)
+            let s2 = dfs(i, j + 1, str1, str2)
+
+            if s1.count < s2.count {
+                result = s1
+                result.append(str1[i])
+            } else {
+                result = s2
+                result.append(str2[j])
+            }
+        }
+
+        cache[i][j] = result
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -450,6 +687,268 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] dp;
+    private int n, m;
+
+    public string ShortestCommonSupersequence(string str1, string str2) {
+        n = str1.Length;
+        m = str2.Length;
+        dp = new int[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            dp[i] = new int[m + 1];
+            Array.Fill(dp[i], -1);
+        }
+
+        Dfs(0, 0, str1, str2);
+
+        return BuildSCS(str1, str2);
+    }
+
+    private int Dfs(int i, int j, string str1, string str2) {
+        if (dp[i][j] != -1) return dp[i][j];
+        if (i == n) return dp[i][j] = m - j;
+        if (j == m) return dp[i][j] = n - i;
+
+        if (str1[i] == str2[j]) {
+            dp[i][j] = 1 + Dfs(i + 1, j + 1, str1, str2);
+        } else {
+            dp[i][j] = 1 + Math.Min(Dfs(i + 1, j, str1, str2), Dfs(i, j + 1, str1, str2));
+        }
+        return dp[i][j];
+    }
+
+    private string BuildSCS(string str1, string str2) {
+        StringBuilder res = new StringBuilder();
+        int i = 0, j = 0;
+
+        while (i < n || j < m) {
+            if (i == n) {
+                res.Append(str2.Substring(j));
+                break;
+            }
+            if (j == m) {
+                res.Append(str1.Substring(i));
+                break;
+            }
+            if (str1[i] == str2[j]) {
+                res.Append(str1[i]);
+                i++;
+                j++;
+            } else if (dp[i + 1][j] < dp[i][j + 1]) {
+                res.Append(str1[i]);
+                i++;
+            } else {
+                res.Append(str2[j]);
+                j++;
+            }
+        }
+
+        return res.ToString();
+    }
+}
+```
+
+```go
+func shortestCommonSupersequence(str1 string, str2 string) string {
+    n, m := len(str1), len(str2)
+    dp := make([][]int, n+1)
+    for i := 0; i <= n; i++ {
+        dp[i] = make([]int, m+1)
+        for j := 0; j <= m; j++ {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+        if i == n {
+            dp[i][j] = m - j
+            return dp[i][j]
+        }
+        if j == m {
+            dp[i][j] = n - i
+            return dp[i][j]
+        }
+
+        if str1[i] == str2[j] {
+            dp[i][j] = 1 + dfs(i+1, j+1)
+        } else {
+            dp[i][j] = 1 + min(dfs(i+1, j), dfs(i, j+1))
+        }
+        return dp[i][j]
+    }
+
+    dfs(0, 0)
+
+    var res strings.Builder
+    i, j := 0, 0
+
+    for i < n || j < m {
+        if i == n {
+            res.WriteString(str2[j:])
+            break
+        }
+        if j == m {
+            res.WriteString(str1[i:])
+            break
+        }
+        if str1[i] == str2[j] {
+            res.WriteByte(str1[i])
+            i++
+            j++
+        } else if dp[i+1][j] < dp[i][j+1] {
+            res.WriteByte(str1[i])
+            i++
+        } else {
+            res.WriteByte(str2[j])
+            j++
+        }
+    }
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+    private var n = 0
+    private var m = 0
+
+    fun shortestCommonSupersequence(str1: String, str2: String): String {
+        n = str1.length
+        m = str2.length
+        dp = Array(n + 1) { IntArray(m + 1) { -1 } }
+
+        dfs(0, 0, str1, str2)
+
+        return buildSCS(str1, str2)
+    }
+
+    private fun dfs(i: Int, j: Int, str1: String, str2: String): Int {
+        if (dp[i][j] != -1) return dp[i][j]
+        if (i == n) {
+            dp[i][j] = m - j
+            return dp[i][j]
+        }
+        if (j == m) {
+            dp[i][j] = n - i
+            return dp[i][j]
+        }
+
+        dp[i][j] = if (str1[i] == str2[j]) {
+            1 + dfs(i + 1, j + 1, str1, str2)
+        } else {
+            1 + minOf(dfs(i + 1, j, str1, str2), dfs(i, j + 1, str1, str2))
+        }
+        return dp[i][j]
+    }
+
+    private fun buildSCS(str1: String, str2: String): String {
+        val res = StringBuilder()
+        var i = 0
+        var j = 0
+
+        while (i < n || j < m) {
+            if (i == n) {
+                res.append(str2.substring(j))
+                break
+            }
+            if (j == m) {
+                res.append(str1.substring(i))
+                break
+            }
+            if (str1[i] == str2[j]) {
+                res.append(str1[i])
+                i++
+                j++
+            } else if (dp[i + 1][j] < dp[i][j + 1]) {
+                res.append(str1[i])
+                i++
+            } else {
+                res.append(str2[j])
+                j++
+            }
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp: [[Int]] = []
+    private var n = 0
+    private var m = 0
+
+    func shortestCommonSupersequence(_ str1: String, _ str2: String) -> String {
+        let s1 = Array(str1)
+        let s2 = Array(str2)
+        n = s1.count
+        m = s2.count
+        dp = Array(repeating: Array(repeating: -1, count: m + 1), count: n + 1)
+
+        _ = dfs(0, 0, s1, s2)
+
+        return buildSCS(s1, s2)
+    }
+
+    private func dfs(_ i: Int, _ j: Int, _ str1: [Character], _ str2: [Character]) -> Int {
+        if dp[i][j] != -1 { return dp[i][j] }
+        if i == n {
+            dp[i][j] = m - j
+            return dp[i][j]
+        }
+        if j == m {
+            dp[i][j] = n - i
+            return dp[i][j]
+        }
+
+        if str1[i] == str2[j] {
+            dp[i][j] = 1 + dfs(i + 1, j + 1, str1, str2)
+        } else {
+            dp[i][j] = 1 + min(dfs(i + 1, j, str1, str2), dfs(i, j + 1, str1, str2))
+        }
+        return dp[i][j]
+    }
+
+    private func buildSCS(_ str1: [Character], _ str2: [Character]) -> String {
+        var res = [Character]()
+        var i = 0, j = 0
+
+        while i < n || j < m {
+            if i == n {
+                res.append(contentsOf: str2[j...])
+                break
+            }
+            if j == m {
+                res.append(contentsOf: str1[i...])
+                break
+            }
+            if str1[i] == str2[j] {
+                res.append(str1[i])
+                i += 1
+                j += 1
+            } else if dp[i + 1][j] < dp[i][j + 1] {
+                res.append(str1[i])
+                i += 1
+            } else {
+                res.append(str2[j])
+                j += 1
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -573,6 +1072,125 @@ class Solution {
         }
 
         return dp[n][m];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string ShortestCommonSupersequence(string str1, string str2) {
+        int n = str1.Length, m = str2.Length;
+        string[][] dp = new string[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            dp[i] = new string[m + 1];
+        }
+
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                if (i == 0) {
+                    dp[i][j] = str2.Substring(0, j);
+                } else if (j == 0) {
+                    dp[i][j] = str1.Substring(0, i);
+                } else if (str1[i - 1] == str2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + str1[i - 1];
+                } else {
+                    dp[i][j] = dp[i - 1][j].Length < dp[i][j - 1].Length ?
+                        dp[i - 1][j] + str1[i - 1] :
+                        dp[i][j - 1] + str2[j - 1];
+                }
+            }
+        }
+
+        return dp[n][m];
+    }
+}
+```
+
+```go
+func shortestCommonSupersequence(str1 string, str2 string) string {
+    n, m := len(str1), len(str2)
+    dp := make([][]string, n+1)
+    for i := 0; i <= n; i++ {
+        dp[i] = make([]string, m+1)
+    }
+
+    for i := 0; i <= n; i++ {
+        for j := 0; j <= m; j++ {
+            if i == 0 {
+                dp[i][j] = str2[:j]
+            } else if j == 0 {
+                dp[i][j] = str1[:i]
+            } else if str1[i-1] == str2[j-1] {
+                dp[i][j] = dp[i-1][j-1] + string(str1[i-1])
+            } else {
+                if len(dp[i-1][j]) < len(dp[i][j-1]) {
+                    dp[i][j] = dp[i-1][j] + string(str1[i-1])
+                } else {
+                    dp[i][j] = dp[i][j-1] + string(str2[j-1])
+                }
+            }
+        }
+    }
+
+    return dp[n][m]
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestCommonSupersequence(str1: String, str2: String): String {
+        val n = str1.length
+        val m = str2.length
+        val dp = Array(n + 1) { Array(m + 1) { "" } }
+
+        for (i in 0..n) {
+            for (j in 0..m) {
+                if (i == 0) {
+                    dp[i][j] = str2.substring(0, j)
+                } else if (j == 0) {
+                    dp[i][j] = str1.substring(0, i)
+                } else if (str1[i - 1] == str2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + str1[i - 1]
+                } else {
+                    dp[i][j] = if (dp[i - 1][j].length < dp[i][j - 1].length) {
+                        dp[i - 1][j] + str1[i - 1]
+                    } else {
+                        dp[i][j - 1] + str2[j - 1]
+                    }
+                }
+            }
+        }
+
+        return dp[n][m]
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestCommonSupersequence(_ str1: String, _ str2: String) -> String {
+        let s1 = Array(str1)
+        let s2 = Array(str2)
+        let n = s1.count, m = s2.count
+        var dp = Array(repeating: Array(repeating: "", count: m + 1), count: n + 1)
+
+        for i in 0...n {
+            for j in 0...m {
+                if i == 0 {
+                    dp[i][j] = String(s2[0..<j])
+                } else if j == 0 {
+                    dp[i][j] = String(s1[0..<i])
+                } else if s1[i - 1] == s2[j - 1] {
+                    dp[i][j] = dp[i - 1][j - 1] + String(s1[i - 1])
+                } else {
+                    dp[i][j] = dp[i - 1][j].count < dp[i][j - 1].count ?
+                        dp[i - 1][j] + String(s1[i - 1]) :
+                        dp[i][j - 1] + String(s2[j - 1])
+                }
+            }
+        }
+
+        return dp[n][m]
     }
 }
 ```
@@ -790,6 +1408,221 @@ class Solution {
         }
 
         return res.reverse().join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string ShortestCommonSupersequence(string str1, string str2) {
+        int n = str1.Length, m = str2.Length;
+        int[][] dp = new int[n + 1][];
+        for (int x = 0; x <= n; x++) {
+            dp[x] = new int[m + 1];
+        }
+
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= m; j++) {
+                if (i == 0) {
+                    dp[i][j] = j;
+                } else if (j == 0) {
+                    dp[i][j] = i;
+                } else if (str1[i - 1] == str2[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + Math.Min(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }
+
+        StringBuilder res = new StringBuilder();
+        int ii = n, jj = m;
+        while (ii > 0 && jj > 0) {
+            if (str1[ii - 1] == str2[jj - 1]) {
+                res.Append(str1[ii - 1]);
+                ii--;
+                jj--;
+            } else if (dp[ii - 1][jj] < dp[ii][jj - 1]) {
+                res.Append(str1[ii - 1]);
+                ii--;
+            } else {
+                res.Append(str2[jj - 1]);
+                jj--;
+            }
+        }
+        while (ii > 0) {
+            res.Append(str1[ii - 1]);
+            ii--;
+        }
+        while (jj > 0) {
+            res.Append(str2[jj - 1]);
+            jj--;
+        }
+
+        char[] arr = res.ToString().ToCharArray();
+        Array.Reverse(arr);
+        return new string(arr);
+    }
+}
+```
+
+```go
+func shortestCommonSupersequence(str1 string, str2 string) string {
+    n, m := len(str1), len(str2)
+    dp := make([][]int, n+1)
+    for i := 0; i <= n; i++ {
+        dp[i] = make([]int, m+1)
+    }
+
+    for i := 0; i <= n; i++ {
+        for j := 0; j <= m; j++ {
+            if i == 0 {
+                dp[i][j] = j
+            } else if j == 0 {
+                dp[i][j] = i
+            } else if str1[i-1] == str2[j-1] {
+                dp[i][j] = 1 + dp[i-1][j-1]
+            } else {
+                dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])
+            }
+        }
+    }
+
+    var res []byte
+    i, j := n, m
+    for i > 0 && j > 0 {
+        if str1[i-1] == str2[j-1] {
+            res = append(res, str1[i-1])
+            i--
+            j--
+        } else if dp[i-1][j] < dp[i][j-1] {
+            res = append(res, str1[i-1])
+            i--
+        } else {
+            res = append(res, str2[j-1])
+            j--
+        }
+    }
+
+    for i > 0 {
+        res = append(res, str1[i-1])
+        i--
+    }
+
+    for j > 0 {
+        res = append(res, str2[j-1])
+        j--
+    }
+
+    for l, r := 0, len(res)-1; l < r; l, r = l+1, r-1 {
+        res[l], res[r] = res[r], res[l]
+    }
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestCommonSupersequence(str1: String, str2: String): String {
+        val n = str1.length
+        val m = str2.length
+        val dp = Array(n + 1) { IntArray(m + 1) }
+
+        for (i in 0..n) {
+            for (j in 0..m) {
+                if (i == 0) {
+                    dp[i][j] = j
+                } else if (j == 0) {
+                    dp[i][j] = i
+                } else if (str1[i - 1] == str2[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1]
+                } else {
+                    dp[i][j] = 1 + minOf(dp[i - 1][j], dp[i][j - 1])
+                }
+            }
+        }
+
+        val res = StringBuilder()
+        var i = n
+        var j = m
+        while (i > 0 && j > 0) {
+            if (str1[i - 1] == str2[j - 1]) {
+                res.append(str1[i - 1])
+                i--
+                j--
+            } else if (dp[i - 1][j] < dp[i][j - 1]) {
+                res.append(str1[i - 1])
+                i--
+            } else {
+                res.append(str2[j - 1])
+                j--
+            }
+        }
+
+        while (i > 0) {
+            res.append(str1[i - 1])
+            i--
+        }
+
+        while (j > 0) {
+            res.append(str2[j - 1])
+            j--
+        }
+
+        return res.reverse().toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestCommonSupersequence(_ str1: String, _ str2: String) -> String {
+        let s1 = Array(str1)
+        let s2 = Array(str2)
+        let n = s1.count, m = s2.count
+        var dp = Array(repeating: Array(repeating: 0, count: m + 1), count: n + 1)
+
+        for i in 0...n {
+            for j in 0...m {
+                if i == 0 {
+                    dp[i][j] = j
+                } else if j == 0 {
+                    dp[i][j] = i
+                } else if s1[i - 1] == s2[j - 1] {
+                    dp[i][j] = 1 + dp[i - 1][j - 1]
+                } else {
+                    dp[i][j] = 1 + min(dp[i - 1][j], dp[i][j - 1])
+                }
+            }
+        }
+
+        var res = [Character]()
+        var i = n, j = m
+        while i > 0 && j > 0 {
+            if s1[i - 1] == s2[j - 1] {
+                res.append(s1[i - 1])
+                i -= 1
+                j -= 1
+            } else if dp[i - 1][j] < dp[i][j - 1] {
+                res.append(s1[i - 1])
+                i -= 1
+            } else {
+                res.append(s2[j - 1])
+                j -= 1
+            }
+        }
+
+        while i > 0 {
+            res.append(s1[i - 1])
+            i -= 1
+        }
+
+        while j > 0 {
+            res.append(s2[j - 1])
+            j -= 1
+        }
+
+        return String(res.reversed())
     }
 }
 ```

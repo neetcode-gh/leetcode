@@ -48,6 +48,28 @@ public class Solution {
 }
 ```
 
+```go
+func sortColors(nums []int) {
+    sort.Ints(nums)
+}
+```
+
+```kotlin
+class Solution {
+    fun sortColors(nums: IntArray) {
+        nums.sort()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortColors(_ nums: inout [Int]) {
+        nums.sort()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -150,6 +172,62 @@ public class Solution {
         for (int i = 0; i < 3; i++) {
             while (count[i]-- > 0) {
                 nums[index++] = i;
+            }
+        }
+    }
+}
+```
+
+```go
+func sortColors(nums []int) {
+    count := make([]int, 3)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    index := 0
+    for i := 0; i < 3; i++ {
+        for count[i] > 0 {
+            count[i]--
+            nums[index] = i
+            index++
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortColors(nums: IntArray) {
+        val count = IntArray(3)
+        for (num in nums) {
+            count[num]++
+        }
+
+        var index = 0
+        for (i in 0 until 3) {
+            while (count[i]-- > 0) {
+                nums[index++] = i
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortColors(_ nums: inout [Int]) {
+        var count = [Int](repeating: 0, count: 3)
+        for num in nums {
+            count[num] += 1
+        }
+
+        var index = 0
+        for i in 0..<3 {
+            while count[i] > 0 {
+                count[i] -= 1
+                nums[index] = i
+                index += 1
             }
         }
     }
@@ -290,6 +368,63 @@ public class Solution {
 }
 ```
 
+```go
+func sortColors(nums []int) {
+    i, l, r := 0, 0, len(nums) - 1
+    for i <= r {
+        if nums[i] == 0 {
+            nums[l], nums[i] = nums[i], nums[l]
+            l++
+        } else if nums[i] == 2 {
+            nums[i], nums[r] = nums[r], nums[i]
+            r--
+            i--
+        }
+        i++
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortColors(nums: IntArray) {
+        var i = 0
+        var l = 0
+        var r = nums.size - 1
+        while (i <= r) {
+            if (nums[i] == 0) {
+                nums[l] = nums[i].also { nums[i] = nums[l] }
+                l++
+            } else if (nums[i] == 2) {
+                nums[i] = nums[r].also { nums[r] = nums[i] }
+                r--
+                i--
+            }
+            i++
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortColors(_ nums: inout [Int]) {
+        var i = 0, l = 0, r = nums.count - 1
+        while i <= r {
+            if nums[i] == 0 {
+                nums.swapAt(l, i)
+                l += 1
+            } else if nums[i] == 2 {
+                nums.swapAt(i, r)
+                r -= 1
+                i -= 1
+            }
+            i += 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -416,6 +551,78 @@ public class Solution {
 }
 ```
 
+```go
+func sortColors(nums []int) {
+    zero, one, two := 0, 0, 0
+    for i := 0; i < len(nums); i++ {
+        if nums[i] == 0 {
+            nums[two] = 2
+            two++
+            nums[one] = 1
+            one++
+            nums[zero] = 0
+            zero++
+        } else if nums[i] == 1 {
+            nums[two] = 2
+            two++
+            nums[one] = 1
+            one++
+        } else {
+            nums[two] = 2
+            two++
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortColors(nums: IntArray) {
+        var zero = 0
+        var one = 0
+        var two = 0
+        for (i in nums.indices) {
+            if (nums[i] == 0) {
+                nums[two++] = 2
+                nums[one++] = 1
+                nums[zero++] = 0
+            } else if (nums[i] == 1) {
+                nums[two++] = 2
+                nums[one++] = 1
+            } else {
+                nums[two++] = 2
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortColors(_ nums: inout [Int]) {
+        var zero = 0, one = 0, two = 0
+        for i in 0..<nums.count {
+            if nums[i] == 0 {
+                nums[two] = 2
+                two += 1
+                nums[one] = 1
+                one += 1
+                nums[zero] = 0
+                zero += 1
+            } else if nums[i] == 1 {
+                nums[two] = 2
+                two += 1
+                nums[one] = 1
+                one += 1
+            } else {
+                nums[two] = 2
+                two += 1
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -521,6 +728,63 @@ public class Solution {
             }
             if (tmp < 1) {
                 nums[zero++] = 0;
+            }
+        }
+    }
+}
+```
+
+```go
+func sortColors(nums []int) {
+    zero, one := 0, 0
+    for two := 0; two < len(nums); two++ {
+        tmp := nums[two]
+        nums[two] = 2
+        if tmp < 2 {
+            nums[one] = 1
+            one++
+        }
+        if tmp < 1 {
+            nums[zero] = 0
+            zero++
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun sortColors(nums: IntArray) {
+        var zero = 0
+        var one = 0
+        for (two in nums.indices) {
+            val tmp = nums[two]
+            nums[two] = 2
+            if (tmp < 2) {
+                nums[one++] = 1
+            }
+            if (tmp < 1) {
+                nums[zero++] = 0
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortColors(_ nums: inout [Int]) {
+        var zero = 0, one = 0
+        for two in 0..<nums.count {
+            let tmp = nums[two]
+            nums[two] = 2
+            if tmp < 2 {
+                nums[one] = 1
+                one += 1
+            }
+            if tmp < 1 {
+                nums[zero] = 0
+                zero += 1
             }
         }
     }

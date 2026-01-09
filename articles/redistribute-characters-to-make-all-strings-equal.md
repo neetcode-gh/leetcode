@@ -85,6 +85,88 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool MakeEqual(string[] words) {
+        var charCnt = new Dictionary<char, int>();
+
+        foreach (string w in words) {
+            foreach (char c in w) {
+                charCnt[c] = charCnt.GetValueOrDefault(c, 0) + 1;
+            }
+        }
+
+        foreach (int count in charCnt.Values) {
+            if (count % words.Length != 0) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func makeEqual(words []string) bool {
+    charCnt := make(map[rune]int)
+
+    for _, w := range words {
+        for _, c := range w {
+            charCnt[c]++
+        }
+    }
+
+    for _, count := range charCnt {
+        if count%len(words) != 0 {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun makeEqual(words: Array<String>): Boolean {
+        val charCnt = mutableMapOf<Char, Int>()
+
+        for (w in words) {
+            for (c in w) {
+                charCnt[c] = charCnt.getOrDefault(c, 0) + 1
+            }
+        }
+
+        for (count in charCnt.values) {
+            if (count % words.size != 0) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func makeEqual(_ words: [String]) -> Bool {
+        var charCnt = [Character: Int]()
+
+        for w in words {
+            for c in w {
+                charCnt[c, default: 0] += 1
+            }
+        }
+
+        for count in charCnt.values {
+            if count % words.count != 0 {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -214,6 +296,125 @@ class Solution {
         }
 
         return flag === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool MakeEqual(string[] words) {
+        int[] freq = new int[26];
+        int flag = 0;
+        int n = words.Length;
+
+        foreach (string w in words) {
+            foreach (char c in w) {
+                int i = c - 'a';
+                if (freq[i] != 0) {
+                    freq[i]++;
+                    if (freq[i] % n == 0) {
+                        flag++;
+                    }
+                } else {
+                    freq[i]++;
+                    if (freq[i] % n != 0) {
+                        flag--;
+                    }
+                }
+                freq[i] %= n;
+            }
+        }
+
+        return flag == 0;
+    }
+}
+```
+
+```go
+func makeEqual(words []string) bool {
+    freq := make([]int, 26)
+    flag := 0
+    n := len(words)
+
+    for _, w := range words {
+        for _, c := range w {
+            i := int(c - 'a')
+            if freq[i] != 0 {
+                freq[i]++
+                if freq[i]%n == 0 {
+                    flag++
+                }
+            } else {
+                freq[i]++
+                if freq[i]%n != 0 {
+                    flag--
+                }
+            }
+            freq[i] %= n
+        }
+    }
+
+    return flag == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun makeEqual(words: Array<String>): Boolean {
+        val freq = IntArray(26)
+        var flag = 0
+        val n = words.size
+
+        for (w in words) {
+            for (c in w) {
+                val i = c - 'a'
+                if (freq[i] != 0) {
+                    freq[i]++
+                    if (freq[i] % n == 0) {
+                        flag++
+                    }
+                } else {
+                    freq[i]++
+                    if (freq[i] % n != 0) {
+                        flag--
+                    }
+                }
+                freq[i] %= n
+            }
+        }
+
+        return flag == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func makeEqual(_ words: [String]) -> Bool {
+        var freq = [Int](repeating: 0, count: 26)
+        var flag = 0
+        let n = words.count
+        let aValue = Int(Character("a").asciiValue!)
+
+        for w in words {
+            for c in w.unicodeScalars {
+                let i = Int(c.value) - aValue
+                if freq[i] != 0 {
+                    freq[i] += 1
+                    if freq[i] % n == 0 {
+                        flag += 1
+                    }
+                } else {
+                    freq[i] += 1
+                    if freq[i] % n != 0 {
+                        flag -= 1
+                    }
+                }
+                freq[i] %= n
+            }
+        }
+
+        return flag == 0
     }
 }
 ```

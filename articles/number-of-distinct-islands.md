@@ -345,11 +345,11 @@ class Solution {
      */
     numDistinctIslands(grid) {
         this.grid = grid;
-        this.visited = Array.from({ length: grid.length }, () => 
+        this.visited = Array.from({ length: grid.length }, () =>
             Array(grid[0].length).fill(false)
         );
         const islands = new Set();
-        
+
         for (let row = 0; row < grid.length; row++) {
             for (let col = 0; col < grid[0].length; col++) {
                 this.currentIsland = [];
@@ -362,7 +362,7 @@ class Solution {
         }
         return islands.size;
     }
-    
+
     dfs(row, col, dir) {
         if (row < 0 || col < 0 || row >= this.grid.length || col >= this.grid[0].length) {
             return;
@@ -377,6 +377,171 @@ class Solution {
         this.dfs(row, col + 1, 'R');
         this.dfs(row, col - 1, 'L');
         this.currentIsland.push('0');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] grid;
+    private bool[,] visited;
+    private StringBuilder currentIsland;
+
+    public int NumDistinctIslands(int[][] grid) {
+        this.grid = grid;
+        int rows = grid.Length, cols = grid[0].Length;
+        visited = new bool[rows, cols];
+        HashSet<string> islands = new HashSet<string>();
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                currentIsland = new StringBuilder();
+                Dfs(row, col, '0');
+                if (currentIsland.Length == 0) continue;
+                islands.Add(currentIsland.ToString());
+            }
+        }
+        return islands.Count;
+    }
+
+    private void Dfs(int row, int col, char dir) {
+        if (row < 0 || col < 0 || row >= grid.Length || col >= grid[0].Length) {
+            return;
+        }
+        if (visited[row, col] || grid[row][col] == 0) {
+            return;
+        }
+        visited[row, col] = true;
+        currentIsland.Append(dir);
+        Dfs(row + 1, col, 'D');
+        Dfs(row - 1, col, 'U');
+        Dfs(row, col + 1, 'R');
+        Dfs(row, col - 1, 'L');
+        currentIsland.Append('0');
+    }
+}
+```
+
+```go
+func numDistinctIslands(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    visited := make([][]bool, rows)
+    for i := range visited {
+        visited[i] = make([]bool, cols)
+    }
+    islands := make(map[string]bool)
+
+    var currentIsland strings.Builder
+    var dfs func(row, col int, dir byte)
+    dfs = func(row, col int, dir byte) {
+        if row < 0 || col < 0 || row >= rows || col >= cols {
+            return
+        }
+        if visited[row][col] || grid[row][col] == 0 {
+            return
+        }
+        visited[row][col] = true
+        currentIsland.WriteByte(dir)
+        dfs(row+1, col, 'D')
+        dfs(row-1, col, 'U')
+        dfs(row, col+1, 'R')
+        dfs(row, col-1, 'L')
+        currentIsland.WriteByte('0')
+    }
+
+    for row := 0; row < rows; row++ {
+        for col := 0; col < cols; col++ {
+            currentIsland.Reset()
+            dfs(row, col, '0')
+            if currentIsland.Len() == 0 {
+                continue
+            }
+            islands[currentIsland.String()] = true
+        }
+    }
+    return len(islands)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var grid: Array<IntArray>
+    private lateinit var visited: Array<BooleanArray>
+    private lateinit var currentIsland: StringBuilder
+
+    fun numDistinctIslands(grid: Array<IntArray>): Int {
+        this.grid = grid
+        val rows = grid.size
+        val cols = grid[0].size
+        visited = Array(rows) { BooleanArray(cols) }
+        val islands = HashSet<String>()
+
+        for (row in 0 until rows) {
+            for (col in 0 until cols) {
+                currentIsland = StringBuilder()
+                dfs(row, col, '0')
+                if (currentIsland.isEmpty()) continue
+                islands.add(currentIsland.toString())
+            }
+        }
+        return islands.size
+    }
+
+    private fun dfs(row: Int, col: Int, dir: Char) {
+        if (row < 0 || col < 0 || row >= grid.size || col >= grid[0].size) {
+            return
+        }
+        if (visited[row][col] || grid[row][col] == 0) {
+            return
+        }
+        visited[row][col] = true
+        currentIsland.append(dir)
+        dfs(row + 1, col, 'D')
+        dfs(row - 1, col, 'U')
+        dfs(row, col + 1, 'R')
+        dfs(row, col - 1, 'L')
+        currentIsland.append('0')
+    }
+}
+```
+
+```swift
+class Solution {
+    private var grid: [[Int]] = []
+    private var visited: [[Bool]] = []
+    private var currentIsland: [Character] = []
+
+    func numDistinctIslands(_ grid: [[Int]]) -> Int {
+        self.grid = grid
+        let rows = grid.count, cols = grid[0].count
+        visited = Array(repeating: Array(repeating: false, count: cols), count: rows)
+        var islands = Set<String>()
+
+        for row in 0..<rows {
+            for col in 0..<cols {
+                currentIsland = []
+                dfs(row, col, "0")
+                if currentIsland.isEmpty { continue }
+                islands.insert(String(currentIsland))
+            }
+        }
+        return islands.count
+    }
+
+    private func dfs(_ row: Int, _ col: Int, _ dir: Character) {
+        if row < 0 || col < 0 || row >= grid.count || col >= grid[0].count {
+            return
+        }
+        if visited[row][col] || grid[row][col] == 0 {
+            return
+        }
+        visited[row][col] = true
+        currentIsland.append(dir)
+        dfs(row + 1, col, "D")
+        dfs(row - 1, col, "U")
+        dfs(row, col + 1, "R")
+        dfs(row, col - 1, "L")
+        currentIsland.append("0")
     }
 }
 ```

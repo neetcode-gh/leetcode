@@ -117,6 +117,74 @@ public class Solution {
 }
 ```
 
+```go
+func findBuildings(heights []int) []int {
+    n := len(heights)
+    res := []int{}
+
+    for i := 0; i < n; i++ {
+        flag := true
+        for j := i + 1; j < n; j++ {
+            if heights[i] <= heights[j] {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            res = append(res, i)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findBuildings(heights: IntArray): IntArray {
+        val n = heights.size
+        val res = mutableListOf<Int>()
+
+        for (i in 0 until n) {
+            var flag = true
+            for (j in i + 1 until n) {
+                if (heights[i] <= heights[j]) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) res.add(i)
+        }
+
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findBuildings(_ heights: [Int]) -> [Int] {
+        let n = heights.count
+        var res = [Int]()
+
+        for i in 0..<n {
+            var flag = true
+            for j in (i + 1)..<n {
+                if heights[i] <= heights[j] {
+                    flag = false
+                    break
+                }
+            }
+            if flag {
+                res.append(i)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,6 +293,55 @@ public class Solution {
 }
 ```
 
+```go
+func findBuildings(heights []int) []int {
+    stack := []int{}
+
+    for i, h := range heights {
+        for len(stack) > 0 && heights[stack[len(stack)-1]] <= h {
+            stack = stack[:len(stack)-1]
+        }
+        stack = append(stack, i)
+    }
+
+    return stack
+}
+```
+
+```kotlin
+class Solution {
+    fun findBuildings(heights: IntArray): IntArray {
+        val stack = mutableListOf<Int>()
+
+        for (i in heights.indices) {
+            while (stack.isNotEmpty() && heights[stack.last()] <= heights[i]) {
+                stack.removeAt(stack.size - 1)
+            }
+            stack.add(i)
+        }
+
+        return stack.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findBuildings(_ heights: [Int]) -> [Int] {
+        var stack = [Int]()
+
+        for i in 0..<heights.count {
+            while !stack.isEmpty && heights[stack.last!] <= heights[i] {
+                stack.removeLast()
+            }
+            stack.append(i)
+        }
+
+        return stack
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,6 +445,60 @@ public class Solution {
 
         res.Reverse();
         return res.ToArray();
+    }
+}
+```
+
+```go
+func findBuildings(heights []int) []int {
+    n := len(heights)
+    res := []int{n - 1}
+
+    for i := n - 2; i >= 0; i-- {
+        if heights[i] > heights[res[len(res)-1]] {
+            res = append(res, i)
+        }
+    }
+
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findBuildings(heights: IntArray): IntArray {
+        val n = heights.size
+        val res = mutableListOf(n - 1)
+
+        for (i in n - 2 downTo 0) {
+            if (heights[i] > heights[res.last()]) {
+                res.add(i)
+            }
+        }
+
+        res.reverse()
+        return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findBuildings(_ heights: [Int]) -> [Int] {
+        let n = heights.count
+        var res = [n - 1]
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            if heights[i] > heights[res.last!] {
+                res.append(i)
+            }
+        }
+
+        res.reverse()
+        return res
     }
 }
 ```

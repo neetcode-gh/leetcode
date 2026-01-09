@@ -124,6 +124,84 @@ public class Solution {
 }
 ```
 
+```go
+func convert(s string, numRows int) string {
+    if numRows == 1 {
+        return s
+    }
+
+    var res strings.Builder
+    length := len(s)
+
+    for r := 0; r < numRows; r++ {
+        increment := 2 * (numRows - 1)
+        for i := r; i < length; i += increment {
+            res.WriteByte(s[i])
+            if r > 0 && r < numRows-1 && i+increment-2*r < length {
+                res.WriteByte(s[i+increment-2*r])
+            }
+        }
+    }
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun convert(s: String, numRows: Int): String {
+        if (numRows == 1) {
+            return s
+        }
+
+        val res = StringBuilder()
+        val len = s.length
+
+        for (r in 0 until numRows) {
+            val increment = 2 * (numRows - 1)
+            var i = r
+            while (i < len) {
+                res.append(s[i])
+                if (r > 0 && r < numRows - 1 && i + increment - 2 * r < len) {
+                    res.append(s[i + increment - 2 * r])
+                }
+                i += increment
+            }
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func convert(_ s: String, _ numRows: Int) -> String {
+        if numRows == 1 {
+            return s
+        }
+
+        let chars = Array(s)
+        var res = [Character]()
+        let len = chars.count
+
+        for r in 0..<numRows {
+            let increment = 2 * (numRows - 1)
+            var i = r
+            while i < len {
+                res.append(chars[i])
+                if r > 0 && r < numRows - 1 && i + increment - 2 * r < len {
+                    res.append(chars[i + increment - 2 * r])
+                }
+                i += increment
+            }
+        }
+
+        return String(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +347,83 @@ public class Solution {
             result.Append(sb);
         }
         return result.ToString();
+    }
+}
+```
+
+```go
+func convert(s string, numRows int) string {
+    if numRows == 1 || numRows >= len(s) {
+        return s
+    }
+
+    res := make([]strings.Builder, numRows)
+    row, dir := 0, 1
+
+    for _, c := range s {
+        res[row].WriteRune(c)
+        row += dir
+        if row == 0 || row == numRows-1 {
+            dir *= -1
+        }
+    }
+
+    var result strings.Builder
+    for _, sb := range res {
+        result.WriteString(sb.String())
+    }
+    return result.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun convert(s: String, numRows: Int): String {
+        if (numRows == 1 || numRows >= s.length) {
+            return s
+        }
+
+        val res = Array(numRows) { StringBuilder() }
+        var row = 0
+        var dir = 1
+
+        for (c in s) {
+            res[row].append(c)
+            row += dir
+            if (row == 0 || row == numRows - 1) {
+                dir *= -1
+            }
+        }
+
+        val result = StringBuilder()
+        for (sb in res) {
+            result.append(sb)
+        }
+        return result.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func convert(_ s: String, _ numRows: Int) -> String {
+        if numRows == 1 || numRows >= s.count {
+            return s
+        }
+
+        var res = [[Character]](repeating: [], count: numRows)
+        var row = 0
+        var dir = 1
+
+        for c in s {
+            res[row].append(c)
+            row += dir
+            if row == 0 || row == numRows - 1 {
+                dir *= -1
+            }
+        }
+
+        return res.flatMap { $0 }.map { String($0) }.joined()
     }
 }
 ```

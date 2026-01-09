@@ -88,6 +88,94 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinCost(string colors, int[] neededTime) {
+        int n = neededTime.Length;
+        int res = 0, i = 0;
+        while (i < n) {
+            int j = i, maxi = 0, curr = 0;
+            while (j < n && colors[j] == colors[i]) {
+                maxi = Math.Max(maxi, neededTime[j]);
+                curr += neededTime[j];
+                j++;
+            }
+            res += curr - maxi;
+            i = j;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minCost(colors string, neededTime []int) int {
+    n := len(neededTime)
+    res, i := 0, 0
+    for i < n {
+        j := i
+        maxi, curr := 0, 0
+        for j < n && colors[j] == colors[i] {
+            if neededTime[j] > maxi {
+                maxi = neededTime[j]
+            }
+            curr += neededTime[j]
+            j++
+        }
+        res += curr - maxi
+        i = j
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(colors: String, neededTime: IntArray): Int {
+        val n = neededTime.size
+        var res = 0
+        var i = 0
+        while (i < n) {
+            var j = i
+            var maxi = 0
+            var curr = 0
+            while (j < n && colors[j] == colors[i]) {
+                maxi = maxOf(maxi, neededTime[j])
+                curr += neededTime[j]
+                j++
+            }
+            res += curr - maxi
+            i = j
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ colors: String, _ neededTime: [Int]) -> Int {
+        let n = neededTime.count
+        let chars = Array(colors)
+        var res = 0
+        var i = 0
+        while i < n {
+            var j = i
+            var maxi = 0
+            var curr = 0
+            while j < n && chars[j] == chars[i] {
+                maxi = max(maxi, neededTime[j])
+                curr += neededTime[j]
+                j += 1
+            }
+            res += curr - maxi
+            i = j
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -187,6 +275,91 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinCost(string colors, int[] neededTime) {
+        int l = 0, res = 0;
+        for (int r = 1; r < colors.Length; r++) {
+            if (colors[l] == colors[r]) {
+                if (neededTime[l] < neededTime[r]) {
+                    res += neededTime[l];
+                    l = r;
+                } else {
+                    res += neededTime[r];
+                }
+            } else {
+                l = r;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minCost(colors string, neededTime []int) int {
+    l, res := 0, 0
+    for r := 1; r < len(colors); r++ {
+        if colors[l] == colors[r] {
+            if neededTime[l] < neededTime[r] {
+                res += neededTime[l]
+                l = r
+            } else {
+                res += neededTime[r]
+            }
+        } else {
+            l = r
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(colors: String, neededTime: IntArray): Int {
+        var l = 0
+        var res = 0
+        for (r in 1 until colors.length) {
+            if (colors[l] == colors[r]) {
+                if (neededTime[l] < neededTime[r]) {
+                    res += neededTime[l]
+                    l = r
+                } else {
+                    res += neededTime[r]
+                }
+            } else {
+                l = r
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ colors: String, _ neededTime: [Int]) -> Int {
+        let chars = Array(colors)
+        var l = 0
+        var res = 0
+        for r in 1..<chars.count {
+            if chars[l] == chars[r] {
+                if neededTime[l] < neededTime[r] {
+                    res += neededTime[l]
+                    l = r
+                } else {
+                    res += neededTime[r]
+                }
+            } else {
+                l = r
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +436,75 @@ class Solution {
             maxi = Math.max(maxi, neededTime[i]);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCost(string colors, int[] neededTime) {
+        int res = 0, maxi = 0;
+        for (int i = 0; i < colors.Length; i++) {
+            if (i > 0 && colors[i] != colors[i - 1]) {
+                maxi = 0;
+            }
+            res += Math.Min(maxi, neededTime[i]);
+            maxi = Math.Max(maxi, neededTime[i]);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minCost(colors string, neededTime []int) int {
+    res, maxi := 0, 0
+    for i := 0; i < len(colors); i++ {
+        if i > 0 && colors[i] != colors[i-1] {
+            maxi = 0
+        }
+        if maxi < neededTime[i] {
+            res += maxi
+            maxi = neededTime[i]
+        } else {
+            res += neededTime[i]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(colors: String, neededTime: IntArray): Int {
+        var res = 0
+        var maxi = 0
+        for (i in colors.indices) {
+            if (i > 0 && colors[i] != colors[i - 1]) {
+                maxi = 0
+            }
+            res += minOf(maxi, neededTime[i])
+            maxi = maxOf(maxi, neededTime[i])
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ colors: String, _ neededTime: [Int]) -> Int {
+        let chars = Array(colors)
+        var res = 0
+        var maxi = 0
+        for i in 0..<chars.count {
+            if i > 0 && chars[i] != chars[i - 1] {
+                maxi = 0
+            }
+            res += min(maxi, neededTime[i])
+            maxi = max(maxi, neededTime[i])
+        }
+        return res
     }
 }
 ```

@@ -83,16 +83,16 @@ class Solution {
     getIndex(reader) {
         let left = 0;
         let length = reader.length();
-        
+
         while (length > 1) {
             length = Math.floor(length / 2);
             const cmp = reader.compareSub(
-                left, 
-                left + length - 1, 
+                left,
+                left + length - 1,
                 left + length,
                 left + length + length - 1
             );
-            
+
             if (cmp === 0) {
                 return left + length + length;
             }
@@ -100,8 +100,118 @@ class Solution {
                 left += length;
             }
         }
-        
+
         return left;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int GetIndex(ArrayReader reader) {
+        int left = 0;
+        int length = reader.Length();
+
+        while (length > 1) {
+            length /= 2;
+            int cmp = reader.CompareSub(
+                left,
+                left + length - 1,
+                left + length,
+                left + length + length - 1
+            );
+
+            if (cmp == 0) {
+                return left + length + length;
+            }
+            if (cmp < 0) {
+                left += length;
+            }
+        }
+
+        return left;
+    }
+}
+```
+
+```go
+func getIndex(reader ArrayReader) int {
+    left := 0
+    length := reader.Length()
+
+    for length > 1 {
+        length /= 2
+        cmp := reader.CompareSub(
+            left,
+            left+length-1,
+            left+length,
+            left+length+length-1,
+        )
+
+        if cmp == 0 {
+            return left + length + length
+        }
+        if cmp < 0 {
+            left += length
+        }
+    }
+
+    return left
+}
+```
+
+```kotlin
+class Solution {
+    fun getIndex(reader: ArrayReader): Int {
+        var left = 0
+        var length = reader.length()
+
+        while (length > 1) {
+            length /= 2
+            val cmp = reader.compareSub(
+                left,
+                left + length - 1,
+                left + length,
+                left + length + length - 1
+            )
+
+            if (cmp == 0) {
+                return left + length + length
+            }
+            if (cmp < 0) {
+                left += length
+            }
+        }
+
+        return left
+    }
+}
+```
+
+```swift
+class Solution {
+    func getIndex(_ reader: ArrayReader) -> Int {
+        var left = 0
+        var length = reader.length()
+
+        while length > 1 {
+            length /= 2
+            let cmp = reader.compareSub(
+                left,
+                left + length - 1,
+                left + length,
+                left + length + length - 1
+            )
+
+            if cmp == 0 {
+                return left + length + length
+            }
+            if cmp < 0 {
+                left += length
+            }
+        }
+
+        return left
     }
 }
 ```

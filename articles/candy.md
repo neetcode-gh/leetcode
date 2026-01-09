@@ -166,6 +166,106 @@ public class Solution {
 }
 ```
 
+```go
+func candy(ratings []int) int {
+    n := len(ratings)
+    arr := make([]int, n)
+    for i := range arr {
+        arr[i] = 1
+    }
+
+    for i := 0; i < n-1; i++ {
+        if ratings[i] == ratings[i+1] {
+            continue
+        }
+        if ratings[i+1] > ratings[i] {
+            arr[i+1] = arr[i] + 1
+        } else if arr[i] == arr[i+1] {
+            arr[i+1] = arr[i]
+            arr[i]++
+            for j := i - 1; j >= 0; j-- {
+                if ratings[j] > ratings[j+1] {
+                    if arr[j+1] < arr[j] {
+                        break
+                    }
+                    arr[j]++
+                } else {
+                    break
+                }
+            }
+        }
+    }
+
+    total := 0
+    for _, a := range arr {
+        total += a
+    }
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun candy(ratings: IntArray): Int {
+        val n = ratings.size
+        val arr = IntArray(n) { 1 }
+
+        for (i in 0 until n - 1) {
+            if (ratings[i] == ratings[i + 1]) {
+                continue
+            }
+            if (ratings[i + 1] > ratings[i]) {
+                arr[i + 1] = arr[i] + 1
+            } else if (arr[i] == arr[i + 1]) {
+                arr[i + 1] = arr[i]
+                arr[i]++
+                for (j in i - 1 downTo 0) {
+                    if (ratings[j] > ratings[j + 1]) {
+                        if (arr[j + 1] < arr[j]) break
+                        arr[j]++
+                    } else {
+                        break
+                    }
+                }
+            }
+        }
+
+        return arr.sum()
+    }
+}
+```
+
+```swift
+class Solution {
+    func candy(_ ratings: [Int]) -> Int {
+        let n = ratings.count
+        var arr = [Int](repeating: 1, count: n)
+
+        for i in 0..<(n - 1) {
+            if ratings[i] == ratings[i + 1] {
+                continue
+            }
+            if ratings[i + 1] > ratings[i] {
+                arr[i + 1] = arr[i] + 1
+            } else if arr[i] == arr[i + 1] {
+                arr[i + 1] = arr[i]
+                arr[i] += 1
+                for j in stride(from: i - 1, through: 0, by: -1) {
+                    if ratings[j] > ratings[j + 1] {
+                        if arr[j + 1] < arr[j] { break }
+                        arr[j] += 1
+                    } else {
+                        break
+                    }
+                }
+            }
+        }
+
+        return arr.reduce(0, +)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +399,82 @@ public class Solution {
             total += a;
         }
         return total;
+    }
+}
+```
+
+```go
+func candy(ratings []int) int {
+    n := len(ratings)
+    arr := make([]int, n)
+    for i := range arr {
+        arr[i] = 1
+    }
+
+    for i := 1; i < n; i++ {
+        if ratings[i-1] < ratings[i] {
+            arr[i] = arr[i-1] + 1
+        }
+    }
+
+    for i := n - 2; i >= 0; i-- {
+        if ratings[i] > ratings[i+1] {
+            if arr[i+1]+1 > arr[i] {
+                arr[i] = arr[i+1] + 1
+            }
+        }
+    }
+
+    total := 0
+    for _, a := range arr {
+        total += a
+    }
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun candy(ratings: IntArray): Int {
+        val n = ratings.size
+        val arr = IntArray(n) { 1 }
+
+        for (i in 1 until n) {
+            if (ratings[i - 1] < ratings[i]) {
+                arr[i] = arr[i - 1] + 1
+            }
+        }
+
+        for (i in n - 2 downTo 0) {
+            if (ratings[i] > ratings[i + 1]) {
+                arr[i] = maxOf(arr[i], arr[i + 1] + 1)
+            }
+        }
+
+        return arr.sum()
+    }
+}
+```
+
+```swift
+class Solution {
+    func candy(_ ratings: [Int]) -> Int {
+        let n = ratings.count
+        var arr = [Int](repeating: 1, count: n)
+
+        for i in 1..<n {
+            if ratings[i - 1] < ratings[i] {
+                arr[i] = arr[i - 1] + 1
+            }
+        }
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            if ratings[i] > ratings[i + 1] {
+                arr[i] = max(arr[i], arr[i + 1] + 1)
+            }
+        }
+
+        return arr.reduce(0, +)
     }
 }
 ```
@@ -486,6 +662,113 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func candy(ratings []int) int {
+    n := len(ratings)
+    res := n
+
+    i := 1
+    for i < n {
+        if ratings[i] == ratings[i-1] {
+            i++
+            continue
+        }
+
+        inc := 0
+        for i < n && ratings[i] > ratings[i-1] {
+            inc++
+            res += inc
+            i++
+        }
+
+        dec := 0
+        for i < n && ratings[i] < ratings[i-1] {
+            dec++
+            res += dec
+            i++
+        }
+
+        if inc < dec {
+            res -= inc
+        } else {
+            res -= dec
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun candy(ratings: IntArray): Int {
+        val n = ratings.size
+        var res = n
+
+        var i = 1
+        while (i < n) {
+            if (ratings[i] == ratings[i - 1]) {
+                i++
+                continue
+            }
+
+            var inc = 0
+            while (i < n && ratings[i] > ratings[i - 1]) {
+                inc++
+                res += inc
+                i++
+            }
+
+            var dec = 0
+            while (i < n && ratings[i] < ratings[i - 1]) {
+                dec++
+                res += dec
+                i++
+            }
+
+            res -= minOf(inc, dec)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func candy(_ ratings: [Int]) -> Int {
+        let n = ratings.count
+        var res = n
+
+        var i = 1
+        while i < n {
+            if ratings[i] == ratings[i - 1] {
+                i += 1
+                continue
+            }
+
+            var inc = 0
+            while i < n && ratings[i] > ratings[i - 1] {
+                inc += 1
+                res += inc
+                i += 1
+            }
+
+            var dec = 0
+            while i < n && ratings[i] < ratings[i - 1] {
+                dec += 1
+                res += dec
+                i += 1
+            }
+
+            res -= min(inc, dec)
+        }
+
+        return res
     }
 }
 ```

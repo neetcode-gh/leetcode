@@ -112,6 +112,111 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode SortedArrayToBST(int[] nums) {
+        if (nums.Length == 0) {
+            return null;
+        }
+
+        int mid = nums.Length / 2;
+        TreeNode root = new TreeNode(nums[mid]);
+        root.left = SortedArrayToBST(nums.Take(mid).ToArray());
+        root.right = SortedArrayToBST(nums.Skip(mid + 1).ToArray());
+        return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sortedArrayToBST(nums []int) *TreeNode {
+    if len(nums) == 0 {
+        return nil
+    }
+
+    mid := len(nums) / 2
+    root := &TreeNode{Val: nums[mid]}
+    root.Left = sortedArrayToBST(nums[:mid])
+    root.Right = sortedArrayToBST(nums[mid+1:])
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sortedArrayToBST(nums: IntArray): TreeNode? {
+        if (nums.isEmpty()) {
+            return null
+        }
+
+        val mid = nums.size / 2
+        val root = TreeNode(nums[mid])
+        root.left = sortedArrayToBST(nums.sliceArray(0 until mid))
+        root.right = sortedArrayToBST(nums.sliceArray(mid + 1 until nums.size))
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        if nums.isEmpty {
+            return nil
+        }
+
+        let mid = nums.count / 2
+        let root = TreeNode(nums[mid])
+        root.left = sortedArrayToBST(Array(nums[0..<mid]))
+        root.right = sortedArrayToBST(Array(nums[(mid + 1)...]))
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -241,6 +346,124 @@ class Solution {
         };
 
         return helper(0, nums.length - 1);
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode SortedArrayToBST(int[] nums) {
+        return Helper(nums, 0, nums.Length - 1);
+    }
+
+    private TreeNode Helper(int[] nums, int l, int r) {
+        if (l > r) {
+            return null;
+        }
+        int m = (l + r) / 2;
+        TreeNode root = new TreeNode(nums[m]);
+        root.left = Helper(nums, l, m - 1);
+        root.right = Helper(nums, m + 1, r);
+        return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sortedArrayToBST(nums []int) *TreeNode {
+    var helper func(l, r int) *TreeNode
+    helper = func(l, r int) *TreeNode {
+        if l > r {
+            return nil
+        }
+        m := (l + r) / 2
+        root := &TreeNode{Val: nums[m]}
+        root.Left = helper(l, m-1)
+        root.Right = helper(m+1, r)
+        return root
+    }
+
+    return helper(0, len(nums)-1)
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sortedArrayToBST(nums: IntArray): TreeNode? {
+        fun helper(l: Int, r: Int): TreeNode? {
+            if (l > r) {
+                return null
+            }
+            val m = (l + r) / 2
+            val root = TreeNode(nums[m])
+            root.left = helper(l, m - 1)
+            root.right = helper(m + 1, r)
+            return root
+        }
+
+        return helper(0, nums.size - 1)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        func helper(_ l: Int, _ r: Int) -> TreeNode? {
+            if l > r {
+                return nil
+            }
+            let m = (l + r) / 2
+            let root = TreeNode(nums[m])
+            root.left = helper(l, m - 1)
+            root.right = helper(m + 1, r)
+            return root
+        }
+
+        return helper(0, nums.count - 1)
     }
 }
 ```
@@ -423,6 +646,175 @@ class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode SortedArrayToBST(int[] nums) {
+        if (nums.Length == 0) {
+            return null;
+        }
+
+        TreeNode root = new TreeNode(0);
+        Stack<(TreeNode, int, int)> stack = new Stack<(TreeNode, int, int)>();
+        stack.Push((root, 0, nums.Length - 1));
+
+        while (stack.Count > 0) {
+            var (node, l, r) = stack.Pop();
+            int m = (l + r) / 2;
+            node.val = nums[m];
+
+            if (l <= m - 1) {
+                node.left = new TreeNode(0);
+                stack.Push((node.left, l, m - 1));
+            }
+            if (m + 1 <= r) {
+                node.right = new TreeNode(0);
+                stack.Push((node.right, m + 1, r));
+            }
+        }
+
+        return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sortedArrayToBST(nums []int) *TreeNode {
+    if len(nums) == 0 {
+        return nil
+    }
+
+    type item struct {
+        node *TreeNode
+        l, r int
+    }
+
+    root := &TreeNode{Val: 0}
+    stack := []item{{root, 0, len(nums) - 1}}
+
+    for len(stack) > 0 {
+        curr := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        m := (curr.l + curr.r) / 2
+        curr.node.Val = nums[m]
+
+        if curr.l <= m-1 {
+            curr.node.Left = &TreeNode{Val: 0}
+            stack = append(stack, item{curr.node.Left, curr.l, m - 1})
+        }
+        if m+1 <= curr.r {
+            curr.node.Right = &TreeNode{Val: 0}
+            stack = append(stack, item{curr.node.Right, m + 1, curr.r})
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sortedArrayToBST(nums: IntArray): TreeNode? {
+        if (nums.isEmpty()) {
+            return null
+        }
+
+        val root = TreeNode(0)
+        val stack = ArrayDeque<Triple<TreeNode, Int, Int>>()
+        stack.addLast(Triple(root, 0, nums.size - 1))
+
+        while (stack.isNotEmpty()) {
+            val (node, l, r) = stack.removeLast()
+            val m = (l + r) / 2
+            node.`val` = nums[m]
+
+            if (l <= m - 1) {
+                node.left = TreeNode(0)
+                stack.addLast(Triple(node.left!!, l, m - 1))
+            }
+            if (m + 1 <= r) {
+                node.right = TreeNode(0)
+                stack.addLast(Triple(node.right!!, m + 1, r))
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sortedArrayToBST(_ nums: [Int]) -> TreeNode? {
+        if nums.isEmpty {
+            return nil
+        }
+
+        let root = TreeNode(0)
+        var stack: [(TreeNode, Int, Int)] = [(root, 0, nums.count - 1)]
+
+        while !stack.isEmpty {
+            let (node, l, r) = stack.removeLast()
+            let m = (l + r) / 2
+            node.val = nums[m]
+
+            if l <= m - 1 {
+                node.left = TreeNode(0)
+                stack.append((node.left!, l, m - 1))
+            }
+            if m + 1 <= r {
+                node.right = TreeNode(0)
+                stack.append((node.right!, m + 1, r))
+            }
+        }
+
+        return root
     }
 }
 ```

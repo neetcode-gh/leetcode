@@ -191,6 +191,104 @@ public class Solution {
 }
 ```
 
+```go
+func jobScheduling(startTime []int, endTime []int, profit []int) int {
+    n := len(startTime)
+    intervals := make([][3]int, n)
+    for i := 0; i < n; i++ {
+        intervals[i] = [3]int{startTime[i], endTime[i], profit[i]}
+    }
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    cache := make(map[int]int)
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == n {
+            return 0
+        }
+        if val, ok := cache[i]; ok {
+            return val
+        }
+
+        res := dfs(i + 1)
+
+        j := i + 1
+        for j < n && intervals[i][1] > intervals[j][0] {
+            j++
+        }
+
+        res = max(res, intervals[i][2]+dfs(j))
+        cache[i] = res
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun jobScheduling(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
+        val n = startTime.size
+        val intervals = Array(n) { i -> intArrayOf(startTime[i], endTime[i], profit[i]) }
+        intervals.sortBy { it[0] }
+
+        val cache = IntArray(n) { -1 }
+
+        fun dfs(i: Int): Int {
+            if (i == n) return 0
+            if (cache[i] != -1) return cache[i]
+
+            var res = dfs(i + 1)
+
+            var j = i + 1
+            while (j < n && intervals[i][1] > intervals[j][0]) {
+                j++
+            }
+
+            res = maxOf(res, intervals[i][2] + dfs(j))
+            cache[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func jobScheduling(_ startTime: [Int], _ endTime: [Int], _ profit: [Int]) -> Int {
+        let n = startTime.count
+        var intervals = (0..<n).map { (startTime[$0], endTime[$0], profit[$0]) }
+        intervals.sort { $0.0 < $1.0 }
+
+        var cache = [Int: Int]()
+
+        func dfs(_ i: Int) -> Int {
+            if i == n { return 0 }
+            if let val = cache[i] { return val }
+
+            var res = dfs(i + 1)
+
+            var j = i + 1
+            while j < n && intervals[i].1 > intervals[j].0 {
+                j += 1
+            }
+
+            res = max(res, intervals[i].2 + dfs(j))
+            cache[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -404,6 +502,124 @@ public class Solution {
 
         cache[i] = Math.Max(res, intervals[i][2] + Dfs(j));
         return cache[i];
+    }
+}
+```
+
+```go
+func jobScheduling(startTime []int, endTime []int, profit []int) int {
+    n := len(startTime)
+    intervals := make([][3]int, n)
+    for i := 0; i < n; i++ {
+        intervals[i] = [3]int{startTime[i], endTime[i], profit[i]}
+    }
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    cache := make([]int, n)
+    for i := range cache {
+        cache[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == n {
+            return 0
+        }
+        if cache[i] != -1 {
+            return cache[i]
+        }
+
+        res := dfs(i + 1)
+
+        left, right, j := i+1, n, n
+        for left < right {
+            mid := left + (right-left)/2
+            if intervals[mid][0] >= intervals[i][1] {
+                j = mid
+                right = mid
+            } else {
+                left = mid + 1
+            }
+        }
+
+        cache[i] = max(res, intervals[i][2]+dfs(j))
+        return cache[i]
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun jobScheduling(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
+        val n = startTime.size
+        val intervals = Array(n) { i -> intArrayOf(startTime[i], endTime[i], profit[i]) }
+        intervals.sortBy { it[0] }
+
+        val cache = IntArray(n) { -1 }
+
+        fun dfs(i: Int): Int {
+            if (i == n) return 0
+            if (cache[i] != -1) return cache[i]
+
+            var res = dfs(i + 1)
+
+            var left = i + 1
+            var right = n
+            var j = n
+            while (left < right) {
+                val mid = left + (right - left) / 2
+                if (intervals[mid][0] >= intervals[i][1]) {
+                    j = mid
+                    right = mid
+                } else {
+                    left = mid + 1
+                }
+            }
+
+            cache[i] = maxOf(res, intervals[i][2] + dfs(j))
+            return cache[i]
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func jobScheduling(_ startTime: [Int], _ endTime: [Int], _ profit: [Int]) -> Int {
+        let n = startTime.count
+        var intervals = (0..<n).map { (startTime[$0], endTime[$0], profit[$0]) }
+        intervals.sort { $0.0 < $1.0 }
+
+        var cache = [Int](repeating: -1, count: n)
+
+        func dfs(_ i: Int) -> Int {
+            if i == n { return 0 }
+            if cache[i] != -1 { return cache[i] }
+
+            var res = dfs(i + 1)
+
+            var left = i + 1, right = n, j = n
+            while left < right {
+                let mid = left + (right - left) / 2
+                if intervals[mid].0 >= intervals[i].1 {
+                    j = mid
+                    right = mid
+                } else {
+                    left = mid + 1
+                }
+            }
+
+            cache[i] = max(res, intervals[i].2 + dfs(j))
+            return cache[i]
+        }
+
+        return dfs(0)
     }
 }
 ```
@@ -645,6 +861,120 @@ public class Solution {
 }
 ```
 
+```go
+func jobScheduling(startTime []int, endTime []int, profit []int) int {
+    n := len(startTime)
+    index := make([]int, n)
+    for i := 0; i < n; i++ {
+        index[i] = i
+    }
+    sort.Slice(index, func(i, j int) bool {
+        return startTime[index[i]] < startTime[index[j]]
+    })
+
+    cache := make([]int, n)
+    for i := range cache {
+        cache[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i == n {
+            return 0
+        }
+        if cache[i] != -1 {
+            return cache[i]
+        }
+
+        res := dfs(i + 1)
+
+        left, right, j := i+1, n, n
+        for left < right {
+            mid := left + (right-left)/2
+            if startTime[index[mid]] >= endTime[index[i]] {
+                j = mid
+                right = mid
+            } else {
+                left = mid + 1
+            }
+        }
+
+        cache[i] = max(res, profit[index[i]]+dfs(j))
+        return cache[i]
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun jobScheduling(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
+        val n = startTime.size
+        val index = (0 until n).sortedBy { startTime[it] }.toIntArray()
+        val cache = IntArray(n) { -1 }
+
+        fun dfs(i: Int): Int {
+            if (i == n) return 0
+            if (cache[i] != -1) return cache[i]
+
+            var res = dfs(i + 1)
+
+            var left = i + 1
+            var right = n
+            var j = n
+            while (left < right) {
+                val mid = left + (right - left) / 2
+                if (startTime[index[mid]] >= endTime[index[i]]) {
+                    j = mid
+                    right = mid
+                } else {
+                    left = mid + 1
+                }
+            }
+
+            cache[i] = maxOf(res, profit[index[i]] + dfs(j))
+            return cache[i]
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func jobScheduling(_ startTime: [Int], _ endTime: [Int], _ profit: [Int]) -> Int {
+        let n = startTime.count
+        let index = (0..<n).sorted { startTime[$0] < startTime[$1] }
+        var cache = [Int](repeating: -1, count: n)
+
+        func dfs(_ i: Int) -> Int {
+            if i == n { return 0 }
+            if cache[i] != -1 { return cache[i] }
+
+            var res = dfs(i + 1)
+
+            var left = i + 1, right = n, j = n
+            while left < right {
+                let mid = left + (right - left) / 2
+                if startTime[index[mid]] >= endTime[index[i]] {
+                    j = mid
+                    right = mid
+                } else {
+                    left = mid + 1
+                }
+            }
+
+            cache[i] = max(res, profit[index[i]] + dfs(j))
+            return cache[i]
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -804,6 +1134,93 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func jobScheduling(startTime []int, endTime []int, profit []int) int {
+    n := len(startTime)
+    index := make([]int, n)
+    for i := 0; i < n; i++ {
+        index[i] = i
+    }
+    sort.Slice(index, func(i, j int) bool {
+        return startTime[index[i]] < startTime[index[j]]
+    })
+
+    dp := make([]int, n+1)
+
+    for i := n - 1; i >= 0; i-- {
+        left, right, j := i+1, n, n
+        for left < right {
+            mid := left + (right-left)/2
+            if startTime[index[mid]] >= endTime[index[i]] {
+                j = mid
+                right = mid
+            } else {
+                left = mid + 1
+            }
+        }
+        dp[i] = max(dp[i+1], profit[index[i]]+dp[j])
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun jobScheduling(startTime: IntArray, endTime: IntArray, profit: IntArray): Int {
+        val n = startTime.size
+        val index = (0 until n).sortedBy { startTime[it] }.toIntArray()
+
+        val dp = IntArray(n + 1)
+
+        for (i in n - 1 downTo 0) {
+            var left = i + 1
+            var right = n
+            var j = n
+            while (left < right) {
+                val mid = left + (right - left) / 2
+                if (startTime[index[mid]] >= endTime[index[i]]) {
+                    j = mid
+                    right = mid
+                } else {
+                    left = mid + 1
+                }
+            }
+            dp[i] = maxOf(dp[i + 1], profit[index[i]] + dp[j])
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func jobScheduling(_ startTime: [Int], _ endTime: [Int], _ profit: [Int]) -> Int {
+        let n = startTime.count
+        let index = (0..<n).sorted { startTime[$0] < startTime[$1] }
+
+        var dp = [Int](repeating: 0, count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            var left = i + 1, right = n, j = n
+            while left < right {
+                let mid = left + (right - left) / 2
+                if startTime[index[mid]] >= endTime[index[i]] {
+                    j = mid
+                    right = mid
+                } else {
+                    left = mid + 1
+                }
+            }
+            dp[i] = max(dp[i + 1], profit[index[i]] + dp[j])
+        }
+
+        return dp[0]
     }
 }
 ```

@@ -143,6 +143,82 @@ public class Solution {
 }
 ```
 
+```go
+func intToRoman(num int) string {
+    symList := [][]interface{}{
+        {"I", 1}, {"IV", 4}, {"V", 5}, {"IX", 9},
+        {"X", 10}, {"XL", 40}, {"L", 50}, {"XC", 90},
+        {"C", 100}, {"CD", 400}, {"D", 500}, {"CM", 900},
+        {"M", 1000},
+    }
+
+    res := ""
+    for i := len(symList) - 1; i >= 0; i-- {
+        sym := symList[i][0].(string)
+        val := symList[i][1].(int)
+        count := num / val
+        for j := 0; j < count; j++ {
+            res += sym
+        }
+        num %= val
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intToRoman(num: Int): String {
+        val symList = listOf(
+            "I" to 1, "IV" to 4, "V" to 5, "IX" to 9,
+            "X" to 10, "XL" to 40, "L" to 50, "XC" to 90,
+            "C" to 100, "CD" to 400, "D" to 500, "CM" to 900,
+            "M" to 1000
+        )
+
+        var n = num
+        val res = StringBuilder()
+        for (i in symList.indices.reversed()) {
+            val (sym, v) = symList[i]
+            val count = n / v
+            repeat(count) {
+                res.append(sym)
+            }
+            n %= v
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intToRoman(_ num: Int) -> String {
+        let symList: [(String, Int)] = [
+            ("I", 1), ("IV", 4), ("V", 5), ("IX", 9),
+            ("X", 10), ("XL", 40), ("L", 50), ("XC", 90),
+            ("C", 100), ("CD", 400), ("D", 500), ("CM", 900),
+            ("M", 1000)
+        ]
+
+        var num = num
+        var res = ""
+        for i in stride(from: symList.count - 1, through: 0, by: -1) {
+            let (sym, val) = symList[i]
+            let count = num / val
+            for _ in 0..<count {
+                res += sym
+            }
+            num %= val
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,6 +348,52 @@ public class Solution {
              + hundreds[(num % 1000) / 100]
              + tens[(num % 100) / 10]
              + ones[num % 10];
+    }
+}
+```
+
+```go
+func intToRoman(num int) string {
+    thousands := []string{"", "M", "MM", "MMM"}
+    hundreds := []string{"", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"}
+    tens := []string{"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"}
+    ones := []string{"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"}
+
+    return thousands[num/1000] +
+        hundreds[(num%1000)/100] +
+        tens[(num%100)/10] +
+        ones[num%10]
+}
+```
+
+```kotlin
+class Solution {
+    fun intToRoman(num: Int): String {
+        val thousands = arrayOf("", "M", "MM", "MMM")
+        val hundreds = arrayOf("", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM")
+        val tens = arrayOf("", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC")
+        val ones = arrayOf("", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX")
+
+        return thousands[num / 1000] +
+                hundreds[(num % 1000) / 100] +
+                tens[(num % 100) / 10] +
+                ones[num % 10]
+    }
+}
+```
+
+```swift
+class Solution {
+    func intToRoman(_ num: Int) -> String {
+        let thousands = ["", "M", "MM", "MMM"]
+        let hundreds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"]
+        let tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"]
+        let ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"]
+
+        return thousands[num / 1000] +
+            hundreds[(num % 1000) / 100] +
+            tens[(num % 100) / 10] +
+            ones[num % 10]
     }
 }
 ```

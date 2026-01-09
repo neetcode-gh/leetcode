@@ -154,21 +154,21 @@ class Solution {
         if (k >= n) {
             return n;
         }
-        
+
         let left = k, right = n;
         while (left < right) {
             let mid = Math.floor((left + right + 1) / 2);
-            
+
             if (this.isValid(s, mid, k)) {
                 left = mid;
             } else {
                 right = mid - 1;
             }
         }
-        
+
         return left;
     }
-    
+
     /**
      * @param {string} s
      * @param {number} size
@@ -178,16 +178,16 @@ class Solution {
     isValid(s, size, k) {
         let n = s.length;
         let counter = new Map();
-        
+
         for (let i = 0; i < size; i++) {
             let c = s.charAt(i);
             counter.set(c, (counter.get(c) || 0) + 1);
         }
-        
+
         if (counter.size <= k) {
             return true;
         }
-        
+
         for (let i = size; i < n; i++) {
             let c1 = s.charAt(i);
             counter.set(c1, (counter.get(c1) || 0) + 1);
@@ -200,8 +200,217 @@ class Solution {
                 return true;
             }
         }
-        
+
         return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LengthOfLongestSubstringKDistinct(string s, int k) {
+        int n = s.Length;
+        if (k >= n) {
+            return n;
+        }
+
+        int left = k, right = n;
+        while (left < right) {
+            int mid = (left + right + 1) / 2;
+
+            if (IsValid(s, mid, k)) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+
+        return left;
+    }
+
+    private bool IsValid(string s, int size, int k) {
+        int n = s.Length;
+        var counter = new Dictionary<char, int>();
+
+        for (int i = 0; i < size; i++) {
+            char c = s[i];
+            if (!counter.ContainsKey(c)) counter[c] = 0;
+            counter[c]++;
+        }
+
+        if (counter.Count <= k) {
+            return true;
+        }
+
+        for (int i = size; i < n; i++) {
+            char c1 = s[i];
+            if (!counter.ContainsKey(c1)) counter[c1] = 0;
+            counter[c1]++;
+            char c2 = s[i - size];
+            counter[c2]--;
+            if (counter[c2] == 0) {
+                counter.Remove(c2);
+            }
+            if (counter.Count <= k) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
+```go
+func lengthOfLongestSubstringKDistinct(s string, k int) int {
+    n := len(s)
+    if k >= n {
+        return n
+    }
+
+    left, right := k, n
+    for left < right {
+        mid := (left + right + 1) / 2
+
+        if isValid(s, mid, k) {
+            left = mid
+        } else {
+            right = mid - 1
+        }
+    }
+
+    return left
+}
+
+func isValid(s string, size, k int) bool {
+    n := len(s)
+    counter := make(map[byte]int)
+
+    for i := 0; i < size; i++ {
+        counter[s[i]]++
+    }
+
+    if len(counter) <= k {
+        return true
+    }
+
+    for i := size; i < n; i++ {
+        counter[s[i]]++
+        counter[s[i-size]]--
+        if counter[s[i-size]] == 0 {
+            delete(counter, s[i-size])
+        }
+        if len(counter) <= k {
+            return true
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstringKDistinct(s: String, k: Int): Int {
+        val n = s.length
+        if (k >= n) {
+            return n
+        }
+
+        var left = k
+        var right = n
+        while (left < right) {
+            val mid = (left + right + 1) / 2
+
+            if (isValid(s, mid, k)) {
+                left = mid
+            } else {
+                right = mid - 1
+            }
+        }
+
+        return left
+    }
+
+    private fun isValid(s: String, size: Int, k: Int): Boolean {
+        val n = s.length
+        val counter = mutableMapOf<Char, Int>()
+
+        for (i in 0 until size) {
+            val c = s[i]
+            counter[c] = (counter[c] ?: 0) + 1
+        }
+
+        if (counter.size <= k) {
+            return true
+        }
+
+        for (i in size until n) {
+            val c1 = s[i]
+            counter[c1] = (counter[c1] ?: 0) + 1
+            val c2 = s[i - size]
+            counter[c2] = counter[c2]!! - 1
+            if (counter[c2] == 0) {
+                counter.remove(c2)
+            }
+            if (counter.size <= k) {
+                return true
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstringKDistinct(_ s: String, _ k: Int) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        if k >= n {
+            return n
+        }
+
+        var left = k
+        var right = n
+        while left < right {
+            let mid = (left + right + 1) / 2
+
+            if isValid(chars, mid, k) {
+                left = mid
+            } else {
+                right = mid - 1
+            }
+        }
+
+        return left
+    }
+
+    private func isValid(_ chars: [Character], _ size: Int, _ k: Int) -> Bool {
+        let n = chars.count
+        var counter = [Character: Int]()
+
+        for i in 0..<size {
+            counter[chars[i], default: 0] += 1
+        }
+
+        if counter.count <= k {
+            return true
+        }
+
+        for i in size..<n {
+            counter[chars[i], default: 0] += 1
+            counter[chars[i - size]]! -= 1
+            if counter[chars[i - size]] == 0 {
+                counter.removeValue(forKey: chars[i - size])
+            }
+            if counter.count <= k {
+                return true
+            }
+        }
+
+        return false
     }
 }
 ```
@@ -309,11 +518,11 @@ class Solution {
         let n = s.length;
         let maxSize = 0;
         let counter = new Map();
-        
+
         let left = 0;
         for (let right = 0; right < n; right++) {
             counter.set(s.charAt(right), (counter.get(s.charAt(right)) || 0) + 1);
-            
+
             while (counter.size > k) {
                 counter.set(s.charAt(left), counter.get(s.charAt(left)) - 1);
                 if (counter.get(s.charAt(left)) === 0) {
@@ -321,11 +530,121 @@ class Solution {
                 }
                 left++;
             }
-            
+
             maxSize = Math.max(maxSize, right - left + 1);
         }
-                    
-        return maxSize;  
+
+        return maxSize;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LengthOfLongestSubstringKDistinct(string s, int k) {
+        int n = s.Length;
+        int maxSize = 0;
+        var counter = new Dictionary<char, int>();
+
+        int left = 0;
+        for (int right = 0; right < n; right++) {
+            if (!counter.ContainsKey(s[right])) counter[s[right]] = 0;
+            counter[s[right]]++;
+
+            while (counter.Count > k) {
+                counter[s[left]]--;
+                if (counter[s[left]] == 0) {
+                    counter.Remove(s[left]);
+                }
+                left++;
+            }
+
+            maxSize = Math.Max(maxSize, right - left + 1);
+        }
+
+        return maxSize;
+    }
+}
+```
+
+```go
+func lengthOfLongestSubstringKDistinct(s string, k int) int {
+    n := len(s)
+    maxSize := 0
+    counter := make(map[byte]int)
+
+    left := 0
+    for right := 0; right < n; right++ {
+        counter[s[right]]++
+
+        for len(counter) > k {
+            counter[s[left]]--
+            if counter[s[left]] == 0 {
+                delete(counter, s[left])
+            }
+            left++
+        }
+
+        if right-left+1 > maxSize {
+            maxSize = right - left + 1
+        }
+    }
+
+    return maxSize
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstringKDistinct(s: String, k: Int): Int {
+        val n = s.length
+        var maxSize = 0
+        val counter = mutableMapOf<Char, Int>()
+
+        var left = 0
+        for (right in 0 until n) {
+            counter[s[right]] = (counter[s[right]] ?: 0) + 1
+
+            while (counter.size > k) {
+                counter[s[left]] = counter[s[left]]!! - 1
+                if (counter[s[left]] == 0) {
+                    counter.remove(s[left])
+                }
+                left++
+            }
+
+            maxSize = maxOf(maxSize, right - left + 1)
+        }
+
+        return maxSize
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstringKDistinct(_ s: String, _ k: Int) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var maxSize = 0
+        var counter = [Character: Int]()
+
+        var left = 0
+        for right in 0..<n {
+            counter[chars[right], default: 0] += 1
+
+            while counter.count > k {
+                counter[chars[left]]! -= 1
+                if counter[chars[left]] == 0 {
+                    counter.removeValue(forKey: chars[left])
+                }
+                left += 1
+            }
+
+            maxSize = max(maxSize, right - left + 1)
+        }
+
+        return maxSize
     }
 }
 ```
@@ -425,10 +744,10 @@ class Solution {
         let n = s.length;
         let maxSize = 0;
         let counter = new Map();
-        
+
         for (let right = 0; right < n; right++) {
             counter.set(s.charAt(right), (counter.get(s.charAt(right)) || 0) + 1);
-            
+
             if (counter.size <= k) {
                 maxSize++;
             } else {
@@ -438,7 +757,103 @@ class Solution {
                 }
             }
         }
-        return maxSize; 
+        return maxSize;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LengthOfLongestSubstringKDistinct(string s, int k) {
+        int n = s.Length;
+        int maxSize = 0;
+        var counter = new Dictionary<char, int>();
+
+        for (int right = 0; right < n; right++) {
+            if (!counter.ContainsKey(s[right])) counter[s[right]] = 0;
+            counter[s[right]]++;
+
+            if (counter.Count <= k) {
+                maxSize++;
+            } else {
+                counter[s[right - maxSize]]--;
+                if (counter[s[right - maxSize]] == 0) {
+                    counter.Remove(s[right - maxSize]);
+                }
+            }
+        }
+        return maxSize;
+    }
+}
+```
+
+```go
+func lengthOfLongestSubstringKDistinct(s string, k int) int {
+    n := len(s)
+    maxSize := 0
+    counter := make(map[byte]int)
+
+    for right := 0; right < n; right++ {
+        counter[s[right]]++
+
+        if len(counter) <= k {
+            maxSize++
+        } else {
+            counter[s[right-maxSize]]--
+            if counter[s[right-maxSize]] == 0 {
+                delete(counter, s[right-maxSize])
+            }
+        }
+    }
+    return maxSize
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstringKDistinct(s: String, k: Int): Int {
+        val n = s.length
+        var maxSize = 0
+        val counter = mutableMapOf<Char, Int>()
+
+        for (right in 0 until n) {
+            counter[s[right]] = (counter[s[right]] ?: 0) + 1
+
+            if (counter.size <= k) {
+                maxSize++
+            } else {
+                counter[s[right - maxSize]] = counter[s[right - maxSize]]!! - 1
+                if (counter[s[right - maxSize]] == 0) {
+                    counter.remove(s[right - maxSize])
+                }
+            }
+        }
+        return maxSize
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstringKDistinct(_ s: String, _ k: Int) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var maxSize = 0
+        var counter = [Character: Int]()
+
+        for right in 0..<n {
+            counter[chars[right], default: 0] += 1
+
+            if counter.count <= k {
+                maxSize += 1
+            } else {
+                counter[chars[right - maxSize]]! -= 1
+                if counter[chars[right - maxSize]] == 0 {
+                    counter.removeValue(forKey: chars[right - maxSize])
+                }
+            }
+        }
+        return maxSize
     }
 }
 ```

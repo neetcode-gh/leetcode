@@ -104,6 +104,66 @@ public class Solution {
 }
 ```
 
+```go
+func numSubarraysWithSum(nums []int, goal int) int {
+    n, res := len(nums), 0
+
+    for i := 0; i < n; i++ {
+        curSum := 0
+        for j := i; j < n; j++ {
+            curSum += nums[j]
+            if curSum == goal {
+                res++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarraysWithSum(nums: IntArray, goal: Int): Int {
+        val n = nums.size
+        var res = 0
+
+        for (i in 0 until n) {
+            var curSum = 0
+            for (j in i until n) {
+                curSum += nums[j]
+                if (curSum == goal) {
+                    res++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarraysWithSum(_ nums: [Int], _ goal: Int) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for i in 0..<n {
+            var curSum = 0
+            for j in i..<n {
+                curSum += nums[j]
+                if curSum == goal {
+                    res += 1
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -212,6 +272,57 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numSubarraysWithSum(nums []int, goal int) int {
+    prefixSum, res := 0, 0
+    count := make(map[int]int)
+    count[0] = 1
+
+    for _, num := range nums {
+        prefixSum += num
+        res += count[prefixSum-goal]
+        count[prefixSum]++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarraysWithSum(nums: IntArray, goal: Int): Int {
+        var prefixSum = 0
+        var res = 0
+        val count = mutableMapOf(0 to 1)
+
+        for (num in nums) {
+            prefixSum += num
+            res += count.getOrDefault(prefixSum - goal, 0)
+            count[prefixSum] = count.getOrDefault(prefixSum, 0) + 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarraysWithSum(_ nums: [Int], _ goal: Int) -> Int {
+        var prefixSum = 0, res = 0
+        var count = [0: 1]
+
+        for num in nums {
+            prefixSum += num
+            res += count[prefixSum - goal, default: 0]
+            count[prefixSum, default: 0] += 1
+        }
+
+        return res
     }
 }
 ```
@@ -331,6 +442,68 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numSubarraysWithSum(nums []int, goal int) int {
+    n := len(nums)
+    count := make([]int, n+1)
+    count[0] = 1
+    prefixSum, res := 0, 0
+
+    for _, num := range nums {
+        prefixSum += num
+        if prefixSum >= goal {
+            res += count[prefixSum-goal]
+        }
+        count[prefixSum]++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarraysWithSum(nums: IntArray, goal: Int): Int {
+        val n = nums.size
+        val count = IntArray(n + 1)
+        count[0] = 1
+        var prefixSum = 0
+        var res = 0
+
+        for (num in nums) {
+            prefixSum += num
+            if (prefixSum >= goal) {
+                res += count[prefixSum - goal]
+            }
+            count[prefixSum]++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarraysWithSum(_ nums: [Int], _ goal: Int) -> Int {
+        let n = nums.count
+        var count = [Int](repeating: 0, count: n + 1)
+        count[0] = 1
+        var prefixSum = 0, res = 0
+
+        for num in nums {
+            prefixSum += num
+            if prefixSum >= goal {
+                res += count[prefixSum - goal]
+            }
+            count[prefixSum] += 1
+        }
+
+        return res
     }
 }
 ```
@@ -459,6 +632,74 @@ public class Solution {
         }
 
         return Helper(goal) - Helper(goal - 1);
+    }
+}
+```
+
+```go
+func numSubarraysWithSum(nums []int, goal int) int {
+    helper := func(x int) int {
+        if x < 0 {
+            return 0
+        }
+        res, l, cur := 0, 0, 0
+        for r := 0; r < len(nums); r++ {
+            cur += nums[r]
+            for cur > x {
+                cur -= nums[l]
+                l++
+            }
+            res += r - l + 1
+        }
+        return res
+    }
+
+    return helper(goal) - helper(goal-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun numSubarraysWithSum(nums: IntArray, goal: Int): Int {
+        fun helper(x: Int): Int {
+            if (x < 0) return 0
+            var res = 0
+            var l = 0
+            var cur = 0
+            for (r in nums.indices) {
+                cur += nums[r]
+                while (cur > x) {
+                    cur -= nums[l]
+                    l++
+                }
+                res += r - l + 1
+            }
+            return res
+        }
+
+        return helper(goal) - helper(goal - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSubarraysWithSum(_ nums: [Int], _ goal: Int) -> Int {
+        func helper(_ x: Int) -> Int {
+            if x < 0 { return 0 }
+            var res = 0, l = 0, cur = 0
+            for r in 0..<nums.count {
+                cur += nums[r]
+                while cur > x {
+                    cur -= nums[l]
+                    l += 1
+                }
+                res += r - l + 1
+            }
+            return res
+        }
+
+        return helper(goal) - helper(goal - 1)
     }
 }
 ```

@@ -160,6 +160,97 @@ public class Solution {
 }
 ```
 
+```go
+func wordBreak(s string, wordDict []string) []string {
+    wordSet := make(map[string]bool)
+    for _, word := range wordDict {
+        wordSet[word] = true
+    }
+
+    var res []string
+    var cur []string
+
+    var backtrack func(i int)
+    backtrack = func(i int) {
+        if i == len(s) {
+            res = append(res, strings.Join(cur, " "))
+            return
+        }
+
+        for j := i; j < len(s); j++ {
+            w := s[i : j+1]
+            if wordSet[w] {
+                cur = append(cur, w)
+                backtrack(j + 1)
+                cur = cur[:len(cur)-1]
+            }
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): List<String> {
+        val wordSet = wordDict.toHashSet()
+        val res = mutableListOf<String>()
+        val cur = mutableListOf<String>()
+
+        fun backtrack(i: Int) {
+            if (i == s.length) {
+                res.add(cur.joinToString(" "))
+                return
+            }
+
+            for (j in i until s.length) {
+                val w = s.substring(i, j + 1)
+                if (w in wordSet) {
+                    cur.add(w)
+                    backtrack(j + 1)
+                    cur.removeAt(cur.size - 1)
+                }
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> [String] {
+        let wordSet = Set(wordDict)
+        var res = [String]()
+        var cur = [String]()
+        let chars = Array(s)
+
+        func backtrack(_ i: Int) {
+            if i == chars.count {
+                res.append(cur.joined(separator: " "))
+                return
+            }
+
+            for j in i..<chars.count {
+                let w = String(chars[i...j])
+                if wordSet.contains(w) {
+                    cur.append(w)
+                    backtrack(j + 1)
+                    cur.removeLast()
+                }
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -684,6 +775,111 @@ public class Solution {
 }
 ```
 
+```go
+func wordBreak(s string, wordDict []string) []string {
+    wordSet := make(map[string]bool)
+    for _, word := range wordDict {
+        wordSet[word] = true
+    }
+    cache := make(map[int][]string)
+
+    var backtrack func(i int) []string
+    backtrack = func(i int) []string {
+        if i == len(s) {
+            return []string{""}
+        }
+        if cached, ok := cache[i]; ok {
+            return cached
+        }
+
+        res := []string{}
+        for j := i; j < len(s); j++ {
+            w := s[i : j+1]
+            if !wordSet[w] {
+                continue
+            }
+            substrings := backtrack(j + 1)
+            for _, substr := range substrings {
+                sentence := w
+                if substr != "" {
+                    sentence += " " + substr
+                }
+                res = append(res, sentence)
+            }
+        }
+        cache[i] = res
+        return res
+    }
+
+    return backtrack(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): List<String> {
+        val wordSet = wordDict.toHashSet()
+        val cache = mutableMapOf<Int, List<String>>()
+
+        fun backtrack(i: Int): List<String> {
+            if (i == s.length) return listOf("")
+            cache[i]?.let { return it }
+
+            val res = mutableListOf<String>()
+            for (j in i until s.length) {
+                val w = s.substring(i, j + 1)
+                if (w !in wordSet) continue
+
+                val substrings = backtrack(j + 1)
+                for (substr in substrings) {
+                    val sentence = if (substr.isNotEmpty()) "$w $substr" else w
+                    res.add(sentence)
+                }
+            }
+            cache[i] = res
+            return res
+        }
+
+        return backtrack(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> [String] {
+        let wordSet = Set(wordDict)
+        var cache = [Int: [String]]()
+        let chars = Array(s)
+
+        func backtrack(_ i: Int) -> [String] {
+            if i == chars.count {
+                return [""]
+            }
+            if let cached = cache[i] {
+                return cached
+            }
+
+            var res = [String]()
+            for j in i..<chars.count {
+                let w = String(chars[i...j])
+                if !wordSet.contains(w) { continue }
+
+                let substrings = backtrack(j + 1)
+                for substr in substrings {
+                    let sentence = substr.isEmpty ? w : "\(w) \(substr)"
+                    res.append(sentence)
+                }
+            }
+            cache[i] = res
+            return res
+        }
+
+        return backtrack(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -823,6 +1019,93 @@ public class Solution {
         }
 
         return dp[n];
+    }
+}
+```
+
+```go
+func wordBreak(s string, wordDict []string) []string {
+    wordSet := make(map[string]bool)
+    for _, word := range wordDict {
+        wordSet[word] = true
+    }
+
+    n := len(s)
+    dp := make([][]string, n+1)
+    for i := range dp {
+        dp[i] = []string{}
+    }
+    dp[0] = []string{""}
+
+    for i := 1; i <= n; i++ {
+        for j := 0; j < i; j++ {
+            word := s[j:i]
+            if wordSet[word] {
+                for _, sentence := range dp[j] {
+                    if sentence == "" {
+                        dp[i] = append(dp[i], word)
+                    } else {
+                        dp[i] = append(dp[i], sentence+" "+word)
+                    }
+                }
+            }
+        }
+    }
+
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): List<String> {
+        val wordSet = wordDict.toHashSet()
+        val n = s.length
+        val dp = Array(n + 1) { mutableListOf<String>() }
+        dp[0].add("")
+
+        for (i in 1..n) {
+            for (j in 0 until i) {
+                val word = s.substring(j, i)
+                if (word in wordSet) {
+                    for (sentence in dp[j]) {
+                        val space = if (sentence.isEmpty()) "" else " "
+                        dp[i].add(sentence + space + word)
+                    }
+                }
+            }
+        }
+
+        return dp[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> [String] {
+        let wordSet = Set(wordDict)
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [[String]](repeating: [String](), count: n + 1)
+        dp[0] = [""]
+
+        for i in 1...n {
+            for j in 0..<i {
+                let word = String(chars[j..<i])
+                if wordSet.contains(word) {
+                    for sentence in dp[j] {
+                        if sentence.isEmpty {
+                            dp[i].append(word)
+                        } else {
+                            dp[i].append("\(sentence) \(word)")
+                        }
+                    }
+                }
+            }
+        }
+
+        return dp[n]
     }
 }
 ```
@@ -1174,6 +1457,203 @@ public class Solution {
 
         cache[index] = res;
         return res;
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children map[rune]*TrieNode
+    isWord   bool
+}
+
+func newTrieNode() *TrieNode {
+    return &TrieNode{children: make(map[rune]*TrieNode)}
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func newTrie() *Trie {
+    return &Trie{root: newTrieNode()}
+}
+
+func (t *Trie) addWord(word string) {
+    curr := t.root
+    for _, c := range word {
+        if _, ok := curr.children[c]; !ok {
+            curr.children[c] = newTrieNode()
+        }
+        curr = curr.children[c]
+    }
+    curr.isWord = true
+}
+
+func wordBreak(s string, wordDict []string) []string {
+    trie := newTrie()
+    for _, word := range wordDict {
+        trie.addWord(word)
+    }
+
+    cache := make(map[int][]string)
+
+    var backtrack func(index int) []string
+    backtrack = func(index int) []string {
+        if index == len(s) {
+            return []string{""}
+        }
+        if cached, ok := cache[index]; ok {
+            return cached
+        }
+
+        res := []string{}
+        curr := trie.root
+
+        for i := index; i < len(s); i++ {
+            c := rune(s[i])
+            if _, ok := curr.children[c]; !ok {
+                break
+            }
+            curr = curr.children[c]
+            if curr.isWord {
+                for _, suffix := range backtrack(i + 1) {
+                    if suffix == "" {
+                        res = append(res, s[index:i+1])
+                    } else {
+                        res = append(res, s[index:i+1]+" "+suffix)
+                    }
+                }
+            }
+        }
+
+        cache[index] = res
+        return res
+    }
+
+    return backtrack(0)
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = mutableMapOf<Char, TrieNode>()
+    var isWord = false
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun addWord(word: String) {
+        var curr = root
+        for (c in word) {
+            curr = curr.children.getOrPut(c) { TrieNode() }
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): List<String> {
+        val trie = Trie()
+        for (word in wordDict) {
+            trie.addWord(word)
+        }
+
+        val cache = mutableMapOf<Int, List<String>>()
+
+        fun backtrack(index: Int): List<String> {
+            if (index == s.length) return listOf("")
+            cache[index]?.let { return it }
+
+            val res = mutableListOf<String>()
+            var curr = trie.root
+
+            for (i in index until s.length) {
+                val c = s[i]
+                curr = curr.children[c] ?: break
+                if (curr.isWord) {
+                    for (suffix in backtrack(i + 1)) {
+                        if (suffix.isEmpty()) {
+                            res.add(s.substring(index, i + 1))
+                        } else {
+                            res.add(s.substring(index, i + 1) + " " + suffix)
+                        }
+                    }
+                }
+            }
+
+            cache[index] = res
+            return res
+        }
+
+        return backtrack(0)
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [Character: TrieNode]()
+    var isWord = false
+}
+
+class Trie {
+    let root = TrieNode()
+
+    func addWord(_ word: String) {
+        var curr = root
+        for c in word {
+            if curr.children[c] == nil {
+                curr.children[c] = TrieNode()
+            }
+            curr = curr.children[c]!
+        }
+        curr.isWord = true
+    }
+}
+
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> [String] {
+        let trie = Trie()
+        for word in wordDict {
+            trie.addWord(word)
+        }
+
+        let chars = Array(s)
+        var cache = [Int: [String]]()
+
+        func backtrack(_ index: Int) -> [String] {
+            if index == chars.count {
+                return [""]
+            }
+            if let cached = cache[index] {
+                return cached
+            }
+
+            var res = [String]()
+            var curr = trie.root
+
+            for i in index..<chars.count {
+                let c = chars[i]
+                guard let next = curr.children[c] else { break }
+                curr = next
+                if curr.isWord {
+                    for suffix in backtrack(i + 1) {
+                        if suffix.isEmpty {
+                            res.append(String(chars[index...i]))
+                        } else {
+                            res.append(String(chars[index...i]) + " " + suffix)
+                        }
+                    }
+                }
+            }
+
+            cache[index] = res
+            return res
+        }
+
+        return backtrack(0)
     }
 }
 ```

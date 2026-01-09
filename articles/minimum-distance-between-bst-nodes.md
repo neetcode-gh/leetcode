@@ -168,6 +168,179 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int MinDiffInBST(TreeNode root) {
+        return Dfs(root, root);
+    }
+
+    private int Dfs(TreeNode root, TreeNode node) {
+        if (node == null) return int.MaxValue;
+        int res = Dfs1(root, node);
+        res = Math.Min(res, Dfs(root, node.left));
+        res = Math.Min(res, Dfs(root, node.right));
+        return res;
+    }
+
+    private int Dfs1(TreeNode root, TreeNode node) {
+        if (root == null) return int.MaxValue;
+        int res = int.MaxValue;
+        if (root != node) {
+            res = Math.Abs(root.val - node.val);
+        }
+        res = Math.Min(res, Dfs1(root.left, node));
+        res = Math.Min(res, Dfs1(root.right, node));
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func minDiffInBST(root *TreeNode) int {
+    var dfs func(node *TreeNode) int
+    var dfs1 func(r, node *TreeNode) int
+
+    dfs1 = func(r, node *TreeNode) int {
+        if r == nil {
+            return math.MaxInt32
+        }
+        res := math.MaxInt32
+        if r != node {
+            res = abs(r.Val - node.Val)
+        }
+        res = min(res, dfs1(r.Left, node))
+        res = min(res, dfs1(r.Right, node))
+        return res
+    }
+
+    dfs = func(node *TreeNode) int {
+        if node == nil {
+            return math.MaxInt32
+        }
+        res := dfs1(root, node)
+        res = min(res, dfs(node.Left))
+        res = min(res, dfs(node.Right))
+        return res
+    }
+
+    return dfs(root)
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun minDiffInBST(root: TreeNode?): Int {
+        return dfs(root, root)
+    }
+
+    private fun dfs(root: TreeNode?, node: TreeNode?): Int {
+        if (node == null) return Int.MAX_VALUE
+        var res = dfs1(root, node)
+        res = minOf(res, dfs(root, node.left))
+        res = minOf(res, dfs(root, node.right))
+        return res
+    }
+
+    private fun dfs1(root: TreeNode?, node: TreeNode?): Int {
+        if (root == null) return Int.MAX_VALUE
+        var res = Int.MAX_VALUE
+        if (root !== node) {
+            res = kotlin.math.abs(root.`val` - node!!.`val`)
+        }
+        res = minOf(res, dfs1(root.left, node))
+        res = minOf(res, dfs1(root.right, node))
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        return dfs(root, root)
+    }
+
+    private func dfs(_ root: TreeNode?, _ node: TreeNode?) -> Int {
+        guard let node = node else { return Int.max }
+        var res = dfs1(root, node)
+        res = min(res, dfs(root, node.left))
+        res = min(res, dfs(root, node.right))
+        return res
+    }
+
+    private func dfs1(_ root: TreeNode?, _ node: TreeNode) -> Int {
+        guard let root = root else { return Int.max }
+        var res = Int.max
+        if root !== node {
+            res = abs(root.val - node.val)
+        }
+        res = min(res, dfs1(root.left, node))
+        res = min(res, dfs1(root.right, node))
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -312,6 +485,148 @@ class Solution {
             res = Math.min(res, arr[i] - arr[i - 1]);
         }
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int MinDiffInBST(TreeNode root) {
+        List<int> arr = new List<int>();
+        Dfs(root, arr);
+
+        int res = arr[1] - arr[0];
+        for (int i = 2; i < arr.Count; i++) {
+            res = Math.Min(res, arr[i] - arr[i - 1]);
+        }
+        return res;
+    }
+
+    private void Dfs(TreeNode node, List<int> arr) {
+        if (node == null) return;
+        Dfs(node.left, arr);
+        arr.Add(node.val);
+        Dfs(node.right, arr);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func minDiffInBST(root *TreeNode) int {
+    var arr []int
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        dfs(node.Left)
+        arr = append(arr, node.Val)
+        dfs(node.Right)
+    }
+
+    dfs(root)
+    res := arr[1] - arr[0]
+    for i := 2; i < len(arr); i++ {
+        res = min(res, arr[i]-arr[i-1])
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun minDiffInBST(root: TreeNode?): Int {
+        val arr = mutableListOf<Int>()
+
+        fun dfs(node: TreeNode?) {
+            if (node == null) return
+            dfs(node.left)
+            arr.add(node.`val`)
+            dfs(node.right)
+        }
+
+        dfs(root)
+        var res = arr[1] - arr[0]
+        for (i in 2 until arr.size) {
+            res = minOf(res, arr[i] - arr[i - 1])
+        }
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        var arr = [Int]()
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+            dfs(node.left)
+            arr.append(node.val)
+            dfs(node.right)
+        }
+
+        dfs(root)
+        var res = arr[1] - arr[0]
+        for i in 2..<arr.count {
+            res = min(res, arr[i] - arr[i - 1])
+        }
+        return res
     }
 }
 ```
@@ -462,6 +777,152 @@ class Solution {
 
         dfs(root);
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private TreeNode prev = null;
+    private int res = int.MaxValue;
+
+    public int MinDiffInBST(TreeNode root) {
+        Dfs(root);
+        return res;
+    }
+
+    private void Dfs(TreeNode node) {
+        if (node == null) return;
+
+        Dfs(node.left);
+        if (prev != null) {
+            res = Math.Min(res, node.val - prev.val);
+        }
+        prev = node;
+        Dfs(node.right);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func minDiffInBST(root *TreeNode) int {
+    var prev *TreeNode
+    res := math.MaxInt32
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+
+        dfs(node.Left)
+        if prev != nil {
+            res = min(res, node.Val-prev.Val)
+        }
+        prev = node
+        dfs(node.Right)
+    }
+
+    dfs(root)
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var prev: TreeNode? = null
+    private var res = Int.MAX_VALUE
+
+    fun minDiffInBST(root: TreeNode?): Int {
+        dfs(root)
+        return res
+    }
+
+    private fun dfs(node: TreeNode?) {
+        if (node == null) return
+
+        dfs(node.left)
+        prev?.let {
+            res = minOf(res, node.`val` - it.`val`)
+        }
+        prev = node
+        dfs(node.right)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        var prev: TreeNode? = nil
+        var res = Int.max
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+
+            dfs(node.left)
+            if let p = prev {
+                res = min(res, node.val - p.val)
+            }
+            prev = node
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return res
     }
 }
 ```
@@ -624,6 +1085,166 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int MinDiffInBST(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode prev = null;
+        int res = int.MaxValue;
+        TreeNode cur = root;
+
+        while (stack.Count > 0 || cur != null) {
+            while (cur != null) {
+                stack.Push(cur);
+                cur = cur.left;
+            }
+
+            cur = stack.Pop();
+            if (prev != null) {
+                res = Math.Min(res, cur.val - prev.val);
+            }
+            prev = cur;
+            cur = cur.right;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func minDiffInBST(root *TreeNode) int {
+    stack := []*TreeNode{}
+    var prev *TreeNode
+    res := math.MaxInt32
+    cur := root
+
+    for len(stack) > 0 || cur != nil {
+        for cur != nil {
+            stack = append(stack, cur)
+            cur = cur.Left
+        }
+
+        cur = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        if prev != nil {
+            res = min(res, cur.Val-prev.Val)
+        }
+        prev = cur
+        cur = cur.Right
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun minDiffInBST(root: TreeNode?): Int {
+        val stack = ArrayDeque<TreeNode>()
+        var prev: TreeNode? = null
+        var res = Int.MAX_VALUE
+        var cur = root
+
+        while (stack.isNotEmpty() || cur != null) {
+            while (cur != null) {
+                stack.addLast(cur)
+                cur = cur.left
+            }
+
+            cur = stack.removeLast()
+            prev?.let {
+                res = minOf(res, cur!!.`val` - it.`val`)
+            }
+            prev = cur
+            cur = cur?.right
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        var stack = [TreeNode]()
+        var prev: TreeNode? = nil
+        var res = Int.max
+        var cur = root
+
+        while !stack.isEmpty || cur != nil {
+            while cur != nil {
+                stack.append(cur!)
+                cur = cur?.left
+            }
+
+            cur = stack.removeLast()
+            if let p = prev {
+                res = min(res, cur!.val - p.val)
+            }
+            prev = cur
+            cur = cur?.right
+        }
+
+        return res
     }
 }
 ```
@@ -829,6 +1450,212 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int MinDiffInBST(TreeNode root) {
+        int prevVal = int.MaxValue, res = int.MaxValue;
+        TreeNode cur = root;
+
+        while (cur != null) {
+            if (cur.left == null) {
+                if (prevVal != int.MaxValue) {
+                    res = Math.Min(res, cur.val - prevVal);
+                }
+                prevVal = cur.val;
+                cur = cur.right;
+            } else {
+                TreeNode prev = cur.left;
+                while (prev.right != null && prev.right != cur) {
+                    prev = prev.right;
+                }
+
+                if (prev.right == null) {
+                    prev.right = cur;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    if (prevVal != int.MaxValue) {
+                        res = Math.Min(res, cur.val - prevVal);
+                    }
+                    prevVal = cur.val;
+                    cur = cur.right;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func minDiffInBST(root *TreeNode) int {
+    prevVal := math.MaxInt32
+    res := math.MaxInt32
+    cur := root
+
+    for cur != nil {
+        if cur.Left == nil {
+            if prevVal != math.MaxInt32 {
+                res = min(res, cur.Val-prevVal)
+            }
+            prevVal = cur.Val
+            cur = cur.Right
+        } else {
+            prev := cur.Left
+            for prev.Right != nil && prev.Right != cur {
+                prev = prev.Right
+            }
+
+            if prev.Right == nil {
+                prev.Right = cur
+                cur = cur.Left
+            } else {
+                prev.Right = nil
+                if prevVal != math.MaxInt32 {
+                    res = min(res, cur.Val-prevVal)
+                }
+                prevVal = cur.Val
+                cur = cur.Right
+            }
+        }
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun minDiffInBST(root: TreeNode?): Int {
+        var prevVal = Int.MAX_VALUE
+        var res = Int.MAX_VALUE
+        var cur = root
+
+        while (cur != null) {
+            if (cur.left == null) {
+                if (prevVal != Int.MAX_VALUE) {
+                    res = minOf(res, cur.`val` - prevVal)
+                }
+                prevVal = cur.`val`
+                cur = cur.right
+            } else {
+                var prev = cur.left
+                while (prev?.right != null && prev.right != cur) {
+                    prev = prev.right
+                }
+
+                if (prev?.right == null) {
+                    prev?.right = cur
+                    cur = cur.left
+                } else {
+                    prev.right = null
+                    if (prevVal != Int.MAX_VALUE) {
+                        res = minOf(res, cur.`val` - prevVal)
+                    }
+                    prevVal = cur.`val`
+                    cur = cur.right
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func minDiffInBST(_ root: TreeNode?) -> Int {
+        var prevVal = Int.max
+        var res = Int.max
+        var cur = root
+
+        while cur != nil {
+            if cur!.left == nil {
+                if prevVal != Int.max {
+                    res = min(res, cur!.val - prevVal)
+                }
+                prevVal = cur!.val
+                cur = cur!.right
+            } else {
+                var prev = cur!.left
+                while prev!.right != nil && prev!.right !== cur {
+                    prev = prev!.right
+                }
+
+                if prev!.right == nil {
+                    prev!.right = cur
+                    cur = cur!.left
+                } else {
+                    prev!.right = nil
+                    if prevVal != Int.max {
+                        res = min(res, cur!.val - prevVal)
+                    }
+                    prevVal = cur!.val
+                    cur = cur!.right
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

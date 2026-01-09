@@ -112,6 +112,117 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountTriplets(int[] arr) {
+        int N = arr.Length;
+        int res = 0;
+
+        for (int i = 0; i < N - 1; i++) {
+            for (int j = i + 1; j < N; j++) {
+                for (int k = j; k < N; k++) {
+                    int a = 0, b = 0;
+                    for (int idx = i; idx < j; idx++) {
+                        a ^= arr[idx];
+                    }
+                    for (int idx = j; idx <= k; idx++) {
+                        b ^= arr[idx];
+                    }
+                    if (a == b) {
+                        res++;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countTriplets(arr []int) int {
+    N := len(arr)
+    res := 0
+
+    for i := 0; i < N-1; i++ {
+        for j := i + 1; j < N; j++ {
+            for k := j; k < N; k++ {
+                a, b := 0, 0
+                for idx := i; idx < j; idx++ {
+                    a ^= arr[idx]
+                }
+                for idx := j; idx <= k; idx++ {
+                    b ^= arr[idx]
+                }
+                if a == b {
+                    res++
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countTriplets(arr: IntArray): Int {
+        val N = arr.size
+        var res = 0
+
+        for (i in 0 until N - 1) {
+            for (j in i + 1 until N) {
+                for (k in j until N) {
+                    var a = 0
+                    var b = 0
+                    for (idx in i until j) {
+                        a = a xor arr[idx]
+                    }
+                    for (idx in j..k) {
+                        b = b xor arr[idx]
+                    }
+                    if (a == b) {
+                        res++
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countTriplets(_ arr: [Int]) -> Int {
+        let N = arr.count
+        var res = 0
+
+        for i in 0..<(N - 1) {
+            for j in (i + 1)..<N {
+                for k in j..<N {
+                    var a = 0, b = 0
+                    for idx in i..<j {
+                        a ^= arr[idx]
+                    }
+                    for idx in j...k {
+                        b ^= arr[idx]
+                    }
+                    if a == b {
+                        res += 1
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -224,6 +335,104 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountTriplets(int[] arr) {
+        int N = arr.Length;
+        int res = 0;
+
+        for (int i = 0; i < N - 1; i++) {
+            int a = 0;
+            for (int j = i + 1; j < N; j++) {
+                a ^= arr[j - 1];
+                int b = 0;
+                for (int k = j; k < N; k++) {
+                    b ^= arr[k];
+                    if (a == b) {
+                        res++;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countTriplets(arr []int) int {
+    N := len(arr)
+    res := 0
+
+    for i := 0; i < N-1; i++ {
+        a := 0
+        for j := i + 1; j < N; j++ {
+            a ^= arr[j-1]
+            b := 0
+            for k := j; k < N; k++ {
+                b ^= arr[k]
+                if a == b {
+                    res++
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countTriplets(arr: IntArray): Int {
+        val N = arr.size
+        var res = 0
+
+        for (i in 0 until N - 1) {
+            var a = 0
+            for (j in i + 1 until N) {
+                a = a xor arr[j - 1]
+                var b = 0
+                for (k in j until N) {
+                    b = b xor arr[k]
+                    if (a == b) {
+                        res++
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countTriplets(_ arr: [Int]) -> Int {
+        let N = arr.count
+        var res = 0
+
+        for i in 0..<(N - 1) {
+            var a = 0
+            for j in (i + 1)..<N {
+                a ^= arr[j - 1]
+                var b = 0
+                for k in j..<N {
+                    b ^= arr[k]
+                    if a == b {
+                        res += 1
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -317,6 +526,88 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountTriplets(int[] arr) {
+        int N = arr.Length;
+        int res = 0;
+
+        for (int i = 0; i < N - 1; i++) {
+            int curXor = arr[i];
+            for (int k = i + 1; k < N; k++) {
+                curXor ^= arr[k];
+                if (curXor == 0) {
+                    res += k - i;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countTriplets(arr []int) int {
+    N := len(arr)
+    res := 0
+
+    for i := 0; i < N-1; i++ {
+        curXor := arr[i]
+        for k := i + 1; k < N; k++ {
+            curXor ^= arr[k]
+            if curXor == 0 {
+                res += k - i
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countTriplets(arr: IntArray): Int {
+        val N = arr.size
+        var res = 0
+
+        for (i in 0 until N - 1) {
+            var curXor = arr[i]
+            for (k in i + 1 until N) {
+                curXor = curXor xor arr[k]
+                if (curXor == 0) {
+                    res += k - i
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countTriplets(_ arr: [Int]) -> Int {
+        let N = arr.count
+        var res = 0
+
+        for i in 0..<(N - 1) {
+            var curXor = arr[i]
+            for k in (i + 1)..<N {
+                curXor ^= arr[k]
+                if curXor == 0 {
+                    res += k - i
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -422,6 +713,94 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountTriplets(int[] arr) {
+        int N = arr.Length, res = 0, prefix = 0;
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        Dictionary<int, int> indexSum = new Dictionary<int, int>();
+        count[0] = 1;
+
+        for (int i = 0; i < N; i++) {
+            prefix ^= arr[i];
+            if (count.ContainsKey(prefix)) {
+                res += i * count[prefix] - (indexSum.ContainsKey(prefix) ? indexSum[prefix] : 0);
+            }
+            count[prefix] = count.GetValueOrDefault(prefix, 0) + 1;
+            indexSum[prefix] = indexSum.GetValueOrDefault(prefix, 0) + i + 1;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countTriplets(arr []int) int {
+    N := len(arr)
+    res, prefix := 0, 0
+    count := make(map[int]int)
+    indexSum := make(map[int]int)
+    count[0] = 1
+
+    for i := 0; i < N; i++ {
+        prefix ^= arr[i]
+        if c, ok := count[prefix]; ok {
+            res += i*c - indexSum[prefix]
+        }
+        count[prefix]++
+        indexSum[prefix] += i + 1
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countTriplets(arr: IntArray): Int {
+        val N = arr.size
+        var res = 0
+        var prefix = 0
+        val count = mutableMapOf(0 to 1)
+        val indexSum = mutableMapOf<Int, Int>()
+
+        for (i in 0 until N) {
+            prefix = prefix xor arr[i]
+            if (prefix in count) {
+                res += i * count[prefix]!! - (indexSum[prefix] ?: 0)
+            }
+            count[prefix] = (count[prefix] ?: 0) + 1
+            indexSum[prefix] = (indexSum[prefix] ?: 0) + i + 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countTriplets(_ arr: [Int]) -> Int {
+        let N = arr.count
+        var res = 0, prefix = 0
+        var count = [0: 1]
+        var indexSum = [Int: Int]()
+
+        for i in 0..<N {
+            prefix ^= arr[i]
+            if let c = count[prefix] {
+                res += i * c - (indexSum[prefix] ?? 0)
+            }
+            count[prefix, default: 0] += 1
+            indexSum[prefix, default: 0] += i + 1
+        }
+
+        return res
     }
 }
 ```

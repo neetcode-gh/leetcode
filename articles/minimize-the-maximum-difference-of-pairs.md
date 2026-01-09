@@ -145,6 +145,85 @@ public class Solution {
 }
 ```
 
+```go
+func minimizeMax(nums []int, p int) int {
+    n := len(nums)
+    sort.Ints(nums)
+    dp := make(map[int]int)
+
+    var dfs func(i, pairs int) int
+    dfs = func(i, pairs int) int {
+        if pairs == p {
+            return 0
+        }
+        if i >= n-1 {
+            return math.MaxInt32
+        }
+        key := i*10001 + pairs
+        if val, ok := dp[key]; ok {
+            return val
+        }
+
+        take := max(nums[i+1]-nums[i], dfs(i+2, pairs+1))
+        skip := dfs(i+1, pairs)
+        dp[key] = min(take, skip)
+        return dp[key]
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun minimizeMax(nums: IntArray, p: Int): Int {
+        val n = nums.size
+        nums.sort()
+        val dp = HashMap<Pair<Int, Int>, Int>()
+
+        fun dfs(i: Int, pairs: Int): Int {
+            if (pairs == p) return 0
+            if (i >= n - 1) return Int.MAX_VALUE / 2
+
+            val key = Pair(i, pairs)
+            if (dp.containsKey(key)) return dp[key]!!
+
+            val take = maxOf(nums[i + 1] - nums[i], dfs(i + 2, pairs + 1))
+            val skip = dfs(i + 1, pairs)
+            dp[key] = minOf(take, skip)
+            return dp[key]!!
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimizeMax(_ nums: [Int], _ p: Int) -> Int {
+        let n = nums.count
+        var nums = nums.sorted()
+        var dp = [String: Int]()
+
+        func dfs(_ i: Int, _ pairs: Int) -> Int {
+            if pairs == p { return 0 }
+            if i >= n - 1 { return Int.max / 2 }
+
+            let key = "\(i),\(pairs)"
+            if let val = dp[key] { return val }
+
+            let take = max(nums[i + 1] - nums[i], dfs(i + 2, pairs + 1))
+            let skip = dfs(i + 1, pairs)
+            dp[key] = min(take, skip)
+            return dp[key]!
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -307,6 +386,92 @@ public class Solution {
         }
 
         return dp[0, p];
+    }
+}
+```
+
+```go
+func minimizeMax(nums []int, p int) int {
+    n := len(nums)
+    sort.Ints(nums)
+
+    INF := math.MaxInt32
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, p+1)
+        for j := range dp[i] {
+            dp[i][j] = INF
+        }
+        dp[i][0] = 0
+    }
+
+    for i := n - 2; i >= 0; i-- {
+        for pairs := 1; pairs <= p; pairs++ {
+            take := INF
+            if i+1 < n {
+                take = max(nums[i+1]-nums[i], dp[i+2][pairs-1])
+            }
+            skip := dp[i+1][pairs]
+            dp[i][pairs] = min(take, skip)
+        }
+    }
+
+    return dp[0][p]
+}
+```
+
+```kotlin
+class Solution {
+    fun minimizeMax(nums: IntArray, p: Int): Int {
+        val n = nums.size
+        nums.sort()
+
+        val INF = Int.MAX_VALUE / 2
+        val dp = Array(n + 1) { IntArray(p + 1) { INF } }
+        for (i in 0..n) {
+            dp[i][0] = 0
+        }
+
+        for (i in n - 2 downTo 0) {
+            for (pairs in 1..p) {
+                var take = INF
+                if (i + 1 < n) {
+                    take = maxOf(nums[i + 1] - nums[i], dp[i + 2][pairs - 1])
+                }
+                val skip = dp[i + 1][pairs]
+                dp[i][pairs] = minOf(take, skip)
+            }
+        }
+
+        return dp[0][p]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimizeMax(_ nums: [Int], _ p: Int) -> Int {
+        let n = nums.count
+        var nums = nums.sorted()
+
+        let INF = Int.max / 2
+        var dp = [[Int]](repeating: [Int](repeating: INF, count: p + 1), count: n + 1)
+        for i in 0...n {
+            dp[i][0] = 0
+        }
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            for pairs in 1...p {
+                var take = INF
+                if i + 1 < n {
+                    take = max(nums[i + 1] - nums[i], dp[i + 2][pairs - 1])
+                }
+                let skip = dp[i + 1][pairs]
+                dp[i][pairs] = min(take, skip)
+            }
+        }
+
+        return dp[0][p]
     }
 }
 ```
@@ -495,6 +660,114 @@ public class Solution {
         }
 
         return dp1[p];
+    }
+}
+```
+
+```go
+func minimizeMax(nums []int, p int) int {
+    n := len(nums)
+    sort.Ints(nums)
+
+    INF := math.MaxInt32
+    dp := make([]int, p+1)
+    dp1 := make([]int, p+1)
+    dp2 := make([]int, p+1)
+
+    for j := 0; j <= p; j++ {
+        dp[j] = INF
+        dp1[j] = INF
+        dp2[j] = INF
+    }
+    dp[0], dp1[0], dp2[0] = 0, 0, 0
+
+    for i := n - 1; i >= 0; i-- {
+        for pairs := 1; pairs <= p; pairs++ {
+            take := INF
+            if i+1 < n {
+                take = max(nums[i+1]-nums[i], dp2[pairs-1])
+            }
+            skip := dp1[pairs]
+            dp[pairs] = min(take, skip)
+        }
+        copy(dp2, dp1)
+        copy(dp1, dp)
+        for j := range dp {
+            dp[j] = INF
+        }
+        dp[0] = 0
+    }
+
+    return dp1[p]
+}
+```
+
+```kotlin
+class Solution {
+    fun minimizeMax(nums: IntArray, p: Int): Int {
+        val n = nums.size
+        nums.sort()
+
+        val INF = Int.MAX_VALUE / 2
+        var dp = IntArray(p + 1) { INF }
+        var dp1 = IntArray(p + 1) { INF }
+        var dp2 = IntArray(p + 1) { INF }
+
+        dp[0] = 0
+        dp1[0] = 0
+        dp2[0] = 0
+
+        for (i in n - 1 downTo 0) {
+            for (pairs in 1..p) {
+                var take = INF
+                if (i + 1 < n) {
+                    take = maxOf(nums[i + 1] - nums[i], dp2[pairs - 1])
+                }
+                val skip = dp1[pairs]
+                dp[pairs] = minOf(take, skip)
+            }
+            dp2 = dp1.copyOf()
+            dp1 = dp.copyOf()
+            dp = IntArray(p + 1) { INF }
+            dp[0] = 0
+        }
+
+        return dp1[p]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimizeMax(_ nums: [Int], _ p: Int) -> Int {
+        let n = nums.count
+        var nums = nums.sorted()
+
+        let INF = Int.max / 2
+        var dp = [Int](repeating: INF, count: p + 1)
+        var dp1 = [Int](repeating: INF, count: p + 1)
+        var dp2 = [Int](repeating: INF, count: p + 1)
+
+        dp[0] = 0
+        dp1[0] = 0
+        dp2[0] = 0
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for pairs in 1...p {
+                var take = INF
+                if i + 1 < n {
+                    take = max(nums[i + 1] - nums[i], dp2[pairs - 1])
+                }
+                let skip = dp1[pairs]
+                dp[pairs] = min(take, skip)
+            }
+            dp2 = dp1
+            dp1 = dp
+            dp = [Int](repeating: INF, count: p + 1)
+            dp[0] = 0
+        }
+
+        return dp1[p]
     }
 }
 ```
@@ -704,6 +977,139 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func minimizeMax(nums []int, p int) int {
+    if p == 0 {
+        return 0
+    }
+
+    sort.Ints(nums)
+    n := len(nums)
+
+    isValid := func(threshold int) bool {
+        i, cnt := 0, 0
+        for i < n-1 {
+            if abs(nums[i]-nums[i+1]) <= threshold {
+                cnt++
+                i += 2
+            } else {
+                i++
+            }
+            if cnt == p {
+                return true
+            }
+        }
+        return false
+    }
+
+    l, r := 0, nums[n-1]-nums[0]
+    res := r
+
+    for l <= r {
+        m := l + (r-l)/2
+        if isValid(m) {
+            res = m
+            r = m - 1
+        } else {
+            l = m + 1
+        }
+    }
+
+    return res
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun minimizeMax(nums: IntArray, p: Int): Int {
+        if (p == 0) return 0
+
+        nums.sort()
+        val n = nums.size
+
+        fun isValid(threshold: Int): Boolean {
+            var i = 0
+            var cnt = 0
+            while (i < n - 1) {
+                if (kotlin.math.abs(nums[i] - nums[i + 1]) <= threshold) {
+                    cnt++
+                    i += 2
+                } else {
+                    i++
+                }
+                if (cnt == p) return true
+            }
+            return false
+        }
+
+        var l = 0
+        var r = nums[n - 1] - nums[0]
+        var res = r
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            if (isValid(m)) {
+                res = m
+                r = m - 1
+            } else {
+                l = m + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimizeMax(_ nums: [Int], _ p: Int) -> Int {
+        if p == 0 { return 0 }
+
+        var nums = nums.sorted()
+        let n = nums.count
+
+        func isValid(_ threshold: Int) -> Bool {
+            var i = 0
+            var cnt = 0
+            while i < n - 1 {
+                if abs(nums[i] - nums[i + 1]) <= threshold {
+                    cnt += 1
+                    i += 2
+                } else {
+                    i += 1
+                }
+                if cnt == p { return true }
+            }
+            return false
+        }
+
+        var l = 0
+        var r = nums[n - 1] - nums[0]
+        var res = r
+
+        while l <= r {
+            let m = l + (r - l) / 2
+            if isValid(m) {
+                res = m
+                r = m - 1
+            } else {
+                l = m + 1
+            }
+        }
+
+        return res
     }
 }
 ```

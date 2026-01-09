@@ -194,6 +194,115 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func convertBST(root *TreeNode) *TreeNode {
+    var getSum func(node *TreeNode) int
+    getSum = func(node *TreeNode) int {
+        if node == nil {
+            return 0
+        }
+        return node.Val + getSum(node.Left) + getSum(node.Right)
+    }
+
+    totalSum := getSum(root)
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        dfs(node.Left)
+        tmp := node.Val
+        node.Val = totalSum
+        totalSum -= tmp
+        dfs(node.Right)
+    }
+
+    dfs(root)
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun convertBST(root: TreeNode?): TreeNode? {
+        fun getSum(node: TreeNode?): Int {
+            if (node == null) return 0
+            return node.`val` + getSum(node.left) + getSum(node.right)
+        }
+
+        var totalSum = getSum(root)
+
+        fun dfs(node: TreeNode?) {
+            if (node == null) return
+            dfs(node.left)
+            val tmp = node.`val`
+            node.`val` = totalSum
+            totalSum -= tmp
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func convertBST(_ root: TreeNode?) -> TreeNode? {
+        func getSum(_ node: TreeNode?) -> Int {
+            guard let node = node else { return 0 }
+            return node.val + getSum(node.left) + getSum(node.right)
+        }
+
+        var totalSum = getSum(root)
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+            dfs(node.left)
+            let tmp = node.val
+            node.val = totalSum
+            totalSum -= tmp
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,6 +477,97 @@ public class Solution {
 
         Dfs(root);
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func convertBST(root *TreeNode) *TreeNode {
+    curSum := 0
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        dfs(node.Right)
+        tmp := node.Val
+        node.Val += curSum
+        curSum += tmp
+        dfs(node.Left)
+    }
+
+    dfs(root)
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun convertBST(root: TreeNode?): TreeNode? {
+        var curSum = 0
+
+        fun dfs(node: TreeNode?) {
+            if (node == null) return
+            dfs(node.right)
+            val tmp = node.`val`
+            node.`val` += curSum
+            curSum += tmp
+            dfs(node.left)
+        }
+
+        dfs(root)
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func convertBST(_ root: TreeNode?) -> TreeNode? {
+        var curSum = 0
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+            dfs(node.right)
+            let tmp = node.val
+            node.val += curSum
+            curSum += tmp
+            dfs(node.left)
+        }
+
+        dfs(root)
+        return root
     }
 }
 ```
@@ -554,6 +754,107 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func convertBST(root *TreeNode) *TreeNode {
+    curSum := 0
+    stack := []*TreeNode{}
+    node := root
+
+    for len(stack) > 0 || node != nil {
+        for node != nil {
+            stack = append(stack, node)
+            node = node.Right
+        }
+
+        node = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        curSum += node.Val
+        node.Val = curSum
+        node = node.Left
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun convertBST(root: TreeNode?): TreeNode? {
+        var curSum = 0
+        val stack = ArrayDeque<TreeNode>()
+        var node = root
+
+        while (stack.isNotEmpty() || node != null) {
+            while (node != null) {
+                stack.addLast(node)
+                node = node.right
+            }
+
+            node = stack.removeLast()
+            curSum += node.`val`
+            node.`val` = curSum
+            node = node.left
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func convertBST(_ root: TreeNode?) -> TreeNode? {
+        var curSum = 0
+        var stack = [TreeNode]()
+        var node = root
+
+        while !stack.isEmpty || node != nil {
+            while node != nil {
+                stack.append(node!)
+                node = node?.right
+            }
+
+            node = stack.removeLast()
+            curSum += node!.val
+            node!.val = curSum
+            node = node?.left
+        }
+
+        return root
     }
 }
 ```
@@ -788,6 +1089,136 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func convertBST(root *TreeNode) *TreeNode {
+    curSum := 0
+    cur := root
+
+    for cur != nil {
+        if cur.Right != nil {
+            prev := cur.Right
+            for prev.Left != nil && prev.Left != cur {
+                prev = prev.Left
+            }
+
+            if prev.Left == nil {
+                prev.Left = cur
+                cur = cur.Right
+            } else {
+                prev.Left = nil
+                curSum += cur.Val
+                cur.Val = curSum
+                cur = cur.Left
+            }
+        } else {
+            curSum += cur.Val
+            cur.Val = curSum
+            cur = cur.Left
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun convertBST(root: TreeNode?): TreeNode? {
+        var curSum = 0
+        var cur = root
+
+        while (cur != null) {
+            if (cur.right != null) {
+                var prev = cur.right
+                while (prev!!.left != null && prev.left != cur) {
+                    prev = prev.left
+                }
+
+                if (prev.left == null) {
+                    prev.left = cur
+                    cur = cur.right
+                } else {
+                    prev.left = null
+                    curSum += cur.`val`
+                    cur.`val` = curSum
+                    cur = cur.left
+                }
+            } else {
+                curSum += cur.`val`
+                cur.`val` = curSum
+                cur = cur.left
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func convertBST(_ root: TreeNode?) -> TreeNode? {
+        var curSum = 0
+        var cur = root
+
+        while cur != nil {
+            if cur!.right != nil {
+                var prev = cur!.right
+                while prev!.left != nil && prev!.left !== cur {
+                    prev = prev!.left
+                }
+
+                if prev!.left == nil {
+                    prev!.left = cur
+                    cur = cur!.right
+                } else {
+                    prev!.left = nil
+                    curSum += cur!.val
+                    cur!.val = curSum
+                    cur = cur!.left
+                }
+            } else {
+                curSum += cur!.val
+                cur!.val = curSum
+                cur = cur!.left
+            }
+        }
+
+        return root
     }
 }
 ```

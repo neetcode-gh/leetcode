@@ -256,61 +256,61 @@ class Solution {
     findShortestWay(maze, ball, hole) {
         const m = maze.length;
         const n = maze[0].length;
-        
+
         const valid = (row, col) => {
             return row >= 0 && row < m && col >= 0 && col < n && maze[row][col] === 0;
         };
-        
+
         const getNeighbors = (row, col) => {
             const directions = [[0, -1, 'l'], [-1, 0, 'u'], [0, 1, 'r'], [1, 0, 'd']];
             const neighbors = [];
-            
+
             for (const [dy, dx, direction] of directions) {
                 let currRow = row;
                 let currCol = col;
                 let dist = 0;
-                
+
                 while (valid(currRow + dy, currCol + dx)) {
                     currRow += dy;
                     currCol += dx;
                     dist++;
-                    
+
                     if (currRow === hole[0] && currCol === hole[1]) {
                         break;
                     }
                 }
-                
+
                 neighbors.push([currRow, currCol, dist, direction]);
             }
-            
+
             return neighbors;
         };
-        
+
         const pq = new PriorityQueue((a, b) => {
             if (a.dist !== b.dist) {
                 return a.dist - b.dist;
             }
             return a.path.localeCompare(b.path);
         });
-        
+
         pq.enqueue({ dist: 0, path: "", row: ball[0], col: ball[1] });
-        
+
         const seen = new Set();
-        
+
         while (!pq.isEmpty()) {
             const { dist: currDist, path, row, col } = pq.dequeue();
-            
+
             const key = `${row},${col}`;
             if (seen.has(key)) {
                 continue;
             }
-            
+
             if (row === hole[0] && col === hole[1]) {
                 return path;
             }
-            
+
             seen.add(key);
-            
+
             for (const [nextRow, nextCol, dist, direction] of getNeighbors(row, col)) {
                 pq.enqueue({
                     dist: currDist + dist,
@@ -320,8 +320,268 @@ class Solution {
                 });
             }
         }
-        
+
         return "impossible";
+    }
+}
+```
+
+```go
+func findShortestWay(maze [][]int, ball []int, hole []int) string {
+    m, n := len(maze), len(maze[0])
+
+    valid := func(row, col int) bool {
+        return row >= 0 && row < m && col >= 0 && col < n && maze[row][col] == 0
+    }
+
+    getNeighbors := func(row, col int) [][]interface{} {
+        directions := [][]interface{}{{0, -1, "l"}, {-1, 0, "u"}, {0, 1, "r"}, {1, 0, "d"}}
+        neighbors := [][]interface{}{}
+
+        for _, d := range directions {
+            dy, dx, direction := d[0].(int), d[1].(int), d[2].(string)
+            currRow, currCol := row, col
+            dist := 0
+
+            for valid(currRow+dy, currCol+dx) {
+                currRow += dy
+                currCol += dx
+                dist++
+                if currRow == hole[0] && currCol == hole[1] {
+                    break
+                }
+            }
+            neighbors = append(neighbors, []interface{}{currRow, currCol, dist, direction})
+        }
+        return neighbors
+    }
+
+    pq := &PriorityQueue{}
+    heap.Init(pq)
+    heap.Push(pq, &State{0, "", ball[0], ball[1]})
+
+    seen := make(map[[2]int]bool)
+
+    for pq.Len() > 0 {
+        curr := heap.Pop(pq).(*State)
+
+        key := [2]int{curr.row, curr.col}
+        if seen[key] {
+            continue
+        }
+
+        if curr.row == hole[0] && curr.col == hole[1] {
+            return curr.path
+        }
+
+        seen[key] = true
+
+        for _, neighbor := range getNeighbors(curr.row, curr.col) {
+            nextRow := neighbor[0].(int)
+            nextCol := neighbor[1].(int)
+            dist := neighbor[2].(int)
+            direction := neighbor[3].(string)
+            heap.Push(pq, &State{curr.dist + dist, curr.path + direction, nextRow, nextCol})
+        }
+    }
+
+    return "impossible"
+}
+
+type State struct {
+    dist int
+    path string
+    row  int
+    col  int
+}
+
+type PriorityQueue []*State
+
+func (pq PriorityQueue) Len() int { return len(pq) }
+func (pq PriorityQueue) Less(i, j int) bool {
+    if pq[i].dist != pq[j].dist {
+        return pq[i].dist < pq[j].dist
+    }
+    return pq[i].path < pq[j].path
+}
+func (pq PriorityQueue) Swap(i, j int)       { pq[i], pq[j] = pq[j], pq[i] }
+func (pq *PriorityQueue) Push(x interface{}) { *pq = append(*pq, x.(*State)) }
+func (pq *PriorityQueue) Pop() interface{} {
+    old := *pq
+    n := len(old)
+    x := old[n-1]
+    *pq = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findShortestWay(maze: Array<IntArray>, ball: IntArray, hole: IntArray): String {
+        val m = maze.size
+        val n = maze[0].size
+        val textDirections = arrayOf("l", "u", "r", "d")
+        val directions = arrayOf(intArrayOf(0, -1), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(1, 0))
+
+        fun valid(row: Int, col: Int): Boolean {
+            return row in 0 until m && col in 0 until n && maze[row][col] == 0
+        }
+
+        fun getNeighbors(row: Int, col: Int): List<IntArray> {
+            val neighbors = mutableListOf<IntArray>()
+            for (i in 0 until 4) {
+                val dy = directions[i][0]
+                val dx = directions[i][1]
+                var currRow = row
+                var currCol = col
+                var dist = 0
+
+                while (valid(currRow + dy, currCol + dx)) {
+                    currRow += dy
+                    currCol += dx
+                    dist++
+                    if (currRow == hole[0] && currCol == hole[1]) break
+                }
+                neighbors.add(intArrayOf(currRow, currCol, dist, i))
+            }
+            return neighbors
+        }
+
+        data class State(val dist: Int, val path: String, val row: Int, val col: Int)
+
+        val pq = PriorityQueue<State>(compareBy({ it.dist }, { it.path }))
+        pq.offer(State(0, "", ball[0], ball[1]))
+
+        val seen = HashSet<Pair<Int, Int>>()
+
+        while (pq.isNotEmpty()) {
+            val curr = pq.poll()
+
+            val key = Pair(curr.row, curr.col)
+            if (key in seen) continue
+
+            if (curr.row == hole[0] && curr.col == hole[1]) {
+                return curr.path
+            }
+
+            seen.add(key)
+
+            for (neighbor in getNeighbors(curr.row, curr.col)) {
+                val nextRow = neighbor[0]
+                val nextCol = neighbor[1]
+                val dist = neighbor[2]
+                val dirIdx = neighbor[3]
+                pq.offer(State(curr.dist + dist, curr.path + textDirections[dirIdx], nextRow, nextCol))
+            }
+        }
+
+        return "impossible"
+    }
+}
+```
+
+```swift
+class Solution {
+    func findShortestWay(_ maze: [[Int]], _ ball: [Int], _ hole: [Int]) -> String {
+        let m = maze.count
+        let n = maze[0].count
+
+        func valid(_ row: Int, _ col: Int) -> Bool {
+            return row >= 0 && row < m && col >= 0 && col < n && maze[row][col] == 0
+        }
+
+        func getNeighbors(_ row: Int, _ col: Int) -> [(Int, Int, Int, String)] {
+            let directions = [(0, -1, "l"), (-1, 0, "u"), (0, 1, "r"), (1, 0, "d")]
+            var neighbors = [(Int, Int, Int, String)]()
+
+            for (dy, dx, direction) in directions {
+                var currRow = row
+                var currCol = col
+                var dist = 0
+
+                while valid(currRow + dy, currCol + dx) {
+                    currRow += dy
+                    currCol += dx
+                    dist += 1
+                    if currRow == hole[0] && currCol == hole[1] {
+                        break
+                    }
+                }
+                neighbors.append((currRow, currCol, dist, direction))
+            }
+            return neighbors
+        }
+
+        var heap = Heap<(dist: Int, path: String, row: Int, col: Int)>(comparator: {
+            if $0.dist != $1.dist { return $0.dist < $1.dist }
+            return $0.path < $1.path
+        })
+        heap.insert((0, "", ball[0], ball[1]))
+
+        var seen = Set<String>()
+
+        while !heap.isEmpty {
+            let curr = heap.remove()!
+
+            let key = "\(curr.row),\(curr.col)"
+            if seen.contains(key) { continue }
+
+            if curr.row == hole[0] && curr.col == hole[1] {
+                return curr.path
+            }
+
+            seen.insert(key)
+
+            for neighbor in getNeighbors(curr.row, curr.col) {
+                let (nextRow, nextCol, dist, direction) = neighbor
+                heap.insert((curr.dist + dist, curr.path + direction, nextRow, nextCol))
+            }
+        }
+
+        return "impossible"
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    var isEmpty: Bool { elements.isEmpty }
+
+    mutating func insert(_ element: T) {
+        elements.append(element)
+        siftUp(elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let element = elements.removeLast()
+        if !elements.isEmpty { siftDown(0) }
+        return element
+    }
+
+    private mutating func siftUp(_ index: Int) {
+        var i = index
+        while i > 0 {
+            let parent = (i - 1) / 2
+            if comparator(elements[i], elements[parent]) {
+                elements.swapAt(i, parent)
+                i = parent
+            } else { break }
+        }
+    }
+
+    private mutating func siftDown(_ index: Int) {
+        var i = index
+        while 2 * i + 1 < elements.count {
+            var j = 2 * i + 1
+            if j + 1 < elements.count && comparator(elements[j + 1], elements[j]) { j += 1 }
+            if comparator(elements[j], elements[i]) {
+                elements.swapAt(i, j)
+                i = j
+            } else { break }
+        }
     }
 }
 ```

@@ -64,6 +64,45 @@ public class Solution {
 }
 ```
 
+```go
+func scoreOfString(s string) int {
+    res := 0
+    for i := 0; i < len(s)-1; i++ {
+        diff := int(s[i]) - int(s[i+1])
+        if diff < 0 {
+            diff = -diff
+        }
+        res += diff
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun scoreOfString(s: String): Int {
+        var res = 0
+        for (i in 0 until s.length - 1) {
+            res += kotlin.math.abs(s[i].code - s[i + 1].code)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func scoreOfString(_ s: String) -> Int {
+        let chars = Array(s)
+        var res = 0
+        for i in 0..<chars.count - 1 {
+            res += abs(Int(chars[i].asciiValue!) - Int(chars[i + 1].asciiValue!))
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -216,6 +216,134 @@ public class Solution {
 }
 ```
 
+```go
+func mostVisitedPattern(username []string, timestamp []int, website []string) []string {
+    n := len(timestamp)
+    arr := make([][2]int, n)
+    for i := 0; i < n; i++ {
+        arr[i] = [2]int{timestamp[i], i}
+    }
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i][0] < arr[j][0]
+    })
+
+    mp := make(map[string][]string)
+    for _, p := range arr {
+        idx := p[1]
+        mp[username[idx]] = append(mp[username[idx]], website[idx])
+    }
+
+    count := make(map[string]int)
+    for _, cur := range mp {
+        patterns := make(map[string]bool)
+        for i := 0; i < len(cur); i++ {
+            for j := i + 1; j < len(cur); j++ {
+                for k := j + 1; k < len(cur); k++ {
+                    patterns[cur[i]+"#"+cur[j]+"#"+cur[k]] = true
+                }
+            }
+        }
+        for p := range patterns {
+            count[p]++
+        }
+    }
+
+    maxCnt := 0
+    res := ""
+    for p, c := range count {
+        if c > maxCnt || (c == maxCnt && (res == "" || p < res)) {
+            maxCnt = c
+            res = p
+        }
+    }
+    return strings.Split(res, "#")
+}
+```
+
+```kotlin
+class Solution {
+    fun mostVisitedPattern(username: Array<String>, timestamp: IntArray, website: Array<String>): List<String> {
+        val n = timestamp.size
+        val arr = (0 until n).map { intArrayOf(timestamp[it], it) }.sortedBy { it[0] }
+
+        val mp = mutableMapOf<String, MutableList<String>>()
+        for ((_, idx) in arr) {
+            mp.getOrPut(username[idx]) { mutableListOf() }.add(website[idx])
+        }
+
+        val count = mutableMapOf<String, Int>()
+        for ((_, cur) in mp) {
+            val patterns = mutableSetOf<String>()
+            for (i in cur.indices) {
+                for (j in i + 1 until cur.size) {
+                    for (k in j + 1 until cur.size) {
+                        patterns.add("${cur[i]}#${cur[j]}#${cur[k]}")
+                    }
+                }
+            }
+            for (p in patterns) {
+                count[p] = count.getOrDefault(p, 0) + 1
+            }
+        }
+
+        var maxCnt = 0
+        var res = ""
+        for ((p, c) in count) {
+            if (c > maxCnt || (c == maxCnt && (res.isEmpty() || p < res))) {
+                maxCnt = c
+                res = p
+            }
+        }
+        return res.split("#")
+    }
+}
+```
+
+```swift
+class Solution {
+    func mostVisitedPattern(_ username: [String], _ timestamp: [Int], _ website: [String]) -> [String] {
+        let n = timestamp.count
+        var arr = [(Int, Int)]()
+        for i in 0..<n {
+            arr.append((timestamp[i], i))
+        }
+        arr.sort { $0.0 < $1.0 }
+
+        var mp = [String: [String]]()
+        for (_, idx) in arr {
+            let user = username[idx]
+            let site = website[idx]
+            mp[user, default: []].append(site)
+        }
+
+        var count = [String: Int]()
+        for (_, cur) in mp {
+            var patterns = Set<String>()
+            for i in 0..<cur.count {
+                for j in (i + 1)..<cur.count {
+                    for k in (j + 1)..<cur.count {
+                        patterns.insert("\(cur[i])#\(cur[j])#\(cur[k])")
+                    }
+                }
+            }
+            for p in patterns {
+                count[p, default: 0] += 1
+            }
+        }
+
+        var maxCnt = 0
+        var res = ""
+        for (p, c) in count {
+            if c > maxCnt || (c == maxCnt && (res.isEmpty || p < res)) {
+                maxCnt = c
+                res = p
+            }
+        }
+        return res.components(separatedBy: "#")
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

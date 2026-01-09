@@ -122,6 +122,72 @@ public class Solution {
 }
 ```
 
+```go
+func combinationSum4(nums []int, target int) int {
+    sort.Ints(nums)
+
+    var dfs func(total int) int
+    dfs = func(total int) int {
+        if total == 0 {
+            return 1
+        }
+
+        res := 0
+        for _, num := range nums {
+            if total < num {
+                break
+            }
+            res += dfs(total - num)
+        }
+        return res
+    }
+
+    return dfs(target)
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum4(nums: IntArray, target: Int): Int {
+        nums.sort()
+
+        fun dfs(total: Int): Int {
+            if (total == 0) return 1
+
+            var res = 0
+            for (num in nums) {
+                if (total < num) break
+                res += dfs(total - num)
+            }
+            return res
+        }
+
+        return dfs(target)
+    }
+}
+```
+
+```swift
+class Solution {
+    func combinationSum4(_ nums: [Int], _ target: Int) -> Int {
+        let nums = nums.sorted()
+
+        func dfs(_ total: Int) -> Int {
+            if total == 0 { return 1 }
+
+            var res = 0
+            for num in nums {
+                if total < num { break }
+                res += dfs(total - num)
+            }
+            return res
+        }
+
+        return dfs(target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +343,80 @@ public class Solution {
 }
 ```
 
+```go
+func combinationSum4(nums []int, target int) int {
+    sort.Ints(nums)
+    memo := map[int]int{0: 1}
+
+    var dfs func(total int) int
+    dfs = func(total int) int {
+        if val, ok := memo[total]; ok {
+            return val
+        }
+
+        res := 0
+        for _, num := range nums {
+            if total < num {
+                break
+            }
+            res += dfs(total - num)
+        }
+        memo[total] = res
+        return res
+    }
+
+    return dfs(target)
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum4(nums: IntArray, target: Int): Int {
+        nums.sort()
+        val memo = mutableMapOf(0 to 1)
+
+        fun dfs(total: Int): Int {
+            memo[total]?.let { return it }
+
+            var res = 0
+            for (num in nums) {
+                if (total < num) break
+                res += dfs(total - num)
+            }
+            memo[total] = res
+            return res
+        }
+
+        return dfs(target)
+    }
+}
+```
+
+```swift
+class Solution {
+    func combinationSum4(_ nums: [Int], _ target: Int) -> Int {
+        let nums = nums.sorted()
+        var memo: [Int: Int] = [0: 1]
+
+        func dfs(_ total: Int) -> Int {
+            if let val = memo[total] {
+                return val
+            }
+
+            var res = 0
+            for num in nums {
+                if total < num { break }
+                res += dfs(total - num)
+            }
+            memo[total] = res
+            return res
+        }
+
+        return dfs(target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,6 +521,58 @@ public class Solution {
         }
 
         return dp[target];
+    }
+}
+```
+
+```go
+func combinationSum4(nums []int, target int) int {
+    dp := make(map[int]int)
+    dp[0] = 1
+
+    for total := 1; total <= target; total++ {
+        dp[total] = 0
+        for _, num := range nums {
+            if val, ok := dp[total-num]; ok {
+                dp[total] += val
+            }
+        }
+    }
+
+    return dp[target]
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum4(nums: IntArray, target: Int): Int {
+        val dp = mutableMapOf(0 to 1)
+
+        for (total in 1..target) {
+            dp[total] = 0
+            for (num in nums) {
+                dp[total] = dp[total]!! + (dp[total - num] ?: 0)
+            }
+        }
+
+        return dp[target]!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func combinationSum4(_ nums: [Int], _ target: Int) -> Int {
+        var dp: [Int: Int] = [0: 1]
+
+        for total in 1...target {
+            dp[total] = 0
+            for num in nums {
+                dp[total]! += dp[total - num] ?? 0
+            }
+        }
+
+        return dp[target]!
     }
 }
 ```
@@ -501,6 +693,65 @@ public class Solution {
         }
 
         return dp.ContainsKey(0) ? dp[0] : 0;
+    }
+}
+```
+
+```go
+func combinationSum4(nums []int, target int) int {
+    sort.Ints(nums)
+    dp := map[int]int{target: 1}
+
+    for total := target; total > 0; total-- {
+        if _, ok := dp[total]; !ok {
+            continue
+        }
+        for _, num := range nums {
+            if total < num {
+                break
+            }
+            dp[total-num] += dp[total]
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum4(nums: IntArray, target: Int): Int {
+        nums.sort()
+        val dp = mutableMapOf(target to 1)
+
+        for (total in target downTo 1) {
+            if (total !in dp) continue
+            for (num in nums) {
+                if (total < num) break
+                dp[total - num] = (dp[total - num] ?: 0) + dp[total]!!
+            }
+        }
+
+        return dp[0] ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func combinationSum4(_ nums: [Int], _ target: Int) -> Int {
+        let nums = nums.sorted()
+        var dp: [Int: Int] = [target: 1]
+
+        for total in stride(from: target, to: 0, by: -1) {
+            guard let curr = dp[total] else { continue }
+            for num in nums {
+                if total < num { break }
+                dp[total - num, default: 0] += curr
+            }
+        }
+
+        return dp[0] ?? 0
     }
 }
 ```

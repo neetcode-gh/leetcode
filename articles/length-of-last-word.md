@@ -113,6 +113,72 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLastWord(s string) int {
+    length, i := 0, 0
+    for i < len(s) {
+        if s[i] == ' ' {
+            for i < len(s) && s[i] == ' ' {
+                i++
+            }
+            if i == len(s) {
+                return length
+            }
+            length = 0
+        } else {
+            length++
+            i++
+        }
+    }
+    return length
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLastWord(s: String): Int {
+        var length = 0
+        var i = 0
+        while (i < s.length) {
+            if (s[i] == ' ') {
+                while (i < s.length && s[i] == ' ') i++
+                if (i == s.length) return length
+                length = 0
+            } else {
+                length++
+                i++
+            }
+        }
+        return length
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLastWord(_ s: String) -> Int {
+        let chars = Array(s)
+        var length = 0
+        var i = 0
+        while i < chars.count {
+            if chars[i] == " " {
+                while i < chars.count && chars[i] == " " {
+                    i += 1
+                }
+                if i == chars.count {
+                    return length
+                }
+                length = 0
+            } else {
+                length += 1
+                i += 1
+            }
+        }
+        return length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +273,53 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLastWord(s string) int {
+    i, length := len(s)-1, 0
+    for i >= 0 && s[i] == ' ' {
+        i--
+    }
+    for i >= 0 && s[i] != ' ' {
+        i--
+        length++
+    }
+    return length
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLastWord(s: String): Int {
+        var i = s.length - 1
+        var length = 0
+        while (i >= 0 && s[i] == ' ') i--
+        while (i >= 0 && s[i] != ' ') {
+            i--
+            length++
+        }
+        return length
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLastWord(_ s: String) -> Int {
+        let chars = Array(s)
+        var i = chars.count - 1
+        var length = 0
+        while i >= 0 && chars[i] == " " {
+            i -= 1
+        }
+        while i >= 0 && chars[i] != " " {
+            i -= 1
+            length += 1
+        }
+        return length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,6 +375,30 @@ public class Solution {
     public int LengthOfLastWord(string s) {
         var parts = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
         return parts[^1].Length;
+    }
+}
+```
+
+```go
+func lengthOfLastWord(s string) int {
+    s = strings.TrimSpace(s)
+    lastIndex := strings.LastIndex(s, " ")
+    return len(s) - lastIndex - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLastWord(s: String): Int {
+        return s.trim().split(" ").last().length
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLastWord(_ s: String) -> Int {
+        return s.split(separator: " ").last?.count ?? 0
     }
 }
 ```

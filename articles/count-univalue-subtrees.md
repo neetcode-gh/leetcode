@@ -110,7 +110,7 @@ class Solution {
     constructor() {
         this.count = 0;
     }
-    
+
     /**
      * @param {TreeNode} node
      * @return {boolean}
@@ -119,10 +119,10 @@ class Solution {
         if (node === null) {
             return true;
         }
-        
+
         let left = this.dfs(node.left);
         let right = this.dfs(node.right);
-        
+
         // If both the children form uni-value subtrees, we compare the value of
         // children's node with the node value.
         if (left && right) {
@@ -135,12 +135,12 @@ class Solution {
             this.count++;
             return true;
         }
-        
+
         // Else if any of the child does not form a uni-value subtree, the subtree
         // rooted at node cannot be a uni-value subtree.
         return false;
     }
-    
+
     /**
      * @param {TreeNode} root
      * @return {number}
@@ -149,6 +149,132 @@ class Solution {
         this.count = 0;
         this.dfs(root);
         return this.count;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int count = 0;
+
+    private bool Dfs(TreeNode node) {
+        if (node == null) {
+            return true;
+        }
+
+        bool left = Dfs(node.left);
+        bool right = Dfs(node.right);
+
+        if (left && right) {
+            if (node.left != null && node.left.val != node.val) {
+                return false;
+            }
+            if (node.right != null && node.right.val != node.val) {
+                return false;
+            }
+            count++;
+            return true;
+        }
+        return false;
+    }
+
+    public int CountUnivalSubtrees(TreeNode root) {
+        count = 0;
+        Dfs(root);
+        return count;
+    }
+}
+```
+
+```go
+func countUnivalSubtrees(root *TreeNode) int {
+    count := 0
+
+    var dfs func(node *TreeNode) bool
+    dfs = func(node *TreeNode) bool {
+        if node == nil {
+            return true
+        }
+
+        left := dfs(node.Left)
+        right := dfs(node.Right)
+
+        if left && right {
+            if node.Left != nil && node.Left.Val != node.Val {
+                return false
+            }
+            if node.Right != nil && node.Right.Val != node.Val {
+                return false
+            }
+            count++
+            return true
+        }
+        return false
+    }
+
+    dfs(root)
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    private var count = 0
+
+    private fun dfs(node: TreeNode?): Boolean {
+        if (node == null) return true
+
+        val left = dfs(node.left)
+        val right = dfs(node.right)
+
+        if (left && right) {
+            if (node.left != null && node.left.`val` != node.`val`) {
+                return false
+            }
+            if (node.right != null && node.right.`val` != node.`val`) {
+                return false
+            }
+            count++
+            return true
+        }
+        return false
+    }
+
+    fun countUnivalSubtrees(root: TreeNode?): Int {
+        count = 0
+        dfs(root)
+        return count
+    }
+}
+```
+
+```swift
+class Solution {
+    private var count = 0
+
+    private func dfs(_ node: TreeNode?) -> Bool {
+        guard let node = node else { return true }
+
+        let left = dfs(node.left)
+        let right = dfs(node.right)
+
+        if left && right {
+            if let leftNode = node.left, leftNode.val != node.val {
+                return false
+            }
+            if let rightNode = node.right, rightNode.val != node.val {
+                return false
+            }
+            count += 1
+            return true
+        }
+        return false
+    }
+
+    func countUnivalSubtrees(_ root: TreeNode?) -> Int {
+        count = 0
+        _ = dfs(root)
+        return count
     }
 }
 ```
@@ -273,10 +399,10 @@ class Solution {
         if (root === null) {
             return true;
         }
-        
+
         let isLeftUnival = this.dfs(root.left, count);
         let isRightUnival = this.dfs(root.right, count);
-        
+
         if (isLeftUnival && isRightUnival &&
             (root.left === null || root.left.val === root.val) &&
             (root.right === null || root.right.val === root.val)
@@ -284,10 +410,10 @@ class Solution {
             count[0]++;
             return true;
         }
-        
+
         return false;
     }
-    
+
     /**
      * @param {TreeNode} root
      * @return {number}
@@ -296,6 +422,116 @@ class Solution {
         let count = [0];
         this.dfs(root, count);
         return count[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private bool Dfs(TreeNode root, int[] count) {
+        if (root == null) {
+            return true;
+        }
+
+        bool isLeftUnival = Dfs(root.left, count);
+        bool isRightUnival = Dfs(root.right, count);
+
+        if (isLeftUnival && isRightUnival &&
+            (root.left == null || root.left.val == root.val) &&
+            (root.right == null || root.right.val == root.val)
+        ) {
+            count[0]++;
+            return true;
+        }
+
+        return false;
+    }
+
+    public int CountUnivalSubtrees(TreeNode root) {
+        int[] count = new int[1];
+        Dfs(root, count);
+        return count[0];
+    }
+}
+```
+
+```go
+func countUnivalSubtrees(root *TreeNode) int {
+    count := 0
+
+    var dfs func(node *TreeNode) bool
+    dfs = func(node *TreeNode) bool {
+        if node == nil {
+            return true
+        }
+
+        isLeftUnival := dfs(node.Left)
+        isRightUnival := dfs(node.Right)
+
+        if isLeftUnival && isRightUnival &&
+            (node.Left == nil || node.Left.Val == node.Val) &&
+            (node.Right == nil || node.Right.Val == node.Val) {
+            count++
+            return true
+        }
+
+        return false
+    }
+
+    dfs(root)
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    private fun dfs(root: TreeNode?, count: IntArray): Boolean {
+        if (root == null) return true
+
+        val isLeftUnival = dfs(root.left, count)
+        val isRightUnival = dfs(root.right, count)
+
+        if (isLeftUnival && isRightUnival &&
+            (root.left == null || root.left.`val` == root.`val`) &&
+            (root.right == null || root.right.`val` == root.`val`)
+        ) {
+            count[0]++
+            return true
+        }
+
+        return false
+    }
+
+    fun countUnivalSubtrees(root: TreeNode?): Int {
+        val count = intArrayOf(0)
+        dfs(root, count)
+        return count[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    private func dfs(_ root: TreeNode?, _ count: inout Int) -> Bool {
+        guard let root = root else { return true }
+
+        let isLeftUnival = dfs(root.left, &count)
+        let isRightUnival = dfs(root.right, &count)
+
+        if isLeftUnival && isRightUnival &&
+            (root.left == nil || root.left!.val == root.val) &&
+            (root.right == nil || root.right!.val == root.val) {
+            count += 1
+            return true
+        }
+
+        return false
+    }
+
+    func countUnivalSubtrees(_ root: TreeNode?) -> Int {
+        var count = 0
+        _ = dfs(root, &count)
+        return count
     }
 }
 ```

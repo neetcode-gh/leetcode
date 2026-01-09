@@ -65,18 +65,18 @@ class AutocompleteSystem {
     TrieNode currNode;
     TrieNode dead;
     StringBuilder currSentence;
-    
+
     public AutocompleteSystem(String[] sentences, int[] times) {
         root = new TrieNode();
         for (int i = 0; i < sentences.length; i++) {
             addToTrie(sentences[i], times[i]);
         }
-        
+
         currSentence = new StringBuilder();
         currNode = root;
         dead = new TrieNode();
     }
-    
+
     public List<String> input(char c) {
         if (c == '#') {
             addToTrie(currSentence.toString(), 1);
@@ -84,13 +84,13 @@ class AutocompleteSystem {
             currNode = root;
             return new ArrayList<String>();
         }
-        
+
         currSentence.append(c);
         if (!currNode.children.containsKey(c)) {
             currNode = dead;
             return new ArrayList<String>();
         }
-        
+
         currNode = currNode.children.get(c);
         List<String> sentences = new ArrayList<>(currNode.sentences.keySet());
         Collections.sort(sentences, (a, b) -> {
@@ -99,27 +99,425 @@ class AutocompleteSystem {
             if (hotA == hotB) {
                 return a.compareTo(b);
             }
-            
+
             return hotB - hotA;
         });
-        
+
         List<String> ans = new ArrayList<>();
         for (int i = 0; i < Math.min(3, sentences.size()); i++) {
             ans.add(sentences.get(i));
         }
-        
+
         return ans;
     }
-    
+
     private void addToTrie(String sentence, int count) {
         TrieNode node = root;
         for (char c: sentence.toCharArray()) {
             if (!node.children.containsKey(c)) {
                 node.children.put(c, new TrieNode());
             }
-            
+
             node = node.children.get(c);
             node.sentences.put(sentence, node.sentences.getOrDefault(sentence, 0) + count);
+        }
+    }
+}
+```
+
+```cpp
+class TrieNode {
+public:
+    unordered_map<char, TrieNode*> children;
+    unordered_map<string, int> sentences;
+};
+
+class AutocompleteSystem {
+private:
+    TrieNode* root;
+    TrieNode* currNode;
+    TrieNode* dead;
+    string currSentence;
+
+    void addToTrie(const string& sentence, int count) {
+        TrieNode* node = root;
+        for (char c : sentence) {
+            if (node->children.find(c) == node->children.end()) {
+                node->children[c] = new TrieNode();
+            }
+            node = node->children[c];
+            node->sentences[sentence] += count;
+        }
+    }
+
+public:
+    AutocompleteSystem(vector<string>& sentences, vector<int>& times) {
+        root = new TrieNode();
+        dead = new TrieNode();
+        currNode = root;
+        currSentence = "";
+
+        for (int i = 0; i < sentences.size(); i++) {
+            addToTrie(sentences[i], times[i]);
+        }
+    }
+
+    vector<string> input(char c) {
+        if (c == '#') {
+            addToTrie(currSentence, 1);
+            currSentence = "";
+            currNode = root;
+            return {};
+        }
+
+        currSentence += c;
+        if (currNode->children.find(c) == currNode->children.end()) {
+            currNode = dead;
+            return {};
+        }
+
+        currNode = currNode->children[c];
+        vector<pair<int, string>> items;
+        for (const auto& [sentence, count] : currNode->sentences) {
+            items.push_back({-count, sentence});
+        }
+
+        sort(items.begin(), items.end());
+
+        vector<string> ans;
+        for (int i = 0; i < min(3, (int)items.size()); i++) {
+            ans.push_back(items[i].second);
+        }
+        return ans;
+    }
+};
+```
+
+```javascript
+class TrieNode {
+    constructor() {
+        this.children = new Map();
+        this.sentences = new Map();
+    }
+}
+
+class AutocompleteSystem {
+    /**
+     * @param {string[]} sentences
+     * @param {number[]} times
+     */
+    constructor(sentences, times) {
+        this.root = new TrieNode();
+        for (let i = 0; i < sentences.length; i++) {
+            this.addToTrie(sentences[i], times[i]);
+        }
+        this.currSentence = [];
+        this.currNode = this.root;
+        this.dead = new TrieNode();
+    }
+
+    /**
+     * @param {character} c
+     * @return {string[]}
+     */
+    input(c) {
+        if (c === "#") {
+            const currSentenceStr = this.currSentence.join("");
+            this.addToTrie(currSentenceStr, 1);
+            this.currSentence = [];
+            this.currNode = this.root;
+            return [];
+        }
+
+        this.currSentence.push(c);
+        if (!this.currNode.children.has(c)) {
+            this.currNode = this.dead;
+            return [];
+        }
+
+        this.currNode = this.currNode.children.get(c);
+        const items = [];
+        for (const [sentence, count] of this.currNode.sentences) {
+            items.push([sentence, count]);
+        }
+
+        items.sort((a, b) => {
+            if (a[1] !== b[1]) return b[1] - a[1];
+            return a[0].localeCompare(b[0]);
+        });
+
+        const ans = [];
+        for (let i = 0; i < Math.min(3, items.length); i++) {
+            ans.push(items[i][0]);
+        }
+        return ans;
+    }
+
+    addToTrie(sentence, count) {
+        let node = this.root;
+        for (const c of sentence) {
+            if (!node.children.has(c)) {
+                node.children.set(c, new TrieNode());
+            }
+            node = node.children.get(c);
+            node.sentences.set(sentence, (node.sentences.get(sentence) || 0) + count);
+        }
+    }
+}
+```
+
+```csharp
+public class TrieNode {
+    public Dictionary<char, TrieNode> Children = new Dictionary<char, TrieNode>();
+    public Dictionary<string, int> Sentences = new Dictionary<string, int>();
+}
+
+public class AutocompleteSystem {
+    private TrieNode root;
+    private TrieNode currNode;
+    private TrieNode dead;
+    private StringBuilder currSentence;
+
+    public AutocompleteSystem(string[] sentences, int[] times) {
+        root = new TrieNode();
+        dead = new TrieNode();
+        currNode = root;
+        currSentence = new StringBuilder();
+
+        for (int i = 0; i < sentences.Length; i++) {
+            AddToTrie(sentences[i], times[i]);
+        }
+    }
+
+    public IList<string> Input(char c) {
+        if (c == '#') {
+            AddToTrie(currSentence.ToString(), 1);
+            currSentence.Clear();
+            currNode = root;
+            return new List<string>();
+        }
+
+        currSentence.Append(c);
+        if (!currNode.Children.ContainsKey(c)) {
+            currNode = dead;
+            return new List<string>();
+        }
+
+        currNode = currNode.Children[c];
+        var sorted = currNode.Sentences
+            .OrderByDescending(x => x.Value)
+            .ThenBy(x => x.Key)
+            .Take(3)
+            .Select(x => x.Key)
+            .ToList();
+
+        return sorted;
+    }
+
+    private void AddToTrie(string sentence, int count) {
+        TrieNode node = root;
+        foreach (char c in sentence) {
+            if (!node.Children.ContainsKey(c)) {
+                node.Children[c] = new TrieNode();
+            }
+            node = node.Children[c];
+            if (!node.Sentences.ContainsKey(sentence)) {
+                node.Sentences[sentence] = 0;
+            }
+            node.Sentences[sentence] += count;
+        }
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children  map[rune]*TrieNode
+    sentences map[string]int
+}
+
+func NewTrieNode() *TrieNode {
+    return &TrieNode{
+        children:  make(map[rune]*TrieNode),
+        sentences: make(map[string]int),
+    }
+}
+
+type AutocompleteSystem struct {
+    root         *TrieNode
+    currNode     *TrieNode
+    dead         *TrieNode
+    currSentence []rune
+}
+
+func Constructor(sentences []string, times []int) AutocompleteSystem {
+    sys := AutocompleteSystem{
+        root:         NewTrieNode(),
+        dead:         NewTrieNode(),
+        currSentence: []rune{},
+    }
+    sys.currNode = sys.root
+    for i, sentence := range sentences {
+        sys.addToTrie(sentence, times[i])
+    }
+    return sys
+}
+
+func (this *AutocompleteSystem) Input(c byte) []string {
+    if c == '#' {
+        this.addToTrie(string(this.currSentence), 1)
+        this.currSentence = []rune{}
+        this.currNode = this.root
+        return []string{}
+    }
+
+    this.currSentence = append(this.currSentence, rune(c))
+    if _, exists := this.currNode.children[rune(c)]; !exists {
+        this.currNode = this.dead
+        return []string{}
+    }
+
+    this.currNode = this.currNode.children[rune(c)]
+    type pair struct {
+        sentence string
+        count    int
+    }
+    items := []pair{}
+    for sentence, count := range this.currNode.sentences {
+        items = append(items, pair{sentence, count})
+    }
+
+    sort.Slice(items, func(i, j int) bool {
+        if items[i].count != items[j].count {
+            return items[i].count > items[j].count
+        }
+        return items[i].sentence < items[j].sentence
+    })
+
+    ans := []string{}
+    for i := 0; i < len(items) && i < 3; i++ {
+        ans = append(ans, items[i].sentence)
+    }
+    return ans
+}
+
+func (this *AutocompleteSystem) addToTrie(sentence string, count int) {
+    node := this.root
+    for _, c := range sentence {
+        if _, exists := node.children[c]; !exists {
+            node.children[c] = NewTrieNode()
+        }
+        node = node.children[c]
+        node.sentences[sentence] += count
+    }
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = mutableMapOf<Char, TrieNode>()
+    val sentences = mutableMapOf<String, Int>()
+}
+
+class AutocompleteSystem(sentences: Array<String>, times: IntArray) {
+    private val root = TrieNode()
+    private var currNode = root
+    private val dead = TrieNode()
+    private val currSentence = StringBuilder()
+
+    init {
+        for (i in sentences.indices) {
+            addToTrie(sentences[i], times[i])
+        }
+    }
+
+    fun input(c: Char): List<String> {
+        if (c == '#') {
+            addToTrie(currSentence.toString(), 1)
+            currSentence.clear()
+            currNode = root
+            return emptyList()
+        }
+
+        currSentence.append(c)
+        if (c !in currNode.children) {
+            currNode = dead
+            return emptyList()
+        }
+
+        currNode = currNode.children[c]!!
+        return currNode.sentences.entries
+            .sortedWith(compareByDescending<Map.Entry<String, Int>> { it.value }
+                .thenBy { it.key })
+            .take(3)
+            .map { it.key }
+    }
+
+    private fun addToTrie(sentence: String, count: Int) {
+        var node = root
+        for (c in sentence) {
+            if (c !in node.children) {
+                node.children[c] = TrieNode()
+            }
+            node = node.children[c]!!
+            node.sentences[sentence] = node.sentences.getOrDefault(sentence, 0) + count
+        }
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children: [Character: TrieNode] = [:]
+    var sentences: [String: Int] = [:]
+}
+
+class AutocompleteSystem {
+    private let root = TrieNode()
+    private var currNode: TrieNode
+    private let dead = TrieNode()
+    private var currSentence = ""
+
+    init(_ sentences: [String], _ times: [Int]) {
+        currNode = root
+        for i in 0..<sentences.count {
+            addToTrie(sentences[i], times[i])
+        }
+    }
+
+    func input(_ c: Character) -> [String] {
+        if c == "#" {
+            addToTrie(currSentence, 1)
+            currSentence = ""
+            currNode = root
+            return []
+        }
+
+        currSentence.append(c)
+        guard let next = currNode.children[c] else {
+            currNode = dead
+            return []
+        }
+
+        currNode = next
+        let sorted = currNode.sentences.sorted { a, b in
+            if a.value != b.value {
+                return a.value > b.value
+            }
+            return a.key < b.key
+        }
+
+        return Array(sorted.prefix(3).map { $0.key })
+    }
+
+    private func addToTrie(_ sentence: String, _ count: Int) {
+        var node = root
+        for c in sentence {
+            if node.children[c] == nil {
+                node.children[c] = TrieNode()
+            }
+            node = node.children[c]!
+            node.sentences[sentence, default: 0] += count
         }
     }
 }
@@ -353,7 +751,7 @@ public:
 class TrieNode {
     constructor() {
         this.children = new Map();
-        this.sentences = new Map(); // Map<string, number>
+        this.sentences = new Map();
     }
 }
 
@@ -372,7 +770,7 @@ class AutocompleteSystem {
         this.dead = new TrieNode();
     }
 
-    /** 
+    /**
      * @param {character} c
      * @return {string[]}
      */
@@ -384,20 +782,20 @@ class AutocompleteSystem {
             this.currNode = this.root;
             return [];
         }
-        
+
         this.currSentence.push(c);
         if (!this.currNode.children.has(c)) {
             this.currNode = this.dead;
             return [];
         }
-        
+
         this.currNode = this.currNode.children.get(c);
-        
+
         const items = [];
         for (const [sentence, count] of this.currNode.sentences) {
             items.push({ sentence, count });
         }
-        
+
         // Using @datastructures-js/priority-queue
         const pq = new PriorityQueue((a, b) => {
             if (a.count !== b.count) {
@@ -405,15 +803,15 @@ class AutocompleteSystem {
             }
             return a.sentence.localeCompare(b.sentence);
         }, items);
-        
+
         const ans = [];
         while (ans.length < 3 && !pq.isEmpty()) {
             ans.push(pq.dequeue().sentence);
         }
-        
+
         return ans;
     }
-    
+
     addToTrie(sentence, count) {
         let node = this.root;
         for (const c of sentence) {
@@ -422,6 +820,309 @@ class AutocompleteSystem {
             }
             node = node.children.get(c);
             node.sentences.set(sentence, (node.sentences.get(sentence) || 0) - count);
+        }
+    }
+}
+```
+
+```csharp
+public class TrieNode {
+    public Dictionary<char, TrieNode> Children = new Dictionary<char, TrieNode>();
+    public Dictionary<string, int> Sentences = new Dictionary<string, int>();
+}
+
+public class AutocompleteSystem {
+    private TrieNode root;
+    private TrieNode currNode;
+    private TrieNode dead;
+    private StringBuilder currSentence;
+
+    public AutocompleteSystem(string[] sentences, int[] times) {
+        root = new TrieNode();
+        dead = new TrieNode();
+        currNode = root;
+        currSentence = new StringBuilder();
+
+        for (int i = 0; i < sentences.Length; i++) {
+            AddToTrie(sentences[i], times[i]);
+        }
+    }
+
+    public IList<string> Input(char c) {
+        if (c == '#') {
+            AddToTrie(currSentence.ToString(), 1);
+            currSentence.Clear();
+            currNode = root;
+            return new List<string>();
+        }
+
+        currSentence.Append(c);
+        if (!currNode.Children.ContainsKey(c)) {
+            currNode = dead;
+            return new List<string>();
+        }
+
+        currNode = currNode.Children[c];
+
+        var pq = new SortedSet<(int count, string sentence)>(
+            Comparer<(int count, string sentence)>.Create((a, b) => {
+                if (a.count != b.count) return a.count.CompareTo(b.count);
+                return b.sentence.CompareTo(a.sentence);
+            })
+        );
+
+        foreach (var kvp in currNode.Sentences) {
+            pq.Add((-kvp.Value, kvp.Key));
+            if (pq.Count > 3) {
+                pq.Remove(pq.Max);
+            }
+        }
+
+        var result = pq.Select(x => x.sentence).Reverse().ToList();
+        return result;
+    }
+
+    private void AddToTrie(string sentence, int count) {
+        TrieNode node = root;
+        foreach (char c in sentence) {
+            if (!node.Children.ContainsKey(c)) {
+                node.Children[c] = new TrieNode();
+            }
+            node = node.Children[c];
+            if (!node.Sentences.ContainsKey(sentence)) {
+                node.Sentences[sentence] = 0;
+            }
+            node.Sentences[sentence] += count;
+        }
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children  map[rune]*TrieNode
+    sentences map[string]int
+}
+
+func NewTrieNode() *TrieNode {
+    return &TrieNode{
+        children:  make(map[rune]*TrieNode),
+        sentences: make(map[string]int),
+    }
+}
+
+type AutocompleteSystem struct {
+    root         *TrieNode
+    currNode     *TrieNode
+    dead         *TrieNode
+    currSentence []rune
+}
+
+func Constructor(sentences []string, times []int) AutocompleteSystem {
+    sys := AutocompleteSystem{
+        root:         NewTrieNode(),
+        dead:         NewTrieNode(),
+        currSentence: []rune{},
+    }
+    sys.currNode = sys.root
+    for i, sentence := range sentences {
+        sys.addToTrie(sentence, times[i])
+    }
+    return sys
+}
+
+func (this *AutocompleteSystem) Input(c byte) []string {
+    if c == '#' {
+        this.addToTrie(string(this.currSentence), 1)
+        this.currSentence = []rune{}
+        this.currNode = this.root
+        return []string{}
+    }
+
+    this.currSentence = append(this.currSentence, rune(c))
+    if _, exists := this.currNode.children[rune(c)]; !exists {
+        this.currNode = this.dead
+        return []string{}
+    }
+
+    this.currNode = this.currNode.children[rune(c)]
+
+    type pair struct {
+        sentence string
+        count    int
+    }
+
+    h := &minHeap{}
+    heap.Init(h)
+
+    for sentence, count := range this.currNode.sentences {
+        heap.Push(h, pair{sentence, -count})
+        if h.Len() > 3 {
+            heap.Pop(h)
+        }
+    }
+
+    ans := make([]string, h.Len())
+    for i := len(ans) - 1; i >= 0; i-- {
+        ans[i] = heap.Pop(h).(pair).sentence
+    }
+    return ans
+}
+
+func (this *AutocompleteSystem) addToTrie(sentence string, count int) {
+    node := this.root
+    for _, c := range sentence {
+        if _, exists := node.children[c]; !exists {
+            node.children[c] = NewTrieNode()
+        }
+        node = node.children[c]
+        node.sentences[sentence] += count
+    }
+}
+
+type minHeap []struct {
+    sentence string
+    count    int
+}
+
+func (h minHeap) Len() int { return len(h) }
+func (h minHeap) Less(i, j int) bool {
+    if h[i].count != h[j].count {
+        return h[i].count > h[j].count
+    }
+    return h[i].sentence < h[j].sentence
+}
+func (h minHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *minHeap) Push(x interface{}) { *h = append(*h, x.(struct{ sentence string; count int })) }
+func (h *minHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = mutableMapOf<Char, TrieNode>()
+    val sentences = mutableMapOf<String, Int>()
+}
+
+class AutocompleteSystem(sentences: Array<String>, times: IntArray) {
+    private val root = TrieNode()
+    private var currNode = root
+    private val dead = TrieNode()
+    private val currSentence = StringBuilder()
+
+    init {
+        for (i in sentences.indices) {
+            addToTrie(sentences[i], times[i])
+        }
+    }
+
+    fun input(c: Char): List<String> {
+        if (c == '#') {
+            addToTrie(currSentence.toString(), 1)
+            currSentence.clear()
+            currNode = root
+            return emptyList()
+        }
+
+        currSentence.append(c)
+        if (c !in currNode.children) {
+            currNode = dead
+            return emptyList()
+        }
+
+        currNode = currNode.children[c]!!
+
+        val pq = java.util.PriorityQueue<Pair<String, Int>> { a, b ->
+            if (a.second != b.second) a.second - b.second
+            else b.first.compareTo(a.first)
+        }
+
+        for ((sentence, count) in currNode.sentences) {
+            pq.offer(Pair(sentence, -count))
+            if (pq.size > 3) {
+                pq.poll()
+            }
+        }
+
+        val result = mutableListOf<String>()
+        while (pq.isNotEmpty()) {
+            result.add(pq.poll().first)
+        }
+        return result.reversed()
+    }
+
+    private fun addToTrie(sentence: String, count: Int) {
+        var node = root
+        for (c in sentence) {
+            if (c !in node.children) {
+                node.children[c] = TrieNode()
+            }
+            node = node.children[c]!!
+            node.sentences[sentence] = node.sentences.getOrDefault(sentence, 0) + count
+        }
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children: [Character: TrieNode] = [:]
+    var sentences: [String: Int] = [:]
+}
+
+class AutocompleteSystem {
+    private let root = TrieNode()
+    private var currNode: TrieNode
+    private let dead = TrieNode()
+    private var currSentence = ""
+
+    init(_ sentences: [String], _ times: [Int]) {
+        currNode = root
+        for i in 0..<sentences.count {
+            addToTrie(sentences[i], times[i])
+        }
+    }
+
+    func input(_ c: Character) -> [String] {
+        if c == "#" {
+            addToTrie(currSentence, 1)
+            currSentence = ""
+            currNode = root
+            return []
+        }
+
+        currSentence.append(c)
+        guard let next = currNode.children[c] else {
+            currNode = dead
+            return []
+        }
+
+        currNode = next
+
+        var items = currNode.sentences.map { ($0.key, -$0.value) }
+        items.sort { a, b in
+            if a.1 != b.1 {
+                return a.1 < b.1
+            }
+            return a.0 < b.0
+        }
+
+        return Array(items.prefix(3).map { $0.0 })
+    }
+
+    private func addToTrie(_ sentence: String, _ count: Int) {
+        var node = root
+        for c in sentence {
+            if node.children[c] == nil {
+                node.children[c] = TrieNode()
+            }
+            node = node.children[c]!
+            node.sentences[sentence, default: 0] += count
         }
     }
 }

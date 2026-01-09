@@ -111,6 +111,67 @@ public class Solution {
 }
 ```
 
+```go
+func numOfSubarrays(arr []int, k int, threshold int) int {
+    res := 0
+    l := 0
+
+    for r := k - 1; r < len(arr); r++ {
+        sum := 0
+        for i := l; i <= r; i++ {
+            sum += arr[i]
+        }
+        if sum/k >= threshold {
+            res++
+        }
+        l++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfSubarrays(arr: IntArray, k: Int, threshold: Int): Int {
+        var res = 0
+        var l = 0
+
+        for (r in k - 1 until arr.size) {
+            var sum = 0
+            for (i in l..r) {
+                sum += arr[i]
+            }
+            if (sum / k >= threshold) {
+                res++
+            }
+            l++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfSubarrays(_ arr: [Int], _ k: Int, _ threshold: Int) -> Int {
+        var res = 0
+        var l = 0
+
+        for r in (k - 1)..<arr.count {
+            var sum = 0
+            for i in l...r {
+                sum += arr[i]
+            }
+            if sum / k >= threshold {
+                res += 1
+            }
+            l += 1
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -232,6 +293,69 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numOfSubarrays(arr []int, k int, threshold int) int {
+    prefixSum := make([]int, len(arr)+1)
+    for i := 0; i < len(arr); i++ {
+        prefixSum[i+1] = prefixSum[i] + arr[i]
+    }
+
+    res, l := 0, 0
+    for r := k - 1; r < len(arr); r++ {
+        sum := prefixSum[r+1] - prefixSum[l]
+        if sum/k >= threshold {
+            res++
+        }
+        l++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfSubarrays(arr: IntArray, k: Int, threshold: Int): Int {
+        val prefixSum = IntArray(arr.size + 1)
+        for (i in arr.indices) {
+            prefixSum[i + 1] = prefixSum[i] + arr[i]
+        }
+
+        var res = 0
+        var l = 0
+        for (r in k - 1 until arr.size) {
+            val sum = prefixSum[r + 1] - prefixSum[l]
+            if (sum / k >= threshold) {
+                res++
+            }
+            l++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfSubarrays(_ arr: [Int], _ k: Int, _ threshold: Int) -> Int {
+        var prefixSum = [Int](repeating: 0, count: arr.count + 1)
+        for i in 0..<arr.count {
+            prefixSum[i + 1] = prefixSum[i] + arr[i]
+        }
+
+        var res = 0
+        var l = 0
+        for r in (k - 1)..<arr.count {
+            let sum = prefixSum[r + 1] - prefixSum[l]
+            if sum / k >= threshold {
+                res += 1
+            }
+            l += 1
+        }
+        return res
     }
 }
 ```
@@ -363,6 +487,70 @@ public class Solution {
 }
 ```
 
+```go
+func numOfSubarrays(arr []int, k int, threshold int) int {
+    res := 0
+    curSum := 0
+
+    for i := 0; i < k-1; i++ {
+        curSum += arr[i]
+    }
+
+    for L := 0; L <= len(arr)-k; L++ {
+        curSum += arr[L+k-1]
+        if curSum/k >= threshold {
+            res++
+        }
+        curSum -= arr[L]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfSubarrays(arr: IntArray, k: Int, threshold: Int): Int {
+        var res = 0
+        var curSum = 0
+
+        for (i in 0 until k - 1) {
+            curSum += arr[i]
+        }
+
+        for (L in 0..arr.size - k) {
+            curSum += arr[L + k - 1]
+            if (curSum / k >= threshold) {
+                res++
+            }
+            curSum -= arr[L]
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfSubarrays(_ arr: [Int], _ k: Int, _ threshold: Int) -> Int {
+        var res = 0
+        var curSum = 0
+
+        for i in 0..<(k - 1) {
+            curSum += arr[i]
+        }
+
+        for L in 0...(arr.count - k) {
+            curSum += arr[L + k - 1]
+            if curSum / k >= threshold {
+                res += 1
+            }
+            curSum -= arr[L]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -476,6 +664,66 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numOfSubarrays(arr []int, k int, threshold int) int {
+    threshold *= k
+    res, curSum := 0, 0
+
+    for r := 0; r < len(arr); r++ {
+        curSum += arr[r]
+        if r >= k-1 {
+            if curSum >= threshold {
+                res++
+            }
+            curSum -= arr[r-k+1]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numOfSubarrays(arr: IntArray, k: Int, threshold: Int): Int {
+        val target = threshold * k
+        var res = 0
+        var curSum = 0
+
+        for (r in arr.indices) {
+            curSum += arr[r]
+            if (r >= k - 1) {
+                if (curSum >= target) {
+                    res++
+                }
+                curSum -= arr[r - k + 1]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numOfSubarrays(_ arr: [Int], _ k: Int, _ threshold: Int) -> Int {
+        let target = threshold * k
+        var res = 0
+        var curSum = 0
+
+        for r in 0..<arr.count {
+            curSum += arr[r]
+            if r >= k - 1 {
+                if curSum >= target {
+                    res += 1
+                }
+                curSum -= arr[r - k + 1]
+            }
+        }
+        return res
     }
 }
 ```

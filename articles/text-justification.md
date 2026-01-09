@@ -218,6 +218,136 @@ public class Solution {
 }
 ```
 
+```go
+func fullJustify(words []string, maxWidth int) []string {
+    res := []string{}
+    line := []string{}
+    length := 0
+    i := 0
+
+    for i < len(words) {
+        if length+len(words[i])+len(line) <= maxWidth {
+            line = append(line, words[i])
+            length += len(words[i])
+            i++
+        } else {
+            // Line complete
+            extraSpace := maxWidth - length
+            gaps := max(1, len(line)-1)
+            remainder := extraSpace % gaps
+            space := extraSpace / gaps
+
+            for j := 0; j < max(1, len(line)-1); j++ {
+                line[j] += strings.Repeat(" ", space)
+                if remainder > 0 {
+                    line[j] += " "
+                    remainder--
+                }
+            }
+
+            res = append(res, strings.Join(line, ""))
+            line = []string{}
+            length = 0
+        }
+    }
+
+    // Handling last line
+    lastLine := strings.Join(line, " ")
+    trailSpace := maxWidth - len(lastLine)
+    res = append(res, lastLine+strings.Repeat(" ", trailSpace))
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun fullJustify(words: Array<String>, maxWidth: Int): List<String> {
+        val res = mutableListOf<String>()
+        val line = mutableListOf<String>()
+        var length = 0
+        var i = 0
+
+        while (i < words.size) {
+            if (length + words[i].length + line.size <= maxWidth) {
+                line.add(words[i])
+                length += words[i].length
+                i++
+            } else {
+                // Line complete
+                val extraSpace = maxWidth - length
+                val gaps = maxOf(1, line.size - 1)
+                var remainder = extraSpace % gaps
+                val space = extraSpace / gaps
+
+                for (j in 0 until maxOf(1, line.size - 1)) {
+                    line[j] = line[j] + " ".repeat(space)
+                    if (remainder > 0) {
+                        line[j] = line[j] + " "
+                        remainder--
+                    }
+                }
+
+                res.add(line.joinToString(""))
+                line.clear()
+                length = 0
+            }
+        }
+
+        // Handling last line
+        val lastLine = line.joinToString(" ")
+        val trailSpace = maxWidth - lastLine.length
+        res.add(lastLine + " ".repeat(trailSpace))
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func fullJustify(_ words: [String], _ maxWidth: Int) -> [String] {
+        var res = [String]()
+        var line = [String]()
+        var length = 0
+        var i = 0
+
+        while i < words.count {
+            if length + words[i].count + line.count <= maxWidth {
+                line.append(words[i])
+                length += words[i].count
+                i += 1
+            } else {
+                // Line complete
+                let extraSpace = maxWidth - length
+                let gaps = max(1, line.count - 1)
+                var remainder = extraSpace % gaps
+                let space = extraSpace / gaps
+
+                for j in 0..<max(1, line.count - 1) {
+                    line[j] += String(repeating: " ", count: space)
+                    if remainder > 0 {
+                        line[j] += " "
+                        remainder -= 1
+                    }
+                }
+
+                res.append(line.joined())
+                line = []
+                length = 0
+            }
+        }
+
+        // Handling last line
+        let lastLine = line.joined(separator: " ")
+        let trailSpace = maxWidth - lastLine.count
+        res.append(lastLine + String(repeating: " ", count: trailSpace))
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

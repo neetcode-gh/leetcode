@@ -172,6 +172,104 @@ public class MyStack {
 }
 ```
 
+```go
+type MyStack struct {
+    q1 []int
+    q2 []int
+}
+
+func Constructor() MyStack {
+    return MyStack{
+        q1: []int{},
+        q2: []int{},
+    }
+}
+
+func (this *MyStack) Push(x int) {
+    this.q2 = append(this.q2, x)
+    for len(this.q1) > 0 {
+        this.q2 = append(this.q2, this.q1[0])
+        this.q1 = this.q1[1:]
+    }
+    this.q1, this.q2 = this.q2, this.q1
+}
+
+func (this *MyStack) Pop() int {
+    top := this.q1[0]
+    this.q1 = this.q1[1:]
+    return top
+}
+
+func (this *MyStack) Top() int {
+    return this.q1[0]
+}
+
+func (this *MyStack) Empty() bool {
+    return len(this.q1) == 0
+}
+```
+
+```kotlin
+class MyStack() {
+    private val q1 = ArrayDeque<Int>()
+    private val q2 = ArrayDeque<Int>()
+
+    fun push(x: Int) {
+        q2.addLast(x)
+        while (q1.isNotEmpty()) {
+            q2.addLast(q1.removeFirst())
+        }
+        val temp = q1
+        q1.addAll(q2)
+        q2.clear()
+    }
+
+    fun pop(): Int {
+        return q1.removeFirst()
+    }
+
+    fun top(): Int {
+        return q1.first()
+    }
+
+    fun empty(): Boolean {
+        return q1.isEmpty()
+    }
+}
+```
+
+```swift
+class MyStack {
+    private var q1: [Int]
+    private var q2: [Int]
+
+    init() {
+        q1 = []
+        q2 = []
+    }
+
+    func push(_ x: Int) {
+        q2.append(x)
+        while !q1.isEmpty {
+            q2.append(q1.removeFirst())
+        }
+        swap(&q1, &q2)
+    }
+
+    func pop() -> Int {
+        return q1.removeFirst()
+    }
+
+    func top() -> Int {
+        return q1.first!
+    }
+
+    func empty() -> Bool {
+        return q1.isEmpty
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -335,6 +433,92 @@ public class MyStack {
 
     public bool Empty() {
         return q.Count == 0;
+    }
+}
+```
+
+```go
+type MyStack struct {
+    q []int
+}
+
+func Constructor() MyStack {
+    return MyStack{q: []int{}}
+}
+
+func (this *MyStack) Push(x int) {
+    this.q = append(this.q, x)
+    for i := len(this.q) - 1; i > 0; i-- {
+        this.q = append(this.q, this.q[0])
+        this.q = this.q[1:]
+    }
+}
+
+func (this *MyStack) Pop() int {
+    top := this.q[0]
+    this.q = this.q[1:]
+    return top
+}
+
+func (this *MyStack) Top() int {
+    return this.q[0]
+}
+
+func (this *MyStack) Empty() bool {
+    return len(this.q) == 0
+}
+```
+
+```kotlin
+class MyStack() {
+    private val q = ArrayDeque<Int>()
+
+    fun push(x: Int) {
+        q.addLast(x)
+        for (i in 0 until q.size - 1) {
+            q.addLast(q.removeFirst())
+        }
+    }
+
+    fun pop(): Int {
+        return q.removeFirst()
+    }
+
+    fun top(): Int {
+        return q.first()
+    }
+
+    fun empty(): Boolean {
+        return q.isEmpty()
+    }
+}
+```
+
+```swift
+class MyStack {
+    private var q: [Int]
+
+    init() {
+        q = []
+    }
+
+    func push(_ x: Int) {
+        q.append(x)
+        for _ in 0..<(q.count - 1) {
+            q.append(q.removeFirst())
+        }
+    }
+
+    func pop() -> Int {
+        return q.removeFirst()
+    }
+
+    func top() -> Int {
+        return q.first!
+    }
+
+    func empty() -> Bool {
+        return q.isEmpty
     }
 }
 ```
@@ -520,6 +704,110 @@ public class MyStack {
 
     public bool Empty() {
         return q == null;
+    }
+}
+```
+
+```go
+type Node struct {
+    val  int
+    next *Node
+}
+
+type MyStack struct {
+    q *Node
+}
+
+func Constructor() MyStack {
+    return MyStack{q: nil}
+}
+
+func (this *MyStack) Push(x int) {
+    this.q = &Node{val: x, next: this.q}
+}
+
+func (this *MyStack) Pop() int {
+    if this.q == nil {
+        return -1
+    }
+    top := this.q.val
+    this.q = this.q.next
+    return top
+}
+
+func (this *MyStack) Top() int {
+    if this.q == nil {
+        return -1
+    }
+    return this.q.val
+}
+
+func (this *MyStack) Empty() bool {
+    return this.q == nil
+}
+```
+
+```kotlin
+class Node(val value: Int, val next: Node?)
+
+class MyStack() {
+    private var q: Node? = null
+
+    fun push(x: Int) {
+        q = Node(x, q)
+    }
+
+    fun pop(): Int {
+        if (q == null) return -1
+        val top = q!!.value
+        q = q!!.next
+        return top
+    }
+
+    fun top(): Int {
+        return q?.value ?: -1
+    }
+
+    fun empty(): Boolean {
+        return q == null
+    }
+}
+```
+
+```swift
+class Node {
+    let val: Int
+    var next: Node?
+
+    init(_ val: Int, _ next: Node?) {
+        self.val = val
+        self.next = next
+    }
+}
+
+class MyStack {
+    private var q: Node?
+
+    init() {
+        q = nil
+    }
+
+    func push(_ x: Int) {
+        q = Node(x, q)
+    }
+
+    func pop() -> Int {
+        guard let node = q else { return -1 }
+        q = node.next
+        return node.val
+    }
+
+    func top() -> Int {
+        return q?.val ?? -1
+    }
+
+    func empty() -> Bool {
+        return q == nil
     }
 }
 ```

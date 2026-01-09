@@ -214,6 +214,249 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private List<Dictionary<char, int>> stickCount;
+    private Dictionary<string, int> dp;
+
+    public int MinStickers(string[] stickers, string target) {
+        stickCount = new List<Dictionary<char, int>>();
+        dp = new Dictionary<string, int>();
+
+        foreach (var s in stickers) {
+            var countMap = new Dictionary<char, int>();
+            foreach (var c in s) {
+                if (!countMap.ContainsKey(c)) countMap[c] = 0;
+                countMap[c]++;
+            }
+            stickCount.Add(countMap);
+        }
+
+        int res = Dfs(target, new Dictionary<char, int>());
+        return res == int.MaxValue ? -1 : res;
+    }
+
+    private int Dfs(string t, Dictionary<char, int> stick) {
+        if (t.Length == 0) return 0;
+        if (dp.ContainsKey(t)) return dp[t];
+
+        int res = stick.Count == 0 ? 0 : 1;
+        var remainT = new System.Text.StringBuilder();
+
+        foreach (var c in t) {
+            if (stick.ContainsKey(c) && stick[c] > 0) {
+                stick[c]--;
+            } else {
+                remainT.Append(c);
+            }
+        }
+
+        if (remainT.Length > 0) {
+            int used = int.MaxValue;
+            foreach (var s in stickCount) {
+                if (!s.ContainsKey(remainT[0])) continue;
+                int curr = Dfs(remainT.ToString(), new Dictionary<char, int>(s));
+                if (curr != int.MaxValue) {
+                    used = Math.Min(used, curr);
+                }
+            }
+            dp[remainT.ToString()] = used;
+            if (used != int.MaxValue && res != int.MaxValue) {
+                res += used;
+            } else {
+                res = int.MaxValue;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minStickers(stickers []string, target string) int {
+    stickCount := make([]map[byte]int, len(stickers))
+    for i, s := range stickers {
+        stickCount[i] = make(map[byte]int)
+        for j := 0; j < len(s); j++ {
+            stickCount[i][s[j]]++
+        }
+    }
+
+    dp := make(map[string]int)
+
+    var dfs func(t string, stick map[byte]int) int
+    dfs = func(t string, stick map[byte]int) int {
+        if len(t) == 0 {
+            return 0
+        }
+        if val, ok := dp[t]; ok {
+            return val
+        }
+
+        res := 0
+        if len(stick) > 0 {
+            res = 1
+        }
+        remainT := ""
+
+        for i := 0; i < len(t); i++ {
+            c := t[i]
+            if stick[c] > 0 {
+                stick[c]--
+            } else {
+                remainT += string(c)
+            }
+        }
+
+        if len(remainT) > 0 {
+            used := math.MaxInt32
+            for _, s := range stickCount {
+                if _, ok := s[remainT[0]]; !ok {
+                    continue
+                }
+                newStick := make(map[byte]int)
+                for k, v := range s {
+                    newStick[k] = v
+                }
+                curr := dfs(remainT, newStick)
+                if curr != math.MaxInt32 {
+                    used = min(used, curr)
+                }
+            }
+            dp[remainT] = used
+            if used != math.MaxInt32 && res != math.MaxInt32 {
+                res += used
+            } else {
+                res = math.MaxInt32
+            }
+        }
+
+        return res
+    }
+
+    result := dfs(target, make(map[byte]int))
+    if result == math.MaxInt32 {
+        return -1
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var stickCount: List<MutableMap<Char, Int>>
+    private lateinit var dp: MutableMap<String, Int>
+
+    fun minStickers(stickers: Array<String>, target: String): Int {
+        stickCount = stickers.map { s ->
+            val countMap = mutableMapOf<Char, Int>()
+            for (c in s) {
+                countMap[c] = countMap.getOrDefault(c, 0) + 1
+            }
+            countMap
+        }
+        dp = mutableMapOf()
+
+        val res = dfs(target, mutableMapOf())
+        return if (res == Int.MAX_VALUE) -1 else res
+    }
+
+    private fun dfs(t: String, stick: MutableMap<Char, Int>): Int {
+        if (t.isEmpty()) return 0
+        dp[t]?.let { return it }
+
+        var res = if (stick.isEmpty()) 0 else 1
+        val remainT = StringBuilder()
+
+        for (c in t) {
+            if ((stick[c] ?: 0) > 0) {
+                stick[c] = stick[c]!! - 1
+            } else {
+                remainT.append(c)
+            }
+        }
+
+        if (remainT.isNotEmpty()) {
+            var used = Int.MAX_VALUE
+            for (s in stickCount) {
+                if (!s.containsKey(remainT[0])) continue
+                val curr = dfs(remainT.toString(), s.toMutableMap())
+                if (curr != Int.MAX_VALUE) {
+                    used = minOf(used, curr)
+                }
+            }
+            dp[remainT.toString()] = used
+            res = if (used != Int.MAX_VALUE && res != Int.MAX_VALUE) {
+                res + used
+            } else {
+                Int.MAX_VALUE
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var stickCount = [[Character: Int]]()
+    private var dp = [String: Int]()
+
+    func minStickers(_ stickers: [String], _ target: String) -> Int {
+        stickCount = stickers.map { s in
+            var countMap = [Character: Int]()
+            for c in s {
+                countMap[c, default: 0] += 1
+            }
+            return countMap
+        }
+        dp = [:]
+
+        let res = dfs(target, [:])
+        return res == Int.max ? -1 : res
+    }
+
+    private func dfs(_ t: String, _ stick: [Character: Int]) -> Int {
+        if t.isEmpty { return 0 }
+        if let cached = dp[t] { return cached }
+
+        var stick = stick
+        var res = stick.isEmpty ? 0 : 1
+        var remainT = ""
+
+        for c in t {
+            if let count = stick[c], count > 0 {
+                stick[c] = count - 1
+            } else {
+                remainT.append(c)
+            }
+        }
+
+        if !remainT.isEmpty {
+            var used = Int.max
+            let firstChar = remainT.first!
+            for s in stickCount {
+                guard s[firstChar] != nil else { continue }
+                let curr = dfs(remainT, s)
+                if curr != Int.max {
+                    used = min(used, curr)
+                }
+            }
+            dp[remainT] = used
+            if used != Int.max && res != Int.max {
+                res += used
+            } else {
+                res = Int.max
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -432,6 +675,230 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<string, int> dp = new Dictionary<string, int>();
+    private List<Dictionary<char, int>> stickCount = new List<Dictionary<char, int>>();
+
+    public int MinStickers(string[] stickers, string target) {
+        dp[""] = 0;
+        foreach (var s in stickers) {
+            var counter = new Dictionary<char, int>();
+            foreach (var c in s) {
+                if (!counter.ContainsKey(c)) counter[c] = 0;
+                counter[c]++;
+            }
+            stickCount.Add(counter);
+        }
+
+        char[] targetArray = target.ToCharArray();
+        Array.Sort(targetArray);
+        target = new string(targetArray);
+
+        int ans = Dfs(target);
+        return ans == int.MaxValue ? -1 : ans;
+    }
+
+    private int Dfs(string t) {
+        if (dp.ContainsKey(t)) return dp[t];
+
+        var tarMp = new Dictionary<char, int>();
+        foreach (var c in t) {
+            if (!tarMp.ContainsKey(c)) tarMp[c] = 0;
+            tarMp[c]++;
+        }
+
+        int res = int.MaxValue;
+        foreach (var s in stickCount) {
+            if (!s.ContainsKey(t[0])) continue;
+
+            var remainT = new System.Text.StringBuilder();
+            foreach (var entry in tarMp) {
+                char c = entry.Key;
+                int need = entry.Value - (s.ContainsKey(c) ? s[c] : 0);
+                for (int i = 0; i < Math.Max(0, need); i++) {
+                    remainT.Append(c);
+                }
+            }
+            char[] remainArray = remainT.ToString().ToCharArray();
+            Array.Sort(remainArray);
+            int cur = Dfs(new string(remainArray));
+            if (cur == int.MaxValue) cur--;
+            res = Math.Min(res, 1 + cur);
+        }
+
+        dp[t] = res;
+        return res;
+    }
+}
+```
+
+```go
+func minStickers(stickers []string, target string) int {
+    dp := make(map[string]int)
+    dp[""] = 0
+
+    stickCount := make([]map[byte]int, len(stickers))
+    for i, s := range stickers {
+        stickCount[i] = make(map[byte]int)
+        for j := 0; j < len(s); j++ {
+            stickCount[i][s[j]]++
+        }
+    }
+
+    targetBytes := []byte(target)
+    sort.Slice(targetBytes, func(i, j int) bool { return targetBytes[i] < targetBytes[j] })
+    target = string(targetBytes)
+
+    var dfs func(t string) int
+    dfs = func(t string) int {
+        if val, ok := dp[t]; ok {
+            return val
+        }
+
+        tarMp := make(map[byte]int)
+        for i := 0; i < len(t); i++ {
+            tarMp[t[i]]++
+        }
+
+        res := math.MaxInt32
+        for _, s := range stickCount {
+            if _, ok := s[t[0]]; !ok {
+                continue
+            }
+
+            remainT := []byte{}
+            for c, count := range tarMp {
+                need := count - s[c]
+                for i := 0; i < max(0, need); i++ {
+                    remainT = append(remainT, c)
+                }
+            }
+
+            sort.Slice(remainT, func(i, j int) bool { return remainT[i] < remainT[j] })
+            cur := dfs(string(remainT))
+            if cur == math.MaxInt32 {
+                cur--
+            }
+            res = min(res, 1+cur)
+        }
+
+        dp[t] = res
+        return res
+    }
+
+    ans := dfs(target)
+    if ans == math.MaxInt32 {
+        return -1
+    }
+    return ans
+}
+```
+
+```kotlin
+class Solution {
+    private val dp = mutableMapOf<String, Int>()
+    private lateinit var stickCount: List<Map<Char, Int>>
+
+    fun minStickers(stickers: Array<String>, target: String): Int {
+        dp[""] = 0
+        stickCount = stickers.map { s ->
+            val counter = mutableMapOf<Char, Int>()
+            for (c in s) {
+                counter[c] = counter.getOrDefault(c, 0) + 1
+            }
+            counter
+        }
+
+        val sortedTarget = target.toCharArray().sorted().joinToString("")
+        val ans = dfs(sortedTarget)
+        return if (ans == Int.MAX_VALUE) -1 else ans
+    }
+
+    private fun dfs(t: String): Int {
+        dp[t]?.let { return it }
+
+        val tarMp = mutableMapOf<Char, Int>()
+        for (c in t) {
+            tarMp[c] = tarMp.getOrDefault(c, 0) + 1
+        }
+
+        var res = Int.MAX_VALUE
+        for (s in stickCount) {
+            if (!s.containsKey(t[0])) continue
+
+            val remainT = StringBuilder()
+            for ((c, count) in tarMp) {
+                val need = count - (s[c] ?: 0)
+                repeat(maxOf(0, need)) {
+                    remainT.append(c)
+                }
+            }
+
+            val sortedRemain = remainT.toString().toCharArray().sorted().joinToString("")
+            var cur = dfs(sortedRemain)
+            if (cur == Int.MAX_VALUE) cur--
+            res = minOf(res, 1 + cur)
+        }
+
+        dp[t] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var dp = [String: Int]()
+    private var stickCount = [[Character: Int]]()
+
+    func minStickers(_ stickers: [String], _ target: String) -> Int {
+        dp[""] = 0
+        stickCount = stickers.map { s in
+            var counter = [Character: Int]()
+            for c in s {
+                counter[c, default: 0] += 1
+            }
+            return counter
+        }
+
+        let sortedTarget = String(target.sorted())
+        let ans = dfs(sortedTarget)
+        return ans == Int.max ? -1 : ans
+    }
+
+    private func dfs(_ t: String) -> Int {
+        if let cached = dp[t] { return cached }
+
+        var tarMp = [Character: Int]()
+        for c in t {
+            tarMp[c, default: 0] += 1
+        }
+
+        var res = Int.max
+        for s in stickCount {
+            guard s[t.first!] != nil else { continue }
+
+            var remainT = [Character]()
+            for (c, count) in tarMp {
+                let need = count - (s[c] ?? 0)
+                for _ in 0..<max(0, need) {
+                    remainT.append(c)
+                }
+            }
+
+            let sortedRemain = String(remainT.sorted())
+            var cur = dfs(sortedRemain)
+            if cur == Int.max { cur -= 1 }
+            res = min(res, 1 + cur)
+        }
+
+        dp[t] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,6 +1033,135 @@ class Solution {
         }
 
         return dp[N - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinStickers(string[] stickers, string target) {
+        int n = target.Length;
+        int N = 1 << n;
+        int[] dp = new int[N];
+        Array.Fill(dp, -1);
+        dp[0] = 0;
+
+        for (int t = 0; t < N; t++) {
+            if (dp[t] == -1) continue;
+            foreach (string s in stickers) {
+                int nextT = t;
+                foreach (char c in s) {
+                    for (int i = 0; i < n; i++) {
+                        if (target[i] == c && ((nextT >> i) & 1) == 0) {
+                            nextT |= 1 << i;
+                            break;
+                        }
+                    }
+                }
+                if (dp[nextT] == -1 || dp[nextT] > dp[t] + 1) {
+                    dp[nextT] = dp[t] + 1;
+                }
+            }
+        }
+
+        return dp[N - 1];
+    }
+}
+```
+
+```go
+func minStickers(stickers []string, target string) int {
+    n := len(target)
+    N := 1 << n
+    dp := make([]int, N)
+    for i := range dp {
+        dp[i] = -1
+    }
+    dp[0] = 0
+
+    for t := 0; t < N; t++ {
+        if dp[t] == -1 {
+            continue
+        }
+        for _, s := range stickers {
+            nextT := t
+            for _, c := range s {
+                for i := 0; i < n; i++ {
+                    if rune(target[i]) == c && ((nextT >> i) & 1) == 0 {
+                        nextT |= 1 << i
+                        break
+                    }
+                }
+            }
+            if dp[nextT] == -1 || dp[nextT] > dp[t]+1 {
+                dp[nextT] = dp[t] + 1
+            }
+        }
+    }
+
+    return dp[N-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun minStickers(stickers: Array<String>, target: String): Int {
+        val n = target.length
+        val N = 1 shl n
+        val dp = IntArray(N) { -1 }
+        dp[0] = 0
+
+        for (t in 0 until N) {
+            if (dp[t] == -1) continue
+            for (s in stickers) {
+                var nextT = t
+                for (c in s) {
+                    for (i in 0 until n) {
+                        if (target[i] == c && ((nextT shr i) and 1) == 0) {
+                            nextT = nextT or (1 shl i)
+                            break
+                        }
+                    }
+                }
+                if (dp[nextT] == -1 || dp[nextT] > dp[t] + 1) {
+                    dp[nextT] = dp[t] + 1
+                }
+            }
+        }
+
+        return dp[N - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minStickers(_ stickers: [String], _ target: String) -> Int {
+        let target = Array(target)
+        let n = target.count
+        let N = 1 << n
+        var dp = [Int](repeating: -1, count: N)
+        dp[0] = 0
+
+        for t in 0..<N {
+            if dp[t] == -1 { continue }
+            for s in stickers {
+                var nextT = t
+                for c in s {
+                    for i in 0..<n {
+                        if target[i] == c && ((nextT >> i) & 1) == 0 {
+                            nextT |= 1 << i
+                            break
+                        }
+                    }
+                }
+                if dp[nextT] == -1 || dp[nextT] > dp[t] + 1 {
+                    dp[nextT] = dp[t] + 1
+                }
+            }
+        }
+
+        return dp[N - 1]
     }
 }
 ```

@@ -93,6 +93,102 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] VowelStrings(string[] words, int[][] queries) {
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
+        int[] res = new int[queries.Length];
+
+        for (int k = 0; k < queries.Length; k++) {
+            int start = queries[k][0], end = queries[k][1], count = 0;
+
+            for (int i = start; i <= end; i++) {
+                string word = words[i];
+                if (vowels.Contains(word[0]) && vowels.Contains(word[word.Length - 1])) {
+                    count++;
+                }
+            }
+
+            res[k] = count;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func vowelStrings(words []string, queries [][]int) []int {
+    vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
+    res := make([]int, len(queries))
+
+    for k, q := range queries {
+        start, end, count := q[0], q[1], 0
+
+        for i := start; i <= end; i++ {
+            word := words[i]
+            if vowels[word[0]] && vowels[word[len(word)-1]] {
+                count++
+            }
+        }
+
+        res[k] = count
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun vowelStrings(words: Array<String>, queries: Array<IntArray>): IntArray {
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
+        val res = IntArray(queries.size)
+
+        for (k in queries.indices) {
+            val (start, end) = queries[k]
+            var count = 0
+
+            for (i in start..end) {
+                val word = words[i]
+                if (word.first() in vowels && word.last() in vowels) {
+                    count++
+                }
+            }
+
+            res[k] = count
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func vowelStrings(_ words: [String], _ queries: [[Int]]) -> [Int] {
+        let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
+        var res = [Int]()
+
+        for q in queries {
+            let start = q[0], end = q[1]
+            var count = 0
+
+            for i in start...end {
+                let word = words[i]
+                if vowels.contains(word.first!) && vowels.contains(word.last!) {
+                    count += 1
+                }
+            }
+
+            res.append(count)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,6 +309,108 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] VowelStrings(string[] words, int[][] queries) {
+        HashSet<char> vowels = new HashSet<char> { 'a', 'e', 'i', 'o', 'u' };
+        int n = words.Length;
+        int[] prefixCnt = new int[n + 1];
+
+        for (int i = 0; i < n; i++) {
+            string w = words[i];
+            prefixCnt[i + 1] = prefixCnt[i];
+            if (vowels.Contains(w[0]) && vowels.Contains(w[w.Length - 1])) {
+                prefixCnt[i + 1]++;
+            }
+        }
+
+        int[] res = new int[queries.Length];
+        for (int i = 0; i < queries.Length; i++) {
+            int l = queries[i][0], r = queries[i][1];
+            res[i] = prefixCnt[r + 1] - prefixCnt[l];
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func vowelStrings(words []string, queries [][]int) []int {
+    vowels := map[byte]bool{'a': true, 'e': true, 'i': true, 'o': true, 'u': true}
+    n := len(words)
+    prefixCnt := make([]int, n+1)
+
+    for i := 0; i < n; i++ {
+        w := words[i]
+        prefixCnt[i+1] = prefixCnt[i]
+        if vowels[w[0]] && vowels[w[len(w)-1]] {
+            prefixCnt[i+1]++
+        }
+    }
+
+    res := make([]int, len(queries))
+    for i, q := range queries {
+        l, r := q[0], q[1]
+        res[i] = prefixCnt[r+1] - prefixCnt[l]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun vowelStrings(words: Array<String>, queries: Array<IntArray>): IntArray {
+        val vowels = setOf('a', 'e', 'i', 'o', 'u')
+        val n = words.size
+        val prefixCnt = IntArray(n + 1)
+
+        for (i in 0 until n) {
+            val w = words[i]
+            prefixCnt[i + 1] = prefixCnt[i]
+            if (w.first() in vowels && w.last() in vowels) {
+                prefixCnt[i + 1]++
+            }
+        }
+
+        val res = IntArray(queries.size)
+        for (i in queries.indices) {
+            val (l, r) = queries[i]
+            res[i] = prefixCnt[r + 1] - prefixCnt[l]
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func vowelStrings(_ words: [String], _ queries: [[Int]]) -> [Int] {
+        let vowels: Set<Character> = ["a", "e", "i", "o", "u"]
+        let n = words.count
+        var prefixCnt = [Int](repeating: 0, count: n + 1)
+
+        for i in 0..<n {
+            let w = words[i]
+            prefixCnt[i + 1] = prefixCnt[i]
+            if vowels.contains(w.first!) && vowels.contains(w.last!) {
+                prefixCnt[i + 1] += 1
+            }
+        }
+
+        var res = [Int]()
+        for q in queries {
+            let l = q[0], r = q[1]
+            res.append(prefixCnt[r + 1] - prefixCnt[l])
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,6 +518,110 @@ class Solution {
         }
 
         return queries.map(([l, r]) => prefix[r + 1] - prefix[l]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] VowelStrings(string[] words, int[][] queries) {
+        int vowels = 0;
+        foreach (char c in "aeiou") {
+            vowels |= 1 << (c - 'a');
+        }
+
+        int[] prefix = new int[words.Length + 1];
+        for (int i = 0; i < words.Length; i++) {
+            int f = words[i][0] - 'a';
+            int l = words[i][words[i].Length - 1] - 'a';
+            int isVowel = ((1 << f) & vowels) != 0 && ((1 << l) & vowels) != 0 ? 1 : 0;
+            prefix[i + 1] = prefix[i] + isVowel;
+        }
+
+        int[] res = new int[queries.Length];
+        for (int i = 0; i < queries.Length; i++) {
+            int l = queries[i][0], r = queries[i][1];
+            res[i] = prefix[r + 1] - prefix[l];
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func vowelStrings(words []string, queries [][]int) []int {
+    vowels := 0
+    for _, c := range "aeiou" {
+        vowels |= 1 << (c - 'a')
+    }
+
+    n := len(words)
+    prefix := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        f := int(words[i][0] - 'a')
+        l := int(words[i][len(words[i])-1] - 'a')
+        isVowel := 0
+        if (1<<f)&vowels != 0 && (1<<l)&vowels != 0 {
+            isVowel = 1
+        }
+        prefix[i+1] = prefix[i] + isVowel
+    }
+
+    res := make([]int, len(queries))
+    for i, q := range queries {
+        l, r := q[0], q[1]
+        res[i] = prefix[r+1] - prefix[l]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun vowelStrings(words: Array<String>, queries: Array<IntArray>): IntArray {
+        var vowels = 0
+        for (c in "aeiou") {
+            vowels = vowels or (1 shl (c - 'a'))
+        }
+
+        val prefix = IntArray(words.size + 1)
+        for (i in words.indices) {
+            val f = words[i][0] - 'a'
+            val l = words[i].last() - 'a'
+            val isVowel = if ((1 shl f) and vowels != 0 && (1 shl l) and vowels != 0) 1 else 0
+            prefix[i + 1] = prefix[i] + isVowel
+        }
+
+        return IntArray(queries.size) { i ->
+            val (lo, hi) = queries[i]
+            prefix[hi + 1] - prefix[lo]
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func vowelStrings(_ words: [String], _ queries: [[Int]]) -> [Int] {
+        var vowels = 0
+        for c in "aeiou" {
+            vowels |= 1 << (Int(c.asciiValue!) - 97)
+        }
+
+        var prefix = [0]
+        for w in words {
+            let f = Int(w.first!.asciiValue!) - 97
+            let l = Int(w.last!.asciiValue!) - 97
+            let isVowel = ((1 << f) & vowels != 0 && (1 << l) & vowels != 0) ? 1 : 0
+            prefix.append(prefix.last! + isVowel)
+        }
+
+        return queries.map { q in
+            let l = q[0], r = q[1]
+            return prefix[r + 1] - prefix[l]
+        }
     }
 }
 ```

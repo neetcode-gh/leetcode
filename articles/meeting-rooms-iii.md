@@ -190,6 +190,130 @@ public class Solution {
 }
 ```
 
+```go
+func mostBooked(n int, meetings [][]int) int {
+    sort.Slice(meetings, func(i, j int) bool {
+        return meetings[i][0] < meetings[j][0]
+    })
+    rooms := make([]int64, n)
+    meetingCount := make([]int, n)
+
+    for _, meeting := range meetings {
+        start, end := meeting[0], meeting[1]
+        minRoom := 0
+        found := false
+
+        for i := 0; i < n; i++ {
+            if rooms[i] <= int64(start) {
+                meetingCount[i]++
+                rooms[i] = int64(end)
+                found = true
+                break
+            }
+            if rooms[minRoom] > rooms[i] {
+                minRoom = i
+            }
+        }
+
+        if !found {
+            meetingCount[minRoom]++
+            rooms[minRoom] += int64(end - start)
+        }
+    }
+
+    maxIndex := 0
+    for i := 1; i < n; i++ {
+        if meetingCount[i] > meetingCount[maxIndex] {
+            maxIndex = i
+        }
+    }
+    return maxIndex
+}
+```
+
+```kotlin
+class Solution {
+    fun mostBooked(n: Int, meetings: Array<IntArray>): Int {
+        meetings.sortBy { it[0] }
+        val rooms = LongArray(n)
+        val meetingCount = IntArray(n)
+
+        for (meeting in meetings) {
+            val start = meeting[0]
+            val end = meeting[1]
+            var minRoom = 0
+            var found = false
+
+            for (i in 0 until n) {
+                if (rooms[i] <= start) {
+                    meetingCount[i]++
+                    rooms[i] = end.toLong()
+                    found = true
+                    break
+                }
+                if (rooms[minRoom] > rooms[i]) {
+                    minRoom = i
+                }
+            }
+
+            if (!found) {
+                meetingCount[minRoom]++
+                rooms[minRoom] += (end - start).toLong()
+            }
+        }
+
+        var maxIndex = 0
+        for (i in 1 until n) {
+            if (meetingCount[i] > meetingCount[maxIndex]) {
+                maxIndex = i
+            }
+        }
+        return maxIndex
+    }
+}
+```
+
+```swift
+class Solution {
+    func mostBooked(_ n: Int, _ meetings: [[Int]]) -> Int {
+        let meetings = meetings.sorted { $0[0] < $1[0] }
+        var rooms = [Int64](repeating: 0, count: n)
+        var meetingCount = [Int](repeating: 0, count: n)
+
+        for meeting in meetings {
+            let start = meeting[0], end = meeting[1]
+            var minRoom = 0
+            var found = false
+
+            for i in 0..<n {
+                if rooms[i] <= Int64(start) {
+                    meetingCount[i] += 1
+                    rooms[i] = Int64(end)
+                    found = true
+                    break
+                }
+                if rooms[minRoom] > rooms[i] {
+                    minRoom = i
+                }
+            }
+
+            if !found {
+                meetingCount[minRoom] += 1
+                rooms[minRoom] += Int64(end - start)
+            }
+        }
+
+        var maxIndex = 0
+        for i in 1..<n {
+            if meetingCount[i] > meetingCount[maxIndex] {
+                maxIndex = i
+            }
+        }
+        return maxIndex
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -409,6 +533,178 @@ public class Solution {
 }
 ```
 
+```go
+func mostBooked(n int, meetings [][]int) int {
+    sort.Slice(meetings, func(i, j int) bool {
+        return meetings[i][0] < meetings[j][0]
+    })
+
+    available := &IntHeap{}
+    heap.Init(available)
+    for i := 0; i < n; i++ {
+        heap.Push(available, i)
+    }
+
+    used := &RoomHeap{}
+    heap.Init(used)
+    count := make([]int, n)
+
+    for _, meeting := range meetings {
+        start, end := int64(meeting[0]), int64(meeting[1])
+
+        for used.Len() > 0 && (*used)[0][0] <= start {
+            room := heap.Pop(used).([2]int64)[1]
+            heap.Push(available, int(room))
+        }
+
+        if available.Len() == 0 {
+            top := heap.Pop(used).([2]int64)
+            end = top[0] + (end - start)
+            heap.Push(available, int(top[1]))
+        }
+
+        room := heap.Pop(available).(int)
+        heap.Push(used, [2]int64{end, int64(room)})
+        count[room]++
+    }
+
+    maxRoom := 0
+    for i := 1; i < n; i++ {
+        if count[i] > count[maxRoom] {
+            maxRoom = i
+        }
+    }
+    return maxRoom
+}
+
+type IntHeap []int
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type RoomHeap [][2]int64
+func (h RoomHeap) Len() int { return len(h) }
+func (h RoomHeap) Less(i, j int) bool {
+    if h[i][0] == h[j][0] {
+        return h[i][1] < h[j][1]
+    }
+    return h[i][0] < h[j][0]
+}
+func (h RoomHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *RoomHeap) Push(x any)   { *h = append(*h, x.([2]int64)) }
+func (h *RoomHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun mostBooked(n: Int, meetings: Array<IntArray>): Int {
+        meetings.sortBy { it[0] }
+        val available = PriorityQueue<Int>()
+        val used = PriorityQueue<LongArray>(compareBy({ it[0] }, { it[1] }))
+
+        for (i in 0 until n) {
+            available.offer(i)
+        }
+        val count = IntArray(n)
+
+        for (meeting in meetings) {
+            var start = meeting[0].toLong()
+            var end = meeting[1].toLong()
+
+            while (used.isNotEmpty() && used.peek()[0] <= start) {
+                val room = used.poll()[1].toInt()
+                available.offer(room)
+            }
+
+            if (available.isEmpty()) {
+                val current = used.poll()
+                end = current[0] + (end - start)
+                available.offer(current[1].toInt())
+            }
+
+            val room = available.poll()
+            used.offer(longArrayOf(end, room.toLong()))
+            count[room]++
+        }
+
+        var maxRoom = 0
+        for (i in 1 until n) {
+            if (count[i] > count[maxRoom]) {
+                maxRoom = i
+            }
+        }
+        return maxRoom
+    }
+}
+```
+
+```swift
+class Solution {
+    func mostBooked(_ n: Int, _ meetings: [[Int]]) -> Int {
+        let meetings = meetings.sorted { $0[0] < $1[0] }
+        var available = Array(0..<n)
+        var used: [(end: Int64, room: Int)] = []
+        var count = [Int](repeating: 0, count: n)
+
+        func heapifyAvailable() {
+            available.sort()
+        }
+
+        func heapifyUsed() {
+            used.sort { ($0.end, $0.room) < ($1.end, $1.room) }
+        }
+
+        heapifyAvailable()
+
+        for meeting in meetings {
+            let start = Int64(meeting[0])
+            var end = Int64(meeting[1])
+
+            heapifyUsed()
+            while !used.isEmpty && used[0].end <= start {
+                let room = used.removeFirst().room
+                available.append(room)
+                heapifyAvailable()
+            }
+
+            if available.isEmpty {
+                heapifyUsed()
+                let current = used.removeFirst()
+                end = current.end + (end - start)
+                available.append(current.room)
+                heapifyAvailable()
+            }
+
+            let room = available.removeFirst()
+            used.append((end: end, room: room))
+            count[room] += 1
+        }
+
+        var maxRoom = 0
+        for i in 1..<n {
+            if count[i] > count[maxRoom] {
+                maxRoom = i
+            }
+        }
+        return maxRoom
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +886,140 @@ public class Solution {
         }
 
         return maxRoom;
+    }
+}
+```
+
+```go
+func mostBooked(n int, meetings [][]int) int {
+    sort.Slice(meetings, func(i, j int) bool {
+        return meetings[i][0] < meetings[j][0]
+    })
+
+    available := &RoomHeap{}
+    heap.Init(available)
+    for i := 0; i < n; i++ {
+        heap.Push(available, [2]int64{0, int64(i)})
+    }
+    count := make([]int, n)
+
+    for _, meeting := range meetings {
+        start, end := int64(meeting[0]), int64(meeting[1])
+
+        for available.Len() > 0 && (*available)[0][0] < start {
+            top := heap.Pop(available).([2]int64)
+            heap.Push(available, [2]int64{start, top[1]})
+        }
+
+        room := heap.Pop(available).([2]int64)
+        newEnd := room[0] + (end - start)
+        heap.Push(available, [2]int64{newEnd, room[1]})
+        count[room[1]]++
+    }
+
+    maxRoom := 0
+    for i := 1; i < n; i++ {
+        if count[i] > count[maxRoom] {
+            maxRoom = i
+        }
+    }
+    return maxRoom
+}
+
+type RoomHeap [][2]int64
+func (h RoomHeap) Len() int { return len(h) }
+func (h RoomHeap) Less(i, j int) bool {
+    if h[i][0] == h[j][0] {
+        return h[i][1] < h[j][1]
+    }
+    return h[i][0] < h[j][0]
+}
+func (h RoomHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *RoomHeap) Push(x any)   { *h = append(*h, x.([2]int64)) }
+func (h *RoomHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun mostBooked(n: Int, meetings: Array<IntArray>): Int {
+        meetings.sortBy { it[0] }
+        val available = PriorityQueue<LongArray>(compareBy({ it[0] }, { it[1] }))
+        for (i in 0 until n) {
+            available.offer(longArrayOf(0, i.toLong()))
+        }
+        val count = IntArray(n)
+
+        for (meeting in meetings) {
+            val start = meeting[0].toLong()
+            val end = meeting[1].toLong()
+
+            while (available.isNotEmpty() && available.peek()[0] < start) {
+                val earliest = available.poll()
+                available.offer(longArrayOf(start, earliest[1]))
+            }
+
+            val room = available.poll()
+            val endTime = room[0] + (end - start)
+            available.offer(longArrayOf(endTime, room[1]))
+            count[room[1].toInt()]++
+        }
+
+        var maxRoom = 0
+        for (i in 1 until n) {
+            if (count[i] > count[maxRoom]) {
+                maxRoom = i
+            }
+        }
+        return maxRoom
+    }
+}
+```
+
+```swift
+class Solution {
+    func mostBooked(_ n: Int, _ meetings: [[Int]]) -> Int {
+        let meetings = meetings.sorted { $0[0] < $1[0] }
+        var available: [(end: Int64, room: Int)] = []
+        for i in 0..<n {
+            available.append((end: 0, room: i))
+        }
+        var count = [Int](repeating: 0, count: n)
+
+        func heapify() {
+            available.sort { ($0.end, $0.room) < ($1.end, $1.room) }
+        }
+
+        for meeting in meetings {
+            let start = Int64(meeting[0])
+            let end = Int64(meeting[1])
+
+            heapify()
+            while !available.isEmpty && available[0].end < start {
+                let top = available.removeFirst()
+                available.append((end: start, room: top.room))
+                heapify()
+            }
+
+            heapify()
+            let room = available.removeFirst()
+            let newEnd = room.end + (end - start)
+            available.append((end: newEnd, room: room.room))
+            count[room.room] += 1
+        }
+
+        var maxRoom = 0
+        for i in 1..<n {
+            if count[i] > count[maxRoom] {
+                maxRoom = i
+            }
+        }
+        return maxRoom
     }
 }
 ```

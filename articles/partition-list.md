@@ -172,6 +172,178 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode Partition(ListNode head, int x) {
+        if (head == null) return null;
+
+        List<int> less = new List<int>();
+        List<int> greater = new List<int>();
+        ListNode cur = head;
+
+        while (cur != null) {
+            if (cur.val < x) {
+                less.Add(cur.val);
+            } else {
+                greater.Add(cur.val);
+            }
+            cur = cur.next;
+        }
+
+        cur = head;
+        foreach (int val in less) {
+            cur.val = val;
+            cur = cur.next;
+        }
+
+        foreach (int val in greater) {
+            cur.val = val;
+            cur = cur.next;
+        }
+
+        return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func partition(head *ListNode, x int) *ListNode {
+    if head == nil {
+        return nil
+    }
+
+    var less, greater []int
+    cur := head
+
+    for cur != nil {
+        if cur.Val < x {
+            less = append(less, cur.Val)
+        } else {
+            greater = append(greater, cur.Val)
+        }
+        cur = cur.Next
+    }
+
+    cur = head
+    for _, val := range less {
+        cur.Val = val
+        cur = cur.Next
+    }
+
+    for _, val := range greater {
+        cur.Val = val
+        cur = cur.Next
+    }
+
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun partition(head: ListNode?, x: Int): ListNode? {
+        if (head == null) return null
+
+        val less = mutableListOf<Int>()
+        val greater = mutableListOf<Int>()
+        var cur = head
+
+        while (cur != null) {
+            if (cur.`val` < x) {
+                less.add(cur.`val`)
+            } else {
+                greater.add(cur.`val`)
+            }
+            cur = cur.next
+        }
+
+        cur = head
+        for (v in less) {
+            cur!!.`val` = v
+            cur = cur.next
+        }
+
+        for (v in greater) {
+            cur!!.`val` = v
+            cur = cur.next
+        }
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func partition(_ head: ListNode?, _ x: Int) -> ListNode? {
+        guard let head = head else { return nil }
+
+        var less = [Int]()
+        var greater = [Int]()
+        var cur: ListNode? = head
+
+        while cur != nil {
+            if cur!.val < x {
+                less.append(cur!.val)
+            } else {
+                greater.append(cur!.val)
+            }
+            cur = cur!.next
+        }
+
+        cur = head
+        for val in less {
+            cur!.val = val
+            cur = cur!.next
+        }
+
+        for val in greater {
+            cur!.val = val
+            cur = cur!.next
+        }
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -315,6 +487,144 @@ class Solution {
         ltail.next = right.next;
         rtail.next = null;
         return left.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode Partition(ListNode head, int x) {
+        ListNode left = new ListNode(0), right = new ListNode(0);
+        ListNode ltail = left, rtail = right;
+
+        while (head != null) {
+            if (head.val < x) {
+                ltail.next = head;
+                ltail = ltail.next;
+            } else {
+                rtail.next = head;
+                rtail = rtail.next;
+            }
+            head = head.next;
+        }
+
+        ltail.next = right.next;
+        rtail.next = null;
+        return left.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func partition(head *ListNode, x int) *ListNode {
+    left := &ListNode{}
+    right := &ListNode{}
+    ltail, rtail := left, right
+
+    for head != nil {
+        if head.Val < x {
+            ltail.Next = head
+            ltail = ltail.Next
+        } else {
+            rtail.Next = head
+            rtail = rtail.Next
+        }
+        head = head.Next
+    }
+
+    ltail.Next = right.Next
+    rtail.Next = nil
+    return left.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun partition(head: ListNode?, x: Int): ListNode? {
+        val left = ListNode(0)
+        val right = ListNode(0)
+        var ltail = left
+        var rtail = right
+        var cur = head
+
+        while (cur != null) {
+            if (cur.`val` < x) {
+                ltail.next = cur
+                ltail = ltail.next!!
+            } else {
+                rtail.next = cur
+                rtail = rtail.next!!
+            }
+            cur = cur.next
+        }
+
+        ltail.next = right.next
+        rtail.next = null
+        return left.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func partition(_ head: ListNode?, _ x: Int) -> ListNode? {
+        let left = ListNode(0)
+        let right = ListNode(0)
+        var ltail = left
+        var rtail = right
+        var cur = head
+
+        while cur != nil {
+            if cur!.val < x {
+                ltail.next = cur
+                ltail = ltail.next!
+            } else {
+                rtail.next = cur
+                rtail = rtail.next!
+            }
+            cur = cur!.next
+        }
+
+        ltail.next = right.next
+        rtail.next = nil
+        return left.next
     }
 }
 ```

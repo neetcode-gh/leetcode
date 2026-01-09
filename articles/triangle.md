@@ -82,6 +82,54 @@ public class Solution {
 }
 ```
 
+```go
+func minimumTotal(triangle [][]int) int {
+    var dfs func(row, col int) int
+    dfs = func(row, col int) int {
+        if row >= len(triangle) {
+            return 0
+        }
+        return triangle[row][col] + min(dfs(row+1, col), dfs(row+1, col+1))
+    }
+    return dfs(0, 0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTotal(triangle: List<List<Int>>): Int {
+        fun dfs(row: Int, col: Int): Int {
+            if (row >= triangle.size) {
+                return 0
+            }
+            return triangle[row][col] + minOf(dfs(row + 1, col), dfs(row + 1, col + 1))
+        }
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        func dfs(_ row: Int, _ col: Int) -> Int {
+            if row >= triangle.count {
+                return 0
+            }
+            return triangle[row][col] + min(dfs(row + 1, col), dfs(row + 1, col + 1))
+        }
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -233,6 +281,77 @@ public class Solution {
 }
 ```
 
+```go
+func minimumTotal(triangle [][]int) int {
+    n := len(triangle)
+    memo := make([][]int, n)
+    for r := 0; r < n; r++ {
+        memo[r] = make([]int, len(triangle[r]))
+        for c := 0; c < len(triangle[r]); c++ {
+            memo[r][c] = math.MaxInt32
+        }
+    }
+
+    var dfs func(row, col int) int
+    dfs = func(row, col int) int {
+        if row >= n {
+            return 0
+        }
+        if memo[row][col] != math.MaxInt32 {
+            return memo[row][col]
+        }
+        memo[row][col] = triangle[row][col] + min(dfs(row+1, col), dfs(row+1, col+1))
+        return memo[row][col]
+    }
+    return dfs(0, 0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTotal(triangle: List<List<Int>>): Int {
+        val n = triangle.size
+        val memo = Array(n) { r -> IntArray(triangle[r].size) { Int.MAX_VALUE } }
+
+        fun dfs(row: Int, col: Int): Int {
+            if (row >= n) return 0
+            if (memo[row][col] != Int.MAX_VALUE) return memo[row][col]
+            memo[row][col] = triangle[row][col] + minOf(dfs(row + 1, col), dfs(row + 1, col + 1))
+            return memo[row][col]
+        }
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        let n = triangle.count
+        var memo = triangle.map { $0.map { _ in Int.max } }
+
+        func dfs(_ row: Int, _ col: Int) -> Int {
+            if row >= n {
+                return 0
+            }
+            if memo[row][col] != Int.max {
+                return memo[row][col]
+            }
+            memo[row][col] = triangle[row][col] + min(dfs(row + 1, col), dfs(row + 1, col + 1))
+            return memo[row][col]
+        }
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +468,77 @@ public class Solution {
         }
 
         return dp[0][0];
+    }
+}
+```
+
+```go
+func minimumTotal(triangle [][]int) int {
+    n := len(triangle)
+    dp := make([][]int, n)
+    for i := 0; i < n; i++ {
+        dp[i] = make([]int, len(triangle[i]))
+    }
+
+    for col := 0; col < len(triangle[n-1]); col++ {
+        dp[n-1][col] = triangle[n-1][col]
+    }
+
+    for row := n - 2; row >= 0; row-- {
+        for col := 0; col < len(triangle[row]); col++ {
+            dp[row][col] = triangle[row][col] + min(dp[row+1][col], dp[row+1][col+1])
+        }
+    }
+
+    return dp[0][0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTotal(triangle: List<List<Int>>): Int {
+        val n = triangle.size
+        val dp = Array(n) { i -> IntArray(triangle[i].size) }
+
+        for (col in triangle[n - 1].indices) {
+            dp[n - 1][col] = triangle[n - 1][col]
+        }
+
+        for (row in n - 2 downTo 0) {
+            for (col in triangle[row].indices) {
+                dp[row][col] = triangle[row][col] + minOf(dp[row + 1][col], dp[row + 1][col + 1])
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        let n = triangle.count
+        var dp = triangle.map { $0.map { _ in 0 } }
+
+        for col in 0..<triangle[n - 1].count {
+            dp[n - 1][col] = triangle[n - 1][col]
+        }
+
+        for row in stride(from: n - 2, through: 0, by: -1) {
+            for col in 0..<triangle[row].count {
+                dp[row][col] = triangle[row][col] + min(dp[row + 1][col], dp[row + 1][col + 1])
+            }
+        }
+
+        return dp[0][0]
     }
 }
 ```
@@ -485,6 +675,81 @@ public class Solution {
 }
 ```
 
+```go
+func minimumTotal(triangle [][]int) int {
+    n := len(triangle)
+    dp := make([]int, len(triangle[0]))
+    copy(dp, triangle[0])
+
+    for row := 1; row < n; row++ {
+        nxtDp := make([]int, row+1)
+        nxtDp[0] = dp[0] + triangle[row][0]
+        for col := 1; col < row; col++ {
+            nxtDp[col] = triangle[row][col] + min(dp[col], dp[col-1])
+        }
+        nxtDp[row] = dp[row-1] + triangle[row][row]
+        dp = nxtDp
+    }
+
+    minPath := dp[0]
+    for _, v := range dp {
+        if v < minPath {
+            minPath = v
+        }
+    }
+    return minPath
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTotal(triangle: List<List<Int>>): Int {
+        val n = triangle.size
+        var dp = triangle[0].toIntArray()
+
+        for (row in 1 until n) {
+            val nxtDp = IntArray(row + 1)
+            nxtDp[0] = dp[0] + triangle[row][0]
+            for (col in 1 until row) {
+                nxtDp[col] = triangle[row][col] + minOf(dp[col], dp[col - 1])
+            }
+            nxtDp[row] = dp[row - 1] + triangle[row][row]
+            dp = nxtDp
+        }
+
+        return dp.minOrNull() ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        let n = triangle.count
+        var dp = triangle[0]
+
+        for row in 1..<n {
+            var nxtDp = [Int](repeating: 0, count: row + 1)
+            nxtDp[0] = dp[0] + triangle[row][0]
+            for col in 1..<row {
+                nxtDp[col] = triangle[row][col] + min(dp[col], dp[col - 1])
+            }
+            nxtDp[row] = dp[row - 1] + triangle[row][row]
+            dp = nxtDp
+        }
+
+        return dp.min() ?? 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +855,63 @@ public class Solution {
 }
 ```
 
+```go
+func minimumTotal(triangle [][]int) int {
+    n := len(triangle)
+    dp := make([]int, len(triangle[n-1]))
+    copy(dp, triangle[n-1])
+
+    for row := n - 2; row >= 0; row-- {
+        for col := 0; col < len(triangle[row]); col++ {
+            dp[col] = triangle[row][col] + min(dp[col], dp[col+1])
+        }
+    }
+
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTotal(triangle: List<List<Int>>): Int {
+        val n = triangle.size
+        val dp = triangle[n - 1].toIntArray()
+
+        for (row in n - 2 downTo 0) {
+            for (col in triangle[row].indices) {
+                dp[col] = triangle[row][col] + minOf(dp[col], dp[col + 1])
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        let n = triangle.count
+        var dp = triangle[n - 1]
+
+        for row in stride(from: n - 2, through: 0, by: -1) {
+            for col in 0..<triangle[row].count {
+                dp[col] = triangle[row][col] + min(dp[col], dp[col + 1])
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -670,6 +992,51 @@ public class Solution {
             }
         }
         return triangle[0][0];
+    }
+}
+```
+
+```go
+func minimumTotal(triangle [][]int) int {
+    for row := len(triangle) - 2; row >= 0; row-- {
+        for col := 0; col < len(triangle[row]); col++ {
+            triangle[row][col] += min(triangle[row+1][col], triangle[row+1][col+1])
+        }
+    }
+    return triangle[0][0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTotal(triangle: MutableList<MutableList<Int>>): Int {
+        for (row in triangle.size - 2 downTo 0) {
+            for (col in triangle[row].indices) {
+                triangle[row][col] += minOf(triangle[row + 1][col], triangle[row + 1][col + 1])
+            }
+        }
+        return triangle[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTotal(_ triangle: [[Int]]) -> Int {
+        var triangle = triangle
+        for row in stride(from: triangle.count - 2, through: 0, by: -1) {
+            for col in 0..<triangle[row].count {
+                triangle[row][col] += min(triangle[row + 1][col], triangle[row + 1][col + 1])
+            }
+        }
+        return triangle[0][0]
     }
 }
 ```

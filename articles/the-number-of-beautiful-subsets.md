@@ -105,6 +105,92 @@ class Solution {
 }
 ```
 
+```go
+func beautifulSubsets(nums []int, k int) int {
+    count := make(map[int]int)
+
+    var helper func(i int) int
+    helper = func(i int) int {
+        if i == len(nums) {
+            return 1
+        }
+
+        res := helper(i + 1) // Skip nums[i]
+
+        if count[nums[i]+k] == 0 && count[nums[i]-k] == 0 {
+            count[nums[i]]++
+            res += helper(i + 1)
+            count[nums[i]]--
+            if count[nums[i]] == 0 {
+                delete(count, nums[i])
+            }
+        }
+
+        return res
+    }
+
+    return helper(0) - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun beautifulSubsets(nums: IntArray, k: Int): Int {
+        val count = mutableMapOf<Int, Int>()
+
+        fun helper(i: Int): Int {
+            if (i == nums.size) {
+                return 1
+            }
+
+            var res = helper(i + 1) // Skip nums[i]
+
+            if ((count[nums[i] + k] ?: 0) == 0 && (count[nums[i] - k] ?: 0) == 0) {
+                count[nums[i]] = (count[nums[i]] ?: 0) + 1
+                res += helper(i + 1)
+                count[nums[i]] = count[nums[i]]!! - 1
+                if (count[nums[i]] == 0) {
+                    count.remove(nums[i])
+                }
+            }
+
+            return res
+        }
+
+        return helper(0) - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func beautifulSubsets(_ nums: [Int], _ k: Int) -> Int {
+        var count = [Int: Int]()
+
+        func helper(_ i: Int) -> Int {
+            if i == nums.count {
+                return 1
+            }
+
+            var res = helper(i + 1) // Skip nums[i]
+
+            if (count[nums[i] + k] ?? 0) == 0 && (count[nums[i] - k] ?? 0) == 0 {
+                count[nums[i], default: 0] += 1
+                res += helper(i + 1)
+                count[nums[i]]! -= 1
+                if count[nums[i]] == 0 {
+                    count.removeValue(forKey: nums[i])
+                }
+            }
+
+            return res
+        }
+
+        return helper(0) - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -327,6 +413,163 @@ class Solution {
             res *= helper(n, g);
         }
         return res - 1;
+    }
+}
+```
+
+```go
+func beautifulSubsets(nums []int, k int) int {
+    cnt := make(map[int]int)
+    for _, num := range nums {
+        cnt[num]++
+    }
+
+    groups := []map[int]int{}
+    visit := make(map[int]bool)
+
+    for n := range cnt {
+        if visit[n] {
+            continue
+        }
+        g := make(map[int]int)
+        for cnt[n-k] > 0 {
+            n -= k
+        }
+        for cnt[n] > 0 {
+            g[n] = cnt[n]
+            visit[n] = true
+            n += k
+        }
+        groups = append(groups, g)
+    }
+
+    cache := make(map[int]int)
+
+    var helper func(n int, g map[int]int) int
+    helper = func(n int, g map[int]int) int {
+        if _, ok := g[n]; !ok {
+            return 1
+        }
+        if val, ok := cache[n]; ok {
+            return val
+        }
+
+        skip := helper(n+k, g)
+        include := ((1 << g[n]) - 1) * helper(n+2*k, g)
+        cache[n] = skip + include
+        return cache[n]
+    }
+
+    res := 1
+    for _, g := range groups {
+        minN := math.MaxInt32
+        for n := range g {
+            if n < minN {
+                minN = n
+            }
+        }
+        cache = make(map[int]int)
+        res *= helper(minN, g)
+    }
+
+    return res - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun beautifulSubsets(nums: IntArray, k: Int): Int {
+        val cnt = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            cnt[num] = (cnt[num] ?: 0) + 1
+        }
+
+        val groups = mutableListOf<MutableMap<Int, Int>>()
+        val visit = mutableSetOf<Int>()
+
+        for (n in cnt.keys) {
+            if (n in visit) continue
+            val g = mutableMapOf<Int, Int>()
+            var num = n
+            while (cnt.containsKey(num - k)) {
+                num -= k
+            }
+            while (cnt.containsKey(num)) {
+                g[num] = cnt[num]!!
+                visit.add(num)
+                num += k
+            }
+            groups.add(g)
+        }
+
+        var res = 1
+        for (g in groups) {
+            val cache = mutableMapOf<Int, Int>()
+
+            fun helper(n: Int): Int {
+                if (!g.containsKey(n)) return 1
+                if (cache.containsKey(n)) return cache[n]!!
+
+                val skip = helper(n + k)
+                val include = ((1 shl g[n]!!) - 1) * helper(n + 2 * k)
+                cache[n] = skip + include
+                return cache[n]!!
+            }
+
+            val minN = g.keys.minOrNull()!!
+            res *= helper(minN)
+        }
+
+        return res - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func beautifulSubsets(_ nums: [Int], _ k: Int) -> Int {
+        var cnt = [Int: Int]()
+        for num in nums {
+            cnt[num, default: 0] += 1
+        }
+
+        var groups = [[Int: Int]]()
+        var visit = Set<Int>()
+
+        for n in cnt.keys {
+            if visit.contains(n) { continue }
+            var g = [Int: Int]()
+            var num = n
+            while cnt[num - k] != nil {
+                num -= k
+            }
+            while cnt[num] != nil {
+                g[num] = cnt[num]!
+                visit.insert(num)
+                num += k
+            }
+            groups.append(g)
+        }
+
+        var res = 1
+        for g in groups {
+            var cache = [Int: Int]()
+
+            func helper(_ n: Int) -> Int {
+                if g[n] == nil { return 1 }
+                if let val = cache[n] { return val }
+
+                let skip = helper(n + k)
+                let include = ((1 << g[n]!) - 1) * helper(n + 2 * k)
+                cache[n] = skip + include
+                return cache[n]!
+            }
+
+            let minN = g.keys.min()!
+            res *= helper(minN)
+        }
+
+        return res - 1
     }
 }
 ```
@@ -554,6 +797,167 @@ class Solution {
 }
 ```
 
+```go
+func beautifulSubsets(nums []int, k int) int {
+    cnt := make(map[int]int)
+    for _, num := range nums {
+        cnt[num]++
+    }
+
+    groups := []map[int]int{}
+    visit := make(map[int]bool)
+
+    for n := range cnt {
+        if visit[n] {
+            continue
+        }
+        g := make(map[int]int)
+        num := n
+        for cnt[num-k] > 0 {
+            num -= k
+        }
+        for cnt[num] > 0 {
+            g[num] = cnt[num]
+            visit[num] = true
+            num += k
+        }
+        groups = append(groups, g)
+    }
+
+    res := 1
+    for _, g := range groups {
+        dp := make(map[int]int)
+        prev := -1
+
+        keys := make([]int, 0, len(g))
+        for num := range g {
+            keys = append(keys, num)
+        }
+        sort.Ints(keys)
+
+        for _, num := range keys {
+            count := g[num]
+            if prev == -1 || prev+k != num {
+                prevVal := 1
+                if prev != -1 {
+                    prevVal = dp[prev]
+                }
+                dp[num] = prevVal * (1 + (1<<count) - 1)
+            } else {
+                prevKVal := 1
+                if val, ok := dp[prev-k]; ok {
+                    prevKVal = val
+                }
+                dp[num] = dp[prev] + ((1<<count)-1)*prevKVal
+            }
+            prev = num
+        }
+
+        res *= dp[prev]
+    }
+
+    return res - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun beautifulSubsets(nums: IntArray, k: Int): Int {
+        val cnt = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            cnt[num] = (cnt[num] ?: 0) + 1
+        }
+
+        val groups = mutableListOf<MutableMap<Int, Int>>()
+        val visit = mutableSetOf<Int>()
+
+        for (n in cnt.keys) {
+            if (n in visit) continue
+            val g = mutableMapOf<Int, Int>()
+            var num = n
+            while (cnt.containsKey(num - k)) {
+                num -= k
+            }
+            while (cnt.containsKey(num)) {
+                g[num] = cnt[num]!!
+                visit.add(num)
+                num += k
+            }
+            groups.add(g)
+        }
+
+        var res = 1
+        for (g in groups) {
+            val dp = mutableMapOf<Int, Int>()
+            var prev: Int? = null
+
+            for (num in g.keys.sorted()) {
+                val count = g[num]!!
+                if (prev == null || prev!! + k != num) {
+                    dp[num] = (dp[prev] ?: 1) * (1 + (1 shl count) - 1)
+                } else {
+                    dp[num] = dp[prev]!! + ((1 shl count) - 1) * (dp[prev!! - k] ?: 1)
+                }
+                prev = num
+            }
+
+            res *= dp[prev]!!
+        }
+
+        return res - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func beautifulSubsets(_ nums: [Int], _ k: Int) -> Int {
+        var cnt = [Int: Int]()
+        for num in nums {
+            cnt[num, default: 0] += 1
+        }
+
+        var groups = [[Int: Int]]()
+        var visit = Set<Int>()
+
+        for n in cnt.keys {
+            if visit.contains(n) { continue }
+            var g = [Int: Int]()
+            var num = n
+            while cnt[num - k] != nil {
+                num -= k
+            }
+            while cnt[num] != nil {
+                g[num] = cnt[num]!
+                visit.insert(num)
+                num += k
+            }
+            groups.append(g)
+        }
+
+        var res = 1
+        for g in groups {
+            var dp = [Int: Int]()
+            var prev: Int? = nil
+
+            for num in g.keys.sorted() {
+                let count = g[num]!
+                if prev == nil || prev! + k != num {
+                    dp[num] = (prev != nil ? dp[prev!]! : 1) * (1 + (1 << count) - 1)
+                } else {
+                    dp[num] = dp[prev!]! + ((1 << count) - 1) * (dp[prev! - k] ?? 1)
+                }
+                prev = num
+            }
+
+            res *= dp[prev!]!
+        }
+
+        return res - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -733,6 +1137,144 @@ class Solution {
         }
 
         return res - 1;
+    }
+}
+```
+
+```go
+func beautifulSubsets(nums []int, k int) int {
+    groups := make(map[int]map[int]int)
+    cnt := make(map[int]int)
+    for _, num := range nums {
+        cnt[num]++
+    }
+
+    // Group numbers based on remainder with k
+    for _, num := range nums {
+        if groups[num%k] == nil {
+            groups[num%k] = make(map[int]int)
+        }
+        groups[num%k][num] = cnt[num]
+    }
+
+    res := 1
+    for _, g := range groups {
+        prev, dp, ndp := 0, 0, 1
+        keys := make([]int, 0, len(g))
+        for num := range g {
+            keys = append(keys, num)
+        }
+        sort.Ints(keys)
+
+        for _, num := range keys {
+            count := g[num]
+            have := (1 << count) - 1
+            tmp := ndp
+            ndp += dp
+
+            if prev == 0 || prev+k != num {
+                dp = have * (tmp + dp)
+            } else {
+                dp = tmp * have
+            }
+
+            prev = num
+        }
+
+        res *= (dp + ndp)
+    }
+
+    return res - 1
+}
+```
+
+```kotlin
+class Solution {
+    fun beautifulSubsets(nums: IntArray, k: Int): Int {
+        val groups = mutableMapOf<Int, MutableMap<Int, Int>>()
+        val cnt = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            cnt[num] = (cnt[num] ?: 0) + 1
+        }
+
+        // Group numbers based on remainder with k
+        for (num in nums) {
+            groups.getOrPut(num % k) { mutableMapOf() }[num] = cnt[num]!!
+        }
+
+        var res = 1
+        for (g in groups.values) {
+            var prev = 0
+            var dp = 0
+            var ndp = 1
+            val sortedKeys = g.keys.sorted()
+
+            for (num in sortedKeys) {
+                val count = g[num]!!
+                val have = (1 shl count) - 1
+                val tmp = ndp
+                ndp += dp
+
+                dp = if (prev == 0 || prev + k != num) {
+                    have * (tmp + dp)
+                } else {
+                    tmp * have
+                }
+
+                prev = num
+            }
+
+            res *= (dp + ndp)
+        }
+
+        return res - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func beautifulSubsets(_ nums: [Int], _ k: Int) -> Int {
+        var groups = [Int: [Int: Int]]()
+        var cnt = [Int: Int]()
+        for num in nums {
+            cnt[num, default: 0] += 1
+        }
+
+        // Group numbers based on remainder with k
+        for num in nums {
+            if groups[num % k] == nil {
+                groups[num % k] = [Int: Int]()
+            }
+            groups[num % k]![num] = cnt[num]!
+        }
+
+        var res = 1
+        for g in groups.values {
+            var prev = 0
+            var dp = 0
+            var ndp = 1
+            let sortedKeys = g.keys.sorted()
+
+            for num in sortedKeys {
+                let count = g[num]!
+                let have = (1 << count) - 1
+                let tmp = ndp
+                ndp += dp
+
+                if prev == 0 || prev + k != num {
+                    dp = have * (tmp + dp)
+                } else {
+                    dp = tmp * have
+                }
+
+                prev = num
+            }
+
+            res *= (dp + ndp)
+        }
+
+        return res - 1
     }
 }
 ```

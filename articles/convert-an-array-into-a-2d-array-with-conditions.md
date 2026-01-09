@@ -97,6 +97,107 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<IList<int>> FindMatrix(int[] nums) {
+        IList<IList<int>> res = new List<IList<int>>();
+
+        foreach (int num in nums) {
+            int r = 0;
+            while (r < res.Count) {
+                if (!res[r].Contains(num)) {
+                    break;
+                }
+                r++;
+            }
+            if (r == res.Count) {
+                res.Add(new List<int>());
+            }
+            res[r].Add(num);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findMatrix(nums []int) [][]int {
+    res := [][]int{}
+
+    for _, num := range nums {
+        r := 0
+        for r < len(res) {
+            found := false
+            for _, v := range res[r] {
+                if v == num {
+                    found = true
+                    break
+                }
+            }
+            if !found {
+                break
+            }
+            r++
+        }
+        if r == len(res) {
+            res = append(res, []int{})
+        }
+        res[r] = append(res[r], num)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findMatrix(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+
+        for (num in nums) {
+            var r = 0
+            while (r < res.size) {
+                if (num !in res[r]) {
+                    break
+                }
+                r++
+            }
+            if (r == res.size) {
+                res.add(mutableListOf())
+            }
+            res[r].add(num)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMatrix(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+
+        for num in nums {
+            var r = 0
+            while r < res.count {
+                if !res[r].contains(num) {
+                    break
+                }
+                r += 1
+            }
+            if r == res.count {
+                res.append([])
+            }
+            res[r].append(num)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -215,6 +316,108 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<IList<int>> FindMatrix(int[] nums) {
+        Array.Sort(nums);
+        IList<IList<int>> res = new List<IList<int>>();
+
+        int i = 0;
+        while (i < nums.Length) {
+            int j = i;
+            int r = 0;
+            while (j < nums.Length && nums[i] == nums[j]) {
+                if (r == res.Count) {
+                    res.Add(new List<int>());
+                }
+                res[r].Add(nums[i]);
+                r++;
+                j++;
+            }
+            i = j;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findMatrix(nums []int) [][]int {
+    sort.Ints(nums)
+    res := [][]int{}
+
+    i := 0
+    for i < len(nums) {
+        j := i
+        r := 0
+        for j < len(nums) && nums[i] == nums[j] {
+            if r == len(res) {
+                res = append(res, []int{})
+            }
+            res[r] = append(res[r], nums[i])
+            r++
+            j++
+        }
+        i = j
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findMatrix(nums: IntArray): List<List<Int>> {
+        nums.sort()
+        val res = mutableListOf<MutableList<Int>>()
+
+        var i = 0
+        while (i < nums.size) {
+            var j = i
+            var r = 0
+            while (j < nums.size && nums[i] == nums[j]) {
+                if (r == res.size) {
+                    res.add(mutableListOf())
+                }
+                res[r].add(nums[i])
+                r++
+                j++
+            }
+            i = j
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMatrix(_ nums: [Int]) -> [[Int]] {
+        let nums = nums.sorted()
+        var res = [[Int]]()
+
+        var i = 0
+        while i < nums.count {
+            var j = i
+            var r = 0
+            while j < nums.count && nums[i] == nums[j] {
+                if r == res.count {
+                    res.append([])
+                }
+                res[r].append(nums[i])
+                r += 1
+                j += 1
+            }
+            i = j
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -305,6 +508,84 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<IList<int>> FindMatrix(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        IList<IList<int>> res = new List<IList<int>>();
+
+        foreach (int num in nums) {
+            int row = count.GetValueOrDefault(num, 0);
+            if (res.Count == row) {
+                res.Add(new List<int>());
+            }
+            res[row].Add(num);
+            count[num] = row + 1;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func findMatrix(nums []int) [][]int {
+    count := make(map[int]int)
+    res := [][]int{}
+
+    for _, num := range nums {
+        row := count[num]
+        if len(res) == row {
+            res = append(res, []int{})
+        }
+        res[row] = append(res[row], num)
+        count[num]++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findMatrix(nums: IntArray): List<List<Int>> {
+        val count = mutableMapOf<Int, Int>()
+        val res = mutableListOf<MutableList<Int>>()
+
+        for (num in nums) {
+            val row = count.getOrDefault(num, 0)
+            if (res.size == row) {
+                res.add(mutableListOf())
+            }
+            res[row].add(num)
+            count[num] = row + 1
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMatrix(_ nums: [Int]) -> [[Int]] {
+        var count = [Int: Int]()
+        var res = [[Int]]()
+
+        for num in nums {
+            let row = count[num, default: 0]
+            if res.count == row {
+                res.append([])
+            }
+            res[row].append(num)
+            count[num] = row + 1
+        }
+
+        return res
     }
 }
 ```

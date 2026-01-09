@@ -178,6 +178,124 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGameIII(stoneValue []int) string {
+    n := len(stoneValue)
+    dp := make([][2]*int, n)
+
+    var dfs func(i, alice int) int
+    dfs = func(i, alice int) int {
+        if i >= n {
+            return 0
+        }
+        if dp[i][alice] != nil {
+            return *dp[i][alice]
+        }
+
+        var res int
+        if alice == 1 {
+            res = math.MinInt32
+        } else {
+            res = math.MaxInt32
+        }
+        score := 0
+
+        for j := i; j < min(i+3, n); j++ {
+            if alice == 1 {
+                score += stoneValue[j]
+                res = max(res, score+dfs(j+1, 0))
+            } else {
+                score -= stoneValue[j]
+                res = min(res, score+dfs(j+1, 1))
+            }
+        }
+
+        dp[i][alice] = &res
+        return res
+    }
+
+    result := dfs(0, 1)
+    if result == 0 {
+        return "Tie"
+    }
+    if result > 0 {
+        return "Alice"
+    }
+    return "Bob"
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGameIII(stoneValue: IntArray): String {
+        val n = stoneValue.size
+        val dp = Array(n) { arrayOfNulls<Int>(2) }
+
+        fun dfs(i: Int, alice: Int): Int {
+            if (i >= n) return 0
+            dp[i][alice]?.let { return it }
+
+            var res = if (alice == 1) Int.MIN_VALUE else Int.MAX_VALUE
+            var score = 0
+
+            for (j in i until minOf(i + 3, n)) {
+                if (alice == 1) {
+                    score += stoneValue[j]
+                    res = maxOf(res, score + dfs(j + 1, 0))
+                } else {
+                    score -= stoneValue[j]
+                    res = minOf(res, score + dfs(j + 1, 1))
+                }
+            }
+
+            dp[i][alice] = res
+            return res
+        }
+
+        val result = dfs(0, 1)
+        return when {
+            result == 0 -> "Tie"
+            result > 0 -> "Alice"
+            else -> "Bob"
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGameIII(_ stoneValue: [Int]) -> String {
+        let n = stoneValue.count
+        var dp = [[Int?]](repeating: [nil, nil], count: n)
+
+        func dfs(_ i: Int, _ alice: Int) -> Int {
+            if i >= n { return 0 }
+            if let cached = dp[i][alice] { return cached }
+
+            var res = alice == 1 ? Int.min : Int.max
+            var score = 0
+
+            for j in i..<min(i + 3, n) {
+                if alice == 1 {
+                    score += stoneValue[j]
+                    res = max(res, score + dfs(j + 1, 0))
+                } else {
+                    score -= stoneValue[j]
+                    res = min(res, score + dfs(j + 1, 1))
+                }
+            }
+
+            dp[i][alice] = res
+            return res
+        }
+
+        let result = dfs(0, 1)
+        if result == 0 { return "Tie" }
+        return result > 0 ? "Alice" : "Bob"
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -339,6 +457,101 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGameIII(stoneValue []int) string {
+    n := len(stoneValue)
+    dp := make(map[int]int)
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= n {
+            return 0
+        }
+        if val, ok := dp[i]; ok {
+            return val
+        }
+
+        res := math.MinInt32
+        total := 0
+        for j := i; j < min(i+3, n); j++ {
+            total += stoneValue[j]
+            res = max(res, total-dfs(j+1))
+        }
+
+        dp[i] = res
+        return res
+    }
+
+    result := dfs(0)
+    if result == 0 {
+        return "Tie"
+    }
+    if result > 0 {
+        return "Alice"
+    }
+    return "Bob"
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGameIII(stoneValue: IntArray): String {
+        val n = stoneValue.size
+        val dp = HashMap<Int, Int>()
+
+        fun dfs(i: Int): Int {
+            if (i >= n) return 0
+            dp[i]?.let { return it }
+
+            var res = Int.MIN_VALUE
+            var total = 0
+            for (j in i until minOf(i + 3, n)) {
+                total += stoneValue[j]
+                res = maxOf(res, total - dfs(j + 1))
+            }
+
+            dp[i] = res
+            return res
+        }
+
+        val result = dfs(0)
+        return when {
+            result == 0 -> "Tie"
+            result > 0 -> "Alice"
+            else -> "Bob"
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGameIII(_ stoneValue: [Int]) -> String {
+        let n = stoneValue.count
+        var dp = [Int: Int]()
+
+        func dfs(_ i: Int) -> Int {
+            if i >= n { return 0 }
+            if let cached = dp[i] { return cached }
+
+            var res = Int.min
+            var total = 0
+            for j in i..<min(i + 3, n) {
+                total += stoneValue[j]
+                res = max(res, total - dfs(j + 1))
+            }
+
+            dp[i] = res
+            return res
+        }
+
+        let result = dfs(0)
+        if result == 0 { return "Tie" }
+        return result > 0 ? "Alice" : "Bob"
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +682,83 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGameIII(stoneValue []int) string {
+    n := len(stoneValue)
+    dp := make([]int, n+1)
+    for i := range dp {
+        dp[i] = math.MinInt32
+    }
+    dp[n] = 0
+
+    for i := n - 1; i >= 0; i-- {
+        total := 0
+        dp[i] = math.MinInt32
+        for j := i; j < min(i+3, n); j++ {
+            total += stoneValue[j]
+            dp[i] = max(dp[i], total-dp[j+1])
+        }
+    }
+
+    result := dp[0]
+    if result == 0 {
+        return "Tie"
+    }
+    if result > 0 {
+        return "Alice"
+    }
+    return "Bob"
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGameIII(stoneValue: IntArray): String {
+        val n = stoneValue.size
+        val dp = IntArray(n + 1) { Int.MIN_VALUE }
+        dp[n] = 0
+
+        for (i in n - 1 downTo 0) {
+            var total = 0
+            for (j in i until minOf(i + 3, n)) {
+                total += stoneValue[j]
+                dp[i] = maxOf(dp[i], total - dp[j + 1])
+            }
+        }
+
+        val result = dp[0]
+        return when {
+            result == 0 -> "Tie"
+            result > 0 -> "Alice"
+            else -> "Bob"
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGameIII(_ stoneValue: [Int]) -> String {
+        let n = stoneValue.count
+        var dp = [Int](repeating: Int.min, count: n + 1)
+        dp[n] = 0
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            var total = 0
+            dp[i] = Int.min
+            for j in i..<min(i + 3, n) {
+                total += stoneValue[j]
+                dp[i] = max(dp[i], total - dp[j + 1])
+            }
+        }
+
+        let result = dp[0]
+        if result == 0 { return "Tie" }
+        return result > 0 ? "Alice" : "Bob"
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -586,6 +876,75 @@ public class Solution {
 
         if (dp[0] == 0) return "Tie";
         return dp[0] > 0 ? "Alice" : "Bob";
+    }
+}
+```
+
+```go
+func stoneGameIII(stoneValue []int) string {
+    n := len(stoneValue)
+    dp := make([]int, 4)
+
+    for i := n - 1; i >= 0; i-- {
+        total := 0
+        dp[i%4] = math.MinInt32
+        for j := i; j < min(i+3, n); j++ {
+            total += stoneValue[j]
+            dp[i%4] = max(dp[i%4], total-dp[(j+1)%4])
+        }
+    }
+
+    if dp[0] == 0 {
+        return "Tie"
+    }
+    if dp[0] > 0 {
+        return "Alice"
+    }
+    return "Bob"
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGameIII(stoneValue: IntArray): String {
+        val n = stoneValue.size
+        val dp = IntArray(4)
+
+        for (i in n - 1 downTo 0) {
+            var total = 0
+            dp[i % 4] = Int.MIN_VALUE
+            for (j in i until minOf(i + 3, n)) {
+                total += stoneValue[j]
+                dp[i % 4] = maxOf(dp[i % 4], total - dp[(j + 1) % 4])
+            }
+        }
+
+        return when {
+            dp[0] == 0 -> "Tie"
+            dp[0] > 0 -> "Alice"
+            else -> "Bob"
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGameIII(_ stoneValue: [Int]) -> String {
+        let n = stoneValue.count
+        var dp = [Int](repeating: 0, count: 4)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            var total = 0
+            dp[i % 4] = Int.min
+            for j in i..<min(i + 3, n) {
+                total += stoneValue[j]
+                dp[i % 4] = max(dp[i % 4], total - dp[(j + 1) % 4])
+            }
+        }
+
+        if dp[0] == 0 { return "Tie" }
+        return dp[0] > 0 ? "Alice" : "Bob"
     }
 }
 ```

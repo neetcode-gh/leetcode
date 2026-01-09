@@ -92,6 +92,68 @@ public class Solution {
 }
 ```
 
+```go
+func mergeAlternately(word1 string, word2 string) string {
+    var res strings.Builder
+    i, j := 0, 0
+
+    for i < len(word1) && j < len(word2) {
+        res.WriteByte(word1[i])
+        res.WriteByte(word2[j])
+        i++
+        j++
+    }
+
+    res.WriteString(word1[i:])
+    res.WriteString(word2[j:])
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun mergeAlternately(word1: String, word2: String): String {
+        val res = StringBuilder()
+        var i = 0
+        var j = 0
+
+        while (i < word1.length && j < word2.length) {
+            res.append(word1[i++])
+            res.append(word2[j++])
+        }
+
+        res.append(word1.substring(i))
+        res.append(word2.substring(j))
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func mergeAlternately(_ word1: String, _ word2: String) -> String {
+        var res = ""
+        let arr1 = Array(word1)
+        let arr2 = Array(word2)
+        var i = 0, j = 0
+
+        while i < arr1.count && j < arr2.count {
+            res.append(arr1[i])
+            res.append(arr2[j])
+            i += 1
+            j += 1
+        }
+
+        res.append(contentsOf: arr1[i...])
+        res.append(contentsOf: arr2[j...])
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -195,6 +257,71 @@ public class Solution {
         }
 
         return res.ToString();
+    }
+}
+```
+
+```go
+func mergeAlternately(word1 string, word2 string) string {
+    n, m := len(word1), len(word2)
+    var res strings.Builder
+    i, j := 0, 0
+
+    for i < n || j < m {
+        if i < n {
+            res.WriteByte(word1[i])
+            i++
+        }
+        if j < m {
+            res.WriteByte(word2[j])
+            j++
+        }
+    }
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun mergeAlternately(word1: String, word2: String): String {
+        val n = word1.length
+        val m = word2.length
+        val res = StringBuilder()
+        var i = 0
+        var j = 0
+
+        while (i < n || j < m) {
+            if (i < n) res.append(word1[i++])
+            if (j < m) res.append(word2[j++])
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func mergeAlternately(_ word1: String, _ word2: String) -> String {
+        let arr1 = Array(word1)
+        let arr2 = Array(word2)
+        let n = arr1.count, m = arr2.count
+        var res = ""
+        var i = 0, j = 0
+
+        while i < n || j < m {
+            if i < n {
+                res.append(arr1[i])
+                i += 1
+            }
+            if j < m {
+                res.append(arr2[j])
+                j += 1
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -304,6 +431,68 @@ public class Solution {
         }
 
         return res.ToString();
+    }
+}
+```
+
+```go
+func mergeAlternately(word1 string, word2 string) string {
+    n, m := len(word1), len(word2)
+    var res strings.Builder
+
+    maxLen := n
+    if m > maxLen {
+        maxLen = m
+    }
+
+    for i := 0; i < maxLen; i++ {
+        if i < n {
+            res.WriteByte(word1[i])
+        }
+        if i < m {
+            res.WriteByte(word2[i])
+        }
+    }
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun mergeAlternately(word1: String, word2: String): String {
+        val n = word1.length
+        val m = word2.length
+        val res = StringBuilder()
+
+        for (i in 0 until maxOf(n, m)) {
+            if (i < n) res.append(word1[i])
+            if (i < m) res.append(word2[i])
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func mergeAlternately(_ word1: String, _ word2: String) -> String {
+        let arr1 = Array(word1)
+        let arr2 = Array(word2)
+        let n = arr1.count, m = arr2.count
+        var res = ""
+
+        for i in 0..<max(n, m) {
+            if i < n {
+                res.append(arr1[i])
+            }
+            if i < m {
+                res.append(arr2[i])
+            }
+        }
+
+        return res
     }
 }
 ```

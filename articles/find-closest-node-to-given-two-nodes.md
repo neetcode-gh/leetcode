@@ -182,6 +182,155 @@ class Solution {
 }
 ```
 
+```go
+func closestMeetingNode(edges []int, node1 int, node2 int) int {
+    n := len(edges)
+    adj := make([][]int, n)
+    for i := 0; i < n; i++ {
+        adj[i] = []int{}
+        if edges[i] != -1 {
+            adj[i] = append(adj[i], edges[i])
+        }
+    }
+
+    bfs := func(src int) []int {
+        distMap := make([]int, n)
+        for i := range distMap {
+            distMap[i] = -1
+        }
+        q := [][]int{{src, 0}}
+        distMap[src] = 0
+
+        for len(q) > 0 {
+            node, dist := q[0][0], q[0][1]
+            q = q[1:]
+            for _, nei := range adj[node] {
+                if distMap[nei] == -1 {
+                    q = append(q, []int{nei, dist + 1})
+                    distMap[nei] = dist + 1
+                }
+            }
+        }
+        return distMap
+    }
+
+    node1Dist := bfs(node1)
+    node2Dist := bfs(node2)
+
+    res, resDist := -1, math.MaxInt32
+    for i := 0; i < n; i++ {
+        if node1Dist[i] != -1 && node2Dist[i] != -1 {
+            dist := max(node1Dist[i], node2Dist[i])
+            if dist < resDist {
+                resDist = dist
+                res = i
+            }
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun closestMeetingNode(edges: IntArray, node1: Int, node2: Int): Int {
+        val n = edges.size
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (i in 0 until n) {
+            if (edges[i] != -1) adj[i].add(edges[i])
+        }
+
+        fun bfs(src: Int): IntArray {
+            val distMap = IntArray(n) { -1 }
+            val q: ArrayDeque<Pair<Int, Int>> = ArrayDeque()
+            q.add(Pair(src, 0))
+            distMap[src] = 0
+
+            while (q.isNotEmpty()) {
+                val (node, dist) = q.removeFirst()
+                for (nei in adj[node]) {
+                    if (distMap[nei] == -1) {
+                        q.add(Pair(nei, dist + 1))
+                        distMap[nei] = dist + 1
+                    }
+                }
+            }
+            return distMap
+        }
+
+        val node1Dist = bfs(node1)
+        val node2Dist = bfs(node2)
+
+        var res = -1
+        var resDist = Int.MAX_VALUE
+        for (i in 0 until n) {
+            if (node1Dist[i] != -1 && node2Dist[i] != -1) {
+                val dist = maxOf(node1Dist[i], node2Dist[i])
+                if (dist < resDist) {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func closestMeetingNode(_ edges: [Int], _ node1: Int, _ node2: Int) -> Int {
+        let n = edges.count
+        var adj = [[Int]](repeating: [], count: n)
+        for i in 0..<n {
+            if edges[i] != -1 {
+                adj[i].append(edges[i])
+            }
+        }
+
+        func bfs(_ src: Int) -> [Int] {
+            var distMap = [Int](repeating: -1, count: n)
+            var q = [(src, 0)]
+            distMap[src] = 0
+
+            while !q.isEmpty {
+                let (node, dist) = q.removeFirst()
+                for nei in adj[node] {
+                    if distMap[nei] == -1 {
+                        q.append((nei, dist + 1))
+                        distMap[nei] = dist + 1
+                    }
+                }
+            }
+            return distMap
+        }
+
+        let node1Dist = bfs(node1)
+        let node2Dist = bfs(node2)
+
+        var res = -1
+        var resDist = Int.max
+        for i in 0..<n {
+            if node1Dist[i] != -1 && node2Dist[i] != -1 {
+                let dist = max(node1Dist[i], node2Dist[i])
+                if dist < resDist {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,6 +510,138 @@ class Solution {
 }
 ```
 
+```go
+func closestMeetingNode(edges []int, node1 int, node2 int) int {
+    n := len(edges)
+
+    bfs := func(src int) []int {
+        dist := make([]int, n)
+        for i := range dist {
+            dist[i] = -1
+        }
+        q := []int{src}
+        dist[src] = 0
+
+        for len(q) > 0 {
+            node := q[0]
+            q = q[1:]
+            nei := edges[node]
+            if nei == -1 || dist[nei] != -1 {
+                continue
+            }
+            q = append(q, nei)
+            dist[nei] = dist[node] + 1
+        }
+        return dist
+    }
+
+    node1Dist := bfs(node1)
+    node2Dist := bfs(node2)
+
+    res, resDist := -1, math.MaxInt32
+    for i := 0; i < n; i++ {
+        if node1Dist[i] != -1 && node2Dist[i] != -1 {
+            dist := max(node1Dist[i], node2Dist[i])
+            if dist < resDist {
+                resDist = dist
+                res = i
+            }
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun closestMeetingNode(edges: IntArray, node1: Int, node2: Int): Int {
+        val n = edges.size
+
+        fun bfs(src: Int): IntArray {
+            val dist = IntArray(n) { -1 }
+            val q: ArrayDeque<Int> = ArrayDeque()
+            q.add(src)
+            dist[src] = 0
+
+            while (q.isNotEmpty()) {
+                val node = q.removeFirst()
+                val nei = edges[node]
+                if (nei == -1 || dist[nei] != -1) {
+                    continue
+                }
+                q.add(nei)
+                dist[nei] = dist[node] + 1
+            }
+            return dist
+        }
+
+        val node1Dist = bfs(node1)
+        val node2Dist = bfs(node2)
+
+        var res = -1
+        var resDist = Int.MAX_VALUE
+        for (i in 0 until n) {
+            if (node1Dist[i] != -1 && node2Dist[i] != -1) {
+                val dist = maxOf(node1Dist[i], node2Dist[i])
+                if (dist < resDist) {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func closestMeetingNode(_ edges: [Int], _ node1: Int, _ node2: Int) -> Int {
+        let n = edges.count
+
+        func bfs(_ src: Int) -> [Int] {
+            var dist = [Int](repeating: -1, count: n)
+            var q = [src]
+            dist[src] = 0
+
+            while !q.isEmpty {
+                let node = q.removeFirst()
+                let nei = edges[node]
+                if nei == -1 || dist[nei] != -1 {
+                    continue
+                }
+                q.append(nei)
+                dist[nei] = dist[node] + 1
+            }
+            return dist
+        }
+
+        let node1Dist = bfs(node1)
+        let node2Dist = bfs(node2)
+
+        var res = -1
+        var resDist = Int.max
+        for i in 0..<n {
+            if node1Dist[i] != -1 && node2Dist[i] != -1 {
+                let dist = max(node1Dist[i], node2Dist[i])
+                if dist < resDist {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -517,6 +798,133 @@ class Solution {
 }
 ```
 
+```go
+func closestMeetingNode(edges []int, node1 int, node2 int) int {
+    n := len(edges)
+
+    var dfs func(node int, dist []int)
+    dfs = func(node int, dist []int) {
+        nei := edges[node]
+        if nei != -1 && dist[nei] == -1 {
+            dist[nei] = dist[node] + 1
+            dfs(nei, dist)
+        }
+    }
+
+    node1Dist := make([]int, n)
+    node2Dist := make([]int, n)
+    for i := range node1Dist {
+        node1Dist[i] = -1
+        node2Dist[i] = -1
+    }
+    node1Dist[node1] = 0
+    node2Dist[node2] = 0
+
+    dfs(node1, node1Dist)
+    dfs(node2, node2Dist)
+
+    res, resDist := -1, math.MaxInt32
+    for i := 0; i < n; i++ {
+        if min(node1Dist[i], node2Dist[i]) != -1 {
+            dist := max(node1Dist[i], node2Dist[i])
+            if dist < resDist {
+                resDist = dist
+                res = i
+            }
+        }
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun closestMeetingNode(edges: IntArray, node1: Int, node2: Int): Int {
+        val n = edges.size
+
+        fun dfs(node: Int, dist: IntArray) {
+            val nei = edges[node]
+            if (nei != -1 && dist[nei] == -1) {
+                dist[nei] = dist[node] + 1
+                dfs(nei, dist)
+            }
+        }
+
+        val node1Dist = IntArray(n) { -1 }
+        val node2Dist = IntArray(n) { -1 }
+        node1Dist[node1] = 0
+        node2Dist[node2] = 0
+
+        dfs(node1, node1Dist)
+        dfs(node2, node2Dist)
+
+        var res = -1
+        var resDist = Int.MAX_VALUE
+        for (i in 0 until n) {
+            if (minOf(node1Dist[i], node2Dist[i]) != -1) {
+                val dist = maxOf(node1Dist[i], node2Dist[i])
+                if (dist < resDist) {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func closestMeetingNode(_ edges: [Int], _ node1: Int, _ node2: Int) -> Int {
+        let n = edges.count
+
+        func dfs(_ node: Int, _ dist: inout [Int]) {
+            let nei = edges[node]
+            if nei != -1 && dist[nei] == -1 {
+                dist[nei] = dist[node] + 1
+                dfs(nei, &dist)
+            }
+        }
+
+        var node1Dist = [Int](repeating: -1, count: n)
+        var node2Dist = [Int](repeating: -1, count: n)
+        node1Dist[node1] = 0
+        node2Dist[node2] = 0
+
+        dfs(node1, &node1Dist)
+        dfs(node2, &node2Dist)
+
+        var res = -1
+        var resDist = Int.max
+        for i in 0..<n {
+            if min(node1Dist[i], node2Dist[i]) != -1 {
+                let dist = max(node1Dist[i], node2Dist[i])
+                if dist < resDist {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -661,6 +1069,127 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func closestMeetingNode(edges []int, node1 int, node2 int) int {
+    n := len(edges)
+
+    dfs := func(node int) []int {
+        dist := make([]int, n)
+        for i := range dist {
+            dist[i] = -1
+        }
+        dist[node] = 0
+        for edges[node] != -1 && dist[edges[node]] == -1 {
+            nei := edges[node]
+            dist[nei] = dist[node] + 1
+            node = nei
+        }
+        return dist
+    }
+
+    node1Dist := dfs(node1)
+    node2Dist := dfs(node2)
+
+    res, resDist := -1, math.MaxInt32
+    for i := 0; i < n; i++ {
+        if min(node1Dist[i], node2Dist[i]) != -1 {
+            dist := max(node1Dist[i], node2Dist[i])
+            if dist < resDist {
+                resDist = dist
+                res = i
+            }
+        }
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun closestMeetingNode(edges: IntArray, node1: Int, node2: Int): Int {
+        val n = edges.size
+
+        fun dfs(startNode: Int): IntArray {
+            val dist = IntArray(n) { -1 }
+            var node = startNode
+            dist[node] = 0
+            while (edges[node] != -1 && dist[edges[node]] == -1) {
+                val nei = edges[node]
+                dist[nei] = dist[node] + 1
+                node = nei
+            }
+            return dist
+        }
+
+        val node1Dist = dfs(node1)
+        val node2Dist = dfs(node2)
+
+        var res = -1
+        var resDist = Int.MAX_VALUE
+        for (i in 0 until n) {
+            if (minOf(node1Dist[i], node2Dist[i]) != -1) {
+                val dist = maxOf(node1Dist[i], node2Dist[i])
+                if (dist < resDist) {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func closestMeetingNode(_ edges: [Int], _ node1: Int, _ node2: Int) -> Int {
+        let n = edges.count
+
+        func dfs(_ startNode: Int) -> [Int] {
+            var dist = [Int](repeating: -1, count: n)
+            var node = startNode
+            dist[node] = 0
+            while edges[node] != -1 && dist[edges[node]] == -1 {
+                let nei = edges[node]
+                dist[nei] = dist[node] + 1
+                node = nei
+            }
+            return dist
+        }
+
+        let node1Dist = dfs(node1)
+        let node2Dist = dfs(node2)
+
+        var res = -1
+        var resDist = Int.max
+        for i in 0..<n {
+            if min(node1Dist[i], node2Dist[i]) != -1 {
+                let dist = max(node1Dist[i], node2Dist[i])
+                if dist < resDist {
+                    resDist = dist
+                    res = i
+                }
+            }
+        }
+        return res
     }
 }
 ```

@@ -79,6 +79,82 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int mod = 1_000_000_007;
+
+    public int CountGoodStrings(int low, int high, int zero, int one) {
+        return Dfs(low, high, zero, one, 0);
+    }
+
+    private int Dfs(int low, int high, int zero, int one, int length) {
+        if (length > high) return 0;
+        int res = (length >= low) ? 1 : 0;
+        res = (res + Dfs(low, high, zero, one, length + zero)) % mod;
+        res = (res + Dfs(low, high, zero, one, length + one)) % mod;
+        return res;
+    }
+}
+```
+
+```go
+func countGoodStrings(low int, high int, zero int, one int) int {
+    mod := int(1e9 + 7)
+
+    var dfs func(length int) int
+    dfs = func(length int) int {
+        if length > high {
+            return 0
+        }
+        res := 0
+        if length >= low {
+            res = 1
+        }
+        res = (res + dfs(length+zero)) % mod
+        res = (res + dfs(length+one)) % mod
+        return res
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    private val mod = 1_000_000_007
+
+    fun countGoodStrings(low: Int, high: Int, zero: Int, one: Int): Int {
+        return dfs(low, high, zero, one, 0)
+    }
+
+    private fun dfs(low: Int, high: Int, zero: Int, one: Int, length: Int): Int {
+        if (length > high) return 0
+        var res = if (length >= low) 1 else 0
+        res = (res + dfs(low, high, zero, one, length + zero)) % mod
+        res = (res + dfs(low, high, zero, one, length + one)) % mod
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private let mod = 1_000_000_007
+
+    func countGoodStrings(_ low: Int, _ high: Int, _ zero: Int, _ one: Int) -> Int {
+        func dfs(_ length: Int) -> Int {
+            if length > high { return 0 }
+            var res = length >= low ? 1 : 0
+            res = (res + dfs(length + zero)) % mod
+            res = (res + dfs(length + one)) % mod
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -186,6 +262,101 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int mod = 1_000_000_007;
+    private int[] dp;
+
+    public int CountGoodStrings(int low, int high, int zero, int one) {
+        dp = new int[high + 1];
+        Array.Fill(dp, -1);
+        return Dfs(low, high, zero, one, 0);
+    }
+
+    private int Dfs(int low, int high, int zero, int one, int length) {
+        if (length > high) return 0;
+        if (dp[length] != -1) return dp[length];
+        dp[length] = (length >= low) ? 1 : 0;
+        dp[length] = (dp[length] + Dfs(low, high, zero, one, length + zero)) % mod;
+        dp[length] = (dp[length] + Dfs(low, high, zero, one, length + one)) % mod;
+        return dp[length];
+    }
+}
+```
+
+```go
+func countGoodStrings(low int, high int, zero int, one int) int {
+    mod := int(1e9 + 7)
+    dp := make([]int, high+1)
+    for i := range dp {
+        dp[i] = -1
+    }
+
+    var dfs func(length int) int
+    dfs = func(length int) int {
+        if length > high {
+            return 0
+        }
+        if dp[length] != -1 {
+            return dp[length]
+        }
+        if length >= low {
+            dp[length] = 1
+        } else {
+            dp[length] = 0
+        }
+        dp[length] = (dp[length] + dfs(length+zero)) % mod
+        dp[length] = (dp[length] + dfs(length+one)) % mod
+        return dp[length]
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    private val mod = 1_000_000_007
+    private lateinit var dp: IntArray
+
+    fun countGoodStrings(low: Int, high: Int, zero: Int, one: Int): Int {
+        dp = IntArray(high + 1) { -1 }
+        return dfs(low, high, zero, one, 0)
+    }
+
+    private fun dfs(low: Int, high: Int, zero: Int, one: Int, length: Int): Int {
+        if (length > high) return 0
+        if (dp[length] != -1) return dp[length]
+        dp[length] = if (length >= low) 1 else 0
+        dp[length] = (dp[length] + dfs(low, high, zero, one, length + zero)) % mod
+        dp[length] = (dp[length] + dfs(low, high, zero, one, length + one)) % mod
+        return dp[length]
+    }
+}
+```
+
+```swift
+class Solution {
+    private let mod = 1_000_000_007
+    private var dp: [Int] = []
+
+    func countGoodStrings(_ low: Int, _ high: Int, _ zero: Int, _ one: Int) -> Int {
+        dp = Array(repeating: -1, count: high + 1)
+
+        func dfs(_ length: Int) -> Int {
+            if length > high { return 0 }
+            if dp[length] != -1 { return dp[length] }
+            dp[length] = length >= low ? 1 : 0
+            dp[length] = (dp[length] + dfs(length + zero)) % mod
+            dp[length] = (dp[length] + dfs(length + one)) % mod
+            return dp[length]
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +440,81 @@ class Solution {
             if (i >= low) res = (res + dp[i]) % mod;
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountGoodStrings(int low, int high, int zero, int one) {
+        int[] dp = new int[high + 1];
+        int mod = 1_000_000_007, res = 0;
+        dp[0] = 1;
+
+        for (int i = 1; i <= high; i++) {
+            if (i >= zero) dp[i] = (dp[i] + dp[i - zero]) % mod;
+            if (i >= one) dp[i] = (dp[i] + dp[i - one]) % mod;
+            if (i >= low) res = (res + dp[i]) % mod;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countGoodStrings(low int, high int, zero int, one int) int {
+    mod := int(1e9 + 7)
+    dp := make([]int, high+1)
+    dp[0] = 1
+    res := 0
+
+    for i := 1; i <= high; i++ {
+        if i >= zero {
+            dp[i] = (dp[i] + dp[i-zero]) % mod
+        }
+        if i >= one {
+            dp[i] = (dp[i] + dp[i-one]) % mod
+        }
+        if i >= low {
+            res = (res + dp[i]) % mod
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countGoodStrings(low: Int, high: Int, zero: Int, one: Int): Int {
+        val mod = 1_000_000_007
+        val dp = IntArray(high + 1)
+        dp[0] = 1
+        var res = 0
+
+        for (i in 1..high) {
+            if (i >= zero) dp[i] = (dp[i] + dp[i - zero]) % mod
+            if (i >= one) dp[i] = (dp[i] + dp[i - one]) % mod
+            if (i >= low) res = (res + dp[i]) % mod
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countGoodStrings(_ low: Int, _ high: Int, _ zero: Int, _ one: Int) -> Int {
+        let mod = 1_000_000_007
+        var dp = [Int](repeating: 0, count: high + 1)
+        dp[0] = 1
+        var res = 0
+
+        for i in 1...high {
+            if i >= zero { dp[i] = (dp[i] + dp[i - zero]) % mod }
+            if i >= one { dp[i] = (dp[i] + dp[i - one]) % mod }
+            if i >= low { res = (res + dp[i]) % mod }
+        }
+        return res
     }
 }
 ```

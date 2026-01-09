@@ -102,6 +102,74 @@ public class Solution {
 }
 ```
 
+```go
+func numSquares(n int) int {
+    var dfs func(target int) int
+    dfs = func(target int) int {
+        if target == 0 {
+            return 0
+        }
+
+        res := target
+        for i := 1; i*i <= target; i++ {
+            res = min(res, 1+dfs(target-i*i))
+        }
+        return res
+    }
+
+    return dfs(n)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun numSquares(n: Int): Int {
+        fun dfs(target: Int): Int {
+            if (target == 0) return 0
+
+            var res = target
+            var i = 1
+            while (i * i <= target) {
+                res = minOf(res, 1 + dfs(target - i * i))
+                i++
+            }
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSquares(_ n: Int) -> Int {
+        func dfs(_ target: Int) -> Int {
+            if target == 0 {
+                return 0
+            }
+
+            var res = target
+            var i = 1
+            while i * i <= target {
+                res = min(res, 1 + dfs(target - i * i))
+                i += 1
+            }
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,6 +303,93 @@ public class Solution {
 }
 ```
 
+```go
+func numSquares(n int) int {
+    memo := make(map[int]int)
+
+    var dfs func(target int) int
+    dfs = func(target int) int {
+        if target == 0 {
+            return 0
+        }
+        if val, ok := memo[target]; ok {
+            return val
+        }
+
+        res := target
+        for i := 1; i*i <= target; i++ {
+            res = min(res, 1+dfs(target-i*i))
+        }
+
+        memo[target] = res
+        return res
+    }
+
+    return dfs(n)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun numSquares(n: Int): Int {
+        val memo = mutableMapOf<Int, Int>()
+
+        fun dfs(target: Int): Int {
+            if (target == 0) return 0
+            if (memo.containsKey(target)) return memo[target]!!
+
+            var res = target
+            var i = 1
+            while (i * i <= target) {
+                res = minOf(res, 1 + dfs(target - i * i))
+                i++
+            }
+
+            memo[target] = res
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSquares(_ n: Int) -> Int {
+        var memo = [Int: Int]()
+
+        func dfs(_ target: Int) -> Int {
+            if target == 0 {
+                return 0
+            }
+            if let cached = memo[target] {
+                return cached
+            }
+
+            var res = target
+            var i = 1
+            while i * i <= target {
+                res = min(res, 1 + dfs(target - i * i))
+                i += 1
+            }
+
+            memo[target] = res
+            return res
+        }
+
+        return dfs(n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,6 +491,69 @@ public class Solution {
         }
 
         return dp[n];
+    }
+}
+```
+
+```go
+func numSquares(n int) int {
+    dp := make([]int, n+1)
+    for i := range dp {
+        dp[i] = n
+    }
+    dp[0] = 0
+
+    for target := 1; target <= n; target++ {
+        for s := 1; s*s <= target; s++ {
+            dp[target] = min(dp[target], 1+dp[target-s*s])
+        }
+    }
+
+    return dp[n]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun numSquares(n: Int): Int {
+        val dp = IntArray(n + 1) { n }
+        dp[0] = 0
+
+        for (target in 1..n) {
+            var s = 1
+            while (s * s <= target) {
+                dp[target] = minOf(dp[target], 1 + dp[target - s * s])
+                s++
+            }
+        }
+
+        return dp[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSquares(_ n: Int) -> Int {
+        var dp = [Int](repeating: n, count: n + 1)
+        dp[0] = 0
+
+        for target in 1...n {
+            var s = 1
+            while s * s <= target {
+                dp[target] = min(dp[target], 1 + dp[target - s * s])
+                s += 1
+            }
+        }
+
+        return dp[n]
     }
 }
 ```
@@ -494,6 +712,99 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func numSquares(n int) int {
+    queue := []int{0}
+    seen := make(map[int]bool)
+
+    res := 0
+    for len(queue) > 0 {
+        res++
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            cur := queue[0]
+            queue = queue[1:]
+            for s := 1; s*s+cur <= n; s++ {
+                next := cur + s*s
+                if next == n {
+                    return res
+                }
+                if !seen[next] {
+                    seen[next] = true
+                    queue = append(queue, next)
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numSquares(n: Int): Int {
+        val queue = ArrayDeque<Int>()
+        val seen = mutableSetOf<Int>()
+
+        var res = 0
+        queue.add(0)
+
+        while (queue.isNotEmpty()) {
+            res++
+            val size = queue.size
+            repeat(size) {
+                val cur = queue.removeFirst()
+                var s = 1
+                while (s * s + cur <= n) {
+                    val next = cur + s * s
+                    if (next == n) return res
+                    if (next !in seen) {
+                        seen.add(next)
+                        queue.add(next)
+                    }
+                    s++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSquares(_ n: Int) -> Int {
+        var queue = [0]
+        var seen = Set<Int>()
+
+        var res = 0
+        while !queue.isEmpty {
+            res += 1
+            let size = queue.count
+            for _ in 0..<size {
+                let cur = queue.removeFirst()
+                var s = 1
+                while s * s + cur <= n {
+                    let next = cur + s * s
+                    if next == n {
+                        return res
+                    }
+                    if !seen.contains(next) {
+                        seen.insert(next)
+                        queue.append(next)
+                    }
+                    s += 1
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -662,6 +973,103 @@ public class Solution {
         }
 
         return 3;
+    }
+}
+```
+
+```go
+func numSquares(n int) int {
+    for n%4 == 0 {
+        n /= 4
+    }
+
+    if n%8 == 7 {
+        return 4
+    }
+
+    isSquareNum := func(num int) bool {
+        s := int(math.Sqrt(float64(num)))
+        return s*s == num
+    }
+
+    if isSquareNum(n) {
+        return 1
+    }
+
+    for i := 1; i*i <= n; i++ {
+        if isSquareNum(n - i*i) {
+            return 2
+        }
+    }
+
+    return 3
+}
+```
+
+```kotlin
+class Solution {
+    fun numSquares(n: Int): Int {
+        var num = n
+        while (num % 4 == 0) {
+            num /= 4
+        }
+
+        if (num % 8 == 7) {
+            return 4
+        }
+
+        fun isSquareNum(x: Int): Boolean {
+            val s = kotlin.math.sqrt(x.toDouble()).toInt()
+            return s * s == x
+        }
+
+        if (isSquareNum(num)) {
+            return 1
+        }
+
+        var i = 1
+        while (i * i <= num) {
+            if (isSquareNum(num - i * i)) {
+                return 2
+            }
+            i++
+        }
+
+        return 3
+    }
+}
+```
+
+```swift
+class Solution {
+    func numSquares(_ n: Int) -> Int {
+        var num = n
+        while num % 4 == 0 {
+            num /= 4
+        }
+
+        if num % 8 == 7 {
+            return 4
+        }
+
+        func isSquareNum(_ x: Int) -> Bool {
+            let s = Int(sqrt(Double(x)))
+            return s * s == x
+        }
+
+        if isSquareNum(num) {
+            return 1
+        }
+
+        var i = 1
+        while i * i <= num {
+            if isSquareNum(num - i * i) {
+                return 2
+            }
+            i += 1
+        }
+
+        return 3
     }
 }
 ```

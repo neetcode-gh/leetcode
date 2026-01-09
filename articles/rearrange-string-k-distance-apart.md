@@ -61,7 +61,7 @@ public:
         for (int i = 0; i < s.size(); i++) {
             freq[s[i] - 'a']++;
         }
-        
+
         priority_queue<pair<int, int>> free;
         // Insert the characters with their frequencies in the max heap.
         for (int i = 0; i < 26; i++) {
@@ -69,37 +69,228 @@ public:
                 free.push({freq[i], i});
             }
         }
-        
+
         string ans;
         // This queue stores the characters that cannot be used now.
         queue<pair<int, int>>  busy;
         while (ans.size() != s.size()) {
             int index = ans.size();
-            
+
             // Insert the character that could be used now into the free heap.
             if (!busy.empty() && (index - busy.front().first) >= k) {
                 auto q = busy.front(); busy.pop();
                 free.push({freq[q.second], q.second});
             }
-            
+
             // If the free heap is empty, it implies no character can be used at this index.
             if (free.empty()) {
                 return "";
             }
-            
+
             int currChar = free.top().second; free.pop();
             ans += currChar + 'a';
-            
+
             // Insert the used character into busy queue with the current index.
             freq[currChar]--;
             if (freq[currChar] > 0) {
                 busy.push({index, currChar});
             }
         }
-        
+
         return ans;
     }
 };
+```
+
+```csharp
+public class Solution {
+    public string RearrangeString(string s, int k) {
+        var freq = new Dictionary<char, int>();
+        foreach (char c in s) {
+            freq[c] = freq.GetValueOrDefault(c, 0) + 1;
+        }
+
+        var free = new PriorityQueue<char, int>(Comparer<int>.Create((a, b) => b - a));
+        foreach (var kvp in freq) {
+            free.Enqueue(kvp.Key, kvp.Value);
+        }
+
+        var ans = new StringBuilder();
+        var busy = new Queue<(int index, char c)>();
+
+        while (ans.Length != s.Length) {
+            int index = ans.Length;
+
+            if (busy.Count > 0 && (index - busy.Peek().index) >= k) {
+                var q = busy.Dequeue();
+                free.Enqueue(q.c, freq[q.c]);
+            }
+
+            if (free.Count == 0) return "";
+
+            char currChar = free.Dequeue();
+            ans.Append(currChar);
+
+            freq[currChar]--;
+            if (freq[currChar] > 0) {
+                busy.Enqueue((index, currChar));
+            }
+        }
+
+        return ans.ToString();
+    }
+}
+```
+
+```go
+import (
+    "container/heap"
+)
+
+type CharFreq struct {
+    freq int
+    char int
+}
+
+type MaxHeap []CharFreq
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i].freq > h[j].freq }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x any)        { *h = append(*h, x.(CharFreq)) }
+func (h *MaxHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func rearrangeString(s string, k int) string {
+    freq := make([]int, 26)
+    for _, c := range s {
+        freq[c-'a']++
+    }
+
+    free := &MaxHeap{}
+    heap.Init(free)
+    for i := 0; i < 26; i++ {
+        if freq[i] > 0 {
+            heap.Push(free, CharFreq{freq[i], i})
+        }
+    }
+
+    ans := []byte{}
+    busy := []struct{ index, char int }{}
+
+    for len(ans) != len(s) {
+        index := len(ans)
+
+        if len(busy) > 0 && (index-busy[0].index) >= k {
+            q := busy[0]
+            busy = busy[1:]
+            heap.Push(free, CharFreq{freq[q.char], q.char})
+        }
+
+        if free.Len() == 0 {
+            return ""
+        }
+
+        cf := heap.Pop(free).(CharFreq)
+        ans = append(ans, byte(cf.char+'a'))
+
+        freq[cf.char]--
+        if freq[cf.char] > 0 {
+            busy = append(busy, struct{ index, char int }{index, cf.char})
+        }
+    }
+
+    return string(ans)
+}
+```
+
+```kotlin
+import java.util.*
+
+class Solution {
+    fun rearrangeString(s: String, k: Int): String {
+        val freq = mutableMapOf<Char, Int>()
+        for (c in s) {
+            freq[c] = freq.getOrDefault(c, 0) + 1
+        }
+
+        val free = PriorityQueue<Pair<Int, Char>>(compareByDescending { it.first })
+        for ((c, f) in freq) {
+            free.offer(f to c)
+        }
+
+        val ans = StringBuilder()
+        val busy = LinkedList<Pair<Int, Char>>()
+
+        while (ans.length != s.length) {
+            val index = ans.length
+
+            if (busy.isNotEmpty() && (index - busy.peek().first) >= k) {
+                val q = busy.poll()
+                free.offer(freq[q.second]!! to q.second)
+            }
+
+            if (free.isEmpty()) return ""
+
+            val (_, currChar) = free.poll()
+            ans.append(currChar)
+
+            freq[currChar] = freq[currChar]!! - 1
+            if (freq[currChar]!! > 0) {
+                busy.offer(index to currChar)
+            }
+        }
+
+        return ans.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func rearrangeString(_ s: String, _ k: Int) -> String {
+        var freq = [Character: Int]()
+        for c in s {
+            freq[c, default: 0] += 1
+        }
+
+        var free = [(freq: Int, char: Character)]()
+        for (c, f) in freq {
+            free.append((f, c))
+        }
+        free.sort { $0.freq > $1.freq }
+
+        var ans = ""
+        var busy = [(index: Int, char: Character)]()
+
+        while ans.count != s.count {
+            let index = ans.count
+
+            if !busy.isEmpty && (index - busy[0].index) >= k {
+                let q = busy.removeFirst()
+                free.append((freq[q.char]!, q.char))
+                free.sort { $0.freq > $1.freq }
+            }
+
+            if free.isEmpty { return "" }
+
+            let currChar = free.removeFirst().char
+            ans.append(currChar)
+
+            freq[currChar]! -= 1
+            if freq[currChar]! > 0 {
+                busy.append((index, currChar))
+            }
+        }
+
+        return ans
+    }
+}
 ```
 
 ::tabs-end
@@ -323,16 +514,16 @@ class Solution {
     rearrangeString(s, k) {
         const freqs = new Map();
         let maxFreq = 0;
-        
+
         // Store the frequency and find the highest frequency
         for (const c of s) {
             freqs.set(c, (freqs.get(c) || 0) + 1);
             maxFreq = Math.max(maxFreq, freqs.get(c));
         }
-        
+
         const mostChars = new Set();
         const secondChars = new Set();
-        
+
         // Store all characters with highest and second highest frequency
         for (const [char, freq] of freqs) {
             if (freq === maxFreq) {
@@ -341,16 +532,16 @@ class Solution {
                 secondChars.add(char);
             }
         }
-        
+
         // Create maxFreq number of different strings
         const segments = Array.from({ length: maxFreq }, () => []);
-        
+
         // Insert one instance of characters with frequency maxFreq & maxFreq - 1 in each segment
         for (let i = 0; i < maxFreq; i++) {
             for (const c of mostChars) {
                 segments[i].push(c);
             }
-            
+
             // Skip the last segment as the frequency is only maxFreq - 1
             if (i < maxFreq - 1) {
                 for (const c of secondChars) {
@@ -358,32 +549,251 @@ class Solution {
                 }
             }
         }
-        
+
         let segmentId = 0;
-        
+
         // Iterate over remaining characters and distribute instances over segments
         for (const [char, freq] of freqs) {
             // Skip characters with maxFreq or maxFreq - 1 frequency
             if (mostChars.has(char) || secondChars.has(char)) {
                 continue;
             }
-            
+
             // Distribute instances over segments in round-robin manner
             for (let f = 0; f < freq; f++) {
                 segments[segmentId].push(char);
                 segmentId = (segmentId + 1) % (maxFreq - 1);
             }
         }
-        
+
         // Each segment except the last should have exactly k elements
         for (let i = 0; i < maxFreq - 1; i++) {
             if (segments[i].length < k) {
                 return "";
             }
         }
-        
+
         // Join all segments and return
         return segments.map(seg => seg.join('')).join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string RearrangeString(string s, int k) {
+        var freqs = new Dictionary<char, int>();
+        int maxFreq = 0;
+
+        foreach (char c in s) {
+            freqs[c] = freqs.GetValueOrDefault(c, 0) + 1;
+            maxFreq = Math.Max(maxFreq, freqs[c]);
+        }
+
+        var mostChars = new HashSet<char>();
+        var secondChars = new HashSet<char>();
+
+        foreach (var kvp in freqs) {
+            if (kvp.Value == maxFreq) {
+                mostChars.Add(kvp.Key);
+            } else if (kvp.Value == maxFreq - 1) {
+                secondChars.Add(kvp.Key);
+            }
+        }
+
+        var segments = new StringBuilder[maxFreq];
+        for (int i = 0; i < maxFreq; i++) {
+            segments[i] = new StringBuilder();
+            foreach (char c in mostChars) {
+                segments[i].Append(c);
+            }
+            if (i < maxFreq - 1) {
+                foreach (char c in secondChars) {
+                    segments[i].Append(c);
+                }
+            }
+        }
+
+        int segmentId = 0;
+        foreach (var kvp in freqs) {
+            if (mostChars.Contains(kvp.Key) || secondChars.Contains(kvp.Key)) {
+                continue;
+            }
+            for (int f = kvp.Value; f > 0; f--) {
+                segments[segmentId].Append(kvp.Key);
+                segmentId = (segmentId + 1) % (maxFreq - 1);
+            }
+        }
+
+        for (int i = 0; i < maxFreq - 1; i++) {
+            if (segments[i].Length < k) return "";
+        }
+
+        return string.Join("", segments.Select(sb => sb.ToString()));
+    }
+}
+```
+
+```go
+func rearrangeString(s string, k int) string {
+    freqs := make(map[rune]int)
+    maxFreq := 0
+
+    for _, c := range s {
+        freqs[c]++
+        if freqs[c] > maxFreq {
+            maxFreq = freqs[c]
+        }
+    }
+
+    mostChars := make(map[rune]bool)
+    secondChars := make(map[rune]bool)
+
+    for c, freq := range freqs {
+        if freq == maxFreq {
+            mostChars[c] = true
+        } else if freq == maxFreq-1 {
+            secondChars[c] = true
+        }
+    }
+
+    segments := make([][]rune, maxFreq)
+    for i := 0; i < maxFreq; i++ {
+        segments[i] = []rune{}
+        for c := range mostChars {
+            segments[i] = append(segments[i], c)
+        }
+        if i < maxFreq-1 {
+            for c := range secondChars {
+                segments[i] = append(segments[i], c)
+            }
+        }
+    }
+
+    segmentId := 0
+    for c, freq := range freqs {
+        if mostChars[c] || secondChars[c] {
+            continue
+        }
+        for f := 0; f < freq; f++ {
+            segments[segmentId] = append(segments[segmentId], c)
+            segmentId = (segmentId + 1) % (maxFreq - 1)
+        }
+    }
+
+    for i := 0; i < maxFreq-1; i++ {
+        if len(segments[i]) < k {
+            return ""
+        }
+    }
+
+    var result []rune
+    for _, seg := range segments {
+        result = append(result, seg...)
+    }
+    return string(result)
+}
+```
+
+```kotlin
+class Solution {
+    fun rearrangeString(s: String, k: Int): String {
+        val freqs = mutableMapOf<Char, Int>()
+        var maxFreq = 0
+
+        for (c in s) {
+            freqs[c] = freqs.getOrDefault(c, 0) + 1
+            maxFreq = maxOf(maxFreq, freqs[c]!!)
+        }
+
+        val mostChars = mutableSetOf<Char>()
+        val secondChars = mutableSetOf<Char>()
+
+        for ((c, freq) in freqs) {
+            when (freq) {
+                maxFreq -> mostChars.add(c)
+                maxFreq - 1 -> secondChars.add(c)
+            }
+        }
+
+        val segments = Array(maxFreq) { StringBuilder() }
+        for (i in 0 until maxFreq) {
+            for (c in mostChars) {
+                segments[i].append(c)
+            }
+            if (i < maxFreq - 1) {
+                for (c in secondChars) {
+                    segments[i].append(c)
+                }
+            }
+        }
+
+        var segmentId = 0
+        for ((c, freq) in freqs) {
+            if (c in mostChars || c in secondChars) continue
+            repeat(freq) {
+                segments[segmentId].append(c)
+                segmentId = (segmentId + 1) % (maxFreq - 1)
+            }
+        }
+
+        for (i in 0 until maxFreq - 1) {
+            if (segments[i].length < k) return ""
+        }
+
+        return segments.joinToString("")
+    }
+}
+```
+
+```swift
+class Solution {
+    func rearrangeString(_ s: String, _ k: Int) -> String {
+        var freqs = [Character: Int]()
+        var maxFreq = 0
+
+        for c in s {
+            freqs[c, default: 0] += 1
+            maxFreq = max(maxFreq, freqs[c]!)
+        }
+
+        var mostChars = Set<Character>()
+        var secondChars = Set<Character>()
+
+        for (c, freq) in freqs {
+            if freq == maxFreq {
+                mostChars.insert(c)
+            } else if freq == maxFreq - 1 {
+                secondChars.insert(c)
+            }
+        }
+
+        var segments = [[Character]](repeating: [], count: maxFreq)
+        for i in 0..<maxFreq {
+            for c in mostChars {
+                segments[i].append(c)
+            }
+            if i < maxFreq - 1 {
+                for c in secondChars {
+                    segments[i].append(c)
+                }
+            }
+        }
+
+        var segmentId = 0
+        for (c, freq) in freqs {
+            if mostChars.contains(c) || secondChars.contains(c) { continue }
+            for _ in 0..<freq {
+                segments[segmentId].append(c)
+                segmentId = (segmentId + 1) % (maxFreq - 1)
+            }
+        }
+
+        for i in 0..<(maxFreq - 1) {
+            if segments[i].count < k { return "" }
+        }
+
+        return segments.map { String($0) }.joined()
     }
 }
 ```

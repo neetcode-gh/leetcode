@@ -151,6 +151,98 @@ public class FreqStack {
 }
 ```
 
+```go
+type FreqStack struct {
+    cnt   map[int]int
+    stack []int
+}
+
+func Constructor() FreqStack {
+    return FreqStack{
+        cnt:   make(map[int]int),
+        stack: []int{},
+    }
+}
+
+func (this *FreqStack) Push(val int) {
+    this.stack = append(this.stack, val)
+    this.cnt[val]++
+}
+
+func (this *FreqStack) Pop() int {
+    maxCnt := 0
+    for _, freq := range this.cnt {
+        if freq > maxCnt {
+            maxCnt = freq
+        }
+    }
+    for i := len(this.stack) - 1; i >= 0; i-- {
+        val := this.stack[i]
+        if this.cnt[val] == maxCnt {
+            this.cnt[val]--
+            this.stack = append(this.stack[:i], this.stack[i+1:]...)
+            return val
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class FreqStack() {
+    private val cnt = mutableMapOf<Int, Int>()
+    private val stack = mutableListOf<Int>()
+
+    fun push(`val`: Int) {
+        stack.add(`val`)
+        cnt[`val`] = cnt.getOrDefault(`val`, 0) + 1
+    }
+
+    fun pop(): Int {
+        val maxCnt = cnt.values.maxOrNull() ?: 0
+        for (i in stack.lastIndex downTo 0) {
+            val v = stack[i]
+            if (cnt[v] == maxCnt) {
+                cnt[v] = cnt[v]!! - 1
+                stack.removeAt(i)
+                return v
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class FreqStack {
+    private var cnt: [Int: Int]
+    private var stack: [Int]
+
+    init() {
+        cnt = [:]
+        stack = []
+    }
+
+    func push(_ val: Int) {
+        stack.append(val)
+        cnt[val, default: 0] += 1
+    }
+
+    func pop() -> Int {
+        let maxCnt = cnt.values.max() ?? 0
+        for i in stride(from: stack.count - 1, through: 0, by: -1) {
+            let val = stack[i]
+            if cnt[val] == maxCnt {
+                cnt[val]! -= 1
+                stack.remove(at: i)
+                return val
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +405,110 @@ public class FreqStack {
         var entry = heap.Dequeue();
         cnt[entry.Value]--;
         return entry.Value;
+    }
+}
+```
+
+```go
+import "container/heap"
+
+type Entry struct {
+    freq  int
+    index int
+    val   int
+}
+
+type MaxHeap []Entry
+
+func (h MaxHeap) Len() int { return len(h) }
+func (h MaxHeap) Less(i, j int) bool {
+    if h[i].freq != h[j].freq {
+        return h[i].freq > h[j].freq
+    }
+    return h[i].index > h[j].index
+}
+func (h MaxHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(Entry)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
+type FreqStack struct {
+    cnt   map[int]int
+    h     *MaxHeap
+    index int
+}
+
+func Constructor() FreqStack {
+    h := &MaxHeap{}
+    heap.Init(h)
+    return FreqStack{cnt: make(map[int]int), h: h, index: 0}
+}
+
+func (this *FreqStack) Push(val int) {
+    this.cnt[val]++
+    heap.Push(this.h, Entry{this.cnt[val], this.index, val})
+    this.index++
+}
+
+func (this *FreqStack) Pop() int {
+    entry := heap.Pop(this.h).(Entry)
+    this.cnt[entry.val]--
+    return entry.val
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class FreqStack() {
+    private val cnt = mutableMapOf<Int, Int>()
+    private val heap = PriorityQueue<IntArray> { a, b ->
+        if (a[0] != b[0]) b[0] - a[0] else b[1] - a[1]
+    }
+    private var index = 0
+
+    fun push(`val`: Int) {
+        cnt[`val`] = cnt.getOrDefault(`val`, 0) + 1
+        heap.offer(intArrayOf(cnt[`val`]!!, index++, `val`))
+    }
+
+    fun pop(): Int {
+        val top = heap.poll()
+        val v = top[2]
+        cnt[v] = cnt[v]!! - 1
+        return v
+    }
+}
+```
+
+```swift
+class FreqStack {
+    private var cnt: [Int: Int]
+    private var heap: [(freq: Int, index: Int, val: Int)]
+    private var index: Int
+
+    init() {
+        cnt = [:]
+        heap = []
+        index = 0
+    }
+
+    func push(_ val: Int) {
+        cnt[val, default: 0] += 1
+        heap.append((cnt[val]!, index, val))
+        index += 1
+        heap.sort { ($0.freq, $0.index) > ($1.freq, $1.index) }
+    }
+
+    func pop() -> Int {
+        let top = heap.removeFirst()
+        cnt[top.val]! -= 1
+        return top.val
     }
 }
 ```
@@ -501,6 +697,103 @@ public class FreqStack {
 }
 ```
 
+```go
+type FreqStack struct {
+    cnt    map[int]int
+    stacks map[int][]int
+    maxCnt int
+}
+
+func Constructor() FreqStack {
+    return FreqStack{
+        cnt:    make(map[int]int),
+        stacks: make(map[int][]int),
+        maxCnt: 0,
+    }
+}
+
+func (this *FreqStack) Push(val int) {
+    this.cnt[val]++
+    valCnt := this.cnt[val]
+    if valCnt > this.maxCnt {
+        this.maxCnt = valCnt
+        this.stacks[valCnt] = []int{}
+    }
+    this.stacks[valCnt] = append(this.stacks[valCnt], val)
+}
+
+func (this *FreqStack) Pop() int {
+    stack := this.stacks[this.maxCnt]
+    res := stack[len(stack)-1]
+    this.stacks[this.maxCnt] = stack[:len(stack)-1]
+    this.cnt[res]--
+    if len(this.stacks[this.maxCnt]) == 0 {
+        this.maxCnt--
+    }
+    return res
+}
+```
+
+```kotlin
+class FreqStack() {
+    private val cnt = mutableMapOf<Int, Int>()
+    private val stacks = mutableMapOf<Int, ArrayDeque<Int>>()
+    private var maxCnt = 0
+
+    fun push(`val`: Int) {
+        val valCnt = cnt.getOrDefault(`val`, 0) + 1
+        cnt[`val`] = valCnt
+        if (valCnt > maxCnt) {
+            maxCnt = valCnt
+            stacks[valCnt] = ArrayDeque()
+        }
+        stacks[valCnt]!!.addLast(`val`)
+    }
+
+    fun pop(): Int {
+        val res = stacks[maxCnt]!!.removeLast()
+        cnt[res] = cnt[res]!! - 1
+        if (stacks[maxCnt]!!.isEmpty()) {
+            maxCnt--
+        }
+        return res
+    }
+}
+```
+
+```swift
+class FreqStack {
+    private var cnt: [Int: Int]
+    private var stacks: [Int: [Int]]
+    private var maxCnt: Int
+
+    init() {
+        cnt = [:]
+        stacks = [:]
+        maxCnt = 0
+    }
+
+    func push(_ val: Int) {
+        let valCnt = (cnt[val] ?? 0) + 1
+        cnt[val] = valCnt
+        if valCnt > maxCnt {
+            maxCnt = valCnt
+            stacks[valCnt] = []
+        }
+        stacks[valCnt]!.append(val)
+    }
+
+    func pop() -> Int {
+        let res = stacks[maxCnt]!.removeLast()
+        cnt[res]! -= 1
+        if stacks[maxCnt]!.isEmpty {
+            maxCnt -= 1
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -673,6 +966,96 @@ public class FreqStack {
         }
 
         return res;
+    }
+}
+```
+
+```go
+type FreqStack struct {
+    cnt    map[int]int
+    stacks [][]int
+}
+
+func Constructor() FreqStack {
+    return FreqStack{
+        cnt:    make(map[int]int),
+        stacks: [][]int{{}},
+    }
+}
+
+func (this *FreqStack) Push(val int) {
+    this.cnt[val]++
+    valCnt := this.cnt[val]
+    if valCnt == len(this.stacks) {
+        this.stacks = append(this.stacks, []int{})
+    }
+    this.stacks[valCnt] = append(this.stacks[valCnt], val)
+}
+
+func (this *FreqStack) Pop() int {
+    lastStack := this.stacks[len(this.stacks)-1]
+    res := lastStack[len(lastStack)-1]
+    this.stacks[len(this.stacks)-1] = lastStack[:len(lastStack)-1]
+    this.cnt[res]--
+    if len(this.stacks[len(this.stacks)-1]) == 0 {
+        this.stacks = this.stacks[:len(this.stacks)-1]
+    }
+    return res
+}
+```
+
+```kotlin
+class FreqStack() {
+    private val cnt = mutableMapOf<Int, Int>()
+    private val stacks = mutableListOf(mutableListOf<Int>())
+
+    fun push(`val`: Int) {
+        val valCnt = cnt.getOrDefault(`val`, 0) + 1
+        cnt[`val`] = valCnt
+        if (valCnt == stacks.size) {
+            stacks.add(mutableListOf())
+        }
+        stacks[valCnt].add(`val`)
+    }
+
+    fun pop(): Int {
+        val lastStack = stacks.last()
+        val res = lastStack.removeLast()
+        cnt[res] = cnt[res]!! - 1
+        if (lastStack.isEmpty()) {
+            stacks.removeLast()
+        }
+        return res
+    }
+}
+```
+
+```swift
+class FreqStack {
+    private var cnt: [Int: Int]
+    private var stacks: [[Int]]
+
+    init() {
+        cnt = [:]
+        stacks = [[]]
+    }
+
+    func push(_ val: Int) {
+        let valCnt = (cnt[val] ?? 0) + 1
+        cnt[val] = valCnt
+        if valCnt == stacks.count {
+            stacks.append([])
+        }
+        stacks[valCnt].append(val)
+    }
+
+    func pop() -> Int {
+        let res = stacks[stacks.count - 1].removeLast()
+        cnt[res]! -= 1
+        if stacks[stacks.count - 1].isEmpty {
+            stacks.removeLast()
+        }
+        return res
     }
 }
 ```

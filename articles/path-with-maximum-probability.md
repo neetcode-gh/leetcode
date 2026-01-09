@@ -205,6 +205,151 @@ public class Solution {
 }
 ```
 
+```go
+import (
+    "container/heap"
+)
+
+type Pair struct {
+    node int
+    prob float64
+}
+
+type MaxHeap []Pair
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i].prob > h[j].prob }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(Pair)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func maxProbability(n int, edges [][]int, succProb []float64, start_node int, end_node int) float64 {
+    adj := make([][]Pair, n)
+    for i := 0; i < n; i++ {
+        adj[i] = []Pair{}
+    }
+
+    for i, edge := range edges {
+        src, dst := edge[0], edge[1]
+        adj[src] = append(adj[src], Pair{dst, succProb[i]})
+        adj[dst] = append(adj[dst], Pair{src, succProb[i]})
+    }
+
+    maxProb := make([]float64, n)
+    maxProb[start_node] = 1.0
+
+    pq := &MaxHeap{Pair{start_node, 1.0}}
+    heap.Init(pq)
+
+    for pq.Len() > 0 {
+        top := heap.Pop(pq).(Pair)
+        node, currProb := top.node, top.prob
+
+        if node == end_node {
+            return currProb
+        }
+        if currProb < maxProb[node] {
+            continue
+        }
+
+        for _, nei := range adj[node] {
+            newProb := currProb * nei.prob
+            if newProb > maxProb[nei.node] {
+                maxProb[nei.node] = newProb
+                heap.Push(pq, Pair{nei.node, newProb})
+            }
+        }
+    }
+
+    return 0.0
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProbability(n: Int, edges: Array<IntArray>, succProb: DoubleArray, start_node: Int, end_node: Int): Double {
+        val adj = Array(n) { mutableListOf<Pair<Int, Double>>() }
+
+        for (i in edges.indices) {
+            val (src, dst) = edges[i]
+            adj[src].add(Pair(dst, succProb[i]))
+            adj[dst].add(Pair(src, succProb[i]))
+        }
+
+        val maxProb = DoubleArray(n)
+        maxProb[start_node] = 1.0
+
+        val pq = PriorityQueue<Pair<Int, Double>>(compareByDescending { it.second })
+        pq.offer(Pair(start_node, 1.0))
+
+        while (pq.isNotEmpty()) {
+            val (node, currProb) = pq.poll()
+
+            if (node == end_node) return currProb
+            if (currProb < maxProb[node]) continue
+
+            for ((nei, edgeProb) in adj[node]) {
+                val newProb = currProb * edgeProb
+                if (newProb > maxProb[nei]) {
+                    maxProb[nei] = newProb
+                    pq.offer(Pair(nei, newProb))
+                }
+            }
+        }
+
+        return 0.0
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProbability(_ n: Int, _ edges: [[Int]], _ succProb: [Double], _ start_node: Int, _ end_node: Int) -> Double {
+        var adj = [[(Int, Double)]](repeating: [], count: n)
+
+        for i in 0..<edges.count {
+            let src = edges[i][0], dst = edges[i][1]
+            adj[src].append((dst, succProb[i]))
+            adj[dst].append((src, succProb[i]))
+        }
+
+        var maxProb = [Double](repeating: 0.0, count: n)
+        maxProb[start_node] = 1.0
+
+        var pq = [(Double, Int)]() // (prob, node)
+        pq.append((1.0, start_node))
+
+        while !pq.isEmpty {
+            pq.sort { $0.0 > $1.0 }
+            let (currProb, node) = pq.removeFirst()
+
+            if node == end_node {
+                return currProb
+            }
+            if currProb < maxProb[node] {
+                continue
+            }
+
+            for (nei, edgeProb) in adj[node] {
+                let newProb = currProb * edgeProb
+                if newProb > maxProb[nei] {
+                    maxProb[nei] = newProb
+                    pq.append((newProb, nei))
+                }
+            }
+        }
+
+        return 0.0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -431,6 +576,151 @@ public class Solution {
 }
 ```
 
+```go
+import (
+    "container/heap"
+)
+
+type Pair struct {
+    node int
+    prob float64
+}
+
+type MaxHeap []Pair
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i].prob > h[j].prob }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(Pair)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+func maxProbability(n int, edges [][]int, succProb []float64, start_node int, end_node int) float64 {
+    adj := make([][]Pair, n)
+    for i := 0; i < n; i++ {
+        adj[i] = []Pair{}
+    }
+
+    for i, edge := range edges {
+        src, dst := edge[0], edge[1]
+        adj[src] = append(adj[src], Pair{dst, succProb[i]})
+        adj[dst] = append(adj[dst], Pair{src, succProb[i]})
+    }
+
+    maxProb := make([]float64, n)
+    maxProb[start_node] = 1.0
+
+    pq := &MaxHeap{Pair{start_node, 1.0}}
+    heap.Init(pq)
+
+    for pq.Len() > 0 {
+        top := heap.Pop(pq).(Pair)
+        node, currProb := top.node, top.prob
+
+        if node == end_node {
+            return currProb
+        }
+        if currProb < maxProb[node] {
+            continue
+        }
+
+        for _, nei := range adj[node] {
+            newProb := currProb * nei.prob
+            if newProb > maxProb[nei.node] {
+                maxProb[nei.node] = newProb
+                heap.Push(pq, Pair{nei.node, newProb})
+            }
+        }
+    }
+
+    return 0.0
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProbability(n: Int, edges: Array<IntArray>, succProb: DoubleArray, start_node: Int, end_node: Int): Double {
+        val adj = Array(n) { mutableListOf<Pair<Int, Double>>() }
+
+        for (i in edges.indices) {
+            val (src, dst) = edges[i]
+            adj[src].add(Pair(dst, succProb[i]))
+            adj[dst].add(Pair(src, succProb[i]))
+        }
+
+        val maxProb = DoubleArray(n)
+        maxProb[start_node] = 1.0
+
+        val pq = PriorityQueue<Pair<Int, Double>>(compareByDescending { it.second })
+        pq.offer(Pair(start_node, 1.0))
+
+        while (pq.isNotEmpty()) {
+            val (node, currProb) = pq.poll()
+
+            if (node == end_node) return currProb
+            if (currProb < maxProb[node]) continue
+
+            for ((nei, edgeProb) in adj[node]) {
+                val newProb = currProb * edgeProb
+                if (newProb > maxProb[nei]) {
+                    maxProb[nei] = newProb
+                    pq.offer(Pair(nei, newProb))
+                }
+            }
+        }
+
+        return 0.0
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProbability(_ n: Int, _ edges: [[Int]], _ succProb: [Double], _ start_node: Int, _ end_node: Int) -> Double {
+        var adj = [[(Int, Double)]](repeating: [], count: n)
+
+        for i in 0..<edges.count {
+            let src = edges[i][0], dst = edges[i][1]
+            adj[src].append((dst, succProb[i]))
+            adj[dst].append((src, succProb[i]))
+        }
+
+        var maxProb = [Double](repeating: 0.0, count: n)
+        maxProb[start_node] = 1.0
+
+        var pq = [(Double, Int)]()
+        pq.append((1.0, start_node))
+
+        while !pq.isEmpty {
+            pq.sort { $0.0 > $1.0 }
+            let (currProb, node) = pq.removeFirst()
+
+            if node == end_node {
+                return currProb
+            }
+            if currProb < maxProb[node] {
+                continue
+            }
+
+            for (nei, edgeProb) in adj[node] {
+                let newProb = currProb * edgeProb
+                if newProb > maxProb[nei] {
+                    maxProb[nei] = newProb
+                    pq.append((newProb, nei))
+                }
+            }
+        }
+
+        return 0.0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -591,6 +881,95 @@ public class Solution {
         }
 
         return maxProb[end_node];
+    }
+}
+```
+
+```go
+func maxProbability(n int, edges [][]int, succProb []float64, start_node int, end_node int) float64 {
+    maxProb := make([]float64, n)
+    maxProb[start_node] = 1.0
+
+    for i := 0; i < n; i++ {
+        updated := false
+        for j := 0; j < len(edges); j++ {
+            src, dst := edges[j][0], edges[j][1]
+
+            if maxProb[src] * succProb[j] > maxProb[dst] {
+                maxProb[dst] = maxProb[src] * succProb[j]
+                updated = true
+            }
+
+            if maxProb[dst] * succProb[j] > maxProb[src] {
+                maxProb[src] = maxProb[dst] * succProb[j]
+                updated = true
+            }
+        }
+        if !updated {
+            break
+        }
+    }
+
+    return maxProb[end_node]
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProbability(n: Int, edges: Array<IntArray>, succProb: DoubleArray, start_node: Int, end_node: Int): Double {
+        val maxProb = DoubleArray(n)
+        maxProb[start_node] = 1.0
+
+        for (i in 0 until n) {
+            var updated = false
+            for (j in edges.indices) {
+                val (src, dst) = edges[j]
+
+                if (maxProb[src] * succProb[j] > maxProb[dst]) {
+                    maxProb[dst] = maxProb[src] * succProb[j]
+                    updated = true
+                }
+
+                if (maxProb[dst] * succProb[j] > maxProb[src]) {
+                    maxProb[src] = maxProb[dst] * succProb[j]
+                    updated = true
+                }
+            }
+            if (!updated) break
+        }
+
+        return maxProb[end_node]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProbability(_ n: Int, _ edges: [[Int]], _ succProb: [Double], _ start_node: Int, _ end_node: Int) -> Double {
+        var maxProb = [Double](repeating: 0.0, count: n)
+        maxProb[start_node] = 1.0
+
+        for _ in 0..<n {
+            var updated = false
+            for j in 0..<edges.count {
+                let src = edges[j][0], dst = edges[j][1]
+
+                if maxProb[src] * succProb[j] > maxProb[dst] {
+                    maxProb[dst] = maxProb[src] * succProb[j]
+                    updated = true
+                }
+
+                if maxProb[dst] * succProb[j] > maxProb[src] {
+                    maxProb[src] = maxProb[dst] * succProb[j]
+                    updated = true
+                }
+            }
+            if !updated {
+                break
+            }
+        }
+
+        return maxProb[end_node]
     }
 }
 ```
@@ -793,6 +1172,110 @@ public class Solution {
             this.node = node;
             this.prob = prob;
         }
+    }
+}
+```
+
+```go
+func maxProbability(n int, edges [][]int, succProb []float64, start_node int, end_node int) float64 {
+    adj := make([][][2]float64, n)
+    for i := 0; i < n; i++ {
+        adj[i] = [][2]float64{}
+    }
+
+    for i, edge := range edges {
+        src, dst := edge[0], edge[1]
+        adj[src] = append(adj[src], [2]float64{float64(dst), succProb[i]})
+        adj[dst] = append(adj[dst], [2]float64{float64(src), succProb[i]})
+    }
+
+    maxProb := make([]float64, n)
+    maxProb[start_node] = 1.0
+
+    queue := []int{start_node}
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+
+        for _, pair := range adj[node] {
+            nei := int(pair[0])
+            edgeProb := pair[1]
+            newProb := maxProb[node] * edgeProb
+            if newProb > maxProb[nei] {
+                maxProb[nei] = newProb
+                queue = append(queue, nei)
+            }
+        }
+    }
+
+    return maxProb[end_node]
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProbability(n: Int, edges: Array<IntArray>, succProb: DoubleArray, start_node: Int, end_node: Int): Double {
+        val adj = Array(n) { mutableListOf<Pair<Int, Double>>() }
+
+        for (i in edges.indices) {
+            val (src, dst) = edges[i]
+            adj[src].add(Pair(dst, succProb[i]))
+            adj[dst].add(Pair(src, succProb[i]))
+        }
+
+        val maxProb = DoubleArray(n)
+        maxProb[start_node] = 1.0
+
+        val queue = ArrayDeque<Int>()
+        queue.add(start_node)
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+
+            for ((nei, edgeProb) in adj[node]) {
+                val newProb = maxProb[node] * edgeProb
+                if (newProb > maxProb[nei]) {
+                    maxProb[nei] = newProb
+                    queue.add(nei)
+                }
+            }
+        }
+
+        return maxProb[end_node]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProbability(_ n: Int, _ edges: [[Int]], _ succProb: [Double], _ start_node: Int, _ end_node: Int) -> Double {
+        var adj = [[(Int, Double)]](repeating: [], count: n)
+
+        for i in 0..<edges.count {
+            let src = edges[i][0], dst = edges[i][1]
+            adj[src].append((dst, succProb[i]))
+            adj[dst].append((src, succProb[i]))
+        }
+
+        var maxProb = [Double](repeating: 0.0, count: n)
+        maxProb[start_node] = 1.0
+
+        var queue = [start_node]
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+
+            for (nei, edgeProb) in adj[node] {
+                let newProb = maxProb[node] * edgeProb
+                if newProb > maxProb[nei] {
+                    maxProb[nei] = newProb
+                    queue.append(nei)
+                }
+            }
+        }
+
+        return maxProb[end_node]
     }
 }
 ```

@@ -68,15 +68,73 @@ class Solution {
         const n = Math.floor(numPeople / 2);
         const dp = new Array(n + 1).fill(0n);
         dp[0] = 1n;
-        
+
         for (let i = 1; i <= n; i++) {
             for (let j = 0; j < i; j++) {
                 dp[i] += dp[j] * dp[i - j - 1];
                 dp[i] %= m;
             }
         }
-        
+
         return Number(dp[n]);
+    }
+}
+```
+
+```go
+func numberOfWays(numPeople int) int {
+    m := 1000000007
+    n := numPeople / 2
+    dp := make([]int, n+1)
+    dp[0] = 1
+
+    for i := 1; i <= n; i++ {
+        for j := 0; j < i; j++ {
+            dp[i] += dp[j] * dp[i-j-1] % m
+            dp[i] %= m
+        }
+    }
+
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun numberOfWays(numPeople: Int): Int {
+        val m = 1000000007L
+        val n = numPeople / 2
+        val dp = LongArray(n + 1)
+        dp[0] = 1L
+
+        for (i in 1..n) {
+            for (j in 0 until i) {
+                dp[i] += dp[j] * dp[i - j - 1] % m
+                dp[i] %= m
+            }
+        }
+
+        return dp[n].toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ numPeople: Int) -> Int {
+        let m = 1000000007
+        let n = numPeople / 2
+        var dp = [Int](repeating: 0, count: n + 1)
+        dp[0] = 1
+
+        for i in 1...n {
+            for j in 0..<i {
+                dp[i] += dp[j] * dp[i - j - 1] % m
+                dp[i] %= m
+            }
+        }
+
+        return dp[n]
     }
 }
 ```
@@ -150,7 +208,7 @@ public:
     int numberOfWays(int numPeople) {
         vector<int> dp(numPeople / 2 + 1, -1);
         dp[0] = 1;
-        
+
         function<int(int)> calculateDP = [&](int i) -> int {
             if (dp[i] != -1) {
                 return dp[i];
@@ -161,7 +219,7 @@ public:
             }
             return dp[i];
         };
-        
+
         return calculateDP(numPeople / 2);
     }
 };
@@ -178,7 +236,7 @@ class Solution {
         const n = Math.floor(numPeople / 2);
         const dp = new Array(n + 1).fill(-1n);
         dp[0] = 1n;
-        
+
         const calculate_dp = (i) => {
             if (dp[i] !== -1n) {
                 return dp[i];
@@ -192,8 +250,86 @@ class Solution {
 
             return dp[i];
         };
-        
+
         return Number(calculate_dp(n));
+    }
+}
+```
+
+```go
+func numberOfWays(numPeople int) int {
+    m := 1000000007
+    n := numPeople / 2
+    dp := make([]int, n+1)
+    for i := range dp {
+        dp[i] = -1
+    }
+    dp[0] = 1
+
+    var calculateDP func(i int) int
+    calculateDP = func(i int) int {
+        if dp[i] != -1 {
+            return dp[i]
+        }
+        dp[i] = 0
+        for j := 0; j < i; j++ {
+            dp[i] += calculateDP(j) * calculateDP(i-j-1) % m
+            dp[i] %= m
+        }
+        return dp[i]
+    }
+
+    return calculateDP(n)
+}
+```
+
+```kotlin
+class Solution {
+    private val m = 1000000007L
+    private lateinit var dp: LongArray
+
+    fun numberOfWays(numPeople: Int): Int {
+        val n = numPeople / 2
+        dp = LongArray(n + 1) { -1L }
+        dp[0] = 1L
+        return calculateDP(n).toInt()
+    }
+
+    private fun calculateDP(i: Int): Long {
+        if (dp[i] != -1L) {
+            return dp[i]
+        }
+        dp[i] = 0L
+        for (j in 0 until i) {
+            dp[i] += calculateDP(j) * calculateDP(i - j - 1) % m
+            dp[i] %= m
+        }
+        return dp[i]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ numPeople: Int) -> Int {
+        let m = 1000000007
+        let n = numPeople / 2
+        var dp = [Int](repeating: -1, count: n + 1)
+        dp[0] = 1
+
+        func calculateDP(_ i: Int) -> Int {
+            if dp[i] != -1 {
+                return dp[i]
+            }
+            dp[i] = 0
+            for j in 0..<i {
+                dp[i] += calculateDP(j) * calculateDP(i - j - 1) % m
+                dp[i] %= m
+            }
+            return dp[i]
+        }
+
+        return calculateDP(n)
     }
 }
 ```
@@ -272,7 +408,7 @@ public:
             int k = m / i, r = m % i;
             inv[i] = m - mul(k, inv[r]);
         }
-        
+
         int C = 1;
         for (int i = 0; i < n; i++) {
             C = mul(mul(2 * (2 * i + 1), inv[i + 2]), C);
@@ -292,7 +428,7 @@ class Solution {
     numberOfWays(numPeople) {
         const m = 1000000007n;
         const n = Math.floor(numPeople / 2);
-        
+
         const inv = new Array(n + 2);
         inv[1] = 1n;
         for (let i = 2; i < n + 2; i++) {
@@ -301,13 +437,96 @@ class Solution {
             const r = m % bi;
             inv[i] = (m - k * inv[Number(r)] % m) % m;
         }
-        
+
         let C = 1n;
         for (let i = 0; i < n; i++) {
             C = 2n * BigInt(2 * i + 1) * inv[i + 2] % m * C % m;
         }
-        
+
         return Number(C);
+    }
+}
+```
+
+```go
+func numberOfWays(numPeople int) int {
+    m := 1000000007
+    n := numPeople / 2
+    inv := make([]int, n+2)
+    inv[1] = 1
+
+    mul := func(a, b int) int {
+        return int(int64(a) * int64(b) % int64(m))
+    }
+
+    for i := 2; i < n+2; i++ {
+        k := m / i
+        r := m % i
+        inv[i] = m - mul(k, inv[r])
+    }
+
+    C := 1
+    for i := 0; i < n; i++ {
+        C = mul(mul(2*(2*i+1), inv[i+2]), C)
+    }
+
+    return C
+}
+```
+
+```kotlin
+class Solution {
+    private val m = 1000000007L
+
+    private fun mul(a: Long, b: Long): Long {
+        return a * b % m
+    }
+
+    fun numberOfWays(numPeople: Int): Int {
+        val n = numPeople / 2
+        val inv = LongArray(n + 2)
+        inv[1] = 1L
+
+        for (i in 2 until n + 2) {
+            val k = m / i
+            val r = (m % i).toInt()
+            inv[i] = m - mul(k, inv[r])
+        }
+
+        var C = 1L
+        for (i in 0 until n) {
+            C = mul(mul((2 * (2 * i + 1)).toLong(), inv[i + 2]), C)
+        }
+
+        return C.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func numberOfWays(_ numPeople: Int) -> Int {
+        let m = 1000000007
+        let n = numPeople / 2
+        var inv = [Int](repeating: 0, count: n + 2)
+        inv[1] = 1
+
+        func mul(_ a: Int, _ b: Int) -> Int {
+            return Int(Int64(a) * Int64(b) % Int64(m))
+        }
+
+        for i in 2..<(n + 2) {
+            let k = m / i
+            let r = m % i
+            inv[i] = m - mul(k, inv[r])
+        }
+
+        var C = 1
+        for i in 0..<n {
+            C = mul(mul(2 * (2 * i + 1), inv[i + 2]), C)
+        }
+
+        return C
     }
 }
 ```

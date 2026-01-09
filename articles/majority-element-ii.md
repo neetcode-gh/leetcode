@@ -90,6 +90,75 @@ public class Solution {
 }
 ```
 
+```go
+func majorityElement(nums []int) []int {
+    res := make(map[int]bool)
+    n := len(nums)
+
+    for _, num := range nums {
+        count := 0
+        for _, i := range nums {
+            if i == num {
+                count++
+            }
+        }
+        if count > n/3 {
+            res[num] = true
+        }
+    }
+
+    result := []int{}
+    for k := range res {
+        result = append(result, k)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun majorityElement(nums: IntArray): List<Int> {
+        val res = HashSet<Int>()
+        val n = nums.size
+
+        for (num in nums) {
+            var count = 0
+            for (i in nums) {
+                if (i == num) count++
+            }
+            if (count > n / 3) {
+                res.add(num)
+            }
+        }
+
+        return res.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func majorityElement(_ nums: [Int]) -> [Int] {
+        var res = Set<Int>()
+        let n = nums.count
+
+        for num in nums {
+            var count = 0
+            for i in nums {
+                if i == num {
+                    count += 1
+                }
+            }
+            if count > n / 3 {
+                res.insert(num)
+            }
+        }
+
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -222,6 +291,76 @@ public class Solution {
 }
 ```
 
+```go
+func majorityElement(nums []int) []int {
+    sort.Ints(nums)
+    res := []int{}
+    n := len(nums)
+
+    i := 0
+    for i < n {
+        j := i + 1
+        for j < n && nums[i] == nums[j] {
+            j++
+        }
+        if j-i > n/3 {
+            res = append(res, nums[i])
+        }
+        i = j
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun majorityElement(nums: IntArray): List<Int> {
+        nums.sort()
+        val res = mutableListOf<Int>()
+        val n = nums.size
+
+        var i = 0
+        while (i < n) {
+            var j = i + 1
+            while (j < n && nums[i] == nums[j]) {
+                j++
+            }
+            if (j - i > n / 3) {
+                res.add(nums[i])
+            }
+            i = j
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func majorityElement(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        var res = [Int]()
+        let n = nums.count
+
+        var i = 0
+        while i < n {
+            var j = i + 1
+            while j < n && nums[i] == nums[j] {
+                j += 1
+            }
+            if j - i > n / 3 {
+                res.append(nums[i])
+            }
+            i = j
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +473,64 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func majorityElement(nums []int) []int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    res := []int{}
+    for key, val := range count {
+        if val > len(nums)/3 {
+            res = append(res, key)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun majorityElement(nums: IntArray): List<Int> {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val res = mutableListOf<Int>()
+        for ((key, value) in count) {
+            if (value > nums.size / 3) {
+                res.add(key)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func majorityElement(_ nums: [Int]) -> [Int] {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var res = [Int]()
+        for (key, value) in count {
+            if value > nums.count / 3 {
+                res.append(key)
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -549,6 +746,125 @@ public class Solution {
         if (cnt2 > n / 3) res.Add(num2);
 
         return res;
+    }
+}
+```
+
+```go
+func majorityElement(nums []int) []int {
+    n := len(nums)
+    num1, num2 := -1, -1
+    cnt1, cnt2 := 0, 0
+
+    for _, num := range nums {
+        if num == num1 {
+            cnt1++
+        } else if num == num2 {
+            cnt2++
+        } else if cnt1 == 0 {
+            cnt1 = 1
+            num1 = num
+        } else if cnt2 == 0 {
+            cnt2 = 1
+            num2 = num
+        } else {
+            cnt1--
+            cnt2--
+        }
+    }
+
+    cnt1, cnt2 = 0, 0
+    for _, num := range nums {
+        if num == num1 {
+            cnt1++
+        } else if num == num2 {
+            cnt2++
+        }
+    }
+
+    res := []int{}
+    if cnt1 > n/3 {
+        res = append(res, num1)
+    }
+    if cnt2 > n/3 {
+        res = append(res, num2)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun majorityElement(nums: IntArray): List<Int> {
+        val n = nums.size
+        var num1 = -1
+        var num2 = -1
+        var cnt1 = 0
+        var cnt2 = 0
+
+        for (num in nums) {
+            when {
+                num == num1 -> cnt1++
+                num == num2 -> cnt2++
+                cnt1 == 0 -> { cnt1 = 1; num1 = num }
+                cnt2 == 0 -> { cnt2 = 1; num2 = num }
+                else -> { cnt1--; cnt2-- }
+            }
+        }
+
+        cnt1 = 0
+        cnt2 = 0
+        for (num in nums) {
+            if (num == num1) cnt1++
+            else if (num == num2) cnt2++
+        }
+
+        val res = mutableListOf<Int>()
+        if (cnt1 > n / 3) res.add(num1)
+        if (cnt2 > n / 3) res.add(num2)
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func majorityElement(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var num1 = -1, num2 = -1
+        var cnt1 = 0, cnt2 = 0
+
+        for num in nums {
+            if num == num1 {
+                cnt1 += 1
+            } else if num == num2 {
+                cnt2 += 1
+            } else if cnt1 == 0 {
+                cnt1 = 1
+                num1 = num
+            } else if cnt2 == 0 {
+                cnt2 = 1
+                num2 = num
+            } else {
+                cnt1 -= 1
+                cnt2 -= 1
+            }
+        }
+
+        cnt1 = 0
+        cnt2 = 0
+        for num in nums {
+            if num == num1 { cnt1 += 1 }
+            else if num == num2 { cnt2 += 1 }
+        }
+
+        var res = [Int]()
+        if cnt1 > n / 3 { res.append(num1) }
+        if cnt2 > n / 3 { res.append(num2) }
+
+        return res
     }
 }
 ```

@@ -211,6 +211,123 @@ public class BSTIterator {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+type BSTIterator struct {
+    arr []int
+    itr int
+}
+
+func Constructor(root *TreeNode) BSTIterator {
+    it := BSTIterator{arr: []int{}, itr: 0}
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        dfs(node.Left)
+        it.arr = append(it.arr, node.Val)
+        dfs(node.Right)
+    }
+    dfs(root)
+    return it
+}
+
+func (this *BSTIterator) Next() int {
+    val := this.arr[this.itr]
+    this.itr++
+    return val
+}
+
+func (this *BSTIterator) HasNext() bool {
+    return this.itr < len(this.arr)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class BSTIterator(root: TreeNode?) {
+    private val arr = mutableListOf<Int>()
+    private var itr = 0
+
+    init {
+        fun dfs(node: TreeNode?) {
+            if (node == null) return
+            dfs(node.left)
+            arr.add(node.`val`)
+            dfs(node.right)
+        }
+        dfs(root)
+    }
+
+    fun next(): Int {
+        return arr[itr++]
+    }
+
+    fun hasNext(): Boolean {
+        return itr < arr.size
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class BSTIterator {
+    private var arr: [Int] = []
+    private var itr: Int = 0
+
+    init(_ root: TreeNode?) {
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+            dfs(node.left)
+            arr.append(node.val)
+            dfs(node.right)
+        }
+        dfs(root)
+    }
+
+    func next() -> Int {
+        let val = arr[itr]
+        itr += 1
+        return val
+    }
+
+    func hasNext() -> Bool {
+        return itr < arr.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,6 +556,99 @@ public class BSTIterator {
 }
 ```
 
+```go
+type BSTIterator struct {
+    arr []int
+    itr int
+}
+
+func Constructor(root *TreeNode) BSTIterator {
+    it := BSTIterator{arr: []int{}, itr: 0}
+    stack := []*TreeNode{}
+    for root != nil || len(stack) > 0 {
+        for root != nil {
+            stack = append(stack, root)
+            root = root.Left
+        }
+        root = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        it.arr = append(it.arr, root.Val)
+        root = root.Right
+    }
+    return it
+}
+
+func (this *BSTIterator) Next() int {
+    val := this.arr[this.itr]
+    this.itr++
+    return val
+}
+
+func (this *BSTIterator) HasNext() bool {
+    return this.itr < len(this.arr)
+}
+```
+
+```kotlin
+class BSTIterator(root: TreeNode?) {
+    private val arr = mutableListOf<Int>()
+    private var itr = 0
+
+    init {
+        var node = root
+        val stack = ArrayDeque<TreeNode>()
+        while (node != null || stack.isNotEmpty()) {
+            while (node != null) {
+                stack.addLast(node)
+                node = node.left
+            }
+            node = stack.removeLast()
+            arr.add(node.`val`)
+            node = node.right
+        }
+    }
+
+    fun next(): Int {
+        return arr[itr++]
+    }
+
+    fun hasNext(): Boolean {
+        return itr < arr.size
+    }
+}
+```
+
+```swift
+class BSTIterator {
+    private var arr: [Int] = []
+    private var itr: Int = 0
+
+    init(_ root: TreeNode?) {
+        var root = root
+        var stack = [TreeNode]()
+        while root != nil || !stack.isEmpty {
+            while root != nil {
+                stack.append(root!)
+                root = root!.left
+            }
+            root = stack.removeLast()
+            arr.append(root!.val)
+            root = root!.right
+        }
+    }
+
+    func next() -> Int {
+        let val = arr[itr]
+        itr += 1
+        return val
+    }
+
+    func hasNext() -> Bool {
+        return itr < arr.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -652,6 +862,92 @@ public class BSTIterator {
 }
 ```
 
+```go
+type BSTIterator struct {
+    stack []*TreeNode
+}
+
+func Constructor(root *TreeNode) BSTIterator {
+    it := BSTIterator{stack: []*TreeNode{}}
+    for root != nil {
+        it.stack = append(it.stack, root)
+        root = root.Left
+    }
+    return it
+}
+
+func (this *BSTIterator) Next() int {
+    node := this.stack[len(this.stack)-1]
+    this.stack = this.stack[:len(this.stack)-1]
+    cur := node.Right
+    for cur != nil {
+        this.stack = append(this.stack, cur)
+        cur = cur.Left
+    }
+    return node.Val
+}
+
+func (this *BSTIterator) HasNext() bool {
+    return len(this.stack) > 0
+}
+```
+
+```kotlin
+class BSTIterator(root: TreeNode?) {
+    private val stack = ArrayDeque<TreeNode>()
+
+    init {
+        var node = root
+        while (node != null) {
+            stack.addLast(node)
+            node = node.left
+        }
+    }
+
+    fun next(): Int {
+        val node = stack.removeLast()
+        var cur = node.right
+        while (cur != null) {
+            stack.addLast(cur)
+            cur = cur.left
+        }
+        return node.`val`
+    }
+
+    fun hasNext(): Boolean {
+        return stack.isNotEmpty()
+    }
+}
+```
+
+```swift
+class BSTIterator {
+    private var stack: [TreeNode] = []
+
+    init(_ root: TreeNode?) {
+        var root = root
+        while root != nil {
+            stack.append(root!)
+            root = root!.left
+        }
+    }
+
+    func next() -> Int {
+        let node = stack.removeLast()
+        var cur = node.right
+        while cur != nil {
+            stack.append(cur!)
+            cur = cur!.left
+        }
+        return node.val
+    }
+
+    func hasNext() -> Bool {
+        return !stack.isEmpty
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -854,6 +1150,78 @@ public class BSTIterator {
 
     public bool HasNext() {
         return cur != null || stack.Count > 0;
+    }
+}
+```
+
+```go
+type BSTIterator struct {
+    cur   *TreeNode
+    stack []*TreeNode
+}
+
+func Constructor(root *TreeNode) BSTIterator {
+    return BSTIterator{cur: root, stack: []*TreeNode{}}
+}
+
+func (this *BSTIterator) Next() int {
+    for this.cur != nil {
+        this.stack = append(this.stack, this.cur)
+        this.cur = this.cur.Left
+    }
+    node := this.stack[len(this.stack)-1]
+    this.stack = this.stack[:len(this.stack)-1]
+    this.cur = node.Right
+    return node.Val
+}
+
+func (this *BSTIterator) HasNext() bool {
+    return this.cur != nil || len(this.stack) > 0
+}
+```
+
+```kotlin
+class BSTIterator(root: TreeNode?) {
+    private var cur: TreeNode? = root
+    private val stack = ArrayDeque<TreeNode>()
+
+    fun next(): Int {
+        while (cur != null) {
+            stack.addLast(cur!!)
+            cur = cur!!.left
+        }
+        val node = stack.removeLast()
+        cur = node.right
+        return node.`val`
+    }
+
+    fun hasNext(): Boolean {
+        return cur != null || stack.isNotEmpty()
+    }
+}
+```
+
+```swift
+class BSTIterator {
+    private var cur: TreeNode?
+    private var stack: [TreeNode] = []
+
+    init(_ root: TreeNode?) {
+        cur = root
+    }
+
+    func next() -> Int {
+        while cur != nil {
+            stack.append(cur!)
+            cur = cur!.left
+        }
+        let node = stack.removeLast()
+        cur = node.right
+        return node.val
+    }
+
+    func hasNext() -> Bool {
+        return cur != nil || !stack.isEmpty
     }
 }
 ```

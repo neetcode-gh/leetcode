@@ -149,6 +149,91 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func insertIntoBST(root *TreeNode, val int) *TreeNode {
+    if root == nil {
+        return &TreeNode{Val: val}
+    }
+
+    if val > root.Val {
+        root.Right = insertIntoBST(root.Right, val)
+    } else {
+        root.Left = insertIntoBST(root.Left, val)
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun insertIntoBST(root: TreeNode?, `val`: Int): TreeNode? {
+        if (root == null) {
+            return TreeNode(`val`)
+        }
+
+        if (`val` > root.`val`) {
+            root.right = insertIntoBST(root.right, `val`)
+        } else {
+            root.left = insertIntoBST(root.left, `val`)
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func insertIntoBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
+        if root == nil {
+            return TreeNode(val)
+        }
+
+        if val > root!.val {
+            root!.right = insertIntoBST(root!.right, val)
+        } else {
+            root!.left = insertIntoBST(root!.left, val)
+        }
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +432,118 @@ public class Solution {
                     return root;
                 }
                 cur = cur.left;
+            }
+        }
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func insertIntoBST(root *TreeNode, val int) *TreeNode {
+    if root == nil {
+        return &TreeNode{Val: val}
+    }
+
+    cur := root
+    for {
+        if val > cur.Val {
+            if cur.Right == nil {
+                cur.Right = &TreeNode{Val: val}
+                return root
+            }
+            cur = cur.Right
+        } else {
+            if cur.Left == nil {
+                cur.Left = &TreeNode{Val: val}
+                return root
+            }
+            cur = cur.Left
+        }
+    }
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun insertIntoBST(root: TreeNode?, `val`: Int): TreeNode? {
+        if (root == null) {
+            return TreeNode(`val`)
+        }
+
+        var cur = root
+        while (true) {
+            if (`val` > cur.`val`) {
+                if (cur.right == null) {
+                    cur.right = TreeNode(`val`)
+                    return root
+                }
+                cur = cur.right!!
+            } else {
+                if (cur.left == null) {
+                    cur.left = TreeNode(`val`)
+                    return root
+                }
+                cur = cur.left!!
+            }
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func insertIntoBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
+        if root == nil {
+            return TreeNode(val)
+        }
+
+        var cur = root
+        while true {
+            if val > cur!.val {
+                if cur!.right == nil {
+                    cur!.right = TreeNode(val)
+                    return root
+                }
+                cur = cur!.right
+            } else {
+                if cur!.left == nil {
+                    cur!.left = TreeNode(val)
+                    return root
+                }
+                cur = cur!.left
             }
         }
     }

@@ -183,6 +183,118 @@ public class Solution {
 }
 ```
 
+```go
+func findDifference(nums1 []int, nums2 []int) [][]int {
+    res1 := make(map[int]struct{})
+    res2 := make(map[int]struct{})
+
+    for _, num1 := range nums1 {
+        found := false
+        for _, num2 := range nums2 {
+            if num1 == num2 {
+                found = true
+                break
+            }
+        }
+        if !found {
+            res1[num1] = struct{}{}
+        }
+    }
+
+    for _, num2 := range nums2 {
+        found := false
+        for _, num1 := range nums1 {
+            if num1 == num2 {
+                found = true
+                break
+            }
+        }
+        if !found {
+            res2[num2] = struct{}{}
+        }
+    }
+
+    result1, result2 := []int{}, []int{}
+    for k := range res1 {
+        result1 = append(result1, k)
+    }
+    for k := range res2 {
+        result2 = append(result2, k)
+    }
+    return [][]int{result1, result2}
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifference(nums1: IntArray, nums2: IntArray): List<List<Int>> {
+        val res1 = mutableSetOf<Int>()
+        val res2 = mutableSetOf<Int>()
+
+        for (num1 in nums1) {
+            var found = false
+            for (num2 in nums2) {
+                if (num1 == num2) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) res1.add(num1)
+        }
+
+        for (num2 in nums2) {
+            var found = false
+            for (num1 in nums1) {
+                if (num1 == num2) {
+                    found = true
+                    break
+                }
+            }
+            if (!found) res2.add(num2)
+        }
+
+        return listOf(res1.toList(), res2.toList())
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifference(_ nums1: [Int], _ nums2: [Int]) -> [[Int]] {
+        var res1 = Set<Int>()
+        var res2 = Set<Int>()
+
+        for num1 in nums1 {
+            var found = false
+            for num2 in nums2 {
+                if num1 == num2 {
+                    found = true
+                    break
+                }
+            }
+            if !found {
+                res1.insert(num1)
+            }
+        }
+
+        for num2 in nums2 {
+            var found = false
+            for num1 in nums1 {
+                if num1 == num2 {
+                    found = true
+                    break
+                }
+            }
+            if !found {
+                res2.insert(num2)
+            }
+        }
+
+        return [Array(res1), Array(res2)]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -335,6 +447,87 @@ public class Solution {
 }
 ```
 
+```go
+func findDifference(nums1 []int, nums2 []int) [][]int {
+    sort.Ints(nums1)
+    sort.Ints(nums2)
+
+    helper := func(A, B []int) []int {
+        res := []int{}
+        j := 0
+        prev := math.MinInt32
+
+        for _, num := range A {
+            if num == prev {
+                continue
+            }
+            for j < len(B) && B[j] < num {
+                j++
+            }
+            if j == len(B) || B[j] != num {
+                res = append(res, num)
+            }
+            prev = num
+        }
+        return res
+    }
+
+    return [][]int{helper(nums1, nums2), helper(nums2, nums1)}
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifference(nums1: IntArray, nums2: IntArray): List<List<Int>> {
+        nums1.sort()
+        nums2.sort()
+
+        fun helper(A: IntArray, B: IntArray): List<Int> {
+            val res = mutableListOf<Int>()
+            var j = 0
+            var prev = Int.MIN_VALUE
+
+            for (num in A) {
+                if (num == prev) continue
+                while (j < B.size && B[j] < num) j++
+                if (j == B.size || B[j] != num) res.add(num)
+                prev = num
+            }
+            return res
+        }
+
+        return listOf(helper(nums1, nums2), helper(nums2, nums1))
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifference(_ nums1: [Int], _ nums2: [Int]) -> [[Int]] {
+        let sortedNums1 = nums1.sorted()
+        let sortedNums2 = nums2.sorted()
+
+        func helper(_ A: [Int], _ B: [Int]) -> [Int] {
+            var res = [Int]()
+            var j = 0
+            var prev = Int.min
+
+            for num in A {
+                if num == prev { continue }
+                while j < B.count && B[j] < num { j += 1 }
+                if j == B.count || B[j] != num {
+                    res.append(num)
+                }
+                prev = num
+            }
+            return res
+        }
+
+        return [helper(sortedNums1, sortedNums2), helper(sortedNums2, sortedNums1)]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,6 +648,61 @@ public class Solution {
 }
 ```
 
+```go
+func findDifference(nums1 []int, nums2 []int) [][]int {
+    num1Set := make(map[int]struct{})
+    num2Set := make(map[int]struct{})
+    for _, num := range nums1 {
+        num1Set[num] = struct{}{}
+    }
+    for _, num := range nums2 {
+        num2Set[num] = struct{}{}
+    }
+
+    res1, res2 := []int{}, []int{}
+    for num := range num1Set {
+        if _, exists := num2Set[num]; !exists {
+            res1 = append(res1, num)
+        }
+    }
+    for num := range num2Set {
+        if _, exists := num1Set[num]; !exists {
+            res2 = append(res2, num)
+        }
+    }
+
+    return [][]int{res1, res2}
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifference(nums1: IntArray, nums2: IntArray): List<List<Int>> {
+        val num1Set = nums1.toHashSet()
+        val num2Set = nums2.toHashSet()
+
+        val res1 = num1Set.filter { it !in num2Set }
+        val res2 = num2Set.filter { it !in num1Set }
+
+        return listOf(res1, res2)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifference(_ nums1: [Int], _ nums2: [Int]) -> [[Int]] {
+        let num1Set = Set(nums1)
+        let num2Set = Set(nums2)
+
+        let res1 = num1Set.filter { !num2Set.contains($0) }
+        let res2 = num2Set.filter { !num1Set.contains($0) }
+
+        return [Array(res1), Array(res2)]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,6 +803,61 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func findDifference(nums1 []int, nums2 []int) [][]int {
+    numSet1 := make(map[int]struct{})
+    numSet2 := make(map[int]struct{})
+    for _, num := range nums1 {
+        numSet1[num] = struct{}{}
+    }
+    for _, num := range nums2 {
+        numSet2[num] = struct{}{}
+    }
+
+    res1, res2 := []int{}, []int{}
+    for num := range numSet1 {
+        if _, exists := numSet2[num]; !exists {
+            res1 = append(res1, num)
+        }
+    }
+    for num := range numSet2 {
+        if _, exists := numSet1[num]; !exists {
+            res2 = append(res2, num)
+        }
+    }
+
+    return [][]int{res1, res2}
+}
+```
+
+```kotlin
+class Solution {
+    fun findDifference(nums1: IntArray, nums2: IntArray): List<List<Int>> {
+        val numSet1 = nums1.toHashSet()
+        val numSet2 = nums2.toHashSet()
+
+        return listOf(
+            (numSet1 - numSet2).toList(),
+            (numSet2 - numSet1).toList()
+        )
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDifference(_ nums1: [Int], _ nums2: [Int]) -> [[Int]] {
+        let numSet1 = Set(nums1)
+        let numSet2 = Set(nums2)
+
+        return [
+            Array(numSet1.subtracting(numSet2)),
+            Array(numSet2.subtracting(numSet1))
+        ]
     }
 }
 ```

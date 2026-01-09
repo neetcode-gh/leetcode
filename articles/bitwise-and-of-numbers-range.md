@@ -65,6 +65,40 @@ public class Solution {
 }
 ```
 
+```go
+func rangeBitwiseAnd(left int, right int) int {
+    res := left
+    for i := left + 1; i <= right; i++ {
+        res &= i
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun rangeBitwiseAnd(left: Int, right: Int): Int {
+        var res = left
+        for (i in left + 1..right) {
+            res = res and i
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func rangeBitwiseAnd(_ left: Int, _ right: Int) -> Int {
+        var res = left
+        for i in (left + 1)...right {
+            res &= i
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +217,63 @@ public class Solution {
 }
 ```
 
+```go
+func rangeBitwiseAnd(left int, right int) int {
+    res := 0
+    for i := 0; i < 32; i++ {
+        bit := (left >> i) & 1
+        if bit == 0 {
+            continue
+        }
+        remain := left % (1 << (i + 1))
+        diff := (1 << (i + 1)) - remain
+        if right-left < diff {
+            res |= (1 << i)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun rangeBitwiseAnd(left: Int, right: Int): Int {
+        var res = 0
+        for (i in 0 until 32) {
+            val bit = (left shr i) and 1
+            if (bit == 0) continue
+
+            val remain = left % (1 shl (i + 1))
+            val diff = (1 shl (i + 1)) - remain
+            if (right - left < diff) {
+                res = res or (1 shl i)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func rangeBitwiseAnd(_ left: Int, _ right: Int) -> Int {
+        var res = 0
+        for i in 0..<32 {
+            let bit = (left >> i) & 1
+            if bit == 0 {
+                continue
+            }
+            let remain = left % (1 << (i + 1))
+            let diff = (1 << (i + 1)) - remain
+            if right - left < diff {
+                res |= (1 << i)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +360,50 @@ public class Solution {
 }
 ```
 
+```go
+func rangeBitwiseAnd(left int, right int) int {
+    i := 0
+    for left != right {
+        left >>= 1
+        right >>= 1
+        i++
+    }
+    return left << i
+}
+```
+
+```kotlin
+class Solution {
+    fun rangeBitwiseAnd(left: Int, right: Int): Int {
+        var l = left
+        var r = right
+        var i = 0
+        while (l != r) {
+            l = l shr 1
+            r = r shr 1
+            i++
+        }
+        return l shl i
+    }
+}
+```
+
+```swift
+class Solution {
+    func rangeBitwiseAnd(_ left: Int, _ right: Int) -> Int {
+        var left = left
+        var right = right
+        var i = 0
+        while left != right {
+            left >>= 1
+            right >>= 1
+            i += 1
+        }
+        return left << i
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,6 +471,39 @@ public class Solution {
             right &= (right - 1);
         }
         return right;
+    }
+}
+```
+
+```go
+func rangeBitwiseAnd(left int, right int) int {
+    for left < right {
+        right &= right - 1
+    }
+    return right
+}
+```
+
+```kotlin
+class Solution {
+    fun rangeBitwiseAnd(left: Int, right: Int): Int {
+        var r = right
+        while (left < r) {
+            r = r and (r - 1)
+        }
+        return r
+    }
+}
+```
+
+```swift
+class Solution {
+    func rangeBitwiseAnd(_ left: Int, _ right: Int) -> Int {
+        var right = right
+        while left < right {
+            right &= right - 1
+        }
+        return right
     }
 }
 ```

@@ -178,6 +178,109 @@ public class Solution {
 }
 ```
 
+```go
+func islandPerimeter(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    visited := make(map[[2]int]bool)
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i < 0 || j < 0 || i >= rows || j >= cols || grid[i][j] == 0 {
+            return 1
+        }
+        if visited[[2]int{i, j}] {
+            return 0
+        }
+
+        visited[[2]int{i, j}] = true
+        return dfs(i, j+1) + dfs(i+1, j) + dfs(i, j-1) + dfs(i-1, j)
+    }
+
+    for i := 0; i < rows; i++ {
+        for j := 0; j < cols; j++ {
+            if grid[i][j] == 1 {
+                return dfs(i, j)
+            }
+        }
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var grid: Array<IntArray>
+    private lateinit var visited: Array<BooleanArray>
+    private var rows = 0
+    private var cols = 0
+
+    fun islandPerimeter(grid: Array<IntArray>): Int {
+        this.grid = grid
+        rows = grid.size
+        cols = grid[0].size
+        visited = Array(rows) { BooleanArray(cols) }
+
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                if (grid[i][j] == 1) {
+                    return dfs(i, j)
+                }
+            }
+        }
+        return 0
+    }
+
+    private fun dfs(i: Int, j: Int): Int {
+        if (i < 0 || j < 0 || i >= rows || j >= cols || grid[i][j] == 0) {
+            return 1
+        }
+        if (visited[i][j]) {
+            return 0
+        }
+
+        visited[i][j] = true
+        return dfs(i, j + 1) + dfs(i + 1, j) + dfs(i, j - 1) + dfs(i - 1, j)
+    }
+}
+```
+
+```swift
+class Solution {
+    private var grid = [[Int]]()
+    private var visited = [[Bool]]()
+    private var rows = 0
+    private var cols = 0
+
+    func islandPerimeter(_ grid: [[Int]]) -> Int {
+        self.grid = grid
+        rows = grid.count
+        cols = grid[0].count
+        visited = [[Bool]](repeating: [Bool](repeating: false, count: cols), count: rows)
+
+        for i in 0..<rows {
+            for j in 0..<cols {
+                if grid[i][j] == 1 {
+                    return dfs(i, j)
+                }
+            }
+        }
+        return 0
+    }
+
+    private func dfs(_ i: Int, _ j: Int) -> Int {
+        if i < 0 || j < 0 || i >= rows || j >= cols || grid[i][j] == 0 {
+            return 1
+        }
+        if visited[i][j] {
+            return 0
+        }
+
+        visited[i][j] = true
+        return dfs(i, j + 1) + dfs(i + 1, j) + dfs(i, j - 1) + dfs(i - 1, j)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -413,6 +516,130 @@ public class Solution {
 }
 ```
 
+```go
+func islandPerimeter(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    visited := make(map[[2]int]bool)
+    directions := [][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+
+    bfs := func(r, c int) int {
+        queue := [][2]int{{r, c}}
+        visited[[2]int{r, c}] = true
+        perimeter := 0
+
+        for len(queue) > 0 {
+            cell := queue[0]
+            queue = queue[1:]
+            x, y := cell[0], cell[1]
+
+            for _, dir := range directions {
+                nx, ny := x+dir[0], y+dir[1]
+                if nx < 0 || ny < 0 || nx >= rows || ny >= cols || grid[nx][ny] == 0 {
+                    perimeter++
+                } else if !visited[[2]int{nx, ny}] {
+                    visited[[2]int{nx, ny}] = true
+                    queue = append(queue, [2]int{nx, ny})
+                }
+            }
+        }
+        return perimeter
+    }
+
+    for i := 0; i < rows; i++ {
+        for j := 0; j < cols; j++ {
+            if grid[i][j] == 1 {
+                return bfs(i, j)
+            }
+        }
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun islandPerimeter(grid: Array<IntArray>): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+        val visited = HashSet<Pair<Int, Int>>()
+        val directions = arrayOf(intArrayOf(0, 1), intArrayOf(1, 0), intArrayOf(0, -1), intArrayOf(-1, 0))
+
+        fun bfs(r: Int, c: Int): Int {
+            val queue: Queue<Pair<Int, Int>> = LinkedList()
+            queue.offer(Pair(r, c))
+            visited.add(Pair(r, c))
+            var perimeter = 0
+
+            while (queue.isNotEmpty()) {
+                val (x, y) = queue.poll()
+                for (dir in directions) {
+                    val nx = x + dir[0]
+                    val ny = y + dir[1]
+                    if (nx < 0 || ny < 0 || nx >= rows || ny >= cols || grid[nx][ny] == 0) {
+                        perimeter++
+                    } else if (!visited.contains(Pair(nx, ny))) {
+                        visited.add(Pair(nx, ny))
+                        queue.offer(Pair(nx, ny))
+                    }
+                }
+            }
+            return perimeter
+        }
+
+        for (i in 0 until rows) {
+            for (j in 0 until cols) {
+                if (grid[i][j] == 1) {
+                    return bfs(i, j)
+                }
+            }
+        }
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func islandPerimeter(_ grid: [[Int]]) -> Int {
+        let rows = grid.count
+        let cols = grid[0].count
+        var visited = Set<[Int]>()
+        let directions = [[0, 1], [1, 0], [0, -1], [-1, 0]]
+
+        func bfs(_ r: Int, _ c: Int) -> Int {
+            var queue = [[r, c]]
+            visited.insert([r, c])
+            var perimeter = 0
+
+            while !queue.isEmpty {
+                let cell = queue.removeFirst()
+                let x = cell[0], y = cell[1]
+
+                for dir in directions {
+                    let nx = x + dir[0], ny = y + dir[1]
+                    if nx < 0 || ny < 0 || nx >= rows || ny >= cols || grid[nx][ny] == 0 {
+                        perimeter += 1
+                    } else if !visited.contains([nx, ny]) {
+                        visited.insert([nx, ny])
+                        queue.append([nx, ny])
+                    }
+                }
+            }
+            return perimeter
+        }
+
+        for i in 0..<rows {
+            for j in 0..<cols {
+                if grid[i][j] == 1 {
+                    return bfs(i, j)
+                }
+            }
+        }
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +752,73 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func islandPerimeter(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    res := 0
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if grid[i][j] == 1 {
+                if i+1 >= m || grid[i+1][j] == 0 {
+                    res++
+                }
+                if j+1 >= n || grid[i][j+1] == 0 {
+                    res++
+                }
+                if i-1 < 0 || grid[i-1][j] == 0 {
+                    res++
+                }
+                if j-1 < 0 || grid[i][j-1] == 0 {
+                    res++
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun islandPerimeter(grid: Array<IntArray>): Int {
+        val m = grid.size
+        val n = grid[0].size
+        var res = 0
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                if (grid[i][j] == 1) {
+                    if (i + 1 >= m || grid[i + 1][j] == 0) res++
+                    if (j + 1 >= n || grid[i][j + 1] == 0) res++
+                    if (i - 1 < 0 || grid[i - 1][j] == 0) res++
+                    if (j - 1 < 0 || grid[i][j - 1] == 0) res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func islandPerimeter(_ grid: [[Int]]) -> Int {
+        let m = grid.count, n = grid[0].count
+        var res = 0
+        for i in 0..<m {
+            for j in 0..<n {
+                if grid[i][j] == 1 {
+                    if i + 1 >= m || grid[i + 1][j] == 0 { res += 1 }
+                    if j + 1 >= n || grid[i][j + 1] == 0 { res += 1 }
+                    if i - 1 < 0 || grid[i - 1][j] == 0 { res += 1 }
+                    if j - 1 < 0 || grid[i][j - 1] == 0 { res += 1 }
+                }
+            }
+        }
+        return res
     }
 }
 ```
@@ -657,6 +951,74 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func islandPerimeter(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    res := 0
+    for r := 0; r < m; r++ {
+        for c := 0; c < n; c++ {
+            if grid[r][c] == 1 {
+                res += 4
+                if r > 0 && grid[r-1][c] == 1 {
+                    res -= 2
+                }
+                if c > 0 && grid[r][c-1] == 1 {
+                    res -= 2
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun islandPerimeter(grid: Array<IntArray>): Int {
+        val m = grid.size
+        val n = grid[0].size
+        var res = 0
+        for (r in 0 until m) {
+            for (c in 0 until n) {
+                if (grid[r][c] == 1) {
+                    res += 4
+                    if (r > 0 && grid[r - 1][c] == 1) {
+                        res -= 2
+                    }
+                    if (c > 0 && grid[r][c - 1] == 1) {
+                        res -= 2
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func islandPerimeter(_ grid: [[Int]]) -> Int {
+        let m = grid.count, n = grid[0].count
+        var res = 0
+        for r in 0..<m {
+            for c in 0..<n {
+                if grid[r][c] == 1 {
+                    res += 4
+                    if r > 0 && grid[r - 1][c] == 1 {
+                        res -= 2
+                    }
+                    if c > 0 && grid[r][c - 1] == 1 {
+                        res -= 2
+                    }
+                }
+            }
+        }
+        return res
     }
 }
 ```

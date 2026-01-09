@@ -167,6 +167,164 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CheckMove(char[][] board, int rMove, int cMove, char color) {
+        int ROWS = board.Length, COLS = board[0].Length;
+        int[][] direction = new int[][] {
+            new int[] {1, 0}, new int[] {-1, 0}, new int[] {0, 1}, new int[] {0, -1},
+            new int[] {1, 1}, new int[] {-1, -1}, new int[] {1, -1}, new int[] {-1, 1}
+        };
+
+        board[rMove][cMove] = color;
+
+        foreach (int[] d in direction) {
+            if (Legal(board, rMove, cMove, color, d)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private bool Legal(char[][] board, int row, int col, char color, int[] direc) {
+        int ROWS = board.Length, COLS = board[0].Length;
+        int dr = direc[0], dc = direc[1];
+        row += dr;
+        col += dc;
+        int length = 1;
+
+        while (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
+            length++;
+            if (board[row][col] == '.') {
+                return false;
+            }
+            if (board[row][col] == color) {
+                return length >= 3;
+            }
+            row += dr;
+            col += dc;
+        }
+        return false;
+    }
+}
+```
+
+```go
+func checkMove(board [][]byte, rMove int, cMove int, color byte) bool {
+    ROWS, COLS := len(board), len(board[0])
+    direction := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1},
+                         {1, 1}, {-1, -1}, {1, -1}, {-1, 1}}
+
+    board[rMove][cMove] = color
+
+    legal := func(row, col int, color byte, direc []int) bool {
+        dr, dc := direc[0], direc[1]
+        row += dr
+        col += dc
+        length := 1
+
+        for row >= 0 && row < ROWS && col >= 0 && col < COLS {
+            length++
+            if board[row][col] == '.' {
+                return false
+            }
+            if board[row][col] == color {
+                return length >= 3
+            }
+            row += dr
+            col += dc
+        }
+        return false
+    }
+
+    for _, d := range direction {
+        if legal(rMove, cMove, color, d) {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun checkMove(board: Array<CharArray>, rMove: Int, cMove: Int, color: Char): Boolean {
+        val ROWS = board.size
+        val COLS = board[0].size
+        val direction = arrayOf(
+            intArrayOf(1, 0), intArrayOf(-1, 0), intArrayOf(0, 1), intArrayOf(0, -1),
+            intArrayOf(1, 1), intArrayOf(-1, -1), intArrayOf(1, -1), intArrayOf(-1, 1)
+        )
+
+        board[rMove][cMove] = color
+
+        fun legal(row: Int, col: Int, color: Char, direc: IntArray): Boolean {
+            var r = row + direc[0]
+            var c = col + direc[1]
+            var length = 1
+
+            while (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+                length++
+                if (board[r][c] == '.') {
+                    return false
+                }
+                if (board[r][c] == color) {
+                    return length >= 3
+                }
+                r += direc[0]
+                c += direc[1]
+            }
+            return false
+        }
+
+        for (d in direction) {
+            if (legal(rMove, cMove, color, d)) {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkMove(_ board: inout [[Character]], _ rMove: Int, _ cMove: Int, _ color: Character) -> Bool {
+        let ROWS = board.count, COLS = board[0].count
+        let direction = [[1, 0], [-1, 0], [0, 1], [0, -1],
+                         [1, 1], [-1, -1], [1, -1], [-1, 1]]
+
+        board[rMove][cMove] = color
+
+        func legal(_ row: Int, _ col: Int, _ color: Character, _ direc: [Int]) -> Bool {
+            var row = row + direc[0]
+            var col = col + direc[1]
+            var length = 1
+
+            while row >= 0 && row < ROWS && col >= 0 && col < COLS {
+                length += 1
+                if board[row][col] == "." {
+                    return false
+                }
+                if board[row][col] == color {
+                    return length >= 3
+                }
+                row += direc[0]
+                col += direc[1]
+            }
+            return false
+        }
+
+        for d in direction {
+            if legal(rMove, cMove, color, d) {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,6 +460,126 @@ class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CheckMove(char[][] board, int rMove, int cMove, char color) {
+        int ROWS = board.Length, COLS = board[0].Length;
+        int[] direction = {0, 1, 0, -1, 0, 1, 1, -1, -1, 1};
+
+        board[rMove][cMove] = color;
+
+        for (int d = 0; d < 9; d++) {
+            int row = rMove, col = cMove;
+            for (int length = 1; ; ++length) {
+                row += direction[d];
+                col += direction[d + 1];
+
+                if (row < 0 || col < 0 || row >= ROWS || col >= COLS || board[row][col] == '.')
+                    break;
+                if (board[row][col] == color) {
+                    if (length > 1)
+                        return true;
+                    break;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
+```go
+func checkMove(board [][]byte, rMove int, cMove int, color byte) bool {
+    ROWS, COLS := len(board), len(board[0])
+    direction := []int{0, 1, 0, -1, 0, 1, 1, -1, -1, 1}
+
+    board[rMove][cMove] = color
+
+    for d := 0; d < 9; d++ {
+        row, col := rMove, cMove
+        for length := 1; ; length++ {
+            row += direction[d]
+            col += direction[d+1]
+
+            if row < 0 || col < 0 || row >= ROWS || col >= COLS || board[row][col] == '.' {
+                break
+            }
+            if board[row][col] == color {
+                if length > 1 {
+                    return true
+                }
+                break
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun checkMove(board: Array<CharArray>, rMove: Int, cMove: Int, color: Char): Boolean {
+        val ROWS = board.size
+        val COLS = board[0].size
+        val direction = intArrayOf(0, 1, 0, -1, 0, 1, 1, -1, -1, 1)
+
+        board[rMove][cMove] = color
+
+        for (d in 0 until 9) {
+            var row = rMove
+            var col = cMove
+            var length = 1
+            while (true) {
+                row += direction[d]
+                col += direction[d + 1]
+
+                if (row < 0 || col < 0 || row >= ROWS || col >= COLS || board[row][col] == '.')
+                    break
+                if (board[row][col] == color) {
+                    if (length > 1)
+                        return true
+                    break
+                }
+                length++
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkMove(_ board: inout [[Character]], _ rMove: Int, _ cMove: Int, _ color: Character) -> Bool {
+        let ROWS = board.count, COLS = board[0].count
+        let direction = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1]
+
+        board[rMove][cMove] = color
+
+        for d in 0..<9 {
+            var row = rMove, col = cMove
+            var length = 1
+            while true {
+                row += direction[d]
+                col += direction[d + 1]
+
+                if row < 0 || col < 0 || row >= ROWS || col >= COLS || board[row][col] == "." {
+                    break
+                }
+                if board[row][col] == color {
+                    if length > 1 {
+                        return true
+                    }
+                    break
+                }
+                length += 1
+            }
+        }
+        return false
     }
 }
 ```

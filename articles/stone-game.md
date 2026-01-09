@@ -113,6 +113,70 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGame(piles []int) bool {
+    total := 0
+    for _, pile := range piles {
+        total += pile
+    }
+
+    var dfs func(l, r int) int
+    dfs = func(l, r int) int {
+        if l > r {
+            return 0
+        }
+        even := (r-l)%2 == 0
+        left, right := 0, 0
+        if even {
+            left = piles[l]
+            right = piles[r]
+        }
+        return max(dfs(l+1, r)+left, dfs(l, r-1)+right)
+    }
+
+    aliceScore := dfs(0, len(piles)-1)
+    return aliceScore > total-aliceScore
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGame(piles: IntArray): Boolean {
+        val total = piles.sum()
+
+        fun dfs(l: Int, r: Int): Int {
+            if (l > r) return 0
+            val even = (r - l) % 2 == 0
+            val left = if (even) piles[l] else 0
+            val right = if (even) piles[r] else 0
+            return maxOf(dfs(l + 1, r) + left, dfs(l, r - 1) + right)
+        }
+
+        val aliceScore = dfs(0, piles.size - 1)
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGame(_ piles: [Int]) -> Bool {
+        let total = piles.reduce(0, +)
+
+        func dfs(_ l: Int, _ r: Int) -> Int {
+            if l > r { return 0 }
+            let even = (r - l) % 2 == 0
+            let left = even ? piles[l] : 0
+            let right = even ? piles[r] : 0
+            return max(dfs(l + 1, r) + left, dfs(l, r - 1) + right)
+        }
+
+        let aliceScore = dfs(0, piles.count - 1)
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,6 +349,91 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGame(piles []int) bool {
+    n := len(piles)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    total := 0
+    for _, pile := range piles {
+        total += pile
+    }
+
+    var dfs func(l, r int) int
+    dfs = func(l, r int) int {
+        if l > r {
+            return 0
+        }
+        if dp[l][r] != -1 {
+            return dp[l][r]
+        }
+        even := (r-l)%2 == 0
+        left, right := 0, 0
+        if even {
+            left = piles[l]
+            right = piles[r]
+        }
+        dp[l][r] = max(dfs(l+1, r)+left, dfs(l, r-1)+right)
+        return dp[l][r]
+    }
+
+    aliceScore := dfs(0, n-1)
+    return aliceScore > total-aliceScore
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGame(piles: IntArray): Boolean {
+        val n = piles.size
+        val dp = Array(n) { IntArray(n) { -1 } }
+        val total = piles.sum()
+
+        fun dfs(l: Int, r: Int): Int {
+            if (l > r) return 0
+            if (dp[l][r] != -1) return dp[l][r]
+            val even = (r - l) % 2 == 0
+            val left = if (even) piles[l] else 0
+            val right = if (even) piles[r] else 0
+            dp[l][r] = maxOf(dfs(l + 1, r) + left, dfs(l, r - 1) + right)
+            return dp[l][r]
+        }
+
+        val aliceScore = dfs(0, n - 1)
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGame(_ piles: [Int]) -> Bool {
+        let n = piles.count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: n), count: n)
+        let total = piles.reduce(0, +)
+
+        func dfs(_ l: Int, _ r: Int) -> Int {
+            if l > r { return 0 }
+            if dp[l][r] != -1 { return dp[l][r] }
+            let even = (r - l) % 2 == 0
+            let left = even ? piles[l] : 0
+            let right = even ? piles[r] : 0
+            dp[l][r] = max(dfs(l + 1, r) + left, dfs(l, r - 1) + right)
+            return dp[l][r]
+        }
+
+        let aliceScore = dfs(0, n - 1)
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -435,6 +584,92 @@ public class Solution {
 
         int aliceScore = dp[0, n - 1];
         return aliceScore > total - aliceScore;
+    }
+}
+```
+
+```go
+func stoneGame(piles []int) bool {
+    n := len(piles)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, n)
+    }
+
+    for l := n - 1; l >= 0; l-- {
+        for r := l; r < n; r++ {
+            even := (r-l)%2 == 0
+            left, right := 0, 0
+            if even {
+                left = piles[l]
+                right = piles[r]
+            }
+            if l == r {
+                dp[l][r] = left
+            } else {
+                dp[l][r] = max(dp[l+1][r]+left, dp[l][r-1]+right)
+            }
+        }
+    }
+
+    total := 0
+    for _, pile := range piles {
+        total += pile
+    }
+
+    aliceScore := dp[0][n-1]
+    return aliceScore > total-aliceScore
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGame(piles: IntArray): Boolean {
+        val n = piles.size
+        val dp = Array(n) { IntArray(n) }
+
+        for (l in n - 1 downTo 0) {
+            for (r in l until n) {
+                val even = (r - l) % 2 == 0
+                val left = if (even) piles[l] else 0
+                val right = if (even) piles[r] else 0
+                dp[l][r] = if (l == r) {
+                    left
+                } else {
+                    maxOf(dp[l + 1][r] + left, dp[l][r - 1] + right)
+                }
+            }
+        }
+
+        val total = piles.sum()
+        val aliceScore = dp[0][n - 1]
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGame(_ piles: [Int]) -> Bool {
+        let n = piles.count
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: n), count: n)
+
+        for l in stride(from: n - 1, through: 0, by: -1) {
+            for r in l..<n {
+                let even = (r - l) % 2 == 0
+                let left = even ? piles[l] : 0
+                let right = even ? piles[r] : 0
+                if l == r {
+                    dp[l][r] = left
+                } else {
+                    dp[l][r] = max(dp[l + 1][r] + left, dp[l][r - 1] + right)
+                }
+            }
+        }
+
+        let total = piles.reduce(0, +)
+        let aliceScore = dp[0][n - 1]
+        return aliceScore > total - aliceScore
     }
 }
 ```
@@ -595,6 +830,89 @@ public class Solution {
 }
 ```
 
+```go
+func stoneGame(piles []int) bool {
+    n := len(piles)
+    dp := make([]int, n)
+
+    for l := n - 1; l >= 0; l-- {
+        for r := l; r < n; r++ {
+            even := (r-l)%2 == 0
+            left, right := 0, 0
+            if even {
+                left = piles[l]
+                right = piles[r]
+            }
+            if l == r {
+                dp[r] = left
+            } else {
+                dp[r] = max(dp[r]+left, dp[r-1]+right)
+            }
+        }
+    }
+
+    total := 0
+    for _, pile := range piles {
+        total += pile
+    }
+
+    aliceScore := dp[n-1]
+    return aliceScore > total-aliceScore
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGame(piles: IntArray): Boolean {
+        val n = piles.size
+        val dp = IntArray(n)
+
+        for (l in n - 1 downTo 0) {
+            for (r in l until n) {
+                val even = (r - l) % 2 == 0
+                val left = if (even) piles[l] else 0
+                val right = if (even) piles[r] else 0
+                dp[r] = if (l == r) {
+                    left
+                } else {
+                    maxOf(dp[r] + left, dp[r - 1] + right)
+                }
+            }
+        }
+
+        val total = piles.sum()
+        val aliceScore = dp[n - 1]
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGame(_ piles: [Int]) -> Bool {
+        let n = piles.count
+        var dp = [Int](repeating: 0, count: n)
+
+        for l in stride(from: n - 1, through: 0, by: -1) {
+            for r in l..<n {
+                let even = (r - l) % 2 == 0
+                let left = even ? piles[l] : 0
+                let right = even ? piles[r] : 0
+                if l == r {
+                    dp[r] = left
+                } else {
+                    dp[r] = max(dp[r] + left, dp[r - 1] + right)
+                }
+            }
+        }
+
+        let total = piles.reduce(0, +)
+        let aliceScore = dp[n - 1]
+        return aliceScore > total - aliceScore
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -647,6 +965,28 @@ class Solution {
 public class Solution {
     public bool StoneGame(int[] piles) {
         return true;
+    }
+}
+```
+
+```go
+func stoneGame(piles []int) bool {
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun stoneGame(piles: IntArray): Boolean {
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func stoneGame(_ piles: [Int]) -> Bool {
+        return true
     }
 }
 ```

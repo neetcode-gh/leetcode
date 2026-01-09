@@ -145,6 +145,164 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<int> LargestValues(TreeNode root) {
+        if (root == null) return new List<int>();
+
+        var res = new List<int>();
+        var q = new Queue<TreeNode>();
+        q.Enqueue(root);
+
+        while (q.Count > 0) {
+            int rowMax = q.Peek().val;
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                var node = q.Dequeue();
+                rowMax = Math.Max(rowMax, node.val);
+                if (node.left != null) q.Enqueue(node.left);
+                if (node.right != null) q.Enqueue(node.right);
+            }
+            res.Add(rowMax);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func largestValues(root *TreeNode) []int {
+    if root == nil {
+        return []int{}
+    }
+
+    res := []int{}
+    q := []*TreeNode{root}
+
+    for len(q) > 0 {
+        rowMax := q[0].Val
+        size := len(q)
+        for i := 0; i < size; i++ {
+            node := q[0]
+            q = q[1:]
+            if node.Val > rowMax {
+                rowMax = node.Val
+            }
+            if node.Left != nil {
+                q = append(q, node.Left)
+            }
+            if node.Right != nil {
+                q = append(q, node.Right)
+            }
+        }
+        res = append(res, rowMax)
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun largestValues(root: TreeNode?): List<Int> {
+        if (root == null) return emptyList()
+
+        val res = mutableListOf<Int>()
+        val q = ArrayDeque<TreeNode>()
+        q.add(root)
+
+        while (q.isNotEmpty()) {
+            var rowMax = q.first().`val`
+            repeat(q.size) {
+                val node = q.removeFirst()
+                rowMax = maxOf(rowMax, node.`val`)
+                node.left?.let { q.add(it) }
+                node.right?.let { q.add(it) }
+            }
+            res.add(rowMax)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func largestValues(_ root: TreeNode?) -> [Int] {
+        guard let root = root else { return [] }
+
+        var res = [Int]()
+        var q = [root]
+
+        while !q.isEmpty {
+            var rowMax = q[0].val
+            let size = q.count
+            for _ in 0..<size {
+                let node = q.removeFirst()
+                rowMax = max(rowMax, node.val)
+                if let left = node.left {
+                    q.append(left)
+                }
+                if let right = node.right {
+                    q.append(right)
+                }
+            }
+            res.append(rowMax)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,6 +449,141 @@ class Solution {
 
         dfs(root, 0);
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<int> LargestValues(TreeNode root) {
+        var res = new List<int>();
+        Dfs(root, 0, res);
+        return res;
+    }
+
+    private void Dfs(TreeNode node, int level, List<int> res) {
+        if (node == null) return;
+        if (level == res.Count) {
+            res.Add(node.val);
+        } else {
+            res[level] = Math.Max(res[level], node.val);
+        }
+        Dfs(node.left, level + 1, res);
+        Dfs(node.right, level + 1, res);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func largestValues(root *TreeNode) []int {
+    res := []int{}
+
+    var dfs func(node *TreeNode, level int)
+    dfs = func(node *TreeNode, level int) {
+        if node == nil {
+            return
+        }
+        if level == len(res) {
+            res = append(res, node.Val)
+        } else if node.Val > res[level] {
+            res[level] = node.Val
+        }
+
+        dfs(node.Left, level+1)
+        dfs(node.Right, level+1)
+    }
+
+    dfs(root, 0)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun largestValues(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+
+        fun dfs(node: TreeNode?, level: Int) {
+            if (node == null) return
+            if (level == res.size) {
+                res.add(node.`val`)
+            } else {
+                res[level] = maxOf(res[level], node.`val`)
+            }
+            dfs(node.left, level + 1)
+            dfs(node.right, level + 1)
+        }
+
+        dfs(root, 0)
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func largestValues(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+
+        func dfs(_ node: TreeNode?, _ level: Int) {
+            guard let node = node else { return }
+            if level == res.count {
+                res.append(node.val)
+            } else {
+                res[level] = max(res[level], node.val)
+            }
+            dfs(node.left, level + 1)
+            dfs(node.right, level + 1)
+        }
+
+        dfs(root, 0)
+        return res
     }
 }
 ```
@@ -450,6 +743,169 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public IList<int> LargestValues(TreeNode root) {
+        if (root == null) return new List<int>();
+
+        var res = new List<int>();
+        var stack = new Stack<(TreeNode node, int level)>();
+        stack.Push((root, 0));
+
+        while (stack.Count > 0) {
+            var (node, level) = stack.Pop();
+            if (level == res.Count) {
+                res.Add(node.val);
+            } else {
+                res[level] = Math.Max(res[level], node.val);
+            }
+
+            if (node.right != null) stack.Push((node.right, level + 1));
+            if (node.left != null) stack.Push((node.left, level + 1));
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func largestValues(root *TreeNode) []int {
+    if root == nil {
+        return []int{}
+    }
+
+    res := []int{}
+    type pair struct {
+        node  *TreeNode
+        level int
+    }
+    stack := []pair{{root, 0}}
+
+    for len(stack) > 0 {
+        p := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        node, level := p.node, p.level
+
+        if level == len(res) {
+            res = append(res, node.Val)
+        } else if node.Val > res[level] {
+            res[level] = node.Val
+        }
+
+        if node.Right != nil {
+            stack = append(stack, pair{node.Right, level + 1})
+        }
+        if node.Left != nil {
+            stack = append(stack, pair{node.Left, level + 1})
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun largestValues(root: TreeNode?): List<Int> {
+        if (root == null) return emptyList()
+
+        val res = mutableListOf<Int>()
+        val stack = ArrayDeque<Pair<TreeNode, Int>>()
+        stack.add(Pair(root, 0))
+
+        while (stack.isNotEmpty()) {
+            val (node, level) = stack.removeLast()
+            if (level == res.size) {
+                res.add(node.`val`)
+            } else {
+                res[level] = maxOf(res[level], node.`val`)
+            }
+
+            node.right?.let { stack.add(Pair(it, level + 1)) }
+            node.left?.let { stack.add(Pair(it, level + 1)) }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func largestValues(_ root: TreeNode?) -> [Int] {
+        guard let root = root else { return [] }
+
+        var res = [Int]()
+        var stack: [(TreeNode, Int)] = [(root, 0)]
+
+        while !stack.isEmpty {
+            let (node, level) = stack.removeLast()
+            if level == res.count {
+                res.append(node.val)
+            } else {
+                res[level] = max(res[level], node.val)
+            }
+
+            if let right = node.right {
+                stack.append((right, level + 1))
+            }
+            if let left = node.left {
+                stack.append((left, level + 1))
+            }
+        }
+
+        return res
     }
 }
 ```

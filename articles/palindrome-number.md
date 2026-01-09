@@ -55,6 +55,37 @@ public class Solution {
 }
 ```
 
+```go
+func isPalindrome(x int) bool {
+    s := strconv.Itoa(x)
+    n := len(s)
+    for i := 0; i < n/2; i++ {
+        if s[i] != s[n-i-1] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        val s = x.toString()
+        return s == s.reversed()
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPalindrome(_ x: Int) -> Bool {
+        let s = String(x)
+        return s == String(s.reversed())
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -142,6 +173,49 @@ public class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```go
+func isPalindrome(x int) bool {
+    s := strconv.Itoa(x)
+    n := len(s)
+    for i := 0; i < n/2; i++ {
+        if s[i] != s[n-i-1] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        val s = x.toString()
+        val n = s.length
+        for (i in 0 until n / 2) {
+            if (s[i] != s[n - i - 1]) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPalindrome(_ x: Int) -> Bool {
+        let s = Array(String(x))
+        let n = s.count
+        for i in 0..<(n / 2) {
+            if s[i] != s[n - i - 1] {
+                return false
+            }
+        }
+        return true
     }
 }
 ```
@@ -246,6 +320,58 @@ public class Solution {
             num /= 10;
         }
         return rev == x;
+    }
+}
+```
+
+```go
+func isPalindrome(x int) bool {
+    if x < 0 {
+        return false
+    }
+
+    rev, num := 0, x
+    for num != 0 {
+        rev = rev*10 + num%10
+        num /= 10
+    }
+
+    return rev == x
+}
+```
+
+```kotlin
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        if (x < 0) return false
+
+        var rev = 0L
+        var num = x
+        while (num != 0) {
+            rev = rev * 10 + num % 10
+            num /= 10
+        }
+
+        return rev == x.toLong()
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPalindrome(_ x: Int) -> Bool {
+        if x < 0 {
+            return false
+        }
+
+        var rev = 0
+        var num = x
+        while num != 0 {
+            rev = rev * 10 + num % 10
+            num /= 10
+        }
+
+        return rev == x
     }
 }
 ```
@@ -387,6 +513,79 @@ public class Solution {
 }
 ```
 
+```go
+func isPalindrome(x int) bool {
+    if x < 0 {
+        return false
+    }
+
+    div := 1
+    for x >= 10*div {
+        div *= 10
+    }
+
+    for x != 0 {
+        if x/div != x%10 {
+            return false
+        }
+        x = (x % div) / 10
+        div /= 100
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        if (x < 0) return false
+
+        var num = x
+        var div = 1L
+        while (num >= 10 * div) {
+            div *= 10
+        }
+
+        while (num != 0) {
+            if (num / div != (num % 10).toLong()) {
+                return false
+            }
+            num = ((num % div) / 10).toInt()
+            div /= 100
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPalindrome(_ x: Int) -> Bool {
+        if x < 0 {
+            return false
+        }
+
+        var num = x
+        var div = 1
+        while num >= 10 * div {
+            div *= 10
+        }
+
+        while num != 0 {
+            if num / div != num % 10 {
+                return false
+            }
+            num = (num % div) / 10
+            div /= 100
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,6 +688,60 @@ public class Solution {
         }
 
         return x == rev || x == rev / 10;
+    }
+}
+```
+
+```go
+func isPalindrome(x int) bool {
+    if x < 0 || (x != 0 && x%10 == 0) {
+        return false
+    }
+
+    rev := 0
+    for x > rev {
+        rev = rev*10 + x%10
+        x /= 10
+    }
+
+    return x == rev || x == rev/10
+}
+```
+
+```kotlin
+class Solution {
+    fun isPalindrome(x: Int): Boolean {
+        if (x < 0 || (x != 0 && x % 10 == 0)) {
+            return false
+        }
+
+        var num = x
+        var rev = 0
+        while (num > rev) {
+            rev = rev * 10 + num % 10
+            num /= 10
+        }
+
+        return num == rev || num == rev / 10
+    }
+}
+```
+
+```swift
+class Solution {
+    func isPalindrome(_ x: Int) -> Bool {
+        if x < 0 || (x != 0 && x % 10 == 0) {
+            return false
+        }
+
+        var num = x
+        var rev = 0
+        while num > rev {
+            rev = rev * 10 + num % 10
+            num /= 10
+        }
+
+        return num == rev || num == rev / 10
     }
 }
 ```

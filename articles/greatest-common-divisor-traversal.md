@@ -191,6 +191,119 @@ public class Solution {
 }
 ```
 
+```go
+func canTraverseAllPairs(nums []int) bool {
+    n := len(nums)
+    visit := make([]bool, n)
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+
+    gcd := func(a, b int) int {
+        for b != 0 {
+            a, b = b, a%b
+        }
+        return a
+    }
+
+    for i := 0; i < n; i++ {
+        for j := i + 1; j < n; j++ {
+            if gcd(nums[i], nums[j]) > 1 {
+                adj[i] = append(adj[i], j)
+                adj[j] = append(adj[j], i)
+            }
+        }
+    }
+
+    var dfs func(node int)
+    dfs = func(node int) {
+        visit[node] = true
+        for _, nei := range adj[node] {
+            if !visit[nei] {
+                dfs(nei)
+            }
+        }
+    }
+
+    dfs(0)
+    for _, v := range visit {
+        if !v {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canTraverseAllPairs(nums: IntArray): Boolean {
+        val n = nums.size
+        val visit = BooleanArray(n)
+        val adj = Array(n) { mutableListOf<Int>() }
+
+        fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                if (gcd(nums[i], nums[j]) > 1) {
+                    adj[i].add(j)
+                    adj[j].add(i)
+                }
+            }
+        }
+
+        fun dfs(node: Int) {
+            visit[node] = true
+            for (nei in adj[node]) {
+                if (!visit[nei]) {
+                    dfs(nei)
+                }
+            }
+        }
+
+        dfs(0)
+        return visit.all { it }
+    }
+}
+```
+
+```swift
+class Solution {
+    func canTraverseAllPairs(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        var visit = [Bool](repeating: false, count: n)
+        var adj = [[Int]](repeating: [], count: n)
+
+        func gcd(_ a: Int, _ b: Int) -> Int {
+            return b == 0 ? a : gcd(b, a % b)
+        }
+
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                if gcd(nums[i], nums[j]) > 1 {
+                    adj[i].append(j)
+                    adj[j].append(i)
+                }
+            }
+        }
+
+        func dfs(_ node: Int) {
+            visit[node] = true
+            for nei in adj[node] {
+                if !visit[nei] {
+                    dfs(nei)
+                }
+            }
+        }
+
+        dfs(0)
+        return visit.allSatisfy { $0 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

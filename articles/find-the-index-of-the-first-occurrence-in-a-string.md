@@ -102,6 +102,75 @@ public class Solution {
 }
 ```
 
+```go
+func strStr(haystack string, needle string) int {
+    n, m := len(haystack), len(needle)
+    for i := 0; i <= n-m; i++ {
+        j := 0
+        for j < m {
+            if haystack[i+j] != needle[j] {
+                break
+            }
+            j++
+        }
+        if j == m {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun strStr(haystack: String, needle: String): Int {
+        val n = haystack.length
+        val m = needle.length
+        for (i in 0..n - m) {
+            var j = 0
+            while (j < m) {
+                if (haystack[i + j] != needle[j]) {
+                    break
+                }
+                j++
+            }
+            if (j == m) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        let n = haystack.count
+        let m = needle.count
+        if m == 0 { return 0 }
+        if m > n { return -1 }
+
+        let haystackArr = Array(haystack)
+        let needleArr = Array(needle)
+
+        for i in 0...(n - m) {
+            var j = 0
+            while j < m {
+                if haystackArr[i + j] != needleArr[j] {
+                    break
+                }
+                j += 1
+            }
+            if j == m {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,6 +412,150 @@ public class Solution {
 }
 ```
 
+```go
+func strStr(haystack string, needle string) int {
+    if needle == "" {
+        return 0
+    }
+
+    m := len(needle)
+    lps := make([]int, m)
+    prevLPS, i := 0, 1
+
+    for i < m {
+        if needle[i] == needle[prevLPS] {
+            lps[i] = prevLPS + 1
+            prevLPS++
+            i++
+        } else if prevLPS == 0 {
+            lps[i] = 0
+            i++
+        } else {
+            prevLPS = lps[prevLPS-1]
+        }
+    }
+
+    i = 0
+    j := 0
+    for i < len(haystack) {
+        if haystack[i] == needle[j] {
+            i++
+            j++
+        } else {
+            if j == 0 {
+                i++
+            } else {
+                j = lps[j-1]
+            }
+        }
+
+        if j == m {
+            return i - m
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun strStr(haystack: String, needle: String): Int {
+        if (needle.isEmpty()) return 0
+
+        val m = needle.length
+        val lps = IntArray(m)
+        var prevLPS = 0
+        var i = 1
+
+        while (i < m) {
+            if (needle[i] == needle[prevLPS]) {
+                lps[i] = prevLPS + 1
+                prevLPS++
+                i++
+            } else if (prevLPS == 0) {
+                lps[i] = 0
+                i++
+            } else {
+                prevLPS = lps[prevLPS - 1]
+            }
+        }
+
+        i = 0
+        var j = 0
+        while (i < haystack.length) {
+            if (haystack[i] == needle[j]) {
+                i++
+                j++
+            } else {
+                if (j == 0) {
+                    i++
+                } else {
+                    j = lps[j - 1]
+                }
+            }
+
+            if (j == m) {
+                return i - m
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        if needle.isEmpty { return 0 }
+
+        let haystackArr = Array(haystack)
+        let needleArr = Array(needle)
+        let n = haystackArr.count
+        let m = needleArr.count
+
+        var lps = [Int](repeating: 0, count: m)
+        var prevLPS = 0
+        var i = 1
+
+        while i < m {
+            if needleArr[i] == needleArr[prevLPS] {
+                lps[i] = prevLPS + 1
+                prevLPS += 1
+                i += 1
+            } else if prevLPS == 0 {
+                lps[i] = 0
+                i += 1
+            } else {
+                prevLPS = lps[prevLPS - 1]
+            }
+        }
+
+        i = 0
+        var j = 0
+        while i < n {
+            if haystackArr[i] == needleArr[j] {
+                i += 1
+                j += 1
+            } else {
+                if j == 0 {
+                    i += 1
+                } else {
+                    j = lps[j - 1]
+                }
+            }
+
+            if j == m {
+                return i - m
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -524,6 +737,119 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func strStr(haystack string, needle string) int {
+    if needle == "" {
+        return 0
+    }
+
+    s := needle + "$" + haystack
+    n := len(s)
+    z := make([]int, n)
+    l, r := 0, 0
+
+    for i := 1; i < n; i++ {
+        if i <= r {
+            z[i] = min(r-i+1, z[i-l])
+        }
+        for i+z[i] < n && s[z[i]] == s[i+z[i]] {
+            z[i]++
+        }
+        if i+z[i]-1 > r {
+            l, r = i, i+z[i]-1
+        }
+    }
+
+    m := len(needle)
+    for i := m + 1; i < n; i++ {
+        if z[i] == m {
+            return i - m - 1
+        }
+    }
+
+    return -1
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun strStr(haystack: String, needle: String): Int {
+        if (needle.isEmpty()) return 0
+
+        val s = needle + "$" + haystack
+        val n = s.length
+        val z = IntArray(n)
+        var l = 0
+        var r = 0
+
+        for (i in 1 until n) {
+            if (i <= r) {
+                z[i] = minOf(r - i + 1, z[i - l])
+            }
+            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+                z[i]++
+            }
+            if (i + z[i] - 1 > r) {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+
+        val m = needle.length
+        for (i in m + 1 until n) {
+            if (z[i] == m) {
+                return i - m - 1
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        if needle.isEmpty { return 0 }
+
+        let s = Array(needle + "$" + haystack)
+        let n = s.count
+        var z = [Int](repeating: 0, count: n)
+        var l = 0
+        var r = 0
+
+        for i in 1..<n {
+            if i <= r {
+                z[i] = min(r - i + 1, z[i - l])
+            }
+            while i + z[i] < n && s[z[i]] == s[i + z[i]] {
+                z[i] += 1
+            }
+            if i + z[i] - 1 > r {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+
+        let m = needle.count
+        for i in (m + 1)..<n {
+            if z[i] == m {
+                return i - m - 1
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -789,6 +1115,165 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func strStr(haystack string, needle string) int {
+    if needle == "" {
+        return 0
+    }
+
+    base1, mod1 := int64(31), int64(768258391)
+    base2, mod2 := int64(37), int64(685683731)
+
+    n, m := len(haystack), len(needle)
+    if m > n {
+        return -1
+    }
+
+    power1, power2 := int64(1), int64(1)
+    for i := 0; i < m; i++ {
+        power1 = (power1 * base1) % mod1
+        power2 = (power2 * base2) % mod2
+    }
+
+    var needleHash1, needleHash2 int64
+    var haystackHash1, haystackHash2 int64
+
+    for i := 0; i < m; i++ {
+        needleHash1 = (needleHash1*base1 + int64(needle[i])) % mod1
+        needleHash2 = (needleHash2*base2 + int64(needle[i])) % mod2
+        haystackHash1 = (haystackHash1*base1 + int64(haystack[i])) % mod1
+        haystackHash2 = (haystackHash2*base2 + int64(haystack[i])) % mod2
+    }
+
+    for i := 0; i <= n-m; i++ {
+        if haystackHash1 == needleHash1 && haystackHash2 == needleHash2 {
+            return i
+        }
+
+        if i+m < n {
+            haystackHash1 = (haystackHash1*base1 - int64(haystack[i])*power1 + int64(haystack[i+m])) % mod1
+            haystackHash2 = (haystackHash2*base2 - int64(haystack[i])*power2 + int64(haystack[i+m])) % mod2
+
+            if haystackHash1 < 0 {
+                haystackHash1 += mod1
+            }
+            if haystackHash2 < 0 {
+                haystackHash2 += mod2
+            }
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun strStr(haystack: String, needle: String): Int {
+        if (needle.isEmpty()) return 0
+
+        val base1 = 31L
+        val mod1 = 768258391L
+        val base2 = 37L
+        val mod2 = 685683731L
+
+        val n = haystack.length
+        val m = needle.length
+        if (m > n) return -1
+
+        var power1 = 1L
+        var power2 = 1L
+        for (i in 0 until m) {
+            power1 = (power1 * base1) % mod1
+            power2 = (power2 * base2) % mod2
+        }
+
+        var needleHash1 = 0L
+        var needleHash2 = 0L
+        var haystackHash1 = 0L
+        var haystackHash2 = 0L
+
+        for (i in 0 until m) {
+            needleHash1 = (needleHash1 * base1 + needle[i].code) % mod1
+            needleHash2 = (needleHash2 * base2 + needle[i].code) % mod2
+            haystackHash1 = (haystackHash1 * base1 + haystack[i].code) % mod1
+            haystackHash2 = (haystackHash2 * base2 + haystack[i].code) % mod2
+        }
+
+        for (i in 0..n - m) {
+            if (haystackHash1 == needleHash1 && haystackHash2 == needleHash2) {
+                return i
+            }
+
+            if (i + m < n) {
+                haystackHash1 = (haystackHash1 * base1 - haystack[i].code * power1 + haystack[i + m].code) % mod1
+                haystackHash2 = (haystackHash2 * base2 - haystack[i].code * power2 + haystack[i + m].code) % mod2
+
+                if (haystackHash1 < 0) haystackHash1 += mod1
+                if (haystackHash2 < 0) haystackHash2 += mod2
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func strStr(_ haystack: String, _ needle: String) -> Int {
+        if needle.isEmpty { return 0 }
+
+        let base1: Int64 = 31
+        let mod1: Int64 = 768258391
+        let base2: Int64 = 37
+        let mod2: Int64 = 685683731
+
+        let haystackArr = Array(haystack.utf8).map { Int64($0) }
+        let needleArr = Array(needle.utf8).map { Int64($0) }
+        let n = haystackArr.count
+        let m = needleArr.count
+
+        if m > n { return -1 }
+
+        var power1: Int64 = 1
+        var power2: Int64 = 1
+        for _ in 0..<m {
+            power1 = (power1 * base1) % mod1
+            power2 = (power2 * base2) % mod2
+        }
+
+        var needleHash1: Int64 = 0
+        var needleHash2: Int64 = 0
+        var haystackHash1: Int64 = 0
+        var haystackHash2: Int64 = 0
+
+        for i in 0..<m {
+            needleHash1 = (needleHash1 * base1 + needleArr[i]) % mod1
+            needleHash2 = (needleHash2 * base2 + needleArr[i]) % mod2
+            haystackHash1 = (haystackHash1 * base1 + haystackArr[i]) % mod1
+            haystackHash2 = (haystackHash2 * base2 + haystackArr[i]) % mod2
+        }
+
+        for i in 0...(n - m) {
+            if haystackHash1 == needleHash1 && haystackHash2 == needleHash2 {
+                return i
+            }
+
+            if i + m < n {
+                haystackHash1 = (haystackHash1 * base1 - haystackArr[i] * power1 + haystackArr[i + m]) % mod1
+                haystackHash2 = (haystackHash2 * base2 - haystackArr[i] * power2 + haystackArr[i + m]) % mod2
+
+                if haystackHash1 < 0 { haystackHash1 += mod1 }
+                if haystackHash2 < 0 { haystackHash2 += mod2 }
+            }
+        }
+
+        return -1
     }
 }
 ```

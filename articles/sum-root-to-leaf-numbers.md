@@ -116,6 +116,125 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int SumNumbers(TreeNode root) {
+        return Dfs(root, 0);
+    }
+
+    private int Dfs(TreeNode cur, int num) {
+        if (cur == null) return 0;
+
+        num = num * 10 + cur.val;
+        if (cur.left == null && cur.right == null) return num;
+
+        return Dfs(cur.left, num) + Dfs(cur.right, num);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sumNumbers(root *TreeNode) int {
+    var dfs func(cur *TreeNode, num int) int
+    dfs = func(cur *TreeNode, num int) int {
+        if cur == nil {
+            return 0
+        }
+
+        num = num*10 + cur.Val
+        if cur.Left == nil && cur.Right == nil {
+            return num
+        }
+
+        return dfs(cur.Left, num) + dfs(cur.Right, num)
+    }
+
+    return dfs(root, 0)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sumNumbers(root: TreeNode?): Int {
+        return dfs(root, 0)
+    }
+
+    private fun dfs(cur: TreeNode?, num: Int): Int {
+        if (cur == null) return 0
+
+        val newNum = num * 10 + cur.`val`
+        if (cur.left == null && cur.right == null) return newNum
+
+        return dfs(cur.left, newNum) + dfs(cur.right, newNum)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sumNumbers(_ root: TreeNode?) -> Int {
+        func dfs(_ cur: TreeNode?, _ num: Int) -> Int {
+            guard let cur = cur else { return 0 }
+
+            let newNum = num * 10 + cur.val
+            if cur.left == nil && cur.right == nil {
+                return newNum
+            }
+
+            return dfs(cur.left, newNum) + dfs(cur.right, newNum)
+        }
+
+        return dfs(root, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +382,151 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int SumNumbers(TreeNode root) {
+        int res = 0;
+        Queue<(TreeNode, int)> q = new Queue<(TreeNode, int)>();
+        q.Enqueue((root, 0));
+        while (q.Count > 0) {
+            var (cur, num) = q.Dequeue();
+            int newNum = num * 10 + cur.val;
+            if (cur.left == null && cur.right == null) {
+                res += newNum;
+                continue;
+            }
+
+            if (cur.left != null) q.Enqueue((cur.left, newNum));
+            if (cur.right != null) q.Enqueue((cur.right, newNum));
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sumNumbers(root *TreeNode) int {
+    res := 0
+    type pair struct {
+        node *TreeNode
+        num  int
+    }
+    q := []pair{{root, 0}}
+    for len(q) > 0 {
+        cur := q[0]
+        q = q[1:]
+        newNum := cur.num*10 + cur.node.Val
+        if cur.node.Left == nil && cur.node.Right == nil {
+            res += newNum
+            continue
+        }
+
+        if cur.node.Left != nil {
+            q = append(q, pair{cur.node.Left, newNum})
+        }
+        if cur.node.Right != nil {
+            q = append(q, pair{cur.node.Right, newNum})
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sumNumbers(root: TreeNode?): Int {
+        if (root == null) return 0
+        var res = 0
+        val q: ArrayDeque<Pair<TreeNode, Int>> = ArrayDeque()
+        q.add(Pair(root, 0))
+        while (q.isNotEmpty()) {
+            val (cur, num) = q.removeFirst()
+            val newNum = num * 10 + cur.`val`
+            if (cur.left == null && cur.right == null) {
+                res += newNum
+                continue
+            }
+
+            cur.left?.let { q.add(Pair(it, newNum)) }
+            cur.right?.let { q.add(Pair(it, newNum)) }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sumNumbers(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+        var res = 0
+        var q: [(TreeNode, Int)] = [(root, 0)]
+        while !q.isEmpty {
+            let (cur, num) = q.removeFirst()
+            let newNum = num * 10 + cur.val
+            if cur.left == nil && cur.right == nil {
+                res += newNum
+                continue
+            }
+
+            if let left = cur.left { q.append((left, newNum)) }
+            if let right = cur.right { q.append((right, newNum)) }
+        }
+
+        return res
     }
 }
 ```
@@ -421,6 +685,159 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int SumNumbers(TreeNode root) {
+        int res = 0, num = 0;
+        Stack<(TreeNode, int)> stack = new Stack<(TreeNode, int)>();
+        TreeNode cur = root;
+
+        while (cur != null || stack.Count > 0) {
+            if (cur != null) {
+                num = num * 10 + cur.val;
+                if (cur.left == null && cur.right == null)
+                    res += num;
+
+                stack.Push((cur.right, num));
+                cur = cur.left;
+            } else {
+                (cur, num) = stack.Pop();
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sumNumbers(root *TreeNode) int {
+    res, num := 0, 0
+    type item struct {
+        node *TreeNode
+        num  int
+    }
+    stack := []item{}
+    cur := root
+
+    for cur != nil || len(stack) > 0 {
+        if cur != nil {
+            num = num*10 + cur.Val
+            if cur.Left == nil && cur.Right == nil {
+                res += num
+            }
+
+            stack = append(stack, item{cur.Right, num})
+            cur = cur.Left
+        } else {
+            top := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            cur, num = top.node, top.num
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sumNumbers(root: TreeNode?): Int {
+        var res = 0
+        var num = 0
+        val stack = ArrayDeque<Pair<TreeNode?, Int>>()
+        var cur = root
+
+        while (cur != null || stack.isNotEmpty()) {
+            if (cur != null) {
+                num = num * 10 + cur.`val`
+                if (cur.left == null && cur.right == null)
+                    res += num
+
+                stack.addLast(Pair(cur.right, num))
+                cur = cur.left
+            } else {
+                val (node, n) = stack.removeLast()
+                cur = node
+                num = n
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sumNumbers(_ root: TreeNode?) -> Int {
+        var res = 0, num = 0
+        var stack: [(TreeNode?, Int)] = []
+        var cur = root
+
+        while cur != nil || !stack.isEmpty {
+            if let node = cur {
+                num = num * 10 + node.val
+                if node.left == nil && node.right == nil {
+                    res += num
+                }
+
+                stack.append((node.right, num))
+                cur = node.left
+            } else {
+                let (node, n) = stack.removeLast()
+                cur = node
+                num = n
+            }
+        }
+        return res
     }
 }
 ```
@@ -642,6 +1059,218 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int SumNumbers(TreeNode root) {
+        int res = 0, num = 0;
+        int[] power = new int[10];
+        power[0] = 1;
+        for (int i = 1; i < 10; i++) {
+            power[i] = power[i - 1] * 10;
+        }
+
+        TreeNode cur = root;
+        while (cur != null) {
+            if (cur.left == null) {
+                num = num * 10 + cur.val;
+                if (cur.right == null) res += num;
+                cur = cur.right;
+            } else {
+                TreeNode prev = cur.left;
+                int steps = 1;
+                while (prev.right != null && prev.right != cur) {
+                    prev = prev.right;
+                    steps++;
+                }
+
+                if (prev.right == null) {
+                    prev.right = cur;
+                    num = num * 10 + cur.val;
+                    cur = cur.left;
+                } else {
+                    prev.right = null;
+                    if (prev.left == null) res += num;
+                    num /= power[steps];
+                    cur = cur.right;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func sumNumbers(root *TreeNode) int {
+    res, num := 0, 0
+    power := make([]int, 10)
+    power[0] = 1
+    for i := 1; i < 10; i++ {
+        power[i] = power[i-1] * 10
+    }
+
+    cur := root
+    for cur != nil {
+        if cur.Left == nil {
+            num = num*10 + cur.Val
+            if cur.Right == nil {
+                res += num
+            }
+            cur = cur.Right
+        } else {
+            prev := cur.Left
+            steps := 1
+            for prev.Right != nil && prev.Right != cur {
+                prev = prev.Right
+                steps++
+            }
+
+            if prev.Right == nil {
+                prev.Right = cur
+                num = num*10 + cur.Val
+                cur = cur.Left
+            } else {
+                prev.Right = nil
+                if prev.Left == nil {
+                    res += num
+                }
+                num /= power[steps]
+                cur = cur.Right
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun sumNumbers(root: TreeNode?): Int {
+        var res = 0
+        var num = 0
+        val power = IntArray(10)
+        power[0] = 1
+        for (i in 1 until 10) {
+            power[i] = power[i - 1] * 10
+        }
+
+        var cur = root
+        while (cur != null) {
+            if (cur.left == null) {
+                num = num * 10 + cur.`val`
+                if (cur.right == null) res += num
+                cur = cur.right
+            } else {
+                var prev = cur.left
+                var steps = 1
+                while (prev!!.right != null && prev.right != cur) {
+                    prev = prev.right
+                    steps++
+                }
+
+                if (prev.right == null) {
+                    prev.right = cur
+                    num = num * 10 + cur.`val`
+                    cur = cur.left
+                } else {
+                    prev.right = null
+                    if (prev.left == null) res += num
+                    num /= power[steps]
+                    cur = cur.right
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func sumNumbers(_ root: TreeNode?) -> Int {
+        var res = 0, num = 0
+        var power = [Int](repeating: 1, count: 10)
+        for i in 1..<10 {
+            power[i] = power[i - 1] * 10
+        }
+
+        var cur = root
+        while cur != nil {
+            if cur!.left == nil {
+                num = num * 10 + cur!.val
+                if cur!.right == nil { res += num }
+                cur = cur!.right
+            } else {
+                var prev = cur!.left
+                var steps = 1
+                while prev!.right != nil && prev!.right !== cur {
+                    prev = prev!.right
+                    steps += 1
+                }
+
+                if prev!.right == nil {
+                    prev!.right = cur
+                    num = num * 10 + cur!.val
+                    cur = cur!.left
+                } else {
+                    prev!.right = nil
+                    if prev!.left == nil { res += num }
+                    num /= power[steps]
+                    cur = cur!.right
+                }
+            }
+        }
+        return res
     }
 }
 ```

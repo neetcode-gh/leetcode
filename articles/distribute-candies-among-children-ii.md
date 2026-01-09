@@ -92,6 +92,58 @@ public class Solution {
 }
 ```
 
+```go
+func distributeCandies(n int, limit int) int64 {
+    var res int64 = 0
+    for a := 0; a <= limit; a++ {
+        for b := 0; b <= limit; b++ {
+            for c := 0; c <= limit; c++ {
+                if a+b+c == n {
+                    res++
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distributeCandies(n: Int, limit: Int): Long {
+        var res: Long = 0
+        for (a in 0..limit) {
+            for (b in 0..limit) {
+                for (c in 0..limit) {
+                    if (a + b + c == n) {
+                        res++
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distributeCandies(_ n: Int, _ limit: Int) -> Int {
+        var res = 0
+        for a in 0...limit {
+            for b in 0...limit {
+                for c in 0...limit {
+                    if a + b + c == n {
+                        res += 1
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +248,58 @@ public class Solution {
 }
 ```
 
+```go
+func distributeCandies(n int, limit int) int64 {
+    var res int64 = 0
+    maxA := min(n, limit)
+    for a := 0; a <= maxA; a++ {
+        maxB := min(n-a, limit)
+        for b := 0; b <= maxB; b++ {
+            if n-a-b <= limit {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distributeCandies(n: Int, limit: Int): Long {
+        var res: Long = 0
+        val maxA = minOf(n, limit)
+        for (a in 0..maxA) {
+            val maxB = minOf(n - a, limit)
+            for (b in 0..maxB) {
+                if (n - a - b <= limit) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distributeCandies(_ n: Int, _ limit: Int) -> Int {
+        var res = 0
+        let maxA = min(n, limit)
+        for a in 0...maxA {
+            let maxB = min(n - a, limit)
+            for b in 0...maxB {
+                if n - a - b <= limit {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -290,6 +394,55 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func distributeCandies(n int, limit int) int64 {
+    var res int64 = 0
+    aMax := min(n, limit)
+    for a := 0; a <= aMax; a++ {
+        bMax := min(n-a, limit)
+        bMin := max(0, n-a-limit)
+        if bMax >= bMin {
+            res += int64(bMax - bMin + 1)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distributeCandies(n: Int, limit: Int): Long {
+        var res: Long = 0
+        val aMax = minOf(n, limit)
+        for (a in 0..aMax) {
+            val bMax = minOf(n - a, limit)
+            val bMin = maxOf(0, n - a - limit)
+            if (bMax >= bMin) {
+                res += (bMax - bMin + 1).toLong()
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distributeCandies(_ n: Int, _ limit: Int) -> Int {
+        var res = 0
+        let aMax = min(n, limit)
+        for a in 0...aMax {
+            let bMax = min(n - a, limit)
+            let bMin = max(0, n - a - limit)
+            if bMax >= bMin {
+                res += bMax - bMin + 1
+            }
+        }
+        return res
     }
 }
 ```
@@ -395,6 +548,58 @@ public class Solution {
 }
 ```
 
+```go
+func distributeCandies(n int, limit int) int64 {
+    var res int64 = 0
+    maxA := min(n, limit)
+    for a := 0; a <= maxA; a++ {
+        rem := n - a
+        if rem <= 2*limit {
+            hi := min(rem, limit)
+            lo := max(0, rem-limit)
+            res += int64(hi - lo + 1)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distributeCandies(n: Int, limit: Int): Long {
+        var res: Long = 0
+        val maxA = minOf(n, limit)
+        for (a in 0..maxA) {
+            val rem = n - a
+            if (rem <= 2 * limit) {
+                val hi = minOf(rem, limit)
+                val lo = maxOf(0, rem - limit)
+                res += (hi - lo + 1).toLong()
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distributeCandies(_ n: Int, _ limit: Int) -> Int {
+        var res = 0
+        let maxA = min(n, limit)
+        for a in 0...maxA {
+            let rem = n - a
+            if rem <= 2 * limit {
+                let hi = min(rem, limit)
+                let lo = max(0, rem - limit)
+                res += hi - lo + 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,6 +698,60 @@ public class Solution {
             res += sign * C3[j] * ways;
         }
         return res;
+    }
+}
+```
+
+```go
+func distributeCandies(n int, limit int) int64 {
+    C3 := []int64{1, 3, 3, 1}
+    var res int64 = 0
+    for j := 0; j < 4; j++ {
+        m := int64(n - j*(limit+1))
+        if m < 0 {
+            continue
+        }
+        ways := (m + 2) * (m + 1) / 2
+        sign := int64(1)
+        if j%2 != 0 {
+            sign = -1
+        }
+        res += sign * C3[j] * ways
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun distributeCandies(n: Int, limit: Int): Long {
+        val C3 = longArrayOf(1, 3, 3, 1)
+        var res: Long = 0
+        for (j in 0 until 4) {
+            val m = n.toLong() - j * (limit + 1)
+            if (m < 0) continue
+            val ways = (m + 2) * (m + 1) / 2
+            val sign = if (j % 2 == 0) 1L else -1L
+            res += sign * C3[j] * ways
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func distributeCandies(_ n: Int, _ limit: Int) -> Int {
+        let C3 = [1, 3, 3, 1]
+        var res = 0
+        for j in 0..<4 {
+            let m = n - j * (limit + 1)
+            if m < 0 { continue }
+            let ways = (m + 2) * (m + 1) / 2
+            let sign = (j % 2 == 0) ? 1 : -1
+            res += sign * C3[j] * ways
+        }
+        return res
     }
 }
 ```

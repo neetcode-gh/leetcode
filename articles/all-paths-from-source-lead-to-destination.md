@@ -144,7 +144,7 @@ private:
 class Solution {
     static GRAY = 1;
     static BLACK = 2;
-    
+
     /**
      * @param {number} n
      * @param {number[][]} edges
@@ -157,7 +157,7 @@ class Solution {
         const states = new Array(n).fill(null);
         return this.leadsToDest(graph, source, destination, states);
     }
-    
+
     /**
      * @param {number[][]} graph
      * @param {number} node
@@ -181,7 +181,7 @@ class Solution {
         states[node] = Solution.BLACK;
         return true;
     }
-    
+
     /**
      * @param {number} n
      * @param {number[][]} edges
@@ -193,6 +193,155 @@ class Solution {
             graph[edge[0]].push(edge[1]);
         }
         return graph;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private const int GRAY = 1;
+    private const int BLACK = 2;
+
+    public bool LeadsToDestination(int n, int[][] edges, int source, int destination) {
+        List<int>[] graph = BuildDigraph(n, edges);
+        int?[] states = new int?[n];
+        return LeadsToDest(graph, source, destination, states);
+    }
+
+    private bool LeadsToDest(List<int>[] graph, int node, int dest, int?[] states) {
+        if (states[node] != null) {
+            return states[node] == BLACK;
+        }
+        if (graph[node].Count == 0) {
+            return node == dest;
+        }
+        states[node] = GRAY;
+        foreach (int nextNode in graph[node]) {
+            if (!LeadsToDest(graph, nextNode, dest, states)) {
+                return false;
+            }
+        }
+        states[node] = BLACK;
+        return true;
+    }
+
+    private List<int>[] BuildDigraph(int n, int[][] edges) {
+        List<int>[] graph = new List<int>[n];
+        for (int i = 0; i < n; i++) {
+            graph[i] = new List<int>();
+        }
+        foreach (int[] edge in edges) {
+            graph[edge[0]].Add(edge[1]);
+        }
+        return graph;
+    }
+}
+```
+
+```go
+func leadsToDestination(n int, edges [][]int, source int, destination int) bool {
+    const GRAY, BLACK = 1, 2
+
+    graph := make([][]int, n)
+    for i := range graph {
+        graph[i] = []int{}
+    }
+    for _, edge := range edges {
+        graph[edge[0]] = append(graph[edge[0]], edge[1])
+    }
+
+    states := make([]int, n)
+
+    var leadsToDest func(node int) bool
+    leadsToDest = func(node int) bool {
+        if states[node] != 0 {
+            return states[node] == BLACK
+        }
+        if len(graph[node]) == 0 {
+            return node == destination
+        }
+        states[node] = GRAY
+        for _, nextNode := range graph[node] {
+            if !leadsToDest(nextNode) {
+                return false
+            }
+        }
+        states[node] = BLACK
+        return true
+    }
+
+    return leadsToDest(source)
+}
+```
+
+```kotlin
+class Solution {
+    companion object {
+        private const val GRAY = 1
+        private const val BLACK = 2
+    }
+
+    fun leadsToDestination(n: Int, edges: Array<IntArray>, source: Int, destination: Int): Boolean {
+        val graph = Array(n) { mutableListOf<Int>() }
+        for (edge in edges) {
+            graph[edge[0]].add(edge[1])
+        }
+
+        val states = IntArray(n)
+
+        fun leadsToDest(node: Int): Boolean {
+            if (states[node] != 0) {
+                return states[node] == BLACK
+            }
+            if (graph[node].isEmpty()) {
+                return node == destination
+            }
+            states[node] = GRAY
+            for (nextNode in graph[node]) {
+                if (!leadsToDest(nextNode)) {
+                    return false
+                }
+            }
+            states[node] = BLACK
+            return true
+        }
+
+        return leadsToDest(source)
+    }
+}
+```
+
+```swift
+class Solution {
+    private let GRAY = 1
+    private let BLACK = 2
+
+    func leadsToDestination(_ n: Int, _ edges: [[Int]], _ source: Int, _ destination: Int) -> Bool {
+        var graph = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            graph[edge[0]].append(edge[1])
+        }
+
+        var states = [Int](repeating: 0, count: n)
+
+        func leadsToDest(_ node: Int) -> Bool {
+            if states[node] != 0 {
+                return states[node] == BLACK
+            }
+            if graph[node].isEmpty {
+                return node == destination
+            }
+            states[node] = GRAY
+            for nextNode in graph[node] {
+                if !leadsToDest(nextNode) {
+                    return false
+                }
+            }
+            states[node] = BLACK
+            return true
+        }
+
+        return leadsToDest(source)
     }
 }
 ```

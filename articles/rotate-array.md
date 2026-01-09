@@ -93,6 +93,55 @@ public class Solution {
 }
 ```
 
+```go
+func rotate(nums []int, k int) {
+    n := len(nums)
+    k %= n
+    for k > 0 {
+        tmp := nums[n-1]
+        for i := n - 1; i > 0; i-- {
+            nums[i] = nums[i-1]
+        }
+        nums[0] = tmp
+        k--
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(nums: IntArray, k: Int) {
+        val n = nums.size
+        var rotations = k % n
+        while (rotations > 0) {
+            val tmp = nums[n - 1]
+            for (i in n - 1 downTo 1) {
+                nums[i] = nums[i - 1]
+            }
+            nums[0] = tmp
+            rotations--
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        let n = nums.count
+        var rotations = k % n
+        while rotations > 0 {
+            let tmp = nums[n - 1]
+            for i in stride(from: n - 1, to: 0, by: -1) {
+                nums[i] = nums[i - 1]
+            }
+            nums[0] = tmp
+            rotations -= 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +232,49 @@ public class Solution {
 
         for (int i = 0; i < n; i++) {
             nums[i] = tmp[i];
+        }
+    }
+}
+```
+
+```go
+func rotate(nums []int, k int) {
+    n := len(nums)
+    tmp := make([]int, n)
+    for i := 0; i < n; i++ {
+        tmp[(i+k)%n] = nums[i]
+    }
+    for i := 0; i < n; i++ {
+        nums[i] = tmp[i]
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(nums: IntArray, k: Int) {
+        val n = nums.size
+        val tmp = IntArray(n)
+        for (i in 0 until n) {
+            tmp[(i + k) % n] = nums[i]
+        }
+        for (i in 0 until n) {
+            nums[i] = tmp[i]
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        let n = nums.count
+        var tmp = [Int](repeating: 0, count: n)
+        for i in 0..<n {
+            tmp[(i + k) % n] = nums[i]
+        }
+        for i in 0..<n {
+            nums[i] = tmp[i]
         }
     }
 }
@@ -324,6 +416,80 @@ public class Solution {
 }
 ```
 
+```go
+func rotate(nums []int, k int) {
+    n := len(nums)
+    k %= n
+    count := 0
+
+    for start := 0; count < n; start++ {
+        current := start
+        prev := nums[start]
+        for {
+            nextIdx := (current + k) % n
+            temp := nums[nextIdx]
+            nums[nextIdx] = prev
+            prev = temp
+            current = nextIdx
+            count++
+            if start == current {
+                break
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(nums: IntArray, k: Int) {
+        val n = nums.size
+        val kMod = k % n
+        var count = 0
+
+        var start = 0
+        while (count < n) {
+            var current = start
+            var prev = nums[start]
+            do {
+                val nextIdx = (current + kMod) % n
+                val temp = nums[nextIdx]
+                nums[nextIdx] = prev
+                prev = temp
+                current = nextIdx
+                count++
+            } while (start != current)
+            start++
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        let n = nums.count
+        let kMod = k % n
+        var count = 0
+
+        var start = 0
+        while count < n {
+            var current = start
+            var prev = nums[start]
+            repeat {
+                let nextIdx = (current + kMod) % n
+                let temp = nums[nextIdx]
+                nums[nextIdx] = prev
+                prev = temp
+                current = nextIdx
+                count += 1
+            } while start != current
+            start += 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,6 +617,74 @@ public class Solution {
 }
 ```
 
+```go
+func rotate(nums []int, k int) {
+    n := len(nums)
+    k %= n
+
+    reverse := func(l, r int) {
+        for l < r {
+            nums[l], nums[r] = nums[r], nums[l]
+            l++
+            r--
+        }
+    }
+
+    reverse(0, n-1)
+    reverse(0, k-1)
+    reverse(k, n-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(nums: IntArray, k: Int) {
+        val n = nums.size
+        val kMod = k % n
+
+        fun reverse(l: Int, r: Int) {
+            var left = l
+            var right = r
+            while (left < right) {
+                val temp = nums[left]
+                nums[left] = nums[right]
+                nums[right] = temp
+                left++
+                right--
+            }
+        }
+
+        reverse(0, n - 1)
+        reverse(0, kMod - 1)
+        reverse(kMod, n - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        let n = nums.count
+        let kMod = k % n
+
+        func reverse(_ l: Int, _ r: Int) {
+            var left = l, right = r
+            while left < right {
+                let temp = nums[left]
+                nums[left] = nums[right]
+                nums[right] = temp
+                left += 1
+                right -= 1
+            }
+        }
+
+        reverse(0, n - 1)
+        reverse(0, kMod - 1)
+        reverse(kMod, n - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -517,6 +751,38 @@ public class Solution {
         Array.Copy(nums, n - k, rotated, 0, k);
         Array.Copy(nums, 0, rotated, k, n - k);
         Array.Copy(rotated, nums, n);
+    }
+}
+```
+
+```go
+func rotate(nums []int, k int) {
+    n := len(nums)
+    k %= n
+    rotated := append(nums[n-k:], nums[:n-k]...)
+    copy(nums, rotated)
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(nums: IntArray, k: Int) {
+        val n = nums.size
+        val kMod = k % n
+        val rotated = nums.takeLast(kMod) + nums.dropLast(kMod)
+        for (i in nums.indices) {
+            nums[i] = rotated[i]
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotate(_ nums: inout [Int], _ k: Int) {
+        let n = nums.count
+        let kMod = k % n
+        nums = Array(nums.suffix(kMod)) + Array(nums.prefix(n - kMod))
     }
 }
 ```

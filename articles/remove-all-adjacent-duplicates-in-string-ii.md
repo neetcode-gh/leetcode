@@ -155,6 +155,100 @@ public class Solution {
 }
 ```
 
+```go
+func removeDuplicates(s string, k int) string {
+    bytes := []byte(s)
+    for len(bytes) > 0 {
+        flag := false
+        cur := bytes[0]
+        cnt := 1
+
+        for i := 1; i < len(bytes); i++ {
+            if cur != bytes[i] {
+                cnt = 0
+                cur = bytes[i]
+            }
+            cnt++
+            if cnt == k {
+                bytes = append(bytes[:i-cnt+1], bytes[i+1:]...)
+                flag = true
+                break
+            }
+        }
+
+        if !flag {
+            break
+        }
+    }
+
+    return string(bytes)
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(s: String, k: Int): String {
+        var str = StringBuilder(s)
+        while (str.isNotEmpty()) {
+            var flag = false
+            var cur = str[0]
+            var cnt = 1
+
+            for (i in 1 until str.length) {
+                if (cur != str[i]) {
+                    cnt = 0
+                    cur = str[i]
+                }
+                cnt++
+                if (cnt == k) {
+                    str.delete(i - cnt + 1, i + 1)
+                    flag = true
+                    break
+                }
+            }
+
+            if (!flag) {
+                break
+            }
+        }
+
+        return str.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ s: String, _ k: Int) -> String {
+        var arr = Array(s)
+        while !arr.isEmpty {
+            var flag = false
+            var cur = arr[0]
+            var cnt = 1
+
+            for i in 1..<arr.count {
+                if cur != arr[i] {
+                    cnt = 0
+                    cur = arr[i]
+                }
+                cnt += 1
+                if cnt == k {
+                    arr.removeSubrange((i - cnt + 1)...i)
+                    flag = true
+                    break
+                }
+            }
+
+            if !flag {
+                break
+            }
+        }
+
+        return String(arr)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,6 +398,88 @@ public class Solution {
 }
 ```
 
+```go
+func removeDuplicates(s string, k int) string {
+    stack := []int{}
+    arr := []byte(s)
+    n := len(arr)
+    i := 0
+
+    for i < n {
+        if i == 0 || arr[i] != arr[i-1] {
+            stack = append(stack, 1)
+        } else {
+            stack[len(stack)-1]++
+            if stack[len(stack)-1] == k {
+                stack = stack[:len(stack)-1]
+                arr = append(arr[:i-k+1], arr[i+1:]...)
+                i -= k
+                n -= k
+            }
+        }
+        i++
+    }
+
+    return string(arr)
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(s: String, k: Int): String {
+        val stack = mutableListOf<Int>()
+        val arr = StringBuilder(s)
+        var n = arr.length
+        var i = 0
+
+        while (i < n) {
+            if (i == 0 || arr[i] != arr[i - 1]) {
+                stack.add(1)
+            } else {
+                stack[stack.size - 1]++
+                if (stack[stack.size - 1] == k) {
+                    stack.removeAt(stack.size - 1)
+                    arr.delete(i - k + 1, i + 1)
+                    i -= k
+                    n -= k
+                }
+            }
+            i++
+        }
+
+        return arr.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ s: String, _ k: Int) -> String {
+        var stack = [Int]()
+        var arr = Array(s)
+        var n = arr.count
+        var i = 0
+
+        while i < n {
+            if i == 0 || arr[i] != arr[i - 1] {
+                stack.append(1)
+            } else {
+                stack[stack.count - 1] += 1
+                if stack[stack.count - 1] == k {
+                    stack.removeLast()
+                    arr.removeSubrange((i - k + 1)...i)
+                    i -= k
+                    n -= k
+                }
+            }
+            i += 1
+        }
+
+        return String(arr)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -446,6 +622,84 @@ public class Solution {
 }
 ```
 
+```go
+func removeDuplicates(s string, k int) string {
+    stack := [][]int{} // [char, count]
+
+    for _, c := range s {
+        if len(stack) > 0 && stack[len(stack)-1][0] == int(c) {
+            stack[len(stack)-1][1]++
+        } else {
+            stack = append(stack, []int{int(c), 1})
+        }
+        if stack[len(stack)-1][1] == k {
+            stack = stack[:len(stack)-1]
+        }
+    }
+
+    var res strings.Builder
+    for _, item := range stack {
+        for i := 0; i < item[1]; i++ {
+            res.WriteByte(byte(item[0]))
+        }
+    }
+
+    return res.String()
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(s: String, k: Int): String {
+        val stack = mutableListOf<Pair<Char, Int>>()
+
+        for (c in s) {
+            if (stack.isNotEmpty() && stack.last().first == c) {
+                stack[stack.size - 1] = c to stack.last().second + 1
+            } else {
+                stack.add(c to 1)
+            }
+            if (stack.last().second == k) {
+                stack.removeLast()
+            }
+        }
+
+        val res = StringBuilder()
+        for ((ch, cnt) in stack) {
+            res.append(ch.toString().repeat(cnt))
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ s: String, _ k: Int) -> String {
+        var stack = [(Character, Int)]()
+
+        for c in s {
+            if !stack.isEmpty && stack.last!.0 == c {
+                stack[stack.count - 1].1 += 1
+            } else {
+                stack.append((c, 1))
+            }
+            if stack.last!.1 == k {
+                stack.removeLast()
+            }
+        }
+
+        var res = ""
+        for (ch, cnt) in stack {
+            res += String(repeating: String(ch), count: cnt)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -570,6 +824,79 @@ public class Solution {
         }
 
         return new string(arr, 0, i);
+    }
+}
+```
+
+```go
+func removeDuplicates(s string, k int) string {
+    n := len(s)
+    arr := []byte(s)
+    count := make([]int, n)
+    i := 0
+
+    for j := 0; j < n; j++ {
+        arr[i] = arr[j]
+        count[i] = 1
+        if i > 0 && arr[i-1] == arr[j] {
+            count[i] += count[i-1]
+        }
+        if count[i] == k {
+            i -= k
+        }
+        i++
+    }
+
+    return string(arr[:i])
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(s: String, k: Int): String {
+        val n = s.length
+        val arr = s.toCharArray()
+        val count = IntArray(n)
+        var i = 0
+
+        for (j in 0 until n) {
+            arr[i] = arr[j]
+            count[i] = 1
+            if (i > 0 && arr[i - 1] == arr[j]) {
+                count[i] += count[i - 1]
+            }
+            if (count[i] == k) {
+                i -= k
+            }
+            i++
+        }
+
+        return String(arr, 0, i)
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ s: String, _ k: Int) -> String {
+        let n = s.count
+        var arr = Array(s)
+        var count = [Int](repeating: 0, count: n)
+        var i = 0
+
+        for j in 0..<n {
+            arr[i] = arr[j]
+            count[i] = 1
+            if i > 0 && arr[i - 1] == arr[j] {
+                count[i] += count[i - 1]
+            }
+            if count[i] == k {
+                i -= k
+            }
+            i += 1
+        }
+
+        return String(arr.prefix(i))
     }
 }
 ```

@@ -143,6 +143,155 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MatrixScore(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+
+        for (int r = 0; r < ROWS; r++) {
+            if (grid[r][0] == 0) {
+                for (int c = 0; c < COLS; c++) {
+                    grid[r][c] ^= 1;
+                }
+            }
+        }
+
+        for (int c = 0; c < COLS; c++) {
+            int oneCnt = 0;
+            for (int r = 0; r < ROWS; r++) {
+                oneCnt += grid[r][c];
+            }
+            if (oneCnt < ROWS - oneCnt) {
+                for (int r = 0; r < ROWS; r++) {
+                    grid[r][c] ^= 1;
+                }
+            }
+        }
+
+        int res = 0;
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                res += grid[r][c] << (COLS - c - 1);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func matrixScore(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+
+    for r := 0; r < ROWS; r++ {
+        if grid[r][0] == 0 {
+            for c := 0; c < COLS; c++ {
+                grid[r][c] ^= 1
+            }
+        }
+    }
+
+    for c := 0; c < COLS; c++ {
+        oneCnt := 0
+        for r := 0; r < ROWS; r++ {
+            oneCnt += grid[r][c]
+        }
+        if oneCnt < ROWS-oneCnt {
+            for r := 0; r < ROWS; r++ {
+                grid[r][c] ^= 1
+            }
+        }
+    }
+
+    res := 0
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            res += grid[r][c] << (COLS - c - 1)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun matrixScore(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+
+        for (r in 0 until ROWS) {
+            if (grid[r][0] == 0) {
+                for (c in 0 until COLS) {
+                    grid[r][c] = grid[r][c] xor 1
+                }
+            }
+        }
+
+        for (c in 0 until COLS) {
+            var oneCnt = 0
+            for (r in 0 until ROWS) {
+                oneCnt += grid[r][c]
+            }
+            if (oneCnt < ROWS - oneCnt) {
+                for (r in 0 until ROWS) {
+                    grid[r][c] = grid[r][c] xor 1
+                }
+            }
+        }
+
+        var res = 0
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                res += grid[r][c] shl (COLS - c - 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func matrixScore(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let ROWS = grid.count
+        let COLS = grid[0].count
+
+        for r in 0..<ROWS {
+            if grid[r][0] == 0 {
+                for c in 0..<COLS {
+                    grid[r][c] ^= 1
+                }
+            }
+        }
+
+        for c in 0..<COLS {
+            var oneCnt = 0
+            for r in 0..<ROWS {
+                oneCnt += grid[r][c]
+            }
+            if oneCnt < ROWS - oneCnt {
+                for r in 0..<ROWS {
+                    grid[r][c] ^= 1
+                }
+            }
+        }
+
+        var res = 0
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                res += grid[r][c] << (COLS - c - 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -241,6 +390,92 @@ class Solution {
             res += cnt * (1 << (COLS - c - 1));
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MatrixScore(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int res = ROWS * (1 << (COLS - 1));
+
+        for (int c = 1; c < COLS; c++) {
+            int cnt = 0;
+            for (int r = 0; r < ROWS; r++) {
+                if (grid[r][c] != grid[r][0]) {
+                    cnt++;
+                }
+            }
+            cnt = Math.Max(cnt, ROWS - cnt);
+            res += cnt * (1 << (COLS - c - 1));
+        }
+        return res;
+    }
+}
+```
+
+```go
+func matrixScore(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    res := ROWS * (1 << (COLS - 1))
+
+    for c := 1; c < COLS; c++ {
+        cnt := 0
+        for r := 0; r < ROWS; r++ {
+            if grid[r][c] != grid[r][0] {
+                cnt++
+            }
+        }
+        if ROWS-cnt > cnt {
+            cnt = ROWS - cnt
+        }
+        res += cnt * (1 << (COLS - c - 1))
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun matrixScore(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        var res = ROWS * (1 shl (COLS - 1))
+
+        for (c in 1 until COLS) {
+            var cnt = 0
+            for (r in 0 until ROWS) {
+                if (grid[r][c] != grid[r][0]) {
+                    cnt++
+                }
+            }
+            cnt = maxOf(cnt, ROWS - cnt)
+            res += cnt * (1 shl (COLS - c - 1))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func matrixScore(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var res = ROWS * (1 << (COLS - 1))
+
+        for c in 1..<COLS {
+            var cnt = 0
+            for r in 0..<ROWS {
+                if grid[r][c] != grid[r][0] {
+                    cnt += 1
+                }
+            }
+            cnt = max(cnt, ROWS - cnt)
+            res += cnt * (1 << (COLS - c - 1))
+        }
+        return res
     }
 }
 ```

@@ -107,6 +107,69 @@ public class Solution {
 }
 ```
 
+```go
+func pivotIndex(nums []int) int {
+    n := len(nums)
+    for i := 0; i < n; i++ {
+        leftSum, rightSum := 0, 0
+        for l := 0; l < i; l++ {
+            leftSum += nums[l]
+        }
+        for r := i + 1; r < n; r++ {
+            rightSum += nums[r]
+        }
+        if leftSum == rightSum {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun pivotIndex(nums: IntArray): Int {
+        val n = nums.size
+        for (i in 0 until n) {
+            var leftSum = 0
+            var rightSum = 0
+            for (l in 0 until i) {
+                leftSum += nums[l]
+            }
+            for (r in i + 1 until n) {
+                rightSum += nums[r]
+            }
+            if (leftSum == rightSum) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func pivotIndex(_ nums: [Int]) -> Int {
+        let n = nums.count
+        for i in 0..<n {
+            var leftSum = 0
+            var rightSum = 0
+            for l in 0..<i {
+                leftSum += nums[l]
+            }
+            for r in (i + 1)..<n {
+                rightSum += nums[r]
+            }
+            if leftSum == rightSum {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -224,6 +287,67 @@ public class Solution {
 }
 ```
 
+```go
+func pivotIndex(nums []int) int {
+    n := len(nums)
+    prefixSum := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        prefixSum[i+1] = prefixSum[i] + nums[i]
+    }
+
+    for i := 0; i < n; i++ {
+        leftSum := prefixSum[i]
+        rightSum := prefixSum[n] - prefixSum[i+1]
+        if leftSum == rightSum {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun pivotIndex(nums: IntArray): Int {
+        val n = nums.size
+        val prefixSum = IntArray(n + 1)
+        for (i in 0 until n) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        for (i in 0 until n) {
+            val leftSum = prefixSum[i]
+            val rightSum = prefixSum[n] - prefixSum[i + 1]
+            if (leftSum == rightSum) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func pivotIndex(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var prefixSum = [Int](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        for i in 0..<n {
+            let leftSum = prefixSum[i]
+            let rightSum = prefixSum[n] - prefixSum[i + 1]
+            if leftSum == rightSum {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +458,67 @@ public class Solution {
             leftSum += nums[i];
         }
         return -1;
+    }
+}
+```
+
+```go
+func pivotIndex(nums []int) int {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+
+    leftSum := 0
+    for i := 0; i < len(nums); i++ {
+        rightSum := total - leftSum - nums[i]
+        if leftSum == rightSum {
+            return i
+        }
+        leftSum += nums[i]
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun pivotIndex(nums: IntArray): Int {
+        var total = 0
+        for (num in nums) {
+            total += num
+        }
+
+        var leftSum = 0
+        for (i in nums.indices) {
+            val rightSum = total - leftSum - nums[i]
+            if (leftSum == rightSum) {
+                return i
+            }
+            leftSum += nums[i]
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func pivotIndex(_ nums: [Int]) -> Int {
+        var total = 0
+        for num in nums {
+            total += num
+        }
+
+        var leftSum = 0
+        for i in 0..<nums.count {
+            let rightSum = total - leftSum - nums[i]
+            if leftSum == rightSum {
+                return i
+            }
+            leftSum += nums[i]
+        }
+        return -1
     }
 }
 ```

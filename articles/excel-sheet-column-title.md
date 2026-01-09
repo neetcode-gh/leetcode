@@ -69,6 +69,40 @@ public class Solution {
 }
 ```
 
+```go
+func convertToTitle(columnNumber int) string {
+    if columnNumber == 0 {
+        return ""
+    }
+    n := columnNumber - 1
+    return convertToTitle(n/26) + string(rune('A'+n%26))
+}
+```
+
+```kotlin
+class Solution {
+    fun convertToTitle(columnNumber: Int): String {
+        if (columnNumber == 0) {
+            return ""
+        }
+        val n = columnNumber - 1
+        return convertToTitle(n / 26) + ('A' + n % 26).toChar()
+    }
+}
+```
+
+```swift
+class Solution {
+    func convertToTitle(_ columnNumber: Int) -> String {
+        if columnNumber == 0 {
+            return ""
+        }
+        let n = columnNumber - 1
+        return convertToTitle(n / 26) + String(Character(UnicodeScalar(Int(Character("A").asciiValue!) + n % 26)!))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -160,6 +194,54 @@ public class Solution {
         }
         res.Reverse();
         return new string(res.ToArray());
+    }
+}
+```
+
+```go
+func convertToTitle(columnNumber int) string {
+    res := []byte{}
+    for columnNumber > 0 {
+        columnNumber--
+        offset := columnNumber % 26
+        res = append(res, byte('A'+offset))
+        columnNumber /= 26
+    }
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun convertToTitle(columnNumber: Int): String {
+        var num = columnNumber
+        val res = StringBuilder()
+        while (num > 0) {
+            num--
+            val offset = num % 26
+            res.append(('A' + offset).toChar())
+            num /= 26
+        }
+        return res.reverse().toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func convertToTitle(_ columnNumber: Int) -> String {
+        var num = columnNumber
+        var res = [Character]()
+        while num > 0 {
+            num -= 1
+            let offset = num % 26
+            res.append(Character(UnicodeScalar(Int(Character("A").asciiValue!) + offset)!))
+            num /= 26
+        }
+        return String(res.reversed())
     }
 }
 ```

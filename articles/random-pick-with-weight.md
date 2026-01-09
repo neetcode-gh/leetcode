@@ -124,6 +124,76 @@ public class Solution {
 }
 ```
 
+```go
+type Solution struct {
+    w     []int
+    total int
+}
+
+func Constructor(w []int) Solution {
+    total := 0
+    for _, weight := range w {
+        total += weight
+    }
+    return Solution{w: w, total: total}
+}
+
+func (this *Solution) PickIndex() int {
+    target := float64(this.total) * rand.Float64()
+    curSum := 0
+    for i := 0; i < len(this.w); i++ {
+        curSum += this.w[i]
+        if float64(curSum) > target {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution(w: IntArray) {
+    private val w = w
+    private val total = w.sum()
+
+    fun pickIndex(): Int {
+        val target = total * Math.random()
+        var curSum = 0
+        for (i in w.indices) {
+            curSum += w[i]
+            if (curSum > target) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    private var w: [Int]
+    private var total: Int
+
+    init(_ w: [Int]) {
+        self.w = w
+        self.total = w.reduce(0, +)
+    }
+
+    func pickIndex() -> Int {
+        let target = Double(total) * Double.random(in: 0..<1)
+        var curSum = 0
+        for i in 0..<w.count {
+            curSum += w[i]
+            if Double(curSum) > target {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -267,6 +337,88 @@ public class Solution {
             }
         }
         return l - 1;
+    }
+}
+```
+
+```go
+type Solution struct {
+    prefix []int
+}
+
+func Constructor(w []int) Solution {
+    prefix := []int{0}
+    for _, wgt := range w {
+        prefix = append(prefix, prefix[len(prefix)-1]+wgt)
+    }
+    return Solution{prefix: prefix}
+}
+
+func (this *Solution) PickIndex() int {
+    target := float64(this.prefix[len(this.prefix)-1]) * rand.Float64()
+    l, r := 1, len(this.prefix)
+    for l < r {
+        mid := (l + r) >> 1
+        if float64(this.prefix[mid]) <= target {
+            l = mid + 1
+        } else {
+            r = mid
+        }
+    }
+    return l - 1
+}
+```
+
+```kotlin
+class Solution(w: IntArray) {
+    private val prefix: MutableList<Int> = mutableListOf(0)
+
+    init {
+        for (wgt in w) {
+            prefix.add(prefix.last() + wgt)
+        }
+    }
+
+    fun pickIndex(): Int {
+        val target = prefix.last() * Math.random()
+        var l = 1
+        var r = prefix.size
+        while (l < r) {
+            val mid = (l + r) shr 1
+            if (prefix[mid] <= target) {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+        return l - 1
+    }
+}
+```
+
+```swift
+class Solution {
+    private var prefix: [Int]
+
+    init(_ w: [Int]) {
+        prefix = [0]
+        for wgt in w {
+            prefix.append(prefix.last! + wgt)
+        }
+    }
+
+    func pickIndex() -> Int {
+        let target = Double(prefix.last!) * Double.random(in: 0..<1)
+        var l = 1, r = prefix.count
+        while l < r {
+            let mid = (l + r) >> 1
+            if Double(prefix[mid]) <= target {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+        return l - 1
     }
 }
 ```

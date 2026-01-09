@@ -85,6 +85,55 @@ public class Solution {
 }
 ```
 
+```go
+func frequencySort(nums []int) []int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    sort.Slice(nums, func(i, j int) bool {
+        if count[nums[i]] != count[nums[j]] {
+            return count[nums[i]] < count[nums[j]]
+        }
+        return nums[i] > nums[j]
+    })
+
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun frequencySort(nums: IntArray): IntArray {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        return nums.sortedWith(compareBy({ count[it] }, { -it })).toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func frequencySort(_ nums: [Int]) -> [Int] {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        return nums.sorted { a, b in
+            if count[a]! != count[b]! {
+                return count[a]! < count[b]!
+            }
+            return a > b
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

@@ -192,7 +192,7 @@ class Solution {
     isLeaf(t) {
         return t.left === null && t.right === null;
     }
-    
+
     addLeaves(res, root) {
         if (this.isLeaf(root)) {
             res.push(root.val);
@@ -205,17 +205,17 @@ class Solution {
             }
         }
     }
-    
+
     boundaryOfBinaryTree(root) {
         const res = [];
         if (root === null) {
             return res;
         }
-        
+
         if (!this.isLeaf(root)) {
             res.push(root.val);
         }
-        
+
         let t = root.left;
         while (t !== null) {
             if (!this.isLeaf(t)) {
@@ -229,7 +229,7 @@ class Solution {
         }
 
         this.addLeaves(res, root);
-        
+
         const stack = [];
         t = root.right;
         while (t !== null) {
@@ -242,12 +242,182 @@ class Solution {
                 t = t.left;
             }
         }
-        
+
         while (stack.length > 0) {
             res.push(stack.pop());
         }
-        
+
         return res;
+    }
+}
+```
+
+```go
+func isLeaf(t *TreeNode) bool {
+    return t.Left == nil && t.Right == nil
+}
+
+func addLeaves(res *[]int, root *TreeNode) {
+    if isLeaf(root) {
+        *res = append(*res, root.Val)
+    } else {
+        if root.Left != nil {
+            addLeaves(res, root.Left)
+        }
+        if root.Right != nil {
+            addLeaves(res, root.Right)
+        }
+    }
+}
+
+func boundaryOfBinaryTree(root *TreeNode) []int {
+    res := []int{}
+    if root == nil {
+        return res
+    }
+
+    if !isLeaf(root) {
+        res = append(res, root.Val)
+    }
+
+    t := root.Left
+    for t != nil {
+        if !isLeaf(t) {
+            res = append(res, t.Val)
+        }
+        if t.Left != nil {
+            t = t.Left
+        } else {
+            t = t.Right
+        }
+    }
+
+    addLeaves(&res, root)
+
+    stack := []int{}
+    t = root.Right
+    for t != nil {
+        if !isLeaf(t) {
+            stack = append(stack, t.Val)
+        }
+        if t.Right != nil {
+            t = t.Right
+        } else {
+            t = t.Left
+        }
+    }
+
+    for len(stack) > 0 {
+        res = append(res, stack[len(stack)-1])
+        stack = stack[:len(stack)-1]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private fun isLeaf(t: TreeNode): Boolean {
+        return t.left == null && t.right == null
+    }
+
+    private fun addLeaves(res: MutableList<Int>, root: TreeNode) {
+        if (isLeaf(root)) {
+            res.add(root.`val`)
+        } else {
+            root.left?.let { addLeaves(res, it) }
+            root.right?.let { addLeaves(res, it) }
+        }
+    }
+
+    fun boundaryOfBinaryTree(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+        if (root == null) return res
+
+        if (!isLeaf(root)) {
+            res.add(root.`val`)
+        }
+
+        var t = root.left
+        while (t != null) {
+            if (!isLeaf(t)) {
+                res.add(t.`val`)
+            }
+            t = if (t.left != null) t.left else t.right
+        }
+
+        addLeaves(res, root)
+
+        val stack = mutableListOf<Int>()
+        t = root.right
+        while (t != null) {
+            if (!isLeaf(t)) {
+                stack.add(t.`val`)
+            }
+            t = if (t.right != null) t.right else t.left
+        }
+
+        while (stack.isNotEmpty()) {
+            res.add(stack.removeAt(stack.size - 1))
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func isLeaf(_ t: TreeNode) -> Bool {
+        return t.left == nil && t.right == nil
+    }
+
+    func addLeaves(_ res: inout [Int], _ root: TreeNode) {
+        if isLeaf(root) {
+            res.append(root.val)
+        } else {
+            if let left = root.left {
+                addLeaves(&res, left)
+            }
+            if let right = root.right {
+                addLeaves(&res, right)
+            }
+        }
+    }
+
+    func boundaryOfBinaryTree(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        guard let root = root else { return res }
+
+        if !isLeaf(root) {
+            res.append(root.val)
+        }
+
+        var t = root.left
+        while t != nil {
+            if !isLeaf(t!) {
+                res.append(t!.val)
+            }
+            t = t!.left != nil ? t!.left : t!.right
+        }
+
+        addLeaves(&res, root)
+
+        var stack = [Int]()
+        t = root.right
+        while t != nil {
+            if !isLeaf(t!) {
+                stack.append(t!.val)
+            }
+            t = t!.right != nil ? t!.right : t!.left
+        }
+
+        while !stack.isEmpty {
+            res.append(stack.removeLast())
+        }
+
+        return res
     }
 }
 ```
@@ -458,23 +628,23 @@ class Solution {
         left_boundary.push(...right_boundary);
         return left_boundary;
     }
-    
+
     isLeaf(cur) {
         return cur.left === null && cur.right === null;
     }
-    
+
     isRightBoundary(flag) {
         return flag === 2;
     }
-    
+
     isLeftBoundary(flag) {
         return flag === 1;
     }
-    
+
     isRoot(flag) {
         return flag === 0;
     }
-    
+
     leftChildFlag(cur, flag) {
         if (this.isLeftBoundary(flag) || this.isRoot(flag)) {
             return 1;
@@ -484,7 +654,7 @@ class Solution {
             return 3;
         }
     }
-    
+
     rightChildFlag(cur, flag) {
         if (this.isRightBoundary(flag) || this.isRoot(flag)) {
             return 2;
@@ -494,7 +664,7 @@ class Solution {
             return 3;
         }
     }
-    
+
     preorder(cur, left_boundary, right_boundary, leaves, flag) {
         if (cur === null) {
             return;
@@ -507,9 +677,154 @@ class Solution {
         } else if (this.isLeaf(cur)) {
             leaves.push(cur.val);
         }
-        
+
         this.preorder(cur.left, left_boundary, right_boundary, leaves, this.leftChildFlag(cur, flag));
         this.preorder(cur.right, left_boundary, right_boundary, leaves, this.rightChildFlag(cur, flag));
+    }
+}
+```
+
+```go
+func boundaryOfBinaryTree(root *TreeNode) []int {
+    leftBoundary := []int{}
+    rightBoundary := []int{}
+    leaves := []int{}
+
+    var preorder func(cur *TreeNode, flag int)
+    preorder = func(cur *TreeNode, flag int) {
+        if cur == nil {
+            return
+        }
+
+        isLeaf := cur.Left == nil && cur.Right == nil
+
+        if flag == 2 {
+            rightBoundary = append([]int{cur.Val}, rightBoundary...)
+        } else if flag == 1 || flag == 0 {
+            leftBoundary = append(leftBoundary, cur.Val)
+        } else if isLeaf {
+            leaves = append(leaves, cur.Val)
+        }
+
+        leftFlag := 3
+        if flag == 1 || flag == 0 {
+            leftFlag = 1
+        } else if flag == 2 && cur.Right == nil {
+            leftFlag = 2
+        }
+
+        rightFlag := 3
+        if flag == 2 || flag == 0 {
+            rightFlag = 2
+        } else if flag == 1 && cur.Left == nil {
+            rightFlag = 1
+        }
+
+        preorder(cur.Left, leftFlag)
+        preorder(cur.Right, rightFlag)
+    }
+
+    preorder(root, 0)
+    leftBoundary = append(leftBoundary, leaves...)
+    leftBoundary = append(leftBoundary, rightBoundary...)
+    return leftBoundary
+}
+```
+
+```kotlin
+class Solution {
+    fun boundaryOfBinaryTree(root: TreeNode?): List<Int> {
+        val leftBoundary = mutableListOf<Int>()
+        val rightBoundary = mutableListOf<Int>()
+        val leaves = mutableListOf<Int>()
+
+        fun isLeaf(cur: TreeNode) = cur.left == null && cur.right == null
+
+        fun leftChildFlag(cur: TreeNode, flag: Int): Int {
+            return when {
+                flag == 1 || flag == 0 -> 1
+                flag == 2 && cur.right == null -> 2
+                else -> 3
+            }
+        }
+
+        fun rightChildFlag(cur: TreeNode, flag: Int): Int {
+            return when {
+                flag == 2 || flag == 0 -> 2
+                flag == 1 && cur.left == null -> 1
+                else -> 3
+            }
+        }
+
+        fun preorder(cur: TreeNode?, flag: Int) {
+            if (cur == null) return
+
+            when {
+                flag == 2 -> rightBoundary.add(0, cur.`val`)
+                flag == 1 || flag == 0 -> leftBoundary.add(cur.`val`)
+                isLeaf(cur) -> leaves.add(cur.`val`)
+            }
+
+            preorder(cur.left, leftChildFlag(cur, flag))
+            preorder(cur.right, rightChildFlag(cur, flag))
+        }
+
+        preorder(root, 0)
+        leftBoundary.addAll(leaves)
+        leftBoundary.addAll(rightBoundary)
+        return leftBoundary
+    }
+}
+```
+
+```swift
+class Solution {
+    func boundaryOfBinaryTree(_ root: TreeNode?) -> [Int] {
+        var leftBoundary = [Int]()
+        var rightBoundary = [Int]()
+        var leaves = [Int]()
+
+        func isLeaf(_ cur: TreeNode) -> Bool {
+            return cur.left == nil && cur.right == nil
+        }
+
+        func leftChildFlag(_ cur: TreeNode, _ flag: Int) -> Int {
+            if flag == 1 || flag == 0 {
+                return 1
+            } else if flag == 2 && cur.right == nil {
+                return 2
+            }
+            return 3
+        }
+
+        func rightChildFlag(_ cur: TreeNode, _ flag: Int) -> Int {
+            if flag == 2 || flag == 0 {
+                return 2
+            } else if flag == 1 && cur.left == nil {
+                return 1
+            }
+            return 3
+        }
+
+        func preorder(_ cur: TreeNode?, _ flag: Int) {
+            guard let cur = cur else { return }
+
+            if flag == 2 {
+                rightBoundary.insert(cur.val, at: 0)
+            } else if flag == 1 || flag == 0 {
+                leftBoundary.append(cur.val)
+            } else if isLeaf(cur) {
+                leaves.append(cur.val)
+            }
+
+            preorder(cur.left, leftChildFlag(cur, flag))
+            preorder(cur.right, rightChildFlag(cur, flag))
+        }
+
+        preorder(root, 0)
+        leftBoundary.append(contentsOf: leaves)
+        leftBoundary.append(contentsOf: rightBoundary)
+        return leftBoundary
     }
 }
 ```

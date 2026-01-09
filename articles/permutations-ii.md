@@ -153,6 +153,103 @@ public class Solution {
 }
 ```
 
+```go
+func permuteUnique(nums []int) [][]int {
+    res := make(map[string][]int)
+    perm := []int{}
+
+    var backtrack func()
+    backtrack = func() {
+        if len(perm) == len(nums) {
+            temp := make([]int, len(perm))
+            copy(temp, perm)
+            key := fmt.Sprint(temp)
+            res[key] = temp
+            return
+        }
+
+        for i := 0; i < len(nums); i++ {
+            if nums[i] != -1001 {
+                temp := nums[i]
+                perm = append(perm, nums[i])
+                nums[i] = -1001
+                backtrack()
+                nums[i] = temp
+                perm = perm[:len(perm)-1]
+            }
+        }
+    }
+
+    backtrack()
+    result := [][]int{}
+    for _, v := range res {
+        result = append(result, v)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun permuteUnique(nums: IntArray): List<List<Int>> {
+        val res = mutableSetOf<List<Int>>()
+        val perm = mutableListOf<Int>()
+
+        fun backtrack() {
+            if (perm.size == nums.size) {
+                res.add(perm.toList())
+                return
+            }
+
+            for (i in nums.indices) {
+                if (nums[i] != Int.MIN_VALUE) {
+                    val temp = nums[i]
+                    perm.add(nums[i])
+                    nums[i] = Int.MIN_VALUE
+                    backtrack()
+                    nums[i] = temp
+                    perm.removeAt(perm.size - 1)
+                }
+            }
+        }
+
+        backtrack()
+        return res.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func permuteUnique(_ nums: [Int]) -> [[Int]] {
+        var res = Set<[Int]>()
+        var nums = nums
+        var perm = [Int]()
+
+        func backtrack() {
+            if perm.count == nums.count {
+                res.insert(perm)
+                return
+            }
+
+            for i in 0..<nums.count {
+                if nums[i] != Int.min {
+                    let temp = nums[i]
+                    perm.append(nums[i])
+                    nums[i] = Int.min
+                    backtrack()
+                    nums[i] = temp
+                    perm.removeLast()
+                }
+            }
+        }
+
+        backtrack()
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -338,6 +435,109 @@ public class Solution {
 }
 ```
 
+```go
+func permuteUnique(nums []int) [][]int {
+    res := [][]int{}
+    perm := []int{}
+    count := make(map[int]int)
+
+    for _, num := range nums {
+        count[num]++
+    }
+
+    var dfs func()
+    dfs = func() {
+        if len(perm) == len(nums) {
+            temp := make([]int, len(perm))
+            copy(temp, perm)
+            res = append(res, temp)
+            return
+        }
+
+        for num := range count {
+            if count[num] > 0 {
+                perm = append(perm, num)
+                count[num]--
+                dfs()
+                count[num]++
+                perm = perm[:len(perm)-1]
+            }
+        }
+    }
+
+    dfs()
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun permuteUnique(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        val perm = mutableListOf<Int>()
+        val count = mutableMapOf<Int, Int>()
+
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        fun dfs() {
+            if (perm.size == nums.size) {
+                res.add(perm.toList())
+                return
+            }
+
+            for (num in count.keys) {
+                if (count[num]!! > 0) {
+                    perm.add(num)
+                    count[num] = count[num]!! - 1
+                    dfs()
+                    count[num] = count[num]!! + 1
+                    perm.removeAt(perm.size - 1)
+                }
+            }
+        }
+
+        dfs()
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func permuteUnique(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var perm = [Int]()
+        var count = [Int: Int]()
+
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        func dfs() {
+            if perm.count == nums.count {
+                res.append(perm)
+                return
+            }
+
+            for num in count.keys {
+                if count[num]! > 0 {
+                    perm.append(num)
+                    count[num]! -= 1
+                    dfs()
+                    count[num]! += 1
+                    perm.removeLast()
+                }
+            }
+        }
+
+        dfs()
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,6 +719,114 @@ public class Solution {
 }
 ```
 
+```go
+func permuteUnique(nums []int) [][]int {
+    res := [][]int{}
+    n := len(nums)
+    visit := make([]bool, n)
+    perm := []int{}
+    sort.Ints(nums)
+
+    var dfs func()
+    dfs = func() {
+        if len(perm) == n {
+            temp := make([]int, len(perm))
+            copy(temp, perm)
+            res = append(res, temp)
+            return
+        }
+
+        for i := 0; i < n; i++ {
+            if visit[i] {
+                continue
+            }
+            if i > 0 && nums[i] == nums[i-1] && !visit[i-1] {
+                continue
+            }
+
+            visit[i] = true
+            perm = append(perm, nums[i])
+            dfs()
+            visit[i] = false
+            perm = perm[:len(perm)-1]
+        }
+    }
+
+    dfs()
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun permuteUnique(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        val n = nums.size
+        val visit = BooleanArray(n)
+        val perm = mutableListOf<Int>()
+        nums.sort()
+
+        fun dfs() {
+            if (perm.size == n) {
+                res.add(perm.toList())
+                return
+            }
+
+            for (i in 0 until n) {
+                if (visit[i]) continue
+                if (i > 0 && nums[i] == nums[i - 1] && !visit[i - 1]) continue
+
+                visit[i] = true
+                perm.add(nums[i])
+                dfs()
+                visit[i] = false
+                perm.removeAt(perm.size - 1)
+            }
+        }
+
+        dfs()
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func permuteUnique(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var nums = nums.sorted()
+        let n = nums.count
+        var visit = [Bool](repeating: false, count: n)
+        var perm = [Int]()
+
+        func dfs() {
+            if perm.count == n {
+                res.append(perm)
+                return
+            }
+
+            for i in 0..<n {
+                if visit[i] {
+                    continue
+                }
+                if i > 0 && nums[i] == nums[i - 1] && !visit[i - 1] {
+                    continue
+                }
+
+                visit[i] = true
+                perm.append(nums[i])
+                dfs()
+                visit[i] = false
+                perm.removeLast()
+            }
+        }
+
+        dfs()
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -689,6 +997,98 @@ public class Solution {
             nums[a] = nums[b];
             nums[b] = temp;
         }
+    }
+}
+```
+
+```go
+func permuteUnique(nums []int) [][]int {
+    res := [][]int{}
+    sort.Ints(nums)
+
+    var dfs func(i int)
+    dfs = func(i int) {
+        if i == len(nums) {
+            temp := make([]int, len(nums))
+            copy(temp, nums)
+            res = append(res, temp)
+            return
+        }
+
+        for j := i; j < len(nums); j++ {
+            if j > i && nums[j] == nums[i] {
+                continue
+            }
+            nums[i], nums[j] = nums[j], nums[i]
+            dfs(i + 1)
+        }
+
+        for j := len(nums) - 1; j > i; j-- {
+            nums[i], nums[j] = nums[j], nums[i]
+        }
+    }
+
+    dfs(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun permuteUnique(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        nums.sort()
+
+        fun dfs(i: Int) {
+            if (i == nums.size) {
+                res.add(nums.toList())
+                return
+            }
+
+            for (j in i until nums.size) {
+                if (j > i && nums[j] == nums[i]) continue
+                nums[i] = nums[j].also { nums[j] = nums[i] }
+                dfs(i + 1)
+            }
+
+            for (j in nums.size - 1 downTo i + 1) {
+                nums[i] = nums[j].also { nums[j] = nums[i] }
+            }
+        }
+
+        dfs(0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func permuteUnique(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var nums = nums.sorted()
+
+        func dfs(_ i: Int) {
+            if i == nums.count {
+                res.append(nums)
+                return
+            }
+
+            for j in i..<nums.count {
+                if j > i && nums[j] == nums[i] {
+                    continue
+                }
+                nums.swapAt(i, j)
+                dfs(i + 1)
+            }
+
+            for j in stride(from: nums.count - 1, to: i, by: -1) {
+                nums.swapAt(i, j)
+            }
+        }
+
+        dfs(0)
+        return res
     }
 }
 ```
@@ -884,6 +1284,126 @@ public class Solution {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+}
+```
+
+```go
+func permuteUnique(nums []int) [][]int {
+    n := len(nums)
+    sort.Ints(nums)
+    res := [][]int{}
+    temp := make([]int, n)
+    copy(temp, nums)
+    res = append(res, temp)
+
+    for {
+        i := n - 2
+        for i >= 0 && nums[i] >= nums[i+1] {
+            i--
+        }
+
+        if i < 0 {
+            break
+        }
+
+        j := n - 1
+        for nums[j] <= nums[i] {
+            j--
+        }
+
+        nums[i], nums[j] = nums[j], nums[i]
+
+        l, r := i+1, n-1
+        for l < r {
+            nums[l], nums[r] = nums[r], nums[l]
+            l++
+            r--
+        }
+
+        temp := make([]int, n)
+        copy(temp, nums)
+        res = append(res, temp)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun permuteUnique(nums: IntArray): List<List<Int>> {
+        val n = nums.size
+        nums.sort()
+        val res = mutableListOf(nums.toList())
+
+        while (true) {
+            var i = n - 2
+            while (i >= 0 && nums[i] >= nums[i + 1]) {
+                i--
+            }
+
+            if (i < 0) break
+
+            var j = n - 1
+            while (nums[j] <= nums[i]) {
+                j--
+            }
+
+            nums[i] = nums[j].also { nums[j] = nums[i] }
+
+            var l = i + 1
+            var r = n - 1
+            while (l < r) {
+                nums[l] = nums[r].also { nums[r] = nums[l] }
+                l++
+                r--
+            }
+
+            res.add(nums.toList())
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func permuteUnique(_ nums: [Int]) -> [[Int]] {
+        var nums = nums.sorted()
+        let n = nums.count
+        var res = [nums]
+
+        while true {
+            var i = n - 2
+            while i >= 0 && nums[i] >= nums[i + 1] {
+                i -= 1
+            }
+
+            if i < 0 {
+                break
+            }
+
+            var j = n - 1
+            while nums[j] <= nums[i] {
+                j -= 1
+            }
+
+            nums.swapAt(i, j)
+
+            var l = i + 1
+            var r = n - 1
+            while l < r {
+                nums.swapAt(l, r)
+                l += 1
+                r -= 1
+            }
+
+            res.append(nums)
+        }
+
+        return res
     }
 }
 ```

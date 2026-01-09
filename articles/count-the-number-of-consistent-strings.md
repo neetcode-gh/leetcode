@@ -87,6 +87,90 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountConsistentStrings(string allowed, string[] words) {
+        int res = 0;
+
+        foreach (string w in words) {
+            bool flag = true;
+            foreach (char c in w) {
+                if (!allowed.Contains(c)) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) res++;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countConsistentStrings(allowed string, words []string) int {
+    res := 0
+
+    for _, w := range words {
+        flag := true
+        for _, c := range w {
+            if !strings.ContainsRune(allowed, c) {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countConsistentStrings(allowed: String, words: Array<String>): Int {
+        var res = 0
+
+        for (w in words) {
+            var flag = true
+            for (c in w) {
+                if (c !in allowed) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) res++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countConsistentStrings(_ allowed: String, _ words: [String]) -> Int {
+        var res = 0
+
+        for w in words {
+            var flag = true
+            for c in w {
+                if !allowed.contains(c) {
+                    flag = false
+                    break
+                }
+            }
+            if flag { res += 1 }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -182,6 +266,87 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountConsistentStrings(string allowed, string[] words) {
+        HashSet<char> allowedSet = new HashSet<char>(allowed);
+
+        int res = words.Length;
+        foreach (string w in words) {
+            foreach (char c in w) {
+                if (!allowedSet.Contains(c)) {
+                    res--;
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countConsistentStrings(allowed string, words []string) int {
+    allowedSet := make(map[rune]bool)
+    for _, c := range allowed {
+        allowedSet[c] = true
+    }
+
+    res := len(words)
+    for _, w := range words {
+        for _, c := range w {
+            if !allowedSet[c] {
+                res--
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countConsistentStrings(allowed: String, words: Array<String>): Int {
+        val allowedSet = allowed.toSet()
+
+        var res = words.size
+        for (w in words) {
+            for (c in w) {
+                if (c !in allowedSet) {
+                    res--
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countConsistentStrings(_ allowed: String, _ words: [String]) -> Int {
+        let allowedSet = Set(allowed)
+
+        var res = words.count
+        for w in words {
+            for c in w {
+                if !allowedSet.contains(c) {
+                    res -= 1
+                    break
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -289,6 +454,96 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountConsistentStrings(string allowed, string[] words) {
+        bool[] allowedArr = new bool[26];
+        foreach (char c in allowed) {
+            allowedArr[c - 'a'] = true;
+        }
+
+        int res = words.Length;
+        foreach (string w in words) {
+            foreach (char c in w) {
+                if (!allowedArr[c - 'a']) {
+                    res--;
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countConsistentStrings(allowed string, words []string) int {
+    allowedArr := make([]bool, 26)
+    for _, c := range allowed {
+        allowedArr[c-'a'] = true
+    }
+
+    res := len(words)
+    for _, w := range words {
+        for _, c := range w {
+            if !allowedArr[c-'a'] {
+                res--
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countConsistentStrings(allowed: String, words: Array<String>): Int {
+        val allowedArr = BooleanArray(26)
+        for (c in allowed) {
+            allowedArr[c - 'a'] = true
+        }
+
+        var res = words.size
+        for (w in words) {
+            for (c in w) {
+                if (!allowedArr[c - 'a']) {
+                    res--
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countConsistentStrings(_ allowed: String, _ words: [String]) -> Int {
+        var allowedArr = [Bool](repeating: false, count: 26)
+        for c in allowed {
+            allowedArr[Int(c.asciiValue!) - 97] = true
+        }
+
+        var res = words.count
+        for w in words {
+            for c in w {
+                if !allowedArr[Int(c.asciiValue!) - 97] {
+                    res -= 1
+                    break
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -401,6 +656,100 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountConsistentStrings(string allowed, string[] words) {
+        int bitMask = 0;
+        foreach (char c in allowed) {
+            bitMask |= 1 << (c - 'a');
+        }
+
+        int res = words.Length;
+        foreach (string w in words) {
+            foreach (char c in w) {
+                int bit = 1 << (c - 'a');
+                if ((bit & bitMask) == 0) {
+                    res--;
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func countConsistentStrings(allowed string, words []string) int {
+    bitMask := 0
+    for _, c := range allowed {
+        bitMask |= 1 << (c - 'a')
+    }
+
+    res := len(words)
+    for _, w := range words {
+        for _, c := range w {
+            bit := 1 << (c - 'a')
+            if bit&bitMask == 0 {
+                res--
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countConsistentStrings(allowed: String, words: Array<String>): Int {
+        var bitMask = 0
+        for (c in allowed) {
+            bitMask = bitMask or (1 shl (c - 'a'))
+        }
+
+        var res = words.size
+        for (w in words) {
+            for (c in w) {
+                val bit = 1 shl (c - 'a')
+                if (bit and bitMask == 0) {
+                    res--
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countConsistentStrings(_ allowed: String, _ words: [String]) -> Int {
+        var bitMask = 0
+        for c in allowed {
+            bitMask |= 1 << (Int(c.asciiValue!) - 97)
+        }
+
+        var res = words.count
+        for w in words {
+            for c in w {
+                let bit = 1 << (Int(c.asciiValue!) - 97)
+                if bit & bitMask == 0 {
+                    res -= 1
+                    break
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

@@ -80,6 +80,86 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxNumberOfBalloons(string text) {
+        Dictionary<char, int> countText = new Dictionary<char, int>();
+        foreach (char c in text) {
+            if (!countText.ContainsKey(c)) countText[c] = 0;
+            countText[c]++;
+        }
+
+        Dictionary<char, int> balloon = new Dictionary<char, int> {
+            {'b', 1}, {'a', 1}, {'l', 2}, {'o', 2}, {'n', 1}
+        };
+
+        int res = text.Length;
+        foreach (var entry in balloon) {
+            int count = countText.ContainsKey(entry.Key) ? countText[entry.Key] : 0;
+            res = Math.Min(res, count / entry.Value);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func maxNumberOfBalloons(text string) int {
+    countText := make(map[rune]int)
+    for _, c := range text {
+        countText[c]++
+    }
+
+    balloon := map[rune]int{'b': 1, 'a': 1, 'l': 2, 'o': 2, 'n': 1}
+
+    res := len(text)
+    for c, need := range balloon {
+        if countText[c]/need < res {
+            res = countText[c] / need
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxNumberOfBalloons(text: String): Int {
+        val countText = mutableMapOf<Char, Int>()
+        for (c in text) {
+            countText[c] = countText.getOrDefault(c, 0) + 1
+        }
+
+        val balloon = mapOf('b' to 1, 'a' to 1, 'l' to 2, 'o' to 2, 'n' to 1)
+
+        var res = text.length
+        for ((c, need) in balloon) {
+            res = minOf(res, (countText[c] ?: 0) / need)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxNumberOfBalloons(_ text: String) -> Int {
+        var countText = [Character: Int]()
+        for c in text {
+            countText[c, default: 0] += 1
+        }
+
+        let balloon: [Character: Int] = ["b": 1, "a": 1, "l": 2, "o": 2, "n": 1]
+
+        var res = text.count
+        for (c, need) in balloon {
+            res = min(res, (countText[c] ?? 0) / need)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +253,96 @@ class Solution {
         mp.set('l', Math.floor(mp.get('l') / 2));
         mp.set('o', Math.floor(mp.get('o') / 2));
         return Math.min(...Array.from(mp.values()));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxNumberOfBalloons(string text) {
+        Dictionary<char, int> mp = new Dictionary<char, int>();
+        foreach (char c in text) {
+            if ("balon".Contains(c)) {
+                if (!mp.ContainsKey(c)) mp[c] = 0;
+                mp[c]++;
+            }
+        }
+
+        if (mp.Count < 5) {
+            return 0;
+        }
+
+        mp['l'] /= 2;
+        mp['o'] /= 2;
+        return mp.Values.Min();
+    }
+}
+```
+
+```go
+func maxNumberOfBalloons(text string) int {
+    mp := make(map[rune]int)
+    for _, c := range text {
+        if c == 'b' || c == 'a' || c == 'l' || c == 'o' || c == 'n' {
+            mp[c]++
+        }
+    }
+
+    if len(mp) < 5 {
+        return 0
+    }
+
+    mp['l'] /= 2
+    mp['o'] /= 2
+
+    res := mp['b']
+    for _, v := range mp {
+        if v < res {
+            res = v
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxNumberOfBalloons(text: String): Int {
+        val mp = mutableMapOf<Char, Int>()
+        for (c in text) {
+            if (c in "balon") {
+                mp[c] = mp.getOrDefault(c, 0) + 1
+            }
+        }
+
+        if (mp.size < 5) {
+            return 0
+        }
+
+        mp['l'] = mp['l']!! / 2
+        mp['o'] = mp['o']!! / 2
+        return mp.values.min()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxNumberOfBalloons(_ text: String) -> Int {
+        var mp = [Character: Int]()
+        for c in text {
+            if "balon".contains(c) {
+                mp[c, default: 0] += 1
+            }
+        }
+
+        if mp.count < 5 {
+            return 0
+        }
+
+        mp["l"]! /= 2
+        mp["o"]! /= 2
+        return mp.values.min()!
     }
 }
 ```

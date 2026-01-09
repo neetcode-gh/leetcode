@@ -161,6 +161,109 @@ public class Solution {
 }
 ```
 
+```go
+func countPrefixSuffixPairs(words []string) int {
+    isPrefixAndSuffix := func(s1, s2 string) bool {
+        if len(s1) > len(s2) {
+            return false
+        }
+
+        for i := 0; i < len(s1); i++ {
+            if s1[i] != s2[i] {
+                return false
+            }
+        }
+
+        j := 0
+        for i := len(s2) - len(s1); i < len(s2); i++ {
+            if s1[j] != s2[i] {
+                return false
+            }
+            j++
+        }
+
+        return true
+    }
+
+    res := 0
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            if isPrefixAndSuffix(words[i], words[j]) {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPrefixSuffixPairs(words: Array<String>): Int {
+        fun isPrefixAndSuffix(s1: String, s2: String): Boolean {
+            if (s1.length > s2.length) return false
+
+            for (i in s1.indices) {
+                if (s1[i] != s2[i]) return false
+            }
+
+            var j = 0
+            for (i in s2.length - s1.length until s2.length) {
+                if (s1[j] != s2[i]) return false
+                j++
+            }
+
+            return true
+        }
+
+        var res = 0
+        for (i in words.indices) {
+            for (j in i + 1 until words.size) {
+                if (isPrefixAndSuffix(words[i], words[j])) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPrefixSuffixPairs(_ words: [String]) -> Int {
+        func isPrefixAndSuffix(_ s1: String, _ s2: String) -> Bool {
+            if s1.count > s2.count { return false }
+
+            let arr1 = Array(s1)
+            let arr2 = Array(s2)
+
+            for i in 0..<arr1.count {
+                if arr1[i] != arr2[i] { return false }
+            }
+
+            var j = 0
+            for i in (arr2.count - arr1.count)..<arr2.count {
+                if arr1[j] != arr2[i] { return false }
+                j += 1
+            }
+
+            return true
+        }
+
+        var res = 0
+        for i in 0..<words.count {
+            for j in (i + 1)..<words.count {
+                if isPrefixAndSuffix(words[i], words[j]) {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -260,6 +363,57 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func countPrefixSuffixPairs(words []string) int {
+    res := 0
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            w1, w2 := words[i], words[j]
+            if strings.HasPrefix(w2, w1) && strings.HasSuffix(w2, w1) {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countPrefixSuffixPairs(words: Array<String>): Int {
+        var res = 0
+        for (i in words.indices) {
+            for (j in i + 1 until words.size) {
+                val w1 = words[i]
+                val w2 = words[j]
+                if (w2.startsWith(w1) && w2.endsWith(w1)) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countPrefixSuffixPairs(_ words: [String]) -> Int {
+        var res = 0
+        for i in 0..<words.count {
+            for j in (i + 1)..<words.count {
+                let w1 = words[i]
+                let w2 = words[j]
+                if w2.hasPrefix(w1) && w2.hasSuffix(w1) {
+                    res += 1
+                }
+            }
+        }
+        return res
     }
 }
 ```
@@ -521,6 +675,157 @@ public class Solution {
             root.Add(words[i]);
         }
         return res;
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children map[string]*TrieNode
+    count    int
+}
+
+func newTrieNode() *TrieNode {
+    return &TrieNode{children: make(map[string]*TrieNode)}
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func newTrie() *Trie {
+    return &Trie{root: newTrieNode()}
+}
+
+func (t *Trie) add(w string) {
+    cur := t.root
+    n := len(w)
+    for i := 0; i < n; i++ {
+        key := string(w[i]) + string(w[n-1-i])
+        if _, ok := cur.children[key]; !ok {
+            cur.children[key] = newTrieNode()
+        }
+        cur = cur.children[key]
+        cur.count++
+    }
+}
+
+func (t *Trie) getCount(w string) int {
+    cur := t.root
+    n := len(w)
+    for i := 0; i < n; i++ {
+        key := string(w[i]) + string(w[n-1-i])
+        if _, ok := cur.children[key]; !ok {
+            return 0
+        }
+        cur = cur.children[key]
+    }
+    return cur.count
+}
+
+func countPrefixSuffixPairs(words []string) int {
+    res := 0
+    trie := newTrie()
+    for i := len(words) - 1; i >= 0; i-- {
+        res += trie.getCount(words[i])
+        trie.add(words[i])
+    }
+    return res
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = HashMap<String, TrieNode>()
+    var count = 0
+}
+
+class Trie {
+    val root = TrieNode()
+
+    fun add(w: String) {
+        var cur = root
+        val n = w.length
+        for (i in 0 until n) {
+            val key = "${w[i]}${w[n - 1 - i]}"
+            if (!cur.children.containsKey(key)) {
+                cur.children[key] = TrieNode()
+            }
+            cur = cur.children[key]!!
+            cur.count++
+        }
+    }
+
+    fun count(w: String): Int {
+        var cur = root
+        val n = w.length
+        for (i in 0 until n) {
+            val key = "${w[i]}${w[n - 1 - i]}"
+            if (!cur.children.containsKey(key)) return 0
+            cur = cur.children[key]!!
+        }
+        return cur.count
+    }
+}
+
+class Solution {
+    fun countPrefixSuffixPairs(words: Array<String>): Int {
+        var res = 0
+        val trie = Trie()
+        for (i in words.size - 1 downTo 0) {
+            res += trie.count(words[i])
+            trie.add(words[i])
+        }
+        return res
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [String: TrieNode]()
+    var count = 0
+}
+
+class Trie {
+    var root = TrieNode()
+
+    func add(_ w: String) {
+        var cur = root
+        let chars = Array(w)
+        let n = chars.count
+        for i in 0..<n {
+            let key = "\(chars[i])\(chars[n - 1 - i])"
+            if cur.children[key] == nil {
+                cur.children[key] = TrieNode()
+            }
+            cur = cur.children[key]!
+            cur.count += 1
+        }
+    }
+
+    func getCount(_ w: String) -> Int {
+        var cur = root
+        let chars = Array(w)
+        let n = chars.count
+        for i in 0..<n {
+            let key = "\(chars[i])\(chars[n - 1 - i])"
+            if cur.children[key] == nil { return 0 }
+            cur = cur.children[key]!
+        }
+        return cur.count
+    }
+}
+
+class Solution {
+    func countPrefixSuffixPairs(_ words: [String]) -> Int {
+        var res = 0
+        let trie = Trie()
+        for i in stride(from: words.count - 1, through: 0, by: -1) {
+            res += trie.getCount(words[i])
+            trie.add(words[i])
+        }
+        return res
     }
 }
 ```

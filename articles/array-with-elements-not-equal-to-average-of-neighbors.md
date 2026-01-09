@@ -81,6 +81,88 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        Array.Sort(nums);
+        int[] res = new int[nums.Length];
+        int l = 0, r = nums.Length - 1;
+        int idx = 0;
+
+        while (idx != nums.Length) {
+            res[idx++] = nums[l++];
+            if (l <= r) {
+                res[idx++] = nums[r--];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func rearrangeArray(nums []int) []int {
+    sort.Ints(nums)
+    res := make([]int, 0, len(nums))
+    l, r := 0, len(nums)-1
+
+    for len(res) != len(nums) {
+        res = append(res, nums[l])
+        l++
+        if l <= r {
+            res = append(res, nums[r])
+            r--
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun rearrangeArray(nums: IntArray): IntArray {
+        nums.sort()
+        val res = IntArray(nums.size)
+        var l = 0
+        var r = nums.size - 1
+        var idx = 0
+
+        while (idx != nums.size) {
+            res[idx++] = nums[l++]
+            if (l <= r) {
+                res[idx++] = nums[r--]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func rearrangeArray(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        var res = [Int]()
+        var l = 0
+        var r = nums.count - 1
+
+        while res.count != nums.count {
+            res.append(nums[l])
+            l += 1
+            if l <= r {
+                res.append(nums[r])
+                r -= 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -142,6 +224,56 @@ class Solution {
             [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
         }
         return nums;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        Array.Sort(nums);
+        for (int i = 1; i < nums.Length; i += 2) {
+            int temp = nums[i];
+            nums[i] = nums[i - 1];
+            nums[i - 1] = temp;
+        }
+        return nums;
+    }
+}
+```
+
+```go
+func rearrangeArray(nums []int) []int {
+    sort.Ints(nums)
+    for i := 1; i < len(nums); i += 2 {
+        nums[i], nums[i-1] = nums[i-1], nums[i]
+    }
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun rearrangeArray(nums: IntArray): IntArray {
+        nums.sort()
+        for (i in 1 until nums.size step 2) {
+            val temp = nums[i]
+            nums[i] = nums[i - 1]
+            nums[i - 1] = temp
+        }
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func rearrangeArray(_ nums: [Int]) -> [Int] {
+        var nums = nums.sorted()
+        for i in stride(from: 1, to: nums.count, by: 2) {
+            nums.swapAt(i, i - 1)
+        }
+        return nums
     }
 }
 ```
@@ -250,6 +382,101 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        int n = nums.Length;
+
+        for (int i = 1; i < n - 1; i++) {
+            if (2 * nums[i] == (nums[i - 1] + nums[i + 1])) {
+                int temp = nums[i];
+                nums[i] = nums[i + 1];
+                nums[i + 1] = temp;
+            }
+        }
+
+        for (int i = n - 2; i > 0; i--) {
+            if (2 * nums[i] == (nums[i - 1] + nums[i + 1])) {
+                int temp = nums[i];
+                nums[i] = nums[i - 1];
+                nums[i - 1] = temp;
+            }
+        }
+
+        return nums;
+    }
+}
+```
+
+```go
+func rearrangeArray(nums []int) []int {
+    n := len(nums)
+
+    for i := 1; i < n-1; i++ {
+        if 2*nums[i] == nums[i-1]+nums[i+1] {
+            nums[i], nums[i+1] = nums[i+1], nums[i]
+        }
+    }
+
+    for i := n - 2; i > 0; i-- {
+        if 2*nums[i] == nums[i-1]+nums[i+1] {
+            nums[i], nums[i-1] = nums[i-1], nums[i]
+        }
+    }
+
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun rearrangeArray(nums: IntArray): IntArray {
+        val n = nums.size
+
+        for (i in 1 until n - 1) {
+            if (2 * nums[i] == nums[i - 1] + nums[i + 1]) {
+                val temp = nums[i]
+                nums[i] = nums[i + 1]
+                nums[i + 1] = temp
+            }
+        }
+
+        for (i in n - 2 downTo 1) {
+            if (2 * nums[i] == nums[i - 1] + nums[i + 1]) {
+                val temp = nums[i]
+                nums[i] = nums[i - 1]
+                nums[i - 1] = temp
+            }
+        }
+
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func rearrangeArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        let n = nums.count
+
+        for i in 1..<(n - 1) {
+            if 2 * nums[i] == nums[i - 1] + nums[i + 1] {
+                nums.swapAt(i, i + 1)
+            }
+        }
+
+        for i in stride(from: n - 2, through: 1, by: -1) {
+            if 2 * nums[i] == nums[i - 1] + nums[i + 1] {
+                nums.swapAt(i, i - 1)
+            }
+        }
+
+        return nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +556,73 @@ class Solution {
             increase = !increase;
         }
         return nums;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        bool increase = nums[0] < nums[1];
+        for (int i = 1; i < nums.Length - 1; i++) {
+            if ((increase && nums[i] < nums[i + 1]) ||
+                (!increase && nums[i] > nums[i + 1])) {
+                int temp = nums[i];
+                nums[i] = nums[i + 1];
+                nums[i + 1] = temp;
+            }
+            increase = !increase;
+        }
+        return nums;
+    }
+}
+```
+
+```go
+func rearrangeArray(nums []int) []int {
+    increase := nums[0] < nums[1]
+    for i := 1; i < len(nums)-1; i++ {
+        if (increase && nums[i] < nums[i+1]) ||
+            (!increase && nums[i] > nums[i+1]) {
+            nums[i], nums[i+1] = nums[i+1], nums[i]
+        }
+        increase = !increase
+    }
+    return nums
+}
+```
+
+```kotlin
+class Solution {
+    fun rearrangeArray(nums: IntArray): IntArray {
+        var increase = nums[0] < nums[1]
+        for (i in 1 until nums.size - 1) {
+            if ((increase && nums[i] < nums[i + 1]) ||
+                (!increase && nums[i] > nums[i + 1])) {
+                val temp = nums[i]
+                nums[i] = nums[i + 1]
+                nums[i + 1] = temp
+            }
+            increase = !increase
+        }
+        return nums
+    }
+}
+```
+
+```swift
+class Solution {
+    func rearrangeArray(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        var increase = nums[0] < nums[1]
+        for i in 1..<(nums.count - 1) {
+            if (increase && nums[i] < nums[i + 1]) ||
+               (!increase && nums[i] > nums[i + 1]) {
+                nums.swapAt(i, i + 1)
+            }
+            increase = !increase
+        }
+        return nums
     }
 }
 ```

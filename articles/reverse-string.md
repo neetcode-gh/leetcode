@@ -79,6 +79,49 @@ public class Solution {
 }
 ```
 
+```go
+func reverseString(s []byte) {
+    tmp := make([]byte, len(s))
+    for i := len(s) - 1; i >= 0; i-- {
+        tmp[len(s)-1-i] = s[i]
+    }
+    for i := 0; i < len(s); i++ {
+        s[i] = tmp[i]
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseString(s: CharArray): Unit {
+        val tmp = CharArray(s.size)
+        val n = s.size
+
+        for (i in 0 until n) {
+            tmp[i] = s[n - 1 - i]
+        }
+
+        for (i in 0 until n) {
+            s[i] = tmp[i]
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseString(_ s: inout [Character]) {
+        var tmp = [Character]()
+        for i in stride(from: s.count - 1, through: 0, by: -1) {
+            tmp.append(s[i])
+        }
+        for i in 0..<s.count {
+            s[i] = tmp[i]
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -170,6 +213,53 @@ public class Solution {
             char temp = s[left];
             s[left] = s[right];
             s[right] = temp;
+        }
+    }
+}
+```
+
+```go
+func reverseString(s []byte) {
+    var reverse func(l, r int)
+    reverse = func(l, r int) {
+        if l < r {
+            reverse(l+1, r-1)
+            s[l], s[r] = s[r], s[l]
+        }
+    }
+    reverse(0, len(s)-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseString(s: CharArray): Unit {
+        reverse(s, 0, s.size - 1)
+    }
+
+    private fun reverse(s: CharArray, l: Int, r: Int) {
+        if (l < r) {
+            reverse(s, l + 1, r - 1)
+            val temp = s[l]
+            s[l] = s[r]
+            s[r] = temp
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseString(_ s: inout [Character]) {
+        reverse(&s, 0, s.count - 1)
+    }
+
+    private func reverse(_ s: inout [Character], _ l: Int, _ r: Int) {
+        if l < r {
+            reverse(&s, l + 1, r - 1)
+            let temp = s[l]
+            s[l] = s[r]
+            s[r] = temp
         }
     }
 }
@@ -270,6 +360,47 @@ public class Solution {
 }
 ```
 
+```go
+func reverseString(s []byte) {
+    stack := make([]byte, 0)
+    for _, c := range s {
+        stack = append(stack, c)
+    }
+    for i := 0; i < len(s); i++ {
+        s[i] = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseString(s: CharArray): Unit {
+        val stack = ArrayDeque<Char>()
+        for (c in s) {
+            stack.addLast(c)
+        }
+        for (i in s.indices) {
+            s[i] = stack.removeLast()
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseString(_ s: inout [Character]) {
+        var stack = [Character]()
+        for c in s {
+            stack.append(c)
+        }
+        for i in 0..<s.count {
+            s[i] = stack.removeLast()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -333,6 +464,30 @@ class Solution {
 public class Solution {
     public void ReverseString(char[] s) {
         Array.Reverse(s);
+    }
+}
+```
+
+```go
+func reverseString(s []byte) {
+    for i, j := 0, len(s)-1; i < j; i, j = i+1, j-1 {
+        s[i], s[j] = s[j], s[i]
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseString(s: CharArray): Unit {
+        s.reverse()
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseString(_ s: inout [Character]) {
+        s.reverse()
     }
 }
 ```
@@ -418,6 +573,49 @@ public class Solution {
             s[r] = temp;
             l++;
             r--;
+        }
+    }
+}
+```
+
+```go
+func reverseString(s []byte) {
+    l, r := 0, len(s)-1
+    for l < r {
+        s[l], s[r] = s[r], s[l]
+        l++
+        r--
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun reverseString(s: CharArray): Unit {
+        var l = 0
+        var r = s.size - 1
+        while (l < r) {
+            val temp = s[l]
+            s[l] = s[r]
+            s[r] = temp
+            l++
+            r--
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverseString(_ s: inout [Character]) {
+        var l = 0
+        var r = s.count - 1
+        while l < r {
+            let temp = s[l]
+            s[l] = s[r]
+            s[r] = temp
+            l += 1
+            r -= 1
         }
     }
 }

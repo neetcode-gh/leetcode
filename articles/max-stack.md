@@ -114,6 +114,337 @@ public:
 };
 ```
 
+```javascript
+class MaxStack {
+    constructor() {
+        // Using balanced BST via sorted array simulation
+        this.stack = []; // [cnt, x]
+        this.values = []; // [x, cnt]
+        this.cnt = 0;
+    }
+
+    _insertSorted(arr, item, compareFn) {
+        let low = 0, high = arr.length;
+        while (low < high) {
+            const mid = (low + high) >> 1;
+            if (compareFn(arr[mid], item) < 0) low = mid + 1;
+            else high = mid;
+        }
+        arr.splice(low, 0, item);
+    }
+
+    _removeSorted(arr, item, compareFn) {
+        let low = 0, high = arr.length;
+        while (low < high) {
+            const mid = (low + high) >> 1;
+            if (compareFn(arr[mid], item) < 0) low = mid + 1;
+            else high = mid;
+        }
+        if (low < arr.length && compareFn(arr[low], item) === 0) {
+            arr.splice(low, 1);
+        }
+    }
+
+    /**
+     * @param {number} x
+     * @return {void}
+     */
+    push(x) {
+        const compStack = (a, b) => a[0] - b[0] || a[1] - b[1];
+        const compValues = (a, b) => a[0] - b[0] || a[1] - b[1];
+        this._insertSorted(this.stack, [this.cnt, x], compStack);
+        this._insertSorted(this.values, [x, this.cnt], compValues);
+        this.cnt++;
+    }
+
+    /**
+     * @return {number}
+     */
+    pop() {
+        const compValues = (a, b) => a[0] - b[0] || a[1] - b[1];
+        const [idx, val] = this.stack.pop();
+        this._removeSorted(this.values, [val, idx], compValues);
+        return val;
+    }
+
+    /**
+     * @return {number}
+     */
+    top() {
+        return this.stack[this.stack.length - 1][1];
+    }
+
+    /**
+     * @return {number}
+     */
+    peekMax() {
+        return this.values[this.values.length - 1][0];
+    }
+
+    /**
+     * @return {number}
+     */
+    popMax() {
+        const compStack = (a, b) => a[0] - b[0] || a[1] - b[1];
+        const [val, idx] = this.values.pop();
+        this._removeSorted(this.stack, [idx, val], compStack);
+        return val;
+    }
+}
+```
+
+```csharp
+public class MaxStack {
+    private SortedSet<(int cnt, int val)> stack;
+    private SortedSet<(int val, int cnt)> values;
+    private int cnt;
+
+    public MaxStack() {
+        stack = new SortedSet<(int cnt, int val)>();
+        values = new SortedSet<(int val, int cnt)>();
+        cnt = 0;
+    }
+
+    public void Push(int x) {
+        stack.Add((cnt, x));
+        values.Add((x, cnt));
+        cnt++;
+    }
+
+    public int Pop() {
+        var p = stack.Max;
+        stack.Remove(p);
+        values.Remove((p.val, p.cnt));
+        return p.val;
+    }
+
+    public int Top() {
+        return stack.Max.val;
+    }
+
+    public int PeekMax() {
+        return values.Max.val;
+    }
+
+    public int PopMax() {
+        var p = values.Max;
+        values.Remove(p);
+        stack.Remove((p.cnt, p.val));
+        return p.val;
+    }
+}
+```
+
+```go
+type MaxStack struct {
+    stack  [][2]int // [cnt, x]
+    values [][2]int // [x, cnt]
+    cnt    int
+}
+
+func Constructor() MaxStack {
+    return MaxStack{
+        stack:  make([][2]int, 0),
+        values: make([][2]int, 0),
+        cnt:    0,
+    }
+}
+
+func (this *MaxStack) insertStack(item [2]int) {
+    i := sort.Search(len(this.stack), func(i int) bool {
+        if this.stack[i][0] != item[0] {
+            return this.stack[i][0] >= item[0]
+        }
+        return this.stack[i][1] >= item[1]
+    })
+    this.stack = append(this.stack, [2]int{})
+    copy(this.stack[i+1:], this.stack[i:])
+    this.stack[i] = item
+}
+
+func (this *MaxStack) insertValues(item [2]int) {
+    i := sort.Search(len(this.values), func(i int) bool {
+        if this.values[i][0] != item[0] {
+            return this.values[i][0] >= item[0]
+        }
+        return this.values[i][1] >= item[1]
+    })
+    this.values = append(this.values, [2]int{})
+    copy(this.values[i+1:], this.values[i:])
+    this.values[i] = item
+}
+
+func (this *MaxStack) removeStack(item [2]int) {
+    i := sort.Search(len(this.stack), func(i int) bool {
+        if this.stack[i][0] != item[0] {
+            return this.stack[i][0] >= item[0]
+        }
+        return this.stack[i][1] >= item[1]
+    })
+    if i < len(this.stack) && this.stack[i] == item {
+        this.stack = append(this.stack[:i], this.stack[i+1:]...)
+    }
+}
+
+func (this *MaxStack) removeValues(item [2]int) {
+    i := sort.Search(len(this.values), func(i int) bool {
+        if this.values[i][0] != item[0] {
+            return this.values[i][0] >= item[0]
+        }
+        return this.values[i][1] >= item[1]
+    })
+    if i < len(this.values) && this.values[i] == item {
+        this.values = append(this.values[:i], this.values[i+1:]...)
+    }
+}
+
+func (this *MaxStack) Push(x int) {
+    this.insertStack([2]int{this.cnt, x})
+    this.insertValues([2]int{x, this.cnt})
+    this.cnt++
+}
+
+func (this *MaxStack) Pop() int {
+    p := this.stack[len(this.stack)-1]
+    this.stack = this.stack[:len(this.stack)-1]
+    this.removeValues([2]int{p[1], p[0]})
+    return p[1]
+}
+
+func (this *MaxStack) Top() int {
+    return this.stack[len(this.stack)-1][1]
+}
+
+func (this *MaxStack) PeekMax() int {
+    return this.values[len(this.values)-1][0]
+}
+
+func (this *MaxStack) PopMax() int {
+    p := this.values[len(this.values)-1]
+    this.values = this.values[:len(this.values)-1]
+    this.removeStack([2]int{p[1], p[0]})
+    return p[0]
+}
+```
+
+```kotlin
+import java.util.TreeSet
+
+class MaxStack {
+    private val stack = TreeSet<IntArray>(compareBy({ it[0] }, { it[1] }))
+    private val values = TreeSet<IntArray>(compareBy({ it[0] }, { it[1] }))
+    private var cnt = 0
+
+    fun push(x: Int) {
+        stack.add(intArrayOf(cnt, x))
+        values.add(intArrayOf(x, cnt))
+        cnt++
+    }
+
+    fun pop(): Int {
+        val p = stack.last()
+        stack.remove(p)
+        values.remove(intArrayOf(p[1], p[0]))
+        return p[1]
+    }
+
+    fun top(): Int {
+        return stack.last()[1]
+    }
+
+    fun peekMax(): Int {
+        return values.last()[0]
+    }
+
+    fun popMax(): Int {
+        val p = values.last()
+        values.remove(p)
+        stack.remove(intArrayOf(p[1], p[0]))
+        return p[0]
+    }
+}
+```
+
+```swift
+class MaxStack {
+    private var stack: [[Int]] = []  // [cnt, x]
+    private var values: [[Int]] = [] // [x, cnt]
+    private var cnt = 0
+
+    init() {}
+
+    private func insertSorted(_ arr: inout [[Int]], _ item: [Int], _ compare: ([Int], [Int]) -> Bool) {
+        var low = 0, high = arr.count
+        while low < high {
+            let mid = (low + high) / 2
+            if compare(arr[mid], item) {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
+        arr.insert(item, at: low)
+    }
+
+    private func removeSorted(_ arr: inout [[Int]], _ item: [Int], _ compare: ([Int], [Int]) -> Int) {
+        var low = 0, high = arr.count
+        while low < high {
+            let mid = (low + high) / 2
+            if compare(arr[mid], item) < 0 {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
+        if low < arr.count && compare(arr[low], item) == 0 {
+            arr.remove(at: low)
+        }
+    }
+
+    func push(_ x: Int) {
+        let stackCompare: ([Int], [Int]) -> Bool = { a, b in
+            if a[0] != b[0] { return a[0] < b[0] }
+            return a[1] < b[1]
+        }
+        let valuesCompare: ([Int], [Int]) -> Bool = { a, b in
+            if a[0] != b[0] { return a[0] < b[0] }
+            return a[1] < b[1]
+        }
+        insertSorted(&stack, [cnt, x], stackCompare)
+        insertSorted(&values, [x, cnt], valuesCompare)
+        cnt += 1
+    }
+
+    func pop() -> Int {
+        let p = stack.removeLast()
+        let valuesCompareInt: ([Int], [Int]) -> Int = { a, b in
+            if a[0] != b[0] { return a[0] - b[0] }
+            return a[1] - b[1]
+        }
+        removeSorted(&values, [p[1], p[0]], valuesCompareInt)
+        return p[1]
+    }
+
+    func top() -> Int {
+        return stack[stack.count - 1][1]
+    }
+
+    func peekMax() -> Int {
+        return values[values.count - 1][0]
+    }
+
+    func popMax() -> Int {
+        let p = values.removeLast()
+        let stackCompareInt: ([Int], [Int]) -> Int = { a, b in
+            if a[0] != b[0] { return a[0] - b[0] }
+            return a[1] - b[1]
+        }
+        removeSorted(&stack, [p[1], p[0]], stackCompareInt)
+        return p[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,7 +630,7 @@ public:
 class MaxStack {
     constructor() {
         this.stack = [];
-        
+
         // Using @datastructures-js/priority-queue
         this.heap = new PriorityQueue((a, b) => {
             if (b[0] !== a[0]) {
@@ -307,7 +638,7 @@ class MaxStack {
             }
             return b[1] - a[1];
         });
-        
+
         this.removed = new Set();
         this.cnt = 0;
     }
@@ -318,10 +649,10 @@ class MaxStack {
      */
     push(x) {
         const element = [x, this.cnt];
-        
+
         this.stack.push(element);
         this.heap.enqueue(element);
-        
+
         this.cnt++;
     }
 
@@ -332,10 +663,10 @@ class MaxStack {
         while (this.removed.has(this.stack[this.stack.length - 1][1])) {
             this.stack.pop();
         }
-        
+
         const top = this.stack.pop();
         this.removed.add(top[1]);
-        
+
         return top[0];
     }
 
@@ -346,7 +677,7 @@ class MaxStack {
         while (this.removed.has(this.stack[this.stack.length - 1][1])) {
             this.stack.pop();
         }
-        
+
         return this.stack[this.stack.length - 1][0];
     }
 
@@ -357,7 +688,7 @@ class MaxStack {
         while (this.removed.has(this.heap.front()[1])) {
             this.heap.dequeue();
         }
-        
+
         return this.heap.front()[0];
     }
 
@@ -368,11 +699,308 @@ class MaxStack {
         while (this.removed.has(this.heap.front()[1])) {
             this.heap.dequeue();
         }
-        
+
         const top = this.heap.dequeue();
         this.removed.add(top[1]);
-        
+
         return top[0];
+    }
+}
+```
+
+```csharp
+public class MaxStack {
+    private Stack<int[]> stack;
+    private PriorityQueue<int[], int[]> heap;
+    private HashSet<int> removed;
+    private int cnt;
+
+    public MaxStack() {
+        stack = new Stack<int[]>();
+        heap = new PriorityQueue<int[], int[]>(
+            Comparer<int[]>.Create((a, b) => b[0] != a[0] ? b[0] - a[0] : b[1] - a[1])
+        );
+        removed = new HashSet<int>();
+        cnt = 0;
+    }
+
+    public void Push(int x) {
+        var element = new int[] { x, cnt };
+        stack.Push(element);
+        heap.Enqueue(element, element);
+        cnt++;
+    }
+
+    public int Pop() {
+        while (removed.Contains(stack.Peek()[1])) {
+            stack.Pop();
+        }
+        var top = stack.Pop();
+        removed.Add(top[1]);
+        return top[0];
+    }
+
+    public int Top() {
+        while (removed.Contains(stack.Peek()[1])) {
+            stack.Pop();
+        }
+        return stack.Peek()[0];
+    }
+
+    public int PeekMax() {
+        while (removed.Contains(heap.Peek()[1])) {
+            heap.Dequeue();
+        }
+        return heap.Peek()[0];
+    }
+
+    public int PopMax() {
+        while (removed.Contains(heap.Peek()[1])) {
+            heap.Dequeue();
+        }
+        var top = heap.Dequeue();
+        removed.Add(top[1]);
+        return top[0];
+    }
+}
+```
+
+```go
+import (
+    "container/heap"
+)
+
+type MaxHeap [][2]int
+
+func (h MaxHeap) Len() int { return len(h) }
+func (h MaxHeap) Less(i, j int) bool {
+    if h[i][0] != h[j][0] {
+        return h[i][0] > h[j][0]
+    }
+    return h[i][1] > h[j][1]
+}
+func (h MaxHeap) Swap(i, j int) { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.([2]int)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type MaxStack struct {
+    stack   [][2]int
+    heap    *MaxHeap
+    removed map[int]bool
+    cnt     int
+}
+
+func Constructor() MaxStack {
+    h := &MaxHeap{}
+    heap.Init(h)
+    return MaxStack{
+        stack:   make([][2]int, 0),
+        heap:    h,
+        removed: make(map[int]bool),
+        cnt:     0,
+    }
+}
+
+func (this *MaxStack) Push(x int) {
+    element := [2]int{x, this.cnt}
+    this.stack = append(this.stack, element)
+    heap.Push(this.heap, element)
+    this.cnt++
+}
+
+func (this *MaxStack) Pop() int {
+    for this.removed[this.stack[len(this.stack)-1][1]] {
+        this.stack = this.stack[:len(this.stack)-1]
+    }
+    top := this.stack[len(this.stack)-1]
+    this.stack = this.stack[:len(this.stack)-1]
+    this.removed[top[1]] = true
+    return top[0]
+}
+
+func (this *MaxStack) Top() int {
+    for this.removed[this.stack[len(this.stack)-1][1]] {
+        this.stack = this.stack[:len(this.stack)-1]
+    }
+    return this.stack[len(this.stack)-1][0]
+}
+
+func (this *MaxStack) PeekMax() int {
+    for this.removed[(*this.heap)[0][1]] {
+        heap.Pop(this.heap)
+    }
+    return (*this.heap)[0][0]
+}
+
+func (this *MaxStack) PopMax() int {
+    for this.removed[(*this.heap)[0][1]] {
+        heap.Pop(this.heap)
+    }
+    top := heap.Pop(this.heap).([2]int)
+    this.removed[top[1]] = true
+    return top[0]
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+import java.util.Stack
+
+class MaxStack {
+    private val stack = Stack<IntArray>()
+    private val heap = PriorityQueue<IntArray> { a, b ->
+        if (b[0] != a[0]) b[0] - a[0] else b[1] - a[1]
+    }
+    private val removed = HashSet<Int>()
+    private var cnt = 0
+
+    fun push(x: Int) {
+        val element = intArrayOf(x, cnt)
+        stack.push(element)
+        heap.add(element)
+        cnt++
+    }
+
+    fun pop(): Int {
+        while (removed.contains(stack.peek()[1])) {
+            stack.pop()
+        }
+        val top = stack.pop()
+        removed.add(top[1])
+        return top[0]
+    }
+
+    fun top(): Int {
+        while (removed.contains(stack.peek()[1])) {
+            stack.pop()
+        }
+        return stack.peek()[0]
+    }
+
+    fun peekMax(): Int {
+        while (removed.contains(heap.peek()[1])) {
+            heap.poll()
+        }
+        return heap.peek()[0]
+    }
+
+    fun popMax(): Int {
+        while (removed.contains(heap.peek()[1])) {
+            heap.poll()
+        }
+        val top = heap.poll()
+        removed.add(top[1])
+        return top[0]
+    }
+}
+```
+
+```swift
+class MaxStack {
+    private var stack: [[Int]] = []
+    private var heap: [[Int]] = [] // Max heap based on [value, cnt]
+    private var removed = Set<Int>()
+    private var cnt = 0
+
+    init() {}
+
+    private func heapifyUp(_ index: Int) {
+        var i = index
+        while i > 0 {
+            let parent = (i - 1) / 2
+            if compare(heap[i], heap[parent]) > 0 {
+                heap.swapAt(i, parent)
+                i = parent
+            } else {
+                break
+            }
+        }
+    }
+
+    private func heapifyDown(_ index: Int) {
+        var i = index
+        while true {
+            let left = 2 * i + 1
+            let right = 2 * i + 2
+            var largest = i
+            if left < heap.count && compare(heap[left], heap[largest]) > 0 {
+                largest = left
+            }
+            if right < heap.count && compare(heap[right], heap[largest]) > 0 {
+                largest = right
+            }
+            if largest != i {
+                heap.swapAt(i, largest)
+                i = largest
+            } else {
+                break
+            }
+        }
+    }
+
+    private func compare(_ a: [Int], _ b: [Int]) -> Int {
+        if a[0] != b[0] { return a[0] - b[0] }
+        return a[1] - b[1]
+    }
+
+    private func heapPush(_ element: [Int]) {
+        heap.append(element)
+        heapifyUp(heap.count - 1)
+    }
+
+    private func heapPop() -> [Int] {
+        let top = heap[0]
+        heap[0] = heap[heap.count - 1]
+        heap.removeLast()
+        if !heap.isEmpty {
+            heapifyDown(0)
+        }
+        return top
+    }
+
+    func push(_ x: Int) {
+        let element = [x, cnt]
+        stack.append(element)
+        heapPush(element)
+        cnt += 1
+    }
+
+    func pop() -> Int {
+        while removed.contains(stack[stack.count - 1][1]) {
+            stack.removeLast()
+        }
+        let top = stack.removeLast()
+        removed.insert(top[1])
+        return top[0]
+    }
+
+    func top() -> Int {
+        while removed.contains(stack[stack.count - 1][1]) {
+            stack.removeLast()
+        }
+        return stack[stack.count - 1][0]
+    }
+
+    func peekMax() -> Int {
+        while removed.contains(heap[0][1]) {
+            _ = heapPop()
+        }
+        return heap[0][0]
+    }
+
+    func popMax() -> Int {
+        while removed.contains(heap[0][1]) {
+            _ = heapPop()
+        }
+        let top = heapPop()
+        removed.insert(top[1])
+        return top[0]
     }
 }
 ```

@@ -93,6 +93,96 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode SearchBST(TreeNode root, int val) {
+        if (root == null || root.val == val) {
+            return root;
+        }
+        return val < root.val ? SearchBST(root.left, val) : SearchBST(root.right, val);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func searchBST(root *TreeNode, val int) *TreeNode {
+    if root == nil || root.Val == val {
+        return root
+    }
+    if val < root.Val {
+        return searchBST(root.Left, val)
+    }
+    return searchBST(root.Right, val)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun searchBST(root: TreeNode?, `val`: Int): TreeNode? {
+        if (root == null || root.`val` == `val`) {
+            return root
+        }
+        return if (`val` < root.`val`) searchBST(root.left, `val`) else searchBST(root.right, `val`)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func searchBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+        if root.val == val { return root }
+        return val < root.val ? searchBST(root.left, val) : searchBST(root.right, val)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -193,6 +283,100 @@ class Solution {
             root = val < root.val ? root.left : root.right;
         }
         return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode SearchBST(TreeNode root, int val) {
+        while (root != null && root.val != val) {
+            root = val < root.val ? root.left : root.right;
+        }
+        return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func searchBST(root *TreeNode, val int) *TreeNode {
+    for root != nil && root.Val != val {
+        if val < root.Val {
+            root = root.Left
+        } else {
+            root = root.Right
+        }
+    }
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun searchBST(root: TreeNode?, `val`: Int): TreeNode? {
+        var node = root
+        while (node != null && node.`val` != `val`) {
+            node = if (`val` < node.`val`) node.left else node.right
+        }
+        return node
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func searchBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
+        var node = root
+        while node != nil && node!.val != val {
+            node = val < node!.val ? node!.left : node!.right
+        }
+        return node
     }
 }
 ```

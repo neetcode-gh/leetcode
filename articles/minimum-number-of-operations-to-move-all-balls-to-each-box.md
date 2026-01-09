@@ -78,6 +78,85 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] MinOperations(string boxes) {
+        int n = boxes.Length;
+        int[] res = new int[n];
+
+        for (int pos = 0; pos < n; pos++) {
+            for (int i = 0; i < n; i++) {
+                if (boxes[i] == '1') {
+                    res[pos] += Math.Abs(pos - i);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minOperations(boxes string) []int {
+    n := len(boxes)
+    res := make([]int, n)
+
+    for pos := 0; pos < n; pos++ {
+        for i := 0; i < n; i++ {
+            if boxes[i] == '1' {
+                if pos > i {
+                    res[pos] += pos - i
+                } else {
+                    res[pos] += i - pos
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(boxes: String): IntArray {
+        val n = boxes.length
+        val res = IntArray(n)
+
+        for (pos in 0 until n) {
+            for (i in 0 until n) {
+                if (boxes[i] == '1') {
+                    res[pos] += kotlin.math.abs(pos - i)
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ boxes: String) -> [Int] {
+        let n = boxes.count
+        var res = [Int](repeating: 0, count: n)
+        let chars = Array(boxes)
+
+        for pos in 0..<n {
+            for i in 0..<n {
+                if chars[i] == "1" {
+                    res[pos] += abs(pos - i)
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -201,6 +280,118 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] MinOperations(string boxes) {
+        int n = boxes.Length;
+        int[] res = new int[n];
+        int[] prefixCount = new int[n + 1];
+        int[] indexSum = new int[n + 1];
+
+        for (int i = 0; i < n; i++) {
+            prefixCount[i + 1] = prefixCount[i] + (boxes[i] == '1' ? 1 : 0);
+            indexSum[i + 1] = indexSum[i] + (boxes[i] == '1' ? i : 0);
+        }
+
+        for (int i = 0; i < n; i++) {
+            int left = prefixCount[i];
+            int leftSum = indexSum[i];
+            int right = prefixCount[n] - prefixCount[i + 1];
+            int rightSum = indexSum[n] - indexSum[i + 1];
+
+            res[i] = i * left - leftSum + (rightSum - i * right);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minOperations(boxes string) []int {
+    n := len(boxes)
+    res := make([]int, n)
+    prefixCount := make([]int, n+1)
+    indexSum := make([]int, n+1)
+
+    for i := 0; i < n; i++ {
+        if boxes[i] == '1' {
+            prefixCount[i+1] = prefixCount[i] + 1
+            indexSum[i+1] = indexSum[i] + i
+        } else {
+            prefixCount[i+1] = prefixCount[i]
+            indexSum[i+1] = indexSum[i]
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        left := prefixCount[i]
+        leftSum := indexSum[i]
+        right := prefixCount[n] - prefixCount[i+1]
+        rightSum := indexSum[n] - indexSum[i+1]
+
+        res[i] = i*left - leftSum + (rightSum - i*right)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(boxes: String): IntArray {
+        val n = boxes.length
+        val res = IntArray(n)
+        val prefixCount = IntArray(n + 1)
+        val indexSum = IntArray(n + 1)
+
+        for (i in 0 until n) {
+            prefixCount[i + 1] = prefixCount[i] + if (boxes[i] == '1') 1 else 0
+            indexSum[i + 1] = indexSum[i] + if (boxes[i] == '1') i else 0
+        }
+
+        for (i in 0 until n) {
+            val left = prefixCount[i]
+            val leftSum = indexSum[i]
+            val right = prefixCount[n] - prefixCount[i + 1]
+            val rightSum = indexSum[n] - indexSum[i + 1]
+
+            res[i] = i * left - leftSum + (rightSum - i * right)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ boxes: String) -> [Int] {
+        let n = boxes.count
+        var res = [Int](repeating: 0, count: n)
+        var prefixCount = [Int](repeating: 0, count: n + 1)
+        var indexSum = [Int](repeating: 0, count: n + 1)
+        let chars = Array(boxes)
+
+        for i in 0..<n {
+            prefixCount[i + 1] = prefixCount[i] + (chars[i] == "1" ? 1 : 0)
+            indexSum[i + 1] = indexSum[i] + (chars[i] == "1" ? i : 0)
+        }
+
+        for i in 0..<n {
+            let left = prefixCount[i]
+            let leftSum = indexSum[i]
+            let right = prefixCount[n] - prefixCount[i + 1]
+            let rightSum = indexSum[n] - indexSum[i + 1]
+
+            res[i] = i * left - leftSum + (rightSum - i * right)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -312,6 +503,109 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] MinOperations(string boxes) {
+        int n = boxes.Length;
+        int[] res = new int[n];
+
+        int balls = 0, moves = 0;
+        for (int i = 0; i < n; i++) {
+            res[i] = balls + moves;
+            moves += balls;
+            balls += boxes[i] - '0';
+        }
+
+        balls = moves = 0;
+        for (int i = n - 1; i >= 0; i--) {
+            res[i] += balls + moves;
+            moves += balls;
+            balls += boxes[i] - '0';
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minOperations(boxes string) []int {
+    n := len(boxes)
+    res := make([]int, n)
+
+    balls, moves := 0, 0
+    for i := 0; i < n; i++ {
+        res[i] = balls + moves
+        moves += balls
+        balls += int(boxes[i] - '0')
+    }
+
+    balls, moves = 0, 0
+    for i := n - 1; i >= 0; i-- {
+        res[i] += balls + moves
+        moves += balls
+        balls += int(boxes[i] - '0')
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(boxes: String): IntArray {
+        val n = boxes.length
+        val res = IntArray(n)
+
+        var balls = 0
+        var moves = 0
+        for (i in 0 until n) {
+            res[i] = balls + moves
+            moves += balls
+            balls += boxes[i] - '0'
+        }
+
+        balls = 0
+        moves = 0
+        for (i in n - 1 downTo 0) {
+            res[i] += balls + moves
+            moves += balls
+            balls += boxes[i] - '0'
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ boxes: String) -> [Int] {
+        let n = boxes.count
+        var res = [Int](repeating: 0, count: n)
+        let chars = Array(boxes)
+
+        var balls = 0
+        var moves = 0
+        for i in 0..<n {
+            res[i] = balls + moves
+            moves += balls
+            balls += chars[i] == "1" ? 1 : 0
+        }
+
+        balls = 0
+        moves = 0
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            res[i] += balls + moves
+            moves += balls
+            balls += chars[i] == "1" ? 1 : 0
+        }
+
+        return res
     }
 }
 ```

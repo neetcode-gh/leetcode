@@ -91,6 +91,55 @@ public class Solution {
 }
 ```
 
+```go
+func removeElement(nums []int, val int) int {
+    tmp := []int{}
+    for _, num := range nums {
+        if num != val {
+            tmp = append(tmp, num)
+        }
+    }
+    for i := 0; i < len(tmp); i++ {
+        nums[i] = tmp[i]
+    }
+    return len(tmp)
+}
+```
+
+```kotlin
+class Solution {
+    fun removeElement(nums: IntArray, `val`: Int): Int {
+        val tmp = mutableListOf<Int>()
+        for (num in nums) {
+            if (num != `val`) {
+                tmp.add(num)
+            }
+        }
+        for (i in tmp.indices) {
+            nums[i] = tmp[i]
+        }
+        return tmp.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
+        var tmp = [Int]()
+        for num in nums {
+            if num != val {
+                tmp.append(num)
+            }
+        }
+        for i in 0..<tmp.count {
+            nums[i] = tmp[i]
+        }
+        return tmp.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +222,48 @@ public class Solution {
             }
         }
         return k;
+    }
+}
+```
+
+```go
+func removeElement(nums []int, val int) int {
+    k := 0
+    for i := 0; i < len(nums); i++ {
+        if nums[i] != val {
+            nums[k] = nums[i]
+            k++
+        }
+    }
+    return k
+}
+```
+
+```kotlin
+class Solution {
+    fun removeElement(nums: IntArray, `val`: Int): Int {
+        var k = 0
+        for (i in nums.indices) {
+            if (nums[i] != `val`) {
+                nums[k++] = nums[i]
+            }
+        }
+        return k
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
+        var k = 0
+        for i in 0..<nums.count {
+            if nums[i] != val {
+                nums[k] = nums[i]
+                k += 1
+            }
+        }
+        return k
     }
 }
 ```
@@ -271,6 +362,57 @@ public class Solution {
             }
         }
         return n;
+    }
+}
+```
+
+```go
+func removeElement(nums []int, val int) int {
+    i, n := 0, len(nums)
+    for i < n {
+        if nums[i] == val {
+            n--
+            nums[i] = nums[n]
+        } else {
+            i++
+        }
+    }
+    return n
+}
+```
+
+```kotlin
+class Solution {
+    fun removeElement(nums: IntArray, `val`: Int): Int {
+        var i = 0
+        var n = nums.size
+        while (i < n) {
+            if (nums[i] == `val`) {
+                n--
+                nums[i] = nums[n]
+            } else {
+                i++
+            }
+        }
+        return n
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeElement(_ nums: inout [Int], _ val: Int) -> Int {
+        var i = 0
+        var n = nums.count
+        while i < n {
+            if nums[i] == val {
+                n -= 1
+                nums[i] = nums[n]
+            } else {
+                i += 1
+            }
+        }
+        return n
     }
 }
 ```

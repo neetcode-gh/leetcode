@@ -146,6 +146,162 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> maxTime;
+    private List<int>[] adj;
+    private int[] time;
+
+    public int MinimumTime(int n, int[][] relations, int[] time) {
+        this.time = time;
+        this.maxTime = new Dictionary<int, int>();
+        this.adj = new List<int>[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            adj[i] = new List<int>();
+        }
+        foreach (var relation in relations) {
+            adj[relation[0]].Add(relation[1]);
+        }
+
+        for (int i = 1; i <= n; i++) {
+            Dfs(i);
+        }
+
+        return maxTime.Values.Max();
+    }
+
+    private int Dfs(int src) {
+        if (maxTime.ContainsKey(src)) {
+            return maxTime[src];
+        }
+
+        int res = time[src - 1];
+        foreach (int nei in adj[src]) {
+            res = Math.Max(res, time[src - 1] + Dfs(nei));
+        }
+        maxTime[src] = res;
+        return res;
+    }
+}
+```
+
+```go
+func minimumTime(n int, relations [][]int, time []int) int {
+    adj := make([][]int, n+1)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, rel := range relations {
+        adj[rel[0]] = append(adj[rel[0]], rel[1])
+    }
+
+    maxTime := make(map[int]int)
+
+    var dfs func(src int) int
+    dfs = func(src int) int {
+        if val, ok := maxTime[src]; ok {
+            return val
+        }
+
+        res := time[src-1]
+        for _, nei := range adj[src] {
+            if time[src-1]+dfs(nei) > res {
+                res = time[src-1] + dfs(nei)
+            }
+        }
+        maxTime[src] = res
+        return res
+    }
+
+    for i := 1; i <= n; i++ {
+        dfs(i)
+    }
+
+    result := 0
+    for _, v := range maxTime {
+        if v > result {
+            result = v
+        }
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var maxTime: MutableMap<Int, Int>
+    private lateinit var adj: Array<MutableList<Int>>
+    private lateinit var time: IntArray
+
+    fun minimumTime(n: Int, relations: Array<IntArray>, time: IntArray): Int {
+        this.time = time
+        this.maxTime = mutableMapOf()
+        this.adj = Array(n + 1) { mutableListOf() }
+
+        for (relation in relations) {
+            adj[relation[0]].add(relation[1])
+        }
+
+        for (i in 1..n) {
+            dfs(i)
+        }
+
+        return maxTime.values.max()!!
+    }
+
+    private fun dfs(src: Int): Int {
+        if (maxTime.containsKey(src)) {
+            return maxTime[src]!!
+        }
+
+        var res = time[src - 1]
+        for (nei in adj[src]) {
+            res = maxOf(res, time[src - 1] + dfs(nei))
+        }
+        maxTime[src] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    private var maxTime = [Int: Int]()
+    private var adj = [[Int]]()
+    private var time = [Int]()
+
+    func minimumTime(_ n: Int, _ relations: [[Int]], _ time: [Int]) -> Int {
+        self.time = time
+        self.maxTime = [:]
+        self.adj = Array(repeating: [Int](), count: n + 1)
+
+        for relation in relations {
+            adj[relation[0]].append(relation[1])
+        }
+
+        for i in 1...n {
+            _ = dfs(i)
+        }
+
+        return maxTime.values.max()!
+    }
+
+    private func dfs(_ src: Int) -> Int {
+        if let val = maxTime[src] {
+            return val
+        }
+
+        var res = time[src - 1]
+        for nei in adj[src] {
+            res = max(res, time[src - 1] + dfs(nei))
+        }
+        maxTime[src] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -318,6 +474,180 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumTime(int n, int[][] relations, int[] time) {
+        List<int>[] adj = new List<int>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+        foreach (var rel in relations) {
+            adj[rel[0] - 1].Add(rel[1] - 1);
+        }
+
+        int[] maxTime = new int[n];
+        Array.Fill(maxTime, -1);
+        bool[] processed = new bool[n];
+
+        for (int i = 0; i < n; i++) {
+            if (maxTime[i] == -1) {
+                Stack<int> stack = new Stack<int>();
+                stack.Push(i);
+                while (stack.Count > 0) {
+                    int node = stack.Pop();
+                    if (processed[node]) {
+                        int best = 0;
+                        foreach (int nei in adj[node]) {
+                            best = Math.Max(best, maxTime[nei]);
+                        }
+                        maxTime[node] = time[node] + best;
+                    } else {
+                        processed[node] = true;
+                        stack.Push(node);
+                        foreach (int nei in adj[node]) {
+                            if (maxTime[nei] == -1) {
+                                stack.Push(nei);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return maxTime.Max();
+    }
+}
+```
+
+```go
+func minimumTime(n int, relations [][]int, time []int) int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, rel := range relations {
+        adj[rel[0]-1] = append(adj[rel[0]-1], rel[1]-1)
+    }
+
+    maxTime := make([]int, n)
+    for i := range maxTime {
+        maxTime[i] = -1
+    }
+    processed := make([]bool, n)
+
+    for i := 0; i < n; i++ {
+        if maxTime[i] == -1 {
+            stack := []int{i}
+            for len(stack) > 0 {
+                node := stack[len(stack)-1]
+                stack = stack[:len(stack)-1]
+                if processed[node] {
+                    best := 0
+                    for _, nei := range adj[node] {
+                        if maxTime[nei] > best {
+                            best = maxTime[nei]
+                        }
+                    }
+                    maxTime[node] = time[node] + best
+                } else {
+                    processed[node] = true
+                    stack = append(stack, node)
+                    for _, nei := range adj[node] {
+                        if maxTime[nei] == -1 {
+                            stack = append(stack, nei)
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    result := 0
+    for _, v := range maxTime {
+        if v > result {
+            result = v
+        }
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTime(n: Int, relations: Array<IntArray>, time: IntArray): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (rel in relations) {
+            adj[rel[0] - 1].add(rel[1] - 1)
+        }
+
+        val maxTime = IntArray(n) { -1 }
+        val processed = BooleanArray(n)
+
+        for (i in 0 until n) {
+            if (maxTime[i] == -1) {
+                val stack = ArrayDeque<Int>()
+                stack.addLast(i)
+                while (stack.isNotEmpty()) {
+                    val node = stack.removeLast()
+                    if (processed[node]) {
+                        var best = 0
+                        for (nei in adj[node]) {
+                            best = maxOf(best, maxTime[nei])
+                        }
+                        maxTime[node] = time[node] + best
+                    } else {
+                        processed[node] = true
+                        stack.addLast(node)
+                        for (nei in adj[node]) {
+                            if (maxTime[nei] == -1) {
+                                stack.addLast(nei)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return maxTime.max()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTime(_ n: Int, _ relations: [[Int]], _ time: [Int]) -> Int {
+        var adj = [[Int]](repeating: [], count: n)
+        for rel in relations {
+            adj[rel[0] - 1].append(rel[1] - 1)
+        }
+
+        var maxTime = [Int](repeating: -1, count: n)
+        var processed = [Bool](repeating: false, count: n)
+
+        for i in 0..<n {
+            if maxTime[i] == -1 {
+                var stack = [i]
+                while !stack.isEmpty {
+                    let node = stack.removeLast()
+                    if processed[node] {
+                        var best = 0
+                        for nei in adj[node] {
+                            best = max(best, maxTime[nei])
+                        }
+                        maxTime[node] = time[node] + best
+                    } else {
+                        processed[node] = true
+                        stack.append(node)
+                        for nei in adj[node] {
+                            if maxTime[nei] == -1 {
+                                stack.append(nei)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return maxTime.max()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -470,6 +800,166 @@ class Solution {
         }
 
         return Math.max(...maxTime);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumTime(int n, int[][] relations, int[] time) {
+        List<List<int>> adj = new List<List<int>>();
+        int[] indegree = new int[n];
+        int[] maxTime = (int[])time.Clone();
+
+        for (int i = 0; i < n; i++) {
+            adj.Add(new List<int>());
+        }
+
+        foreach (var relation in relations) {
+            int src = relation[0] - 1, dst = relation[1] - 1;
+            adj[src].Add(dst);
+            indegree[dst]++;
+        }
+
+        Queue<int> queue = new Queue<int>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                queue.Enqueue(i);
+            }
+        }
+
+        while (queue.Count > 0) {
+            int node = queue.Dequeue();
+            foreach (int nei in adj[node]) {
+                maxTime[nei] = Math.Max(maxTime[nei], maxTime[node] + time[nei]);
+                if (--indegree[nei] == 0) {
+                    queue.Enqueue(nei);
+                }
+            }
+        }
+
+        return maxTime.Max();
+    }
+}
+```
+
+```go
+func minimumTime(n int, relations [][]int, time []int) int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    indegree := make([]int, n)
+    maxTime := make([]int, n)
+    copy(maxTime, time)
+
+    for _, relation := range relations {
+        src, dst := relation[0]-1, relation[1]-1
+        adj[src] = append(adj[src], dst)
+        indegree[dst]++
+    }
+
+    queue := []int{}
+    for i := 0; i < n; i++ {
+        if indegree[i] == 0 {
+            queue = append(queue, i)
+        }
+    }
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        for _, nei := range adj[node] {
+            if maxTime[node]+time[nei] > maxTime[nei] {
+                maxTime[nei] = maxTime[node] + time[nei]
+            }
+            indegree[nei]--
+            if indegree[nei] == 0 {
+                queue = append(queue, nei)
+            }
+        }
+    }
+
+    result := 0
+    for _, v := range maxTime {
+        if v > result {
+            result = v
+        }
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumTime(n: Int, relations: Array<IntArray>, time: IntArray): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        val indegree = IntArray(n)
+        val maxTime = time.copyOf()
+
+        for (relation in relations) {
+            val src = relation[0] - 1
+            val dst = relation[1] - 1
+            adj[src].add(dst)
+            indegree[dst]++
+        }
+
+        val queue = ArrayDeque<Int>()
+        for (i in 0 until n) {
+            if (indegree[i] == 0) {
+                queue.addLast(i)
+            }
+        }
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            for (nei in adj[node]) {
+                maxTime[nei] = maxOf(maxTime[nei], maxTime[node] + time[nei])
+                if (--indegree[nei] == 0) {
+                    queue.addLast(nei)
+                }
+            }
+        }
+
+        return maxTime.max()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumTime(_ n: Int, _ relations: [[Int]], _ time: [Int]) -> Int {
+        var adj = [[Int]](repeating: [], count: n)
+        var indegree = [Int](repeating: 0, count: n)
+        var maxTime = time
+
+        for relation in relations {
+            let src = relation[0] - 1, dst = relation[1] - 1
+            adj[src].append(dst)
+            indegree[dst] += 1
+        }
+
+        var queue = [Int]()
+        for i in 0..<n {
+            if indegree[i] == 0 {
+                queue.append(i)
+            }
+        }
+
+        var index = 0
+        while index < queue.count {
+            let node = queue[index]
+            index += 1
+            for nei in adj[node] {
+                maxTime[nei] = max(maxTime[nei], maxTime[node] + time[nei])
+                indegree[nei] -= 1
+                if indegree[nei] == 0 {
+                    queue.append(nei)
+                }
+            }
+        }
+
+        return maxTime.max()!
     }
 }
 ```

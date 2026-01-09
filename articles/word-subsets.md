@@ -127,6 +127,146 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<string> WordSubsets(string[] words1, string[] words2) {
+        List<string> res = new List<string>();
+
+        foreach (string w1 in words1) {
+            int[] count1 = new int[26];
+            foreach (char c in w1) count1[c - 'a']++;
+
+            bool isSubset = true;
+            foreach (string w2 in words2) {
+                int[] count2 = new int[26];
+                foreach (char c in w2) count2[c - 'a']++;
+
+                for (int i = 0; i < 26; i++) {
+                    if (count2[i] > count1[i]) {
+                        isSubset = false;
+                        break;
+                    }
+                }
+
+                if (!isSubset) break;
+            }
+
+            if (isSubset) res.Add(w1);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func wordSubsets(words1 []string, words2 []string) []string {
+    res := []string{}
+
+    for _, w1 := range words1 {
+        count1 := [26]int{}
+        for _, c := range w1 {
+            count1[c-'a']++
+        }
+
+        isSubset := true
+        for _, w2 := range words2 {
+            count2 := [26]int{}
+            for _, c := range w2 {
+                count2[c-'a']++
+            }
+
+            for i := 0; i < 26; i++ {
+                if count2[i] > count1[i] {
+                    isSubset = false
+                    break
+                }
+            }
+
+            if !isSubset {
+                break
+            }
+        }
+
+        if isSubset {
+            res = append(res, w1)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun wordSubsets(words1: Array<String>, words2: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+
+        for (w1 in words1) {
+            val count1 = IntArray(26)
+            for (c in w1) count1[c - 'a']++
+
+            var isSubset = true
+            for (w2 in words2) {
+                val count2 = IntArray(26)
+                for (c in w2) count2[c - 'a']++
+
+                for (i in 0 until 26) {
+                    if (count2[i] > count1[i]) {
+                        isSubset = false
+                        break
+                    }
+                }
+
+                if (!isSubset) break
+            }
+
+            if (isSubset) res.add(w1)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordSubsets(_ words1: [String], _ words2: [String]) -> [String] {
+        var res = [String]()
+
+        for w1 in words1 {
+            var count1 = [Int](repeating: 0, count: 26)
+            for c in w1 {
+                count1[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+            }
+
+            var isSubset = true
+            for w2 in words2 {
+                var count2 = [Int](repeating: 0, count: 26)
+                for c in w2 {
+                    count2[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+                }
+
+                for i in 0..<26 {
+                    if count2[i] > count1[i] {
+                        isSubset = false
+                        break
+                    }
+                }
+
+                if !isSubset { break }
+            }
+
+            if isSubset {
+                res.append(w1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +417,162 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<string> WordSubsets(string[] words1, string[] words2) {
+        int[] count2 = new int[26];
+        foreach (string w in words2) {
+            int[] countW = new int[26];
+            foreach (char c in w) {
+                countW[c - 'a']++;
+            }
+            for (int i = 0; i < 26; i++) {
+                count2[i] = Math.Max(count2[i], countW[i]);
+            }
+        }
+
+        List<string> res = new List<string>();
+        foreach (string w in words1) {
+            int[] countW = new int[26];
+            foreach (char c in w) {
+                countW[c - 'a']++;
+            }
+
+            bool flag = true;
+            for (int i = 0; i < 26; i++) {
+                if (countW[i] < count2[i]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) {
+                res.Add(w);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func wordSubsets(words1 []string, words2 []string) []string {
+    count2 := [26]int{}
+    for _, w := range words2 {
+        countW := [26]int{}
+        for _, c := range w {
+            countW[c-'a']++
+        }
+        for i := 0; i < 26; i++ {
+            if countW[i] > count2[i] {
+                count2[i] = countW[i]
+            }
+        }
+    }
+
+    res := []string{}
+    for _, w := range words1 {
+        countW := [26]int{}
+        for _, c := range w {
+            countW[c-'a']++
+        }
+
+        flag := true
+        for i := 0; i < 26; i++ {
+            if countW[i] < count2[i] {
+                flag = false
+                break
+            }
+        }
+
+        if flag {
+            res = append(res, w)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun wordSubsets(words1: Array<String>, words2: Array<String>): List<String> {
+        val count2 = IntArray(26)
+        for (w in words2) {
+            val countW = IntArray(26)
+            for (c in w) {
+                countW[c - 'a']++
+            }
+            for (i in 0 until 26) {
+                count2[i] = maxOf(count2[i], countW[i])
+            }
+        }
+
+        val res = mutableListOf<String>()
+        for (w in words1) {
+            val countW = IntArray(26)
+            for (c in w) {
+                countW[c - 'a']++
+            }
+
+            var flag = true
+            for (i in 0 until 26) {
+                if (countW[i] < count2[i]) {
+                    flag = false
+                    break
+                }
+            }
+
+            if (flag) {
+                res.add(w)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordSubsets(_ words1: [String], _ words2: [String]) -> [String] {
+        var count2 = [Int](repeating: 0, count: 26)
+        for w in words2 {
+            var countW = [Int](repeating: 0, count: 26)
+            for c in w {
+                countW[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+            }
+            for i in 0..<26 {
+                count2[i] = max(count2[i], countW[i])
+            }
+        }
+
+        var res = [String]()
+        for w in words1 {
+            var countW = [Int](repeating: 0, count: 26)
+            for c in w {
+                countW[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+            }
+
+            var flag = true
+            for i in 0..<26 {
+                if countW[i] < count2[i] {
+                    flag = false
+                    break
+                }
+            }
+
+            if flag {
+                res.append(w)
+            }
+        }
+
+        return res
     }
 }
 ```

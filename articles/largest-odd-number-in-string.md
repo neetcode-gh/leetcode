@@ -92,6 +92,96 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string LargestOddNumber(string num) {
+        string res = "";
+        int n = num.Length;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i; j < n; j++) {
+                int onesDigit = num[j] - '0';
+                if ((onesDigit & 1) == 1) {
+                    string cur = num.Substring(i, j - i + 1);
+                    if (res.Length < cur.Length ||
+                       (res.Length == cur.Length && string.Compare(res, cur) < 0)) {
+                        res = cur;
+                    }
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func largestOddNumber(num string) string {
+    res := ""
+    n := len(num)
+
+    for i := 0; i < n; i++ {
+        for j := i; j < n; j++ {
+            onesDigit := int(num[j] - '0')
+            if onesDigit&1 == 1 {
+                cur := num[i : j+1]
+                if len(res) < len(cur) || (len(res) == len(cur) && res < cur) {
+                    res = cur
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestOddNumber(num: String): String {
+        var res = ""
+        val n = num.length
+
+        for (i in 0 until n) {
+            for (j in i until n) {
+                val onesDigit = num[j] - '0'
+                if (onesDigit and 1 == 1) {
+                    val cur = num.substring(i, j + 1)
+                    if (res.length < cur.length ||
+                       (res.length == cur.length && res < cur)) {
+                        res = cur
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestOddNumber(_ num: String) -> String {
+        var res = ""
+        let chars = Array(num)
+        let n = chars.count
+
+        for i in 0..<n {
+            for j in i..<n {
+                let onesDigit = Int(String(chars[j]))!
+                if onesDigit & 1 == 1 {
+                    let cur = String(chars[i...j])
+                    if res.count < cur.count ||
+                       (res.count == cur.count && res < cur) {
+                        res = cur
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -154,6 +244,57 @@ class Solution {
             }
         }
         return '';
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LargestOddNumber(string num) {
+        for (int i = num.Length - 1; i >= 0; i--) {
+            if ((num[i] - '0') % 2 == 1) {
+                return num.Substring(0, i + 1);
+            }
+        }
+        return "";
+    }
+}
+```
+
+```go
+func largestOddNumber(num string) string {
+    for i := len(num) - 1; i >= 0; i-- {
+        if (num[i]-'0')%2 == 1 {
+            return num[:i+1]
+        }
+    }
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun largestOddNumber(num: String): String {
+        for (i in num.length - 1 downTo 0) {
+            if ((num[i] - '0') % 2 == 1) {
+                return num.substring(0, i + 1)
+            }
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestOddNumber(_ num: String) -> String {
+        let chars = Array(num)
+        for i in stride(from: chars.count - 1, through: 0, by: -1) {
+            if Int(String(chars[i]))! % 2 == 1 {
+                return String(chars[0...i])
+            }
+        }
+        return ""
     }
 }
 ```

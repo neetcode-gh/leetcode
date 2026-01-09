@@ -77,6 +77,80 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> GetRow(int rowIndex) {
+        if (rowIndex == 0) return new List<int> { 1 };
+
+        var curRow = new List<int> { 1 };
+        var prevRow = GetRow(rowIndex - 1);
+
+        for (int i = 1; i < rowIndex; i++) {
+            curRow.Add(prevRow[i - 1] + prevRow[i]);
+        }
+
+        curRow.Add(1);
+        return curRow;
+    }
+}
+```
+
+```go
+func getRow(rowIndex int) []int {
+    if rowIndex == 0 {
+        return []int{1}
+    }
+
+    curRow := []int{1}
+    prevRow := getRow(rowIndex - 1)
+
+    for i := 1; i < rowIndex; i++ {
+        curRow = append(curRow, prevRow[i-1]+prevRow[i])
+    }
+
+    curRow = append(curRow, 1)
+    return curRow
+}
+```
+
+```kotlin
+class Solution {
+    fun getRow(rowIndex: Int): List<Int> {
+        if (rowIndex == 0) return listOf(1)
+
+        val curRow = mutableListOf(1)
+        val prevRow = getRow(rowIndex - 1)
+
+        for (i in 1 until rowIndex) {
+            curRow.add(prevRow[i - 1] + prevRow[i])
+        }
+
+        curRow.add(1)
+        return curRow
+    }
+}
+```
+
+```swift
+class Solution {
+    func getRow(_ rowIndex: Int) -> [Int] {
+        if rowIndex == 0 {
+            return [1]
+        }
+
+        var curRow = [1]
+        let prevRow = getRow(rowIndex - 1)
+
+        for i in 1..<rowIndex {
+            curRow.append(prevRow[i - 1] + prevRow[i])
+        }
+
+        curRow.append(1)
+        return curRow
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -148,6 +222,71 @@ class Solution {
             }
         }
         return res[rowIndex];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> GetRow(int rowIndex) {
+        var res = new List<int[]>();
+        for (int i = 0; i <= rowIndex; i++) {
+            int[] row = new int[i + 1];
+            Array.Fill(row, 1);
+            for (int j = 1; j < i; j++) {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j];
+            }
+            res.Add(row);
+        }
+        return res[rowIndex].ToList();
+    }
+}
+```
+
+```go
+func getRow(rowIndex int) []int {
+    res := make([][]int, rowIndex+1)
+    for i := 0; i <= rowIndex; i++ {
+        res[i] = make([]int, i+1)
+        for j := 0; j <= i; j++ {
+            res[i][j] = 1
+        }
+        for j := 1; j < i; j++ {
+            res[i][j] = res[i-1][j-1] + res[i-1][j]
+        }
+    }
+    return res[rowIndex]
+}
+```
+
+```kotlin
+class Solution {
+    fun getRow(rowIndex: Int): List<Int> {
+        val res = mutableListOf<MutableList<Int>>()
+        for (i in 0..rowIndex) {
+            val row = MutableList(i + 1) { 1 }
+            for (j in 1 until i) {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j]
+            }
+            res.add(row)
+        }
+        return res[rowIndex]
+    }
+}
+```
+
+```swift
+class Solution {
+    func getRow(_ rowIndex: Int) -> [Int] {
+        var res = [[Int]]()
+        for i in 0...rowIndex {
+            var row = [Int](repeating: 1, count: i + 1)
+            for j in 1..<i {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j]
+            }
+            res.append(row)
+        }
+        return res[rowIndex]
     }
 }
 ```
@@ -235,6 +374,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> GetRow(int rowIndex) {
+        var res = new List<int> { 1 };
+        for (int i = 0; i < rowIndex; i++) {
+            var nextRow = new List<int>(new int[res.Count + 1]);
+            for (int j = 0; j < res.Count; j++) {
+                nextRow[j] += res[j];
+                nextRow[j + 1] += res[j];
+            }
+            res = nextRow;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func getRow(rowIndex int) []int {
+    res := []int{1}
+    for i := 0; i < rowIndex; i++ {
+        nextRow := make([]int, len(res)+1)
+        for j := 0; j < len(res); j++ {
+            nextRow[j] += res[j]
+            nextRow[j+1] += res[j]
+        }
+        res = nextRow
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun getRow(rowIndex: Int): List<Int> {
+        var res = mutableListOf(1)
+        for (i in 0 until rowIndex) {
+            val nextRow = MutableList(res.size + 1) { 0 }
+            for (j in res.indices) {
+                nextRow[j] += res[j]
+                nextRow[j + 1] += res[j]
+            }
+            res = nextRow
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func getRow(_ rowIndex: Int) -> [Int] {
+        var res = [1]
+        for _ in 0..<rowIndex {
+            var nextRow = [Int](repeating: 0, count: res.count + 1)
+            for j in 0..<res.count {
+                nextRow[j] += res[j]
+                nextRow[j + 1] += res[j]
+            }
+            res = nextRow
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -305,6 +510,64 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<int> GetRow(int rowIndex) {
+        var row = new List<int>(new int[rowIndex + 1]);
+        for (int i = 0; i <= rowIndex; i++) row[i] = 1;
+        for (int i = 1; i < rowIndex; i++) {
+            for (int j = i; j > 0; j--) {
+                row[j] += row[j - 1];
+            }
+        }
+        return row;
+    }
+}
+```
+
+```go
+func getRow(rowIndex int) []int {
+    row := make([]int, rowIndex+1)
+    for i := range row {
+        row[i] = 1
+    }
+    for i := 1; i < rowIndex; i++ {
+        for j := i; j > 0; j-- {
+            row[j] += row[j-1]
+        }
+    }
+    return row
+}
+```
+
+```kotlin
+class Solution {
+    fun getRow(rowIndex: Int): List<Int> {
+        val row = MutableList(rowIndex + 1) { 1 }
+        for (i in 1 until rowIndex) {
+            for (j in i downTo 1) {
+                row[j] += row[j - 1]
+            }
+        }
+        return row
+    }
+}
+```
+
+```swift
+class Solution {
+    func getRow(_ rowIndex: Int) -> [Int] {
+        var row = [Int](repeating: 1, count: rowIndex + 1)
+        for i in 1..<rowIndex {
+            for j in stride(from: i, through: 1, by: -1) {
+                row[j] += row[j - 1]
+            }
+        }
+        return row
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +630,52 @@ class Solution {
             );
         }
         return row;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> GetRow(int rowIndex) {
+        var row = new List<int> { 1 };
+        for (int i = 1; i <= rowIndex; i++) {
+            row.Add((int)((long)row[row.Count - 1] * (rowIndex - i + 1) / i));
+        }
+        return row;
+    }
+}
+```
+
+```go
+func getRow(rowIndex int) []int {
+    row := []int{1}
+    for i := 1; i <= rowIndex; i++ {
+        row = append(row, row[len(row)-1]*(rowIndex-i+1)/i)
+    }
+    return row
+}
+```
+
+```kotlin
+class Solution {
+    fun getRow(rowIndex: Int): List<Int> {
+        val row = mutableListOf(1)
+        for (i in 1..rowIndex) {
+            row.add((row.last().toLong() * (rowIndex - i + 1) / i).toInt())
+        }
+        return row
+    }
+}
+```
+
+```swift
+class Solution {
+    func getRow(_ rowIndex: Int) -> [Int] {
+        var row = [1]
+        for i in 1...rowIndex {
+            row.append(row.last! * (rowIndex - i + 1) / i)
+        }
+        return row
     }
 }
 ```

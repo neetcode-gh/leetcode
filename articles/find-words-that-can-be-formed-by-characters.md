@@ -113,6 +113,123 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountCharacters(string[] words, string chars) {
+        Dictionary<char, int> count = new Dictionary<char, int>();
+        foreach (char c in chars) {
+            if (!count.ContainsKey(c)) count[c] = 0;
+            count[c]++;
+        }
+        int res = 0;
+        foreach (string w in words) {
+            Dictionary<char, int> curWord = new Dictionary<char, int>();
+            foreach (char c in w) {
+                if (!curWord.ContainsKey(c)) curWord[c] = 0;
+                curWord[c]++;
+            }
+            bool good = true;
+            foreach (var kvp in curWord) {
+                int available = count.ContainsKey(kvp.Key) ? count[kvp.Key] : 0;
+                if (kvp.Value > available) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+                res += w.Length;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countCharacters(words []string, chars string) int {
+    count := make(map[rune]int)
+    for _, c := range chars {
+        count[c]++
+    }
+    res := 0
+    for _, w := range words {
+        curWord := make(map[rune]int)
+        for _, c := range w {
+            curWord[c]++
+        }
+        good := true
+        for c, cnt := range curWord {
+            if cnt > count[c] {
+                good = false
+                break
+            }
+        }
+        if good {
+            res += len(w)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countCharacters(words: Array<String>, chars: String): Int {
+        val count = mutableMapOf<Char, Int>()
+        for (c in chars) {
+            count[c] = count.getOrDefault(c, 0) + 1
+        }
+        var res = 0
+        for (w in words) {
+            val curWord = mutableMapOf<Char, Int>()
+            for (c in w) {
+                curWord[c] = curWord.getOrDefault(c, 0) + 1
+            }
+            var good = true
+            for ((c, cnt) in curWord) {
+                if (cnt > count.getOrDefault(c, 0)) {
+                    good = false
+                    break
+                }
+            }
+            if (good) {
+                res += w.length
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countCharacters(_ words: [String], _ chars: String) -> Int {
+        var count = [Character: Int]()
+        for c in chars {
+            count[c, default: 0] += 1
+        }
+        var res = 0
+        for w in words {
+            var curWord = [Character: Int]()
+            for c in w {
+                curWord[c, default: 0] += 1
+            }
+            var good = true
+            for (c, cnt) in curWord {
+                if cnt > (count[c] ?? 0) {
+                    good = false
+                    break
+                }
+            }
+            if good {
+                res += w.count
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -230,6 +347,115 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountCharacters(string[] words, string chars) {
+        Dictionary<char, int> count = new Dictionary<char, int>();
+        foreach (char c in chars) {
+            if (!count.ContainsKey(c)) count[c] = 0;
+            count[c]++;
+        }
+        int res = 0;
+        foreach (string w in words) {
+            Dictionary<char, int> curWord = new Dictionary<char, int>();
+            bool good = true;
+            foreach (char c in w) {
+                if (!curWord.ContainsKey(c)) curWord[c] = 0;
+                curWord[c]++;
+                int available = count.ContainsKey(c) ? count[c] : 0;
+                if (curWord[c] > available) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+                res += w.Length;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countCharacters(words []string, chars string) int {
+    count := make(map[rune]int)
+    for _, c := range chars {
+        count[c]++
+    }
+    res := 0
+    for _, w := range words {
+        curWord := make(map[rune]int)
+        good := true
+        for _, c := range w {
+            curWord[c]++
+            if curWord[c] > count[c] {
+                good = false
+                break
+            }
+        }
+        if good {
+            res += len(w)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countCharacters(words: Array<String>, chars: String): Int {
+        val count = mutableMapOf<Char, Int>()
+        for (c in chars) {
+            count[c] = count.getOrDefault(c, 0) + 1
+        }
+        var res = 0
+        for (w in words) {
+            val curWord = mutableMapOf<Char, Int>()
+            var good = true
+            for (c in w) {
+                curWord[c] = curWord.getOrDefault(c, 0) + 1
+                if (curWord[c]!! > count.getOrDefault(c, 0)) {
+                    good = false
+                    break
+                }
+            }
+            if (good) {
+                res += w.length
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countCharacters(_ words: [String], _ chars: String) -> Int {
+        var count = [Character: Int]()
+        for c in chars {
+            count[c, default: 0] += 1
+        }
+        var res = 0
+        for w in words {
+            var curWord = [Character: Int]()
+            var good = true
+            for c in w {
+                curWord[c, default: 0] += 1
+                if curWord[c]! > (count[c] ?? 0) {
+                    good = false
+                    break
+                }
+            }
+            if good {
+                res += w.count
+            }
+        }
+        return res
     }
 }
 ```
@@ -377,6 +603,134 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountCharacters(string[] words, string chars) {
+        int[] count = new int[26];
+        foreach (char c in chars) {
+            count[c - 'a']++;
+        }
+
+        int[] org = (int[])count.Clone();
+        int res = 0;
+
+        foreach (string w in words) {
+            bool good = true;
+            foreach (char c in w) {
+                int i = c - 'a';
+                count[i]--;
+                if (count[i] < 0) {
+                    good = false;
+                    break;
+                }
+            }
+            if (good) {
+                res += w.Length;
+            }
+            for (int i = 0; i < 26; i++) {
+                count[i] = org[i];
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func countCharacters(words []string, chars string) int {
+    count := make([]int, 26)
+    for _, c := range chars {
+        count[c-'a']++
+    }
+
+    org := make([]int, 26)
+    copy(org, count)
+    res := 0
+
+    for _, w := range words {
+        good := true
+        for _, c := range w {
+            i := c - 'a'
+            count[i]--
+            if count[i] < 0 {
+                good = false
+                break
+            }
+        }
+        if good {
+            res += len(w)
+        }
+        copy(count, org)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countCharacters(words: Array<String>, chars: String): Int {
+        val count = IntArray(26)
+        for (c in chars) {
+            count[c - 'a']++
+        }
+
+        val org = count.copyOf()
+        var res = 0
+
+        for (w in words) {
+            var good = true
+            for (c in w) {
+                val i = c - 'a'
+                count[i]--
+                if (count[i] < 0) {
+                    good = false
+                    break
+                }
+            }
+            if (good) {
+                res += w.length
+            }
+            for (i in 0 until 26) {
+                count[i] = org[i]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countCharacters(_ words: [String], _ chars: String) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        let aValue = Int(Character("a").asciiValue!)
+        for c in chars {
+            count[Int(c.asciiValue!) - aValue] += 1
+        }
+
+        let org = count
+        var res = 0
+
+        for w in words {
+            var good = true
+            for c in w {
+                let i = Int(c.asciiValue!) - aValue
+                count[i] -= 1
+                if count[i] < 0 {
+                    good = false
+                    break
+                }
+            }
+            if good {
+                res += w.count
+            }
+            count = org
+        }
+        return res
     }
 }
 ```

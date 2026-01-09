@@ -109,6 +109,71 @@ public class Solution {
 }
 ```
 
+```go
+func largestGoodInteger(num string) string {
+    res := ""
+    val := 0
+
+    for i := 0; i < len(num)-2; i++ {
+        if num[i] == num[i+1] && num[i] == num[i+2] {
+            tmp := num[i : i+3]
+            tmpVal, _ := strconv.Atoi(tmp)
+            if val <= tmpVal {
+                val = tmpVal
+                res = tmp
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestGoodInteger(num: String): String {
+        var res = ""
+        var value = 0
+
+        for (i in 0 until num.length - 2) {
+            if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
+                val tmp = num.substring(i, i + 3)
+                val tmpVal = tmp.toInt()
+                if (value <= tmpVal) {
+                    value = tmpVal
+                    res = tmp
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestGoodInteger(_ num: String) -> String {
+        var res = ""
+        var val = 0
+        let chars = Array(num)
+
+        for i in 0..<(chars.count - 2) {
+            if chars[i] == chars[i + 1] && chars[i] == chars[i + 2] {
+                let tmp = String(chars[i..<(i + 3)])
+                let tmpVal = Int(tmp)!
+                if val <= tmpVal {
+                    val = tmpVal
+                    res = tmp
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -210,6 +275,65 @@ public class Solution {
 }
 ```
 
+```go
+func largestGoodInteger(num string) string {
+    res := "0"
+
+    for i := 0; i < len(num)-2; i++ {
+        if num[i] == num[i+1] && num[i] == num[i+2] {
+            tmp := num[i : i+3]
+            if tmp > res {
+                res = tmp
+            }
+        }
+    }
+
+    if res == "0" {
+        return ""
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestGoodInteger(num: String): String {
+        var res = "0"
+
+        for (i in 0 until num.length - 2) {
+            if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
+                val tmp = num.substring(i, i + 3)
+                if (tmp > res) {
+                    res = tmp
+                }
+            }
+        }
+
+        return if (res == "0") "" else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestGoodInteger(_ num: String) -> String {
+        var res = "0"
+        let chars = Array(num)
+
+        for i in 0..<(chars.count - 2) {
+            if chars[i] == chars[i + 1] && chars[i] == chars[i + 2] {
+                let tmp = String(chars[i..<(i + 3)])
+                if tmp > res {
+                    res = tmp
+                }
+            }
+        }
+
+        return res == "0" ? "" : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -300,6 +424,60 @@ public class Solution {
         }
 
         return res == -1 ? "" : new string((char)(res + '0'), 3);
+    }
+}
+```
+
+```go
+func largestGoodInteger(num string) string {
+    res := -1
+
+    for i := 0; i < len(num)-2; i++ {
+        if num[i] == num[i+1] && num[i] == num[i+2] {
+            digit := int(num[i] - '0')
+            if digit > res {
+                res = digit
+            }
+        }
+    }
+
+    if res == -1 {
+        return ""
+    }
+    return strings.Repeat(string(rune(res+'0')), 3)
+}
+```
+
+```kotlin
+class Solution {
+    fun largestGoodInteger(num: String): String {
+        var res = -1
+
+        for (i in 0 until num.length - 2) {
+            if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
+                res = maxOf(res, num[i] - '0')
+            }
+        }
+
+        return if (res == -1) "" else res.toString().repeat(3)
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestGoodInteger(_ num: String) -> String {
+        var res = -1
+        let chars = Array(num)
+
+        for i in 0..<(chars.count - 2) {
+            if chars[i] == chars[i + 1] && chars[i] == chars[i + 2] {
+                let digit = Int(String(chars[i]))!
+                res = max(res, digit)
+            }
+        }
+
+        return res == -1 ? "" : String(repeating: String(res), count: 3)
     }
 }
 ```

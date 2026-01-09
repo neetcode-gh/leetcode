@@ -119,6 +119,127 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private static readonly int MOD = 1000000007;
+    private int[,] dp;
+
+    public int KInversePairs(int n, int k) {
+        dp = new int[n + 1, k + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Count(n, k);
+    }
+
+    private int Count(int n, int k) {
+        if (n == 0) return k == 0 ? 1 : 0;
+        if (k < 0) return 0;
+        if (dp[n, k] != -1) return dp[n, k];
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            res = (res + Count(n - 1, k - i)) % MOD;
+        }
+
+        dp[n, k] = res;
+        return res;
+    }
+}
+```
+
+```go
+func kInversePairs(n int, k int) int {
+    MOD := 1000000007
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var count func(n, k int) int
+    count = func(n, k int) int {
+        if n == 0 {
+            if k == 0 {
+                return 1
+            }
+            return 0
+        }
+        if k < 0 {
+            return 0
+        }
+        if dp[n][k] != -1 {
+            return dp[n][k]
+        }
+
+        res := 0
+        for i := 0; i < n; i++ {
+            res = (res + count(n-1, k-i)) % MOD
+        }
+        dp[n][k] = res
+        return res
+    }
+
+    return count(n, k)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007
+    private lateinit var dp: Array<IntArray>
+
+    fun kInversePairs(n: Int, k: Int): Int {
+        dp = Array(n + 1) { IntArray(k + 1) { -1 } }
+        return count(n, k)
+    }
+
+    private fun count(n: Int, k: Int): Int {
+        if (n == 0) return if (k == 0) 1 else 0
+        if (k < 0) return 0
+        if (dp[n][k] != -1) return dp[n][k]
+
+        var res = 0
+        for (i in 0 until n) {
+            res = (res + count(n - 1, k - i)) % MOD
+        }
+
+        dp[n][k] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    let MOD = 1000000007
+    var dp: [[Int]] = []
+
+    func kInversePairs(_ n: Int, _ k: Int) -> Int {
+        dp = [[Int]](repeating: [Int](repeating: -1, count: k + 1), count: n + 1)
+        return count(n, k)
+    }
+
+    private func count(_ n: Int, _ k: Int) -> Int {
+        if n == 0 { return k == 0 ? 1 : 0 }
+        if k < 0 { return 0 }
+        if dp[n][k] != -1 { return dp[n][k] }
+
+        var res = 0
+        for i in 0..<n {
+            res = (res + count(n - 1, k - i)) % MOD
+        }
+
+        dp[n][k] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -259,6 +380,141 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private static readonly int MOD = 1000000007;
+    private int[,] dp;
+
+    public int KInversePairs(int n, int k) {
+        dp = new int[n + 1, k + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Count(n, k);
+    }
+
+    private int Count(int n, int k) {
+        if (k == 0) return 1;
+        if (n == 1) return 0;
+        if (n * (n - 1) / 2 < k) return 0;
+        if (n * (n - 1) / 2 == k) return 1;
+        if (dp[n, k] != -1) return dp[n, k];
+
+        long res = Count(n, k - 1);
+        if (k >= n) {
+            res -= Count(n - 1, k - n);
+        }
+        res = (res + Count(n - 1, k) + MOD) % MOD;
+
+        dp[n, k] = (int)res;
+        return dp[n, k];
+    }
+}
+```
+
+```go
+func kInversePairs(n int, k int) int {
+    MOD := 1000000007
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var count func(n, k int) int
+    count = func(n, k int) int {
+        if k == 0 {
+            return 1
+        }
+        if n == 1 {
+            return 0
+        }
+        if n*(n-1)/2 < k {
+            return 0
+        }
+        if n*(n-1)/2 == k {
+            return 1
+        }
+        if dp[n][k] != -1 {
+            return dp[n][k]
+        }
+
+        res := count(n, k-1)
+        if k >= n {
+            res -= count(n-1, k-n)
+        }
+        res = (res + count(n-1, k) + MOD) % MOD
+
+        dp[n][k] = res
+        return res
+    }
+
+    return count(n, k)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1000000007
+    private lateinit var dp: Array<IntArray>
+
+    fun kInversePairs(n: Int, k: Int): Int {
+        dp = Array(n + 1) { IntArray(k + 1) { -1 } }
+        return count(n, k)
+    }
+
+    private fun count(n: Int, k: Int): Int {
+        if (k == 0) return 1
+        if (n == 1) return 0
+        if (n * (n - 1) / 2 < k) return 0
+        if (n * (n - 1) / 2 == k) return 1
+        if (dp[n][k] != -1) return dp[n][k]
+
+        var res = count(n, k - 1).toLong()
+        if (k >= n) {
+            res -= count(n - 1, k - n)
+        }
+        res = (res + count(n - 1, k) + MOD) % MOD
+
+        dp[n][k] = res.toInt()
+        return dp[n][k]
+    }
+}
+```
+
+```swift
+class Solution {
+    let MOD = 1000000007
+    var dp: [[Int]] = []
+
+    func kInversePairs(_ n: Int, _ k: Int) -> Int {
+        dp = [[Int]](repeating: [Int](repeating: -1, count: k + 1), count: n + 1)
+        return count(n, k)
+    }
+
+    private func count(_ n: Int, _ k: Int) -> Int {
+        if k == 0 { return 1 }
+        if n == 1 { return 0 }
+        if n * (n - 1) / 2 < k { return 0 }
+        if n * (n - 1) / 2 == k { return 1 }
+        if dp[n][k] != -1 { return dp[n][k] }
+
+        var res = count(n, k - 1)
+        if k >= n {
+            res -= count(n - 1, k - n)
+        }
+        res = (res + count(n - 1, k) + MOD) % MOD
+
+        dp[n][k] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -358,6 +614,95 @@ class Solution {
         }
 
         return dp[n][k];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int KInversePairs(int n, int k) {
+        int MOD = 1000000007;
+        int[,] dp = new int[n + 1, k + 1];
+        dp[0, 0] = 1;
+
+        for (int N = 1; N <= n; N++) {
+            for (int K = 0; K <= k; K++) {
+                for (int pairs = 0; pairs < N; pairs++) {
+                    if (K - pairs >= 0) {
+                        dp[N, K] = (dp[N, K] + dp[N - 1, K - pairs]) % MOD;
+                    }
+                }
+            }
+        }
+
+        return dp[n, k];
+    }
+}
+```
+
+```go
+func kInversePairs(n int, k int) int {
+    MOD := 1000000007
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+    }
+    dp[0][0] = 1
+
+    for N := 1; N <= n; N++ {
+        for K := 0; K <= k; K++ {
+            for pairs := 0; pairs < N; pairs++ {
+                if K-pairs >= 0 {
+                    dp[N][K] = (dp[N][K] + dp[N-1][K-pairs]) % MOD
+                }
+            }
+        }
+    }
+
+    return dp[n][k]
+}
+```
+
+```kotlin
+class Solution {
+    fun kInversePairs(n: Int, k: Int): Int {
+        val MOD = 1000000007
+        val dp = Array(n + 1) { IntArray(k + 1) }
+        dp[0][0] = 1
+
+        for (N in 1..n) {
+            for (K in 0..k) {
+                for (pairs in 0 until N) {
+                    if (K - pairs >= 0) {
+                        dp[N][K] = (dp[N][K] + dp[N - 1][K - pairs]) % MOD
+                    }
+                }
+            }
+        }
+
+        return dp[n][k]
+    }
+}
+```
+
+```swift
+class Solution {
+    func kInversePairs(_ n: Int, _ k: Int) -> Int {
+        let MOD = 1000000007
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: k + 1), count: n + 1)
+        dp[0][0] = 1
+
+        for N in 1...n {
+            for K in 0...k {
+                for pairs in 0..<N {
+                    if K - pairs >= 0 {
+                        dp[N][K] = (dp[N][K] + dp[N - 1][K - pairs]) % MOD
+                    }
+                }
+            }
+        }
+
+        return dp[n][k]
     }
 }
 ```
@@ -469,6 +814,103 @@ class Solution {
         }
 
         return dp[n][k];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int KInversePairs(int n, int k) {
+        int MOD = 1000000007;
+        int[,] dp = new int[n + 1, k + 1];
+        dp[0, 0] = 1;
+
+        for (int N = 1; N <= n; N++) {
+            for (int K = 0; K <= k; K++) {
+                dp[N, K] = dp[N - 1, K];
+                if (K > 0) {
+                    dp[N, K] = (dp[N, K] + dp[N, K - 1]) % MOD;
+                }
+                if (K >= N) {
+                    dp[N, K] = (dp[N, K] - dp[N - 1, K - N] + MOD) % MOD;
+                }
+            }
+        }
+
+        return dp[n, k];
+    }
+}
+```
+
+```go
+func kInversePairs(n int, k int) int {
+    MOD := 1000000007
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, k+1)
+    }
+    dp[0][0] = 1
+
+    for N := 1; N <= n; N++ {
+        for K := 0; K <= k; K++ {
+            dp[N][K] = dp[N-1][K]
+            if K > 0 {
+                dp[N][K] = (dp[N][K] + dp[N][K-1]) % MOD
+            }
+            if K >= N {
+                dp[N][K] = (dp[N][K] - dp[N-1][K-N] + MOD) % MOD
+            }
+        }
+    }
+
+    return dp[n][k]
+}
+```
+
+```kotlin
+class Solution {
+    fun kInversePairs(n: Int, k: Int): Int {
+        val MOD = 1000000007
+        val dp = Array(n + 1) { IntArray(k + 1) }
+        dp[0][0] = 1
+
+        for (N in 1..n) {
+            for (K in 0..k) {
+                dp[N][K] = dp[N - 1][K]
+                if (K > 0) {
+                    dp[N][K] = (dp[N][K] + dp[N][K - 1]) % MOD
+                }
+                if (K >= N) {
+                    dp[N][K] = (dp[N][K] - dp[N - 1][K - N] + MOD) % MOD
+                }
+            }
+        }
+
+        return dp[n][k]
+    }
+}
+```
+
+```swift
+class Solution {
+    func kInversePairs(_ n: Int, _ k: Int) -> Int {
+        let MOD = 1000000007
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: k + 1), count: n + 1)
+        dp[0][0] = 1
+
+        for N in 1...n {
+            for K in 0...k {
+                dp[N][K] = dp[N - 1][K]
+                if K > 0 {
+                    dp[N][K] = (dp[N][K] + dp[N][K - 1]) % MOD
+                }
+                if K >= N {
+                    dp[N][K] = (dp[N][K] - dp[N - 1][K - N] + MOD) % MOD
+                }
+            }
+        }
+
+        return dp[n][k]
     }
 }
 ```
@@ -585,6 +1027,104 @@ class Solution {
         }
 
         return prev[k];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int KInversePairs(int n, int k) {
+        int MOD = 1000000007;
+        int[] prev = new int[k + 1];
+        prev[0] = 1;
+
+        for (int N = 1; N <= n; N++) {
+            int[] cur = new int[k + 1];
+            int total = 0;
+            for (int K = 0; K <= k; K++) {
+                total = (total + prev[K]) % MOD;
+                if (K >= N) {
+                    total = (total - prev[K - N] + MOD) % MOD;
+                }
+                cur[K] = total;
+            }
+            prev = cur;
+        }
+
+        return prev[k];
+    }
+}
+```
+
+```go
+func kInversePairs(n int, k int) int {
+    MOD := 1000000007
+    prev := make([]int, k+1)
+    prev[0] = 1
+
+    for N := 1; N <= n; N++ {
+        cur := make([]int, k+1)
+        total := 0
+        for K := 0; K <= k; K++ {
+            total = (total + prev[K]) % MOD
+            if K >= N {
+                total = (total - prev[K-N] + MOD) % MOD
+            }
+            cur[K] = total
+        }
+        prev = cur
+    }
+
+    return prev[k]
+}
+```
+
+```kotlin
+class Solution {
+    fun kInversePairs(n: Int, k: Int): Int {
+        val MOD = 1000000007
+        var prev = IntArray(k + 1)
+        prev[0] = 1
+
+        for (N in 1..n) {
+            val cur = IntArray(k + 1)
+            var total = 0
+            for (K in 0..k) {
+                total = (total + prev[K]) % MOD
+                if (K >= N) {
+                    total = (total - prev[K - N] + MOD) % MOD
+                }
+                cur[K] = total
+            }
+            prev = cur
+        }
+
+        return prev[k]
+    }
+}
+```
+
+```swift
+class Solution {
+    func kInversePairs(_ n: Int, _ k: Int) -> Int {
+        let MOD = 1000000007
+        var prev = [Int](repeating: 0, count: k + 1)
+        prev[0] = 1
+
+        for N in 1...n {
+            var cur = [Int](repeating: 0, count: k + 1)
+            var total = 0
+            for K in 0...k {
+                total = (total + prev[K]) % MOD
+                if K >= N {
+                    total = (total - prev[K - N] + MOD) % MOD
+                }
+                cur[K] = total
+            }
+            prev = cur
+        }
+
+        return prev[k]
     }
 }
 ```

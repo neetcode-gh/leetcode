@@ -145,6 +145,159 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxScore(int[] nums) {
+        int N = nums.Length;
+        bool[] visit = new bool[N];
+        return Dfs(nums, visit, 1, N);
+    }
+
+    private int Dfs(int[] nums, bool[] visit, int n, int N) {
+        if (n > N / 2) {
+            return 0;
+        }
+
+        int res = 0;
+        for (int i = 0; i < N; i++) {
+            if (visit[i]) continue;
+            visit[i] = true;
+            for (int j = i + 1; j < N; j++) {
+                if (visit[j]) continue;
+                visit[j] = true;
+                int g = Gcd(nums[i], nums[j]);
+                res = Math.Max(res, n * g + Dfs(nums, visit, n + 1, N));
+                visit[j] = false;
+            }
+            visit[i] = false;
+        }
+
+        return res;
+    }
+
+    private int Gcd(int a, int b) {
+        return b == 0 ? a : Gcd(b, a % b);
+    }
+}
+```
+
+```go
+func maxScore(nums []int) int {
+    N := len(nums)
+    visit := make([]bool, N)
+
+    var gcd func(a, b int) int
+    gcd = func(a, b int) int {
+        if b == 0 {
+            return a
+        }
+        return gcd(b, a%b)
+    }
+
+    var dfs func(n int) int
+    dfs = func(n int) int {
+        if n > N/2 {
+            return 0
+        }
+
+        res := 0
+        for i := 0; i < N; i++ {
+            if visit[i] {
+                continue
+            }
+            visit[i] = true
+            for j := i + 1; j < N; j++ {
+                if visit[j] {
+                    continue
+                }
+                visit[j] = true
+                g := gcd(nums[i], nums[j])
+                score := n*g + dfs(n+1)
+                if score > res {
+                    res = score
+                }
+                visit[j] = false
+            }
+            visit[i] = false
+        }
+
+        return res
+    }
+
+    return dfs(1)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(nums: IntArray): Int {
+        val N = nums.size
+        val visit = BooleanArray(N)
+
+        fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+
+        fun dfs(n: Int): Int {
+            if (n > N / 2) return 0
+
+            var res = 0
+            for (i in 0 until N) {
+                if (visit[i]) continue
+                visit[i] = true
+                for (j in i + 1 until N) {
+                    if (visit[j]) continue
+                    visit[j] = true
+                    val g = gcd(nums[i], nums[j])
+                    res = maxOf(res, n * g + dfs(n + 1))
+                    visit[j] = false
+                }
+                visit[i] = false
+            }
+
+            return res
+        }
+
+        return dfs(1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ nums: [Int]) -> Int {
+        let N = nums.count
+        var visit = [Bool](repeating: false, count: N)
+
+        func gcd(_ a: Int, _ b: Int) -> Int {
+            return b == 0 ? a : gcd(b, a % b)
+        }
+
+        func dfs(_ n: Int) -> Int {
+            if n > N / 2 {
+                return 0
+            }
+
+            var res = 0
+            for i in 0..<N {
+                if visit[i] { continue }
+                visit[i] = true
+                for j in (i + 1)..<N {
+                    if visit[j] { continue }
+                    visit[j] = true
+                    let g = gcd(nums[i], nums[j])
+                    res = max(res, n * g + dfs(n + 1))
+                    visit[j] = false
+                }
+                visit[i] = false
+            }
+
+            return res
+        }
+
+        return dfs(1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,6 +441,155 @@ class Solution {
         };
 
         return dfs(0, 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private Dictionary<int, int> cache;
+
+    public int MaxScore(int[] nums) {
+        cache = new Dictionary<int, int>();
+        return Dfs(0, 1, nums);
+    }
+
+    private int Dfs(int mask, int op, int[] nums) {
+        if (cache.ContainsKey(mask)) {
+            return cache[mask];
+        }
+
+        int maxScore = 0;
+        int n = nums.Length;
+        for (int i = 0; i < n; i++) {
+            if ((mask & (1 << i)) != 0) continue;
+            for (int j = i + 1; j < n; j++) {
+                if ((mask & (1 << j)) != 0) continue;
+                int newMask = mask | (1 << i) | (1 << j);
+                int score = op * Gcd(nums[i], nums[j]) + Dfs(newMask, op + 1, nums);
+                maxScore = Math.Max(maxScore, score);
+            }
+        }
+
+        cache[mask] = maxScore;
+        return maxScore;
+    }
+
+    private int Gcd(int a, int b) {
+        return b == 0 ? a : Gcd(b, a % b);
+    }
+}
+```
+
+```go
+func maxScore(nums []int) int {
+    cache := make(map[int]int)
+
+    var gcd func(a, b int) int
+    gcd = func(a, b int) int {
+        if b == 0 {
+            return a
+        }
+        return gcd(b, a%b)
+    }
+
+    var dfs func(mask, op int) int
+    dfs = func(mask, op int) int {
+        if val, ok := cache[mask]; ok {
+            return val
+        }
+
+        maxScore := 0
+        n := len(nums)
+        for i := 0; i < n; i++ {
+            if (mask & (1 << i)) != 0 {
+                continue
+            }
+            for j := i + 1; j < n; j++ {
+                if (mask & (1 << j)) != 0 {
+                    continue
+                }
+                newMask := mask | (1 << i) | (1 << j)
+                score := op*gcd(nums[i], nums[j]) + dfs(newMask, op+1)
+                if score > maxScore {
+                    maxScore = score
+                }
+            }
+        }
+
+        cache[mask] = maxScore
+        return maxScore
+    }
+
+    return dfs(0, 1)
+}
+```
+
+```kotlin
+class Solution {
+    private val cache = HashMap<Int, Int>()
+
+    fun maxScore(nums: IntArray): Int {
+        return dfs(0, 1, nums)
+    }
+
+    private fun dfs(mask: Int, op: Int, nums: IntArray): Int {
+        if (cache.containsKey(mask)) {
+            return cache[mask]!!
+        }
+
+        var maxScore = 0
+        val n = nums.size
+        for (i in 0 until n) {
+            if ((mask and (1 shl i)) != 0) continue
+            for (j in i + 1 until n) {
+                if ((mask and (1 shl j)) != 0) continue
+                val newMask = mask or (1 shl i) or (1 shl j)
+                val score = op * gcd(nums[i], nums[j]) + dfs(newMask, op + 1, nums)
+                maxScore = maxOf(maxScore, score)
+            }
+        }
+
+        cache[mask] = maxScore
+        return maxScore
+    }
+
+    private fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+}
+```
+
+```swift
+class Solution {
+    private var cache = [Int: Int]()
+
+    func maxScore(_ nums: [Int]) -> Int {
+        cache = [:]
+        return dfs(0, 1, nums)
+    }
+
+    private func dfs(_ mask: Int, _ op: Int, _ nums: [Int]) -> Int {
+        if let val = cache[mask] {
+            return val
+        }
+
+        var maxScore = 0
+        let n = nums.count
+        for i in 0..<n {
+            if (mask & (1 << i)) != 0 { continue }
+            for j in (i + 1)..<n {
+                if (mask & (1 << j)) != 0 { continue }
+                let newMask = mask | (1 << i) | (1 << j)
+                let score = op * gcd(nums[i], nums[j]) + dfs(newMask, op + 1, nums)
+                maxScore = max(maxScore, score)
+            }
+        }
+
+        cache[mask] = maxScore
+        return maxScore
+    }
+
+    private func gcd(_ a: Int, _ b: Int) -> Int {
+        return b == 0 ? a : gcd(b, a % b)
     }
 }
 ```
@@ -466,6 +768,193 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] GCD;
+    private int[] dp;
+
+    public int MaxScore(int[] nums) {
+        int n = nums.Length;
+        GCD = new int[n][];
+        dp = new int[1 << n];
+        Array.Fill(dp, -1);
+
+        for (int i = 0; i < n; i++) {
+            GCD[i] = new int[n];
+            for (int j = i + 1; j < n; j++) {
+                GCD[i][j] = Gcd(nums[i], nums[j]);
+            }
+        }
+
+        return Dfs(0, 1, nums);
+    }
+
+    private int Dfs(int mask, int op, int[] nums) {
+        if (dp[mask] != -1) return dp[mask];
+
+        int maxScore = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            if ((mask & (1 << i)) != 0) continue;
+            for (int j = i + 1; j < nums.Length; j++) {
+                if ((mask & (1 << j)) != 0) continue;
+                int newMask = mask | (1 << i) | (1 << j);
+                maxScore = Math.Max(
+                    maxScore,
+                    op * GCD[i][j] + Dfs(newMask, op + 1, nums)
+                );
+            }
+        }
+        return dp[mask] = maxScore;
+    }
+
+    private int Gcd(int a, int b) {
+        return b == 0 ? a : Gcd(b, a % b);
+    }
+}
+```
+
+```go
+func maxScore(nums []int) int {
+    n := len(nums)
+    GCD := make([][]int, n)
+    for i := range GCD {
+        GCD[i] = make([]int, n)
+    }
+    dp := make([]int, 1<<n)
+    for i := range dp {
+        dp[i] = -1
+    }
+
+    var gcd func(a, b int) int
+    gcd = func(a, b int) int {
+        if b == 0 {
+            return a
+        }
+        return gcd(b, a%b)
+    }
+
+    for i := 0; i < n; i++ {
+        for j := i + 1; j < n; j++ {
+            GCD[i][j] = gcd(nums[i], nums[j])
+        }
+    }
+
+    var dfs func(mask, op int) int
+    dfs = func(mask, op int) int {
+        if dp[mask] != -1 {
+            return dp[mask]
+        }
+
+        maxScore := 0
+        for i := 0; i < n; i++ {
+            if (mask & (1 << i)) != 0 {
+                continue
+            }
+            for j := i + 1; j < n; j++ {
+                if (mask & (1 << j)) != 0 {
+                    continue
+                }
+                newMask := mask | (1 << i) | (1 << j)
+                score := op*GCD[i][j] + dfs(newMask, op+1)
+                if score > maxScore {
+                    maxScore = score
+                }
+            }
+        }
+        dp[mask] = maxScore
+        return maxScore
+    }
+
+    return dfs(0, 1)
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var GCD: Array<IntArray>
+    private lateinit var dp: IntArray
+
+    fun maxScore(nums: IntArray): Int {
+        val n = nums.size
+        GCD = Array(n) { IntArray(n) }
+        dp = IntArray(1 shl n) { -1 }
+
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                GCD[i][j] = gcd(nums[i], nums[j])
+            }
+        }
+
+        return dfs(0, 1, nums)
+    }
+
+    private fun dfs(mask: Int, op: Int, nums: IntArray): Int {
+        if (dp[mask] != -1) return dp[mask]
+
+        var maxScore = 0
+        for (i in nums.indices) {
+            if ((mask and (1 shl i)) != 0) continue
+            for (j in i + 1 until nums.size) {
+                if ((mask and (1 shl j)) != 0) continue
+                val newMask = mask or (1 shl i) or (1 shl j)
+                maxScore = maxOf(
+                    maxScore,
+                    op * GCD[i][j] + dfs(newMask, op + 1, nums)
+                )
+            }
+        }
+        dp[mask] = maxScore
+        return maxScore
+    }
+
+    private fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+}
+```
+
+```swift
+class Solution {
+    private var GCD: [[Int]] = []
+    private var dp: [Int] = []
+
+    func maxScore(_ nums: [Int]) -> Int {
+        let n = nums.count
+        GCD = Array(repeating: Array(repeating: 0, count: n), count: n)
+        dp = Array(repeating: -1, count: 1 << n)
+
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                GCD[i][j] = gcd(nums[i], nums[j])
+            }
+        }
+
+        return dfs(0, 1, nums)
+    }
+
+    private func dfs(_ mask: Int, _ op: Int, _ nums: [Int]) -> Int {
+        if dp[mask] != -1 { return dp[mask] }
+
+        var maxScore = 0
+        for i in 0..<nums.count {
+            if (mask & (1 << i)) != 0 { continue }
+            for j in (i + 1)..<nums.count {
+                if (mask & (1 << j)) != 0 { continue }
+                let newMask = mask | (1 << i) | (1 << j)
+                maxScore = max(
+                    maxScore,
+                    op * GCD[i][j] + dfs(newMask, op + 1, nums)
+                )
+            }
+        }
+        dp[mask] = maxScore
+        return maxScore
+    }
+
+    private func gcd(_ a: Int, _ b: Int) -> Int {
+        return b == 0 ? a : gcd(b, a % b)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -615,6 +1104,185 @@ class Solution {
             }
         }
         return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxScore(int[] nums) {
+        int n = nums.Length;
+        int N = 1 << n;
+        int[][] GCD = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            GCD[i] = new int[n];
+            for (int j = i + 1; j < n; j++) {
+                GCD[i][j] = Gcd(nums[i], nums[j]);
+            }
+        }
+
+        int[] dp = new int[N];
+        for (int mask = N - 1; mask >= 0; mask--) {
+            int bits = BitCount(mask);
+            if (bits % 2 == 1) continue;
+            int op = bits / 2 + 1;
+
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) continue;
+                for (int j = i + 1; j < n; j++) {
+                    if ((mask & (1 << j)) != 0) continue;
+                    int newMask = mask | (1 << i) | (1 << j);
+                    dp[mask] = Math.Max(dp[mask], op * GCD[i][j] + dp[newMask]);
+                }
+            }
+        }
+        return dp[0];
+    }
+
+    private int Gcd(int a, int b) {
+        return b == 0 ? a : Gcd(b, a % b);
+    }
+
+    private int BitCount(int n) {
+        int count = 0;
+        while (n != 0) {
+            count += n & 1;
+            n >>= 1;
+        }
+        return count;
+    }
+}
+```
+
+```go
+func maxScore(nums []int) int {
+    n := len(nums)
+    N := 1 << n
+    GCD := make([][]int, n)
+    for i := range GCD {
+        GCD[i] = make([]int, n)
+    }
+
+    var gcd func(a, b int) int
+    gcd = func(a, b int) int {
+        if b == 0 {
+            return a
+        }
+        return gcd(b, a%b)
+    }
+
+    for i := 0; i < n; i++ {
+        for j := i + 1; j < n; j++ {
+            GCD[i][j] = gcd(nums[i], nums[j])
+        }
+    }
+
+    dp := make([]int, N)
+    for mask := N - 1; mask >= 0; mask-- {
+        bits := popcount(mask)
+        if bits%2 == 1 {
+            continue
+        }
+        op := bits/2 + 1
+
+        for i := 0; i < n; i++ {
+            if (mask & (1 << i)) != 0 {
+                continue
+            }
+            for j := i + 1; j < n; j++ {
+                if (mask & (1 << j)) != 0 {
+                    continue
+                }
+                newMask := mask | (1 << i) | (1 << j)
+                score := op*GCD[i][j] + dp[newMask]
+                if score > dp[mask] {
+                    dp[mask] = score
+                }
+            }
+        }
+    }
+    return dp[0]
+}
+
+func popcount(x int) int {
+    count := 0
+    for x != 0 {
+        count += x & 1
+        x >>= 1
+    }
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(nums: IntArray): Int {
+        val n = nums.size
+        val N = 1 shl n
+        val GCD = Array(n) { IntArray(n) }
+
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                GCD[i][j] = gcd(nums[i], nums[j])
+            }
+        }
+
+        val dp = IntArray(N)
+        for (mask in N - 1 downTo 0) {
+            val bits = Integer.bitCount(mask)
+            if (bits % 2 == 1) continue
+            val op = bits / 2 + 1
+
+            for (i in 0 until n) {
+                if ((mask and (1 shl i)) != 0) continue
+                for (j in i + 1 until n) {
+                    if ((mask and (1 shl j)) != 0) continue
+                    val newMask = mask or (1 shl i) or (1 shl j)
+                    dp[mask] = maxOf(dp[mask], op * GCD[i][j] + dp[newMask])
+                }
+            }
+        }
+        return dp[0]
+    }
+
+    private fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ nums: [Int]) -> Int {
+        let n = nums.count
+        let N = 1 << n
+        var GCD = Array(repeating: Array(repeating: 0, count: n), count: n)
+
+        func gcd(_ a: Int, _ b: Int) -> Int {
+            return b == 0 ? a : gcd(b, a % b)
+        }
+
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                GCD[i][j] = gcd(nums[i], nums[j])
+            }
+        }
+
+        var dp = Array(repeating: 0, count: N)
+        for mask in stride(from: N - 1, through: 0, by: -1) {
+            let bits = mask.nonzeroBitCount
+            if bits % 2 == 1 { continue }
+            let op = bits / 2 + 1
+
+            for i in 0..<n {
+                if (mask & (1 << i)) != 0 { continue }
+                for j in (i + 1)..<n {
+                    if (mask & (1 << j)) != 0 { continue }
+                    let newMask = mask | (1 << i) | (1 << j)
+                    dp[mask] = max(dp[mask], op * GCD[i][j] + dp[newMask])
+                }
+            }
+        }
+        return dp[0]
     }
 }
 ```

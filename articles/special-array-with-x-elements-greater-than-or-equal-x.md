@@ -79,6 +79,80 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SpecialArray(int[] nums) {
+        for (int i = 1; i <= nums.Length; i++) {
+            int count = 0;
+            foreach (int num in nums) {
+                if (num >= i) {
+                    count++;
+                }
+            }
+            if (count == i) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+```go
+func specialArray(nums []int) int {
+    for i := 1; i <= len(nums); i++ {
+        count := 0
+        for _, num := range nums {
+            if num >= i {
+                count++
+            }
+        }
+        if count == i {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun specialArray(nums: IntArray): Int {
+        for (i in 1..nums.size) {
+            var count = 0
+            for (num in nums) {
+                if (num >= i) {
+                    count++
+                }
+            }
+            if (count == i) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func specialArray(_ nums: [Int]) -> Int {
+        for i in 1...nums.count {
+            var count = 0
+            for num in nums {
+                if num >= i {
+                    count += 1
+                }
+            }
+            if count == i {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -182,6 +256,100 @@ class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SpecialArray(int[] nums) {
+        int l = 1, r = nums.Length;
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            int cnt = 0;
+            foreach (int num in nums) {
+                if (num >= mid) cnt++;
+            }
+
+            if (cnt == mid) return mid;
+
+            if (cnt < mid) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+```go
+func specialArray(nums []int) int {
+    l, r := 1, len(nums)
+    for l <= r {
+        mid := (l + r) / 2
+        cnt := 0
+        for _, num := range nums {
+            if num >= mid {
+                cnt++
+            }
+        }
+
+        if cnt == mid {
+            return mid
+        }
+
+        if cnt < mid {
+            r = mid - 1
+        } else {
+            l = mid + 1
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun specialArray(nums: IntArray): Int {
+        var l = 1
+        var r = nums.size
+        while (l <= r) {
+            val mid = (l + r) / 2
+            val cnt = nums.count { it >= mid }
+
+            if (cnt == mid) return mid
+
+            if (cnt < mid) {
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func specialArray(_ nums: [Int]) -> Int {
+        var l = 1
+        var r = nums.count
+        while l <= r {
+            let mid = (l + r) / 2
+            let cnt = nums.filter { $0 >= mid }.count
+
+            if cnt == mid { return mid }
+
+            if cnt < mid {
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+        return -1
     }
 }
 ```
@@ -307,6 +475,112 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SpecialArray(int[] nums) {
+        Array.Sort(nums);
+        int i = 0, prev = -1, totalRight = nums.Length;
+
+        while (i < nums.Length) {
+            if (nums[i] == totalRight ||
+               (prev < totalRight && totalRight < nums[i])) {
+                return totalRight;
+            }
+
+            while (i + 1 < nums.Length && nums[i] == nums[i + 1]) {
+                i++;
+            }
+
+            prev = nums[i];
+            i++;
+            totalRight = nums.Length - i;
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func specialArray(nums []int) int {
+    sort.Ints(nums)
+    i, prev, totalRight := 0, -1, len(nums)
+
+    for i < len(nums) {
+        if nums[i] == totalRight ||
+           (prev < totalRight && totalRight < nums[i]) {
+            return totalRight
+        }
+
+        for i+1 < len(nums) && nums[i] == nums[i+1] {
+            i++
+        }
+
+        prev = nums[i]
+        i++
+        totalRight = len(nums) - i
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun specialArray(nums: IntArray): Int {
+        nums.sort()
+        var i = 0
+        var prev = -1
+        var totalRight = nums.size
+
+        while (i < nums.size) {
+            if (nums[i] == totalRight ||
+               (prev < totalRight && totalRight < nums[i])) {
+                return totalRight
+            }
+
+            while (i + 1 < nums.size && nums[i] == nums[i + 1]) {
+                i++
+            }
+
+            prev = nums[i]
+            i++
+            totalRight = nums.size - i
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func specialArray(_ nums: [Int]) -> Int {
+        var nums = nums.sorted()
+        var i = 0
+        var prev = -1
+        var totalRight = nums.count
+
+        while i < nums.count {
+            if nums[i] == totalRight ||
+               (prev < totalRight && totalRight < nums[i]) {
+                return totalRight
+            }
+
+            while i + 1 < nums.count && nums[i] == nums[i + 1] {
+                i += 1
+            }
+
+            prev = nums[i]
+            i += 1
+            totalRight = nums.count - i
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -407,6 +681,94 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SpecialArray(int[] nums) {
+        Array.Sort(nums);
+        int n = nums.Length;
+        int i = 0, j = 1;
+
+        while (i < n && j <= n) {
+            while (i < n && j > nums[i]) i++;
+
+            if (j == n - i) {
+                return j;
+            }
+            j++;
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func specialArray(nums []int) int {
+    sort.Ints(nums)
+    n := len(nums)
+    i, j := 0, 1
+
+    for i < n && j <= n {
+        for i < n && j > nums[i] {
+            i++
+        }
+
+        if j == n-i {
+            return j
+        }
+        j++
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun specialArray(nums: IntArray): Int {
+        nums.sort()
+        val n = nums.size
+        var i = 0
+        var j = 1
+
+        while (i < n && j <= n) {
+            while (i < n && j > nums[i]) i++
+
+            if (j == n - i) {
+                return j
+            }
+            j++
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func specialArray(_ nums: [Int]) -> Int {
+        var nums = nums.sorted()
+        let n = nums.count
+        var i = 0
+        var j = 1
+
+        while i < n && j <= n {
+            while i < n && j > nums[i] {
+                i += 1
+            }
+
+            if j == n - i {
+                return j
+            }
+            j += 1
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -500,6 +862,91 @@ class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SpecialArray(int[] nums) {
+        int[] count = new int[nums.Length + 1];
+        foreach (int num in nums) {
+            int index = Math.Min(num, nums.Length);
+            count[index]++;
+        }
+
+        int totalRight = 0;
+        for (int i = nums.Length; i >= 0; i--) {
+            totalRight += count[i];
+            if (i == totalRight) {
+                return totalRight;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+```go
+func specialArray(nums []int) int {
+    count := make([]int, len(nums)+1)
+    for _, num := range nums {
+        index := num
+        if index > len(nums) {
+            index = len(nums)
+        }
+        count[index]++
+    }
+
+    totalRight := 0
+    for i := len(nums); i >= 0; i-- {
+        totalRight += count[i]
+        if i == totalRight {
+            return totalRight
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun specialArray(nums: IntArray): Int {
+        val count = IntArray(nums.size + 1)
+        for (num in nums) {
+            val index = minOf(num, nums.size)
+            count[index]++
+        }
+
+        var totalRight = 0
+        for (i in nums.size downTo 0) {
+            totalRight += count[i]
+            if (i == totalRight) {
+                return totalRight
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func specialArray(_ nums: [Int]) -> Int {
+        var count = [Int](repeating: 0, count: nums.count + 1)
+        for num in nums {
+            let index = min(num, nums.count)
+            count[index] += 1
+        }
+
+        var totalRight = 0
+        for i in stride(from: nums.count, through: 0, by: -1) {
+            totalRight += count[i]
+            if i == totalRight {
+                return totalRight
+            }
+        }
+        return -1
     }
 }
 ```

@@ -147,6 +147,105 @@ public class Solution {
 }
 ```
 
+```go
+func addBinary(a string, b string) string {
+    res := []byte{}
+    carry := 0
+
+    aBytes := []byte(a)
+    bBytes := []byte(b)
+    for i, j := 0, len(aBytes)-1; i < j; i, j = i+1, j-1 {
+        aBytes[i], aBytes[j] = aBytes[j], aBytes[i]
+    }
+    for i, j := 0, len(bBytes)-1; i < j; i, j = i+1, j-1 {
+        bBytes[i], bBytes[j] = bBytes[j], bBytes[i]
+    }
+
+    n := len(aBytes)
+    if len(bBytes) > n {
+        n = len(bBytes)
+    }
+
+    for i := 0; i < n; i++ {
+        digitA := 0
+        digitB := 0
+        if i < len(aBytes) {
+            digitA = int(aBytes[i] - '0')
+        }
+        if i < len(bBytes) {
+            digitB = int(bBytes[i] - '0')
+        }
+
+        total := digitA + digitB + carry
+        res = append(res, byte(total%2)+'0')
+        carry = total / 2
+    }
+
+    if carry > 0 {
+        res = append(res, '1')
+    }
+
+    for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+        res[i], res[j] = res[j], res[i]
+    }
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun addBinary(a: String, b: String): String {
+        val res = StringBuilder()
+        var carry = 0
+
+        val sa = a.reversed()
+        val sb = b.reversed()
+
+        for (i in 0 until maxOf(sa.length, sb.length)) {
+            val digitA = if (i < sa.length) sa[i] - '0' else 0
+            val digitB = if (i < sb.length) sb[i] - '0' else 0
+
+            val total = digitA + digitB + carry
+            res.append((total % 2))
+            carry = total / 2
+        }
+
+        if (carry > 0) {
+            res.append('1')
+        }
+
+        return res.reverse().toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func addBinary(_ a: String, _ b: String) -> String {
+        var res = ""
+        var carry = 0
+
+        let aArr = Array(a.reversed())
+        let bArr = Array(b.reversed())
+
+        for i in 0..<max(aArr.count, bArr.count) {
+            let digitA = i < aArr.count ? Int(String(aArr[i]))! : 0
+            let digitB = i < bArr.count ? Int(String(bArr[i]))! : 0
+
+            let total = digitA + digitB + carry
+            res = String(total % 2) + res
+            carry = total / 2
+        }
+
+        if carry > 0 {
+            res = "1" + res
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +385,90 @@ public class Solution {
         char[] resultArray = res.ToString().ToCharArray();
         Array.Reverse(resultArray);
         return new string(resultArray);
+    }
+}
+```
+
+```go
+func addBinary(a string, b string) string {
+    res := []byte{}
+    carry := 0
+
+    i, j := len(a)-1, len(b)-1
+    for i >= 0 || j >= 0 || carry > 0 {
+        digitA := 0
+        digitB := 0
+        if i >= 0 {
+            digitA = int(a[i] - '0')
+        }
+        if j >= 0 {
+            digitB = int(b[j] - '0')
+        }
+
+        total := digitA + digitB + carry
+        res = append(res, byte(total%2)+'0')
+        carry = total / 2
+
+        i--
+        j--
+    }
+
+    for l, r := 0, len(res)-1; l < r; l, r = l+1, r-1 {
+        res[l], res[r] = res[r], res[l]
+    }
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun addBinary(a: String, b: String): String {
+        val res = StringBuilder()
+        var carry = 0
+
+        var i = a.length - 1
+        var j = b.length - 1
+        while (i >= 0 || j >= 0 || carry > 0) {
+            val digitA = if (i >= 0) a[i] - '0' else 0
+            val digitB = if (j >= 0) b[j] - '0' else 0
+
+            val total = digitA + digitB + carry
+            res.append(total % 2)
+            carry = total / 2
+
+            i--
+            j--
+        }
+
+        return res.reverse().toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func addBinary(_ a: String, _ b: String) -> String {
+        var res = [Character]()
+        var carry = 0
+
+        let aArr = Array(a)
+        let bArr = Array(b)
+        var i = aArr.count - 1
+        var j = bArr.count - 1
+
+        while i >= 0 || j >= 0 || carry > 0 {
+            let digitA = i >= 0 ? Int(String(aArr[i]))! : 0
+            let digitB = j >= 0 ? Int(String(bArr[j]))! : 0
+
+            let total = digitA + digitB + carry
+            res.append(Character(String(total % 2)))
+            carry = total / 2
+
+            i -= 1
+            j -= 1
+        }
+
+        return String(res.reversed())
     }
 }
 ```

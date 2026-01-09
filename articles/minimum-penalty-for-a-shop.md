@@ -121,6 +121,127 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int BestClosingTime(string customers) {
+        int n = customers.Length;
+        int res = n, minPenalty = n;
+
+        for (int i = 0; i <= n; i++) {
+            int penalty = 0;
+            for (int j = 0; j < i; j++) {
+                if (customers[j] == 'N') {
+                    penalty++;
+                }
+            }
+            for (int j = i; j < n; j++) {
+                if (customers[j] == 'Y') {
+                    penalty++;
+                }
+            }
+
+            if (penalty < minPenalty) {
+                minPenalty = penalty;
+                res = i;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func bestClosingTime(customers string) int {
+    n := len(customers)
+    res, minPenalty := n, n
+
+    for i := 0; i <= n; i++ {
+        penalty := 0
+        for j := 0; j < i; j++ {
+            if customers[j] == 'N' {
+                penalty++
+            }
+        }
+        for j := i; j < n; j++ {
+            if customers[j] == 'Y' {
+                penalty++
+            }
+        }
+
+        if penalty < minPenalty {
+            minPenalty = penalty
+            res = i
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun bestClosingTime(customers: String): Int {
+        val n = customers.length
+        var res = n
+        var minPenalty = n
+
+        for (i in 0..n) {
+            var penalty = 0
+            for (j in 0 until i) {
+                if (customers[j] == 'N') {
+                    penalty++
+                }
+            }
+            for (j in i until n) {
+                if (customers[j] == 'Y') {
+                    penalty++
+                }
+            }
+
+            if (penalty < minPenalty) {
+                minPenalty = penalty
+                res = i
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func bestClosingTime(_ customers: String) -> Int {
+        let n = customers.count
+        let chars = Array(customers)
+        var res = n
+        var minPenalty = n
+
+        for i in 0...n {
+            var penalty = 0
+            for j in 0..<i {
+                if chars[j] == "N" {
+                    penalty += 1
+                }
+            }
+            for j in i..<n {
+                if chars[j] == "Y" {
+                    penalty += 1
+                }
+            }
+
+            if penalty < minPenalty {
+                minPenalty = penalty
+                res = i
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -280,6 +401,155 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int BestClosingTime(string customers) {
+        int n = customers.Length;
+        int cnt = 0;
+
+        int[] prefixN = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixN[i] = cnt;
+            if (customers[i] == 'N') {
+                cnt++;
+            }
+        }
+        prefixN[n] = cnt;
+
+        int[] suffixY = new int[n + 1];
+        for (int i = n - 1; i >= 0; i--) {
+            suffixY[i] = suffixY[i + 1];
+            if (customers[i] == 'Y') {
+                suffixY[i]++;
+            }
+        }
+
+        int res = n, minPenalty = n;
+        for (int i = 0; i <= n; i++) {
+            int penalty = prefixN[i] + suffixY[i];
+            if (penalty < minPenalty) {
+                minPenalty = penalty;
+                res = i;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func bestClosingTime(customers string) int {
+    n := len(customers)
+    cnt := 0
+
+    prefixN := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        prefixN[i] = cnt
+        if customers[i] == 'N' {
+            cnt++
+        }
+    }
+    prefixN[n] = cnt
+
+    suffixY := make([]int, n+1)
+    for i := n - 1; i >= 0; i-- {
+        suffixY[i] = suffixY[i+1]
+        if customers[i] == 'Y' {
+            suffixY[i]++
+        }
+    }
+
+    res, minPenalty := n, n
+    for i := 0; i <= n; i++ {
+        penalty := prefixN[i] + suffixY[i]
+        if penalty < minPenalty {
+            minPenalty = penalty
+            res = i
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun bestClosingTime(customers: String): Int {
+        val n = customers.length
+        var cnt = 0
+
+        val prefixN = IntArray(n + 1)
+        for (i in 0 until n) {
+            prefixN[i] = cnt
+            if (customers[i] == 'N') {
+                cnt++
+            }
+        }
+        prefixN[n] = cnt
+
+        val suffixY = IntArray(n + 1)
+        for (i in n - 1 downTo 0) {
+            suffixY[i] = suffixY[i + 1]
+            if (customers[i] == 'Y') {
+                suffixY[i]++
+            }
+        }
+
+        var res = n
+        var minPenalty = n
+        for (i in 0..n) {
+            val penalty = prefixN[i] + suffixY[i]
+            if (penalty < minPenalty) {
+                minPenalty = penalty
+                res = i
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func bestClosingTime(_ customers: String) -> Int {
+        let n = customers.count
+        let chars = Array(customers)
+        var cnt = 0
+
+        var prefixN = [Int](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixN[i] = cnt
+            if chars[i] == "N" {
+                cnt += 1
+            }
+        }
+        prefixN[n] = cnt
+
+        var suffixY = [Int](repeating: 0, count: n + 1)
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            suffixY[i] = suffixY[i + 1]
+            if chars[i] == "Y" {
+                suffixY[i] += 1
+            }
+        }
+
+        var res = n
+        var minPenalty = n
+        for i in 0...n {
+            let penalty = prefixN[i] + suffixY[i]
+            if penalty < minPenalty {
+                minPenalty = penalty
+                res = i
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,6 +672,117 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int BestClosingTime(string customers) {
+        int cntY = 0;
+        foreach (char c in customers) {
+            if (c == 'Y') cntY++;
+        }
+
+        int minPenalty = cntY, res = 0, cntN = 0;
+        for (int i = 0; i < customers.Length; i++) {
+            if (customers[i] == 'Y') {
+                cntY--;
+            } else {
+                cntN++;
+            }
+
+            int penalty = cntN + cntY;
+            if (penalty < minPenalty) {
+                res = i + 1;
+                minPenalty = penalty;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func bestClosingTime(customers string) int {
+    cntY := 0
+    for _, c := range customers {
+        if c == 'Y' {
+            cntY++
+        }
+    }
+
+    minPenalty, res, cntN := cntY, 0, 0
+    for i := 0; i < len(customers); i++ {
+        if customers[i] == 'Y' {
+            cntY--
+        } else {
+            cntN++
+        }
+
+        penalty := cntN + cntY
+        if penalty < minPenalty {
+            res = i + 1
+            minPenalty = penalty
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun bestClosingTime(customers: String): Int {
+        var cntY = customers.count { it == 'Y' }
+
+        var minPenalty = cntY
+        var res = 0
+        var cntN = 0
+        for (i in customers.indices) {
+            if (customers[i] == 'Y') {
+                cntY--
+            } else {
+                cntN++
+            }
+
+            val penalty = cntN + cntY
+            if (penalty < minPenalty) {
+                res = i + 1
+                minPenalty = penalty
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func bestClosingTime(_ customers: String) -> Int {
+        let chars = Array(customers)
+        var cntY = chars.filter { $0 == "Y" }.count
+
+        var minPenalty = cntY
+        var res = 0
+        var cntN = 0
+        for i in 0..<chars.count {
+            if chars[i] == "Y" {
+                cntY -= 1
+            } else {
+                cntN += 1
+            }
+
+            let penalty = cntN + cntY
+            if penalty < minPenalty {
+                res = i + 1
+                minPenalty = penalty
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -491,6 +872,89 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int BestClosingTime(string customers) {
+        int res = 0, minPenalty = 0, penalty = 0;
+
+        for (int i = 0; i < customers.Length; i++) {
+            penalty += customers[i] == 'Y' ? 1 : -1;
+
+            if (penalty > minPenalty) {
+                minPenalty = penalty;
+                res = i + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func bestClosingTime(customers string) int {
+    res, minPenalty, penalty := 0, 0, 0
+
+    for i := 0; i < len(customers); i++ {
+        if customers[i] == 'Y' {
+            penalty++
+        } else {
+            penalty--
+        }
+
+        if penalty > minPenalty {
+            minPenalty = penalty
+            res = i + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun bestClosingTime(customers: String): Int {
+        var res = 0
+        var minPenalty = 0
+        var penalty = 0
+
+        for (i in customers.indices) {
+            penalty += if (customers[i] == 'Y') 1 else -1
+
+            if (penalty > minPenalty) {
+                minPenalty = penalty
+                res = i + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func bestClosingTime(_ customers: String) -> Int {
+        let chars = Array(customers)
+        var res = 0
+        var minPenalty = 0
+        var penalty = 0
+
+        for i in 0..<chars.count {
+            penalty += chars[i] == "Y" ? 1 : -1
+
+            if penalty > minPenalty {
+                minPenalty = penalty
+                res = i + 1
+            }
+        }
+
+        return res
     }
 }
 ```

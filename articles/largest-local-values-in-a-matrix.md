@@ -85,6 +85,96 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] LargestLocal(int[][] grid) {
+        int N = grid.Length;
+        int[][] res = new int[N - 2][];
+        for (int i = 0; i < N - 2; i++) {
+            res[i] = new int[N - 2];
+        }
+
+        for (int i = 0; i < N - 2; i++) {
+            for (int j = 0; j < N - 2; j++) {
+                for (int r = i; r < i + 3; r++) {
+                    for (int c = j; c < j + 3; c++) {
+                        res[i][j] = Math.Max(res[i][j], grid[r][c]);
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func largestLocal(grid [][]int) [][]int {
+    N := len(grid)
+    res := make([][]int, N-2)
+    for i := range res {
+        res[i] = make([]int, N-2)
+    }
+
+    for i := 0; i < N-2; i++ {
+        for j := 0; j < N-2; j++ {
+            for r := i; r < i+3; r++ {
+                for c := j; c < j+3; c++ {
+                    if grid[r][c] > res[i][j] {
+                        res[i][j] = grid[r][c]
+                    }
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestLocal(grid: Array<IntArray>): Array<IntArray> {
+        val N = grid.size
+        val res = Array(N - 2) { IntArray(N - 2) }
+
+        for (i in 0 until N - 2) {
+            for (j in 0 until N - 2) {
+                for (r in i until i + 3) {
+                    for (c in j until j + 3) {
+                        res[i][j] = maxOf(res[i][j], grid[r][c])
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestLocal(_ grid: [[Int]]) -> [[Int]] {
+        let N = grid.count
+        var res = [[Int]](repeating: [Int](repeating: 0, count: N - 2), count: N - 2)
+
+        for i in 0..<(N - 2) {
+            for j in 0..<(N - 2) {
+                for r in i..<(i + 3) {
+                    for c in j..<(j + 3) {
+                        res[i][j] = max(res[i][j], grid[r][c])
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -436,6 +526,330 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class SparseTable {
+    private int[,,,] sparseTable;
+    private int[] log;
+    private int n;
+
+    public SparseTable(int[][] grid) {
+        n = grid.Length;
+        log = new int[n + 1];
+        for (int i = 2; i <= n; i++) {
+            log[i] = log[i >> 1] + 1;
+        }
+
+        int maxLog = log[n];
+        sparseTable = new int[n, n, maxLog + 1, maxLog + 1];
+
+        for (int r = 0; r < n; r++) {
+            for (int c = 0; c < n; c++) {
+                sparseTable[r, c, 0, 0] = grid[r][c];
+            }
+        }
+
+        for (int i = 0; i <= maxLog; i++) {
+            for (int j = 0; j <= maxLog; j++) {
+                for (int r = 0; r + (1 << i) <= n; r++) {
+                    for (int c = 0; c + (1 << j) <= n; c++) {
+                        if (i == 0 && j == 0) continue;
+                        if (i == 0) {
+                            sparseTable[r, c, i, j] = Math.Max(
+                                sparseTable[r, c, i, j - 1],
+                                sparseTable[r, c + (1 << (j - 1)), i, j - 1]
+                            );
+                        } else if (j == 0) {
+                            sparseTable[r, c, i, j] = Math.Max(
+                                sparseTable[r, c, i - 1, j],
+                                sparseTable[r + (1 << (i - 1)), c, i - 1, j]
+                            );
+                        } else {
+                            sparseTable[r, c, i, j] = Math.Max(
+                                Math.Max(sparseTable[r, c, i - 1, j - 1],
+                                        sparseTable[r + (1 << (i - 1)), c, i - 1, j - 1]),
+                                Math.Max(sparseTable[r, c + (1 << (j - 1)), i - 1, j - 1],
+                                        sparseTable[r + (1 << (i - 1)), c + (1 << (j - 1)), i - 1, j - 1])
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public int Query(int x1, int y1, int x2, int y2) {
+        int lx = log[x2 - x1 + 1];
+        int ly = log[y2 - y1 + 1];
+        return Math.Max(
+            Math.Max(sparseTable[x1, y1, lx, ly], sparseTable[x2 - (1 << lx) + 1, y1, lx, ly]),
+            Math.Max(sparseTable[x1, y2 - (1 << ly) + 1, lx, ly],
+                    sparseTable[x2 - (1 << lx) + 1, y2 - (1 << ly) + 1, lx, ly])
+        );
+    }
+}
+
+public class Solution {
+    public int[][] LargestLocal(int[][] grid) {
+        int n = grid.Length;
+        int k = 3;
+        SparseTable st = new SparseTable(grid);
+        int[][] res = new int[n - k + 1][];
+        for (int i = 0; i <= n - k; i++) {
+            res[i] = new int[n - k + 1];
+            for (int j = 0; j <= n - k; j++) {
+                res[i][j] = st.Query(i, j, i + k - 1, j + k - 1);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+type SparseTable struct {
+    sparseTable [][][][]int
+    log         []int
+    n           int
+}
+
+func NewSparseTable(grid [][]int) *SparseTable {
+    n := len(grid)
+    log := make([]int, n+1)
+    for i := 2; i <= n; i++ {
+        log[i] = log[i/2] + 1
+    }
+
+    maxLog := log[n]
+    sparseTable := make([][][][]int, n)
+    for r := range sparseTable {
+        sparseTable[r] = make([][][]int, n)
+        for c := range sparseTable[r] {
+            sparseTable[r][c] = make([][]int, maxLog+1)
+            for i := range sparseTable[r][c] {
+                sparseTable[r][c][i] = make([]int, maxLog+1)
+            }
+        }
+    }
+
+    for r := 0; r < n; r++ {
+        for c := 0; c < n; c++ {
+            sparseTable[r][c][0][0] = grid[r][c]
+        }
+    }
+
+    for i := 0; i <= maxLog; i++ {
+        for j := 0; j <= maxLog; j++ {
+            for r := 0; r+(1<<i) <= n; r++ {
+                for c := 0; c+(1<<j) <= n; c++ {
+                    if i == 0 && j == 0 {
+                        continue
+                    }
+                    if i == 0 {
+                        sparseTable[r][c][i][j] = max(
+                            sparseTable[r][c][i][j-1],
+                            sparseTable[r][c+(1<<(j-1))][i][j-1],
+                        )
+                    } else if j == 0 {
+                        sparseTable[r][c][i][j] = max(
+                            sparseTable[r][c][i-1][j],
+                            sparseTable[r+(1<<(i-1))][c][i-1][j],
+                        )
+                    } else {
+                        sparseTable[r][c][i][j] = max(
+                            max(sparseTable[r][c][i-1][j-1], sparseTable[r+(1<<(i-1))][c][i-1][j-1]),
+                            max(sparseTable[r][c+(1<<(j-1))][i-1][j-1],
+                                sparseTable[r+(1<<(i-1))][c+(1<<(j-1))][i-1][j-1]),
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+    return &SparseTable{sparseTable, log, n}
+}
+
+func (st *SparseTable) Query(x1, y1, x2, y2 int) int {
+    lx := st.log[x2-x1+1]
+    ly := st.log[y2-y1+1]
+    return max(
+        max(st.sparseTable[x1][y1][lx][ly], st.sparseTable[x2-(1<<lx)+1][y1][lx][ly]),
+        max(st.sparseTable[x1][y2-(1<<ly)+1][lx][ly],
+            st.sparseTable[x2-(1<<lx)+1][y2-(1<<ly)+1][lx][ly]),
+    )
+}
+
+func largestLocal(grid [][]int) [][]int {
+    n := len(grid)
+    k := 3
+    st := NewSparseTable(grid)
+    res := make([][]int, n-k+1)
+    for i := 0; i <= n-k; i++ {
+        res[i] = make([]int, n-k+1)
+        for j := 0; j <= n-k; j++ {
+            res[i][j] = st.Query(i, j, i+k-1, j+k-1)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class SparseTable(grid: Array<IntArray>) {
+    private val sparseTable: Array<Array<Array<IntArray>>>
+    private val log: IntArray
+    private val n: Int
+
+    init {
+        n = grid.size
+        log = IntArray(n + 1)
+        for (i in 2..n) {
+            log[i] = log[i shr 1] + 1
+        }
+
+        val maxLog = log[n]
+        sparseTable = Array(n) { Array(n) { Array(maxLog + 1) { IntArray(maxLog + 1) } } }
+
+        for (r in 0 until n) {
+            for (c in 0 until n) {
+                sparseTable[r][c][0][0] = grid[r][c]
+            }
+        }
+
+        for (i in 0..maxLog) {
+            for (j in 0..maxLog) {
+                for (r in 0 until n - (1 shl i) + 1) {
+                    for (c in 0 until n - (1 shl j) + 1) {
+                        if (i == 0 && j == 0) continue
+                        if (i == 0) {
+                            sparseTable[r][c][i][j] = maxOf(
+                                sparseTable[r][c][i][j - 1],
+                                sparseTable[r][c + (1 shl (j - 1))][i][j - 1]
+                            )
+                        } else if (j == 0) {
+                            sparseTable[r][c][i][j] = maxOf(
+                                sparseTable[r][c][i - 1][j],
+                                sparseTable[r + (1 shl (i - 1))][c][i - 1][j]
+                            )
+                        } else {
+                            sparseTable[r][c][i][j] = maxOf(
+                                maxOf(sparseTable[r][c][i - 1][j - 1],
+                                      sparseTable[r + (1 shl (i - 1))][c][i - 1][j - 1]),
+                                maxOf(sparseTable[r][c + (1 shl (j - 1))][i - 1][j - 1],
+                                      sparseTable[r + (1 shl (i - 1))][c + (1 shl (j - 1))][i - 1][j - 1])
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    fun query(x1: Int, y1: Int, x2: Int, y2: Int): Int {
+        val lx = log[x2 - x1 + 1]
+        val ly = log[y2 - y1 + 1]
+        return maxOf(
+            maxOf(sparseTable[x1][y1][lx][ly], sparseTable[x2 - (1 shl lx) + 1][y1][lx][ly]),
+            maxOf(sparseTable[x1][y2 - (1 shl ly) + 1][lx][ly],
+                  sparseTable[x2 - (1 shl lx) + 1][y2 - (1 shl ly) + 1][lx][ly])
+        )
+    }
+}
+
+class Solution {
+    fun largestLocal(grid: Array<IntArray>): Array<IntArray> {
+        val n = grid.size
+        val k = 3
+        val st = SparseTable(grid)
+        return Array(n - k + 1) { i ->
+            IntArray(n - k + 1) { j ->
+                st.query(i, j, i + k - 1, j + k - 1)
+            }
+        }
+    }
+}
+```
+
+```swift
+class SparseTable {
+    private var sparseTable: [[[[Int]]]]
+    private var log: [Int]
+    private var n: Int
+
+    init(_ grid: [[Int]]) {
+        n = grid.count
+        log = [Int](repeating: 0, count: n + 1)
+        for i in 2...n {
+            log[i] = log[i / 2] + 1
+        }
+
+        let maxLog = log[n]
+        sparseTable = [[[[Int]]]](repeating: [[[Int]]](repeating: [[Int]](repeating: [Int](repeating: 0, count: maxLog + 1), count: maxLog + 1), count: n), count: n)
+
+        for r in 0..<n {
+            for c in 0..<n {
+                sparseTable[r][c][0][0] = grid[r][c]
+            }
+        }
+
+        for i in 0...maxLog {
+            for j in 0...maxLog {
+                for r in 0..<(n - (1 << i) + 1) {
+                    for c in 0..<(n - (1 << j) + 1) {
+                        if i == 0 && j == 0 { continue }
+                        if i == 0 {
+                            sparseTable[r][c][i][j] = max(
+                                sparseTable[r][c][i][j - 1],
+                                sparseTable[r][c + (1 << (j - 1))][i][j - 1]
+                            )
+                        } else if j == 0 {
+                            sparseTable[r][c][i][j] = max(
+                                sparseTable[r][c][i - 1][j],
+                                sparseTable[r + (1 << (i - 1))][c][i - 1][j]
+                            )
+                        } else {
+                            sparseTable[r][c][i][j] = max(
+                                max(sparseTable[r][c][i - 1][j - 1],
+                                    sparseTable[r + (1 << (i - 1))][c][i - 1][j - 1]),
+                                max(sparseTable[r][c + (1 << (j - 1))][i - 1][j - 1],
+                                    sparseTable[r + (1 << (i - 1))][c + (1 << (j - 1))][i - 1][j - 1])
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    func query(_ x1: Int, _ y1: Int, _ x2: Int, _ y2: Int) -> Int {
+        let lx = log[x2 - x1 + 1]
+        let ly = log[y2 - y1 + 1]
+        return max(
+            max(sparseTable[x1][y1][lx][ly], sparseTable[x2 - (1 << lx) + 1][y1][lx][ly]),
+            max(sparseTable[x1][y2 - (1 << ly) + 1][lx][ly],
+                sparseTable[x2 - (1 << lx) + 1][y2 - (1 << ly) + 1][lx][ly])
+        )
+    }
+}
+
+class Solution {
+    func largestLocal(_ grid: [[Int]]) -> [[Int]] {
+        let n = grid.count
+        let k = 3
+        let st = SparseTable(grid)
+        var res = [[Int]](repeating: [Int](repeating: 0, count: n - k + 1), count: n - k + 1)
+
+        for i in 0...(n - k) {
+            for j in 0...(n - k) {
+                res[i][j] = st.query(i, j, i + k - 1, j + k - 1)
+            }
+        }
+
+        return res
     }
 }
 ```

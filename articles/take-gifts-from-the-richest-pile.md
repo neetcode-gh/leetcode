@@ -98,6 +98,63 @@ public class Solution {
 }
 ```
 
+```go
+func pickGifts(gifts []int, k int) int64 {
+    for t := 0; t < k; t++ {
+        maxIdx := 0
+        for i := 1; i < len(gifts); i++ {
+            if gifts[i] > gifts[maxIdx] {
+                maxIdx = i
+            }
+        }
+        gifts[maxIdx] = int(math.Floor(math.Sqrt(float64(gifts[maxIdx]))))
+    }
+
+    var sum int64 = 0
+    for _, g := range gifts {
+        sum += int64(g)
+    }
+    return sum
+}
+```
+
+```kotlin
+class Solution {
+    fun pickGifts(gifts: IntArray, k: Int): Long {
+        for (t in 0 until k) {
+            var maxIdx = 0
+            for (i in 1 until gifts.size) {
+                if (gifts[i] > gifts[maxIdx]) {
+                    maxIdx = i
+                }
+            }
+            gifts[maxIdx] = kotlin.math.floor(kotlin.math.sqrt(gifts[maxIdx].toDouble())).toInt()
+        }
+
+        return gifts.sumOf { it.toLong() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func pickGifts(_ gifts: [Int], _ k: Int) -> Int {
+        var gifts = gifts
+        for _ in 0..<k {
+            var maxIdx = 0
+            for i in 1..<gifts.count {
+                if gifts[i] > gifts[maxIdx] {
+                    maxIdx = i
+                }
+            }
+            gifts[maxIdx] = Int(floor(sqrt(Double(gifts[maxIdx]))))
+        }
+
+        return gifts.reduce(0, +)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,11 +270,144 @@ public class Solution {
 }
 ```
 
+```go
+func pickGifts(gifts []int, k int) int64 {
+    h := &MaxHeap{}
+    heap.Init(h)
+    for _, g := range gifts {
+        heap.Push(h, g)
+    }
+
+    for t := 0; t < k; t++ {
+        n := heap.Pop(h).(int)
+        heap.Push(h, int(math.Floor(math.Sqrt(float64(n)))))
+    }
+
+    var sum int64 = 0
+    for h.Len() > 0 {
+        sum += int64(heap.Pop(h).(int))
+    }
+    return sum
+}
+
+type MaxHeap []int
+
+func (h MaxHeap) Len() int           { return len(h) }
+func (h MaxHeap) Less(i, j int) bool { return h[i] > h[j] }
+func (h MaxHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *MaxHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun pickGifts(gifts: IntArray, k: Int): Long {
+        val pq = PriorityQueue<Int>(compareByDescending { it })
+        for (g in gifts) pq.offer(g)
+
+        for (t in 0 until k) {
+            val n = pq.poll()
+            pq.offer(kotlin.math.floor(kotlin.math.sqrt(n.toDouble())).toInt())
+        }
+
+        var sum = 0L
+        while (pq.isNotEmpty()) {
+            sum += pq.poll()
+        }
+        return sum
+    }
+}
+```
+
+```swift
+class Solution {
+    func pickGifts(_ gifts: [Int], _ k: Int) -> Int {
+        var heap = Heap<Int>(sort: >)
+        for g in gifts {
+            heap.insert(g)
+        }
+
+        for _ in 0..<k {
+            if let n = heap.remove() {
+                heap.insert(Int(floor(sqrt(Double(n)))))
+            }
+        }
+
+        var sum = 0
+        while !heap.isEmpty {
+            if let val = heap.remove() {
+                sum += val
+            }
+        }
+        return sum
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let sort: (T, T) -> Bool
+
+    init(sort: @escaping (T, T) -> Bool) {
+        self.sort = sort
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let removed = elements.removeLast()
+        if !elements.isEmpty { siftDown(from: 0) }
+        return removed
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && sort(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && sort(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && sort(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: 
+* Time complexity:
     - $O(n + k \log n)$ in Python.
     - $O(n \log n + k \log n)$ in other languages.
 * Space complexity: $O(n)$

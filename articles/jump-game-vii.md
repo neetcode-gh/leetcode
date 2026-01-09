@@ -164,6 +164,104 @@ public class Solution {
 }
 ```
 
+```go
+func canReach(s string, minJump int, maxJump int) bool {
+    n := len(s)
+    dp := make([]*bool, n)
+    t := true
+    dp[n-1] = &t
+
+    var dfs func(i int) bool
+    dfs = func(i int) bool {
+        if dp[i] != nil {
+            return *dp[i]
+        }
+
+        f := false
+        dp[i] = &f
+        for j := i + minJump; j <= min(n-1, i+maxJump); j++ {
+            if s[j] == '0' && dfs(j) {
+                t := true
+                dp[i] = &t
+                break
+            }
+        }
+        return *dp[i]
+    }
+
+    if s[n-1] == '1' {
+        return false
+    }
+    return dfs(0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun canReach(s: String, minJump: Int, maxJump: Int): Boolean {
+        val n = s.length
+        val dp = arrayOfNulls<Boolean>(n)
+        dp[n - 1] = true
+
+        fun dfs(i: Int): Boolean {
+            dp[i]?.let { return it }
+
+            dp[i] = false
+            for (j in i + minJump..minOf(n - 1, i + maxJump)) {
+                if (s[j] == '0' && dfs(j)) {
+                    dp[i] = true
+                    break
+                }
+            }
+            return dp[i]!!
+        }
+
+        if (s[n - 1] == '1') {
+            return false
+        }
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func canReach(_ s: String, _ minJump: Int, _ maxJump: Int) -> Bool {
+        let sArr = Array(s)
+        let n = sArr.count
+        var dp = [Bool?](repeating: nil, count: n)
+        dp[n - 1] = true
+
+        func dfs(_ i: Int) -> Bool {
+            if let val = dp[i] {
+                return val
+            }
+
+            dp[i] = false
+            for j in (i + minJump)...min(n - 1, i + maxJump) {
+                if sArr[j] == "0" && dfs(j) {
+                    dp[i] = true
+                    break
+                }
+            }
+            return dp[i]!
+        }
+
+        if sArr[n - 1] == "1" {
+            return false
+        }
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -310,6 +408,95 @@ public class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```go
+func canReach(s string, minJump int, maxJump int) bool {
+    n := len(s)
+    q := []int{0}
+    farthest := 0
+
+    for len(q) > 0 {
+        i := q[0]
+        q = q[1:]
+        start := max(i+minJump, farthest+1)
+        for j := start; j < min(i+maxJump+1, n); j++ {
+            if s[j] == '0' {
+                if j == n-1 {
+                    return true
+                }
+                q = append(q, j)
+            }
+        }
+        farthest = i + maxJump
+    }
+
+    return false
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun canReach(s: String, minJump: Int, maxJump: Int): Boolean {
+        val n = s.length
+        val q: java.util.Queue<Int> = java.util.LinkedList()
+        q.add(0)
+        var farthest = 0
+
+        while (q.isNotEmpty()) {
+            val i = q.poll()
+            val start = maxOf(i + minJump, farthest + 1)
+            for (j in start..minOf(i + maxJump, n - 1)) {
+                if (s[j] == '0') {
+                    if (j == n - 1) return true
+                    q.add(j)
+                }
+            }
+            farthest = i + maxJump
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func canReach(_ s: String, _ minJump: Int, _ maxJump: Int) -> Bool {
+        let sArr = Array(s)
+        let n = sArr.count
+        var q = [0]
+        var farthest = 0
+
+        while !q.isEmpty {
+            let i = q.removeFirst()
+            let start = max(i + minJump, farthest + 1)
+            for j in start..<min(i + maxJump + 1, n) {
+                if sArr[j] == "0" {
+                    if j == n - 1 { return true }
+                    q.append(j)
+                }
+            }
+            farthest = i + maxJump
+        }
+
+        return false
     }
 }
 ```
@@ -467,6 +654,92 @@ public class Solution {
         }
 
         return dp[n - 1];
+    }
+}
+```
+
+```go
+func canReach(s string, minJump int, maxJump int) bool {
+    n := len(s)
+    if s[n-1] == '1' {
+        return false
+    }
+
+    dp := make([]bool, n)
+    dp[0] = true
+    cnt := 0
+
+    for i := 1; i < n; i++ {
+        if i >= minJump && dp[i-minJump] {
+            cnt++
+        }
+        if i > maxJump && dp[i-maxJump-1] {
+            cnt--
+        }
+        if cnt > 0 && s[i] == '0' {
+            dp[i] = true
+        }
+    }
+
+    return dp[n-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun canReach(s: String, minJump: Int, maxJump: Int): Boolean {
+        val n = s.length
+        if (s[n - 1] == '1') {
+            return false
+        }
+
+        val dp = BooleanArray(n)
+        dp[0] = true
+        var cnt = 0
+
+        for (i in 1 until n) {
+            if (i >= minJump && dp[i - minJump]) {
+                cnt++
+            }
+            if (i > maxJump && dp[i - maxJump - 1]) {
+                cnt--
+            }
+            if (cnt > 0 && s[i] == '0') {
+                dp[i] = true
+            }
+        }
+
+        return dp[n - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func canReach(_ s: String, _ minJump: Int, _ maxJump: Int) -> Bool {
+        let sArr = Array(s)
+        let n = sArr.count
+        if sArr[n - 1] == "1" {
+            return false
+        }
+
+        var dp = [Bool](repeating: false, count: n)
+        dp[0] = true
+        var cnt = 0
+
+        for i in 1..<n {
+            if i >= minJump && dp[i - minJump] {
+                cnt += 1
+            }
+            if i > maxJump && dp[i - maxJump - 1] {
+                cnt -= 1
+            }
+            if cnt > 0 && sArr[i] == "0" {
+                dp[i] = true
+            }
+        }
+
+        return dp[n - 1]
     }
 }
 ```
@@ -629,6 +902,105 @@ public class Solution {
         }
 
         return dp[n - 1];
+    }
+}
+```
+
+```go
+func canReach(s string, minJump int, maxJump int) bool {
+    n := len(s)
+    if s[n-1] == '1' {
+        return false
+    }
+
+    dp := make([]bool, n)
+    dp[0] = true
+    j := 0
+
+    for i := 0; i < n; i++ {
+        if !dp[i] {
+            continue
+        }
+        j = max(j, i+minJump)
+        for j < min(i+maxJump+1, n) {
+            if s[j] == '0' {
+                dp[j] = true
+            }
+            j++
+        }
+    }
+
+    return dp[n-1]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun canReach(s: String, minJump: Int, maxJump: Int): Boolean {
+        val n = s.length
+        if (s[n - 1] == '1') {
+            return false
+        }
+
+        val dp = BooleanArray(n)
+        dp[0] = true
+        var j = 0
+
+        for (i in 0 until n) {
+            if (!dp[i]) continue
+            j = maxOf(j, i + minJump)
+            while (j <= minOf(i + maxJump, n - 1)) {
+                if (s[j] == '0') {
+                    dp[j] = true
+                }
+                j++
+            }
+        }
+
+        return dp[n - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func canReach(_ s: String, _ minJump: Int, _ maxJump: Int) -> Bool {
+        let sArr = Array(s)
+        let n = sArr.count
+        if sArr[n - 1] == "1" {
+            return false
+        }
+
+        var dp = [Bool](repeating: false, count: n)
+        dp[0] = true
+        var j = 0
+
+        for i in 0..<n {
+            if !dp[i] { continue }
+            j = max(j, i + minJump)
+            while j <= min(i + maxJump, n - 1) {
+                if sArr[j] == "0" {
+                    dp[j] = true
+                }
+                j += 1
+            }
+        }
+
+        return dp[n - 1]
     }
 }
 ```

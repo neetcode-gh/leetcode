@@ -136,6 +136,151 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums, int x) {
+        int n = nums.Length;
+        int res = n + 1;
+        int suffixSum = 0, prefixSum = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            suffixSum += nums[i];
+            if (suffixSum == x) {
+                res = Math.Min(res, n - i);
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            prefixSum += nums[i];
+            suffixSum = 0;
+            if (prefixSum == x) {
+                res = Math.Min(res, i + 1);
+            }
+
+            for (int j = n - 1; j > i; j--) {
+                suffixSum += nums[j];
+                if (prefixSum + suffixSum == x) {
+                    res = Math.Min(res, i + 1 + n - j);
+                }
+            }
+        }
+
+        return res == n + 1 ? -1 : res;
+    }
+}
+```
+
+```go
+func minOperations(nums []int, x int) int {
+    n := len(nums)
+    res := n + 1
+    suffixSum, prefixSum := 0, 0
+
+    for i := n - 1; i >= 0; i-- {
+        suffixSum += nums[i]
+        if suffixSum == x {
+            if n-i < res {
+                res = n - i
+            }
+        }
+    }
+
+    for i := 0; i < n; i++ {
+        prefixSum += nums[i]
+        suffixSum = 0
+        if prefixSum == x {
+            if i+1 < res {
+                res = i + 1
+            }
+        }
+
+        for j := n - 1; j > i; j-- {
+            suffixSum += nums[j]
+            if prefixSum+suffixSum == x {
+                if i+1+n-j < res {
+                    res = i + 1 + n - j
+                }
+            }
+        }
+    }
+
+    if res == n+1 {
+        return -1
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray, x: Int): Int {
+        val n = nums.size
+        var res = n + 1
+        var suffixSum = 0
+        var prefixSum = 0
+
+        for (i in n - 1 downTo 0) {
+            suffixSum += nums[i]
+            if (suffixSum == x) {
+                res = minOf(res, n - i)
+            }
+        }
+
+        for (i in 0 until n) {
+            prefixSum += nums[i]
+            suffixSum = 0
+            if (prefixSum == x) {
+                res = minOf(res, i + 1)
+            }
+
+            for (j in n - 1 downTo i + 1) {
+                suffixSum += nums[j]
+                if (prefixSum + suffixSum == x) {
+                    res = minOf(res, i + 1 + n - j)
+                }
+            }
+        }
+
+        return if (res == n + 1) -1 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int], _ x: Int) -> Int {
+        let n = nums.count
+        var res = n + 1
+        var suffixSum = 0
+        var prefixSum = 0
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            suffixSum += nums[i]
+            if suffixSum == x {
+                res = min(res, n - i)
+            }
+        }
+
+        for i in 0..<n {
+            prefixSum += nums[i]
+            suffixSum = 0
+            if prefixSum == x {
+                res = min(res, i + 1)
+            }
+
+            for j in stride(from: n - 1, to: i, by: -1) {
+                suffixSum += nums[j]
+                if prefixSum + suffixSum == x {
+                    res = min(res, i + 1 + n - j)
+                }
+            }
+        }
+
+        return res == n + 1 ? -1 : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +479,208 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] prefixSum;
+
+    public int MinOperations(int[] nums, int x) {
+        int n = nums.Length;
+        prefixSum = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        if (x > prefixSum[n]) {
+            return -1;
+        }
+
+        int res = BinarySearch(x, n);
+        int suffixSum = 0;
+        for (int i = n - 1; i > 0; i--) {
+            suffixSum += nums[i];
+            if (suffixSum == x) {
+                res = Math.Min(res, n - i);
+                break;
+            }
+            if (suffixSum > x) break;
+            res = Math.Min(res, BinarySearch(x - suffixSum, i) + n - i);
+        }
+
+        return res == n + 1 ? -1 : res;
+    }
+
+    private int BinarySearch(int target, int m) {
+        int l = 1, r = m;
+        int index = prefixSum.Length;
+
+        while (l <= r) {
+            int mid = (l + r) / 2;
+            if (prefixSum[mid] >= target) {
+                if (prefixSum[mid] == target) {
+                    index = mid;
+                }
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return index;
+    }
+}
+```
+
+```go
+func minOperations(nums []int, x int) int {
+    n := len(nums)
+    prefixSum := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        prefixSum[i+1] = prefixSum[i] + nums[i]
+    }
+
+    if x > prefixSum[n] {
+        return -1
+    }
+
+    binarySearch := func(target, m int) int {
+        l, r := 1, m
+        index := n + 1
+
+        for l <= r {
+            mid := (l + r) / 2
+            if prefixSum[mid] >= target {
+                if prefixSum[mid] == target {
+                    index = mid
+                }
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+        return index
+    }
+
+    res := binarySearch(x, n)
+    suffixSum := 0
+    for i := n - 1; i > 0; i-- {
+        suffixSum += nums[i]
+        if suffixSum == x {
+            if n-i < res {
+                res = n - i
+            }
+            break
+        }
+        if suffixSum > x {
+            break
+        }
+        if binarySearch(x-suffixSum, i)+n-i < res {
+            res = binarySearch(x-suffixSum, i) + n - i
+        }
+    }
+
+    if res == n+1 {
+        return -1
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray, x: Int): Int {
+        val n = nums.size
+        val prefixSum = IntArray(n + 1)
+        for (i in 0 until n) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        if (x > prefixSum[n]) {
+            return -1
+        }
+
+        fun binarySearch(target: Int, m: Int): Int {
+            var l = 1
+            var r = m
+            var index = n + 1
+
+            while (l <= r) {
+                val mid = (l + r) / 2
+                if (prefixSum[mid] >= target) {
+                    if (prefixSum[mid] == target) {
+                        index = mid
+                    }
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+            return index
+        }
+
+        var res = binarySearch(x, n)
+        var suffixSum = 0
+        for (i in n - 1 downTo 1) {
+            suffixSum += nums[i]
+            if (suffixSum == x) {
+                res = minOf(res, n - i)
+                break
+            }
+            if (suffixSum > x) break
+            res = minOf(res, binarySearch(x - suffixSum, i) + n - i)
+        }
+
+        return if (res == n + 1) -1 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int], _ x: Int) -> Int {
+        let n = nums.count
+        var prefixSum = [Int](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefixSum[i + 1] = prefixSum[i] + nums[i]
+        }
+
+        if x > prefixSum[n] {
+            return -1
+        }
+
+        func binarySearch(_ target: Int, _ m: Int) -> Int {
+            var l = 1, r = m
+            var index = n + 1
+
+            while l <= r {
+                let mid = (l + r) / 2
+                if prefixSum[mid] >= target {
+                    if prefixSum[mid] == target {
+                        index = mid
+                    }
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+            return index
+        }
+
+        var res = binarySearch(x, n)
+        var suffixSum = 0
+        for i in stride(from: n - 1, to: 0, by: -1) {
+            suffixSum += nums[i]
+            if suffixSum == x {
+                res = min(res, n - i)
+                break
+            }
+            if suffixSum > x { break }
+            res = min(res, binarySearch(x - suffixSum, i) + n - i)
+        }
+
+        return res == n + 1 ? -1 : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,6 +805,120 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums, int x) {
+        int total = 0;
+        foreach (int num in nums) total += num;
+        if (total == x) return nums.Length;
+
+        int target = total - x;
+        if (target < 0) return -1;
+
+        Dictionary<int, int> prefixMap = new Dictionary<int, int>();
+        prefixMap[0] = -1;
+        int prefixSum = 0, res = -1;
+
+        for (int i = 0; i < nums.Length; i++) {
+            prefixSum += nums[i];
+            if (prefixMap.ContainsKey(prefixSum - target)) {
+                res = Math.Max(res, i - prefixMap[prefixSum - target]);
+            }
+            prefixMap[prefixSum] = i;
+        }
+
+        return res == -1 ? -1 : nums.Length - res;
+    }
+}
+```
+
+```go
+func minOperations(nums []int, x int) int {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    if total == x {
+        return len(nums)
+    }
+
+    target := total - x
+    if target < 0 {
+        return -1
+    }
+
+    prefixMap := map[int]int{0: -1}
+    prefixSum, res := 0, -1
+
+    for i, num := range nums {
+        prefixSum += num
+        if j, ok := prefixMap[prefixSum-target]; ok {
+            if i-j > res {
+                res = i - j
+            }
+        }
+        prefixMap[prefixSum] = i
+    }
+
+    if res == -1 {
+        return -1
+    }
+    return len(nums) - res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray, x: Int): Int {
+        val total = nums.sum()
+        if (total == x) return nums.size
+
+        val target = total - x
+        if (target < 0) return -1
+
+        val prefixMap = mutableMapOf(0 to -1)
+        var prefixSum = 0
+        var res = -1
+
+        for (i in nums.indices) {
+            prefixSum += nums[i]
+            if (prefixMap.containsKey(prefixSum - target)) {
+                res = maxOf(res, i - prefixMap[prefixSum - target]!!)
+            }
+            prefixMap[prefixSum] = i
+        }
+
+        return if (res == -1) -1 else nums.size - res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int], _ x: Int) -> Int {
+        let total = nums.reduce(0, +)
+        if total == x { return nums.count }
+
+        let target = total - x
+        if target < 0 { return -1 }
+
+        var prefixMap: [Int: Int] = [0: -1]
+        var prefixSum = 0
+        var res = -1
+
+        for i in 0..<nums.count {
+            prefixSum += nums[i]
+            if let j = prefixMap[prefixSum - target] {
+                res = max(res, i - j)
+            }
+            prefixMap[prefixSum] = i
+        }
+
+        return res == -1 ? -1 : nums.count - res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -571,6 +1032,117 @@ class Solution {
         }
 
         return maxWindow === -1 ? -1 : nums.length - maxWindow;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums, int x) {
+        int target = 0;
+        foreach (int num in nums) target += num;
+        target -= x;
+
+        int curSum = 0, maxWindow = -1, l = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            curSum += nums[r];
+
+            while (l <= r && curSum > target) {
+                curSum -= nums[l];
+                l++;
+            }
+
+            if (curSum == target) {
+                maxWindow = Math.Max(maxWindow, r - l + 1);
+            }
+        }
+
+        return maxWindow == -1 ? -1 : nums.Length - maxWindow;
+    }
+}
+```
+
+```go
+func minOperations(nums []int, x int) int {
+    target := 0
+    for _, num := range nums {
+        target += num
+    }
+    target -= x
+
+    curSum, maxWindow, l := 0, -1, 0
+
+    for r := 0; r < len(nums); r++ {
+        curSum += nums[r]
+
+        for l <= r && curSum > target {
+            curSum -= nums[l]
+            l++
+        }
+
+        if curSum == target {
+            if r-l+1 > maxWindow {
+                maxWindow = r - l + 1
+            }
+        }
+    }
+
+    if maxWindow == -1 {
+        return -1
+    }
+    return len(nums) - maxWindow
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray, x: Int): Int {
+        val target = nums.sum() - x
+        var curSum = 0
+        var maxWindow = -1
+        var l = 0
+
+        for (r in nums.indices) {
+            curSum += nums[r]
+
+            while (l <= r && curSum > target) {
+                curSum -= nums[l]
+                l++
+            }
+
+            if (curSum == target) {
+                maxWindow = maxOf(maxWindow, r - l + 1)
+            }
+        }
+
+        return if (maxWindow == -1) -1 else nums.size - maxWindow
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int], _ x: Int) -> Int {
+        let target = nums.reduce(0, +) - x
+        var curSum = 0
+        var maxWindow = -1
+        var l = 0
+
+        for r in 0..<nums.count {
+            curSum += nums[r]
+
+            while l <= r && curSum > target {
+                curSum -= nums[l]
+                l += 1
+            }
+
+            if curSum == target {
+                maxWindow = max(maxWindow, r - l + 1)
+            }
+        }
+
+        return maxWindow == -1 ? -1 : nums.count - maxWindow
     }
 }
 ```

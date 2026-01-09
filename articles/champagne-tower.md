@@ -97,6 +97,97 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public double ChampagneTower(int poured, int query_row, int query_glass) {
+        return Math.Min(1, Rec(poured, query_row, query_glass));
+    }
+
+    private double Rec(int poured, int row, int glass) {
+        if (row < 0 || glass < 0 || glass > row) {
+            return 0;
+        }
+
+        if (row == 0 && glass == 0) {
+            return poured;
+        }
+
+        double leftParent = Math.Max(0, Rec(poured, row - 1, glass - 1) - 1);
+        double rightParent = Math.Max(0, Rec(poured, row - 1, glass) - 1);
+
+        return (leftParent + rightParent) / 2;
+    }
+}
+```
+
+```go
+func champagneTower(poured int, query_row int, query_glass int) float64 {
+    var rec func(row, glass int) float64
+    rec = func(row, glass int) float64 {
+        if row < 0 || glass < 0 || glass > row {
+            return 0
+        }
+
+        if row == 0 && glass == 0 {
+            return float64(poured)
+        }
+
+        leftParent := math.Max(0, rec(row-1, glass-1)-1)
+        rightParent := math.Max(0, rec(row-1, glass)-1)
+
+        return (leftParent + rightParent) / 2
+    }
+
+    return math.Min(1, rec(query_row, query_glass))
+}
+```
+
+```kotlin
+class Solution {
+    fun champagneTower(poured: Int, query_row: Int, query_glass: Int): Double {
+        fun rec(row: Int, glass: Int): Double {
+            if (row < 0 || glass < 0 || glass > row) {
+                return 0.0
+            }
+
+            if (row == 0 && glass == 0) {
+                return poured.toDouble()
+            }
+
+            val leftParent = maxOf(0.0, rec(row - 1, glass - 1) - 1)
+            val rightParent = maxOf(0.0, rec(row - 1, glass) - 1)
+
+            return (leftParent + rightParent) / 2
+        }
+
+        return minOf(1.0, rec(query_row, query_glass))
+    }
+}
+```
+
+```swift
+class Solution {
+    func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
+        func rec(_ row: Int, _ glass: Int) -> Double {
+            if row < 0 || glass < 0 || glass > row {
+                return 0
+            }
+
+            if row == 0 && glass == 0 {
+                return Double(poured)
+            }
+
+            let leftParent = max(0, rec(row - 1, glass - 1) - 1)
+            let rightParent = max(0, rec(row - 1, glass) - 1)
+
+            return (leftParent + rightParent) / 2
+        }
+
+        return min(1, rec(query_row, query_glass))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,11 +314,131 @@ class Solution {
 
             memo[row][glass] = (leftParent + rightParent) / 2;
             return memo[row][glass];
-
-            return (leftParent + rightParent) / 2;
         };
 
         return Math.min(1, rec(query_row, query_glass));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private double[][] memo;
+
+    public double ChampagneTower(int poured, int query_row, int query_glass) {
+        memo = new double[query_row + 5][];
+        for (int i = 0; i < query_row + 5; i++) {
+            memo[i] = new double[i + 1];
+            Array.Fill(memo[i], -1);
+        }
+        memo[0][0] = poured;
+
+        return Math.Min(1, Rec(query_row, query_glass));
+    }
+
+    private double Rec(int row, int glass) {
+        if (row < 0 || glass < 0 || glass > row) {
+            return 0;
+        }
+
+        if (memo[row][glass] != -1) {
+            return memo[row][glass];
+        }
+
+        double leftParent = Math.Max(0, Rec(row - 1, glass - 1) - 1);
+        double rightParent = Math.Max(0, Rec(row - 1, glass) - 1);
+
+        memo[row][glass] = (leftParent + rightParent) / 2;
+        return memo[row][glass];
+    }
+}
+```
+
+```go
+func champagneTower(poured int, query_row int, query_glass int) float64 {
+    memo := make([][]float64, query_row+5)
+    for i := 0; i <= query_row+4; i++ {
+        memo[i] = make([]float64, i+1)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+    memo[0][0] = float64(poured)
+
+    var rec func(row, glass int) float64
+    rec = func(row, glass int) float64 {
+        if row < 0 || glass < 0 || glass > row {
+            return 0
+        }
+
+        if memo[row][glass] != -1 {
+            return memo[row][glass]
+        }
+
+        leftParent := math.Max(0, rec(row-1, glass-1)-1)
+        rightParent := math.Max(0, rec(row-1, glass)-1)
+
+        memo[row][glass] = (leftParent + rightParent) / 2
+        return memo[row][glass]
+    }
+
+    return math.Min(1, rec(query_row, query_glass))
+}
+```
+
+```kotlin
+class Solution {
+    fun champagneTower(poured: Int, query_row: Int, query_glass: Int): Double {
+        val memo = Array(query_row + 5) { i -> DoubleArray(i + 1) { -1.0 } }
+        memo[0][0] = poured.toDouble()
+
+        fun rec(row: Int, glass: Int): Double {
+            if (row < 0 || glass < 0 || glass > row) {
+                return 0.0
+            }
+
+            if (memo[row][glass] != -1.0) {
+                return memo[row][glass]
+            }
+
+            val leftParent = maxOf(0.0, rec(row - 1, glass - 1) - 1)
+            val rightParent = maxOf(0.0, rec(row - 1, glass) - 1)
+
+            memo[row][glass] = (leftParent + rightParent) / 2
+            return memo[row][glass]
+        }
+
+        return minOf(1.0, rec(query_row, query_glass))
+    }
+}
+```
+
+```swift
+class Solution {
+    func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
+        var memo = [[Double]]()
+        for i in 0..<(query_row + 5) {
+            memo.append([Double](repeating: -1, count: i + 1))
+        }
+        memo[0][0] = Double(poured)
+
+        func rec(_ row: Int, _ glass: Int) -> Double {
+            if row < 0 || glass < 0 || glass > row {
+                return 0
+            }
+
+            if memo[row][glass] != -1 {
+                return memo[row][glass]
+            }
+
+            let leftParent = max(0, rec(row - 1, glass - 1) - 1)
+            let rightParent = max(0, rec(row - 1, glass) - 1)
+
+            memo[row][glass] = (leftParent + rightParent) / 2
+            return memo[row][glass]
+        }
+
+        return min(1, rec(query_row, query_glass))
     }
 }
 ```
@@ -343,6 +554,107 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public double ChampagneTower(int poured, int query_row, int query_glass) {
+        double[][] dp = new double[query_row + 5][];
+        for (int i = 0; i < query_row + 5; i++) {
+            dp[i] = new double[i + 1];
+        }
+
+        dp[0][0] = poured;
+
+        for (int row = 0; row < Math.Min(99, query_row + 1); row++) {
+            for (int glass = 0; glass <= row; glass++) {
+                double excess = (dp[row][glass] - 1.0) / 2.0;
+                if (excess > 0) {
+                    dp[row + 1][glass] += excess;
+                    dp[row + 1][glass + 1] += excess;
+                }
+            }
+        }
+
+        return Math.Min(1.0, dp[query_row][query_glass]);
+    }
+}
+```
+
+```go
+func champagneTower(poured int, query_row int, query_glass int) float64 {
+    dp := make([][]float64, query_row+5)
+    for i := 0; i <= query_row+4; i++ {
+        dp[i] = make([]float64, i+1)
+    }
+
+    dp[0][0] = float64(poured)
+
+    limit := 99
+    if query_row+1 < limit {
+        limit = query_row + 1
+    }
+    for row := 0; row < limit; row++ {
+        for glass := 0; glass <= row; glass++ {
+            excess := (dp[row][glass] - 1.0) / 2.0
+            if excess > 0 {
+                dp[row+1][glass] += excess
+                dp[row+1][glass+1] += excess
+            }
+        }
+    }
+
+    if dp[query_row][query_glass] < 1.0 {
+        return dp[query_row][query_glass]
+    }
+    return 1.0
+}
+```
+
+```kotlin
+class Solution {
+    fun champagneTower(poured: Int, query_row: Int, query_glass: Int): Double {
+        val dp = Array(query_row + 5) { i -> DoubleArray(i + 1) }
+        dp[0][0] = poured.toDouble()
+
+        for (row in 0 until minOf(99, query_row + 1)) {
+            for (glass in 0..row) {
+                val excess = (dp[row][glass] - 1.0) / 2.0
+                if (excess > 0) {
+                    dp[row + 1][glass] += excess
+                    dp[row + 1][glass + 1] += excess
+                }
+            }
+        }
+
+        return minOf(1.0, dp[query_row][query_glass])
+    }
+}
+```
+
+```swift
+class Solution {
+    func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
+        var dp = [[Double]]()
+        for i in 0..<(query_row + 5) {
+            dp.append([Double](repeating: 0, count: i + 1))
+        }
+
+        dp[0][0] = Double(poured)
+
+        for row in 0..<min(99, query_row + 1) {
+            for glass in 0...row {
+                let excess = (dp[row][glass] - 1.0) / 2.0
+                if excess > 0 {
+                    dp[row + 1][glass] += excess
+                    dp[row + 1][glass + 1] += excess
+                }
+            }
+        }
+
+        return min(1.0, dp[query_row][query_glass])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +756,95 @@ class Solution {
         }
 
         return Math.min(1, prev_row[query_glass]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double ChampagneTower(int poured, int query_row, int query_glass) {
+        double[] prev_row = new double[] { poured };
+
+        for (int row = 1; row <= query_row; row++) {
+            double[] cur_row = new double[row + 1];
+            for (int i = 0; i < row; i++) {
+                double extra = prev_row[i] - 1;
+                if (extra > 0) {
+                    cur_row[i] += 0.5 * extra;
+                    cur_row[i + 1] += 0.5 * extra;
+                }
+            }
+            prev_row = cur_row;
+        }
+
+        return Math.Min(1.0, prev_row[query_glass]);
+    }
+}
+```
+
+```go
+func champagneTower(poured int, query_row int, query_glass int) float64 {
+    prevRow := []float64{float64(poured)}
+
+    for row := 1; row <= query_row; row++ {
+        curRow := make([]float64, row+1)
+        for i := 0; i < row; i++ {
+            extra := prevRow[i] - 1
+            if extra > 0 {
+                curRow[i] += 0.5 * extra
+                curRow[i+1] += 0.5 * extra
+            }
+        }
+        prevRow = curRow
+    }
+
+    if prevRow[query_glass] < 1.0 {
+        return prevRow[query_glass]
+    }
+    return 1.0
+}
+```
+
+```kotlin
+class Solution {
+    fun champagneTower(poured: Int, query_row: Int, query_glass: Int): Double {
+        var prevRow = doubleArrayOf(poured.toDouble())
+
+        for (row in 1..query_row) {
+            val curRow = DoubleArray(row + 1)
+            for (i in 0 until row) {
+                val extra = prevRow[i] - 1
+                if (extra > 0) {
+                    curRow[i] += 0.5 * extra
+                    curRow[i + 1] += 0.5 * extra
+                }
+            }
+            prevRow = curRow
+        }
+
+        return minOf(1.0, prevRow[query_glass])
+    }
+}
+```
+
+```swift
+class Solution {
+    func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
+        var prevRow = [Double(poured)]
+
+        for row in 1...query_row {
+            var curRow = [Double](repeating: 0, count: row + 1)
+            for i in 0..<row {
+                let extra = prevRow[i] - 1
+                if extra > 0 {
+                    curRow[i] += 0.5 * extra
+                    curRow[i + 1] += 0.5 * extra
+                }
+            }
+            prevRow = curRow
+        }
+
+        return min(1, prevRow[query_glass])
     }
 }
 ```
@@ -552,6 +953,99 @@ class Solution {
         }
 
         return Math.min(1, dp[query_glass]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double ChampagneTower(int poured, int query_row, int query_glass) {
+        double[] dp = new double[query_row + 1];
+        dp[0] = poured;
+
+        for (int row = 1; row <= query_row; row++) {
+            for (int i = row - 1; i >= 0; i--) {
+                double extra = dp[i] - 1;
+                if (extra > 0) {
+                    dp[i] = 0.5 * extra;
+                    dp[i + 1] += 0.5 * extra;
+                } else {
+                    dp[i] = 0;
+                }
+            }
+        }
+
+        return Math.Min(1, dp[query_glass]);
+    }
+}
+```
+
+```go
+func champagneTower(poured int, query_row int, query_glass int) float64 {
+    dp := make([]float64, query_row+1)
+    dp[0] = float64(poured)
+
+    for row := 1; row <= query_row; row++ {
+        for i := row - 1; i >= 0; i-- {
+            extra := dp[i] - 1
+            if extra > 0 {
+                dp[i] = 0.5 * extra
+                dp[i+1] += 0.5 * extra
+            } else {
+                dp[i] = 0
+            }
+        }
+    }
+
+    if dp[query_glass] < 1.0 {
+        return dp[query_glass]
+    }
+    return 1.0
+}
+```
+
+```kotlin
+class Solution {
+    fun champagneTower(poured: Int, query_row: Int, query_glass: Int): Double {
+        val dp = DoubleArray(query_row + 1)
+        dp[0] = poured.toDouble()
+
+        for (row in 1..query_row) {
+            for (i in row - 1 downTo 0) {
+                val extra = dp[i] - 1
+                if (extra > 0) {
+                    dp[i] = 0.5 * extra
+                    dp[i + 1] += 0.5 * extra
+                } else {
+                    dp[i] = 0.0
+                }
+            }
+        }
+
+        return minOf(1.0, dp[query_glass])
+    }
+}
+```
+
+```swift
+class Solution {
+    func champagneTower(_ poured: Int, _ query_row: Int, _ query_glass: Int) -> Double {
+        var dp = [Double](repeating: 0, count: query_row + 1)
+        dp[0] = Double(poured)
+
+        for row in 1...query_row {
+            for i in stride(from: row - 1, through: 0, by: -1) {
+                let extra = dp[i] - 1
+                if extra > 0 {
+                    dp[i] = 0.5 * extra
+                    dp[i + 1] += 0.5 * extra
+                } else {
+                    dp[i] = 0
+                }
+            }
+        }
+
+        return min(1, dp[query_glass])
     }
 }
 ```

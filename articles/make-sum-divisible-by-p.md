@@ -105,6 +105,120 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinSubarray(int[] nums, int p) {
+        int n = nums.Length;
+        long totSum = 0;
+        foreach (int num in nums) totSum += num;
+
+        if (totSum % p == 0) return 0;
+
+        for (int l = 1; l < n; l++) {
+            long curSum = 0;
+            for (int i = 0; i < n; i++) {
+                curSum += nums[i];
+                if (i >= l) curSum -= nums[i - l];
+
+                long remainSum = totSum - curSum;
+                if (remainSum % p == 0) return l;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func minSubarray(nums []int, p int) int {
+    n := len(nums)
+    totSum := 0
+    for _, num := range nums {
+        totSum += num
+    }
+
+    if totSum%p == 0 {
+        return 0
+    }
+
+    for l := 1; l < n; l++ {
+        curSum := 0
+        for i := 0; i < n; i++ {
+            curSum += nums[i]
+            if i >= l {
+                curSum -= nums[i-l]
+            }
+
+            remainSum := totSum - curSum
+            if remainSum%p == 0 {
+                return l
+            }
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun minSubarray(nums: IntArray, p: Int): Int {
+        val n = nums.size
+        var totSum = 0L
+        for (num in nums) totSum += num
+
+        if (totSum % p == 0L) return 0
+
+        for (l in 1 until n) {
+            var curSum = 0L
+            for (i in 0 until n) {
+                curSum += nums[i]
+                if (i >= l) curSum -= nums[i - l]
+
+                val remainSum = totSum - curSum
+                if (remainSum % p == 0L) return l
+            }
+        }
+
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minSubarray(_ nums: [Int], _ p: Int) -> Int {
+        let n = nums.count
+        var totSum = 0
+        for num in nums {
+            totSum += num
+        }
+
+        if totSum % p == 0 {
+            return 0
+        }
+
+        for l in 1..<n {
+            var curSum = 0
+            for i in 0..<n {
+                curSum += nums[i]
+                if i >= l {
+                    curSum -= nums[i - l]
+                }
+
+                let remainSum = totSum - curSum
+                if remainSum % p == 0 {
+                    return l
+                }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,6 +337,125 @@ class Solution {
         }
 
         return res === nums.length ? -1 : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinSubarray(int[] nums, int p) {
+        long total = 0;
+        foreach (int num in nums) total += num;
+        int remain = (int)(total % p);
+        if (remain == 0) return 0;
+
+        int res = nums.Length;
+        long curSum = 0;
+        var map = new Dictionary<int, int>();
+        map[0] = -1;
+
+        for (int i = 0; i < nums.Length; i++) {
+            curSum = (curSum + nums[i]) % p;
+            int prefix = (int)((curSum - remain + p) % p);
+            if (map.ContainsKey(prefix)) {
+                res = Math.Min(res, i - map[prefix]);
+            }
+            map[(int)curSum] = i;
+        }
+
+        return res == nums.Length ? -1 : res;
+    }
+}
+```
+
+```go
+func minSubarray(nums []int, p int) int {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    remain := total % p
+    if remain == 0 {
+        return 0
+    }
+
+    res := len(nums)
+    curSum := 0
+    m := make(map[int]int)
+    m[0] = -1
+
+    for i, num := range nums {
+        curSum = (curSum + num) % p
+        prefix := (curSum - remain + p) % p
+        if idx, ok := m[prefix]; ok {
+            if i-idx < res {
+                res = i - idx
+            }
+        }
+        m[curSum] = i
+    }
+
+    if res == len(nums) {
+        return -1
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minSubarray(nums: IntArray, p: Int): Int {
+        var total = 0L
+        for (num in nums) total += num
+        val remain = (total % p).toInt()
+        if (remain == 0) return 0
+
+        var res = nums.size
+        var curSum = 0L
+        val map = HashMap<Int, Int>()
+        map[0] = -1
+
+        for (i in nums.indices) {
+            curSum = (curSum + nums[i]) % p
+            val prefix = ((curSum - remain + p) % p).toInt()
+            if (map.containsKey(prefix)) {
+                res = minOf(res, i - map[prefix]!!)
+            }
+            map[curSum.toInt()] = i
+        }
+
+        return if (res == nums.size) -1 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minSubarray(_ nums: [Int], _ p: Int) -> Int {
+        var total = 0
+        for num in nums {
+            total += num
+        }
+        let remain = total % p
+        if remain == 0 {
+            return 0
+        }
+
+        var res = nums.count
+        var curSum = 0
+        var map = [Int: Int]()
+        map[0] = -1
+
+        for i in 0..<nums.count {
+            curSum = (curSum + nums[i]) % p
+            let prefix = (curSum - remain + p) % p
+            if let idx = map[prefix] {
+                res = min(res, i - idx)
+            }
+            map[curSum] = i
+        }
+
+        return res == nums.count ? -1 : res
     }
 }
 ```

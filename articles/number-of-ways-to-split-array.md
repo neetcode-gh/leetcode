@@ -108,6 +108,112 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int WaysToSplitArray(int[] nums) {
+        int n = nums.Length;
+        int res = 0;
+
+        for (int i = 0; i < n - 1; i++) {
+            long leftSum = 0;
+            for (int j = 0; j <= i; j++) {
+                leftSum += nums[j];
+            }
+
+            long rightSum = 0;
+            for (int j = i + 1; j < n; j++) {
+                rightSum += nums[j];
+            }
+
+            if (leftSum >= rightSum) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func waysToSplitArray(nums []int) int {
+    n := len(nums)
+    res := 0
+
+    for i := 0; i < n-1; i++ {
+        leftSum := 0
+        for j := 0; j <= i; j++ {
+            leftSum += nums[j]
+        }
+
+        rightSum := 0
+        for j := i + 1; j < n; j++ {
+            rightSum += nums[j]
+        }
+
+        if leftSum >= rightSum {
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun waysToSplitArray(nums: IntArray): Int {
+        val n = nums.size
+        var res = 0
+
+        for (i in 0 until n - 1) {
+            var leftSum = 0L
+            for (j in 0..i) {
+                leftSum += nums[j]
+            }
+
+            var rightSum = 0L
+            for (j in i + 1 until n) {
+                rightSum += nums[j]
+            }
+
+            if (leftSum >= rightSum) {
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func waysToSplitArray(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for i in 0..<(n - 1) {
+            var leftSum = 0
+            for j in 0...i {
+                leftSum += nums[j]
+            }
+
+            var rightSum = 0
+            for j in (i + 1)..<n {
+                rightSum += nums[j]
+            }
+
+            if leftSum >= rightSum {
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -217,6 +323,100 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int WaysToSplitArray(int[] nums) {
+        int n = nums.Length;
+        long[] prefix = new long[n + 1];
+
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        int res = 0;
+        for (int i = 1; i < n; i++) {
+            long left = prefix[i];
+            long right = prefix[n] - prefix[i];
+            if (left >= right) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func waysToSplitArray(nums []int) int {
+    n := len(nums)
+    prefix := make([]int, n+1)
+
+    for i := 0; i < n; i++ {
+        prefix[i+1] = prefix[i] + nums[i]
+    }
+
+    res := 0
+    for i := 1; i < n; i++ {
+        left := prefix[i]
+        right := prefix[n] - prefix[i]
+        if left >= right {
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun waysToSplitArray(nums: IntArray): Int {
+        val n = nums.size
+        val prefix = LongArray(n + 1)
+
+        for (i in 0 until n) {
+            prefix[i + 1] = prefix[i] + nums[i]
+        }
+
+        var res = 0
+        for (i in 1 until n) {
+            val left = prefix[i]
+            val right = prefix[n] - prefix[i]
+            if (left >= right) {
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func waysToSplitArray(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var prefix = [Int](repeating: 0, count: n + 1)
+
+        for i in 0..<n {
+            prefix[i + 1] = prefix[i] + nums[i]
+        }
+
+        var res = 0
+        for i in 1..<n {
+            let left = prefix[i]
+            let right = prefix[n] - prefix[i]
+            if left >= right {
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -309,6 +509,88 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int WaysToSplitArray(int[] nums) {
+        long right = 0, left = 0;
+        foreach (int num in nums) {
+            right += num;
+        }
+
+        int res = 0;
+        for (int i = 0; i < nums.Length - 1; i++) {
+            left += nums[i];
+            right -= nums[i];
+            if (left >= right) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func waysToSplitArray(nums []int) int {
+    right := 0
+    for _, num := range nums {
+        right += num
+    }
+
+    left, res := 0, 0
+    for i := 0; i < len(nums)-1; i++ {
+        left += nums[i]
+        right -= nums[i]
+        if left >= right {
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun waysToSplitArray(nums: IntArray): Int {
+        var right = nums.fold(0L) { acc, num -> acc + num }
+        var left = 0L
+        var res = 0
+
+        for (i in 0 until nums.size - 1) {
+            left += nums[i]
+            right -= nums[i]
+            if (left >= right) {
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func waysToSplitArray(_ nums: [Int]) -> Int {
+        var right = nums.reduce(0, +)
+        var left = 0
+        var res = 0
+
+        for i in 0..<(nums.count - 1) {
+            left += nums[i]
+            right -= nums[i]
+            if left >= right {
+                res += 1
+            }
+        }
+
+        return res
     }
 }
 ```

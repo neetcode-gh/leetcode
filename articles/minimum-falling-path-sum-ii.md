@@ -106,6 +106,110 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] grid) {
+        int N = grid.Length;
+        int res = int.MaxValue;
+        for (int c = 0; c < N; c++) {
+            res = Math.Min(res, Helper(grid, 0, c, N));
+        }
+        return res;
+    }
+
+    private int Helper(int[][] grid, int r, int c, int N) {
+        if (r == N - 1) {
+            return grid[r][c];
+        }
+        int res = int.MaxValue;
+        for (int nextCol = 0; nextCol < N; nextCol++) {
+            if (c != nextCol) {
+                res = Math.Min(res, grid[r][c] + Helper(grid, r + 1, nextCol, N));
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minFallingPathSum(grid [][]int) int {
+    n := len(grid)
+
+    var helper func(r, c int) int
+    helper = func(r, c int) int {
+        if r == n-1 {
+            return grid[r][c]
+        }
+        res := math.MaxInt32
+        for nextCol := 0; nextCol < n; nextCol++ {
+            if c != nextCol {
+                res = min(res, grid[r][c]+helper(r+1, nextCol))
+            }
+        }
+        return res
+    }
+
+    res := math.MaxInt32
+    for c := 0; c < n; c++ {
+        res = min(res, helper(0, c))
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(grid: Array<IntArray>): Int {
+        val n = grid.size
+
+        fun helper(r: Int, c: Int): Int {
+            if (r == n - 1) return grid[r][c]
+            var res = Int.MAX_VALUE
+            for (nextCol in 0 until n) {
+                if (c != nextCol) {
+                    res = minOf(res, grid[r][c] + helper(r + 1, nextCol))
+                }
+            }
+            return res
+        }
+
+        var res = Int.MAX_VALUE
+        for (c in 0 until n) {
+            res = minOf(res, helper(0, c))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+
+        func helper(_ r: Int, _ c: Int) -> Int {
+            if r == n - 1 {
+                return grid[r][c]
+            }
+            var res = Int.max
+            for nextCol in 0..<n {
+                if c != nextCol {
+                    res = min(res, grid[r][c] + helper(r + 1, nextCol))
+                }
+            }
+            return res
+        }
+
+        var res = Int.max
+        for c in 0..<n {
+            res = min(res, helper(0, c))
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -249,6 +353,139 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] memo;
+
+    public int MinFallingPathSum(int[][] grid) {
+        int N = grid.Length;
+        memo = new int[N, N];
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                memo[i, j] = int.MinValue;
+            }
+        }
+        int res = int.MaxValue;
+        for (int c = 0; c < N; c++) {
+            res = Math.Min(res, Helper(grid, 0, c, N));
+        }
+        return res;
+    }
+
+    private int Helper(int[][] grid, int r, int c, int N) {
+        if (r == N - 1) return grid[r][c];
+        if (memo[r, c] != int.MinValue) return memo[r, c];
+
+        int res = int.MaxValue;
+        for (int nextCol = 0; nextCol < N; nextCol++) {
+            if (c != nextCol) {
+                res = Math.Min(res, grid[r][c] + Helper(grid, r + 1, nextCol, N));
+            }
+        }
+        memo[r, c] = res;
+        return res;
+    }
+}
+```
+
+```go
+func minFallingPathSum(grid [][]int) int {
+    n := len(grid)
+    memo := make([][]int, n)
+    for i := range memo {
+        memo[i] = make([]int, n)
+        for j := range memo[i] {
+            memo[i][j] = math.MinInt32
+        }
+    }
+
+    var helper func(r, c int) int
+    helper = func(r, c int) int {
+        if r == n-1 {
+            return grid[r][c]
+        }
+        if memo[r][c] != math.MinInt32 {
+            return memo[r][c]
+        }
+        res := math.MaxInt32
+        for nextCol := 0; nextCol < n; nextCol++ {
+            if c != nextCol {
+                res = min(res, grid[r][c]+helper(r+1, nextCol))
+            }
+        }
+        memo[r][c] = res
+        return res
+    }
+
+    res := math.MaxInt32
+    for c := 0; c < n; c++ {
+        res = min(res, helper(0, c))
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val memo = Array(n) { IntArray(n) { Int.MIN_VALUE } }
+
+        fun helper(r: Int, c: Int): Int {
+            if (r == n - 1) return grid[r][c]
+            if (memo[r][c] != Int.MIN_VALUE) return memo[r][c]
+
+            var res = Int.MAX_VALUE
+            for (nextCol in 0 until n) {
+                if (c != nextCol) {
+                    res = minOf(res, grid[r][c] + helper(r + 1, nextCol))
+                }
+            }
+            memo[r][c] = res
+            return res
+        }
+
+        var res = Int.MAX_VALUE
+        for (c in 0 until n) {
+            res = minOf(res, helper(0, c))
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var memo = Array(repeating: Array(repeating: Int.min, count: n), count: n)
+
+        func helper(_ r: Int, _ c: Int) -> Int {
+            if r == n - 1 {
+                return grid[r][c]
+            }
+            if memo[r][c] != Int.min {
+                return memo[r][c]
+            }
+            var res = Int.max
+            for nextCol in 0..<n {
+                if c != nextCol {
+                    res = min(res, grid[r][c] + helper(r + 1, nextCol))
+                }
+            }
+            memo[r][c] = res
+            return res
+        }
+
+        var res = Int.max
+        for c in 0..<n {
+            res = min(res, helper(0, c))
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -373,6 +610,119 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] grid) {
+        int N = grid.Length;
+        int[,] dp = new int[N, N];
+
+        for (int c = 0; c < N; c++) {
+            dp[N - 1, c] = grid[N - 1][c];
+        }
+
+        for (int r = N - 2; r >= 0; r--) {
+            for (int c = 0; c < N; c++) {
+                dp[r, c] = int.MaxValue;
+                for (int nextCol = 0; nextCol < N; nextCol++) {
+                    if (c != nextCol) {
+                        dp[r, c] = Math.Min(dp[r, c], grid[r][c] + dp[r + 1, nextCol]);
+                    }
+                }
+            }
+        }
+
+        int res = int.MaxValue;
+        for (int c = 0; c < N; c++) {
+            res = Math.Min(res, dp[0, c]);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minFallingPathSum(grid [][]int) int {
+    n := len(grid)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = math.MaxInt32
+        }
+    }
+
+    for c := 0; c < n; c++ {
+        dp[n-1][c] = grid[n-1][c]
+    }
+
+    for r := n - 2; r >= 0; r-- {
+        for c := 0; c < n; c++ {
+            for nextCol := 0; nextCol < n; nextCol++ {
+                if c != nextCol {
+                    dp[r][c] = min(dp[r][c], grid[r][c]+dp[r+1][nextCol])
+                }
+            }
+        }
+    }
+
+    res := math.MaxInt32
+    for c := 0; c < n; c++ {
+        res = min(res, dp[0][c])
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val dp = Array(n) { IntArray(n) { Int.MAX_VALUE } }
+
+        for (c in 0 until n) {
+            dp[n - 1][c] = grid[n - 1][c]
+        }
+
+        for (r in n - 2 downTo 0) {
+            for (c in 0 until n) {
+                for (nextCol in 0 until n) {
+                    if (c != nextCol) {
+                        dp[r][c] = minOf(dp[r][c], grid[r][c] + dp[r + 1][nextCol])
+                    }
+                }
+            }
+        }
+
+        return dp[0].minOrNull()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var dp = Array(repeating: Array(repeating: Int.max, count: n), count: n)
+
+        for c in 0..<n {
+            dp[n - 1][c] = grid[n - 1][c]
+        }
+
+        for r in stride(from: n - 2, through: 0, by: -1) {
+            for c in 0..<n {
+                for nextCol in 0..<n {
+                    if c != nextCol {
+                        dp[r][c] = min(dp[r][c], grid[r][c] + dp[r + 1][nextCol])
+                    }
+                }
+            }
+        }
+
+        return dp[0].min()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,6 +839,110 @@ class Solution {
         }
 
         return Math.min(...dp);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] grid) {
+        int N = grid.Length;
+        int[] dp = (int[])grid[0].Clone();
+
+        for (int r = 1; r < N; r++) {
+            int[] nextDp = new int[N];
+            Array.Fill(nextDp, int.MaxValue);
+
+            for (int currC = 0; currC < N; currC++) {
+                for (int prevC = 0; prevC < N; prevC++) {
+                    if (prevC != currC) {
+                        nextDp[currC] = Math.Min(nextDp[currC], grid[r][currC] + dp[prevC]);
+                    }
+                }
+            }
+            dp = nextDp;
+        }
+
+        int res = int.MaxValue;
+        foreach (int val in dp) {
+            res = Math.Min(res, val);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func minFallingPathSum(grid [][]int) int {
+    n := len(grid)
+    dp := make([]int, n)
+    copy(dp, grid[0])
+
+    for r := 1; r < n; r++ {
+        nextDp := make([]int, n)
+        for i := range nextDp {
+            nextDp[i] = math.MaxInt32
+        }
+        for currC := 0; currC < n; currC++ {
+            for prevC := 0; prevC < n; prevC++ {
+                if prevC != currC {
+                    nextDp[currC] = min(nextDp[currC], grid[r][currC]+dp[prevC])
+                }
+            }
+        }
+        dp = nextDp
+    }
+
+    res := math.MaxInt32
+    for _, val := range dp {
+        res = min(res, val)
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(grid: Array<IntArray>): Int {
+        val n = grid.size
+        var dp = grid[0].clone()
+
+        for (r in 1 until n) {
+            val nextDp = IntArray(n) { Int.MAX_VALUE }
+            for (currC in 0 until n) {
+                for (prevC in 0 until n) {
+                    if (prevC != currC) {
+                        nextDp[currC] = minOf(nextDp[currC], grid[r][currC] + dp[prevC])
+                    }
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp.minOrNull()!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var dp = grid[0]
+
+        for r in 1..<n {
+            var nextDp = Array(repeating: Int.max, count: n)
+            for currC in 0..<n {
+                for prevC in 0..<n {
+                    if prevC != currC {
+                        nextDp[currC] = min(nextDp[currC], grid[r][currC] + dp[prevC])
+                    }
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp.min()!
     }
 }
 ```
@@ -681,6 +1135,184 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] grid) {
+        int N = grid.Length;
+
+        List<int[]> GetMinTwo(List<int[]> row) {
+            var twoSmallest = new List<int[]>();
+            foreach (var entry in row) {
+                if (twoSmallest.Count < 2) {
+                    twoSmallest.Add(entry);
+                } else if (twoSmallest[1][0] > entry[0]) {
+                    twoSmallest.RemoveAt(1);
+                    twoSmallest.Add(entry);
+                }
+                twoSmallest.Sort((a, b) => a[0].CompareTo(b[0]));
+            }
+            return twoSmallest;
+        }
+
+        var firstRow = new List<int[]>();
+        for (int i = 0; i < grid[0].Length; i++) {
+            firstRow.Add(new int[] { grid[0][i], i });
+        }
+
+        var dp = GetMinTwo(firstRow);
+
+        for (int r = 1; r < N; r++) {
+            var nextDp = new List<int[]>();
+            for (int c = 0; c < grid[0].Length; c++) {
+                int currVal = grid[r][c];
+                int minVal = int.MaxValue;
+                foreach (var prev in dp) {
+                    if (prev[1] != c) {
+                        minVal = Math.Min(minVal, currVal + prev[0]);
+                    }
+                }
+                nextDp.Add(new int[] { minVal, c });
+            }
+            dp = GetMinTwo(nextDp);
+        }
+
+        return dp.Min(a => a[0]);
+    }
+}
+```
+
+```go
+func minFallingPathSum(grid [][]int) int {
+    n := len(grid)
+
+    getMinTwo := func(row [][2]int) [][2]int {
+        twoSmallest := make([][2]int, 0, 2)
+        for _, entry := range row {
+            if len(twoSmallest) < 2 {
+                twoSmallest = append(twoSmallest, entry)
+            } else if twoSmallest[1][0] > entry[0] {
+                twoSmallest[1] = entry
+            }
+            sort.Slice(twoSmallest, func(i, j int) bool {
+                return twoSmallest[i][0] < twoSmallest[j][0]
+            })
+        }
+        return twoSmallest
+    }
+
+    firstRow := make([][2]int, n)
+    for i, val := range grid[0] {
+        firstRow[i] = [2]int{val, i}
+    }
+    dp := getMinTwo(firstRow)
+
+    for r := 1; r < n; r++ {
+        nextDp := make([][2]int, n)
+        for c := 0; c < n; c++ {
+            currVal := grid[r][c]
+            minVal := math.MaxInt32
+            for _, prev := range dp {
+                if c != prev[1] {
+                    minVal = min(minVal, currVal+prev[0])
+                }
+            }
+            nextDp[c] = [2]int{minVal, c}
+        }
+        dp = getMinTwo(nextDp)
+    }
+
+    res := math.MaxInt32
+    for _, entry := range dp {
+        res = min(res, entry[0])
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(grid: Array<IntArray>): Int {
+        val n = grid.size
+
+        fun getMinTwo(row: List<Pair<Int, Int>>): List<Pair<Int, Int>> {
+            val twoSmallest = mutableListOf<Pair<Int, Int>>()
+            for (entry in row) {
+                if (twoSmallest.size < 2) {
+                    twoSmallest.add(entry)
+                } else if (twoSmallest[1].first > entry.first) {
+                    twoSmallest.removeAt(1)
+                    twoSmallest.add(entry)
+                }
+                twoSmallest.sortBy { it.first }
+            }
+            return twoSmallest
+        }
+
+        val firstRow = grid[0].mapIndexed { idx, value -> Pair(value, idx) }
+        var dp = getMinTwo(firstRow)
+
+        for (r in 1 until n) {
+            val nextDp = mutableListOf<Pair<Int, Int>>()
+            for (c in 0 until n) {
+                val currVal = grid[r][c]
+                var minVal = Int.MAX_VALUE
+                for ((prevVal, prevC) in dp) {
+                    if (c != prevC) {
+                        minVal = minOf(minVal, currVal + prevVal)
+                    }
+                }
+                nextDp.add(Pair(minVal, c))
+            }
+            dp = getMinTwo(nextDp)
+        }
+
+        return dp.minOfOrNull { it.first }!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+
+        func getMinTwo(_ row: [(Int, Int)]) -> [(Int, Int)] {
+            var twoSmallest: [(Int, Int)] = []
+            for entry in row {
+                if twoSmallest.count < 2 {
+                    twoSmallest.append(entry)
+                } else if twoSmallest[1].0 > entry.0 {
+                    twoSmallest.removeLast()
+                    twoSmallest.append(entry)
+                }
+                twoSmallest.sort { $0.0 < $1.0 }
+            }
+            return twoSmallest
+        }
+
+        let firstRow = grid[0].enumerated().map { ($0.element, $0.offset) }
+        var dp = getMinTwo(firstRow)
+
+        for r in 1..<n {
+            var nextDp: [(Int, Int)] = []
+            for c in 0..<n {
+                let currVal = grid[r][c]
+                var minVal = Int.max
+                for (prevVal, prevC) in dp {
+                    if c != prevC {
+                        minVal = min(minVal, currVal + prevVal)
+                    }
+                }
+                nextDp.append((minVal, c))
+            }
+            dp = getMinTwo(nextDp)
+        }
+
+        return dp.map { $0.0 }.min()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,6 +1481,163 @@ class Solution {
         }
 
         return dpVal1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinFallingPathSum(int[][] grid) {
+        int n = grid.Length;
+        if (n == 1) return grid[0][0];
+
+        int dpIdx1 = -1, dpIdx2 = -1;
+        int dpVal1 = 0, dpVal2 = 0;
+
+        for (int i = 0; i < n; i++) {
+            int nextDpIdx1 = -1, nextDpIdx2 = -1;
+            int nextDpVal1 = int.MaxValue, nextDpVal2 = int.MaxValue;
+
+            for (int j = 0; j < n; j++) {
+                int cur = (j != dpIdx1) ? dpVal1 : dpVal2;
+                cur += grid[i][j];
+
+                if (nextDpIdx1 == -1 || cur < nextDpVal1) {
+                    nextDpIdx2 = nextDpIdx1;
+                    nextDpVal2 = nextDpVal1;
+                    nextDpIdx1 = j;
+                    nextDpVal1 = cur;
+                } else if (nextDpIdx2 == -1 || cur < nextDpVal2) {
+                    nextDpIdx2 = j;
+                    nextDpVal2 = cur;
+                }
+            }
+
+            dpIdx1 = nextDpIdx1;
+            dpIdx2 = nextDpIdx2;
+            dpVal1 = nextDpVal1;
+            dpVal2 = nextDpVal2;
+        }
+
+        return dpVal1;
+    }
+}
+```
+
+```go
+func minFallingPathSum(grid [][]int) int {
+    n := len(grid)
+    if n == 1 {
+        return grid[0][0]
+    }
+
+    dpIdx1, dpIdx2 := -1, -1
+    dpVal1, dpVal2 := 0, 0
+
+    for i := 0; i < n; i++ {
+        nextDpIdx1, nextDpIdx2 := -1, -1
+        nextDpVal1, nextDpVal2 := math.MaxInt32, math.MaxInt32
+
+        for j := 0; j < n; j++ {
+            cur := dpVal1
+            if j == dpIdx1 {
+                cur = dpVal2
+            }
+            cur += grid[i][j]
+
+            if nextDpIdx1 == -1 || cur < nextDpVal1 {
+                nextDpIdx2, nextDpVal2 = nextDpIdx1, nextDpVal1
+                nextDpIdx1, nextDpVal1 = j, cur
+            } else if nextDpIdx2 == -1 || cur < nextDpVal2 {
+                nextDpIdx2, nextDpVal2 = j, cur
+            }
+        }
+
+        dpIdx1, dpIdx2, dpVal1, dpVal2 = nextDpIdx1, nextDpIdx2, nextDpVal1, nextDpVal2
+    }
+
+    return dpVal1
+}
+```
+
+```kotlin
+class Solution {
+    fun minFallingPathSum(grid: Array<IntArray>): Int {
+        val n = grid.size
+        if (n == 1) return grid[0][0]
+
+        var dpIdx1 = -1
+        var dpIdx2 = -1
+        var dpVal1 = 0
+        var dpVal2 = 0
+
+        for (i in 0 until n) {
+            var nextDpIdx1 = -1
+            var nextDpIdx2 = -1
+            var nextDpVal1 = Int.MAX_VALUE
+            var nextDpVal2 = Int.MAX_VALUE
+
+            for (j in 0 until n) {
+                var cur = if (j != dpIdx1) dpVal1 else dpVal2
+                cur += grid[i][j]
+
+                if (nextDpIdx1 == -1 || cur < nextDpVal1) {
+                    nextDpIdx2 = nextDpIdx1
+                    nextDpVal2 = nextDpVal1
+                    nextDpIdx1 = j
+                    nextDpVal1 = cur
+                } else if (nextDpIdx2 == -1 || cur < nextDpVal2) {
+                    nextDpIdx2 = j
+                    nextDpVal2 = cur
+                }
+            }
+
+            dpIdx1 = nextDpIdx1
+            dpIdx2 = nextDpIdx2
+            dpVal1 = nextDpVal1
+            dpVal2 = nextDpVal2
+        }
+
+        return dpVal1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minFallingPathSum(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        if n == 1 { return grid[0][0] }
+
+        var dpIdx1 = -1, dpIdx2 = -1
+        var dpVal1 = 0, dpVal2 = 0
+
+        for i in 0..<n {
+            var nextDpIdx1 = -1, nextDpIdx2 = -1
+            var nextDpVal1 = Int.max, nextDpVal2 = Int.max
+
+            for j in 0..<n {
+                var cur = (j != dpIdx1) ? dpVal1 : dpVal2
+                cur += grid[i][j]
+
+                if nextDpIdx1 == -1 || cur < nextDpVal1 {
+                    nextDpIdx2 = nextDpIdx1
+                    nextDpVal2 = nextDpVal1
+                    nextDpIdx1 = j
+                    nextDpVal1 = cur
+                } else if nextDpIdx2 == -1 || cur < nextDpVal2 {
+                    nextDpIdx2 = j
+                    nextDpVal2 = cur
+                }
+            }
+
+            dpIdx1 = nextDpIdx1
+            dpIdx2 = nextDpIdx2
+            dpVal1 = nextDpVal1
+            dpVal2 = nextDpVal2
+        }
+
+        return dpVal1
     }
 }
 ```

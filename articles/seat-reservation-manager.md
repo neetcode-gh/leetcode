@@ -97,6 +97,98 @@ class SeatManager {
 }
 ```
 
+```csharp
+public class SeatManager {
+    private bool[] seats;
+
+    public SeatManager(int n) {
+        seats = new bool[n];
+    }
+
+    public int Reserve() {
+        for (int i = 0; i < seats.Length; i++) {
+            if (!seats[i]) {
+                seats[i] = true;
+                return i + 1;
+            }
+        }
+        return -1;
+    }
+
+    public void Unreserve(int seatNumber) {
+        seats[seatNumber - 1] = false;
+    }
+}
+```
+
+```go
+type SeatManager struct {
+    seats []bool
+}
+
+func Constructor(n int) SeatManager {
+    return SeatManager{seats: make([]bool, n)}
+}
+
+func (this *SeatManager) Reserve() int {
+    for i := 0; i < len(this.seats); i++ {
+        if !this.seats[i] {
+            this.seats[i] = true
+            return i + 1
+        }
+    }
+    return -1
+}
+
+func (this *SeatManager) Unreserve(seatNumber int) {
+    this.seats[seatNumber-1] = false
+}
+```
+
+```kotlin
+class SeatManager(n: Int) {
+    private val seats = BooleanArray(n)
+
+    fun reserve(): Int {
+        for (i in seats.indices) {
+            if (!seats[i]) {
+                seats[i] = true
+                return i + 1
+            }
+        }
+        return -1
+    }
+
+    fun unreserve(seatNumber: Int) {
+        seats[seatNumber - 1] = false
+    }
+}
+```
+
+```swift
+class SeatManager {
+    private var seats: [Bool]
+
+    init(_ n: Int) {
+        seats = [Bool](repeating: false, count: n)
+    }
+
+    func reserve() -> Int {
+        for i in 0..<seats.count {
+            if !seats[i] {
+                seats[i] = true
+                return i + 1
+            }
+        }
+        return -1
+    }
+
+    func unreserve(_ seatNumber: Int) {
+        seats[seatNumber - 1] = false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +288,109 @@ class SeatManager {
      */
     unreserve(seatNumber) {
         this.unres.enqueue(seatNumber);
+    }
+}
+```
+
+```csharp
+public class SeatManager {
+    private PriorityQueue<int, int> unres;
+
+    public SeatManager(int n) {
+        unres = new PriorityQueue<int, int>();
+        for (int i = 1; i <= n; i++) {
+            unres.Enqueue(i, i);
+        }
+    }
+
+    public int Reserve() {
+        return unres.Dequeue();
+    }
+
+    public void Unreserve(int seatNumber) {
+        unres.Enqueue(seatNumber, seatNumber);
+    }
+}
+```
+
+```go
+import "container/heap"
+
+type MinHeap []int
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type SeatManager struct {
+    unres *MinHeap
+}
+
+func Constructor(n int) SeatManager {
+    h := &MinHeap{}
+    heap.Init(h)
+    for i := 1; i <= n; i++ {
+        heap.Push(h, i)
+    }
+    return SeatManager{unres: h}
+}
+
+func (this *SeatManager) Reserve() int {
+    return heap.Pop(this.unres).(int)
+}
+
+func (this *SeatManager) Unreserve(seatNumber int) {
+    heap.Push(this.unres, seatNumber)
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class SeatManager(n: Int) {
+    private val unres = PriorityQueue<Int>()
+
+    init {
+        for (i in 1..n) {
+            unres.offer(i)
+        }
+    }
+
+    fun reserve(): Int {
+        return unres.poll()
+    }
+
+    fun unreserve(seatNumber: Int) {
+        unres.offer(seatNumber)
+    }
+}
+```
+
+```swift
+class SeatManager {
+    private var unres: Heap<Int>
+
+    init(_ n: Int) {
+        unres = Heap<Int>()
+        for i in 1...n {
+            unres.insert(i)
+        }
+    }
+
+    func reserve() -> Int {
+        return unres.popMin()!
+    }
+
+    func unreserve(_ seatNumber: Int) {
+        unres.insert(seatNumber)
     }
 }
 ```
@@ -313,6 +508,117 @@ class SeatManager {
 }
 ```
 
+```csharp
+public class SeatManager {
+    private PriorityQueue<int, int> minHeap;
+    private int nextSeat;
+
+    public SeatManager(int n) {
+        minHeap = new PriorityQueue<int, int>();
+        nextSeat = 1;
+    }
+
+    public int Reserve() {
+        if (minHeap.Count > 0) {
+            return minHeap.Dequeue();
+        }
+        return nextSeat++;
+    }
+
+    public void Unreserve(int seatNumber) {
+        minHeap.Enqueue(seatNumber, seatNumber);
+    }
+}
+```
+
+```go
+import "container/heap"
+
+type MinHeap []int
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+
+type SeatManager struct {
+    minHeap  *MinHeap
+    nextSeat int
+}
+
+func Constructor(n int) SeatManager {
+    h := &MinHeap{}
+    heap.Init(h)
+    return SeatManager{minHeap: h, nextSeat: 1}
+}
+
+func (this *SeatManager) Reserve() int {
+    if this.minHeap.Len() > 0 {
+        return heap.Pop(this.minHeap).(int)
+    }
+    seat := this.nextSeat
+    this.nextSeat++
+    return seat
+}
+
+func (this *SeatManager) Unreserve(seatNumber int) {
+    heap.Push(this.minHeap, seatNumber)
+}
+```
+
+```kotlin
+import java.util.PriorityQueue
+
+class SeatManager(n: Int) {
+    private val minHeap = PriorityQueue<Int>()
+    private var nextSeat = 1
+
+    fun reserve(): Int {
+        return if (minHeap.isNotEmpty()) {
+            minHeap.poll()
+        } else {
+            nextSeat++
+        }
+    }
+
+    fun unreserve(seatNumber: Int) {
+        minHeap.offer(seatNumber)
+    }
+}
+```
+
+```swift
+class SeatManager {
+    private var minHeap: Heap<Int>
+    private var nextSeat: Int
+
+    init(_ n: Int) {
+        minHeap = Heap<Int>()
+        nextSeat = 1
+    }
+
+    func reserve() -> Int {
+        if !minHeap.isEmpty {
+            return minHeap.popMin()!
+        }
+        let seat = nextSeat
+        nextSeat += 1
+        return seat
+    }
+
+    func unreserve(_ seatNumber: Int) {
+        minHeap.insert(seatNumber)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -394,6 +700,111 @@ public:
         available.insert(seatNumber);
     }
 };
+```
+
+```csharp
+public class SeatManager {
+    private SortedSet<int> available;
+    private int nextSeat;
+
+    public SeatManager(int n) {
+        available = new SortedSet<int>();
+        nextSeat = 1;
+    }
+
+    public int Reserve() {
+        if (available.Count > 0) {
+            int seat = available.Min;
+            available.Remove(seat);
+            return seat;
+        }
+        return nextSeat++;
+    }
+
+    public void Unreserve(int seatNumber) {
+        available.Add(seatNumber);
+    }
+}
+```
+
+```go
+import "github.com/emirpasic/gods/trees/redblacktree"
+
+type SeatManager struct {
+    available *redblacktree.Tree
+    nextSeat  int
+}
+
+func Constructor(n int) SeatManager {
+    return SeatManager{
+        available: redblacktree.NewWithIntComparator(),
+        nextSeat:  1,
+    }
+}
+
+func (this *SeatManager) Reserve() int {
+    if this.available.Size() > 0 {
+        node := this.available.Left()
+        seat := node.Key.(int)
+        this.available.Remove(seat)
+        return seat
+    }
+    seat := this.nextSeat
+    this.nextSeat++
+    return seat
+}
+
+func (this *SeatManager) Unreserve(seatNumber int) {
+    this.available.Put(seatNumber, true)
+}
+```
+
+```kotlin
+import java.util.TreeSet
+
+class SeatManager(n: Int) {
+    private val available = TreeSet<Int>()
+    private var nextSeat = 1
+
+    fun reserve(): Int {
+        return if (available.isNotEmpty()) {
+            available.pollFirst()!!
+        } else {
+            nextSeat++
+        }
+    }
+
+    fun unreserve(seatNumber: Int) {
+        available.add(seatNumber)
+    }
+}
+```
+
+```swift
+class SeatManager {
+    private var available: Set<Int>
+    private var nextSeat: Int
+
+    init(_ n: Int) {
+        available = Set<Int>()
+        nextSeat = 1
+    }
+
+    func reserve() -> Int {
+        if !available.isEmpty {
+            let seat = available.min()!
+            available.remove(seat)
+            return seat
+        }
+        let seat = nextSeat
+        nextSeat += 1
+        return seat
+    }
+
+    func unreserve(_ seatNumber: Int) {
+        available.insert(seatNumber)
+    }
+}
 ```
 
 ::tabs-end

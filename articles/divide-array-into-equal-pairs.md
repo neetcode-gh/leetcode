@@ -102,6 +102,104 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool DivideArray(int[] nums) {
+        int N = nums.Length;
+        Array.Sort(nums);
+
+        int i = 0;
+        while (i < N) {
+            int j = i;
+            while (j < N && nums[i] == nums[j]) {
+                j++;
+            }
+
+            if ((j - i) % 2 != 0) {
+                return false;
+            }
+
+            i = j;
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func divideArray(nums []int) bool {
+    N := len(nums)
+    sort.Ints(nums)
+
+    i := 0
+    for i < N {
+        j := i
+        for j < N && nums[i] == nums[j] {
+            j++
+        }
+
+        if (j-i)%2 != 0 {
+            return false
+        }
+
+        i = j
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun divideArray(nums: IntArray): Boolean {
+        val N = nums.size
+        nums.sort()
+
+        var i = 0
+        while (i < N) {
+            var j = i
+            while (j < N && nums[i] == nums[j]) {
+                j++
+            }
+
+            if ((j - i) % 2 != 0) {
+                return false
+            }
+
+            i = j
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func divideArray(_ nums: [Int]) -> Bool {
+        let N = nums.count
+        let nums = nums.sorted()
+
+        var i = 0
+        while i < N {
+            var j = i
+            while j < N && nums[i] == nums[j] {
+                j += 1
+            }
+
+            if (j - i) % 2 != 0 {
+                return false
+            }
+
+            i = j
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +294,83 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool DivideArray(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) {
+                count[num] = 0;
+            }
+            count[num]++;
+        }
+
+        foreach (var cnt in count.Values) {
+            if (cnt % 2 == 1) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+func divideArray(nums []int) bool {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    for _, cnt := range count {
+        if cnt%2 == 1 {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun divideArray(nums: IntArray): Boolean {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        for (cnt in count.values) {
+            if (cnt % 2 == 1) {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func divideArray(_ nums: [Int]) -> Bool {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        for cnt in count.values {
+            if cnt % 2 == 1 {
+                return false
+            }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,6 +453,76 @@ class Solution {
         }
 
         return oddSet.size === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool DivideArray(int[] nums) {
+        HashSet<int> oddSet = new HashSet<int>();
+
+        foreach (int num in nums) {
+            if (oddSet.Contains(num)) {
+                oddSet.Remove(num);
+            } else {
+                oddSet.Add(num);
+            }
+        }
+
+        return oddSet.Count == 0;
+    }
+}
+```
+
+```go
+func divideArray(nums []int) bool {
+    oddSet := make(map[int]bool)
+
+    for _, num := range nums {
+        if oddSet[num] {
+            delete(oddSet, num)
+        } else {
+            oddSet[num] = true
+        }
+    }
+
+    return len(oddSet) == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun divideArray(nums: IntArray): Boolean {
+        val oddSet = HashSet<Int>()
+
+        for (num in nums) {
+            if (num in oddSet) {
+                oddSet.remove(num)
+            } else {
+                oddSet.add(num)
+            }
+        }
+
+        return oddSet.isEmpty()
+    }
+}
+```
+
+```swift
+class Solution {
+    func divideArray(_ nums: [Int]) -> Bool {
+        var oddSet = Set<Int>()
+
+        for num in nums {
+            if oddSet.contains(num) {
+                oddSet.remove(num)
+            } else {
+                oddSet.insert(num)
+            }
+        }
+
+        return oddSet.isEmpty
     }
 }
 ```

@@ -66,6 +66,46 @@ public class Solution {
 }
 ```
 
+```go
+func removeDuplicates(nums []int) int {
+    seen := make(map[int]bool)
+    var unique []int
+    for _, num := range nums {
+        if !seen[num] {
+            seen[num] = true
+            unique = append(unique, num)
+        }
+    }
+    sort.Ints(unique)
+    copy(nums, unique)
+    return len(unique)
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        val unique = nums.toSet().sorted()
+        for (i in unique.indices) {
+            nums[i] = unique[i]
+        }
+        return unique.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        let unique = Array(Set(nums)).sorted()
+        for i in 0..<unique.count {
+            nums[i] = unique[i]
+        }
+        return unique.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -166,6 +206,56 @@ public class Solution {
 }
 ```
 
+```go
+func removeDuplicates(nums []int) int {
+    n := len(nums)
+    l, r := 0, 0
+    for r < n {
+        nums[l] = nums[r]
+        for r < n && nums[r] == nums[l] {
+            r++
+        }
+        l++
+    }
+    return l
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        val n = nums.size
+        var l = 0
+        var r = 0
+        while (r < n) {
+            nums[l] = nums[r]
+            while (r < n && nums[r] == nums[l]) {
+                r++
+            }
+            l++
+        }
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        let n = nums.count
+        var l = 0, r = 0
+        while r < n {
+            nums[l] = nums[r]
+            while r < n && nums[r] == nums[l] {
+                r += 1
+            }
+            l += 1
+        }
+        return l
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -249,6 +339,48 @@ public class Solution {
         }
 
         return l;
+    }
+}
+```
+
+```go
+func removeDuplicates(nums []int) int {
+    l := 1
+    for r := 1; r < len(nums); r++ {
+        if nums[r] != nums[r-1] {
+            nums[l] = nums[r]
+            l++
+        }
+    }
+    return l
+}
+```
+
+```kotlin
+class Solution {
+    fun removeDuplicates(nums: IntArray): Int {
+        var l = 1
+        for (r in 1 until nums.size) {
+            if (nums[r] != nums[r - 1]) {
+                nums[l++] = nums[r]
+            }
+        }
+        return l
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeDuplicates(_ nums: inout [Int]) -> Int {
+        var l = 1
+        for r in 1..<nums.count {
+            if nums[r] != nums[r - 1] {
+                nums[l] = nums[r]
+                l += 1
+            }
+        }
+        return l
     }
 }
 ```

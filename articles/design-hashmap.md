@@ -121,6 +121,72 @@ public class MyHashMap {
 }
 ```
 
+```go
+type MyHashMap struct {
+    data []int
+}
+
+func Constructor() MyHashMap {
+    data := make([]int, 1000001)
+    for i := range data {
+        data[i] = -1
+    }
+    return MyHashMap{data: data}
+}
+
+func (this *MyHashMap) Put(key int, value int) {
+    this.data[key] = value
+}
+
+func (this *MyHashMap) Get(key int) int {
+    return this.data[key]
+}
+
+func (this *MyHashMap) Remove(key int) {
+    this.data[key] = -1
+}
+```
+
+```kotlin
+class MyHashMap() {
+    private val map = IntArray(1000001) { -1 }
+
+    fun put(key: Int, value: Int) {
+        map[key] = value
+    }
+
+    fun get(key: Int): Int {
+        return map[key]
+    }
+
+    fun remove(key: Int) {
+        map[key] = -1
+    }
+}
+```
+
+```swift
+class MyHashMap {
+    private var map: [Int]
+
+    init() {
+        map = [Int](repeating: -1, count: 1000001)
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        map[key] = value
+    }
+
+    func get(_ key: Int) -> Int {
+        return map[key]
+    }
+
+    func remove(_ key: Int) {
+        map[key] = -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -437,6 +503,167 @@ public class MyHashMap {
                 return;
             }
             cur = cur.next;
+        }
+    }
+}
+```
+
+```go
+type ListNode struct {
+    key, val int
+    next     *ListNode
+}
+
+type MyHashMap struct {
+    data []*ListNode
+}
+
+func Constructor() MyHashMap {
+    data := make([]*ListNode, 1000)
+    for i := range data {
+        data[i] = &ListNode{key: -1, val: -1}
+    }
+    return MyHashMap{data: data}
+}
+
+func (this *MyHashMap) hash(key int) int {
+    return key % len(this.data)
+}
+
+func (this *MyHashMap) Put(key int, value int) {
+    cur := this.data[this.hash(key)]
+    for cur.next != nil {
+        if cur.next.key == key {
+            cur.next.val = value
+            return
+        }
+        cur = cur.next
+    }
+    cur.next = &ListNode{key: key, val: value}
+}
+
+func (this *MyHashMap) Get(key int) int {
+    cur := this.data[this.hash(key)].next
+    for cur != nil {
+        if cur.key == key {
+            return cur.val
+        }
+        cur = cur.next
+    }
+    return -1
+}
+
+func (this *MyHashMap) Remove(key int) {
+    cur := this.data[this.hash(key)]
+    for cur.next != nil {
+        if cur.next.key == key {
+            cur.next = cur.next.next
+            return
+        }
+        cur = cur.next
+    }
+}
+```
+
+```kotlin
+class ListNode(var key: Int = -1, var `val`: Int = -1, var next: ListNode? = null)
+
+class MyHashMap() {
+    private val map = Array(1000) { ListNode() }
+
+    private fun hash(key: Int): Int = key % map.size
+
+    fun put(key: Int, value: Int) {
+        var cur = map[hash(key)]
+        while (cur.next != null) {
+            if (cur.next!!.key == key) {
+                cur.next!!.`val` = value
+                return
+            }
+            cur = cur.next!!
+        }
+        cur.next = ListNode(key, value)
+    }
+
+    fun get(key: Int): Int {
+        var cur = map[hash(key)].next
+        while (cur != null) {
+            if (cur.key == key) {
+                return cur.`val`
+            }
+            cur = cur.next
+        }
+        return -1
+    }
+
+    fun remove(key: Int) {
+        var cur = map[hash(key)]
+        while (cur.next != null) {
+            if (cur.next!!.key == key) {
+                cur.next = cur.next!!.next
+                return
+            }
+            cur = cur.next!!
+        }
+    }
+}
+```
+
+```swift
+class ListNode {
+    var key: Int
+    var val: Int
+    var next: ListNode?
+
+    init(_ key: Int = -1, _ val: Int = -1, _ next: ListNode? = nil) {
+        self.key = key
+        self.val = val
+        self.next = next
+    }
+}
+
+class MyHashMap {
+    private var map: [ListNode]
+
+    init() {
+        map = (0..<1000).map { _ in ListNode() }
+    }
+
+    private func hash(_ key: Int) -> Int {
+        return key % map.count
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        var cur = map[hash(key)]
+        while cur.next != nil {
+            if cur.next!.key == key {
+                cur.next!.val = value
+                return
+            }
+            cur = cur.next!
+        }
+        cur.next = ListNode(key, value)
+    }
+
+    func get(_ key: Int) -> Int {
+        var cur = map[hash(key)].next
+        while cur != nil {
+            if cur!.key == key {
+                return cur!.val
+            }
+            cur = cur!.next
+        }
+        return -1
+    }
+
+    func remove(_ key: Int) {
+        var cur = map[hash(key)]
+        while cur.next != nil {
+            if cur.next!.key == key {
+                cur.next = cur.next!.next
+                return
+            }
+            cur = cur.next!
         }
     }
 }

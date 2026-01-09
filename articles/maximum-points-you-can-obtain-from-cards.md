@@ -97,6 +97,81 @@ class Solution {
 }
 ```
 
+```go
+func maxScore(cardPoints []int, k int) int {
+    n := len(cardPoints)
+    res := 0
+
+    for left := 0; left <= k; left++ {
+        leftSum := 0
+        for i := 0; i < left; i++ {
+            leftSum += cardPoints[i]
+        }
+
+        rightSum := 0
+        for i := n - (k - left); i < n; i++ {
+            rightSum += cardPoints[i]
+        }
+
+        if leftSum+rightSum > res {
+            res = leftSum + rightSum
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(cardPoints: IntArray, k: Int): Int {
+        val n = cardPoints.size
+        var res = 0
+
+        for (left in 0..k) {
+            var leftSum = 0
+            for (i in 0 until left) {
+                leftSum += cardPoints[i]
+            }
+
+            var rightSum = 0
+            for (i in n - (k - left) until n) {
+                rightSum += cardPoints[i]
+            }
+
+            res = maxOf(res, leftSum + rightSum)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ cardPoints: [Int], _ k: Int) -> Int {
+        let n = cardPoints.count
+        var res = 0
+
+        for left in 0...k {
+            var leftSum = 0
+            for i in 0..<left {
+                leftSum += cardPoints[i]
+            }
+
+            var rightSum = 0
+            for i in (n - (k - left))..<n {
+                rightSum += cardPoints[i]
+            }
+
+            res = max(res, leftSum + rightSum)
+        }
+
+        return res
+    }
+}
+```
+
 ```csharp
 public class Solution {
     public int MaxScore(int[] cardPoints, int k) {
@@ -238,6 +313,84 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxScore(cardPoints []int, k int) int {
+    n := len(cardPoints)
+
+    prefix := make([]int, n+1)
+    for i := 0; i < n; i++ {
+        prefix[i+1] = prefix[i] + cardPoints[i]
+    }
+
+    suffix := make([]int, n+1)
+    for i := n - 1; i >= 0; i-- {
+        suffix[i] = suffix[i+1] + cardPoints[i]
+    }
+
+    res := 0
+    for left := 0; left <= k; left++ {
+        right := k - left
+        if prefix[left]+suffix[n-right] > res {
+            res = prefix[left] + suffix[n-right]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(cardPoints: IntArray, k: Int): Int {
+        val n = cardPoints.size
+
+        val prefix = IntArray(n + 1)
+        for (i in 0 until n) {
+            prefix[i + 1] = prefix[i] + cardPoints[i]
+        }
+
+        val suffix = IntArray(n + 1)
+        for (i in n - 1 downTo 0) {
+            suffix[i] = suffix[i + 1] + cardPoints[i]
+        }
+
+        var res = 0
+        for (left in 0..k) {
+            val right = k - left
+            res = maxOf(res, prefix[left] + suffix[n - right])
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ cardPoints: [Int], _ k: Int) -> Int {
+        let n = cardPoints.count
+
+        var prefix = [Int](repeating: 0, count: n + 1)
+        for i in 0..<n {
+            prefix[i + 1] = prefix[i] + cardPoints[i]
+        }
+
+        var suffix = [Int](repeating: 0, count: n + 1)
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            suffix[i] = suffix[i + 1] + cardPoints[i]
+        }
+
+        var res = 0
+        for left in 0...k {
+            let right = k - left
+            res = max(res, prefix[left] + suffix[n - right])
+        }
+
+        return res
     }
 }
 ```
@@ -396,6 +549,94 @@ class Solution {
 }
 ```
 
+```go
+func maxScore(cardPoints []int, k int) int {
+    n := len(cardPoints)
+    windowSize := n - k
+
+    if windowSize == 0 {
+        sum := 0
+        for _, v := range cardPoints {
+            sum += v
+        }
+        return sum
+    }
+
+    total := 0
+    minWindowSum := math.MaxInt32
+    curSum := 0
+
+    for i := 0; i < n; i++ {
+        total += cardPoints[i]
+        curSum += cardPoints[i]
+        if i >= windowSize-1 {
+            if curSum < minWindowSum {
+                minWindowSum = curSum
+            }
+            curSum -= cardPoints[i-windowSize+1]
+        }
+    }
+
+    return total - minWindowSum
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(cardPoints: IntArray, k: Int): Int {
+        val n = cardPoints.size
+        val windowSize = n - k
+
+        if (windowSize == 0) {
+            return cardPoints.sum()
+        }
+
+        var total = 0
+        var minWindowSum = Int.MAX_VALUE
+        var curSum = 0
+
+        for (i in 0 until n) {
+            total += cardPoints[i]
+            curSum += cardPoints[i]
+            if (i >= windowSize - 1) {
+                minWindowSum = minOf(minWindowSum, curSum)
+                curSum -= cardPoints[i - windowSize + 1]
+            }
+        }
+
+        return total - minWindowSum
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ cardPoints: [Int], _ k: Int) -> Int {
+        let n = cardPoints.count
+        let windowSize = n - k
+
+        if windowSize == 0 {
+            return cardPoints.reduce(0, +)
+        }
+
+        var total = 0
+        var minWindowSum = Int.max
+        var curSum = 0
+
+        for i in 0..<n {
+            total += cardPoints[i]
+            curSum += cardPoints[i]
+            if i >= windowSize - 1 {
+                minWindowSum = min(minWindowSum, curSum)
+                curSum -= cardPoints[i - windowSize + 1]
+            }
+        }
+
+        return total - minWindowSum
+    }
+}
+```
+
 ```csharp
 public class Solution {
     public int MaxScore(int[] cardPoints, int k) {
@@ -531,6 +772,80 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func maxScore(cardPoints []int, k int) int {
+    l, r := 0, len(cardPoints)-k
+    total := 0
+
+    for i := r; i < len(cardPoints); i++ {
+        total += cardPoints[i]
+    }
+
+    res := total
+
+    for r < len(cardPoints) {
+        total += cardPoints[l] - cardPoints[r]
+        if total > res {
+            res = total
+        }
+        l++
+        r++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxScore(cardPoints: IntArray, k: Int): Int {
+        var l = 0
+        var r = cardPoints.size - k
+        var total = 0
+
+        for (i in r until cardPoints.size) {
+            total += cardPoints[i]
+        }
+
+        var res = total
+
+        while (r < cardPoints.size) {
+            total += cardPoints[l] - cardPoints[r]
+            res = maxOf(res, total)
+            l++
+            r++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxScore(_ cardPoints: [Int], _ k: Int) -> Int {
+        var l = 0
+        var r = cardPoints.count - k
+        var total = 0
+
+        for i in r..<cardPoints.count {
+            total += cardPoints[i]
+        }
+
+        var res = total
+
+        while r < cardPoints.count {
+            total += cardPoints[l] - cardPoints[r]
+            res = max(res, total)
+            l += 1
+            r += 1
+        }
+
+        return res
     }
 }
 ```

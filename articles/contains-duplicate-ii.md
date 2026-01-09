@@ -78,6 +78,56 @@ public class Solution {
 }
 ```
 
+```go
+func containsNearbyDuplicate(nums []int, k int) bool {
+    for L := 0; L < len(nums); L++ {
+        for R := L + 1; R < min(len(nums), L+k+1); R++ {
+            if nums[L] == nums[R] {
+                return true
+            }
+        }
+    }
+    return false
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun containsNearbyDuplicate(nums: IntArray, k: Int): Boolean {
+        for (L in nums.indices) {
+            for (R in L + 1 until minOf(nums.size, L + k + 1)) {
+                if (nums[L] == nums[R]) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
+        for L in 0..<nums.count {
+            for R in (L + 1)..<min(nums.count, L + k + 1) {
+                if nums[L] == nums[R] {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -176,6 +226,55 @@ public class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```go
+func containsNearbyDuplicate(nums []int, k int) bool {
+    mp := make(map[int]int)
+
+    for i, num := range nums {
+        if j, ok := mp[num]; ok && i-j <= k {
+            return true
+        }
+        mp[num] = i
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun containsNearbyDuplicate(nums: IntArray, k: Int): Boolean {
+        val mp = mutableMapOf<Int, Int>()
+
+        for (i in nums.indices) {
+            if (mp.containsKey(nums[i]) && i - mp[nums[i]]!! <= k) {
+                return true
+            }
+            mp[nums[i]] = i
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
+        var mp = [Int: Int]()
+
+        for i in 0..<nums.count {
+            if let j = mp[nums[i]], i - j <= k {
+                return true
+            }
+            mp[nums[i]] = i
+        }
+
+        return false
     }
 }
 ```
@@ -299,6 +398,70 @@ public class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```go
+func containsNearbyDuplicate(nums []int, k int) bool {
+    window := make(map[int]bool)
+    L := 0
+
+    for R := 0; R < len(nums); R++ {
+        if R-L > k {
+            delete(window, nums[L])
+            L++
+        }
+        if window[nums[R]] {
+            return true
+        }
+        window[nums[R]] = true
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun containsNearbyDuplicate(nums: IntArray, k: Int): Boolean {
+        val window = HashSet<Int>()
+        var L = 0
+
+        for (R in nums.indices) {
+            if (R - L > k) {
+                window.remove(nums[L])
+                L++
+            }
+            if (nums[R] in window) {
+                return true
+            }
+            window.add(nums[R])
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func containsNearbyDuplicate(_ nums: [Int], _ k: Int) -> Bool {
+        var window = Set<Int>()
+        var L = 0
+
+        for R in 0..<nums.count {
+            if R - L > k {
+                window.remove(nums[L])
+                L += 1
+            }
+            if window.contains(nums[R]) {
+                return true
+            }
+            window.insert(nums[R])
+        }
+
+        return false
     }
 }
 ```

@@ -110,6 +110,73 @@ public class Solution {
 }
 ```
 
+```go
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
+    n := len(nums2)
+    res := make([]int, len(nums1))
+
+    for i, num := range nums1 {
+        nextGreater := -1
+        for j := n - 1; j >= 0; j-- {
+            if nums2[j] > num {
+                nextGreater = nums2[j]
+            } else if nums2[j] == num {
+                break
+            }
+        }
+        res[i] = nextGreater
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun nextGreaterElement(nums1: IntArray, nums2: IntArray): IntArray {
+        val n = nums2.size
+        val res = IntArray(nums1.size)
+
+        for (i in nums1.indices) {
+            var nextGreater = -1
+            for (j in n - 1 downTo 0) {
+                if (nums2[j] > nums1[i]) {
+                    nextGreater = nums2[j]
+                } else if (nums2[j] == nums1[i]) {
+                    break
+                }
+            }
+            res[i] = nextGreater
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func nextGreaterElement(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        let n = nums2.count
+        var res = [Int]()
+
+        for num in nums1 {
+            var nextGreater = -1
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                if nums2[j] > num {
+                    nextGreater = nums2[j]
+                } else if nums2[j] == num {
+                    break
+                }
+            }
+            res.append(nextGreater)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,6 +321,91 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
+    nums1Idx := make(map[int]int)
+    for i, num := range nums1 {
+        nums1Idx[num] = i
+    }
+
+    res := make([]int, len(nums1))
+    for i := range res {
+        res[i] = -1
+    }
+
+    for i := 0; i < len(nums2); i++ {
+        if _, ok := nums1Idx[nums2[i]]; !ok {
+            continue
+        }
+        for j := i + 1; j < len(nums2); j++ {
+            if nums2[j] > nums2[i] {
+                idx := nums1Idx[nums2[i]]
+                res[idx] = nums2[j]
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun nextGreaterElement(nums1: IntArray, nums2: IntArray): IntArray {
+        val nums1Idx = HashMap<Int, Int>()
+        for (i in nums1.indices) {
+            nums1Idx[nums1[i]] = i
+        }
+
+        val res = IntArray(nums1.size) { -1 }
+
+        for (i in nums2.indices) {
+            if (nums2[i] !in nums1Idx) {
+                continue
+            }
+            for (j in i + 1 until nums2.size) {
+                if (nums2[j] > nums2[i]) {
+                    val idx = nums1Idx[nums2[i]]!!
+                    res[idx] = nums2[j]
+                    break
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func nextGreaterElement(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var nums1Idx = [Int: Int]()
+        for (i, num) in nums1.enumerated() {
+            nums1Idx[num] = i
+        }
+
+        var res = Array(repeating: -1, count: nums1.count)
+
+        for i in 0..<nums2.count {
+            guard let _ = nums1Idx[nums2[i]] else {
+                continue
+            }
+            for j in (i + 1)..<nums2.count {
+                if nums2[j] > nums2[i] {
+                    let idx = nums1Idx[nums2[i]]!
+                    res[idx] = nums2[j]
+                    break
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -405,6 +557,89 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func nextGreaterElement(nums1 []int, nums2 []int) []int {
+    nums1Idx := make(map[int]int)
+    for i, num := range nums1 {
+        nums1Idx[num] = i
+    }
+
+    res := make([]int, len(nums1))
+    for i := range res {
+        res[i] = -1
+    }
+
+    stack := []int{}
+    for _, num := range nums2 {
+        for len(stack) > 0 && num > stack[len(stack)-1] {
+            val := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            idx := nums1Idx[val]
+            res[idx] = num
+        }
+        if _, ok := nums1Idx[num]; ok {
+            stack = append(stack, num)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun nextGreaterElement(nums1: IntArray, nums2: IntArray): IntArray {
+        val nums1Idx = HashMap<Int, Int>()
+        for (i in nums1.indices) {
+            nums1Idx[nums1[i]] = i
+        }
+
+        val res = IntArray(nums1.size) { -1 }
+        val stack = ArrayDeque<Int>()
+
+        for (num in nums2) {
+            while (stack.isNotEmpty() && num > stack.last()) {
+                val value = stack.removeLast()
+                val idx = nums1Idx[value]!!
+                res[idx] = num
+            }
+            if (num in nums1Idx) {
+                stack.addLast(num)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func nextGreaterElement(_ nums1: [Int], _ nums2: [Int]) -> [Int] {
+        var nums1Idx = [Int: Int]()
+        for (i, num) in nums1.enumerated() {
+            nums1Idx[num] = i
+        }
+
+        var res = Array(repeating: -1, count: nums1.count)
+        var stack = [Int]()
+
+        for num in nums2 {
+            while !stack.isEmpty && num > stack.last! {
+                let val = stack.removeLast()
+                let idx = nums1Idx[val]!
+                res[idx] = num
+            }
+            if nums1Idx[num] != nil {
+                stack.append(num)
+            }
+        }
+
+        return res
     }
 }
 ```

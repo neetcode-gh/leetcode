@@ -86,7 +86,7 @@ class Solution {
      */
     removeInterval(intervals, toBeRemoved) {
         const result = [];
-        
+
         for (const interval of intervals) {
             // If there are no overlaps, add the interval to the list as is.
             if (interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0]) {
@@ -102,8 +102,110 @@ class Solution {
                 }
             }
         }
-        
+
         return result;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<IList<int>> RemoveInterval(int[][] intervals, int[] toBeRemoved) {
+        IList<IList<int>> result = new List<IList<int>>();
+
+        foreach (var interval in intervals) {
+            // If there are no overlaps, add the interval to the list as is.
+            if (interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0]) {
+                result.Add(new List<int> { interval[0], interval[1] });
+            } else {
+                // Is there a left interval we need to keep?
+                if (interval[0] < toBeRemoved[0]) {
+                    result.Add(new List<int> { interval[0], toBeRemoved[0] });
+                }
+                // Is there a right interval we need to keep?
+                if (interval[1] > toBeRemoved[1]) {
+                    result.Add(new List<int> { toBeRemoved[1], interval[1] });
+                }
+            }
+        }
+
+        return result;
+    }
+}
+```
+
+```go
+func removeInterval(intervals [][]int, toBeRemoved []int) [][]int {
+    result := [][]int{}
+
+    for _, interval := range intervals {
+        // If there are no overlaps, add the interval to the list as is.
+        if interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0] {
+            result = append(result, []int{interval[0], interval[1]})
+        } else {
+            // Is there a left interval we need to keep?
+            if interval[0] < toBeRemoved[0] {
+                result = append(result, []int{interval[0], toBeRemoved[0]})
+            }
+            // Is there a right interval we need to keep?
+            if interval[1] > toBeRemoved[1] {
+                result = append(result, []int{toBeRemoved[1], interval[1]})
+            }
+        }
+    }
+
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun removeInterval(intervals: Array<IntArray>, toBeRemoved: IntArray): List<List<Int>> {
+        val result = mutableListOf<List<Int>>()
+
+        for (interval in intervals) {
+            // If there are no overlaps, add the interval to the list as is.
+            if (interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0]) {
+                result.add(listOf(interval[0], interval[1]))
+            } else {
+                // Is there a left interval we need to keep?
+                if (interval[0] < toBeRemoved[0]) {
+                    result.add(listOf(interval[0], toBeRemoved[0]))
+                }
+                // Is there a right interval we need to keep?
+                if (interval[1] > toBeRemoved[1]) {
+                    result.add(listOf(toBeRemoved[1], interval[1]))
+                }
+            }
+        }
+
+        return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeInterval(_ intervals: [[Int]], _ toBeRemoved: [Int]) -> [[Int]] {
+        var result = [[Int]]()
+
+        for interval in intervals {
+            // If there are no overlaps, add the interval to the list as is.
+            if interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0] {
+                result.append([interval[0], interval[1]])
+            } else {
+                // Is there a left interval we need to keep?
+                if interval[0] < toBeRemoved[0] {
+                    result.append([interval[0], toBeRemoved[0]])
+                }
+                // Is there a right interval we need to keep?
+                if interval[1] > toBeRemoved[1] {
+                    result.append([toBeRemoved[1], interval[1]])
+                }
+            }
+        }
+
+        return result
     }
 }
 ```

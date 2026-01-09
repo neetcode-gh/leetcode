@@ -81,11 +81,66 @@ public class Solution {
     private bool Rec(int i, int j, string s, string t) {
         if (i == s.Length) return true;
         if (j == t.Length) return false;
-        
+
         if (s[i] == t[j]) {
             return Rec(i + 1, j + 1, s, t);
         }
         return Rec(i, j + 1, s, t);
+    }
+}
+```
+
+```go
+func isSubsequence(s string, t string) bool {
+    var rec func(i, j int) bool
+    rec = func(i, j int) bool {
+        if i == len(s) {
+            return true
+        }
+        if j == len(t) {
+            return false
+        }
+        if s[i] == t[j] {
+            return rec(i+1, j+1)
+        }
+        return rec(i, j+1)
+    }
+    return rec(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun isSubsequence(s: String, t: String): Boolean {
+        fun rec(i: Int, j: Int): Boolean {
+            if (i == s.length) return true
+            if (j == t.length) return false
+            return if (s[i] == t[j]) {
+                rec(i + 1, j + 1)
+            } else {
+                rec(i, j + 1)
+            }
+        }
+        return rec(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func isSubsequence(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+
+        func rec(_ i: Int, _ j: Int) -> Bool {
+            if i == sArr.count { return true }
+            if j == tArr.count { return false }
+            if sArr[i] == tArr[j] {
+                return rec(i + 1, j + 1)
+            }
+            return rec(i, j + 1)
+        }
+        return rec(0, 0)
     }
 }
 ```
@@ -228,6 +283,99 @@ public class Solution {
         }
 
         return Rec(0, 0);
+    }
+}
+```
+
+```go
+func isSubsequence(s string, t string) bool {
+    n, m := len(s), len(t)
+    memo := make([][]int, n)
+    for i := range memo {
+        memo[i] = make([]int, m)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var rec func(i, j int) bool
+    rec = func(i, j int) bool {
+        if i == n {
+            return true
+        }
+        if j == m {
+            return false
+        }
+        if memo[i][j] != -1 {
+            return memo[i][j] == 1
+        }
+        if s[i] == t[j] {
+            if rec(i+1, j+1) {
+                memo[i][j] = 1
+            } else {
+                memo[i][j] = 0
+            }
+        } else {
+            if rec(i, j+1) {
+                memo[i][j] = 1
+            } else {
+                memo[i][j] = 0
+            }
+        }
+        return memo[i][j] == 1
+    }
+
+    return rec(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun isSubsequence(s: String, t: String): Boolean {
+        val n = s.length
+        val m = t.length
+        val memo = Array(n) { IntArray(m) { -1 } }
+
+        fun rec(i: Int, j: Int): Boolean {
+            if (i == n) return true
+            if (j == m) return false
+            if (memo[i][j] != -1) return memo[i][j] == 1
+
+            memo[i][j] = if (s[i] == t[j]) {
+                if (rec(i + 1, j + 1)) 1 else 0
+            } else {
+                if (rec(i, j + 1)) 1 else 0
+            }
+            return memo[i][j] == 1
+        }
+
+        return rec(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func isSubsequence(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        let n = sArr.count, m = tArr.count
+        var memo = [[Int]](repeating: [Int](repeating: -1, count: m), count: max(n, 1))
+
+        func rec(_ i: Int, _ j: Int) -> Bool {
+            if i == n { return true }
+            if j == m { return false }
+            if memo[i][j] != -1 { return memo[i][j] == 1 }
+
+            if sArr[i] == tArr[j] {
+                memo[i][j] = rec(i + 1, j + 1) ? 1 : 0
+            } else {
+                memo[i][j] = rec(i, j + 1) ? 1 : 0
+            }
+            return memo[i][j] == 1
+        }
+
+        return rec(0, 0)
     }
 }
 ```
@@ -375,6 +523,85 @@ public class Solution {
 }
 ```
 
+```go
+func isSubsequence(s string, t string) bool {
+    n, m := len(s), len(t)
+    dp := make([][]bool, n+1)
+    for i := range dp {
+        dp[i] = make([]bool, m+1)
+    }
+
+    for j := 0; j <= m; j++ {
+        dp[n][j] = true
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for j := m - 1; j >= 0; j-- {
+            if s[i] == t[j] {
+                dp[i][j] = dp[i+1][j+1]
+            } else {
+                dp[i][j] = dp[i][j+1]
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isSubsequence(s: String, t: String): Boolean {
+        val n = s.length
+        val m = t.length
+        val dp = Array(n + 1) { BooleanArray(m + 1) }
+
+        for (j in 0..m) {
+            dp[n][j] = true
+        }
+
+        for (i in n - 1 downTo 0) {
+            for (j in m - 1 downTo 0) {
+                dp[i][j] = if (s[i] == t[j]) {
+                    dp[i + 1][j + 1]
+                } else {
+                    dp[i][j + 1]
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isSubsequence(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        let n = sArr.count, m = tArr.count
+        var dp = [[Bool]](repeating: [Bool](repeating: false, count: m + 1), count: n + 1)
+
+        for j in 0...m {
+            dp[n][j] = true
+        }
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for j in stride(from: m - 1, through: 0, by: -1) {
+                if sArr[i] == tArr[j] {
+                    dp[i][j] = dp[i + 1][j + 1]
+                } else {
+                    dp[i][j] = dp[i][j + 1]
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,6 +691,52 @@ public class Solution {
             j++;
         }
         return i == s.Length;
+    }
+}
+```
+
+```go
+func isSubsequence(s string, t string) bool {
+    i, j := 0, 0
+    for i < len(s) && j < len(t) {
+        if s[i] == t[j] {
+            i++
+        }
+        j++
+    }
+    return i == len(s)
+}
+```
+
+```kotlin
+class Solution {
+    fun isSubsequence(s: String, t: String): Boolean {
+        var i = 0
+        var j = 0
+        while (i < s.length && j < t.length) {
+            if (s[i] == t[j]) {
+                i++
+            }
+            j++
+        }
+        return i == s.length
+    }
+}
+```
+
+```swift
+class Solution {
+    func isSubsequence(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        var i = 0, j = 0
+        while i < sArr.count && j < tArr.count {
+            if sArr[i] == tArr[j] {
+                i += 1
+            }
+            j += 1
+        }
+        return i == sArr.count
     }
 }
 ```
@@ -625,6 +898,97 @@ public class Solution {
         }
 
         return iPtr == n;
+    }
+}
+```
+
+```go
+func isSubsequence(s string, t string) bool {
+    n, m := len(s), len(t)
+    if m == 0 {
+        return n == 0
+    }
+
+    store := make([][]int, m)
+    for i := range store {
+        store[i] = make([]int, 26)
+        for j := range store[i] {
+            store[i][j] = m + 1
+        }
+    }
+
+    store[m-1][t[m-1]-'a'] = m - 1
+
+    for i := m - 2; i >= 0; i-- {
+        copy(store[i], store[i+1])
+        store[i][t[i]-'a'] = i
+    }
+
+    i, j := 0, 0
+    for i < n && j < m {
+        j = store[j][s[i]-'a'] + 1
+        if j > m {
+            return false
+        }
+        i++
+    }
+
+    return i == n
+}
+```
+
+```kotlin
+class Solution {
+    fun isSubsequence(s: String, t: String): Boolean {
+        val n = s.length
+        val m = t.length
+        if (m == 0) return n == 0
+
+        val store = Array(m) { IntArray(26) { m + 1 } }
+        store[m - 1][t[m - 1] - 'a'] = m - 1
+
+        for (i in m - 2 downTo 0) {
+            store[i + 1].copyInto(store[i])
+            store[i][t[i] - 'a'] = i
+        }
+
+        var i = 0
+        var j = 0
+        while (i < n && j < m) {
+            j = store[j][s[i] - 'a'] + 1
+            if (j > m) return false
+            i++
+        }
+
+        return i == n
+    }
+}
+```
+
+```swift
+class Solution {
+    func isSubsequence(_ s: String, _ t: String) -> Bool {
+        let sArr = Array(s)
+        let tArr = Array(t)
+        let n = sArr.count, m = tArr.count
+        if m == 0 { return n == 0 }
+
+        var store = [[Int]](repeating: [Int](repeating: m + 1, count: 26), count: m)
+        store[m - 1][Int(tArr[m - 1].asciiValue!) - 97] = m - 1
+
+        for i in stride(from: m - 2, through: 0, by: -1) {
+            store[i] = store[i + 1]
+            store[i][Int(tArr[i].asciiValue!) - 97] = i
+        }
+
+        var i = 0, j = 0
+        while i < n && j < m {
+            j = store[j][Int(sArr[i].asciiValue!) - 97] + 1
+            if j > m { return false }
+            i += 1
+        }
+
+        return i == n
     }
 }
 ```

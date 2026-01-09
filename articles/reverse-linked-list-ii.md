@@ -245,6 +245,152 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    dummy := &ListNode{Val: 0, Next: head}
+    prev := dummy
+
+    for i := 0; i < left-1; i++ {
+        prev = prev.Next
+    }
+
+    sublistHead := prev.Next
+    sublistTail := sublistHead
+    for i := 0; i < right-left; i++ {
+        sublistTail = sublistTail.Next
+    }
+
+    nextNode := sublistTail.Next
+    sublistTail.Next = nil
+
+    var reverseList func(*ListNode) *ListNode
+    reverseList = func(node *ListNode) *ListNode {
+        if node == nil {
+            return nil
+        }
+        newHead := node
+        if node.Next != nil {
+            newHead = reverseList(node.Next)
+            node.Next.Next = node
+        }
+        node.Next = nil
+        return newHead
+    }
+
+    prev.Next = reverseList(sublistHead)
+    sublistHead.Next = nextNode
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+        val dummy = ListNode(0)
+        dummy.next = head
+        var prev: ListNode? = dummy
+
+        for (i in 0 until left - 1) {
+            prev = prev?.next
+        }
+
+        val sublistHead = prev?.next
+        var sublistTail = sublistHead
+        for (i in 0 until right - left) {
+            sublistTail = sublistTail?.next
+        }
+
+        val nextNode = sublistTail?.next
+        sublistTail?.next = null
+
+        prev?.next = reverseList(sublistHead)
+        sublistHead?.next = nextNode
+
+        return dummy.next
+    }
+
+    private fun reverseList(head: ListNode?): ListNode? {
+        if (head == null) return null
+
+        var newHead = head
+        if (head.next != null) {
+            newHead = reverseList(head.next)
+            head.next?.next = head
+        }
+        head.next = null
+        return newHead
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reverseBetween(_ head: ListNode?, _ left: Int, _ right: Int) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var prev: ListNode? = dummy
+
+        for _ in 0..<(left - 1) {
+            prev = prev?.next
+        }
+
+        let sublistHead = prev?.next
+        var sublistTail = sublistHead
+        for _ in 0..<(right - left) {
+            sublistTail = sublistTail?.next
+        }
+
+        let nextNode = sublistTail?.next
+        sublistTail?.next = nil
+
+        prev?.next = reverseList(sublistHead)
+        sublistHead?.next = nextNode
+
+        return dummy.next
+    }
+
+    private func reverseList(_ head: ListNode?) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+
+        var newHead = head
+        if head?.next != nil {
+            newHead = reverseList(head?.next)
+            head?.next?.next = head
+        }
+        head?.next = nil
+        return newHead
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -417,6 +563,106 @@ public class Solution {
         }
         head.next = ReverseBetween(head.next, left - 1, right - 1);
         return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    var successor *ListNode
+
+    var reverseList func(*ListNode, int) *ListNode
+    reverseList = func(node *ListNode, n int) *ListNode {
+        if n == 1 {
+            successor = node.Next
+            return node
+        }
+        newHead := reverseList(node.Next, n-1)
+        node.Next.Next = node
+        node.Next = successor
+        return newHead
+    }
+
+    if left == 1 {
+        return reverseList(head, right)
+    }
+    head.Next = reverseBetween(head.Next, left-1, right-1)
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    private var successor: ListNode? = null
+
+    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+        if (left == 1) {
+            return reverseList(head, right)
+        }
+        head?.next = reverseBetween(head?.next, left - 1, right - 1)
+        return head
+    }
+
+    private fun reverseList(node: ListNode?, n: Int): ListNode? {
+        if (n == 1) {
+            successor = node?.next
+            return node
+        }
+        val newHead = reverseList(node?.next, n - 1)
+        node?.next?.next = node
+        node?.next = successor
+        return newHead
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    private var successor: ListNode? = nil
+
+    func reverseBetween(_ head: ListNode?, _ left: Int, _ right: Int) -> ListNode? {
+        if left == 1 {
+            return reverseList(head, right)
+        }
+        head?.next = reverseBetween(head?.next, left - 1, right - 1)
+        return head
+    }
+
+    private func reverseList(_ node: ListNode?, _ n: Int) -> ListNode? {
+        if n == 1 {
+            successor = node?.next
+            return node
+        }
+        let newHead = reverseList(node?.next, n - 1)
+        node?.next?.next = node
+        node?.next = successor
+        return newHead
     }
 }
 ```
@@ -679,6 +925,148 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    dummy := &ListNode{Val: 0, Next: head}
+    prev := dummy
+
+    for i := 0; i < left-1; i++ {
+        prev = prev.Next
+    }
+
+    sublistHead := prev.Next
+    sublistTail := sublistHead
+    for i := 0; i < right-left; i++ {
+        sublistTail = sublistTail.Next
+    }
+
+    nextNode := sublistTail.Next
+    sublistTail.Next = nil
+    prev.Next = reverseList(sublistHead)
+    sublistHead.Next = nextNode
+
+    return dummy.Next
+}
+
+func reverseList(head *ListNode) *ListNode {
+    var prev *ListNode
+    curr := head
+
+    for curr != nil {
+        temp := curr.Next
+        curr.Next = prev
+        prev = curr
+        curr = temp
+    }
+    return prev
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+        val dummy = ListNode(0)
+        dummy.next = head
+        var prev: ListNode? = dummy
+
+        for (i in 0 until left - 1) {
+            prev = prev?.next
+        }
+
+        val sublistHead = prev?.next
+        var sublistTail = sublistHead
+        for (i in 0 until right - left) {
+            sublistTail = sublistTail?.next
+        }
+
+        val nextNode = sublistTail?.next
+        sublistTail?.next = null
+        prev?.next = reverseList(sublistHead)
+        sublistHead?.next = nextNode
+
+        return dummy.next
+    }
+
+    private fun reverseList(head: ListNode?): ListNode? {
+        var prev: ListNode? = null
+        var curr = head
+
+        while (curr != null) {
+            val temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = temp
+        }
+        return prev
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reverseBetween(_ head: ListNode?, _ left: Int, _ right: Int) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var prev: ListNode? = dummy
+
+        for _ in 0..<(left - 1) {
+            prev = prev?.next
+        }
+
+        let sublistHead = prev?.next
+        var sublistTail = sublistHead
+        for _ in 0..<(right - left) {
+            sublistTail = sublistTail?.next
+        }
+
+        let nextNode = sublistTail?.next
+        sublistTail?.next = nil
+        prev?.next = reverseList(sublistHead)
+        sublistHead?.next = nextNode
+
+        return dummy.next
+    }
+
+    private func reverseList(_ head: ListNode?) -> ListNode? {
+        var prev: ListNode? = nil
+        var curr = head
+
+        while curr != nil {
+            let temp = curr?.next
+            curr?.next = prev
+            prev = curr
+            curr = temp
+        }
+        return prev
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -873,6 +1261,115 @@ public class Solution {
         leftPrev.next = prev;
 
         return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseBetween(head *ListNode, left int, right int) *ListNode {
+    dummy := &ListNode{Val: 0, Next: head}
+    leftPrev := dummy
+    cur := head
+
+    for i := 0; i < left-1; i++ {
+        leftPrev = cur
+        cur = cur.Next
+    }
+
+    var prev *ListNode
+    for i := 0; i < right-left+1; i++ {
+        tmpNext := cur.Next
+        cur.Next = prev
+        prev = cur
+        cur = tmpNext
+    }
+
+    leftPrev.Next.Next = cur
+    leftPrev.Next = prev
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseBetween(head: ListNode?, left: Int, right: Int): ListNode? {
+        val dummy = ListNode(0)
+        dummy.next = head
+        var leftPrev: ListNode? = dummy
+        var cur = head
+
+        for (i in 0 until left - 1) {
+            leftPrev = cur
+            cur = cur?.next
+        }
+
+        var prev: ListNode? = null
+        for (i in 0 until right - left + 1) {
+            val tmpNext = cur?.next
+            cur?.next = prev
+            prev = cur
+            cur = tmpNext
+        }
+
+        leftPrev?.next?.next = cur
+        leftPrev?.next = prev
+
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reverseBetween(_ head: ListNode?, _ left: Int, _ right: Int) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var leftPrev: ListNode? = dummy
+        var cur = head
+
+        for _ in 0..<(left - 1) {
+            leftPrev = cur
+            cur = cur?.next
+        }
+
+        var prev: ListNode? = nil
+        for _ in 0..<(right - left + 1) {
+            let tmpNext = cur?.next
+            cur?.next = prev
+            prev = cur
+            cur = tmpNext
+        }
+
+        leftPrev?.next?.next = cur
+        leftPrev?.next = prev
+
+        return dummy.next
     }
 }
 ```

@@ -105,6 +105,110 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool WinnerOfGame(string colors) {
+        List<char> s = new List<char>(colors.ToCharArray());
+
+        while (true) {
+            if (!RemoveChar(s, 'A')) return false;
+            if (!RemoveChar(s, 'B')) return true;
+        }
+    }
+
+    private bool RemoveChar(List<char> s, char c) {
+        for (int i = 1; i < s.Count - 1; i++) {
+            if (s[i] != c) continue;
+
+            if (s[i - 1] == c && s[i + 1] == c) {
+                s.RemoveAt(i);
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
+```go
+func winnerOfGame(colors string) bool {
+    s := []byte(colors)
+
+    removeChar := func(c byte) bool {
+        for i := 1; i < len(s)-1; i++ {
+            if s[i] != c {
+                continue
+            }
+
+            if s[i-1] == c && s[i+1] == c {
+                s = append(s[:i], s[i+1:]...)
+                return true
+            }
+        }
+        return false
+    }
+
+    for {
+        if !removeChar('A') {
+            return false
+        }
+        if !removeChar('B') {
+            return true
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun winnerOfGame(colors: String): Boolean {
+        val s = StringBuilder(colors)
+
+        fun removeChar(c: Char): Boolean {
+            for (i in 1 until s.length - 1) {
+                if (s[i] != c) continue
+
+                if (s[i - 1] == c && s[i + 1] == c) {
+                    s.deleteCharAt(i)
+                    return true
+                }
+            }
+            return false
+        }
+
+        while (true) {
+            if (!removeChar('A')) return false
+            if (!removeChar('B')) return true
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func winnerOfGame(_ colors: String) -> Bool {
+        var s = Array(colors)
+
+        func removeChar(_ c: Character) -> Bool {
+            for i in 1..<s.count - 1 {
+                if s[i] != c { continue }
+
+                if s[i - 1] == c && s[i + 1] == c {
+                    s.remove(at: i)
+                    return true
+                }
+            }
+            return false
+        }
+
+        while true {
+            if !removeChar("A") { return false }
+            if !removeChar("B") { return true }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -219,6 +323,107 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool WinnerOfGame(string colors) {
+        int alice = 0, bob = 0, l = 0;
+
+        for (int r = 0; r < colors.Length; r++) {
+            if (colors[l] != colors[r]) {
+                l = r;
+            }
+
+            int extra = r - l - 1;
+            if (extra > 0) {
+                if (colors[l] == 'A') {
+                    alice++;
+                } else {
+                    bob++;
+                }
+            }
+        }
+
+        return alice > bob;
+    }
+}
+```
+
+```go
+func winnerOfGame(colors string) bool {
+    alice, bob, l := 0, 0, 0
+
+    for r := 0; r < len(colors); r++ {
+        if colors[l] != colors[r] {
+            l = r
+        }
+
+        extra := r - l - 1
+        if extra > 0 {
+            if colors[l] == 'A' {
+                alice++
+            } else {
+                bob++
+            }
+        }
+    }
+
+    return alice > bob
+}
+```
+
+```kotlin
+class Solution {
+    fun winnerOfGame(colors: String): Boolean {
+        var alice = 0
+        var bob = 0
+        var l = 0
+
+        for (r in colors.indices) {
+            if (colors[l] != colors[r]) {
+                l = r
+            }
+
+            val extra = r - l - 1
+            if (extra > 0) {
+                if (colors[l] == 'A') {
+                    alice++
+                } else {
+                    bob++
+                }
+            }
+        }
+
+        return alice > bob
+    }
+}
+```
+
+```swift
+class Solution {
+    func winnerOfGame(_ colors: String) -> Bool {
+        var alice = 0, bob = 0, l = 0
+        let chars = Array(colors)
+
+        for r in 0..<chars.count {
+            if chars[l] != chars[r] {
+                l = r
+            }
+
+            let extra = r - l - 1
+            if extra > 0 {
+                if chars[l] == "A" {
+                    alice += 1
+                } else {
+                    bob += 1
+                }
+            }
+        }
+
+        return alice > bob
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +518,90 @@ class Solution {
         }
 
         return alice > bob;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool WinnerOfGame(string colors) {
+        int alice = 0, bob = 0;
+
+        for (int i = 1; i < colors.Length - 1; i++) {
+            if (colors[i - 1] == colors[i] && colors[i] == colors[i + 1]) {
+                if (colors[i] == 'A') {
+                    alice++;
+                }
+                if (colors[i] == 'B') {
+                    bob++;
+                }
+            }
+        }
+
+        return alice > bob;
+    }
+}
+```
+
+```go
+func winnerOfGame(colors string) bool {
+    alice, bob := 0, 0
+
+    for i := 1; i < len(colors)-1; i++ {
+        if colors[i-1] == colors[i] && colors[i] == colors[i+1] {
+            if colors[i] == 'A' {
+                alice++
+            }
+            if colors[i] == 'B' {
+                bob++
+            }
+        }
+    }
+
+    return alice > bob
+}
+```
+
+```kotlin
+class Solution {
+    fun winnerOfGame(colors: String): Boolean {
+        var alice = 0
+        var bob = 0
+
+        for (i in 1 until colors.length - 1) {
+            if (colors[i - 1] == colors[i] && colors[i] == colors[i + 1]) {
+                if (colors[i] == 'A') {
+                    alice++
+                }
+                if (colors[i] == 'B') {
+                    bob++
+                }
+            }
+        }
+
+        return alice > bob
+    }
+}
+```
+
+```swift
+class Solution {
+    func winnerOfGame(_ colors: String) -> Bool {
+        var alice = 0, bob = 0
+        let chars = Array(colors)
+
+        for i in 1..<chars.count - 1 {
+            if chars[i - 1] == chars[i] && chars[i] == chars[i + 1] {
+                if chars[i] == "A" {
+                    alice += 1
+                }
+                if chars[i] == "B" {
+                    bob += 1
+                }
+            }
+        }
+
+        return alice > bob
     }
 }
 ```

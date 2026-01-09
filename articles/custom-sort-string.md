@@ -93,6 +93,58 @@ public class Solution {
 }
 ```
 
+```go
+func customSortString(order string, s string) string {
+    rank := make(map[byte]int)
+    for i := 0; i < len(order); i++ {
+        rank[order[i]] = i
+    }
+
+    arr := []byte(s)
+    sort.Slice(arr, func(i, j int) bool {
+        ri, oki := rank[arr[i]]
+        rj, okj := rank[arr[j]]
+        if !oki {
+            ri = 26
+        }
+        if !okj {
+            rj = 26
+        }
+        return ri < rj
+    })
+
+    return string(arr)
+}
+```
+
+```kotlin
+class Solution {
+    fun customSortString(order: String, s: String): String {
+        val rank = mutableMapOf<Char, Int>()
+        for (i in order.indices) {
+            rank[order[i]] = i
+        }
+
+        return s.toCharArray()
+            .sortedBy { rank.getOrDefault(it, 26) }
+            .joinToString("")
+    }
+}
+```
+
+```swift
+class Solution {
+    func customSortString(_ order: String, _ s: String) -> String {
+        var rank = [Character: Int]()
+        for (i, c) in order.enumerated() {
+            rank[c] = i
+        }
+
+        return String(s.sorted { rank[$0, default: 26] < rank[$1, default: 26] })
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,6 +303,94 @@ public class Solution {
         }
 
         return res.ToString();
+    }
+}
+```
+
+```go
+func customSortString(order string, s string) string {
+    count := make([]int, 26)
+    for i := 0; i < len(s); i++ {
+        count[s[i]-'a']++
+    }
+
+    var res []byte
+    for i := 0; i < len(order); i++ {
+        idx := order[i] - 'a'
+        for count[idx] > 0 {
+            res = append(res, order[i])
+            count[idx]--
+        }
+    }
+
+    for idx := 0; idx < 26; idx++ {
+        c := byte('a' + idx)
+        for count[idx] > 0 {
+            res = append(res, c)
+            count[idx]--
+        }
+    }
+
+    return string(res)
+}
+```
+
+```kotlin
+class Solution {
+    fun customSortString(order: String, s: String): String {
+        val count = IntArray(26)
+        for (c in s) {
+            count[c - 'a']++
+        }
+
+        val res = StringBuilder()
+        for (c in order) {
+            val idx = c - 'a'
+            while (count[idx] > 0) {
+                res.append(c)
+                count[idx]--
+            }
+        }
+
+        for (idx in 0 until 26) {
+            val c = ('a' + idx)
+            while (count[idx] > 0) {
+                res.append(c)
+                count[idx]--
+            }
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func customSortString(_ order: String, _ s: String) -> String {
+        var count = [Int](repeating: 0, count: 26)
+        for c in s {
+            count[Int(c.asciiValue! - Character("a").asciiValue!)] += 1
+        }
+
+        var res = ""
+        for c in order {
+            let idx = Int(c.asciiValue! - Character("a").asciiValue!)
+            while count[idx] > 0 {
+                res.append(c)
+                count[idx] -= 1
+            }
+        }
+
+        for idx in 0..<26 {
+            let c = Character(UnicodeScalar(Int(Character("a").asciiValue!) + idx)!)
+            while count[idx] > 0 {
+                res.append(c)
+                count[idx] -= 1
+            }
+        }
+
+        return res
     }
 }
 ```

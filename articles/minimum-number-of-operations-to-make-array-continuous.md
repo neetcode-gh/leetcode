@@ -99,6 +99,106 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        int N = nums.Length;
+        int res = int.MaxValue;
+        int[] sortedNums = nums.Distinct().OrderBy(x => x).ToArray();
+        int n = sortedNums.Length;
+
+        for (int i = 0; i < n; i++) {
+            int noChange = 1;
+            for (int j = i + 1; j < n; j++) {
+                if (sortedNums[j] < sortedNums[i] + N) {
+                    noChange++;
+                }
+            }
+            res = Math.Min(res, N - noChange);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minOperations(nums []int) int {
+    N := len(nums)
+    res := N
+    seen := make(map[int]bool)
+    var sortedNums []int
+    for _, num := range nums {
+        if !seen[num] {
+            seen[num] = true
+            sortedNums = append(sortedNums, num)
+        }
+    }
+    sort.Ints(sortedNums)
+    n := len(sortedNums)
+
+    for i := 0; i < n; i++ {
+        noChange := 1
+        for j := i + 1; j < n; j++ {
+            if sortedNums[j] < sortedNums[i]+N {
+                noChange++
+            }
+        }
+        if N-noChange < res {
+            res = N - noChange
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val N = nums.size
+        var res = Int.MAX_VALUE
+        val sortedNums = nums.toSet().sorted()
+        val n = sortedNums.size
+
+        for (i in 0 until n) {
+            var noChange = 1
+            for (j in i + 1 until n) {
+                if (sortedNums[j] < sortedNums[i] + N) {
+                    noChange++
+                }
+            }
+            res = minOf(res, N - noChange)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        let N = nums.count
+        var res = Int.max
+        let sortedNums = Array(Set(nums)).sorted()
+        let n = sortedNums.count
+
+        for i in 0..<n {
+            var noChange = 1
+            for j in (i + 1)..<n {
+                if sortedNums[j] < sortedNums[i] + N {
+                    noChange += 1
+                }
+            }
+            res = min(res, N - noChange)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -226,6 +326,123 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        int N = nums.Length;
+        int res = int.MaxValue;
+        int[] sortedNums = nums.Distinct().OrderBy(x => x).ToArray();
+        int n = sortedNums.Length;
+
+        for (int i = 0; i < n; i++) {
+            int l = i, r = n;
+            while (l < r) {
+                int mid = l + (r - l) / 2;
+                if (sortedNums[mid] < sortedNums[i] + N) {
+                    l = mid + 1;
+                } else {
+                    r = mid;
+                }
+            }
+            int noChange = l - i;
+            res = Math.Min(res, N - noChange);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minOperations(nums []int) int {
+    N := len(nums)
+    res := N
+    seen := make(map[int]bool)
+    var sortedNums []int
+    for _, num := range nums {
+        if !seen[num] {
+            seen[num] = true
+            sortedNums = append(sortedNums, num)
+        }
+    }
+    sort.Ints(sortedNums)
+    n := len(sortedNums)
+
+    for i := 0; i < n; i++ {
+        l, r := i, n
+        for l < r {
+            mid := l + (r-l)/2
+            if sortedNums[mid] < sortedNums[i]+N {
+                l = mid + 1
+            } else {
+                r = mid
+            }
+        }
+        noChange := l - i
+        if N-noChange < res {
+            res = N - noChange
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val N = nums.size
+        var res = Int.MAX_VALUE
+        val sortedNums = nums.toSet().sorted()
+        val n = sortedNums.size
+
+        for (i in 0 until n) {
+            var l = i
+            var r = n
+            while (l < r) {
+                val mid = l + (r - l) / 2
+                if (sortedNums[mid] < sortedNums[i] + N) {
+                    l = mid + 1
+                } else {
+                    r = mid
+                }
+            }
+            val noChange = l - i
+            res = minOf(res, N - noChange)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        let N = nums.count
+        var res = Int.max
+        let sortedNums = Array(Set(nums)).sorted()
+        let n = sortedNums.count
+
+        for i in 0..<n {
+            var l = i, r = n
+            while l < r {
+                let mid = l + (r - l) / 2
+                if sortedNums[mid] < sortedNums[i] + N {
+                    l = mid + 1
+                } else {
+                    r = mid
+                }
+            }
+            let noChange = l - i
+            res = min(res, N - noChange)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -326,6 +543,97 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        int length = nums.Length;
+        int[] sortedNums = nums.Distinct().OrderBy(x => x).ToArray();
+        int res = length, r = 0;
+
+        for (int l = 0; l < sortedNums.Length; l++) {
+            while (r < sortedNums.Length && sortedNums[r] < sortedNums[l] + length) {
+                r++;
+            }
+            int window = r - l;
+            res = Math.Min(res, length - window);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func minOperations(nums []int) int {
+    length := len(nums)
+    seen := make(map[int]bool)
+    var sortedNums []int
+    for _, num := range nums {
+        if !seen[num] {
+            seen[num] = true
+            sortedNums = append(sortedNums, num)
+        }
+    }
+    sort.Ints(sortedNums)
+    res := length
+    r := 0
+
+    for l := 0; l < len(sortedNums); l++ {
+        for r < len(sortedNums) && sortedNums[r] < sortedNums[l]+length {
+            r++
+        }
+        window := r - l
+        if length-window < res {
+            res = length - window
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val length = nums.size
+        val sortedNums = nums.toSet().sorted()
+        var res = length
+        var r = 0
+
+        for (l in sortedNums.indices) {
+            while (r < sortedNums.size && sortedNums[r] < sortedNums[l] + length) {
+                r++
+            }
+            val window = r - l
+            res = minOf(res, length - window)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        let length = nums.count
+        let sortedNums = Array(Set(nums)).sorted()
+        var res = length
+        var r = 0
+
+        for l in 0..<sortedNums.count {
+            while r < sortedNums.count && sortedNums[r] < sortedNums[l] + length {
+                r += 1
+            }
+            let window = r - l
+            res = min(res, length - window)
+        }
+
+        return res
     }
 }
 ```
@@ -442,6 +750,108 @@ class Solution {
         }
 
         return length - (n - l);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        int length = nums.Length;
+        Array.Sort(nums);
+        int n = 1;
+
+        for (int i = 1; i < length; i++) {
+            if (nums[i] != nums[i - 1]) {
+                nums[n] = nums[i];
+                n++;
+            }
+        }
+
+        int l = 0;
+        for (int r = 0; r < n; r++) {
+            if (nums[r] - nums[l] > length - 1) {
+                l++;
+            }
+        }
+
+        return length - (n - l);
+    }
+}
+```
+
+```go
+func minOperations(nums []int) int {
+    length := len(nums)
+    sort.Ints(nums)
+    n := 1
+
+    for i := 1; i < length; i++ {
+        if nums[i] != nums[i-1] {
+            nums[n] = nums[i]
+            n++
+        }
+    }
+
+    l := 0
+    for r := 0; r < n; r++ {
+        if nums[r]-nums[l] > length-1 {
+            l++
+        }
+    }
+
+    return length - (n - l)
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(nums: IntArray): Int {
+        val length = nums.size
+        nums.sort()
+        var n = 1
+
+        for (i in 1 until length) {
+            if (nums[i] != nums[i - 1]) {
+                nums[n] = nums[i]
+                n++
+            }
+        }
+
+        var l = 0
+        for (r in 0 until n) {
+            if (nums[r] - nums[l] > length - 1) {
+                l++
+            }
+        }
+
+        return length - (n - l)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ nums: [Int]) -> Int {
+        let length = nums.count
+        var nums = nums.sorted()
+        var n = 1
+
+        for i in 1..<length {
+            if nums[i] != nums[i - 1] {
+                nums[n] = nums[i]
+                n += 1
+            }
+        }
+
+        var l = 0
+        for r in 0..<n {
+            if nums[r] - nums[l] > length - 1 {
+                l += 1
+            }
+        }
+
+        return length - (n - l)
     }
 }
 ```

@@ -108,6 +108,76 @@ public class Solution {
 }
 ```
 
+```go
+func lastStoneWeightII(stones []int) int {
+    stoneSum := 0
+    for _, stone := range stones {
+        stoneSum += stone
+    }
+    target := (stoneSum + 1) / 2
+
+    var dfs func(i, total int) int
+    dfs = func(i, total int) int {
+        if total >= target || i == len(stones) {
+            return abs(total - (stoneSum - total))
+        }
+        return min(dfs(i+1, total), dfs(i+1, total+stones[i]))
+    }
+
+    return dfs(0, 0)
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeightII(stones: IntArray): Int {
+        val stoneSum = stones.sum()
+        val target = (stoneSum + 1) / 2
+
+        fun dfs(i: Int, total: Int): Int {
+            if (total >= target || i == stones.size) {
+                return kotlin.math.abs(total - (stoneSum - total))
+            }
+            return minOf(dfs(i + 1, total), dfs(i + 1, total + stones[i]))
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeightII(_ stones: [Int]) -> Int {
+        let stoneSum = stones.reduce(0, +)
+        let target = (stoneSum + 1) / 2
+
+        func dfs(_ i: Int, _ total: Int) -> Int {
+            if total >= target || i == stones.count {
+                return abs(total - (stoneSum - total))
+            }
+            return min(dfs(i + 1, total), dfs(i + 1, total + stones[i]))
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -282,6 +352,97 @@ public class Solution {
 }
 ```
 
+```go
+func lastStoneWeightII(stones []int) int {
+    stoneSum := 0
+    for _, stone := range stones {
+        stoneSum += stone
+    }
+    target := (stoneSum + 1) / 2
+    dp := make([][]int, len(stones))
+    for i := range dp {
+        dp[i] = make([]int, target+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, total int) int
+    dfs = func(i, total int) int {
+        if total >= target || i == len(stones) {
+            return abs(total - (stoneSum - total))
+        }
+        if dp[i][total] != -1 {
+            return dp[i][total]
+        }
+        dp[i][total] = min(dfs(i+1, total), dfs(i+1, total+stones[i]))
+        return dp[i][total]
+    }
+
+    return dfs(0, 0)
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeightII(stones: IntArray): Int {
+        val stoneSum = stones.sum()
+        val target = (stoneSum + 1) / 2
+        val dp = Array(stones.size) { IntArray(target + 1) { -1 } }
+
+        fun dfs(i: Int, total: Int): Int {
+            if (total >= target || i == stones.size) {
+                return kotlin.math.abs(total - (stoneSum - total))
+            }
+            if (dp[i][total] != -1) {
+                return dp[i][total]
+            }
+            dp[i][total] = minOf(dfs(i + 1, total), dfs(i + 1, total + stones[i]))
+            return dp[i][total]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeightII(_ stones: [Int]) -> Int {
+        let stoneSum = stones.reduce(0, +)
+        let target = (stoneSum + 1) / 2
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: target + 1), count: stones.count)
+
+        func dfs(_ i: Int, _ total: Int) -> Int {
+            if total >= target || i == stones.count {
+                return abs(total - (stoneSum - total))
+            }
+            if dp[i][total] != -1 {
+                return dp[i][total]
+            }
+            dp[i][total] = min(dfs(i + 1, total), dfs(i + 1, total + stones[i]))
+            return dp[i][total]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -428,6 +589,89 @@ public class Solution {
 }
 ```
 
+```go
+func lastStoneWeightII(stones []int) int {
+    stoneSum := 0
+    for _, stone := range stones {
+        stoneSum += stone
+    }
+    target := stoneSum / 2
+    n := len(stones)
+
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, target+1)
+    }
+
+    for i := 1; i <= n; i++ {
+        for t := 0; t <= target; t++ {
+            if t >= stones[i-1] {
+                dp[i][t] = max(dp[i-1][t], dp[i-1][t-stones[i-1]]+stones[i-1])
+            } else {
+                dp[i][t] = dp[i-1][t]
+            }
+        }
+    }
+
+    return stoneSum - 2*dp[n][target]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeightII(stones: IntArray): Int {
+        val stoneSum = stones.sum()
+        val target = stoneSum / 2
+        val n = stones.size
+
+        val dp = Array(n + 1) { IntArray(target + 1) }
+
+        for (i in 1..n) {
+            for (t in 0..target) {
+                if (t >= stones[i - 1]) {
+                    dp[i][t] = maxOf(dp[i - 1][t], dp[i - 1][t - stones[i - 1]] + stones[i - 1])
+                } else {
+                    dp[i][t] = dp[i - 1][t]
+                }
+            }
+        }
+
+        return stoneSum - 2 * dp[n][target]
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeightII(_ stones: [Int]) -> Int {
+        let stoneSum = stones.reduce(0, +)
+        let target = stoneSum / 2
+        let n = stones.count
+
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: target + 1), count: n + 1)
+
+        for i in 1...n {
+            for t in 0...target {
+                if t >= stones[i - 1] {
+                    dp[i][t] = max(dp[i - 1][t], dp[i - 1][t - stones[i - 1]] + stones[i - 1])
+                } else {
+                    dp[i][t] = dp[i - 1][t]
+                }
+            }
+        }
+
+        return stoneSum - 2 * dp[n][target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,6 +780,63 @@ public class Solution {
         }
 
         return stoneSum - 2 * dp[target];
+    }
+}
+```
+
+```go
+func lastStoneWeightII(stones []int) int {
+    stoneSum := 0
+    for _, stone := range stones {
+        stoneSum += stone
+    }
+    target := stoneSum / 2
+    dp := make([]int, target+1)
+
+    for _, stone := range stones {
+        for t := target; t >= stone; t-- {
+            if dp[t-stone]+stone > dp[t] {
+                dp[t] = dp[t-stone] + stone
+            }
+        }
+    }
+
+    return stoneSum - 2*dp[target]
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeightII(stones: IntArray): Int {
+        val stoneSum = stones.sum()
+        val target = stoneSum / 2
+        val dp = IntArray(target + 1)
+
+        for (stone in stones) {
+            for (t in target downTo stone) {
+                dp[t] = maxOf(dp[t], dp[t - stone] + stone)
+            }
+        }
+
+        return stoneSum - 2 * dp[target]
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeightII(_ stones: [Int]) -> Int {
+        let stoneSum = stones.reduce(0, +)
+        let target = stoneSum / 2
+        var dp = [Int](repeating: 0, count: target + 1)
+
+        for stone in stones {
+            for t in stride(from: target, through: stone, by: -1) {
+                dp[t] = max(dp[t], dp[t - stone] + stone)
+            }
+        }
+
+        return stoneSum - 2 * dp[target]
     }
 }
 ```
@@ -702,6 +1003,94 @@ public class Solution {
         }
 
         return stoneSum - 2 * maxVal;
+    }
+}
+```
+
+```go
+func lastStoneWeightII(stones []int) int {
+    stoneSum := 0
+    for _, stone := range stones {
+        stoneSum += stone
+    }
+    target := stoneSum / 2
+
+    dp := make(map[int]bool)
+    dp[0] = true
+
+    for _, stone := range stones {
+        newDp := make(map[int]bool)
+        for val := range dp {
+            newDp[val] = true
+            if val+stone == target {
+                return stoneSum - 2*target
+            }
+            if val+stone < target {
+                newDp[val+stone] = true
+            }
+        }
+        dp = newDp
+    }
+
+    maxVal := 0
+    for val := range dp {
+        if val > maxVal {
+            maxVal = val
+        }
+    }
+
+    return stoneSum - 2*maxVal
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeightII(stones: IntArray): Int {
+        val stoneSum = stones.sum()
+        val target = stoneSum / 2
+
+        var dp = hashSetOf(0)
+
+        for (stone in stones) {
+            val newDp = HashSet(dp)
+            for (v in dp) {
+                if (v + stone == target) {
+                    return stoneSum - 2 * target
+                }
+                if (v + stone < target) {
+                    newDp.add(v + stone)
+                }
+            }
+            dp = newDp
+        }
+
+        return stoneSum - 2 * (dp.maxOrNull() ?: 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeightII(_ stones: [Int]) -> Int {
+        let stoneSum = stones.reduce(0, +)
+        let target = stoneSum / 2
+
+        var dp: Set<Int> = [0]
+
+        for stone in stones {
+            var newDp = dp
+            for val in dp {
+                if val + stone == target {
+                    return stoneSum - 2 * target
+                }
+                if val + stone < target {
+                    newDp.insert(val + stone)
+                }
+            }
+            dp = newDp
+        }
+
+        return stoneSum - 2 * (dp.max() ?? 0)
     }
 }
 ```

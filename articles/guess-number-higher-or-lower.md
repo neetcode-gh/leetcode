@@ -102,6 +102,68 @@ public class Solution : GuessGame {
 }
 ```
 
+```go
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * func guess(num int) int;
+ */
+
+func guessNumber(n int) int {
+    for num := 1; num <= n; num++ {
+        if guess(num) == 0 {
+            return num
+        }
+    }
+    return n
+}
+```
+
+```kotlin
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * fun guess(num: Int): Int {}
+ */
+
+class Solution : GuessGame() {
+    override fun guessNumber(n: Int): Int {
+        for (num in 1..n) {
+            if (guess(num) == 0) return num
+        }
+        return n
+    }
+}
+```
+
+```swift
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * func guess(_ num: Int) -> Int
+ */
+
+class Solution : GuessGame {
+    func guessNumber(_ n: Int) -> Int {
+        for num in 1...n {
+            if guess(num) == 0 {
+                return num
+            }
+        }
+        return n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,6 +313,90 @@ public class Solution : GuessGame {
             }
             else {
                 return m;
+            }
+        }
+    }
+}
+```
+
+```go
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * func guess(num int) int;
+ */
+
+func guessNumber(n int) int {
+    l, r := 1, n
+    for {
+        m := l + (r-l)/2
+        res := guess(m)
+        if res > 0 {
+            l = m + 1
+        } else if res < 0 {
+            r = m - 1
+        } else {
+            return m
+        }
+    }
+}
+```
+
+```kotlin
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * fun guess(num: Int): Int {}
+ */
+
+class Solution : GuessGame() {
+    override fun guessNumber(n: Int): Int {
+        var l = 1
+        var r = n
+        while (true) {
+            val m = l + (r - l) / 2
+            val res = guess(m)
+            if (res > 0) {
+                l = m + 1
+            } else if (res < 0) {
+                r = m - 1
+            } else {
+                return m
+            }
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * func guess(_ num: Int) -> Int
+ */
+
+class Solution : GuessGame {
+    func guessNumber(_ n: Int) -> Int {
+        var l = 1
+        var r = n
+        while true {
+            let m = l + (r - l) / 2
+            let res = guess(m)
+            if res > 0 {
+                l = m + 1
+            } else if res < 0 {
+                r = m - 1
+            } else {
+                return m
             }
         }
     }
@@ -425,6 +571,103 @@ public class Solution : GuessGame {
             }
             else {
                 l = m2 + 1;
+            }
+        }
+    }
+}
+```
+
+```go
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * func guess(num int) int;
+ */
+
+func guessNumber(n int) int {
+    l, r := 1, n
+    for {
+        m1 := l + (r-l)/3
+        m2 := r - (r-l)/3
+        if guess(m1) == 0 {
+            return m1
+        }
+        if guess(m2) == 0 {
+            return m2
+        }
+        if guess(m1)+guess(m2) == 0 {
+            l = m1 + 1
+            r = m2 - 1
+        } else if guess(m1) == -1 {
+            r = m1 - 1
+        } else {
+            l = m2 + 1
+        }
+    }
+}
+```
+
+```kotlin
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * fun guess(num: Int): Int {}
+ */
+
+class Solution : GuessGame() {
+    override fun guessNumber(n: Int): Int {
+        var l = 1
+        var r = n
+        while (true) {
+            val m1 = l + (r - l) / 3
+            val m2 = r - (r - l) / 3
+            if (guess(m1) == 0) return m1
+            if (guess(m2) == 0) return m2
+            if (guess(m1) + guess(m2) == 0) {
+                l = m1 + 1
+                r = m2 - 1
+            } else if (guess(m1) == -1) {
+                r = m1 - 1
+            } else {
+                l = m2 + 1
+            }
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * func guess(_ num: Int) -> Int
+ */
+
+class Solution : GuessGame {
+    func guessNumber(_ n: Int) -> Int {
+        var l = 1
+        var r = n
+        while true {
+            let m1 = l + (r - l) / 3
+            let m2 = r - (r - l) / 3
+            if guess(m1) == 0 { return m1 }
+            if guess(m2) == 0 { return m2 }
+            if guess(m1) + guess(m2) == 0 {
+                l = m1 + 1
+                r = m2 - 1
+            } else if guess(m1) == -1 {
+                r = m1 - 1
+            } else {
+                l = m2 + 1
             }
         }
     }

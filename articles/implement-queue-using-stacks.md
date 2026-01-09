@@ -214,6 +214,134 @@ public class MyQueue {
 }
 ```
 
+```go
+type MyQueue struct {
+    stack1 []int
+    stack2 []int
+}
+
+func Constructor() MyQueue {
+    return MyQueue{
+        stack1: []int{},
+        stack2: []int{},
+    }
+}
+
+func (this *MyQueue) Push(x int) {
+    this.stack1 = append(this.stack1, x)
+}
+
+func (this *MyQueue) Pop() int {
+    for len(this.stack1) > 1 {
+        this.stack2 = append(this.stack2, this.stack1[len(this.stack1)-1])
+        this.stack1 = this.stack1[:len(this.stack1)-1]
+    }
+    res := this.stack1[len(this.stack1)-1]
+    this.stack1 = this.stack1[:len(this.stack1)-1]
+    for len(this.stack2) > 0 {
+        this.stack1 = append(this.stack1, this.stack2[len(this.stack2)-1])
+        this.stack2 = this.stack2[:len(this.stack2)-1]
+    }
+    return res
+}
+
+func (this *MyQueue) Peek() int {
+    for len(this.stack1) > 1 {
+        this.stack2 = append(this.stack2, this.stack1[len(this.stack1)-1])
+        this.stack1 = this.stack1[:len(this.stack1)-1]
+    }
+    res := this.stack1[len(this.stack1)-1]
+    for len(this.stack2) > 0 {
+        this.stack1 = append(this.stack1, this.stack2[len(this.stack2)-1])
+        this.stack2 = this.stack2[:len(this.stack2)-1]
+    }
+    return res
+}
+
+func (this *MyQueue) Empty() bool {
+    return len(this.stack1) == 0
+}
+```
+
+```kotlin
+class MyQueue() {
+    private val stack1 = ArrayDeque<Int>()
+    private val stack2 = ArrayDeque<Int>()
+
+    fun push(x: Int) {
+        stack1.addLast(x)
+    }
+
+    fun pop(): Int {
+        while (stack1.size > 1) {
+            stack2.addLast(stack1.removeLast())
+        }
+        val res = stack1.removeLast()
+        while (stack2.isNotEmpty()) {
+            stack1.addLast(stack2.removeLast())
+        }
+        return res
+    }
+
+    fun peek(): Int {
+        while (stack1.size > 1) {
+            stack2.addLast(stack1.removeLast())
+        }
+        val res = stack1.last()
+        while (stack2.isNotEmpty()) {
+            stack1.addLast(stack2.removeLast())
+        }
+        return res
+    }
+
+    fun empty(): Boolean {
+        return stack1.isEmpty()
+    }
+}
+```
+
+```swift
+class MyQueue {
+    private var stack1: [Int]
+    private var stack2: [Int]
+
+    init() {
+        stack1 = []
+        stack2 = []
+    }
+
+    func push(_ x: Int) {
+        stack1.append(x)
+    }
+
+    func pop() -> Int {
+        while stack1.count > 1 {
+            stack2.append(stack1.removeLast())
+        }
+        let res = stack1.removeLast()
+        while !stack2.isEmpty {
+            stack1.append(stack2.removeLast())
+        }
+        return res
+    }
+
+    func peek() -> Int {
+        while stack1.count > 1 {
+            stack2.append(stack1.removeLast())
+        }
+        let res = stack1.last!
+        while !stack2.isEmpty {
+            stack1.append(stack2.removeLast())
+        }
+        return res
+    }
+
+    func empty() -> Bool {
+        return stack1.isEmpty
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -416,6 +544,121 @@ public class MyQueue {
 
     public bool Empty() {
         return s1.Count == 0 && s2.Count == 0;
+    }
+}
+```
+
+```go
+type MyQueue struct {
+    s1 []int
+    s2 []int
+}
+
+func Constructor() MyQueue {
+    return MyQueue{
+        s1: []int{},
+        s2: []int{},
+    }
+}
+
+func (this *MyQueue) Push(x int) {
+    this.s1 = append(this.s1, x)
+}
+
+func (this *MyQueue) Pop() int {
+    if len(this.s2) == 0 {
+        for len(this.s1) > 0 {
+            this.s2 = append(this.s2, this.s1[len(this.s1)-1])
+            this.s1 = this.s1[:len(this.s1)-1]
+        }
+    }
+    res := this.s2[len(this.s2)-1]
+    this.s2 = this.s2[:len(this.s2)-1]
+    return res
+}
+
+func (this *MyQueue) Peek() int {
+    if len(this.s2) == 0 {
+        for len(this.s1) > 0 {
+            this.s2 = append(this.s2, this.s1[len(this.s1)-1])
+            this.s1 = this.s1[:len(this.s1)-1]
+        }
+    }
+    return this.s2[len(this.s2)-1]
+}
+
+func (this *MyQueue) Empty() bool {
+    return len(this.s1) == 0 && len(this.s2) == 0
+}
+```
+
+```kotlin
+class MyQueue() {
+    private val s1 = ArrayDeque<Int>()
+    private val s2 = ArrayDeque<Int>()
+
+    fun push(x: Int) {
+        s1.addLast(x)
+    }
+
+    fun pop(): Int {
+        if (s2.isEmpty()) {
+            while (s1.isNotEmpty()) {
+                s2.addLast(s1.removeLast())
+            }
+        }
+        return s2.removeLast()
+    }
+
+    fun peek(): Int {
+        if (s2.isEmpty()) {
+            while (s1.isNotEmpty()) {
+                s2.addLast(s1.removeLast())
+            }
+        }
+        return s2.last()
+    }
+
+    fun empty(): Boolean {
+        return s1.isEmpty() && s2.isEmpty()
+    }
+}
+```
+
+```swift
+class MyQueue {
+    private var s1: [Int]
+    private var s2: [Int]
+
+    init() {
+        s1 = []
+        s2 = []
+    }
+
+    func push(_ x: Int) {
+        s1.append(x)
+    }
+
+    func pop() -> Int {
+        if s2.isEmpty {
+            while !s1.isEmpty {
+                s2.append(s1.removeLast())
+            }
+        }
+        return s2.removeLast()
+    }
+
+    func peek() -> Int {
+        if s2.isEmpty {
+            while !s1.isEmpty {
+                s2.append(s1.removeLast())
+            }
+        }
+        return s2.last!
+    }
+
+    func empty() -> Bool {
+        return s1.isEmpty && s2.isEmpty
     }
 }
 ```

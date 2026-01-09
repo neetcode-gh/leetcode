@@ -131,6 +131,125 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private const int MOD = 1_000_000_007;
+    private int[,] dp;
+
+    public int NumWays(int steps, int arrLen) {
+        int maxPos = Math.Min(steps, arrLen);
+        dp = new int[maxPos + 1, steps + 1];
+        for (int i = 0; i <= maxPos; i++) {
+            for (int j = 0; j <= steps; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, steps, maxPos);
+    }
+
+    private int Dfs(int i, int steps, int maxPos) {
+        if (steps == 0) return i == 0 ? 1 : 0;
+        if (dp[i, steps] != -1) return dp[i, steps];
+
+        int res = Dfs(i, steps - 1, maxPos);
+        if (i > 0) res = (res + Dfs(i - 1, steps - 1, maxPos)) % MOD;
+        if (i < maxPos - 1) res = (res + Dfs(i + 1, steps - 1, maxPos)) % MOD;
+
+        dp[i, steps] = res;
+        return res;
+    }
+}
+```
+
+```go
+func numWays(steps int, arrLen int) int {
+    MOD := int(1e9 + 7)
+    maxPos := min(steps, arrLen)
+    dp := make([][]int, maxPos+1)
+    for i := range dp {
+        dp[i] = make([]int, steps+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, steps int) int
+    dfs = func(i, steps int) int {
+        if steps == 0 {
+            if i == 0 {
+                return 1
+            }
+            return 0
+        }
+        if dp[i][steps] != -1 {
+            return dp[i][steps]
+        }
+
+        res := dfs(i, steps-1)
+        if i > 0 {
+            res = (res + dfs(i-1, steps-1)) % MOD
+        }
+        if i < maxPos-1 {
+            res = (res + dfs(i+1, steps-1)) % MOD
+        }
+
+        dp[i][steps] = res
+        return res
+    }
+
+    return dfs(0, steps)
+}
+```
+
+```kotlin
+class Solution {
+    private val MOD = 1_000_000_007
+    private lateinit var dp: Array<IntArray>
+
+    fun numWays(steps: Int, arrLen: Int): Int {
+        val maxPos = minOf(steps, arrLen)
+        dp = Array(maxPos + 1) { IntArray(steps + 1) { -1 } }
+        return dfs(0, steps, maxPos)
+    }
+
+    private fun dfs(i: Int, steps: Int, maxPos: Int): Int {
+        if (steps == 0) return if (i == 0) 1 else 0
+        if (dp[i][steps] != -1) return dp[i][steps]
+
+        var res = dfs(i, steps - 1, maxPos)
+        if (i > 0) res = (res + dfs(i - 1, steps - 1, maxPos)) % MOD
+        if (i < maxPos - 1) res = (res + dfs(i + 1, steps - 1, maxPos)) % MOD
+
+        dp[i][steps] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ steps: Int, _ arrLen: Int) -> Int {
+        let MOD = 1_000_000_007
+        let maxPos = min(steps, arrLen)
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: steps + 1), count: maxPos + 1)
+
+        func dfs(_ i: Int, _ steps: Int) -> Int {
+            if steps == 0 { return i == 0 ? 1 : 0 }
+            if dp[i][steps] != -1 { return dp[i][steps] }
+
+            var res = dfs(i, steps - 1)
+            if i > 0 { res = (res + dfs(i - 1, steps - 1)) % MOD }
+            if i < maxPos - 1 { res = (res + dfs(i + 1, steps - 1)) % MOD }
+
+            dp[i][steps] = res
+            return res
+        }
+
+        return dfs(0, steps)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,6 +367,113 @@ class Solution {
         }
 
         return dp[steps][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumWays(int steps, int arrLen) {
+        int MOD = 1_000_000_007;
+        arrLen = Math.Min(arrLen, steps);
+        int[,] dp = new int[steps + 1, arrLen + 1];
+        dp[0, 0] = 1;
+
+        for (int step = 1; step <= steps; step++) {
+            for (int i = 0; i < arrLen; i++) {
+                int res = dp[step - 1, i];
+                if (i > 0) {
+                    res = (res + dp[step - 1, i - 1]) % MOD;
+                }
+                if (i < arrLen - 1) {
+                    res = (res + dp[step - 1, i + 1]) % MOD;
+                }
+                dp[step, i] = res;
+            }
+        }
+
+        return dp[steps, 0];
+    }
+}
+```
+
+```go
+func numWays(steps int, arrLen int) int {
+    MOD := int(1e9 + 7)
+    if arrLen > steps {
+        arrLen = steps
+    }
+    dp := make([][]int, steps+1)
+    for i := range dp {
+        dp[i] = make([]int, arrLen+1)
+    }
+    dp[0][0] = 1
+
+    for step := 1; step <= steps; step++ {
+        for i := 0; i < arrLen; i++ {
+            res := dp[step-1][i]
+            if i > 0 {
+                res = (res + dp[step-1][i-1]) % MOD
+            }
+            if i < arrLen-1 {
+                res = (res + dp[step-1][i+1]) % MOD
+            }
+            dp[step][i] = res
+        }
+    }
+
+    return dp[steps][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numWays(steps: Int, arrLen: Int): Int {
+        val MOD = 1_000_000_007
+        val len = minOf(arrLen, steps)
+        val dp = Array(steps + 1) { IntArray(len + 1) }
+        dp[0][0] = 1
+
+        for (step in 1..steps) {
+            for (i in 0 until len) {
+                var res = dp[step - 1][i]
+                if (i > 0) {
+                    res = (res + dp[step - 1][i - 1]) % MOD
+                }
+                if (i < len - 1) {
+                    res = (res + dp[step - 1][i + 1]) % MOD
+                }
+                dp[step][i] = res
+            }
+        }
+
+        return dp[steps][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ steps: Int, _ arrLen: Int) -> Int {
+        let MOD = 1_000_000_007
+        let len = min(arrLen, steps)
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: len + 1), count: steps + 1)
+        dp[0][0] = 1
+
+        for step in 1...steps {
+            for i in 0..<len {
+                var res = dp[step - 1][i]
+                if i > 0 {
+                    res = (res + dp[step - 1][i - 1]) % MOD
+                }
+                if i < len - 1 {
+                    res = (res + dp[step - 1][i + 1]) % MOD
+                }
+                dp[step][i] = res
+            }
+        }
+
+        return dp[steps][0]
     }
 }
 ```
@@ -375,6 +601,114 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumWays(int steps, int arrLen) {
+        int MOD = 1_000_000_007;
+        arrLen = Math.Min(steps, arrLen);
+        int[] dp = new int[arrLen];
+        dp[0] = 1;
+
+        for (int step = 0; step < steps; step++) {
+            int[] nextDp = new int[arrLen];
+            for (int i = 0; i < arrLen; i++) {
+                nextDp[i] = dp[i];
+                if (i > 0) {
+                    nextDp[i] = (nextDp[i] + dp[i - 1]) % MOD;
+                }
+                if (i < arrLen - 1) {
+                    nextDp[i] = (nextDp[i] + dp[i + 1]) % MOD;
+                }
+            }
+            dp = nextDp;
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```go
+func numWays(steps int, arrLen int) int {
+    MOD := int(1e9 + 7)
+    if arrLen > steps {
+        arrLen = steps
+    }
+    dp := make([]int, arrLen)
+    dp[0] = 1
+
+    for step := 0; step < steps; step++ {
+        nextDp := make([]int, arrLen)
+        for i := 0; i < arrLen; i++ {
+            nextDp[i] = dp[i]
+            if i > 0 {
+                nextDp[i] = (nextDp[i] + dp[i-1]) % MOD
+            }
+            if i < arrLen-1 {
+                nextDp[i] = (nextDp[i] + dp[i+1]) % MOD
+            }
+        }
+        dp = nextDp
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numWays(steps: Int, arrLen: Int): Int {
+        val MOD = 1_000_000_007
+        val len = minOf(steps, arrLen)
+        var dp = IntArray(len)
+        dp[0] = 1
+
+        repeat(steps) {
+            val nextDp = IntArray(len)
+            for (i in 0 until len) {
+                nextDp[i] = dp[i]
+                if (i > 0) {
+                    nextDp[i] = (nextDp[i] + dp[i - 1]) % MOD
+                }
+                if (i < len - 1) {
+                    nextDp[i] = (nextDp[i] + dp[i + 1]) % MOD
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ steps: Int, _ arrLen: Int) -> Int {
+        let MOD = 1_000_000_007
+        let len = min(steps, arrLen)
+        var dp = [Int](repeating: 0, count: len)
+        dp[0] = 1
+
+        for _ in 0..<steps {
+            var nextDp = [Int](repeating: 0, count: len)
+            for i in 0..<len {
+                nextDp[i] = dp[i]
+                if i > 0 {
+                    nextDp[i] = (nextDp[i] + dp[i - 1]) % MOD
+                }
+                if i < len - 1 {
+                    nextDp[i] = (nextDp[i] + dp[i + 1]) % MOD
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,6 +827,114 @@ class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumWays(int steps, int arrLen) {
+        int MOD = 1_000_000_007;
+        arrLen = Math.Min(steps, arrLen);
+        int[] dp = new int[arrLen];
+        dp[0] = 1;
+
+        for (int step = 0; step < steps; step++) {
+            int prev = 0;
+            for (int i = 0; i < arrLen; i++) {
+                int cur = dp[i];
+                if (i > 0) {
+                    dp[i] = (dp[i] + prev) % MOD;
+                }
+                if (i < arrLen - 1) {
+                    dp[i] = (dp[i] + dp[i + 1]) % MOD;
+                }
+                prev = cur;
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```go
+func numWays(steps int, arrLen int) int {
+    MOD := int(1e9 + 7)
+    if arrLen > steps {
+        arrLen = steps
+    }
+    dp := make([]int, arrLen)
+    dp[0] = 1
+
+    for step := 0; step < steps; step++ {
+        prev := 0
+        for i := 0; i < arrLen; i++ {
+            cur := dp[i]
+            if i > 0 {
+                dp[i] = (dp[i] + prev) % MOD
+            }
+            if i < arrLen-1 {
+                dp[i] = (dp[i] + dp[i+1]) % MOD
+            }
+            prev = cur
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numWays(steps: Int, arrLen: Int): Int {
+        val MOD = 1_000_000_007
+        val len = minOf(steps, arrLen)
+        val dp = IntArray(len)
+        dp[0] = 1
+
+        repeat(steps) {
+            var prev = 0
+            for (i in 0 until len) {
+                val cur = dp[i]
+                if (i > 0) {
+                    dp[i] = (dp[i] + prev) % MOD
+                }
+                if (i < len - 1) {
+                    dp[i] = (dp[i] + dp[i + 1]) % MOD
+                }
+                prev = cur
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ steps: Int, _ arrLen: Int) -> Int {
+        let MOD = 1_000_000_007
+        let len = min(steps, arrLen)
+        var dp = [Int](repeating: 0, count: len)
+        dp[0] = 1
+
+        for _ in 0..<steps {
+            var prev = 0
+            for i in 0..<len {
+                let cur = dp[i]
+                if i > 0 {
+                    dp[i] = (dp[i] + prev) % MOD
+                }
+                if i < len - 1 {
+                    dp[i] = (dp[i] + dp[i + 1]) % MOD
+                }
+                prev = cur
+            }
+        }
+
+        return dp[0]
     }
 }
 ```

@@ -130,6 +130,106 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func pairSum(head *ListNode) int {
+    arr := []int{}
+    cur := head
+
+    for cur != nil {
+        arr = append(arr, cur.Val)
+        cur = cur.Next
+    }
+
+    i, j := 0, len(arr)-1
+    res := 0
+    for i < j {
+        if arr[i]+arr[j] > res {
+            res = arr[i] + arr[j]
+        }
+        i++
+        j--
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun pairSum(head: ListNode?): Int {
+        val arr = mutableListOf<Int>()
+        var cur = head
+
+        while (cur != null) {
+            arr.add(cur.`val`)
+            cur = cur.next
+        }
+
+        var i = 0
+        var j = arr.size - 1
+        var res = 0
+        while (i < j) {
+            res = maxOf(res, arr[i] + arr[j])
+            i++
+            j--
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func pairSum(_ head: ListNode?) -> Int {
+        var arr = [Int]()
+        var cur = head
+
+        while cur != nil {
+            arr.append(cur!.val)
+            cur = cur?.next
+        }
+
+        var i = 0
+        var j = arr.count - 1
+        var res = 0
+        while i < j {
+            res = max(res, arr[i] + arr[j])
+            i += 1
+            j -= 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +399,129 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func pairSum(head *ListNode) int {
+    slow, fast := head, head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+
+    var prev *ListNode = nil
+    cur := slow
+    for cur != nil {
+        nxt := cur.Next
+        cur.Next = prev
+        prev = cur
+        cur = nxt
+    }
+
+    res := 0
+    first, second := head, prev
+    for second != nil {
+        if first.Val+second.Val > res {
+            res = first.Val + second.Val
+        }
+        first = first.Next
+        second = second.Next
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun pairSum(head: ListNode?): Int {
+        var slow = head
+        var fast = head
+        while (fast != null && fast.next != null) {
+            slow = slow?.next
+            fast = fast.next?.next
+        }
+
+        var prev: ListNode? = null
+        var cur = slow
+        while (cur != null) {
+            val nxt = cur.next
+            cur.next = prev
+            prev = cur
+            cur = nxt
+        }
+
+        var res = 0
+        var first = head
+        var second = prev
+        while (second != null) {
+            res = maxOf(res, first!!.`val` + second.`val`)
+            first = first.next
+            second = second.next
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func pairSum(_ head: ListNode?) -> Int {
+        var slow = head
+        var fast = head
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next?.next
+        }
+
+        var prev: ListNode? = nil
+        var cur = slow
+        while cur != nil {
+            let nxt = cur?.next
+            cur?.next = prev
+            prev = cur
+            cur = nxt
+        }
+
+        var res = 0
+        var first = head
+        var second = prev
+        while second != nil {
+            res = max(res, first!.val + second!.val)
+            first = first?.next
+            second = second?.next
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -446,6 +669,112 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func pairSum(head *ListNode) int {
+    slow, fast := head, head
+    var prev *ListNode = nil
+
+    for fast != nil && fast.Next != nil {
+        fast = fast.Next.Next
+        tmp := slow.Next
+        slow.Next = prev
+        prev = slow
+        slow = tmp
+    }
+
+    res := 0
+    for slow != nil {
+        if prev.Val+slow.Val > res {
+            res = prev.Val + slow.Val
+        }
+        prev = prev.Next
+        slow = slow.Next
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun pairSum(head: ListNode?): Int {
+        var slow = head
+        var fast = head
+        var prev: ListNode? = null
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next?.next
+            val tmp = slow?.next
+            slow?.next = prev
+            prev = slow
+            slow = tmp
+        }
+
+        var res = 0
+        while (slow != null) {
+            res = maxOf(res, prev!!.`val` + slow.`val`)
+            prev = prev.next
+            slow = slow.next
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func pairSum(_ head: ListNode?) -> Int {
+        var slow = head
+        var fast = head
+        var prev: ListNode? = nil
+
+        while fast != nil && fast?.next != nil {
+            fast = fast?.next?.next
+            let tmp = slow?.next
+            slow?.next = prev
+            prev = slow
+            slow = tmp
+        }
+
+        var res = 0
+        while slow != nil {
+            res = max(res, prev!.val + slow!.val)
+            prev = prev?.next
+            slow = slow?.next
+        }
+
+        return res
     }
 }
 ```

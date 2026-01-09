@@ -78,6 +78,76 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] DivideArray(int[] nums, int k) {
+        Array.Sort(nums);
+        int[][] res = new int[nums.Length / 3][];
+
+        for (int i = 0, idx = 0; i < nums.Length; i += 3, idx++) {
+            if (nums[i + 2] - nums[i] > k) {
+                return new int[][] {};
+            }
+            res[idx] = new int[] { nums[i], nums[i + 1], nums[i + 2] };
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func divideArray(nums []int, k int) [][]int {
+    sort.Ints(nums)
+    res := [][]int{}
+
+    for i := 0; i < len(nums); i += 3 {
+        if nums[i+2]-nums[i] > k {
+            return [][]int{}
+        }
+        res = append(res, []int{nums[i], nums[i+1], nums[i+2]})
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun divideArray(nums: IntArray, k: Int): Array<IntArray> {
+        nums.sort()
+        val res = mutableListOf<IntArray>()
+
+        for (i in nums.indices step 3) {
+            if (nums[i + 2] - nums[i] > k) {
+                return emptyArray()
+            }
+            res.add(intArrayOf(nums[i], nums[i + 1], nums[i + 2]))
+        }
+
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func divideArray(_ nums: [Int], _ k: Int) -> [[Int]] {
+        let nums = nums.sorted()
+        var res = [[Int]]()
+
+        for i in stride(from: 0, to: nums.count, by: 3) {
+            if nums[i + 2] - nums[i] > k {
+                return []
+            }
+            res.append([nums[i], nums[i + 1], nums[i + 2]])
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -224,6 +294,145 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[][] DivideArray(int[] nums, int k) {
+        int max = 0;
+        foreach (int num in nums) {
+            max = Math.Max(max, num);
+        }
+
+        int[] count = new int[max + 1];
+        foreach (int num in nums) {
+            count[num]++;
+        }
+
+        int[][] res = new int[nums.Length / 3][];
+        int[] group = new int[3];
+        int i = 0, idx = 0;
+
+        for (int num = 0; num <= max; num++) {
+            while (count[num] > 0) {
+                group[i++] = num;
+                count[num]--;
+
+                if (i == 3) {
+                    if (group[2] - group[0] > k) {
+                        return new int[][] {};
+                    }
+                    res[idx++] = new int[] { group[0], group[1], group[2] };
+                    i = 0;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func divideArray(nums []int, k int) [][]int {
+    maxNum := 0
+    for _, num := range nums {
+        if num > maxNum {
+            maxNum = num
+        }
+    }
+
+    count := make([]int, maxNum+1)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    res := [][]int{}
+    group := []int{}
+
+    for num := 0; num <= maxNum; num++ {
+        for count[num] > 0 {
+            group = append(group, num)
+            count[num]--
+
+            if len(group) == 3 {
+                if group[2]-group[0] > k {
+                    return [][]int{}
+                }
+                res = append(res, group)
+                group = []int{}
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun divideArray(nums: IntArray, k: Int): Array<IntArray> {
+        val maxNum = nums.max()
+        val count = IntArray(maxNum + 1)
+
+        for (num in nums) {
+            count[num]++
+        }
+
+        val res = mutableListOf<IntArray>()
+        val group = mutableListOf<Int>()
+
+        for (num in 0..maxNum) {
+            while (count[num] > 0) {
+                group.add(num)
+                count[num]--
+
+                if (group.size == 3) {
+                    if (group[2] - group[0] > k) {
+                        return emptyArray()
+                    }
+                    res.add(group.toIntArray())
+                    group.clear()
+                }
+            }
+        }
+
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func divideArray(_ nums: [Int], _ k: Int) -> [[Int]] {
+        let maxNum = nums.max()!
+        var count = [Int](repeating: 0, count: maxNum + 1)
+
+        for num in nums {
+            count[num] += 1
+        }
+
+        var res = [[Int]]()
+        var group = [Int]()
+
+        for num in 0...maxNum {
+            while count[num] > 0 {
+                group.append(num)
+                count[num] -= 1
+
+                if group.count == 3 {
+                    if group[2] - group[0] > k {
+                        return []
+                    }
+                    res.append(group)
+                    group = []
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

@@ -119,6 +119,128 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<IList<int>> ShiftGrid(int[][] grid, int k) {
+        int m = grid.Length, n = grid[0].Length;
+
+        while (k > 0) {
+            int[][] cur = new int[m][];
+            for (int i = 0; i < m; i++) {
+                cur[i] = new int[n];
+            }
+
+            for (int r = 0; r < m; r++) {
+                for (int c = 0; c < n - 1; c++) {
+                    cur[r][c + 1] = grid[r][c];
+                }
+            }
+
+            for (int r = 0; r < m; r++) {
+                cur[(r + 1) % m][0] = grid[r][n - 1];
+            }
+
+            grid = cur;
+            k--;
+        }
+
+        IList<IList<int>> res = new List<IList<int>>();
+        for (int r = 0; r < m; r++) {
+            res.Add(new List<int>(grid[r]));
+        }
+        return res;
+    }
+}
+```
+
+```go
+func shiftGrid(grid [][]int, k int) [][]int {
+    m, n := len(grid), len(grid[0])
+
+    for k > 0 {
+        cur := make([][]int, m)
+        for i := range cur {
+            cur[i] = make([]int, n)
+        }
+
+        for r := 0; r < m; r++ {
+            for c := 0; c < n-1; c++ {
+                cur[r][c+1] = grid[r][c]
+            }
+        }
+
+        for r := 0; r < m; r++ {
+            cur[(r+1)%m][0] = grid[r][n-1]
+        }
+
+        grid = cur
+        k--
+    }
+
+    return grid
+}
+```
+
+```kotlin
+class Solution {
+    fun shiftGrid(grid: Array<IntArray>, k: Int): List<List<Int>> {
+        var grid = grid
+        var k = k
+        val m = grid.size
+        val n = grid[0].size
+
+        while (k > 0) {
+            val cur = Array(m) { IntArray(n) }
+
+            for (r in 0 until m) {
+                for (c in 0 until n - 1) {
+                    cur[r][c + 1] = grid[r][c]
+                }
+            }
+
+            for (r in 0 until m) {
+                cur[(r + 1) % m][0] = grid[r][n - 1]
+            }
+
+            grid = cur
+            k--
+        }
+
+        return grid.map { it.toList() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
+        var grid = grid
+        var k = k
+        let m = grid.count
+        let n = grid[0].count
+
+        while k > 0 {
+            var cur = [[Int]](repeating: [Int](repeating: 0, count: n), count: m)
+
+            for r in 0..<m {
+                for c in 0..<(n - 1) {
+                    cur[r][c + 1] = grid[r][c]
+                }
+            }
+
+            for r in 0..<m {
+                cur[(r + 1) % m][0] = grid[r][n - 1]
+            }
+
+            grid = cur
+            k -= 1
+        }
+
+        return grid
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -222,6 +344,99 @@ class Solution {
         }
 
         return grid;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<IList<int>> ShiftGrid(int[][] grid, int k) {
+        int m = grid.Length, n = grid[0].Length;
+
+        while (k > 0) {
+            int prev = grid[m - 1][n - 1];
+            for (int r = 0; r < m; r++) {
+                for (int c = 0; c < n; c++) {
+                    int temp = grid[r][c];
+                    grid[r][c] = prev;
+                    prev = temp;
+                }
+            }
+            k--;
+        }
+
+        IList<IList<int>> res = new List<IList<int>>();
+        for (int r = 0; r < m; r++) {
+            res.Add(new List<int>(grid[r]));
+        }
+        return res;
+    }
+}
+```
+
+```go
+func shiftGrid(grid [][]int, k int) [][]int {
+    m, n := len(grid), len(grid[0])
+
+    for k > 0 {
+        prev := grid[m-1][n-1]
+        for r := 0; r < m; r++ {
+            for c := 0; c < n; c++ {
+                grid[r][c], prev = prev, grid[r][c]
+            }
+        }
+        k--
+    }
+
+    return grid
+}
+```
+
+```kotlin
+class Solution {
+    fun shiftGrid(grid: Array<IntArray>, k: Int): List<List<Int>> {
+        var k = k
+        val m = grid.size
+        val n = grid[0].size
+
+        while (k > 0) {
+            var prev = grid[m - 1][n - 1]
+            for (r in 0 until m) {
+                for (c in 0 until n) {
+                    val temp = grid[r][c]
+                    grid[r][c] = prev
+                    prev = temp
+                }
+            }
+            k--
+        }
+
+        return grid.map { it.toList() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
+        var grid = grid
+        var k = k
+        let m = grid.count
+        let n = grid[0].count
+
+        while k > 0 {
+            var prev = grid[m - 1][n - 1]
+            for r in 0..<m {
+                for c in 0..<n {
+                    let temp = grid[r][c]
+                    grid[r][c] = prev
+                    prev = temp
+                }
+            }
+            k -= 1
+        }
+
+        return grid
     }
 }
 ```
@@ -384,6 +599,164 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public IList<IList<int>> ShiftGrid(int[][] grid, int k) {
+        int m = grid.Length, n = grid[0].Length;
+        int N = m * n;
+        k %= N;
+
+        int[] arr = new int[N];
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                arr[r * n + c] = grid[r][c];
+            }
+        }
+
+        Reverse(arr, 0, N - 1);
+        Reverse(arr, 0, k - 1);
+        Reverse(arr, k, N - 1);
+
+        IList<IList<int>> res = new List<IList<int>>();
+        for (int r = 0; r < m; r++) {
+            List<int> row = new List<int>();
+            for (int c = 0; c < n; c++) {
+                row.Add(arr[r * n + c]);
+            }
+            res.Add(row);
+        }
+        return res;
+    }
+
+    private void Reverse(int[] arr, int l, int r) {
+        while (l < r) {
+            int temp = arr[l];
+            arr[l] = arr[r];
+            arr[r] = temp;
+            l++;
+            r--;
+        }
+    }
+}
+```
+
+```go
+func shiftGrid(grid [][]int, k int) [][]int {
+    m, n := len(grid), len(grid[0])
+    N := m * n
+    k %= N
+
+    arr := make([]int, N)
+    for r := 0; r < m; r++ {
+        for c := 0; c < n; c++ {
+            arr[r*n+c] = grid[r][c]
+        }
+    }
+
+    reverse := func(l, r int) {
+        for l < r {
+            arr[l], arr[r] = arr[r], arr[l]
+            l++
+            r--
+        }
+    }
+
+    reverse(0, N-1)
+    reverse(0, k-1)
+    reverse(k, N-1)
+
+    for r := 0; r < m; r++ {
+        for c := 0; c < n; c++ {
+            grid[r][c] = arr[r*n+c]
+        }
+    }
+
+    return grid
+}
+```
+
+```kotlin
+class Solution {
+    fun shiftGrid(grid: Array<IntArray>, k: Int): List<List<Int>> {
+        val m = grid.size
+        val n = grid[0].size
+        val N = m * n
+        var k = k % N
+
+        val arr = IntArray(N)
+        for (r in 0 until m) {
+            for (c in 0 until n) {
+                arr[r * n + c] = grid[r][c]
+            }
+        }
+
+        fun reverse(l: Int, r: Int) {
+            var left = l
+            var right = r
+            while (left < right) {
+                val temp = arr[left]
+                arr[left] = arr[right]
+                arr[right] = temp
+                left++
+                right--
+            }
+        }
+
+        reverse(0, N - 1)
+        reverse(0, k - 1)
+        reverse(k, N - 1)
+
+        for (r in 0 until m) {
+            for (c in 0 until n) {
+                grid[r][c] = arr[r * n + c]
+            }
+        }
+
+        return grid.map { it.toList() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
+        var grid = grid
+        let m = grid.count
+        let n = grid[0].count
+        let N = m * n
+        let k = k % N
+
+        var arr = [Int](repeating: 0, count: N)
+        for r in 0..<m {
+            for c in 0..<n {
+                arr[r * n + c] = grid[r][c]
+            }
+        }
+
+        func reverse(_ l: Int, _ r: Int) {
+            var l = l, r = r
+            while l < r {
+                arr.swapAt(l, r)
+                l += 1
+                r -= 1
+            }
+        }
+
+        reverse(0, N - 1)
+        reverse(0, k - 1)
+        reverse(k, N - 1)
+
+        for r in 0..<m {
+            for c in 0..<n {
+                grid[r][c] = arr[r * n + c]
+            }
+        }
+
+        return grid
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -492,6 +865,95 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<IList<int>> ShiftGrid(int[][] grid, int k) {
+        int M = grid.Length, N = grid[0].Length;
+        int[][] arr = new int[M][];
+        for (int i = 0; i < M; i++) {
+            arr[i] = new int[N];
+        }
+
+        for (int r = 0; r < M; r++) {
+            for (int c = 0; c < N; c++) {
+                int newVal = (r * N + c + k) % (M * N);
+                int newR = newVal / N, newC = newVal % N;
+                arr[newR][newC] = grid[r][c];
+            }
+        }
+
+        IList<IList<int>> res = new List<IList<int>>();
+        for (int r = 0; r < M; r++) {
+            res.Add(new List<int>(arr[r]));
+        }
+        return res;
+    }
+}
+```
+
+```go
+func shiftGrid(grid [][]int, k int) [][]int {
+    M, N := len(grid), len(grid[0])
+
+    res := make([][]int, M)
+    for i := range res {
+        res[i] = make([]int, N)
+    }
+
+    for r := 0; r < M; r++ {
+        for c := 0; c < N; c++ {
+            newVal := (r*N + c + k) % (M * N)
+            newR, newC := newVal/N, newVal%N
+            res[newR][newC] = grid[r][c]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun shiftGrid(grid: Array<IntArray>, k: Int): List<List<Int>> {
+        val M = grid.size
+        val N = grid[0].size
+
+        val res = Array(M) { IntArray(N) }
+        for (r in 0 until M) {
+            for (c in 0 until N) {
+                val newVal = (r * N + c + k) % (M * N)
+                val newR = newVal / N
+                val newC = newVal % N
+                res[newR][newC] = grid[r][c]
+            }
+        }
+
+        return res.map { it.toList() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func shiftGrid(_ grid: [[Int]], _ k: Int) -> [[Int]] {
+        let M = grid.count
+        let N = grid[0].count
+
+        var res = [[Int]](repeating: [Int](repeating: 0, count: N), count: M)
+        for r in 0..<M {
+            for c in 0..<N {
+                let newVal = (r * N + c + k) % (M * N)
+                let newR = newVal / N
+                let newC = newVal % N
+                res[newR][newC] = grid[r][c]
+            }
+        }
+
+        return res
     }
 }
 ```

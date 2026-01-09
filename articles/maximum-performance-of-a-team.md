@@ -110,6 +110,81 @@ class Solution {
 }
 ```
 
+```go
+func maxPerformance(n int, speed []int, efficiency []int, k int) int {
+    MOD := 1000000007
+    res := 0
+
+    var dfs func(i, k, minEff int, speedSum int)
+    dfs = func(i, k, minEff int, speedSum int) {
+        if minEff != math.MaxInt32 {
+            if speedSum*minEff > res {
+                res = speedSum * minEff
+            }
+        }
+        if i == n || k == 0 {
+            return
+        }
+
+        dfs(i+1, k, minEff, speedSum)
+        newMinEff := minEff
+        if efficiency[i] < minEff {
+            newMinEff = efficiency[i]
+        }
+        dfs(i+1, k-1, newMinEff, speedSum+speed[i])
+    }
+
+    dfs(0, k, math.MaxInt32, 0)
+    return res % MOD
+}
+```
+
+```kotlin
+class Solution {
+    private var res: Long = 0
+
+    fun maxPerformance(n: Int, speed: IntArray, efficiency: IntArray, k: Int): Int {
+        val MOD = 1000000007
+        res = 0
+
+        fun dfs(i: Int, k: Int, minEff: Int, speedSum: Long) {
+            if (minEff != Int.MAX_VALUE) {
+                res = maxOf(res, speedSum * minEff)
+            }
+            if (i == n || k == 0) return
+
+            dfs(i + 1, k, minEff, speedSum)
+            dfs(i + 1, k - 1, minOf(minEff, efficiency[i]), speedSum + speed[i])
+        }
+
+        dfs(0, k, Int.MAX_VALUE, 0)
+        return (res % MOD).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxPerformance(_ n: Int, _ speed: [Int], _ efficiency: [Int], _ k: Int) -> Int {
+        let MOD = 1000000007
+        var res = 0
+
+        func dfs(_ i: Int, _ k: Int, _ minEff: Int, _ speedSum: Int) {
+            if minEff != Int.max {
+                res = max(res, speedSum * minEff)
+            }
+            if i == n || k == 0 { return }
+
+            dfs(i + 1, k, minEff, speedSum)
+            dfs(i + 1, k - 1, min(minEff, efficiency[i]), speedSum + speed[i])
+        }
+
+        dfs(0, k, Int.max, 0)
+        return res % MOD
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -230,6 +305,102 @@ class Solution {
         }
 
         return Number(res % MOD);
+    }
+}
+```
+
+```go
+func maxPerformance(n int, speed []int, efficiency []int, k int) int {
+    MOD := int64(1000000007)
+    engineers := make([][2]int, n)
+    for i := 0; i < n; i++ {
+        engineers[i] = [2]int{efficiency[i], speed[i]}
+    }
+
+    sort.Slice(engineers, func(i, j int) bool {
+        return engineers[i][0] > engineers[j][0]
+    })
+
+    minHeap := &IntHeap{}
+    heap.Init(minHeap)
+    var speedSum, res int64
+
+    for _, eng := range engineers {
+        if minHeap.Len() == k {
+            speedSum -= int64(heap.Pop(minHeap).(int))
+        }
+        speedSum += int64(eng[1])
+        heap.Push(minHeap, eng[1])
+        if speedSum*int64(eng[0]) > res {
+            res = speedSum * int64(eng[0])
+        }
+    }
+
+    return int(res % MOD)
+}
+
+type IntHeap []int
+
+func (h IntHeap) Len() int           { return len(h) }
+func (h IntHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h IntHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *IntHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *IntHeap) Pop() any {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun maxPerformance(n: Int, speed: IntArray, efficiency: IntArray, k: Int): Int {
+        val MOD = 1_000_000_007L
+        val engineers = efficiency.indices
+            .map { i -> intArrayOf(efficiency[i], speed[i]) }
+            .sortedByDescending { it[0] }
+
+        val minHeap = PriorityQueue<Int>()
+        var speedSum = 0L
+        var res = 0L
+
+        for ((eff, spd) in engineers) {
+            if (minHeap.size == k) {
+                speedSum -= minHeap.poll()
+            }
+            speedSum += spd
+            minHeap.offer(spd)
+            res = maxOf(res, speedSum * eff)
+        }
+
+        return (res % MOD).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxPerformance(_ n: Int, _ speed: [Int], _ efficiency: [Int], _ k: Int) -> Int {
+        let MOD = 1_000_000_007
+        var engineers = (0..<n).map { (efficiency[$0], speed[$0]) }
+        engineers.sort { $0.0 > $1.0 }
+
+        var minHeap = Heap<Int>()
+        var speedSum = 0
+        var res = 0
+
+        for (eff, spd) in engineers {
+            if minHeap.count == k {
+                speedSum -= minHeap.popMin()!
+            }
+            speedSum += spd
+            minHeap.insert(spd)
+            res = max(res, speedSum * eff)
+        }
+
+        return res % MOD
     }
 }
 ```

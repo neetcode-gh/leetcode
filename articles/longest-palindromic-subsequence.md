@@ -167,6 +167,198 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int LongestPalindromeSubseq(string s) {
+        int n = s.Length;
+        dp = new int[n, n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i, j] = -1;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            Dfs(i, i, s);      // Odd length
+            Dfs(i, i + 1, s);  // Even length
+        }
+
+        int maxLength = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                maxLength = Math.Max(maxLength, dp[i, j]);
+            }
+        }
+
+        return maxLength;
+    }
+
+    private int Dfs(int i, int j, string s) {
+        if (i < 0 || j == s.Length) {
+            return 0;
+        }
+        if (dp[i, j] != -1) {
+            return dp[i, j];
+        }
+
+        if (s[i] == s[j]) {
+            int length = (i == j) ? 1 : 2;
+            dp[i, j] = length + Dfs(i - 1, j + 1, s);
+        } else {
+            dp[i, j] = Math.Max(Dfs(i - 1, j, s), Dfs(i, j + 1, s));
+        }
+
+        return dp[i, j];
+    }
+}
+```
+
+```go
+func longestPalindromeSubseq(s string) int {
+    n := len(s)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i < 0 || j == n {
+            return 0
+        }
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+
+        if s[i] == s[j] {
+            length := 2
+            if i == j {
+                length = 1
+            }
+            dp[i][j] = length + dfs(i-1, j+1)
+        } else {
+            dp[i][j] = max(dfs(i-1, j), dfs(i, j+1))
+        }
+
+        return dp[i][j]
+    }
+
+    for i := 0; i < n; i++ {
+        dfs(i, i)     // Odd length
+        dfs(i, i+1)   // Even length
+    }
+
+    maxLength := 0
+    for i := 0; i < n; i++ {
+        for j := 0; j < n; j++ {
+            if dp[i][j] > maxLength {
+                maxLength = dp[i][j]
+            }
+        }
+    }
+
+    return maxLength
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+
+    fun longestPalindromeSubseq(s: String): Int {
+        val n = s.length
+        dp = Array(n) { IntArray(n) { -1 } }
+
+        for (i in 0 until n) {
+            dfs(i, i, s)       // Odd length
+            dfs(i, i + 1, s)   // Even length
+        }
+
+        var maxLength = 0
+        for (row in dp) {
+            for (value in row) {
+                maxLength = maxOf(maxLength, value)
+            }
+        }
+
+        return maxLength
+    }
+
+    private fun dfs(i: Int, j: Int, s: String): Int {
+        if (i < 0 || j == s.length) {
+            return 0
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j]
+        }
+
+        dp[i][j] = if (s[i] == s[j]) {
+            val length = if (i == j) 1 else 2
+            length + dfs(i - 1, j + 1, s)
+        } else {
+            maxOf(dfs(i - 1, j, s), dfs(i, j + 1, s))
+        }
+
+        return dp[i][j]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestPalindromeSubseq(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: n), count: n)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i < 0 || j == n {
+                return 0
+            }
+            if dp[i][j] != -1 {
+                return dp[i][j]
+            }
+
+            if chars[i] == chars[j] {
+                let length = (i == j) ? 1 : 2
+                dp[i][j] = length + dfs(i - 1, j + 1)
+            } else {
+                dp[i][j] = max(dfs(i - 1, j), dfs(i, j + 1))
+            }
+
+            return dp[i][j]
+        }
+
+        for i in 0..<n {
+            _ = dfs(i, i)      // Odd length
+            _ = dfs(i, i + 1)  // Even length
+        }
+
+        var maxLength = 0
+        for row in dp {
+            for val in row {
+                maxLength = max(maxLength, val)
+            }
+        }
+
+        return maxLength
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -310,6 +502,152 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int LongestPalindromeSubseq(string s) {
+        int n = s.Length;
+        dp = new int[n, n];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i, j] = -1;
+            }
+        }
+
+        return Dfs(0, n - 1, s);
+    }
+
+    private int Dfs(int i, int j, string s) {
+        if (i > j) {
+            return 0;
+        }
+        if (i == j) {
+            return 1;
+        }
+        if (dp[i, j] != -1) {
+            return dp[i, j];
+        }
+
+        if (s[i] == s[j]) {
+            dp[i, j] = Dfs(i + 1, j - 1, s) + 2;
+        } else {
+            dp[i, j] = Math.Max(Dfs(i + 1, j, s), Dfs(i, j - 1, s));
+        }
+
+        return dp[i, j];
+    }
+}
+```
+
+```go
+func longestPalindromeSubseq(s string) int {
+    n := len(s)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, n)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i > j {
+            return 0
+        }
+        if i == j {
+            return 1
+        }
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+
+        if s[i] == s[j] {
+            dp[i][j] = dfs(i+1, j-1) + 2
+        } else {
+            dp[i][j] = max(dfs(i+1, j), dfs(i, j-1))
+        }
+
+        return dp[i][j]
+    }
+
+    return dfs(0, n-1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var dp: Array<IntArray>
+
+    fun longestPalindromeSubseq(s: String): Int {
+        val n = s.length
+        dp = Array(n) { IntArray(n) { -1 } }
+        return dfs(0, n - 1, s)
+    }
+
+    private fun dfs(i: Int, j: Int, s: String): Int {
+        if (i > j) {
+            return 0
+        }
+        if (i == j) {
+            return 1
+        }
+        if (dp[i][j] != -1) {
+            return dp[i][j]
+        }
+
+        dp[i][j] = if (s[i] == s[j]) {
+            dfs(i + 1, j - 1, s) + 2
+        } else {
+            maxOf(dfs(i + 1, j, s), dfs(i, j - 1, s))
+        }
+
+        return dp[i][j]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestPalindromeSubseq(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: n), count: n)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i > j {
+                return 0
+            }
+            if i == j {
+                return 1
+            }
+            if dp[i][j] != -1 {
+                return dp[i][j]
+            }
+
+            if chars[i] == chars[j] {
+                dp[i][j] = dfs(i + 1, j - 1) + 2
+            } else {
+                dp[i][j] = max(dfs(i + 1, j), dfs(i, j - 1))
+            }
+
+            return dp[i][j]
+        }
+
+        return dfs(0, n - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +768,129 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LongestPalindromeSubseq(string s) {
+        char[] arr = s.ToCharArray();
+        Array.Reverse(arr);
+        return LongestCommonSubsequence(s, new string(arr));
+    }
+
+    private int LongestCommonSubsequence(string s1, string s2) {
+        int N = s1.Length, M = s2.Length;
+        int[,] dp = new int[N + 1, M + 1];
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < M; j++) {
+                if (s1[i] == s2[j]) {
+                    dp[i + 1, j + 1] = 1 + dp[i, j];
+                } else {
+                    dp[i + 1, j + 1] = Math.Max(dp[i + 1, j], dp[i, j + 1]);
+                }
+            }
+        }
+
+        return dp[N, M];
+    }
+}
+```
+
+```go
+func longestPalindromeSubseq(s string) int {
+    reversed := reverse(s)
+    return longestCommonSubsequence(s, reversed)
+}
+
+func reverse(s string) string {
+    runes := []rune(s)
+    for i, j := 0, len(runes)-1; i < j; i, j = i+1, j-1 {
+        runes[i], runes[j] = runes[j], runes[i]
+    }
+    return string(runes)
+}
+
+func longestCommonSubsequence(s1, s2 string) int {
+    N, M := len(s1), len(s2)
+    dp := make([][]int, N+1)
+    for i := range dp {
+        dp[i] = make([]int, M+1)
+    }
+
+    for i := 0; i < N; i++ {
+        for j := 0; j < M; j++ {
+            if s1[i] == s2[j] {
+                dp[i+1][j+1] = 1 + dp[i][j]
+            } else {
+                dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])
+            }
+        }
+    }
+
+    return dp[N][M]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestPalindromeSubseq(s: String): Int {
+        return longestCommonSubsequence(s, s.reversed())
+    }
+
+    private fun longestCommonSubsequence(s1: String, s2: String): Int {
+        val N = s1.length
+        val M = s2.length
+        val dp = Array(N + 1) { IntArray(M + 1) }
+
+        for (i in 0 until N) {
+            for (j in 0 until M) {
+                if (s1[i] == s2[j]) {
+                    dp[i + 1][j + 1] = 1 + dp[i][j]
+                } else {
+                    dp[i + 1][j + 1] = maxOf(dp[i + 1][j], dp[i][j + 1])
+                }
+            }
+        }
+
+        return dp[N][M]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestPalindromeSubseq(_ s: String) -> Int {
+        return longestCommonSubsequence(s, String(s.reversed()))
+    }
+
+    private func longestCommonSubsequence(_ s1: String, _ s2: String) -> Int {
+        let arr1 = Array(s1)
+        let arr2 = Array(s2)
+        let N = arr1.count
+        let M = arr2.count
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: M + 1), count: N + 1)
+
+        for i in 0..<N {
+            for j in 0..<M {
+                if arr1[i] == arr2[j] {
+                    dp[i + 1][j + 1] = 1 + dp[i][j]
+                } else {
+                    dp[i + 1][j + 1] = max(dp[i + 1][j], dp[i][j + 1])
+                }
+            }
+        }
+
+        return dp[N][M]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -546,6 +1007,115 @@ class Solution {
         }
 
         return dp[n - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LongestPalindromeSubseq(string s) {
+        int n = s.Length;
+        int[] dp = new int[n];
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1;
+            int prev = 0;
+            for (int j = i + 1; j < n; j++) {
+                int temp = dp[j];
+
+                if (s[i] == s[j]) {
+                    dp[j] = prev + 2;
+                } else {
+                    dp[j] = Math.Max(dp[j], dp[j - 1]);
+                }
+
+                prev = temp;
+            }
+        }
+
+        return dp[n - 1];
+    }
+}
+```
+
+```go
+func longestPalindromeSubseq(s string) int {
+    n := len(s)
+    dp := make([]int, n)
+
+    for i := n - 1; i >= 0; i-- {
+        dp[i] = 1
+        prev := 0
+        for j := i + 1; j < n; j++ {
+            temp := dp[j]
+
+            if s[i] == s[j] {
+                dp[j] = prev + 2
+            } else {
+                if dp[j-1] > dp[j] {
+                    dp[j] = dp[j-1]
+                }
+            }
+
+            prev = temp
+        }
+    }
+
+    return dp[n-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun longestPalindromeSubseq(s: String): Int {
+        val n = s.length
+        val dp = IntArray(n)
+
+        for (i in n - 1 downTo 0) {
+            dp[i] = 1
+            var prev = 0
+            for (j in i + 1 until n) {
+                val temp = dp[j]
+
+                if (s[i] == s[j]) {
+                    dp[j] = prev + 2
+                } else {
+                    dp[j] = maxOf(dp[j], dp[j - 1])
+                }
+
+                prev = temp
+            }
+        }
+
+        return dp[n - 1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestPalindromeSubseq(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var dp = [Int](repeating: 0, count: n)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            dp[i] = 1
+            var prev = 0
+            for j in (i + 1)..<n {
+                let temp = dp[j]
+
+                if chars[i] == chars[j] {
+                    dp[j] = prev + 2
+                } else {
+                    dp[j] = max(dp[j], dp[j - 1])
+                }
+
+                prev = temp
+            }
+        }
+
+        return dp[n - 1]
     }
 }
 ```

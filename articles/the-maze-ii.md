@@ -33,6 +33,109 @@ class Solution {
 }
 ```
 
+```go
+func shortestDistance(maze [][]int, start []int, destination []int) int {
+    m, n := len(maze), len(maze[0])
+    distance := make([][]int, m)
+    for i := range distance {
+        distance[i] = make([]int, n)
+        for j := range distance[i] {
+            distance[i][j] = math.MaxInt32
+        }
+    }
+    distance[start[0]][start[1]] = 0
+
+    var dfs func(start []int)
+    dfs = func(start []int) {
+        dirs := [][]int{{0, 1}, {0, -1}, {-1, 0}, {1, 0}}
+        for _, dir := range dirs {
+            x, y := start[0]+dir[0], start[1]+dir[1]
+            count := 0
+            for x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                x += dir[0]
+                y += dir[1]
+                count++
+            }
+            if distance[start[0]][start[1]]+count < distance[x-dir[0]][y-dir[1]] {
+                distance[x-dir[0]][y-dir[1]] = distance[start[0]][start[1]] + count
+                dfs([]int{x - dir[0], y - dir[1]})
+            }
+        }
+    }
+
+    dfs(start)
+    if distance[destination[0]][destination[1]] == math.MaxInt32 {
+        return -1
+    }
+    return distance[destination[0]][destination[1]]
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestDistance(maze: Array<IntArray>, start: IntArray, destination: IntArray): Int {
+        val m = maze.size
+        val n = maze[0].size
+        val distance = Array(m) { IntArray(n) { Int.MAX_VALUE } }
+        distance[start[0]][start[1]] = 0
+
+        fun dfs(s: IntArray) {
+            val dirs = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(-1, 0), intArrayOf(1, 0))
+            for (dir in dirs) {
+                var x = s[0] + dir[0]
+                var y = s[1] + dir[1]
+                var count = 0
+                while (x in 0 until m && y in 0 until n && maze[x][y] == 0) {
+                    x += dir[0]
+                    y += dir[1]
+                    count++
+                }
+                if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count
+                    dfs(intArrayOf(x - dir[0], y - dir[1]))
+                }
+            }
+        }
+
+        dfs(start)
+        return if (distance[destination[0]][destination[1]] == Int.MAX_VALUE) -1
+               else distance[destination[0]][destination[1]]
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ maze: [[Int]], _ start: [Int], _ destination: [Int]) -> Int {
+        let m = maze.count
+        let n = maze[0].count
+        var distance = [[Int]](repeating: [Int](repeating: Int.max, count: n), count: m)
+        distance[start[0]][start[1]] = 0
+
+        func dfs(_ s: [Int]) {
+            let dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
+            for dir in dirs {
+                var x = s[0] + dir[0]
+                var y = s[1] + dir[1]
+                var count = 0
+                while x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                    x += dir[0]
+                    y += dir[1]
+                    count += 1
+                }
+                if distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]] {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count
+                    dfs([x - dir[0], y - dir[1]])
+                }
+            }
+        }
+
+        dfs(start)
+        return distance[destination[0]][destination[1]] == Int.max ? -1 : distance[destination[0]][destination[1]]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -78,6 +181,116 @@ class Solution {
             }
         }
         return distance[dest[0]][dest[1]] == Integer.MAX_VALUE ? -1 : distance[dest[0]][dest[1]];
+    }
+}
+```
+
+```go
+func shortestDistance(maze [][]int, start []int, destination []int) int {
+    m, n := len(maze), len(maze[0])
+    distance := make([][]int, m)
+    for i := range distance {
+        distance[i] = make([]int, n)
+        for j := range distance[i] {
+            distance[i][j] = math.MaxInt32
+        }
+    }
+    distance[start[0]][start[1]] = 0
+
+    dirs := [][]int{{0, 1}, {0, -1}, {-1, 0}, {1, 0}}
+    queue := [][]int{start}
+
+    for len(queue) > 0 {
+        s := queue[0]
+        queue = queue[1:]
+        for _, dir := range dirs {
+            x, y := s[0]+dir[0], s[1]+dir[1]
+            count := 0
+            for x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                x += dir[0]
+                y += dir[1]
+                count++
+            }
+            if distance[s[0]][s[1]]+count < distance[x-dir[0]][y-dir[1]] {
+                distance[x-dir[0]][y-dir[1]] = distance[s[0]][s[1]] + count
+                queue = append(queue, []int{x - dir[0], y - dir[1]})
+            }
+        }
+    }
+
+    if distance[destination[0]][destination[1]] == math.MaxInt32 {
+        return -1
+    }
+    return distance[destination[0]][destination[1]]
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestDistance(maze: Array<IntArray>, start: IntArray, destination: IntArray): Int {
+        val m = maze.size
+        val n = maze[0].size
+        val distance = Array(m) { IntArray(n) { Int.MAX_VALUE } }
+        distance[start[0]][start[1]] = 0
+
+        val dirs = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(-1, 0), intArrayOf(1, 0))
+        val queue: Queue<IntArray> = LinkedList()
+        queue.add(start)
+
+        while (queue.isNotEmpty()) {
+            val s = queue.poll()
+            for (dir in dirs) {
+                var x = s[0] + dir[0]
+                var y = s[1] + dir[1]
+                var count = 0
+                while (x in 0 until m && y in 0 until n && maze[x][y] == 0) {
+                    x += dir[0]
+                    y += dir[1]
+                    count++
+                }
+                if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count
+                    queue.add(intArrayOf(x - dir[0], y - dir[1]))
+                }
+            }
+        }
+
+        return if (distance[destination[0]][destination[1]] == Int.MAX_VALUE) -1
+               else distance[destination[0]][destination[1]]
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ maze: [[Int]], _ start: [Int], _ destination: [Int]) -> Int {
+        let m = maze.count
+        let n = maze[0].count
+        var distance = [[Int]](repeating: [Int](repeating: Int.max, count: n), count: m)
+        distance[start[0]][start[1]] = 0
+
+        let dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
+        var queue = [start]
+
+        while !queue.isEmpty {
+            let s = queue.removeFirst()
+            for dir in dirs {
+                var x = s[0] + dir[0]
+                var y = s[1] + dir[1]
+                var count = 0
+                while x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                    x += dir[0]
+                    y += dir[1]
+                    count += 1
+                }
+                if distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]] {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count
+                    queue.append([x - dir[0], y - dir[1]])
+                }
+            }
+        }
+
+        return distance[destination[0]][destination[1]] == Int.max ? -1 : distance[destination[0]][destination[1]]
     }
 }
 ```
@@ -148,6 +361,159 @@ class Solution {
                 }
             }
         }
+    }
+}
+```
+
+```go
+func shortestDistance(maze [][]int, start []int, destination []int) int {
+    m, n := len(maze), len(maze[0])
+    distance := make([][]int, m)
+    visited := make([][]bool, m)
+    for i := range distance {
+        distance[i] = make([]int, n)
+        visited[i] = make([]bool, n)
+        for j := range distance[i] {
+            distance[i][j] = math.MaxInt32
+        }
+    }
+    distance[start[0]][start[1]] = 0
+
+    minDistance := func() []int {
+        minPos := []int{-1, -1}
+        minVal := math.MaxInt32
+        for i := 0; i < m; i++ {
+            for j := 0; j < n; j++ {
+                if !visited[i][j] && distance[i][j] < minVal {
+                    minPos = []int{i, j}
+                    minVal = distance[i][j]
+                }
+            }
+        }
+        return minPos
+    }
+
+    dirs := [][]int{{0, 1}, {0, -1}, {-1, 0}, {1, 0}}
+    for {
+        s := minDistance()
+        if s[0] < 0 {
+            break
+        }
+        visited[s[0]][s[1]] = true
+        for _, dir := range dirs {
+            x, y := s[0]+dir[0], s[1]+dir[1]
+            count := 0
+            for x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                x += dir[0]
+                y += dir[1]
+                count++
+            }
+            if distance[s[0]][s[1]]+count < distance[x-dir[0]][y-dir[1]] {
+                distance[x-dir[0]][y-dir[1]] = distance[s[0]][s[1]] + count
+            }
+        }
+    }
+
+    if distance[destination[0]][destination[1]] == math.MaxInt32 {
+        return -1
+    }
+    return distance[destination[0]][destination[1]]
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestDistance(maze: Array<IntArray>, start: IntArray, destination: IntArray): Int {
+        val m = maze.size
+        val n = maze[0].size
+        val distance = Array(m) { IntArray(n) { Int.MAX_VALUE } }
+        val visited = Array(m) { BooleanArray(n) }
+        distance[start[0]][start[1]] = 0
+
+        fun minDistance(): IntArray {
+            var minPos = intArrayOf(-1, -1)
+            var minVal = Int.MAX_VALUE
+            for (i in 0 until m) {
+                for (j in 0 until n) {
+                    if (!visited[i][j] && distance[i][j] < minVal) {
+                        minPos = intArrayOf(i, j)
+                        minVal = distance[i][j]
+                    }
+                }
+            }
+            return minPos
+        }
+
+        val dirs = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(-1, 0), intArrayOf(1, 0))
+        while (true) {
+            val s = minDistance()
+            if (s[0] < 0) break
+            visited[s[0]][s[1]] = true
+            for (dir in dirs) {
+                var x = s[0] + dir[0]
+                var y = s[1] + dir[1]
+                var count = 0
+                while (x in 0 until m && y in 0 until n && maze[x][y] == 0) {
+                    x += dir[0]
+                    y += dir[1]
+                    count++
+                }
+                if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count
+                }
+            }
+        }
+
+        return if (distance[destination[0]][destination[1]] == Int.MAX_VALUE) -1
+               else distance[destination[0]][destination[1]]
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ maze: [[Int]], _ start: [Int], _ destination: [Int]) -> Int {
+        let m = maze.count
+        let n = maze[0].count
+        var distance = [[Int]](repeating: [Int](repeating: Int.max, count: n), count: m)
+        var visited = [[Bool]](repeating: [Bool](repeating: false, count: n), count: m)
+        distance[start[0]][start[1]] = 0
+
+        func minDistance() -> [Int] {
+            var minPos = [-1, -1]
+            var minVal = Int.max
+            for i in 0..<m {
+                for j in 0..<n {
+                    if !visited[i][j] && distance[i][j] < minVal {
+                        minPos = [i, j]
+                        minVal = distance[i][j]
+                    }
+                }
+            }
+            return minPos
+        }
+
+        let dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
+        while true {
+            let s = minDistance()
+            if s[0] < 0 { break }
+            visited[s[0]][s[1]] = true
+            for dir in dirs {
+                var x = s[0] + dir[0]
+                var y = s[1] + dir[1]
+                var count = 0
+                while x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                    x += dir[0]
+                    y += dir[1]
+                    count += 1
+                }
+                if distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]] {
+                    distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count
+                }
+            }
+        }
+
+        return distance[destination[0]][destination[1]] == Int.max ? -1 : distance[destination[0]][destination[1]]
     }
 }
 ```
@@ -310,7 +676,7 @@ class Solution {
         this.dijkstra(maze, start, distance);
         return distance[destination[0]][destination[1]] === Infinity ? -1 : distance[destination[0]][destination[1]];
     }
-    
+
     /**
      * @param {number[][]} maze
      * @param {number[]} start
@@ -321,33 +687,215 @@ class Solution {
         const m = maze.length;
         const n = maze[0].length;
         const dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]];
-        
+
         // @datastructures-js/priority-queue MinPriorityQueue implementation
         const pq = new MinPriorityQueue((element) => element.dist);
         pq.enqueue({ dist: 0, x: start[0], y: start[1] });
-        
+
         while (!pq.isEmpty()) {
             const { dist, x: sx, y: sy } = pq.dequeue();
-            
+
             if (distance[sx][sy] < dist)
                 continue;
-            
+
             for (const [dx, dy] of dirs) {
                 let x = sx + dx;
                 let y = sy + dy;
                 let count = 0;
-                
+
                 while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] === 0) {
                     x += dx;
                     y += dy;
                     count++;
                 }
-                
+
                 if (distance[sx][sy] + count < distance[x - dx][y - dy]) {
                     distance[x - dx][y - dy] = distance[sx][sy] + count;
                     pq.enqueue({ dist: distance[x - dx][y - dy], x: x - dx, y: y - dy });
                 }
             }
+        }
+    }
+}
+```
+
+```go
+func shortestDistance(maze [][]int, start []int, destination []int) int {
+    m, n := len(maze), len(maze[0])
+    distance := make([][]int, m)
+    for i := range distance {
+        distance[i] = make([]int, n)
+        for j := range distance[i] {
+            distance[i][j] = math.MaxInt32
+        }
+    }
+    distance[start[0]][start[1]] = 0
+
+    dirs := [][]int{{0, 1}, {0, -1}, {-1, 0}, {1, 0}}
+    pq := &PriorityQueue{}
+    heap.Init(pq)
+    heap.Push(pq, []int{0, start[0], start[1]})
+
+    for pq.Len() > 0 {
+        curr := heap.Pop(pq).([]int)
+        dist, sx, sy := curr[0], curr[1], curr[2]
+
+        if distance[sx][sy] < dist {
+            continue
+        }
+
+        for _, dir := range dirs {
+            x, y := sx+dir[0], sy+dir[1]
+            count := 0
+            for x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                x += dir[0]
+                y += dir[1]
+                count++
+            }
+            if distance[sx][sy]+count < distance[x-dir[0]][y-dir[1]] {
+                distance[x-dir[0]][y-dir[1]] = distance[sx][sy] + count
+                heap.Push(pq, []int{distance[x-dir[0]][y-dir[1]], x - dir[0], y - dir[1]})
+            }
+        }
+    }
+
+    if distance[destination[0]][destination[1]] == math.MaxInt32 {
+        return -1
+    }
+    return distance[destination[0]][destination[1]]
+}
+
+type PriorityQueue [][]int
+
+func (pq PriorityQueue) Len() int { return len(pq) }
+func (pq PriorityQueue) Less(i, j int) bool { return pq[i][0] < pq[j][0] }
+func (pq PriorityQueue) Swap(i, j int) { pq[i], pq[j] = pq[j], pq[i] }
+func (pq *PriorityQueue) Push(x interface{}) { *pq = append(*pq, x.([]int)) }
+func (pq *PriorityQueue) Pop() interface{} {
+    old := *pq
+    n := len(old)
+    x := old[n-1]
+    *pq = old[0 : n-1]
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun shortestDistance(maze: Array<IntArray>, start: IntArray, destination: IntArray): Int {
+        val m = maze.size
+        val n = maze[0].size
+        val distance = Array(m) { IntArray(n) { Int.MAX_VALUE } }
+        distance[start[0]][start[1]] = 0
+
+        val dirs = arrayOf(intArrayOf(0, 1), intArrayOf(0, -1), intArrayOf(-1, 0), intArrayOf(1, 0))
+        val pq = PriorityQueue<IntArray>(compareBy { it[2] })
+        pq.offer(intArrayOf(start[0], start[1], 0))
+
+        while (pq.isNotEmpty()) {
+            val (sx, sy, dist) = pq.poll()
+
+            if (distance[sx][sy] < dist) continue
+
+            for (dir in dirs) {
+                var x = sx + dir[0]
+                var y = sy + dir[1]
+                var count = 0
+                while (x in 0 until m && y in 0 until n && maze[x][y] == 0) {
+                    x += dir[0]
+                    y += dir[1]
+                    count++
+                }
+                if (distance[sx][sy] + count < distance[x - dir[0]][y - dir[1]]) {
+                    distance[x - dir[0]][y - dir[1]] = distance[sx][sy] + count
+                    pq.offer(intArrayOf(x - dir[0], y - dir[1], distance[x - dir[0]][y - dir[1]]))
+                }
+            }
+        }
+
+        return if (distance[destination[0]][destination[1]] == Int.MAX_VALUE) -1
+               else distance[destination[0]][destination[1]]
+    }
+}
+```
+
+```swift
+class Solution {
+    func shortestDistance(_ maze: [[Int]], _ start: [Int], _ destination: [Int]) -> Int {
+        let m = maze.count
+        let n = maze[0].count
+        var distance = [[Int]](repeating: [Int](repeating: Int.max, count: n), count: m)
+        distance[start[0]][start[1]] = 0
+
+        let dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
+        var heap = Heap<(dist: Int, x: Int, y: Int)>(comparator: { $0.dist < $1.dist })
+        heap.insert((0, start[0], start[1]))
+
+        while !heap.isEmpty {
+            let curr = heap.remove()!
+            let (dist, sx, sy) = curr
+
+            if distance[sx][sy] < dist { continue }
+
+            for dir in dirs {
+                var x = sx + dir[0]
+                var y = sy + dir[1]
+                var count = 0
+                while x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0 {
+                    x += dir[0]
+                    y += dir[1]
+                    count += 1
+                }
+                if distance[sx][sy] + count < distance[x - dir[0]][y - dir[1]] {
+                    distance[x - dir[0]][y - dir[1]] = distance[sx][sy] + count
+                    heap.insert((distance[x - dir[0]][y - dir[1]], x - dir[0], y - dir[1]))
+                }
+            }
+        }
+
+        return distance[destination[0]][destination[1]] == Int.max ? -1 : distance[destination[0]][destination[1]]
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    var isEmpty: Bool { elements.isEmpty }
+
+    mutating func insert(_ element: T) {
+        elements.append(element)
+        siftUp(elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        elements.swapAt(0, elements.count - 1)
+        let element = elements.removeLast()
+        if !elements.isEmpty { siftDown(0) }
+        return element
+    }
+
+    private mutating func siftUp(_ index: Int) {
+        var i = index
+        while i > 0 {
+            let parent = (i - 1) / 2
+            if comparator(elements[i], elements[parent]) {
+                elements.swapAt(i, parent)
+                i = parent
+            } else { break }
+        }
+    }
+
+    private mutating func siftDown(_ index: Int) {
+        var i = index
+        while 2 * i + 1 < elements.count {
+            var j = 2 * i + 1
+            if j + 1 < elements.count && comparator(elements[j + 1], elements[j]) { j += 1 }
+            if comparator(elements[j], elements[i]) {
+                elements.swapAt(i, j)
+                i = j
+            } else { break }
         }
     }
 }

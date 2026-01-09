@@ -106,6 +106,87 @@ class Solution {
 }
 ```
 
+```go
+func imageSmoother(img [][]int) [][]int {
+    ROWS, COLS := len(img), len(img[0])
+    res := make([][]int, ROWS)
+    for i := range res {
+        res[i] = make([]int, COLS)
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            total, count := 0, 0
+            for i := r - 1; i <= r+1; i++ {
+                for j := c - 1; j <= c+1; j++ {
+                    if i >= 0 && i < ROWS && j >= 0 && j < COLS {
+                        total += img[i][j]
+                        count++
+                    }
+                }
+            }
+            res[r][c] = total / count
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun imageSmoother(img: Array<IntArray>): Array<IntArray> {
+        val ROWS = img.size
+        val COLS = img[0].size
+        val res = Array(ROWS) { IntArray(COLS) }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                var total = 0
+                var count = 0
+                for (i in r - 1..r + 1) {
+                    for (j in c - 1..c + 1) {
+                        if (i in 0 until ROWS && j in 0 until COLS) {
+                            total += img[i][j]
+                            count++
+                        }
+                    }
+                }
+                res[r][c] = total / count
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func imageSmoother(_ img: [[Int]]) -> [[Int]] {
+        let ROWS = img.count, COLS = img[0].count
+        var res = [[Int]](repeating: [Int](repeating: 0, count: COLS), count: ROWS)
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                var total = 0, count = 0
+                for i in (r - 1)...(r + 1) {
+                    for j in (c - 1)...(c + 1) {
+                        if i >= 0 && i < ROWS && j >= 0 && j < COLS {
+                            total += img[i][j]
+                            count += 1
+                        }
+                    }
+                }
+                res[r][c] = total / count
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,6 +346,123 @@ class Solution {
 }
 ```
 
+```go
+func imageSmoother(img [][]int) [][]int {
+    ROWS, COLS := len(img), len(img[0])
+    prevRow := make([]int, COLS)
+    copy(prevRow, img[0])
+
+    for r := 0; r < ROWS; r++ {
+        currRow := make([]int, COLS)
+        copy(currRow, img[r])
+
+        for c := 0; c < COLS; c++ {
+            total, count := 0, 0
+            for i := max(0, r-1); i < min(ROWS, r+2); i++ {
+                for j := max(0, c-1); j < min(COLS, c+2); j++ {
+                    if i == r {
+                        total += currRow[j]
+                    } else if i == r-1 {
+                        total += prevRow[j]
+                    } else {
+                        total += img[i][j]
+                    }
+                    count++
+                }
+            }
+            img[r][c] = total / count
+        }
+
+        prevRow = currRow
+    }
+
+    return img
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun imageSmoother(img: Array<IntArray>): Array<IntArray> {
+        val ROWS = img.size
+        val COLS = img[0].size
+        var prevRow = img[0].clone()
+
+        for (r in 0 until ROWS) {
+            val currRow = img[r].clone()
+
+            for (c in 0 until COLS) {
+                var total = 0
+                var count = 0
+                for (i in maxOf(0, r - 1) until minOf(ROWS, r + 2)) {
+                    for (j in maxOf(0, c - 1) until minOf(COLS, c + 2)) {
+                        total += when (i) {
+                            r -> currRow[j]
+                            r - 1 -> prevRow[j]
+                            else -> img[i][j]
+                        }
+                        count++
+                    }
+                }
+                img[r][c] = total / count
+            }
+
+            prevRow = currRow
+        }
+
+        return img
+    }
+}
+```
+
+```swift
+class Solution {
+    func imageSmoother(_ img: [[Int]]) -> [[Int]] {
+        var img = img
+        let ROWS = img.count, COLS = img[0].count
+        var prevRow = img[0]
+
+        for r in 0..<ROWS {
+            let currRow = img[r]
+
+            for c in 0..<COLS {
+                var total = 0, count = 0
+                for i in max(0, r - 1)..<min(ROWS, r + 2) {
+                    for j in max(0, c - 1)..<min(COLS, c + 2) {
+                        if i == r {
+                            total += currRow[j]
+                        } else if i == r - 1 {
+                            total += prevRow[j]
+                        } else {
+                            total += img[i][j]
+                        }
+                        count += 1
+                    }
+                }
+                img[r][c] = total / count
+            }
+
+            prevRow = currRow
+        }
+
+        return img
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -407,6 +605,111 @@ class Solution {
 }
 ```
 
+```go
+func imageSmoother(img [][]int) [][]int {
+    ROWS, COLS := len(img), len(img[0])
+    LIMIT := 256
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            total, count := 0, 0
+            for i := max(0, r-1); i < min(ROWS, r+2); i++ {
+                for j := max(0, c-1); j < min(COLS, c+2); j++ {
+                    total += img[i][j] % LIMIT
+                    count++
+                }
+            }
+            img[r][c] += (total / count) * LIMIT
+        }
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            img[r][c] /= LIMIT
+        }
+    }
+
+    return img
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun imageSmoother(img: Array<IntArray>): Array<IntArray> {
+        val ROWS = img.size
+        val COLS = img[0].size
+        val LIMIT = 256
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                var total = 0
+                var count = 0
+                for (i in maxOf(0, r - 1) until minOf(ROWS, r + 2)) {
+                    for (j in maxOf(0, c - 1) until minOf(COLS, c + 2)) {
+                        total += img[i][j] % LIMIT
+                        count++
+                    }
+                }
+                img[r][c] += (total / count) * LIMIT
+            }
+        }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                img[r][c] /= LIMIT
+            }
+        }
+
+        return img
+    }
+}
+```
+
+```swift
+class Solution {
+    func imageSmoother(_ img: [[Int]]) -> [[Int]] {
+        var img = img
+        let ROWS = img.count, COLS = img[0].count
+        let LIMIT = 256
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                var total = 0, count = 0
+                for i in max(0, r - 1)..<min(ROWS, r + 2) {
+                    for j in max(0, c - 1)..<min(COLS, c + 2) {
+                        total += img[i][j] % LIMIT
+                        count += 1
+                    }
+                }
+                img[r][c] += (total / count) * LIMIT
+            }
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                img[r][c] /= LIMIT
+            }
+        }
+
+        return img
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,6 +843,100 @@ class Solution {
             }
         }
         return img;
+    }
+}
+```
+
+```go
+func imageSmoother(img [][]int) [][]int {
+    ROWS, COLS := len(img), len(img[0])
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            total, cnt := 0, 0
+            for i := r - 1; i <= r+1; i++ {
+                for j := c - 1; j <= c+1; j++ {
+                    if i < 0 || i >= ROWS || j < 0 || j >= COLS {
+                        continue
+                    }
+                    total += img[i][j] % 256
+                    cnt++
+                }
+            }
+            img[r][c] ^= ((total / cnt) << 8)
+        }
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            img[r][c] >>= 8
+        }
+    }
+    return img
+}
+```
+
+```kotlin
+class Solution {
+    fun imageSmoother(img: Array<IntArray>): Array<IntArray> {
+        val ROWS = img.size
+        val COLS = img[0].size
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                var total = 0
+                var cnt = 0
+                for (i in r - 1..r + 1) {
+                    for (j in c - 1..c + 1) {
+                        if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
+                            continue
+                        }
+                        total += img[i][j] % 256
+                        cnt++
+                    }
+                }
+                img[r][c] = img[r][c] xor ((total / cnt) shl 8)
+            }
+        }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                img[r][c] = img[r][c] shr 8
+            }
+        }
+        return img
+    }
+}
+```
+
+```swift
+class Solution {
+    func imageSmoother(_ img: [[Int]]) -> [[Int]] {
+        var img = img
+        let ROWS = img.count, COLS = img[0].count
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                var total = 0, cnt = 0
+                for i in (r - 1)...(r + 1) {
+                    for j in (c - 1)...(c + 1) {
+                        if i < 0 || i >= ROWS || j < 0 || j >= COLS {
+                            continue
+                        }
+                        total += img[i][j] % 256
+                        cnt += 1
+                    }
+                }
+                img[r][c] ^= ((total / cnt) << 8)
+            }
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                img[r][c] >>= 8
+            }
+        }
+        return img
     }
 }
 ```

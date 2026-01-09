@@ -153,6 +153,98 @@ public class Solution {
 }
 ```
 
+```go
+func largestSubmatrix(matrix [][]int) int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    res := 0
+
+    for startRow := 0; startRow < ROWS; startRow++ {
+        ones := make([]int, 0, COLS)
+        for c := 0; c < COLS; c++ {
+            ones = append(ones, c)
+        }
+
+        for r := startRow; r < ROWS; r++ {
+            if len(ones) == 0 {
+                break
+            }
+
+            newOnes := make([]int, 0)
+            for _, c := range ones {
+                if matrix[r][c] == 1 {
+                    newOnes = append(newOnes, c)
+                }
+            }
+            ones = newOnes
+
+            if len(ones)*(r-startRow+1) > res {
+                res = len(ones) * (r - startRow + 1)
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestSubmatrix(matrix: Array<IntArray>): Int {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        var res = 0
+
+        for (startRow in 0 until ROWS) {
+            val ones = ArrayDeque<Int>()
+            for (c in 0 until COLS) {
+                ones.addLast(c)
+            }
+
+            for (r in startRow until ROWS) {
+                if (ones.isEmpty()) break
+
+                repeat(ones.size) {
+                    val c = ones.removeFirst()
+                    if (matrix[r][c] == 1) {
+                        ones.addLast(c)
+                    }
+                }
+
+                res = maxOf(res, ones.size * (r - startRow + 1))
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestSubmatrix(_ matrix: [[Int]]) -> Int {
+        let ROWS = matrix.count, COLS = matrix[0].count
+        var res = 0
+
+        for startRow in 0..<ROWS {
+            var ones = Array(0..<COLS)
+
+            for r in startRow..<ROWS {
+                if ones.isEmpty { break }
+
+                var newOnes = [Int]()
+                for c in ones {
+                    if matrix[r][c] == 1 {
+                        newOnes.append(c)
+                    }
+                }
+                ones = newOnes
+
+                res = max(res, ones.count * (r - startRow + 1))
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,6 +412,95 @@ public class Solution {
 }
 ```
 
+```go
+func largestSubmatrix(matrix [][]int) int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    res := 0
+    prevHeights := make([]int, COLS)
+
+    for r := 0; r < ROWS; r++ {
+        heights := make([]int, COLS)
+        copy(heights, matrix[r])
+
+        for c := 0; c < COLS; c++ {
+            if heights[c] > 0 {
+                heights[c] += prevHeights[c]
+            }
+        }
+
+        sortedHgts := make([]int, COLS)
+        copy(sortedHgts, heights)
+        sort.Sort(sort.Reverse(sort.IntSlice(sortedHgts)))
+
+        for i := 0; i < COLS; i++ {
+            if (i+1)*sortedHgts[i] > res {
+                res = (i + 1) * sortedHgts[i]
+            }
+        }
+
+        prevHeights = heights
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestSubmatrix(matrix: Array<IntArray>): Int {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        var res = 0
+        var prevHeights = IntArray(COLS)
+
+        for (r in 0 until ROWS) {
+            val heights = matrix[r].copyOf()
+
+            for (c in 0 until COLS) {
+                if (heights[c] > 0) {
+                    heights[c] += prevHeights[c]
+                }
+            }
+
+            val sortedHgts = heights.sortedDescending()
+            for (i in 0 until COLS) {
+                res = maxOf(res, (i + 1) * sortedHgts[i])
+            }
+
+            prevHeights = heights
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestSubmatrix(_ matrix: [[Int]]) -> Int {
+        let ROWS = matrix.count, COLS = matrix[0].count
+        var res = 0
+        var prevHeights = [Int](repeating: 0, count: COLS)
+
+        for r in 0..<ROWS {
+            var heights = matrix[r]
+
+            for c in 0..<COLS {
+                if heights[c] > 0 {
+                    heights[c] += prevHeights[c]
+                }
+            }
+
+            let sortedHgts = heights.sorted(by: >)
+            for i in 0..<COLS {
+                res = max(res, (i + 1) * sortedHgts[i])
+            }
+
+            prevHeights = heights
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -461,6 +642,85 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func largestSubmatrix(matrix [][]int) int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    res := 0
+
+    for r := 1; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if matrix[r][c] > 0 {
+                matrix[r][c] += matrix[r-1][c]
+            }
+        }
+    }
+
+    for r := 0; r < ROWS; r++ {
+        row := make([]int, COLS)
+        copy(row, matrix[r])
+        sort.Sort(sort.Reverse(sort.IntSlice(row)))
+        for i := 0; i < COLS; i++ {
+            if (i+1)*row[i] > res {
+                res = (i + 1) * row[i]
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestSubmatrix(matrix: Array<IntArray>): Int {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        var res = 0
+
+        for (r in 1 until ROWS) {
+            for (c in 0 until COLS) {
+                if (matrix[r][c] > 0) {
+                    matrix[r][c] += matrix[r - 1][c]
+                }
+            }
+        }
+
+        for (r in 0 until ROWS) {
+            val row = matrix[r].sortedDescending()
+            for (i in 0 until COLS) {
+                res = maxOf(res, (i + 1) * row[i])
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestSubmatrix(_ matrix: [[Int]]) -> Int {
+        var matrix = matrix
+        let ROWS = matrix.count, COLS = matrix[0].count
+        var res = 0
+
+        for r in 1..<ROWS {
+            for c in 0..<COLS {
+                if matrix[r][c] > 0 {
+                    matrix[r][c] += matrix[r - 1][c]
+                }
+            }
+        }
+
+        for r in 0..<ROWS {
+            let row = matrix[r].sorted(by: >)
+            for i in 0..<COLS {
+                res = max(res, (i + 1) * row[i])
+            }
+        }
+        return res
     }
 }
 ```
@@ -646,6 +906,110 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func largestSubmatrix(matrix [][]int) int {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    res := 0
+    prevHeights := []int{}
+
+    for r := 0; r < ROWS; r++ {
+        heights := []int{}
+
+        for _, c := range prevHeights {
+            if matrix[r][c] == 1 {
+                matrix[r][c] += matrix[r-1][c]
+                heights = append(heights, c)
+            }
+        }
+
+        for c := 0; c < COLS; c++ {
+            if matrix[r][c] == 1 {
+                heights = append(heights, c)
+            }
+        }
+
+        for i, c := range heights {
+            if (i+1)*matrix[r][c] > res {
+                res = (i + 1) * matrix[r][c]
+            }
+        }
+
+        prevHeights = heights
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestSubmatrix(matrix: Array<IntArray>): Int {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        var res = 0
+        var prevHeights = mutableListOf<Int>()
+
+        for (r in 0 until ROWS) {
+            val heights = mutableListOf<Int>()
+
+            for (c in prevHeights) {
+                if (matrix[r][c] == 1) {
+                    matrix[r][c] += matrix[r - 1][c]
+                    heights.add(c)
+                }
+            }
+
+            for (c in 0 until COLS) {
+                if (matrix[r][c] == 1) {
+                    heights.add(c)
+                }
+            }
+
+            for ((i, c) in heights.withIndex()) {
+                res = maxOf(res, (i + 1) * matrix[r][c])
+            }
+
+            prevHeights = heights
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestSubmatrix(_ matrix: [[Int]]) -> Int {
+        var matrix = matrix
+        let ROWS = matrix.count, COLS = matrix[0].count
+        var res = 0
+        var prevHeights = [Int]()
+
+        for r in 0..<ROWS {
+            var heights = [Int]()
+
+            for c in prevHeights {
+                if matrix[r][c] == 1 {
+                    matrix[r][c] += matrix[r - 1][c]
+                    heights.append(c)
+                }
+            }
+
+            for c in 0..<COLS {
+                if matrix[r][c] == 1 {
+                    heights.append(c)
+                }
+            }
+
+            for (i, c) in heights.enumerated() {
+                res = max(res, (i + 1) * matrix[r][c])
+            }
+
+            prevHeights = heights
+        }
+        return res
     }
 }
 ```

@@ -249,6 +249,141 @@ public class Solution {
 }
 ```
 
+```go
+func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
+    adj := make(map[string][][2]interface{})
+
+    for i, eq := range equations {
+        a, b := eq[0], eq[1]
+        adj[a] = append(adj[a], [2]interface{}{b, values[i]})
+        adj[b] = append(adj[b], [2]interface{}{a, 1.0 / values[i]})
+    }
+
+    bfs := func(src, target string) float64 {
+        if _, ok := adj[src]; !ok {
+            return -1.0
+        }
+        if _, ok := adj[target]; !ok {
+            return -1.0
+        }
+
+        queue := [][2]interface{}{{src, 1.0}}
+        visited := make(map[string]bool)
+        visited[src] = true
+
+        for len(queue) > 0 {
+            node := queue[0][0].(string)
+            weight := queue[0][1].(float64)
+            queue = queue[1:]
+
+            if node == target {
+                return weight
+            }
+
+            for _, nei := range adj[node] {
+                neiNode := nei[0].(string)
+                neiWeight := nei[1].(float64)
+                if !visited[neiNode] {
+                    visited[neiNode] = true
+                    queue = append(queue, [2]interface{}{neiNode, weight * neiWeight})
+                }
+            }
+        }
+
+        return -1.0
+    }
+
+    res := make([]float64, len(queries))
+    for i, q := range queries {
+        res[i] = bfs(q[0], q[1])
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun calcEquation(equations: List<List<String>>, values: DoubleArray, queries: List<List<String>>): DoubleArray {
+        val adj = HashMap<String, MutableList<Pair<String, Double>>>()
+
+        for (i in equations.indices) {
+            val (a, b) = equations[i]
+            adj.getOrPut(a) { mutableListOf() }.add(Pair(b, values[i]))
+            adj.getOrPut(b) { mutableListOf() }.add(Pair(a, 1.0 / values[i]))
+        }
+
+        fun bfs(src: String, target: String): Double {
+            if (src !in adj || target !in adj) return -1.0
+
+            val queue: ArrayDeque<Pair<String, Double>> = ArrayDeque()
+            val visited = HashSet<String>()
+            queue.add(Pair(src, 1.0))
+            visited.add(src)
+
+            while (queue.isNotEmpty()) {
+                val (node, weight) = queue.removeFirst()
+
+                if (node == target) return weight
+
+                for ((nei, neiWeight) in adj[node]!!) {
+                    if (nei !in visited) {
+                        visited.add(nei)
+                        queue.add(Pair(nei, weight * neiWeight))
+                    }
+                }
+            }
+
+            return -1.0
+        }
+
+        return queries.map { (src, target) -> bfs(src, target) }.toDoubleArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func calcEquation(_ equations: [[String]], _ values: [Double], _ queries: [[String]]) -> [Double] {
+        var adj = [String: [(String, Double)]]()
+
+        for i in 0..<equations.count {
+            let a = equations[i][0]
+            let b = equations[i][1]
+            adj[a, default: []].append((b, values[i]))
+            adj[b, default: []].append((a, 1.0 / values[i]))
+        }
+
+        func bfs(_ src: String, _ target: String) -> Double {
+            guard adj[src] != nil, adj[target] != nil else { return -1.0 }
+
+            var queue = [(src, 1.0)]
+            var visited = Set<String>()
+            visited.insert(src)
+
+            while !queue.isEmpty {
+                let (node, weight) = queue.removeFirst()
+
+                if node == target {
+                    return weight
+                }
+
+                for (nei, neiWeight) in adj[node]! {
+                    if !visited.contains(nei) {
+                        visited.insert(nei)
+                        queue.append((nei, weight * neiWeight))
+                    }
+                }
+            }
+
+            return -1.0
+        }
+
+        return queries.map { bfs($0[0], $0[1]) }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -482,6 +617,126 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
+    adj := make(map[string][][2]interface{})
+
+    for i, eq := range equations {
+        a, b := eq[0], eq[1]
+        adj[a] = append(adj[a], [2]interface{}{b, values[i]})
+        adj[b] = append(adj[b], [2]interface{}{a, 1.0 / values[i]})
+    }
+
+    var dfs func(src, target string, visited map[string]bool) float64
+    dfs = func(src, target string, visited map[string]bool) float64 {
+        if _, ok := adj[src]; !ok {
+            return -1.0
+        }
+        if _, ok := adj[target]; !ok {
+            return -1.0
+        }
+        if src == target {
+            return 1.0
+        }
+
+        visited[src] = true
+
+        for _, nei := range adj[src] {
+            neiNode := nei[0].(string)
+            weight := nei[1].(float64)
+            if !visited[neiNode] {
+                result := dfs(neiNode, target, visited)
+                if result != -1.0 {
+                    return weight * result
+                }
+            }
+        }
+
+        return -1.0
+    }
+
+    res := make([]float64, len(queries))
+    for i, q := range queries {
+        visited := make(map[string]bool)
+        res[i] = dfs(q[0], q[1], visited)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun calcEquation(equations: List<List<String>>, values: DoubleArray, queries: List<List<String>>): DoubleArray {
+        val adj = HashMap<String, MutableList<Pair<String, Double>>>()
+
+        for (i in equations.indices) {
+            val (a, b) = equations[i]
+            adj.getOrPut(a) { mutableListOf() }.add(Pair(b, values[i]))
+            adj.getOrPut(b) { mutableListOf() }.add(Pair(a, 1.0 / values[i]))
+        }
+
+        fun dfs(src: String, target: String, visited: HashSet<String>): Double {
+            if (src !in adj || target !in adj) return -1.0
+            if (src == target) return 1.0
+
+            visited.add(src)
+
+            for ((nei, weight) in adj[src]!!) {
+                if (nei !in visited) {
+                    val result = dfs(nei, target, visited)
+                    if (result != -1.0) {
+                        return weight * result
+                    }
+                }
+            }
+
+            return -1.0
+        }
+
+        return queries.map { (src, target) -> dfs(src, target, HashSet()) }.toDoubleArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func calcEquation(_ equations: [[String]], _ values: [Double], _ queries: [[String]]) -> [Double] {
+        var adj = [String: [(String, Double)]]()
+
+        for i in 0..<equations.count {
+            let a = equations[i][0]
+            let b = equations[i][1]
+            adj[a, default: []].append((b, values[i]))
+            adj[b, default: []].append((a, 1.0 / values[i]))
+        }
+
+        func dfs(_ src: String, _ target: String, _ visited: inout Set<String>) -> Double {
+            guard adj[src] != nil, adj[target] != nil else { return -1.0 }
+            if src == target { return 1.0 }
+
+            visited.insert(src)
+
+            for (nei, weight) in adj[src]! {
+                if !visited.contains(nei) {
+                    let result = dfs(nei, target, &visited)
+                    if result != -1.0 {
+                        return weight * result
+                    }
+                }
+            }
+
+            return -1.0
+        }
+
+        return queries.map { query -> Double in
+            var visited = Set<String>()
+            return dfs(query[0], query[1], &visited)
+        }
     }
 }
 ```
@@ -834,6 +1089,183 @@ public class Solution {
 }
 ```
 
+```go
+type UnionFind struct {
+    parent map[string]string
+    weight map[string]float64
+}
+
+func NewUnionFind() *UnionFind {
+    return &UnionFind{
+        parent: make(map[string]string),
+        weight: make(map[string]float64),
+    }
+}
+
+func (uf *UnionFind) Add(x string) {
+    if _, ok := uf.parent[x]; !ok {
+        uf.parent[x] = x
+        uf.weight[x] = 1.0
+    }
+}
+
+func (uf *UnionFind) Find(x string) string {
+    if uf.parent[x] != x {
+        origParent := uf.parent[x]
+        uf.parent[x] = uf.Find(origParent)
+        uf.weight[x] *= uf.weight[origParent]
+    }
+    return uf.parent[x]
+}
+
+func (uf *UnionFind) Union(x, y string, value float64) {
+    uf.Add(x)
+    uf.Add(y)
+    rootX := uf.Find(x)
+    rootY := uf.Find(y)
+
+    if rootX != rootY {
+        uf.parent[rootX] = rootY
+        uf.weight[rootX] = value * uf.weight[y] / uf.weight[x]
+    }
+}
+
+func (uf *UnionFind) GetRatio(x, y string) float64 {
+    _, okX := uf.parent[x]
+    _, okY := uf.parent[y]
+    if !okX || !okY || uf.Find(x) != uf.Find(y) {
+        return -1.0
+    }
+    return uf.weight[x] / uf.weight[y]
+}
+
+func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
+    uf := NewUnionFind()
+
+    for i, eq := range equations {
+        uf.Union(eq[0], eq[1], values[i])
+    }
+
+    res := make([]float64, len(queries))
+    for i, q := range queries {
+        res[i] = uf.GetRatio(q[0], q[1])
+    }
+
+    return res
+}
+```
+
+```kotlin
+class UnionFind {
+    private val parent = HashMap<String, String>()
+    private val weight = HashMap<String, Double>()
+
+    fun add(x: String) {
+        if (x !in parent) {
+            parent[x] = x
+            weight[x] = 1.0
+        }
+    }
+
+    fun find(x: String): String {
+        if (parent[x] != x) {
+            val origParent = parent[x]!!
+            parent[x] = find(origParent)
+            weight[x] = weight[x]!! * weight[origParent]!!
+        }
+        return parent[x]!!
+    }
+
+    fun union(x: String, y: String, value: Double) {
+        add(x)
+        add(y)
+        val rootX = find(x)
+        val rootY = find(y)
+
+        if (rootX != rootY) {
+            parent[rootX] = rootY
+            weight[rootX] = value * weight[y]!! / weight[x]!!
+        }
+    }
+
+    fun getRatio(x: String, y: String): Double {
+        if (x !in parent || y !in parent || find(x) != find(y)) {
+            return -1.0
+        }
+        return weight[x]!! / weight[y]!!
+    }
+}
+
+class Solution {
+    fun calcEquation(equations: List<List<String>>, values: DoubleArray, queries: List<List<String>>): DoubleArray {
+        val uf = UnionFind()
+
+        for (i in equations.indices) {
+            val (a, b) = equations[i]
+            uf.union(a, b, values[i])
+        }
+
+        return queries.map { (a, b) -> uf.getRatio(a, b) }.toDoubleArray()
+    }
+}
+```
+
+```swift
+class UnionFind {
+    private var parent = [String: String]()
+    private var weight = [String: Double]()
+
+    func add(_ x: String) {
+        if parent[x] == nil {
+            parent[x] = x
+            weight[x] = 1.0
+        }
+    }
+
+    func find(_ x: String) -> String {
+        if parent[x] != x {
+            let origParent = parent[x]!
+            parent[x] = find(origParent)
+            weight[x] = weight[x]! * weight[origParent]!
+        }
+        return parent[x]!
+    }
+
+    func union(_ x: String, _ y: String, _ value: Double) {
+        add(x)
+        add(y)
+        let rootX = find(x)
+        let rootY = find(y)
+
+        if rootX != rootY {
+            parent[rootX] = rootY
+            weight[rootX] = value * weight[y]! / weight[x]!
+        }
+    }
+
+    func getRatio(_ x: String, _ y: String) -> Double {
+        if parent[x] == nil || parent[y] == nil || find(x) != find(y) {
+            return -1.0
+        }
+        return weight[x]! / weight[y]!
+    }
+}
+
+class Solution {
+    func calcEquation(_ equations: [[String]], _ values: [Double], _ queries: [[String]]) -> [Double] {
+        let uf = UnionFind()
+
+        for i in 0..<equations.count {
+            let a = equations[i][0]
+            let b = equations[i][1]
+            uf.union(a, b, values[i])
+        }
+
+        return queries.map { uf.getRatio($0[0], $0[1]) }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1035,6 +1467,120 @@ public class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```go
+func calcEquation(equations [][]string, values []float64, queries [][]string) []float64 {
+    graph := make(map[string]map[string]float64)
+
+    for i, eq := range equations {
+        a, b := eq[0], eq[1]
+        if graph[a] == nil {
+            graph[a] = make(map[string]float64)
+        }
+        if graph[b] == nil {
+            graph[b] = make(map[string]float64)
+        }
+        graph[a][b] = values[i]
+        graph[b][a] = 1.0 / values[i]
+    }
+
+    for k := range graph {
+        for i := range graph[k] {
+            for j := range graph[k] {
+                if _, ok := graph[i][j]; !ok {
+                    graph[i][j] = graph[i][k] * graph[k][j]
+                }
+            }
+        }
+    }
+
+    result := make([]float64, len(queries))
+    for i, q := range queries {
+        a, b := q[0], q[1]
+        if graph[a] != nil {
+            if val, ok := graph[a][b]; ok {
+                result[i] = val
+            } else {
+                result[i] = -1.0
+            }
+        } else {
+            result[i] = -1.0
+        }
+    }
+
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun calcEquation(equations: List<List<String>>, values: DoubleArray, queries: List<List<String>>): DoubleArray {
+        val graph = HashMap<String, HashMap<String, Double>>()
+
+        for (i in equations.indices) {
+            val (a, b) = equations[i]
+            val value = values[i]
+            graph.getOrPut(a) { HashMap() }[b] = value
+            graph.getOrPut(b) { HashMap() }[a] = 1.0 / value
+        }
+
+        for (k in graph.keys) {
+            for (i in graph[k]!!.keys) {
+                for (j in graph[k]!!.keys) {
+                    if (j !in graph[i]!!) {
+                        graph[i]!![j] = graph[i]!![k]!! * graph[k]!![j]!!
+                    }
+                }
+            }
+        }
+
+        return queries.map { (a, b) ->
+            if (graph[a]?.containsKey(b) == true) {
+                graph[a]!![b]!!
+            } else {
+                -1.0
+            }
+        }.toDoubleArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func calcEquation(_ equations: [[String]], _ values: [Double], _ queries: [[String]]) -> [Double] {
+        var graph = [String: [String: Double]]()
+
+        for i in 0..<equations.count {
+            let a = equations[i][0]
+            let b = equations[i][1]
+            let value = values[i]
+            graph[a, default: [:]][b] = value
+            graph[b, default: [:]][a] = 1.0 / value
+        }
+
+        let keys = Array(graph.keys)
+        for k in keys {
+            for i in graph[k]!.keys {
+                for j in graph[k]!.keys {
+                    if graph[i]![j] == nil {
+                        graph[i]![j] = graph[i]![k]! * graph[k]![j]!
+                    }
+                }
+            }
+        }
+
+        return queries.map { query -> Double in
+            let a = query[0]
+            let b = query[1]
+            if let val = graph[a]?[b] {
+                return val
+            } else {
+                return -1.0
+            }
+        }
     }
 }
 ```

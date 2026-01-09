@@ -79,6 +79,75 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string[] SortPeople(string[] names, int[] heights) {
+        var map = new Dictionary<int, string>();
+        for (int i = 0; i < heights.Length; i++) {
+            map[heights[i]] = names[i];
+        }
+
+        Array.Sort(heights);
+        string[] res = new string[heights.Length];
+        for (int i = 0; i < heights.Length; i++) {
+            res[i] = map[heights[heights.Length - 1 - i]];
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func sortPeople(names []string, heights []int) []string {
+    m := make(map[int]string)
+    for i, h := range heights {
+        m[h] = names[i]
+    }
+
+    sort.Ints(heights)
+    res := make([]string, len(heights))
+    for i := 0; i < len(heights); i++ {
+        res[i] = m[heights[len(heights)-1-i]]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sortPeople(names: Array<String>, heights: IntArray): Array<String> {
+        val map = mutableMapOf<Int, String>()
+        for (i in heights.indices) {
+            map[heights[i]] = names[i]
+        }
+
+        heights.sort()
+        return Array(heights.size) { map[heights[heights.size - 1 - it]]!! }
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortPeople(_ names: [String], _ heights: [Int]) -> [String] {
+        var map = [Int: String]()
+        for i in 0..<heights.count {
+            map[heights[i]] = names[i]
+        }
+
+        let sortedHeights = heights.sorted()
+        var res = [String]()
+        for i in stride(from: heights.count - 1, through: 0, by: -1) {
+            res.append(map[sortedHeights[i]]!)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -170,6 +239,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string[] SortPeople(string[] names, int[] heights) {
+        int n = names.Length;
+        var arr = new (int height, string name)[n];
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = (heights[i], names[i]);
+        }
+
+        Array.Sort(arr, (a, b) => b.height.CompareTo(a.height));
+
+        string[] res = new string[n];
+        for (int i = 0; i < n; i++) {
+            res[i] = arr[i].name;
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func sortPeople(names []string, heights []int) []string {
+    type pair struct {
+        height int
+        name   string
+    }
+
+    arr := make([]pair, len(names))
+    for i := range names {
+        arr[i] = pair{heights[i], names[i]}
+    }
+
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i].height > arr[j].height
+    })
+
+    res := make([]string, len(names))
+    for i, p := range arr {
+        res[i] = p.name
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sortPeople(names: Array<String>, heights: IntArray): Array<String> {
+        val arr = names.indices.map { heights[it] to names[it] }
+            .sortedByDescending { it.first }
+        return arr.map { it.second }.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortPeople(_ names: [String], _ heights: [Int]) -> [String] {
+        let arr = zip(heights, names).sorted { $0.0 > $1.0 }
+        return arr.map { $0.1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -244,6 +379,65 @@ class Solution {
         const indices = names.map((_, i) => i);
         indices.sort((a, b) => heights[b] - heights[a]);
         return indices.map((i) => names[i]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string[] SortPeople(string[] names, int[] heights) {
+        int[] indices = new int[names.Length];
+        for (int i = 0; i < names.Length; i++) {
+            indices[i] = i;
+        }
+
+        Array.Sort(indices, (i, j) => heights[j].CompareTo(heights[i]));
+
+        string[] res = new string[names.Length];
+        for (int i = 0; i < names.Length; i++) {
+            res[i] = names[indices[i]];
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func sortPeople(names []string, heights []int) []string {
+    n := len(names)
+    indices := make([]int, n)
+    for i := range indices {
+        indices[i] = i
+    }
+
+    sort.Slice(indices, func(i, j int) bool {
+        return heights[indices[i]] > heights[indices[j]]
+    })
+
+    res := make([]string, n)
+    for i, idx := range indices {
+        res[i] = names[idx]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun sortPeople(names: Array<String>, heights: IntArray): Array<String> {
+        val indices = names.indices.sortedByDescending { heights[it] }
+        return indices.map { names[it] }.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func sortPeople(_ names: [String], _ heights: [Int]) -> [String] {
+        let indices = names.indices.sorted { heights[$0] > heights[$1] }
+        return indices.map { names[$0] }
     }
 }
 ```

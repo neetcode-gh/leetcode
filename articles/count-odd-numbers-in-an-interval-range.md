@@ -74,6 +74,46 @@ public class Solution {
 }
 ```
 
+```go
+func countOdds(low int, high int) int {
+    odd := 0
+    for num := low; num <= high; num++ {
+        if num&1 == 1 {
+            odd++
+        }
+    }
+    return odd
+}
+```
+
+```kotlin
+class Solution {
+    fun countOdds(low: Int, high: Int): Int {
+        var odd = 0
+        for (num in low..high) {
+            if (num and 1 == 1) {
+                odd++
+            }
+        }
+        return odd
+    }
+}
+```
+
+```swift
+class Solution {
+    func countOdds(_ low: Int, _ high: Int) -> Int {
+        var odd = 0
+        for num in low...high {
+            if num & 1 == 1 {
+                odd += 1
+            }
+        }
+        return odd
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -157,6 +197,43 @@ public class Solution {
 }
 ```
 
+```go
+func countOdds(low int, high int) int {
+    length := high - low + 1
+    count := length / 2
+    if length%2 == 1 && low%2 == 1 {
+        count++
+    }
+    return count
+}
+```
+
+```kotlin
+class Solution {
+    fun countOdds(low: Int, high: Int): Int {
+        val length = high - low + 1
+        var count = length / 2
+        if (length % 2 == 1 && low % 2 == 1) {
+            count++
+        }
+        return count
+    }
+}
+```
+
+```swift
+class Solution {
+    func countOdds(_ low: Int, _ high: Int) -> Int {
+        let length = high - low + 1
+        var count = length / 2
+        if length % 2 == 1 && low % 2 == 1 {
+            count += 1
+        }
+        return count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -210,6 +287,28 @@ class Solution {
 public class Solution {
     public int CountOdds(int low, int high) {
         return ((high + 1) >> 1) - (low >> 1);
+    }
+}
+```
+
+```go
+func countOdds(low int, high int) int {
+    return ((high + 1) >> 1) - (low >> 1)
+}
+```
+
+```kotlin
+class Solution {
+    fun countOdds(low: Int, high: Int): Int {
+        return ((high + 1) shr 1) - (low shr 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func countOdds(_ low: Int, _ high: Int) -> Int {
+        return ((high + 1) >> 1) - (low >> 1)
     }
 }
 ```

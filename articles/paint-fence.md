@@ -83,27 +83,114 @@ class Solution {
      */
     numWays(n, k) {
         const memo = {};
-        
+
         const total_ways = (i) => {
             if (i === 1) {
                 return k;
             }
-            
+
             if (i === 2) {
                 return k * k;
             }
-            
+
             // Check if we have already calculated total_ways(i)
             if (i in memo) {
                 return memo[i];
             }
-            
+
             // Use the recurrence relation to calculate total_ways(i)
             memo[i] = (k - 1) * (total_ways(i - 1) + total_ways(i - 2));
             return memo[i];
         };
-        
+
         return total_ways(n);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private Dictionary<int, int> memo = new Dictionary<int, int>();
+
+    private int TotalWays(int i, int k) {
+        if (i == 1) return k;
+        if (i == 2) return k * k;
+
+        if (memo.ContainsKey(i)) {
+            return memo[i];
+        }
+
+        memo[i] = (k - 1) * (TotalWays(i - 1, k) + TotalWays(i - 2, k));
+        return memo[i];
+    }
+
+    public int NumWays(int n, int k) {
+        return TotalWays(n, k);
+    }
+}
+```
+
+```go
+func numWays(n int, k int) int {
+    memo := make(map[int]int)
+
+    var totalWays func(i int) int
+    totalWays = func(i int) int {
+        if i == 1 {
+            return k
+        }
+        if i == 2 {
+            return k * k
+        }
+
+        if val, ok := memo[i]; ok {
+            return val
+        }
+
+        memo[i] = (k - 1) * (totalWays(i-1) + totalWays(i-2))
+        return memo[i]
+    }
+
+    return totalWays(n)
+}
+```
+
+```kotlin
+class Solution {
+    fun numWays(n: Int, k: Int): Int {
+        val memo = HashMap<Int, Int>()
+
+        fun totalWays(i: Int): Int {
+            if (i == 1) return k
+            if (i == 2) return k * k
+
+            if (i in memo) return memo[i]!!
+
+            memo[i] = (k - 1) * (totalWays(i - 1) + totalWays(i - 2))
+            return memo[i]!!
+        }
+
+        return totalWays(n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ n: Int, _ k: Int) -> Int {
+        var memo = [Int: Int]()
+
+        func totalWays(_ i: Int) -> Int {
+            if i == 1 { return k }
+            if i == 2 { return k * k }
+
+            if let val = memo[i] { return val }
+
+            memo[i] = (k - 1) * (totalWays(i - 1) + totalWays(i - 2))
+            return memo[i]!
+        }
+
+        return totalWays(n)
     }
 }
 ```
@@ -194,16 +281,94 @@ class Solution {
         // Base cases for the problem to avoid index out of bound issues
         if (n === 1) return k;
         if (n === 2) return k * k;
-        
+
         let totalWays = new Array(n + 1);
         totalWays[1] = k;
         totalWays[2] = k * k;
-        
+
         for (let i = 3; i <= n; i++) {
             totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2]);
         }
-        
+
         return totalWays[n];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumWays(int n, int k) {
+        if (n == 1) return k;
+        if (n == 2) return k * k;
+
+        int[] totalWays = new int[n + 1];
+        totalWays[1] = k;
+        totalWays[2] = k * k;
+
+        for (int i = 3; i <= n; i++) {
+            totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2]);
+        }
+
+        return totalWays[n];
+    }
+}
+```
+
+```go
+func numWays(n int, k int) int {
+    if n == 1 {
+        return k
+    }
+    if n == 2 {
+        return k * k
+    }
+
+    totalWays := make([]int, n+1)
+    totalWays[1] = k
+    totalWays[2] = k * k
+
+    for i := 3; i <= n; i++ {
+        totalWays[i] = (k - 1) * (totalWays[i-1] + totalWays[i-2])
+    }
+
+    return totalWays[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun numWays(n: Int, k: Int): Int {
+        if (n == 1) return k
+        if (n == 2) return k * k
+
+        val totalWays = IntArray(n + 1)
+        totalWays[1] = k
+        totalWays[2] = k * k
+
+        for (i in 3..n) {
+            totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2])
+        }
+
+        return totalWays[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ n: Int, _ k: Int) -> Int {
+        if n == 1 { return k }
+        if n == 2 { return k * k }
+
+        var totalWays = [Int](repeating: 0, count: n + 1)
+        totalWays[1] = k
+        totalWays[2] = k * k
+
+        for i in 3...n {
+            totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2])
+        }
+
+        return totalWays[n]
     }
 }
 ```
@@ -288,7 +453,7 @@ class Solution {
      */
     numWays(n, k) {
         if (n === 1) return k;
-        
+
         let twoPostsBack = k;
         let onePostBack = k * k;
 
@@ -299,6 +464,82 @@ class Solution {
         }
 
         return onePostBack;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumWays(int n, int k) {
+        if (n == 1) return k;
+
+        int twoPostsBack = k;
+        int onePostBack = k * k;
+
+        for (int i = 3; i <= n; i++) {
+            int curr = (k - 1) * (onePostBack + twoPostsBack);
+            twoPostsBack = onePostBack;
+            onePostBack = curr;
+        }
+
+        return onePostBack;
+    }
+}
+```
+
+```go
+func numWays(n int, k int) int {
+    if n == 1 {
+        return k
+    }
+
+    twoPostsBack := k
+    onePostBack := k * k
+
+    for i := 3; i <= n; i++ {
+        curr := (k - 1) * (onePostBack + twoPostsBack)
+        twoPostsBack = onePostBack
+        onePostBack = curr
+    }
+
+    return onePostBack
+}
+```
+
+```kotlin
+class Solution {
+    fun numWays(n: Int, k: Int): Int {
+        if (n == 1) return k
+
+        var twoPostsBack = k
+        var onePostBack = k * k
+
+        for (i in 3..n) {
+            val curr = (k - 1) * (onePostBack + twoPostsBack)
+            twoPostsBack = onePostBack
+            onePostBack = curr
+        }
+
+        return onePostBack
+    }
+}
+```
+
+```swift
+class Solution {
+    func numWays(_ n: Int, _ k: Int) -> Int {
+        if n == 1 { return k }
+
+        var twoPostsBack = k
+        var onePostBack = k * k
+
+        for _ in 3...n {
+            let curr = (k - 1) * (onePostBack + twoPostsBack)
+            twoPostsBack = onePostBack
+            onePostBack = curr
+        }
+
+        return onePostBack
     }
 }
 ```

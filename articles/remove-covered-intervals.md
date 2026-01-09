@@ -87,6 +87,84 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveCoveredIntervals(int[][] intervals) {
+        int n = intervals.Length;
+        int res = n;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                if (i != j && intervals[j][0] <= intervals[i][0] &&
+                    intervals[j][1] >= intervals[i][1]) {
+                    res--;
+                    break;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func removeCoveredIntervals(intervals [][]int) int {
+    n := len(intervals)
+    res := n
+
+    for i := 0; i < n; i++ {
+        for j := 0; j < n; j++ {
+            if i != j && intervals[j][0] <= intervals[i][0] &&
+                intervals[j][1] >= intervals[i][1] {
+                res--
+                break
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun removeCoveredIntervals(intervals: Array<IntArray>): Int {
+        val n = intervals.size
+        var res = n
+
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                if (i != j && intervals[j][0] <= intervals[i][0] &&
+                    intervals[j][1] >= intervals[i][1]) {
+                    res--
+                    break
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeCoveredIntervals(_ intervals: [[Int]]) -> Int {
+        let n = intervals.count
+        var res = n
+
+        for i in 0..<n {
+            for j in 0..<n {
+                if i != j && intervals[j][0] <= intervals[i][0] &&
+                    intervals[j][1] >= intervals[i][1] {
+                    res -= 1
+                    break
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -182,6 +260,92 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveCoveredIntervals(int[][] intervals) {
+        Array.Sort(intervals, (a, b) =>
+            a[0] == b[0] ? b[1].CompareTo(a[1]) : a[0].CompareTo(b[0])
+        );
+        int res = 1, prevL = intervals[0][0], prevR = intervals[0][1];
+        foreach (var interval in intervals) {
+            int l = interval[0], r = interval[1];
+            if (prevL <= l && prevR >= r) {
+                continue;
+            }
+            res++;
+            prevL = l;
+            prevR = r;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func removeCoveredIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        if intervals[i][0] == intervals[j][0] {
+            return intervals[i][1] > intervals[j][1]
+        }
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    res := 1
+    prevL, prevR := intervals[0][0], intervals[0][1]
+    for _, interval := range intervals {
+        l, r := interval[0], interval[1]
+        if prevL <= l && prevR >= r {
+            continue
+        }
+        res++
+        prevL, prevR = l, r
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun removeCoveredIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortWith(compareBy({ it[0] }, { -it[1] }))
+        var res = 1
+        var prevL = intervals[0][0]
+        var prevR = intervals[0][1]
+        for ((l, r) in intervals) {
+            if (prevL <= l && prevR >= r) {
+                continue
+            }
+            res++
+            prevL = l
+            prevR = r
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeCoveredIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals.sorted {
+            $0[0] == $1[0] ? $0[1] > $1[1] : $0[0] < $1[0]
+        }
+        var res = 1
+        var prevL = intervals[0][0], prevR = intervals[0][1]
+        for interval in intervals {
+            let l = interval[0], r = interval[1]
+            if prevL <= l && prevR >= r {
+                continue
+            }
+            res += 1
+            prevL = l
+            prevR = r
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +433,87 @@ class Solution {
             end = Math.max(end, r);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RemoveCoveredIntervals(int[][] intervals) {
+        Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
+        int res = 1, start = intervals[0][0], end = intervals[0][1];
+
+        foreach (var interval in intervals) {
+            int l = interval[0], r = interval[1];
+            if (start < l && end < r) {
+                start = l;
+                res++;
+            }
+            end = Math.Max(end, r);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func removeCoveredIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    res := 1
+    start, end := intervals[0][0], intervals[0][1]
+    for _, interval := range intervals {
+        l, r := interval[0], interval[1]
+        if start < l && end < r {
+            start = l
+            res++
+        }
+        if r > end {
+            end = r
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun removeCoveredIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[0] }
+        var res = 1
+        var start = intervals[0][0]
+        var end = intervals[0][1]
+
+        for ((l, r) in intervals) {
+            if (start < l && end < r) {
+                start = l
+                res++
+            }
+            end = maxOf(end, r)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeCoveredIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals.sorted { $0[0] < $1[0] }
+        var res = 1
+        var start = intervals[0][0], end = intervals[0][1]
+
+        for interval in intervals {
+            let l = interval[0], r = interval[1]
+            if start < l && end < r {
+                start = l
+                res += 1
+            }
+            end = max(end, r)
+        }
+        return res
     }
 }
 ```

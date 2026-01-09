@@ -106,6 +106,112 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string KthDistinct(string[] arr, int k) {
+        for (int i = 0; i < arr.Length; i++) {
+            bool flag = true;
+            for (int j = 0; j < arr.Length; j++) {
+                if (i == j) continue;
+
+                if (arr[i] == arr[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) {
+                k--;
+                if (k == 0) {
+                    return arr[i];
+                }
+            }
+        }
+        return "";
+    }
+}
+```
+
+```go
+func kthDistinct(arr []string, k int) string {
+    for i := 0; i < len(arr); i++ {
+        flag := true
+        for j := 0; j < len(arr); j++ {
+            if i == j {
+                continue
+            }
+
+            if arr[i] == arr[j] {
+                flag = false
+                break
+            }
+        }
+
+        if flag {
+            k--
+            if k == 0 {
+                return arr[i]
+            }
+        }
+    }
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun kthDistinct(arr: Array<String>, k: Int): String {
+        var cnt = k
+        for (i in arr.indices) {
+            var flag = true
+            for (j in arr.indices) {
+                if (i == j) continue
+
+                if (arr[i] == arr[j]) {
+                    flag = false
+                    break
+                }
+            }
+
+            if (flag) {
+                cnt--
+                if (cnt == 0) {
+                    return arr[i]
+                }
+            }
+        }
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthDistinct(_ arr: [String], _ k: Int) -> String {
+        var cnt = k
+        for i in 0..<arr.count {
+            var flag = true
+            for j in 0..<arr.count {
+                if i == j { continue }
+
+                if arr[i] == arr[j] {
+                    flag = false
+                    break
+                }
+            }
+
+            if flag {
+                cnt -= 1
+                if cnt == 0 {
+                    return arr[i]
+                }
+            }
+        }
+        return ""
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -212,6 +318,101 @@ class Solution {
         }
 
         return '';
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string KthDistinct(string[] arr, int k) {
+        var count = new Dictionary<string, int>();
+
+        foreach (string s in arr) {
+            if (!count.ContainsKey(s)) {
+                count[s] = 0;
+            }
+            count[s]++;
+        }
+
+        foreach (string s in arr) {
+            if (count[s] == 1) {
+                k--;
+                if (k == 0) {
+                    return s;
+                }
+            }
+        }
+
+        return "";
+    }
+}
+```
+
+```go
+func kthDistinct(arr []string, k int) string {
+    count := make(map[string]int)
+
+    for _, s := range arr {
+        count[s]++
+    }
+
+    for _, s := range arr {
+        if count[s] == 1 {
+            k--
+            if k == 0 {
+                return s
+            }
+        }
+    }
+
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun kthDistinct(arr: Array<String>, k: Int): String {
+        val count = mutableMapOf<String, Int>()
+
+        for (s in arr) {
+            count[s] = count.getOrDefault(s, 0) + 1
+        }
+
+        var cnt = k
+        for (s in arr) {
+            if (count[s] == 1) {
+                cnt--
+                if (cnt == 0) {
+                    return s
+                }
+            }
+        }
+
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthDistinct(_ arr: [String], _ k: Int) -> String {
+        var count = [String: Int]()
+
+        for s in arr {
+            count[s, default: 0] += 1
+        }
+
+        var cnt = k
+        for s in arr {
+            if count[s] == 1 {
+                cnt -= 1
+                if cnt == 0 {
+                    return s
+                }
+            }
+        }
+
+        return ""
     }
 }
 ```
@@ -338,6 +539,122 @@ class Solution {
         }
 
         return '';
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string KthDistinct(string[] arr, int k) {
+        var distinct = new HashSet<string>();
+        var seen = new HashSet<string>();
+
+        foreach (string s in arr) {
+            if (distinct.Contains(s)) {
+                distinct.Remove(s);
+                seen.Add(s);
+            } else if (!seen.Contains(s)) {
+                distinct.Add(s);
+            }
+        }
+
+        foreach (string s in arr) {
+            if (distinct.Contains(s)) {
+                k--;
+                if (k == 0) {
+                    return s;
+                }
+            }
+        }
+
+        return "";
+    }
+}
+```
+
+```go
+func kthDistinct(arr []string, k int) string {
+    distinct := make(map[string]bool)
+    seen := make(map[string]bool)
+
+    for _, s := range arr {
+        if distinct[s] {
+            delete(distinct, s)
+            seen[s] = true
+        } else if !seen[s] {
+            distinct[s] = true
+        }
+    }
+
+    for _, s := range arr {
+        if distinct[s] {
+            k--
+            if k == 0 {
+                return s
+            }
+        }
+    }
+
+    return ""
+}
+```
+
+```kotlin
+class Solution {
+    fun kthDistinct(arr: Array<String>, k: Int): String {
+        val distinct = mutableSetOf<String>()
+        val seen = mutableSetOf<String>()
+
+        for (s in arr) {
+            if (s in distinct) {
+                distinct.remove(s)
+                seen.add(s)
+            } else if (s !in seen) {
+                distinct.add(s)
+            }
+        }
+
+        var cnt = k
+        for (s in arr) {
+            if (s in distinct) {
+                cnt--
+                if (cnt == 0) {
+                    return s
+                }
+            }
+        }
+
+        return ""
+    }
+}
+```
+
+```swift
+class Solution {
+    func kthDistinct(_ arr: [String], _ k: Int) -> String {
+        var distinct = Set<String>()
+        var seen = Set<String>()
+
+        for s in arr {
+            if distinct.contains(s) {
+                distinct.remove(s)
+                seen.insert(s)
+            } else if !seen.contains(s) {
+                distinct.insert(s)
+            }
+        }
+
+        var cnt = k
+        for s in arr {
+            if distinct.contains(s) {
+                cnt -= 1
+                if cnt == 0 {
+                    return s
+                }
+            }
+        }
+
+        return ""
     }
 }
 ```

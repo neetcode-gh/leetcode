@@ -87,6 +87,89 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string RemoveStars(string s) {
+        while (true) {
+            bool flag = false;
+            for (int i = 1; i < s.Length; i++) {
+                if (s[i] == '*' && s[i - 1] != '*') {
+                    s = s.Substring(0, i - 1) + s.Substring(i + 1);
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag) {
+                break;
+            }
+        }
+        return s;
+    }
+}
+```
+
+```go
+func removeStars(s string) string {
+    for {
+        flag := false
+        for i := 1; i < len(s); i++ {
+            if s[i] == '*' && s[i-1] != '*' {
+                s = s[:i-1] + s[i+1:]
+                flag = true
+                break
+            }
+        }
+        if !flag {
+            break
+        }
+    }
+    return s
+}
+```
+
+```kotlin
+class Solution {
+    fun removeStars(s: String): String {
+        var str = s
+        while (true) {
+            var flag = false
+            for (i in 1 until str.length) {
+                if (str[i] == '*' && str[i - 1] != '*') {
+                    str = str.substring(0, i - 1) + str.substring(i + 1)
+                    flag = true
+                    break
+                }
+            }
+            if (!flag) break
+        }
+        return str
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeStars(_ s: String) -> String {
+        var str = s
+        while true {
+            var flag = false
+            var arr = Array(str)
+            for i in 1..<arr.count {
+                if arr[i] == "*" && arr[i - 1] != "*" {
+                    arr.remove(at: i)
+                    arr.remove(at: i - 1)
+                    str = String(arr)
+                    flag = true
+                    break
+                }
+            }
+            if !flag { break }
+        }
+        return str
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -169,6 +252,77 @@ class Solution {
             i++;
         }
         return s;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string RemoveStars(string s) {
+        int n = s.Length;
+        int i = 0;
+        while (i < n) {
+            if (i > 0 && s[i] == '*' && s[i - 1] != '*') {
+                s = s.Substring(0, i - 1) + s.Substring(i + 1);
+                n -= 2;
+                i -= 2;
+            }
+            i++;
+        }
+        return s;
+    }
+}
+```
+
+```go
+func removeStars(s string) string {
+    n := len(s)
+    i := 0
+    for i < n {
+        if i > 0 && s[i] == '*' && s[i-1] != '*' {
+            s = s[:i-1] + s[i+1:]
+            n -= 2
+            i -= 2
+        }
+        i++
+    }
+    return s
+}
+```
+
+```kotlin
+class Solution {
+    fun removeStars(s: String): String {
+        var str = s
+        var n = str.length
+        var i = 0
+        while (i < n) {
+            if (i > 0 && str[i] == '*' && str[i - 1] != '*') {
+                str = str.substring(0, i - 1) + str.substring(i + 1)
+                n -= 2
+                i -= 2
+            }
+            i++
+        }
+        return str
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeStars(_ s: String) -> String {
+        var str = Array(s)
+        var i = 0
+        while i < str.count {
+            if i > 0 && str[i] == "*" && str[i - 1] != "*" {
+                str.remove(at: i)
+                str.remove(at: i - 1)
+                i -= 2
+            }
+            i += 1
+        }
+        return String(str)
     }
 }
 ```
@@ -259,6 +413,70 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string RemoveStars(string s) {
+        var stack = new System.Text.StringBuilder();
+        foreach (char c in s) {
+            if (c == '*') {
+                if (stack.Length > 0) stack.Remove(stack.Length - 1, 1);
+            } else {
+                stack.Append(c);
+            }
+        }
+        return stack.ToString();
+    }
+}
+```
+
+```go
+func removeStars(s string) string {
+    stack := []byte{}
+    for i := 0; i < len(s); i++ {
+        if s[i] == '*' {
+            if len(stack) > 0 {
+                stack = stack[:len(stack)-1]
+            }
+        } else {
+            stack = append(stack, s[i])
+        }
+    }
+    return string(stack)
+}
+```
+
+```kotlin
+class Solution {
+    fun removeStars(s: String): String {
+        val stack = StringBuilder()
+        for (c in s) {
+            if (c == '*') {
+                if (stack.isNotEmpty()) stack.deleteCharAt(stack.length - 1)
+            } else {
+                stack.append(c)
+            }
+        }
+        return stack.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeStars(_ s: String) -> String {
+        var stack = [Character]()
+        for c in s {
+            if c == "*" {
+                if !stack.isEmpty { stack.removeLast() }
+            } else {
+                stack.append(c)
+            }
+        }
+        return String(stack)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +563,80 @@ class Solution {
             }
         }
         return arr.slice(0, l).join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string RemoveStars(string s) {
+        char[] arr = s.ToCharArray();
+        int l = 0;
+
+        for (int r = 0; r < arr.Length; r++) {
+            if (arr[r] == '*') {
+                l--;
+            } else {
+                arr[l] = arr[r];
+                l++;
+            }
+        }
+        return new string(arr, 0, l);
+    }
+}
+```
+
+```go
+func removeStars(s string) string {
+    arr := []byte(s)
+    l := 0
+
+    for r := 0; r < len(arr); r++ {
+        if arr[r] == '*' {
+            l--
+        } else {
+            arr[l] = arr[r]
+            l++
+        }
+    }
+    return string(arr[:l])
+}
+```
+
+```kotlin
+class Solution {
+    fun removeStars(s: String): String {
+        val arr = s.toCharArray()
+        var l = 0
+
+        for (r in arr.indices) {
+            if (arr[r] == '*') {
+                l--
+            } else {
+                arr[l] = arr[r]
+                l++
+            }
+        }
+        return String(arr, 0, l)
+    }
+}
+```
+
+```swift
+class Solution {
+    func removeStars(_ s: String) -> String {
+        var arr = Array(s)
+        var l = 0
+
+        for r in 0..<arr.count {
+            if arr[r] == "*" {
+                l -= 1
+            } else {
+                arr[l] = arr[r]
+                l += 1
+            }
+        }
+        return String(arr[0..<l])
     }
 }
 ```

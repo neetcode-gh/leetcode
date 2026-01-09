@@ -176,6 +176,109 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isCompleteTree(root *TreeNode) bool {
+    q := []*TreeNode{root}
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        if node != nil {
+            q = append(q, node.Left)
+            q = append(q, node.Right)
+        } else {
+            for len(q) > 0 {
+                if q[0] != nil {
+                    return false
+                }
+                q = q[1:]
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isCompleteTree(root: TreeNode?): Boolean {
+        val q = ArrayDeque<TreeNode?>()
+        q.add(root)
+
+        while (q.isNotEmpty()) {
+            val node = q.removeFirst()
+            if (node != null) {
+                q.add(node.left)
+                q.add(node.right)
+            } else {
+                while (q.isNotEmpty()) {
+                    if (q.removeFirst() != null) {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isCompleteTree(_ root: TreeNode?) -> Bool {
+        var queue = [root]
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            if let node = node {
+                queue.append(node.left)
+                queue.append(node.right)
+            } else {
+                while !queue.isEmpty {
+                    if queue.removeFirst() != nil {
+                        return false
+                    }
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -357,6 +460,104 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isCompleteTree(root *TreeNode) bool {
+    q := []*TreeNode{root}
+    nullSeen := false
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        if node != nil {
+            if nullSeen {
+                return false
+            }
+            q = append(q, node.Left)
+            q = append(q, node.Right)
+        } else {
+            nullSeen = true
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isCompleteTree(root: TreeNode?): Boolean {
+        val q = ArrayDeque<TreeNode?>()
+        q.add(root)
+        var nullSeen = false
+
+        while (q.isNotEmpty()) {
+            val node = q.removeFirst()
+            if (node != null) {
+                if (nullSeen) return false
+                q.add(node.left)
+                q.add(node.right)
+            } else {
+                nullSeen = true
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isCompleteTree(_ root: TreeNode?) -> Bool {
+        var queue: [TreeNode?] = [root]
+        var nullSeen = false
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            if let node = node {
+                if nullSeen { return false }
+                queue.append(node.left)
+                queue.append(node.right)
+            } else {
+                nullSeen = true
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -531,6 +732,105 @@ public class Solution {
     private int CountNodes(TreeNode node) {
         if (node == null) return 0;
         return 1 + CountNodes(node.left) + CountNodes(node.right);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isCompleteTree(root *TreeNode) bool {
+    var countNodes func(node *TreeNode) int
+    countNodes = func(node *TreeNode) int {
+        if node == nil {
+            return 0
+        }
+        return 1 + countNodes(node.Left) + countNodes(node.Right)
+    }
+
+    var dfs func(node *TreeNode, index, n int) bool
+    dfs = func(node *TreeNode, index, n int) bool {
+        if node == nil {
+            return true
+        }
+        if index >= n {
+            return false
+        }
+        return dfs(node.Left, 2*index+1, n) && dfs(node.Right, 2*index+2, n)
+    }
+
+    n := countNodes(root)
+    return dfs(root, 0, n)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isCompleteTree(root: TreeNode?): Boolean {
+        fun countNodes(node: TreeNode?): Int {
+            if (node == null) return 0
+            return 1 + countNodes(node.left) + countNodes(node.right)
+        }
+
+        fun dfs(node: TreeNode?, index: Int, n: Int): Boolean {
+            if (node == null) return true
+            if (index >= n) return false
+            return dfs(node.left, 2 * index + 1, n) && dfs(node.right, 2 * index + 2, n)
+        }
+
+        val n = countNodes(root)
+        return dfs(root, 0, n)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isCompleteTree(_ root: TreeNode?) -> Bool {
+        func countNodes(_ node: TreeNode?) -> Int {
+            guard let node = node else { return 0 }
+            return 1 + countNodes(node.left) + countNodes(node.right)
+        }
+
+        func dfs(_ node: TreeNode?, _ index: Int, _ n: Int) -> Bool {
+            guard let node = node else { return true }
+            if index >= n { return false }
+            return dfs(node.left, 2 * index + 1, n) && dfs(node.right, 2 * index + 2, n)
+        }
+
+        let n = countNodes(root)
+        return dfs(root, 0, n)
     }
 }
 ```
@@ -729,6 +1029,115 @@ public class Solution {
             return !(hgt == treeHgt && nullSeen);
         }
         return Dfs(node.left, hgt + 1) && Dfs(node.right, hgt + 1);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isCompleteTree(root *TreeNode) bool {
+    treeHgt := 0
+    nullSeen := false
+
+    var dfs func(node *TreeNode, hgt int) bool
+    dfs = func(node *TreeNode, hgt int) bool {
+        if node == nil {
+            if treeHgt == 0 {
+                treeHgt = hgt
+            } else if hgt == treeHgt-1 {
+                nullSeen = true
+            } else if hgt != treeHgt {
+                return false
+            }
+            return !(hgt == treeHgt && nullSeen)
+        }
+        return dfs(node.Left, hgt+1) && dfs(node.Right, hgt+1)
+    }
+
+    return dfs(root, 0)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var treeHgt = 0
+    private var nullSeen = false
+
+    fun isCompleteTree(root: TreeNode?): Boolean {
+        treeHgt = 0
+        nullSeen = false
+        return dfs(root, 0)
+    }
+
+    private fun dfs(node: TreeNode?, hgt: Int): Boolean {
+        if (node == null) {
+            if (treeHgt == 0) {
+                treeHgt = hgt
+            } else if (hgt == treeHgt - 1) {
+                nullSeen = true
+            } else if (hgt != treeHgt) {
+                return false
+            }
+            return !(hgt == treeHgt && nullSeen)
+        }
+        return dfs(node.left, hgt + 1) && dfs(node.right, hgt + 1)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isCompleteTree(_ root: TreeNode?) -> Bool {
+        var treeHgt = 0
+        var nullSeen = false
+
+        func dfs(_ node: TreeNode?, _ hgt: Int) -> Bool {
+            if node == nil {
+                if treeHgt == 0 {
+                    treeHgt = hgt
+                } else if hgt == treeHgt - 1 {
+                    nullSeen = true
+                } else if hgt != treeHgt {
+                    return false
+                }
+                return !(hgt == treeHgt && nullSeen)
+            }
+            return dfs(node?.left, hgt + 1) && dfs(node?.right, hgt + 1)
+        }
+
+        return dfs(root, 0)
     }
 }
 ```

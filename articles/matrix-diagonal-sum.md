@@ -132,6 +132,88 @@ public class Solution {
 }
 ```
 
+```go
+func diagonalSum(mat [][]int) int {
+    n := len(mat)
+
+    helper := func(matrix [][]int) int {
+        res := 0
+        for i := 0; i < n; i++ {
+            for j := 0; j < n; j++ {
+                if i == j {
+                    res += matrix[i][j]
+                }
+            }
+            for l, r := 0, len(matrix[i])-1; l < r; l, r = l+1, r-1 {
+                matrix[i][l], matrix[i][r] = matrix[i][r], matrix[i][l]
+            }
+        }
+        return res
+    }
+
+    sum := helper(mat) + helper(mat)
+    if n%2 == 1 {
+        sum -= mat[n/2][n/2]
+    }
+    return sum
+}
+```
+
+```kotlin
+class Solution {
+    fun diagonalSum(mat: Array<IntArray>): Int {
+        val n = mat.size
+
+        fun helper(matrix: Array<IntArray>): Int {
+            var res = 0
+            for (i in 0 until n) {
+                for (j in 0 until n) {
+                    if (i == j) {
+                        res += matrix[i][j]
+                    }
+                }
+                matrix[i].reverse()
+            }
+            return res
+        }
+
+        var sum = helper(mat) + helper(mat)
+        if (n % 2 == 1) {
+            sum -= mat[n / 2][n / 2]
+        }
+        return sum
+    }
+}
+```
+
+```swift
+class Solution {
+    func diagonalSum(_ mat: [[Int]]) -> Int {
+        var mat = mat
+        let n = mat.count
+
+        func helper(_ matrix: inout [[Int]]) -> Int {
+            var res = 0
+            for i in 0..<n {
+                for j in 0..<n {
+                    if i == j {
+                        res += matrix[i][j]
+                    }
+                }
+                matrix[i].reverse()
+            }
+            return res
+        }
+
+        var sum = helper(&mat) + helper(&mat)
+        if n % 2 == 1 {
+            sum -= mat[n / 2][n / 2]
+        }
+        return sum
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -226,6 +308,64 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func diagonalSum(mat [][]int) int {
+    res := 0
+    n := len(mat)
+
+    for r := 0; r < n; r++ {
+        res += mat[r][r]
+        res += mat[r][n-r-1]
+    }
+
+    if n%2 == 1 {
+        res -= mat[n/2][n/2]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun diagonalSum(mat: Array<IntArray>): Int {
+        var res = 0
+        val n = mat.size
+
+        for (r in 0 until n) {
+            res += mat[r][r]
+            res += mat[r][n - r - 1]
+        }
+
+        if (n % 2 == 1) {
+            res -= mat[n / 2][n / 2]
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func diagonalSum(_ mat: [[Int]]) -> Int {
+        var res = 0
+        let n = mat.count
+
+        for r in 0..<n {
+            res += mat[r][r]
+            res += mat[r][n - r - 1]
+        }
+
+        if n % 2 == 1 {
+            res -= mat[n / 2][n / 2]
+        }
+
+        return res
     }
 }
 ```

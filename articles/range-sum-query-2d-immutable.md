@@ -107,6 +107,61 @@ public class NumMatrix {
 }
 ```
 
+```go
+type NumMatrix struct {
+    matrix [][]int
+}
+
+func Constructor(matrix [][]int) NumMatrix {
+    return NumMatrix{matrix: matrix}
+}
+
+func (this *NumMatrix) SumRegion(row1 int, col1 int, row2 int, col2 int) int {
+    res := 0
+    for r := row1; r <= row2; r++ {
+        for c := col1; c <= col2; c++ {
+            res += this.matrix[r][c]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class NumMatrix(private val matrix: Array<IntArray>) {
+
+    fun sumRegion(row1: Int, col1: Int, row2: Int, col2: Int): Int {
+        var res = 0
+        for (r in row1..row2) {
+            for (c in col1..col2) {
+                res += matrix[r][c]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class NumMatrix {
+    private var matrix: [[Int]]
+
+    init(_ matrix: [[Int]]) {
+        self.matrix = matrix
+    }
+
+    func sumRegion(_ row1: Int, _ col1: Int, _ row2: Int, _ col2: Int) -> Int {
+        var res = 0
+        for r in row1...row2 {
+            for c in col1...col2 {
+                res += matrix[r][c]
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -279,6 +334,101 @@ public class NumMatrix {
 }
 ```
 
+```go
+type NumMatrix struct {
+    prefixSum [][]int
+}
+
+func Constructor(matrix [][]int) NumMatrix {
+    rows, cols := len(matrix), len(matrix[0])
+    prefixSum := make([][]int, rows)
+
+    for row := 0; row < rows; row++ {
+        prefixSum[row] = make([]int, cols)
+        prefixSum[row][0] = matrix[row][0]
+        for col := 1; col < cols; col++ {
+            prefixSum[row][col] = prefixSum[row][col-1] + matrix[row][col]
+        }
+    }
+
+    return NumMatrix{prefixSum: prefixSum}
+}
+
+func (this *NumMatrix) SumRegion(row1 int, col1 int, row2 int, col2 int) int {
+    res := 0
+    for row := row1; row <= row2; row++ {
+        if col1 > 0 {
+            res += this.prefixSum[row][col2] - this.prefixSum[row][col1-1]
+        } else {
+            res += this.prefixSum[row][col2]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class NumMatrix(matrix: Array<IntArray>) {
+    private val prefixSum: Array<IntArray>
+
+    init {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        prefixSum = Array(rows) { IntArray(cols) }
+
+        for (row in 0 until rows) {
+            prefixSum[row][0] = matrix[row][0]
+            for (col in 1 until cols) {
+                prefixSum[row][col] = prefixSum[row][col - 1] + matrix[row][col]
+            }
+        }
+    }
+
+    fun sumRegion(row1: Int, col1: Int, row2: Int, col2: Int): Int {
+        var res = 0
+        for (row in row1..row2) {
+            res += if (col1 > 0) {
+                prefixSum[row][col2] - prefixSum[row][col1 - 1]
+            } else {
+                prefixSum[row][col2]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class NumMatrix {
+    private var prefixSum: [[Int]]
+
+    init(_ matrix: [[Int]]) {
+        let rows = matrix.count
+        let cols = matrix[0].count
+        prefixSum = Array(repeating: Array(repeating: 0, count: cols), count: rows)
+
+        for row in 0..<rows {
+            prefixSum[row][0] = matrix[row][0]
+            for col in 1..<cols {
+                prefixSum[row][col] = prefixSum[row][col - 1] + matrix[row][col]
+            }
+        }
+    }
+
+    func sumRegion(_ row1: Int, _ col1: Int, _ row2: Int, _ col2: Int) -> Int {
+        var res = 0
+        for row in row1...row2 {
+            if col1 > 0 {
+                res += prefixSum[row][col2] - prefixSum[row][col1 - 1]
+            } else {
+                res += prefixSum[row][col2]
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -447,6 +597,103 @@ public class NumMatrix {
         int left = sumMat[row2, col1 - 1];
         int topLeft = sumMat[row1 - 1, col1 - 1];
         return bottomRight - above - left + topLeft;
+    }
+}
+```
+
+```go
+type NumMatrix struct {
+    sumMat [][]int
+}
+
+func Constructor(matrix [][]int) NumMatrix {
+    rows, cols := len(matrix), len(matrix[0])
+    sumMat := make([][]int, rows+1)
+    for i := range sumMat {
+        sumMat[i] = make([]int, cols+1)
+    }
+
+    for r := 0; r < rows; r++ {
+        prefix := 0
+        for c := 0; c < cols; c++ {
+            prefix += matrix[r][c]
+            above := sumMat[r][c+1]
+            sumMat[r+1][c+1] = prefix + above
+        }
+    }
+
+    return NumMatrix{sumMat: sumMat}
+}
+
+func (this *NumMatrix) SumRegion(row1 int, col1 int, row2 int, col2 int) int {
+    row1++; col1++; row2++; col2++
+    bottomRight := this.sumMat[row2][col2]
+    above := this.sumMat[row1-1][col2]
+    left := this.sumMat[row2][col1-1]
+    topLeft := this.sumMat[row1-1][col1-1]
+    return bottomRight - above - left + topLeft
+}
+```
+
+```kotlin
+class NumMatrix(matrix: Array<IntArray>) {
+    private val sumMat: Array<IntArray>
+
+    init {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        sumMat = Array(rows + 1) { IntArray(cols + 1) }
+
+        for (r in 0 until rows) {
+            var prefix = 0
+            for (c in 0 until cols) {
+                prefix += matrix[r][c]
+                val above = sumMat[r][c + 1]
+                sumMat[r + 1][c + 1] = prefix + above
+            }
+        }
+    }
+
+    fun sumRegion(row1: Int, col1: Int, row2: Int, col2: Int): Int {
+        val r1 = row1 + 1
+        val c1 = col1 + 1
+        val r2 = row2 + 1
+        val c2 = col2 + 1
+        val bottomRight = sumMat[r2][c2]
+        val above = sumMat[r1 - 1][c2]
+        val left = sumMat[r2][c1 - 1]
+        val topLeft = sumMat[r1 - 1][c1 - 1]
+        return bottomRight - above - left + topLeft
+    }
+}
+```
+
+```swift
+class NumMatrix {
+    private var sumMat: [[Int]]
+
+    init(_ matrix: [[Int]]) {
+        let rows = matrix.count
+        let cols = matrix[0].count
+        sumMat = Array(repeating: Array(repeating: 0, count: cols + 1), count: rows + 1)
+
+        for r in 0..<rows {
+            var prefix = 0
+            for c in 0..<cols {
+                prefix += matrix[r][c]
+                let above = sumMat[r][c + 1]
+                sumMat[r + 1][c + 1] = prefix + above
+            }
+        }
+    }
+
+    func sumRegion(_ row1: Int, _ col1: Int, _ row2: Int, _ col2: Int) -> Int {
+        let r1 = row1 + 1, c1 = col1 + 1, r2 = row2 + 1, c2 = col2 + 1
+        let bottomRight = sumMat[r2][c2]
+        let above = sumMat[r1 - 1][c2]
+        let left = sumMat[r2][c1 - 1]
+        let topLeft = sumMat[r1 - 1][c1 - 1]
+        return bottomRight - above - left + topLeft
     }
 }
 ```

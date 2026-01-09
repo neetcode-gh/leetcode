@@ -99,6 +99,66 @@ public class Solution {
 }
 ```
 
+```go
+func firstUniqChar(s string) int {
+    for i := 0; i < len(s); i++ {
+        flag := true
+        for j := 0; j < len(s); j++ {
+            if i == j {
+                continue
+            }
+            if s[i] == s[j] {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun firstUniqChar(s: String): Int {
+        for (i in s.indices) {
+            var flag = true
+            for (j in s.indices) {
+                if (i == j) continue
+                if (s[i] == s[j]) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) return i
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func firstUniqChar(_ s: String) -> Int {
+        let chars = Array(s)
+        for i in 0..<chars.count {
+            var flag = true
+            for j in 0..<chars.count {
+                if i == j { continue }
+                if chars[i] == chars[j] {
+                    flag = false
+                    break
+                }
+            }
+            if flag { return i }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -201,6 +261,58 @@ public class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```go
+func firstUniqChar(s string) int {
+    count := make(map[rune]int)
+    for _, c := range s {
+        count[c]++
+    }
+
+    for i, c := range s {
+        if count[c] == 1 {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun firstUniqChar(s: String): Int {
+        val count = mutableMapOf<Char, Int>()
+        for (c in s) {
+            count[c] = count.getOrDefault(c, 0) + 1
+        }
+
+        for (i in s.indices) {
+            if (count[s[i]] == 1) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func firstUniqChar(_ s: String) -> Int {
+        var count = [Character: Int]()
+        for c in s {
+            count[c, default: 0] += 1
+        }
+
+        for (i, c) in s.enumerated() {
+            if count[c] == 1 {
+                return i
+            }
+        }
+        return -1
     }
 }
 ```
@@ -340,6 +452,84 @@ public class Solution {
 }
 ```
 
+```go
+func firstUniqChar(s string) int {
+    n := len(s)
+    count := make(map[rune]int)
+
+    for i, c := range s {
+        if _, exists := count[c]; !exists {
+            count[c] = i
+        } else {
+            count[c] = n
+        }
+    }
+
+    res := n
+    for _, index := range count {
+        if index < res {
+            res = index
+        }
+    }
+
+    if res == n {
+        return -1
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun firstUniqChar(s: String): Int {
+        val n = s.length
+        val count = mutableMapOf<Char, Int>()
+
+        for (i in s.indices) {
+            val c = s[i]
+            if (c !in count) {
+                count[c] = i
+            } else {
+                count[c] = n
+            }
+        }
+
+        var res = n
+        for (index in count.values) {
+            res = minOf(res, index)
+        }
+
+        return if (res == n) -1 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func firstUniqChar(_ s: String) -> Int {
+        let n = s.count
+        let chars = Array(s)
+        var count = [Character: Int]()
+
+        for i in 0..<n {
+            let c = chars[i]
+            if count[c] == nil {
+                count[c] = i
+            } else {
+                count[c] = n
+            }
+        }
+
+        var res = n
+        for index in count.values {
+            res = min(res, index)
+        }
+
+        return res == n ? -1 : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -436,6 +626,64 @@ public class Solution {
         }
 
         return res == n ? -1 : res;
+    }
+}
+```
+
+```go
+func firstUniqChar(s string) int {
+    n := len(s)
+    res := n
+
+    for ch := 'a'; ch <= 'z'; ch++ {
+        firstIndex := strings.IndexRune(s, ch)
+        if firstIndex != -1 && strings.LastIndex(s, string(ch)) == firstIndex {
+            if firstIndex < res {
+                res = firstIndex
+            }
+        }
+    }
+
+    if res == n {
+        return -1
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun firstUniqChar(s: String): Int {
+        var res = s.length
+
+        for (ch in 'a'..'z') {
+            val firstIndex = s.indexOf(ch)
+            if (firstIndex != -1 && s.lastIndexOf(ch) == firstIndex) {
+                res = minOf(res, firstIndex)
+            }
+        }
+
+        return if (res == s.length) -1 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func firstUniqChar(_ s: String) -> Int {
+        let n = s.count
+        var res = n
+        let chars = Array(s)
+
+        for ch in "abcdefghijklmnopqrstuvwxyz" {
+            if let firstIndex = chars.firstIndex(of: ch),
+               let lastIndex = chars.lastIndex(of: ch),
+               firstIndex == lastIndex {
+                res = min(res, firstIndex)
+            }
+        }
+
+        return res == n ? -1 : res
     }
 }
 ```

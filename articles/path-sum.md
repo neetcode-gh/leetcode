@@ -156,6 +156,97 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func hasPathSum(root *TreeNode, targetSum int) bool {
+    var dfs func(node *TreeNode, curSum int) bool
+    dfs = func(node *TreeNode, curSum int) bool {
+        if node == nil {
+            return false
+        }
+
+        curSum += node.Val
+        if node.Left == nil && node.Right == nil {
+            return curSum == targetSum
+        }
+
+        return dfs(node.Left, curSum) || dfs(node.Right, curSum)
+    }
+
+    return dfs(root, 0)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun hasPathSum(root: TreeNode?, targetSum: Int): Boolean {
+        fun dfs(node: TreeNode?, curSum: Int): Boolean {
+            if (node == null) return false
+
+            val newSum = curSum + node.`val`
+            if (node.left == null && node.right == null) {
+                return newSum == targetSum
+            }
+
+            return dfs(node.left, newSum) || dfs(node.right, newSum)
+        }
+
+        return dfs(root, 0)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        func dfs(_ node: TreeNode?, _ curSum: Int) -> Bool {
+            guard let node = node else { return false }
+
+            let newSum = curSum + node.val
+            if node.left == nil && node.right == nil {
+                return newSum == targetSum
+            }
+
+            return dfs(node.left, newSum) || dfs(node.right, newSum)
+        }
+
+        return dfs(root, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,6 +380,78 @@ public class Solution {
         return HasPathSum(root.left, targetSum) ||
                HasPathSum(root.right, targetSum) ||
                (targetSum == 0 && root.left == null && root.right == null);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func hasPathSum(root *TreeNode, targetSum int) bool {
+    if root == nil {
+        return false
+    }
+
+    targetSum -= root.Val
+    return hasPathSum(root.Left, targetSum) ||
+           hasPathSum(root.Right, targetSum) ||
+           (targetSum == 0 && root.Left == nil && root.Right == nil)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun hasPathSum(root: TreeNode?, targetSum: Int): Boolean {
+        if (root == null) return false
+
+        val remaining = targetSum - root.`val`
+        return hasPathSum(root.left, remaining) ||
+               hasPathSum(root.right, remaining) ||
+               (remaining == 0 && root.left == null && root.right == null)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        guard let root = root else { return false }
+
+        let remaining = targetSum - root.val
+        return hasPathSum(root.left, remaining) ||
+               hasPathSum(root.right, remaining) ||
+               (remaining == 0 && root.left == nil && root.right == nil)
     }
 }
 ```
@@ -504,6 +667,125 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func hasPathSum(root *TreeNode, targetSum int) bool {
+    if root == nil {
+        return false
+    }
+
+    type pair struct {
+        node   *TreeNode
+        curSum int
+    }
+
+    stack := []pair{{root, targetSum - root.Val}}
+    for len(stack) > 0 {
+        p := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        if p.node.Left == nil && p.node.Right == nil && p.curSum == 0 {
+            return true
+        }
+
+        if p.node.Right != nil {
+            stack = append(stack, pair{p.node.Right, p.curSum - p.node.Right.Val})
+        }
+        if p.node.Left != nil {
+            stack = append(stack, pair{p.node.Left, p.curSum - p.node.Left.Val})
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun hasPathSum(root: TreeNode?, targetSum: Int): Boolean {
+        if (root == null) return false
+
+        val stack = ArrayDeque<Pair<TreeNode, Int>>()
+        stack.addLast(Pair(root, targetSum - root.`val`))
+
+        while (stack.isNotEmpty()) {
+            val (node, currSum) = stack.removeLast()
+
+            if (node.left == null && node.right == null && currSum == 0) {
+                return true
+            }
+
+            node.right?.let {
+                stack.addLast(Pair(it, currSum - it.`val`))
+            }
+            node.left?.let {
+                stack.addLast(Pair(it, currSum - it.`val`))
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        guard let root = root else { return false }
+
+        var stack: [(TreeNode, Int)] = [(root, targetSum - root.val)]
+        while !stack.isEmpty {
+            let (node, currSum) = stack.removeLast()
+
+            if node.left == nil && node.right == nil && currSum == 0 {
+                return true
+            }
+
+            if let right = node.right {
+                stack.append((right, currSum - right.val))
+            }
+            if let left = node.left {
+                stack.append((left, currSum - left.val))
+            }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -711,6 +993,125 @@ public class Solution {
         }
 
         return false;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func hasPathSum(root *TreeNode, targetSum int) bool {
+    if root == nil {
+        return false
+    }
+
+    type pair struct {
+        node   *TreeNode
+        curSum int
+    }
+
+    queue := []pair{{root, targetSum - root.Val}}
+    for len(queue) > 0 {
+        p := queue[0]
+        queue = queue[1:]
+
+        if p.node.Left == nil && p.node.Right == nil && p.curSum == 0 {
+            return true
+        }
+
+        if p.node.Left != nil {
+            queue = append(queue, pair{p.node.Left, p.curSum - p.node.Left.Val})
+        }
+        if p.node.Right != nil {
+            queue = append(queue, pair{p.node.Right, p.curSum - p.node.Right.Val})
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun hasPathSum(root: TreeNode?, targetSum: Int): Boolean {
+        if (root == null) return false
+
+        val queue = ArrayDeque<Pair<TreeNode, Int>>()
+        queue.addLast(Pair(root, targetSum - root.`val`))
+
+        while (queue.isNotEmpty()) {
+            val (node, currSum) = queue.removeFirst()
+
+            if (node.left == null && node.right == null && currSum == 0) {
+                return true
+            }
+
+            node.left?.let {
+                queue.addLast(Pair(it, currSum - it.`val`))
+            }
+            node.right?.let {
+                queue.addLast(Pair(it, currSum - it.`val`))
+            }
+        }
+
+        return false
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func hasPathSum(_ root: TreeNode?, _ targetSum: Int) -> Bool {
+        guard let root = root else { return false }
+
+        var queue: [(TreeNode, Int)] = [(root, targetSum - root.val)]
+        while !queue.isEmpty {
+            let (node, currSum) = queue.removeFirst()
+
+            if node.left == nil && node.right == nil && currSum == 0 {
+                return true
+            }
+
+            if let left = node.left {
+                queue.append((left, currSum - left.val))
+            }
+            if let right = node.right {
+                queue.append((right, currSum - right.val))
+            }
+        }
+
+        return false
     }
 }
 ```

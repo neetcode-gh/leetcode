@@ -76,6 +76,72 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool ValidateStackSequences(int[] pushed, int[] popped) {
+        Stack<int> stack = new Stack<int>();
+        int i = 0;
+        foreach (int n in pushed) {
+            stack.Push(n);
+            while (i < popped.Length && stack.Count > 0 && popped[i] == stack.Peek()) {
+                stack.Pop();
+                i++;
+            }
+        }
+        return stack.Count == 0;
+    }
+}
+```
+
+```go
+func validateStackSequences(pushed []int, popped []int) bool {
+    stack := []int{}
+    i := 0
+    for _, n := range pushed {
+        stack = append(stack, n)
+        for i < len(popped) && len(stack) > 0 && popped[i] == stack[len(stack)-1] {
+            stack = stack[:len(stack)-1]
+            i++
+        }
+    }
+    return len(stack) == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun validateStackSequences(pushed: IntArray, popped: IntArray): Boolean {
+        val stack = ArrayDeque<Int>()
+        var i = 0
+        for (n in pushed) {
+            stack.addLast(n)
+            while (i < popped.size && stack.isNotEmpty() && popped[i] == stack.last()) {
+                stack.removeLast()
+                i++
+            }
+        }
+        return stack.isEmpty()
+    }
+}
+```
+
+```swift
+class Solution {
+    func validateStackSequences(_ pushed: [Int], _ popped: [Int]) -> Bool {
+        var stack = [Int]()
+        var i = 0
+        for n in pushed {
+            stack.append(n)
+            while i < popped.count && !stack.isEmpty && popped[i] == stack.last! {
+                stack.removeLast()
+                i += 1
+            }
+        }
+        return stack.isEmpty
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -153,6 +219,73 @@ class Solution {
             }
         }
         return l === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ValidateStackSequences(int[] pushed, int[] popped) {
+        int l = 0, r = 0;
+        foreach (int num in pushed) {
+            pushed[l++] = num;
+            while (l > 0 && pushed[l - 1] == popped[r]) {
+                r++;
+                l--;
+            }
+        }
+        return l == 0;
+    }
+}
+```
+
+```go
+func validateStackSequences(pushed []int, popped []int) bool {
+    l, r := 0, 0
+    for _, num := range pushed {
+        pushed[l] = num
+        l++
+        for l > 0 && pushed[l-1] == popped[r] {
+            r++
+            l--
+        }
+    }
+    return l == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun validateStackSequences(pushed: IntArray, popped: IntArray): Boolean {
+        var l = 0
+        var r = 0
+        for (num in pushed) {
+            pushed[l++] = num
+            while (l > 0 && pushed[l - 1] == popped[r]) {
+                r++
+                l--
+            }
+        }
+        return l == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func validateStackSequences(_ pushed: [Int], _ popped: [Int]) -> Bool {
+        var pushed = pushed
+        var l = 0
+        var r = 0
+        for num in pushed {
+            pushed[l] = num
+            l += 1
+            while l > 0 && pushed[l - 1] == popped[r] {
+                r += 1
+                l -= 1
+            }
+        }
+        return l == 0
     }
 }
 ```

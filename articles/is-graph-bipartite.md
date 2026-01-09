@@ -119,6 +119,127 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] color;
+
+    public bool IsBipartite(int[][] graph) {
+        int n = graph.Length;
+        color = new int[n]; // Map node i -> odd=1, even=-1
+
+        for (int i = 0; i < n; i++) {
+            if (color[i] == 0 && !Dfs(graph, i, 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private bool Dfs(int[][] graph, int i, int c) {
+        color[i] = c;
+        foreach (int nei in graph[i]) {
+            if (color[nei] == c) {
+                return false;
+            }
+            if (color[nei] == 0 && !Dfs(graph, nei, -c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func isBipartite(graph [][]int) bool {
+    n := len(graph)
+    color := make([]int, n) // Map node i -> odd=1, even=-1
+
+    var dfs func(i, c int) bool
+    dfs = func(i, c int) bool {
+        color[i] = c
+        for _, nei := range graph[i] {
+            if color[nei] == c {
+                return false
+            }
+            if color[nei] == 0 && !dfs(nei, -c) {
+                return false
+            }
+        }
+        return true
+    }
+
+    for i := 0; i < n; i++ {
+        if color[i] == 0 && !dfs(i, 1) {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var color: IntArray
+
+    fun isBipartite(graph: Array<IntArray>): Boolean {
+        val n = graph.size
+        color = IntArray(n) // Map node i -> odd=1, even=-1
+
+        for (i in 0 until n) {
+            if (color[i] == 0 && !dfs(graph, i, 1)) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private fun dfs(graph: Array<IntArray>, i: Int, c: Int): Boolean {
+        color[i] = c
+        for (nei in graph[i]) {
+            if (color[nei] == c) {
+                return false
+            }
+            if (color[nei] == 0 && !dfs(graph, nei, -c)) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    private var color = [Int]()
+
+    func isBipartite(_ graph: [[Int]]) -> Bool {
+        let n = graph.count
+        color = [Int](repeating: 0, count: n) // Map node i -> odd=1, even=-1
+
+        for i in 0..<n {
+            if color[i] == 0 && !dfs(graph, i, 1) {
+                return false
+            }
+        }
+        return true
+    }
+
+    private func dfs(_ graph: [[Int]], _ i: Int, _ c: Int) -> Bool {
+        color[i] = c
+        for nei in graph[i] {
+            if color[nei] == c {
+                return false
+            }
+            if color[nei] == 0 && !dfs(graph, nei, -c) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,6 +373,121 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsBipartite(int[][] graph) {
+        int n = graph.Length;
+        int[] color = new int[n]; // Map node i -> odd=1, even=-1
+
+        for (int i = 0; i < n; i++) {
+            if (color[i] != 0) continue;
+            Queue<int> q = new Queue<int>();
+            q.Enqueue(i);
+            color[i] = -1;
+
+            while (q.Count > 0) {
+                int node = q.Dequeue();
+                foreach (int nei in graph[node]) {
+                    if (color[nei] == color[node]) {
+                        return false;
+                    } else if (color[nei] == 0) {
+                        q.Enqueue(nei);
+                        color[nei] = -color[node];
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func isBipartite(graph [][]int) bool {
+    n := len(graph)
+    color := make([]int, n) // Map node i -> odd=1, even=-1
+
+    for i := 0; i < n; i++ {
+        if color[i] != 0 {
+            continue
+        }
+        q := []int{i}
+        color[i] = -1
+
+        for len(q) > 0 {
+            node := q[0]
+            q = q[1:]
+            for _, nei := range graph[node] {
+                if color[nei] == color[node] {
+                    return false
+                } else if color[nei] == 0 {
+                    q = append(q, nei)
+                    color[nei] = -color[node]
+                }
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isBipartite(graph: Array<IntArray>): Boolean {
+        val n = graph.size
+        val color = IntArray(n) // Map node i -> odd=1, even=-1
+
+        for (i in 0 until n) {
+            if (color[i] != 0) continue
+            val q: Queue<Int> = LinkedList()
+            q.offer(i)
+            color[i] = -1
+
+            while (q.isNotEmpty()) {
+                val node = q.poll()
+                for (nei in graph[node]) {
+                    if (color[nei] == color[node]) {
+                        return false
+                    } else if (color[nei] == 0) {
+                        q.offer(nei)
+                        color[nei] = -color[node]
+                    }
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isBipartite(_ graph: [[Int]]) -> Bool {
+        let n = graph.count
+        var color = [Int](repeating: 0, count: n) // Map node i -> odd=1, even=-1
+
+        for i in 0..<n {
+            if color[i] != 0 { continue }
+            var q = [i]
+            color[i] = -1
+
+            while !q.isEmpty {
+                let node = q.removeFirst()
+                for nei in graph[node] {
+                    if color[nei] == color[node] {
+                        return false
+                    } else if color[nei] == 0 {
+                        q.append(nei)
+                        color[nei] = -color[node]
+                    }
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -373,6 +609,117 @@ class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsBipartite(int[][] graph) {
+        int n = graph.Length;
+        int[] color = new int[n]; // Map node i -> odd=1, even=-1
+        Stack<int> stack = new Stack<int>();
+
+        for (int i = 0; i < n; i++) {
+            if (color[i] != 0) continue;
+            color[i] = -1;
+            stack.Push(i);
+            while (stack.Count > 0) {
+                int node = stack.Pop();
+                foreach (int nei in graph[node]) {
+                    if (color[node] == color[nei]) return false;
+                    if (color[nei] == 0) {
+                        stack.Push(nei);
+                        color[nei] = -color[node];
+                    }
+                }
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+func isBipartite(graph [][]int) bool {
+    n := len(graph)
+    color := make([]int, n) // Map node i -> odd=1, even=-1
+    stack := []int{}
+
+    for i := 0; i < n; i++ {
+        if color[i] != 0 {
+            continue
+        }
+        color[i] = -1
+        stack = append(stack, i)
+        for len(stack) > 0 {
+            node := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            for _, nei := range graph[node] {
+                if color[node] == color[nei] {
+                    return false
+                }
+                if color[nei] == 0 {
+                    stack = append(stack, nei)
+                    color[nei] = -color[node]
+                }
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isBipartite(graph: Array<IntArray>): Boolean {
+        val n = graph.size
+        val color = IntArray(n) // Map node i -> odd=1, even=-1
+        val stack = ArrayDeque<Int>()
+
+        for (i in 0 until n) {
+            if (color[i] != 0) continue
+            color[i] = -1
+            stack.addLast(i)
+            while (stack.isNotEmpty()) {
+                val node = stack.removeLast()
+                for (nei in graph[node]) {
+                    if (color[node] == color[nei]) return false
+                    if (color[nei] == 0) {
+                        stack.addLast(nei)
+                        color[nei] = -color[node]
+                    }
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isBipartite(_ graph: [[Int]]) -> Bool {
+        let n = graph.count
+        var color = [Int](repeating: 0, count: n) // Map node i -> odd=1, even=-1
+        var stack = [Int]()
+
+        for i in 0..<n {
+            if color[i] != 0 { continue }
+            color[i] = -1
+            stack.append(i)
+            while !stack.isEmpty {
+                let node = stack.removeLast()
+                for nei in graph[node] {
+                    if color[node] == color[nei] { return false }
+                    if color[nei] == 0 {
+                        stack.append(nei)
+                        color[nei] = -color[node]
+                    }
+                }
+            }
+        }
+        return true
     }
 }
 ```
@@ -598,6 +945,209 @@ class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```csharp
+public class DSU {
+    private int[] Parent, Size;
+
+    public DSU(int n) {
+        Parent = new int[n];
+        Size = new int[n];
+        for (int i = 0; i < n; i++) {
+            Parent[i] = i;
+            Size[i] = 0;
+        }
+    }
+
+    public int Find(int node) {
+        if (Parent[node] != node) {
+            Parent[node] = Find(Parent[node]);
+        }
+        return Parent[node];
+    }
+
+    public bool Union(int u, int v) {
+        int pu = Find(u), pv = Find(v);
+        if (pu == pv) return false;
+        if (Size[pu] > Size[pv]) {
+            Parent[pv] = pu;
+        } else if (Size[pu] < Size[pv]) {
+            Parent[pu] = pv;
+        } else {
+            Parent[pv] = pu;
+            Size[pu]++;
+        }
+        return true;
+    }
+}
+
+public class Solution {
+    public bool IsBipartite(int[][] graph) {
+        int n = graph.Length;
+        DSU dsu = new DSU(n);
+
+        for (int node = 0; node < n; node++) {
+            foreach (int nei in graph[node]) {
+                if (dsu.Find(node) == dsu.Find(nei)) {
+                    return false;
+                }
+                dsu.Union(graph[node][0], nei);
+            }
+        }
+        return true;
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent []int
+    Size   []int
+}
+
+func NewDSU(n int) *DSU {
+    parent := make([]int, n)
+    size := make([]int, n)
+    for i := 0; i < n; i++ {
+        parent[i] = i
+    }
+    return &DSU{Parent: parent, Size: size}
+}
+
+func (d *DSU) Find(node int) int {
+    if d.Parent[node] != node {
+        d.Parent[node] = d.Find(d.Parent[node])
+    }
+    return d.Parent[node]
+}
+
+func (d *DSU) Union(u, v int) bool {
+    pu, pv := d.Find(u), d.Find(v)
+    if pu == pv {
+        return false
+    }
+    if d.Size[pu] > d.Size[pv] {
+        d.Parent[pv] = pu
+    } else if d.Size[pu] < d.Size[pv] {
+        d.Parent[pu] = pv
+    } else {
+        d.Parent[pv] = pu
+        d.Size[pu]++
+    }
+    return true
+}
+
+func isBipartite(graph [][]int) bool {
+    n := len(graph)
+    dsu := NewDSU(n)
+
+    for node := 0; node < n; node++ {
+        for _, nei := range graph[node] {
+            if dsu.Find(node) == dsu.Find(nei) {
+                return false
+            }
+            dsu.Union(graph[node][0], nei)
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n) { it }
+    private val size = IntArray(n)
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        val pu = find(u)
+        val pv = find(v)
+        if (pu == pv) return false
+        if (size[pu] > size[pv]) {
+            parent[pv] = pu
+        } else if (size[pu] < size[pv]) {
+            parent[pu] = pv
+        } else {
+            parent[pv] = pu
+            size[pu]++
+        }
+        return true
+    }
+}
+
+class Solution {
+    fun isBipartite(graph: Array<IntArray>): Boolean {
+        val n = graph.size
+        val dsu = DSU(n)
+
+        for (node in 0 until n) {
+            for (nei in graph[node]) {
+                if (dsu.find(node) == dsu.find(nei)) {
+                    return false
+                }
+                dsu.union(graph[node][0], nei)
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0..<n)
+        size = [Int](repeating: 0, count: n)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u), pv = find(v)
+        if pu == pv { return false }
+        if size[pu] > size[pv] {
+            parent[pv] = pu
+        } else if size[pu] < size[pv] {
+            parent[pu] = pv
+        } else {
+            parent[pv] = pu
+            size[pu] += 1
+        }
+        return true
+    }
+}
+
+class Solution {
+    func isBipartite(_ graph: [[Int]]) -> Bool {
+        let n = graph.count
+        let dsu = DSU(n)
+
+        for node in 0..<n {
+            for nei in graph[node] {
+                if dsu.find(node) == dsu.find(nei) {
+                    return false
+                }
+                dsu.union(graph[node][0], nei)
+            }
+        }
+        return true
     }
 }
 ```

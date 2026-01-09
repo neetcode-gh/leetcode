@@ -139,6 +139,88 @@ public class Solution {
 }
 ```
 
+```go
+func minTime(n int, edges [][]int, hasApple []bool) int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        adj[edge[1]] = append(adj[edge[1]], edge[0])
+    }
+
+    var dfs func(cur, parent int) int
+    dfs = func(cur, parent int) int {
+        time := 0
+        for _, child := range adj[cur] {
+            if child == parent {
+                continue
+            }
+            childTime := dfs(child, cur)
+            if childTime > 0 || hasApple[child] {
+                time += 2 + childTime
+            }
+        }
+        return time
+    }
+
+    return dfs(0, -1)
+}
+```
+
+```kotlin
+class Solution {
+    fun minTime(n: Int, edges: Array<IntArray>, hasApple: List<Boolean>): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            adj[edge[1]].add(edge[0])
+        }
+
+        fun dfs(cur: Int, parent: Int): Int {
+            var time = 0
+            for (child in adj[cur]) {
+                if (child == parent) continue
+                val childTime = dfs(child, cur)
+                if (childTime > 0 || hasApple[child]) {
+                    time += 2 + childTime
+                }
+            }
+            return time
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minTime(_ n: Int, _ edges: [[Int]], _ hasApple: [Bool]) -> Int {
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+        }
+
+        func dfs(_ cur: Int, _ parent: Int) -> Int {
+            var time = 0
+            for child in adj[cur] {
+                if child == parent { continue }
+                let childTime = dfs(child, cur)
+                if childTime > 0 || hasApple[child] {
+                    time += 2 + childTime
+                }
+            }
+            return time
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -366,6 +448,132 @@ public class Solution {
         }
 
         return time[0];
+    }
+}
+```
+
+```go
+func minTime(n int, edges [][]int, hasApple []bool) int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    indegree := make([]int, n)
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        adj[edge[1]] = append(adj[edge[1]], edge[0])
+        indegree[edge[0]]++
+        indegree[edge[1]]++
+    }
+
+    queue := []int{}
+    for i := 1; i < n; i++ {
+        if indegree[i] == 1 {
+            queue = append(queue, i)
+            indegree[i] = 0
+        }
+    }
+
+    time := make([]int, n)
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        for _, nei := range adj[node] {
+            if indegree[nei] <= 0 {
+                continue
+            }
+            indegree[nei]--
+            if hasApple[node] || time[node] > 0 {
+                time[nei] += time[node] + 2
+            }
+            if indegree[nei] == 1 && nei != 0 {
+                queue = append(queue, nei)
+            }
+        }
+    }
+
+    return time[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun minTime(n: Int, edges: Array<IntArray>, hasApple: List<Boolean>): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        val indegree = IntArray(n)
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            adj[edge[1]].add(edge[0])
+            indegree[edge[0]]++
+            indegree[edge[1]]++
+        }
+
+        val queue = ArrayDeque<Int>()
+        for (i in 1 until n) {
+            if (indegree[i] == 1) {
+                queue.add(i)
+                indegree[i] = 0
+            }
+        }
+
+        val time = IntArray(n)
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            for (nei in adj[node]) {
+                if (indegree[nei] <= 0) continue
+                indegree[nei]--
+                if (hasApple[node] || time[node] > 0) {
+                    time[nei] += time[node] + 2
+                }
+                if (indegree[nei] == 1 && nei != 0) {
+                    queue.add(nei)
+                }
+            }
+        }
+
+        return time[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minTime(_ n: Int, _ edges: [[Int]], _ hasApple: [Bool]) -> Int {
+        var adj = [[Int]](repeating: [], count: n)
+        var indegree = [Int](repeating: 0, count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+            indegree[edge[0]] += 1
+            indegree[edge[1]] += 1
+        }
+
+        var queue = [Int]()
+        for i in 1..<n {
+            if indegree[i] == 1 {
+                queue.append(i)
+                indegree[i] = 0
+            }
+        }
+
+        var time = [Int](repeating: 0, count: n)
+        var idx = 0
+        while idx < queue.count {
+            let node = queue[idx]
+            idx += 1
+            for nei in adj[node] {
+                if indegree[nei] <= 0 { continue }
+                indegree[nei] -= 1
+                if hasApple[node] || time[node] > 0 {
+                    time[nei] += time[node] + 2
+                }
+                if indegree[nei] == 1 && nei != 0 {
+                    queue.append(nei)
+                }
+            }
+        }
+
+        return time[0]
     }
 }
 ```

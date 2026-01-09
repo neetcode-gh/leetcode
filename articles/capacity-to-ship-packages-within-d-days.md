@@ -121,6 +121,81 @@ public class Solution {
 }
 ```
 
+```go
+func shipWithinDays(weights []int, days int) int {
+    res := 0
+    for _, w := range weights {
+        if w > res {
+            res = w
+        }
+    }
+
+    for {
+        ships := 1
+        cap := res
+        for _, w := range weights {
+            if cap-w < 0 {
+                ships++
+                cap = res
+            }
+            cap -= w
+        }
+        if ships <= days {
+            return res
+        }
+        res++
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun shipWithinDays(weights: IntArray, days: Int): Int {
+        var res = weights.max()
+
+        while (true) {
+            var ships = 1
+            var cap = res
+            for (w in weights) {
+                if (cap - w < 0) {
+                    ships++
+                    cap = res
+                }
+                cap -= w
+            }
+            if (ships <= days) {
+                return res
+            }
+            res++
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func shipWithinDays(_ weights: [Int], _ days: Int) -> Int {
+        var res = weights.max()!
+
+        while true {
+            var ships = 1
+            var cap = res
+            for w in weights {
+                if cap - w < 0 {
+                    ships += 1
+                    cap = res
+                }
+                cap -= w
+            }
+            if ships <= days {
+                return res
+            }
+            res += 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -317,6 +392,120 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func shipWithinDays(weights []int, days int) int {
+    l, r := 0, 0
+    for _, w := range weights {
+        if w > l {
+            l = w
+        }
+        r += w
+    }
+    res := r
+
+    canShip := func(cap int) bool {
+        ships, currCap := 1, cap
+        for _, w := range weights {
+            if currCap-w < 0 {
+                ships++
+                if ships > days {
+                    return false
+                }
+                currCap = cap
+            }
+            currCap -= w
+        }
+        return true
+    }
+
+    for l <= r {
+        cap := (l + r) / 2
+        if canShip(cap) {
+            if cap < res {
+                res = cap
+            }
+            r = cap - 1
+        } else {
+            l = cap + 1
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun shipWithinDays(weights: IntArray, days: Int): Int {
+        var l = weights.max()
+        var r = weights.sum()
+        var res = r
+
+        fun canShip(cap: Int): Boolean {
+            var ships = 1
+            var currCap = cap
+            for (w in weights) {
+                if (currCap - w < 0) {
+                    ships++
+                    if (ships > days) return false
+                    currCap = cap
+                }
+                currCap -= w
+            }
+            return true
+        }
+
+        while (l <= r) {
+            val cap = (l + r) / 2
+            if (canShip(cap)) {
+                res = minOf(res, cap)
+                r = cap - 1
+            } else {
+                l = cap + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func shipWithinDays(_ weights: [Int], _ days: Int) -> Int {
+        var l = weights.max()!
+        var r = weights.reduce(0, +)
+        var res = r
+
+        func canShip(_ cap: Int) -> Bool {
+            var ships = 1
+            var currCap = cap
+            for w in weights {
+                if currCap - w < 0 {
+                    ships += 1
+                    if ships > days { return false }
+                    currCap = cap
+                }
+                currCap -= w
+            }
+            return true
+        }
+
+        while l <= r {
+            let cap = (l + r) / 2
+            if canShip(cap) {
+                res = min(res, cap)
+                r = cap - 1
+            } else {
+                l = cap + 1
+            }
+        }
+
+        return res
     }
 }
 ```

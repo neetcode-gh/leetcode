@@ -93,6 +93,72 @@ public class Solution {
 }
 ```
 
+```go
+func intervalIntersection(firstList [][]int, secondList [][]int) [][]int {
+    res := [][]int{}
+    for i := 0; i < len(firstList); i++ {
+        startA, endA := firstList[i][0], firstList[i][1]
+        for j := 0; j < len(secondList); j++ {
+            startB, endB := secondList[j][0], secondList[j][1]
+            if (startA <= startB && startB <= endA) || (startB <= startA && startA <= endB) {
+                res = append(res, []int{max(startA, startB), min(endA, endB)})
+            }
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun intervalIntersection(firstList: Array<IntArray>, secondList: Array<IntArray>): Array<IntArray> {
+        val res = mutableListOf<IntArray>()
+        for (i in firstList.indices) {
+            val (startA, endA) = firstList[i][0] to firstList[i][1]
+            for (j in secondList.indices) {
+                val (startB, endB) = secondList[j][0] to secondList[j][1]
+                if ((startA <= startB && startB <= endA) || (startB <= startA && startA <= endB)) {
+                    res.add(intArrayOf(maxOf(startA, startB), minOf(endA, endB)))
+                }
+            }
+        }
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intervalIntersection(_ firstList: [[Int]], _ secondList: [[Int]]) -> [[Int]] {
+        var res = [[Int]]()
+        for i in 0..<firstList.count {
+            let startA = firstList[i][0], endA = firstList[i][1]
+            for j in 0..<secondList.count {
+                let startB = secondList[j][0], endB = secondList[j][1]
+                if (startA <= startB && startB <= endA) || (startB <= startA && startA <= endB) {
+                    res.append([max(startA, startB), min(endA, endB)])
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -249,6 +315,101 @@ public class Solution {
             prev = x;
         }
         return res.ToArray();
+    }
+}
+```
+
+```go
+func intervalIntersection(firstList [][]int, secondList [][]int) [][]int {
+    mp := make(map[int]int)
+    keys := []int{}
+
+    addKey := func(k int) {
+        if _, exists := mp[k]; !exists {
+            keys = append(keys, k)
+        }
+    }
+
+    for _, f := range firstList {
+        addKey(f[0])
+        mp[f[0]] += 1
+        addKey(f[1] + 1)
+        mp[f[1]+1] -= 1
+    }
+    for _, s := range secondList {
+        addKey(s[0])
+        mp[s[0]] += 1
+        addKey(s[1] + 1)
+        mp[s[1]+1] -= 1
+    }
+
+    sort.Ints(keys)
+
+    res := [][]int{}
+    active, prev := 0, 0
+    for _, x := range keys {
+        if active == 2 {
+            res = append(res, []int{prev, x - 1})
+        }
+        active += mp[x]
+        prev = x
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun intervalIntersection(firstList: Array<IntArray>, secondList: Array<IntArray>): Array<IntArray> {
+        val mp = sortedMapOf<Int, Int>()
+        for (f in firstList) {
+            mp[f[0]] = mp.getOrDefault(f[0], 0) + 1
+            mp[f[1] + 1] = mp.getOrDefault(f[1] + 1, 0) - 1
+        }
+        for (s in secondList) {
+            mp[s[0]] = mp.getOrDefault(s[0], 0) + 1
+            mp[s[1] + 1] = mp.getOrDefault(s[1] + 1, 0) - 1
+        }
+
+        val res = mutableListOf<IntArray>()
+        var active = 0
+        var prev = 0
+        for ((x, v) in mp) {
+            if (active == 2) {
+                res.add(intArrayOf(prev, x - 1))
+            }
+            active += v
+            prev = x
+        }
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intervalIntersection(_ firstList: [[Int]], _ secondList: [[Int]]) -> [[Int]] {
+        var mp = [Int: Int]()
+        for f in firstList {
+            mp[f[0], default: 0] += 1
+            mp[f[1] + 1, default: 0] -= 1
+        }
+        for s in secondList {
+            mp[s[0], default: 0] += 1
+            mp[s[1] + 1, default: 0] -= 1
+        }
+
+        var res = [[Int]]()
+        var active = 0
+        var prev = 0
+        for x in mp.keys.sorted() {
+            if active == 2 {
+                res.append([prev, x - 1])
+            }
+            active += mp[x]!
+            prev = x
+        }
+        return res
     }
 }
 ```
@@ -413,12 +574,112 @@ public class Solution {
 }
 ```
 
+```go
+func intervalIntersection(firstList [][]int, secondList [][]int) [][]int {
+    res := [][]int{}
+    i, j := 0, 0
+
+    for i < len(firstList) && j < len(secondList) {
+        startA, endA := firstList[i][0], firstList[i][1]
+        startB, endB := secondList[j][0], secondList[j][1]
+
+        start := max(startA, startB)
+        end := min(endA, endB)
+
+        if start <= end {
+            res = append(res, []int{start, end})
+        }
+
+        if endA < endB {
+            i++
+        } else {
+            j++
+        }
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun intervalIntersection(firstList: Array<IntArray>, secondList: Array<IntArray>): Array<IntArray> {
+        val res = mutableListOf<IntArray>()
+        var i = 0
+        var j = 0
+
+        while (i < firstList.size && j < secondList.size) {
+            val (startA, endA) = firstList[i][0] to firstList[i][1]
+            val (startB, endB) = secondList[j][0] to secondList[j][1]
+
+            val start = maxOf(startA, startB)
+            val end = minOf(endA, endB)
+
+            if (start <= end) {
+                res.add(intArrayOf(start, end))
+            }
+
+            if (endA < endB) {
+                i++
+            } else {
+                j++
+            }
+        }
+
+        return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func intervalIntersection(_ firstList: [[Int]], _ secondList: [[Int]]) -> [[Int]] {
+        var res = [[Int]]()
+        var i = 0, j = 0
+
+        while i < firstList.count && j < secondList.count {
+            let startA = firstList[i][0], endA = firstList[i][1]
+            let startB = secondList[j][0], endB = secondList[j][1]
+
+            let start = max(startA, startB)
+            let end = min(endA, endB)
+
+            if start <= end {
+                res.append([start, end])
+            }
+
+            if endA < endB {
+                i += 1
+            } else {
+                j += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(m + n)$
-* Space complexity: 
+* Space complexity:
     * $O(1)$ extra space.
     * $O(m + n)$ for the output list.
 

@@ -86,6 +86,36 @@ func countSeniors(details []string) int {
 }
 ```
 
+```kotlin
+class Solution {
+    fun countSeniors(details: Array<String>): Int {
+        var res = 0
+        for (d in details) {
+            if (d.substring(11, 13).toInt() > 60) {
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSeniors(_ details: [String]) -> Int {
+        var res = 0
+        for d in details {
+            let start = d.index(d.startIndex, offsetBy: 11)
+            let end = d.index(d.startIndex, offsetBy: 13)
+            if Int(d[start..<end])! > 60 {
+                res += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,6 +227,41 @@ func countSeniors(details []string) int {
         }
     }
     return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSeniors(details: Array<String>): Int {
+        var res = 0
+        for (d in details) {
+            val ten = d[11] - '0'
+            val one = d[12] - '0'
+            val age = one + 10 * ten
+            if (age > 60) {
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSeniors(_ details: [String]) -> Int {
+        var res = 0
+        for d in details {
+            let chars = Array(d)
+            let ten = Int(chars[11].asciiValue! - Character("0").asciiValue!)
+            let one = Int(chars[12].asciiValue! - Character("0").asciiValue!)
+            let age = one + 10 * ten
+            if age > 60 {
+                res += 1
+            }
+        }
+        return res
+    }
 }
 ```
 

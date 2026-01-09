@@ -130,6 +130,80 @@ public class Solution {
 }
 ```
 
+```go
+func asteroidCollision(asteroids []int) []int {
+    stack := []int{}
+    for _, a := range asteroids {
+        for len(stack) > 0 && a < 0 && stack[len(stack)-1] > 0 {
+            diff := a + stack[len(stack)-1]
+            if diff < 0 {
+                stack = stack[:len(stack)-1]
+            } else if diff > 0 {
+                a = 0
+            } else {
+                a = 0
+                stack = stack[:len(stack)-1]
+            }
+        }
+        if a != 0 {
+            stack = append(stack, a)
+        }
+    }
+    return stack
+}
+```
+
+```kotlin
+class Solution {
+    fun asteroidCollision(asteroids: IntArray): IntArray {
+        val stack = mutableListOf<Int>()
+        for (a in asteroids) {
+            var curr = a
+            while (stack.isNotEmpty() && curr < 0 && stack.last() > 0) {
+                val diff = curr + stack.last()
+                if (diff < 0) {
+                    stack.removeAt(stack.size - 1)
+                } else if (diff > 0) {
+                    curr = 0
+                } else {
+                    curr = 0
+                    stack.removeAt(stack.size - 1)
+                }
+            }
+            if (curr != 0) {
+                stack.add(curr)
+            }
+        }
+        return stack.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func asteroidCollision(_ asteroids: [Int]) -> [Int] {
+        var stack = [Int]()
+        for var a in asteroids {
+            while !stack.isEmpty && a < 0 && stack.last! > 0 {
+                let diff = a + stack.last!
+                if diff < 0 {
+                    stack.removeLast()
+                } else if diff > 0 {
+                    a = 0
+                } else {
+                    a = 0
+                    stack.removeLast()
+                }
+            }
+            if a != 0 {
+                stack.append(a)
+            }
+        }
+        return stack
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -290,6 +364,94 @@ public class Solution {
         int[] result = new int[j + 1];
         Array.Copy(asteroids, 0, result, 0, j + 1);
         return result;
+    }
+}
+```
+
+```go
+func asteroidCollision(asteroids []int) []int {
+    j := -1
+
+    for _, a := range asteroids {
+        for j >= 0 && asteroids[j] > 0 && a < 0 {
+            if asteroids[j] > -a {
+                a = 0
+                break
+            } else if asteroids[j] == -a {
+                j--
+                a = 0
+                break
+            } else {
+                j--
+            }
+        }
+        if a != 0 {
+            j++
+            asteroids[j] = a
+        }
+    }
+
+    return asteroids[:j+1]
+}
+```
+
+```kotlin
+class Solution {
+    fun asteroidCollision(asteroids: IntArray): IntArray {
+        var j = -1
+
+        for (a in asteroids) {
+            var curr = a
+            while (j >= 0 && asteroids[j] > 0 && curr < 0) {
+                if (asteroids[j] > -curr) {
+                    curr = 0
+                    break
+                } else if (asteroids[j] == -curr) {
+                    j--
+                    curr = 0
+                    break
+                } else {
+                    j--
+                }
+            }
+            if (curr != 0) {
+                j++
+                asteroids[j] = curr
+            }
+        }
+
+        return asteroids.copyOfRange(0, j + 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func asteroidCollision(_ asteroids: [Int]) -> [Int] {
+        var asteroids = asteroids
+        var j = -1
+
+        for a in asteroids {
+            var curr = a
+            while j >= 0 && asteroids[j] > 0 && curr < 0 {
+                if asteroids[j] > -curr {
+                    curr = 0
+                    break
+                } else if asteroids[j] == -curr {
+                    j -= 1
+                    curr = 0
+                    break
+                } else {
+                    j -= 1
+                }
+            }
+            if curr != 0 {
+                j += 1
+                asteroids[j] = curr
+            }
+        }
+
+        return Array(asteroids[0...(j >= 0 ? j : -1)])
     }
 }
 ```

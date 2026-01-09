@@ -104,6 +104,70 @@ public class Solution {
 }
 ```
 
+```go
+func longestOnes(nums []int, k int) int {
+    res := 0
+    for l := 0; l < len(nums); l++ {
+        cnt, r := 0, l
+        for r < len(nums) {
+            if nums[r] == 0 {
+                if cnt == k {
+                    break
+                }
+                cnt++
+            }
+            r++
+        }
+        if r-l > res {
+            res = r - l
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestOnes(nums: IntArray, k: Int): Int {
+        var res = 0
+        for (l in nums.indices) {
+            var cnt = 0
+            var r = l
+            while (r < nums.size) {
+                if (nums[r] == 0) {
+                    if (cnt == k) break
+                    cnt++
+                }
+                r++
+            }
+            res = maxOf(res, r - l)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestOnes(_ nums: [Int], _ k: Int) -> Int {
+        var res = 0
+        for l in 0..<nums.count {
+            var cnt = 0
+            var r = l
+            while r < nums.count {
+                if nums[r] == 0 {
+                    if cnt == k { break }
+                    cnt += 1
+                }
+                r += 1
+            }
+            res = max(res, r - l)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -247,6 +311,90 @@ public class Solution {
 }
 ```
 
+```go
+func longestOnes(nums []int, k int) int {
+    prefix := make([]int, len(nums)+1)
+    for i := 0; i < len(nums); i++ {
+        if nums[i] == 0 {
+            prefix[i+1] = prefix[i] + 1
+        } else {
+            prefix[i+1] = prefix[i]
+        }
+    }
+
+    res := 0
+    for l := 0; l < len(nums); l++ {
+        low, high := l, len(nums)
+        for low < high {
+            mid := (low + high) / 2
+            if prefix[mid+1]-prefix[l] <= k {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
+        if low-l > res {
+            res = low - l
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestOnes(nums: IntArray, k: Int): Int {
+        val prefix = IntArray(nums.size + 1)
+        for (i in nums.indices) {
+            prefix[i + 1] = prefix[i] + if (nums[i] == 0) 1 else 0
+        }
+
+        var res = 0
+        for (l in nums.indices) {
+            var low = l
+            var high = nums.size
+            while (low < high) {
+                val mid = (low + high) / 2
+                if (prefix[mid + 1] - prefix[l] <= k) {
+                    low = mid + 1
+                } else {
+                    high = mid
+                }
+            }
+            res = maxOf(res, low - l)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestOnes(_ nums: [Int], _ k: Int) -> Int {
+        var prefix = [Int](repeating: 0, count: nums.count + 1)
+        for i in 0..<nums.count {
+            prefix[i + 1] = prefix[i] + (nums[i] == 0 ? 1 : 0)
+        }
+
+        var res = 0
+        for l in 0..<nums.count {
+            var low = l
+            var high = nums.count
+            while low < high {
+                let mid = (low + high) / 2
+                if prefix[mid + 1] - prefix[l] <= k {
+                    low = mid + 1
+                } else {
+                    high = mid
+                }
+            }
+            res = max(res, low - l)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,6 +491,65 @@ public class Solution {
             res = Math.Max(res, r - l + 1);
         }
         return res;
+    }
+}
+```
+
+```go
+func longestOnes(nums []int, k int) int {
+    l, res := 0, 0
+    for r := 0; r < len(nums); r++ {
+        if nums[r] == 0 {
+            k--
+        }
+        for k < 0 {
+            if nums[l] == 0 {
+                k++
+            }
+            l++
+        }
+        if r-l+1 > res {
+            res = r - l + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestOnes(nums: IntArray, k: Int): Int {
+        var kVar = k
+        var l = 0
+        var res = 0
+        for (r in nums.indices) {
+            kVar -= if (nums[r] == 0) 1 else 0
+            while (kVar < 0) {
+                kVar += if (nums[l] == 0) 1 else 0
+                l++
+            }
+            res = maxOf(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestOnes(_ nums: [Int], _ k: Int) -> Int {
+        var k = k
+        var l = 0
+        var res = 0
+        for r in 0..<nums.count {
+            k -= nums[r] == 0 ? 1 : 0
+            while k < 0 {
+                k += nums[l] == 0 ? 1 : 0
+                l += 1
+            }
+            res = max(res, r - l + 1)
+        }
+        return res
     }
 }
 ```

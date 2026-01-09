@@ -126,6 +126,139 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private HashSet<int> visit;
+
+    public bool ValidateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+        HashSet<int> hasParent = new HashSet<int>();
+        foreach (int c in leftChild) if (c != -1) hasParent.Add(c);
+        foreach (int c in rightChild) if (c != -1) hasParent.Add(c);
+        if (hasParent.Count == n) return false;
+
+        int root = -1;
+        for (int i = 0; i < n; i++) {
+            if (!hasParent.Contains(i)) {
+                root = i;
+                break;
+            }
+        }
+        visit = new HashSet<int>();
+        return Dfs(root, leftChild, rightChild) && visit.Count == n;
+    }
+
+    private bool Dfs(int i, int[] leftChild, int[] rightChild) {
+        if (i == -1) return true;
+        if (visit.Contains(i)) return false;
+        visit.Add(i);
+        return Dfs(leftChild[i], leftChild, rightChild) &&
+               Dfs(rightChild[i], leftChild, rightChild);
+    }
+}
+```
+
+```go
+func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
+    hasParent := make(map[int]bool)
+    for _, c := range leftChild {
+        if c != -1 {
+            hasParent[c] = true
+        }
+    }
+    for _, c := range rightChild {
+        if c != -1 {
+            hasParent[c] = true
+        }
+    }
+    if len(hasParent) == n {
+        return false
+    }
+
+    root := -1
+    for i := 0; i < n; i++ {
+        if !hasParent[i] {
+            root = i
+            break
+        }
+    }
+
+    visit := make(map[int]bool)
+    var dfs func(i int) bool
+    dfs = func(i int) bool {
+        if i == -1 {
+            return true
+        }
+        if visit[i] {
+            return false
+        }
+        visit[i] = true
+        return dfs(leftChild[i]) && dfs(rightChild[i])
+    }
+
+    return dfs(root) && len(visit) == n
+}
+```
+
+```kotlin
+class Solution {
+    private val visit = HashSet<Int>()
+
+    fun validateBinaryTreeNodes(n: Int, leftChild: IntArray, rightChild: IntArray): Boolean {
+        val hasParent = HashSet<Int>()
+        for (c in leftChild) if (c != -1) hasParent.add(c)
+        for (c in rightChild) if (c != -1) hasParent.add(c)
+        if (hasParent.size == n) return false
+
+        var root = -1
+        for (i in 0 until n) {
+            if (i !in hasParent) {
+                root = i
+                break
+            }
+        }
+        visit.clear()
+        return dfs(root, leftChild, rightChild) && visit.size == n
+    }
+
+    private fun dfs(i: Int, leftChild: IntArray, rightChild: IntArray): Boolean {
+        if (i == -1) return true
+        if (i in visit) return false
+        visit.add(i)
+        return dfs(leftChild[i], leftChild, rightChild) &&
+               dfs(rightChild[i], leftChild, rightChild)
+    }
+}
+```
+
+```swift
+class Solution {
+    func validateBinaryTreeNodes(_ n: Int, _ leftChild: [Int], _ rightChild: [Int]) -> Bool {
+        var hasParent = Set<Int>()
+        for c in leftChild where c != -1 { hasParent.insert(c) }
+        for c in rightChild where c != -1 { hasParent.insert(c) }
+        if hasParent.count == n { return false }
+
+        var root = -1
+        for i in 0..<n {
+            if !hasParent.contains(i) {
+                root = i
+                break
+            }
+        }
+
+        var visit = Set<Int>()
+        func dfs(_ i: Int) -> Bool {
+            if i == -1 { return true }
+            if visit.contains(i) { return false }
+            visit.insert(i)
+            return dfs(leftChild[i]) && dfs(rightChild[i])
+        }
+
+        return dfs(root) && visit.count == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,6 +428,171 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool ValidateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (leftChild[i] != -1) {
+                if (++indegree[leftChild[i]] > 1) return false;
+            }
+            if (rightChild[i] != -1) {
+                if (++indegree[rightChild[i]] > 1) return false;
+            }
+        }
+
+        int root = -1;
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                if (root != -1) return false;
+                root = i;
+            }
+        }
+
+        if (root == -1) return false;
+
+        int count = 0;
+        Queue<int> q = new Queue<int>();
+        q.Enqueue(root);
+
+        while (q.Count > 0) {
+            int node = q.Dequeue();
+            count++;
+            if (leftChild[node] != -1) q.Enqueue(leftChild[node]);
+            if (rightChild[node] != -1) q.Enqueue(rightChild[node]);
+        }
+        return count == n;
+    }
+}
+```
+
+```go
+func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
+    indegree := make([]int, n)
+    for i := 0; i < n; i++ {
+        if leftChild[i] != -1 {
+            indegree[leftChild[i]]++
+            if indegree[leftChild[i]] > 1 {
+                return false
+            }
+        }
+        if rightChild[i] != -1 {
+            indegree[rightChild[i]]++
+            if indegree[rightChild[i]] > 1 {
+                return false
+            }
+        }
+    }
+
+    root := -1
+    for i := 0; i < n; i++ {
+        if indegree[i] == 0 {
+            if root != -1 {
+                return false
+            }
+            root = i
+        }
+    }
+
+    if root == -1 {
+        return false
+    }
+
+    count := 0
+    q := []int{root}
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        count++
+        if leftChild[node] != -1 {
+            q = append(q, leftChild[node])
+        }
+        if rightChild[node] != -1 {
+            q = append(q, rightChild[node])
+        }
+    }
+    return count == n
+}
+```
+
+```kotlin
+class Solution {
+    fun validateBinaryTreeNodes(n: Int, leftChild: IntArray, rightChild: IntArray): Boolean {
+        val indegree = IntArray(n)
+        for (i in 0 until n) {
+            if (leftChild[i] != -1) {
+                if (++indegree[leftChild[i]] > 1) return false
+            }
+            if (rightChild[i] != -1) {
+                if (++indegree[rightChild[i]] > 1) return false
+            }
+        }
+
+        var root = -1
+        for (i in 0 until n) {
+            if (indegree[i] == 0) {
+                if (root != -1) return false
+                root = i
+            }
+        }
+
+        if (root == -1) return false
+
+        var count = 0
+        val q: Queue<Int> = LinkedList()
+        q.offer(root)
+
+        while (q.isNotEmpty()) {
+            val node = q.poll()
+            count++
+            if (leftChild[node] != -1) q.offer(leftChild[node])
+            if (rightChild[node] != -1) q.offer(rightChild[node])
+        }
+        return count == n
+    }
+}
+```
+
+```swift
+class Solution {
+    func validateBinaryTreeNodes(_ n: Int, _ leftChild: [Int], _ rightChild: [Int]) -> Bool {
+        var indegree = [Int](repeating: 0, count: n)
+        for i in 0..<n {
+            if leftChild[i] != -1 {
+                indegree[leftChild[i]] += 1
+                if indegree[leftChild[i]] > 1 { return false }
+            }
+            if rightChild[i] != -1 {
+                indegree[rightChild[i]] += 1
+                if indegree[rightChild[i]] > 1 { return false }
+            }
+        }
+
+        var root = -1
+        for i in 0..<n {
+            if indegree[i] == 0 {
+                if root != -1 { return false }
+                root = i
+            }
+        }
+
+        if root == -1 { return false }
+
+        var count = 0
+        var q = [root]
+
+        while !q.isEmpty {
+            let node = q.removeFirst()
+            count += 1
+            if leftChild[node] != -1 { q.append(leftChild[node]) }
+            if rightChild[node] != -1 { q.append(rightChild[node]) }
+        }
+        return count == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -450,6 +748,171 @@ class Solution {
             if (rightChild[node] !== -1) stack.push(rightChild[node]);
         }
         return count === n;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ValidateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+        int[] indegree = new int[n];
+        for (int i = 0; i < n; i++) {
+            if (leftChild[i] != -1) {
+                if (++indegree[leftChild[i]] > 1) return false;
+            }
+            if (rightChild[i] != -1) {
+                if (++indegree[rightChild[i]] > 1) return false;
+            }
+        }
+
+        int root = -1;
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                if (root != -1) return false;
+                root = i;
+            }
+        }
+
+        if (root == -1) return false;
+
+        int count = 0;
+        Stack<int> stack = new Stack<int>();
+        stack.Push(root);
+
+        while (stack.Count > 0) {
+            int node = stack.Pop();
+            count++;
+            if (leftChild[node] != -1) stack.Push(leftChild[node]);
+            if (rightChild[node] != -1) stack.Push(rightChild[node]);
+        }
+        return count == n;
+    }
+}
+```
+
+```go
+func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
+    indegree := make([]int, n)
+    for i := 0; i < n; i++ {
+        if leftChild[i] != -1 {
+            indegree[leftChild[i]]++
+            if indegree[leftChild[i]] > 1 {
+                return false
+            }
+        }
+        if rightChild[i] != -1 {
+            indegree[rightChild[i]]++
+            if indegree[rightChild[i]] > 1 {
+                return false
+            }
+        }
+    }
+
+    root := -1
+    for i := 0; i < n; i++ {
+        if indegree[i] == 0 {
+            if root != -1 {
+                return false
+            }
+            root = i
+        }
+    }
+
+    if root == -1 {
+        return false
+    }
+
+    count := 0
+    stack := []int{root}
+
+    for len(stack) > 0 {
+        node := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        count++
+        if leftChild[node] != -1 {
+            stack = append(stack, leftChild[node])
+        }
+        if rightChild[node] != -1 {
+            stack = append(stack, rightChild[node])
+        }
+    }
+    return count == n
+}
+```
+
+```kotlin
+class Solution {
+    fun validateBinaryTreeNodes(n: Int, leftChild: IntArray, rightChild: IntArray): Boolean {
+        val indegree = IntArray(n)
+        for (i in 0 until n) {
+            if (leftChild[i] != -1) {
+                if (++indegree[leftChild[i]] > 1) return false
+            }
+            if (rightChild[i] != -1) {
+                if (++indegree[rightChild[i]] > 1) return false
+            }
+        }
+
+        var root = -1
+        for (i in 0 until n) {
+            if (indegree[i] == 0) {
+                if (root != -1) return false
+                root = i
+            }
+        }
+
+        if (root == -1) return false
+
+        var count = 0
+        val stack = ArrayDeque<Int>()
+        stack.addLast(root)
+
+        while (stack.isNotEmpty()) {
+            val node = stack.removeLast()
+            count++
+            if (leftChild[node] != -1) stack.addLast(leftChild[node])
+            if (rightChild[node] != -1) stack.addLast(rightChild[node])
+        }
+        return count == n
+    }
+}
+```
+
+```swift
+class Solution {
+    func validateBinaryTreeNodes(_ n: Int, _ leftChild: [Int], _ rightChild: [Int]) -> Bool {
+        var indegree = [Int](repeating: 0, count: n)
+        for i in 0..<n {
+            if leftChild[i] != -1 {
+                indegree[leftChild[i]] += 1
+                if indegree[leftChild[i]] > 1 { return false }
+            }
+            if rightChild[i] != -1 {
+                indegree[rightChild[i]] += 1
+                if indegree[rightChild[i]] > 1 { return false }
+            }
+        }
+
+        var root = -1
+        for i in 0..<n {
+            if indegree[i] == 0 {
+                if root != -1 { return false }
+                root = i
+            }
+        }
+
+        if root == -1 { return false }
+
+        var count = 0
+        var stack = [root]
+
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            count += 1
+            if leftChild[node] != -1 { stack.append(leftChild[node]) }
+            if rightChild[node] != -1 { stack.append(rightChild[node]) }
+        }
+        return count == n
     }
 }
 ```
@@ -658,6 +1121,194 @@ class Solution {
         }
 
         return dsu.Components === 1;
+    }
+}
+```
+
+```csharp
+public class DSU {
+    private int[] Parent;
+    public int Components;
+
+    public DSU(int n) {
+        Parent = new int[n];
+        for (int i = 0; i < n; i++) {
+            Parent[i] = i;
+        }
+        Components = n;
+    }
+
+    public int Find(int node) {
+        if (Parent[node] != node) {
+            Parent[node] = Find(Parent[node]);
+        }
+        return Parent[node];
+    }
+
+    public bool Union(int parent, int child) {
+        int parentRoot = Find(parent);
+        int childRoot = Find(child);
+        if (childRoot != child || parentRoot == childRoot) {
+            return false;
+        }
+
+        Components--;
+        Parent[childRoot] = parentRoot;
+        return true;
+    }
+}
+
+public class Solution {
+    public bool ValidateBinaryTreeNodes(int n, int[] leftChild, int[] rightChild) {
+        DSU dsu = new DSU(n);
+
+        for (int parent = 0; parent < n; parent++) {
+            foreach (int child in new int[] { leftChild[parent], rightChild[parent] }) {
+                if (child == -1) continue;
+                if (!dsu.Union(parent, child)) return false;
+            }
+        }
+
+        return dsu.Components == 1;
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent     []int
+    Components int
+}
+
+func NewDSU(n int) *DSU {
+    parent := make([]int, n)
+    for i := 0; i < n; i++ {
+        parent[i] = i
+    }
+    return &DSU{Parent: parent, Components: n}
+}
+
+func (dsu *DSU) Find(node int) int {
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.Find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
+}
+
+func (dsu *DSU) Union(parent, child int) bool {
+    parentRoot := dsu.Find(parent)
+    childRoot := dsu.Find(child)
+    if childRoot != child || parentRoot == childRoot {
+        return false
+    }
+
+    dsu.Components--
+    dsu.Parent[childRoot] = parentRoot
+    return true
+}
+
+func validateBinaryTreeNodes(n int, leftChild []int, rightChild []int) bool {
+    dsu := NewDSU(n)
+
+    for parent := 0; parent < n; parent++ {
+        for _, child := range []int{leftChild[parent], rightChild[parent]} {
+            if child == -1 {
+                continue
+            }
+            if !dsu.Union(parent, child) {
+                return false
+            }
+        }
+    }
+
+    return dsu.Components == 1
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n) { it }
+    var components = n
+        private set
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(parentNode: Int, child: Int): Boolean {
+        val parentRoot = find(parentNode)
+        val childRoot = find(child)
+        if (childRoot != child || parentRoot == childRoot) {
+            return false
+        }
+
+        components--
+        parent[childRoot] = parentRoot
+        return true
+    }
+}
+
+class Solution {
+    fun validateBinaryTreeNodes(n: Int, leftChild: IntArray, rightChild: IntArray): Boolean {
+        val dsu = DSU(n)
+
+        for (parent in 0 until n) {
+            for (child in listOf(leftChild[parent], rightChild[parent])) {
+                if (child == -1) continue
+                if (!dsu.union(parent, child)) return false
+            }
+        }
+
+        return dsu.components == 1
+    }
+}
+```
+
+```swift
+class DSU {
+    var parent: [Int]
+    var components: Int
+
+    init(_ n: Int) {
+        parent = Array(0..<n)
+        components = n
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ parentNode: Int, _ child: Int) -> Bool {
+        let parentRoot = find(parentNode)
+        let childRoot = find(child)
+        if childRoot != child || parentRoot == childRoot {
+            return false
+        }
+
+        components -= 1
+        parent[childRoot] = parentRoot
+        return true
+    }
+}
+
+class Solution {
+    func validateBinaryTreeNodes(_ n: Int, _ leftChild: [Int], _ rightChild: [Int]) -> Bool {
+        let dsu = DSU(n)
+
+        for parent in 0..<n {
+            for child in [leftChild[parent], rightChild[parent]] {
+                if child == -1 { continue }
+                if !dsu.union(parent, child) { return false }
+            }
+        }
+
+        return dsu.components == 1
     }
 }
 ```

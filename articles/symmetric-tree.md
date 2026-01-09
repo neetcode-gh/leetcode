@@ -127,6 +127,128 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsSymmetric(TreeNode root) {
+        return Dfs(root.left, root.right);
+    }
+
+    private bool Dfs(TreeNode left, TreeNode right) {
+        if (left == null && right == null) {
+            return true;
+        }
+        if (left == null || right == null) {
+            return false;
+        }
+        return left.val == right.val &&
+               Dfs(left.left, right.right) &&
+               Dfs(left.right, right.left);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSymmetric(root *TreeNode) bool {
+    var dfs func(left, right *TreeNode) bool
+    dfs = func(left, right *TreeNode) bool {
+        if left == nil && right == nil {
+            return true
+        }
+        if left == nil || right == nil {
+            return false
+        }
+        return left.Val == right.Val &&
+               dfs(left.Left, right.Right) &&
+               dfs(left.Right, right.Left)
+    }
+    return dfs(root.Left, root.Right)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSymmetric(root: TreeNode?): Boolean {
+        fun dfs(left: TreeNode?, right: TreeNode?): Boolean {
+            if (left == null && right == null) {
+                return true
+            }
+            if (left == null || right == null) {
+                return false
+            }
+            return left.`val` == right.`val` &&
+                   dfs(left.left, right.right) &&
+                   dfs(left.right, right.left)
+        }
+        return dfs(root?.left, root?.right)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        func dfs(_ left: TreeNode?, _ right: TreeNode?) -> Bool {
+            if left == nil && right == nil {
+                return true
+            }
+            if left == nil || right == nil {
+                return false
+            }
+            return left!.val == right!.val &&
+                   dfs(left!.left, right!.right) &&
+                   dfs(left!.right, right!.left)
+        }
+        return dfs(root?.left, root?.right)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,6 +398,156 @@ class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsSymmetric(TreeNode root) {
+        if (root == null) return true;
+
+        var stack = new Stack<(TreeNode, TreeNode)>();
+        stack.Push((root.left, root.right));
+
+        while (stack.Count > 0) {
+            var (left, right) = stack.Pop();
+
+            if (left == null && right == null) continue;
+            if (left == null || right == null || left.val != right.val) {
+                return false;
+            }
+
+            stack.Push((left.left, right.right));
+            stack.Push((left.right, right.left));
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSymmetric(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+
+    type pair struct {
+        left, right *TreeNode
+    }
+    stack := []pair{{root.Left, root.Right}}
+
+    for len(stack) > 0 {
+        p := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        if p.left == nil && p.right == nil {
+            continue
+        }
+        if p.left == nil || p.right == nil || p.left.Val != p.right.Val {
+            return false
+        }
+
+        stack = append(stack, pair{p.left.Left, p.right.Right})
+        stack = append(stack, pair{p.left.Right, p.right.Left})
+    }
+
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSymmetric(root: TreeNode?): Boolean {
+        if (root == null) return true
+
+        val stack = ArrayDeque<Pair<TreeNode?, TreeNode?>>()
+        stack.addLast(Pair(root.left, root.right))
+
+        while (stack.isNotEmpty()) {
+            val (left, right) = stack.removeLast()
+
+            if (left == null && right == null) continue
+            if (left == null || right == null || left.`val` != right.`val`) {
+                return false
+            }
+
+            stack.addLast(Pair(left.left, right.right))
+            stack.addLast(Pair(left.right, right.left))
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+
+        var stack: [(TreeNode?, TreeNode?)] = [(root.left, root.right)]
+
+        while !stack.isEmpty {
+            let (left, right) = stack.removeLast()
+
+            if left == nil && right == nil { continue }
+            if left == nil || right == nil || left!.val != right!.val {
+                return false
+            }
+
+            stack.append((left!.left, right!.right))
+            stack.append((left!.right, right!.left))
+        }
+
+        return true
     }
 }
 ```
@@ -435,6 +707,162 @@ class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsSymmetric(TreeNode root) {
+        if (root == null) return true;
+
+        var queue = new Queue<(TreeNode, TreeNode)>();
+        queue.Enqueue((root.left, root.right));
+
+        while (queue.Count > 0) {
+            for (int i = queue.Count; i > 0; i--) {
+                var (left, right) = queue.Dequeue();
+
+                if (left == null && right == null) continue;
+                if (left == null || right == null || left.val != right.val) {
+                    return false;
+                }
+                queue.Enqueue((left.left, right.right));
+                queue.Enqueue((left.right, right.left));
+            }
+        }
+
+        return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSymmetric(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+
+    type pair struct {
+        left, right *TreeNode
+    }
+    queue := []pair{{root.Left, root.Right}}
+
+    for len(queue) > 0 {
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            p := queue[0]
+            queue = queue[1:]
+
+            if p.left == nil && p.right == nil {
+                continue
+            }
+            if p.left == nil || p.right == nil || p.left.Val != p.right.Val {
+                return false
+            }
+            queue = append(queue, pair{p.left.Left, p.right.Right})
+            queue = append(queue, pair{p.left.Right, p.right.Left})
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSymmetric(root: TreeNode?): Boolean {
+        if (root == null) return true
+
+        val queue = ArrayDeque<Pair<TreeNode?, TreeNode?>>()
+        queue.addLast(Pair(root.left, root.right))
+
+        while (queue.isNotEmpty()) {
+            repeat(queue.size) {
+                val (left, right) = queue.removeFirst()
+
+                if (left == null && right == null) return@repeat
+                if (left == null || right == null || left.`val` != right.`val`) {
+                    return false
+                }
+                queue.addLast(Pair(left.left, right.right))
+                queue.addLast(Pair(left.right, right.left))
+            }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSymmetric(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+
+        var queue: [(TreeNode?, TreeNode?)] = [(root.left, root.right)]
+
+        while !queue.isEmpty {
+            let size = queue.count
+            for _ in 0..<size {
+                let (left, right) = queue.removeFirst()
+
+                if left == nil && right == nil { continue }
+                if left == nil || right == nil || left!.val != right!.val {
+                    return false
+                }
+                queue.append((left!.left, right!.right))
+                queue.append((left!.right, right!.left))
+            }
+        }
+
+        return true
     }
 }
 ```

@@ -156,6 +156,106 @@ public class Solution {
 }
 ```
 
+```go
+func validWordAbbreviation(word string, abbr string) bool {
+    n, m := len(word), len(abbr)
+    i, j := 0, 0
+
+    for i < n && j < m {
+        if abbr[j] == '0' {
+            return false
+        }
+
+        if abbr[j] >= 'a' && abbr[j] <= 'z' {
+            if word[i] == abbr[j] {
+                i++
+                j++
+            } else {
+                return false
+            }
+        } else {
+            subLen := 0
+            for j < m && abbr[j] >= '0' && abbr[j] <= '9' {
+                subLen = subLen*10 + int(abbr[j]-'0')
+                j++
+            }
+            i += subLen
+        }
+    }
+
+    return i == n && j == m
+}
+```
+
+```kotlin
+class Solution {
+    fun validWordAbbreviation(word: String, abbr: String): Boolean {
+        val n = word.length
+        val m = abbr.length
+        var i = 0
+        var j = 0
+
+        while (i < n && j < m) {
+            if (abbr[j] == '0') return false
+
+            if (abbr[j].isLetter()) {
+                if (word[i] == abbr[j]) {
+                    i++
+                    j++
+                } else {
+                    return false
+                }
+            } else {
+                var subLen = 0
+                while (j < m && abbr[j].isDigit()) {
+                    subLen = subLen * 10 + (abbr[j] - '0')
+                    j++
+                }
+                i += subLen
+            }
+        }
+
+        return i == n && j == m
+    }
+}
+```
+
+```swift
+class Solution {
+    func validWordAbbreviation(_ word: String, _ abbr: String) -> Bool {
+        let wordArr = Array(word)
+        let abbrArr = Array(abbr)
+        let n = wordArr.count
+        let m = abbrArr.count
+        var i = 0, j = 0
+
+        while i < n && j < m {
+            if abbrArr[j] == "0" {
+                return false
+            }
+
+            if abbrArr[j].isLetter {
+                if wordArr[i] == abbrArr[j] {
+                    i += 1
+                    j += 1
+                } else {
+                    return false
+                }
+            } else {
+                var subLen = 0
+                while j < m && abbrArr[j].isNumber {
+                    subLen = subLen * 10 + Int(String(abbrArr[j]))!
+                    j += 1
+                }
+                i += subLen
+            }
+        }
+
+        return i == n && j == m
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

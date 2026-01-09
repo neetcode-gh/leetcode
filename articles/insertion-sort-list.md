@@ -159,6 +159,93 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func insertionSortList(head *ListNode) *ListNode {
+    arr := []int{}
+    cur := head
+    for cur != nil {
+        arr = append(arr, cur.Val)
+        cur = cur.Next
+    }
+
+    sort.Ints(arr)
+    cur = head
+    for _, val := range arr {
+        cur.Val = val
+        cur = cur.Next
+    }
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertionSortList(head: ListNode?): ListNode? {
+        val arr = mutableListOf<Int>()
+        var cur = head
+        while (cur != null) {
+            arr.add(cur.`val`)
+            cur = cur.next
+        }
+
+        arr.sort()
+        cur = head
+        for (v in arr) {
+            cur!!.`val` = v
+            cur = cur.next
+        }
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func insertionSortList(_ head: ListNode?) -> ListNode? {
+        var arr = [Int]()
+        var cur = head
+        while cur != nil {
+            arr.append(cur!.val)
+            cur = cur?.next
+        }
+
+        arr.sort()
+        cur = head
+        for val in arr {
+            cur!.val = val
+            cur = cur?.next
+        }
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,6 +389,87 @@ public class Solution {
             cur = cur.next;
         }
         return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func insertionSortList(head *ListNode) *ListNode {
+    for cur := head.Next; cur != nil; cur = cur.Next {
+        for tmp := head; tmp != cur; tmp = tmp.Next {
+            if tmp.Val > cur.Val {
+                tmp.Val, cur.Val = cur.Val, tmp.Val
+            }
+        }
+    }
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertionSortList(head: ListNode?): ListNode? {
+        var cur = head?.next
+        while (cur != null) {
+            var tmp = head
+            while (tmp != cur) {
+                if (tmp!!.`val` > cur.`val`) {
+                    val t = tmp.`val`
+                    tmp.`val` = cur.`val`
+                    cur.`val` = t
+                }
+                tmp = tmp.next
+            }
+            cur = cur.next
+        }
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func insertionSortList(_ head: ListNode?) -> ListNode? {
+        var cur = head?.next
+        while cur != nil {
+            var tmp = head
+            while tmp !== cur {
+                if tmp!.val > cur!.val {
+                    let t = tmp!.val
+                    tmp!.val = cur!.val
+                    cur!.val = t
+                }
+                tmp = tmp?.next
+            }
+            cur = cur?.next
+        }
+        return head
     }
 }
 ```
@@ -508,6 +676,121 @@ public class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func insertionSortList(head *ListNode) *ListNode {
+    dummy := &ListNode{Val: 0, Next: head}
+    prev, cur := head, head.Next
+
+    for cur != nil {
+        if cur.Val >= prev.Val {
+            prev = cur
+            cur = cur.Next
+            continue
+        }
+
+        tmp := dummy
+        for cur.Val > tmp.Next.Val {
+            tmp = tmp.Next
+        }
+
+        prev.Next = cur.Next
+        cur.Next = tmp.Next
+        tmp.Next = cur
+        cur = prev.Next
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun insertionSortList(head: ListNode?): ListNode? {
+        if (head == null) return null
+
+        val dummy = ListNode(0).apply { next = head }
+        var prev = head
+        var cur = head.next
+
+        while (cur != null) {
+            if (cur.`val` >= prev!!.`val`) {
+                prev = cur
+                cur = cur.next
+                continue
+            }
+
+            var tmp: ListNode? = dummy
+            while (cur.`val` > tmp!!.next!!.`val`) {
+                tmp = tmp.next
+            }
+
+            prev.next = cur.next
+            cur.next = tmp!!.next
+            tmp.next = cur
+            cur = prev.next
+        }
+
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func insertionSortList(_ head: ListNode?) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var prev = head
+        var cur = head?.next
+
+        while cur != nil {
+            if cur!.val >= prev!.val {
+                prev = cur
+                cur = cur?.next
+                continue
+            }
+
+            var tmp: ListNode? = dummy
+            while cur!.val > tmp!.next!.val {
+                tmp = tmp?.next
+            }
+
+            prev?.next = cur?.next
+            cur?.next = tmp?.next
+            tmp?.next = cur
+            cur = prev?.next
+        }
+
+        return dummy.next
     }
 }
 ```

@@ -127,6 +127,100 @@ class Solution {
 }
 ```
 
+```go
+func eventualSafeNodes(graph [][]int) []int {
+    n := len(graph)
+    safe := make(map[int]bool)
+    visited := make(map[int]bool)
+
+    var dfs func(node int) bool
+    dfs = func(node int) bool {
+        if _, exists := visited[node]; exists {
+            return safe[node]
+        }
+        visited[node] = true
+        safe[node] = false
+        for _, nei := range graph[node] {
+            if !dfs(nei) {
+                return false
+            }
+        }
+        safe[node] = true
+        return true
+    }
+
+    res := []int{}
+    for node := 0; node < n; node++ {
+        if dfs(node) {
+            res = append(res, node)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun eventualSafeNodes(graph: Array<IntArray>): List<Int> {
+        val n = graph.size
+        val safe = arrayOfNulls<Boolean>(n)
+
+        fun dfs(node: Int): Boolean {
+            if (safe[node] != null) {
+                return safe[node]!!
+            }
+            safe[node] = false
+            for (nei in graph[node]) {
+                if (!dfs(nei)) {
+                    return false
+                }
+            }
+            safe[node] = true
+            return true
+        }
+
+        val res = mutableListOf<Int>()
+        for (node in 0 until n) {
+            if (dfs(node)) {
+                res.add(node)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func eventualSafeNodes(_ graph: [[Int]]) -> [Int] {
+        let n = graph.count
+        var safe = [Int: Bool]()
+
+        func dfs(_ node: Int) -> Bool {
+            if let isSafe = safe[node] {
+                return isSafe
+            }
+            safe[node] = false
+            for nei in graph[node] {
+                if !dfs(nei) {
+                    return false
+                }
+            }
+            safe[node] = true
+            return true
+        }
+
+        var res = [Int]()
+        for node in 0..<n {
+            if dfs(node) {
+                res.append(node)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +388,123 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func eventualSafeNodes(graph [][]int) []int {
+    n := len(graph)
+    outdegree := make([]int, n)
+    parents := make([][]int, n)
+    queue := []int{}
+
+    for node := 0; node < n; node++ {
+        parents[node] = []int{}
+        outdegree[node] = len(graph[node])
+        if outdegree[node] == 0 {
+            queue = append(queue, node)
+        }
+        for _, nei := range graph[node] {
+            parents[nei] = append(parents[nei], node)
+        }
+    }
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+        for _, parent := range parents[node] {
+            outdegree[parent]--
+            if outdegree[parent] == 0 {
+                queue = append(queue, parent)
+            }
+        }
+    }
+
+    res := []int{}
+    for node := 0; node < n; node++ {
+        if outdegree[node] <= 0 {
+            res = append(res, node)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun eventualSafeNodes(graph: Array<IntArray>): List<Int> {
+        val n = graph.size
+        val outdegree = IntArray(n)
+        val parents = Array(n) { mutableListOf<Int>() }
+        val queue: ArrayDeque<Int> = ArrayDeque()
+
+        for (node in 0 until n) {
+            outdegree[node] = graph[node].size
+            if (outdegree[node] == 0) {
+                queue.add(node)
+            }
+            for (nei in graph[node]) {
+                parents[nei].add(node)
+            }
+        }
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            for (parent in parents[node]) {
+                outdegree[parent]--
+                if (outdegree[parent] == 0) {
+                    queue.add(parent)
+                }
+            }
+        }
+
+        val res = mutableListOf<Int>()
+        for (node in 0 until n) {
+            if (outdegree[node] <= 0) {
+                res.add(node)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func eventualSafeNodes(_ graph: [[Int]]) -> [Int] {
+        let n = graph.count
+        var outdegree = [Int](repeating: 0, count: n)
+        var parents = [[Int]](repeating: [], count: n)
+        var queue = [Int]()
+
+        for node in 0..<n {
+            outdegree[node] = graph[node].count
+            if outdegree[node] == 0 {
+                queue.append(node)
+            }
+            for nei in graph[node] {
+                parents[nei].append(node)
+            }
+        }
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            for parent in parents[node] {
+                outdegree[parent] -= 1
+                if outdegree[parent] == 0 {
+                    queue.append(parent)
+                }
+            }
+        }
+
+        var res = [Int]()
+        for node in 0..<n {
+            if outdegree[node] <= 0 {
+                res.append(node)
+            }
+        }
+        return res
     }
 }
 ```

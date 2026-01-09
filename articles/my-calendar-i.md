@@ -80,6 +80,82 @@ class MyCalendar {
 }
 ```
 
+```csharp
+public class MyCalendar {
+    private List<int[]> events;
+
+    public MyCalendar() {
+        events = new List<int[]>();
+    }
+
+    public bool Book(int startTime, int endTime) {
+        foreach (var ev in events) {
+            if (startTime < ev[1] && ev[0] < endTime) {
+                return false;
+            }
+        }
+        events.Add(new int[] { startTime, endTime });
+        return true;
+    }
+}
+```
+
+```go
+type MyCalendar struct {
+    events [][2]int
+}
+
+func Constructor() MyCalendar {
+    return MyCalendar{events: [][2]int{}}
+}
+
+func (mc *MyCalendar) Book(startTime int, endTime int) bool {
+    for _, event := range mc.events {
+        if startTime < event[1] && event[0] < endTime {
+            return false
+        }
+    }
+    mc.events = append(mc.events, [2]int{startTime, endTime})
+    return true
+}
+```
+
+```kotlin
+class MyCalendar() {
+    private val events = mutableListOf<IntArray>()
+
+    fun book(startTime: Int, endTime: Int): Boolean {
+        for (event in events) {
+            if (startTime < event[1] && event[0] < endTime) {
+                return false
+            }
+        }
+        events.add(intArrayOf(startTime, endTime))
+        return true
+    }
+}
+```
+
+```swift
+class MyCalendar {
+    private var events: [(Int, Int)]
+
+    init() {
+        events = []
+    }
+
+    func book(_ startTime: Int, _ endTime: Int) -> Bool {
+        for (start, end) in events {
+            if startTime < end && start < endTime {
+                return false
+            }
+        }
+        events.append((startTime, endTime))
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,6 +349,181 @@ class MyCalendar {
 }
 ```
 
+```csharp
+public class TreeNode {
+    public int start, end;
+    public TreeNode left, right;
+
+    public TreeNode(int start, int end) {
+        this.start = start;
+        this.end = end;
+        this.left = null;
+        this.right = null;
+    }
+}
+
+public class MyCalendar {
+    private TreeNode root;
+
+    public MyCalendar() {
+        root = null;
+    }
+
+    private bool Insert(TreeNode node, int start, int end) {
+        if (end <= node.start) {
+            if (node.left == null) {
+                node.left = new TreeNode(start, end);
+                return true;
+            }
+            return Insert(node.left, start, end);
+        } else if (start >= node.end) {
+            if (node.right == null) {
+                node.right = new TreeNode(start, end);
+                return true;
+            }
+            return Insert(node.right, start, end);
+        }
+        return false;
+    }
+
+    public bool Book(int startTime, int endTime) {
+        if (root == null) {
+            root = new TreeNode(startTime, endTime);
+            return true;
+        }
+        return Insert(root, startTime, endTime);
+    }
+}
+```
+
+```go
+type TreeNode struct {
+    start, end int
+    left, right *TreeNode
+}
+
+type MyCalendar struct {
+    root *TreeNode
+}
+
+func Constructor() MyCalendar {
+    return MyCalendar{root: nil}
+}
+
+func (mc *MyCalendar) insert(node *TreeNode, start, end int) bool {
+    if end <= node.start {
+        if node.left == nil {
+            node.left = &TreeNode{start: start, end: end}
+            return true
+        }
+        return mc.insert(node.left, start, end)
+    } else if start >= node.end {
+        if node.right == nil {
+            node.right = &TreeNode{start: start, end: end}
+            return true
+        }
+        return mc.insert(node.right, start, end)
+    }
+    return false
+}
+
+func (mc *MyCalendar) Book(startTime int, endTime int) bool {
+    if mc.root == nil {
+        mc.root = &TreeNode{start: startTime, end: endTime}
+        return true
+    }
+    return mc.insert(mc.root, startTime, endTime)
+}
+```
+
+```kotlin
+class TreeNode(var start: Int, var end: Int) {
+    var left: TreeNode? = null
+    var right: TreeNode? = null
+}
+
+class MyCalendar() {
+    private var root: TreeNode? = null
+
+    private fun insert(node: TreeNode, start: Int, end: Int): Boolean {
+        return if (end <= node.start) {
+            if (node.left == null) {
+                node.left = TreeNode(start, end)
+                true
+            } else {
+                insert(node.left!!, start, end)
+            }
+        } else if (start >= node.end) {
+            if (node.right == null) {
+                node.right = TreeNode(start, end)
+                true
+            } else {
+                insert(node.right!!, start, end)
+            }
+        } else {
+            false
+        }
+    }
+
+    fun book(startTime: Int, endTime: Int): Boolean {
+        if (root == null) {
+            root = TreeNode(startTime, endTime)
+            return true
+        }
+        return insert(root!!, startTime, endTime)
+    }
+}
+```
+
+```swift
+class TreeNode {
+    var start: Int
+    var end: Int
+    var left: TreeNode?
+    var right: TreeNode?
+
+    init(_ start: Int, _ end: Int) {
+        self.start = start
+        self.end = end
+        self.left = nil
+        self.right = nil
+    }
+}
+
+class MyCalendar {
+    private var root: TreeNode?
+
+    init() {
+        root = nil
+    }
+
+    private func insert(_ node: TreeNode, _ start: Int, _ end: Int) -> Bool {
+        if end <= node.start {
+            if node.left == nil {
+                node.left = TreeNode(start, end)
+                return true
+            }
+            return insert(node.left!, start, end)
+        } else if start >= node.end {
+            if node.right == nil {
+                node.right = TreeNode(start, end)
+                return true
+            }
+            return insert(node.right!, start, end)
+        }
+        return false
+    }
+
+    func book(_ startTime: Int, _ endTime: Int) -> Bool {
+        if root == nil {
+            root = TreeNode(startTime, endTime)
+            return true
+        }
+        return insert(root!, startTime, endTime)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -394,6 +645,135 @@ class MyCalendar {
         }
         this.events.splice(idx, 0, [startTime, endTime]);
         return true;
+    }
+}
+```
+
+```csharp
+public class MyCalendar {
+    private List<int[]> events;
+
+    public MyCalendar() {
+        events = new List<int[]>();
+    }
+
+    public bool Book(int startTime, int endTime) {
+        int idx = BinarySearch(startTime);
+        if (idx > 0 && events[idx - 1][1] > startTime) {
+            return false;
+        }
+        if (idx < events.Count && events[idx][0] < endTime) {
+            return false;
+        }
+        events.Insert(idx, new int[] { startTime, endTime });
+        return true;
+    }
+
+    private int BinarySearch(int target) {
+        int left = 0, right = events.Count;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (events[mid][0] < target) {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+        return left;
+    }
+}
+```
+
+```go
+import "sort"
+
+type MyCalendar struct {
+    events [][2]int
+}
+
+func Constructor() MyCalendar {
+    return MyCalendar{events: [][2]int{}}
+}
+
+func (mc *MyCalendar) Book(startTime int, endTime int) bool {
+    idx := sort.Search(len(mc.events), func(i int) bool {
+        return mc.events[i][0] >= startTime
+    })
+    if idx > 0 && mc.events[idx-1][1] > startTime {
+        return false
+    }
+    if idx < len(mc.events) && mc.events[idx][0] < endTime {
+        return false
+    }
+    mc.events = append(mc.events[:idx], append([][2]int{{startTime, endTime}}, mc.events[idx:]...)...)
+    return true
+}
+```
+
+```kotlin
+class MyCalendar() {
+    private val events = mutableListOf<IntArray>()
+
+    fun book(startTime: Int, endTime: Int): Boolean {
+        val idx = binarySearch(startTime)
+        if (idx > 0 && events[idx - 1][1] > startTime) {
+            return false
+        }
+        if (idx < events.size && events[idx][0] < endTime) {
+            return false
+        }
+        events.add(idx, intArrayOf(startTime, endTime))
+        return true
+    }
+
+    private fun binarySearch(target: Int): Int {
+        var left = 0
+        var right = events.size
+        while (left < right) {
+            val mid = (left + right) / 2
+            if (events[mid][0] < target) {
+                left = mid + 1
+            } else {
+                right = mid
+            }
+        }
+        return left
+    }
+}
+```
+
+```swift
+class MyCalendar {
+    private var events: [(Int, Int)]
+
+    init() {
+        events = []
+    }
+
+    func book(_ startTime: Int, _ endTime: Int) -> Bool {
+        let idx = binarySearch(startTime)
+        if idx > 0 && events[idx - 1].1 > startTime {
+            return false
+        }
+        if idx < events.count && events[idx].0 < endTime {
+            return false
+        }
+        events.insert((startTime, endTime), at: idx)
+        return true
+    }
+
+    private func binarySearch(_ target: Int) -> Int {
+        var left = 0
+        var right = events.count
+        while left < right {
+            let mid = (left + right) / 2
+            if events[mid].0 < target {
+                left = mid + 1
+            } else {
+                right = mid
+            }
+        }
+        return left
     }
 }
 ```

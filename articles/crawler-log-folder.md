@@ -92,6 +92,58 @@ public class Solution {
 }
 ```
 
+```go
+func minOperations(logs []string) int {
+    stack := []string{}
+    for _, log := range logs {
+        if log == "../" {
+            if len(stack) > 0 {
+                stack = stack[:len(stack)-1]
+            }
+        } else if log != "./" {
+            stack = append(stack, log)
+        }
+    }
+    return len(stack)
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(logs: Array<String>): Int {
+        val stack = ArrayDeque<String>()
+        for (log in logs) {
+            if (log == "../") {
+                if (stack.isNotEmpty()) {
+                    stack.removeLast()
+                }
+            } else if (log != "./") {
+                stack.addLast(log)
+            }
+        }
+        return stack.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ logs: [String]) -> Int {
+        var stack = [String]()
+        for log in logs {
+            if log == "../" {
+                if !stack.isEmpty {
+                    stack.removeLast()
+                }
+            } else if log != "./" {
+                stack.append(log)
+            }
+        }
+        return stack.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +248,63 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func minOperations(logs []string) int {
+    res := 0
+    for _, log := range logs {
+        if log == "./" {
+            continue
+        }
+        if log == "../" {
+            if res > 0 {
+                res--
+            }
+        } else {
+            res++
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minOperations(logs: Array<String>): Int {
+        var res = 0
+        for (log in logs) {
+            if (log == "./") {
+                continue
+            }
+            if (log == "../") {
+                res = maxOf(0, res - 1)
+            } else {
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minOperations(_ logs: [String]) -> Int {
+        var res = 0
+        for log in logs {
+            if log == "./" {
+                continue
+            }
+            if log == "../" {
+                res = max(0, res - 1)
+            } else {
+                res += 1
+            }
+        }
+        return res
     }
 }
 ```

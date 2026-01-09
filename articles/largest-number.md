@@ -125,6 +125,79 @@ public class Solution {
 }
 ```
 
+```go
+func largestNumber(nums []int) string {
+    arr := make([]string, len(nums))
+    for i, num := range nums {
+        arr[i] = strconv.Itoa(num)
+    }
+
+    var res []string
+    for len(arr) > 0 {
+        maxi := 0
+        for i := 1; i < len(arr); i++ {
+            if arr[i]+arr[maxi] > arr[maxi]+arr[i] {
+                maxi = i
+            }
+        }
+        res = append(res, arr[maxi])
+        arr = append(arr[:maxi], arr[maxi+1:]...)
+    }
+
+    result := strings.Join(res, "")
+    if result[0] == '0' {
+        return "0"
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun largestNumber(nums: IntArray): String {
+        val arr = nums.map { it.toString() }.toMutableList()
+
+        val res = mutableListOf<String>()
+        while (arr.isNotEmpty()) {
+            var maxi = 0
+            for (i in 1 until arr.size) {
+                if (arr[i] + arr[maxi] > arr[maxi] + arr[i]) {
+                    maxi = i
+                }
+            }
+            res.add(arr[maxi])
+            arr.removeAt(maxi)
+        }
+
+        val result = res.joinToString("")
+        return if (result[0] == '0') "0" else result
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestNumber(_ nums: [Int]) -> String {
+        var arr = nums.map { String($0) }
+
+        var res = [String]()
+        while !arr.isEmpty {
+            var maxi = 0
+            for i in 1..<arr.count {
+                if arr[i] + arr[maxi] > arr[maxi] + arr[i] {
+                    maxi = i
+                }
+            }
+            res.append(arr[maxi])
+            arr.remove(at: maxi)
+        }
+
+        let result = res.joined()
+        return result.first == "0" ? "0" : result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +293,51 @@ public class Solution {
 
         string result = string.Join("", arr);
         return result[0] == '0' ? "0" : result;
+    }
+}
+```
+
+```go
+func largestNumber(nums []int) string {
+    arr := make([]string, len(nums))
+    for i, num := range nums {
+        arr[i] = strconv.Itoa(num)
+    }
+
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i]+arr[j] > arr[j]+arr[i]
+    })
+
+    res := strings.Join(arr, "")
+    if res[0] == '0' {
+        return "0"
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun largestNumber(nums: IntArray): String {
+        val arr = nums.map { it.toString() }.sortedWith { a, b ->
+            (b + a).compareTo(a + b)
+        }
+
+        val res = arr.joinToString("")
+        return if (res[0] == '0') "0" else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestNumber(_ nums: [Int]) -> String {
+        let arr = nums.map { String($0) }.sorted { a, b in
+            a + b > b + a
+        }
+
+        let res = arr.joined()
+        return res.first == "0" ? "0" : res
     }
 }
 ```

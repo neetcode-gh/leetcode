@@ -113,6 +113,45 @@ func canPlaceFlowers(flowerbed []int, n int) bool {
 }
 ```
 
+```kotlin
+class Solution {
+    fun canPlaceFlowers(flowerbed: IntArray, n: Int): Boolean {
+        var n = n
+        val f = IntArray(flowerbed.size + 2)
+        for (i in flowerbed.indices) {
+            f[i + 1] = flowerbed[i]
+        }
+
+        for (i in 1 until f.size - 1) {
+            if (f[i - 1] == 0 && f[i] == 0 && f[i + 1] == 0) {
+                f[i] = 1
+                n--
+            }
+        }
+
+        return n <= 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPlaceFlowers(_ flowerbed: [Int], _ n: Int) -> Bool {
+        var n = n
+        var f = [0] + flowerbed + [0]
+
+        for i in 1..<(f.count - 1) {
+            if f[i - 1] == 0 && f[i] == 0 && f[i + 1] == 0 {
+                f[i] = 1
+                n -= 1
+            }
+        }
+
+        return n <= 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -246,6 +285,48 @@ func canPlaceFlowers(flowerbed []int, n int) bool {
 
     n -= empty / 2
     return n <= 0
+}
+```
+
+```kotlin
+class Solution {
+    fun canPlaceFlowers(flowerbed: IntArray, n: Int): Boolean {
+        var n = n
+        var empty = if (flowerbed[0] == 0) 1 else 0
+
+        for (f in flowerbed) {
+            if (f == 1) {
+                n -= (empty - 1) / 2
+                empty = 0
+            } else {
+                empty++
+            }
+        }
+
+        n -= empty / 2
+        return n <= 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func canPlaceFlowers(_ flowerbed: [Int], _ n: Int) -> Bool {
+        var n = n
+        var empty = flowerbed[0] == 0 ? 1 : 0
+
+        for f in flowerbed {
+            if f == 1 {
+                n -= (empty - 1) / 2
+                empty = 0
+            } else {
+                empty += 1
+            }
+        }
+
+        n -= empty / 2
+        return n <= 0
+    }
 }
 ```
 

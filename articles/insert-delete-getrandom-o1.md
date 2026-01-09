@@ -177,6 +177,114 @@ public class RandomizedSet {
 }
 ```
 
+```go
+type RandomizedSet struct {
+    numMap map[int]int
+    size   int
+}
+
+func Constructor() RandomizedSet {
+    return RandomizedSet{
+        numMap: make(map[int]int),
+        size:   0,
+    }
+}
+
+func (this *RandomizedSet) Insert(val int) bool {
+    if _, exists := this.numMap[val]; exists {
+        return false
+    }
+    this.numMap[val] = 1
+    this.size++
+    return true
+}
+
+func (this *RandomizedSet) Remove(val int) bool {
+    if _, exists := this.numMap[val]; !exists {
+        return false
+    }
+    delete(this.numMap, val)
+    this.size--
+    return true
+}
+
+func (this *RandomizedSet) GetRandom() int {
+    idx := rand.Intn(this.size)
+    for key := range this.numMap {
+        if idx == 0 {
+            return key
+        }
+        idx--
+    }
+    return 0
+}
+```
+
+```kotlin
+class RandomizedSet() {
+    private val numMap = HashMap<Int, Int>()
+    private var size = 0
+
+    fun insert(`val`: Int): Boolean {
+        if (numMap.containsKey(`val`)) {
+            return false
+        }
+        numMap[`val`] = 1
+        size++
+        return true
+    }
+
+    fun remove(`val`: Int): Boolean {
+        if (!numMap.containsKey(`val`)) {
+            return false
+        }
+        numMap.remove(`val`)
+        size--
+        return true
+    }
+
+    fun getRandom(): Int {
+        val idx = (0 until size).random()
+        return numMap.keys.elementAt(idx)
+    }
+}
+```
+
+```swift
+class RandomizedSet {
+    private var numMap: [Int: Int]
+    private var size: Int
+
+    init() {
+        numMap = [:]
+        size = 0
+    }
+
+    func insert(_ val: Int) -> Bool {
+        if numMap[val] != nil {
+            return false
+        }
+        numMap[val] = 1
+        size += 1
+        return true
+    }
+
+    func remove(_ val: Int) -> Bool {
+        if numMap[val] == nil {
+            return false
+        }
+        numMap.removeValue(forKey: val)
+        size -= 1
+        return true
+    }
+
+    func getRandom() -> Int {
+        let idx = Int.random(in: 0..<size)
+        return Array(numMap.keys)[idx]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +475,116 @@ public class RandomizedSet {
     public int GetRandom() {
         int index = rand.Next(nums.Count);
         return nums[index];
+    }
+}
+```
+
+```go
+type RandomizedSet struct {
+    numMap map[int]int
+    nums   []int
+}
+
+func Constructor() RandomizedSet {
+    return RandomizedSet{
+        numMap: make(map[int]int),
+        nums:   []int{},
+    }
+}
+
+func (this *RandomizedSet) Insert(val int) bool {
+    if _, exists := this.numMap[val]; exists {
+        return false
+    }
+    this.numMap[val] = len(this.nums)
+    this.nums = append(this.nums, val)
+    return true
+}
+
+func (this *RandomizedSet) Remove(val int) bool {
+    if _, exists := this.numMap[val]; !exists {
+        return false
+    }
+    idx := this.numMap[val]
+    last := this.nums[len(this.nums)-1]
+    this.nums[idx] = last
+    this.numMap[last] = idx
+    this.nums = this.nums[:len(this.nums)-1]
+    delete(this.numMap, val)
+    return true
+}
+
+func (this *RandomizedSet) GetRandom() int {
+    return this.nums[rand.Intn(len(this.nums))]
+}
+```
+
+```kotlin
+class RandomizedSet() {
+    private val numMap = HashMap<Int, Int>()
+    private val nums = ArrayList<Int>()
+
+    fun insert(`val`: Int): Boolean {
+        if (numMap.containsKey(`val`)) {
+            return false
+        }
+        numMap[`val`] = nums.size
+        nums.add(`val`)
+        return true
+    }
+
+    fun remove(`val`: Int): Boolean {
+        if (!numMap.containsKey(`val`)) {
+            return false
+        }
+        val idx = numMap[`val`]!!
+        val last = nums[nums.size - 1]
+        nums[idx] = last
+        numMap[last] = idx
+        nums.removeAt(nums.size - 1)
+        numMap.remove(`val`)
+        return true
+    }
+
+    fun getRandom(): Int {
+        return nums[(0 until nums.size).random()]
+    }
+}
+```
+
+```swift
+class RandomizedSet {
+    private var numMap: [Int: Int]
+    private var nums: [Int]
+
+    init() {
+        numMap = [:]
+        nums = []
+    }
+
+    func insert(_ val: Int) -> Bool {
+        if numMap[val] != nil {
+            return false
+        }
+        numMap[val] = nums.count
+        nums.append(val)
+        return true
+    }
+
+    func remove(_ val: Int) -> Bool {
+        guard let idx = numMap[val] else {
+            return false
+        }
+        let last = nums[nums.count - 1]
+        nums[idx] = last
+        numMap[last] = idx
+        nums.removeLast()
+        numMap.removeValue(forKey: val)
+        return true
+    }
+
+    func getRandom() -> Int {
+        return nums[Int.random(in: 0..<nums.count)]
     }
 }
 ```

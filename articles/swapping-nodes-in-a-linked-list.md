@@ -146,6 +146,151 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapNodes(ListNode head, int k) {
+        var arr = new List<int>();
+        var cur = head;
+
+        while (cur != null) {
+            arr.Add(cur.val);
+            cur = cur.next;
+        }
+
+        int n = arr.Count;
+        (arr[k - 1], arr[n - k]) = (arr[n - k], arr[k - 1]);
+
+        cur = head;
+        int i = 0;
+        while (cur != null) {
+            cur.val = arr[i];
+            cur = cur.next;
+            i++;
+        }
+
+        return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapNodes(head *ListNode, k int) *ListNode {
+    arr := []int{}
+    cur := head
+
+    for cur != nil {
+        arr = append(arr, cur.Val)
+        cur = cur.Next
+    }
+
+    n := len(arr)
+    arr[k-1], arr[n-k] = arr[n-k], arr[k-1]
+
+    cur = head
+    i := 0
+    for cur != nil {
+        cur.Val = arr[i]
+        cur = cur.Next
+        i++
+    }
+
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapNodes(head: ListNode?, k: Int): ListNode? {
+        val arr = mutableListOf<Int>()
+        var cur = head
+
+        while (cur != null) {
+            arr.add(cur.`val`)
+            cur = cur.next
+        }
+
+        val n = arr.size
+        val temp = arr[k - 1]
+        arr[k - 1] = arr[n - k]
+        arr[n - k] = temp
+
+        cur = head
+        var i = 0
+        while (cur != null) {
+            cur.`val` = arr[i]
+            cur = cur.next
+            i++
+        }
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapNodes(_ head: ListNode?, _ k: Int) -> ListNode? {
+        var arr = [Int]()
+        var cur = head
+
+        while cur != nil {
+            arr.append(cur!.val)
+            cur = cur?.next
+        }
+
+        let n = arr.count
+        arr.swapAt(k - 1, n - k)
+
+        cur = head
+        var i = 0
+        while cur != nil {
+            cur!.val = arr[i]
+            cur = cur?.next
+            i += 1
+        }
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -330,6 +475,178 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    private ListNode left, right;
+    private int startIdx;
+
+    public ListNode SwapNodes(ListNode head, int k) {
+        left = null;
+        right = null;
+        startIdx = 0;
+
+        Dfs(head, k);
+
+        if (left != null && right != null) {
+            int temp = left.val;
+            left.val = right.val;
+            right.val = temp;
+        }
+
+        return head;
+    }
+
+    private int Dfs(ListNode node, int k) {
+        if (node == null) return 0;
+
+        startIdx++;
+        if (startIdx == k) left = node;
+
+        int endIdx = Dfs(node.next, k) + 1;
+        if (endIdx == k) right = node;
+
+        return endIdx;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapNodes(head *ListNode, k int) *ListNode {
+    var left, right *ListNode
+    startIdx := 0
+
+    var dfs func(node *ListNode) int
+    dfs = func(node *ListNode) int {
+        if node == nil {
+            return 0
+        }
+
+        startIdx++
+        if startIdx == k {
+            left = node
+        }
+
+        endIdx := dfs(node.Next) + 1
+        if endIdx == k {
+            right = node
+        }
+
+        return endIdx
+    }
+
+    dfs(head)
+    if left != nil && right != nil {
+        left.Val, right.Val = right.Val, left.Val
+    }
+
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    private var left: ListNode? = null
+    private var right: ListNode? = null
+    private var startIdx = 0
+
+    fun swapNodes(head: ListNode?, k: Int): ListNode? {
+        left = null
+        right = null
+        startIdx = 0
+
+        dfs(head, k)
+
+        if (left != null && right != null) {
+            val temp = left!!.`val`
+            left!!.`val` = right!!.`val`
+            right!!.`val` = temp
+        }
+
+        return head
+    }
+
+    private fun dfs(node: ListNode?, k: Int): Int {
+        if (node == null) return 0
+
+        startIdx++
+        if (startIdx == k) left = node
+
+        val endIdx = dfs(node.next, k) + 1
+        if (endIdx == k) right = node
+
+        return endIdx
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapNodes(_ head: ListNode?, _ k: Int) -> ListNode? {
+        var left: ListNode? = nil
+        var right: ListNode? = nil
+        var startIdx = 0
+
+        func dfs(_ node: ListNode?) -> Int {
+            guard let node = node else { return 0 }
+
+            startIdx += 1
+            if startIdx == k { left = node }
+
+            let endIdx = dfs(node.next) + 1
+            if endIdx == k { right = node }
+
+            return endIdx
+        }
+
+        dfs(head)
+        if let l = left, let r = right {
+            let temp = l.val
+            l.val = r.val
+            r.val = temp
+        }
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -494,6 +811,164 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapNodes(ListNode head, int k) {
+        int n = 0;
+        var cur = head;
+        while (cur != null) {
+            n++;
+            cur = cur.next;
+        }
+
+        ListNode left = null, right = null;
+        cur = head;
+        for (int i = 1; i <= n; i++) {
+            if (i == k) {
+                left = cur;
+            }
+            if (i == (n - k + 1)) {
+                right = cur;
+            }
+            cur = cur.next;
+        }
+
+        int temp = left.val;
+        left.val = right.val;
+        right.val = temp;
+
+        return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapNodes(head *ListNode, k int) *ListNode {
+    n := 0
+    cur := head
+    for cur != nil {
+        n++
+        cur = cur.Next
+    }
+
+    var left, right *ListNode
+    cur = head
+    for i := 1; i <= n; i++ {
+        if i == k {
+            left = cur
+        }
+        if i == (n - k + 1) {
+            right = cur
+        }
+        cur = cur.Next
+    }
+
+    left.Val, right.Val = right.Val, left.Val
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapNodes(head: ListNode?, k: Int): ListNode? {
+        var n = 0
+        var cur = head
+        while (cur != null) {
+            n++
+            cur = cur.next
+        }
+
+        var left: ListNode? = null
+        var right: ListNode? = null
+        cur = head
+        for (i in 1..n) {
+            if (i == k) {
+                left = cur
+            }
+            if (i == (n - k + 1)) {
+                right = cur
+            }
+            cur = cur?.next
+        }
+
+        val temp = left!!.`val`
+        left.`val` = right!!.`val`
+        right.`val` = temp
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapNodes(_ head: ListNode?, _ k: Int) -> ListNode? {
+        var n = 0
+        var cur = head
+        while cur != nil {
+            n += 1
+            cur = cur?.next
+        }
+
+        var left: ListNode? = nil
+        var right: ListNode? = nil
+        cur = head
+        for i in 1...n {
+            if i == k {
+                left = cur
+            }
+            if i == (n - k + 1) {
+                right = cur
+            }
+            cur = cur?.next
+        }
+
+        let temp = left!.val
+        left!.val = right!.val
+        right!.val = temp
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -630,6 +1105,138 @@ class Solution {
 
         [left.val, right.val] = [right.val, left.val];
         return head;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapNodes(ListNode head, int k) {
+        var cur = head;
+        for (int i = 0; i < k - 1; i++) {
+            cur = cur.next;
+        }
+
+        var left = cur;
+        var right = head;
+
+        while (cur.next != null) {
+            cur = cur.next;
+            right = right.next;
+        }
+
+        int temp = left.val;
+        left.val = right.val;
+        right.val = temp;
+
+        return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapNodes(head *ListNode, k int) *ListNode {
+    cur := head
+    for i := 0; i < k-1; i++ {
+        cur = cur.Next
+    }
+
+    left := cur
+    right := head
+
+    for cur.Next != nil {
+        cur = cur.Next
+        right = right.Next
+    }
+
+    left.Val, right.Val = right.Val, left.Val
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapNodes(head: ListNode?, k: Int): ListNode? {
+        var cur = head
+        for (i in 0 until k - 1) {
+            cur = cur?.next
+        }
+
+        val left = cur
+        var right = head
+
+        while (cur?.next != null) {
+            cur = cur.next
+            right = right?.next
+        }
+
+        val temp = left!!.`val`
+        left.`val` = right!!.`val`
+        right.`val` = temp
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapNodes(_ head: ListNode?, _ k: Int) -> ListNode? {
+        var cur = head
+        for _ in 0..<(k - 1) {
+            cur = cur?.next
+        }
+
+        let left = cur
+        var right = head
+
+        while cur?.next != nil {
+            cur = cur?.next
+            right = right?.next
+        }
+
+        let temp = left!.val
+        left!.val = right!.val
+        right!.val = temp
+
+        return head
     }
 }
 ```
@@ -778,6 +1385,149 @@ class Solution {
 
         [left.val, right.val] = [right.val, left.val];
         return head;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode SwapNodes(ListNode head, int k) {
+        ListNode left = null, right = null, cur = head;
+
+        while (cur != null) {
+            if (right != null) {
+                right = right.next;
+            }
+            if (k == 1) {
+                left = cur;
+                right = head;
+            }
+            k--;
+            cur = cur.next;
+        }
+
+        int temp = left.val;
+        left.val = right.val;
+        right.val = temp;
+
+        return head;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func swapNodes(head *ListNode, k int) *ListNode {
+    var left, right *ListNode
+    cur := head
+
+    for cur != nil {
+        if right != nil {
+            right = right.Next
+        }
+        if k == 1 {
+            left = cur
+            right = head
+        }
+        k--
+        cur = cur.Next
+    }
+
+    left.Val, right.Val = right.Val, left.Val
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun swapNodes(head: ListNode?, k: Int): ListNode? {
+        var left: ListNode? = null
+        var right: ListNode? = null
+        var cur = head
+        var kk = k
+
+        while (cur != null) {
+            if (right != null) {
+                right = right.next
+            }
+            if (kk == 1) {
+                left = cur
+                right = head
+            }
+            kk--
+            cur = cur.next
+        }
+
+        val temp = left!!.`val`
+        left.`val` = right!!.`val`
+        right.`val` = temp
+
+        return head
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func swapNodes(_ head: ListNode?, _ k: Int) -> ListNode? {
+        var left: ListNode? = nil
+        var right: ListNode? = nil
+        var cur = head
+        var kk = k
+
+        while cur != nil {
+            if right != nil {
+                right = right?.next
+            }
+            if kk == 1 {
+                left = cur
+                right = head
+            }
+            kk -= 1
+            cur = cur?.next
+        }
+
+        let temp = left!.val
+        left!.val = right!.val
+        right!.val = temp
+
+        return head
     }
 }
 ```

@@ -73,6 +73,57 @@ class Solution {
 }
 ```
 
+```go
+func heightChecker(heights []int) int {
+    expected := make([]int, len(heights))
+    copy(expected, heights)
+    sort.Ints(expected)
+
+    res := 0
+    for i := 0; i < len(heights); i++ {
+        if heights[i] != expected[i] {
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun heightChecker(heights: IntArray): Int {
+        val expected = heights.sortedArray()
+
+        var res = 0
+        for (i in heights.indices) {
+            if (heights[i] != expected[i]) {
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func heightChecker(_ heights: [Int]) -> Int {
+        let expected = heights.sorted()
+
+        var res = 0
+        for i in 0..<heights.count {
+            if heights[i] != expected[i] {
+                res += 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -192,6 +243,88 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func heightChecker(heights []int) int {
+    count := make([]int, 101)
+    for _, h := range heights {
+        count[h]++
+    }
+
+    expected := []int{}
+    for h := 1; h <= 100; h++ {
+        c := count[h]
+        for i := 0; i < c; i++ {
+            expected = append(expected, h)
+        }
+    }
+
+    res := 0
+    for i := 0; i < len(heights); i++ {
+        if heights[i] != expected[i] {
+            res++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun heightChecker(heights: IntArray): Int {
+        val count = IntArray(101)
+        for (h in heights) {
+            count[h]++
+        }
+
+        val expected = mutableListOf<Int>()
+        for (h in 1..100) {
+            val c = count[h]
+            repeat(c) {
+                expected.add(h)
+            }
+        }
+
+        var res = 0
+        for (i in heights.indices) {
+            if (heights[i] != expected[i]) {
+                res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func heightChecker(_ heights: [Int]) -> Int {
+        var count = [Int](repeating: 0, count: 101)
+        for h in heights {
+            count[h] += 1
+        }
+
+        var expected = [Int]()
+        for h in 1...100 {
+            let c = count[h]
+            for _ in 0..<c {
+                expected.append(h)
+            }
+        }
+
+        var res = 0
+        for i in 0..<heights.count {
+            if heights[i] != expected[i] {
+                res += 1
+            }
+        }
+
+        return res
     }
 }
 ```

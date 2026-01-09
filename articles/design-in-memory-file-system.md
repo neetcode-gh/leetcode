@@ -324,6 +324,299 @@ class FileSystem {
 }
 ```
 
+```csharp
+public class FileSystem {
+    private class Dir {
+        public Dictionary<string, Dir> dirs = new Dictionary<string, Dir>();
+        public Dictionary<string, string> files = new Dictionary<string, string>();
+    }
+
+    private Dir root;
+
+    public FileSystem() {
+        root = new Dir();
+    }
+
+    public IList<string> Ls(string path) {
+        Dir t = root;
+        List<string> files = new List<string>();
+
+        if (path != "/") {
+            string[] d = path.Split('/');
+            for (int i = 1; i < d.Length - 1; i++) {
+                t = t.dirs[d[i]];
+            }
+            if (t.files.ContainsKey(d[d.Length - 1])) {
+                files.Add(d[d.Length - 1]);
+                return files;
+            } else {
+                t = t.dirs[d[d.Length - 1]];
+            }
+        }
+
+        files.AddRange(t.dirs.Keys);
+        files.AddRange(t.files.Keys);
+        files.Sort();
+        return files;
+    }
+
+    public void Mkdir(string path) {
+        Dir t = root;
+        string[] d = path.Split('/');
+        for (int i = 1; i < d.Length; i++) {
+            if (!t.dirs.ContainsKey(d[i])) {
+                t.dirs[d[i]] = new Dir();
+            }
+            t = t.dirs[d[i]];
+        }
+    }
+
+    public void AddContentToFile(string filePath, string content) {
+        Dir t = root;
+        string[] d = filePath.Split('/');
+        for (int i = 1; i < d.Length - 1; i++) {
+            t = t.dirs[d[i]];
+        }
+        if (!t.files.ContainsKey(d[d.Length - 1])) {
+            t.files[d[d.Length - 1]] = "";
+        }
+        t.files[d[d.Length - 1]] += content;
+    }
+
+    public string ReadContentFromFile(string filePath) {
+        Dir t = root;
+        string[] d = filePath.Split('/');
+        for (int i = 1; i < d.Length - 1; i++) {
+            t = t.dirs[d[i]];
+        }
+        return t.files[d[d.Length - 1]];
+    }
+}
+```
+
+```go
+type Dir struct {
+    dirs  map[string]*Dir
+    files map[string]string
+}
+
+type FileSystem struct {
+    root *Dir
+}
+
+func Constructor() FileSystem {
+    return FileSystem{root: &Dir{
+        dirs:  make(map[string]*Dir),
+        files: make(map[string]string),
+    }}
+}
+
+func (this *FileSystem) Ls(path string) []string {
+    t := this.root
+    files := []string{}
+
+    if path != "/" {
+        d := strings.Split(path, "/")[1:]
+
+        for i := 0; i < len(d)-1; i++ {
+            t = t.dirs[d[i]]
+        }
+
+        if _, ok := t.files[d[len(d)-1]]; ok {
+            return []string{d[len(d)-1]}
+        } else {
+            t = t.dirs[d[len(d)-1]]
+        }
+    }
+
+    for k := range t.dirs {
+        files = append(files, k)
+    }
+    for k := range t.files {
+        files = append(files, k)
+    }
+    sort.Strings(files)
+    return files
+}
+
+func (this *FileSystem) Mkdir(path string) {
+    t := this.root
+    d := strings.Split(path, "/")[1:]
+
+    for i := 0; i < len(d); i++ {
+        if _, ok := t.dirs[d[i]]; !ok {
+            t.dirs[d[i]] = &Dir{
+                dirs:  make(map[string]*Dir),
+                files: make(map[string]string),
+            }
+        }
+        t = t.dirs[d[i]]
+    }
+}
+
+func (this *FileSystem) AddContentToFile(filePath string, content string) {
+    t := this.root
+    d := strings.Split(filePath, "/")[1:]
+
+    for i := 0; i < len(d)-1; i++ {
+        t = t.dirs[d[i]]
+    }
+    t.files[d[len(d)-1]] += content
+}
+
+func (this *FileSystem) ReadContentFromFile(filePath string) string {
+    t := this.root
+    d := strings.Split(filePath, "/")[1:]
+
+    for i := 0; i < len(d)-1; i++ {
+        t = t.dirs[d[i]]
+    }
+    return t.files[d[len(d)-1]]
+}
+```
+
+```kotlin
+class FileSystem() {
+    private class Dir {
+        val dirs = mutableMapOf<String, Dir>()
+        val files = mutableMapOf<String, String>()
+    }
+
+    private val root = Dir()
+
+    fun ls(path: String): List<String> {
+        var t = root
+        val files = mutableListOf<String>()
+
+        if (path != "/") {
+            val d = path.split("/").filter { it.isNotEmpty() }
+
+            for (i in 0 until d.size - 1) {
+                t = t.dirs[d[i]]!!
+            }
+
+            if (d.last() in t.files) {
+                return listOf(d.last())
+            } else {
+                t = t.dirs[d.last()]!!
+            }
+        }
+
+        files.addAll(t.dirs.keys)
+        files.addAll(t.files.keys)
+        files.sort()
+        return files
+    }
+
+    fun mkdir(path: String) {
+        var t = root
+        val d = path.split("/").filter { it.isNotEmpty() }
+
+        for (part in d) {
+            if (part !in t.dirs) {
+                t.dirs[part] = Dir()
+            }
+            t = t.dirs[part]!!
+        }
+    }
+
+    fun addContentToFile(filePath: String, content: String) {
+        var t = root
+        val d = filePath.split("/").filter { it.isNotEmpty() }
+
+        for (i in 0 until d.size - 1) {
+            t = t.dirs[d[i]]!!
+        }
+
+        t.files[d.last()] = t.files.getOrDefault(d.last(), "") + content
+    }
+
+    fun readContentFromFile(filePath: String): String {
+        var t = root
+        val d = filePath.split("/").filter { it.isNotEmpty() }
+
+        for (i in 0 until d.size - 1) {
+            t = t.dirs[d[i]]!!
+        }
+
+        return t.files[d.last()]!!
+    }
+}
+```
+
+```swift
+class FileSystem {
+    private class Dir {
+        var dirs: [String: Dir] = [:]
+        var files: [String: String] = [:]
+    }
+
+    private var root: Dir
+
+    init() {
+        root = Dir()
+    }
+
+    func ls(_ path: String) -> [String] {
+        var t = root
+        var files: [String] = []
+
+        if path != "/" {
+            let d = path.split(separator: "/").map(String.init)
+
+            for i in 0..<d.count - 1 {
+                t = t.dirs[d[i]]!
+            }
+
+            if t.files[d[d.count - 1]] != nil {
+                return [d[d.count - 1]]
+            } else {
+                t = t.dirs[d[d.count - 1]]!
+            }
+        }
+
+        files.append(contentsOf: t.dirs.keys)
+        files.append(contentsOf: t.files.keys)
+        files.sort()
+        return files
+    }
+
+    func mkdir(_ path: String) {
+        var t = root
+        let d = path.split(separator: "/").map(String.init)
+
+        for part in d {
+            if t.dirs[part] == nil {
+                t.dirs[part] = Dir()
+            }
+            t = t.dirs[part]!
+        }
+    }
+
+    func addContentToFile(_ filePath: String, _ content: String) {
+        var t = root
+        let d = filePath.split(separator: "/").map(String.init)
+
+        for i in 0..<d.count - 1 {
+            t = t.dirs[d[i]]!
+        }
+
+        t.files[d[d.count - 1], default: ""] += content
+    }
+
+    func readContentFromFile(_ filePath: String) -> String {
+        var t = root
+        let d = filePath.split(separator: "/").map(String.init)
+
+        for i in 0..<d.count - 1 {
+            t = t.dirs[d[i]]!
+        }
+
+        return t.files[d[d.count - 1]]!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time Complexity
@@ -406,6 +699,478 @@ class FileSystem {
             t = t.files.get(d[i]);
         }
         return t.files.get(d[d.length - 1]).content;
+    }
+}
+```
+
+```python
+class FileSystem:
+    class File:
+        def __init__(self):
+            self.isfile = False
+            self.files = {}
+            self.content = ""
+
+    def __init__(self):
+        self.root = self.File()
+
+    def ls(self, path: str) -> List[str]:
+        t = self.root
+        files = []
+        if path != "/":
+            d = path.split("/")
+            for i in range(1, len(d)):
+                t = t.files[d[i]]
+            if t.isfile:
+                files.append(d[-1])
+                return files
+        res_files = sorted(t.files.keys())
+        return res_files
+
+    def mkdir(self, path: str) -> None:
+        t = self.root
+        d = path.split("/")
+        for i in range(1, len(d)):
+            if d[i] not in t.files:
+                t.files[d[i]] = self.File()
+            t = t.files[d[i]]
+
+    def addContentToFile(self, filePath: str, content: str) -> None:
+        t = self.root
+        d = filePath.split("/")
+        for i in range(1, len(d) - 1):
+            t = t.files[d[i]]
+        if d[-1] not in t.files:
+            t.files[d[-1]] = self.File()
+        t = t.files[d[-1]]
+        t.isfile = True
+        t.content += content
+
+    def readContentFromFile(self, filePath: str) -> str:
+        t = self.root
+        d = filePath.split("/")
+        for i in range(1, len(d) - 1):
+            t = t.files[d[i]]
+        return t.files[d[-1]].content
+```
+
+```cpp
+class FileSystem {
+private:
+    struct File {
+        bool isfile = false;
+        unordered_map<string, File*> files;
+        string content = "";
+    };
+
+    File* root;
+
+public:
+    FileSystem() {
+        root = new File();
+    }
+
+    vector<string> ls(string path) {
+        File* t = root;
+        vector<string> files;
+        if (path != "/") {
+            vector<string> d;
+            stringstream ss(path);
+            string item;
+            while (getline(ss, item, '/')) {
+                if (!item.empty()) d.push_back(item);
+            }
+            for (int i = 0; i < d.size(); i++) {
+                t = t->files[d[i]];
+            }
+            if (t->isfile) {
+                return {d[d.size() - 1]};
+            }
+        }
+        for (auto& p : t->files) {
+            files.push_back(p.first);
+        }
+        sort(files.begin(), files.end());
+        return files;
+    }
+
+    void mkdir(string path) {
+        File* t = root;
+        vector<string> d;
+        stringstream ss(path);
+        string item;
+        while (getline(ss, item, '/')) {
+            if (!item.empty()) d.push_back(item);
+        }
+        for (int i = 0; i < d.size(); i++) {
+            if (t->files.find(d[i]) == t->files.end()) {
+                t->files[d[i]] = new File();
+            }
+            t = t->files[d[i]];
+        }
+    }
+
+    void addContentToFile(string filePath, string content) {
+        File* t = root;
+        vector<string> d;
+        stringstream ss(filePath);
+        string item;
+        while (getline(ss, item, '/')) {
+            if (!item.empty()) d.push_back(item);
+        }
+        for (int i = 0; i < d.size() - 1; i++) {
+            t = t->files[d[i]];
+        }
+        if (t->files.find(d[d.size() - 1]) == t->files.end()) {
+            t->files[d[d.size() - 1]] = new File();
+        }
+        t = t->files[d[d.size() - 1]];
+        t->isfile = true;
+        t->content += content;
+    }
+
+    string readContentFromFile(string filePath) {
+        File* t = root;
+        vector<string> d;
+        stringstream ss(filePath);
+        string item;
+        while (getline(ss, item, '/')) {
+            if (!item.empty()) d.push_back(item);
+        }
+        for (int i = 0; i < d.size() - 1; i++) {
+            t = t->files[d[i]];
+        }
+        return t->files[d[d.size() - 1]]->content;
+    }
+};
+```
+
+```javascript
+class FileSystem {
+    constructor() {
+        this.root = {
+            isfile: false,
+            files: new Map(),
+            content: ""
+        };
+    }
+
+    ls(path) {
+        let t = this.root;
+        let files = [];
+        if (path !== "/") {
+            const d = path.split("/").filter(x => x !== "");
+            for (let i = 0; i < d.length; i++) {
+                t = t.files.get(d[i]);
+            }
+            if (t.isfile) {
+                return [d[d.length - 1]];
+            }
+        }
+        files = [...t.files.keys()].sort();
+        return files;
+    }
+
+    mkdir(path) {
+        let t = this.root;
+        const d = path.split("/").filter(x => x !== "");
+        for (let i = 0; i < d.length; i++) {
+            if (!t.files.has(d[i])) {
+                t.files.set(d[i], {
+                    isfile: false,
+                    files: new Map(),
+                    content: ""
+                });
+            }
+            t = t.files.get(d[i]);
+        }
+    }
+
+    addContentToFile(filePath, content) {
+        let t = this.root;
+        const d = filePath.split("/").filter(x => x !== "");
+        for (let i = 0; i < d.length - 1; i++) {
+            t = t.files.get(d[i]);
+        }
+        if (!t.files.has(d[d.length - 1])) {
+            t.files.set(d[d.length - 1], {
+                isfile: false,
+                files: new Map(),
+                content: ""
+            });
+        }
+        t = t.files.get(d[d.length - 1]);
+        t.isfile = true;
+        t.content += content;
+    }
+
+    readContentFromFile(filePath) {
+        let t = this.root;
+        const d = filePath.split("/").filter(x => x !== "");
+        for (let i = 0; i < d.length - 1; i++) {
+            t = t.files.get(d[i]);
+        }
+        return t.files.get(d[d.length - 1]).content;
+    }
+}
+```
+
+```csharp
+public class FileSystem {
+    private class File {
+        public bool isfile = false;
+        public Dictionary<string, File> files = new Dictionary<string, File>();
+        public string content = "";
+    }
+
+    private File root;
+
+    public FileSystem() {
+        root = new File();
+    }
+
+    public IList<string> Ls(string path) {
+        File t = root;
+        List<string> files = new List<string>();
+        if (path != "/") {
+            string[] d = path.Split('/').Where(x => x != "").ToArray();
+            for (int i = 0; i < d.Length; i++) {
+                t = t.files[d[i]];
+            }
+            if (t.isfile) {
+                return new List<string> { d[d.Length - 1] };
+            }
+        }
+        files = t.files.Keys.ToList();
+        files.Sort();
+        return files;
+    }
+
+    public void Mkdir(string path) {
+        File t = root;
+        string[] d = path.Split('/').Where(x => x != "").ToArray();
+        for (int i = 0; i < d.Length; i++) {
+            if (!t.files.ContainsKey(d[i])) {
+                t.files[d[i]] = new File();
+            }
+            t = t.files[d[i]];
+        }
+    }
+
+    public void AddContentToFile(string filePath, string content) {
+        File t = root;
+        string[] d = filePath.Split('/').Where(x => x != "").ToArray();
+        for (int i = 0; i < d.Length - 1; i++) {
+            t = t.files[d[i]];
+        }
+        if (!t.files.ContainsKey(d[d.Length - 1])) {
+            t.files[d[d.Length - 1]] = new File();
+        }
+        t = t.files[d[d.Length - 1]];
+        t.isfile = true;
+        t.content += content;
+    }
+
+    public string ReadContentFromFile(string filePath) {
+        File t = root;
+        string[] d = filePath.Split('/').Where(x => x != "").ToArray();
+        for (int i = 0; i < d.Length - 1; i++) {
+            t = t.files[d[i]];
+        }
+        return t.files[d[d.Length - 1]].content;
+    }
+}
+```
+
+```go
+type File struct {
+    isfile  bool
+    files   map[string]*File
+    content string
+}
+
+type FileSystem struct {
+    root *File
+}
+
+func Constructor() FileSystem {
+    return FileSystem{root: &File{files: make(map[string]*File)}}
+}
+
+func (this *FileSystem) Ls(path string) []string {
+    t := this.root
+    files := []string{}
+    if path != "/" {
+        d := strings.Split(path, "/")[1:]
+        for i := 0; i < len(d); i++ {
+            t = t.files[d[i]]
+        }
+        if t.isfile {
+            return []string{d[len(d)-1]}
+        }
+    }
+    for k := range t.files {
+        files = append(files, k)
+    }
+    sort.Strings(files)
+    return files
+}
+
+func (this *FileSystem) Mkdir(path string) {
+    t := this.root
+    d := strings.Split(path, "/")[1:]
+    for i := 0; i < len(d); i++ {
+        if _, ok := t.files[d[i]]; !ok {
+            t.files[d[i]] = &File{files: make(map[string]*File)}
+        }
+        t = t.files[d[i]]
+    }
+}
+
+func (this *FileSystem) AddContentToFile(filePath string, content string) {
+    t := this.root
+    d := strings.Split(filePath, "/")[1:]
+    for i := 0; i < len(d)-1; i++ {
+        t = t.files[d[i]]
+    }
+    if _, ok := t.files[d[len(d)-1]]; !ok {
+        t.files[d[len(d)-1]] = &File{files: make(map[string]*File)}
+    }
+    t = t.files[d[len(d)-1]]
+    t.isfile = true
+    t.content += content
+}
+
+func (this *FileSystem) ReadContentFromFile(filePath string) string {
+    t := this.root
+    d := strings.Split(filePath, "/")[1:]
+    for i := 0; i < len(d)-1; i++ {
+        t = t.files[d[i]]
+    }
+    return t.files[d[len(d)-1]].content
+}
+```
+
+```kotlin
+class FileSystem() {
+    private class File {
+        var isfile = false
+        val files = mutableMapOf<String, File>()
+        var content = ""
+    }
+
+    private val root = File()
+
+    fun ls(path: String): List<String> {
+        var t = root
+        if (path != "/") {
+            val d = path.split("/").filter { it.isNotEmpty() }
+            for (i in d.indices) {
+                t = t.files[d[i]]!!
+            }
+            if (t.isfile) {
+                return listOf(d.last())
+            }
+        }
+        return t.files.keys.sorted()
+    }
+
+    fun mkdir(path: String) {
+        var t = root
+        val d = path.split("/").filter { it.isNotEmpty() }
+        for (part in d) {
+            if (part !in t.files) {
+                t.files[part] = File()
+            }
+            t = t.files[part]!!
+        }
+    }
+
+    fun addContentToFile(filePath: String, content: String) {
+        var t = root
+        val d = filePath.split("/").filter { it.isNotEmpty() }
+        for (i in 0 until d.size - 1) {
+            t = t.files[d[i]]!!
+        }
+        if (d.last() !in t.files) {
+            t.files[d.last()] = File()
+        }
+        t = t.files[d.last()]!!
+        t.isfile = true
+        t.content += content
+    }
+
+    fun readContentFromFile(filePath: String): String {
+        var t = root
+        val d = filePath.split("/").filter { it.isNotEmpty() }
+        for (i in 0 until d.size - 1) {
+            t = t.files[d[i]]!!
+        }
+        return t.files[d.last()]!!.content
+    }
+}
+```
+
+```swift
+class FileSystem {
+    private class File {
+        var isfile = false
+        var files: [String: File] = [:]
+        var content = ""
+    }
+
+    private var root: File
+
+    init() {
+        root = File()
+    }
+
+    func ls(_ path: String) -> [String] {
+        var t = root
+        if path != "/" {
+            let d = path.split(separator: "/").map(String.init)
+            for i in 0..<d.count {
+                t = t.files[d[i]]!
+            }
+            if t.isfile {
+                return [d[d.count - 1]]
+            }
+        }
+        return t.files.keys.sorted()
+    }
+
+    func mkdir(_ path: String) {
+        var t = root
+        let d = path.split(separator: "/").map(String.init)
+        for part in d {
+            if t.files[part] == nil {
+                t.files[part] = File()
+            }
+            t = t.files[part]!
+        }
+    }
+
+    func addContentToFile(_ filePath: String, _ content: String) {
+        var t = root
+        let d = filePath.split(separator: "/").map(String.init)
+        for i in 0..<d.count - 1 {
+            t = t.files[d[i]]!
+        }
+        if t.files[d[d.count - 1]] == nil {
+            t.files[d[d.count - 1]] = File()
+        }
+        t = t.files[d[d.count - 1]]!
+        t.isfile = true
+        t.content += content
+    }
+
+    func readContentFromFile(_ filePath: String) -> String {
+        var t = root
+        let d = filePath.split(separator: "/").map(String.init)
+        for i in 0..<d.count - 1 {
+            t = t.files[d[i]]!
+        }
+        return t.files[d[d.count - 1]]!.content
     }
 }
 ```

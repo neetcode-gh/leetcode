@@ -166,6 +166,184 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int n;
+    private List<int>[] adj;
+    private bool[] visit;
+
+    public int LargestPathValue(string colors, int[][] edges) {
+        n = colors.Length;
+        adj = new List<int>[n];
+        visit = new bool[n];
+
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+        }
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+        }
+
+        int res = -1;
+        for (int i = 0; i < n; i++) {
+            for (int c = 0; c < 26; c++) {
+                int cnt = Dfs(i, c, colors);
+                if (cnt == int.MaxValue) return -1;
+                res = Math.Max(res, cnt);
+            }
+        }
+        return res;
+    }
+
+    private int Dfs(int node, int c, string colors) {
+        if (visit[node]) return int.MaxValue;
+
+        visit[node] = true;
+        int clrCnt = 0;
+        foreach (int nei in adj[node]) {
+            int cur = Dfs(nei, c, colors);
+            if (cur == int.MaxValue) return cur;
+            clrCnt = Math.Max(clrCnt, cur);
+        }
+        visit[node] = false;
+        return clrCnt + ((colors[node] - 'a') == c ? 1 : 0);
+    }
+}
+```
+
+```go
+func largestPathValue(colors string, edges [][]int) int {
+    n := len(colors)
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+    }
+
+    visit := make([]bool, n)
+    var dfs func(node, c int) int
+    dfs = func(node, c int) int {
+        if visit[node] {
+            return math.MaxInt32
+        }
+
+        visit[node] = true
+        clrCnt := 0
+        for _, nei := range adj[node] {
+            cur := dfs(nei, c)
+            if cur == math.MaxInt32 {
+                return cur
+            }
+            clrCnt = max(clrCnt, cur)
+        }
+        visit[node] = false
+        add := 0
+        if int(colors[node]-'a') == c {
+            add = 1
+        }
+        return clrCnt + add
+    }
+
+    res := -1
+    for i := 0; i < n; i++ {
+        for c := 0; c < 26; c++ {
+            cnt := dfs(i, c)
+            if cnt == math.MaxInt32 {
+                return -1
+            }
+            res = max(res, cnt)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+    private lateinit var visit: BooleanArray
+
+    fun largestPathValue(colors: String, edges: Array<IntArray>): Int {
+        val n = colors.length
+        adj = Array(n) { mutableListOf<Int>() }
+        visit = BooleanArray(n)
+
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+        }
+
+        var res = -1
+        for (i in 0 until n) {
+            for (c in 0 until 26) {
+                val cnt = dfs(i, c, colors)
+                if (cnt == Int.MAX_VALUE) return -1
+                res = maxOf(res, cnt)
+            }
+        }
+        return res
+    }
+
+    private fun dfs(node: Int, c: Int, colors: String): Int {
+        if (visit[node]) return Int.MAX_VALUE
+
+        visit[node] = true
+        var clrCnt = 0
+        for (nei in adj[node]) {
+            val cur = dfs(nei, c, colors)
+            if (cur == Int.MAX_VALUE) return cur
+            clrCnt = maxOf(clrCnt, cur)
+        }
+        visit[node] = false
+        return clrCnt + if ((colors[node] - 'a') == c) 1 else 0
+    }
+}
+```
+
+```swift
+class Solution {
+    private var adj = [[Int]]()
+    private var visit = [Bool]()
+
+    func largestPathValue(_ colors: String, _ edges: [[Int]]) -> Int {
+        let n = colors.count
+        let colorsArr = Array(colors)
+        adj = Array(repeating: [Int](), count: n)
+        visit = Array(repeating: false, count: n)
+
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+        }
+
+        func dfs(_ node: Int, _ c: Int) -> Int {
+            if visit[node] { return Int.max }
+
+            visit[node] = true
+            var clrCnt = 0
+            for nei in adj[node] {
+                let cur = dfs(nei, c)
+                if cur == Int.max { return cur }
+                clrCnt = max(clrCnt, cur)
+            }
+            visit[node] = false
+            let colorIndex = Int(colorsArr[node].asciiValue! - Character("a").asciiValue!)
+            return clrCnt + (colorIndex == c ? 1 : 0)
+        }
+
+        var res = -1
+        for i in 0..<n {
+            for c in 0..<26 {
+                let cnt = dfs(i, c)
+                if cnt == Int.max { return -1 }
+                res = max(res, cnt)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,6 +567,232 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int n;
+    private List<int>[] adj;
+    private bool[] visit, path;
+    private int[][] count;
+
+    public int LargestPathValue(string colors, int[][] edges) {
+        n = colors.Length;
+        adj = new List<int>[n];
+        visit = new bool[n];
+        path = new bool[n];
+        count = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+            count[i] = new int[26];
+        }
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+        }
+
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            if (Dfs(i, colors) == int.MaxValue) return -1;
+            for (int c = 0; c < 26; c++) {
+                res = Math.Max(res, count[i][c]);
+            }
+        }
+        return res;
+    }
+
+    private int Dfs(int node, string colors) {
+        if (path[node]) return int.MaxValue;
+        if (visit[node]) return 0;
+
+        visit[node] = true;
+        path[node] = true;
+        int colorIndex = colors[node] - 'a';
+        count[node][colorIndex] = 1;
+
+        foreach (int nei in adj[node]) {
+            if (Dfs(nei, colors) == int.MaxValue) return int.MaxValue;
+            for (int c = 0; c < 26; c++) {
+                count[node][c] = Math.Max(
+                    count[node][c],
+                    (c == colorIndex ? 1 : 0) + count[nei][c]
+                );
+            }
+        }
+
+        path[node] = false;
+        return 0;
+    }
+}
+```
+
+```go
+func largestPathValue(colors string, edges [][]int) int {
+    n := len(colors)
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+    }
+
+    visit := make([]bool, n)
+    path := make([]bool, n)
+    count := make([][]int, n)
+    for i := range count {
+        count[i] = make([]int, 26)
+    }
+
+    var dfs func(node int) int
+    dfs = func(node int) int {
+        if path[node] {
+            return math.MaxInt32
+        }
+        if visit[node] {
+            return 0
+        }
+
+        visit[node] = true
+        path[node] = true
+        colorIndex := int(colors[node] - 'a')
+        count[node][colorIndex] = 1
+
+        for _, nei := range adj[node] {
+            if dfs(nei) == math.MaxInt32 {
+                return math.MaxInt32
+            }
+            for c := 0; c < 26; c++ {
+                add := 0
+                if c == colorIndex {
+                    add = 1
+                }
+                count[node][c] = max(count[node][c], add+count[nei][c])
+            }
+        }
+
+        path[node] = false
+        return 0
+    }
+
+    res := 0
+    for i := 0; i < n; i++ {
+        if dfs(i) == math.MaxInt32 {
+            return -1
+        }
+        for c := 0; c < 26; c++ {
+            res = max(res, count[i][c])
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+    private lateinit var visit: BooleanArray
+    private lateinit var path: BooleanArray
+    private lateinit var count: Array<IntArray>
+
+    fun largestPathValue(colors: String, edges: Array<IntArray>): Int {
+        val n = colors.length
+        adj = Array(n) { mutableListOf<Int>() }
+        visit = BooleanArray(n)
+        path = BooleanArray(n)
+        count = Array(n) { IntArray(26) }
+
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+        }
+
+        var res = 0
+        for (i in 0 until n) {
+            if (dfs(i, colors) == Int.MAX_VALUE) return -1
+            for (c in 0 until 26) {
+                res = maxOf(res, count[i][c])
+            }
+        }
+        return res
+    }
+
+    private fun dfs(node: Int, colors: String): Int {
+        if (path[node]) return Int.MAX_VALUE
+        if (visit[node]) return 0
+
+        visit[node] = true
+        path[node] = true
+        val colorIndex = colors[node] - 'a'
+        count[node][colorIndex] = 1
+
+        for (nei in adj[node]) {
+            if (dfs(nei, colors) == Int.MAX_VALUE) return Int.MAX_VALUE
+            for (c in 0 until 26) {
+                count[node][c] = maxOf(
+                    count[node][c],
+                    (if (c == colorIndex) 1 else 0) + count[nei][c]
+                )
+            }
+        }
+
+        path[node] = false
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    private var adj = [[Int]]()
+    private var visit = [Bool]()
+    private var path = [Bool]()
+    private var count = [[Int]]()
+
+    func largestPathValue(_ colors: String, _ edges: [[Int]]) -> Int {
+        let n = colors.count
+        let colorsArr = Array(colors)
+        adj = Array(repeating: [Int](), count: n)
+        visit = Array(repeating: false, count: n)
+        path = Array(repeating: false, count: n)
+        count = Array(repeating: Array(repeating: 0, count: 26), count: n)
+
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+        }
+
+        func dfs(_ node: Int) -> Int {
+            if path[node] { return Int.max }
+            if visit[node] { return 0 }
+
+            visit[node] = true
+            path[node] = true
+            let colorIndex = Int(colorsArr[node].asciiValue! - Character("a").asciiValue!)
+            count[node][colorIndex] = 1
+
+            for nei in adj[node] {
+                if dfs(nei) == Int.max { return Int.max }
+                for c in 0..<26 {
+                    count[node][c] = max(
+                        count[node][c],
+                        (c == colorIndex ? 1 : 0) + count[nei][c]
+                    )
+                }
+            }
+
+            path[node] = false
+            return 0
+        }
+
+        var res = 0
+        for i in 0..<n {
+            if dfs(i) == Int.max { return -1 }
+            for c in 0..<26 {
+                res = max(res, count[i][c])
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -576,6 +980,198 @@ class Solution {
         }
 
         return visit === n ? res : -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestPathValue(string colors, int[][] edges) {
+        int n = colors.Length;
+        var adj = new List<int>[n];
+        var indegree = new int[n];
+        var count = new int[n][];
+
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+            count[i] = new int[26];
+        }
+
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+            indegree[edge[1]]++;
+        }
+
+        var q = new Queue<int>();
+        for (int i = 0; i < n; i++) {
+            if (indegree[i] == 0) {
+                q.Enqueue(i);
+            }
+        }
+
+        int visit = 0, res = 0;
+        while (q.Count > 0) {
+            int node = q.Dequeue();
+            visit++;
+            int colorIndex = colors[node] - 'a';
+            count[node][colorIndex]++;
+            res = Math.Max(res, count[node][colorIndex]);
+
+            foreach (int nei in adj[node]) {
+                for (int c = 0; c < 26; c++) {
+                    count[nei][c] = Math.Max(count[nei][c], count[node][c]);
+                }
+                if (--indegree[nei] == 0) {
+                    q.Enqueue(nei);
+                }
+            }
+        }
+
+        return visit == n ? res : -1;
+    }
+}
+```
+
+```go
+func largestPathValue(colors string, edges [][]int) int {
+    n := len(colors)
+    adj := make([][]int, n)
+    indegree := make([]int, n)
+    count := make([][]int, n)
+
+    for i := range adj {
+        adj[i] = []int{}
+        count[i] = make([]int, 26)
+    }
+
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        indegree[edge[1]]++
+    }
+
+    q := []int{}
+    for i := 0; i < n; i++ {
+        if indegree[i] == 0 {
+            q = append(q, i)
+        }
+    }
+
+    visit, res := 0, 0
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        visit++
+        colorIndex := int(colors[node] - 'a')
+        count[node][colorIndex]++
+        res = max(res, count[node][colorIndex])
+
+        for _, nei := range adj[node] {
+            for c := 0; c < 26; c++ {
+                count[nei][c] = max(count[nei][c], count[node][c])
+            }
+            indegree[nei]--
+            if indegree[nei] == 0 {
+                q = append(q, nei)
+            }
+        }
+    }
+
+    if visit == n {
+        return res
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun largestPathValue(colors: String, edges: Array<IntArray>): Int {
+        val n = colors.length
+        val adj = Array(n) { mutableListOf<Int>() }
+        val indegree = IntArray(n)
+        val count = Array(n) { IntArray(26) }
+
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            indegree[edge[1]]++
+        }
+
+        val q = ArrayDeque<Int>()
+        for (i in 0 until n) {
+            if (indegree[i] == 0) {
+                q.add(i)
+            }
+        }
+
+        var visit = 0
+        var res = 0
+        while (q.isNotEmpty()) {
+            val node = q.removeFirst()
+            visit++
+            val colorIndex = colors[node] - 'a'
+            count[node][colorIndex]++
+            res = maxOf(res, count[node][colorIndex])
+
+            for (nei in adj[node]) {
+                for (c in 0 until 26) {
+                    count[nei][c] = maxOf(count[nei][c], count[node][c])
+                }
+                indegree[nei]--
+                if (indegree[nei] == 0) {
+                    q.add(nei)
+                }
+            }
+        }
+
+        return if (visit == n) res else -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestPathValue(_ colors: String, _ edges: [[Int]]) -> Int {
+        let n = colors.count
+        let colorsArr = Array(colors)
+        var adj = Array(repeating: [Int](), count: n)
+        var indegree = Array(repeating: 0, count: n)
+        var count = Array(repeating: Array(repeating: 0, count: 26), count: n)
+
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            indegree[edge[1]] += 1
+        }
+
+        var q = [Int]()
+        for i in 0..<n {
+            if indegree[i] == 0 {
+                q.append(i)
+            }
+        }
+
+        var visit = 0
+        var res = 0
+        var idx = 0
+        while idx < q.count {
+            let node = q[idx]
+            idx += 1
+            visit += 1
+            let colorIndex = Int(colorsArr[node].asciiValue! - Character("a").asciiValue!)
+            count[node][colorIndex] += 1
+            res = max(res, count[node][colorIndex])
+
+            for nei in adj[node] {
+                for c in 0..<26 {
+                    count[nei][c] = max(count[nei][c], count[node][c])
+                }
+                indegree[nei] -= 1
+                if indegree[nei] == 0 {
+                    q.append(nei)
+                }
+            }
+        }
+
+        return visit == n ? res : -1
     }
 }
 ```

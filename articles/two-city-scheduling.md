@@ -134,6 +134,81 @@ public class Solution {
 }
 ```
 
+```go
+func twoCitySchedCost(costs [][]int) int {
+    n := len(costs) / 2
+
+    var dfs func(i, aCount, bCount int) int
+    dfs = func(i, aCount, bCount int) int {
+        if i == len(costs) {
+            return 0
+        }
+
+        res := 1 << 30
+        if aCount > 0 {
+            res = costs[i][0] + dfs(i+1, aCount-1, bCount)
+        }
+
+        if bCount > 0 {
+            if val := costs[i][1] + dfs(i+1, aCount, bCount-1); val < res {
+                res = val
+            }
+        }
+        return res
+    }
+
+    return dfs(0, n, n)
+}
+```
+
+```kotlin
+class Solution {
+    fun twoCitySchedCost(costs: Array<IntArray>): Int {
+        val n = costs.size / 2
+
+        fun dfs(i: Int, aCount: Int, bCount: Int): Int {
+            if (i == costs.size) return 0
+
+            var res = Int.MAX_VALUE
+            if (aCount > 0) {
+                res = costs[i][0] + dfs(i + 1, aCount - 1, bCount)
+            }
+
+            if (bCount > 0) {
+                res = minOf(res, costs[i][1] + dfs(i + 1, aCount, bCount - 1))
+            }
+            return res
+        }
+
+        return dfs(0, n, n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoCitySchedCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count / 2
+
+        func dfs(_ i: Int, _ aCount: Int, _ bCount: Int) -> Int {
+            if i == costs.count { return 0 }
+
+            var res = Int.max
+            if aCount > 0 {
+                res = costs[i][0] + dfs(i + 1, aCount - 1, bCount)
+            }
+
+            if bCount > 0 {
+                res = min(res, costs[i][1] + dfs(i + 1, aCount, bCount - 1))
+            }
+            return res
+        }
+
+        return dfs(0, n, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -312,6 +387,98 @@ public class Solution {
 }
 ```
 
+```go
+func twoCitySchedCost(costs [][]int) int {
+    n := len(costs) / 2
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, aCount, bCount int) int
+    dfs = func(i, aCount, bCount int) int {
+        if i == len(costs) {
+            return 0
+        }
+        if dp[aCount][bCount] != -1 {
+            return dp[aCount][bCount]
+        }
+
+        res := 1 << 30
+        if aCount > 0 {
+            res = costs[i][0] + dfs(i+1, aCount-1, bCount)
+        }
+        if bCount > 0 {
+            if val := costs[i][1] + dfs(i+1, aCount, bCount-1); val < res {
+                res = val
+            }
+        }
+
+        dp[aCount][bCount] = res
+        return res
+    }
+
+    return dfs(0, n, n)
+}
+```
+
+```kotlin
+class Solution {
+    fun twoCitySchedCost(costs: Array<IntArray>): Int {
+        val n = costs.size / 2
+        val dp = Array(n + 1) { IntArray(n + 1) { -1 } }
+
+        fun dfs(i: Int, aCount: Int, bCount: Int): Int {
+            if (i == costs.size) return 0
+            if (dp[aCount][bCount] != -1) return dp[aCount][bCount]
+
+            var res = Int.MAX_VALUE
+            if (aCount > 0) {
+                res = costs[i][0] + dfs(i + 1, aCount - 1, bCount)
+            }
+            if (bCount > 0) {
+                res = minOf(res, costs[i][1] + dfs(i + 1, aCount, bCount - 1))
+            }
+
+            dp[aCount][bCount] = res
+            return res
+        }
+
+        return dfs(0, n, n)
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoCitySchedCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count / 2
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: n + 1), count: n + 1)
+
+        func dfs(_ i: Int, _ aCount: Int, _ bCount: Int) -> Int {
+            if i == costs.count { return 0 }
+            if dp[aCount][bCount] != -1 { return dp[aCount][bCount] }
+
+            var res = Int.max
+            if aCount > 0 {
+                res = costs[i][0] + dfs(i + 1, aCount - 1, bCount)
+            }
+            if bCount > 0 {
+                res = min(res, costs[i][1] + dfs(i + 1, aCount, bCount - 1))
+            }
+
+            dp[aCount][bCount] = res
+            return res
+        }
+
+        return dfs(0, n, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,6 +626,91 @@ public class Solution {
         }
 
         return dp[n, n];
+    }
+}
+```
+
+```go
+func twoCitySchedCost(costs [][]int) int {
+    n := len(costs) / 2
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for aCount := 0; aCount <= n; aCount++ {
+        for bCount := 0; bCount <= n; bCount++ {
+            i := aCount + bCount
+            if i == 0 {
+                continue
+            }
+
+            dp[aCount][bCount] = 1 << 30
+            if aCount > 0 {
+                if val := dp[aCount-1][bCount] + costs[i-1][0]; val < dp[aCount][bCount] {
+                    dp[aCount][bCount] = val
+                }
+            }
+            if bCount > 0 {
+                if val := dp[aCount][bCount-1] + costs[i-1][1]; val < dp[aCount][bCount] {
+                    dp[aCount][bCount] = val
+                }
+            }
+        }
+    }
+
+    return dp[n][n]
+}
+```
+
+```kotlin
+class Solution {
+    fun twoCitySchedCost(costs: Array<IntArray>): Int {
+        val n = costs.size / 2
+        val dp = Array(n + 1) { IntArray(n + 1) }
+
+        for (aCount in 0..n) {
+            for (bCount in 0..n) {
+                val i = aCount + bCount
+                if (i == 0) continue
+
+                dp[aCount][bCount] = Int.MAX_VALUE
+                if (aCount > 0) {
+                    dp[aCount][bCount] = minOf(dp[aCount][bCount], dp[aCount - 1][bCount] + costs[i - 1][0])
+                }
+                if (bCount > 0) {
+                    dp[aCount][bCount] = minOf(dp[aCount][bCount], dp[aCount][bCount - 1] + costs[i - 1][1])
+                }
+            }
+        }
+
+        return dp[n][n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoCitySchedCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count / 2
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: n + 1), count: n + 1)
+
+        for aCount in 0...n {
+            for bCount in 0...n {
+                let i = aCount + bCount
+                if i == 0 { continue }
+
+                dp[aCount][bCount] = Int.max
+                if aCount > 0 {
+                    dp[aCount][bCount] = min(dp[aCount][bCount], dp[aCount - 1][bCount] + costs[i - 1][0])
+                }
+                if bCount > 0 {
+                    dp[aCount][bCount] = min(dp[aCount][bCount], dp[aCount][bCount - 1] + costs[i - 1][1])
+                }
+            }
+        }
+
+        return dp[n][n]
     }
 }
 ```
@@ -616,6 +868,91 @@ public class Solution {
 }
 ```
 
+```go
+func twoCitySchedCost(costs [][]int) int {
+    n := len(costs) / 2
+    dp := make([]int, n+1)
+
+    for aCount := 0; aCount <= n; aCount++ {
+        for bCount := 0; bCount <= n; bCount++ {
+            i := aCount + bCount
+            if i == 0 {
+                continue
+            }
+
+            tmp := dp[bCount]
+            dp[bCount] = 1 << 30
+            if aCount > 0 {
+                if val := tmp + costs[i-1][0]; val < dp[bCount] {
+                    dp[bCount] = val
+                }
+            }
+            if bCount > 0 {
+                if val := dp[bCount-1] + costs[i-1][1]; val < dp[bCount] {
+                    dp[bCount] = val
+                }
+            }
+        }
+    }
+
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun twoCitySchedCost(costs: Array<IntArray>): Int {
+        val n = costs.size / 2
+        val dp = IntArray(n + 1)
+
+        for (aCount in 0..n) {
+            for (bCount in 0..n) {
+                val i = aCount + bCount
+                if (i == 0) continue
+
+                val tmp = dp[bCount]
+                dp[bCount] = Int.MAX_VALUE
+                if (aCount > 0) {
+                    dp[bCount] = minOf(dp[bCount], tmp + costs[i - 1][0])
+                }
+                if (bCount > 0) {
+                    dp[bCount] = minOf(dp[bCount], dp[bCount - 1] + costs[i - 1][1])
+                }
+            }
+        }
+
+        return dp[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoCitySchedCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count / 2
+        var dp = [Int](repeating: 0, count: n + 1)
+
+        for aCount in 0...n {
+            for bCount in 0...n {
+                let i = aCount + bCount
+                if i == 0 { continue }
+
+                let tmp = dp[bCount]
+                dp[bCount] = Int.max
+                if aCount > 0 {
+                    dp[bCount] = min(dp[bCount], tmp + costs[i - 1][0])
+                }
+                if bCount > 0 {
+                    dp[bCount] = min(dp[bCount], dp[bCount - 1] + costs[i - 1][1])
+                }
+            }
+        }
+
+        return dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -749,6 +1086,70 @@ public class Solution {
 }
 ```
 
+```go
+func twoCitySchedCost(costs [][]int) int {
+    diffs := make([][3]int, len(costs))
+    for i, cost := range costs {
+        diffs[i] = [3]int{cost[1] - cost[0], cost[0], cost[1]}
+    }
+
+    sort.Slice(diffs, func(i, j int) bool {
+        return diffs[i][0] < diffs[j][0]
+    })
+
+    res := 0
+    for i := 0; i < len(diffs); i++ {
+        if i < len(diffs)/2 {
+            res += diffs[i][2]
+        } else {
+            res += diffs[i][1]
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun twoCitySchedCost(costs: Array<IntArray>): Int {
+        val diffs = costs.map { intArrayOf(it[1] - it[0], it[0], it[1]) }
+            .sortedBy { it[0] }
+
+        var res = 0
+        for (i in diffs.indices) {
+            if (i < diffs.size / 2) {
+                res += diffs[i][2]
+            } else {
+                res += diffs[i][1]
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoCitySchedCost(_ costs: [[Int]]) -> Int {
+        var diffs = costs.map { [($0[1] - $0[0]), $0[0], $0[1]] }
+        diffs.sort { $0[0] < $1[0] }
+
+        var res = 0
+        for i in 0..<diffs.count {
+            if i < diffs.count / 2 {
+                res += diffs[i][2]
+            } else {
+                res += diffs[i][1]
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -835,6 +1236,55 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func twoCitySchedCost(costs [][]int) int {
+    sort.Slice(costs, func(i, j int) bool {
+        return (costs[i][1] - costs[i][0]) < (costs[j][1] - costs[j][0])
+    })
+
+    n := len(costs) / 2
+    res := 0
+
+    for i := 0; i < n; i++ {
+        res += costs[i][1] + costs[i+n][0]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun twoCitySchedCost(costs: Array<IntArray>): Int {
+        costs.sortBy { it[1] - it[0] }
+        val n = costs.size / 2
+        var res = 0
+
+        for (i in 0 until n) {
+            res += costs[i][1] + costs[i + n][0]
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoCitySchedCost(_ costs: [[Int]]) -> Int {
+        let sortedCosts = costs.sorted { ($0[1] - $0[0]) < ($1[1] - $1[0]) }
+        let n = sortedCosts.count / 2
+        var res = 0
+
+        for i in 0..<n {
+            res += sortedCosts[i][1] + sortedCosts[i + n][0]
+        }
+
+        return res
     }
 }
 ```

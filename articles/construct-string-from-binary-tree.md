@@ -155,6 +155,159 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public string Tree2str(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+
+        string cur = root.val.ToString();
+        string left = Tree2str(root.left);
+        string right = Tree2str(root.right);
+
+        if (!string.IsNullOrEmpty(left) && !string.IsNullOrEmpty(right)) {
+            return cur + "(" + left + ")" + "(" + right + ")";
+        }
+
+        if (!string.IsNullOrEmpty(right)) {
+            return cur + "()" + "(" + right + ")";
+        }
+
+        if (!string.IsNullOrEmpty(left)) {
+            return cur + "(" + left + ")";
+        }
+
+        return cur;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func tree2str(root *TreeNode) string {
+    if root == nil {
+        return ""
+    }
+
+    cur := strconv.Itoa(root.Val)
+    left := tree2str(root.Left)
+    right := tree2str(root.Right)
+
+    if left != "" && right != "" {
+        return cur + "(" + left + ")(" + right + ")"
+    }
+
+    if right != "" {
+        return cur + "()(" + right + ")"
+    }
+
+    if left != "" {
+        return cur + "(" + left + ")"
+    }
+
+    return cur
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int = 0) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun tree2str(root: TreeNode?): String {
+        if (root == null) {
+            return ""
+        }
+
+        val cur = root.`val`.toString()
+        val left = tree2str(root.left)
+        val right = tree2str(root.right)
+
+        if (left.isNotEmpty() && right.isNotEmpty()) {
+            return "$cur($left)($right)"
+        }
+
+        if (right.isNotEmpty()) {
+            return "$cur()($right)"
+        }
+
+        if (left.isNotEmpty()) {
+            return "$cur($left)"
+        }
+
+        return cur
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func tree2str(_ root: TreeNode?) -> String {
+        guard let root = root else {
+            return ""
+        }
+
+        let cur = String(root.val)
+        let left = tree2str(root.left)
+        let right = tree2str(root.right)
+
+        if !left.isEmpty && !right.isEmpty {
+            return "\(cur)(\(left))(\(right))"
+        }
+
+        if !right.isEmpty {
+            return "\(cur)()(\(right))"
+        }
+
+        if !left.isEmpty {
+            return "\(cur)(\(left))"
+        }
+
+        return cur
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -301,6 +454,99 @@ class Solution {
 
         preorder(root);
         return res.join('').slice(1, -1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string Tree2str(TreeNode root) {
+        var res = new StringBuilder();
+        Preorder(root, res);
+        return res.ToString().Substring(1, res.Length - 2);
+    }
+
+    private void Preorder(TreeNode root, StringBuilder res) {
+        if (root == null) return;
+
+        res.Append("(").Append(root.val);
+        if (root.left == null && root.right != null) {
+            res.Append("()");
+        }
+        Preorder(root.left, res);
+        Preorder(root.right, res);
+        res.Append(")");
+    }
+}
+```
+
+```go
+func tree2str(root *TreeNode) string {
+    var res strings.Builder
+
+    var preorder func(node *TreeNode)
+    preorder = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        res.WriteString("(")
+        res.WriteString(strconv.Itoa(node.Val))
+        if node.Left == nil && node.Right != nil {
+            res.WriteString("()")
+        }
+        preorder(node.Left)
+        preorder(node.Right)
+        res.WriteString(")")
+    }
+
+    preorder(root)
+    s := res.String()
+    return s[1 : len(s)-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun tree2str(root: TreeNode?): String {
+        val res = StringBuilder()
+
+        fun preorder(node: TreeNode?) {
+            if (node == null) return
+            res.append("(").append(node.`val`)
+            if (node.left == null && node.right != null) {
+                res.append("()")
+            }
+            preorder(node.left)
+            preorder(node.right)
+            res.append(")")
+        }
+
+        preorder(root)
+        return res.toString().substring(1, res.length - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func tree2str(_ root: TreeNode?) -> String {
+        var res = [String]()
+
+        func preorder(_ node: TreeNode?) {
+            guard let node = node else { return }
+            res.append("(")
+            res.append(String(node.val))
+            if node.left == nil && node.right != nil {
+                res.append("()")
+            }
+            preorder(node.left)
+            preorder(node.right)
+            res.append(")")
+        }
+
+        preorder(root)
+        let str = res.joined()
+        return String(str.dropFirst().dropLast())
     }
 }
 ```
@@ -506,6 +752,159 @@ class Solution {
         }
 
         return res.join('').slice(1, -1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string Tree2str(TreeNode root) {
+        if (root == null) {
+            return "";
+        }
+
+        var res = new StringBuilder();
+        var stack = new Stack<TreeNode>();
+        TreeNode lastVisited = null;
+        TreeNode cur = root;
+
+        while (cur != null || stack.Count > 0) {
+            if (cur != null) {
+                res.Append("(").Append(cur.val);
+                if (cur.left == null && cur.right != null) {
+                    res.Append("()");
+                }
+
+                stack.Push(cur);
+                cur = cur.left;
+            } else {
+                TreeNode top = stack.Peek();
+                if (top.right != null && lastVisited != top.right) {
+                    cur = top.right;
+                } else {
+                    stack.Pop();
+                    res.Append(")");
+                    lastVisited = top;
+                }
+            }
+        }
+
+        return res.ToString().Substring(1, res.Length - 2);
+    }
+}
+```
+
+```go
+func tree2str(root *TreeNode) string {
+    if root == nil {
+        return ""
+    }
+
+    var res strings.Builder
+    stack := []*TreeNode{}
+    var lastVisited *TreeNode
+    cur := root
+
+    for cur != nil || len(stack) > 0 {
+        if cur != nil {
+            res.WriteString("(")
+            res.WriteString(strconv.Itoa(cur.Val))
+            if cur.Left == nil && cur.Right != nil {
+                res.WriteString("()")
+            }
+
+            stack = append(stack, cur)
+            cur = cur.Left
+        } else {
+            top := stack[len(stack)-1]
+            if top.Right != nil && lastVisited != top.Right {
+                cur = top.Right
+            } else {
+                stack = stack[:len(stack)-1]
+                res.WriteString(")")
+                lastVisited = top
+            }
+        }
+    }
+
+    s := res.String()
+    return s[1 : len(s)-1]
+}
+```
+
+```kotlin
+class Solution {
+    fun tree2str(root: TreeNode?): String {
+        if (root == null) {
+            return ""
+        }
+
+        val res = StringBuilder()
+        val stack = ArrayDeque<TreeNode>()
+        var lastVisited: TreeNode? = null
+        var cur = root
+
+        while (cur != null || stack.isNotEmpty()) {
+            if (cur != null) {
+                res.append("(").append(cur.`val`)
+                if (cur.left == null && cur.right != null) {
+                    res.append("()")
+                }
+
+                stack.addLast(cur)
+                cur = cur.left
+            } else {
+                val top = stack.last()
+                if (top.right != null && lastVisited != top.right) {
+                    cur = top.right
+                } else {
+                    stack.removeLast()
+                    res.append(")")
+                    lastVisited = top
+                }
+            }
+        }
+
+        return res.toString().substring(1, res.length - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func tree2str(_ root: TreeNode?) -> String {
+        guard let root = root else {
+            return ""
+        }
+
+        var res = [String]()
+        var stack = [TreeNode]()
+        var lastVisited: TreeNode? = nil
+        var cur: TreeNode? = root
+
+        while cur != nil || !stack.isEmpty {
+            if let node = cur {
+                res.append("(\(node.val)")
+                if node.left == nil && node.right != nil {
+                    res.append("()")
+                }
+
+                stack.append(node)
+                cur = node.left
+            } else {
+                let top = stack.last!
+                if top.right != nil && lastVisited !== top.right {
+                    cur = top.right
+                } else {
+                    stack.removeLast()
+                    res.append(")")
+                    lastVisited = top
+                }
+            }
+        }
+
+        let str = res.joined()
+        return String(str.dropFirst().dropLast())
     }
 }
 ```

@@ -128,6 +128,83 @@ public class Solution {
 }
 ```
 
+```go
+func minCost(costs [][]int) int {
+    n := len(costs)
+
+    var dfs func(i, prevColor int) int
+    dfs = func(i, prevColor int) int {
+        if i == n {
+            return 0
+        }
+
+        res := math.MaxInt32
+        for c := 0; c < 3; c++ {
+            if c == prevColor {
+                continue
+            }
+            res = min(res, costs[i][c] + dfs(i+1, c))
+        }
+        return res
+    }
+
+    return dfs(0, -1)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(costs: Array<IntArray>): Int {
+        val n = costs.size
+
+        fun dfs(i: Int, prevColor: Int): Int {
+            if (i == n) return 0
+
+            var res = Int.MAX_VALUE
+            for (c in 0 until 3) {
+                if (c == prevColor) continue
+                res = minOf(res, costs[i][c] + dfs(i + 1, c))
+            }
+            return res
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count
+
+        func dfs(_ i: Int, _ prevColor: Int) -> Int {
+            if i == n {
+                return 0
+            }
+
+            var res = Int.max
+            for c in 0..<3 {
+                if c == prevColor {
+                    continue
+                }
+                res = min(res, costs[i][c] + dfs(i + 1, c))
+            }
+            return res
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +376,105 @@ public class Solution {
 }
 ```
 
+```go
+func minCost(costs [][]int) int {
+    n := len(costs)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, 4)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, prevColor int) int
+    dfs = func(i, prevColor int) int {
+        if i == n {
+            return 0
+        }
+        if dp[i][prevColor+1] != -1 {
+            return dp[i][prevColor+1]
+        }
+
+        res := math.MaxInt32
+        for c := 0; c < 3; c++ {
+            if c == prevColor {
+                continue
+            }
+            res = min(res, costs[i][c]+dfs(i+1, c))
+        }
+
+        dp[i][prevColor+1] = res
+        return res
+    }
+
+    return dfs(0, -1)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(costs: Array<IntArray>): Int {
+        val n = costs.size
+        val dp = Array(n) { IntArray(4) { -1 } }
+
+        fun dfs(i: Int, prevColor: Int): Int {
+            if (i == n) return 0
+            if (dp[i][prevColor + 1] != -1) return dp[i][prevColor + 1]
+
+            var res = Int.MAX_VALUE
+            for (c in 0 until 3) {
+                if (c == prevColor) continue
+                res = minOf(res, costs[i][c] + dfs(i + 1, c))
+            }
+
+            dp[i][prevColor + 1] = res
+            return res
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count
+        var dp = [[Int]](repeating: [Int](repeating: -1, count: 4), count: n)
+
+        func dfs(_ i: Int, _ prevColor: Int) -> Int {
+            if i == n {
+                return 0
+            }
+            if dp[i][prevColor + 1] != -1 {
+                return dp[i][prevColor + 1]
+            }
+
+            var res = Int.max
+            for c in 0..<3 {
+                if c == prevColor {
+                    continue
+                }
+                res = min(res, costs[i][c] + dfs(i + 1, c))
+            }
+
+            dp[i][prevColor + 1] = res
+            return res
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,6 +610,85 @@ public class Solution {
 }
 ```
 
+```go
+func minCost(costs [][]int) int {
+    n := len(costs)
+    if n == 0 {
+        return 0
+    }
+
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, 3)
+    }
+
+    for c := 0; c < 3; c++ {
+        dp[0][c] = costs[0][c]
+    }
+
+    for i := 1; i < n; i++ {
+        for c := 0; c < 3; c++ {
+            dp[i][c] = costs[i][c] + min(dp[i-1][(c+1)%3], dp[i-1][(c+2)%3])
+        }
+    }
+
+    return min(dp[n-1][0], min(dp[n-1][1], dp[n-1][2]))
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(costs: Array<IntArray>): Int {
+        val n = costs.size
+        if (n == 0) return 0
+
+        val dp = Array(n) { IntArray(3) }
+        for (c in 0 until 3) {
+            dp[0][c] = costs[0][c]
+        }
+
+        for (i in 1 until n) {
+            for (c in 0 until 3) {
+                dp[i][c] = costs[i][c] + minOf(dp[i - 1][(c + 1) % 3], dp[i - 1][(c + 2) % 3])
+            }
+        }
+
+        return minOf(dp[n - 1][0], dp[n - 1][1], dp[n - 1][2])
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ costs: [[Int]]) -> Int {
+        let n = costs.count
+        if n == 0 {
+            return 0
+        }
+
+        var dp = [[Int]](repeating: [Int](repeating: 0, count: 3), count: n)
+        for c in 0..<3 {
+            dp[0][c] = costs[0][c]
+        }
+
+        for i in 1..<n {
+            for c in 0..<3 {
+                dp[i][c] = costs[i][c] + min(dp[i - 1][(c + 1) % 3], dp[i - 1][(c + 2) % 3])
+            }
+        }
+
+        return min(dp[n - 1][0], min(dp[n - 1][1], dp[n - 1][2]))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -534,6 +789,70 @@ public class Solution {
         }
 
         return Math.Min(dp[0], Math.Min(dp[1], dp[2]));
+    }
+}
+```
+
+```go
+func minCost(costs [][]int) int {
+    dp0, dp1, dp2 := 0, 0, 0
+
+    for _, cost := range costs {
+        newDp0 := cost[0] + min(dp1, dp2)
+        newDp1 := cost[1] + min(dp0, dp2)
+        newDp2 := cost[2] + min(dp0, dp1)
+        dp0, dp1, dp2 = newDp0, newDp1, newDp2
+    }
+
+    return min(dp0, min(dp1, dp2))
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCost(costs: Array<IntArray>): Int {
+        var dp0 = 0
+        var dp1 = 0
+        var dp2 = 0
+
+        for (cost in costs) {
+            val newDp0 = cost[0] + minOf(dp1, dp2)
+            val newDp1 = cost[1] + minOf(dp0, dp2)
+            val newDp2 = cost[2] + minOf(dp0, dp1)
+            dp0 = newDp0
+            dp1 = newDp1
+            dp2 = newDp2
+        }
+
+        return minOf(dp0, dp1, dp2)
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCost(_ costs: [[Int]]) -> Int {
+        var dp0 = 0
+        var dp1 = 0
+        var dp2 = 0
+
+        for cost in costs {
+            let newDp0 = cost[0] + min(dp1, dp2)
+            let newDp1 = cost[1] + min(dp0, dp2)
+            let newDp2 = cost[2] + min(dp0, dp1)
+            dp0 = newDp0
+            dp1 = newDp1
+            dp2 = newDp2
+        }
+
+        return min(dp0, min(dp1, dp2))
     }
 }
 ```

@@ -244,6 +244,176 @@ public class Solution {
 }
 ```
 
+```go
+func nextPermutation(nums []int) {
+    perms := permute(append([]int{}, nums...))
+    sort.Slice(perms, func(a, b int) bool {
+        for i := 0; i < len(perms[a]); i++ {
+            if perms[a][i] != perms[b][i] {
+                return perms[a][i] < perms[b][i]
+            }
+        }
+        return false
+    })
+    for i := 0; i < len(perms); i++ {
+        match := true
+        for j := 0; j < len(nums); j++ {
+            if perms[i][j] != nums[j] {
+                match = false
+                break
+            }
+        }
+        if match {
+            next := perms[(i+1)%len(perms)]
+            copy(nums, next)
+            return
+        }
+    }
+}
+
+func permute(nums []int) [][]int {
+    sort.Ints(nums)
+    var res [][]int
+    used := make([]bool, len(nums))
+    var path []int
+
+    var dfs func()
+    dfs = func() {
+        if len(path) == len(nums) {
+            res = append(res, append([]int{}, path...))
+            return
+        }
+        for i := 0; i < len(nums); i++ {
+            if used[i] {
+                continue
+            }
+            if i > 0 && nums[i] == nums[i-1] && !used[i-1] {
+                continue
+            }
+            used[i] = true
+            path = append(path, nums[i])
+            dfs()
+            path = path[:len(path)-1]
+            used[i] = false
+        }
+    }
+    dfs()
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun nextPermutation(nums: IntArray) {
+        val perms = permute(nums.clone())
+        perms.sortWith { a, b ->
+            for (i in a.indices) {
+                if (a[i] != b[i]) return@sortWith a[i] - b[i]
+            }
+            0
+        }
+        for (i in perms.indices) {
+            var match = true
+            for (j in nums.indices) {
+                if (perms[i][j] != nums[j]) {
+                    match = false
+                    break
+                }
+            }
+            if (match) {
+                val next = perms[(i + 1) % perms.size]
+                for (j in nums.indices) {
+                    nums[j] = next[j]
+                }
+                return
+            }
+        }
+    }
+
+    private fun permute(nums: IntArray): MutableList<IntArray> {
+        nums.sort()
+        val res = mutableListOf<IntArray>()
+        val used = BooleanArray(nums.size)
+        val path = mutableListOf<Int>()
+
+        fun dfs() {
+            if (path.size == nums.size) {
+                res.add(path.toIntArray())
+                return
+            }
+            for (i in nums.indices) {
+                if (used[i]) continue
+                if (i > 0 && nums[i] == nums[i - 1] && !used[i - 1]) continue
+                used[i] = true
+                path.add(nums[i])
+                dfs()
+                path.removeAt(path.size - 1)
+                used[i] = false
+            }
+        }
+        dfs()
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func nextPermutation(_ nums: inout [Int]) {
+        var perms = permute(nums)
+        perms.sort { a, b in
+            for i in 0..<a.count {
+                if a[i] != b[i] {
+                    return a[i] < b[i]
+                }
+            }
+            return false
+        }
+        for i in 0..<perms.count {
+            var match = true
+            for j in 0..<nums.count {
+                if perms[i][j] != nums[j] {
+                    match = false
+                    break
+                }
+            }
+            if match {
+                let next = perms[(i + 1) % perms.count]
+                for j in 0..<nums.count {
+                    nums[j] = next[j]
+                }
+                return
+            }
+        }
+    }
+
+    private func permute(_ nums: [Int]) -> [[Int]] {
+        var nums = nums.sorted()
+        var res = [[Int]]()
+        var used = Array(repeating: false, count: nums.count)
+        var path = [Int]()
+
+        func dfs() {
+            if path.count == nums.count {
+                res.append(path)
+                return
+            }
+            for i in 0..<nums.count {
+                if used[i] { continue }
+                if i > 0 && nums[i] == nums[i - 1] && !used[i - 1] { continue }
+                used[i] = true
+                path.append(nums[i])
+                dfs()
+                path.removeLast()
+                used[i] = false
+            }
+        }
+        dfs()
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,6 +559,81 @@ public class Solution {
         int tmp = nums[i];
         nums[i] = nums[j];
         nums[j] = tmp;
+    }
+}
+```
+
+```go
+func nextPermutation(nums []int) {
+    n := len(nums)
+    i := n - 2
+    for i >= 0 && nums[i] >= nums[i+1] {
+        i--
+    }
+    if i >= 0 {
+        j := n - 1
+        for nums[j] <= nums[i] {
+            j--
+        }
+        nums[i], nums[j] = nums[j], nums[i]
+    }
+    l, r := i+1, n-1
+    for l < r {
+        nums[l], nums[r] = nums[r], nums[l]
+        l++
+        r--
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun nextPermutation(nums: IntArray) {
+        val n = nums.size
+        var i = n - 2
+        while (i >= 0 && nums[i] >= nums[i + 1]) {
+            i--
+        }
+        if (i >= 0) {
+            var j = n - 1
+            while (nums[j] <= nums[i]) {
+                j--
+            }
+            nums[i] = nums[j].also { nums[j] = nums[i] }
+        }
+        var l = i + 1
+        var r = n - 1
+        while (l < r) {
+            nums[l] = nums[r].also { nums[r] = nums[l] }
+            l++
+            r--
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func nextPermutation(_ nums: inout [Int]) {
+        let n = nums.count
+        var i = n - 2
+        while i >= 0 && nums[i] >= nums[i + 1] {
+            i -= 1
+        }
+        if i >= 0 {
+            var j = n - 1
+            while nums[j] <= nums[i] {
+                j -= 1
+            }
+            nums.swapAt(i, j)
+        }
+        var l = i + 1
+        var r = n - 1
+        while l < r {
+            nums.swapAt(l, r)
+            l += 1
+            r -= 1
+        }
     }
 }
 ```

@@ -79,6 +79,83 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumLength(string s) {
+        int l = 0, r = s.Length - 1;
+
+        while (l < r && s[l] == s[r]) {
+            char tmp = s[l];
+            while (l <= r && s[l] == tmp) {
+                l++;
+            }
+            while (l <= r && s[r] == tmp) {
+                r--;
+            }
+        }
+        return r - l + 1;
+    }
+}
+```
+
+```go
+func minimumLength(s string) int {
+    l, r := 0, len(s)-1
+
+    for l < r && s[l] == s[r] {
+        tmp := s[l]
+        for l <= r && s[l] == tmp {
+            l++
+        }
+        for l <= r && s[r] == tmp {
+            r--
+        }
+    }
+    return r - l + 1
+}
+```
+
+```kotlin
+class Solution {
+    fun minimumLength(s: String): Int {
+        var l = 0
+        var r = s.length - 1
+
+        while (l < r && s[l] == s[r]) {
+            val tmp = s[l]
+            while (l <= r && s[l] == tmp) {
+                l++
+            }
+            while (l <= r && s[r] == tmp) {
+                r--
+            }
+        }
+        return r - l + 1
+    }
+}
+```
+
+```swift
+class Solution {
+    func minimumLength(_ s: String) -> Int {
+        let chars = Array(s)
+        var l = 0
+        var r = chars.count - 1
+
+        while l < r && chars[l] == chars[r] {
+            let tmp = chars[l]
+            while l <= r && chars[l] == tmp {
+                l += 1
+            }
+            while l <= r && chars[r] == tmp {
+                r -= 1
+            }
+        }
+        return r - l + 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

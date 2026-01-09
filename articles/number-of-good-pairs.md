@@ -66,6 +66,68 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumIdenticalPairs(int[] nums) {
+        int res = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            for (int j = i + 1; j < nums.Length; j++) {
+                if (nums[i] == nums[j]) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func numIdenticalPairs(nums []int) int {
+    res := 0
+    for i := 0; i < len(nums); i++ {
+        for j := i + 1; j < len(nums); j++ {
+            if nums[i] == nums[j] {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numIdenticalPairs(nums: IntArray): Int {
+        var res = 0
+        for (i in nums.indices) {
+            for (j in i + 1 until nums.size) {
+                if (nums[i] == nums[j]) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numIdenticalPairs(_ nums: [Int]) -> Int {
+        var res = 0
+        for i in 0..<nums.count {
+            for j in (i + 1)..<nums.count {
+                if nums[i] == nums[j] {
+                    res += 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -142,6 +204,69 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumIdenticalPairs(int[] nums) {
+        var count = new Dictionary<int, int>();
+        int res = 0;
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) count[num] = 0;
+            count[num]++;
+        }
+        foreach (int c in count.Values) {
+            res += c * (c - 1) / 2;
+        }
+        return res;
+    }
+}
+```
+
+```go
+func numIdenticalPairs(nums []int) int {
+    count := make(map[int]int)
+    res := 0
+    for _, num := range nums {
+        count[num]++
+    }
+    for _, c := range count {
+        res += c * (c - 1) / 2
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numIdenticalPairs(nums: IntArray): Int {
+        val count = mutableMapOf<Int, Int>()
+        var res = 0
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+        for (c in count.values) {
+            res += c * (c - 1) / 2
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numIdenticalPairs(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        var res = 0
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+        for c in count.values {
+            res += c * (c - 1) / 2
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -209,6 +334,64 @@ class Solution {
             count[num] = (count[num] || 0) + 1;
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumIdenticalPairs(int[] nums) {
+        var count = new Dictionary<int, int>();
+        int res = 0;
+        foreach (int num in nums) {
+            if (count.ContainsKey(num)) {
+                res += count[num];
+                count[num]++;
+            } else {
+                count[num] = 1;
+            }
+        }
+        return res;
+    }
+}
+```
+
+```go
+func numIdenticalPairs(nums []int) int {
+    count := make(map[int]int)
+    res := 0
+    for _, num := range nums {
+        res += count[num]
+        count[num]++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numIdenticalPairs(nums: IntArray): Int {
+        val count = mutableMapOf<Int, Int>()
+        var res = 0
+        for (num in nums) {
+            res += count.getOrDefault(num, 0)
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func numIdenticalPairs(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        var res = 0
+        for num in nums {
+            res += count[num] ?? 0
+            count[num, default: 0] += 1
+        }
+        return res
     }
 }
 ```

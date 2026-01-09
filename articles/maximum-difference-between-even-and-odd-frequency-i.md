@@ -106,6 +106,74 @@ public class Solution {
 }
 ```
 
+```go
+func maxDifference(s string) int {
+    count := make([]int, 26)
+    for _, c := range s {
+        count[c-'a']++
+    }
+
+    res := -1 << 31
+    for _, odd := range count {
+        if odd == 0 || odd%2 == 0 {
+            continue
+        }
+        for _, even := range count {
+            if even == 0 || even%2 == 1 {
+                continue
+            }
+            if odd-even > res {
+                res = odd - even
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxDifference(s: String): Int {
+        val count = IntArray(26)
+        for (c in s) {
+            count[c - 'a']++
+        }
+
+        var res = Int.MIN_VALUE
+        for (odd in count) {
+            if (odd == 0 || odd % 2 == 0) continue
+            for (even in count) {
+                if (even == 0 || even % 2 == 1) continue
+                res = maxOf(res, odd - even)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDifference(_ s: String) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        let aAscii = Character("a").asciiValue!
+        for c in s {
+            count[Int(c.asciiValue! - aAscii)] += 1
+        }
+
+        var res = Int.min
+        for odd in count {
+            if odd == 0 || odd % 2 == 0 { continue }
+            for even in count {
+                if even == 0 || even % 2 == 1 { continue }
+                res = max(res, odd - even)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,6 +291,77 @@ public class Solution {
         }
 
         return oddMax - evenMin;
+    }
+}
+```
+
+```go
+func maxDifference(s string) int {
+    count := make([]int, 26)
+    for _, c := range s {
+        count[c-'a']++
+    }
+
+    oddMax, evenMin := 0, len(s)
+    for _, c := range count {
+        if c&1 == 1 {
+            if c > oddMax {
+                oddMax = c
+            }
+        } else if c > 0 {
+            if c < evenMin {
+                evenMin = c
+            }
+        }
+    }
+
+    return oddMax - evenMin
+}
+```
+
+```kotlin
+class Solution {
+    fun maxDifference(s: String): Int {
+        val count = IntArray(26)
+        for (c in s) {
+            count[c - 'a']++
+        }
+
+        var oddMax = 0
+        var evenMin = s.length
+        for (c in count) {
+            if (c and 1 == 1) {
+                oddMax = maxOf(oddMax, c)
+            } else if (c > 0) {
+                evenMin = minOf(evenMin, c)
+            }
+        }
+
+        return oddMax - evenMin
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxDifference(_ s: String) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        let aAscii = Character("a").asciiValue!
+        for c in s {
+            count[Int(c.asciiValue! - aAscii)] += 1
+        }
+
+        var oddMax = 0
+        var evenMin = s.count
+        for c in count {
+            if c & 1 == 1 {
+                oddMax = max(oddMax, c)
+            } else if c > 0 {
+                evenMin = min(evenMin, c)
+            }
+        }
+
+        return oddMax - evenMin
     }
 }
 ```

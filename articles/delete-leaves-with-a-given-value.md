@@ -152,6 +152,90 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func removeLeafNodes(root *TreeNode, target int) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    root.Left = removeLeafNodes(root.Left, target)
+    root.Right = removeLeafNodes(root.Right, target)
+
+    if root.Left == nil && root.Right == nil && root.Val == target {
+        return nil
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun removeLeafNodes(root: TreeNode?, target: Int): TreeNode? {
+        if (root == null) return null
+
+        root.left = removeLeafNodes(root.left, target)
+        root.right = removeLeafNodes(root.right, target)
+
+        if (root.left == null && root.right == null && root.`val` == target) {
+            return null
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func removeLeafNodes(_ root: TreeNode?, _ target: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        root.left = removeLeafNodes(root.left, target)
+        root.right = removeLeafNodes(root.right, target)
+
+        if root.left == nil && root.right == nil && root.val == target {
+            return nil
+        }
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -425,6 +509,163 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func removeLeafNodes(root *TreeNode, target int) *TreeNode {
+    stack := []*TreeNode{root}
+    visit := make(map[*TreeNode]bool)
+    parents := make(map[*TreeNode]*TreeNode)
+    parents[root] = nil
+
+    for len(stack) > 0 {
+        node := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        if node.Left == nil && node.Right == nil {
+            if node.Val == target {
+                p := parents[node]
+                if p == nil {
+                    return nil
+                }
+                if p.Left == node {
+                    p.Left = nil
+                }
+                if p.Right == node {
+                    p.Right = nil
+                }
+            }
+        } else if !visit[node] {
+            visit[node] = true
+            stack = append(stack, node)
+            if node.Left != nil {
+                stack = append(stack, node.Left)
+                parents[node.Left] = node
+            }
+            if node.Right != nil {
+                stack = append(stack, node.Right)
+                parents[node.Right] = node
+            }
+        }
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun removeLeafNodes(root: TreeNode?, target: Int): TreeNode? {
+        if (root == null) return null
+
+        val stack = ArrayDeque<TreeNode>()
+        val visit = mutableSetOf<TreeNode>()
+        val parents = mutableMapOf<TreeNode, TreeNode?>()
+
+        stack.addLast(root)
+        parents[root] = null
+
+        while (stack.isNotEmpty()) {
+            val node = stack.removeLast()
+
+            if (node.left == null && node.right == null) {
+                if (node.`val` == target) {
+                    val p = parents[node]
+                    if (p == null) return null
+                    if (p.left == node) p.left = null
+                    if (p.right == node) p.right = null
+                }
+            } else if (node !in visit) {
+                visit.add(node)
+                stack.addLast(node)
+                node.left?.let {
+                    stack.addLast(it)
+                    parents[it] = node
+                }
+                node.right?.let {
+                    stack.addLast(it)
+                    parents[it] = node
+                }
+            }
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func removeLeafNodes(_ root: TreeNode?, _ target: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        var stack = [root]
+        var visit = Set<ObjectIdentifier>()
+        var parents = [ObjectIdentifier: TreeNode?]()
+        parents[ObjectIdentifier(root)] = nil
+
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            let nodeId = ObjectIdentifier(node)
+
+            if node.left == nil && node.right == nil {
+                if node.val == target {
+                    guard let p = parents[nodeId] as? TreeNode else {
+                        return nil
+                    }
+                    if p.left === node { p.left = nil }
+                    if p.right === node { p.right = nil }
+                }
+            } else if !visit.contains(nodeId) {
+                visit.insert(nodeId)
+                stack.append(node)
+                if let left = node.left {
+                    stack.append(left)
+                    parents[ObjectIdentifier(left)] = node
+                }
+                if let right = node.right {
+                    stack.append(right)
+                    parents[ObjectIdentifier(right)] = node
+                }
+            }
+        }
+
+        return root
     }
 }
 ```
@@ -708,6 +949,170 @@ public class Solution {
         }
 
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func removeLeafNodes(root *TreeNode, target int) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    stack := []*TreeNode{}
+    cur := root
+    var visited *TreeNode
+
+    for len(stack) > 0 || cur != nil {
+        for cur != nil {
+            stack = append(stack, cur)
+            cur = cur.Left
+        }
+
+        cur = stack[len(stack)-1]
+        if cur.Right != nil && cur.Right != visited {
+            cur = cur.Right
+            continue
+        }
+
+        stack = stack[:len(stack)-1]
+        if cur.Left == nil && cur.Right == nil && cur.Val == target {
+            if len(stack) == 0 {
+                return nil
+            }
+
+            parent := stack[len(stack)-1]
+            if parent.Left == cur {
+                parent.Left = nil
+            } else if parent.Right == cur {
+                parent.Right = nil
+            }
+        } else {
+            visited = cur
+        }
+
+        cur = nil
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun removeLeafNodes(root: TreeNode?, target: Int): TreeNode? {
+        if (root == null) return null
+
+        val stack = ArrayDeque<TreeNode>()
+        var cur: TreeNode? = root
+        var visited: TreeNode? = null
+
+        while (stack.isNotEmpty() || cur != null) {
+            while (cur != null) {
+                stack.addLast(cur)
+                cur = cur.left
+            }
+
+            cur = stack.last()
+            if (cur.right != null && cur.right != visited) {
+                cur = cur.right
+                continue
+            }
+
+            stack.removeLast()
+            if (cur.left == null && cur.right == null && cur.`val` == target) {
+                if (stack.isEmpty()) return null
+
+                val parent = stack.last()
+                if (parent.left == cur) {
+                    parent.left = null
+                } else if (parent.right == cur) {
+                    parent.right = null
+                }
+            } else {
+                visited = cur
+            }
+
+            cur = null
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func removeLeafNodes(_ root: TreeNode?, _ target: Int) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        var stack = [TreeNode]()
+        var cur: TreeNode? = root
+        var visited: TreeNode? = nil
+
+        while !stack.isEmpty || cur != nil {
+            while cur != nil {
+                stack.append(cur!)
+                cur = cur!.left
+            }
+
+            cur = stack.last
+            if cur!.right != nil && cur!.right !== visited {
+                cur = cur!.right
+                continue
+            }
+
+            stack.removeLast()
+            if cur!.left == nil && cur!.right == nil && cur!.val == target {
+                if stack.isEmpty { return nil }
+
+                let parent = stack.last!
+                if parent.left === cur {
+                    parent.left = nil
+                } else if parent.right === cur {
+                    parent.right = nil
+                }
+            } else {
+                visited = cur
+            }
+
+            cur = nil
+        }
+
+        return root
     }
 }
 ```

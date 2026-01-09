@@ -183,6 +183,117 @@ public class Solution {
 }
 ```
 
+```go
+func decodeString(s string) string {
+    i := 0
+
+    var helper func() string
+    helper = func() string {
+        res := ""
+        k := 0
+
+        for i < len(s) {
+            c := s[i]
+
+            if c >= '0' && c <= '9' {
+                k = k*10 + int(c-'0')
+            } else if c == '[' {
+                i++
+                subRes := helper()
+                for j := 0; j < k; j++ {
+                    res += subRes
+                }
+                k = 0
+            } else if c == ']' {
+                return res
+            } else {
+                res += string(c)
+            }
+
+            i++
+        }
+
+        return res
+    }
+
+    return helper()
+}
+```
+
+```kotlin
+class Solution {
+    private var i = 0
+
+    fun decodeString(s: String): String {
+        i = 0
+        return helper(s)
+    }
+
+    private fun helper(s: String): String {
+        val res = StringBuilder()
+        var k = 0
+
+        while (i < s.length) {
+            val c = s[i]
+
+            when {
+                c.isDigit() -> k = k * 10 + (c - '0')
+                c == '[' -> {
+                    i++
+                    val subRes = helper(s)
+                    repeat(k) { res.append(subRes) }
+                    k = 0
+                }
+                c == ']' -> return res.toString()
+                else -> res.append(c)
+            }
+
+            i++
+        }
+
+        return res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    private var i = 0
+
+    func decodeString(_ s: String) -> String {
+        i = 0
+        let chars = Array(s)
+        return helper(chars)
+    }
+
+    private func helper(_ s: [Character]) -> String {
+        var res = ""
+        var k = 0
+
+        while i < s.count {
+            let c = s[i]
+
+            if c.isNumber {
+                k = k * 10 + Int(String(c))!
+            } else if c == "[" {
+                i += 1
+                let subRes = helper(s)
+                res += String(repeating: subRes, count: k)
+                k = 0
+            } else if c == "]" {
+                return res
+            } else {
+                res += String(c)
+            }
+
+            i += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -365,6 +476,98 @@ public class Solution {
 }
 ```
 
+```go
+func decodeString(s string) string {
+    stack := []string{}
+
+    for i := 0; i < len(s); i++ {
+        c := s[i]
+        if c != ']' {
+            stack = append(stack, string(c))
+        } else {
+            substr := ""
+            for stack[len(stack)-1] != "[" {
+                substr = stack[len(stack)-1] + substr
+                stack = stack[:len(stack)-1]
+            }
+            stack = stack[:len(stack)-1] // remove '['
+
+            k := ""
+            for len(stack) > 0 && stack[len(stack)-1][0] >= '0' && stack[len(stack)-1][0] <= '9' {
+                k = stack[len(stack)-1] + k
+                stack = stack[:len(stack)-1]
+            }
+
+            count, _ := strconv.Atoi(k)
+            repeated := strings.Repeat(substr, count)
+            stack = append(stack, repeated)
+        }
+    }
+
+    return strings.Join(stack, "")
+}
+```
+
+```kotlin
+class Solution {
+    fun decodeString(s: String): String {
+        val stack = mutableListOf<String>()
+
+        for (c in s) {
+            if (c != ']') {
+                stack.add(c.toString())
+            } else {
+                var substr = ""
+                while (stack.last() != "[") {
+                    substr = stack.removeLast() + substr
+                }
+                stack.removeLast() // remove '['
+
+                var k = ""
+                while (stack.isNotEmpty() && stack.last()[0].isDigit()) {
+                    k = stack.removeLast() + k
+                }
+
+                val count = k.toInt()
+                stack.add(substr.repeat(count))
+            }
+        }
+
+        return stack.joinToString("")
+    }
+}
+```
+
+```swift
+class Solution {
+    func decodeString(_ s: String) -> String {
+        var stack = [String]()
+
+        for c in s {
+            if c != "]" {
+                stack.append(String(c))
+            } else {
+                var substr = ""
+                while stack.last! != "[" {
+                    substr = stack.removeLast() + substr
+                }
+                stack.removeLast() // remove '['
+
+                var k = ""
+                while !stack.isEmpty && stack.last!.first!.isNumber {
+                    k = stack.removeLast() + k
+                }
+
+                let count = Int(k)!
+                stack.append(String(repeating: substr, count: count))
+            }
+        }
+
+        return stack.joined()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,6 +743,102 @@ public class Solution {
         }
 
         return cur;
+    }
+}
+```
+
+```go
+func decodeString(s string) string {
+    stringStack := []string{}
+    countStack := []int{}
+    cur := ""
+    k := 0
+
+    for _, c := range s {
+        if c >= '0' && c <= '9' {
+            k = k*10 + int(c-'0')
+        } else if c == '[' {
+            stringStack = append(stringStack, cur)
+            countStack = append(countStack, k)
+            cur = ""
+            k = 0
+        } else if c == ']' {
+            temp := cur
+            cur = stringStack[len(stringStack)-1]
+            stringStack = stringStack[:len(stringStack)-1]
+            count := countStack[len(countStack)-1]
+            countStack = countStack[:len(countStack)-1]
+            for i := 0; i < count; i++ {
+                cur += temp
+            }
+        } else {
+            cur += string(c)
+        }
+    }
+
+    return cur
+}
+```
+
+```kotlin
+class Solution {
+    fun decodeString(s: String): String {
+        val stringStack = ArrayDeque<String>()
+        val countStack = ArrayDeque<Int>()
+        var cur = ""
+        var k = 0
+
+        for (c in s) {
+            when {
+                c.isDigit() -> k = k * 10 + (c - '0')
+                c == '[' -> {
+                    stringStack.addLast(cur)
+                    countStack.addLast(k)
+                    cur = ""
+                    k = 0
+                }
+                c == ']' -> {
+                    val temp = cur
+                    cur = stringStack.removeLast()
+                    val count = countStack.removeLast()
+                    repeat(count) { cur += temp }
+                }
+                else -> cur += c
+            }
+        }
+
+        return cur
+    }
+}
+```
+
+```swift
+class Solution {
+    func decodeString(_ s: String) -> String {
+        var stringStack = [String]()
+        var countStack = [Int]()
+        var cur = ""
+        var k = 0
+
+        for c in s {
+            if c.isNumber {
+                k = k * 10 + Int(String(c))!
+            } else if c == "[" {
+                stringStack.append(cur)
+                countStack.append(k)
+                cur = ""
+                k = 0
+            } else if c == "]" {
+                let temp = cur
+                cur = stringStack.removeLast()
+                let count = countStack.removeLast()
+                cur += String(repeating: temp, count: count)
+            } else {
+                cur += String(c)
+            }
+        }
+
+        return cur
     }
 }
 ```

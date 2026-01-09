@@ -180,6 +180,117 @@ public class Solution {
 }
 ```
 
+```go
+func countServers(grid [][]int) int {
+    m, n := len(grid), len(grid[0])
+    res := 0
+
+    for r := 0; r < m; r++ {
+        for c := 0; c < n; c++ {
+            if grid[r][c] == 0 {
+                continue
+            }
+
+            found := false
+            for col := 0; col < n; col++ {
+                if col != c && grid[r][col] == 1 {
+                    found = true
+                    break
+                }
+            }
+
+            if !found {
+                for row := 0; row < m; row++ {
+                    if row != r && grid[row][c] == 1 {
+                        found = true
+                        break
+                    }
+                }
+            }
+
+            if found {
+                res++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countServers(grid: Array<IntArray>): Int {
+        val m = grid.size
+        val n = grid[0].size
+        var res = 0
+
+        for (r in 0 until m) {
+            for (c in 0 until n) {
+                if (grid[r][c] == 0) continue
+
+                var found = false
+                for (col in 0 until n) {
+                    if (col != c && grid[r][col] == 1) {
+                        found = true
+                        break
+                    }
+                }
+
+                if (!found) {
+                    for (row in 0 until m) {
+                        if (row != r && grid[row][c] == 1) {
+                            found = true
+                            break
+                        }
+                    }
+                }
+
+                if (found) res++
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countServers(_ grid: [[Int]]) -> Int {
+        let m = grid.count, n = grid[0].count
+        var res = 0
+
+        for r in 0..<m {
+            for c in 0..<n {
+                if grid[r][c] == 0 { continue }
+
+                var found = false
+                for col in 0..<n {
+                    if col != c && grid[r][col] == 1 {
+                        found = true
+                        break
+                    }
+                }
+
+                if !found {
+                    for row in 0..<m {
+                        if row != r && grid[row][c] == 1 {
+                            found = true
+                            break
+                        }
+                    }
+                }
+
+                if found { res += 1 }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -337,6 +448,102 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func countServers(grid [][]int) int {
+    ROWS, COLS := len(grid), len(grid[0])
+    rowCnt := make([]int, ROWS)
+    colCnt := make([]int, COLS)
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if grid[r][c] == 1 {
+                rowCnt[r]++
+                colCnt[c]++
+            }
+        }
+    }
+
+    res := 0
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if grid[r][c] == 1 && max(rowCnt[r], colCnt[c]) > 1 {
+                res++
+            }
+        }
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun countServers(grid: Array<IntArray>): Int {
+        val ROWS = grid.size
+        val COLS = grid[0].size
+        val rowCnt = IntArray(ROWS)
+        val colCnt = IntArray(COLS)
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (grid[r][c] == 1) {
+                    rowCnt[r]++
+                    colCnt[c]++
+                }
+            }
+        }
+
+        var res = 0
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (grid[r][c] == 1 && maxOf(rowCnt[r], colCnt[c]) > 1) {
+                    res++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countServers(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count, COLS = grid[0].count
+        var rowCnt = [Int](repeating: 0, count: ROWS)
+        var colCnt = [Int](repeating: 0, count: COLS)
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == 1 {
+                    rowCnt[r] += 1
+                    colCnt[c] += 1
+                }
+            }
+        }
+
+        var res = 0
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == 1 && max(rowCnt[r], colCnt[c]) > 1 {
+                    res += 1
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -522,6 +729,119 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func countServers(grid [][]int) int {
+    res := 0
+    ROWS, COLS := len(grid), len(grid[0])
+
+    // Rows
+    for r := 0; r < ROWS; r++ {
+        rowSum := 0
+        for c := 0; c < COLS; c++ {
+            rowSum += grid[r][c]
+        }
+        if rowSum <= 1 {
+            continue
+        }
+        res += rowSum
+        for c := 0; c < COLS; c++ {
+            if grid[r][c] == 1 {
+                grid[r][c] = -1 // Mark
+            }
+        }
+    }
+
+    // Cols
+    for c := 0; c < COLS; c++ {
+        colSum, unmarked := 0, 0
+        for r := 0; r < ROWS; r++ {
+            if grid[r][c] < 0 {
+                colSum += -grid[r][c]
+            } else {
+                colSum += grid[r][c]
+            }
+            if grid[r][c] > 0 {
+                unmarked++
+            } else if grid[r][c] < 0 {
+                grid[r][c] = 1 // Unmark
+            }
+        }
+        if colSum >= 2 {
+            res += unmarked
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countServers(grid: Array<IntArray>): Int {
+        var res = 0
+        val ROWS = grid.size
+        val COLS = grid[0].size
+
+        // Rows
+        for (r in 0 until ROWS) {
+            val rowSum = grid[r].sum()
+            if (rowSum <= 1) continue
+            res += rowSum
+            for (c in 0 until COLS) {
+                if (grid[r][c] == 1) grid[r][c] = -1 // Mark
+            }
+        }
+
+        // Cols
+        for (c in 0 until COLS) {
+            var colSum = 0
+            var unmarked = 0
+            for (r in 0 until ROWS) {
+                colSum += kotlin.math.abs(grid[r][c])
+                if (grid[r][c] > 0) unmarked++
+                else if (grid[r][c] < 0) grid[r][c] = 1 // Unmark
+            }
+            if (colSum >= 2) res += unmarked
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countServers(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        var res = 0
+        let ROWS = grid.count, COLS = grid[0].count
+
+        // Rows
+        for r in 0..<ROWS {
+            let rowSum = grid[r].reduce(0, +)
+            if rowSum <= 1 { continue }
+            res += rowSum
+            for c in 0..<COLS {
+                if grid[r][c] == 1 { grid[r][c] = -1 } // Mark
+            }
+        }
+
+        // Cols
+        for c in 0..<COLS {
+            var colSum = 0, unmarked = 0
+            for r in 0..<ROWS {
+                colSum += abs(grid[r][c])
+                if grid[r][c] > 0 { unmarked += 1 }
+                else if grid[r][c] < 0 { grid[r][c] = 1 } // Unmark
+            }
+            if colSum >= 2 { res += unmarked }
+        }
+
+        return res
     }
 }
 ```

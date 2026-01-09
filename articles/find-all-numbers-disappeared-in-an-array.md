@@ -86,6 +86,56 @@ public class Solution {
 }
 ```
 
+```go
+func findDisappearedNumbers(nums []int) []int {
+    n := len(nums)
+    store := make(map[int]bool)
+    for i := 1; i <= n; i++ {
+        store[i] = true
+    }
+
+    for _, num := range nums {
+        delete(store, num)
+    }
+
+    result := []int{}
+    for num := range store {
+        result = append(result, num)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun findDisappearedNumbers(nums: IntArray): List<Int> {
+        val n = nums.size
+        val store = (1..n).toMutableSet()
+
+        for (num in nums) {
+            store.remove(num)
+        }
+
+        return store.toList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDisappearedNumbers(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var store = Set(1...n)
+
+        for num in nums {
+            store.remove(num)
+        }
+
+        return Array(store)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,6 +250,67 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func findDisappearedNumbers(nums []int) []int {
+    n := len(nums)
+    mark := make([]bool, n)
+
+    for _, num := range nums {
+        mark[num-1] = true
+    }
+
+    res := []int{}
+    for i := 1; i <= n; i++ {
+        if !mark[i-1] {
+            res = append(res, i)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findDisappearedNumbers(nums: IntArray): List<Int> {
+        val n = nums.size
+        val mark = BooleanArray(n)
+
+        for (num in nums) {
+            mark[num - 1] = true
+        }
+
+        val res = mutableListOf<Int>()
+        for (i in 1..n) {
+            if (!mark[i - 1]) {
+                res.add(i)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDisappearedNumbers(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var mark = [Bool](repeating: false, count: n)
+
+        for num in nums {
+            mark[num - 1] = true
+        }
+
+        var res = [Int]()
+        for i in 1...n {
+            if !mark[i - 1] {
+                res.append(i)
+            }
+        }
+        return res
     }
 }
 ```
@@ -321,6 +432,67 @@ public class Solution {
 }
 ```
 
+```go
+func findDisappearedNumbers(nums []int) []int {
+    n := len(nums)
+    sort.Ints(nums)
+
+    res := []int{}
+    idx := 0
+    for num := 1; num <= n; num++ {
+        for idx < n && nums[idx] < num {
+            idx++
+        }
+        if idx == n || nums[idx] > num {
+            res = append(res, num)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findDisappearedNumbers(nums: IntArray): List<Int> {
+        val n = nums.size
+        nums.sort()
+
+        val res = mutableListOf<Int>()
+        var idx = 0
+        for (num in 1..n) {
+            while (idx < n && nums[idx] < num) {
+                idx++
+            }
+            if (idx == n || nums[idx] > num) {
+                res.add(num)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDisappearedNumbers(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        let sortedNums = nums.sorted()
+
+        var res = [Int]()
+        var idx = 0
+        for num in 1...n {
+            while idx < n && sortedNums[idx] < num {
+                idx += 1
+            }
+            if idx == n || sortedNums[idx] > num {
+                res.append(num)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -425,6 +597,69 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func findDisappearedNumbers(nums []int) []int {
+    for _, num := range nums {
+        i := abs(num) - 1
+        nums[i] = -abs(nums[i])
+    }
+
+    res := []int{}
+    for i, num := range nums {
+        if num > 0 {
+            res = append(res, i+1)
+        }
+    }
+    return res
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun findDisappearedNumbers(nums: IntArray): List<Int> {
+        for (num in nums) {
+            val i = kotlin.math.abs(num) - 1
+            nums[i] = -kotlin.math.abs(nums[i])
+        }
+
+        val res = mutableListOf<Int>()
+        for (i in nums.indices) {
+            if (nums[i] > 0) {
+                res.add(i + 1)
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDisappearedNumbers(_ nums: [Int]) -> [Int] {
+        var nums = nums
+        for num in nums {
+            let i = abs(num) - 1
+            nums[i] = -abs(nums[i])
+        }
+
+        var res = [Int]()
+        for i in 0..<nums.count {
+            if nums[i] > 0 {
+                res.append(i + 1)
+            }
+        }
+        return res
     }
 }
 ```

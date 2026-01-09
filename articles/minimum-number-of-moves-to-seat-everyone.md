@@ -80,6 +80,53 @@ public class Solution {
 }
 ```
 
+```go
+func minMovesToSeat(seats []int, students []int) int {
+    sort.Ints(seats)
+    sort.Ints(students)
+
+    res := 0
+    for i := 0; i < len(seats); i++ {
+        if seats[i] > students[i] {
+            res += seats[i] - students[i]
+        } else {
+            res += students[i] - seats[i]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minMovesToSeat(seats: IntArray, students: IntArray): Int {
+        seats.sort()
+        students.sort()
+
+        var res = 0
+        for (i in seats.indices) {
+            res += kotlin.math.abs(seats[i] - students[i])
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minMovesToSeat(_ seats: [Int], _ students: [Int]) -> Int {
+        let sortedSeats = seats.sorted()
+        let sortedStudents = students.sorted()
+
+        var res = 0
+        for i in 0..<sortedSeats.count {
+            res += abs(sortedSeats[i] - sortedStudents[i])
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,6 +301,122 @@ public class Solution {
             remain--;
         }
         return res;
+    }
+}
+```
+
+```go
+func minMovesToSeat(seats []int, students []int) int {
+    maxIndex := 0
+    for _, s := range seats {
+        if s > maxIndex {
+            maxIndex = s
+        }
+    }
+    for _, s := range students {
+        if s > maxIndex {
+            maxIndex = s
+        }
+    }
+    maxIndex++
+
+    countSeats := make([]int, maxIndex)
+    countStudents := make([]int, maxIndex)
+
+    for _, seat := range seats {
+        countSeats[seat]++
+    }
+    for _, student := range students {
+        countStudents[student]++
+    }
+
+    i, j, res, remain := 0, 0, 0, len(seats)
+    for remain > 0 {
+        if countSeats[i] == 0 {
+            i++
+            continue
+        }
+        if countStudents[j] == 0 {
+            j++
+            continue
+        }
+        if i > j {
+            res += i - j
+        } else {
+            res += j - i
+        }
+        countSeats[i]--
+        countStudents[j]--
+        remain--
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minMovesToSeat(seats: IntArray, students: IntArray): Int {
+        var maxIndex = 0
+        for (s in seats) maxIndex = maxOf(maxIndex, s)
+        for (s in students) maxIndex = maxOf(maxIndex, s)
+        maxIndex++
+
+        val countSeats = IntArray(maxIndex)
+        val countStudents = IntArray(maxIndex)
+
+        for (seat in seats) countSeats[seat]++
+        for (student in students) countStudents[student]++
+
+        var i = 0
+        var j = 0
+        var res = 0
+        var remain = seats.size
+        while (remain > 0) {
+            if (countSeats[i] == 0) {
+                i++
+                continue
+            }
+            if (countStudents[j] == 0) {
+                j++
+                continue
+            }
+            res += kotlin.math.abs(i - j)
+            countSeats[i]--
+            countStudents[j]--
+            remain--
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minMovesToSeat(_ seats: [Int], _ students: [Int]) -> Int {
+        var maxIndex = max(seats.max()!, students.max()!) + 1
+
+        var countSeats = [Int](repeating: 0, count: maxIndex)
+        var countStudents = [Int](repeating: 0, count: maxIndex)
+
+        for seat in seats { countSeats[seat] += 1 }
+        for student in students { countStudents[student] += 1 }
+
+        var i = 0, j = 0, res = 0, remain = seats.count
+        while remain > 0 {
+            if countSeats[i] == 0 {
+                i += 1
+                continue
+            }
+            if countStudents[j] == 0 {
+                j += 1
+                continue
+            }
+            res += abs(i - j)
+            countSeats[i] -= 1
+            countStudents[j] -= 1
+            remain -= 1
+        }
+        return res
     }
 }
 ```
@@ -438,6 +601,126 @@ public class Solution {
             remain -= tmp;
         }
         return res;
+    }
+}
+```
+
+```go
+func minMovesToSeat(seats []int, students []int) int {
+    maxSeat, maxStudent := 0, 0
+    for _, s := range seats {
+        if s > maxSeat {
+            maxSeat = s
+        }
+    }
+    for _, s := range students {
+        if s > maxStudent {
+            maxStudent = s
+        }
+    }
+
+    countSeats := make([]int, maxSeat+1)
+    countStudents := make([]int, maxStudent+1)
+
+    for _, s := range seats {
+        countSeats[s]++
+    }
+    for _, s := range students {
+        countStudents[s]++
+    }
+
+    remain, i, j, res := len(seats), 0, 0, 0
+    for remain > 0 {
+        if countSeats[i] == 0 {
+            i++
+            continue
+        }
+        if countStudents[j] == 0 {
+            j++
+            continue
+        }
+        tmp := countSeats[i]
+        if countStudents[j] < tmp {
+            tmp = countStudents[j]
+        }
+        diff := i - j
+        if diff < 0 {
+            diff = -diff
+        }
+        res += diff * tmp
+        countSeats[i] -= tmp
+        countStudents[j] -= tmp
+        remain -= tmp
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minMovesToSeat(seats: IntArray, students: IntArray): Int {
+        val maxSeat = seats.maxOrNull()!!
+        val maxStudent = students.maxOrNull()!!
+
+        val countSeats = IntArray(maxSeat + 1)
+        val countStudents = IntArray(maxStudent + 1)
+
+        for (s in seats) countSeats[s]++
+        for (s in students) countStudents[s]++
+
+        var remain = seats.size
+        var i = 0
+        var j = 0
+        var res = 0
+        while (remain > 0) {
+            if (countSeats[i] == 0) {
+                i++
+                continue
+            }
+            if (countStudents[j] == 0) {
+                j++
+                continue
+            }
+            val tmp = minOf(countSeats[i], countStudents[j])
+            res += kotlin.math.abs(i - j) * tmp
+            countSeats[i] -= tmp
+            countStudents[j] -= tmp
+            remain -= tmp
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minMovesToSeat(_ seats: [Int], _ students: [Int]) -> Int {
+        let maxSeat = seats.max()!
+        let maxStudent = students.max()!
+
+        var countSeats = [Int](repeating: 0, count: maxSeat + 1)
+        var countStudents = [Int](repeating: 0, count: maxStudent + 1)
+
+        for s in seats { countSeats[s] += 1 }
+        for s in students { countStudents[s] += 1 }
+
+        var remain = seats.count, i = 0, j = 0, res = 0
+        while remain > 0 {
+            if countSeats[i] == 0 {
+                i += 1
+                continue
+            }
+            if countStudents[j] == 0 {
+                j += 1
+                continue
+            }
+            let tmp = min(countSeats[i], countStudents[j])
+            res += abs(i - j) * tmp
+            countSeats[i] -= tmp
+            countStudents[j] -= tmp
+            remain -= tmp
+        }
+        return res
     }
 }
 ```

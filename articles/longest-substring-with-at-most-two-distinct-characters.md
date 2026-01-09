@@ -113,6 +113,75 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLongestSubstringTwoDistinct(s string) int {
+    res, n := 0, len(s)
+
+    for i := 0; i < n; i++ {
+        seen := make(map[byte]bool)
+        curLen := 0
+        for j := i; j < n; j++ {
+            seen[s[j]] = true
+            if len(seen) > 2 {
+                break
+            }
+            curLen++
+        }
+        if curLen > res {
+            res = curLen
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstringTwoDistinct(s: String): Int {
+        var res = 0
+        val n = s.length
+
+        for (i in 0 until n) {
+            val seen = HashSet<Char>()
+            var curLen = 0
+            for (j in i until n) {
+                seen.add(s[j])
+                if (seen.size > 2) {
+                    break
+                }
+                curLen++
+            }
+            res = maxOf(res, curLen)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstringTwoDistinct(_ s: String) -> Int {
+        let chars = Array(s)
+        var res = 0
+        let n = chars.count
+
+        for i in 0..<n {
+            var seen = Set<Character>()
+            var curLen = 0
+            for j in i..<n {
+                seen.insert(chars[j])
+                if seen.count > 2 {
+                    break
+                }
+                curLen += 1
+            }
+            res = max(res, curLen)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,6 +321,84 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLongestSubstringTwoDistinct(s string) int {
+    res, n := 0, len(s)
+    seen := make(map[byte]int)
+    j := 0
+
+    for i := 0; i < n; i++ {
+        seen[s[i]]++
+
+        for len(seen) > 2 {
+            c := s[j]
+            seen[c]--
+            if seen[c] == 0 {
+                delete(seen, c)
+            }
+            j++
+        }
+        if i-j+1 > res {
+            res = i - j + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstringTwoDistinct(s: String): Int {
+        var res = 0
+        val n = s.length
+        val seen = HashMap<Char, Int>()
+        var j = 0
+
+        for (i in 0 until n) {
+            seen[s[i]] = seen.getOrDefault(s[i], 0) + 1
+
+            while (seen.size > 2) {
+                val c = s[j]
+                seen[c] = seen[c]!! - 1
+                if (seen[c] == 0) {
+                    seen.remove(c)
+                }
+                j++
+            }
+            res = maxOf(res, i - j + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstringTwoDistinct(_ s: String) -> Int {
+        let chars = Array(s)
+        var res = 0
+        let n = chars.count
+        var seen = [Character: Int]()
+        var j = 0
+
+        for i in 0..<n {
+            seen[chars[i], default: 0] += 1
+
+            while seen.count > 2 {
+                let c = chars[j]
+                seen[c]! -= 1
+                if seen[c] == 0 {
+                    seen.removeValue(forKey: c)
+                }
+                j += 1
+            }
+            res = max(res, i - j + 1)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,6 +508,69 @@ public class Solution {
             }
         }
         return i - j;
+    }
+}
+```
+
+```go
+func lengthOfLongestSubstringTwoDistinct(s string) int {
+    n := len(s)
+    count := make(map[byte]int)
+    j := 0
+
+    for i := 0; i < n; i++ {
+        count[s[i]]++
+        if len(count) > 2 {
+            count[s[j]]--
+            if count[s[j]] == 0 {
+                delete(count, s[j])
+            }
+            j++
+        }
+    }
+    return n - j
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstringTwoDistinct(s: String): Int {
+        val n = s.length
+        val count = HashMap<Char, Int>()
+        var j = 0
+
+        for (i in 0 until n) {
+            count[s[i]] = count.getOrDefault(s[i], 0) + 1
+            if (count.size > 2) {
+                count[s[j]] = count[s[j]]!! - 1
+                if (count[s[j]] == 0) count.remove(s[j])
+                j++
+            }
+        }
+        return n - j
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstringTwoDistinct(_ s: String) -> Int {
+        let chars = Array(s)
+        let n = chars.count
+        var count = [Character: Int]()
+        var j = 0
+
+        for i in 0..<n {
+            count[chars[i], default: 0] += 1
+            if count.count > 2 {
+                count[chars[j]]! -= 1
+                if count[chars[j]] == 0 {
+                    count.removeValue(forKey: chars[j])
+                }
+                j += 1
+            }
+        }
+        return n - j
     }
 }
 ```

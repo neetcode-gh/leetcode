@@ -74,16 +74,143 @@ class Solution {
         if (!root) {
             return root;
         }
-        
+
         // First, copy the node itself.
         const node_copy = new Node(root.val);
-        
+
         // Then, recursively clone the sub-trees.
         for (const child of root.children) {
             node_copy.children.push(this.cloneTree(child));
         }
-        
+
         return node_copy;
+    }
+}
+```
+
+```csharp
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public IList<Node> children;
+
+    public Node() {
+        val = 0;
+        children = new List<Node>();
+    }
+
+    public Node(int _val) {
+        val = _val;
+        children = new List<Node>();
+    }
+}
+*/
+
+public class Solution {
+    public Node CloneTree(Node root) {
+        // Base case: empty node.
+        if (root == null) {
+            return root;
+        }
+
+        // First, copy the node itself.
+        Node nodeCopy = new Node(root.val);
+
+        // Then, recursively clone the sub-trees.
+        foreach (Node child in root.children) {
+            nodeCopy.children.Add(CloneTree(child));
+        }
+
+        return nodeCopy;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a Node.
+ * type Node struct {
+ *     Val int
+ *     Children []*Node
+ * }
+ */
+
+func cloneTree(root *Node) *Node {
+    // Base case: empty node.
+    if root == nil {
+        return root
+    }
+
+    // First, copy the node itself.
+    nodeCopy := &Node{Val: root.Val}
+
+    // Then, recursively clone the sub-trees.
+    for _, child := range root.Children {
+        nodeCopy.Children = append(nodeCopy.Children, cloneTree(child))
+    }
+
+    return nodeCopy
+}
+```
+
+```kotlin
+/**
+ * Definition for a Node.
+ * class Node(var `val`: Int) {
+ *     var children: List<Node?> = listOf()
+ * }
+ */
+
+class Solution {
+    fun cloneTree(root: Node?): Node? {
+        // Base case: empty node.
+        if (root == null) {
+            return root
+        }
+
+        // First, copy the node itself.
+        val nodeCopy = Node(root.`val`)
+
+        // Then, recursively clone the sub-trees.
+        nodeCopy.children = root.children.map { cloneTree(it) }
+
+        return nodeCopy
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var children: [Node]
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.children = []
+ *     }
+ * }
+ */
+
+class Solution {
+    func cloneTree(_ root: Node?) -> Node? {
+        // Base case: empty node.
+        guard let root = root else {
+            return nil
+        }
+
+        // First, copy the node itself.
+        let nodeCopy = Node(root.val)
+
+        // Then, recursively clone the sub-trees.
+        for child in root.children {
+            if let clonedChild = cloneTree(child) {
+                nodeCopy.children.append(clonedChild)
+            }
+        }
+
+        return nodeCopy
     }
 }
 ```
@@ -205,14 +332,14 @@ class Solution {
         if (!root) {
             return root;
         }
-        
+
         const new_root = new Node(root.val);
         // Starting point to kick off the DFS visits.
         const stack = [[root, new_root]];
-        
+
         while (stack.length > 0) {
             const [old_node, new_node] = stack.pop();
-            
+
             for (const child_node of old_node.children) {
                 const new_child_node = new Node(child_node.val);
                 // Make a copy for each child node.
@@ -221,8 +348,128 @@ class Solution {
                 stack.push([child_node, new_child_node]);
             }
         }
-        
+
         return new_root;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public Node CloneTree(Node root) {
+        if (root == null) {
+            return root;
+        }
+
+        Node newRoot = new Node(root.val);
+        // Starting point to kick off the DFS visits.
+        Stack<Node[]> stack = new Stack<Node[]>();
+        stack.Push(new Node[] { root, newRoot });
+
+        while (stack.Count > 0) {
+            Node[] nodePair = stack.Pop();
+            Node oldNode = nodePair[0];
+            Node newNode = nodePair[1];
+
+            foreach (Node childNode in oldNode.children) {
+                Node newChildNode = new Node(childNode.val);
+                // Make a copy for each child node.
+                newNode.children.Add(newChildNode);
+                // Schedule a visit to copy the child nodes of each child node.
+                stack.Push(new Node[] { childNode, newChildNode });
+            }
+        }
+
+        return newRoot;
+    }
+}
+```
+
+```go
+func cloneTree(root *Node) *Node {
+    if root == nil {
+        return root
+    }
+
+    newRoot := &Node{Val: root.Val}
+    // Starting point to kick off the DFS visits.
+    stack := [][2]*Node{{root, newRoot}}
+
+    for len(stack) > 0 {
+        pair := stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        oldNode, newNode := pair[0], pair[1]
+
+        for _, childNode := range oldNode.Children {
+            newChildNode := &Node{Val: childNode.Val}
+            // Make a copy for each child node.
+            newNode.Children = append(newNode.Children, newChildNode)
+            // Schedule a visit to copy the child nodes of each child node.
+            stack = append(stack, [2]*Node{childNode, newChildNode})
+        }
+    }
+
+    return newRoot
+}
+```
+
+```kotlin
+class Solution {
+    fun cloneTree(root: Node?): Node? {
+        if (root == null) {
+            return root
+        }
+
+        val newRoot = Node(root.`val`)
+        // Starting point to kick off the DFS visits.
+        val stack = ArrayDeque<Pair<Node, Node>>()
+        stack.addLast(Pair(root, newRoot))
+
+        while (stack.isNotEmpty()) {
+            val (oldNode, newNode) = stack.removeLast()
+            val newChildren = mutableListOf<Node?>()
+
+            for (childNode in oldNode.children) {
+                if (childNode != null) {
+                    val newChildNode = Node(childNode.`val`)
+                    // Make a copy for each child node.
+                    newChildren.add(newChildNode)
+                    // Schedule a visit to copy the child nodes of each child node.
+                    stack.addLast(Pair(childNode, newChildNode))
+                }
+            }
+            newNode.children = newChildren
+        }
+
+        return newRoot
+    }
+}
+```
+
+```swift
+class Solution {
+    func cloneTree(_ root: Node?) -> Node? {
+        guard let root = root else {
+            return nil
+        }
+
+        let newRoot = Node(root.val)
+        // Starting point to kick off the DFS visits.
+        var stack: [(Node, Node)] = [(root, newRoot)]
+
+        while !stack.isEmpty {
+            let (oldNode, newNode) = stack.removeLast()
+
+            for childNode in oldNode.children {
+                let newChildNode = Node(childNode.val)
+                // Make a copy for each child node.
+                newNode.children.append(newChildNode)
+                // Schedule a visit to copy the child nodes of each child node.
+                stack.append((childNode, newChildNode))
+            }
+        }
+
+        return newRoot
     }
 }
 ```
@@ -347,15 +594,15 @@ class Solution {
         if (!root) {
             return root;
         }
-        
+
         const new_root = new Node(root.val);
         // Starting point to kick off the BFS visits.
         const queue = [[root, new_root]];
-        
+
         while (queue.length > 0) {
             // Get the element from the head of the queue.
             const [old_node, new_node] = queue.shift();
-            
+
             for (const child_node of old_node.children) {
                 const new_child_node = new Node(child_node.val);
                 // Make a copy for each child node.
@@ -364,8 +611,130 @@ class Solution {
                 queue.push([child_node, new_child_node]);
             }
         }
-        
+
         return new_root;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public Node CloneTree(Node root) {
+        if (root == null) {
+            return root;
+        }
+
+        Node newRoot = new Node(root.val);
+        // Starting point to kick off the BFS visits.
+        Queue<Node[]> queue = new Queue<Node[]>();
+        queue.Enqueue(new Node[] { root, newRoot });
+
+        while (queue.Count > 0) {
+            Node[] nodePair = queue.Dequeue();
+            Node oldNode = nodePair[0];
+            Node newNode = nodePair[1];
+
+            foreach (Node childNode in oldNode.children) {
+                Node newChildNode = new Node(childNode.val);
+                // Make a copy for each child node.
+                newNode.children.Add(newChildNode);
+                // Schedule a visit to copy the child nodes of each child node.
+                queue.Enqueue(new Node[] { childNode, newChildNode });
+            }
+        }
+
+        return newRoot;
+    }
+}
+```
+
+```go
+func cloneTree(root *Node) *Node {
+    if root == nil {
+        return root
+    }
+
+    newRoot := &Node{Val: root.Val}
+    // Starting point to kick off the BFS visits.
+    queue := [][2]*Node{{root, newRoot}}
+
+    for len(queue) > 0 {
+        // Get the element from the head of the queue.
+        pair := queue[0]
+        queue = queue[1:]
+        oldNode, newNode := pair[0], pair[1]
+
+        for _, childNode := range oldNode.Children {
+            newChildNode := &Node{Val: childNode.Val}
+            // Make a copy for each child node.
+            newNode.Children = append(newNode.Children, newChildNode)
+            // Schedule a visit to copy the child nodes of each child node.
+            queue = append(queue, [2]*Node{childNode, newChildNode})
+        }
+    }
+
+    return newRoot
+}
+```
+
+```kotlin
+class Solution {
+    fun cloneTree(root: Node?): Node? {
+        if (root == null) {
+            return root
+        }
+
+        val newRoot = Node(root.`val`)
+        // Starting point to kick off the BFS visits.
+        val queue = ArrayDeque<Pair<Node, Node>>()
+        queue.addLast(Pair(root, newRoot))
+
+        while (queue.isNotEmpty()) {
+            val (oldNode, newNode) = queue.removeFirst()
+            val newChildren = mutableListOf<Node?>()
+
+            for (childNode in oldNode.children) {
+                if (childNode != null) {
+                    val newChildNode = Node(childNode.`val`)
+                    // Make a copy for each child node.
+                    newChildren.add(newChildNode)
+                    // Schedule a visit to copy the child nodes of each child node.
+                    queue.addLast(Pair(childNode, newChildNode))
+                }
+            }
+            newNode.children = newChildren
+        }
+
+        return newRoot
+    }
+}
+```
+
+```swift
+class Solution {
+    func cloneTree(_ root: Node?) -> Node? {
+        guard let root = root else {
+            return nil
+        }
+
+        let newRoot = Node(root.val)
+        // Starting point to kick off the BFS visits.
+        var queue: [(Node, Node)] = [(root, newRoot)]
+
+        while !queue.isEmpty {
+            // Get the element from the head of the queue.
+            let (oldNode, newNode) = queue.removeFirst()
+
+            for childNode in oldNode.children {
+                let newChildNode = Node(childNode.val)
+                // Make a copy for each child node.
+                newNode.children.append(newChildNode)
+                // Schedule a visit to copy the child nodes of each child node.
+                queue.append((childNode, newChildNode))
+            }
+        }
+
+        return newRoot
     }
 }
 ```

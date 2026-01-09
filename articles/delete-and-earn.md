@@ -116,6 +116,102 @@ class Solution {
 }
 ```
 
+```go
+func deleteAndEarn(nums []int) int {
+    sort.Ints(nums)
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= len(nums) {
+            return 0
+        }
+
+        cur := nums[i]
+        pick := 0
+        for i < len(nums) && nums[i] == cur {
+            pick += nums[i]
+            i++
+        }
+
+        res := dfs(i)
+        for i < len(nums) && nums[i] == cur+1 {
+            i++
+        }
+
+        res = max(res, pick+dfs(i))
+        return res
+    }
+
+    return dfs(0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun deleteAndEarn(nums: IntArray): Int {
+        nums.sort()
+        return dfs(nums, 0)
+    }
+
+    private fun dfs(nums: IntArray, idx: Int): Int {
+        var i = idx
+        if (i >= nums.size) return 0
+
+        val cur = nums[i]
+        var pick = 0
+        while (i < nums.size && nums[i] == cur) {
+            pick += nums[i]
+            i++
+        }
+
+        var res = dfs(nums, i)
+        while (i < nums.size && nums[i] == cur + 1) {
+            i++
+        }
+
+        res = maxOf(res, pick + dfs(nums, i))
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func deleteAndEarn(_ nums: [Int]) -> Int {
+        let sortedNums = nums.sorted()
+
+        func dfs(_ i: Int) -> Int {
+            var i = i
+            if i >= sortedNums.count { return 0 }
+
+            let cur = sortedNums[i]
+            var pick = 0
+            while i < sortedNums.count && sortedNums[i] == cur {
+                pick += sortedNums[i]
+                i += 1
+            }
+
+            var res = dfs(i)
+            while i < sortedNums.count && sortedNums[i] == cur + 1 {
+                i += 1
+            }
+
+            res = max(res, pick + dfs(i))
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +365,126 @@ class Solution {
 }
 ```
 
+```go
+func deleteAndEarn(nums []int) int {
+    val := make(map[int]int)
+    for _, num := range nums {
+        val[num] += num
+    }
+
+    uniqueSet := make(map[int]bool)
+    for _, num := range nums {
+        uniqueSet[num] = true
+    }
+    uniqueNums := make([]int, 0, len(uniqueSet))
+    for num := range uniqueSet {
+        uniqueNums = append(uniqueNums, num)
+    }
+    sort.Ints(uniqueNums)
+    memo := make([]int, len(uniqueNums))
+    for i := range memo {
+        memo[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= len(uniqueNums) {
+            return 0
+        }
+        if memo[i] != -1 {
+            return memo[i]
+        }
+
+        res := val[uniqueNums[i]]
+        if i+1 < len(uniqueNums) && uniqueNums[i]+1 == uniqueNums[i+1] {
+            res += dfs(i + 2)
+        } else {
+            res += dfs(i + 1)
+        }
+
+        res = max(res, dfs(i+1))
+        memo[i] = res
+        return res
+    }
+
+    return dfs(0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var valMap: MutableMap<Int, Int>
+    private lateinit var memo: IntArray
+
+    fun deleteAndEarn(nums: IntArray): Int {
+        valMap = mutableMapOf()
+        for (num in nums) {
+            valMap[num] = valMap.getOrDefault(num, 0) + num
+        }
+
+        val uniqueNums = valMap.keys.sorted()
+        memo = IntArray(uniqueNums.size) { -1 }
+
+        return dfs(uniqueNums, 0)
+    }
+
+    private fun dfs(nums: List<Int>, i: Int): Int {
+        if (i >= nums.size) return 0
+        if (memo[i] != -1) return memo[i]
+
+        var res = valMap[nums[i]]!!
+        res += if (i + 1 < nums.size && nums[i] + 1 == nums[i + 1]) {
+            dfs(nums, i + 2)
+        } else {
+            dfs(nums, i + 1)
+        }
+
+        res = maxOf(res, dfs(nums, i + 1))
+        memo[i] = res
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func deleteAndEarn(_ nums: [Int]) -> Int {
+        var val = [Int: Int]()
+        for num in nums {
+            val[num, default: 0] += num
+        }
+
+        let uniqueNums = Array(Set(nums)).sorted()
+        var memo = [Int](repeating: -1, count: uniqueNums.count)
+
+        func dfs(_ i: Int) -> Int {
+            if i >= uniqueNums.count { return 0 }
+            if memo[i] != -1 { return memo[i] }
+
+            var res = val[uniqueNums[i]]!
+            if i + 1 < uniqueNums.count && uniqueNums[i] + 1 == uniqueNums[i + 1] {
+                res += dfs(i + 2)
+            } else {
+                res += dfs(i + 1)
+            }
+
+            res = max(res, dfs(i + 1))
+            memo[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,6 +598,90 @@ class Solution {
 }
 ```
 
+```go
+func deleteAndEarn(nums []int) int {
+    val := make(map[int]int)
+    for _, num := range nums {
+        val[num] += num
+    }
+    sortedNums := make([]int, 0, len(val))
+    for key := range val {
+        sortedNums = append(sortedNums, key)
+    }
+    sort.Ints(sortedNums)
+
+    dp := make([]int, len(sortedNums)+1)
+    for i := len(sortedNums) - 1; i >= 0; i-- {
+        take := val[sortedNums[i]]
+        if i+1 < len(sortedNums) && sortedNums[i+1] == sortedNums[i]+1 {
+            take += dp[i+2]
+        } else {
+            take += dp[i+1]
+        }
+        dp[i] = max(dp[i+1], take)
+    }
+
+    return dp[0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun deleteAndEarn(nums: IntArray): Int {
+        val valMap = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            valMap[num] = valMap.getOrDefault(num, 0) + num
+        }
+        val sortedNums = valMap.keys.sorted()
+
+        val dp = IntArray(sortedNums.size + 1)
+        for (i in sortedNums.size - 1 downTo 0) {
+            var take = valMap[sortedNums[i]]!!
+            take += if (i + 1 < sortedNums.size && sortedNums[i + 1] == sortedNums[i] + 1) {
+                dp[i + 2]
+            } else {
+                dp[i + 1]
+            }
+            dp[i] = maxOf(dp[i + 1], take)
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func deleteAndEarn(_ nums: [Int]) -> Int {
+        var val = [Int: Int]()
+        for num in nums {
+            val[num, default: 0] += num
+        }
+        let sortedNums = val.keys.sorted()
+
+        var dp = [Int](repeating: 0, count: sortedNums.count + 1)
+        for i in stride(from: sortedNums.count - 1, through: 0, by: -1) {
+            var take = val[sortedNums[i]]!
+            if i + 1 < sortedNums.count && sortedNums[i + 1] == sortedNums[i] + 1 {
+                take += dp[i + 2]
+            } else {
+                take += dp[i + 1]
+            }
+            dp[i] = max(dp[i + 1], take)
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -460,6 +760,70 @@ class Solution {
             dp[i] = Math.max(dp[i + 1], dp[i + 2] + dp[i]);
         }
         return dp[1];
+    }
+}
+```
+
+```go
+func deleteAndEarn(nums []int) int {
+    m := 0
+    for _, num := range nums {
+        if num > m {
+            m = num
+        }
+    }
+
+    dp := make([]int, m+2)
+    for _, num := range nums {
+        dp[num] += num
+    }
+
+    for i := m - 1; i > 0; i-- {
+        dp[i] = max(dp[i+1], dp[i+2]+dp[i])
+    }
+    return dp[1]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun deleteAndEarn(nums: IntArray): Int {
+        val m = nums.maxOrNull()!!
+        val dp = IntArray(m + 2)
+
+        for (num in nums) {
+            dp[num] += num
+        }
+
+        for (i in m - 1 downTo 1) {
+            dp[i] = maxOf(dp[i + 1], dp[i + 2] + dp[i])
+        }
+        return dp[1]
+    }
+}
+```
+
+```swift
+class Solution {
+    func deleteAndEarn(_ nums: [Int]) -> Int {
+        let m = nums.max()!
+        var dp = [Int](repeating: 0, count: m + 2)
+
+        for num in nums {
+            dp[num] += num
+        }
+
+        for i in stride(from: m - 1, through: 1, by: -1) {
+            dp[i] = max(dp[i + 1], dp[i + 2] + dp[i])
+        }
+        return dp[1]
     }
 }
 ```
@@ -579,6 +943,98 @@ class Solution {
             }
         }
         return earn2;
+    }
+}
+```
+
+```go
+func deleteAndEarn(nums []int) int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num] += num
+    }
+    uniqueNums := make([]int, 0, len(count))
+    for key := range count {
+        uniqueNums = append(uniqueNums, key)
+    }
+    sort.Ints(uniqueNums)
+
+    earn1, earn2 := 0, 0
+    for i := 0; i < len(uniqueNums); i++ {
+        curEarn := count[uniqueNums[i]]
+        if i > 0 && uniqueNums[i] == uniqueNums[i-1]+1 {
+            temp := earn2
+            earn2 = max(curEarn+earn1, earn2)
+            earn1 = temp
+        } else {
+            temp := earn2
+            earn2 = curEarn + earn2
+            earn1 = temp
+        }
+    }
+    return earn2
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun deleteAndEarn(nums: IntArray): Int {
+        val count = mutableMapOf<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + num
+        }
+        val uniqueNums = count.keys.sorted()
+
+        var earn1 = 0
+        var earn2 = 0
+        for (i in uniqueNums.indices) {
+            val curEarn = count[uniqueNums[i]]!!
+            if (i > 0 && uniqueNums[i] == uniqueNums[i - 1] + 1) {
+                val temp = earn2
+                earn2 = maxOf(curEarn + earn1, earn2)
+                earn1 = temp
+            } else {
+                val temp = earn2
+                earn2 = curEarn + earn2
+                earn1 = temp
+            }
+        }
+        return earn2
+    }
+}
+```
+
+```swift
+class Solution {
+    func deleteAndEarn(_ nums: [Int]) -> Int {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += num
+        }
+        let uniqueNums = count.keys.sorted()
+
+        var earn1 = 0
+        var earn2 = 0
+        for i in 0..<uniqueNums.count {
+            let curEarn = count[uniqueNums[i]]!
+            if i > 0 && uniqueNums[i] == uniqueNums[i - 1] + 1 {
+                let temp = earn2
+                earn2 = max(curEarn + earn1, earn2)
+                earn1 = temp
+            } else {
+                let temp = earn2
+                earn2 = curEarn + earn2
+                earn1 = temp
+            }
+        }
+        return earn2
     }
 }
 ```

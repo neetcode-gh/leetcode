@@ -191,6 +191,114 @@ public class Solution {
 }
 ```
 
+```go
+func findMinHeightTrees(n int, edges [][]int) []int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        adj[edge[1]] = append(adj[edge[1]], edge[0])
+    }
+
+    var dfs func(node, parent int) int
+    dfs = func(node, parent int) int {
+        hgt := 0
+        for _, nei := range adj[node] {
+            if nei == parent {
+                continue
+            }
+            hgt = max(hgt, 1+dfs(nei, node))
+        }
+        return hgt
+    }
+
+    minHgt := n
+    result := []int{}
+    for i := 0; i < n; i++ {
+        curHgt := dfs(i, -1)
+        if curHgt == minHgt {
+            result = append(result, i)
+        } else if curHgt < minHgt {
+            result = []int{i}
+            minHgt = curHgt
+        }
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+
+    fun findMinHeightTrees(n: Int, edges: Array<IntArray>): List<Int> {
+        adj = Array(n) { mutableListOf() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            adj[edge[1]].add(edge[0])
+        }
+
+        var minHgt = n
+        var result = mutableListOf<Int>()
+        for (i in 0 until n) {
+            val curHgt = dfs(i, -1)
+            if (curHgt == minHgt) {
+                result.add(i)
+            } else if (curHgt < minHgt) {
+                result = mutableListOf(i)
+                minHgt = curHgt
+            }
+        }
+        return result
+    }
+
+    private fun dfs(node: Int, parent: Int): Int {
+        var hgt = 0
+        for (nei in adj[node]) {
+            if (nei == parent) continue
+            hgt = maxOf(hgt, 1 + dfs(nei, node))
+        }
+        return hgt
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMinHeightTrees(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+        }
+
+        func dfs(_ node: Int, _ parent: Int) -> Int {
+            var hgt = 0
+            for nei in adj[node] {
+                if nei == parent { continue }
+                hgt = max(hgt, 1 + dfs(nei, node))
+            }
+            return hgt
+        }
+
+        var minHgt = n
+        var result = [Int]()
+        for i in 0..<n {
+            let curHgt = dfs(i, -1)
+            if curHgt == minHgt {
+                result.append(i)
+            } else if curHgt < minHgt {
+                result = [i]
+                minHgt = curHgt
+            }
+        }
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -514,6 +622,192 @@ public class Solution {
 }
 ```
 
+```go
+func findMinHeightTrees(n int, edges [][]int) []int {
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        adj[edge[1]] = append(adj[edge[1]], edge[0])
+    }
+
+    dp := make([][2]int, n)
+
+    var dfs func(node, parent int)
+    dfs = func(node, parent int) {
+        for _, nei := range adj[node] {
+            if nei == parent {
+                continue
+            }
+            dfs(nei, node)
+            curHgt := 1 + dp[nei][0]
+            if curHgt > dp[node][0] {
+                dp[node][1] = dp[node][0]
+                dp[node][0] = curHgt
+            } else if curHgt > dp[node][1] {
+                dp[node][1] = curHgt
+            }
+        }
+    }
+
+    var dfs1 func(node, parent, topHgt int)
+    dfs1 = func(node, parent, topHgt int) {
+        if topHgt > dp[node][0] {
+            dp[node][1] = dp[node][0]
+            dp[node][0] = topHgt
+        } else if topHgt > dp[node][1] {
+            dp[node][1] = topHgt
+        }
+
+        for _, nei := range adj[node] {
+            if nei == parent {
+                continue
+            }
+            toChild := dp[node][0]
+            if dp[node][0] == 1+dp[nei][0] {
+                toChild = dp[node][1]
+            }
+            dfs1(nei, node, 1+toChild)
+        }
+    }
+
+    dfs(0, -1)
+    dfs1(0, -1, 0)
+
+    minHgt := n
+    for i := 0; i < n; i++ {
+        minHgt = min(minHgt, dp[i][0])
+    }
+    result := []int{}
+    for i := 0; i < n; i++ {
+        if dp[i][0] == minHgt {
+            result = append(result, i)
+        }
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+    private lateinit var dp: Array<IntArray>
+
+    fun findMinHeightTrees(n: Int, edges: Array<IntArray>): List<Int> {
+        adj = Array(n) { mutableListOf() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            adj[edge[1]].add(edge[0])
+        }
+
+        dp = Array(n) { IntArray(2) }
+        dfs(0, -1)
+        dfs1(0, -1, 0)
+
+        var minHgt = n
+        for (i in 0 until n) {
+            minHgt = minOf(minHgt, dp[i][0])
+        }
+        val result = mutableListOf<Int>()
+        for (i in 0 until n) {
+            if (dp[i][0] == minHgt) {
+                result.add(i)
+            }
+        }
+        return result
+    }
+
+    private fun dfs(node: Int, parent: Int) {
+        for (nei in adj[node]) {
+            if (nei == parent) continue
+            dfs(nei, node)
+            val curHgt = 1 + dp[nei][0]
+            if (curHgt > dp[node][0]) {
+                dp[node][1] = dp[node][0]
+                dp[node][0] = curHgt
+            } else if (curHgt > dp[node][1]) {
+                dp[node][1] = curHgt
+            }
+        }
+    }
+
+    private fun dfs1(node: Int, parent: Int, topHgt: Int) {
+        if (topHgt > dp[node][0]) {
+            dp[node][1] = dp[node][0]
+            dp[node][0] = topHgt
+        } else if (topHgt > dp[node][1]) {
+            dp[node][1] = topHgt
+        }
+
+        for (nei in adj[node]) {
+            if (nei == parent) continue
+            val toChild = 1 + if (dp[node][0] == 1 + dp[nei][0]) dp[node][1] else dp[node][0]
+            dfs1(nei, node, toChild)
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMinHeightTrees(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+        }
+
+        var dp = [[Int]](repeating: [0, 0], count: n)
+
+        func dfs(_ node: Int, _ parent: Int) {
+            for nei in adj[node] {
+                if nei == parent { continue }
+                dfs(nei, node)
+                let curHgt = 1 + dp[nei][0]
+                if curHgt > dp[node][0] {
+                    dp[node][1] = dp[node][0]
+                    dp[node][0] = curHgt
+                } else if curHgt > dp[node][1] {
+                    dp[node][1] = curHgt
+                }
+            }
+        }
+
+        func dfs1(_ node: Int, _ parent: Int, _ topHgt: Int) {
+            if topHgt > dp[node][0] {
+                dp[node][1] = dp[node][0]
+                dp[node][0] = topHgt
+            } else if topHgt > dp[node][1] {
+                dp[node][1] = topHgt
+            }
+
+            for nei in adj[node] {
+                if nei == parent { continue }
+                let toChild = 1 + (dp[node][0] == 1 + dp[nei][0] ? dp[node][1] : dp[node][0])
+                dfs1(nei, node, toChild)
+            }
+        }
+
+        dfs(0, -1)
+        dfs1(0, -1, 0)
+
+        var minHgt = n
+        for i in 0..<n {
+            minHgt = min(minHgt, dp[i][0])
+        }
+        var result = [Int]()
+        for i in 0..<n {
+            if dp[i][0] == minHgt {
+                result.append(i)
+            }
+        }
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -832,6 +1126,187 @@ public class Solution {
 }
 ```
 
+```go
+func findMinHeightTrees(n int, edges [][]int) []int {
+    if n == 1 {
+        return []int{0}
+    }
+
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        adj[edge[1]] = append(adj[edge[1]], edge[0])
+    }
+
+    var dfs func(node, parent int) (int, int)
+    dfs = func(node, parent int) (int, int) {
+        farthestNode := node
+        maxDistance := 0
+        for _, nei := range adj[node] {
+            if nei != parent {
+                neiNode, neiDist := dfs(nei, node)
+                if neiDist+1 > maxDistance {
+                    maxDistance = neiDist + 1
+                    farthestNode = neiNode
+                }
+            }
+        }
+        return farthestNode, maxDistance
+    }
+
+    nodeA, _ := dfs(0, -1)
+    nodeB, diameter := dfs(nodeA, -1)
+
+    centroids := []int{}
+    var findCentroids func(node, parent int) bool
+    findCentroids = func(node, parent int) bool {
+        if node == nodeB {
+            centroids = append(centroids, node)
+            return true
+        }
+        for _, nei := range adj[node] {
+            if nei != parent {
+                if findCentroids(nei, node) {
+                    centroids = append(centroids, node)
+                    return true
+                }
+            }
+        }
+        return false
+    }
+
+    findCentroids(nodeA, -1)
+    L := len(centroids)
+    if diameter%2 == 0 {
+        return []int{centroids[L/2]}
+    }
+    return []int{centroids[L/2-1], centroids[L/2]}
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var adj: Array<MutableList<Int>>
+    private var nodeB = 0
+    private val centroids = mutableListOf<Int>()
+
+    fun findMinHeightTrees(n: Int, edges: Array<IntArray>): List<Int> {
+        if (n == 1) return listOf(0)
+
+        adj = Array(n) { mutableListOf() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            adj[edge[1]].add(edge[0])
+        }
+
+        val nodeA = dfs(0, -1).first
+        val (nodeBVal, diameter) = dfs(nodeA, -1)
+        nodeB = nodeBVal
+
+        centroids.clear()
+        findCentroids(nodeA, -1)
+
+        val L = centroids.size
+        return if (diameter % 2 == 0) {
+            listOf(centroids[L / 2])
+        } else {
+            listOf(centroids[L / 2 - 1], centroids[L / 2])
+        }
+    }
+
+    private fun dfs(node: Int, parent: Int): Pair<Int, Int> {
+        var farthestNode = node
+        var maxDistance = 0
+        for (nei in adj[node]) {
+            if (nei != parent) {
+                val (neiNode, neiDist) = dfs(nei, node)
+                if (neiDist + 1 > maxDistance) {
+                    maxDistance = neiDist + 1
+                    farthestNode = neiNode
+                }
+            }
+        }
+        return Pair(farthestNode, maxDistance)
+    }
+
+    private fun findCentroids(node: Int, parent: Int): Boolean {
+        if (node == nodeB) {
+            centroids.add(node)
+            return true
+        }
+        for (nei in adj[node]) {
+            if (nei != parent) {
+                if (findCentroids(nei, node)) {
+                    centroids.add(node)
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMinHeightTrees(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        if n == 1 { return [0] }
+
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+        }
+
+        func dfs(_ node: Int, _ parent: Int) -> (Int, Int) {
+            var farthestNode = node
+            var maxDistance = 0
+            for nei in adj[node] {
+                if nei != parent {
+                    let (neiNode, neiDist) = dfs(nei, node)
+                    if neiDist + 1 > maxDistance {
+                        maxDistance = neiDist + 1
+                        farthestNode = neiNode
+                    }
+                }
+            }
+            return (farthestNode, maxDistance)
+        }
+
+        let (nodeA, _) = dfs(0, -1)
+        let (nodeB, diameter) = dfs(nodeA, -1)
+
+        var centroids = [Int]()
+        func findCentroids(_ node: Int, _ parent: Int) -> Bool {
+            if node == nodeB {
+                centroids.append(node)
+                return true
+            }
+            for nei in adj[node] {
+                if nei != parent {
+                    if findCentroids(nei, node) {
+                        centroids.append(node)
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        _ = findCentroids(nodeA, -1)
+        let L = centroids.count
+        if diameter % 2 == 0 {
+            return [centroids[L / 2]]
+        } else {
+            return [centroids[L / 2 - 1], centroids[L / 2]]
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1057,6 +1532,130 @@ public class Solution {
         }
 
         return new List<int>();
+    }
+}
+```
+
+```go
+func findMinHeightTrees(n int, edges [][]int) []int {
+    if n == 1 {
+        return []int{0}
+    }
+
+    adj := make([][]int, n)
+    for i := range adj {
+        adj[i] = []int{}
+    }
+    for _, edge := range edges {
+        adj[edge[0]] = append(adj[edge[0]], edge[1])
+        adj[edge[1]] = append(adj[edge[1]], edge[0])
+    }
+
+    edgeCnt := make([]int, n)
+    leaves := []int{}
+    for i := 0; i < n; i++ {
+        edgeCnt[i] = len(adj[i])
+        if len(adj[i]) == 1 {
+            leaves = append(leaves, i)
+        }
+    }
+
+    for len(leaves) > 0 {
+        if n <= 2 {
+            return leaves
+        }
+        size := len(leaves)
+        for i := 0; i < size; i++ {
+            node := leaves[0]
+            leaves = leaves[1:]
+            n--
+            for _, nei := range adj[node] {
+                edgeCnt[nei]--
+                if edgeCnt[nei] == 1 {
+                    leaves = append(leaves, nei)
+                }
+            }
+        }
+    }
+
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun findMinHeightTrees(n: Int, edges: Array<IntArray>): List<Int> {
+        if (n == 1) return listOf(0)
+
+        val adj = Array(n) { mutableListOf<Int>() }
+        for (edge in edges) {
+            adj[edge[0]].add(edge[1])
+            adj[edge[1]].add(edge[0])
+        }
+
+        val edgeCnt = IntArray(n)
+        val leaves = ArrayDeque<Int>()
+        for (i in 0 until n) {
+            edgeCnt[i] = adj[i].size
+            if (adj[i].size == 1) leaves.add(i)
+        }
+
+        var remaining = n
+        while (leaves.isNotEmpty()) {
+            if (remaining <= 2) return leaves.toList()
+            val size = leaves.size
+            repeat(size) {
+                val node = leaves.removeFirst()
+                remaining--
+                for (nei in adj[node]) {
+                    edgeCnt[nei]--
+                    if (edgeCnt[nei] == 1) leaves.add(nei)
+                }
+            }
+        }
+
+        return emptyList()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMinHeightTrees(_ n: Int, _ edges: [[Int]]) -> [Int] {
+        if n == 1 { return [0] }
+
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            adj[edge[0]].append(edge[1])
+            adj[edge[1]].append(edge[0])
+        }
+
+        var edgeCnt = [Int](repeating: 0, count: n)
+        var leaves = [Int]()
+        for i in 0..<n {
+            edgeCnt[i] = adj[i].count
+            if adj[i].count == 1 {
+                leaves.append(i)
+            }
+        }
+
+        var remaining = n
+        while !leaves.isEmpty {
+            if remaining <= 2 { return leaves }
+            let size = leaves.count
+            for _ in 0..<size {
+                let node = leaves.removeFirst()
+                remaining -= 1
+                for nei in adj[node] {
+                    edgeCnt[nei] -= 1
+                    if edgeCnt[nei] == 1 {
+                        leaves.append(nei)
+                    }
+                }
+            }
+        }
+
+        return []
     }
 }
 ```

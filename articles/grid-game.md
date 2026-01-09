@@ -141,6 +141,151 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public long GridGame(int[][] grid) {
+        int cols = grid[0].Length;
+        long res = long.MaxValue;
+
+        long top1 = 0;
+        for (int i = 0; i < cols; i++) {
+            top1 += grid[0][i];
+            long bottom1 = 0;
+            for (int j = i; j < cols; j++) {
+                bottom1 += grid[1][j];
+            }
+
+            long top2 = 0, robot2 = 0;
+            for (int j = 0; j < cols; j++) {
+                if (j > i) {
+                    top2 += grid[0][j];
+                }
+
+                long bottom2 = 0;
+                for (int k = j; k < i; k++) {
+                    bottom2 += grid[1][k];
+                }
+                robot2 = Math.Max(robot2, top2 + bottom2);
+            }
+
+            res = Math.Min(res, robot2);
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func gridGame(grid [][]int) int64 {
+    cols := len(grid[0])
+    res := int64(math.MaxInt64)
+
+    top1 := int64(0)
+    for i := 0; i < cols; i++ {
+        top1 += int64(grid[0][i])
+        bottom1 := int64(0)
+        for j := i; j < cols; j++ {
+            bottom1 += int64(grid[1][j])
+        }
+
+        top2 := int64(0)
+        robot2 := int64(0)
+        for j := 0; j < cols; j++ {
+            if j > i {
+                top2 += int64(grid[0][j])
+            }
+
+            bottom2 := int64(0)
+            for k := j; k < i; k++ {
+                bottom2 += int64(grid[1][k])
+            }
+            if top2+bottom2 > robot2 {
+                robot2 = top2 + bottom2
+            }
+        }
+
+        if robot2 < res {
+            res = robot2
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun gridGame(grid: Array<IntArray>): Long {
+        val cols = grid[0].size
+        var res = Long.MAX_VALUE
+
+        var top1 = 0L
+        for (i in 0 until cols) {
+            top1 += grid[0][i]
+            var bottom1 = 0L
+            for (j in i until cols) {
+                bottom1 += grid[1][j]
+            }
+
+            var top2 = 0L
+            var robot2 = 0L
+            for (j in 0 until cols) {
+                if (j > i) {
+                    top2 += grid[0][j]
+                }
+
+                var bottom2 = 0L
+                for (k in j until i) {
+                    bottom2 += grid[1][k]
+                }
+                robot2 = maxOf(robot2, top2 + bottom2)
+            }
+
+            res = minOf(res, robot2)
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func gridGame(_ grid: [[Int]]) -> Int {
+        let cols = grid[0].count
+        var res = Int.max
+
+        var top1 = 0
+        for i in 0..<cols {
+            top1 += grid[0][i]
+            var bottom1 = 0
+            for j in i..<cols {
+                bottom1 += grid[1][j]
+            }
+
+            var top2 = 0
+            var robot2 = 0
+            for j in 0..<cols {
+                if j > i {
+                    top2 += grid[0][j]
+                }
+
+                var bottom2 = 0
+                for k in j..<i {
+                    bottom2 += grid[1][k]
+                }
+                robot2 = max(robot2, top2 + bottom2)
+            }
+
+            res = min(res, robot2)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,6 +398,116 @@ class Solution {
             res = Math.min(res, secondRobot);
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public long GridGame(int[][] grid) {
+        int N = grid[0].Length;
+        long[] preRow1 = new long[N];
+        long[] preRow2 = new long[N];
+        for (int i = 0; i < N; i++) {
+            preRow1[i] = grid[0][i];
+            preRow2[i] = grid[1][i];
+        }
+
+        for (int i = 1; i < N; i++) {
+            preRow1[i] += preRow1[i - 1];
+            preRow2[i] += preRow2[i - 1];
+        }
+
+        long res = long.MaxValue;
+        for (int i = 0; i < N; i++) {
+            long top = preRow1[N - 1] - preRow1[i];
+            long bottom = i > 0 ? preRow2[i - 1] : 0;
+            long secondRobot = Math.Max(top, bottom);
+            res = Math.Min(res, secondRobot);
+        }
+        return res;
+    }
+}
+```
+
+```go
+func gridGame(grid [][]int) int64 {
+    N := len(grid[0])
+    preRow1 := make([]int64, N)
+    preRow2 := make([]int64, N)
+    for i := 0; i < N; i++ {
+        preRow1[i] = int64(grid[0][i])
+        preRow2[i] = int64(grid[1][i])
+    }
+
+    for i := 1; i < N; i++ {
+        preRow1[i] += preRow1[i-1]
+        preRow2[i] += preRow2[i-1]
+    }
+
+    res := int64(math.MaxInt64)
+    for i := 0; i < N; i++ {
+        top := preRow1[N-1] - preRow1[i]
+        bottom := int64(0)
+        if i > 0 {
+            bottom = preRow2[i-1]
+        }
+        secondRobot := top
+        if bottom > secondRobot {
+            secondRobot = bottom
+        }
+        if secondRobot < res {
+            res = secondRobot
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun gridGame(grid: Array<IntArray>): Long {
+        val N = grid[0].size
+        val preRow1 = LongArray(N) { grid[0][it].toLong() }
+        val preRow2 = LongArray(N) { grid[1][it].toLong() }
+
+        for (i in 1 until N) {
+            preRow1[i] += preRow1[i - 1]
+            preRow2[i] += preRow2[i - 1]
+        }
+
+        var res = Long.MAX_VALUE
+        for (i in 0 until N) {
+            val top = preRow1[N - 1] - preRow1[i]
+            val bottom = if (i > 0) preRow2[i - 1] else 0L
+            val secondRobot = maxOf(top, bottom)
+            res = minOf(res, secondRobot)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func gridGame(_ grid: [[Int]]) -> Int {
+        let N = grid[0].count
+        var preRow1 = grid[0]
+        var preRow2 = grid[1]
+
+        for i in 1..<N {
+            preRow1[i] += preRow1[i - 1]
+            preRow2[i] += preRow2[i - 1]
+        }
+
+        var res = Int.max
+        for i in 0..<N {
+            let top = preRow1[N - 1] - preRow1[i]
+            let bottom = i > 0 ? preRow2[i - 1] : 0
+            let secondRobot = max(top, bottom)
+            res = min(res, secondRobot)
+        }
+        return res
     }
 }
 ```

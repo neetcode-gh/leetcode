@@ -183,6 +183,142 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func widthOfBinaryTree(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    res := 0
+    type item struct {
+        node  *TreeNode
+        num   uint64
+        level int
+    }
+    queue := []item{{root, 1, 0}}
+    prevLevel := 0
+    var prevNum uint64 = 1
+
+    for len(queue) > 0 {
+        cur := queue[0]
+        queue = queue[1:]
+        node, num, level := cur.node, cur.num, cur.level
+
+        if level > prevLevel {
+            prevLevel = level
+            prevNum = num
+        }
+
+        width := int(num - prevNum + 1)
+        if width > res {
+            res = width
+        }
+        if node.Left != nil {
+            queue = append(queue, item{node.Left, 2 * num, level + 1})
+        }
+        if node.Right != nil {
+            queue = append(queue, item{node.Right, 2*num + 1, level + 1})
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun widthOfBinaryTree(root: TreeNode?): Int {
+        if (root == null) return 0
+
+        var res = 0
+        val queue = ArrayDeque<Triple<TreeNode, Long, Int>>()
+        queue.add(Triple(root, 1L, 0))
+        var prevLevel = 0
+        var prevNum = 1L
+
+        while (queue.isNotEmpty()) {
+            val (node, num, level) = queue.removeFirst()
+
+            if (level > prevLevel) {
+                prevLevel = level
+                prevNum = num
+            }
+
+            res = maxOf(res, (num - prevNum + 1).toInt())
+            node.left?.let { queue.add(Triple(it, 2 * num, level + 1)) }
+            node.right?.let { queue.add(Triple(it, 2 * num + 1, level + 1)) }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func widthOfBinaryTree(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+
+        var res = 0
+        var queue: [(TreeNode, UInt64, Int)] = [(root, 1, 0)]
+        var prevLevel = 0
+        var prevNum: UInt64 = 1
+
+        while !queue.isEmpty {
+            let (node, num, level) = queue.removeFirst()
+
+            if level > prevLevel {
+                prevLevel = level
+                prevNum = num
+            }
+
+            res = max(res, Int(num - prevNum + 1))
+            if let left = node.left {
+                queue.append((left, 2 * num, level + 1))
+            }
+            if let right = node.right {
+                queue.append((right, 2 * num + 1, level + 1))
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -348,6 +484,127 @@ class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func widthOfBinaryTree(root *TreeNode) int {
+    res := 0
+    type item struct {
+        node *TreeNode
+        num  uint
+    }
+    queue := []item{{root, 0}}
+
+    for len(queue) > 0 {
+        start := queue[0].num
+        size := len(queue)
+
+        for i := 0; i < size; i++ {
+            cur := queue[0]
+            queue = queue[1:]
+            curNum := cur.num - start
+            if int(curNum)+1 > res {
+                res = int(curNum) + 1
+            }
+            if cur.node.Left != nil {
+                queue = append(queue, item{cur.node.Left, 2 * curNum})
+            }
+            if cur.node.Right != nil {
+                queue = append(queue, item{cur.node.Right, 2*curNum + 1})
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun widthOfBinaryTree(root: TreeNode?): Int {
+        var res = 0
+        val queue = ArrayDeque<Pair<TreeNode, Int>>()
+        queue.add(root!! to 0)
+
+        while (queue.isNotEmpty()) {
+            val start = queue.first().second
+            val size = queue.size
+
+            repeat(size) {
+                val (node, num) = queue.removeFirst()
+                val curNum = num - start
+                res = maxOf(res, curNum + 1)
+                node.left?.let { queue.add(it to 2 * curNum) }
+                node.right?.let { queue.add(it to 2 * curNum + 1) }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func widthOfBinaryTree(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+
+        var res = 0
+        var queue: [(TreeNode, Int)] = [(root, 0)]
+
+        while !queue.isEmpty {
+            let start = queue.first!.1
+            let size = queue.count
+
+            for _ in 0..<size {
+                let (node, num) = queue.removeFirst()
+                let curNum = num - start
+                res = max(res, curNum + 1)
+                if let left = node.left {
+                    queue.append((left, 2 * curNum))
+                }
+                if let right = node.right {
+                    queue.append((right, 2 * curNum + 1))
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -502,6 +759,119 @@ class Solution {
 
         dfs(root, 0, 0);
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func widthOfBinaryTree(root *TreeNode) int {
+    first := make(map[int]int)
+    res := 0
+
+    var dfs func(node *TreeNode, level, curNum int)
+    dfs = func(node *TreeNode, level, curNum int) {
+        if node == nil {
+            return
+        }
+
+        if _, ok := first[level]; !ok {
+            first[level] = curNum
+        }
+
+        width := curNum - first[level] + 1
+        if width > res {
+            res = width
+        }
+        dfs(node.Left, level+1, 2*(curNum-first[level]))
+        dfs(node.Right, level+1, 2*(curNum-first[level])+1)
+    }
+
+    dfs(root, 0, 0)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private val first = mutableMapOf<Int, Int>()
+    private var res = 0
+
+    fun widthOfBinaryTree(root: TreeNode?): Int {
+        first.clear()
+        res = 0
+        dfs(root, 0, 0)
+        return res
+    }
+
+    private fun dfs(node: TreeNode?, level: Int, curNum: Int) {
+        if (node == null) return
+
+        if (level !in first) {
+            first[level] = curNum
+        }
+
+        res = maxOf(res, curNum - first[level]!! + 1)
+        dfs(node.left, level + 1, 2 * (curNum - first[level]!!))
+        dfs(node.right, level + 1, 2 * (curNum - first[level]!!) + 1)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    private var first = [Int: Int]()
+    private var res = 0
+
+    func widthOfBinaryTree(_ root: TreeNode?) -> Int {
+        first = [:]
+        res = 0
+        dfs(root, 0, 0)
+        return res
+    }
+
+    private func dfs(_ node: TreeNode?, _ level: Int, _ curNum: Int) {
+        guard let node = node else { return }
+
+        if first[level] == nil {
+            first[level] = curNum
+        }
+
+        res = max(res, curNum - first[level]! + 1)
+        dfs(node.left, level + 1, 2 * (curNum - first[level]!))
+        dfs(node.right, level + 1, 2 * (curNum - first[level]!) + 1)
     }
 }
 ```
