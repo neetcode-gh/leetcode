@@ -24,7 +24,7 @@ The brute-force method recomputes the left maximum and right maximum for every i
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-```
+```markdown
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
   │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
