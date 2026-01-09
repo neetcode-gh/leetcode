@@ -19,6 +19,53 @@ The brute-force method recomputes the left maximum and right maximum for every i
    - Add `min(leftMax, rightMax) - height[i]` to `res`.
 4. After processing all positions, return `res`.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+```markdown
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+```
+
+**Step-by-step execution:**
+
+For each position, we scan left and right to find the maximum heights.
+
+
+| i | height[i] | leftMax | rightMax | min(L,R) | Water = min(L,R) - height[i] |
+|---|-----------|---------|----------|----------|------------------------------|
+| 0 | 0         | 0       | 3        | 0        | 0 - 0 = 0                    |
+| 1 | 1         | 1       | 3        | 1        | 1 - 1 = 0                    |
+| 2 | 0         | 1       | 3        | 1        | 1 - 0 = **1**                |
+| 3 | 2         | 2       | 3        | 2        | 2 - 2 = 0                    |
+| 4 | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
+| 5 | 0         | 2       | 3        | 2        | 2 - 0 = **2**                |
+| 6 | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
+| 7 | 3         | 3       | 3        | 3        | 3 - 3 = 0                    |
+| 8 | 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
+| 9 | 1         | 3       | 2        | 2        | 2 - 1 = **1**                |
+| 10| 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
+| 11| 1         | 3       | 1        | 1        | 1 - 1 = 0                    |
+
+
+**Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -286,6 +333,83 @@ This removes the repeated work from the brute-force approach and makes the solut
    - For each index `i`, add `min(leftMax[i], rightMax[i]) - height[i]` to the result.
 6. Return the total trapped water.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+```
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+```
+
+**Step 1: Build leftMax array (scan left to right)**
+
+```
+  leftMax[i] = max height from index 0 to i
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 1 │ 2 │ 2 │ 2 │ 2 │ 3 │ 3 │ 3 │ 3 │ 3 │  leftMax
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+```
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 2: Build rightMax array (scan right to left)**
+
+```
+  rightMax[i] = max height from index i to n-1
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 2 │ 2 │ 2 │ 1 │  rightMax
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+```
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 3: Calculate water at each position**
+
+Water at index i = min(leftMax[i], rightMax[i]) - height[i]
+
+
+| i | height[i] | leftMax[i] | rightMax[i] | min(L,R) | Water |
+|---|-----------|------------|-------------|----------|-------|
+| 0 | 0 | 0 | 3 | 0 | 0 |
+| 1 | 1 | 1 | 3 | 1 | 0 |
+| 2 | 0 | 1 | 3 | 1 | **1** |
+| 3 | 2 | 2 | 3 | 2 | 0 |
+| 4 | 1 | 2 | 3 | 2 | **1** |
+| 5 | 0 | 2 | 3 | 2 | **2** |
+| 6 | 1 | 2 | 3 | 2 | **1** |
+| 7 | 3 | 3 | 3 | 3 | 0 |
+| 8 | 2 | 3 | 2 | 2 | 0 |
+| 9 | 1 | 3 | 2 | 2 | **1** |
+| 10 | 2 | 3 | 2 | 2 | 0 |
+| 11 | 1 | 3 | 1 | 1 | 0 |
+
+
+**Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -568,6 +692,134 @@ We keep doing this as long as the current bar keeps forming valid containers.
    - Push the current index onto the stack.
 3. Return `res` after the loop finishes.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+```
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+```
+
+**Stack-based approach: Process horizontally layer by layer**
+
+The stack stores indices. When we find a taller bar, we pop and calculate water trapped.
+
+
+**Step 4: i = 3, height[3] = 2**
+
+Found right wall at index 3, pop index 2 (bottom = 0), left wall at index 1 (height = 1)
+
+```
+            ┌───┐
+       ┌───┐│   │
+       │   │≈≈≈≈│       Water: h=min(1,2)-0=1, w=3-1-1=1, area=1
+  ─────┴───┴────┴────
+       0   1   0   2
+               ↑   ↑
+             bottom right
+```
+
+Water added: **1**
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 7: i = 6, height[6] = 1**
+
+Found right wall at index 6, pop index 5 (bottom = 0), left wall at index 4 (height = 1)
+
+```
+                        ┌───┐
+            ┌───┐       │   │
+            │   │ ┌───┐ │   │ ┌───┐
+  ──────────┴───┴─┴───┴─≈≈≈≈┴─┴───┴────
+            2   1   0   1   3   2
+                    ↑   ↑
+                  bottom right
+```
+
+Water added: **1**
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 8: i = 7, height[7] = 3**
+
+Pop multiple times to fill the pool between index 3 and 7
+
+```
+                        ┌───┐
+            ┌───┐ ≈ ≈ ≈ │   │
+            │   │ ≈ ≈ ≈ │   │       Water: h=min(2,3)-1=1, w=7-3-1=3, area=3
+  ──────────┴───┴─≈─≈─≈─┴───┴────
+            2   1   0   1   3
+            ↑               ↑
+          left            right
+```
+
+Water added: **3**
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 11: i = 10, height[10] = 2**
+
+Found right wall at index 10, pop index 9 (bottom = 1), left wall at index 8 (height = 2)
+
+```
+       ┌───┐     ┌───┐
+       │   │ ≈ ≈ │   │       Water: h=min(2,2)-1=1, w=10-8-1=1, area=1
+  ─────┴───┴──≈──┴───┴────
+       3   2   1   2
+           ↑   ↑   ↑
+         left bottom right
+```
+
+Water added: **1**
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Complete step-by-step trace:**
+
+| Step | i | height[i] | Stack (indices) | Action | Water |
+|------|---|-----------|-----------------|--------|-------|
+| 1 | 0 | 0 | [] | Push 0 | 0 |
+| 2 | 1 | 1 | [0] | Pop 0, no left wall; Push 1 | 0 |
+| 3 | 2 | 0 | [1] | Push 2 | 0 |
+| 4 | 3 | 2 | [1,2] | Pop 2, calculate water; Push 3 | **1** |
+| 5 | 4 | 1 | [3] | Push 4 | 0 |
+| 6 | 5 | 0 | [3,4] | Push 5 | 0 |
+| 7 | 6 | 1 | [3,4,5] | Pop 5, calculate water; Push 6 | **1** |
+| 8 | 7 | 3 | [3,4,6] | Pop 6,4,3, calculate water; Push 7 | **3** |
+| 9 | 8 | 2 | [7] | Push 8 | 0 |
+| 10 | 9 | 1 | [7,8] | Push 9 | 0 |
+| 11 | 10 | 2 | [7,8,9] | Pop 9, calculate water; Push 10 | **1** |
+| 12 | 11 | 1 | [7,8,10] | Push 11 | 0 |
+
+
+**Total water trapped = 1 + 1 + 3 + 1 = 6**
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -846,6 +1098,143 @@ The water at each position is simply:
      - Add `rightMax - height[r]` to the result.
 3. Return the total trapped water.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+```
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+```
+
+**Two Pointers Approach**
+
+
+**Step 1: Initial State**
+
+```
+   L                                           R
+   ↓                                           ↓
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  leftMax = 0    rightMax = 1    water = 0
+```
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 3: Water trapped at index 2**
+
+leftMax < rightMax, so process left side. Water = leftMax - height[2] = 1 - 0 = 1
+
+```
+           L                                   R
+           ↓                                   ↓
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+            ≈
+
+  leftMax = 1    rightMax = 2    water = 1
+```
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Step 5: Water trapped at index 9**
+
+leftMax >= rightMax, so process right side. Water = rightMax - height[9] = 2 - 1 = 1
+
+```
+               L                       R
+               ↓                       ↓
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+            ≈                           ≈
+
+  leftMax = 2    rightMax = 2    water = 2
+```
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Steps 8-10: Water trapped at indices 4, 5, 6**
+
+Processing left side as leftMax < rightMax
+
+```
+                           L       R
+                           ↓       ↓
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+            ≈       ≈   ≈   ≈           ≈
+
+  leftMax = 2    rightMax = 3    water = 6
+```
+
+
+═══════════════════════════════════════════════════════════
+
+
+**Complete step-by-step trace:**
+
+| Step | l | r | height[l] | height[r] | leftMax | rightMax | Action | Water | Total |
+|------|---|---|-----------|-----------|---------|----------|--------|-------|-------|
+| 1 | 0 | 11 | 0 | 1 | 0 | 1 | l++ | 0 | 0 |
+| 2 | 1 | 11 | 1 | 1 | 1 | 1 | r-- | 0 | 0 |
+| 3 | 1 | 10 | 1 | 2 | 1 | 2 | l++ | **1** | 1 |
+| 4 | 2 | 10 | 0 | 2 | 1 | 2 | l++ | 0 | 1 |
+| 5 | 3 | 10 | 2 | 2 | 2 | 2 | r-- | **1** | 2 |
+| 6 | 3 | 9 | 2 | 1 | 2 | 2 | r-- | 0 | 2 |
+| 7 | 3 | 8 | 2 | 2 | 2 | 2 | r-- | 0 | 2 |
+| 8 | 3 | 7 | 2 | 3 | 2 | 3 | l++ | **1** | 3 |
+| 9 | 4 | 7 | 1 | 3 | 2 | 3 | l++ | **2** | 5 |
+| 10 | 5 | 7 | 0 | 3 | 2 | 3 | l++ | **1** | 6 |
+| 11 | 6 | 7 | 1 | 3 | 2 | 3 | l++ | 0 | 6 |
+
+
+Loop ends when l = 7 = r
+
+
+**Final Result with all water (≈):**
+
+```
+                        ┌───┐
+            ┌───┐ ≈ ≈ ≈ │   │ ┌───┐     ┌───┐
+       ┌───┐│   │ ≈ ≈ ≈ │   │ │   │ ≈ ≈ │   │
+  ─────┴───┴┴───┴─≈─≈─≈─┴───┴─┴───┴──≈──┴───┴────
+       0   1   0   2   1   0   1   3   2   1   2   1
+```
+
+
+**Total water trapped = 1 + 1 + 1 + 2 + 1 = 6**
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python

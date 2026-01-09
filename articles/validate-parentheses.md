@@ -16,6 +16,86 @@ Otherwise, some unmatched characters remain, meaning the string is invalid.
    - If the string is empty, return `True`.
    - Otherwise, return `False`.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `s = "({[]})"`
+
+We repeatedly remove matching pairs `()`, `{}`, `[]` until no more can be removed.
+
+```
+Initial String:
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+  0   1   2   3   4   5
+
+═══════════════════════════════════════
+
+Iteration 1:
+    Remove "()" → not found at adjacent positions
+    Remove "{}" → not found at adjacent positions
+    Remove "[]" → found at positions 2-3!
+
+             Found pair
+               ↓↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+    After removal:
+    ┌───┬───┬───┬───┐
+    │ ( │ { │ } │ ) │
+    └───┴───┴───┴───┘
+      0   1   2   3
+
+═══════════════════════════════════════
+
+Iteration 2:
+    Remove "()" → not found at adjacent positions
+    Remove "{}" → found at positions 1-2!
+
+         Found pair
+           ↓↓
+    ┌───┬───┬───┬───┐
+    │ ( │ { │ } │ ) │
+    └───┴───┴───┴───┘
+
+    After removal:
+    ┌───┬───┐
+    │ ( │ ) │
+    └───┴───┘
+      0   1
+
+═══════════════════════════════════════
+
+Iteration 3:
+    Remove "()" → found at positions 0-1!
+
+     Found pair
+       ↓↓
+    ┌───┬───┐
+    │ ( │ ) │
+    └───┴───┘
+
+    After removal:
+    ┌───┐
+    │   │  ← Empty string!
+    └───┘
+
+═══════════════════════════════════════
+
+Final Result:
+    String is empty → return True
+```
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -168,6 +248,147 @@ A valid string ends with an empty stack.
    - If the stack is empty, return `True`.
    - Otherwise, return `False`.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `s = "({[]})"`
+
+We use a stack to track opening brackets and match them with closing brackets.
+
+```
+String (processing left to right):
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+  0   1   2   3   4   5
+
+═══════════════════════════════════════
+
+Step 1: char = '('
+
+    Current char
+         ↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+Action: '(' is an opening bracket → Push to stack
+
+Stack:
+┌───┐
+│ ( │ ← top
+└───┘
+
+═══════════════════════════════════════
+
+Step 2: char = '{'
+
+        Current char
+             ↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+Action: '{' is an opening bracket → Push to stack
+
+Stack:
+┌───┐
+│ { │ ← top
+├───┤
+│ ( │
+└───┘
+
+═══════════════════════════════════════
+
+Step 3: char = '['
+
+            Current char
+                 ↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+Action: '[' is an opening bracket → Push to stack
+
+Stack:
+┌───┐
+│ [ │ ← top
+├───┤
+│ { │
+├───┤
+│ ( │
+└───┘
+
+═══════════════════════════════════════
+
+Step 4: char = ']'
+
+                Current char
+                     ↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+Action: ']' is a closing bracket
+        Top of stack is '[' which matches! → Pop from stack
+
+Stack:
+┌───┐
+│ { │ ← top
+├───┤
+│ ( │
+└───┘
+
+═══════════════════════════════════════
+
+Step 5: char = '}'
+
+                    Current char
+                         ↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+Action: '}' is a closing bracket
+        Top of stack is '{' which matches! → Pop from stack
+
+Stack:
+┌───┐
+│ ( │ ← top
+└───┘
+
+═══════════════════════════════════════
+
+Step 6: char = ')'
+
+                        Current char
+                             ↓
+┌───┬───┬───┬───┬───┬───┐
+│ ( │ { │ [ │ ] │ } │ ) │
+└───┴───┴───┴───┴───┴───┘
+
+Action: ')' is a closing bracket
+        Top of stack is '(' which matches! → Pop from stack
+
+Stack:
+┌───┐
+│   │ ← empty
+└───┘
+
+═══════════════════════════════════════
+
+Final Result:
+    Stack is empty → All brackets matched correctly!
+    Return: True
+```
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python

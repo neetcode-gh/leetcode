@@ -11,6 +11,64 @@ We can check every pair of different elements in the array and return the first 
 3. If no such pair is found, return an empty array.
 4. There is guaranteed to be exactly one solution, so we will never return an empty array.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+**Input:** `nums = [2, 7, 11, 15]`, `target = 9`
+
+```
+┌─────┬─────┬─────┬─────┐
+│  2  │  7  │ 11  │ 15  │
+└─────┴─────┴─────┴─────┘
+   0     1     2     3    ← indices
+```
+
+We check every pair of elements using two nested loops.
+
+
+**Step 1:** `i = 0`, `j = 1`
+
+```
+   i     j
+   ↓     ↓
+┌─────┬─────┬─────┬─────┐
+│  2  │  7  │ 11  │ 15  │
+└─────┴─────┴─────┴─────┘
+
+Check: nums[0] + nums[1] = 2 + 7 = 9 == target ✓
+```
+
+**Match found!** Return `[0, 1]`
+
+
+---
+
+
+**Visualization of all pairs (if no early match):**
+
+```
+┌──────────┬─────────────┬────────────┐
+│   Pair   │ Calculation │   Result   │
+├──────────┼─────────────┼────────────┤
+│  (0, 1)  │   2 +  7    │   9  ✓     │ ← Found!
+│  (0, 2)  │   2 + 11    │  13        │
+│  (0, 3)  │   2 + 15    │  17        │
+│  (1, 2)  │   7 + 11    │  18        │
+│  (1, 3)  │   7 + 15    │  22        │
+│  (2, 3)  │  11 + 15    │  26        │
+└──────────┴─────────────┴────────────┘
+```
+
+
+**Result:** `[0, 1]`
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -157,6 +215,90 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 6. If the sum is greater than the target, move the right pointer to the left, which will decrease the sum.
 7. There is guaranteed to be exactly one solution, so we will never return an empty array.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+**Input:** `nums = [2, 7, 11, 15]`, `target = 9`
+
+```
+┌─────┬─────┬─────┬─────┐
+│  2  │  7  │ 11  │ 15  │
+└─────┴─────┴─────┴─────┘
+   0     1     2     3    ← indices
+```
+
+
+**Initial State:** Create array with (value, original_index) pairs
+
+```
+A = [(2, 0), (7, 1), (11, 2), (15, 3)]
+```
+
+
+**After Sorting:** (already sorted in this case)
+
+```
+        i                       j
+        ↓                       ↓
+┌───────────┬───────────┬───────────┬───────────┐
+│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+└───────────┴───────────┴───────────┴───────────┘
+   val=2       val=7      val=11      val=15
+```
+
+
+**Step 1:** `i = 0`, `j = 3`
+
+```
+        i                       j
+        ↓                       ↓
+┌───────────┬───────────┬───────────┬───────────┐
+│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+└───────────┴───────────┴───────────┴───────────┘
+
+Sum = 2 + 15 = 17 > 9 (target)
+Action: Move j left (decrease sum) ←
+```
+
+
+**Step 2:** `i = 0`, `j = 2`
+
+```
+        i               j
+        ↓               ↓
+┌───────────┬───────────┬───────────┬───────────┐
+│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+└───────────┴───────────┴───────────┴───────────┘
+
+Sum = 2 + 11 = 13 > 9 (target)
+Action: Move j left (decrease sum) ←
+```
+
+
+**Step 3:** `i = 0`, `j = 1`
+
+```
+        i       j
+        ↓       ↓
+┌───────────┬───────────┬───────────┬───────────┐
+│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+└───────────┴───────────┴───────────┴───────────┘
+
+Sum = 2 + 7 = 9 == target ✓
+```
+
+**Match found!** Original indices are 0 and 1.
+
+
+**Result:** `[0, 1]`
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -406,6 +548,72 @@ By using a hashmap, we can achieve a time complexity of $O(n)$ because the inser
 4. If it does, return the indices of the current element and its complement.
 5. If no such pair is found, return an empty array.
 
+<<<<<<< Updated upstream
+=======
+<details>
+<summary>Example - Dry Run</summary>
+
+**Input:** `nums = [2, 7, 11, 15]`, `target = 9`
+
+```
+┌─────┬─────┬─────┬─────┐
+│  2  │  7  │ 11  │ 15  │
+└─────┴─────┴─────┴─────┘
+   0     1     2     3    ← indices
+```
+
+
+**Pass 1: Build the HashMap**
+
+```
+Iteration 0: indices[2]  = 0
+Iteration 1: indices[7]  = 1
+Iteration 2: indices[11] = 2
+Iteration 3: indices[15] = 3
+```
+
+HashMap after Pass 1:
+
+```
+┌───────┬───────┐
+│ Value │ Index │
+├───────┼───────┤
+│   2   │   0   │
+│   7   │   1   │
+│  11   │   2   │
+│  15   │   3   │
+└───────┴───────┘
+```
+
+
+**Pass 2: Find the complement**
+
+
+**Step 1:** `i = 0`, `nums[0] = 2`
+
+```
+   i
+   ↓
+┌─────┬─────┬─────┬─────┐
+│  2  │  7  │ 11  │ 15  │
+└─────┴─────┴─────┴─────┘
+
+diff = target - nums[0] = 9 - 2 = 7
+
+Check: Is 7 in HashMap?      → YES, at index 1
+Check: Is index 1 != index 0? → YES ✓
+```
+
+**Match found!** Return `[0, 1]`
+
+
+**Result:** `[0, 1]`
+
+</details>
+
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -598,6 +806,8 @@ If it does, we return the indices of the current element and its complement. If 
 4. If it does, return the indices of the current element and its complement.
 5. If no such pair is found, return an empty array.
 
+
+<br>
 
 ::tabs-start
 
