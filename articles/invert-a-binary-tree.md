@@ -24,6 +24,151 @@ This approach ensures that every node is visited exactly once and inverted immed
    - If the right child exists, add it to the queue.
 4. After all nodes are processed, return the root as the inverted tree.
 
+<details>
+<summary>Example - Dry Run</summary>
+
+```
+Input Tree:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 2 │           │ 7 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 1 │ │ 3 │     │ 6 │ │ 9 │
+    └───┘ └───┘     └───┘ └───┘
+
+Queue: [4]
+```
+
+
+**BFS Traversal (Level by Level):**
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 1:** Dequeue node 4, swap its children (2 <-> 7)
+
+```
+  Swap children of node 4:
+
+      Before:              After:
+         4                    4
+        / \                  / \
+       2   7        →       7   2
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │  ← swapped!
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 6 │ │ 9 │     │ 1 │ │ 3 │
+    └───┘ └───┘     └───┘ └───┘
+
+  Queue: [7, 2]
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 2:** Dequeue node 7, swap its children (6 <-> 9)
+
+```
+  Swap children of node 7:
+
+      Before:              After:
+         7                    7
+        / \                  / \
+       6   9        →       9   6
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 1 │ │ 3 │  ← swapped 9,6!
+    └───┘ └───┘     └───┘ └───┘
+
+  Queue: [2, 9, 6]
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 3:** Dequeue node 2, swap its children (1 <-> 3)
+
+```
+  Swap children of node 2:
+
+      Before:              After:
+         2                    2
+        / \                  / \
+       1   3        →       3   1
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 3 │ │ 1 │  ← swapped 3,1!
+    └───┘ └───┘     └───┘ └───┘
+
+  Queue: [9, 6, 3, 1]
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Steps 4-7:** Dequeue nodes 9, 6, 3, 1
+
+```
+  All are leaf nodes (no children to swap)
+
+  Queue: [] (empty)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Final Inverted Tree:**
+
+```
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 3 │ │ 1 │
+    └───┘ └───┘     └───┘ └───┘
+```
+
+</details>
+
 ::tabs-start
 
 ```python
@@ -291,69 +436,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-Consider the following binary tree:
-
-```
-Input Tree:
-       4
-      / \
-     2   7
-    / \ / \
-   1  3 6  9
-```
-
-**BFS Traversal (Level by Level):**
-
-**Initial State:**
-- Queue: [4]
-
-**Step 1:** Dequeue node 4, swap its children (2 <-> 7)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   6  9 1  3
-```
-- Queue after enqueuing children: [7, 2]
-
-**Step 2:** Dequeue node 7, swap its children (6 <-> 9)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 1  3
-```
-- Queue after enqueuing children: [2, 9, 6]
-
-**Step 3:** Dequeue node 2, swap its children (1 <-> 3)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 3  1
-```
-- Queue after enqueuing children: [9, 6, 3, 1]
-
-**Steps 4-7:** Dequeue nodes 9, 6, 3, 1 (all are leaf nodes, no children to swap)
-- Queue becomes empty
-
-**Final Result:**
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 3  1
-```
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
@@ -384,6 +466,198 @@ The inversion happens during the descent of the recursion, and each subtree beco
 3. Recursively call DFS on the new `left` child.
 4. Recursively call DFS on the new `right` child.
 5. Return the current node (now inverted).
+
+<details>
+<summary>Example - Dry Run</summary>
+
+```
+Input Tree:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 2 │           │ 7 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 1 │ │ 3 │     │ 6 │ │ 9 │
+    └───┘ └───┘     └───┘ └───┘
+```
+
+
+**DFS Recursive Traversal (Top-Down):**
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 1:** `invertTree(4)`
+
+```
+  Swap children of node 4:
+
+      Before:              After:
+         4                    4
+        / \                  / \
+       2   7        →       7   2
+
+
+  Current state:
+               ┌───┐
+               │ 4 │  ← processing
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │  ← swapped!
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 6 │ │ 9 │     │ 1 │ │ 3 │
+    └───┘ └───┘     └───┘ └───┘
+
+  → Recurse on left child (now 7)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 2:** `invertTree(7)`
+
+```
+  Swap children of node 7:
+
+      Before:              After:
+         7                    7
+        / \                  / \
+       6   9        →       9   6
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 1 │ │ 3 │  ← swapped 9,6!
+    └───┘ └───┘     └───┘ └───┘
+
+  → Recurse on left child (now 9)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 3:** `invertTree(9)`
+
+```
+  Node 9 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 9 │  ← leaf node, nothing to swap
+    └───┘
+
+  → Return to Call 2
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 4:** `invertTree(6)`
+
+```
+  Node 6 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 6 │  ← leaf node, nothing to swap
+    └───┘
+
+  → Return to Call 2, then return to Call 1
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 5:** `invertTree(2)`
+
+```
+  Swap children of node 2:
+
+      Before:              After:
+         2                    2
+        / \                  / \
+       1   3        →       3   1
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │  ← processing
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 3 │ │ 1 │  ← swapped 3,1!
+    └───┘ └───┘     └───┘ └───┘
+
+  → Recurse on left child (now 3)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 6:** `invertTree(3)`
+
+```
+  Node 3 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 3 │  ← leaf node, nothing to swap
+    └───┘
+
+  → Return to Call 5
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Call 7:** `invertTree(1)`
+
+```
+  Node 1 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 1 │  ← leaf node, nothing to swap
+    └───┘
+
+  → Return to Call 5, then return to Call 1
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Final Inverted Tree:**
+
+```
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 3 │ │ 1 │
+    └───┘ └───┘     └───┘ └───┘
+```
+
+</details>
 
 ::tabs-start
 
@@ -610,82 +884,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-Consider the following binary tree:
-
-```
-Input Tree:
-       4
-      / \
-     2   7
-    / \ / \
-   1  3 6  9
-```
-
-**DFS Recursive Traversal (Top-Down):**
-
-**Call 1:** `invertTree(4)`
-- Swap children of node 4: left(2) <-> right(7)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   6  9 1  3
-```
-- Recurse on left child (now 7)
-
-**Call 2:** `invertTree(7)`
-- Swap children of node 7: left(6) <-> right(9)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 1  3
-```
-- Recurse on left child (now 9)
-
-**Call 3:** `invertTree(9)`
-- Node 9 is a leaf (no children to swap)
-- Return to Call 2
-
-**Call 4:** `invertTree(6)`
-- Node 6 is a leaf (no children to swap)
-- Return to Call 2, then return to Call 1
-
-**Call 5:** `invertTree(2)`
-- Swap children of node 2: left(1) <-> right(3)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 3  1
-```
-- Recurse on left child (now 3)
-
-**Call 6:** `invertTree(3)`
-- Node 3 is a leaf (no children to swap)
-- Return to Call 5
-
-**Call 7:** `invertTree(1)`
-- Node 1 is a leaf (no children to swap)
-- Return to Call 5, then return to Call 1
-
-**Final Result:**
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 3  1
-```
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
@@ -726,6 +924,200 @@ This simulates the recursive DFS in an iterative manner and works well when recu
    - If the left child exists, push it to the stack.
    - If the right child exists, push it to the stack.
 4. Return the `root`.
+
+<details>
+<summary>Example - Dry Run</summary>
+
+```
+Input Tree:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 2 │           │ 7 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 1 │ │ 3 │     │ 6 │ │ 9 │
+    └───┘ └───┘     └───┘ └───┘
+
+Stack: [4]
+```
+
+
+**Iterative DFS using Stack:**
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 1:** Pop node 4, swap its children (2 <-> 7)
+
+```
+  Swap children of node 4:
+
+      Before:              After:
+         4                    4
+        / \                  / \
+       2   7        →       7   2
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │  ← swapped!
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 6 │ │ 9 │     │ 1 │ │ 3 │
+    └───┘ └───┘     └───┘ └───┘
+
+  Stack: [7, 2]  (pushed children)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 2:** Pop node 2, swap its children (1 <-> 3)
+
+```
+  Swap children of node 2:
+
+      Before:              After:
+         2                    2
+        / \                  / \
+       1   3        →       3   1
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │  ← processing
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 6 │ │ 9 │     │ 3 │ │ 1 │  ← swapped 3,1!
+    └───┘ └───┘     └───┘ └───┘
+
+  Stack: [7, 3, 1]  (pushed children)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 3:** Pop node 1 (leaf node)
+
+```
+  Node 1 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 1 │  ← leaf node, nothing to swap
+    └───┘
+
+  Stack: [7, 3]
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 4:** Pop node 3 (leaf node)
+
+```
+  Node 3 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 3 │  ← leaf node, nothing to swap
+    └───┘
+
+  Stack: [7]
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 5:** Pop node 7, swap its children (6 <-> 9)
+
+```
+  Swap children of node 7:
+
+      Before:              After:
+         7                    7
+        / \                  / \
+       6   9        →       9   6
+
+
+  Current state:
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 3 │ │ 1 │  ← swapped 9,6!
+    └───┘ └───┘     └───┘ └───┘
+
+  Stack: [9, 6]  (pushed children)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 6:** Pop node 6 (leaf node)
+
+```
+  Node 6 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 6 │  ← leaf node, nothing to swap
+    └───┘
+
+  Stack: [9]
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Step 7:** Pop node 9 (leaf node)
+
+```
+  Node 9 is a leaf (no children to swap)
+
+    ┌───┐
+    │ 9 │  ← leaf node, nothing to swap
+    └───┘
+
+  Stack: [] (empty)
+```
+
+
+═══════════════════════════════════════════════════════════════════════
+
+**Final Inverted Tree:**
+
+```
+               ┌───┐
+               │ 4 │
+               └─┬─┘
+         ┌───────┴───────┐
+       ┌─┴─┐           ┌─┴─┐
+       │ 7 │           │ 2 │
+       └─┬─┘           └─┬─┘
+      ┌──┴──┐         ┌──┴──┐
+    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
+    │ 9 │ │ 6 │     │ 3 │ │ 1 │
+    └───┘ └───┘     └───┘ └───┘
+```
+
+</details>
 
 ::tabs-start
 
@@ -968,78 +1360,6 @@ class Solution {
 ```
 
 ::tabs-end
-
-<details>
-<summary>Example - Dry Run</summary>
-
-Consider the following binary tree:
-
-```
-Input Tree:
-       4
-      / \
-     2   7
-    / \ / \
-   1  3 6  9
-```
-
-**Iterative DFS using Stack:**
-
-**Initial State:**
-- Stack: [4]
-
-**Step 1:** Pop node 4, swap its children (2 <-> 7)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   6  9 1  3
-```
-- Push children to stack: Stack = [7, 2]
-
-**Step 2:** Pop node 2, swap its children (1 <-> 3)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   6  9 3  1
-```
-- Push children to stack: Stack = [7, 3, 1]
-
-**Step 3:** Pop node 1 (leaf node, no children to swap)
-- Stack = [7, 3]
-
-**Step 4:** Pop node 3 (leaf node, no children to swap)
-- Stack = [7]
-
-**Step 5:** Pop node 7, swap its children (6 <-> 9)
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 3  1
-```
-- Push children to stack: Stack = [9, 6]
-
-**Step 6:** Pop node 6 (leaf node, no children to swap)
-- Stack = [9]
-
-**Step 7:** Pop node 9 (leaf node, no children to swap)
-- Stack = []
-
-**Final Result:**
-```
-       4
-      / \
-     7   2
-    / \ / \
-   9  6 3  1
-```
-
-</details>
 
 ### Time & Space Complexity
 

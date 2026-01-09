@@ -17,6 +17,158 @@ Whenever we find a land cell that hasn’t been visited, we start a DFS to **sin
 4. Continue until all cells are processed.
 5. Return the total island count.
 
+<details>
+<summary>Example - Dry Run</summary>
+
+**Input Grid:**
+```
+grid = [
+  ["1","1","0","0"],
+  ["1","1","0","0"],
+  ["0","0","1","0"],
+  ["0","0","0","1"]
+]
+```
+
+**Visual Representation:**
+```
+Input Grid (1 = land, 0 = water):
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
+```
+
+**Step-by-Step Walkthrough:**
+
+```
+═══════════════════════════════════════════════════════
+
+Step 1: Found land at (0,0), start DFS
+        Island count: 0 → 1
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ █ │ ░ │ ░ │  ← Starting DFS here
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 2: DFS explores neighbors of (0,0)
+        Visit (1,0) - it's land, mark visited
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ █ │ ░ │ ░ │  ← Visited from (0,0)
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 3: DFS explores neighbors of (1,0)
+        Visit (1,1) - it's land, mark visited
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │  ← Visited from (1,0)
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 4: DFS explores neighbors of (1,1)
+        Visit (0,1) - it's land, mark visited
+        All other neighbors are water or visited
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │  ← Visited from (1,1)
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        DFS complete for first island.
+        Island count: 1
+
+
+═══════════════════════════════════════════════════════
+
+Step 5: Continue scanning, find land at (2,2)
+        Start DFS, island count: 1 → 2
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ ✓ │ ░ │  ← New island found!
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        No land neighbors, DFS complete.
+        Island count: 2
+
+
+═══════════════════════════════════════════════════════
+
+Step 6: Continue scanning, find land at (3,3)
+        Start DFS, island count: 2 → 3
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ ✓ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ ✓ │  ← New island found!
+  └───┴───┴───┴───┘
+
+        No land neighbors, DFS complete.
+        Island count: 3
+
+═══════════════════════════════════════════════════════
+```
+
+**Final Result:** `3 islands`
+
+</details>
+
 ::tabs-start
 
 ```python
@@ -295,100 +447,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-**Input Grid:**
-```
-grid = [
-  ["1","1","0","0"],
-  ["1","1","0","0"],
-  ["0","0","1","0"],
-  ["0","0","0","1"]
-]
-```
-
-**Visual Representation:**
-```
-Initial Grid:
-  0 1 2 3
-0 ■ ■ □ □
-1 ■ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Legend: ■ = land ('1'), □ = water ('0'), ✓ = visited
-```
-
-**Step-by-Step Walkthrough:**
-
-```
-Step 1: Scan grid, find land at (0,0)
-        Start DFS, mark (0,0) as visited, islands = 1
-
-  0 1 2 3
-0 ✓ ■ □ □
-1 ■ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 2: DFS explores neighbors of (0,0)
-        Visit (1,0) - it's land, mark visited
-
-  0 1 2 3
-0 ✓ ■ □ □
-1 ✓ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 3: DFS explores neighbors of (1,0)
-        Visit (1,1) - it's land, mark visited
-
-  0 1 2 3
-0 ✓ ■ □ □
-1 ✓ ✓ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 4: DFS explores neighbors of (1,1)
-        Visit (0,1) - it's land, mark visited
-        All other neighbors are water or visited
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-        DFS complete for first island. Islands = 1
-
-Step 5: Continue scanning, find land at (2,2)
-        Start DFS, mark (2,2) as visited, islands = 2
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □
-2 □ □ ✓ □
-3 □ □ □ ■
-
-        No land neighbors, DFS complete. Islands = 2
-
-Step 6: Continue scanning, find land at (3,3)
-        Start DFS, mark (3,3) as visited, islands = 3
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □
-2 □ □ ✓ □
-3 □ □ □ ✓
-
-        No land neighbors, DFS complete. Islands = 3
-```
-
-**Final Result:** `3 islands`
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(m * n)$
@@ -418,6 +476,189 @@ When we encounter a land cell, we use **BFS** to visit all connected land cells 
      - If a neighbor is land, mark it as `'0'` and add it to the queue.
 4. Continue scanning the grid.
 5. Return the total number of islands.
+
+<details>
+<summary>Example - Dry Run</summary>
+
+**Input Grid:**
+```
+grid = [
+  ["1","1","0","0"],
+  ["1","1","0","0"],
+  ["0","0","1","0"],
+  ["0","0","0","1"]
+]
+```
+
+**Visual Representation:**
+```
+Input Grid (1 = land, 0 = water):
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
+```
+
+**Step-by-Step Walkthrough:**
+
+```
+═══════════════════════════════════════════════════════
+
+Step 1: Found land at (0,0), start BFS
+        Add (0,0) to queue, mark visited
+        Island count: 0 → 1
+        Queue: [(0,0)]
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ █ │ ░ │ ░ │  ← Starting BFS here
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 2: Dequeue (0,0), check neighbors
+        (0,1) is land → add to queue, mark visited
+        (1,0) is land → add to queue, mark visited
+        Queue: [(0,1), (1,0)]
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │  ← Added (0,1)
+  ├───┼───┼───┼───┤
+1 │ ✓ │ █ │ ░ │ ░ │  ← Added (1,0)
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 3: Dequeue (0,1), check neighbors
+        (0,0) already visited
+        (1,1) is land → add to queue, mark visited
+        Queue: [(1,0), (1,1)]
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │  ← Added (1,1)
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 4: Dequeue (1,0), check neighbors
+        All neighbors are water or visited
+        Queue: [(1,1)]
+
+        (No grid change - already visited)
+
+
+═══════════════════════════════════════════════════════
+
+Step 5: Dequeue (1,1), check neighbors
+        All neighbors are water or visited
+        Queue: [] (empty)
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        BFS complete for first island.
+        Island count: 1
+
+
+═══════════════════════════════════════════════════════
+
+Step 6: Continue scanning, find land at (2,2)
+        Start BFS, add (2,2) to queue, mark visited
+        Island count: 1 → 2
+        Queue: [(2,2)]
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ ✓ │ ░ │  ← New island found!
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 7: Dequeue (2,2), no land neighbors
+        Queue: [] (empty)
+
+        BFS complete.
+        Island count: 2
+
+
+═══════════════════════════════════════════════════════
+
+Step 8: Continue scanning, find land at (3,3)
+        Start BFS, add (3,3) to queue, mark visited
+        Island count: 2 → 3
+        Queue: [(3,3)]
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ ✓ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ ✓ │  ← New island found!
+  └───┴───┴───┴───┘
+
+
+═══════════════════════════════════════════════════════
+
+Step 9: Dequeue (3,3), no land neighbors
+        Queue: [] (empty)
+
+        BFS complete.
+        Island count: 3
+
+═══════════════════════════════════════════════════════
+```
+
+**Final Result:** `3 islands`
+
+</details>
 
 ::tabs-start
 
@@ -768,111 +1009,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-**Input Grid:**
-```
-grid = [
-  ["1","1","0","0"],
-  ["1","1","0","0"],
-  ["0","0","1","0"],
-  ["0","0","0","1"]
-]
-```
-
-**Visual Representation:**
-```
-Initial Grid:
-  0 1 2 3
-0 ■ ■ □ □
-1 ■ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Legend: ■ = land ('1'), □ = water ('0'), ✓ = visited
-```
-
-**Step-by-Step Walkthrough:**
-
-```
-Step 1: Scan grid, find land at (0,0)
-        Start BFS, add (0,0) to queue, mark visited, islands = 1
-        Queue: [(0,0)]
-
-  0 1 2 3
-0 ✓ ■ □ □
-1 ■ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 2: Dequeue (0,0), check neighbors
-        (0,1) is land -> add to queue, mark visited
-        (1,0) is land -> add to queue, mark visited
-        Queue: [(0,1), (1,0)]
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 3: Dequeue (0,1), check neighbors
-        (0,0) already visited
-        (1,1) is land -> add to queue, mark visited
-        Queue: [(1,0), (1,1)]
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 4: Dequeue (1,0), check neighbors
-        All neighbors are water or visited
-        Queue: [(1,1)]
-
-Step 5: Dequeue (1,1), check neighbors
-        All neighbors are water or visited
-        Queue: [] (empty)
-
-        BFS complete for first island. Islands = 1
-
-Step 6: Continue scanning, find land at (2,2)
-        Start BFS, add (2,2) to queue, mark visited, islands = 2
-        Queue: [(2,2)]
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □
-2 □ □ ✓ □
-3 □ □ □ ■
-
-Step 7: Dequeue (2,2), no land neighbors
-        Queue: [] (empty)
-
-        BFS complete. Islands = 2
-
-Step 8: Continue scanning, find land at (3,3)
-        Start BFS, add (3,3) to queue, mark visited, islands = 3
-        Queue: [(3,3)]
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □
-2 □ □ ✓ □
-3 □ □ □ ✓
-
-Step 9: Dequeue (3,3), no land neighbors
-        Queue: [] (empty)
-
-        BFS complete. Islands = 3
-```
-
-**Final Result:** `3 islands`
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(m * n)$
@@ -905,6 +1041,222 @@ Each successful merge reduces the total island count by 1.
      - If a union actually happens, decrement island count.
 4. After processing all cells, the remaining count is the number of islands.
 5. Return the island count.
+
+<details>
+<summary>Example - Dry Run</summary>
+
+**Input Grid:**
+```
+grid = [
+  ["1","1","0","0"],
+  ["1","1","0","0"],
+  ["0","0","1","0"],
+  ["0","0","0","1"]
+]
+```
+
+**Visual Representation:**
+```
+Input Grid (1 = land, 0 = water):
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+Cell Indices (row * 4 + col):
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ 0 │ 1 │ 2 │ 3 │
+  ├───┼───┼───┼───┤
+1 │ 4 │ 5 │ 6 │ 7 │
+  ├───┼───┼───┼───┤
+2 │ 8 │ 9 │10 │11 │
+  ├───┼───┼───┼───┤
+3 │12 │13 │14 │15 │
+  └───┴───┴───┴───┘
+
+Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
+```
+
+**Step-by-Step Walkthrough:**
+
+```
+═══════════════════════════════════════════════════════
+
+Initial State:
+  Parent: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+  Each cell is its own parent (separate component)
+
+
+═══════════════════════════════════════════════════════
+
+Step 1: Process cell (0,0) - index 0, it's land
+        Island count: 0 → 1
+
+        Check neighbor (1,0) - index 4, it's land
+        Union(0, 4): different parents, merge!
+        Island count: 1 → 0
+
+        Check neighbor (0,1) - index 1, it's land
+        Union(0, 1): different parents, merge!
+        Island count: 0 → -1
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ █ │ ░ │ ░ │  ← Processing (0,0)
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        DSU: {0, 1, 4} are connected
+
+
+═══════════════════════════════════════════════════════
+
+Step 2: Process cell (0,1) - index 1, it's land
+        Island count: -1 → 0
+
+        Check neighbor (0,0) - index 0, it's land
+        Union(1, 0): SAME parent (already connected)!
+        No change
+
+        Check neighbor (1,1) - index 5, it's land
+        Union(1, 5): different parents, merge!
+        Island count: 0 → -1
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │  ← Processing (0,1)
+  ├───┼───┼───┼───┤
+1 │ █ │ █ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        DSU: {0, 1, 4, 5} are connected
+
+
+═══════════════════════════════════════════════════════
+
+Step 3: Process cell (1,0) - index 4, it's land
+        Island count: -1 → 0
+
+        Check neighbor (0,0) - index 0
+        Union(4, 0): SAME parent, no change
+
+        Check neighbor (1,1) - index 5
+        Union(4, 5): SAME parent, no change
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ █ │ ░ │ ░ │  ← Processing (1,0)
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        DSU: {0, 1, 4, 5} still connected
+
+
+═══════════════════════════════════════════════════════
+
+Step 4: Process cell (1,1) - index 5, it's land
+        Island count: 0 → 1
+
+        Check neighbor (0,1) - index 1
+        Union(5, 1): SAME parent, no change
+
+        Check neighbor (1,0) - index 4
+        Union(5, 4): SAME parent, no change
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │  ← Processing (1,1)
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        First island complete!
+        DSU: {0, 1, 4, 5} unified
+        Island count: 1
+
+
+═══════════════════════════════════════════════════════
+
+Step 5: Process cell (2,2) - index 10, it's land
+        Island count: 1 → 2
+
+        No land neighbors to union with
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ ✓ │ ░ │  ← New island found!
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
+
+        Island count: 2
+
+
+═══════════════════════════════════════════════════════
+
+Step 6: Process cell (3,3) - index 15, it's land
+        Island count: 2 → 3
+
+        No land neighbors to union with
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ ✓ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ ✓ │  ← New island found!
+  └───┴───┴───┴───┘
+
+        Island count: 3
+
+═══════════════════════════════════════════════════════
+```
+
+**Final DSU State:**
+```
+Components:
+  - Component 1: {0, 1, 4, 5} (first island)
+  - Component 2: {10} (second island)
+  - Component 3: {15} (third island)
+```
+
+**Final Result:** `3 islands`
+
+</details>
 
 ::tabs-start
 
@@ -1469,123 +1821,6 @@ class Solution {
 ```
 
 ::tabs-end
-
-<details>
-<summary>Example - Dry Run</summary>
-
-**Input Grid:**
-```
-grid = [
-  ["1","1","0","0"],
-  ["1","1","0","0"],
-  ["0","0","1","0"],
-  ["0","0","0","1"]
-]
-```
-
-**Visual Representation:**
-```
-Initial Grid:          Cell Indices (row * 4 + col):
-  0 1 2 3                0  1  2  3
-0 ■ ■ □ □              0  1  2  3
-1 ■ ■ □ □              4  5  6  7
-2 □ □ ■ □              8  9  10 11
-3 □ □ □ ■              12 13 14 15
-
-Legend: ■ = land ('1'), □ = water ('0')
-```
-
-**Step-by-Step Walkthrough:**
-
-```
-Initial State:
-  Parent: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-  Each cell is its own parent (separate component)
-
-Step 1: Process cell (0,0) - index 0, it's land
-        islands = 1
-        Check neighbor (1,0) - index 4, it's land
-        Union(0, 4): merge components -> islands = 0
-        Check neighbor (0,1) - index 1, it's land
-        Union(0, 1): merge components -> islands = -1? No!
-        (We only decrement when union succeeds with NEW component)
-
-        Wait - let's trace more carefully:
-
-Step 1: Cell (0,0), index=0, is land
-        islands++ -> islands = 1
-        Neighbor (1,0) index=4 is land
-          Union(0,4): different parents, merge! islands-- -> islands = 0
-        Neighbor (0,1) index=1 is land
-          Union(0,1): different parents, merge! islands-- -> islands = -1
-
-  0 1 2 3
-0 ■ ■ □ □    DSU: 0,1,4 are connected
-1 ■ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 2: Cell (0,1), index=1, is land
-        islands++ -> islands = 0
-        Neighbor (0,0) index=0 is land
-          Union(1,0): SAME parent (already connected)! No change
-        Neighbor (1,1) index=5 is land
-          Union(1,5): different parents, merge! islands-- -> islands = -1
-
-  0 1 2 3
-0 ■ ■ □ □    DSU: 0,1,4,5 are connected
-1 ■ ■ □ □
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 3: Cell (1,0), index=4, is land
-        islands++ -> islands = 0
-        Neighbor (0,0) index=0: Union(4,0) - SAME parent, no change
-        Neighbor (1,1) index=5: Union(4,5) - SAME parent, no change
-
-Step 4: Cell (1,1), index=5, is land
-        islands++ -> islands = 1
-        Neighbor (0,1) index=1: Union(5,1) - SAME parent, no change
-        Neighbor (1,0) index=4: Union(5,4) - SAME parent, no change
-
-  0 1 2 3
-0 ✓ ✓ □ □    First island complete (cells 0,1,4,5 unified)
-1 ✓ ✓ □ □    islands = 1
-2 □ □ ■ □
-3 □ □ □ ■
-
-Step 5: Cell (2,2), index=10, is land
-        islands++ -> islands = 2
-        No land neighbors to union with
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □    islands = 2
-2 □ □ ✓ □
-3 □ □ □ ■
-
-Step 6: Cell (3,3), index=15, is land
-        islands++ -> islands = 3
-        No land neighbors to union with
-
-  0 1 2 3
-0 ✓ ✓ □ □
-1 ✓ ✓ □ □    islands = 3
-2 □ □ ✓ □
-3 □ □ □ ✓
-```
-
-**Final DSU State:**
-```
-Components:
-  - Component 1: {0, 1, 4, 5} (first island)
-  - Component 2: {10} (second island)
-  - Component 3: {15} (third island)
-```
-
-**Final Result:** `3 islands`
-
-</details>
 
 ### Time & Space Complexity
 

@@ -23,6 +23,60 @@ The recursive version simply expresses this idea as a function that keeps callin
 5. Start the recursion with the full range `[0, n - 1]`.
 6. Return the final result.
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+**Initial Array:**
+```
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+   0    1    2    3    4    5
+```
+
+═══════════════════════════════════════════════════
+
+**Call 1:** binary_search(l=0, r=5)
+```
+  L              M              R
+  ↓              ↓              ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+└─────────────────────────────┘
+          Search Range
+
+  l = 0, r = 5, m = 2
+  nums[M] = nums[2] = 3
+  3 < 9 (target)
+  → Search right half: binary_search(3, 5)
+```
+
+═══════════════════════════════════════════════════
+
+**Call 2:** binary_search(l=3, r=5)
+```
+                   L    M    R
+                   ↓    ↓    ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+              └──────────────┘
+                Search Range
+
+  l = 3, r = 5, m = 4
+  nums[M] = nums[4] = 9
+  9 == 9 (target) ✓ Found!
+```
+
+═══════════════════════════════════════════════════
+
+**Result: index 4**
+
+</details>
+
 ::tabs-start
 
 ```python
@@ -187,36 +241,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
-
-**Call 1:** binary_search(l=0, r=5)
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-          L              M         R
-
-l=0, r=5, m=2
-nums[2]=3 < 9 → search right half
-Recursive call: binary_search(3, 5)
-```
-
-**Call 2:** binary_search(l=3, r=5)
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                         L    M    R
-
-l=3, r=5, m=4
-nums[4]=9 == 9 ✓ Found! Return 4
-```
-
-Result: **4**
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -243,6 +267,58 @@ We adjust the left and right pointers until we either find the target or the poi
    - If `nums[m] < target`, move search to the **right half**: update `l = m + 1`.
    - If `nums[m] > target`, move search to the **left half**: update `r = m - 1`.
 3. If the loop ends without finding the target, return `-1`.
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+**Initial Array:**
+```
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+   0    1    2    3    4    5
+```
+
+═══════════════════════════════════════════════════
+
+**Step 1:** L = 0, R = 5, M = 2
+```
+  L              M              R
+  ↓              ↓              ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+└─────────────────────────────┘
+          Search Range
+
+  nums[M] = nums[2] = 3
+  3 < 9 (target)
+  → Search right half: L = M + 1 = 3
+```
+
+═══════════════════════════════════════════════════
+
+**Step 2:** L = 3, R = 5, M = 4
+```
+                   L    M    R
+                   ↓    ↓    ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+              └──────────────┘
+                Search Range
+
+  nums[M] = nums[4] = 9
+  9 == 9 (target) ✓ Found!
+```
+
+═══════════════════════════════════════════════════
+
+**Result: index 4**
+
+</details>
 
 ::tabs-start
 
@@ -414,36 +490,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
-
-**Step 1:**
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-          L              M         R
-
-l=0, r=5, m=2
-nums[2]=3 < 9 → search right half
-Update: l = m + 1 = 3
-```
-
-**Step 2:**
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                         L    M    R
-
-l=3, r=5, m=4
-nums[4]=9 == 9 ✓ Found at index 4!
-```
-
-Result: **4**
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -472,6 +518,93 @@ Then we simply check whether the element just before that boundary is the target
    - So the potential location of the target is `l - 1`.
 4. If `l > 0` and `nums[l - 1] == target`, return `l - 1`.
 5. Otherwise, return `-1` (target not found).
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+The upper bound approach finds the first index where value > target, then checks index - 1.
+
+**Initial Array:**
+```
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+   0    1    2    3    4    5
+
+Note: R starts at index 6 (past end of array)
+```
+
+═══════════════════════════════════════════════════
+
+**Step 1:** L = 0, R = 6, M = 3
+```
+  L              M                   R
+  ↓              ↓                   ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+└────┴────┴────┴────┴────┴────┘
+└────────────────────────────────────┘
+             Search Range
+
+  nums[M] = nums[3] = 5
+  5 <= 9 (target)
+  → Move left pointer: L = M + 1 = 4
+```
+
+═══════════════════════════════════════════════════
+
+**Step 2:** L = 4, R = 6, M = 5
+```
+                        L    M       R
+                        ↓    ↓       ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+└────┴────┴────┴────┴────┴────┘
+                   └─────────────────┘
+                       Search Range
+
+  nums[M] = nums[5] = 12
+  12 > 9 (target)
+  → Move right pointer: R = M = 5
+```
+
+═══════════════════════════════════════════════════
+
+**Step 3:** L = 4, R = 5, M = 4
+```
+                        L    R
+                        ↓    ↓
+                        M
+                        ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+                   └────┘
+                Search Range
+
+  nums[M] = nums[4] = 9
+  9 <= 9 (target)
+  → Move left pointer: L = M + 1 = 5
+```
+
+═══════════════════════════════════════════════════
+
+**Final Check:**
+```
+  L = 5 (upper bound: first index where value > target)
+  L - 1 = 4
+  nums[4] = 9 == 9 (target) ✓
+
+  Return L - 1 = 4
+```
+
+═══════════════════════════════════════════════════
+
+**Result: index 4**
+
+</details>
 
 ::tabs-start
 
@@ -626,57 +759,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
-
-The upper bound approach finds the first index where value > target, then checks index - 1.
-
-**Step 1:**
-```
-Index:    0    1    2    3    4    5    6
-nums = [ -1,   0,   3,   5,   9,  12 ]  (r starts past end)
-          L              M              R
-
-l=0, r=6, m=3
-nums[3]=5 <= 9 → move left pointer
-Update: l = m + 1 = 4
-```
-
-**Step 2:**
-```
-Index:    0    1    2    3    4    5    6
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                              L    M    R
-
-l=4, r=6, m=5
-nums[5]=12 > 9 → move right pointer
-Update: r = m = 5
-```
-
-**Step 3:**
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                              L
-                              R
-
-l=4, r=5, m=4
-nums[4]=9 <= 9 → move left pointer
-Update: l = m + 1 = 5
-```
-
-**Final Check:**
-```
-l=5, l-1=4
-nums[4]=9 == 9 ✓ Return l-1 = 4
-```
-
-Result: **4**
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -707,6 +789,93 @@ This approach is especially useful for sorted arrays because it avoids overshoot
    - `l` is the **lower bound**: first index where value ≥ target.
 4. If `l` is within bounds *and* `nums[l] == target`, return `l`.
 5. Otherwise, return `-1` (the target is not in the array).
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+The lower bound approach finds the first index where value >= target.
+
+**Initial Array:**
+```
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+   0    1    2    3    4    5
+
+Note: R starts at index 6 (past end of array)
+```
+
+═══════════════════════════════════════════════════
+
+**Step 1:** L = 0, R = 6, M = 3
+```
+  L              M                   R
+  ↓              ↓                   ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+└────┴────┴────┴────┴────┴────┘
+└────────────────────────────────────┘
+             Search Range
+
+  nums[M] = nums[3] = 5
+  5 < 9 (target)
+  → Move left pointer: L = M + 1 = 4
+```
+
+═══════════════════════════════════════════════════
+
+**Step 2:** L = 4, R = 6, M = 5
+```
+                        L    M       R
+                        ↓    ↓       ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+└────┴────┴────┴────┴────┴────┘
+                   └─────────────────┘
+                       Search Range
+
+  nums[M] = nums[5] = 12
+  12 >= 9 (target)
+  → Move right pointer: R = M = 5
+```
+
+═══════════════════════════════════════════════════
+
+**Step 3:** L = 4, R = 5, M = 4
+```
+                        L    R
+                        ↓    ↓
+                        M
+                        ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+                   └────┘
+                Search Range
+
+  nums[M] = nums[4] = 9
+  9 >= 9 (target)
+  → Move right pointer: R = M = 4
+```
+
+═══════════════════════════════════════════════════
+
+**Final Check:**
+```
+  L = 4, R = 4 → Loop ends (L == R)
+  L = 4 is within bounds (< 6)
+  nums[4] = 9 == 9 (target) ✓
+
+  Return L = 4
+```
+
+═══════════════════════════════════════════════════
+
+**Result: index 4**
+
+</details>
 
 ::tabs-start
 
@@ -861,58 +1030,6 @@ class Solution {
 
 ::tabs-end
 
-<details>
-<summary>Example - Dry Run</summary>
-
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
-
-The lower bound approach finds the first index where value >= target.
-
-**Step 1:**
-```
-Index:    0    1    2    3    4    5    6
-nums = [ -1,   0,   3,   5,   9,  12 ]  (r starts past end)
-          L              M              R
-
-l=0, r=6, m=3
-nums[3]=5 < 9 → move left pointer
-Update: l = m + 1 = 4
-```
-
-**Step 2:**
-```
-Index:    0    1    2    3    4    5    6
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                              L    M    R
-
-l=4, r=6, m=5
-nums[5]=12 >= 9 → move right pointer
-Update: r = m = 5
-```
-
-**Step 3:**
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                              L
-                              R
-
-l=4, r=5, m=4
-nums[4]=9 >= 9 → move right pointer
-Update: r = m = 4
-```
-
-**Final Check:**
-```
-l=4, r=4 → loop ends
-l=4 is within bounds
-nums[4]=9 == 9 ✓ Return 4
-```
-
-Result: **4**
-
-</details>
-
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -921,6 +1038,91 @@ Result: **4**
 ---
 
 ## 5. Built-In Function
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+Built-in functions abstract the binary search logic. Here is how they work internally:
+
+**Initial Array:**
+```
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+   0    1    2    3    4    5
+```
+
+═══════════════════════════════════════════════════
+
+**Using Python's `bisect_left` (or similar):**
+
+The function finds the leftmost position where target can be inserted to maintain sorted order.
+
+```
+                        ↓
+                   bisect_left
+                    returns 4
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+   0    1    2    3    4    5
+```
+
+═══════════════════════════════════════════════════
+
+**Internal Binary Search (what the built-in does):**
+
+Step 1: L = 0, R = 6, M = 3
+```
+  L              M                   R
+  ↓              ↓                   ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+└────┴────┴────┴────┴────┴────┘
+  nums[3] = 5 < 9 → L = 4
+```
+
+Step 2: L = 4, R = 6, M = 5
+```
+                        L    M       R
+                        ↓    ↓       ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+└────┴────┴────┴────┴────┴────┘
+  nums[5] = 12 >= 9 → R = 5
+```
+
+Step 3: L = 4, R = 5, M = 4
+```
+                        L    R
+                        ↓    ↓
+                        M
+                        ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │  0 │  3 │  5 │  9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+  nums[4] = 9 >= 9 → R = 4
+```
+
+Loop ends: L = 4
+
+═══════════════════════════════════════════════════
+
+**Verification:**
+```
+  index = 4
+  nums[4] = 9 == 9 (target) ✓
+
+  Return 4
+```
+
+═══════════════════════════════════════════════════
+
+**Result: index 4**
+
+</details>
 
 ::tabs-start
 
@@ -1003,43 +1205,6 @@ class Solution {
 ```
 
 ::tabs-end
-
-<details>
-<summary>Example - Dry Run</summary>
-
-Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
-
-Built-in functions abstract the binary search logic. Here is how they work internally:
-
-**Using Python's `bisect_left` (or similar):**
-
-The function finds the leftmost position where target can be inserted to maintain sorted order.
-
-```
-Index:    0    1    2    3    4    5
-nums = [ -1,   0,   3,   5,   9,  12 ]
-                              ^
-                         bisect_left returns 4
-```
-
-**Verification:**
-```
-index = 4
-nums[4] = 9 == target ✓
-Return 4
-```
-
-**Internal Binary Search (what the built-in does):**
-```
-Step 1: l=0, r=6, m=3 → nums[3]=5 < 9  → l=4
-Step 2: l=4, r=6, m=5 → nums[5]=12 >= 9 → r=5
-Step 3: l=4, r=5, m=4 → nums[4]=9 >= 9  → r=4
-Loop ends: l=4
-```
-
-Result: **4**
-
-</details>
 
 ### Time & Space Complexity
 
