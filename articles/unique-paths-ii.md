@@ -223,6 +223,65 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input Grid:
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │  row 0
+├───┼───┼───┤
+│ 0 │ ■ │ 0 │  row 1  (■ = obstacle, value 1)
+├───┼───┼───┤
+│ 0 │ 0 │ 0 │  row 2
+└───┴───┴───┘
+  c0  c1  c2
+```
+
+The top-down approach starts from `(0,0)` and recursively explores paths to `(2,2)`.
+We can only move **right** or **down**. The DFS returns the number of paths from current cell to destination.
+
+**Call Tree (simplified):**
+```
+dfs(0,0)
+├── dfs(1,0)          → go down
+│   ├── dfs(2,0)      → go down
+│   │   ├── dfs(2,1)  → go right
+│   │   │   └── dfs(2,2) = 1 (destination!)
+│   │   └── returns 1
+│   ├── dfs(1,1) = 0  → OBSTACLE! return 0
+│   └── returns 1
+├── dfs(0,1)          → go right
+│   ├── dfs(1,1) = 0  → OBSTACLE! return 0
+│   ├── dfs(0,2)      → go right
+│   │   ├── dfs(1,2)  → go down
+│   │   │   └── dfs(2,2) = 1 (destination!)
+│   │   └── returns 1
+│   └── returns 1
+└── returns 1 + 1 = 2
+```
+
+**Memoization Table (dp) after all calls:**
+```
+┌───┬───┬───┐
+│ 2 │ 1 │ 1 │
+├───┼───┼───┤
+│ 1 │ 0 │ 1 │  (1,1) = 0 because it's an obstacle
+├───┼───┼───┤
+│ 1 │ 1 │ 1 │
+└───┴───┴───┘
+```
+
+**Result:** `dp[0][0] = 2` (two unique paths from start to end)
+
+The two valid paths are:
+- Path 1: `(0,0) → (1,0) → (2,0) → (2,1) → (2,2)`
+- Path 2: `(0,0) → (0,1) → (0,2) → (1,2) → (2,2)`
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(m * n)$
@@ -457,6 +516,102 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input Grid:
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │  row 0
+├───┼───┼───┤
+│ 0 │ ■ │ 0 │  row 1  (■ = obstacle, value 1)
+├───┼───┼───┤
+│ 0 │ 0 │ 0 │  row 2
+└───┴───┴───┘
+  c0  c1  c2
+```
+
+The bottom-up approach fills the DP table from destination `(2,2)` back to start `(0,0)`.
+Each cell stores the number of paths from that cell to the destination.
+
+**Initialization:**
+```
+dp[2][2] = 1 (destination has 1 way to reach itself)
+
+DP Table (4x4, extra row/col for boundary):
+┌───┬───┬───┬───┐
+│ ? │ ? │ ? │ 0 │
+├───┼───┼───┼───┤
+│ ? │ ? │ ? │ 0 │
+├───┼───┼───┼───┤
+│ ? │ ? │ 1 │ 0 │
+├───┼───┼───┼───┤
+│ 0 │ 0 │ 0 │ 0 │  (boundary row)
+└───┴───┴───┴───┘
+```
+
+**Step-by-step computation (right to left, bottom to top):**
+
+```
+Processing row 2 (r=2):
+  c=2: dp[2][2] = 1 (already set)
+  c=1: dp[2][1] = dp[3][1] + dp[2][2] = 0 + 1 = 1
+  c=0: dp[2][0] = dp[3][0] + dp[2][1] = 0 + 1 = 1
+
+DP Table after row 2:
+┌───┬───┬───┬───┐
+│ ? │ ? │ ? │ 0 │
+├───┼───┼───┼───┤
+│ ? │ ? │ ? │ 0 │
+├───┼───┼───┼───┤
+│ 1 │ 1 │ 1 │ 0 │
+├───┼───┼───┼───┤
+│ 0 │ 0 │ 0 │ 0 │
+└───┴───┴───┴───┘
+```
+
+```
+Processing row 1 (r=1):
+  c=2: dp[1][2] = dp[2][2] + dp[1][3] = 1 + 0 = 1
+  c=1: grid[1][1] = 1 (OBSTACLE!) → dp[1][1] = 0
+  c=0: dp[1][0] = dp[2][0] + dp[1][1] = 1 + 0 = 1
+
+DP Table after row 1:
+┌───┬───┬───┬───┐
+│ ? │ ? │ ? │ 0 │
+├───┼───┼───┼───┤
+│ 1 │ 0 │ 1 │ 0 │  ← (1,1) = 0 due to obstacle
+├───┼───┼───┼───┤
+│ 1 │ 1 │ 1 │ 0 │
+├───┼───┼───┼───┤
+│ 0 │ 0 │ 0 │ 0 │
+└───┴───┴───┴───┘
+```
+
+```
+Processing row 0 (r=0):
+  c=2: dp[0][2] = dp[1][2] + dp[0][3] = 1 + 0 = 1
+  c=1: dp[0][1] = dp[1][1] + dp[0][2] = 0 + 1 = 1
+  c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2
+
+Final DP Table:
+┌───┬───┬───┬───┐
+│ 2 │ 1 │ 1 │ 0 │
+├───┼───┼───┼───┤
+│ 1 │ 0 │ 1 │ 0 │
+├───┼───┼───┼───┤
+│ 1 │ 1 │ 1 │ 0 │
+├───┼───┼───┼───┤
+│ 0 │ 0 │ 0 │ 0 │
+└───┴───┴───┴───┘
+```
+
+**Result:** `dp[0][0] = 2`
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(m * n)$
@@ -647,6 +802,74 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input Grid:
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │  row 0
+├───┼───┼───┤
+│ 0 │ ■ │ 0 │  row 1  (■ = obstacle, value 1)
+├───┼───┼───┤
+│ 0 │ 0 │ 0 │  row 2
+└───┴───┴───┘
+  c0  c1  c2
+```
+
+Instead of a 2D DP table, we use a 1D array of size `N+1 = 4`.
+The key insight: `dp[c]` represents paths from below (previous row), and `dp[c+1]` represents paths from the right (already computed in current row).
+
+**Initialization:**
+```
+dp = [0, 0, 1, 0]
+      c0  c1  c2  c3(boundary)
+```
+
+**Processing row 2 (r=2):**
+```
+c=2: grid[2][2]=0, dp[2] += dp[3] → dp[2] = 1 + 0 = 1
+c=1: grid[2][1]=0, dp[1] += dp[2] → dp[1] = 0 + 1 = 1
+c=0: grid[2][0]=0, dp[0] += dp[1] → dp[0] = 0 + 1 = 1
+
+dp = [1, 1, 1, 0]
+```
+
+**Processing row 1 (r=1):**
+```
+c=2: grid[1][2]=0, dp[2] += dp[3] → dp[2] = 1 + 0 = 1
+c=1: grid[1][1]=1 (OBSTACLE!), dp[1] = 0
+c=0: grid[1][0]=0, dp[0] += dp[1] → dp[0] = 1 + 0 = 1
+
+dp = [1, 0, 1, 0]
+      ↑
+      blocked paths through (1,1)
+```
+
+**Processing row 0 (r=0):**
+```
+c=2: grid[0][2]=0, dp[2] += dp[3] → dp[2] = 1 + 0 = 1
+c=1: grid[0][1]=0, dp[1] += dp[2] → dp[1] = 0 + 1 = 1
+c=0: grid[0][0]=0, dp[0] += dp[1] → dp[0] = 1 + 1 = 2
+
+dp = [2, 1, 1, 0]
+```
+
+**Visual representation of how the 1D dp evolves:**
+```
+After row 2:  dp = [1, 1, 1, 0]
+                    ↓  ↓  ↓
+After row 1:  dp = [1, 0, 1, 0]  ← obstacle blocks (1,1)
+                    ↓  ↓  ↓
+After row 0:  dp = [2, 1, 1, 0]
+```
+
+**Result:** `dp[0] = 2`
+
+</details>
 
 ### Time & Space Complexity
 
@@ -915,6 +1138,104 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input Grid (0 = empty, 1 = obstacle):
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │  row 0
+├───┼───┼───┤
+│ 0 │ 1 │ 0 │  row 1  (obstacle at (1,1))
+├───┼───┼───┤
+│ 0 │ 0 │ 0 │  row 2
+└───┴───┴───┘
+  c0  c1  c2
+```
+
+This approach modifies the input grid directly to store path counts.
+Obstacles (value 1) are converted to 0 (no paths through them).
+
+**Step 1: Initialize destination**
+```
+grid[2][2] = 1 (1 way to reach destination from itself)
+
+Grid state:
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │
+├───┼───┼───┤
+│ 0 │ 1 │ 0 │
+├───┼───┼───┤
+│ 0 │ 0 │ 1 │  ← destination initialized
+└───┴───┴───┘
+```
+
+**Step 2: Process row 2 (r=2), right to left**
+```
+(2,2): Skip (destination, already set to 1)
+(2,1): Not obstacle, grid[2][1] = down + right = 0 + 1 = 1
+(2,0): Not obstacle, grid[2][0] = down + right = 0 + 1 = 1
+
+Grid state:
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │
+├───┼───┼───┤
+│ 0 │ 1 │ 0 │
+├───┼───┼───┤
+│ 1 │ 1 │ 1 │  ← row 2 filled
+└───┴───┴───┘
+```
+
+**Step 3: Process row 1 (r=1), right to left**
+```
+(1,2): Not obstacle, grid[1][2] = down + right = 1 + 0 = 1
+(1,1): OBSTACLE! grid[1][1] = 0 (was 1, now 0)
+(1,0): Not obstacle, grid[1][0] = down + right = 1 + 0 = 1
+
+Grid state:
+┌───┬───┬───┐
+│ 0 │ 0 │ 0 │
+├───┼───┼───┤
+│ 1 │ 0 │ 1 │  ← (1,1) converted from obstacle to 0
+├───┼───┼───┤
+│ 1 │ 1 │ 1 │
+└───┴───┴───┘
+```
+
+**Step 4: Process row 0 (r=0), right to left**
+```
+(0,2): Not obstacle, grid[0][2] = down + right = 1 + 0 = 1
+(0,1): Not obstacle, grid[0][1] = down + right = 0 + 1 = 1
+(0,0): Not obstacle, grid[0][0] = down + right = 1 + 1 = 2
+
+Final Grid state:
+┌───┬───┬───┐
+│ 2 │ 1 │ 1 │  ← answer at (0,0)
+├───┼───┼───┤
+│ 1 │ 0 │ 1 │
+├───┼───┼───┤
+│ 1 │ 1 │ 1 │
+└───┴───┴───┘
+```
+
+**Key transformation visualization:**
+```
+Original Grid:          Final Grid (path counts):
+┌───┬───┬───┐           ┌───┬───┬───┐
+│ 0 │ 0 │ 0 │           │ 2 │ 1 │ 1 │
+├───┼───┼───┤    ──►    ├───┼───┼───┤
+│ 0 │ ■ │ 0 │           │ 1 │ 0 │ 1 │
+├───┼───┼───┤           ├───┼───┼───┤
+│ 0 │ 0 │ 0 │           │ 1 │ 1 │ 1 │
+└───┴───┴───┘           └───┴───┴───┘
+```
+
+**Result:** `grid[0][0] = 2`
+
+</details>
 
 ### Time & Space Complexity
 

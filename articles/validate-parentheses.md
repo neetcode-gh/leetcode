@@ -137,6 +137,54 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `s = "({[]})"`
+
+We repeatedly remove matching pairs `()`, `{}`, `[]` until no more can be removed.
+
+```
+Initial String: ( { [ ] } )
+
+Iteration 1: Remove "()" → not found at adjacent positions
+             Remove "{}" → not found at adjacent positions
+             Remove "[]" → found!
+
+String after: ( { } )
+
+Iteration 2: Remove "()" → not found at adjacent positions
+             Remove "{}" → found!
+
+String after: ( )
+
+Iteration 3: Remove "()" → found!
+
+String after: "" (empty)
+```
+
+**Visual representation of string transformations:**
+
+```
+Step 1:  ( { [ ] } )
+             ↑↑
+           Remove "[]"
+
+Step 2:  ( { } )
+           ↑↑↑
+         Remove "{}"
+
+Step 3:  ( )
+         ↑↑↑
+       Remove "()"
+
+Step 4:  "" ← Empty string!
+```
+
+Since the string is now empty, return `True`.
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2)$
@@ -370,6 +418,75 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `s = "({[]})"`
+
+We use a stack to track opening brackets and match them with closing brackets.
+
+```
+Step 1: char = '('
+String:  ( { [ ] } )
+         ↑
+Action:  '(' is an opening bracket → Push to stack
+Stack:   [ ( ]
+         -----
+         bottom
+
+Step 2: char = '{'
+String:  ( { [ ] } )
+           ↑
+Action:  '{' is an opening bracket → Push to stack
+Stack:   [ (, { ]
+         -------
+         bottom
+
+Step 3: char = '['
+String:  ( { [ ] } )
+             ↑
+Action:  '[' is an opening bracket → Push to stack
+Stack:   [ (, {, [ ]
+         ----------
+         bottom
+
+Step 4: char = ']'
+String:  ( { [ ] } )
+               ↑
+Action:  ']' is a closing bracket
+         Top of stack is '[' which matches! → Pop from stack
+Stack:   [ (, { ]
+         -------
+         bottom
+
+Step 5: char = '}'
+String:  ( { [ ] } )
+                 ↑
+Action:  '}' is a closing bracket
+         Top of stack is '{' which matches! → Pop from stack
+Stack:   [ ( ]
+         -----
+         bottom
+
+Step 6: char = ')'
+String:  ( { [ ] } )
+                   ↑
+Action:  ')' is a closing bracket
+         Top of stack is '(' which matches! → Pop from stack
+Stack:   [ ]  ← Empty!
+         ---
+         bottom
+```
+
+**Final State:**
+
+```
+Stack is empty → All brackets matched correctly!
+Return: True
+```
+
+</details>
 
 ### Time & Space Complexity
 

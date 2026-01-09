@@ -229,6 +229,67 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+```
+Input: nums = [1, 2, 3]
+
+Decision Tree (Include / Exclude):
+                        []
+                       /  \
+                 [1]        []
+                /   \      /   \
+           [1,2]   [1]   [2]    []
+           /  \    / \   / \    / \
+      [1,2,3][1,2][1,3][1][2,3][2][3][]
+
+Step-by-step walkthrough:
+
+dfs(0): Consider nums[0] = 1
+├── Include 1: subset = [1]
+│   dfs(1): Consider nums[1] = 2
+│   ├── Include 2: subset = [1, 2]
+│   │   dfs(2): Consider nums[2] = 3
+│   │   ├── Include 3: subset = [1, 2, 3]
+│   │   │   dfs(3): i >= len(nums), add [1, 2, 3] to result
+│   │   │   Result: [[1, 2, 3]]
+│   │   └── Exclude 3: subset = [1, 2] (backtrack)
+│   │       dfs(3): i >= len(nums), add [1, 2] to result
+│   │       Result: [[1, 2, 3], [1, 2]]
+│   └── Exclude 2: subset = [1] (backtrack)
+│       dfs(2): Consider nums[2] = 3
+│       ├── Include 3: subset = [1, 3]
+│       │   dfs(3): add [1, 3] to result
+│       │   Result: [[1, 2, 3], [1, 2], [1, 3]]
+│       └── Exclude 3: subset = [1] (backtrack)
+│           dfs(3): add [1] to result
+│           Result: [[1, 2, 3], [1, 2], [1, 3], [1]]
+└── Exclude 1: subset = [] (backtrack)
+    dfs(1): Consider nums[1] = 2
+    ├── Include 2: subset = [2]
+    │   dfs(2): Consider nums[2] = 3
+    │   ├── Include 3: subset = [2, 3]
+    │   │   dfs(3): add [2, 3] to result
+    │   │   Result: [[1, 2, 3], [1, 2], [1, 3], [1], [2, 3]]
+    │   └── Exclude 3: subset = [2] (backtrack)
+    │       dfs(3): add [2] to result
+    │       Result: [[1, 2, 3], [1, 2], [1, 3], [1], [2, 3], [2]]
+    └── Exclude 2: subset = [] (backtrack)
+        dfs(2): Consider nums[2] = 3
+        ├── Include 3: subset = [3]
+        │   dfs(3): add [3] to result
+        │   Result: [[1, 2, 3], [1, 2], [1, 3], [1], [2, 3], [2], [3]]
+        └── Exclude 3: subset = [] (backtrack)
+            dfs(3): add [] to result
+            Result: [[1, 2, 3], [1, 2], [1, 3], [1], [2, 3], [2], [3], []]
+
+Final Result: [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+(order may vary based on implementation)
+```
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n * 2 ^ n)$
@@ -412,6 +473,73 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+```
+Input: nums = [1, 2, 3]
+
+Initial State:
+res = [[]]
+
+Iteration Visualization:
++--------------------------------------------------+
+|  For each number, duplicate existing subsets     |
+|  and add the current number to each copy         |
++--------------------------------------------------+
+
+Step 1: Process num = 1
+┌─────────────────────────────────────────────────┐
+│ Current res: [[]]                               │
+│                                                 │
+│ Take each existing subset and add 1:            │
+│   [] + [1] = [1]                                │
+│                                                 │
+│ Append new subsets to res                       │
+└─────────────────────────────────────────────────┘
+res = [[], [1]]
+
+Step 2: Process num = 2
+┌─────────────────────────────────────────────────┐
+│ Current res: [[], [1]]                          │
+│                                                 │
+│ Take each existing subset and add 2:            │
+│   [] + [2] = [2]                                │
+│   [1] + [2] = [1, 2]                            │
+│                                                 │
+│ Append new subsets to res                       │
+└─────────────────────────────────────────────────┘
+res = [[], [1], [2], [1, 2]]
+
+Step 3: Process num = 3
+┌─────────────────────────────────────────────────┐
+│ Current res: [[], [1], [2], [1, 2]]             │
+│                                                 │
+│ Take each existing subset and add 3:            │
+│   [] + [3] = [3]                                │
+│   [1] + [3] = [1, 3]                            │
+│   [2] + [3] = [2, 3]                            │
+│   [1, 2] + [3] = [1, 2, 3]                      │
+│                                                 │
+│ Append new subsets to res                       │
+└─────────────────────────────────────────────────┘
+res = [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+
+Growth Pattern:
+┌───────────────────────────────────────┐
+│ After processing:     # of subsets    │
+├───────────────────────────────────────┤
+│ Initial (empty)       1   = 2^0       │
+│ After num=1           2   = 2^1       │
+│ After num=2           4   = 2^2       │
+│ After num=3           8   = 2^3       │
+└───────────────────────────────────────┘
+
+Final Result: [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+```
+
+</details>
 
 ### Time & Space Complexity
 
@@ -612,6 +740,114 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+```
+Input: nums = [1, 2, 3]
+n = 3, so we iterate i from 0 to 7 (2^3 - 1)
+
+Bitmask Representation:
+┌─────────────────────────────────────────────────────────────┐
+│  Each bit position corresponds to an element in nums        │
+│  Bit 0 (rightmost) -> nums[0] = 1                          │
+│  Bit 1             -> nums[1] = 2                          │
+│  Bit 2             -> nums[2] = 3                          │
+└─────────────────────────────────────────────────────────────┘
+
+Step-by-step iteration:
+
+i = 0 (binary: 000)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   0      0      0             │
+│   3      2      1   <- nums   │
+│   -      -      -   <- include│
+└───────────────────────────────┘
+Subset: []
+
+i = 1 (binary: 001)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   0      0      1             │
+│   3      2      1   <- nums   │
+│   -      -      *   <- include│
+└───────────────────────────────┘
+Subset: [1]
+
+i = 2 (binary: 010)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   0      1      0             │
+│   3      2      1   <- nums   │
+│   -      *      -   <- include│
+└───────────────────────────────┘
+Subset: [2]
+
+i = 3 (binary: 011)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   0      1      1             │
+│   3      2      1   <- nums   │
+│   -      *      *   <- include│
+└───────────────────────────────┘
+Subset: [1, 2]
+
+i = 4 (binary: 100)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   1      0      0             │
+│   3      2      1   <- nums   │
+│   *      -      -   <- include│
+└───────────────────────────────┘
+Subset: [3]
+
+i = 5 (binary: 101)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   1      0      1             │
+│   3      2      1   <- nums   │
+│   *      -      *   <- include│
+└───────────────────────────────┘
+Subset: [1, 3]
+
+i = 6 (binary: 110)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   1      1      0             │
+│   3      2      1   <- nums   │
+│   *      *      -   <- include│
+└───────────────────────────────┘
+Subset: [2, 3]
+
+i = 7 (binary: 111)
+┌───────────────────────────────┐
+│ Bit 2  Bit 1  Bit 0           │
+│   1      1      1             │
+│   3      2      1   <- nums   │
+│   *      *      *   <- include│
+└───────────────────────────────┘
+Subset: [1, 2, 3]
+
+Summary Table:
+┌─────┬────────┬─────────────┐
+│  i  │ Binary │   Subset    │
+├─────┼────────┼─────────────┤
+│  0  │  000   │    []       │
+│  1  │  001   │    [1]      │
+│  2  │  010   │    [2]      │
+│  3  │  011   │    [1,2]    │
+│  4  │  100   │    [3]      │
+│  5  │  101   │    [1,3]    │
+│  6  │  110   │    [2,3]    │
+│  7  │  111   │    [1,2,3]  │
+└─────┴────────┴─────────────┘
+
+Final Result: [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]
+```
+
+</details>
 
 ### Time & Space Complexity
 

@@ -369,6 +369,104 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider the following partial Sudoku board:
+
+```
+Input Board (partial view):
+┌───────┬───────┬───────┐
+│ 5 3 . │ . 7 . │ . . . │  row 0
+│ 6 . . │ 1 9 5 │ . . . │  row 1
+│ . 9 8 │ . . . │ . 6 . │  row 2
+├───────┼───────┼───────┤
+│ 8 . . │ . 6 . │ . . 3 │  row 3
+│ ...   │       │       │
+```
+
+**Phase 1: Check Rows**
+
+Checking Row 0:
+```
+Row 0: [5, 3, ., ., 7, ., ., ., .]
+
+Step 1: cell (0,0) = '5'
+  seen = {}
+  '5' not in seen → add it
+  seen = {5}
+
+Step 2: cell (0,1) = '3'
+  '3' not in seen → add it
+  seen = {5, 3}
+
+Step 3: cell (0,2) = '.' → skip
+
+Step 4: cell (0,3) = '.' → skip
+
+Step 5: cell (0,4) = '7'
+  '7' not in seen → add it
+  seen = {5, 3, 7}
+
+... continue for remaining cells
+✓ Row 0 is valid (no duplicates)
+```
+
+**Phase 2: Check Columns**
+
+Checking Column 0:
+```
+Col 0: [5, 6, ., 8, ...]
+
+Step 1: cell (0,0) = '5'
+  seen = {}
+  '5' not in seen → add it
+  seen = {5}
+
+Step 2: cell (1,0) = '6'
+  '6' not in seen → add it
+  seen = {5, 6}
+
+Step 3: cell (2,0) = '.' → skip
+
+Step 4: cell (3,0) = '8'
+  '8' not in seen → add it
+  seen = {5, 6, 8}
+
+... continue for remaining cells
+✓ Column 0 is valid (no duplicates)
+```
+
+**Phase 3: Check 3x3 Boxes**
+
+Checking Box 0 (top-left):
+```
+Box 0 covers rows 0-2, cols 0-2:
+┌───────┐
+│ 5 3 . │
+│ 6 . . │
+│ . 9 8 │
+└───────┘
+
+Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,0) → (2,1) → (2,2)
+
+Step 1: cell (0,0) = '5' → seen = {5}
+Step 2: cell (0,1) = '3' → seen = {5, 3}
+Step 3: cell (0,2) = '.' → skip
+Step 4: cell (1,0) = '6' → seen = {5, 3, 6}
+Step 5: cell (1,1) = '.' → skip
+Step 6: cell (1,2) = '.' → skip
+Step 7: cell (2,0) = '.' → skip
+Step 8: cell (2,1) = '9' → seen = {5, 3, 6, 9}
+Step 9: cell (2,2) = '8' → seen = {5, 3, 6, 9, 8}
+
+✓ Box 0 is valid (no duplicates)
+```
+
+After checking all 9 rows, 9 columns, and 9 boxes with no duplicates found, return `True`.
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2)$
@@ -667,6 +765,96 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider the following partial Sudoku board:
+
+```
+Input Board (partial view):
+┌───────┬───────┬───────┐
+│ 5 3 . │ . 7 . │ . . . │  row 0
+│ 6 . . │ 1 9 5 │ . . . │  row 1
+│ . 9 8 │ . . . │ . 6 . │  row 2
+├───────┼───────┼───────┤
+```
+
+**Data Structures:**
+- `rows[r]` = set of digits seen in row r
+- `cols[c]` = set of digits seen in column c
+- `squares[(r//3, c//3)]` = set of digits seen in that 3x3 box
+
+**One-Pass Walkthrough:**
+
+```
+Step 1: Process cell (0,0) = '5'
+  Box index: (0//3, 0//3) = (0,0)
+  Check: '5' in rows[0]? No
+         '5' in cols[0]? No
+         '5' in squares[(0,0)]? No
+  Update:
+    rows[0] = {5}
+    cols[0] = {5}
+    squares[(0,0)] = {5}
+  ✓ Valid
+
+Step 2: Process cell (0,1) = '3'
+  Box index: (0//3, 1//3) = (0,0)
+  Check: '3' in rows[0]? No
+         '3' in cols[1]? No
+         '3' in squares[(0,0)]? No
+  Update:
+    rows[0] = {5, 3}
+    cols[1] = {3}
+    squares[(0,0)] = {5, 3}
+  ✓ Valid
+
+Step 3: Process cell (0,2) = '.' → skip
+
+Step 4: Process cell (0,3) = '.' → skip
+
+Step 5: Process cell (0,4) = '7'
+  Box index: (0//3, 4//3) = (0,1)
+  Check: '7' in rows[0]? No
+         '7' in cols[4]? No
+         '7' in squares[(0,1)]? No
+  Update:
+    rows[0] = {5, 3, 7}
+    cols[4] = {7}
+    squares[(0,1)] = {7}
+  ✓ Valid
+
+... (continue scanning row 0)
+
+Step: Process cell (1,0) = '6'
+  Box index: (1//3, 0//3) = (0,0)
+  Check: '6' in rows[1]? No
+         '6' in cols[0]? No (cols[0] = {5})
+         '6' in squares[(0,0)]? No (squares[(0,0)] = {5, 3})
+  Update:
+    rows[1] = {6}
+    cols[0] = {5, 6}
+    squares[(0,0)] = {5, 3, 6}
+  ✓ Valid
+```
+
+**State after processing first two rows:**
+```
+rows[0] = {5, 3, 7}
+rows[1] = {6, 1, 9, 5}
+cols[0] = {5, 6}
+cols[1] = {3}
+cols[3] = {1}
+cols[4] = {7, 9}
+cols[5] = {5}
+squares[(0,0)] = {5, 3, 6}
+squares[(0,1)] = {7, 1, 9, 5}
+```
+
+Continue processing all cells. If no duplicate is found in any row, column, or box, return `True`.
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2)$
@@ -952,6 +1140,110 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider the following partial Sudoku board:
+
+```
+Input Board (partial view):
+┌───────┬───────┬───────┐
+│ 5 3 . │ . 7 . │ . . . │  row 0
+│ 6 . . │ 1 9 5 │ . . . │  row 1
+│ . 9 8 │ . . . │ . 6 . │  row 2
+├───────┼───────┼───────┤
+```
+
+**Bit Representation:**
+- Digit 1 → bit 0 → mask = 0b000000001 (1)
+- Digit 2 → bit 1 → mask = 0b000000010 (2)
+- Digit 3 → bit 2 → mask = 0b000000100 (4)
+- Digit 5 → bit 4 → mask = 0b000010000 (16)
+- Digit 9 → bit 8 → mask = 0b100000000 (256)
+
+**Data Structures (all initialized to 0):**
+- `rows[9]` = integers tracking seen digits per row
+- `cols[9]` = integers tracking seen digits per column
+- `squares[9]` = integers tracking seen digits per 3x3 box
+
+**Walkthrough:**
+
+```
+Step 1: Process cell (0,0) = '5'
+  val = 5 - 1 = 4
+  mask = 1 << 4 = 0b000010000 (16)
+  Box index: (0/3)*3 + 0/3 = 0
+
+  Check duplicates (bitwise AND):
+    rows[0] & mask = 0 & 16 = 0  → not seen
+    cols[0] & mask = 0 & 16 = 0  → not seen
+    squares[0] & mask = 0 & 16 = 0  → not seen
+
+  Update (bitwise OR):
+    rows[0] |= 16  → rows[0] = 0b000010000
+    cols[0] |= 16  → cols[0] = 0b000010000
+    squares[0] |= 16  → squares[0] = 0b000010000
+  ✓ Valid
+
+Step 2: Process cell (0,1) = '3'
+  val = 3 - 1 = 2
+  mask = 1 << 2 = 0b000000100 (4)
+  Box index: (0/3)*3 + 1/3 = 0
+
+  Check duplicates:
+    rows[0] & mask = 16 & 4 = 0  → not seen
+    cols[1] & mask = 0 & 4 = 0  → not seen
+    squares[0] & mask = 16 & 4 = 0  → not seen
+
+  Update:
+    rows[0] |= 4  → rows[0] = 0b000010100 (20)
+    cols[1] |= 4  → cols[1] = 0b000000100
+    squares[0] |= 4  → squares[0] = 0b000010100 (20)
+  ✓ Valid
+
+Step 3: Process cell (0,4) = '7'
+  val = 7 - 1 = 6
+  mask = 1 << 6 = 0b001000000 (64)
+  Box index: (0/3)*3 + 4/3 = 1
+
+  Check duplicates:
+    rows[0] & mask = 20 & 64 = 0  → not seen
+    cols[4] & mask = 0 & 64 = 0  → not seen
+    squares[1] & mask = 0 & 64 = 0  → not seen
+
+  Update:
+    rows[0] |= 64  → rows[0] = 0b001010100 (84)
+    cols[4] |= 64  → cols[4] = 0b001000000
+    squares[1] |= 64  → squares[1] = 0b001000000
+  ✓ Valid
+```
+
+**State after processing row 0:**
+```
+rows[0] = 0b001010100 = 84  (digits 3, 5, 7 seen)
+         ↑  ↑ ↑
+         7  5 3
+
+cols[0] = 0b000010000 = 16  (digit 5)
+cols[1] = 0b000000100 = 4   (digit 3)
+cols[4] = 0b001000000 = 64  (digit 7)
+
+squares[0] = 0b000010100 = 20  (digits 3, 5)
+squares[1] = 0b001000000 = 64  (digit 7)
+```
+
+**Detecting a duplicate (example):**
+If we later encounter another '5' in row 0:
+```
+mask = 1 << 4 = 16
+rows[0] & mask = 84 & 16 = 16 (non-zero!)
+→ Duplicate found! Return False.
+```
+
+Continue processing all cells. If no duplicate is detected, return `True`.
+
+</details>
 
 ### Time & Space Complexity
 

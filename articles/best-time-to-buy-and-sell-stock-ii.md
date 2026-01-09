@@ -170,6 +170,53 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: prices = [7, 1, 5, 3, 6, 4]
+
+Price Chart:
+```
+7 ●
+6         ●
+5     ●
+4             ●
+3       ●
+2
+1   ●
+  ─────────────
+  0 1 2 3 4 5
+```
+
+The recursion explores all possible buy/sell decisions:
+
+```
+rec(0, False) - At day 0, not holding stock
+├── Skip day 0: rec(1, False)
+│   ├── Buy at day 1 (price=1): -1 + rec(2, True)
+│   │   ├── Sell at day 2 (price=5): 5 + rec(3, False) → profit = 4
+│   │   │   ├── Buy at day 3: -3 + rec(4, True)
+│   │   │   │   └── Sell at day 4: 6 + rec(5, False) → profit = 3
+│   │   │   │       └── Total path: 4 + 3 = 7 ✓ (Optimal)
+│   │   │   └── Skip, buy at day 4, etc...
+│   │   └── Skip day 2, sell at day 3, etc...
+│   └── Skip day 1: rec(2, False)...
+└── Buy at day 0 (price=7): -7 + rec(1, True)
+    └── Sell at day 1 (price=1): 1 + rec(2, False) → profit = -6 (bad choice)
+```
+
+Optimal Path Found:
+```
+Day 1: BUY  at price 1  → Balance: -1
+Day 2: SELL at price 5  → Balance: -1 + 5 = 4
+Day 3: BUY  at price 3  → Balance: 4 - 3 = 1
+Day 4: SELL at price 6  → Balance: 1 + 6 = 7
+
+Total Profit = 7
+```
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(2 ^ n)$
@@ -412,6 +459,62 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: prices = [7, 1, 5, 3, 6, 4]
+
+Price Chart:
+```
+7 ●
+6         ●
+5     ●
+4             ●
+3       ●
+2
+1   ●
+  ─────────────
+  0 1 2 3 4 5
+```
+
+Memoization avoids recomputing the same states.
+dp[i][bought] stores max profit from day i with bought status.
+
+```
+Call Tree with Memoization:
+rec(0, 0) → not cached
+├── rec(1, 0) → not cached
+│   ├── rec(2, 0) → not cached
+│   │   ├── rec(3, 0) → not cached
+│   │   │   ├── rec(4, 0) → not cached
+│   │   │   │   └── rec(5, 0) = 0, rec(5, 1) = 0
+│   │   │   │   dp[4][0] = max(0, -6+0) = 0
+│   │   │   │   dp[4][1] = max(0, 6+0) = 6
+│   │   │   └── dp[3][0] = max(dp[4][0], -3+dp[4][1]) = max(0, 3) = 3
+│   │   │       dp[3][1] = max(dp[4][1], 3+dp[4][0]) = max(6, 3) = 6
+│   │   └── dp[2][0] = max(dp[3][0], -5+dp[3][1]) = max(3, 1) = 3
+│   │       dp[2][1] = max(dp[3][1], 5+dp[3][0]) = max(6, 8) = 8
+│   └── dp[1][0] = max(dp[2][0], -1+dp[2][1]) = max(3, 7) = 7
+│       dp[1][1] = max(dp[2][1], 1+dp[2][0]) = max(8, 4) = 8
+└── dp[0][0] = max(dp[1][0], -7+dp[1][1]) = max(7, 1) = 7
+```
+
+DP Table After Computation:
+```
+       bought=0    bought=1
+       (can buy)   (can sell)
+day 0:    7           8
+day 1:    7           8
+day 2:    3           8
+day 3:    3           6
+day 4:    0           6
+day 5:    0           0
+```
+
+Answer: dp[0][0] = 7
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
@@ -559,6 +662,91 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: prices = [7, 1, 5, 3, 6, 4]
+
+Price Chart:
+```
+7 ●
+6         ●
+5     ●
+4             ●
+3       ●
+2
+1   ●
+  ─────────────
+  0 1 2 3 4 5
+```
+
+Building DP table from right to left:
+- dp[i][0] = max profit from day i when we CAN buy
+- dp[i][1] = max profit from day i when we CAN sell (holding stock)
+
+```
+Initial: dp[6][0] = 0, dp[6][1] = 0 (base case)
+
+i = 5 (price = 4):
+┌─────────────────────────────────────────────────────────┐
+│ dp[5][0] = max(dp[6][0], -4 + dp[6][1])                 │
+│          = max(0, -4 + 0) = 0  (skip buying)            │
+│ dp[5][1] = max(dp[6][1], 4 + dp[6][0])                  │
+│          = max(0, 4 + 0) = 4   (sell at price 4)        │
+└─────────────────────────────────────────────────────────┘
+
+i = 4 (price = 6):
+┌─────────────────────────────────────────────────────────┐
+│ dp[4][0] = max(dp[5][0], -6 + dp[5][1])                 │
+│          = max(0, -6 + 4) = 0  (skip buying)            │
+│ dp[4][1] = max(dp[5][1], 6 + dp[5][0])                  │
+│          = max(4, 6 + 0) = 6   (sell at price 6)        │
+└─────────────────────────────────────────────────────────┘
+
+i = 3 (price = 3):
+┌─────────────────────────────────────────────────────────┐
+│ dp[3][0] = max(dp[4][0], -3 + dp[4][1])                 │
+│          = max(0, -3 + 6) = 3  (buy at price 3)         │
+│ dp[3][1] = max(dp[4][1], 3 + dp[4][0])                  │
+│          = max(6, 3 + 0) = 6   (keep holding)           │
+└─────────────────────────────────────────────────────────┘
+
+i = 2 (price = 5):
+┌─────────────────────────────────────────────────────────┐
+│ dp[2][0] = max(dp[3][0], -5 + dp[3][1])                 │
+│          = max(3, -5 + 6) = 3  (skip buying)            │
+│ dp[2][1] = max(dp[3][1], 5 + dp[3][0])                  │
+│          = max(6, 5 + 3) = 8   (sell at price 5)        │
+└─────────────────────────────────────────────────────────┘
+
+i = 1 (price = 1):
+┌─────────────────────────────────────────────────────────┐
+│ dp[1][0] = max(dp[2][0], -1 + dp[2][1])                 │
+│          = max(3, -1 + 8) = 7  (buy at price 1)         │
+│ dp[1][1] = max(dp[2][1], 1 + dp[2][0])                  │
+│          = max(8, 1 + 3) = 8   (keep holding)           │
+└─────────────────────────────────────────────────────────┘
+
+i = 0 (price = 7):
+┌─────────────────────────────────────────────────────────┐
+│ dp[0][0] = max(dp[1][0], -7 + dp[1][1])                 │
+│          = max(7, -7 + 8) = 7  (skip buying)            │
+│ dp[0][1] = max(dp[1][1], 7 + dp[1][0])                  │
+│          = max(8, 7 + 7) = 14  (would sell, but unused) │
+└─────────────────────────────────────────────────────────┘
+```
+
+Final DP Table:
+```
+day:      0    1    2    3    4    5    6
+dp[i][0]: 7    7    3    3    0    0    0
+dp[i][1]: 14   8    8    6    6    4    0
+```
+
+Answer: dp[0][0] = 7
+
+</details>
 
 ### Time & Space Complexity
 
@@ -729,6 +917,103 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: prices = [7, 1, 5, 3, 6, 4]
+
+Price Chart:
+```
+7 ●
+6         ●
+5     ●
+4             ●
+3       ●
+2
+1   ●
+  ─────────────
+  0 1 2 3 4 5
+```
+
+Using only 4 variables instead of full DP array:
+- nextBuy/curBuy: max profit when we can buy
+- nextSell/curSell: max profit when we can sell
+
+```
+Initial State:
+nextBuy = 0, nextSell = 0
+
+Processing from right to left:
+═══════════════════════════════════════════════════════════════
+
+i = 5 (price = 4):
+┌───────────────────────────────────────────────────────────┐
+│  curBuy  = max(nextBuy, -price + nextSell)                │
+│         = max(0, -4 + 0) = 0                              │
+│  curSell = max(nextSell, price + nextBuy)                 │
+│         = max(0, 4 + 0) = 4                               │
+│                                                           │
+│  nextBuy ← 0, nextSell ← 4                                │
+└───────────────────────────────────────────────────────────┘
+
+i = 4 (price = 6):
+┌───────────────────────────────────────────────────────────┐
+│  curBuy  = max(0, -6 + 4) = 0                             │
+│  curSell = max(4, 6 + 0) = 6                              │
+│                                                           │
+│  nextBuy ← 0, nextSell ← 6                                │
+└───────────────────────────────────────────────────────────┘
+
+i = 3 (price = 3):
+┌───────────────────────────────────────────────────────────┐
+│  curBuy  = max(0, -3 + 6) = 3   ← Buy here for profit!    │
+│  curSell = max(6, 3 + 0) = 6                              │
+│                                                           │
+│  nextBuy ← 3, nextSell ← 6                                │
+└───────────────────────────────────────────────────────────┘
+
+i = 2 (price = 5):
+┌───────────────────────────────────────────────────────────┐
+│  curBuy  = max(3, -5 + 6) = 3                             │
+│  curSell = max(6, 5 + 3) = 8   ← Sell here!               │
+│                                                           │
+│  nextBuy ← 3, nextSell ← 8                                │
+└───────────────────────────────────────────────────────────┘
+
+i = 1 (price = 1):
+┌───────────────────────────────────────────────────────────┐
+│  curBuy  = max(3, -1 + 8) = 7  ← Best: buy at 1!          │
+│  curSell = max(8, 1 + 3) = 8                              │
+│                                                           │
+│  nextBuy ← 7, nextSell ← 8                                │
+└───────────────────────────────────────────────────────────┘
+
+i = 0 (price = 7):
+┌───────────────────────────────────────────────────────────┐
+│  curBuy  = max(7, -7 + 8) = 7                             │
+│  curSell = max(8, 7 + 7) = 14                             │
+│                                                           │
+│  Final: curBuy = 7                                        │
+└───────────────────────────────────────────────────────────┘
+```
+
+Variable Trace:
+```
+  i  │ price │ curBuy │ curSell │ nextBuy │ nextSell
+─────┼───────┼────────┼─────────┼─────────┼──────────
+init │   -   │   0    │    0    │    0    │    0
+  5  │   4   │   0    │    4    │    0    │    4
+  4  │   6   │   0    │    6    │    0    │    6
+  3  │   3   │   3    │    6    │    3    │    6
+  2  │   5   │   3    │    8    │    3    │    8
+  1  │   1   │   7    │    8    │    7    │    8
+  0  │   7   │   7    │   14    │    7    │    8
+```
+
+Answer: curBuy = 7
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
@@ -854,6 +1139,100 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: prices = [7, 1, 5, 3, 6, 4]
+
+Price Chart with Arrows Showing Profitable Moves:
+```
+7 ●
+6         ●───┐
+5     ●───┘   │
+4     ↑       ↓ ●
+3   ┌─┘   ●───┘
+2   │     ↑
+1   ●─────┘
+  ─────────────────
+  0 1 2 3 4 5
+
+  Legend: ↑ = Buy, ─ = Hold, ↓ = Sell
+```
+
+Greedy Insight: Capture EVERY upward movement!
+If tomorrow's price > today's price, that's profit we can take.
+
+```
+Step-by-Step Execution:
+═══════════════════════════════════════════════════════════════
+
+i = 1: Compare prices[1] vs prices[0]
+┌─────────────────────────────────────────────────────────────┐
+│   prices[1] = 1,  prices[0] = 7                             │
+│   1 > 7? NO (price dropped)                                 │
+│   Action: Skip                                              │
+│   Profit = 0                                                │
+└─────────────────────────────────────────────────────────────┘
+
+i = 2: Compare prices[2] vs prices[1]
+┌─────────────────────────────────────────────────────────────┐
+│   prices[2] = 5,  prices[1] = 1                             │
+│   5 > 1? YES! (price increased by 4)                        │
+│   Action: Buy at 1, Sell at 5                               │
+│   Profit += 5 - 1 = 4                                       │
+│   Total Profit = 4                                          │
+└─────────────────────────────────────────────────────────────┘
+
+i = 3: Compare prices[3] vs prices[2]
+┌─────────────────────────────────────────────────────────────┐
+│   prices[3] = 3,  prices[2] = 5                             │
+│   3 > 5? NO (price dropped)                                 │
+│   Action: Skip                                              │
+│   Total Profit = 4                                          │
+└─────────────────────────────────────────────────────────────┘
+
+i = 4: Compare prices[4] vs prices[3]
+┌─────────────────────────────────────────────────────────────┐
+│   prices[4] = 6,  prices[3] = 3                             │
+│   6 > 3? YES! (price increased by 3)                        │
+│   Action: Buy at 3, Sell at 6                               │
+│   Profit += 6 - 3 = 3                                       │
+│   Total Profit = 7                                          │
+└─────────────────────────────────────────────────────────────┘
+
+i = 5: Compare prices[5] vs prices[4]
+┌─────────────────────────────────────────────────────────────┐
+│   prices[5] = 4,  prices[4] = 6                             │
+│   4 > 6? NO (price dropped)                                 │
+│   Action: Skip                                              │
+│   Total Profit = 7                                          │
+└─────────────────────────────────────────────────────────────┘
+```
+
+Summary Table:
+```
+ Day │ Price │ Change │ Action      │ Profit
+─────┼───────┼────────┼─────────────┼────────
+  0  │   7   │   -    │ Start       │   0
+  1  │   1   │  -6    │ Skip        │   0
+  2  │   5   │  +4    │ Capture +4  │   4
+  3  │   3   │  -2    │ Skip        │   4
+  4  │   6   │  +3    │ Capture +3  │   7
+  5  │   4   │  -2    │ Skip        │   7
+```
+
+Transactions Made:
+```
+Transaction 1: Buy @ $1 (day 1) → Sell @ $5 (day 2) = +$4
+Transaction 2: Buy @ $3 (day 3) → Sell @ $6 (day 4) = +$3
+                                          ──────────────
+                                          Total = $7
+```
+
+Answer: 7
+
+</details>
 
 ### Time & Space Complexity
 

@@ -187,6 +187,36 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+**Call 1:** binary_search(l=0, r=5)
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+          L              M         R
+
+l=0, r=5, m=2
+nums[2]=3 < 9 → search right half
+Recursive call: binary_search(3, 5)
+```
+
+**Call 2:** binary_search(l=3, r=5)
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                         L    M    R
+
+l=3, r=5, m=4
+nums[4]=9 == 9 ✓ Found! Return 4
+```
+
+Result: **4**
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -384,6 +414,36 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+**Step 1:**
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+          L              M         R
+
+l=0, r=5, m=2
+nums[2]=3 < 9 → search right half
+Update: l = m + 1 = 3
+```
+
+**Step 2:**
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                         L    M    R
+
+l=3, r=5, m=4
+nums[4]=9 == 9 ✓ Found at index 4!
+```
+
+Result: **4**
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -565,6 +625,57 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+The upper bound approach finds the first index where value > target, then checks index - 1.
+
+**Step 1:**
+```
+Index:    0    1    2    3    4    5    6
+nums = [ -1,   0,   3,   5,   9,  12 ]  (r starts past end)
+          L              M              R
+
+l=0, r=6, m=3
+nums[3]=5 <= 9 → move left pointer
+Update: l = m + 1 = 4
+```
+
+**Step 2:**
+```
+Index:    0    1    2    3    4    5    6
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                              L    M    R
+
+l=4, r=6, m=5
+nums[5]=12 > 9 → move right pointer
+Update: r = m = 5
+```
+
+**Step 3:**
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                              L
+                              R
+
+l=4, r=5, m=4
+nums[4]=9 <= 9 → move left pointer
+Update: l = m + 1 = 5
+```
+
+**Final Check:**
+```
+l=5, l-1=4
+nums[4]=9 == 9 ✓ Return l-1 = 4
+```
+
+Result: **4**
+
+</details>
 
 ### Time & Space Complexity
 
@@ -750,6 +861,58 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+The lower bound approach finds the first index where value >= target.
+
+**Step 1:**
+```
+Index:    0    1    2    3    4    5    6
+nums = [ -1,   0,   3,   5,   9,  12 ]  (r starts past end)
+          L              M              R
+
+l=0, r=6, m=3
+nums[3]=5 < 9 → move left pointer
+Update: l = m + 1 = 4
+```
+
+**Step 2:**
+```
+Index:    0    1    2    3    4    5    6
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                              L    M    R
+
+l=4, r=6, m=5
+nums[5]=12 >= 9 → move right pointer
+Update: r = m = 5
+```
+
+**Step 3:**
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                              L
+                              R
+
+l=4, r=5, m=4
+nums[4]=9 >= 9 → move right pointer
+Update: r = m = 4
+```
+
+**Final Check:**
+```
+l=4, r=4 → loop ends
+l=4 is within bounds
+nums[4]=9 == 9 ✓ Return 4
+```
+
+Result: **4**
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(\log n)$
@@ -840,6 +1003,43 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
+
+Built-in functions abstract the binary search logic. Here is how they work internally:
+
+**Using Python's `bisect_left` (or similar):**
+
+The function finds the leftmost position where target can be inserted to maintain sorted order.
+
+```
+Index:    0    1    2    3    4    5
+nums = [ -1,   0,   3,   5,   9,  12 ]
+                              ^
+                         bisect_left returns 4
+```
+
+**Verification:**
+```
+index = 4
+nums[4] = 9 == target ✓
+Return 4
+```
+
+**Internal Binary Search (what the built-in does):**
+```
+Step 1: l=0, r=6, m=3 → nums[3]=5 < 9  → l=4
+Step 2: l=4, r=6, m=5 → nums[5]=12 >= 9 → r=5
+Step 3: l=4, r=5, m=4 → nums[4]=9 >= 9  → r=4
+Loop ends: l=4
+```
+
+Result: **4**
+
+</details>
 
 ### Time & Space Complexity
 

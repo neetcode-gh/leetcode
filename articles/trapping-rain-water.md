@@ -245,6 +245,55 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+**Visual representation of the elevation map:**
+```
+Index:     0 1 2 3 4 5 6 7 8 9 10 11
+Height:    0 1 0 2 1 0 1 3 2 1  2  1
+
+             |
+       |     || |
+   |   ||  | ||||  |
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+```
+
+**With water trapped (~ = water):**
+```
+             |
+       |~~~~~||~|
+   |~~~||~~|~||||~~|
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+```
+
+**Step-by-step execution:**
+
+For each position, we scan left and right to find the maximum heights.
+
+| i | height[i] | leftMax | rightMax | min(L,R) | Water = min(L,R) - height[i] |
+|---|-----------|---------|----------|----------|------------------------------|
+| 0 | 0         | 0       | 3        | 0        | 0 - 0 = 0                    |
+| 1 | 1         | 1       | 3        | 1        | 1 - 1 = 0                    |
+| 2 | 0         | 1       | 3        | 1        | 1 - 0 = **1**                |
+| 3 | 2         | 2       | 3        | 2        | 2 - 2 = 0                    |
+| 4 | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
+| 5 | 0         | 2       | 3        | 2        | 2 - 0 = **2**                |
+| 6 | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
+| 7 | 3         | 3       | 3        | 3        | 3 - 3 = 0                    |
+| 8 | 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
+| 9 | 1         | 3       | 2        | 2        | 2 - 1 = **1**                |
+| 10| 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
+| 11| 1         | 3       | 1        | 1        | 1 - 1 = 0                    |
+
+**Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2)$
@@ -539,6 +588,64 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+**Visual representation:**
+```
+             |
+       |     || |
+   |   ||  | ||||  |
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+```
+
+**Step 1: Build leftMax array (scan left to right)**
+
+| i  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+|----|---|---|---|---|---|---|---|---|---|---|----|----|
+| height[i] | 0 | 1 | 0 | 2 | 1 | 0 | 1 | 3 | 2 | 1 | 2 | 1 |
+| leftMax[i] | 0 | 1 | 1 | 2 | 2 | 2 | 2 | 3 | 3 | 3 | 3 | 3 |
+
+**Step 2: Build rightMax array (scan right to left)**
+
+| i  | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 |
+|----|---|---|---|---|---|---|---|---|---|---|----|----|
+| height[i] | 0 | 1 | 0 | 2 | 1 | 0 | 1 | 3 | 2 | 1 | 2 | 1 |
+| rightMax[i] | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 3 | 2 | 2 | 2 | 1 |
+
+**Step 3: Calculate water at each position**
+
+```
+With water (~ = water):
+             |
+       |~~~~~||~|
+   |~~~||~~|~||||~~|
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+```
+
+| i | height[i] | leftMax[i] | rightMax[i] | min(L,R) | Water |
+|---|-----------|------------|-------------|----------|-------|
+| 0 | 0 | 0 | 3 | 0 | 0 |
+| 1 | 1 | 1 | 3 | 1 | 0 |
+| 2 | 0 | 1 | 3 | 1 | **1** |
+| 3 | 2 | 2 | 3 | 2 | 0 |
+| 4 | 1 | 2 | 3 | 2 | **1** |
+| 5 | 0 | 2 | 3 | 2 | **2** |
+| 6 | 1 | 2 | 3 | 2 | **1** |
+| 7 | 3 | 3 | 3 | 3 | 0 |
+| 8 | 2 | 3 | 2 | 2 | 0 |
+| 9 | 1 | 3 | 2 | 2 | **1** |
+| 10 | 2 | 3 | 2 | 2 | 0 |
+| 11 | 1 | 3 | 1 | 1 | 0 |
+
+**Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
@@ -808,6 +915,69 @@ class Solution {
 
 ::tabs-end
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+**Visual representation:**
+```
+             |
+       |     || |
+   |   ||  | ||||  |
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+```
+
+**Stack-based approach: Process horizontally layer by layer**
+
+The stack stores indices. When we find a taller bar, we pop and calculate water trapped.
+
+| Step | i | height[i] | Stack (indices) | Action | Water Added |
+|------|---|-----------|-----------------|--------|-------------|
+| 1 | 0 | 0 | [] | Push 0 | 0 |
+| 2 | 1 | 1 | [0] | Pop 0, no left wall; Push 1 | 0 |
+| 3 | 2 | 0 | [1] | Push 2 | 0 |
+| 4 | 3 | 2 | [1,2] | Pop 2: bottom=0, left=1, right=2, h=min(1,2)-0=1, w=3-1-1=1, water=1; Pop 1: no left wall; Push 3 | **1** |
+| 5 | 4 | 1 | [3] | Push 4 | 0 |
+| 6 | 5 | 0 | [3,4] | Push 5 | 0 |
+| 7 | 6 | 1 | [3,4,5] | Pop 5: bottom=0, left=1, right=1, h=min(1,1)-0=1, w=6-4-1=1, water=1; Push 6 | **1** |
+| 8 | 7 | 3 | [3,4,6] | Pop 6: bottom=1, left=1, right=3, h=min(1,3)-1=0, water=0; Pop 4: bottom=1, left=2, right=3, h=min(2,3)-1=1, w=7-3-1=3, water=3; Pop 3: no left wall; Push 7 | **3** |
+| 9 | 8 | 2 | [7] | Push 8 | 0 |
+| 10 | 9 | 1 | [7,8] | Push 9 | 0 |
+| 11 | 10 | 2 | [7,8,9] | Pop 9: bottom=1, left=2, right=2, h=min(2,2)-1=1, w=10-8-1=1, water=1; Push 10 | **1** |
+| 12 | 11 | 1 | [7,8,10] | Push 11 | 0 |
+
+**Visualization of horizontal water layers:**
+```
+Step 4: Water between index 1 and 3
+       |
+   |~~~|
+ ─────────
+   0 1 0 2
+
+Step 7: Water between index 4 and 6
+         |   |
+ ───────────────
+       1 0 1
+
+Step 8: Water between index 3 and 7 (filling the pool)
+             |
+       |~~~~~|
+ ───────────────
+   0 1 0 2 1 0 1 3
+
+Step 11: Water between index 8 and 10
+       || |
+       ||~|
+ ───────────
+       3 2 1 2
+```
+
+**Total water trapped = 1 + 1 + 3 + 1 = 6**
+
+</details>
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
@@ -1067,6 +1237,74 @@ class Solution {
 ```
 
 ::tabs-end
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
+
+**Visual representation:**
+```
+             |
+       |     || |
+   |   ||  | ||||  |
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+   L                     R
+```
+
+**Two-pointer approach: Move pointers from both ends toward the center**
+
+Initial state: `l = 0`, `r = 11`, `leftMax = 0`, `rightMax = 1`, `res = 0`
+
+| Step | l | r | height[l] | height[r] | leftMax | rightMax | Condition | Action | Water Added | Total |
+|------|---|---|-----------|-----------|---------|----------|-----------|--------|-------------|-------|
+| 1 | 0 | 11 | 0 | 1 | 0 | 1 | leftMax < rightMax | l++, update leftMax | 1 - 1 = 0 | 0 |
+| 2 | 1 | 11 | 1 | 1 | 1 | 1 | leftMax >= rightMax | r--, update rightMax | 2 - 2 = 0 | 0 |
+| 3 | 1 | 10 | 1 | 2 | 1 | 2 | leftMax < rightMax | l++, update leftMax | 1 - 0 = **1** | 1 |
+| 4 | 2 | 10 | 0 | 2 | 1 | 2 | leftMax < rightMax | l++, update leftMax | 2 - 2 = 0 | 1 |
+| 5 | 3 | 10 | 2 | 2 | 2 | 2 | leftMax >= rightMax | r--, update rightMax | 2 - 1 = **1** | 2 |
+| 6 | 3 | 9 | 2 | 1 | 2 | 2 | leftMax >= rightMax | r--, update rightMax | 2 - 2 = 0 | 2 |
+| 7 | 3 | 8 | 2 | 2 | 2 | 2 | leftMax >= rightMax | r--, update rightMax | 3 - 3 = 0 | 2 |
+| 8 | 3 | 7 | 2 | 3 | 2 | 3 | leftMax < rightMax | l++, update leftMax | 2 - 1 = **1** | 3 |
+| 9 | 4 | 7 | 1 | 3 | 2 | 3 | leftMax < rightMax | l++, update leftMax | 2 - 0 = **2** | 5 |
+| 10 | 5 | 7 | 0 | 3 | 2 | 3 | leftMax < rightMax | l++, update leftMax | 2 - 1 = **1** | 6 |
+| 11 | 6 | 7 | 1 | 3 | 2 | 3 | leftMax < rightMax | l++, update leftMax | 3 - 3 = 0 | 6 |
+
+Loop ends when `l = 7 = r`
+
+**Visualization of pointer movement:**
+```
+Initial:
+   L                     R
+   0 1 0 2 1 0 1 3 2 1 2 1
+
+After step 3 (water at index 2):
+       L                 R
+   0 1 0 2 1 0 1 3 2 1 2 1
+       ~
+
+After step 5 (water at index 9):
+         L           R
+   0 1 0 2 1 0 1 3 2 1 2 1
+       ~             ~
+
+After step 8-10 (water at indices 4,5,6):
+               L   R
+   0 1 0 2 1 0 1 3 2 1 2 1
+       ~ ~ ~ ~       ~
+
+Final with all water (~ = water):
+             |
+       |~~~~~||~|
+   |~~~||~~|~||||~~|
+ ─────────────────────
+   0 1 0 2 1 0 1 3 2 1 2 1
+```
+
+**Total water trapped = 1 + 1 + 1 + 2 + 1 = 6**
+
+</details>
 
 ### Time & Space Complexity
 
