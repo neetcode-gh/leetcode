@@ -21,7 +21,6 @@ Legend: █ = obstacle (value 1), 0 = empty cell
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Top-Down DFS with Memoization**
 
@@ -29,7 +28,6 @@ The algorithm starts from `(0,0)` and recursively explores paths to `(2,2)`.
 We can only move **right** or **down**. Each DFS call returns the number of paths from the current cell to the destination.
 
 
-════════════════════════════════════════════════════════
 
 **Call Tree (simplified):**
 
@@ -55,7 +53,6 @@ dfs(0,0)
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Memoization Table (dp) after all calls:**
 
@@ -73,7 +70,6 @@ Each cell shows: number of paths from that cell to destination (2,2)
 ```
 
 
-════════════════════════════════════════════════════════
 
 **The Two Valid Paths:**
 
@@ -352,7 +348,6 @@ Legend: █ = obstacle (value 1), 0 = empty cell
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Bottom-Up DP Table Construction**
 
@@ -361,7 +356,6 @@ Each cell stores the number of paths from that cell to the destination.
 Formula: `dp[r][c] = dp[r+1][c] + dp[r][c+1]` (paths from below + paths from right)
 
 
-════════════════════════════════════════════════════════
 
 **Step 0: Initialize DP table with boundary**
 
@@ -381,7 +375,6 @@ DP Table (4x4, extra row/col for boundary handling):
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
@@ -403,7 +396,6 @@ c=0: dp[2][0] = dp[3][0] + dp[2][1] = 0 + 1 = 1
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 2: Process row 1 (middle row, right to left)**
 
@@ -425,7 +417,6 @@ c=0: dp[1][0] = dp[2][0] + dp[1][1] = 1 + 0 = 1
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 3: Process row 0 (top row, right to left)**
 
@@ -447,7 +438,6 @@ c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2  ← ANSWER!
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Final DP Table (without boundary):**
 
@@ -723,7 +713,6 @@ Legend: █ = obstacle (value 1), 0 = empty cell
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Space Optimization: 1D Array Instead of 2D Table**
 
@@ -735,7 +724,6 @@ Key insight:
 - Formula: `dp[c] += dp[c+1]`
 
 
-════════════════════════════════════════════════════════
 
 **Step 0: Initialize 1D DP array**
 
@@ -748,7 +736,6 @@ dp = [ 0 ,  0 ,  1 ,  0 ]
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
@@ -773,7 +760,6 @@ Represents row 2 of the 2D table:
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 2: Process row 1 (middle row, right to left)**
 
@@ -798,7 +784,6 @@ Represents row 1 of the 2D table:
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 3: Process row 0 (top row, right to left)**
 
@@ -823,7 +808,6 @@ Represents row 0 of the 2D table:
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Evolution of the 1D DP Array:**
 
@@ -1073,7 +1057,6 @@ Legend: █ = obstacle (value 1), 0 = empty cell
 ```
 
 
-════════════════════════════════════════════════════════
 
 **In-Place Modification: Reuse Input Grid**
 
@@ -1083,7 +1066,6 @@ This approach modifies the input grid directly to store path counts.
 - Formula: `grid[r][c] = grid[r+1][c] + grid[r][c+1]`
 
 
-════════════════════════════════════════════════════════
 
 **Step 0: Initialize destination**
 
@@ -1101,7 +1083,6 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
@@ -1125,7 +1106,6 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 2: Process row 1 (middle row, right to left)**
 
@@ -1150,7 +1130,6 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Step 3: Process row 0 (top row, right to left)**
 
@@ -1176,7 +1155,6 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 ```
 
 
-════════════════════════════════════════════════════════
 
 **Before and After Transformation:**
 

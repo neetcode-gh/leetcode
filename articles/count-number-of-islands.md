@@ -51,7 +51,6 @@ Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
 **Step-by-Step Walkthrough:**
 
 ```markdown
-═══════════════════════════════════════════════════════
 
 Step 1: Found land at (0,0), start DFS
         Island count: 0 → 1
@@ -68,7 +67,6 @@ Step 1: Found land at (0,0), start DFS
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 2: DFS explores neighbors of (0,0)
         Visit (1,0) - it's land, mark visited
@@ -85,7 +83,6 @@ Step 2: DFS explores neighbors of (0,0)
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 3: DFS explores neighbors of (1,0)
         Visit (1,1) - it's land, mark visited
@@ -102,7 +99,6 @@ Step 3: DFS explores neighbors of (1,0)
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 4: DFS explores neighbors of (1,1)
         Visit (0,1) - it's land, mark visited
@@ -123,7 +119,6 @@ Step 4: DFS explores neighbors of (1,1)
         Island count: 1
 
 
-═══════════════════════════════════════════════════════
 
 Step 5: Continue scanning, find land at (2,2)
         Start DFS, island count: 1 → 2
@@ -143,7 +138,6 @@ Step 5: Continue scanning, find land at (2,2)
         Island count: 2
 
 
-═══════════════════════════════════════════════════════
 
 Step 6: Continue scanning, find land at (3,3)
         Start DFS, island count: 2 → 3
@@ -162,7 +156,6 @@ Step 6: Continue scanning, find land at (3,3)
         No land neighbors, DFS complete.
         Island count: 3
 
-═══════════════════════════════════════════════════════
 ```
 
 **Final Result:** `3 islands`
@@ -513,7 +506,6 @@ Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
 **Step-by-Step Walkthrough:**
 
 ```markdown
-═══════════════════════════════════════════════════════
 
 Step 1: Found land at (0,0), start BFS
         Add (0,0) to queue, mark visited
@@ -532,7 +524,6 @@ Step 1: Found land at (0,0), start BFS
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 2: Dequeue (0,0), check neighbors
         (0,1) is land → add to queue, mark visited
@@ -551,7 +542,6 @@ Step 2: Dequeue (0,0), check neighbors
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 3: Dequeue (0,1), check neighbors
         (0,0) already visited
@@ -570,7 +560,6 @@ Step 3: Dequeue (0,1), check neighbors
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 4: Dequeue (1,0), check neighbors
         All neighbors are water or visited
@@ -579,7 +568,6 @@ Step 4: Dequeue (1,0), check neighbors
         (No grid change - already visited)
 
 
-═══════════════════════════════════════════════════════
 
 Step 5: Dequeue (1,1), check neighbors
         All neighbors are water or visited
@@ -600,7 +588,6 @@ Step 5: Dequeue (1,1), check neighbors
         Island count: 1
 
 
-═══════════════════════════════════════════════════════
 
 Step 6: Continue scanning, find land at (2,2)
         Start BFS, add (2,2) to queue, mark visited
@@ -619,7 +606,6 @@ Step 6: Continue scanning, find land at (2,2)
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 7: Dequeue (2,2), no land neighbors
         Queue: [] (empty)
@@ -628,7 +614,6 @@ Step 7: Dequeue (2,2), no land neighbors
         Island count: 2
 
 
-═══════════════════════════════════════════════════════
 
 Step 8: Continue scanning, find land at (3,3)
         Start BFS, add (3,3) to queue, mark visited
@@ -647,7 +632,6 @@ Step 8: Continue scanning, find land at (3,3)
   └───┴───┴───┴───┘
 
 
-═══════════════════════════════════════════════════════
 
 Step 9: Dequeue (3,3), no land neighbors
         Queue: [] (empty)
@@ -655,7 +639,6 @@ Step 9: Dequeue (3,3), no land neighbors
         BFS complete.
         Island count: 3
 
-═══════════════════════════════════════════════════════
 ```
 
 **Final Result:** `3 islands`
@@ -1093,14 +1076,12 @@ Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
 **Step-by-Step Walkthrough:**
 
 ```markdown
-═══════════════════════════════════════════════════════
 
 Initial State:
   Parent: [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
   Each cell is its own parent (separate component)
 
 
-═══════════════════════════════════════════════════════
 
 Step 1: Process cell (0,0) - index 0, it's land
         Island count: 0 → 1
@@ -1127,7 +1108,6 @@ Step 1: Process cell (0,0) - index 0, it's land
         DSU: {0, 1, 4} are connected
 
 
-═══════════════════════════════════════════════════════
 
 Step 2: Process cell (0,1) - index 1, it's land
         Island count: -1 → 0
@@ -1154,7 +1134,6 @@ Step 2: Process cell (0,1) - index 1, it's land
         DSU: {0, 1, 4, 5} are connected
 
 
-═══════════════════════════════════════════════════════
 
 Step 3: Process cell (1,0) - index 4, it's land
         Island count: -1 → 0
@@ -1179,7 +1158,6 @@ Step 3: Process cell (1,0) - index 4, it's land
         DSU: {0, 1, 4, 5} still connected
 
 
-═══════════════════════════════════════════════════════
 
 Step 4: Process cell (1,1) - index 5, it's land
         Island count: 0 → 1
@@ -1206,7 +1184,6 @@ Step 4: Process cell (1,1) - index 5, it's land
         Island count: 1
 
 
-═══════════════════════════════════════════════════════
 
 Step 5: Process cell (2,2) - index 10, it's land
         Island count: 1 → 2
@@ -1227,7 +1204,6 @@ Step 5: Process cell (2,2) - index 10, it's land
         Island count: 2
 
 
-═══════════════════════════════════════════════════════
 
 Step 6: Process cell (3,3) - index 15, it's land
         Island count: 2 → 3
@@ -1247,7 +1223,6 @@ Step 6: Process cell (3,3) - index 15, it's land
 
         Island count: 3
 
-═══════════════════════════════════════════════════════
 ```
 
 **Final DSU State:**

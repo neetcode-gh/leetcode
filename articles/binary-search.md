@@ -36,7 +36,6 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
    0    1    2    3    4    5
 ```
 
-═══════════════════════════════════════════════════
 
 **Call 1:** binary_search(l=0, r=5)
 ```markdown
@@ -53,7 +52,6 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
   → Search right half: binary_search(3, 5)
 ```
 
-═══════════════════════════════════════════════════
 
 **Call 2:** binary_search(l=3, r=5)
 ```markdown
@@ -69,7 +67,6 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
   9 == 9 (target) ✓ Found!
 ```
 
-═══════════════════════════════════════════════════
 
 **Result: index 4**
 
@@ -281,7 +278,6 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
    0    1    2    3    4    5
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 1:** L = 0, R = 5, M = 2
 ```markdown
@@ -297,7 +293,6 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
   → Search right half: L = M + 1 = 3
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 2:** L = 3, R = 5, M = 4
 ```markdown
@@ -312,7 +307,6 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
   9 == 9 (target) ✓ Found!
 ```
 
-═══════════════════════════════════════════════════
 
 **Result: index 4**
 
@@ -536,7 +530,6 @@ The upper bound approach finds the first index where value > target, then checks
 Note: R starts at index 6 (past end of array)
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 1:** L = 0, R = 6, M = 3
 ```markdown
@@ -552,7 +545,6 @@ Note: R starts at index 6 (past end of array)
   → Move left pointer: L = M + 1 = 4
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 2:** L = 4, R = 6, M = 5
 ```markdown
@@ -568,7 +560,6 @@ Note: R starts at index 6 (past end of array)
   → Move right pointer: R = M = 5
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 3:** L = 4, R = 5, M = 4
 ```markdown
@@ -586,7 +577,6 @@ Note: R starts at index 6 (past end of array)
   → Move left pointer: L = M + 1 = 5
 ```
 
-═══════════════════════════════════════════════════
 
 **Final Check:**
 ```markdown
@@ -597,7 +587,6 @@ Note: R starts at index 6 (past end of array)
   Return L - 1 = 4
 ```
 
-═══════════════════════════════════════════════════
 
 **Result: index 4**
 
@@ -806,7 +795,6 @@ The lower bound approach finds the first index where value >= target.
 Note: R starts at index 6 (past end of array)
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 1:** L = 0, R = 6, M = 3
 ```markdown
@@ -822,7 +810,6 @@ Note: R starts at index 6 (past end of array)
   → Move left pointer: L = M + 1 = 4
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 2:** L = 4, R = 6, M = 5
 ```markdown
@@ -838,7 +825,6 @@ Note: R starts at index 6 (past end of array)
   → Move right pointer: R = M = 5
 ```
 
-═══════════════════════════════════════════════════
 
 **Step 3:** L = 4, R = 5, M = 4
 ```markdown
@@ -856,7 +842,6 @@ Note: R starts at index 6 (past end of array)
   → Move right pointer: R = M = 4
 ```
 
-═══════════════════════════════════════════════════
 
 **Final Check:**
 ```markdown
@@ -867,7 +852,6 @@ Note: R starts at index 6 (past end of array)
   Return L = 4
 ```
 
-═══════════════════════════════════════════════════
 
 **Result: index 4**
 
@@ -1052,7 +1036,6 @@ Built-in functions abstract the binary search logic. Here is how they work inter
    0    1    2    3    4    5
 ```
 
-═══════════════════════════════════════════════════
 
 **Using Python's `bisect_left` (or similar):**
 
@@ -1068,7 +1051,6 @@ The function finds the leftmost position where target can be inserted to maintai
    0    1    2    3    4    5
 ```
 
-═══════════════════════════════════════════════════
 
 **Internal Binary Search (what the built-in does):**
 
@@ -1109,7 +1091,6 @@ Step 3: L = 4, R = 5, M = 4
 
 Loop ends: L = 4
 
-═══════════════════════════════════════════════════
 
 **Verification:**
 ```markdown
@@ -1119,7 +1100,6 @@ Loop ends: L = 4
   Return 4
 ```
 
-═══════════════════════════════════════════════════
 
 **Result: index 4**
 

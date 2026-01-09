@@ -30,7 +30,6 @@ Initial String:
 └───┴───┴───┴───┴───┴───┘
   0   1   2   3   4   5
 
-═══════════════════════════════════════
 
 Iteration 1:
     Remove "()" → not found at adjacent positions
@@ -49,7 +48,6 @@ Iteration 1:
     └───┴───┴───┴───┘
       0   1   2   3
 
-═══════════════════════════════════════
 
 Iteration 2:
     Remove "()" → not found at adjacent positions
@@ -67,7 +65,6 @@ Iteration 2:
     └───┴───┘
       0   1
 
-═══════════════════════════════════════
 
 Iteration 3:
     Remove "()" → found at positions 0-1!
@@ -83,7 +80,6 @@ Iteration 3:
     │   │  ← Empty string!
     └───┘
 
-═══════════════════════════════════════
 
 Final Result:
     String is empty → return True
@@ -259,7 +255,6 @@ String (processing left to right):
 └───┴───┴───┴───┴───┴───┘
   0   1   2   3   4   5
 
-═══════════════════════════════════════
 
 Step 1: char = '('
 
@@ -276,7 +271,6 @@ Stack:
 │ ( │ ← top
 └───┘
 
-═══════════════════════════════════════
 
 Step 2: char = '{'
 
@@ -295,7 +289,6 @@ Stack:
 │ ( │
 └───┘
 
-═══════════════════════════════════════
 
 Step 3: char = '['
 
@@ -316,7 +309,6 @@ Stack:
 │ ( │
 └───┘
 
-═══════════════════════════════════════
 
 Step 4: char = ']'
 
@@ -336,7 +328,6 @@ Stack:
 │ ( │
 └───┘
 
-═══════════════════════════════════════
 
 Step 5: char = '}'
 
@@ -354,7 +345,6 @@ Stack:
 │ ( │ ← top
 └───┘
 
-═══════════════════════════════════════
 
 Step 6: char = ')'
 
@@ -372,7 +362,6 @@ Stack:
 │   │ ← empty
 └───┘
 
-═══════════════════════════════════════
 
 Final Result:
     Stack is empty → All brackets matched correctly!

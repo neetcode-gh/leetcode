@@ -73,9 +73,7 @@ Input Sudoku Board:
 ```
 
 
-═════════════════════════════════════════════════════════════
 **PHASE 1: Check Rows**
-═════════════════════════════════════════════════════════════
 
 **Checking Row 0:**
 
@@ -123,9 +121,7 @@ Input Sudoku Board:
 **Result:** Row 0 is valid (no duplicates found)
 
 
-═════════════════════════════════════════════════════════════
 **PHASE 2: Check Columns**
-═════════════════════════════════════════════════════════════
 
 **Checking Column 0:**
 
@@ -184,9 +180,7 @@ Input Sudoku Board:
 **Result:** Column 0 is valid (no duplicates found)
 
 
-═════════════════════════════════════════════════════════════
 **PHASE 3: Check 3x3 Boxes**
-═════════════════════════════════════════════════════════════
 
 **Checking Box 0 (top-left, rows 0-2, cols 0-2):**
 
@@ -258,7 +252,6 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 **Result:** Box 0 is valid (no duplicates found)
 
 
-═════════════════════════════════════════════════════════════
 
 After checking all 9 rows, 9 columns, and 9 boxes with no duplicates found, return `True`.
 
@@ -684,9 +677,7 @@ Box Index Map (for reference):
 - `squares[(r//3, c//3)]` = set of digits seen in that 3x3 box
 
 
-═════════════════════════════════════════════════════════════
 **ONE-PASS WALKTHROUGH**
-═════════════════════════════════════════════════════════════
 
 **Step 1:** Process cell (0, 0) = '5'
 
@@ -807,9 +798,7 @@ Box Index Map (for reference):
 ```
 
 
-═════════════════════════════════════════════════════════════
 **STATE AFTER PROCESSING FIRST TWO ROWS**
-═════════════════════════════════════════════════════════════
 
 ```markdown
 Row Sets:
@@ -829,7 +818,6 @@ Box Sets:
 ```
 
 
-═════════════════════════════════════════════════════════════
 
 Continue processing all cells. If no duplicate is found in any row, column, or box, return `True`.
 
@@ -1163,9 +1151,7 @@ Input Sudoku Board:
 ```
 
 
-═════════════════════════════════════════════════════════════
 **BIT REPRESENTATION**
-═════════════════════════════════════════════════════════════
 
 ```markdown
 Each digit is represented by a single bit:
@@ -1189,9 +1175,7 @@ Each digit is represented by a single bit:
 - `squares[9]` = integers tracking seen digits per 3x3 box (one int per box)
 
 
-═════════════════════════════════════════════════════════════
 **WALKTHROUGH**
-═════════════════════════════════════════════════════════════
 
 **Step 1:** Process cell (0, 0) = '5'
 
@@ -1286,9 +1270,7 @@ Each digit is represented by a single bit:
 ```
 
 
-═════════════════════════════════════════════════════════════
 **STATE AFTER PROCESSING ROW 0**
-═════════════════════════════════════════════════════════════
 
 ```markdown
 rows[0] = 0b001010100 = 84  (digits 3, 5, 7 seen)
@@ -1305,9 +1287,7 @@ squares[1] = 0b001000000 = 64  (digit 7)
 ```
 
 
-═════════════════════════════════════════════════════════════
 **DETECTING A DUPLICATE (Example)**
-═════════════════════════════════════════════════════════════
 
 If we later encounter another '5' in row 0:
 
@@ -1335,7 +1315,6 @@ If we later encounter another '5' in row 0:
 ```
 
 
-═════════════════════════════════════════════════════════════
 
 Continue processing all cells. If no duplicate is detected (all AND operations return 0), return `True`.
 

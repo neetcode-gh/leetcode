@@ -31,7 +31,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
 
-═════════════════════════════════════════════════════════════
 
 **Step-by-step execution:**
 
@@ -339,7 +338,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
 
-═════════════════════════════════════════════════════════════
 
 **Step 1: Build leftMax array (scan left to right)**
 
@@ -353,7 +351,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 ```
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 2: Build rightMax array (scan right to left)**
@@ -368,7 +365,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 ```
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 3: Calculate water at each position**
@@ -692,7 +688,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
 
-═════════════════════════════════════════════════════════════
 
 **Stack-based approach: Process horizontally layer by layer**
 
@@ -716,7 +711,6 @@ Found right wall at index 3, pop index 2 (bottom = 0), left wall at index 1 (hei
 Water added: **1**
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 7: i = 6, height[6] = 1**
@@ -736,7 +730,6 @@ Found right wall at index 6, pop index 5 (bottom = 0), left wall at index 4 (hei
 Water added: **1**
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 8: i = 7, height[7] = 3**
@@ -756,7 +749,6 @@ Pop multiple times to fill the pool between index 3 and 7
 Water added: **3**
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 11: i = 10, height[10] = 2**
@@ -775,7 +767,6 @@ Found right wall at index 10, pop index 9 (bottom = 1), left wall at index 8 (he
 Water added: **1**
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Complete step-by-step trace:**
@@ -1092,7 +1083,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
 
-═════════════════════════════════════════════════════════════
 
 **Two Pointers Approach**
 
@@ -1111,7 +1101,6 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 ```
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 3: Water trapped at index 2**
@@ -1131,7 +1120,6 @@ leftMax < rightMax, so process left side. Water = leftMax - height[2] = 1 - 0 = 
 ```
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Step 5: Water trapped at index 9**
@@ -1151,7 +1139,6 @@ leftMax >= rightMax, so process right side. Water = rightMax - height[9] = 2 - 1
 ```
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Steps 8-10: Water trapped at indices 4, 5, 6**
@@ -1171,7 +1158,6 @@ Processing left side as leftMax < rightMax
 ```
 
 
-═══════════════════════════════════════════════════════════
 
 
 **Complete step-by-step trace:**
