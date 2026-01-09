@@ -1,5 +1,7 @@
 ## 1. Dynamic Programming (Top-Down)
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -95,6 +97,9 @@ Path 1:                          Path 2:
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -329,6 +334,8 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -464,6 +471,9 @@ Result: dp[0][0] = 2 unique paths
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -698,6 +708,8 @@ class Solution {
 
 ## 3. Dynamic Programming (Space Optimized)
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -855,6 +867,9 @@ Result: dp[0] = 2 unique paths
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -1046,6 +1061,8 @@ class Solution {
 
 ## 4. Dynamic Programming (In-Place)
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -1194,6 +1211,9 @@ Result: grid[0][0] = 2 unique paths
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python

@@ -19,35 +19,24 @@ The brute-force method recomputes the left maximum and right maximum for every i
    - Add `min(leftMax, rightMax) - height[i]` to `res`.
 4. After processing all positions, return `res`.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-
-**Elevation Map (with trapped water shown as ≈):**
-
-```
-                        ┌───┐
-            ┌───┐ ≈ ≈ ≈ │   │ ┌───┐     ┌───┐
-       ┌───┐│   │ ≈ ≈ ≈ │   │ │   │ ≈ ≈ │   │
-  ─────┴───┴┴───┴─≈─≈─≈─┴───┴─┴───┴──≈──┴───┴────
-       0   1   0   2   1   0   1   3   2   1   2   1
-```
-
-
-**Height Array:**
-
-```
+```markdown
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
-
-
-═══════════════════════════════════════════════════════════
-
 
 **Step-by-step execution:**
 
@@ -74,6 +63,9 @@ For each position, we scan left and right to find the maximum heights.
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -341,35 +333,24 @@ This removes the repeated work from the brute-force approach and makes the solut
    - For each index `i`, add `min(leftMax[i], rightMax[i]) - height[i]` to the result.
 6. Return the total trapped water.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-
-**Elevation Map (with trapped water shown as ≈):**
-
-```
-                        ┌───┐
-            ┌───┐ ≈ ≈ ≈ │   │ ┌───┐     ┌───┐
-       ┌───┐│   │ ≈ ≈ ≈ │   │ │   │ ≈ ≈ │   │
-  ─────┴───┴┴───┴─≈─≈─≈─┴───┴─┴───┴──≈──┴───┴────
-       0   1   0   2   1   0   1   3   2   1   2   1
-```
-
-
-**Height Array:**
-
 ```
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
-
-
-═══════════════════════════════════════════════════════════
-
 
 **Step 1: Build leftMax array (scan left to right)**
 
@@ -426,6 +407,9 @@ Water at index i = min(leftMax[i], rightMax[i]) - height[i]
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -708,35 +692,24 @@ We keep doing this as long as the current bar keeps forming valid containers.
    - Push the current index onto the stack.
 3. Return `res` after the loop finishes.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-
-**Elevation Map (with trapped water shown as ≈):**
-
-```
-                        ┌───┐
-            ┌───┐ ≈ ≈ ≈ │   │ ┌───┐     ┌───┐
-       ┌───┐│   │ ≈ ≈ ≈ │   │ │   │ ≈ ≈ │   │
-  ─────┴───┴┴───┴─≈─≈─≈─┴───┴─┴───┴──≈──┴───┴────
-       0   1   0   2   1   0   1   3   2   1   2   1
-```
-
-
-**Height Array:**
-
 ```
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
-
-
-═══════════════════════════════════════════════════════════
-
 
 **Stack-based approach: Process horizontally layer by layer**
 
@@ -844,6 +817,9 @@ Water added: **1**
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -1122,35 +1098,24 @@ The water at each position is simply:
      - Add `rightMax - height[r]` to the result.
 3. Return the total trapped water.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-
-**Elevation Map (with trapped water shown as ≈):**
-
-```
-                        ┌───┐
-            ┌───┐ ≈ ≈ ≈ │   │ ┌───┐     ┌───┐
-       ┌───┐│   │ ≈ ≈ ≈ │   │ │   │ ≈ ≈ │   │
-  ─────┴───┴┴───┴─≈─≈─≈─┴───┴─┴───┴──≈──┴───┴────
-       0   1   0   2   1   0   1   3   2   1   2   1
-```
-
-
-**Height Array:**
-
 ```
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
+  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+    0   1   2   3   4   5   6   7   8   9  10  11
+
+  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
     0   1   2   3   4   5   6   7   8   9  10  11
 ```
-
-
-═══════════════════════════════════════════════════════════
-
 
 **Two Pointers Approach**
 
@@ -1267,6 +1232,9 @@ Loop ends when l = 7 = r
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python

@@ -11,6 +11,8 @@ We can check every pair of different elements in the array and return the first 
 3. If no such pair is found, return an empty array.
 4. There is guaranteed to be exactly one solution, so we will never return an empty array.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -64,6 +66,9 @@ Check: nums[0] + nums[1] = 2 + 7 = 9 == target ✓
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -210,6 +215,8 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 6. If the sum is greater than the target, move the right pointer to the left, which will decrease the sum.
 7. There is guaranteed to be exactly one solution, so we will never return an empty array.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -289,6 +296,9 @@ Sum = 2 + 7 = 9 == target ✓
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -538,6 +548,8 @@ By using a hashmap, we can achieve a time complexity of $O(n)$ because the inser
 4. If it does, return the indices of the current element and its complement.
 5. If no such pair is found, return an empty array.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -599,6 +611,9 @@ Check: Is index 1 != index 0? → YES ✓
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -791,93 +806,8 @@ If it does, we return the indices of the current element and its complement. If 
 4. If it does, return the indices of the current element and its complement.
 5. If no such pair is found, return an empty array.
 
-<details>
-<summary>Example - Dry Run</summary>
 
-**Input:** `nums = [2, 7, 11, 15]`, `target = 9`
-
-```
-┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
-└─────┴─────┴─────┴─────┘
-   0     1     2     3    ← indices
-```
-
-We iterate through the array once, checking for complement and building the HashMap simultaneously.
-
-
-**Step 1:** `i = 0`, `nums[0] = 2`
-
-```
-   i
-   ↓
-┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
-└─────┴─────┴─────┴─────┘
-
-diff = target - nums[0] = 9 - 2 = 7
-
-HashMap (before):
-┌───────┬───────┐
-│  Key  │ Value │
-├───────┼───────┤
-│ (empty)       │
-└───────┴───────┘
-
-Check: Is 7 in HashMap? → NO
-Action: Add 2 → 0 to HashMap
-
-HashMap (after):
-┌───────┬───────┐
-│  Key  │ Value │
-├───────┼───────┤
-│   2   │   0   │
-└───────┴───────┘
-```
-
-
-**Step 2:** `i = 1`, `nums[1] = 7`
-
-```
-         i
-         ↓
-┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
-└─────┴─────┴─────┴─────┘
-
-diff = target - nums[1] = 9 - 7 = 2
-
-HashMap:
-┌───────┬───────┐
-│  Key  │ Value │
-├───────┼───────┤
-│   2   │   0   │
-└───────┴───────┘
-
-Check: Is 2 in HashMap? → YES, at index 0 ✓
-```
-
-**Match found!** Return `[0, 1]`
-
-
----
-
-
-**Visual Summary:**
-
-```
-┌──────┬─────────┬──────┬─────────────────┬──────────────────┐
-│ Step │ nums[i] │ diff │ HashMap Before  │ Action           │
-├──────┼─────────┼──────┼─────────────────┼──────────────────┤
-│  0   │    2    │   7  │ {}              │ Add {2: 0}       │
-│  1   │    7    │   2  │ {2: 0}          │ Found! Return ✓  │
-└──────┴─────────┴──────┴─────────────────┴──────────────────┘
-```
-
-
-**Result:** `[0, 1]`
-
-</details>
+<br>
 
 ::tabs-start
 

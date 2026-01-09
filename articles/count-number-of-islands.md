@@ -17,6 +17,8 @@ Whenever we find a land cell that hasn’t been visited, we start a DFS to **sin
 4. Continue until all cells are processed.
 5. Return the total island count.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -169,6 +171,9 @@ Step 6: Continue scanning, find land at (3,3)
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -477,6 +482,8 @@ When we encounter a land cell, we use **BFS** to visit all connected land cells 
 4. Continue scanning the grid.
 5. Return the total number of islands.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -660,6 +667,9 @@ Step 9: Dequeue (3,3), no land neighbors
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -1042,6 +1052,8 @@ Each successful merge reduces the total island count by 1.
 4. After processing all cells, the remaining count is the number of islands.
 5. Return the island count.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -1258,6 +1270,9 @@ Components:
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python

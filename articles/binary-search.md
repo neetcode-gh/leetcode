@@ -23,6 +23,8 @@ The recursive version simply expresses this idea as a function that keeps callin
 5. Start the recursion with the full range `[0, n - 1]`.
 6. Return the final result.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -40,8 +42,8 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Call 1:** binary_search(l=0, r=5)
 ```
-  L              M              R
-  ↓              ↓              ↓
+   L         M              R
+   ↓         ↓              ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -58,12 +60,12 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Call 2:** binary_search(l=3, r=5)
 ```
-                   L    M    R
-                   ↓    ↓    ↓
+                  L    M    R
+                  ↓    ↓    ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-              └──────────────┘
+               └─────────────┘
                 Search Range
 
   l = 3, r = 5, m = 4
@@ -77,6 +79,9 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -268,6 +273,8 @@ We adjust the left and right pointers until we either find the target or the poi
    - If `nums[m] > target`, move search to the **left half**: update `r = m - 1`.
 3. If the loop ends without finding the target, return `-1`.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -285,8 +292,8 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Step 1:** L = 0, R = 5, M = 2
 ```
-  L              M              R
-  ↓              ↓              ↓
+   L         M              R
+   ↓         ↓              ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -302,12 +309,12 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Step 2:** L = 3, R = 5, M = 4
 ```
-                   L    M    R
-                   ↓    ↓    ↓
+                  L    M    R
+                  ↓    ↓    ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-              └──────────────┘
+               └─────────────┘
                 Search Range
 
   nums[M] = nums[4] = 9
@@ -320,6 +327,9 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -519,6 +529,8 @@ Then we simply check whether the element just before that boundary is the target
 4. If `l > 0` and `nums[l - 1] == target`, return `l - 1`.
 5. Otherwise, return `-1` (target not found).
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -540,12 +552,12 @@ Note: R starts at index 6 (past end of array)
 
 **Step 1:** L = 0, R = 6, M = 3
 ```
-  L              M                   R
-  ↓              ↓                   ↓
+   L              M                 R
+   ↓              ↓                 ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │  0 │  3 │  5 │  9 │ 12 │    (6)
 └────┴────┴────┴────┴────┴────┘
-└────────────────────────────────────┘
+└───────────────────────────────────┘
              Search Range
 
   nums[M] = nums[3] = 5
@@ -557,12 +569,12 @@ Note: R starts at index 6 (past end of array)
 
 **Step 2:** L = 4, R = 6, M = 5
 ```
-                        L    M       R
-                        ↓    ↓       ↓
+                       L    M       R
+                       ↓    ↓       ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │  0 │  3 │  5 │  9 │ 12 │    (6)
 └────┴────┴────┴────┴────┴────┘
-                   └─────────────────┘
+                  └──────────────────┘
                        Search Range
 
   nums[M] = nums[5] = 12
@@ -574,14 +586,14 @@ Note: R starts at index 6 (past end of array)
 
 **Step 3:** L = 4, R = 5, M = 4
 ```
-                        L    R
-                        ↓    ↓
-                        M
-                        ↓
+                       L    R
+                       ↓    ↓
+                       M
+                       ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-                   └────┘
+                  └─────┘
                 Search Range
 
   nums[M] = nums[4] = 9
@@ -606,6 +618,9 @@ Note: R starts at index 6 (past end of array)
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -790,6 +805,8 @@ This approach is especially useful for sorted arrays because it avoids overshoot
 4. If `l` is within bounds *and* `nums[l] == target`, return `l`.
 5. Otherwise, return `-1` (the target is not in the array).
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -811,12 +828,12 @@ Note: R starts at index 6 (past end of array)
 
 **Step 1:** L = 0, R = 6, M = 3
 ```
-  L              M                   R
-  ↓              ↓                   ↓
+   L              M                 R
+   ↓              ↓                 ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │  0 │  3 │  5 │  9 │ 12 │    (6)
 └────┴────┴────┴────┴────┴────┘
-└────────────────────────────────────┘
+└───────────────────────────────────┘
              Search Range
 
   nums[M] = nums[3] = 5
@@ -828,12 +845,12 @@ Note: R starts at index 6 (past end of array)
 
 **Step 2:** L = 4, R = 6, M = 5
 ```
-                        L    M       R
-                        ↓    ↓       ↓
+                       L    M       R
+                       ↓    ↓       ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │  0 │  3 │  5 │  9 │ 12 │    (6)
 └────┴────┴────┴────┴────┴────┘
-                   └─────────────────┘
+                  └──────────────────┘
                        Search Range
 
   nums[M] = nums[5] = 12
@@ -845,14 +862,14 @@ Note: R starts at index 6 (past end of array)
 
 **Step 3:** L = 4, R = 5, M = 4
 ```
-                        L    R
-                        ↓    ↓
-                        M
-                        ↓
+                       L    R
+                       ↓    ↓
+                       M
+                       ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-                   └────┘
+                  └─────┘
                 Search Range
 
   nums[M] = nums[4] = 9
@@ -877,6 +894,9 @@ Note: R starts at index 6 (past end of array)
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -1039,6 +1059,8 @@ class Solution {
 
 ## 5. Built-In Function
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -1061,9 +1083,9 @@ Built-in functions abstract the binary search logic. Here is how they work inter
 The function finds the leftmost position where target can be inserted to maintain sorted order.
 
 ```
-                        ↓
-                   bisect_left
-                    returns 4
+                       ↓
+                  bisect_left
+                   returns 4
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -1076,30 +1098,30 @@ The function finds the leftmost position where target can be inserted to maintai
 
 Step 1: L = 0, R = 6, M = 3
 ```
-  L              M                   R
-  ↓              ↓                   ↓
+   L              M                 R
+   ↓              ↓                 ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │  0 │  3 │  5 │  9 │ 12 │    (6)
 └────┴────┴────┴────┴────┴────┘
   nums[3] = 5 < 9 → L = 4
 ```
 
 Step 2: L = 4, R = 6, M = 5
 ```
-                        L    M       R
-                        ↓    ↓       ↓
+                       L    M       R
+                       ↓    ↓       ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │  0 │  3 │  5 │  9 │ 12 │    (6)
 └────┴────┴────┴────┴────┴────┘
   nums[5] = 12 >= 9 → R = 5
 ```
 
 Step 3: L = 4, R = 5, M = 4
 ```
-                        L    R
-                        ↓    ↓
-                        M
-                        ↓
+                       L    R
+                       ↓    ↓
+                       M
+                       ↓
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -1124,6 +1146,9 @@ Loop ends: L = 4
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python

@@ -16,6 +16,8 @@ Otherwise, some unmatched characters remain, meaning the string is invalid.
    - If the string is empty, return `True`.
    - Otherwise, return `False`.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -91,6 +93,9 @@ Final Result:
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
@@ -243,6 +248,8 @@ A valid string ends with an empty stack.
    - If the stack is empty, return `True`.
    - Otherwise, return `False`.
 
+<<<<<<< Updated upstream
+=======
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -379,6 +386,9 @@ Final Result:
 
 </details>
 
+<br>
+
+>>>>>>> Stashed changes
 ::tabs-start
 
 ```python
