@@ -3,7 +3,7 @@
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: prices = [7, 1, 5, 3, 6, 4]
 
 Price Array:
@@ -113,6 +113,8 @@ Final Answer: 7
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -296,7 +298,7 @@ class Solution {
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: prices = [7, 1, 5, 3, 6, 4]
 
 Price Array:
@@ -440,6 +442,8 @@ Final Answer: dp[0][0] = 7
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -686,7 +690,7 @@ class Solution {
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: prices = [7, 1, 5, 3, 6, 4]
 
 Price Array:
@@ -822,6 +826,8 @@ Final Answer: dp[0][0] = 7
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -974,7 +980,7 @@ class Solution {
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: prices = [7, 1, 5, 3, 6, 4]
 
 Price Array:
@@ -1111,6 +1117,8 @@ Final Answer: curBuy = 7
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -1284,7 +1292,7 @@ class Solution {
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: prices = [7, 1, 5, 3, 6, 4]
 
 Price Array:
@@ -1436,6 +1444,8 @@ Final Answer: 7
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 

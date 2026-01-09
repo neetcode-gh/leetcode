@@ -23,7 +23,7 @@ Input: `s = "({[]})"`
 
 We repeatedly remove matching pairs `()`, `{}`, `[]` until no more can be removed.
 
-```
+```markdown
 Initial String:
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
@@ -90,6 +90,8 @@ Final Result:
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -250,7 +252,7 @@ Input: `s = "({[]})"`
 
 We use a stack to track opening brackets and match them with closing brackets.
 
-```
+```markdown
 String (processing left to right):
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
@@ -378,6 +380,8 @@ Final Result:
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 

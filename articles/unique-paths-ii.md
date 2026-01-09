@@ -5,7 +5,7 @@
 
 Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 
-```
+```markdown
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
@@ -33,7 +33,7 @@ We can only move **right** or **down**. Each DFS call returns the number of path
 
 **Call Tree (simplified):**
 
-```
+```markdown
 dfs(0,0)
 ├── dfs(1,0)                → go DOWN
 │   ├── dfs(2,0)            → go DOWN
@@ -59,7 +59,7 @@ dfs(0,0)
 
 **Memoization Table (dp) after all calls:**
 
-```
+```markdown
     0   1   2
   ┌───┬───┬───┐
 0 │ 2 │ 1 │ 1 │  ← dp[0][0] = 2 (answer)
@@ -77,7 +77,7 @@ Each cell shows: number of paths from that cell to destination (2,2)
 
 **The Two Valid Paths:**
 
-```
+```markdown
 Path 1:                          Path 2:
     0   1   2                        0   1   2
   ┌───┬───┬───┐                    ┌───┬───┬───┐
@@ -94,6 +94,8 @@ Path 1:                          Path 2:
 **Result:** `dp[0][0] = 2` unique paths from start to end
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -334,7 +336,7 @@ class Solution {
 
 Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 
-```
+```markdown
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
@@ -363,7 +365,7 @@ Formula: `dp[r][c] = dp[r+1][c] + dp[r][c+1]` (paths from below + paths from rig
 
 **Step 0: Initialize DP table with boundary**
 
-```
+```markdown
 DP Table (4x4, extra row/col for boundary handling):
 
     0   1   2   3
@@ -383,7 +385,7 @@ DP Table (4x4, extra row/col for boundary handling):
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
-```
+```markdown
 c=2: dp[2][2] = 1 (already set - destination)
 c=1: dp[2][1] = dp[3][1] + dp[2][2] = 0 + 1 = 1
 c=0: dp[2][0] = dp[3][0] + dp[2][1] = 0 + 1 = 1
@@ -405,7 +407,7 @@ c=0: dp[2][0] = dp[3][0] + dp[2][1] = 0 + 1 = 1
 
 **Step 2: Process row 1 (middle row, right to left)**
 
-```
+```markdown
 c=2: dp[1][2] = dp[2][2] + dp[1][3] = 1 + 0 = 1
 c=1: grid[1][1] = OBSTACLE! → dp[1][1] = 0 (no paths through obstacle)
 c=0: dp[1][0] = dp[2][0] + dp[1][1] = 1 + 0 = 1
@@ -427,7 +429,7 @@ c=0: dp[1][0] = dp[2][0] + dp[1][1] = 1 + 0 = 1
 
 **Step 3: Process row 0 (top row, right to left)**
 
-```
+```markdown
 c=2: dp[0][2] = dp[1][2] + dp[0][3] = 1 + 0 = 1
 c=1: dp[0][1] = dp[1][1] + dp[0][2] = 0 + 1 = 1
 c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2  ← ANSWER!
@@ -449,7 +451,7 @@ c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2  ← ANSWER!
 
 **Final DP Table (without boundary):**
 
-```
+```markdown
     0   1   2
   ┌───┬───┬───┐
 0 │ 2 │ 1 │ 1 │  ← 2 paths from start
@@ -463,6 +465,8 @@ Result: dp[0][0] = 2 unique paths
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -703,7 +707,7 @@ class Solution {
 
 Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 
-```
+```markdown
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
@@ -735,7 +739,7 @@ Key insight:
 
 **Step 0: Initialize 1D DP array**
 
-```
+```markdown
 dp = [ 0 ,  0 ,  1 ,  0 ]
        ↑    ↑    ↑    ↑
       c=0  c=1  c=2  c=3 (boundary)
@@ -748,7 +752,7 @@ dp = [ 0 ,  0 ,  1 ,  0 ]
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
-```
+```markdown
 c=2: grid[2][2] = 0 (empty)
      dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
 
@@ -773,7 +777,7 @@ Represents row 2 of the 2D table:
 
 **Step 2: Process row 1 (middle row, right to left)**
 
-```
+```markdown
 c=2: grid[1][2] = 0 (empty)
      dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
 
@@ -798,7 +802,7 @@ Represents row 1 of the 2D table:
 
 **Step 3: Process row 0 (top row, right to left)**
 
-```
+```markdown
 c=2: grid[0][2] = 0 (empty)
      dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
 
@@ -823,7 +827,7 @@ Represents row 0 of the 2D table:
 
 **Evolution of the 1D DP Array:**
 
-```
+```markdown
                   c=0  c=1  c=2  c=3
                 ┌────┬────┬────┬────┐
 Initialize:     │  0 │  0 │  1 │  0 │
@@ -854,6 +858,8 @@ Result: dp[0] = 2 unique paths
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -1051,7 +1057,7 @@ class Solution {
 
 Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 
-```
+```markdown
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
@@ -1081,7 +1087,7 @@ This approach modifies the input grid directly to store path counts.
 
 **Step 0: Initialize destination**
 
-```
+```markdown
 grid[2][2] = 1 (1 way to reach destination from itself)
 
     0   1   2
@@ -1099,7 +1105,7 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
-```
+```markdown
 (2,2): SKIP - destination already set to 1
 (2,1): grid[2][1] = 0 (empty), compute paths:
        down = 0 (out of bounds), right = grid[2][2] = 1
@@ -1123,7 +1129,7 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 
 **Step 2: Process row 1 (middle row, right to left)**
 
-```
+```markdown
 (1,2): grid[1][2] = 0 (empty), compute paths:
        down = grid[2][2] = 1, right = 0 (out of bounds)
        grid[1][2] = 1 + 0 = 1
@@ -1148,7 +1154,7 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 
 **Step 3: Process row 0 (top row, right to left)**
 
-```
+```markdown
 (0,2): grid[0][2] = 0 (empty), compute paths:
        down = grid[1][2] = 1, right = 0 (out of bounds)
        grid[0][2] = 1 + 0 = 1
@@ -1174,7 +1180,7 @@ grid[2][2] = 1 (1 way to reach destination from itself)
 
 **Before and After Transformation:**
 
-```
+```markdown
 BEFORE (Input):                    AFTER (In-Place Modified):
 
     0   1   2                          0   1   2
@@ -1193,6 +1199,8 @@ Result: grid[0][0] = 2 unique paths
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 

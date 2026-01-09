@@ -29,7 +29,7 @@ The recursive version simply expresses this idea as a function that keeps callin
 Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Initial Array:**
-```
+```markdown
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -39,7 +39,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 ═══════════════════════════════════════════════════
 
 **Call 1:** binary_search(l=0, r=5)
-```
+```markdown
    L         M              R
    ↓         ↓              ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -56,7 +56,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 ═══════════════════════════════════════════════════
 
 **Call 2:** binary_search(l=3, r=5)
-```
+```markdown
                   L    M    R
                   ↓    ↓    ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -74,6 +74,8 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 **Result: index 4**
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -272,7 +274,7 @@ We adjust the left and right pointers until we either find the target or the poi
 Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Initial Array:**
-```
+```markdown
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -282,7 +284,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 ═══════════════════════════════════════════════════
 
 **Step 1:** L = 0, R = 5, M = 2
-```
+```markdown
    L         M              R
    ↓         ↓              ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -298,7 +300,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 ═══════════════════════════════════════════════════
 
 **Step 2:** L = 3, R = 5, M = 4
-```
+```markdown
                   L    M    R
                   ↓    ↓    ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -315,6 +317,8 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 **Result: index 4**
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -523,7 +527,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 The upper bound approach finds the first index where value > target, then checks index - 1.
 
 **Initial Array:**
-```
+```markdown
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -535,7 +539,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Step 1:** L = 0, R = 6, M = 3
-```
+```markdown
    L              M                   R
    ↓              ↓                   ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -551,7 +555,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Step 2:** L = 4, R = 6, M = 5
-```
+```markdown
                        L    M        R
                        ↓    ↓        ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -567,7 +571,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Step 3:** L = 4, R = 5, M = 4
-```
+```markdown
                        L    R
                        ↓    ↓
                        M
@@ -585,7 +589,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Final Check:**
-```
+```markdown
   L = 5 (upper bound: first index where value > target)
   L - 1 = 4
   nums[4] = 9 == 9 (target) ✓
@@ -598,6 +602,8 @@ Note: R starts at index 6 (past end of array)
 **Result: index 4**
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -791,7 +797,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 The lower bound approach finds the first index where value >= target.
 
 **Initial Array:**
-```
+```markdown
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -803,7 +809,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Step 1:** L = 0, R = 6, M = 3
-```
+```markdown
    L              M                   R
    ↓              ↓                   ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -819,7 +825,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Step 2:** L = 4, R = 6, M = 5
-```
+```markdown
                        L    M        R
                        ↓    ↓        ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -835,7 +841,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Step 3:** L = 4, R = 5, M = 4
-```
+```markdown
                        L    R
                        ↓    ↓
                        M
@@ -853,7 +859,7 @@ Note: R starts at index 6 (past end of array)
 ═══════════════════════════════════════════════════
 
 **Final Check:**
-```
+```markdown
   L = 4, R = 4 → Loop ends (L == R)
   L = 4 is within bounds (< 6)
   nums[4] = 9 == 9 (target) ✓
@@ -866,6 +872,8 @@ Note: R starts at index 6 (past end of array)
 **Result: index 4**
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -1037,7 +1045,7 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 Built-in functions abstract the binary search logic. Here is how they work internally:
 
 **Initial Array:**
-```
+```markdown
 ┌────┬────┬────┬────┬────┬────┐
 │ -1 │  0 │  3 │  5 │  9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
@@ -1050,7 +1058,7 @@ Built-in functions abstract the binary search logic. Here is how they work inter
 
 The function finds the leftmost position where target can be inserted to maintain sorted order.
 
-```
+```markdown
                         ↓
                    bisect_left
                     returns 4
@@ -1065,7 +1073,7 @@ The function finds the leftmost position where target can be inserted to maintai
 **Internal Binary Search (what the built-in does):**
 
 Step 1: L = 0, R = 6, M = 3
-```
+```markdown
    L              M                   R
    ↓              ↓                   ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -1076,7 +1084,7 @@ Step 1: L = 0, R = 6, M = 3
 ```
 
 Step 2: L = 4, R = 6, M = 5
-```
+```markdown
                        L    M        R
                        ↓    ↓        ↓
 ┌────┬────┬────┬────┬────┬────┐
@@ -1087,7 +1095,7 @@ Step 2: L = 4, R = 6, M = 5
 ```
 
 Step 3: L = 4, R = 5, M = 4
-```
+```markdown
                        L    R
                        ↓    ↓
                        M
@@ -1104,7 +1112,7 @@ Loop ends: L = 4
 ═══════════════════════════════════════════════════
 
 **Verification:**
-```
+```markdown
   index = 4
   nums[4] = 9 == 9 (target) ✓
 
@@ -1116,6 +1124,8 @@ Loop ends: L = 4
 **Result: index 4**
 
 </details>
+
+<br>
 
 ::tabs-start
 
