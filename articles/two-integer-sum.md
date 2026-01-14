@@ -827,7 +827,7 @@ HashMap (before):
 ┌───────┬───────┐
 │  Key  │ Value │
 ├───────┼───────┤
-│ (empty)       │
+│   -   │   -   │
 └───────┴───────┘
 
 Check: Is 7 in HashMap? → NO

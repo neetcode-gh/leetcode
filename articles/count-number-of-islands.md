@@ -565,7 +565,16 @@ Step 4: Dequeue (1,0), check neighbors
         All neighbors are water or visited
         Queue: [(1,1)]
 
-        (No grid change - already visited)
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+1 │ ✓ │ ✓ │ ░ │ ░ │
+  ├───┼───┼───┼───┤
+2 │ ░ │ ░ │ █ │ ░ │
+  ├───┼───┼───┼───┤
+3 │ ░ │ ░ │ ░ │ █ │
+  └───┴───┴───┴───┘
 
 
 
