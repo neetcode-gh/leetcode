@@ -1601,3 +1601,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-By-One Errors in Position Calculation
+
+The k-th node from the beginning is at position `k` (1-indexed), requiring `k-1` advances from the head. The k-th node from the end is at position `n-k+1` from the beginning. Confusing 0-indexed and 1-indexed counting or miscalculating the end position leads to swapping the wrong nodes. Carefully trace through a small example to verify your indexing.
+
+### Not Starting the Second Pointer at the Right Time
+
+In the one-pass two-pointer approach, the second pointer (`right`) must start moving from the head exactly when the first pointer reaches the k-th node. Starting too early or too late means `right` won't land on the k-th node from the end when the first pointer reaches the list's end. The gap between pointers must be exactly `k-1` nodes.
+
+### Swapping Nodes Instead of Values
+
+The problem asks to swap the values of two nodes, not the nodes themselves. Swapping node pointers requires updating multiple references (including the previous nodes' next pointers), which is more complex and error-prone. Simply swapping `left.val` and `right.val` is cleaner and achieves the same result for this problem.

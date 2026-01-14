@@ -323,3 +323,30 @@ For this analysis, we will assume that we are using Java.
 - Space complexity: $O(n)$
 
 >  Where $n$ is `s.length`, $m$ is `words.length`, and $k$ is the average length of the words.
+
+---
+
+## Common Pitfalls
+
+### Not Merging Adjacent Bold Regions
+A common mistake is inserting separate `<b>` tags for each word match without merging overlapping or adjacent regions. For example, if "ab" and "bc" both match in "abc", the result should be `<b>abc</b>`, not `<b>ab</b><b>bc</b>`.
+```python
+# Wrong: treating each match independently
+for word in words:
+    s = s.replace(word, f"<b>{word}</b>")  # Creates nested/separate tags
+```
+
+### Off-by-One When Marking Bold Ranges
+When marking character positions as bold, forgetting that the end index should be `start + len(word) - 1` (inclusive) or using `start + len(word)` (exclusive) inconsistently leads to incorrect bold boundaries.
+```python
+# Wrong: marking one character too many or too few
+for i in range(start, start + len(word) + 1):  # Off-by-one error
+    bold[i] = True
+```
+
+### Missing Overlapping Occurrences of the Same Word
+Using `find()` with `start + len(word)` as the next search position misses overlapping matches. For example, searching for "aa" in "aaa" should find two matches (at index 0 and 1), but skipping by word length finds only one.
+```python
+# Wrong: skipping by word length misses overlaps
+start = s.find(word, start + len(word))  # Should be start + 1
+```

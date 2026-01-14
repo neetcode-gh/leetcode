@@ -676,3 +676,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Finding Pivot with Wrong Comparison
+
+The pivot is the rightmost element that is smaller than its right neighbor (nums[i] < nums[i+1]). Using <= instead of < causes the algorithm to fail on arrays with duplicate elements, as it may skip valid pivot positions.
+
+### Swapping with Wrong Element
+
+After finding the pivot, you must swap it with the smallest element to its right that is still larger than the pivot. Swapping with the first larger element from the left (instead of from the right) may not produce the lexicographically smallest increase.
+
+### Forgetting to Reverse the Suffix
+
+After swapping, the suffix to the right of the pivot position is in descending order. Failing to reverse it to ascending order produces a larger permutation than necessary. The reversal is essential to get the next (smallest) greater permutation.

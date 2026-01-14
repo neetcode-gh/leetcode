@@ -590,3 +590,23 @@ class Solution {
 - Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the array $g$ and $m$ is the size of the array $s$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort Both Arrays
+The two-pointer greedy approach only works when both the greed factors and cookie sizes are sorted. Forgetting to sort one of them leads to suboptimal assignments.
+```python
+# Wrong: only sorting cookies, not greed factors
+s.sort()
+# g is not sorted, so greedy matching fails
+```
+
+### Using the Wrong Comparison Operator
+A child is satisfied when the cookie size is greater than or equal to the greed factor. Using strict greater-than misses valid matches where the cookie exactly equals the greed.
+```python
+# Wrong: should be >= not >
+if s[j] > g[i]:  # Misses case where s[j] == g[i]
+    i += 1
+```

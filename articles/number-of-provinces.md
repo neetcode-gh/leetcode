@@ -1197,3 +1197,19 @@ class Solution {
 
 * Time complexity: $O(n ^ 2)$
 * Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Nodes with Edges
+
+The adjacency matrix `isConnected[i][j]` represents whether city `i` and city `j` are directly connected. A common mistake is treating the matrix indices as edge indices rather than node indices. Remember that `n` is the number of cities, not the number of connections.
+
+### Forgetting to Mark Nodes as Visited
+
+When performing DFS or BFS, failing to mark a node as visited before or immediately after processing it can lead to infinite loops or counting the same province multiple times. Always mark nodes as visited as soon as they are encountered.
+
+### Misunderstanding the Diagonal
+
+The diagonal elements `isConnected[i][i]` are always `1` (a city is connected to itself). When modifying the input to track visited status, be careful to use the diagonal correctly. Do not confuse self-connections with actual inter-city connections.

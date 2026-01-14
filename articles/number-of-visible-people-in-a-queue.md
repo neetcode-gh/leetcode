@@ -583,3 +583,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using the Wrong Stack Order
+
+This problem requires a monotonic decreasing stack. Using an increasing stack or getting the comparison direction wrong leads to incorrect visibility counts. When iterating left-to-right, pop elements shorter than the current person; when iterating right-to-left, pop elements shorter than the current person as well.
+
+### Forgetting to Count the Blocking Person
+
+When a taller person blocks the view, they are still visible to the current person. After popping all shorter people from the stack, if the stack is not empty, the person at the top is also visible. Forgetting to add 1 for this blocking person is a common mistake.
+
+### Confusing What to Store on the Stack
+
+You can store either indices or heights on the stack, but you must be consistent. Storing indices allows you to update the result array directly but requires looking up heights. Storing heights simplifies comparisons but requires a different approach to update results.
+
+### Misunderstanding the Visibility Condition
+
+Person `i` can see person `j` if there is no one between them who is taller than both. This is not the same as "no one taller than person `j`" or "no one taller than person `i`". The blocking condition depends on the minimum of the two heights being compared against the maximum height between them.

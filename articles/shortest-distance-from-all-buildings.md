@@ -1884,3 +1884,27 @@ class Solution {
 - Space complexity: $O(N \cdot M)$
 
 >  Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
+
+---
+
+## Common Pitfalls
+
+### Not Checking Reachability to All Houses
+
+An empty cell is only valid if it can reach ALL houses. Simply finding the minimum distance sum is insufficient; you must also verify that the cell can reach every house. Cells that cannot reach all houses should be excluded from consideration, or the solution returns -1 if no valid cell exists.
+
+### Incorrect Early Termination
+
+Some implementations try to optimize by stopping BFS early when a house is found. However, BFS from a house must continue to all reachable empty cells to correctly accumulate distances. Early termination leads to incomplete distance sums and incorrect results.
+
+### Modifying Grid Without Tracking Reachability
+
+The optimized approach uses decreasing values (0, -1, -2, ...) to track which cells are reachable by all previously processed houses. A common mistake is not understanding that a cell with value `k` should only be visited by the `(|k|+1)`-th house's BFS. Cells not matching the expected value are either obstacles, houses, or unreachable from some previous house.
+
+### Confusing BFS Direction
+
+There are two valid approaches: BFS from empty cells to houses, or BFS from houses to empty cells. Mixing concepts from both approaches leads to incorrect logic. When doing BFS from houses, each house's BFS contributes distances to empty cells. When doing BFS from empty cells, each empty cell computes its total distance to all houses.
+
+### Integer Overflow with Distance Sums
+
+In large grids with many houses, the sum of distances can become very large. Using `Integer.MAX_VALUE` or similar sentinels for invalid cells, then performing arithmetic operations, can cause overflow. Ensure proper handling of sentinel values in comparisons and avoid adding to them.

@@ -746,3 +746,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Applying Gravity in the Wrong Direction
+
+After rotation, gravity pulls stones downward, but before rotation stones should fall to the right (toward higher column indices). Processing stones left-to-right instead of right-to-left causes stones to fall incorrectly, as earlier stones block the path for later ones.
+
+### Forgetting to Reset the Drop Position After Obstacles
+
+When an obstacle `*` is encountered, the drop position pointer must reset to just before the obstacle (`c - 1`). Failing to reset this pointer causes stones to incorrectly pass through or stack on top of obstacles.
+
+### Incorrect Rotation Index Mapping
+
+The rotation transforms position `(r, c)` to `(c, ROWS - 1 - r)` for a 90-degree clockwise rotation. Using incorrect formulas like `(c, r)` or `(ROWS - 1 - r, c)` results in a transposed or incorrectly flipped matrix instead of a proper rotation.

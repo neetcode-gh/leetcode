@@ -1122,3 +1122,19 @@ class Solution {
 - Space complexity: $O(k)$ for the output array.
 
 > Where $n$ is the size of the input array and $k$ is the number of closest elements to find.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Tie-Breaking Rule
+
+When two elements have the same distance to `x`, the problem requires preferring the **smaller** element. A common mistake is treating equal distances arbitrarily or preferring the larger element. This affects both the custom comparator approach and the two-pointer shrinking logic where you should shrink from the right (larger values) when distances are equal.
+
+### Not Returning Results in Sorted Order
+
+The output must be sorted in ascending order. When using approaches that collect elements based on distance (like sorting by distance or expanding from a center point), the collected elements may not be in sorted order. Forgetting to sort the final result before returning leads to incorrect output.
+
+### Incorrect Binary Search Bounds
+
+In the optimized binary search approach, the search range should be `[0, n - k]` for the starting index of the window, not `[0, n - 1]`. Using incorrect bounds can cause the window to extend past the array end or miss valid starting positions, leading to index out of bounds errors or wrong answers.

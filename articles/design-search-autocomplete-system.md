@@ -1167,3 +1167,87 @@ class AutocompleteSystem {
 - Space complexity: $O(k \cdot (n \cdot k + m))$
 
 >  Where $n$ is the length of `sentences`, $k$ is the average length of all sentences, and $m$ is the number of times `input` is called.
+
+## Common Pitfalls
+
+### Forgetting to Reset State on '#'
+
+When the user presses `#`, you must add the completed sentence to the trie, reset the current sentence, and return the trie pointer to root. Missing any of these steps causes incorrect behavior on subsequent inputs.
+
+```python
+# Wrong: forgets to reset current node
+if c == "#":
+    self.add_to_trie(curr_sentence, 1)
+    self.curr_sentence = []
+    return []  # Missing: self.curr_node = self.root
+
+# Correct
+if c == "#":
+    self.add_to_trie("".join(self.curr_sentence), 1)
+    self.curr_sentence = []
+    self.curr_node = self.root
+    return []
+```
+
+### Not Handling Non-Existent Prefix Path
+
+When a character doesn't exist in the current node's children, the system should return empty results for all subsequent characters until `#` is pressed. Using a "dead" node pattern handles this cleanly.
+
+```python
+# Wrong: crashes on missing child
+self.curr_node = self.curr_node.children[c]  # KeyError
+
+# Correct: use dead node for invalid paths
+if c not in self.curr_node.children:
+    self.curr_node = self.dead  # dead is empty TrieNode
+    return []
+self.curr_node = self.curr_node.children[c]
+```
+
+### Wrong Sorting Order for Results
+
+Results must be sorted by frequency (highest first), then alphabetically for ties. Reversing this order or sorting in the wrong direction gives incorrect top-3 results.
+
+```python
+# Wrong: sorts alphabetically first, then by frequency
+sorted_sentences = sorted(sentences.items(), key=lambda x: (x[0], -x[1]))
+
+# Correct: frequency descending, then alphabetically
+sorted_sentences = sorted(sentences.items(), key=lambda x: (-x[1], x[0]))
+```
+
+### Not Storing Sentence at Every Node Along Path
+
+Each trie node must store all sentences that pass through it, not just at the leaf. Otherwise, prefix queries won't find matching sentences.
+
+```python
+# Wrong: only stores at final node
+def add_to_trie(self, sentence, count):
+    node = self.root
+    for c in sentence:
+        if c not in node.children:
+            node.children[c] = TrieNode()
+        node = node.children[c]
+    node.sentences[sentence] += count  # Only at end
+
+# Correct: store at every node along path
+def add_to_trie(self, sentence, count):
+    node = self.root
+    for c in sentence:
+        if c not in node.children:
+            node.children[c] = TrieNode()
+        node = node.children[c]
+        node.sentences[sentence] += count  # At every node
+```
+
+### Returning More Than 3 Results
+
+The problem requires returning at most 3 results. Forgetting to limit the output or using the wrong slice gives incorrect answers.
+
+```python
+# Wrong: returns all matching sentences
+return [s[0] for s in sorted_sentences]
+
+# Correct: return at most 3
+return [s[0] for s in sorted_sentences[:3]]
+```

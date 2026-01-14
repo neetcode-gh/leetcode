@@ -427,3 +427,15 @@ class KthLargest {
 - Space complexity: $O(k)$
 
 > Where $m$ is the number of calls made to $add()$.
+
+---
+
+## Common Pitfalls
+
+### Using a Max-Heap Instead of Min-Heap
+
+A common mistake is using a max-heap to find the k-th largest element. While it seems intuitive to keep the largest elements at the top, a max-heap would require storing all elements and repeatedly extracting the maximum k times for each query. A min-heap of size k is the correct choice because the root always holds the k-th largest element directly, allowing O(1) retrieval after each insertion.
+
+### Forgetting to Maintain Heap Size
+
+When using a min-heap, it is essential to remove the smallest element whenever the heap size exceeds k. Failing to do so means the heap grows unbounded, and the root no longer represents the k-th largest element. Always check and pop after each insertion to keep exactly k elements in the heap.

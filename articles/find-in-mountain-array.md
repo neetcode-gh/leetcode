@@ -1351,3 +1351,27 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(\log n)$
+
+---
+
+## Common Pitfalls
+
+### Searching Right Side Before Left Side
+
+Since the problem requires returning the **minimum index** when the target appears multiple times, you must search the ascending (left) portion first. If you search the descending (right) portion first or return the first match found without considering index order, you may return a larger index when a smaller one exists.
+
+### Incorrect Binary Search Direction for Descending Portion
+
+When searching the descending right portion of the mountain, the binary search logic must be reversed. In an ascending array, smaller values are on the left; in a descending array, smaller values are on the right. Forgetting to flip the comparison logic will cause the search to move in the wrong direction.
+
+### Off-by-One Errors in Peak Finding
+
+When finding the peak, the search bounds should be `[1, length - 2]` to ensure safe access to `mid - 1` and `mid + 1`. Using `[0, length - 1]` can cause index out of bounds errors. Additionally, ensure the peak is correctly identified as the element greater than both neighbors, not just one.
+
+### Exceeding API Call Limits
+
+The problem often restricts the number of `get()` calls (e.g., 100 calls). Without caching, you may query the same index multiple times during peak finding and subsequent searches. Implementing a cache to store previously retrieved values prevents exceeding the call limit and avoids time limit issues.
+
+### Not Handling Target at Peak Position
+
+The target might be at the peak itself. If your left portion search excludes the peak and your right portion search also misses it due to boundary conditions, the target at the peak will never be found. Ensure at least one of your searches includes the peak index in its range.

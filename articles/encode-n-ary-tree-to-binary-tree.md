@@ -1352,3 +1352,23 @@ class Codec {
     - And this consumption of call stack space is the main space complexity for our DFS algorithm. As we can see, the size of the call stack at any moment is exactly the number of level where the currently visited node resides, e.g. for the root node (level 0), the recursive call stack is empty.
 
 >  Where $N$ is the number of nodes in the N-ary tree, and $D$ is the depth of the N-ary tree.
+
+---
+
+## Common Pitfalls
+
+### Confusing Left-Child and Right-Sibling Roles
+
+In the encoding scheme, `left` points to the first child of the N-ary node, while `right` links siblings together. A common mistake is reversing these roles or using `right` for children, which breaks the bidirectional mapping and makes decoding impossible.
+
+### Not Initializing the Children List
+
+When decoding, the N-ary node's children list must be initialized as an empty list, not `null` or `None`. Many online judges expect an empty list for leaf nodes, and failing to initialize causes null pointer exceptions when appending children.
+
+### Forgetting to Handle the Empty Tree Case
+
+Both encode and decode must handle `null` input and return `null`. Forgetting this base case causes null pointer exceptions when the root is null, as the algorithm tries to access properties of a non-existent node.
+
+### Incorrect Sibling Chain Traversal During Decode
+
+When decoding, you must traverse the entire right-sibling chain starting from the left child. A common mistake is only processing the immediate left child without following the `right` pointers, which loses all siblings after the first child.

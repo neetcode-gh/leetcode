@@ -637,3 +637,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Incrementing the Pointer After Swapping with the Right Boundary
+
+In the two-pointer approach where you swap odd elements to the right, you must not increment the left pointer after a swap. The element swapped from the right side has not been checked yet and could be odd, requiring another swap.
+
+### Using Modulo on Negative Numbers
+
+While this problem only has non-negative integers, using `num % 2` can behave unexpectedly with negative numbers in some languages (returning -1 instead of 1 for odd negatives). Using bitwise AND (`num & 1`) is safer and more efficient for parity checking.

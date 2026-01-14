@@ -1007,3 +1007,15 @@ class MinStack {
 
 - Time complexity: $O(1)$ for all operations.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Synchronizing the Two Stacks
+
+When using the two-stack approach, some implementations only push to `minStack` when the new value is smaller than the current minimum. This optimization requires careful handling during `pop()`: you must only pop from `minStack` when the popped value equals the current minimum. Forgetting this synchronization causes `minStack` to become misaligned with the main stack, returning incorrect minimums.
+
+### Integer Overflow in the Encoded Value Approach
+
+The one-stack solution stores `val - min` as encoded values. When dealing with extreme integer values (e.g., `Integer.MIN_VALUE` and `Integer.MAX_VALUE`), this subtraction can overflow. Using `long` instead of `int` for the encoded values and the minimum prevents this issue in languages with fixed-width integers.

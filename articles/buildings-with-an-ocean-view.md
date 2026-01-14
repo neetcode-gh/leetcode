@@ -548,3 +548,24 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ for the output array.
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Comparison Operator
+A building loses its ocean view if any building to its right is taller OR EQUAL in height. Using strictly greater than (`>`) instead of greater than or equal (`>=`) incorrectly keeps buildings that are blocked by same-height buildings.
+```python
+# Wrong: same height doesn't block
+if heights[i] > heights[j]:  # Misses equal heights
+
+# Correct: equal or greater blocks the view
+if heights[i] <= heights[j]:
+    has_view = False
+```
+
+### Forgetting to Reverse the Result
+When iterating from right to left (the optimal approach), indices are collected in reverse order. Forgetting to reverse the final result returns indices in descending order instead of the required ascending order.
+
+### Not Handling Single Building Case
+An array with one building should return `[0]` since the only building always has an ocean view. Edge case handling ensures the rightmost building is always included in the initial result.

@@ -1230,3 +1230,27 @@ class Solution {
 - Space complexity: $O(n + w)$
 
 > Where $n$ is the number of words, $w$ is the maximum length of a word, $m$ is the size of the array $scores$, and $N$ is the size of the array $letters$.
+
+---
+
+## Common Pitfalls
+
+### Not Restoring Letter Counts After Backtracking
+
+When using backtracking, you must restore the letter counts after exploring the branch where you include a word. Forgetting to add the letters back after the recursive call means subsequent branches operate with incorrect letter availability, leading to wrong results or missing valid combinations.
+
+### Checking Word Validity Too Late
+
+You should verify that a word can be formed with available letters before consuming those letters. If you subtract letters first and then discover the word is invalid, you've already corrupted the state. Always check availability first, then subtract if the word can be formed.
+
+### Counting Letters Incorrectly for Duplicate Characters
+
+When a word contains duplicate characters (e.g., "aab"), you need the letter pool to have enough of each character. A common bug is checking if each character exists at least once, rather than checking if the count is sufficient. Use frequency arrays or counters that properly track multiple occurrences.
+
+### Confusing Word Score with Letter Score
+
+The `score` array maps each letter to its value (index 0 = 'a', index 1 = 'b', etc.). A word's score is the sum of its letters' scores, not a single lookup. Misinterpreting this mapping or forgetting to sum all letters in the word produces incorrect scores.
+
+### Using Greedy Instead of Exhaustive Search
+
+This problem requires exploring all `2^n` subsets of words because including a high-scoring word might prevent including multiple other words that together score higher. Greedy approaches (e.g., always taking the highest-scoring valid word first) don't guarantee the optimal solution.

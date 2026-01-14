@@ -738,3 +738,15 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Squaring
+
+When computing `m * m` during binary search, the result can overflow if `m` is large (e.g., close to 46340 for 32-bit integers). Always cast to a 64-bit type before multiplication, such as `(long)m * m` in Java or `(long long)m * m` in C++, to prevent incorrect comparisons.
+
+### Off-by-One Errors in Binary Search
+
+A subtle mistake is returning `m` when `m * m < x` instead of tracking it as a candidate and continuing to search for a larger valid value. The correct approach is to store `m` in a result variable when `m * m <= x` and keep searching, returning the stored result when the loop ends.

@@ -455,3 +455,15 @@ class Solution {
 * Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the image.
+
+---
+
+## Common Pitfalls
+
+### Infinite Loop When New Color Equals Original Color
+
+If the starting pixel already has the target color, the algorithm will infinitely revisit the same pixels since the color change that normally marks pixels as visited never happens. Always check if `originalColor == newColor` at the start and return immediately if true.
+
+### Not Storing the Original Color Before Modifying
+
+The flood fill must only spread to pixels matching the original color of the starting pixel. If you check against the current pixel color after already modifying some pixels, you may either skip valid pixels or incorrectly include pixels of the new color. Store the original color in a variable before any modifications.

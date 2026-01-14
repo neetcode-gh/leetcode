@@ -290,3 +290,19 @@ class Solution {
 - Space complexity: $O(N)$ extra space used
 
 >  where $N$ is the number of characters in the longest string
+
+---
+
+## Common Pitfalls
+
+### Returning True for Identical Strings
+
+A common mistake is returning `true` when both strings are exactly identical. The problem requires exactly one edit, so identical strings should return `false`. Always check that strings differ by exactly one operation.
+
+### Forgetting the Append/Delete at End Case
+
+When no mismatch is found during the loop, some solutions incorrectly return `false`. If the shorter string is a prefix of the longer string and the longer string has exactly one more character, the answer is `true`. This edge case occurs when the edit is appending a character at the end.
+
+### Not Handling the Length Difference Correctly
+
+When strings have different lengths, the comparison after finding a mismatch must skip the extra character in the longer string, not the shorter one. Confusing which string to advance leads to incorrect substring comparisons and wrong answers for insertion/deletion cases.

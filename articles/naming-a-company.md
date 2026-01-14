@@ -1029,3 +1029,27 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $n$ is the size of the array $ideas$ and $m$ is the average length of the strings.
+
+---
+
+## Common Pitfalls
+
+### Checking Both Swapped Names
+
+A valid company name requires that both swapped names are new. Some solutions only check if one of the swapped names exists in the original set, forgetting that both must be absent. If either swapped name already exists as an original idea, the pair is invalid.
+
+### Counting Pairs vs Ordered Names
+
+The problem asks for distinct company names, which are ordered pairs (first name + second name). After finding a valid swap between two ideas, you must count both orderings. Forgetting to multiply by 2 or add both orderings leads to answers that are half the correct value.
+
+### Same First Letter Produces No New Names
+
+Swapping first letters between two ideas that start with the same letter produces the original names back. Solutions that do not skip pairs with identical first letters waste computation and may produce incorrect intersection counts in the optimized approaches.
+
+### Off-by-One in Suffix Extraction
+
+When grouping by first letter, the suffix is everything after the first character. Using `s[1:]` correctly extracts the suffix, but some implementations accidentally include the first character or miss the last character due to incorrect slicing, causing lookups to fail.
+
+### Integer Overflow in Pair Counting
+
+With up to 50,000 ideas, the number of valid pairs can exceed 32-bit integer limits. The product of two group sizes (each up to 50,000) requires 64-bit arithmetic. Using `int` instead of `long` in languages like Java causes overflow and wrong answers.

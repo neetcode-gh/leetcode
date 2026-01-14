@@ -727,3 +727,19 @@ class Solution {
     * $O(m + n)$ for the output list.
 
 > Where $m$ and $n$ are the sizes of the arrays $firstList$ and $secondList$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Overlap Detection
+
+A common mistake is using an incorrect condition to check if two intervals overlap. The correct condition is `start <= end` where `start = max(startA, startB)` and `end = min(endA, endB)`. Some developers mistakenly check if one interval's start is between the other's boundaries, which can miss edge cases like when intervals touch at a single point (e.g., `[1,3]` and `[3,5]` should produce `[3,3]`).
+
+### Wrong Pointer Advancement Logic
+
+When using the two-pointer approach, advancing the wrong pointer leads to missed intersections. The key insight is to advance the pointer for the interval that ends first because that interval cannot intersect with any future intervals from the other list. Advancing based on start times or advancing both pointers simultaneously will produce incorrect results.
+
+### Forgetting Empty Input Cases
+
+Failing to handle cases where one or both input lists are empty can cause index out-of-bounds errors or incorrect behavior. Always ensure your solution gracefully returns an empty result when either `firstList` or `secondList` is empty, which the two-pointer approach handles naturally by never entering the while loop.

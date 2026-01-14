@@ -400,3 +400,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Double-Counting the Center Element for Odd-Sized Matrices
+
+When the matrix has an odd dimension, the center element lies on both diagonals and gets added twice. You must subtract it once at the end. Forgetting this check causes incorrect results for odd-sized matrices like 3x3 or 5x5.
+
+### Using Incorrect Index Formula for Secondary Diagonal
+
+The secondary diagonal element in row `r` is at column `n - r - 1`, not `n - r`. Using the wrong formula causes an index out of bounds error or accesses the wrong elements.

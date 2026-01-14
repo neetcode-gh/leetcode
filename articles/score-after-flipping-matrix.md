@@ -514,3 +514,17 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+## Common Pitfalls
+
+### Flipping Columns Before Rows
+
+A critical ordering mistake is flipping columns before ensuring all first bits are 1. Row flips must happen first because they determine which cells need flipping in each row. Flipping columns first may undo progress or lead to suboptimal results since the leftmost bit has the highest value.
+
+### Flipping Columns When 1s Equal 0s
+
+When a column has exactly half 1s and half 0s, flipping it makes no difference to the score. Some solutions incorrectly flip in this case or use `<=` instead of `<` in the comparison. Only flip when 0s strictly outnumber 1s to avoid unnecessary operations.
+
+### Miscalculating Bit Position Values
+
+When computing the final score, using incorrect powers of 2 for each column position causes wrong answers. The leftmost column contributes `2^(COLS-1)`, not `2^0`. Ensure you use `COLS - c - 1` as the exponent for column `c` when calculating each bit's contribution.

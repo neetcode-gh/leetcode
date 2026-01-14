@@ -749,3 +749,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow in Combinatorics Approach
+
+When computing binomial coefficients using the formula `C(n, k) = C(n, k-1) * (n - k + 1) / k`, the intermediate multiplication can overflow before the division. Always multiply first and divide immediately, or use `long` types to hold intermediate results before casting back to `int`.
+
+### Wrong Iteration Direction in Space-Optimized DP
+
+When updating the row in place, iterating from left to right overwrites values that are still needed for subsequent calculations. You must iterate from right to left so that each element is updated using the original (unmodified) values from the previous logical row.

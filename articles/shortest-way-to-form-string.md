@@ -1730,3 +1730,19 @@ class Solution {
 - Space complexity: $O(S)$
 
 >  where $S$ is the length of `source` and $T$ is the length of `target`
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check for Impossible Characters
+
+Before attempting to form the target, you must verify that every character in `target` exists in `source`. If any character is missing, forming the target is impossible regardless of how many times you concatenate `source`. Skipping this check leads to infinite loops or incorrect results.
+
+### Off-by-One Errors When Wrapping Around Source
+
+When using a pointer to track your position in `source`, a common mistake is mishandling the wrap-around logic. If you reach the end of `source` without finding the needed character, you must reset to the beginning and increment the count. Errors often occur when forgetting to increment the count upon wrap-around or when incorrectly resetting the pointer position.
+
+### Counting Subsequences Incorrectly
+
+Another pitfall is miscounting the number of source copies needed. The count should increment each time you start a new pass through `source`, not each time you find a character. Starting with `count = 0` instead of `count = 1` or incrementing at the wrong point in the loop results in an off-by-one error in the final answer.

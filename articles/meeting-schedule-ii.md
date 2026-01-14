@@ -1208,3 +1208,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using the Wrong Comparison for Room Reuse
+
+When checking if a room can be reused, the condition should be `earliest_end_time <= current_start`, not `<`. A meeting ending at time `t` allows a room to be reused by a meeting starting at time `t`.
+
+### Forgetting to Sort Meetings Before Processing
+
+The min heap and two pointer approaches only work correctly when meetings are sorted by start time. Without sorting, you cannot determine the correct order of room allocation.
+
+### Returning the Max Heap Size Instead of Tracking It
+
+The heap size changes throughout processing. You need to track the maximum size the heap reaches during iteration, or simply return the final heap size if you only pop when reusing rooms.

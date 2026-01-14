@@ -1161,3 +1161,44 @@ class Solution {
 - Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $words$ and $m$ is the length of the longest word in the array.
+
+---
+
+## Common Pitfalls
+
+### Counting a Word as Its Own Concatenation
+A concatenated word must be formed by at least two other words. If you check whether the entire word exists in the set without excluding it, every word would trivially match itself.
+
+```python
+# Wrong: allows word to match itself
+if word[j:i] in wordSet:
+    dp[i] = True
+
+# Correct: skip the case where the entire word is checked
+if j == 0 and i == m:
+    continue
+```
+
+### Not Requiring Multiple Words
+The problem requires concatenation of two or more words. Checking only that the word can be split into valid parts without ensuring at least two parts will incorrectly include single words that exist in the dictionary.
+
+### Missing Memoization Leading to TLE
+Without memoization, the same suffix may be checked exponentially many times. For long words with many valid prefixes, this causes timeout.
+
+```python
+# Wrong: no caching
+def dfs(word):
+    for i in range(1, len(word)):
+        if prefix in wordSet and dfs(suffix):
+            return True
+
+# Correct: cache results
+if word in dp:
+    return dp[word]
+```
+
+### Incorrect Substring Indices
+Off-by-one errors when splitting the word into prefix and suffix are common. The prefix should be `word[0:i]` and suffix should be `word[i:]`, where `i` ranges from `1` to `len(word)-1`.
+
+### Forgetting Empty String Edge Case
+If the word list contains an empty string, it could match infinitely. Most solutions implicitly handle this since the loop starts at `i=1`, but explicitly filtering empty strings from the word set is safer.

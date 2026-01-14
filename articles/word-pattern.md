@@ -1052,3 +1052,27 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $pattern$ and $m$ is the length of the string $s$.
+
+---
+
+## Common Pitfalls
+
+### Only Checking One Direction of the Mapping
+A common mistake is using only one hash map to check if each pattern character maps to the same word, but forgetting to verify the reverse. This fails cases like `pattern = "abba"` and `s = "dog dog dog dog"` where `a -> dog` and `b -> dog` would both be stored, incorrectly returning `true`.
+
+```python
+# Wrong: Only checks character -> word
+if c in charToWord and charToWord[c] != w:
+    return False
+charToWord[c] = w  # Missing reverse check!
+```
+
+### Forgetting to Check Length Mismatch Early
+Failing to compare the pattern length with the word count before iterating leads to index errors or incorrect results. For example, `pattern = "ab"` with `s = "dog"` has a mismatch that should immediately return `false`.
+
+```python
+words = s.split()
+# Wrong: Missing this check before the loop
+if len(pattern) != len(words):
+    return False
+```

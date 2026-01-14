@@ -1237,3 +1237,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Double Counting with Duplicate Elements
+
+When there are duplicate values in the array, using strict less-than (`<`) on both sides when finding previous and next smaller elements causes the same subarray to be counted multiple times. The solution is to use strict less-than (`<`) on one side and less-than-or-equal (`<=`) on the other side to ensure each subarray is counted exactly once.
+
+### Integer Overflow in Contribution Calculation
+
+The contribution formula `arr[i] * left * right` can overflow a 32-bit integer when the array is large. With `n` up to 30,000 and values up to 30,000, the product can reach approximately 2.7 * 10^13. Always use 64-bit integers for the multiplication and apply the modulo operation at each step.
+
+### Incorrect Boundary Initialization
+
+When no previous smaller element exists, `prevSmaller[i]` should be `-1` (not `0`), representing an imaginary boundary before the array. Similarly, when no next smaller element exists, `nextSmaller[i]` should be `n` (not `n-1`). Using wrong boundary values leads to incorrect counts for subarrays starting at the beginning or ending at the end of the array.
+
+### Forgetting to Apply Modulo Operation
+
+The problem requires returning the result modulo 10^9 + 7. A common mistake is only applying modulo at the final return statement. Since intermediate sums can overflow even with 64-bit integers after many additions, modulo should be applied after each addition to the result to keep values within bounds.

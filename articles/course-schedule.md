@@ -712,3 +712,58 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
+
+---
+
+## Common Pitfalls
+
+### Using a Single Visited Set Instead of Tracking the Current Path
+
+A single `visited` set marks nodes as seen globally, but cycle detection requires knowing if a node is in the **current DFS path**. Without tracking the recursion path separately, you may miss cycles or falsely detect them.
+
+```python
+# Wrong: single visited set
+visited = set()
+def dfs(node):
+    if node in visited:
+        return False  # This doesn't distinguish "finished" from "in current path"
+    visited.add(node)
+    for nei in adj[node]:
+        if not dfs(nei):
+            return False
+    return True
+
+# Correct: track visiting (current path) and visited (finished)
+visiting = set()
+def dfs(node):
+    if node in visiting:
+        return False  # Cycle: node is in current recursion path
+    if preMap[node] == []:
+        return True   # Already processed, no cycle
+    visiting.add(node)
+    for nei in preMap[node]:
+        if not dfs(nei):
+            return False
+    visiting.remove(node)
+    preMap[node] = []  # Mark as processed
+    return True
+```
+
+### Forgetting to Handle Disconnected Components
+
+If you only start DFS from one node, you may miss cycles in disconnected parts of the graph. Always iterate through all courses and run DFS from each unvisited node.
+
+```python
+# Wrong: only check from course 0
+return dfs(0)
+
+# Correct: check all courses
+for c in range(numCourses):
+    if not dfs(c):
+        return False
+return True
+```
+
+### Incorrectly Building the Adjacency List
+
+The prerequisite `[a, b]` means "to take course `a`, you must first take course `b`". Mixing up which course maps to which leads to checking the wrong dependencies and missing or falsely reporting cycles.

@@ -194,3 +194,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have $7$ characters in the hash map.
+
+---
+
+## Common Pitfalls
+
+### Always Adding Instead of Subtracting
+
+A common mistake is to always add the value of each Roman numeral without checking for subtractive notation. For example, treating `IV` as `I + V = 6` instead of `V - I = 4`. The fix is to compare the current character's value with the next character's value and subtract when the current is smaller.
+
+### Off-by-One Error When Comparing Adjacent Characters
+
+When checking if the current numeral is smaller than the next, forgetting to verify that `i + 1` is within bounds causes an index out of bounds error. Always ensure the comparison `i + 1 < len(s)` is checked before accessing `s[i + 1]`.

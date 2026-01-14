@@ -872,3 +872,19 @@ class PrefixTree {
 - Space complexity: $O(t)$
 
 > Where $n$ is the length of the string and $t$ is the total number of TrieNodes created in the Trie.
+
+---
+
+## Common Pitfalls
+
+### Confusing `search` and `startsWith`
+
+A frequent mistake is returning `true` in `search()` whenever the traversal completes successfully, without checking the `endOfWord` flag. The `search()` method must verify that the final node marks the end of a complete word, while `startsWith()` only checks if the prefix path exists. For example, if "apple" is inserted, `search("app")` should return `false` (no word ends there), but `startsWith("app")` should return `true`.
+
+### Incorrect Character Index Calculation
+
+When using an array-based Trie with 26 children, the character must be converted to an index using `c - 'a'`. A common error is using the ASCII value directly without subtraction, which causes index out of bounds errors. Another mistake is assuming uppercase letters, which would require `c - 'A'` instead. Always ensure the input constraints match the indexing scheme.
+
+### Forgetting to Initialize Child Nodes
+
+When traversing during `insert()`, forgetting to create a new `TrieNode` when the child does not exist leads to null pointer exceptions on subsequent character accesses. The check `if cur.children[i] == None: cur.children[i] = TrieNode()` must happen before moving to the next node. Similarly, in the hash map approach, forgetting to add the character key before accessing it causes key errors.

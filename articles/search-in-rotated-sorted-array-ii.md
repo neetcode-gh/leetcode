@@ -398,3 +398,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$ in average case, $O(n)$ in worst case.
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling the Duplicate Case
+
+When `nums[l] == nums[m]`, you cannot determine which half is sorted. Simply incrementing `l` by one is the correct approach, but forgetting this case or trying to apply normal binary search logic will produce incorrect results. This case is what distinguishes this problem from the version without duplicates.
+
+### Incorrect Boundary Checks for Target Range
+
+When checking if the target lies in the sorted half, using incorrect comparison operators is a common mistake. For the left sorted portion, use `nums[l] <= target < nums[m]`. For the right sorted portion, use `nums[m] < target <= nums[r]`. Missing the equals sign on the boundary elements will cause the algorithm to miss valid targets.
+
+### Assuming O(log n) Time Complexity
+
+Unlike the non-duplicate version, this problem has O(n) worst-case time complexity when all elements are duplicates except one. Assuming O(log n) performance and not accounting for this edge case in time-sensitive applications can lead to timeout issues.

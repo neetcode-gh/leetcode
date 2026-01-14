@@ -843,3 +843,27 @@ class Solution {
 - Space complexity: $O(K)$
 
 >  Where $N$ is the length of the string `s`, and $K$ is the number of unique characters in the string `s`.
+
+---
+
+## Common Pitfalls
+
+### Ignoring the Edge Case When k Equals Zero or One
+
+When `k` is 0 or 1, any arrangement is valid since there is no spacing constraint. Failing to handle these cases early can lead to division by zero errors (e.g., `segmentId % (maxFreq - 1)`) or unnecessary processing.
+
+### Reinserting Characters to Priority Queue with Stale Frequencies
+
+In the priority queue approach, after using a character, its frequency decreases. When reinserting it from the cooldown queue back to the priority queue, you must use the updated frequency, not the original. Using stale frequencies causes incorrect ordering and wrong character selection.
+
+### Miscalculating the Cooldown Period
+
+The cooldown constraint means the same character cannot appear within `k` positions of its last occurrence. A common error is using `k-1` instead of `k` for the cooldown check, or vice versa. Carefully verify that `(currentIndex - lastUsedIndex) >= k` before reusing a character.
+
+### Not Detecting Impossible Cases Early
+
+If the maximum frequency character appears more times than can be accommodated given `k` and the string length, rearrangement is impossible. Failing to detect this early leads to infinite loops or incorrect outputs. Check that each segment (except possibly the last) can contain at least `k` characters.
+
+### Off-by-One Errors in Segment Distribution
+
+When distributing characters across segments in the greedy approach, the last segment has different requirements than the others. Forgetting to skip the last segment when placing `maxFreq - 1` frequency characters, or using wrong modular arithmetic for round-robin distribution, causes incorrect results.

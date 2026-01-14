@@ -1201,3 +1201,40 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for recursion stack.
+
+---
+
+## Common Pitfalls
+
+### Not Adding Null Children to Queue
+When using BFS, both left and right children must be added to the queue even if they are null. Skipping null children prevents detection of gaps in the tree, since the null marker is needed to identify when a non-null node appears after a gap.
+```python
+# Wrong: only adds non-null children
+if node.left:
+    q.append(node.left)
+# Correct: always add both children
+q.append(node.left)
+q.append(node.right)
+```
+
+### Checking Only Immediate Children for Completeness
+A tree can have a missing left child but present right child, which violates completeness. Simply checking if both children exist misses cases where a null appears in the middle of a level.
+```python
+# Wrong: only checks current node's children
+if node.left is None and node.right is not None:
+    return False
+# Correct: track if any null seen, then check for non-null after
+if node and nullSeen:
+    return False
+```
+
+### Wrong Index Formula in DFS Approach
+When using array-based indexing (root at 0, children at 2i+1 and 2i+2), using incorrect formulas causes false positives. A common mistake is using 2i and 2i+1, which corresponds to 1-indexed arrays instead of 0-indexed.
+```python
+# Wrong: 1-indexed formula with 0-indexed array
+left_child = 2 * index
+right_child = 2 * index + 1
+# Correct: 0-indexed formula
+left_child = 2 * index + 1
+right_child = 2 * index + 2
+```

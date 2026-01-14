@@ -1114,3 +1114,23 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error in Base Cases
+Initializing DP incorrectly or misunderstanding what `dp[0]` represents. For this problem, `dp[1] = 1` (one way to climb 1 step) and `dp[2] = 2` (two ways to climb 2 steps). Starting the loop from index 1 instead of 3 overwrites these base cases.
+
+```python
+# Wrong: loop starts too early
+for i in range(1, n + 1):
+    dp[i] = dp[i-1] + dp[i-2]
+
+# Correct: preserve base cases
+for i in range(3, n + 1):
+    dp[i] = dp[i-1] + dp[i-2]
+```
+
+### Not Handling n = 1 or n = 2 Edge Cases
+Attempting to access `dp[n-1]` or `dp[n-2]` when `n` is 1 or 2 without proper base case handling, causing index out of bounds errors. Always check `if n <= 2: return n` before running the general loop.

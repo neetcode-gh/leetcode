@@ -1425,3 +1425,36 @@ class Solution {
 - Space complexity: $O(n+k)$
 
 >  Where $n$ is the number of nodes in the tree and $k$ is the number of closest values to return
+
+---
+
+## Common Pitfalls
+
+### Not Exploiting BST Property
+Using a generic tree traversal and sorting all values works but misses the O(n + k) optimization possible with BST. Inorder traversal gives sorted values, enabling efficient sliding window approaches.
+
+### Off-by-One Errors in Binary Search
+When using binary search to find the starting position for the sliding window, the insertion point may be at index 0 or n, causing out-of-bounds access when initializing the left pointer.
+
+```python
+# Wrong: Can cause index -1 access
+left = bisect_left(arr, target) - 1  # If target < all elements, left = -1
+# Must check: if left < 0 before accessing arr[left]
+```
+
+### Using Wrong Heap Type
+When using a heap to track k closest values, a max-heap is needed to evict the farthest element. Using a min-heap evicts the closest element instead, producing incorrect results.
+
+```python
+# Wrong: Min-heap evicts closest values
+heappush(heap, (abs(node.val - target), node.val))
+
+# Correct: Max-heap (negate distance) evicts farthest
+heappush(heap, (-abs(node.val - target), node.val))
+```
+
+### Incorrect Tie-Breaking for Equal Distances
+When two values have equal distance to target, the problem may require returning the smaller value. Failing to handle ties correctly can produce wrong results.
+
+### Stopping Early Without Checking Both Sides
+In the sliding window approach, stopping as soon as one pointer goes out of bounds forgets to collect remaining elements from the other side.

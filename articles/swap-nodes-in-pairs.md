@@ -847,3 +847,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Losing Reference to the Next Pair
+
+When swapping a pair of nodes, you must save a reference to the node after the pair (`curr.next.next`) before modifying any pointers. If you swap the current pair first, `curr.next` changes and you lose access to the remaining list. Always store `nxtPair = curr.next.next` at the beginning of each iteration.
+
+### Forgetting to Update the Previous Node's Next Pointer
+
+After swapping a pair, the previous node (or dummy node for the first pair) must point to the new first node of the swapped pair. A common mistake is correctly swapping the pair internally but failing to connect it back to the rest of the list, resulting in a broken chain or lost nodes.
+
+### Not Handling Odd-Length Lists
+
+When the list has an odd number of nodes, the last node has no partner to swap with and should remain in place. Your loop condition must check that both `curr` and `curr.next` exist before attempting a swap. Failing to check both conditions can cause null pointer exceptions or incorrect behavior on the final unpaired node.

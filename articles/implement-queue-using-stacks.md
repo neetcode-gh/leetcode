@@ -700,3 +700,15 @@ class MyQueue {
     - $O(1)$ time for each $push()$ and $empty()$ function calls.
     - $O(1)$ amortized time for each $pop()$ and $peek()$ function calls.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Checking Only One Stack for Empty
+
+In the optimized two-stack approach, the `empty()` method must check if both stacks are empty, not just one. A common mistake is returning `s1.isEmpty()` without considering `s2`. Elements may exist in `s2` ready to be popped even when `s1` is empty. The correct check is `s1.isEmpty() && s2.isEmpty()`.
+
+### Transferring Elements Back After Every Pop
+
+In the brute force approach, forgetting to transfer elements back from `stack2` to `stack1` after a pop operation breaks subsequent operations. However, in the optimized approach, the opposite mistake is problematic: unnecessarily transferring elements back defeats the amortized O(1) complexity. The key insight is that elements in `s2` are already in the correct order for popping and should remain there until exhausted.

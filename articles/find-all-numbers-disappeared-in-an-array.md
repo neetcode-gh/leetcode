@@ -718,3 +718,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we modified the input array without using extra space.
+
+---
+
+## Common Pitfalls
+
+### Confusing Indices and Values
+
+Since values are in the range `[1, n]` but indices are `[0, n-1]`, it is easy to mix them up. When marking position `i` as visited, remember that value `v` maps to index `v-1`. Similarly, when checking which numbers are missing, index `i` corresponds to the number `i+1`.
+
+### Double-Negating Already Marked Values
+
+When using negative marking, if you negate a value that is already negative, it becomes positive again and appears as if that position was never visited. Always use `abs()` before negating to ensure the value becomes negative regardless of its current sign.

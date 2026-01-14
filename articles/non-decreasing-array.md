@@ -214,3 +214,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Always Modifying the Same Element
+
+A common mistake is always choosing to modify the same element (either always decreasing `nums[i]` or always increasing `nums[i + 1]`). The correct approach requires checking the relationship with `nums[i - 1]` to determine which modification keeps the array non-decreasing. For example, in `[3, 4, 2, 3]`, blindly decreasing `nums[1]` to 2 would create a new violation with `nums[0]`.
+
+### Ignoring the Element Before the Violation
+
+When fixing a violation at index `i`, failing to consider `nums[i - 1]` leads to incorrect solutions. If `nums[i + 1] < nums[i - 1]`, then decreasing `nums[i]` would create a new violation. In this case, we must increase `nums[i + 1]` instead to maintain the non-decreasing property with all previous elements.
+
+### Off-by-One Errors at Array Boundaries
+
+Not handling the edge case when `i == 0` causes index-out-of-bounds errors or incorrect logic. At the start of the array, there is no `nums[i - 1]` to consider, so we can freely modify `nums[0]` without additional checks. Missing this boundary condition leads to either crashes or unnecessarily complex decision logic.

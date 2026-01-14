@@ -418,3 +418,34 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Sorting in the Wrong Order
+Sorting cars by position in ascending order (farthest from target first) instead of descending order causes incorrect fleet merging. Cars must be processed from closest to the target first, since a car behind can only merge with the fleet ahead of it.
+```python
+# Wrong: ascending order
+pair.sort()
+# Correct: descending order (closest to target first)
+pair.sort(reverse=True)
+```
+
+### Using Strict Less Than for Fleet Merging
+Using `<` instead of `<=` when comparing arrival times misses the case where two cars arrive at exactly the same time. If a car behind arrives at the same time or earlier than the car ahead, it joins that fleet.
+```python
+# Wrong: misses equal arrival times
+if stack[-1] < stack[-2]:
+# Correct: cars arriving at same time merge
+if stack[-1] <= stack[-2]:
+```
+
+### Integer Division Instead of Float Division
+In languages like Java or C++, dividing two integers results in integer division, which truncates the decimal part. Since arrival times are often fractional, this leads to incorrect comparisons and wrong fleet counts.
+```java
+// Wrong: integer division truncates
+int time = (target - position) / speed;
+// Correct: cast to double for precise time
+double time = (double)(target - position) / speed;
+```

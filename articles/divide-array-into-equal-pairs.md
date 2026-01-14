@@ -569,3 +569,28 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Checking for Pairs Instead of Even Counts
+
+A common mistake is trying to actually form pairs and check if adjacent elements match after sorting. The problem only requires checking if each element appears an even number of times, not that the pairs are adjacent.
+
+```python
+# Wrong: Checking adjacent pairs after sorting
+nums.sort()
+for i in range(0, len(nums), 2):
+    if nums[i] != nums[i + 1]:  # IndexError if odd length
+        return False
+
+# Correct: Just check if each count is even
+for cnt in count.values():
+    if cnt % 2 == 1:
+        return False
+```
+
+### Forgetting the Array Length is Always Even
+
+The problem guarantees that `nums` has `2n` elements. Some solutions add unnecessary checks for odd-length arrays or forget that the total count of elements is always even, which simplifies the problem to just checking individual element frequencies.

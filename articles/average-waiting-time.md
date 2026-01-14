@@ -349,3 +349,34 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow
+With large arrival times and order durations, the sum of waiting times can exceed 32-bit integer limits. Use 64-bit integers for accumulating totals.
+```java
+// Wrong: int can overflow
+int total = 0;
+// Right: use long for accumulation
+long total = 0;
+```
+
+### Confusing Waiting Time with Service Time
+Waiting time is from arrival until the order is complete (includes cooking time), not just the time spent waiting before cooking starts.
+```python
+# Wrong: only counting idle wait time
+wait = max(0, t - arrival)
+# Right: total time from arrival to completion
+wait = (max(t, arrival) + order) - arrival
+```
+
+### Forgetting to Update Current Time
+When a customer arrives after the chef is idle, the current time must jump forward to the arrival time, not stay at the previous finish time.
+```python
+# Wrong: always adding order time to current t
+t += order
+# Right: chef starts at max(t, arrival)
+t = max(t, arrival) + order
+```

@@ -1209,3 +1209,19 @@ class Solution {
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ is the number of tasks.
+
+---
+
+## Common Pitfalls
+
+### Not Prioritizing the Most Frequent Task
+
+A greedy approach must always pick the task with the highest remaining count that is not in cooldown. Picking tasks arbitrarily or in the order they appear leads to suboptimal schedules with more idle time than necessary.
+
+### Incorrect Cooldown Tracking
+
+When using a heap with a cooldown queue, the task should become available at time `current_time + n`, not `current_time + n + 1`. Off-by-one errors in cooldown calculations are common and result in either too many idle slots or cooldown violations.
+
+### Forgetting to Count Tasks with Maximum Frequency
+
+In the math-based solution, you must count how many tasks share the maximum frequency (`maxCount`). Using just `1` instead of `maxCount` in the formula `(maxf - 1) * (n + 1) + maxCount` underestimates the required time when multiple tasks have the same highest frequency.

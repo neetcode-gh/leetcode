@@ -1165,3 +1165,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Divisibility First
+
+If the total number of cards is not divisible by `groupSize`, it is impossible to form complete groups. Skipping this initial check wastes time processing the array and may lead to subtle bugs where the algorithm appears to succeed but produces an invalid grouping.
+
+### Not Starting Groups from the Smallest Available Card
+
+Groups must be formed starting from the smallest available card value to ensure consecutive sequences work correctly. Starting from an arbitrary card can leave smaller cards stranded without enough consecutive neighbors to form a valid group. Always process cards in sorted order or use a min-heap to find the smallest available value.
+
+### Failing to Decrement Counts Properly
+
+When forming a group, each card in the consecutive sequence must have its count decremented. A common bug is forgetting to decrement or decrementing the wrong key, which causes cards to be reused or leaves cards unused. Additionally, when a card's count reaches zero, it must be handled correctly to avoid checking for cards that no longer exist.

@@ -1268,3 +1268,19 @@ class Solution {
 - Space complexity: $O(N + E)$
 
 >  Where $E$ is the length of `relations` and $N$ is the number of courses.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Detect Cycles
+
+If the prerequisite graph contains a cycle, it is impossible to complete all courses. Returning the longest path length without first checking for cycles will give a wrong answer. Always verify that all courses can be processed (studied count equals N) before returning the result.
+
+### Counting Courses Instead of Semesters in BFS
+
+With Kahn's algorithm, each BFS level represents one semester, not one course. The answer is the number of levels traversed, not the total number of courses processed. Incrementing the counter for each course instead of each level gives an incorrect result.
+
+### Using the Wrong DFS State Values
+
+When combining cycle detection with longest path calculation, using `-1` as both "visiting" and "cycle detected" requires careful handling. If a node returns `-1`, you must propagate this upward immediately rather than continuing to compute path lengths.

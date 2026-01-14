@@ -302,3 +302,37 @@ class ParkingSystem {
     - $O(1)$ time for initialization.
     - $O(1)$ time for each $addCar()$ function call.
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Off-by-One Index Error
+
+Car types are 1-indexed (`1` = big, `2` = medium, `3` = small), but arrays are 0-indexed. Forgetting to subtract 1 causes an index out of bounds error.
+
+```python
+# Wrong: carType is 1-indexed, causes IndexError for carType=3
+self.spaces[carType] -= 1
+
+# Correct: convert to 0-indexed
+self.spaces[carType - 1] -= 1
+```
+
+### Decrementing Before Checking Availability
+
+When using the concise approach that decrements first, you must check the value before decrementing (using post-decrement) or check if the result is non-negative. Checking for `> 0` after decrementing gives wrong results.
+
+```python
+# Wrong: always decrements, even when no space available
+self.spaces[carType - 1] -= 1
+return self.spaces[carType - 1] > 0  # Returns False when it was 1
+
+# Correct option 1: check first, then decrement
+if self.spaces[carType - 1] > 0:
+    self.spaces[carType - 1] -= 1
+    return True
+return False
+
+# Correct option 2: decrement and check >= 0
+self.spaces[carType - 1] -= 1
+return self.spaces[carType - 1] >= 0
+```

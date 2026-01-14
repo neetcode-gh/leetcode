@@ -273,3 +273,21 @@ class Solution {
 
 - Time complexity: $O(n)$ where $n$ is the length of the input array. Although we iterate through the input once, we still perform $2n$ total writes to the output array.
 - Space complexity: $O(n)$ as we must allocate an array of size $2n$ for the output.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Result Array Size
+Allocating an array of size `n` instead of `2n` causes an index out of bounds error when writing to the second half.
+
+```python
+# Wrong
+ans = [0] * n
+
+# Correct
+ans = [0] * (2 * n)
+```
+
+### Off-by-One When Using Index Offset
+When using the one-pass approach with `ans[i + n] = nums[i]`, forgetting that indices are zero-based or miscalculating the offset leads to incorrect placement of elements in the second half.

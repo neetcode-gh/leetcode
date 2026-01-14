@@ -1247,3 +1247,28 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ is the length of $nums1$ and $m$ is the length of $nums2$.
+
+---
+
+## Common Pitfalls
+
+### Binary Searching on the Larger Array
+
+The binary search should be performed on the smaller array to ensure the partition index in the larger array stays within bounds. If you search on the larger array, the computed index `j = half - i` for the smaller array may become negative or exceed its length, causing index-out-of-bounds errors.
+
+### Incorrect Partition Index Calculation
+
+A subtle bug arises from how you define the partition. Some implementations use `half = (m + n) / 2` while others use `half = (m + n + 1) / 2`. Depending on this choice, the indices `i` and `j` and the formula for the median differ. Mixing conventions leads to off-by-one errors or incorrect median values.
+
+### Mishandling Edge Cases with Empty Partitions
+
+When the partition places all elements of one array on one side (e.g., `i = 0` or `i = len(A)`), the corresponding `Aleft` or `Aright` does not exist. You must use sentinel values like negative infinity and positive infinity for these boundary conditions. Accessing `A[-1]` or `A[len(A)]` directly causes runtime errors.
+
+### Confusing Odd and Even Total Length Cases
+
+For odd total length, the median is a single element; for even, it is the average of two. The element(s) involved depend on whether you are taking the max of the left partition or the min of the right partition. Mixing up which elements to use for each case produces incorrect results.
+
+### Forgetting Arrays Are Already Sorted
+
+Some implementations unnecessarily sort the input arrays or merge them fully before finding the median. This ignores the key constraint that the arrays are already sorted, inflating time complexity to `O((m+n) log(m+n))` instead of the optimal `O(log(min(m, n)))`.
+

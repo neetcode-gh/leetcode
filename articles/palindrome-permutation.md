@@ -160,6 +160,18 @@ class Solution {
 
 ---
 
+## Common Pitfalls
+
+### Forgetting That One Odd Count Is Allowed
+
+A common mistake is checking if all character counts are even. For odd-length palindromes, exactly one character can have an odd count (the middle character). The condition should be `oddCount <= 1`, not `oddCount == 0`.
+
+### Confusing Palindrome With Palindrome Permutation
+
+Some developers attempt to check if the string itself is a palindrome rather than if any permutation can form one. The problem asks about rearranging characters, so only character frequencies matter, not their positions in the original string.
+
+---
+
 ## 2. Using HashMap
 
 ### Intuition
@@ -313,6 +325,18 @@ class Solution {
     - $O(k)$ If the implementation is modiifed to handle Unicode characters, the space complexity would depend on the number of unique characters in the string. $O(n)$ in the worst case (if all characters are unique).
 
 >  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+
+---
+
+## Common Pitfalls
+
+### Forgetting That One Odd Count Is Allowed
+
+A common mistake is checking if all character counts are even. For odd-length palindromes, exactly one character can have an odd count (the middle character). The condition should be `oddCount <= 1`, not `oddCount == 0`.
+
+### Confusing Palindrome With Palindrome Permutation
+
+Some developers attempt to check if the string itself is a palindrome rather than if any permutation can form one. The problem asks about rearranging characters, so only character frequencies matter, not their positions in the original string.
 
 ---
 
@@ -476,6 +500,18 @@ class Solution {
 
 ---
 
+## Common Pitfalls
+
+### Forgetting That One Odd Count Is Allowed
+
+A common mistake is checking if all character counts are even. For odd-length palindromes, exactly one character can have an odd count (the middle character). The condition should be `oddCount <= 1`, not `oddCount == 0`.
+
+### Confusing Palindrome With Palindrome Permutation
+
+Some developers attempt to check if the string itself is a palindrome rather than if any permutation can form one. The problem asks about rearranging characters, so only character frequencies matter, not their positions in the original string.
+
+---
+
 ## 4. Single Pass
 
 ### Intuition
@@ -634,6 +670,18 @@ class Solution {
 
 >  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
 
+---
+
+## Common Pitfalls
+
+### Forgetting That One Odd Count Is Allowed
+
+A common mistake is checking if all character counts are even. For odd-length palindromes, exactly one character can have an odd count (the middle character). The condition should be `oddCount <= 1`, not `oddCount == 0`.
+
+### Confusing Palindrome With Palindrome Permutation
+
+Some developers attempt to check if the string itself is a palindrome rather than if any permutation can form one. The problem asks about rearranging characters, so only character frequencies matter, not their positions in the original string.
+
 
 ---
 
@@ -786,3 +834,15 @@ class Solution {
     - $O(k)$ If the implementation is modiifed to handle Unicode characters, the space complexity would depend on the number of unique characters in the string. $O(n)$ in the worst case (if all characters are unique)
 
 >  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+
+---
+
+## Common Pitfalls
+
+### Forgetting That One Odd Count Is Allowed
+
+A common mistake is checking if all character counts are even. For odd-length palindromes, exactly one character can have an odd count (the middle character). The condition should be `oddCount <= 1`, not `oddCount == 0`.
+
+### Confusing Palindrome With Palindrome Permutation
+
+Some developers attempt to check if the string itself is a palindrome rather than if any permutation can form one. The problem asks about rearranging characters, so only character frequencies matter, not their positions in the original string.

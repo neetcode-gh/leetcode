@@ -1201,3 +1201,27 @@ class Solution {
 - Space complexity: $O(k)$
 
 > Where $n$ is the size of the permutation and $k$ is the number of inverse pairs in the permutation.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Modular Arithmetic
+
+Results can grow extremely large, requiring modulo `10^9 + 7` operations. Forgetting to apply the modulo after each addition causes integer overflow. Apply `% MOD` consistently in all accumulation steps.
+
+### Incorrect Handling of Negative Values in Modular Subtraction
+
+When subtracting in the optimized recurrence `(res - dp[n-1][k-n])`, the result may become negative before taking modulo. Always add `MOD` before the final modulo: `(res - value + MOD) % MOD` to ensure a non-negative result.
+
+### Not Recognizing the Sliding Window Pattern
+
+The naive approach sums `n` terms per cell, leading to `O(n^2 * k)` complexity. The key insight is that consecutive cells share most terms, allowing a sliding window optimization. Missing this pattern results in TLE on large inputs.
+
+### Off-by-One Errors in Window Boundaries
+
+When placing element `n`, it can create `0` to `n-1` inverse pairs (not `n` pairs). The window of previous row values spans `k` down to `k - (n-1)`. Getting these boundaries wrong produces incorrect counts.
+
+### Missing Base Cases
+
+The recurrence requires proper initialization: `dp[0][0] = 1` (one way to arrange zero elements with zero pairs). Missing this base case or incorrectly setting `dp[n][0]` values propagates errors through the entire table.

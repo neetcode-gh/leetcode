@@ -496,3 +496,27 @@ class Solution {
 - Space complexity: $O(g)$
 
 > Where $N$ is the total number of bricks in the wall and $g$ is the total number of gaps in all the rows.
+
+---
+
+## Common Pitfalls
+
+### Counting the Wall Edge as a Valid Gap
+The rightmost edge of the wall (at position equal to total width) should not be counted as a gap since a line there wouldn't cross any bricks anyway. Including it inflates the gap count and gives wrong answers.
+```python
+# Wrong: counting all gaps including the last one
+for brick in row:
+    total += brick
+    countGap[total] += 1  # Counts wall edge
+
+# Correct: exclude the last brick
+for i in range(len(row) - 1):
+    total += row[i]
+    countGap[total] += 1
+```
+
+### Returning Maximum Gaps Instead of Minimum Cuts
+The answer is `number_of_rows - max_gaps`, not just `max_gaps`. Maximizing gaps minimizes cuts, but forgetting to subtract from total rows returns the wrong value.
+
+### Not Handling Rows with Single Bricks
+If a row contains only one brick spanning the entire width, it has no internal gaps. The hash map initialization with `{0: 0}` handles the edge case where no gaps exist, ensuring the answer defaults to cutting through all rows.

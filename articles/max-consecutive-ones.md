@@ -473,3 +473,15 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Final Comparison
+
+When tracking consecutive ones by resetting the counter on encountering a zero, the longest sequence might end at the last element of the array. If you only update the maximum inside the loop when hitting a zero, you will miss this case. Always compare the final count with the result after the loop ends, or update the maximum on every iteration.
+
+### Resetting the Counter Incorrectly
+
+A subtle bug is resetting the counter to `1` instead of `0` when encountering a zero, or incrementing before checking the current element. The counter should be reset to `0` when a zero is found, then the next `1` will increment it to `1`. Mixing up this logic leads to off-by-one errors in the count.

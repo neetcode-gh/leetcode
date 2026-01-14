@@ -1133,3 +1133,19 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Tracking Only Node Visits Instead of (Node, Color) Pairs
+
+A common mistake is marking nodes as visited based solely on the node ID, ignoring the color of the edge used to reach it. Since reaching node `X` via a red edge allows different future moves than reaching it via a blue edge, you must track visited states as `(node, last_edge_color)` pairs. Without this, you may prematurely block valid paths that use a different edge color.
+
+### Forgetting to Allow Both Starting Colors
+
+Since there is no edge leading into node `0`, both red and blue edges are valid first moves. Failing to initialize the BFS with both color options (or using a sentinel value like `None` or `-1` for "no previous color") means you might miss the shortest path if it requires starting with a specific color.
+
+### Not Recording Distance on First Visit
+
+In BFS for shortest paths, the first time you reach a node is guaranteed to be via the shortest path. A pitfall is updating the answer every time a node is encountered rather than only on the first visit. This can lead to incorrect results if you overwrite an earlier (shorter) distance with a later (longer) one when the node is reached through a different color sequence.

@@ -683,3 +683,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Clockwise and Counter-Clockwise Rotation
+
+The order of operations matters: for 90-degree clockwise rotation, reverse rows first then transpose. For counter-clockwise, transpose first then reverse rows. Mixing up this order or using the wrong sequence produces incorrect rotations.
+
+### Transposing the Entire Matrix Instead of Upper Triangle
+
+When transposing in-place, swapping all pairs `(i, j)` with `(j, i)` including when `i > j` swaps each element twice, returning to the original matrix. The inner loop should only iterate for `j > i` to swap each pair exactly once.
+
+### Incorrect Index Calculation in Layer-by-Layer Rotation
+
+In the four-cell rotation approach, computing the indices for the four corners incorrectly causes elements to be placed in wrong positions. Each of the four positions involves different combinations of `l`, `r`, `i`, `top`, and `bottom`, and confusing these leads to corrupted matrix values.

@@ -686,3 +686,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Int Instead of Long for the Result
+
+With an array of up to `10^5` elements, a long sequence of zeros (say, all zeros) would contribute `n * (n + 1) / 2` subarrays, which can exceed `2^31 - 1`. In Java and C++, using `int` for the result causes overflow. Always use `long` or `long long` for the result variable.
+
+### Forgetting to Handle Trailing Zeros in the Math Approach
+
+When using the formula `count * (count + 1) / 2` to count subarrays in each zero sequence, you must apply the formula one final time after the loop ends to handle any trailing zeros. A common bug is only applying the formula when hitting a non-zero element, missing the last zero sequence if the array ends with zeros.
+
+### Resetting Count at the Wrong Time
+
+In the incremental approach, the count must be reset to 0 when encountering a non-zero element. A common mistake is resetting count before adding to the result, or forgetting to reset entirely, which causes zero sequences to be incorrectly merged across non-zero elements.

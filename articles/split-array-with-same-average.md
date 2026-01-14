@@ -1158,3 +1158,27 @@ class Solution {
 * Space complexity: $O(n ^ 2 * s)$
 
 > Where $n$ is the size of the input array $nums$, and $s$ is the sum of the elements of the array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Both Groups Must Be Non-Empty
+
+A common mistake is checking only whether the averages match without ensuring both groups contain at least one element. If all elements go into group A and group B is empty, that is not a valid split. Always verify that both partitions have size greater than zero before comparing averages.
+
+### Using Floating-Point Comparison for Averages
+
+Comparing averages directly using floating-point division can lead to precision errors. Instead of checking `sum(A) / len(A) == sum(B) / len(B)`, use the mathematically equivalent integer comparison `sum(A) * len(B) == sum(B) * len(A)` to avoid floating-point inaccuracies.
+
+### Missing the Early Termination Condition
+
+The condition `a * total % n == 0` is crucial for pruning. For a valid subset of size `a`, the required sum `a * total / n` must be an integer. Skipping this check leads to unnecessary computation for impossible subset sizes and can cause the solution to time out.
+
+### Integer Overflow in Sum Calculations
+
+When computing sums or products like `a * total`, the result can exceed 32-bit integer limits for large arrays with large values. Use 64-bit integers (long/long long) for intermediate calculations to prevent overflow and incorrect results.
+
+### Iterating Over All Subset Sizes Instead of Half
+
+Since finding a valid subset A automatically determines a valid subset B (the remaining elements), you only need to check subset sizes from 1 to n/2. Checking sizes beyond n/2 is redundant because if a subset of size `a` works, so does the complement of size `n - a`.

@@ -666,3 +666,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Strictly Greater Than Instead of Greater Than or Equal
+A node is "good" if its value is greater than OR EQUAL to all ancestors. Using `node.val > maxVal` instead of `node.val >= maxVal` causes the root and equal-valued paths to be missed.
+
+### Initializing maxVal Too High
+Starting with `maxVal = 0` or `maxVal = root.val` can cause issues with negative values. Initialize with negative infinity or the root's value to correctly count the root as a good node.
+```python
+# Wrong: misses root if root.val < 0
+dfs(root, 0)
+
+# Correct: root is always good
+dfs(root, float('-inf'))
+```
+
+### Sharing maxVal Across Sibling Subtrees
+The maximum value must be tracked per-path, not globally. Updating a shared variable instead of passing the new max to each recursive call causes incorrect comparisons across different branches.

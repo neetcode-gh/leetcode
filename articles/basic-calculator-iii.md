@@ -985,3 +985,26 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the length of the expression
+
+---
+
+## Common Pitfalls
+
+### Not Resetting State When Entering Parentheses
+When encountering an opening parenthesis, you must save the current operator and reset to a default state (usually `+`). Failing to reset causes the operator before the parenthesis to be applied incorrectly inside.
+```python
+# Wrong: not resetting previous_operator when entering parenthesis
+# Correct: save current operator to stack, reset to '+'
+```
+
+### Incorrect Handling of Closing Parenthesis
+When a closing parenthesis is encountered, you must sum all values inside the parentheses and then apply the saved operator from before the opening parenthesis. Missing either step produces wrong results.
+
+### Mixing Up Operator Precedence with Parentheses
+Multiplication and division still have higher precedence than addition and subtraction, even inside parentheses. The parentheses only group sub-expressions; they do not change the relative precedence of operators within them.
+
+### Off-by-One Errors in Index Management with Recursion
+When using recursion to handle parentheses, the index must be shared across recursive calls (e.g., using a mutable reference or array). Failing to properly advance the index after processing a sub-expression causes characters to be processed multiple times or skipped.
+
+### Forgetting the Sentinel Character
+Many solutions append a sentinel character (like `@`) to trigger processing of the final number. Without this, the last number or sub-expression may not be evaluated.

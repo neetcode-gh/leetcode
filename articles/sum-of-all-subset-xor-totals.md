@@ -679,3 +679,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Empty Subset
+
+The problem includes all subsets, including the empty subset which has an XOR value of 0. While this does not affect the sum, a common conceptual error is starting the subset generation from size 1 instead of size 0, or incorrectly counting the total number of subsets as `2^n - 1` instead of `2^n`. This can lead to off-by-one issues in verification.
+
+### Misunderstanding XOR Properties
+
+A frequent mistake is confusing XOR with addition or other operations. XOR has the property that `a ^ a = 0` and `a ^ 0 = a`. When computing subset XOR totals, some assume that duplicate elements cancel out across all subsets, but each subset is computed independently. Also, the optimal solution relies on understanding that each bit appears in exactly half of all subsets, which requires grasping XOR's bit-level behavior.

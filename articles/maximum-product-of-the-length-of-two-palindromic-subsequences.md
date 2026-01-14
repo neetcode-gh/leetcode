@@ -1715,3 +1715,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2 * 2 ^ n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Allowing Overlapping Characters Between Subsequences
+
+The two palindromic subsequences must be disjoint, meaning they cannot share any character. When using bitmasks, ensure that `(mask1 & mask2) == 0` before considering a pair. Forgetting this check leads to invalid solutions where the same character is counted in both subsequences.
+
+### Not Validating Palindrome Before Computing Product
+
+When iterating through bitmasks, some masks represent subsequences that are not palindromes. Computing the product of lengths without first verifying that both subsequences are actually palindromes leads to incorrect maximum values.
+
+### Inefficient Palindrome Checking in Tight Loops
+
+Constructing new strings for each subsequence and then checking if they are palindromes is expensive. For optimal solutions, use two-pointer validation directly on the original string with mask-based index skipping to avoid repeated string allocations inside the exponential loop.

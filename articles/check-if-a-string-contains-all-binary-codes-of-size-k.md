@@ -1003,3 +1003,32 @@ class Solution {
 - Space complexity: $O(2 ^ k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the length of the binary code.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Early Length Check
+If the string length is less than `k + 2^k - 1`, it's impossible to contain all binary codes since there aren't enough substrings. Skipping this check leads to unnecessary computation and potential incorrect results.
+```python
+# Always check first:
+if len(s) < (1 << k):
+    return False
+```
+
+### Off-by-One Error in Substring Extraction
+When iterating to extract substrings of length `k`, the loop should go from `0` to `len(s) - k` inclusive. Using `range(len(s) - k)` instead of `range(len(s) - k + 1)` misses the last valid substring.
+```python
+# Wrong: for i in range(len(s) - k)
+# Correct:
+for i in range(len(s) - k + 1):
+    codeSet.add(s[i:i + k])
+```
+
+### Incorrect Bitmask in Sliding Window
+When using the sliding window approach with bit manipulation, forgetting to mask the result after shifting causes the integer to grow beyond `k` bits. The mask `(1 << k) - 1` must be applied to keep only the last `k` bits.
+```python
+# Wrong: cur = (cur << 1) | bit
+# Correct:
+cur = ((cur << 1) & ((1 << k) - 1)) | bit
+```

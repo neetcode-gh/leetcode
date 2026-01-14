@@ -1219,3 +1219,19 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges. $α()$ is used for amortized complexity.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Disconnected Components
+
+The graph may consist of multiple disconnected components. If you only run BFS/DFS from node 0, you will miss other components that might not be bipartite. Always iterate through all nodes and start a new traversal from any unvisited node to ensure every component is checked.
+
+### Checking Only Unvisited Neighbors
+
+When traversing the graph, you must check the color of all neighbors, not just unvisited ones. If a neighbor is already colored with the same color as the current node, the graph is not bipartite. Skipping already-visited neighbors misses these conflict cases.
+
+### Using Wrong Initial Color Values
+
+Using `0` as a valid color while also using it to represent "unvisited" creates ambiguity. A clean approach is to use `0` for unvisited nodes and `1`/`-1` as the two actual colors. Alternatively, use a separate visited array. Mixing up these states leads to incorrect bipartiteness detection.

@@ -1331,3 +1331,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Equal Adjacent Elements
+
+When two adjacent elements are equal, the turbulent pattern breaks completely. A common mistake is treating equality as either an increase or decrease, or failing to reset the count. Equal elements should reset your tracking variables since no valid turbulent subarray can contain adjacent equal elements.
+
+### Miscounting Array Length vs Comparison Count
+
+The turbulent subarray length is the number of elements, not the number of comparisons. If you track comparison counts, remember that `n` comparisons correspond to `n + 1` elements. Many solutions return a result that is off by one because they confuse these two quantities.
+
+### Not Initializing Result to Handle Single-Element Arrays
+
+A single-element array is a valid turbulent subarray of length 1. If your solution only updates the result when finding valid comparisons, it may return 0 for single-element inputs. Always initialize your result to at least 1 to handle this edge case correctly.

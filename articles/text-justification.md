@@ -375,3 +375,27 @@ class Solution {
 - Space complexity: $O(n * m)$
 
 > Where $n$ is the number of words and $m$ is the average length of the words.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Account for Spaces When Checking Line Capacity
+
+When determining if a word fits on the current line, you must include the mandatory spaces between words. The check should be `length + word.length + numberOfWordsOnLine <= maxWidth`, not just `length + word.length <= maxWidth`. Forgetting the space count causes lines to exceed the maximum width.
+
+### Division by Zero with Single-Word Lines
+
+When a line contains only one word, there are zero gaps between words, leading to division by zero when calculating space distribution. Always use `max(1, gaps)` when dividing to handle single-word lines, where all extra spaces go after the word.
+
+### Incorrect Handling of the Last Line
+
+The last line follows different rules: it should be left-justified with single spaces between words and trailing spaces to reach `maxWidth`. A common mistake is applying the same full-justification logic to the last line, resulting in incorrectly distributed spaces.
+
+### Uneven Space Distribution Going to Wrong Gaps
+
+Extra spaces that cannot be evenly distributed must go to the leftmost gaps first. A mistake is distributing remainder spaces to the rightmost gaps or distributing them randomly. The remainder should decrement as you add one extra space to each gap from left to right.
+
+### Not Padding Lines to Exact Width
+
+Every line must be exactly `maxWidth` characters. For single-word lines or the last line, forgetting to append trailing spaces results in lines shorter than required. Always calculate and append `maxWidth - currentLineLength` spaces at the end.

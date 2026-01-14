@@ -507,3 +507,23 @@ class Solution {
 - Time complexity: $O(1)$
 
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Tiling Pattern
+
+The constraint applies to every `sideLength x sideLength` submatrix, not just non-overlapping tiles. This means adjacent submatrices overlap, creating a repeating pattern where each position `(r, c)` in the pattern maps to the same relative position `(r % sideLength, c % sideLength)` across the entire matrix.
+
+### Incorrect Frequency Calculation
+
+When calculating how many times a position in the pattern appears in the full matrix, you must account for partial tiles at the edges. The formula `(1 + (width - c - 1) / sideLength)` handles this, but off-by-one errors are common. Using `(width - c) / sideLength` or similar incorrect formulas will give wrong counts.
+
+### Swapping Width and Height
+
+The problem distinguishes between width (columns) and height (rows). Confusing these dimensions when calculating horizontal and vertical repetitions leads to incorrect frequency counts, especially when the matrix is not square.
+
+### Greedy Selection Order
+
+After computing frequencies, you must select the `maxOnes` positions with the highest frequencies. Forgetting to sort in descending order or selecting positions with lower frequencies will not maximize the total number of ones in the matrix.

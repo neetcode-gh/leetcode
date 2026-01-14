@@ -575,3 +575,58 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the number of nodes in the given binary tree
+
+---
+
+## Common Pitfalls
+
+### Short-Circuit Evaluation Breaking the Count
+
+Using short-circuit evaluation with `and` can skip processing one subtree entirely, causing missed counts. Both subtrees must be fully traversed to count all uni-value subtrees, even if one returns `false`.
+
+```python
+# Incorrect - if left is false, right subtree is never processed
+if dfs(node.left) and dfs(node.right):
+    # ...
+
+# Correct - process both subtrees before combining results
+left = dfs(node.left)
+right = dfs(node.right)
+if left and right:
+    # ...
+```
+
+### Comparing Node Values Before Checking Null
+
+Attempting to access a child's value without first checking if the child exists causes a null pointer exception. Always verify the child is not null before comparing values.
+
+```python
+# Incorrect - crashes if node.left is None
+if node.left.val != node.val:
+    return False
+
+# Correct - check for null first
+if node.left and node.left.val != node.val:
+    return False
+```
+
+### Incrementing Count for Non-Univalue Subtrees
+
+A common mistake is incrementing the count before validating that the current node's value matches its children. The count should only increase after confirming all uni-value conditions are met.
+
+```python
+# Incorrect - increments before checking value match
+if left and right:
+    count += 1
+    if node.left and node.val != node.left.val:
+        return False
+
+# Correct - increment only after all checks pass
+if left and right:
+    if node.left and node.val != node.left.val:
+        return False
+    if node.right and node.val != node.right.val:
+        return False
+    count += 1
+    return True
+```

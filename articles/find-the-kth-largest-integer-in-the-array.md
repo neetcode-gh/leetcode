@@ -1168,3 +1168,19 @@ class Solution {
 
 - Time complexity: $O(m * n)$ in average case, $O(m * n ^ 2)$ in worst case.
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Converting Strings to Integers Directly
+
+Numbers can have up to 100 digits, far exceeding the range of standard integer types (even 64-bit). Attempting to convert these strings to integers causes overflow and incorrect comparisons. Always compare strings using length-first, then lexicographic comparison.
+
+### Using Default String Comparison
+
+Default lexicographic comparison does not work correctly for numeric strings of different lengths. For example, `"9"` would be considered greater than `"123"` lexicographically, but numerically `123 > 9`. The comparator must first compare by string length, then lexicographically for equal lengths.
+
+### Off-by-One Error with k-th Element
+
+The problem asks for the `k`th largest element using 1-based indexing, but arrays are 0-indexed. After sorting in descending order, the answer is at index `k - 1`, not `k`. This is a frequent source of incorrect answers.

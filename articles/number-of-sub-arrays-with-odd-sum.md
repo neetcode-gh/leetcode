@@ -1038,3 +1038,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Initialize Even Count
+
+When using the prefix sum approach, the empty prefix (sum of zero elements) has an even sum. If you forget to initialize `count[0] = 1` or `evenCnt = 0` with proper handling, you will miss subarrays that start from index 0.
+
+### Confusing Parity Logic
+
+The key insight is that `odd - even = odd` and `even - odd = odd`. Some programmers mistakenly check if the current prefix sum is odd and then add the count of odd prefix sums, when they should be adding the count of even prefix sums (since subtracting an even prefix from an odd prefix yields an odd subarray sum).
+
+### Not Applying Modulo Correctly
+
+The result can grow very large, so modulo `10^9 + 7` must be applied. A common mistake is applying modulo only at the end instead of during each addition, which can cause integer overflow in languages without arbitrary precision integers.

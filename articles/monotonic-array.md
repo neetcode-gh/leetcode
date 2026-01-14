@@ -608,3 +608,13 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Using Strict Inequality Instead of Non-Strict
+
+A monotonic array allows equal consecutive elements (non-decreasing or non-increasing). Using strict comparisons like `nums[i] > nums[i-1]` instead of `nums[i] >= nums[i-1]` incorrectly rejects arrays like `[1, 2, 2, 3]` as non-monotonic. The condition should check for `<=` (non-decreasing) or `>=` (non-increasing) to properly handle equal adjacent values.
+
+### Checking Only One Direction
+
+Arrays that are constant (all elements equal) are both non-decreasing and non-increasing. Returning `false` early when detecting a violation in one direction without checking the other leads to incorrect results. The array `[5, 5, 5]` should return `true`, but checking only for strictly increasing or strictly decreasing patterns would fail this case.

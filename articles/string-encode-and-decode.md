@@ -657,3 +657,19 @@ class Solution {
 - Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.
+
+---
+
+## Common Pitfalls
+
+### Using a Delimiter That Can Appear in the Strings
+
+Choosing a simple delimiter like a comma or space will break decoding if that character appears inside the original strings. The length-prefixing approach avoids this by using the length to know exactly how many characters to read, making the content irrelevant.
+
+### Not Handling Empty Strings or Empty Lists
+
+Edge cases like an empty input list or strings that are themselves empty ("") require careful handling. Ensure your encoding distinguishes between an empty list and a list containing one empty string, and that decoding correctly reconstructs zero-length strings.
+
+### Parsing Length Incorrectly for Multi-Digit Numbers
+
+When the length of a string is 10 or more, the length prefix becomes multi-digit. Ensure you read all digits before the `#` separator rather than just assuming a single digit. Using a loop to collect characters until reaching `#` handles this correctly.

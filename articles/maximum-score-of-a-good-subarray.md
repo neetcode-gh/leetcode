@@ -1521,3 +1521,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Subarray Must Include Index k
+
+The problem requires the subarray to contain index `k`. A common mistake is computing the maximum score over all subarrays without enforcing this constraint. In the monotonic stack approach, you must check that the range `[left, right]` actually contains `k` before updating the result. Skipping this check leads to incorrect answers when the global maximum rectangle doesn't include `k`.
+
+### Off-by-One Errors in Boundary Calculations
+
+When computing the left and right boundaries of a valid subarray, it's easy to be off by one. The valid range for an element at index `i` extends from `prev_smaller + 1` to `next_smaller - 1`, not from `prev_smaller` to `next_smaller`. Miscalculating these boundaries causes incorrect subarray lengths and wrong scores.
+
+### Expanding in the Wrong Direction with Two Pointers
+
+In the greedy two-pointer approach, you should always expand toward the larger neighbor to maintain the highest possible minimum for as long as possible. Expanding toward the smaller neighbor prematurely reduces the minimum value, potentially missing the optimal score. Always compare `nums[l-1]` with `nums[r+1]` and expand toward the larger one.
+
+### Not Handling Edge Cases at Array Boundaries
+
+When the left pointer reaches `0` or the right pointer reaches `n-1`, you can only expand in one direction. Failing to handle these boundary conditions (e.g., accessing `nums[-1]` or `nums[n]`) causes index out of bounds errors. Use sentinel values or explicit boundary checks to handle these cases gracefully.
+
+### Misunderstanding the Score Formula
+
+The score is `min(subarray) * length(subarray)`, not `min(subarray) * sum(subarray)`. Confusing this formula with similar problems leads to computing the wrong value entirely. Always verify you're multiplying the minimum element by the subarray length, not its sum.

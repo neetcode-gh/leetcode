@@ -1733,3 +1733,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Leveraging BST Properties
+
+The most common mistake is treating this as a generic binary tree problem and comparing all pairs of nodes, resulting in O(n^2) time complexity. The BST property guarantees that inorder traversal produces a sorted sequence, so the minimum difference must occur between consecutive elements. Always use inorder traversal to reduce complexity to O(n).
+
+### Comparing Non-Adjacent Elements
+
+In a sorted sequence, the minimum difference is always between adjacent elements. Some implementations incorrectly compare non-adjacent pairs or track global minimum/maximum values instead of the previous node, missing the optimal answer or overcomplicating the solution.

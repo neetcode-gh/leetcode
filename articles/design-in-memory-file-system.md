@@ -639,7 +639,81 @@ class FileSystem {
 
 - The time complexity of both `addContentToFile` and `readContentFromFile` : $O(m + n)$
     - Here $m$ is the length of the input string and $n$ refers to the depth of the file name in the current input
->
+
+## Common Pitfalls
+
+### Forgetting to Handle the Root Path
+
+When the path is `"/"`, splitting by `"/"` produces an empty string or array depending on the language. Failing to handle this case causes index errors or incorrect traversal.
+
+```python
+# Wrong: assumes d[1] always exists
+d = path.split("/")
+t = t.dirs[d[1]]  # IndexError when path is "/"
+
+# Correct: check for root path first
+if path != "/":
+    d = path.split("/")
+    for i in range(1, len(d)):
+        t = t.dirs[d[i]]
+```
+
+### Confusing Files and Directories in ls()
+
+The `ls` command must return just the file name (not contents) when the path points to a file, but return sorted directory contents when pointing to a directory. Mixing up these cases leads to wrong output.
+
+```python
+# Wrong: always treating path as directory
+return sorted(t.dirs.keys()) + sorted(t.files.keys())
+
+# Correct: check if final component is a file
+if d[-1] in t.files:
+    return [d[-1]]  # Return just the filename
+else:
+    t = t.dirs[d[-1]]
+    return sorted(list(t.dirs.keys()) + list(t.files.keys()))
+```
+
+### Replacing File Content Instead of Appending
+
+The `addContentToFile` method should append to existing content, not replace it. This is a common oversight that causes test failures.
+
+```python
+# Wrong: overwrites existing content
+t.files[filename] = content
+
+# Correct: append to existing content
+t.files[filename] = t.files.get(filename, "") + content
+```
+
+### Off-by-One Errors in Path Traversal
+
+When navigating to a file's parent directory, you must stop one level before the final component. Traversing all the way causes you to look for the file as a directory.
+
+```python
+# Wrong: traverses to the file itself (crashes if file isn't a directory)
+for i in range(1, len(d)):
+    t = t.dirs[d[i]]
+
+# Correct: stop before the last component
+for i in range(1, len(d) - 1):
+    t = t.dirs[d[i]]
+# Now access the file: t.files[d[-1]]
+```
+
+### Not Sorting ls() Output
+
+The problem requires `ls` to return entries in lexicographical order. Forgetting to sort causes wrong answer even when the data structure is correct.
+
+```python
+# Wrong: returns unsorted keys
+return list(t.dirs.keys()) + list(t.files.keys())
+
+# Correct: sort the combined result
+files = list(t.dirs.keys()) + list(t.files.keys())
+files.sort()
+return files
+```
 
 ---
 

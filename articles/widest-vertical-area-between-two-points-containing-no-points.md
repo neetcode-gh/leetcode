@@ -427,3 +427,40 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Using Y-Coordinates Instead of X-Coordinates
+The problem asks for the widest *vertical* area, which means we need to find gaps along the x-axis. A common mistake is to consider y-coordinates or try to compute 2D distances between points.
+
+```python
+# Wrong: using y-coordinate
+width = abs(points[i][1] - points[j][1])
+
+# Correct: using x-coordinate only
+width = abs(points[i][0] - points[j][0])
+```
+
+### Checking Non-Adjacent Points After Sorting
+After sorting by x-coordinate, the maximum gap must occur between consecutive points. Some attempt to check all pairs even after sorting, which is unnecessary and leads to O(n^2) complexity.
+
+```python
+# Wrong: checking all pairs after sorting
+for i in range(n):
+    for j in range(i + 1, n):
+        res = max(res, points[j][0] - points[i][0])
+
+# Correct: only check adjacent pairs
+for i in range(n - 1):
+    res = max(res, points[i + 1][0] - points[i][0])
+```
+
+### Forgetting to Sort by X-Coordinate Only
+When sorting 2D points, the default sort may use both x and y coordinates for tie-breaking. While this still works, some mistakenly sort by y-coordinate or use a complex comparator when only x matters.
+
+```python
+# Correct: sort by x-coordinate (y doesn't affect the answer)
+points.sort(key=lambda p: p[0])
+```

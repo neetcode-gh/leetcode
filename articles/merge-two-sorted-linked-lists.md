@@ -592,3 +592,15 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ is the length of $list1$ and $m$ is the length of $list2$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Empty Lists
+
+A common mistake is not checking if one or both input lists are `null`/`None` before starting the merge. If `list1` is empty, the answer is simply `list2`, and vice versa. Failing to handle these edge cases leads to null pointer exceptions or incorrect results.
+
+### Not Attaching the Remaining Nodes
+
+After the main comparison loop ends, one list may still have remaining nodes. A frequent error is forgetting to attach these leftover nodes to the merged list. Since both lists are sorted, simply linking the remaining portion to the end of the merged list completes the merge correctly.

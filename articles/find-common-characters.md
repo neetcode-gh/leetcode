@@ -248,3 +248,15 @@ class Solution {
     - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words and $m$ is the length of the longest word.
+
+---
+
+## Common Pitfalls
+
+### Initializing Counts to Zero Instead of Infinity
+
+Starting the global frequency array with zeros causes `min(0, curCnt[c])` to always be zero. Initialize with a large value or use the first word's counts as the starting point.
+
+### Adding Characters Once Instead of by Frequency
+
+The result must include each common character as many times as it appears in all words. Appending each character only once ignores duplicates that appear in every word.

@@ -1049,3 +1049,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Start and End Cells
+
+Before starting BFS, verify that both the starting cell `(0, 0)` and the destination cell `(n-1, n-1)` are passable (value 0). If either is blocked (value 1), return -1 immediately. Missing this check causes BFS to run unnecessarily or return incorrect results.
+
+### Using Only 4 Directions Instead of 8
+
+This problem allows diagonal movement, so all 8 directions must be explored: up, down, left, right, and the four diagonals. Using only the standard 4-directional movement leads to longer paths or failure to find a path that exists through diagonal moves.
+
+### Marking Cells as Visited Too Late
+
+Cells must be marked as visited when they are added to the queue, not when they are dequeued. Marking upon dequeue allows the same cell to be added multiple times from different neighbors, causing incorrect path lengths and memory issues. Always mark visited immediately upon enqueueing.

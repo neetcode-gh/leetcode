@@ -590,3 +590,27 @@ class MedianFinder {
 - Space complexity: $O(n)$
 
 > Where $m$ is the number of function calls and $n$ is the length of the array.
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Heap Types
+
+The two-heap solution requires a max-heap for the smaller half and a min-heap for the larger half. Swapping these or using two min-heaps produces incorrect medians. In languages like Python where `heapq` only provides min-heaps, you must negate values to simulate a max-heap for the smaller half.
+
+### Failing to Maintain Heap Balance
+
+The heaps must differ in size by at most one element. Forgetting to rebalance after insertions leads to incorrect median calculations. After every `addNum` call, check if one heap has more than one extra element and transfer the top element to the other heap.
+
+### Incorrect Median Calculation for Even Count
+
+When both heaps have equal size, the median is the average of both tops, not just one of them. Returning only the top of one heap or using integer division instead of floating-point division produces wrong results. Always check heap sizes and compute `(smallTop + largeTop) / 2.0` for the even case.
+
+### Integer Overflow in Sum Calculation
+
+When computing the average of two heap tops, adding two large integers can cause overflow in languages like Java or C++. Cast to a larger type before adding, or compute as `a + (b - a) / 2.0` to avoid overflow while still getting the correct floating-point result.
+
+### Inserting Into Wrong Heap Initially
+
+The first element must go into one of the heaps, but subsequent elements must be compared against the appropriate heap top to determine placement. Inserting all elements into one heap first and then rebalancing works, but directly inserting into the wrong heap without proper comparison breaks the invariant that all elements in the small heap are less than or equal to all elements in the large heap.

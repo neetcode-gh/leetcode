@@ -458,3 +458,15 @@ class Solution {
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Divisibility by n
+
+A common mistake is to only check if the total character count is even or to compare character counts between words directly. The key insight is that each character's total count must be divisible by `n` (the number of words), not just divisible by 2. For example, with 3 words and 4 occurrences of 'a', redistribution is impossible because 4 is not divisible by 3.
+
+### Assuming Words Must Already Be Similar
+
+Some solutions incorrectly assume that redistribution is only possible if the words already share some characters or have similar lengths. In reality, the order and current arrangement of characters within each word is irrelevant. The only thing that matters is whether the global character counts allow for even distribution across all `n` words.

@@ -366,3 +366,15 @@ class Solution {
 - Space complexity: $O(n + k)$
 
 > Where $n$ is the size of the input array, and $k$ is the range of numbers.
+
+---
+
+## Common Pitfalls
+
+### Modifying the Original Array
+
+When sorting the array to get the expected order, some developers accidentally sort the original array in place. This destroys the original order, making it impossible to compare positions. Always create a copy of the array before sorting, or use a method that returns a new sorted array without modifying the original.
+
+### Using Lexicographic Sort Instead of Numeric Sort
+
+In languages like JavaScript, the default `sort()` method sorts elements as strings, not numbers. This means `[1, 10, 2]` would be sorted as `[1, 10, 2]` instead of `[1, 2, 10]`. Always provide a numeric comparator function (e.g., `(a, b) => a - b`) to ensure correct sorting behavior.

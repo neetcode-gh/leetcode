@@ -563,3 +563,19 @@ class Solution {
 
 - Time complexity: $O(n + k)$
 - Space complexity: $O(k)$
+
+---
+
+## Common Pitfalls
+
+### Mishandling Negative Remainders
+
+In most programming languages, the modulo of a negative number can return a negative result (e.g., `-5 % 3 = -2` in Java/C++). You must normalize the remainder to be non-negative by using `((prefixSum % k) + k) % k` to ensure correct hash map lookups.
+
+### Confusing This Problem with Subarray Sum Equals K
+
+While both problems use prefix sums, the comparison logic differs. Here you need to match remainders, not exact differences. Two prefix sums with the same remainder modulo `k` indicate a valid subarray, regardless of their absolute values.
+
+### Forgetting to Initialize Count for Remainder Zero
+
+The hash map or array must start with `count[0] = 1` to account for subarrays starting from index `0` that are directly divisible by `k`. Missing this initialization causes undercounting.

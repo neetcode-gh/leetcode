@@ -1484,3 +1484,15 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(\log n)$
+
+---
+
+## Common Pitfalls
+
+### Initializing the Result to Zero
+
+When all elements in the array are negative, the maximum subarray sum is the largest negative number, not zero. Initializing `maxSum` to `0` instead of `nums[0]` (or negative infinity) causes the algorithm to incorrectly return `0` for all-negative arrays. Always initialize with the first element or a sufficiently small value.
+
+### Resetting Current Sum at the Wrong Time
+
+In Kadane's algorithm, you should reset `curSum` to zero when it becomes negative, not when it becomes less than the current element. The condition `if (curSum < 0) curSum = 0` should come before adding the current element, not after. Placing this check incorrectly changes when subarrays restart and produces wrong results.

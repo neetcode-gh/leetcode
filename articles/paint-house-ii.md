@@ -1625,3 +1625,27 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
+
+---
+
+## Common Pitfalls
+
+### Using O(k^2) Time Per House Without Optimization
+
+The naive approach of checking all k colors from the previous row for each of k colors in the current row results in O(n*k^2) time. For large k values, this times out. The key insight is that you only need to track the minimum and second minimum costs from the previous row, reducing per-house work to O(k).
+
+### Not Handling the Case When k Equals 1
+
+When there is only one color available, it is impossible to paint more than one house without violating the adjacent color constraint. Some implementations crash or return incorrect results because they assume k >= 2. Always check if k equals 1 and n > 1, returning an error indicator or handling it appropriately.
+
+### Forgetting to Track Which Color Achieved the Minimum
+
+When optimizing with minimum and second minimum tracking, you must remember which color index gave the minimum cost. Without this, you cannot determine whether to use the minimum or second minimum when processing the next row, since you need the second minimum only when the current color matches the previous minimum color.
+
+### Modifying the Input Array Unexpectedly
+
+Some solutions modify the costs array in place to save space. While this works, it can cause issues if the caller expects the original data to remain unchanged. Either document this behavior clearly, work on a copy of the input, or use the O(1) space solution that tracks only the necessary values without modifying input.
+
+### Off-by-One Errors in House Indexing
+
+The DP processes houses from index 1 to n-1, using costs from house 0 as the base case. Confusing 0-indexed and 1-indexed loops, or incorrectly referencing `costs[house-1]` versus `costs[house]`, leads to accessing wrong cost values or array out-of-bounds errors.

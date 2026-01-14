@@ -419,3 +419,42 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Dropping Characters Not Present in Order
+
+Characters in `s` that do not appear in `order` must still be included in the result. Forgetting to append these leftover characters produces an incomplete output.
+
+```python
+# Wrong: only includes characters from order
+for c in order:
+    res += c * count[c]
+# Missing: characters in s but not in order are lost
+
+# Correct: also append remaining characters
+for c in order:
+    res += c * count[ord(c) - ord('a')]
+    count[ord(c) - ord('a')] = 0
+for i in range(26):
+    res += chr(ord('a') + i) * count[i]  # Append leftovers
+```
+
+### Using Unstable Sort and Expecting Relative Order Preservation
+
+When using a comparison-based sort, characters with the same rank (those not in `order`) may have their relative order changed. While technically valid per the problem, this can cause confusion. Using a counting approach avoids this issue entirely.
+
+### Incorrect Rank Assignment for Missing Characters
+
+Characters not in `order` need a default rank higher than any position in `order`. Forgetting to assign a default or using a rank that conflicts with valid positions causes incorrect sorting.
+
+```python
+# Wrong: no default rank, causes KeyError
+rank = {c: i for i, c in enumerate(order)}
+sorted(s, key=lambda c: rank[c])  # Crashes if c not in order
+
+# Correct: provide default rank
+sorted(s, key=lambda c: rank.get(c, 26))
+```

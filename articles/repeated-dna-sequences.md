@@ -974,3 +974,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Adding Duplicates to the Result
+
+When a sequence appears three or more times, it should only be added to the result once. Using a single set without tracking whether the sequence was already added to the result causes duplicates in the output.
+
+### Off-by-One Errors in Window Boundaries
+
+The sliding window must extract exactly 10 characters. Common mistakes include using `s[l:l+9]` instead of `s[l:l+10]`, or iterating with `range(len(s) - 10)` instead of `range(len(s) - 9)`, which skips valid windows or causes index errors.
+
+### Incorrect Bit Mask Width in the Optimized Approach
+
+When using bit manipulation, each nucleotide requires 2 bits, so a 10-character sequence needs 20 bits. Using the wrong mask value (such as `0xFFFF` for 16 bits instead of `0xFFFFF` for 20 bits) causes hash collisions between different sequences.

@@ -1955,3 +1955,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since the size of the $dp$ array is $31$.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding Pass Duration Coverage
+
+A 7-day pass bought on day `d` covers days `d` through `d+6` (inclusive), not `d+1` through `d+7`. Similarly, a 30-day pass covers days `d` through `d+29`. When finding the next uncovered day, check if `days[j] < days[i] + duration`, not `days[j] <= days[i] + duration`. This off-by-one error leads to passes covering one fewer day than they should.
+
+### Not Considering All Three Pass Options at Each Decision Point
+
+At each travel day, you must consider all three pass types: 1-day, 7-day, and 30-day. Some solutions greedily choose based on the number of upcoming travel days, but this can be suboptimal. For example, a 7-day pass might be cheaper than seven 1-day passes even if you only travel twice in that week. Always compute and compare the cost of all three options.
+
+### Incorrect Base Case or Boundary Handling
+
+When using bottom-up DP, ensure `dp[n] = 0` (no cost needed after all travel days). When looking back for pass coverage (e.g., `dp[max(0, d-7)]`), handle negative indices by clamping to 0. Failing to properly initialize boundaries or handle edge cases like single-day trips or consecutive travel days can produce incorrect results.

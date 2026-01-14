@@ -1813,3 +1813,24 @@ class Solution {
 - Space complexity: $O(n * m)$
 
 > Where $n$ is the number of accounts and $m$ is the number of emails.
+
+---
+
+## Common Pitfalls
+
+### Treating Same Name as Same Person
+Two accounts with the same name are NOT necessarily the same person. They are only the same person if they share at least one email. Merging accounts based solely on name will produce incorrect results.
+```python
+# Wrong: merging by name
+if accounts[i][0] == accounts[j][0]:
+    merge(i, j)
+# Correct: merge only when emails overlap
+if email in emailToAccount:
+    union(i, emailToAccount[email])
+```
+
+### Forgetting to Sort Emails in Output
+The problem requires emails in each merged account to be sorted in lexicographical order. Forgetting this step will produce results in arbitrary order that may fail validation.
+
+### Using Wrong Account Name After Merging
+When merging accounts, you must use the name from one of the original accounts in the merged group. A common mistake is losing track of which account's name to use, especially in Union-Find where you need to get the name from the representative's original account.

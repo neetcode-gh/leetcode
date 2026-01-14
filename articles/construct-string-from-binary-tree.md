@@ -952,3 +952,22 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Omitting Empty Parentheses for Missing Left Child
+When only the right child exists, you must include empty parentheses `()` for the missing left child to preserve tree structure. Without this, the right child would be incorrectly interpreted as the left child during reconstruction.
+```python
+# Wrong: Missing empty parentheses
+if right:
+    return f"{cur}({right})"  # Output: "1(3)" instead of "1()(3)"
+
+# Correct: Include empty parentheses for missing left
+if right:
+    return f"{cur}()({right})"
+```
+
+### Adding Unnecessary Parentheses for Missing Right Child
+When only the left child exists, you should NOT add empty parentheses for the missing right child. The problem specifically states that empty parentheses for missing right children should be omitted since they don't affect tree reconstruction.

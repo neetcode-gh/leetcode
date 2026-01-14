@@ -709,3 +709,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the language.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Remove Remaining Digits When k > 0
+
+After processing all digits, there may still be removals left if the string was already in non-decreasing order (e.g., `"12345"` with `k=2`). If you do not trim the last `k` digits from the result, you will return a number larger than necessary. Always check if `k > 0` after the main loop and remove digits from the end accordingly.
+
+### Not Stripping Leading Zeros
+
+Removing digits can expose leading zeros that make the result invalid (e.g., removing `1` from `"10200"` leaves `"0200"`). Failing to strip these zeros results in incorrect output. After all removals, scan from the start and skip any `'0'` characters before constructing the final string.
+
+### Returning an Empty String Instead of "0"
+
+When all digits are removed or only zeros remain after stripping, the result should be `"0"`, not an empty string. For example, `"10"` with `k=2` should return `"0"`. Always check if the final string is empty and return `"0"` as a fallback to handle this edge case.

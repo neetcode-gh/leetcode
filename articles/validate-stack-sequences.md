@@ -318,3 +318,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Popping Without Checking Stack Emptiness
+
+When simulating stack operations, always verify the stack is non-empty before attempting to pop or access the top element. Failing to check this condition can lead to runtime errors or incorrect comparisons with an empty stack.
+
+### Not Popping Greedily After Each Push
+
+The key insight is that after each push, you should immediately pop as many elements as possible that match the expected pop sequence. Delaying pops or only checking once at the end will lead to incorrect results because the order of operations matters in stack simulations.
+
+### Forgetting to Verify Complete Stack Emptiness
+
+After processing all pushed elements, the stack must be completely empty for the sequences to be valid. If elements remain in the stack, it means not all pops could be matched, indicating an invalid sequence. Always check that the final stack size is zero.

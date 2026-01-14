@@ -1157,3 +1157,27 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $N$ is the number of words, $m$ is the length of each word, and $n$ is the length of the $target$ string.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Precompute Character Frequencies
+
+A common mistake is iterating through all words at each step to count matching characters. This leads to TLE because the time complexity becomes $O(N)$ per state transition. Instead, precompute a frequency table `cnt[k][c]` storing how many words have character `c` at column `k` before starting the DP.
+
+### Integer Overflow When Multiplying Count by DP Value
+
+When computing `cnt[k][c] * dp[i+1][k+1]`, both values can be large. In languages like Java and C++, multiplying two `int` values can overflow before the modulo operation is applied. Always cast to `long` or `long long` before multiplication: `(long) cnt[k][c] * dp[i+1][k+1] % MOD`.
+
+### Using Wrong Base Case for Bottom-Up DP
+
+In bottom-up DP, the base case placement matters. Setting `dp[n][k] = 1` for all `k` is incorrect because only `dp[n][m] = 1` represents a valid completion (target fully matched at the end). The recurrence `dp[i][k] = dp[i][k+1]` propagates this value correctly, but initializing all `dp[n][k] = 1` would overcount.
+
+### Confusing Column Index with Target Index
+
+The DP state involves two indices: `i` for the target position and `k` for the column in words. A common error is swapping their roles or forgetting that `k` can skip ahead (we can skip columns) while `i` must advance exactly by 1 each time we pick a character. The column index `k` must always be at least as large as the target index `i`.
+
+### Not Handling Target Longer Than Word Length
+
+If the target string is longer than the word length (`n > m`), it is impossible to form the target since we need at least `n` columns. The algorithm should return `0` in this case. While the recursion handles this naturally (running out of columns before finishing target), explicitly checking can prevent unnecessary computation.

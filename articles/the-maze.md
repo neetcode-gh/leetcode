@@ -566,3 +566,19 @@ class Solution {
 - Space complexity: $O(m \cdot n)$
 
 >  Where $m$ and $n$ are the number of rows and columns in `maze`.
+
+---
+
+## Common Pitfalls
+
+### Treating This as a Standard Grid Traversal
+
+In typical grid problems, movement is one cell at a time in any direction. Here, the ball rolls continuously until hitting a wall. A common mistake is moving only one cell per step or checking neighbors adjacently. The ball can only stop at positions next to walls, not at arbitrary empty cells.
+
+### Checking Destination During Rolling Instead of After Stopping
+
+The ball can only stop when it hits a wall, not mid-roll. Even if the destination is on the rolling path, the ball cannot stop there unless a wall forces it to. Check if the current position equals the destination only after the ball has stopped rolling.
+
+### Forgetting to Step Back After the Rolling Loop
+
+The while loop condition checks the next cell before moving, but after exiting, the ball is one step past a valid position (inside a wall or out of bounds). Always subtract the direction vector after the loop to get the actual stopping cell.

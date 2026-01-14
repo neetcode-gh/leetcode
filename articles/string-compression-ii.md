@@ -1004,3 +1004,27 @@ class Solution {
 - Space complexity: $O(n * k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the maximum number of characters that can be deleted from the string.
+
+---
+
+## Common Pitfalls
+
+### Miscounting Run-Length Encoding Length
+
+The encoded length does not increase linearly with count. It is 1 for a single character (e.g., "a"), 2 for counts 2-9 (e.g., "a5"), 3 for counts 10-99 (e.g., "a12"), and 4 for count 100 (e.g., "a100"). The length only increases at thresholds 1, 9, and 99. Missing these thresholds leads to incorrect length calculations.
+
+### Not Considering All Deletion Strategies
+
+A greedy approach of only deleting characters that break runs fails. Sometimes deleting characters within a run or deleting characters to merge two separate runs of the same character produces a shorter encoding. The DP must explore both keeping and deleting each character.
+
+### Incorrect State Representation
+
+Tracking only position and remaining deletions is insufficient for the naive approach. You also need to track the previous character and its count to properly compute the contribution to encoded length. The optimized approach avoids this by scanning forward to form complete runs.
+
+### Integer Overflow with Infinity Values
+
+Using `INT_MAX` or `Integer.MAX_VALUE` as infinity and then adding to it causes overflow. Either use a smaller sentinel value (like 150, which exceeds the maximum possible answer) or check for infinity before performing arithmetic operations.
+
+### Off-by-One Errors in Loop Termination
+
+When scanning forward to extend a run, ensure you correctly handle the boundary when `j` reaches `n`. The base case when all remaining characters can be deleted (`n - i <= k`) should return 0. Failing to check bounds before accessing `s[j]` causes runtime errors.

@@ -1137,3 +1137,19 @@ class NestedIterator {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of integers and $d$ is the nesting depth.
+
+---
+
+## Common Pitfalls
+
+### Calling next() Without Checking hasNext() First
+
+The iterator contract requires calling `hasNext()` before `next()`. In lazy evaluation approaches, `hasNext()` is responsible for ensuring an integer is at the top of the stack. Calling `next()` without first calling `hasNext()` may return a nested list object instead of an integer, or cause an exception when the stack is empty.
+
+### Not Handling Empty Nested Lists
+
+A nested list can contain empty lists like `[[]]` or `[[], [1, []], 2]`. Failing to handle these causes `hasNext()` to return `true` when no integers remain, or `next()` to fail. The lazy approach must continue unpacking until it finds an actual integer or the stack becomes empty.
+
+### Forgetting to Reverse When Pushing to Stack
+
+When using a stack for lazy evaluation, elements must be pushed in reverse order so the first element ends up on top. Pushing in forward order reverses the iteration order. Similarly, when popping a nested list and pushing its contents, those contents must also be reversed to maintain correct order.

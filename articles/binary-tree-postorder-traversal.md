@@ -1302,3 +1302,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Adding Node Value Before Recursing on Children
+Postorder requires visiting children before the current node. Adding the value before recursive calls produces preorder traversal instead.
+```python
+# Wrong: this is preorder, not postorder
+res.append(node.val)
+postorder(node.left)
+postorder(node.right)
+```
+
+### Wrong Child Order in Iterative Approach
+In the iterative approach using reversal, you must traverse current -> right -> left, then reverse. Traversing current -> left -> right and reversing gives incorrect results.

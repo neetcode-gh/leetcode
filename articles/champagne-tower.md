@@ -1121,3 +1121,38 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the given $queryRow$ and $m$ is the given $queryGlass$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Clamp the Final Result to 1
+A glass can receive more champagne than it can hold, but the answer should only report how full it is (max 1.0). Returning the raw flow value without capping it at 1 gives incorrect results for glasses that overflow.
+```python
+# Wrong: returns overflow amount
+return dp[query_row][query_glass]
+# Correct: cap at 1.0 (glass can't be more than full)
+return min(1, dp[query_row][query_glass])
+```
+
+### Distributing Total Flow Instead of Excess
+Each glass holds 1 unit before overflowing. A common mistake is distributing the total champagne received to children instead of only the excess (amount - 1). This incorrectly empties glasses that should remain full.
+```python
+# Wrong: distributes everything
+dp[row + 1][glass] += dp[row][glass] / 2
+# Correct: only distribute the excess
+excess = dp[row][glass] - 1
+if excess > 0:
+    dp[row + 1][glass] += excess / 2
+```
+
+### Incorrect Parent Glass Indices
+When computing flow from parent glasses, using wrong indices for left and right parents causes incorrect champagne distribution. The left parent is at (row-1, glass-1) and right parent is at (row-1, glass).
+```python
+# Wrong: both parents at same index
+left_parent = rec(row - 1, glass)
+right_parent = rec(row - 1, glass)
+# Correct: different parent positions
+left_parent = rec(row - 1, glass - 1)
+right_parent = rec(row - 1, glass)
+```

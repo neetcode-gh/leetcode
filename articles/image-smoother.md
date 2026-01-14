@@ -1011,3 +1011,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the number of rows and $m$ is the number of columns of the matrix.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Neighbor Iteration
+
+When iterating through the 3x3 window centered at cell `(r, c)`, it is easy to make off-by-one errors with the loop bounds. For example, using `range(r - 1, r + 1)` only covers two rows instead of three. The correct bounds are `range(r - 1, r + 2)` to include `r - 1`, `r`, and `r + 1`. Similarly, forgetting to check boundary conditions like `0 <= i < ROWS` can cause index out of bounds errors.
+
+### Using Modified Values Instead of Original Values
+
+When modifying the matrix in place without extra space, a common mistake is reading already-modified values when computing neighbors. If cell `(i, j)` has been updated before processing cell `(r, c)`, using `img[i][j]` directly gives the wrong result. The in-place solutions address this by encoding both original and new values in the same cell using bit manipulation or arithmetic (multiplying/dividing by 256), ensuring original values can always be extracted during computation.

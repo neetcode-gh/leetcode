@@ -523,3 +523,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting That "000" Is a Valid Good Integer
+
+The problem asks for the largest good integer, but "000" is still a valid answer if it is the only one found. Initializing the result to an empty string and checking only for non-zero matches causes "000" to be incorrectly skipped. Handle "000" explicitly or use comparison logic that includes it.
+
+### Returning the Wrong Result When No Good Integer Exists
+
+If no three consecutive identical digits exist in the string, the answer should be an empty string. Returning "0", a default numeric value, or the last partial match leads to wrong answers. Always track whether any valid match was found before returning.

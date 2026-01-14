@@ -751,3 +751,19 @@ class NumMatrix {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the matrix.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Inclusion-Exclusion Principle
+
+When computing the sum of a rectangular region using 2D prefix sums, you must subtract the regions above and to the left, then add back the top-left corner that was subtracted twice. The formula is `bottomRight - above - left + topLeft`. Forgetting to add back the top-left corner results in under-counting, while forgetting to subtract either the above or left region causes over-counting.
+
+### Off-by-One Errors with Prefix Sum Indices
+
+The prefix sum matrix is typically sized `(rows + 1) x (cols + 1)` to handle edge cases where the query starts at row 0 or column 0. Mixing up whether indices are 0-based or 1-based leads to accessing wrong cells or out-of-bounds errors. When querying `sumRegion(row1, col1, row2, col2)`, remember to shift indices appropriately when accessing the prefix sum matrix.
+
+### Building Prefix Sum Matrix Incorrectly
+
+The 2D prefix sum at position `(r, c)` should represent the sum of all elements from `(0, 0)` to `(r-1, c-1)`. A common mistake is computing prefix sums row by row without properly incorporating the contribution from previous rows. The correct formula is `prefix[r+1][c+1] = matrix[r][c] + prefix[r][c+1] + prefix[r+1][c] - prefix[r][c]`, or equivalently, accumulate row prefix and add the cell directly above.

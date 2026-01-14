@@ -934,3 +934,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Ignoring Equal Consecutive Elements
+
+The problem asks for strictly increasing or strictly decreasing subarrays. Equal consecutive elements (`nums[i] == nums[i-1]`) break both patterns. A common mistake is treating equal elements as continuing the current sequence. When you encounter equal elements, you must reset your counter to 1 because a single element is a valid subarray of length 1.
+
+### Forgetting to Track Both Directions
+
+You need to find the longest subarray that is either strictly increasing OR strictly decreasing. A common error is only tracking one direction and missing the optimal answer. Either maintain two separate counters (one for increasing, one for decreasing) or use a direction flag that resets when the pattern changes.

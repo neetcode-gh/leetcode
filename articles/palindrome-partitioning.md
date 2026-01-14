@@ -1397,3 +1397,19 @@ class Solution {
 - Space complexity:
     - $O(n ^ 2)$ extra space.
     - $O(n * 2 ^ n)$ space for the output list.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Copy the Partition Before Adding to Results
+
+When adding the current partition to the results list, you must add a copy of the list, not a reference to it. Since backtracking modifies the same partition list, adding the reference directly means all entries in the result will point to the same (eventually empty) list.
+
+### Incorrect Base Case in Backtracking
+
+The base case should trigger when the starting index reaches the end of the string, indicating a complete valid partition. A common mistake is to check `i > len(s)` instead of `i >= len(s)` or `i == len(s)`, causing missed partitions or index errors.
+
+### Redundant Palindrome Checks Without Memoization
+
+Repeatedly checking whether the same substring is a palindrome across different recursion branches wastes time. Without precomputing palindrome information using DP, the same substring may be checked O(2^n) times, significantly slowing down the solution for longer strings.

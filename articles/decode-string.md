@@ -894,3 +894,53 @@ class Solution {
 - Space complexity: $O(n + N)$
 
 > Where $n$ is the length of the input string and $N$ is the length of the output string.
+
+---
+
+## Common Pitfalls
+
+### Multi-Digit Numbers
+
+The repeat count `k` can be more than one digit (e.g., `"12[a]"` means repeat 'a' 12 times). A common mistake is treating only single digits.
+
+```python
+# Wrong: only handles single digit
+k = int(s[i])
+
+# Correct: accumulate all digits
+k = k * 10 + int(s[i])
+```
+
+### Not Resetting the Repeat Count
+
+After processing a `[`, the repeat count `k` must be reset to 0 for the next pattern. Forgetting this causes incorrect multiplications in nested structures.
+
+```python
+# Wrong: k carries over to next pattern
+if c == "[":
+    self.i += 1
+    res += k * helper()
+    # Missing: k = 0
+
+# Correct: reset k after using it
+if c == "[":
+    self.i += 1
+    res += k * helper()
+    k = 0
+```
+
+### Index Management in Recursion
+
+When using recursion with a shared index, incrementing `i` at the wrong time causes characters to be skipped or processed twice. The index should be incremented after processing `[` but before the recursive call.
+
+```python
+# Wrong: skips the character after [
+if c == "[":
+    res += k * helper()
+    self.i += 1  # Too late!
+
+# Correct: increment before recursive call
+if c == "[":
+    self.i += 1
+    res += k * helper()
+```

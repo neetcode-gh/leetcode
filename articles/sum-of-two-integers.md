@@ -538,3 +538,19 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Negative Numbers
+
+When using bit manipulation to add integers, negative numbers are represented in two's complement form. In languages like Python that have arbitrary-precision integers, you must explicitly mask results to 32 bits and convert back to signed representation when the result exceeds `0x7FFFFFFF`. Failing to do this will produce incorrect results for negative inputs or negative sums.
+
+### Infinite Loop with Negative Carry
+
+In languages with fixed-width integers (like Java, C++), left-shifting a negative carry can cause issues. When `b` becomes negative and you compute `(a & b) << 1`, the carry propagates correctly due to two's complement representation. However, in Python without masking, the carry can grow indefinitely, causing an infinite loop. Always apply a 32-bit mask to both `a` and `b` in each iteration.
+
+### Confusing XOR and AND Operations
+
+A common mistake is mixing up the roles of XOR and AND in the addition algorithm. XOR (`^`) computes the sum without carry, while AND (`&`) followed by left shift computes the carry. Swapping these operations or forgetting the left shift on the carry will produce wrong results. Remember: XOR gives you what stays, AND shifted gives you what carries over.

@@ -1096,3 +1096,19 @@ class Solution {
 * Space complexity: $O(n)$
 
 > Where $m$ is the number of rows, and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow
+
+With grid dimensions up to 10^5 and cell values up to 10^5, the maximum total points can exceed the 32-bit integer limit. Using `int` instead of `long` (or equivalent 64-bit type) will cause overflow and incorrect results.
+
+### Missing One Direction in Prefix Maximum
+
+The optimized solution requires computing both left-to-right and right-to-left prefix maximums. Forgetting one direction or incorrectly combining them will miss optimal transitions from certain columns, leading to suboptimal answers.
+
+### Off-by-One in Penalty Propagation
+
+When propagating the prefix maximum, the penalty decreases by 1 for each column of distance. A common error is applying the penalty incorrectly, such as subtracting the penalty before comparing or not decrementing for each step. The update should be `left[c] = max(dp[c], left[c-1] - 1)`, not `left[c] = max(dp[c] - 1, left[c-1])`.

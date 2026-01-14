@@ -845,6 +845,22 @@ class Solution {
 
 ---
 
+## Common Pitfalls
+
+### Trying to Find Surrounded Regions Directly
+
+The intuitive approach of finding regions completely surrounded by 'X' is error-prone. A region touching any border cell cannot be captured, and checking this condition during a flood fill is complex. The correct approach is to invert the logic: first mark all border-connected 'O' cells as safe, then flip all remaining 'O' cells. This reversal simplifies the problem significantly.
+
+### Forgetting to Check All Four Borders
+
+When marking safe regions, you must start DFS/BFS from 'O' cells on all four borders: top row, bottom row, left column, and right column. A common mistake is only checking two opposite edges (like top and bottom) and missing cells connected through the left or right borders. Ensure your initial seeding loop covers all border cells.
+
+### Modifying Cells Without a Temporary Marker
+
+If you flip 'O' to 'X' immediately when you find a surrounded region, you may incorrectly process cells that should remain 'O'. The standard approach uses a temporary marker (like 'T') to distinguish between safe 'O' cells and those to be processed. After marking is complete, convert 'T' back to 'O' and remaining 'O' to 'X' in a final pass.
+
+---
+
 ## 3. Disjoint Set Union
 
 ### Intuition
@@ -854,7 +870,7 @@ The key observation:
 - Any region of `'O'` that touches the **border** is **safe** (it cannot be surrounded).
 - Any region of `'O'` that does **not** touch the border is **captured** → should become `'X'`.
 
-So we use **DSU (Union-Find)** to group connected `'O'` cells, and we create one extra **dummy node** that represents “connected to border”.
+So we use **DSU (Union-Find)** to group connected `'O'` cells, and we create one extra **dummy node** that represents "connected to border".
 - Union every border `'O'` with the dummy node.
 - Union every `'O'` with its neighboring `'O'` cells.
 - Finally, any cell **not connected** to the dummy node is surrounded → flip to `'X'`.

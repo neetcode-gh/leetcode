@@ -722,3 +722,13 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Confusing Power of Two with Power of Four
+
+All powers of four are powers of two, but not vice versa. Checking only `(n & (n - 1)) == 0` accepts values like `2`, `8`, and `32` which are powers of two but not four. You must add an additional check to verify the set bit is at an even position.
+
+### Floating-Point Precision Errors with Logarithms
+
+Using `log(n) / log(4)` can introduce floating-point errors. For example, `log(64) / log(4)` might return `2.9999999...` instead of exactly `3`. Comparing with `== 0` after modulo may incorrectly reject valid powers of four. Consider rounding or using integer-based approaches instead.

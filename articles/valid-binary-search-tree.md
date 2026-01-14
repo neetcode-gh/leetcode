@@ -1050,3 +1050,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Only Comparing with the Immediate Parent
+
+A classic mistake is checking only that `left.val < node.val < right.val` for direct children. This misses cases where a node deep in the left subtree has a value greater than an ancestor. For example, a tree with root 10, left child 5, and right grandchild 15 under node 5 would pass local checks but violates BST properties. The valid range must be inherited from all ancestors.
+
+### Using Inclusive Bounds Instead of Exclusive
+
+BST properties require strictly less than and strictly greater than comparisons. Using `<=` or `>=` instead of `<` and `>` will incorrectly accept trees with duplicate values, which violates the standard BST definition where all left descendants are strictly less and all right descendants are strictly greater.
+
+### Integer Overflow with Boundary Values
+
+When using `Integer.MIN_VALUE` and `Integer.MAX_VALUE` as initial bounds, problems arise if the tree contains these exact values as node data. The comparison `node.val > Integer.MAX_VALUE` will never be true. Use `Long.MIN_VALUE` and `Long.MAX_VALUE` or nullable types to handle edge cases where node values equal the integer limits.

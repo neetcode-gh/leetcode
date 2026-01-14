@@ -855,3 +855,19 @@ class Solution {
 - Space complexity: $O(|x \cdot y|)$
 
 >  Where $(x,y)$ is the coordinate of the target.
+
+---
+
+## Common Pitfalls
+
+### Not Exploiting Symmetry to Reduce Search Space
+
+The knight's movement is symmetric across both axes. Searching the entire coordinate plane when only the first quadrant (using absolute values of x and y) is necessary wastes time and memory. Always convert to positive coordinates first.
+
+### Unbounded BFS Without Coordinate Limits
+
+Without restricting the search area, BFS can explore positions far from both origin and target, leading to memory exhaustion. The optimal path rarely strays far beyond the target coordinates, so limiting exploration to a reasonable bounding box improves efficiency.
+
+### Missing Base Cases in Memoized DFS
+
+The recursive solution requires proper base cases. The position `(0, 0)` needs `0` moves, and positions where `x + y = 2` (like `(1, 1)`, `(2, 0)`, `(0, 2)`) need exactly `2` moves. Missing these base cases causes infinite recursion or incorrect results.

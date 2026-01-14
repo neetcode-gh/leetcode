@@ -1478,3 +1478,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Ignoring Downward or Equal Height Transitions
+
+Not all building transitions require resources. When `heights[i+1] <= heights[i]`, no bricks or ladders are needed. Forgetting to skip these cases leads to wasting resources on non-existent climbs and incorrect answers. Always check if the height difference is positive before consuming any resources.
+
+### Using Ladders for Small Gaps Instead of Large Ones
+
+The greedy insight is that ladders should cover the largest height differences since they handle any gap regardless of size. Using ladders greedily for the first gaps encountered (rather than the largest ones) leads to suboptimal resource usage. The heap-based solutions ensure ladders always end up covering the maximum height differences.
+
+### Returning the Wrong Index When Resources Run Out
+
+When bricks become negative, the current building cannot be reached, so the answer should be the previous index. A common mistake is returning `i` instead of `i - 1` in the brute force approach, or returning `i` when we should return `i` (the last reachable building) in the heap approach. Pay careful attention to what index represents the last successfully reached building.

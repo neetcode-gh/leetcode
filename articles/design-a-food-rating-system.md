@@ -1056,3 +1056,57 @@ class FoodRatings {
     - $O(\log n)$ time for each $changeRating()$ function call.
     - $O(1)$ in Python and $O(\log n)$ in other languages for each $highestRated()$ function call.
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Forgetting to Handle Lexicographic Tie-Breaking
+
+When multiple foods have the same highest rating, you must return the lexicographically smallest name. Forgetting this tie-breaker or sorting in the wrong order will produce incorrect results.
+
+```python
+# Wrong: Only compares ratings
+if r > maxR:
+    res = food
+    maxR = r
+
+# Correct: Include lexicographic comparison for ties
+if r > maxR or (r == maxR and food < res):
+    res = food
+    maxR = r
+```
+
+### Not Removing Stale Entries from the Heap
+
+When using a heap with lazy deletion, you must validate that the top entry's rating matches the current rating in your hash map before returning it. Stale entries from previous rating updates will otherwise be returned.
+
+```python
+# Wrong: Returns potentially stale entry
+def highestRated(self, cuisine):
+    return self.cuisineToHeap[cuisine][0][1]  # May be outdated!
+
+# Correct: Validate and remove stale entries
+def highestRated(self, cuisine):
+    heap = self.cuisineToHeap[cuisine]
+    while heap:
+        rating, food = heap[0]
+        if -rating == self.foodToRating[food]:
+            return food
+        heappop(heap)  # Remove stale entry
+```
+
+### Forgetting to Map Food to Its Cuisine
+
+When a rating changes, you need to know which cuisine the food belongs to in order to update the correct data structure. Without a `foodToCuisine` mapping, you cannot efficiently locate and update the food's entry.
+
+```python
+# Wrong: No way to find cuisine when rating changes
+def changeRating(self, food, newRating):
+    self.foodToRating[food] = newRating
+    # How do we update the heap? We don't know the cuisine!
+
+# Correct: Maintain food-to-cuisine mapping
+def __init__(self, foods, cuisines, ratings):
+    self.foodToCuisine = {}  # food -> cuisine
+    for i in range(len(foods)):
+        self.foodToCuisine[foods[i]] = cuisines[i]
+```

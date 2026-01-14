@@ -2220,3 +2220,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Not Marking Cells Before Adding to Queue
+
+A common mistake is marking cells as visited only when dequeuing rather than when enqueuing. This causes the same cell to be added to the queue multiple times from different neighbors, leading to incorrect distance calculations and potential TLE. Always mark a cell as visited immediately when adding it to the BFS queue.
+
+### Confusing Island Detection with Bridge Finding
+
+The DFS phase identifies all cells of the first island, while the BFS phase finds the shortest path to the second island. Mixing up these phases or using incorrect termination conditions (e.g., stopping DFS when finding any land cell) will produce wrong results. The BFS should return immediately upon reaching any cell with value 1 that was not part of the first island.
+
+### Incorrect Handling of the Return Value
+
+When BFS reaches a cell of the second island, the current `distance` or `steps` counter represents the number of water cells flipped, which is the bridge length. Some implementations incorrectly return `distance + 1` or forget that the starting cells of BFS (the first island's boundary) should not count toward the bridge length. The bridge length is the number of 0s between the islands, not including the island cells themselves.

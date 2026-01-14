@@ -431,3 +431,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Floor Division Instead of Ceiling
+
+When calculating arrival time, you need `ceil(dist[i] / speed[i])` because a monster at distance 3 with speed 2 arrives at minute 2 (not 1.5). Using floor division or integer division without rounding up causes incorrect arrival time calculations, leading to wrong elimination counts.
+
+### Forgetting to Sort the Arrival Times
+
+The greedy approach only works when monsters are processed in order of their arrival times. Without sorting, you might try to eliminate a monster that arrives later while an earlier one reaches the city, giving incorrect results.
+
+### Off-by-One Error in the Comparison
+
+The condition should be `minute >= minReach[minute]` (monster arrives at or before the current minute), not `minute > minReach[minute]`. If a monster arrives exactly at minute 2 and we're at minute 2, we cannot eliminate it in time since we shoot at the start of each minute.

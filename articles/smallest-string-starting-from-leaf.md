@@ -662,3 +662,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Building the String in the Wrong Direction
+
+The string must be built from leaf to root, not root to leaf. This means prepending each character as you traverse down the tree. A common mistake is appending characters during traversal, which produces the reversed string. Always use `cur = char + cur` (prepend), not `cur = cur + char` (append).
+
+### Comparing Incomplete Strings at Non-Leaf Nodes
+
+Only complete strings from leaf nodes should be compared. If you compare strings at internal nodes, you might select a prefix that leads to a suboptimal complete string. Always ensure comparisons only happen when `node.left == null && node.right == null`, confirming the node is truly a leaf.
+
+### Ignoring Single-Child Nodes
+
+When a node has only one child, you must continue traversal on that child. A common bug is treating nodes with one child as leaves or skipping the single child entirely. This causes valid paths to be missed. Always check for left-only and right-only cases separately from the two-children and no-children cases.

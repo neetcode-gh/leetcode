@@ -489,3 +489,19 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Counting Already-Satisfied Customers in the Window
+
+A common mistake is including customers who are already satisfied (when `grumpy[i] = 0`) in the window's "saved" count. The technique only helps during grumpy minutes, so only customers at indices where `grumpy[i] = 1` should be added to the window sum. Counting non-grumpy customers in the window leads to double-counting since they are already part of the baseline satisfaction.
+
+### Off-by-One Errors in Window Boundaries
+
+When implementing the sliding window, it is easy to miscalculate when to shrink the window. The window should have exactly `minutes` elements, so the condition should check if `r - l + 1 > minutes` before removing the left element. Using `>=` instead of `>` or forgetting to increment the left pointer after removal causes incorrect window sizes.
+
+### Forgetting to Track the Maximum Window Value
+
+Some solutions correctly compute the window sum but forget to track the maximum value seen across all window positions. The final answer requires the best possible window, not just the last one computed. Always update `maxWindow` after each window adjustment to capture the optimal placement of the technique.

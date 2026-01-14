@@ -1187,3 +1187,25 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Calculating Mid
+Using `(l + r) / 2` can overflow when `l` and `r` are large. Use `l + (r - l) / 2` instead to safely compute the midpoint.
+```python
+# Wrong: can overflow in some languages
+m = (l + r) // 2
+# Correct: prevents overflow
+m = l + (r - l) // 2
+```
+
+### Infinite Loop Due to Wrong Pointer Update
+Updating `l = m` instead of `l = m + 1` (or `r = m` instead of `r = m - 1` in some variants) can cause an infinite loop when `l` and `r` are adjacent.
+
+### Off-by-One Errors with Loop Condition
+Using `while l <= r` vs `while l < r` changes the behavior significantly. Mixing these up with the wrong pointer updates causes bugs. Be consistent with your chosen template.
+
+### Not Checking if Target Was Actually Found
+Binary search converges to a position, but that position might not contain the target. Always verify that `nums[result] == target` before returning the index.

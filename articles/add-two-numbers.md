@@ -733,3 +733,23 @@ class Solution {
     - $O(max(m, n))$ for the output list.
 
 > Where $m$ is the length of $l1$ and $n$ is the length of $l2$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Final Carry
+When both lists are exhausted, there may still be a carry of 1 (e.g., `999 + 1 = 1000`). Stopping the loop early without checking for remaining carry produces an incorrect result.
+```python
+# Wrong: missing carry check
+while l1 or l2:  # Should be: while l1 or l2 or carry
+    # ...
+```
+
+### Not Handling Lists of Different Lengths
+When one list is longer than the other, the loop must continue processing the remaining nodes. Using `l1 and l2` instead of `l1 or l2` stops too early.
+```python
+# Wrong: requires both lists to have nodes
+while l1 and l2:  # Stops when either list ends
+    # ...
+```

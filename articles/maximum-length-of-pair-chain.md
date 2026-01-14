@@ -1149,3 +1149,19 @@ class Solution {
 
 - Time complexity: $O(n\log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Sorting by the Wrong Element
+
+A common mistake is sorting pairs by their first element (start value) instead of the second element (end value) when using the greedy approach. Sorting by end values is crucial because it ensures we always pick the pair that leaves the most room for subsequent pairs. Sorting by start values can lead to suboptimal chains.
+
+### Using Non-Strict Inequality
+
+The problem requires that for pair `[c, d]` to follow pair `[a, b]`, we need `b < c` (strictly less than). Using `b <= c` instead will incorrectly allow pairs where the end of one equals the start of another, violating the chain condition.
+
+### Confusing with Longest Increasing Subsequence
+
+While this problem resembles LIS, the chain condition `b < c` is different from the standard LIS comparison. Directly applying LIS logic without adapting for the pair structure will produce incorrect results. The binary search approach requires careful handling of which element to compare and which to store.

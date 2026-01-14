@@ -640,3 +640,52 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Using Greater-Than-or-Equal Instead of Strictly Greater
+
+The problem asks for the next **warmer** day, meaning strictly greater temperature. Using `>=` instead of `>` causes the algorithm to stop at equal temperatures, producing incorrect results.
+
+```python
+# Wrong: stops at equal temperatures
+while stack and t >= stack[-1][0]:
+    # This pops when temperatures are equal, not just warmer
+
+# Correct: strictly greater
+while stack and t > stack[-1][0]:
+    stackT, stackInd = stack.pop()
+    res[stackInd] = i - stackInd
+```
+
+### Storing Only Indices Without Temperature Access
+
+When using a stack, you need to compare temperatures. Storing only indices works if you can access `temperatures[index]`, but mixing up index and value access leads to comparison errors.
+
+```python
+# Correct: store just indices but access temperature via array
+stack = []  # stores indices
+for i, t in enumerate(temperatures):
+    while stack and t > temperatures[stack[-1]]:
+        idx = stack.pop()
+        res[idx] = i - idx
+    stack.append(i)
+```
+
+### Off-by-One Errors in Day Counting
+
+The result should be the number of days to wait, which is the difference in indices. Initializing count wrong or miscalculating the difference leads to off-by-one errors.
+
+```python
+# Wrong: starting count at 0
+count = 0
+j = i + 1
+while j < n and temperatures[j] <= temperatures[i]:
+    j += 1
+    count += 1  # count is now j - i - 1, off by one
+
+# Correct: difference of indices
+res[i] = j - i  # Direct index difference gives correct wait days
+```

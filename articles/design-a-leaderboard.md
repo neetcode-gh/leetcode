@@ -1205,3 +1205,55 @@ class Leaderboard {
 
 
 >  Where $N$ is the total number of players in the leaderboard, and $K$ is the number of top-scoring players.
+
+## Common Pitfalls
+
+### Using Reset to Delete vs. Set to Zero
+
+The `reset` function should remove the player's score entirely or set it to zero, depending on the problem requirements. Using the wrong approach affects how the `top(K)` calculation handles that player.
+
+```python
+# Approach 1: Set score to 0 (player still exists with 0 score)
+def reset(self, playerId):
+    self.scores[playerId] = 0  # Will be included in calculations
+
+# Approach 2: Remove player entirely (cleaner for TreeMap approach)
+def reset(self, playerId):
+    del self.scores[playerId]  # Player no longer counted
+```
+
+### Forgetting to Handle Duplicate Scores in TreeMap
+
+When using a TreeMap to track scores, multiple players can have the same score. You must store a count of players per score, not just a single player. Otherwise, adding a second player with the same score will overwrite the first.
+
+```python
+# Wrong: Only stores one player per score
+self.sortedScores[score] = playerId  # Overwrites previous player!
+
+# Correct: Store count of players with each score
+self.sortedScores[score] = self.sortedScores.get(score, 0) + 1
+```
+
+### Not Updating Both Data Structures When Score Changes
+
+When a player's score changes via `addScore`, you must update both the player-to-score mapping and the sorted scores structure. Forgetting to remove the old score from the sorted structure leads to stale data.
+
+```python
+# Wrong: Only updates player score
+def addScore(self, playerId, score):
+    self.scores[playerId] = self.scores.get(playerId, 0) + score
+    # Sorted structure still has old score!
+
+# Correct: Update both structures
+def addScore(self, playerId, score):
+    if playerId in self.scores:
+        oldScore = self.scores[playerId]
+        # Remove old score from sorted structure
+        self.sortedScores[oldScore] -= 1
+        if self.sortedScores[oldScore] == 0:
+            del self.sortedScores[oldScore]
+    newScore = self.scores.get(playerId, 0) + score
+    self.scores[playerId] = newScore
+    # Add new score to sorted structure
+    self.sortedScores[newScore] = self.sortedScores.get(newScore, 0) + 1
+```

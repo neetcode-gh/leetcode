@@ -917,3 +917,35 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Confusing Depth with Height
+
+Depth is measured from the root down (root has depth 1 or 0 depending on convention), while height is measured from the leaves up. The maximum depth of a tree equals its height when counting from root. Be consistent with whether you start counting at 0 or 1.
+
+```python
+# If root is None, depth is 0 (no nodes)
+# If root exists with no children, depth is 1 (one node)
+def maxDepth(self, root):
+    if not root:
+        return 0  # Base case: empty tree has depth 0
+    return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+```
+
+### Forgetting to Handle the Empty Tree Case
+
+An empty tree (null root) has a depth of 0. Failing to check for this base case before accessing node properties will cause a null pointer exception.
+
+```python
+# Wrong: No null check
+def maxDepth(self, root):
+    return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+    # Crashes when root is None
+
+# Correct: Handle empty tree first
+def maxDepth(self, root):
+    if not root:
+        return 0
+    return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
+```

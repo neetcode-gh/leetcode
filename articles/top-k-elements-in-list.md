@@ -722,3 +722,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using a Max-Heap Instead of Min-Heap
+
+When keeping track of the top `k` elements, a min-heap of size `k` is needed so you can efficiently remove the smallest frequency when the heap exceeds size `k`. Using a max-heap requires storing all elements and then extracting `k` times, which is less efficient. The min-heap approach maintains only the `k` largest frequencies at any time.
+
+### Forgetting to Handle Ties in Frequency
+
+When multiple numbers have the same frequency, the order in which they appear in the result may vary. Most problem statements accept any valid ordering, but some solutions incorrectly assume a specific order or break when frequencies are equal. Ensure your comparison function handles equal frequencies gracefully.
+
+### Off-By-One in Bucket Sort Index
+
+In bucket sort, frequencies range from `1` to `n` (the array length), so you need `n + 1` buckets indexed `0` to `n`. A common mistake is creating only `n` buckets, causing an index out of bounds error when an element appears `n` times. Always allocate `len(nums) + 1` buckets to accommodate all possible frequencies.

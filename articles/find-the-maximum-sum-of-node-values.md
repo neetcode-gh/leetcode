@@ -1332,3 +1332,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Even Parity Constraint
+
+The XOR operation on an edge affects both endpoints simultaneously. This means you must XOR an even number of nodes in total. Forgetting this constraint and greedily XORing any node that benefits individually will produce incorrect results when an odd number of nodes would improve.
+
+### Ignoring That Tree Structure Allows Any Pair
+
+A key insight is that applying XOR operations along a path allows you to effectively XOR any pair of nodes, not just adjacent ones. Many solutions incorrectly try to only consider adjacent node pairs, missing that the tree structure enables reaching any two nodes through a sequence of edge operations.
+
+### Integer Overflow in Sum Calculations
+
+When summing node values (especially after XOR operations), the total can exceed 32-bit integer limits. Using `int` instead of `long` in languages like Java, C++, or C# will cause overflow errors on large inputs.
+
+### Incorrectly Computing the Minimum Difference for Parity Fix
+
+In the optimal greedy approach, if an odd number of nodes are XORed, you need to undo one operation. The cost to fix parity is the minimum absolute difference `|nums[i] ^ k - nums[i]|` across all nodes. A common mistake is taking the minimum gain rather than the minimum absolute difference, or forgetting to track this value during iteration.
+
+### Misunderstanding XOR Self-Cancellation
+
+Applying XOR with `k` twice on the same value returns the original value. Some solutions fail to recognize that repeated operations on the same edge cancel out, leading to unnecessarily complex state tracking or incorrect assumptions about which operations are possible.

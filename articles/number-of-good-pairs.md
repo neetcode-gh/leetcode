@@ -435,3 +435,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Double Counting Pairs
+
+A good pair requires `i < j`, meaning each pair should only be counted once. When using nested loops, ensure the inner loop starts from `i + 1` rather than `0`. Similarly, when using the mathematical formula `c * (c - 1) / 2`, this already accounts for unique pairs and should not be doubled.
+
+### Integer Overflow in Pair Calculation
+
+When using the formula `c * (c - 1) / 2` to calculate the number of pairs for a frequency `c`, the multiplication can overflow for large values if using 32-bit integers. In languages with fixed-size integers, ensure you use an appropriate data type or perform the division before the multiplication becomes too large.

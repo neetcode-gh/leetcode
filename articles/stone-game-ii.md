@@ -1128,3 +1128,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 3)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the M Parameter Update
+
+A frequent error is updating `M` incorrectly after a move. The rule is `M = max(M, X)` where `X` is the number of piles taken, not `M = X` or `M = M + X`. Failing to take the maximum means `M` might decrease, which violates the game rules and leads to wrong answers.
+
+### Confusing Whose Score to Track
+
+Since both players play optimally but only Alice's score matters for the answer, it is easy to mix up the logic. When using the minimax approach, Alice maximizes her score while Bob minimizes it. When using the suffix sum trick, both players maximize their own score, and the recursion naturally handles the alternation.
+
+### Off-by-One Errors in Loop Bounds
+
+The player can take `X` piles where `1 <= X <= 2*M`. A common mistake is iterating `X` from `0` to `2*M` or from `1` to `2*M - 1`. Ensure your loop correctly covers exactly the valid range of moves, and check that `i + X` does not exceed the array length before accessing elements.

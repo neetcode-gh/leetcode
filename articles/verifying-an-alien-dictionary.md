@@ -473,3 +473,15 @@ class Solution {
 - Space complexity: $O(1)$ since we have $26$ different characters.
 
 > Where $n$ is the number of words and $m$ is the average length of a word.
+
+---
+
+## Common Pitfalls
+
+### Ignoring the Prefix Case
+
+When comparing two words where one is a prefix of the other (e.g., "apple" and "app"), the shorter word must come first. If the longer word appears before its prefix in the list, the order is invalid. Many solutions forget to check this case and only compare differing characters.
+
+### Breaking Too Early or Too Late in Character Comparison
+
+When comparing adjacent words character by character, you must break out of the loop as soon as you find the first differing character. Continuing to compare after finding a difference can lead to incorrect conclusions, as only the first difference determines the relative order of two words.

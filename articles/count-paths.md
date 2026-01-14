@@ -1157,3 +1157,31 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Confusing Rows and Columns with Moves
+Misunderstanding that an `m x n` grid requires `m - 1` down moves and `n - 1` right moves (not `m` and `n`). The total moves is `(m - 1) + (n - 1) = m + n - 2`.
+
+### Wrong Base Case in Recursion
+Returning `1` when reaching any boundary instead of only the destination cell. The base case should trigger only at `(m-1, n-1)`, not when hitting the last row or column.
+```python
+# Wrong: counts incomplete paths
+if i == m - 1 or j == n - 1:
+    return 1
+# Correct: only count at destination
+if i == m - 1 and j == n - 1:
+    return 1
+```
+
+### Integer Overflow in Math Solution
+When computing combinations for larger grids, intermediate multiplication can overflow. Use `long` types and divide as you multiply to keep values manageable.
+```java
+// Risk of overflow
+res = factorial(m + n - 2) / (factorial(m - 1) * factorial(n - 1));
+// Safer: multiply and divide iteratively
+res *= i;
+res /= j;
+```

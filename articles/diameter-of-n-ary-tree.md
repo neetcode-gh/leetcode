@@ -590,3 +590,68 @@ class Solution {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the number of nodes in the tree.
+
+---
+
+## Common Pitfalls
+
+### Only Considering Paths Through the Root
+
+A common mistake is assuming the diameter must pass through the root node. The longest path may be entirely within a subtree. You must track the maximum diameter found at any node, not just the root.
+
+```python
+# Wrong: Only checking diameter at root level
+def diameter(root):
+    heights = [height(child) for child in root.children]
+    heights.sort(reverse=True)
+    return heights[0] + heights[1] if len(heights) >= 2 else 0
+
+# Correct: Track max diameter across all nodes
+def diameter(root):
+    max_diameter = 0
+    def height(node):
+        nonlocal max_diameter
+        # ... update max_diameter at every node
+    height(root)
+    return max_diameter
+```
+
+### Confusing Height and Depth Definitions
+
+Height (distance down to leaves) and depth (distance from root) are different concepts. Mixing them up leads to incorrect diameter calculations. Height returns the longest path downward from a node, while depth is passed as a parameter representing distance from root.
+
+```python
+# Using height: returns longest path DOWN from node
+def height(node):
+    if not node.children:
+        return 0
+    return 1 + max(height(child) for child in node.children)
+
+# Using depth: distance FROM ROOT passed as parameter
+def maxDepth(node, curr_depth):
+    if not node.children:
+        return curr_depth  # Returns absolute depth
+    return max(maxDepth(child, curr_depth + 1) for child in node.children)
+```
+
+### Only Tracking the Single Maximum Height
+
+To compute the diameter through a node, you need the two largest heights among its children. Tracking only the maximum height misses the second-largest, which is needed for the path length calculation.
+
+```python
+# Wrong: Only tracking one maximum
+max_height = 0
+for child in node.children:
+    max_height = max(max_height, height(child) + 1)
+diameter = max_height  # Missing the second branch!
+
+# Correct: Track top two heights
+max_height_1, max_height_2 = 0, 0
+for child in node.children:
+    h = height(child) + 1
+    if h > max_height_1:
+        max_height_1, max_height_2 = h, max_height_1
+    elif h > max_height_2:
+        max_height_2 = h
+diameter = max_height_1 + max_height_2
+```

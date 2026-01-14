@@ -827,3 +827,27 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Lower Bound Instead of Upper Bound
+
+This problem allows equal elements in the subsequence (non-strictly increasing), so we need `upper_bound` (first element greater than target), not `lower_bound` (first element greater than or equal to target). Using lower bound would treat equal elements as strictly increasing and produce incorrect results.
+
+### Confusing with Standard LIS
+
+Standard Longest Increasing Subsequence requires strictly increasing elements and uses `lower_bound`. This problem requires non-decreasing elements (allowing duplicates), which changes the binary search condition. Applying the standard LIS algorithm directly will undercount valid sequences containing equal consecutive elements.
+
+### Forgetting to Update the DP Array
+
+After finding the insertion position using binary search, the `dp` array must be updated with the current element. Forgetting this update means the algorithm does not track the optimal ending values for each sequence length, leading to incorrect results for subsequent elements.
+
+### Returning Indices Instead of Lengths
+
+The binary search returns an index in the `dp` array, but the answer is the length of the longest valid course. The result for each position is `index + 1` (since `dp` is 0-indexed and the index represents sequences of length `index + 1`). Returning `index` directly gives answers that are off by one.
+
+### Not Handling the First Element
+
+The first obstacle always has a course length of `1` since there are no previous obstacles. Some implementations may incorrectly initialize or skip this case, especially when using recursive approaches that need careful base case handling.

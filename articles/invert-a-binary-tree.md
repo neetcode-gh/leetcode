@@ -1350,3 +1350,29 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Null Root
+Forgetting to check for a null root causes null pointer exceptions. Always return null immediately if the root is null.
+
+### Swapping After Recursive Calls
+If you swap children after making recursive calls, you end up swapping already-inverted subtrees back. The swap must happen before or the recursion will undo the inversion.
+```python
+# Wrong: swaps after recursion undoes the inversion
+self.invertTree(root.left)
+self.invertTree(root.right)
+root.left, root.right = root.right, root.left
+# Correct: swap first, then recurse
+root.left, root.right = root.right, root.left
+self.invertTree(root.left)
+self.invertTree(root.right)
+```
+
+### Using Wrong References After Swap
+After swapping, `root.left` now points to what was previously `root.right`. When recursing, make sure you're using the correct references for the swapped children.
+
+### Modifying While Traversing Incorrectly
+In iterative approaches, ensure you push children to the stack after swapping, not before. Pushing before the swap means you're adding references to positions that will change.

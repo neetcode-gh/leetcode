@@ -912,3 +912,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
+
+---
+
+## Common Pitfalls
+
+### Not Removing Zero-Count Characters from the Map
+
+When shrinking the window and decrementing character counts, failing to remove characters with zero count from the hash map leads to incorrect distinct character counts. Always delete or remove entries when their count reaches zero to maintain an accurate count of distinct characters in the current window.
+
+### Off-by-One Errors in Window Size Calculation
+
+A frequent mistake is calculating the window size as `right - left` instead of `right - left + 1`. Since both `left` and `right` are inclusive indices, the correct window size includes both endpoints. This off-by-one error leads to returning a result that is one less than the actual answer.
+
+### Handling Edge Cases with k = 0
+
+When `k` is zero, no characters are allowed in the substring, so the answer should be `0`. Some solutions forget to handle this edge case, leading to incorrect results or infinite loops when the while condition never terminates because the window can never be valid.

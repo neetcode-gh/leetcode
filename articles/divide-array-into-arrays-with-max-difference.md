@@ -472,3 +472,67 @@ class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in $nums$.
+
+---
+
+## Common Pitfalls
+
+### Checking Wrong Elements for Difference
+
+The maximum difference in a sorted triplet is between the first and third elements (smallest and largest), not adjacent elements. Checking `nums[i+1] - nums[i]` misses the actual constraint.
+
+```python
+# Wrong: Checking adjacent differences
+for i in range(0, len(nums), 3):
+    if nums[i+1] - nums[i] > k or nums[i+2] - nums[i+1] > k:
+        return []
+
+# Correct: Check first and third elements
+for i in range(0, len(nums), 3):
+    if nums[i+2] - nums[i] > k:
+        return []
+```
+
+### Forgetting to Sort First
+
+The greedy approach only works on sorted arrays. Without sorting, consecutive elements may not be close in value, making it impossible to form valid groups even when solutions exist.
+
+```python
+# Wrong: Missing sort
+def divideArray(nums, k):
+    res = []
+    for i in range(0, len(nums), 3):
+        if nums[i+2] - nums[i] > k:  # Not meaningful without sorting!
+            return []
+        res.append(nums[i:i+3])
+    return res
+
+# Correct: Sort first
+def divideArray(nums, k):
+    nums.sort()  # Critical step!
+    res = []
+    for i in range(0, len(nums), 3):
+        if nums[i+2] - nums[i] > k:
+            return []
+        res.append(nums[i:i+3])
+    return res
+```
+
+### Incorrect Handling of Return Value
+
+When no valid division exists, return an empty 2D array, not `None` or an array with empty subarrays. The return type matters for correctness.
+
+```java
+// Wrong: Returning null
+if (nums[i + 2] - nums[i] > k) {
+    return null;  // Incorrect type!
+}
+
+// Wrong: Returning array with empty element
+return new int[][]{ {} };
+
+// Correct: Return empty 2D array
+if (nums[i + 2] - nums[i] > k) {
+    return new int[][]{};
+}
+```

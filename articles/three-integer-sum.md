@@ -829,3 +829,19 @@ class Solution {
     - $O(m)$ space for the output list.
 
 > Where $m$ is the number of triplets and $n$ is the length of the given array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Skip Duplicates
+
+A common mistake is not properly skipping duplicate values, which leads to duplicate triplets in the result. After sorting, when you find a valid triplet, you must skip over all identical values for the first element (outer loop) and the left pointer. Failing to do this causes wrong answers on inputs like `[-1, -1, 0, 1, 1]`.
+
+### Not Sorting the Array First
+
+The two-pointer approach only works correctly on a sorted array. Without sorting, moving pointers based on sum comparisons does not guarantee you will find all valid triplets. Always sort the input array before applying the two-pointer technique.
+
+### Incorrect Early Termination
+
+When the first element `nums[i]` is positive, all remaining elements are also positive (since the array is sorted), so no triplet can sum to zero. However, incorrectly breaking when `nums[i] >= 0` instead of `nums[i] > 0` misses cases like `[0, 0, 0]`. The break condition should be `nums[i] > 0`, not `nums[i] >= 0`.

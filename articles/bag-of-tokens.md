@@ -229,3 +229,42 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Tokens
+The greedy approach only works on sorted tokens. Without sorting, you cannot guarantee playing the smallest token face-up and largest face-down.
+```python
+# Wrong: using unsorted tokens
+l, r = 0, len(tokens) - 1
+# Right: sort first
+tokens.sort()
+l, r = 0, len(tokens) - 1
+```
+
+### Playing Face-Down with Zero Score
+You cannot play a token face-down to gain power unless you have at least 1 score to spend. Attempting this leads to incorrect results.
+```python
+# Wrong: no score check before face-down play
+else:
+    power += tokens[r]
+    r -= 1
+    score -= 1
+# Right: require score > 0
+elif score > 0:
+    power += tokens[r]
+    r -= 1
+    score -= 1
+```
+
+### Returning Current Score Instead of Maximum
+The score fluctuates as you play tokens face-down. You must track the maximum score achieved, not just the final score.
+```python
+# Wrong: returning final score
+return score
+# Right: track and return maximum
+res = max(res, score)  # update after each face-up play
+return res
+```

@@ -1109,3 +1109,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the length of the first list and $n$ is the length of the second list.
+
+---
+
+## Common Pitfalls
+
+### Comparing Node Values Instead of References
+
+Intersection means the lists share the same node object, not just nodes with equal values. Using `nodeA.val == nodeB.val` will give false positives. You must compare node references directly (`nodeA == nodeB` or `nodeA === nodeB` in JavaScript) to correctly identify shared nodes.
+
+### Not Handling Non-Intersecting Lists
+
+When two lists do not intersect, the two-pointer approach naturally terminates when both pointers become `null` simultaneously. However, some implementations create infinite loops by not properly handling the case where pointers should redirect to the other list's head. Ensure your loop condition checks for pointer equality including the `null == null` case.

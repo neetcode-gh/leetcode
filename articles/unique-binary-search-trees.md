@@ -810,3 +810,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Base Case for Zero Nodes
+
+When implementing the recursive or DP solution, failing to handle the case where `n = 0` leads to incorrect results. An empty tree (zero nodes) has exactly one valid structure (the empty structure), so `numTrees(0)` must return `1`. Without this, the multiplication in the recurrence breaks down since multiplying by zero eliminates valid combinations.
+
+### Integer Overflow in Catalan Number Formulas
+
+The Catalan number approach involves multiplying large numbers before dividing. In languages like Java, C++, or Go, intermediate products can overflow standard `int` types even for moderate values of `n`. Always use `long` or `long long` for intermediate calculations, and be careful about the order of operations to minimize overflow risk.
+
+### Confusing Node Count with Node Values
+
+The problem asks for the count of structurally unique BSTs with nodes numbered `1` to `n`, but the actual values do not matter for counting structures. What matters is how many nodes go in the left versus right subtree. Some solutions incorrectly try to track specific node values rather than just counting nodes, leading to unnecessarily complex code or wrong answers.

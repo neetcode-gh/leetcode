@@ -868,3 +868,19 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the array $nums$ and $m$ is the sum of all the elements in the array.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Memoization Key
+
+When using top-down DP, the state must include both the current index and the running sum. Forgetting to include one of these in the memoization key will cause incorrect caching and wrong results. The key should be `(index, total)` not just `index` or just `total`.
+
+### Not Handling Negative Sums in Array-Based DP
+
+When using an array instead of a hashmap for memoization, the running sum can become negative. You must offset the sum by the total sum of all elements to convert it to a valid non-negative index. For example, use `dp[i][total + totalSum]` where `totalSum` is the sum of all numbers.
+
+### Modifying Map While Iterating (Space-Optimized DP)
+
+In the space-optimized bottom-up approach, you cannot update `dp` while iterating over it. You must create a new map `next_dp` for the next state and then replace `dp` with `next_dp` after processing each number. Modifying `dp` in place leads to using updated values in the same iteration.

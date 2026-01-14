@@ -994,3 +994,15 @@ class Solution {
 - Space complexity: $O(1)$
 
 > The probability of randomly choosing the majority element is greater than $50\%$, so the expected number of iterations in the outer while loop is constant.
+
+---
+
+## Common Pitfalls
+
+### Using >= Instead of > for the Majority Check
+
+The majority element must appear **more than** `n/2` times, not `n/2` or more. Using `count >= n/2` instead of `count > n/2` can return incorrect results for arrays like `[1, 2, 2]` where `2` appears exactly `n/2` times but is not a strict majority.
+
+### Forgetting Integer Division Semantics
+
+In languages like Python 3, `/` performs floating-point division while `//` performs integer division. Using `n / 2` instead of `n // 2` can lead to type errors or incorrect comparisons. Similarly, in JavaScript, `Math.floor(n / 2)` is needed for proper integer division.

@@ -435,3 +435,15 @@ class Solution {
 - Space complexity: $O(n * m)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the matrix.
+
+---
+
+## Common Pitfalls
+
+### Swapping Dimensions Incorrectly
+
+When creating the result matrix, you must swap the dimensions. The original matrix has dimensions `ROWS x COLS`, but the transposed matrix must have dimensions `COLS x ROWS`. A common mistake is creating a matrix with the same dimensions as the original, which leads to index out of bounds errors or incorrect results.
+
+### Confusing Transpose with In-Place Swap for Non-Square Matrices
+
+For square matrices, you can transpose in-place by swapping elements across the diagonal. However, for non-square matrices, in-place transposition is not possible because the dimensions change. Attempting to apply the in-place swap technique to a rectangular matrix will result in incorrect output or runtime errors.

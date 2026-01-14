@@ -491,3 +491,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Using Three $5 Bills Before One $10 and One $5
+
+When giving $15 change for a $20 bill, you should prefer using one $10 and one $5 over three $5 bills. The $5 bills are more versatile since they can be used for both $5 and $10 change scenarios. Using three $5 bills depletes your flexibility for future transactions.
+
+### Not Tracking the $10 Bill Count
+
+Some solutions only track $5 bills, assuming $10 bills are not useful. However, $10 bills are essential for efficiently making $15 change. Failing to track them means you cannot implement the optimal greedy strategy and may incorrectly return `false` when change is actually possible.

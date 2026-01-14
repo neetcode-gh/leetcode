@@ -360,3 +360,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the length of the input array `nums`.
+
+---
+
+## Common Pitfalls
+
+### Miscounting Missing Elements
+
+The formula for counting missing elements up to index `i` is `nums[i] - nums[0] - i`. Using `nums[i] - i` without subtracting `nums[0]` gives incorrect counts when the array does not start at 0 or 1.
+
+### Handling the Missing Element Beyond the Array
+
+When `k` exceeds the total count of missing elements within the array, the answer lies beyond the last element. Failing to account for this case and only searching within array bounds leads to incorrect results or out-of-bounds errors.
+
+### Binary Search Boundary Errors
+
+Using the wrong mid calculation or boundary updates can cause infinite loops or skip valid positions. The upper-mid formula `mid = right - (right - left) / 2` is used here to avoid getting stuck; using standard lower-mid without proper boundary handling leads to incorrect convergence.

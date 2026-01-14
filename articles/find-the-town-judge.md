@@ -396,3 +396,16 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Only Checking Indegree Without Outdegree
+
+The town judge must be trusted by everyone (indegree = n-1) AND trust nobody (outdegree = 0). A common mistake is only checking that someone is trusted by n-1 people, which would incorrectly identify a person who also trusts others.
+
+### Off-by-One Errors with 1-Indexed People
+
+People are labeled from 1 to n, not 0 to n-1. When using arrays indexed from 0, forgetting to iterate from 1 to n (inclusive) or incorrectly accessing array indices can cause out-of-bounds errors or missed candidates.
+

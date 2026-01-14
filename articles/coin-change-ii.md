@@ -1200,3 +1200,37 @@ class Solution {
 - Space complexity: $O(a)$
 
 > Where $n$ is the number of coins and $a$ is the given amount.
+
+---
+
+## Common Pitfalls
+
+### Counting Permutations Instead of Combinations
+Iterating over amounts in the outer loop and coins in the inner loop counts permutations (order matters), not combinations. This causes [1,2] and [2,1] to be counted as different ways.
+
+```python
+# Wrong: Counts permutations
+for a in range(1, amount + 1):
+    for coin in coins:
+        dp[a] += dp[a - coin]
+
+# Correct: Counts combinations (coins in outer loop)
+for coin in coins:
+    for a in range(coin, amount + 1):
+        dp[a] += dp[a - coin]
+```
+
+### Forgetting the Base Case
+Not initializing `dp[0] = 1` means there is no way to build any amount. The base case represents the one valid way to make amount 0: use no coins.
+
+### Allowing Negative Array Access
+When checking `dp[a - coins[i]]`, failing to verify `a >= coins[i]` first causes negative index access or runtime errors.
+
+```python
+# Wrong: Can access negative index
+dp[a] += dp[a - coins[i]]
+
+# Correct: Check before accessing
+if a >= coins[i]:
+    dp[a] += dp[a - coins[i]]
+```

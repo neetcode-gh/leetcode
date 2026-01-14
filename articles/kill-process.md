@@ -957,3 +957,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the length of the `pid` and `ppid`.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Include the Kill Process Itself
+
+A common mistake is only collecting the children of the process to kill, but forgetting to include the `kill` process itself in the result. The killed process must be added to the result list before traversing its descendants.
+
+### Not Handling Processes With No Children
+
+When building the parent-to-children map, some processes may have no children (leaf processes). Failing to check if a key exists in the map before accessing its children can cause null pointer exceptions or key errors. Always verify the map contains the key before iterating over children.
+
+### Using Linear Search for Each Recursive Call
+
+The brute force approach scans the entire `ppid` array for each recursive call, leading to O(n^2) complexity. This becomes a problem for large inputs. Building a hash map upfront to store parent-child relationships reduces this to O(n) by providing O(1) child lookups.

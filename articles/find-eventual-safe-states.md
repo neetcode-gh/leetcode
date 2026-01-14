@@ -545,3 +545,19 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the given graph.
+
+---
+
+## Common Pitfalls
+
+### Confusing Visited with Safe Status
+
+A node being visited during DFS does not mean it is safe. You need separate tracking for "currently being explored" (to detect cycles) and "confirmed safe" (all paths lead to terminal nodes). Mixing these states causes incorrect cycle detection or premature safety classification.
+
+### Not Returning Results in Sorted Order
+
+The problem requires returning safe nodes in ascending order. If you collect nodes as they are confirmed safe during DFS, the order depends on traversal order, not node indices. Either sort the result at the end or iterate through nodes 0 to n-1 and check each one's safety status.
+
+### Incorrectly Handling Nodes with No Outgoing Edges
+
+Terminal nodes (nodes with no outgoing edges) are always safe by definition. In the topological sort approach, these nodes have out-degree 0 and should be the starting points. In DFS, they should immediately return true without further recursion.

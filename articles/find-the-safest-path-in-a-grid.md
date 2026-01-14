@@ -2448,3 +2448,19 @@ struct Deque<T> {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Using Single-Source BFS Instead of Multi-Source BFS
+
+To compute the minimum distance from each cell to the nearest thief, you must start BFS from all thief cells simultaneously. A common mistake is running separate BFS from each thief and taking the minimum, which results in O(n^4) time complexity instead of O(n^2).
+
+### Confusing Min-Heap with Max-Heap in Dijkstra
+
+Since we want to maximize the minimum distance (safeness factor), we need a max-heap to always process the path with the highest current safeness first. Using a min-heap (standard Dijkstra) will find the path with the lowest safeness instead, giving incorrect results.
+
+### Forgetting to Check Start and End Cell Constraints
+
+The safeness of any path is bounded by the minimum distance at both the start cell (0,0) and the destination cell (N-1, N-1). If either cell contains a thief (distance 0), the maximum safeness is 0 regardless of the path taken. Some solutions skip this edge case check.

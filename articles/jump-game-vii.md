@@ -1068,3 +1068,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check the Last Character
+
+Before starting any traversal, verify that `s[n-1] == '0'`. If the destination is blocked, immediately return `false`. Skipping this check wastes computation on an impossible path.
+
+### Off-by-One Errors in Jump Range
+
+The valid jump range from position `i` is `[i + minJump, i + maxJump]` inclusive. Common mistakes include using `i + maxJump - 1` or forgetting to clamp the upper bound to `n - 1`. Always verify your loop bounds match the problem constraints.
+
+### Revisiting Already Processed Positions
+
+In BFS or DP approaches, failing to track which positions have been visited or marked leads to exponential blowup. Use a `farthest` pointer or visited array to ensure each index is processed at most once.

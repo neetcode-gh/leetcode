@@ -956,3 +956,20 @@ class Solution {
 - Space complexity: $O(k)$
 
 > Where $k$ is the maximum length of the subarray and $n$ is the size of the array $arr$.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Transformation
+
+Each element in a partition becomes the maximum value of that partition, not stays as its original value. The sum contribution is `max_element * partition_length`, not the sum of original elements. This transformation is the key insight of the problem.
+
+### Incorrect Window Size Calculation
+
+When iterating through possible partition endpoints, the window size is `j - i + 1`, not `j - i`. Off-by-one errors here lead to underestimating the contribution of each partition and returning a smaller sum than optimal.
+
+### Forgetting to Track Running Maximum
+
+For each partition starting at index `i`, you must track the maximum element seen so far as you extend the window. Recalculating the maximum from scratch for each window length turns an O(n*k) solution into O(n*k^2).
+

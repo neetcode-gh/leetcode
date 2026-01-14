@@ -571,3 +571,24 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $N$ is the length of the input string `s`.
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Formula for Counting Substrings
+For a group of `L` identical consecutive characters, the number of valid substrings is `L * (L + 1) / 2`, not `L` or `L * L`. This arithmetic sum counts substrings of lengths 1, 2, 3, ..., L.
+
+```python
+# Wrong: Only counts substrings of length 1
+total += length
+
+# Wrong: Overcounts
+total += length * length
+
+# Correct: Sum of 1 + 2 + ... + L
+total += length * (length + 1) // 2
+```
+
+### Forgetting to Process the Last Group
+When iterating through the string to find groups of identical characters, the last group may not be processed if the loop only triggers on character changes. Ensure the final group is counted either by extending the loop to `len(s) + 1` or by handling it after the loop ends.

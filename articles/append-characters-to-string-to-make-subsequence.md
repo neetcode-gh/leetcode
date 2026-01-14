@@ -442,3 +442,30 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ and $m$ are the lengths of the strings $s$ and $t$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Returning the Wrong Value After Matching
+The result should be the number of unmatched characters in `t`, not the number of matched characters. After the loop, `j` represents how many characters were matched, so you need to return `len(t) - j`, not `j`.
+```python
+# Wrong: returning matched count
+return j  # Returns how many matched, not how many to append
+
+# Correct: return remaining characters
+return len(t) - j
+```
+
+### Advancing Both Pointers on Mismatch
+When characters do not match, only the pointer for `s` should advance. The pointer for `t` should stay in place waiting for its character to appear later in `s`. Advancing both pointers skips characters in `t` that might match later.
+```python
+# Wrong: advancing both pointers
+if s[i] != t[j]:
+    i += 1
+    j += 1  # Skips a character in t that might match later
+
+# Correct: only advance s pointer
+if s[i] != t[j]:
+    i += 1
+```

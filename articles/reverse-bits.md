@@ -517,3 +517,15 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Signed Right Shift Instead of Unsigned
+
+In languages like Java and JavaScript, using `>>` (signed right shift) instead of `>>>` (unsigned right shift) can cause incorrect results. The signed shift preserves the sign bit, which leads to unexpected behavior when the most significant bit is set. Always use unsigned right shift for bit reversal operations.
+
+### Hardcoding the Wrong Bit Width
+
+The problem specifies a 32-bit unsigned integer, so all operations must process exactly 32 bits. A common mistake is iterating fewer than 32 times or not accounting for leading zeros. Every bit position matters in reversal, so the loop must always run for all 32 bits regardless of the input value.

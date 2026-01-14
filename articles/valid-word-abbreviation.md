@@ -281,3 +281,15 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ and $m$ are the lengths of the strings $word$ and $abbr$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Allowing Leading Zeros in Numbers
+
+The abbreviation `"a02b"` is invalid because the number has a leading zero. Many solutions forget to check for this edge case. Before parsing a multi-digit number, always verify that the first digit is not `'0'`. A leading zero makes the abbreviation invalid regardless of the number's value.
+
+### Skipping Past the End of the Word
+
+After parsing a number from the abbreviation and advancing the word pointer, you must verify that the pointer does not exceed the word length. For example, with `word = "hi"` and `abbr = "5"`, skipping 5 characters goes beyond the word's length. Always check `i <= n` after advancing, and ensure both pointers reach their respective ends simultaneously.

@@ -1280,3 +1280,27 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Sorting by End Time Instead of Start Time
+
+For the top-down DP approach, jobs must be sorted by start time so that when we take a job, we can efficiently find the next non-overlapping job. Sorting by end time breaks the forward progression logic and makes binary search for the next valid job incorrect.
+
+### Off-by-One Errors in Binary Search
+
+When finding the next non-overlapping job, the condition should be `startTime[j] >= endTime[i]` (using `>=` not `>`). Jobs that start exactly when another ends are non-overlapping. Using strict greater-than excludes valid job combinations and produces suboptimal results.
+
+### Forgetting to Handle the Skip Case
+
+At each job, there are two choices: take it or skip it. A common mistake is only considering taking the job and recursing to the next non-overlapping position. You must also consider skipping the current job entirely with `dfs(i + 1)` and take the maximum of both options.
+
+### Using Linear Scan Instead of Binary Search
+
+While a linear scan to find the next non-overlapping job produces correct results, it degrades the time complexity from $O(n \log n)$ to $O(n^2)$. For large inputs, this causes time limit exceeded errors. Always use binary search to find the next valid job index.
+
+### Not Memoizing the Recursion
+
+Without memoization, the recursive solution revisits the same subproblems exponentially many times. Each index can be reached through multiple paths, and recomputing the answer each time leads to exponential time complexity. Always cache the result for each index after computing it.

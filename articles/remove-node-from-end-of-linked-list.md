@@ -1159,3 +1159,19 @@ class Solution {
 
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Head Removal
+
+When `n` equals the length of the list, the head node itself must be removed. Without a dummy node or explicit check for this case, the code may crash or return incorrect results. Always verify your solution works when the target is the first node.
+
+### Off-by-One Errors in Pointer Positioning
+
+The two-pointer technique requires the `left` pointer to stop at the node *before* the one to delete. A common mistake is advancing `right` by `n-1` instead of `n` steps, causing the wrong node to be removed. Carefully trace through a small example to confirm your gap is correct.
+
+### Not Returning the Updated Head
+
+After modifying the list, forgetting to return `dummy.next` (or the updated head) results in returning a stale reference. This is especially problematic when the original head was deleted. Always ensure your return statement reflects any structural changes to the list.

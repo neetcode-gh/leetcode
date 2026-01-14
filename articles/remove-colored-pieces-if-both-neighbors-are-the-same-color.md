@@ -647,3 +647,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Simulating the Game Turn by Turn
+
+A common mistake is to simulate the actual game by removing pieces one at a time and alternating turns. This leads to O(n^2) time complexity because each removal requires scanning and modifying the string. The key insight is that removing an 'A' from a sequence of A's doesn't affect Bob's available moves on B sequences, and vice versa. Instead of simulating, simply count the available moves for each player upfront.
+
+### Miscounting Available Moves
+
+When counting moves, remember that a player can only remove a piece if it has neighbors of the same color on both sides. For a run of k consecutive same-colored pieces, the number of removable pieces is k - 2 (not k or k - 1). A run of length 1 or 2 gives zero moves. Some solutions incorrectly count individual pieces or forget to subtract 2 for the boundary pieces that cannot be removed.
+
+### Using the Wrong Win Condition
+
+The problem asks if Alice wins, and Alice moves first. Some solutions return `alice >= bob` instead of `alice > bob`. Since Alice needs strictly more moves than Bob to win (she goes first, so if they have equal moves, Bob makes the last move and Alice loses), the correct condition is `alice > bob`.

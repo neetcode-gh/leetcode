@@ -1002,3 +1002,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Negative Stone Values
+
+Unlike other stone game problems, this one allows negative values. Greedily taking the maximum stones does not work because sometimes it is better to take fewer stones to force the opponent into a bad position. Your DP must consider all choices (1, 2, or 3 stones) even when some have negative values.
+
+### Returning the Wrong Output Type
+
+The problem asks for a string ("Alice", "Bob", or "Tie"), not a boolean or numeric score. A common mistake is returning the score difference instead of comparing it to determine the winner. Always convert the final score comparison into the correct string result.
+
+### Incorrect Base Case Handling
+
+When the index reaches or exceeds the array length, the remaining score is zero. Initializing this incorrectly or not handling the edge case where fewer than 3 stones remain causes out-of-bounds errors or wrong results. Ensure your loop condition properly checks `i + X <= n` before accessing elements.
+
+### Forgetting Both Players Play Optimally
+
+Assuming Bob plays suboptimally (e.g., always takes 1 stone) leads to incorrect results. The DP must model Bob as a rational player who also maximizes his own score. In the score-difference formulation, this is handled by subtracting the opponent's optimal result from the current player's gain.

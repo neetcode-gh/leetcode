@@ -1057,3 +1057,19 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Overcomplicating the Solution
+
+The mathematical insight that Alice always wins (due to even pile count and odd total) means you can simply return `true`. However, many solvers implement full DP without recognizing this property. While the DP approach is valid and educational, understanding why Alice always wins demonstrates deeper problem analysis.
+
+### Confusing Whose Turn It Is
+
+In the DP approach, determining whose turn it is based on the range `[l, r]` can be tricky. Alice moves when the number of remaining piles is even (since the game starts with an even number and she goes first). Using `(r - l + 1) % 2 == 0` or equivalently `(r - l) % 2 == 1` indicates Alice's turn, but off-by-one errors here are common.
+
+### Wrong Comparison for Final Result
+
+The question asks whether Alice wins (strictly greater score), not whether she ties or wins. Comparing `alice_score >= total - alice_score` instead of `alice_score > total - alice_score` gives incorrect results. Since the total is odd and all values are positive integers, a tie is impossible in this specific problem, but the comparison should still be strictly greater.

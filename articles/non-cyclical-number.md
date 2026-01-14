@@ -881,3 +881,15 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Infinite Loop Without Cycle Detection
+
+Forgetting to detect cycles causes the program to loop forever for non-happy numbers. Without a hash set or fast/slow pointers, numbers like 2 will endlessly cycle through the same values (2 → 4 → 16 → 37 → 58 → 89 → 145 → 42 → 20 → 4 → ...) without ever reaching 1.
+
+### Incorrect Digit Extraction
+
+Using the wrong operations to extract digits leads to incorrect sum calculations. A common mistake is forgetting integer division when removing the last digit (`n = n // 10`) or using string conversion inefficiently. Always use `n % 10` to get the last digit and `n // 10` to remove it.

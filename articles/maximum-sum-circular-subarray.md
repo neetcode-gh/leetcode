@@ -662,3 +662,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the All-Negative Edge Case
+
+When all elements are negative, the minimum subarray equals the entire array, so `total - minSum` becomes zero. This would incorrectly suggest an empty subarray. The fix is to check if `maxSum > 0` before considering the wrap-around case, or equivalently return `maxSum` when all elements are negative.
+
+### Confusing Wrap-Around Logic
+
+A common mistake is trying to directly find the maximum wrap-around subarray. The key insight is that if a subarray wraps around, it means we are excluding a contiguous middle portion. Therefore, the wrap-around max equals `total - minSubarraySum`. Failing to realize this leads to overly complicated solutions.
+
+### Incorrect Kadane Initialization
+
+Initializing `curMax` and `curMin` to `nums[0]` instead of `0` can cause off-by-one errors when updating the global max/min. The standard Kadane approach resets the running sum when it becomes detrimental, which requires careful initialization to avoid skipping or double-counting the first element.

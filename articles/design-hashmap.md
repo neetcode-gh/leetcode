@@ -696,3 +696,54 @@ class MyHashMap {
 - Space complexity: $O(k + m)$
 
 > Where $n$ is the number of keys, $k$ is the size of the map ($1000$) and $m$ is the number of unique keys.
+
+---
+
+## Common Pitfalls
+
+### Not Updating Existing Keys on Put
+
+When a key already exists, `put()` should update its value rather than adding a duplicate entry.
+
+```python
+# Wrong - creates duplicate entries
+def put(self, key: int, value: int) -> None:
+    cur = self.map[self.hash(key)]
+    while cur.next:
+        cur = cur.next
+    cur.next = ListNode(key, value)  # Always adds new node!
+
+# Correct - update if exists, otherwise add
+def put(self, key: int, value: int) -> None:
+    cur = self.map[self.hash(key)]
+    while cur.next:
+        if cur.next.key == key:
+            cur.next.val = value  # Update existing
+            return
+        cur = cur.next
+    cur.next = ListNode(key, value)  # Add new
+```
+
+### Traversing from Dummy Node in Get
+
+When getting a value, start from `dummy.next` (actual first element), not the dummy head itself.
+
+```python
+# Wrong - checks dummy node's key
+def get(self, key: int) -> int:
+    cur = self.map[self.hash(key)]  # Starts at dummy
+    while cur:
+        if cur.key == key:  # Dummy has key=-1, might match!
+            return cur.val
+        cur = cur.next
+    return -1
+
+# Correct - skip dummy node
+def get(self, key: int) -> int:
+    cur = self.map[self.hash(key)].next  # Start after dummy
+    while cur:
+        if cur.key == key:
+            return cur.val
+        cur = cur.next
+    return -1
+```

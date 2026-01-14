@@ -1362,3 +1362,27 @@ class Solution {
 - Space complexity: $O(n ^ 2 + 2 ^ n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Multiply by Operation Number
+
+Each operation's score is `i * gcd(nums[a], nums[b])` where `i` is the operation number (1-indexed). Forgetting the multiplier or using 0-indexed operation numbers produces incorrect scores.
+
+### Using Wrong Bit Count for Operation Number
+
+In bitmask DP, the operation number is derived from the number of set bits divided by 2, plus 1 (since each operation uses 2 elements). Off-by-one errors in this calculation cascade through all subsequent operations.
+
+### Not Precomputing GCD Values
+
+Recomputing `gcd(nums[i], nums[j])` inside the DP loop for every state transition leads to TLE on larger inputs. Precomputing all pairwise GCD values into a 2D table provides significant speedup.
+
+### Skipping Invalid Bitmask States
+
+In bottom-up DP, states with an odd number of set bits are invalid (you cannot pair up an odd number of elements). Failing to skip these states wastes computation and can cause incorrect transitions.
+
+### Incorrect Bitmask Transition
+
+When marking elements as used, the new mask should be `mask | (1 << i) | (1 << j)`. Using XOR or other operations instead of OR can incorrectly toggle bits that are already set, corrupting the state.

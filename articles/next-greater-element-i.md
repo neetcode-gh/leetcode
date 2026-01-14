@@ -697,3 +697,15 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $m$ is the size of the array $nums1$ and $n$ is the size of the array $nums2$.
+
+---
+
+## Common Pitfalls
+
+### Searching in Wrong Array
+
+The next greater element must be found in `nums2`, to the right of where the element appears in `nums2`. Some solutions mistakenly look for the next greater element within `nums1` or search to the left instead of right in `nums2`.
+
+### Pushing All Elements onto Stack
+
+The stack optimization only needs to track elements from `nums1` that are waiting for their next greater element. Pushing every element from `nums2` onto the stack works but uses unnecessary space. Only push elements that exist in the `nums1` lookup map.

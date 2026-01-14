@@ -670,3 +670,17 @@ struct Heap<T> {
     - $O(n + (30\log n))$ in Python, C++, JS.
     - $O(n \log n)$ in Java.
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Using Greater-Than-or-Equal Instead of Strictly Greater
+
+The polygon inequality requires that the longest side be strictly less than the sum of all other sides (equivalently, the sum of other sides must be strictly greater than the longest side). Using `>=` instead of `>` in the comparison will incorrectly accept degenerate cases where the sides form a straight line, not a valid polygon.
+
+### Integer Overflow with Large Sums
+
+The array can contain up to 10^5 elements, each up to 10^9. The sum of all elements can exceed the 32-bit integer range. Use 64-bit integers (`long` in Java, `long long` in C++) for the running total and result to prevent overflow and incorrect comparisons.
+
+### Forgetting That Polygons Need At Least 3 Sides
+
+A valid polygon requires at least 3 sides. When iterating through the sorted array, you cannot form a valid polygon until you have accumulated at least 2 previous elements. Starting the validity check too early (e.g., at index 0 or 1) can lead to incorrect results or accessing invalid indices.

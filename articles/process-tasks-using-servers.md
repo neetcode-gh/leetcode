@@ -1121,3 +1121,19 @@ class Solution {
     - $O(m)$ space for the output array.
 
 > Where $m$ is the number of tasks and $n$ is the number of servers.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Heap Ordering for Server Selection
+
+When no servers are available at time `t`, you must wait until the earliest server becomes free. A common mistake is not correctly ordering the unavailable heap by finish time, or forgetting to move **all** servers that become free at that time back to the available heap. Multiple servers might become available simultaneously.
+
+### Not Advancing Time When All Servers Are Busy
+
+If all servers are busy when a task arrives, you must jump time forward to when the next server becomes free. Forgetting this causes an infinite loop or incorrect assignments. The time should be set to `unavailable.peek().finishTime`, not incremented by 1.
+
+### Wrong Tie-Breaking Logic in Priority Queue
+
+The problem requires selecting the server with the smallest weight, and among ties, the smallest index. Implementing the comparator incorrectly (e.g., comparing indices before weights) leads to wrong server assignments. Ensure the primary comparison is on weight and secondary on index.

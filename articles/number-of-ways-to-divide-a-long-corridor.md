@@ -1255,3 +1255,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Edge Cases for Seat Count
+
+If the total number of seats is odd or less than 2, there is no valid way to divide the corridor. Forgetting to check these conditions at the start leads to incorrect results or division by zero errors when computing gap products.
+
+### Misunderstanding Where Dividers Can Be Placed
+
+Dividers can only be placed between sections, specifically in the gaps between the second seat of one section and the first seat of the next section. The number of valid positions for each divider equals the number of positions between consecutive seat pairs (the gap includes all plants plus the implicit space between seats).
+
+### Off-by-One Errors in Gap Calculation
+
+The gap between the 2nd seat of one section and the 1st seat of the next is `seats[i+1] - seats[i]`, not `seats[i+1] - seats[i] - 1` or `seats[i+1] - seats[i] + 1`. This represents the number of possible divider positions, including placing it immediately after the 2nd seat.
+
+### Forgetting to Apply Modulo During Multiplication
+
+The product of gaps can become extremely large. Applying modulo only at the end causes integer overflow. You must apply modulo after each multiplication step to keep the intermediate results within bounds.
+
+### Incorrect Loop Bounds in Combinatorics Approach
+
+When iterating through seat positions to compute gap products, the loop should process pairs `(seats[1], seats[2])`, `(seats[3], seats[4])`, etc. Starting at the wrong index or using incorrect step sizes skips gaps or includes invalid pairs.

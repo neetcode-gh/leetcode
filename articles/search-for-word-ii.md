@@ -1600,3 +1600,27 @@ class Solution {
 - Space complexity: $O(s)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Remove Duplicate Words from Results
+
+When multiple paths on the board can form the same word, adding the word to the result list without checking for duplicates leads to duplicate entries. Using a set for results or marking words as found in the Trie (by setting `idx = -1` or `isWord = false`) prevents this issue.
+
+### Not Restoring the Board After Backtracking
+
+When marking cells as visited by modifying the board directly (e.g., setting `board[r][c] = '*'`), forgetting to restore the original character after the recursive calls will corrupt the board state. This prevents other starting positions or words from finding valid paths.
+
+### Inefficient Trie Without Pruning
+
+Building a Trie but not pruning it after finding words leads to repeated exploration of dead branches. Without decrementing `refs` counts and removing nodes when `refs` reaches zero, the algorithm continues searching paths that cannot yield any new words, significantly degrading performance.
+
+### Incorrect Trie Traversal During DFS
+
+Advancing the Trie pointer before checking if the child node exists can cause null pointer exceptions. Always verify that `node.children[char]` exists before moving to the next node. Similarly, checking `isWord` before updating the node pointer will miss the current word.
+
+### Not Handling the Visited Set Correctly with Trie
+
+When using a separate visited set alongside the Trie, forgetting to clear or properly backtrack the visited set for each new starting cell can block valid paths. Each DFS starting point should begin with a fresh or properly reset visited state.

@@ -305,3 +305,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Traversing Left to Right
+
+Processing the array from left to right requires recalculating the maximum of all right elements for each position, resulting in O(n^2) time complexity. The optimal approach traverses right to left, maintaining a running maximum in a single pass.
+
+### Updating the Maximum Before Storing the Result
+
+When traversing right to left, the current element's value must be stored in the result before updating `rightMax`. Updating `rightMax` first causes the current element to incorrectly include itself in its own replacement value.

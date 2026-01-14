@@ -1162,3 +1162,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow with Large Numbers
+
+The string can be up to 20 characters long, meaning numbers can exceed 64-bit integer limits. Using `int` or even standard `long` without considering overflow can produce incorrect comparisons. Use `unsigned long long` or language-specific big integer handling, and be cautious when building numbers digit by digit.
+
+### Not Requiring At Least Two Parts
+
+The problem requires splitting into at least two parts. A common mistake is returning true when the entire string forms a single number. Always ensure the loop for the first number excludes the last character, forcing at least one more part to exist.
+
+### Missing the Pruning Optimization
+
+Without early termination when the current number exceeds or equals the previous number, the solution explores many unnecessary branches. Since we need strictly descending consecutive values, once `num >= prev`, no valid sequence can be formed by adding more digits, so breaking out of the loop is essential for efficiency.

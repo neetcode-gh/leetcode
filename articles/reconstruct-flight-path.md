@@ -898,3 +898,27 @@ class Solution {
 - Space complexity: $O(E)$
 
 > Where $E$ is the number of tickets (edges) and $V$ is the number of airports (vertices).
+
+---
+
+## Common Pitfalls
+
+### Not Starting from JFK
+
+The problem explicitly states the journey must begin from "JFK". Forgetting to initialize the traversal from "JFK" or accidentally starting from a different airport will produce an invalid itinerary.
+
+### Forgetting to Use Each Ticket Exactly Once
+
+Each ticket represents a one-time-use flight. Failing to remove or mark tickets as used after consuming them leads to infinite loops or itineraries that reuse the same flight multiple times.
+
+### Sorting in Wrong Order for Hierholzer's Algorithm
+
+Hierholzer's algorithm requires processing destinations in reverse lexicographical order (when using a stack/pop approach) so that popping gives the smallest destination. Sorting in ascending order without reversing, or using the wrong data structure, produces lexicographically incorrect results.
+
+### Not Reversing the Result in Post-Order Traversal
+
+In Hierholzer's algorithm, airports are added to the result when backtracking (post-order), which builds the path in reverse. Forgetting to reverse the final result returns the itinerary in wrong order.
+
+### Confusing Dead Ends with Valid Endpoints
+
+In the DFS backtracking approach, reaching an airport with no outgoing flights does not necessarily mean failure. It could be the valid end of the Eulerian path. Only return failure if you cannot use all tickets, not simply because you reached a node with no remaining edges.

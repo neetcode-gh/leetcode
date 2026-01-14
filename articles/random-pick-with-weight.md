@@ -455,3 +455,19 @@ class Solution {
 
 * Time complexity: $O(n)$ for initializing and $O(\log n)$ for each $pickIndex()$ function call.
 * Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Binary Search
+
+The prefix sum array has one extra element compared to the weights array when using a leading zero. When binary searching, forgetting to adjust indices correctly leads to returning the wrong index or accessing out-of-bounds memory. Always verify that your search range and return value account for the offset between prefix sum indices and original weight indices.
+
+### Using Integer Random Instead of Floating Point
+
+Generating a random integer in `[0, total)` instead of a floating-point value in `[0, total)` can cause subtle probability errors. For example, with weights `[1, 1]`, using integer random would give exactly 50-50 distribution, but the edge case handling differs. Using `random() * total` with proper floating-point comparison ensures correct probability distribution matching the weight ratios.
+
+### Wrong Comparison Operator in Binary Search
+
+Using `<` instead of `<=` (or vice versa) when comparing the prefix sum to the target changes which index gets selected. The correct approach finds the first index where the prefix sum strictly exceeds the random target. Using `>=` instead of `>` shifts all probabilities by one index, causing the first element to be selected too often and the last element too rarely.

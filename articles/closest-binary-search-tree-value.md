@@ -578,3 +578,25 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $H$ is the height of the tree.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Tie-Breaking Correctly
+When two values have the same distance to the target, the problem requires returning the smaller value. Using `<` instead of `<=` in the comparison can return the wrong answer.
+
+```python
+# Wrong: Returns larger value on ties
+if abs(val - target) < abs(closest - target):
+    closest = val
+
+# Correct: Prefer smaller value on ties
+if abs(val - target) < abs(closest - target) or \
+   (abs(val - target) == abs(closest - target) and val < closest):
+    closest = val
+```
+
+### Going the Wrong Direction in BST
+Choosing the wrong child based on comparison with target defeats the purpose of binary search. If target is smaller than current value, you must go left (not right) to find potentially closer smaller values.
+

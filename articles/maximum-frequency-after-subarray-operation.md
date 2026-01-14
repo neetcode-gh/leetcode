@@ -637,3 +637,27 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(50)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Subarray Operation
+
+The operation adds a constant to every element in a chosen subarray. A common mistake is to think you can selectively modify some elements within the subarray while leaving others unchanged. Every element in the range `[l, r]` gets the same constant added. This means if you have both `k` and `num` values in your chosen subarray, converting `num` to `k` will simultaneously change existing `k` values to something else.
+
+### Forgetting to Account for Lost k Values
+
+When you apply the operation to a subarray to convert `num` values to `k`, any existing `k` values within that subarray become `k + constant`, which is no longer `k`. The net gain is `(count of num in subarray) - (count of k in subarray)`. Solutions that only count the gains without subtracting the losses will produce incorrect results.
+
+### Not Resetting State Between Target Values
+
+When iterating through all possible target values (1 to 50), each target requires its own independent Kadane's algorithm pass. Failing to reset the running count between targets will carry over state from previous iterations, leading to incorrect maximum subarray calculations. Initialize `cnt = 0` at the start of each target value's iteration.
+
+### Ignoring the No-Operation Case
+
+The operation is optional. Sometimes the best strategy is to not perform any operation at all, especially when `k` already appears frequently. The answer should always be at least `count(k)` in the original array. Some solutions focus so heavily on finding the best subarray that they forget to compare against the base case of leaving the array unchanged.
+
+### Applying the Wrong Kadane's Variant
+
+Kadane's algorithm finds the maximum sum subarray, but the classic version requires at least one element. In this problem, an empty subarray (doing nothing to convert any `num` to `k`) is valid and contributes 0 to the gain. Solutions must allow the running sum to reset to 0 when it goes negative, representing the choice to not include those elements in the operation subarray.

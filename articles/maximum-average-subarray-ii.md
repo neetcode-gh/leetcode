@@ -540,3 +540,27 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $N$ is the number of elements in the array, and `range` is the difference between the maximal and minimal values in the array, i.e. `range = max_val - min_val`, and finally `error` is the precision required in the problem.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Minimum Length Constraint
+
+The subarray must have length at least `k`. A common mistake is to check all subarrays without enforcing this constraint, or to only check subarrays of exactly length `k` and miss longer subarrays that could have a higher average.
+
+### Floating-Point Precision Issues
+
+Binary search on real numbers requires careful handling of precision. Setting the tolerance too tight can cause infinite loops, while setting it too loose yields inaccurate answers. The epsilon value of `0.00001` must be chosen to match the problem's precision requirements.
+
+### Incorrect Check Function Logic
+
+The check function determines if a subarray with average at least `mid` exists. The trick of subtracting `mid` from each element and finding a non-negative sum subarray is subtle. Errors in tracking prefix sums or the minimum prefix sum lead to false positives or negatives.
+
+### Not Tracking Minimum Prefix Sum Correctly
+
+In the check function, you need the minimum prefix sum that ends at least `k` positions before the current index. Off-by-one errors in when to update `min_sum` versus when to use it cause the check to return incorrect results.
+
+### Binary Search Direction Confusion
+
+When the check returns true, it means a valid subarray exists with average at least `mid`, so the answer is at least `mid` and we should search higher. Reversing this logic inverts the binary search and produces wrong answers.

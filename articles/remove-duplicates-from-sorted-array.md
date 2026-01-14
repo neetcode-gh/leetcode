@@ -427,3 +427,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Leveraging the Sorted Property
+
+The array is already sorted, meaning duplicates are always adjacent. Some solutions use a hash set or sort the array again, which wastes time and space. Since duplicates are consecutive, you only need to compare each element with its predecessor (or the last written element) to detect duplicates in O(1) space.
+
+### Returning the Wrong Value
+
+The function should return the count of unique elements, not modify and return the array itself. Additionally, the returned length `k` means the first `k` elements of `nums` contain the unique values. Some solutions off-by-one error by returning `l - 1` instead of `l`, or forget that the write pointer already represents the count of unique elements written.

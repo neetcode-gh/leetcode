@@ -1778,3 +1778,19 @@ class Solution {
 
 - Time complexity: $O(26 * n)$
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
+
+---
+
+## Common Pitfalls
+
+### Counting Subsequences Instead of Unique Palindromes
+
+The problem asks for the count of unique palindromic subsequences, not the total number of subsequences. A palindrome like `"aba"` should only be counted once even if it appears multiple times in the string at different positions. Failing to use a set or similar deduplication mechanism leads to overcounting.
+
+### Not Understanding the Subsequence Definition
+
+A subsequence does not require consecutive characters. Some solutions incorrectly look for contiguous substrings of length 3 instead of subsequences where the three characters can have any number of characters between them. The characters just need to maintain their relative order.
+
+### Inefficient Middle Character Counting
+
+For each pair of matching end characters, you need to count distinct middle characters between the first and last occurrence. Iterating through the entire substring for each end character pair works but can be slow. The optimal approach uses prefix sums or bitmasks to efficiently count distinct characters in any range.

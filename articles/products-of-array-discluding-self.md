@@ -925,3 +925,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Using Division Without Handling Zeros
+
+The division approach (`totalProduct / nums[i]`) fails when the array contains zeros. Dividing by zero causes runtime errors, and having multiple zeros requires special handling. Always count zeros first: with two or more zeros, the entire result is zeros; with exactly one zero, only the zero's position gets the product of other elements.
+
+### Off-by-One Errors in Prefix/Suffix Array Construction
+
+When building prefix products, `pref[i]` should contain the product of elements **before** index `i`, not including `nums[i]`. A common mistake is including `nums[i]` in the prefix, which double-counts the element. The same applies to suffix arrays: `suff[i]` should exclude `nums[i]`.
+
+### Integer Overflow with Large Products
+
+When the array contains many large numbers, the product can overflow 32-bit integers. In languages with fixed-size integers, consider using `long` or `BigInteger`. The problem constraints usually prevent overflow, but edge cases with many elements near the maximum value should be tested.

@@ -864,3 +864,22 @@ class Solution {
 - Space complexity:
     - $O(\log n)$ space for the stack.
     - $O(n)$ space for the output.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Subarray Bounds
+When recursively building subtrees, a common mistake is including the middle element in one of the subarrays, leading to infinite recursion or duplicate nodes.
+
+```python
+# Wrong - includes mid in left subtree
+root.left = helper(l, m)  # should be m - 1
+
+# Correct
+root.left = helper(l, m - 1)
+root.right = helper(m + 1, r)
+```
+
+### Choosing Wrong Middle Element in Even-Length Arrays
+For arrays with even length, the middle can be either `(l + r) // 2` or `(l + r + 1) // 2`. While both produce valid height-balanced BSTs, inconsistency can cause confusion. The problem accepts either choice, but stick with one consistently.

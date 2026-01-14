@@ -163,3 +163,15 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array First
+
+The sliding window approach only works on a sorted array because it relies on contiguous elements having the minimum possible range. Applying the window on an unsorted array compares arbitrary elements, missing the optimal k-element subset.
+
+### Off-by-One Error in Window Size
+
+The window should contain exactly `k` elements, meaning if `l` is the left index and `r` is the right index, then `r - l + 1 = k`, so `r = l + k - 1`. Initializing `r = k` instead of `r = k - 1` creates a window of size `k + 1`, producing incorrect difference calculations.

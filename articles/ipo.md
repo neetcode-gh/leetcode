@@ -820,3 +820,27 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using the Wrong Heap Type
+
+A critical mistake is confusing which heap to use for which purpose. You need a min-heap ordered by capital (to efficiently find affordable projects) and a max-heap ordered by profit (to select the most profitable affordable project). Reversing these or using the wrong ordering will produce incorrect results.
+
+### Not Transferring Projects When Capital Increases
+
+After completing a project and gaining profit, your capital increases, which may unlock previously unaffordable projects. Forgetting to transfer newly affordable projects from the capital heap to the profit heap before selecting the next project means you might miss the most profitable option available to you.
+
+### Not Handling the Case When No Projects Are Affordable
+
+If your current capital is insufficient to start any remaining projects, the max-heap for profits will be empty. Failing to check for this condition and break out of the loop will cause errors (such as attempting to pop from an empty heap) or infinite loops.
+
+### Incorrect Greedy Strategy
+
+Some developers try to optimize by considering both profit and capital together (e.g., profit-to-capital ratio) or by looking ahead multiple projects. This overcomplicates the solution. The optimal greedy strategy is simple: always pick the highest-profit project among those currently affordable.
+
+### Off-by-One Errors with k Projects
+
+Remember that you can complete at most `k` projects, not exactly `k`. If there are fewer than `k` affordable projects total or if you run out of affordable projects before completing `k`, you should stop early rather than erroring or returning incorrect values.

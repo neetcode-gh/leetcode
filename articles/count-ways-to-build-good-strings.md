@@ -557,3 +557,47 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is equal to the given $high$ value.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Modulo Operation
+
+When counting the number of good strings, the result can grow very large. Forgetting to apply the modulo `10^9 + 7` during intermediate calculations leads to integer overflow.
+
+```python
+# Wrong: Only applying mod at the end
+dp[i] = dp[i - zero] + dp[i - one]  # Can overflow before mod is applied
+
+# Correct: Apply mod after each addition
+dp[i] = (dp[i - zero] + dp[i - one]) % mod
+```
+
+### Off-by-One Errors in Range Check
+
+The problem asks for strings with length in the range `[low, high]` inclusive. A common mistake is using exclusive bounds or checking `> high` instead of `>= high` when counting valid strings.
+
+```python
+# Wrong: Missing strings of length exactly equal to low
+if length > low:  # Should be length >= low
+
+# Correct
+if length >= low:
+    count += 1
+```
+
+### Not Initializing the Base Case Correctly
+
+In the bottom-up DP approach, forgetting to set `dp[0] = 1` (representing one way to build an empty string) causes all subsequent values to be zero.
+
+```python
+# Wrong: Missing base case
+dp = [0] * (high + 1)
+for i in range(1, high + 1):
+    dp[i] = dp.get(i - zero, 0) + dp.get(i - one, 0)  # All zeros!
+
+# Correct: Initialize base case
+dp = [0] * (high + 1)
+dp[0] = 1  # One way to have an empty string
+```

@@ -455,3 +455,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $N$ is the length of the input list, which is also the number of nodes in the N-ary tree.
+
+---
+
+## Common Pitfalls
+
+### Confusing Node Values with Node References
+
+When building the set of child nodes, you can store either the node's value or the node reference itself. However, be consistent. If you store values, compare values when finding the root. If you store references, compare references. Mixing the two leads to incorrect results.
+
+### Assuming the Root is Always at Index 0
+
+The input list contains nodes in arbitrary order, not level-order or any specific traversal order. Never assume the root appears first in the list. Always iterate through all nodes to identify which one is not a child of any other.
+
+### Integer Overflow in the Sum Approach
+
+When using the O(1) space solution that adds parent values and subtracts child values, be aware of potential integer overflow for very large trees with large node values. In languages with fixed-size integers, the sum could overflow before the final cancellation produces the correct root value.

@@ -1208,3 +1208,19 @@ class Solution {
     - $O(m * w)$ space for the output array.
 
 > Where $n$ is the total number of characters in the string array $products$, $N$ is the size of the array $products$, $m$ is the length of the string $searchWord$, and $w$ is the average length of each word in the given string array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort Products First
+
+The problem requires returning suggestions in lexicographical order. A common mistake is attempting to find matches without first sorting the products array. Without sorting, you cannot guarantee that the first three matching products are the lexicographically smallest ones.
+
+### Not Handling Short Products Correctly
+
+When checking if a product matches the current prefix, you must verify that the product is long enough to contain the prefix. Accessing `product[i]` when `product.length <= i` causes an index out of bounds error. Always check the product length before comparing characters at a given position.
+
+### Inefficient Prefix Matching
+
+Rebuilding or recomputing the prefix string from scratch for each character of the search word leads to unnecessary overhead. Instead, incrementally build the prefix by appending one character at a time, and reuse the previous search position since matching products form a contiguous block in the sorted array.

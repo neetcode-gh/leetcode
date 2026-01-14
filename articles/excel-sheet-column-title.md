@@ -284,3 +284,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the given column number.
+
+---
+
+## Common Pitfalls
+
+### Treating It as Standard Base-26 Conversion
+
+Unlike standard base conversion where digits range from 0 to 25, Excel columns use a 1-indexed system where A=1 and Z=26. Forgetting to subtract 1 before taking modulo will cause off-by-one errors. For example, column 26 should be "Z", but without the subtraction, you would incorrectly compute the character for position 0.
+
+### Forgetting to Reverse the Result in Iterative Approach
+
+When building the string iteratively by repeatedly taking modulo and dividing, you generate characters from least significant (rightmost) to most significant (leftmost). If you forget to reverse the accumulated characters at the end, "ABC" would incorrectly become "CBA". Either build the string in reverse or explicitly reverse it before returning.

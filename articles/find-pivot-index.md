@@ -569,3 +569,13 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Confusing Empty Sum as Zero
+
+When the pivot is at index 0, the left sum is 0 (sum of no elements). Similarly, when the pivot is at the last index, the right sum is 0. Some solutions incorrectly skip checking the first or last index, assuming a pivot must have elements on both sides. The problem defines sums of empty ranges as 0, so boundary indices are valid pivot candidates.
+
+### Including the Pivot Element in the Sum
+
+The pivot index itself should not be included in either the left sum or the right sum. A common mistake is computing `leftSum` as the sum up to and including index `i`, or computing `rightSum` starting from index `i`. The correct formula is `rightSum = total - leftSum - nums[i]`, which explicitly excludes the pivot element from both sums.

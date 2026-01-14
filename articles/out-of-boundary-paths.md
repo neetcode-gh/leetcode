@@ -1044,3 +1044,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, and $N$ is the maximum number of allowed moves.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Apply Modulo at Each Step
+
+The number of paths can grow extremely large, causing integer overflow. A common mistake is only applying the modulo operation at the end. You must apply `% (10^9 + 7)` after each addition to prevent overflow, especially when summing results from multiple recursive calls or DP transitions.
+
+### Incorrect Base Case for Out-of-Bounds
+
+Some implementations check if moves are zero before checking if the position is out of bounds. The correct order is to first check if we are outside the grid (return 1 for a valid exit path), then check if moves are exhausted (return 0). Reversing this order means we would never count paths that step outside on their last move.
+
+### Using Wrong Memoization Key
+
+When using memoization, the cache key must include all three state variables: row, column, and remaining moves. Forgetting to include the move count in the key leads to incorrect caching where different move states overwrite each other, producing wrong answers.

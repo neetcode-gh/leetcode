@@ -1737,3 +1737,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
+
+---
+
+## Common Pitfalls
+
+### Short-Circuit Evaluation in DFS
+
+Using short-circuit evaluation (like `return dfs(up) && dfs(down) && dfs(left) && dfs(right)`) stops exploring the moment one direction returns false. This leaves parts of the island unvisited, causing them to be counted as separate islands later. Always explore ALL four directions before returning, even if you know the island is not closed.
+
+### Confusing Land and Water Values
+
+Mixing up which value represents land (0) and which represents water (1) is a common source of bugs. In this problem, 0 is land and 1 is water, which is counterintuitive compared to many other grid problems. Double-check the problem statement and ensure your conditions correctly identify land cells.
+
+### Forgetting to Handle Boundary-Connected Islands
+
+Counting islands that touch the grid boundary as closed islands is incorrect. Any island with at least one cell on the first row, last row, first column, or last column cannot be closed. Either pre-process boundary islands to mark them as water, or track during DFS/BFS whether the island touches the boundary.

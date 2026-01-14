@@ -519,3 +519,15 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the number of strings in the `words` array and $m$ is the maximum length of a string
+
+---
+
+## Common Pitfalls
+
+### Not Handling Jagged Arrays Correctly
+
+Words in the input can have different lengths, creating a jagged grid. When checking if `words[i][j] == words[j][i]`, you must first verify that both positions exist. If `words[j]` does not have a character at index `i` (because it is shorter), or if `j` exceeds the number of words, the comparison is invalid. Always check bounds before accessing characters.
+
+### Assuming Square Dimensions
+
+Do not assume that the number of rows equals the maximum word length. For example, `["abc", "de"]` has 2 rows but the first word has 3 characters. A valid word square requires the k-th row to match the k-th column exactly, which implicitly requires consistent dimensions. Verify that accessing `words[charPos][wordNum]` is valid before comparing.

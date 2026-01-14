@@ -796,3 +796,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$ or $O(\log n)$ depending on the language.
+
+---
+
+## Common Pitfalls
+
+### Using 0-Indexed vs 1-Indexed Position
+
+The problem uses 1-indexed positions for `k`, but many solutions require converting to 0-indexed logic. A common mistake is forgetting to subtract 1 when counting bits or when comparing positions. For the bit-counting solution, you must use `k - 1` (not `k`) to correctly count the number of flips from the root.
+
+### Integer Overflow When Computing Row Size
+
+When calculating the size of row `n` as `2^(n-1)`, this can overflow for large values of `n` (up to 30 in the constraints). Using `1 << (n - 1)` is safe in most languages for n <= 30, but be careful with signed 32-bit integers when `n = 31` or higher. Always ensure your bit-shift operations use appropriate integer types.
+
+### Confusing Left Child vs Right Child Logic
+
+In the recursive solutions, the logic for determining whether a position is a left child or right child is subtle. Left children (odd `k` values) inherit the parent's value, while right children (even `k` values) flip it. Mixing up this logic or incorrectly computing the parent position `(k + 1) / 2` vs `k / 2` leads to wrong answers.

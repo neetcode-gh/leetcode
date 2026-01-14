@@ -1264,3 +1264,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting Even-Length Palindromes
+
+When using the expand-around-center approach, many developers only expand from single characters (odd-length centers). Even-length palindromes like "aa" or "abba" require expanding from between two characters, so both `(i, i)` and `(i, i+1)` centers must be checked.
+
+### Off-By-One Errors in DP Table Indexing
+
+In the DP approach, the recurrence `dp[i][j] = dp[i+1][j-1]` requires careful iteration order. Processing `i` from high to low ensures `dp[i+1][j-1]` is computed before `dp[i][j]`. Iterating in the wrong direction leads to reading uninitialized values.
+
+### Counting Substrings Instead of Counting Once Per Palindrome
+
+Some implementations accidentally count the same palindrome multiple times or miss counting single characters as palindromes. Every single character is itself a palindrome, so the minimum count for a string of length n is n.

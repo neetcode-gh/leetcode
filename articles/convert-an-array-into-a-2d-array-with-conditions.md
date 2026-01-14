@@ -634,3 +634,34 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Row Index with Frequency Count
+A common mistake is using the frequency count incorrectly as the row index. The row where an element should go is determined by how many times it has been placed so far, not its total frequency in the array.
+
+```python
+# Wrong - using total frequency
+row = total_count[num]
+
+# Correct - using count of placements so far
+row = count[num]  # then increment count[num] after placing
+```
+
+### Creating Rows Only When Empty
+Forgetting to create a new row when needed leads to index out of bounds errors. Before placing an element in a row, check if that row exists.
+
+```python
+# Wrong - crashes if row doesn't exist
+res[row].append(num)
+
+# Correct - create row if needed
+if len(res) == row:
+    res.append([])
+res[row].append(num)
+```
+
+### Using Linear Search for Duplicate Check in Brute Force
+In the brute force approach, checking if a number exists in a row using linear search on every insert leads to O(n * m) complexity. While acceptable for the brute force solution, be aware that the frequency count approach achieves O(n) by avoiding these repeated searches entirely.

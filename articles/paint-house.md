@@ -916,3 +916,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Adjacent Constraint
+
+A common mistake is to simply pick the minimum cost color for each house independently. This greedy approach ignores the constraint that adjacent houses cannot have the same color. The solution must ensure that each house is painted with a different color than the previous house.
+
+### Updating DP Values In-Place Incorrectly
+
+When using the space-optimized approach, updating `dp0`, `dp1`, and `dp2` sequentially causes bugs because you overwrite values that are still needed for subsequent calculations. All three new values must be computed using the old values before any of them are updated. Use temporary variables or compute all new values simultaneously.
+
+### Off-By-One Errors in Memoization Index
+
+When using memoization with `prevColor = -1` to indicate no previous constraint, forgetting to offset the index by 1 when accessing the cache leads to array index out of bounds errors. The cache needs to handle `prevColor` values from `-1` to `2`, requiring an offset or an extra dimension.

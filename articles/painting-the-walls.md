@@ -935,3 +935,27 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Free Painter's Role
+
+A critical insight is that when the paid painter paints wall `i` taking `time[i]` units, the free painter can paint `time[i]` additional walls simultaneously. Many fail to realize that choosing wall `i` for the paid painter effectively covers `1 + time[i]` walls total, not just 1 wall.
+
+### Integer Overflow When Adding to Infinity
+
+When using `Integer.MAX_VALUE` or similar to represent infinity, adding `cost[i]` to it causes integer overflow, resulting in negative values and incorrect answers. Always check if the value is infinity before performing addition, or use a sufficiently large but safe sentinel value.
+
+### Iterating in Wrong Direction for Space Optimization
+
+In the 1D DP optimization, iterating `remain` from `1` to `n` (forward) instead of from `n` to `1` (backward) causes incorrect results. Forward iteration uses values from the current iteration rather than the previous one, violating the DP recurrence. The reverse iteration ensures we use the untouched previous-iteration values.
+
+### Not Capping Negative Remain Values
+
+When `remain - 1 - time[i]` becomes negative, it means all walls are covered. Failing to cap this at 0 leads to accessing negative indices in the DP array. Always use `max(remain - 1 - time[i], 0)` to handle cases where the free painter's contribution exceeds the remaining walls.
+
+### Treating This as a Standard Knapsack Problem
+
+While this problem resembles 0/1 knapsack, the transition is different because time values affect how much work gets done, not just costs. Applying the standard knapsack recurrence without accounting for the free painter's parallel work leads to incorrect solutions.

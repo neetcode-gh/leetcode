@@ -941,3 +941,49 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Leading Zeros
+
+A string starting with '0' or containing '0' that cannot pair with the previous digit has zero valid decodings. This is the most common edge case to miss.
+
+```python
+# Wrong: doesn't handle '0' case
+res = dfs(i + 1)
+
+# Correct: return 0 for invalid '0'
+if s[i] == '0':
+    return 0
+res = dfs(i + 1)
+```
+
+### Incorrect Two-Digit Validation
+
+Two digits form a valid decoding only if they represent 10-26. Common mistakes include allowing "00", "07", or values above 26.
+
+```python
+# Wrong: allows invalid two-digit codes like "00" or "30"
+if i + 1 < len(s):
+    res += dfs(i + 2)
+
+# Correct: only allow 10-26
+if i + 1 < len(s) and (s[i] == '1' or (s[i] == '2' and s[i + 1] <= '6')):
+    res += dfs(i + 2)
+```
+
+### Confusing Base Case Value
+
+When the entire string is decoded (index reaches the end), there is exactly 1 valid decoding (the one that got us here). Returning 0 instead causes all paths to count as zero.
+
+```python
+# Wrong: returns 0, making all counts zero
+if i == len(s):
+    return 0
+
+# Correct: reaching the end means one valid decoding
+if i == len(s):
+    return 1
+```

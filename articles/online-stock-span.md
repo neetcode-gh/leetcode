@@ -353,3 +353,19 @@ class StockSpanner {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of function calls.
+
+---
+
+## Common Pitfalls
+
+### Using Strictly Less Than Instead of Less Than or Equal
+
+The span includes all consecutive days where prices are less than or equal to the current price, not strictly less than. Using `<` instead of `<=` will undercount the span when previous days have the same price as today.
+
+### Forgetting to Include the Current Day in the Span
+
+The span always includes the current day itself. When initializing the span counter, start with `1` (for today) before adding spans from popped elements. Starting with `0` will result in spans that are off by one.
+
+### Storing Only Prices Without Spans
+
+Storing just prices on the stack requires recounting spans on every query, leading to O(n) per operation. The stack should store pairs of `(price, span)` so that when an element is popped, its accumulated span can be added directly to the current span in O(1) time.

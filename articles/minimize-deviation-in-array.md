@@ -1103,3 +1103,27 @@ struct Heap<T> {
 - Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in $nums$.
+
+---
+
+## Common Pitfalls
+
+### Confusing the Operations for Odd and Even Numbers
+
+Odd numbers can only be doubled (multiplied by 2), while even numbers can only be halved (divided by 2). A frequent mistake is applying the wrong operation or allowing both operations on any number. Remember: odd numbers increase, even numbers decrease.
+
+### Not Recognizing the Stopping Condition
+
+When using the max-heap approach, the algorithm must stop when the maximum element is odd because odd numbers cannot be reduced further. Failing to check this condition leads to infinite loops or attempting invalid operations.
+
+### Forgetting to Track the Minimum Value Separately
+
+When using a max-heap, you only have direct access to the maximum element. The deviation requires knowing both the max and min values. A common error is trying to find the minimum by scanning the heap, which defeats the purpose of the data structure. Track the minimum separately and update it when pushing new values.
+
+### Not Generating All Possible Values for Each Element
+
+In the sliding window approach, each number can take multiple values. Even numbers can be halved repeatedly until odd, and odd numbers can be doubled once. Missing any possible value means the algorithm might not find the true minimum deviation.
+
+### Off-by-One Errors in the Sliding Window Count
+
+When using the sliding window with a frequency array, ensure you correctly track when all `n` original elements are represented. Incrementing or decrementing the count at the wrong time can cause the window to be considered valid prematurely or remain invalid when it should be valid.

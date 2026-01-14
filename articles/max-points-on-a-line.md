@@ -761,3 +761,27 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of points and $m$ is the maximum value in the points.
+
+---
+
+## Common Pitfalls
+
+### Floating Point Precision Errors
+
+Using floating point division to compute slopes introduces precision errors. Two mathematically equal slopes may compare as unequal due to rounding. For example, `1/3` and `2/6` might not be exactly equal as floats. The solution is to represent slopes as reduced fractions using GCD, storing them as pairs or strings of integers.
+
+### Handling Vertical Lines
+
+When two points have the same x-coordinate, the slope is undefined (division by zero). Forgetting to handle this case causes runtime errors. Use a special value like `infinity` or a distinct key (such as `"inf"` or a tuple like `(1, 0)`) to represent vertical lines in your slope map.
+
+### Negative Zero in Floating Point
+
+In floating point arithmetic, `-0.0` and `0.0` are distinct values but should be treated as equal slopes. Horizontal lines going left-to-right and right-to-left produce `0.0` and `-0.0` respectively. When using floating point slopes, normalize `-0.0` to `0.0` before using it as a hash key.
+
+### Inconsistent Slope Normalization with GCD
+
+When using GCD to reduce fractions, ensure consistent sign handling. The GCD of negative numbers can produce inconsistent signs across different implementations. Normalize by always making the denominator positive, or by making the first non-zero component positive. Otherwise, slopes like `(-1, 2)` and `(1, -2)` will be treated as different when they represent the same line.
+
+### Forgetting to Include the Reference Point
+
+When counting points with the same slope from a reference point, the count only includes other points, not the reference point itself. The total collinear points is `count + 1`. Forgetting to add one for the reference point will undercount by one for every line.

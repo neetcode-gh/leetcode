@@ -629,3 +629,27 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Operations
+
+The two operations allowed (flip the rightmost bit, flip bit `i` if bit `i-1` is `1` and all bits to the right of `i-1` are `0`) are often misunderstood. Many solutions incorrectly assume you can flip any bit at any time, leading to incorrect operation counts. Carefully trace through small examples like `n = 3` to understand the constraints.
+
+### Not Recognizing the Gray Code Pattern
+
+This problem has a deep connection to Gray codes, where consecutive numbers differ by exactly one bit. Missing this insight leads to overly complex recursive solutions that are hard to derive and verify. The elegant solution converts the Gray code back to its binary index using iterative XOR.
+
+### Integer Overflow in Intermediate Calculations
+
+When computing `(k << 1) - 1` or similar expressions, intermediate values can overflow for large inputs near the 32-bit integer limit. In languages like C++ or Java, ensure you handle the bit shifting carefully, especially when `k` approaches `2^30`.
+
+### Incorrect Sign Alternation
+
+In iterative solutions that process bits from highest to lowest, the sign must alternate correctly between addition and subtraction. A common bug is initializing the sign incorrectly or flipping it at the wrong point in the loop, leading to off-by-one errors in the final count.
+
+### Off-by-One in Bit Position Calculation
+
+Finding the highest set bit requires careful loop conditions. Using `while (k < n)` instead of `while ((k << 1) <= n)` or similar variations can cause the algorithm to select the wrong bit position, resulting in incorrect operation counts.

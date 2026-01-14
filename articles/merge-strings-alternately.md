@@ -544,3 +544,15 @@ class Solution {
 - Space complexity: $O(n + m)$ for the output string.
 
 > Where $n$ and $m$ are the lengths of the strings $word1$ and $word2$ respectively.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Append the Remaining Characters
+
+When one string is longer than the other, the remaining characters must be appended after the alternating portion is complete. Stopping the loop when the shorter string ends without handling the leftover characters produces an incomplete result.
+
+### Using String Concatenation in a Loop
+
+In many languages, repeatedly concatenating strings with `+` inside a loop creates a new string object each time, leading to O(n^2) time complexity. Use a `StringBuilder`, list of characters, or similar efficient structure to build the result, then join at the end.

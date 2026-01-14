@@ -619,3 +619,24 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $M$ is the number of digits in the input integer `n`.
+
+---
+
+## Common Pitfalls
+
+### Using a Fixed Power Instead of the Digit Count
+A common mistake is hardcoding the exponent (e.g., always using 3) instead of dynamically calculating the number of digits. Armstrong numbers are defined with respect to their digit count, so 153 uses power 3, but 1634 uses power 4.
+```python
+# Wrong: always using power 3
+result += digit ** 3
+```
+
+### Modifying the Original Number Without Saving It
+When extracting digits by repeatedly dividing by 10, the original number gets destroyed. Forgetting to save the original value before the loop means you have nothing to compare the sum against.
+```python
+# Wrong: n is modified and can't be compared later
+while n != 0:
+    result += (n % 10) ** k
+    n //= 10
+return result == n  # n is now 0!
+```

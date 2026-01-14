@@ -2703,3 +2703,27 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Preserve Original Edge Indices
+
+When sorting edges by weight for Kruskal's algorithm, the original indices get lost. You must store the original index with each edge before sorting, as the problem requires returning indices from the original edge list, not the sorted order.
+
+### Incorrect Connectivity Check After Edge Removal
+
+When testing if an edge is critical by removing it, simply checking if the MST weight increases is insufficient. The graph may become disconnected entirely, making it impossible to form any spanning tree. Always verify that all nodes remain connected (e.g., by checking if the Union-Find structure has exactly one component).
+
+### Confusing Critical and Pseudo-Critical Edge Conditions
+
+A critical edge must be in every MST, while a pseudo-critical edge can be in some MST but not all. The testing order matters: first check if removing the edge breaks the MST (critical), then check if forcing the edge into the MST still yields minimum weight (pseudo-critical). An edge cannot be both.
+
+### Not Resetting Union-Find for Each Edge Test
+
+Each edge must be tested with a fresh Union-Find structure. Reusing the same Union-Find instance across multiple edge tests will carry over previous union operations, leading to incorrect connectivity states and wrong classifications.
+
+### Mishandling Edges with Equal Weights
+
+When multiple edges have the same weight, they may be interchangeable in forming an MST. This is precisely what creates pseudo-critical edges. Failing to account for weight ties can cause edges to be incorrectly classified as critical when they are actually pseudo-critical.

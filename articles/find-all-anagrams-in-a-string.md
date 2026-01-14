@@ -1212,3 +1212,19 @@ class Solution {
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $p$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Edge Case When Pattern is Longer Than String
+
+If the pattern `p` is longer than the string `s`, there cannot be any anagrams. Failing to handle this edge case at the start can lead to index out of bounds errors or incorrect empty results being returned for the wrong reason.
+
+### Incorrect Window Size Management
+
+When sliding the window, it is easy to make off-by-one errors with the window boundaries. The window must always be exactly `len(p)` characters wide. Adding a character before removing one, or vice versa, can temporarily create windows of incorrect size and lead to false matches.
+
+### Inefficient Frequency Comparison
+
+Comparing two frequency arrays or maps after every window slide takes O(26) or O(k) time where k is the alphabet size. While this is technically constant, it adds overhead. The optimal approach tracks how many character counts currently match between the window and pattern, updating this count incrementally as characters enter and leave the window.

@@ -936,3 +936,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Empty String `s`
+
+When `s` is an empty string, `t` contains exactly one character (the added one). Solutions that iterate through `s` first or rely on finding a mismatch between sorted strings must handle this edge case. The XOR and sum-based approaches naturally handle this since XORing or summing over an empty string contributes nothing.
+
+### Comparing Characters Instead of Counts
+
+A common mistake is to iterate through both strings and return the first character in `t` that does not appear in `s`. This fails when the added character is a duplicate of an existing character. For example, if `s = "a"` and `t = "aa"`, the added character is `'a'`, but a naive check would miss it since `'a'` already exists in `s`.

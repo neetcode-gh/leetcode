@@ -1303,3 +1303,19 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.
+
+---
+
+## Common Pitfalls
+
+### Treating It as a Shortest Path Problem
+
+Many people instinctively reach for Dijkstra's algorithm when they see "minimum" and "path" in the same problem. However, this problem asks for the minimum edge weight along any path, not the shortest total distance. Since you can revisit edges freely, you simply need to find the smallest edge weight in the entire connected component containing node 1.
+
+### Only Considering Direct Paths
+
+Some solutions only examine edges that lie on simple paths from node 1 to node n. This misses the key insight that you can traverse any edge in the connected component by taking detours. The answer is the minimum weight among all edges reachable from node 1, regardless of whether they appear on a direct path to node n.
+
+### Forgetting to Build Bidirectional Edges
+
+The graph is undirected, so each edge must be added in both directions when constructing the adjacency list. Failing to do this will cause your traversal to miss large portions of the graph, leading to incorrect results when the minimum edge is only reachable through a path that requires traversing an edge in the "reverse" direction.

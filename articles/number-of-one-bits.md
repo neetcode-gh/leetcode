@@ -534,3 +534,13 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Signed vs Unsigned Integer Handling
+
+In some languages, right-shifting a signed negative integer fills with 1s (arithmetic shift) instead of 0s (logical shift). This can cause infinite loops when using `while (n != 0)` with negative inputs. Use unsigned types or the `>>>` operator in languages that support it.
+
+### Using Division Instead of Bit Shift
+
+While `n / 2` and `n >> 1` produce the same result for positive integers, division can behave differently for negative numbers and is generally slower. Stick to bitwise operations for clarity and consistency with the problem's intent.

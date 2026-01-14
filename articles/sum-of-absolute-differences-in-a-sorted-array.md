@@ -873,3 +873,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for the output array.
+
+---
+
+## Common Pitfalls
+
+### Not Leveraging the Sorted Property
+
+Since the array is sorted, elements to the left of index `i` are always smaller or equal, and elements to the right are always larger or equal. A common mistake is using `abs()` for every pair when the sorted property allows us to eliminate the absolute value operation entirely by subtracting left elements from `nums[i]` and subtracting `nums[i]` from right elements.
+
+### Incorrect Prefix/Suffix Sum Formula
+
+When computing contributions from left and right elements, the formula involves both the count of elements and their sum. For left contribution, it should be `i * nums[i] - prefixSum[i-1]` (not just the sum). Similarly, for right contribution, it should be `suffixSum[i+1] - (n - i - 1) * nums[i]`. Mixing up these multipliers leads to wrong results.
+
+### Index Out of Bounds at Array Edges
+
+The first element has no left neighbors, and the last element has no right neighbors. Failing to handle these boundary cases by checking `i > 0` before accessing `prefixSum[i-1]` or `i < n-1` before accessing `suffixSum[i+1]` causes index out of bounds errors. Always initialize edge contributions to zero.

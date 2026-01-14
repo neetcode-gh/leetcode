@@ -811,3 +811,18 @@ class Solution {
 - Space complexity: $O(1)$  constant space
 
 >  Where $N$ is the size of `nums`.
+
+---
+
+## Common Pitfalls
+
+### Using >= Instead of > for Majority Check
+The majority element must appear **more than** `n/2` times, not greater than or equal to. Using `count >= n/2` will incorrectly return `true` for elements that appear exactly half the time.
+```python
+# Wrong: count >= len(nums) // 2
+# Correct:
+return count > len(nums) // 2
+```
+
+### Not Leveraging the Sorted Property
+Since the array is sorted, all occurrences of the target are contiguous. A common mistake is to use a linear scan when binary search can find the first and last occurrence in O(log N) time. Additionally, forgetting that you only need to check if `nums[first_index + n//2] == target` after finding the first occurrence wastes an extra binary search.

@@ -810,3 +810,43 @@ class Solution {
 
 - Time complexity: $O(n^3)$
 - Space complexity: $O(n^2)$
+
+---
+
+## Common Pitfalls
+
+### Thinking About First Balloon to Burst Instead of Last
+The key insight is to consider which balloon is burst LAST in a range, not first. When thinking about the first balloon, the subproblems are not independent because neighbors change. When considering the last balloon, the boundary neighbors are fixed.
+```python
+# Wrong mental model: burst balloon i first
+# The remaining array's structure changes unpredictably
+
+# Correct: burst balloon i last in range [l, r]
+# Neighbors of i are fixed as nums[l-1] and nums[r+1]
+```
+
+### Forgetting to Pad the Array with 1s
+The problem states that out-of-bounds neighbors are treated as value 1. Forgetting to add `1` at both ends of the array causes index errors or incorrect coin calculations at the boundaries.
+```python
+# Wrong: using original array
+nums = [3, 1, 5, 8]
+
+# Correct: pad with 1s
+nums = [1] + nums + [1]  # [1, 3, 1, 5, 8, 1]
+```
+
+### Incorrect Loop Order in Bottom-Up DP
+In bottom-up DP, smaller intervals must be computed before larger ones. The left index `l` should iterate in decreasing order while `r` iterates in increasing order. Wrong iteration order reads uncomputed DP values.
+
+### Using Wrong Neighbors in Coin Calculation
+When balloon `i` is the last to burst in range `[l, r]`, its neighbors are `nums[l-1]` and `nums[r+1]` (the boundaries), not `nums[i-1]` and `nums[i+1]` (adjacent indices).
+```python
+# Wrong: using adjacent indices
+coins = nums[i-1] * nums[i] * nums[i+1]
+
+# Correct: using range boundaries
+coins = nums[l-1] * nums[i] * nums[r+1]
+```
+
+### Not Handling Empty Range Base Case
+When `l > r`, there are no balloons to burst, so the result should be 0. Missing this base case causes incorrect recursion or array index errors.

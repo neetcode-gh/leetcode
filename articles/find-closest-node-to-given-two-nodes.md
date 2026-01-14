@@ -1004,7 +1004,6 @@ class Solution:
                 node = nei
             return dist
 
-
         node1Dist, node2Dist = dfs(node1), dfs(node2)
         res, resDist = -1, float("inf")
         for i in range(n):
@@ -1252,3 +1251,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Sum Instead of Maximum Distance
+
+The problem asks for the node that minimizes the maximum of the two distances, not the sum. Using `node1Dist[i] + node2Dist[i]` instead of `max(node1Dist[i], node2Dist[i])` produces incorrect results.
+
+### Not Handling Cycles Properly
+
+The graph can contain cycles, so distance computation must mark visited nodes to avoid infinite loops. Always check if a node has already been assigned a distance before processing it.
+
+### Forgetting to Return the Smallest Index on Ties
+
+When multiple nodes have the same minimum maximum distance, the problem requires returning the smallest index. Iterating from index 0 and using strict less-than comparison ensures the first valid node is selected.

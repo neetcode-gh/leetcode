@@ -823,3 +823,27 @@ public class Solution {
 * Space complexity: $O(1)$
 
 > Where $m$ and $n$ are the lengths of the arrays $nums1$ and $nums2$, respectively. $N$ is the size of the range of the product.
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow in Product Calculations
+
+Products of two integers can exceed the 32-bit integer range, especially when values approach 10^5 in magnitude. Always use 64-bit integers (long long in C++, long in Java) for product calculations and comparisons. Failing to do so causes incorrect counts and wrong answers.
+
+### Incorrect Handling of Negative Numbers
+
+When one or both arrays contain negative numbers, the sign of the product flips, and the ordering reverses. A negative number multiplied by a large positive yields a more negative (smaller) result. You must handle negative-negative, negative-positive, positive-negative, and positive-positive cases separately to count products correctly.
+
+### Incorrect Floor/Ceiling Division for Negative Values
+
+Standard integer division truncates toward zero, but counting products requires floor division for positive divisors and ceiling logic for negative divisors. Using the wrong rounding direction causes off-by-one errors in binary search bounds. Use language-specific floor division functions or manually adjust for negative operands.
+
+### Not Accounting for Zero Values
+
+When an element is zero, its product with any number is zero. This affects counting: if the target product is non-negative, all pairs involving zero contribute to the count. Forgetting to handle zeros separately leads to missing or double-counting products.
+
+### Binary Search Boundary Errors
+
+The search range must cover all possible products, from the most negative to the most positive. Setting bounds too tight causes the algorithm to miss the answer. Use safe bounds like -10^10 to 10^10 based on the problem constraints, and ensure the binary search condition correctly finds the smallest value with at least k products less than or equal to it.

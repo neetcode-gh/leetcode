@@ -582,3 +582,45 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Wiggle Sort with Wiggle Sort II
+Wiggle Sort requires `nums[0] <= nums[1] >= nums[2] <= nums[3]...` (non-strict inequalities), while Wiggle Sort II requires strict inequalities. Using the wrong condition will fail test cases with duplicate elements.
+
+```python
+# This problem (Wiggle Sort): allows equality
+# nums[i] <= nums[i+1] for odd i
+# nums[i] >= nums[i+1] for even i
+
+# Wiggle Sort II: requires strict inequality
+# nums[i] < nums[i+1] for odd i (different problem!)
+```
+
+### Swapping with Wrong Neighbor
+The greedy approach compares each element with its previous element (i-1), not the next element (i+1). Swapping with the wrong neighbor breaks the already-established wiggle pattern.
+
+```python
+# Wrong: comparing with next element and swapping forward
+if i % 2 == 1 and nums[i] < nums[i + 1]:
+    nums[i], nums[i + 1] = nums[i + 1], nums[i]
+
+# Correct: comparing with previous element
+if i % 2 == 1 and nums[i] < nums[i - 1]:
+    nums[i], nums[i - 1] = nums[i - 1], nums[i]
+```
+
+### Starting Loop at Index 0 Instead of 1
+The greedy approach needs to compare each element with its predecessor, so the loop must start at index 1. Starting at 0 causes an index-out-of-bounds error when accessing `nums[i - 1]`.
+
+```python
+# Wrong: causes index error at nums[-1]
+for i in range(len(nums)):
+    if nums[i] > nums[i - 1]:  # i=0 gives nums[-1]
+
+# Correct: start from index 1
+for i in range(1, len(nums)):
+    if nums[i] > nums[i - 1]:
+```

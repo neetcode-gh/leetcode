@@ -311,3 +311,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Non-Strict Inequality
+
+The problem requires strictly ascending elements, meaning each element must be greater than the previous one. Using `>=` instead of `>` when checking the ascending condition will incorrectly include equal consecutive elements in your subarray, leading to wrong answers.
+
+### Forgetting Single-Element Subarrays
+
+A single element by itself forms a valid ascending subarray. If you forget to consider this case or initialize your result incorrectly, you might miss the maximum when the answer is a single large element surrounded by non-ascending neighbors.

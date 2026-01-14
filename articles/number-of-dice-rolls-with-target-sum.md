@@ -1153,3 +1153,19 @@ class Solution {
 - Space complexity: $O(t)$
 
 > Where $n$ is the number of dices, $k$ is the number of faces each dice have, and $t$ is the target value.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Modulo Operations
+
+Not applying the modulo operation (`% (10^9 + 7)`) after each addition causes integer overflow. The number of ways can grow extremely large, exceeding the maximum value of 32-bit or even 64-bit integers. Apply modulo after every addition to keep values within bounds and avoid overflow errors.
+
+### Incorrect Base Case Handling
+
+Setting the wrong base case in the DP leads to incorrect counts. When `n == 0` (no dice left), the only valid result is if `target == 0` (we exactly hit the target), returning 1. If `target != 0` with no dice remaining, return 0. Mixing up these conditions produces wrong answers for edge cases.
+
+### Off-by-One Errors in Face Values
+
+Starting the face value loop at 0 instead of 1, or going up to `k - 1` instead of `k`, miscounts the valid dice rolls. Each die has faces numbered 1 through k (not 0 through k-1). Ensure your loop iterates from 1 to k inclusive to correctly enumerate all possible face values.

@@ -1017,3 +1017,27 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of unique characters, $E$ is the number of edges and $N$ is the sum of lengths of all the strings.
+
+---
+
+## Common Pitfalls
+
+### Missing the Invalid Prefix Case
+
+When a longer word appears before its own prefix (e.g., `"abc"` before `"ab"`), this is an invalid ordering that cannot exist in any alphabet. Failing to detect this case and return an empty string leads to incorrect results or undefined behavior.
+
+### Only Comparing Adjacent Words Partially
+
+The ordering information comes from the first differing character between adjacent words. A common mistake is comparing all differing characters or only comparing the first characters. You must find the first position where characters differ and extract exactly one edge from that comparison.
+
+### Not Including All Characters in the Result
+
+Characters that appear in the words but have no ordering constraints (no incoming or outgoing edges) must still appear in the final alphabet. Forgetting to initialize nodes for all unique characters causes some letters to be missing from the output.
+
+### Incorrect Cycle Detection in DFS
+
+The three-state visited tracking (unvisited, visiting, visited) is crucial for detecting cycles. Using only two states (visited/unvisited) cannot distinguish between a back edge (cycle) and a cross edge (already processed node). This leads to either false cycle detection or missing actual cycles.
+
+### Adding Duplicate Edges
+
+When the same character pair appears from multiple adjacent word comparisons, adding duplicate edges inflates the indegree count in Kahn's algorithm, preventing nodes from ever reaching zero indegree. Use a set to track existing edges before adding new ones.

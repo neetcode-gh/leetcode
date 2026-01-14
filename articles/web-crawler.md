@@ -560,3 +560,19 @@ class Solution {
 - Space complexity: $O(n \cdot l)$
 
 >  Where $m$ is the number of edges in the graph, $l$ is the maximum length of a URL (`urls[i].length`), and $n$ is the total number of URLs (`urls.length`).
+
+---
+
+## Common Pitfalls
+
+### Incorrect Hostname Extraction
+
+Extracting the hostname incorrectly is a frequent mistake. URLs follow the format `http://hostname/path`, so the hostname is the third element when splitting by `/`. Off-by-one errors or not accounting for URLs without paths can cause the crawler to include or exclude wrong domains.
+
+### Not Marking URLs as Visited Before Adding to Queue
+
+In BFS, you must mark a URL as visited when adding it to the queue, not when processing it. If you wait until dequeuing, multiple threads or iterations might add the same URL to the queue multiple times, leading to redundant work and potentially infinite loops.
+
+### Visiting URLs Outside the Starting Hostname
+
+The crawler must only visit URLs with the same hostname as the starting URL. Failing to filter URLs by hostname before crawling will cause the solution to explore unrelated domains, violating the problem constraints and potentially causing timeouts or incorrect results.

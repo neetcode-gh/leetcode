@@ -1637,3 +1637,32 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Edge Cases (All Land or All Water)
+The problem requires returning -1 if the grid contains only land cells or only water cells. Forgetting this check leads to incorrect results or infinite loops.
+```python
+# Wrong: doesn't check if there's no water or no land
+# BFS from land will never find water, or vice versa
+```
+
+### Starting BFS from Water Instead of Land
+For multi-source BFS, the sources should be all land cells (value 1), not water cells. Starting from water cells would require running separate BFS from each water cell, which is O(n^4) instead of O(n^2).
+```python
+# Wrong: starting from water cells
+for r in range(N):
+    for c in range(N):
+        if grid[r][c] == 0:  # Should be == 1
+            queue.append((r, c))
+```
+
+### Off-by-One Error in Distance Calculation
+When using multi-source BFS, land cells start with distance 0 (or 1 in some implementations). A common mistake is mishandling the initial distance, leading to results that are off by one.
+```python
+# Wrong: land cells marked as 1, so final answer needs adjustment
+grid[newR][newC] = grid[r][c] + 1
+return res  # Should be res - 1 if land started at 1
+```

@@ -1318,3 +1318,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Enqueueing Children in Wrong Order for BFS
+
+The right-to-left BFS trick only works if right children are enqueued before left children. Reversing this order causes the last processed node to be the bottom-right instead of bottom-left.
+
+### Not Tracking Depth in DFS
+
+When using DFS, updating the result without checking if the current depth exceeds the maximum seen depth causes incorrect values to be recorded. Always compare depths before updating the result.
+
+### Confusing Leftmost with First Encountered
+
+The leftmost value at the deepest level is not necessarily the first node encountered during traversal. In DFS, left-first traversal combined with depth tracking ensures the leftmost node at maximum depth is correctly identified.

@@ -443,3 +443,27 @@ class Solution {
 - Space complexity: $O(n + k)$
 
 > Where $n$ is the number of engineers and $k$ is the maximum number of engineers that can be selected.
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Computing Performance
+
+The performance value is `(sum of speeds) * (minimum efficiency)`, which can exceed the 32-bit integer range for large inputs. Use 64-bit integers (`long` in Java, `long long` in C++) for intermediate calculations, and only apply the modulo when returning the final result.
+
+### Applying Modulo During Computation Instead of at the End
+
+The modulo operation should only be applied to the final answer, not during intermediate maximum comparisons. Applying modulo too early (e.g., `res = max(res, performance % MOD)`) corrupts the comparison logic because a smaller modulo result might incorrectly appear larger than the true maximum.
+
+### Misunderstanding "At Most k Engineers"
+
+The problem asks for at most `k` engineers, meaning teams of size 1, 2, ..., up to `k` are all valid. A common mistake is only considering teams of exactly size `k`. The heap-based solution naturally handles this by computing performance at each step as engineers are added.
+
+### Incorrect Heap Management
+
+When the heap exceeds `k` engineers, you must remove the engineer with the smallest speed (the top of a min-heap). A common error is using a max-heap instead, which would remove the fastest engineer and yield suboptimal results. The min-heap ensures we always keep the `k` fastest engineers seen so far.
+
+### Forgetting to Update Speed Sum When Popping from Heap
+
+After removing an engineer from the heap, the speed sum must be decremented by that engineer's speed. Forgetting this update causes the speed sum to be incorrectly inflated, leading to wrong performance calculations.

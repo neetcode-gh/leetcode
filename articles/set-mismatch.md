@@ -1413,3 +1413,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing the Output Order
+
+The problem asks to return `[duplicate, missing]` in that specific order. Accidentally swapping the order and returning `[missing, duplicate]` produces wrong answers even when both numbers are correctly identified.
+
+### Not Handling Edge Cases at Array Boundaries
+
+When using the sorting approach, special handling is needed if the missing number is `1` (the first element) or `n` (the last element). These boundary cases require explicit checks beyond just comparing adjacent elements.

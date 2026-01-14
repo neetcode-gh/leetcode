@@ -452,3 +452,28 @@ public class Solution {
 
 * Time complexity: $O(n \log (\log n))$
 * Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Including n in the Count
+The problem asks for primes strictly less than `n`, not less than or equal to. Using `range(2, n + 1)` or `i <= n` will include `n` itself if it's prime.
+```python
+# Wrong: includes n
+for num in range(2, n + 1):
+# Correct: excludes n
+for num in range(2, n):
+```
+
+### Integer Overflow When Computing num * num
+When starting the sieve from `i * i`, this multiplication can overflow for large values. Use `long` or cast before multiplying.
+```java
+// Overflow risk when i is large
+for (int j = i * i; j < n; j += i)
+// Safe: use long arithmetic
+for (long j = (long) i * i; j < n; j += i)
+```
+
+### Forgetting to Handle n < 2
+There are no primes less than 2. Failing to handle edge cases like `n = 0`, `n = 1`, or `n = 2` can cause array index errors or incorrect results.

@@ -280,6 +280,18 @@ class Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O((n + k) \cdot m)$
-- Space complexity: $O(k\cdot m)$ 
+- Space complexity: $O(k\cdot m)$
 
 >  Where $n$ is the number of words in `sentence1` and `sentence2`, $k$ is the length of `similarPairs`, and $m$ is the average length of words in `sentence1` as well as `similarPairs`.
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Similarity Is Symmetric
+
+When building the lookup structure, a common mistake is only adding one direction of the similarity relationship. If `(word1, word2)` is a similar pair, then `word2` should be accessible from `word1` AND `word1` should be accessible from `word2`. Failing to add both directions will cause false negatives when words appear in opposite positions.
+
+### Not Checking for Equal Words First
+
+A word is always similar to itself, even if it does not appear in any similarity pair. Forgetting to check if `sentence1[i] == sentence2[i]` before consulting the similarity map will incorrectly return false for identical words that happen to not be in the pairs list.

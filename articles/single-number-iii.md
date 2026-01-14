@@ -1221,3 +1221,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Confusing This Problem with Single Number I
+
+Unlike the classic Single Number problem where XORing all elements directly yields the answer, this problem has two unique numbers. XORing all elements gives `a ^ b`, not the individual values. Candidates often fail to recognize that an additional step is needed to separate the two numbers.
+
+### Misunderstanding the Differing Bit Logic
+
+The key insight is that `a ^ b` has at least one set bit where `a` and `b` differ. Using this bit to partition the array into two groups is crucial. A common mistake is not understanding why this partitioning works or incorrectly identifying which bit to use for separation.
+
+### Integer Overflow When Finding the Rightmost Set Bit
+
+The expression `x & (-x)` to find the rightmost set bit can cause overflow issues in some languages when dealing with the minimum integer value. In languages like C++ or Java, negating `INT_MIN` causes undefined behavior or overflow, requiring careful handling with unsigned types or alternative approaches.

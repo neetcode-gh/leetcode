@@ -720,3 +720,15 @@ class Solution : GuessGame {
 
 - Time complexity: $O(\log_3 n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Misinterpreting the guess() API Return Values
+
+The `guess()` API returns `-1` when your guess is higher than the picked number and `1` when your guess is lower. This is counterintuitive since many people expect positive to mean "go higher." Mixing up these return values causes the binary search to move in the wrong direction, leading to infinite loops or incorrect results.
+
+### Integer Overflow When Computing the Midpoint
+
+Calculating the midpoint as `(l + r) / 2` can cause integer overflow when `l` and `r` are both large values close to the maximum integer. The safe approach is to use `l + (r - l) / 2`, which avoids adding two large numbers together and prevents overflow in languages with fixed-size integers like Java, C++, and Go.

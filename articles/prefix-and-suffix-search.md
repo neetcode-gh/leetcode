@@ -1175,3 +1175,27 @@ class WordFilter {
 - Space complexity: $O(n * m ^ 3)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
+
+---
+
+## Common Pitfalls
+
+### Choosing the Wrong Separator Character
+
+When combining prefix and suffix into a single key (e.g., `suffix + "{" + prefix`), you must use a character that cannot appear in the input. Since the problem specifies only lowercase letters `a-z`, using `{` (ASCII 123, right after `z`) is safe. Using a character like `_` or any letter would cause collisions with valid input.
+
+### Returning the First Match Instead of the Highest Index
+
+The problem asks for the word with the **highest index** that matches both prefix and suffix. If multiple words satisfy the condition, you must return the largest index. When iterating forward and storing in a hash map, later words naturally overwrite earlier ones. When iterating in brute force, you must iterate from the end backward.
+
+### Off-by-One Errors in Prefix/Suffix Generation
+
+When generating all prefixes, ensure you include both the empty prefix and the full word. Similarly for suffixes. Missing the empty string or the complete word means some valid queries will fail. The loop bounds should be `0` to `word.length()` inclusive for prefixes and suffixes.
+
+### Incorrect Trie Node Index Updates
+
+In the Trie approach, each node should store the **latest** (highest) word index seen along that path. A common mistake is only updating the index at the leaf node. You must update the index at every node along the insertion path so that partial matches correctly return the highest index.
+
+### Memory Limit Exceeded from Excessive Key Generation
+
+The hash map and Trie approaches generate $O(m^2)$ entries per word (all prefix-suffix combinations), leading to $O(n \cdot m^3)$ total space when accounting for string storage. For large inputs, this can exceed memory limits. Ensure your implementation reuses string builders or avoids unnecessary string copies during key construction.

@@ -906,3 +906,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Out-of-Bounds Column Access
+
+When computing the minimum from the three cells above (left-diagonal, directly above, right-diagonal), forgetting to check column boundaries causes index errors. The leftmost column has no left-diagonal parent, and the rightmost column has no right-diagonal parent. Always handle these edge cases by treating out-of-bounds values as infinity.
+
+### Modifying Input While Reading
+
+In the in-place DP approach, you update `matrix[r][c]` using values from the previous row. Since you read from the same row you just wrote to, there is no conflict. However, if you mistakenly read from cells you have already updated in the current row, you will get incorrect results. Process each row independently from the previous row.
+
+### Forgetting to Check All Starting Columns
+
+The path can start from any column in the first row. A common mistake is starting only from column 0 or assuming the minimum value in the first row is the optimal start. You must either try all starting columns explicitly or let the DP naturally propagate all possibilities.

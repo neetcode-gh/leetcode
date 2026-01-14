@@ -797,3 +797,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Majority with Most Frequent
+
+The dominant element must appear more than half the time, not just be the most frequent. An element appearing exactly `n/2` times is not dominant. The condition is strictly greater than, so always use `count > length / 2` rather than `>=`.
+
+### Off-by-One Errors in Split Length Calculation
+
+When splitting at index `i`, the left segment has length `i + 1` and the right segment has length `n - i - 1`. Mixing up these lengths or using `i` instead of `i + 1` for the left length leads to incorrect dominance checks and wrong answers.
+
+### Not Recognizing That Only the Global Dominant Can Work
+
+A valid split requires the same element to dominate both halves. This element must also dominate the entire array. Checking all elements at each split point is wasteful; instead, identify the global dominant element first and only track its counts during the split search.

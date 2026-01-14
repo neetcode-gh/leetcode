@@ -475,3 +475,22 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the size of the input array and $m$ is the maximum value in the array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array First
+The two-pointer approach only works on sorted arrays. Attempting to pair people without sorting will not produce the minimum number of boats because you cannot guarantee pairing the heaviest with the lightest.
+
+### Trying to Fit More Than Two People per Boat
+The problem states each boat can carry at most 2 people, regardless of weight. A common mistake is trying to fit three or more light people in one boat.
+```python
+# Wrong: trying to fit multiple light people
+while l <= r and remain >= people[l]:
+    remain -= people[l]
+    l += 1  # Might add more than 2 people total
+```
+
+### Not Moving the Right Pointer First
+The heaviest person always needs a boat. A mistake is checking if the lightest person fits first, which can lead to incorrect pointer movement when the lightest person alone exceeds the remaining capacity.

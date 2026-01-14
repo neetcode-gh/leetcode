@@ -1068,3 +1068,27 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $N$ is the size of the $group$ array, $m$ is the given minimum profit, and $n$ is the number of group members.
+
+---
+
+## Common Pitfalls
+
+### Not Capping Profit at minProfit
+
+When accumulating profit in the DP state, tracking values beyond `minProfit` wastes memory and causes state explosion. Any profit exceeding the threshold is functionally equivalent for counting valid schemes. Always cap the profit dimension at `minProfit` to reduce the state space from potentially unbounded to O(minProfit).
+
+### Forgetting the Modulo Operation
+
+The problem requires results modulo 10^9 + 7 due to potentially huge answer values. Forgetting to apply modulo when summing the include and skip options leads to integer overflow. Apply modulo after every addition operation, not just at the end.
+
+### Incorrect Base Case Logic
+
+The base case must return 1 when all crimes are considered AND the accumulated profit meets the threshold. A common mistake is returning 1 unconditionally or checking the wrong condition. The check `p >= minProfit` must happen only when `i == len(group)`.
+
+### Off-by-One in Member Count Check
+
+When deciding whether to include a crime, the condition should be `n >= group[i]` or equivalently `n - group[i] >= 0`. Using strict inequality `n > group[i]` incorrectly excludes cases where exactly enough members are available.
+
+### Iterating in Wrong Direction for Space Optimization
+
+In the space-optimized bottom-up solution, iterating `j` (member count) in the wrong direction causes using updated values from the current iteration instead of the previous one. Process members from high to low to ensure correct dependency ordering.

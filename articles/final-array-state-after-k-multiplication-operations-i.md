@@ -425,3 +425,15 @@ class Solution {
 * Space complexity: $O(n)$
 
 > Where $n$ is the size of the input array, and $k$ is the number of operations.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Tie-Breaking for Minimum Element
+
+When multiple elements share the minimum value, the problem requires selecting the one with the smallest index. Failing to handle this tie-breaking rule correctly will produce wrong results. Always scan from left to right and keep track of the first occurrence of the minimum.
+
+### Modifying Heap Values Without Re-Heapifying
+
+When using a heap-based approach, some implementations store indices and compare using the current array values. After multiplying an element, you must properly update the heap by removing and reinserting the index, or the heap property will be violated and subsequent minimum extractions will be incorrect.

@@ -1288,3 +1288,19 @@ class LRUCache {
 
 - Time complexity: $O(1)$ for each $put()$ and $get()$ operation.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Update on Get Operations
+
+A critical LRU requirement is that `get()` operations also update recency. Many implementations correctly update order on `put()` but forget that accessing a key via `get()` should also move it to the most recently used position. This breaks the LRU invariant and causes wrong evictions.
+
+### Incorrect Doubly Linked List Pointer Updates
+
+When implementing the doubly linked list approach, pointer manipulation errors are common. When removing a node, you must update both `prev.next` and `next.prev`. When inserting, you must update four pointers: the new node's `prev` and `next`, plus the adjacent nodes' pointers. Missing any of these updates corrupts the list structure.
+
+### Not Storing Keys in List Nodes
+
+When evicting the least recently used item, you need to remove it from both the linked list and the hash map. If your list nodes only store values (not keys), you cannot efficiently find and remove the corresponding hash map entry. Always store the key in each list node to enable O(1) eviction.

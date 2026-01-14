@@ -851,3 +851,23 @@ class Solution {
 - Space complexity: $O(n * k)$
 
 > Where $n$ is the number of piles, $k$ is the number of coins to choose, and $m$ is the total number of coins among all the piles.
+
+---
+
+## Common Pitfalls
+
+### Off-By-One Errors in Coin Counting
+
+When iterating through coins to take from a pile, it is easy to miscount. Taking `j + 1` coins means indices `0` through `j`, so loops should run from `0` to `min(coins, pile.size()) - 1`. Mixing up whether `j` represents the count or the last index causes incorrect state transitions.
+
+### Forgetting to Consider Skipping a Pile
+
+The option to take zero coins from a pile (skip it entirely) must be explicitly handled. In the DP transition, initialize the result with `dp[i + 1][coins]` before iterating over how many coins to take. Missing this case means you cannot skip piles, leading to suboptimal or incorrect answers.
+
+### Incorrect DP Iteration Order for Space Optimization
+
+In the space-optimized version, iterating `coins` from `0` to `k` instead of from `k` down to `1` causes you to overwrite values you still need for the current pile. Always iterate in reverse when using a 1D DP array to avoid using updated values prematurely.
+
+### Accumulating Pile Sum Incorrectly
+
+When computing the value of taking the top `j + 1` coins, you must accumulate the sum incrementally: `curPile += pile[j]`. Recomputing the sum from scratch each iteration is inefficient, and forgetting to accumulate leads to only counting the single coin at index `j` rather than all coins from `0` to `j`.

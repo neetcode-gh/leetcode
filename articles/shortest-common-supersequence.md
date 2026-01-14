@@ -1707,3 +1707,27 @@ class Solution {
 - Space complexity: $O(n * m)$
 
 > Where $n$ and $m$ are the lengths of the strings $str1$ and $str2$ respectively.
+
+---
+
+## Common Pitfalls
+
+### Confusing SCS with LCS
+
+The Shortest Common Supersequence is related to but different from the Longest Common Subsequence. The SCS length equals `len(str1) + len(str2) - LCS_length`. Some solutions incorrectly try to directly apply LCS logic without understanding that SCS requires including all characters from both strings, not just the common ones.
+
+### Incorrect Traceback Direction
+
+When reconstructing the SCS from the DP table, you must trace backward from `(n, m)` to `(0, 0)` and then reverse the result. A common mistake is tracing forward, which produces a different (incorrect) supersequence. The direction of traceback must match the direction used to fill the DP table.
+
+### Missing Characters After Traceback Loop
+
+After the main traceback loop terminates (when either `i` or `j` reaches 0), there may still be remaining characters in one of the strings. Forgetting to append these remaining characters results in an incomplete supersequence that does not contain one of the input strings as a subsequence.
+
+### Inefficient String Concatenation
+
+Building the result string by repeated concatenation in languages like Java or Python can lead to O(n * m * (n + m)) time complexity due to string immutability. Use a StringBuilder, list, or similar mutable structure and reverse at the end for optimal performance.
+
+### Off-by-One Errors in DP Indices
+
+The DP table has dimensions `(n+1) x (m+1)` where indices 0 represent empty prefixes. When accessing characters, `dp[i][j]` corresponds to `str1[i-1]` and `str2[j-1]`. Mixing up 0-indexed string access with 1-indexed DP access causes incorrect character comparisons and wrong results.

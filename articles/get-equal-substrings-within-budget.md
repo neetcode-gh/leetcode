@@ -569,3 +569,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Use Absolute Value for Cost Calculation
+
+When computing the transformation cost between characters, you must use the absolute difference `|s[i] - t[i]|`. Forgetting to take the absolute value will produce negative costs when `t[i] < s[i]`, leading to incorrect results. Always wrap the difference in `abs()` or `Math.abs()`.
+
+### Shrinking the Window Too Aggressively
+
+In the standard sliding window approach, when the cost exceeds the budget, you should shrink the window from the left one step at a time while updating the running cost. A common mistake is resetting the left pointer to `right + 1` or incorrectly jumping the left pointer, which skips valid substrings and produces suboptimal answers.
+
+### Returning Window Size Instead of Maximum Length
+
+The problem asks for the maximum length found across all valid windows, not the final window size. Make sure to track and update a separate `result` variable with `max(result, r - l + 1)` after each expansion, rather than just returning `r - l + 1` at the end of the loop.

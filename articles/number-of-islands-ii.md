@@ -684,3 +684,25 @@ class Solution {
 - Space complexity: $O(m \cdot n)$
 
 >  Where $m$ and $n$ are the number of rows and columns in the given grid, and $l$ is the size of `positions`.
+
+## Common Pitfalls
+
+### Forgetting to Handle Duplicate Positions
+
+The input `positions` array may contain duplicate coordinates. If you add a land cell that already exists, you should not increment the island count again. Always check if a cell is already land before processing it as a new addition.
+
+### Incorrect 2D to 1D Index Conversion
+
+When flattening a 2D grid to a 1D array for Union-Find, the conversion formula `row * n + col` must use the number of columns `n`, not the number of rows `m`. Mixing these up leads to incorrect neighbor calculations and wrong union operations.
+
+### Not Decrementing Count on Successful Union
+
+When unioning two land cells that belong to different islands, the island count must decrease by 1. A common mistake is to always decrement, even when the cells are already in the same set. Only decrement when `find(x) != find(y)` before the union operation.
+
+### Bounds Checking Before Index Calculation
+
+When checking neighbors, you must validate that `neighborX` and `neighborY` are within grid bounds before computing `neighborPosition = neighborX * n + neighborY`. Otherwise, negative indices or out-of-bounds positions can cause array access errors or incorrect unions with unrelated cells.
+
+### Missing Path Compression or Union by Rank
+
+While the algorithm works without optimizations, omitting path compression in `find()` or union by rank can degrade performance from near-constant time to linear time per operation. For large inputs, this can cause Time Limit Exceeded errors.

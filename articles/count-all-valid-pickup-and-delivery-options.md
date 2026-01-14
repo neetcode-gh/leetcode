@@ -1308,3 +1308,37 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting Modular Arithmetic
+The result grows extremely fast (factorial-like), causing integer overflow. You must take modulo at each multiplication step, not just at the end.
+```python
+# Wrong: overflow before final mod
+res = res * validChoices
+return res % MOD
+
+# Correct: mod at each step
+res = (res * validChoices) % MOD
+```
+
+### Allowing Delivery Before Pickup
+Some solutions incorrectly count all permutations of 2n events. The constraint that each delivery must come after its pickup is essential and reduces valid arrangements by a factor of 2^n.
+
+### Integer Overflow in Intermediate Calculations
+When multiplying two integers before taking modulo, the intermediate result can overflow. Use explicit casting to `long` or 64-bit integers.
+```java
+// Wrong: overflow before mod
+res = (res + (n - picked) * dfs(...)) % MOD;
+
+// Correct: cast to long first
+res = (res + (n - picked) * 1L * dfs(...)) % MOD;
+```
+
+### Miscounting Slot Choices
+In the combinatorics approach, the valid choices for placing a pickup-delivery pair is `slots * (slots - 1) / 2`, not `slots * (slots - 1)`. The division by 2 accounts for the fact that pickup must come before delivery.
+
+### Wrong Base Case in Recursion
+The base case should return 1 when all orders are picked AND delivered, not just when all are picked. Returning early causes undercounting.

@@ -1038,3 +1038,31 @@ class Solution {
 - Space complexity:
     - $O(n)$ extra space.
     - $O(2 ^ n)$ for the output list.
+
+---
+
+## Common Pitfalls
+
+### Modifying the Subset After Adding to Result
+When adding a subset to the result list, you must add a copy of the current subset. Otherwise, backtracking modifications will alter subsets already in the result.
+```python
+# Wrong: adds reference that gets modified later
+res.append(subset)
+# Correct: add a copy
+res.append(subset[:])  # or list(subset)
+```
+
+### Forgetting the Empty Subset
+The power set always includes the empty subset `[]`. Forgetting to initialize with an empty subset or starting the iteration incorrectly will miss this case.
+
+### Incorrect Index Handling in Backtracking
+When recursing, start from `i + 1` to avoid reusing the same element and to prevent duplicate subsets. Starting from `0` or `i` generates incorrect results.
+```python
+# Wrong: includes current element again
+for j in range(i, len(nums)):
+# Correct: start from next element
+for j in range(i + 1, len(nums)):
+```
+
+### Integer Overflow in Bitmask Approach
+For the bitmask solution, `1 << n` can overflow for large `n`. In most languages, this limits the approach to around 30 elements, though problem constraints usually keep `n` small.

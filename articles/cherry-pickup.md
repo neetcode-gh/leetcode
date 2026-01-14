@@ -1567,3 +1567,31 @@ class Solution {
 
 * Time complexity: $O(n ^ 3)$
 * Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Solving as Two Independent Paths
+Running a greedy or DP solution for the forward path, removing collected cherries, then solving the return path separately. This approach fails because the optimal combined solution may require a suboptimal forward path to enable a better return path. Both paths must be considered simultaneously.
+
+### Double Counting Cherries When Paths Overlap
+Forgetting to subtract cherries when both simulated people land on the same cell. If `(r1, c1) == (r2, c2)`, you must count cherries only once.
+
+```python
+# Wrong: always adds both
+res += grid[r1][c1] + grid[r2][c2]
+
+# Correct: subtract overlap
+if r1 == r2 and c1 == c2:
+    res -= grid[r1][c1]
+```
+
+### Ignoring Blocked Cells (-1) Properly
+Returning `0` instead of a large negative value when hitting a thorn. Returning `0` makes invalid paths appear viable when taking the maximum. Return `-1000` or `float('-inf')` to ensure invalid paths are never selected.
+
+### Forgetting to Handle No Valid Path
+Not checking if the final result is negative before returning. If no valid path exists (blocked by thorns), the algorithm may return a negative number. The answer should be `max(0, result)`.
+
+### Using 4D State Without Optimization
+Not recognizing that `c2` can be derived from `c1`, `r1`, and `r2` since both people take the same number of steps (`r1 + c1 == r2 + c2`). This optimization reduces state space from O(n^4) to O(n^3).

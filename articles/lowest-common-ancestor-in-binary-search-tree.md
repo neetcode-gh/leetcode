@@ -563,3 +563,15 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $h$ is the height of the tree.
+
+---
+
+## Common Pitfalls
+
+### Ignoring BST Properties
+
+A common mistake is treating this problem like a general binary tree LCA problem. In a BST, values are ordered (left < node < right), which allows us to determine the direction to search based on value comparisons alone. Using a generic DFS approach that checks both subtrees wastes time and ignores the BST structure that makes O(h) solutions possible.
+
+### Incorrect Comparison Logic
+
+When comparing `p` and `q` values against the current node, be careful with the boundary conditions. The LCA is found when the current node's value lies between `p.val` and `q.val` (inclusive). A common bug is using strict inequalities everywhere, which fails when `p` or `q` equals the current node. Remember: if `p.val <= root.val <= q.val` (or vice versa), the current node is the LCA.

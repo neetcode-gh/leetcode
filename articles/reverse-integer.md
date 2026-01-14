@@ -652,3 +652,19 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Checking for Overflow After It Happens
+
+A critical mistake is multiplying `res` by 10 and adding the digit before checking if the result overflows. By that point, overflow has already occurred and the value is corrupted. The overflow check must happen before the multiplication to determine if the next operation would exceed the 32-bit signed integer bounds.
+
+### Incorrect Handling of Negative Numbers with Modulo
+
+Different programming languages handle the modulo operation differently for negative numbers. In Python, `-123 % 10` returns `7`, not `-3`. Using the wrong modulo behavior leads to incorrect digit extraction for negative inputs. Use language-specific functions like `math.fmod()` in Python or ensure consistent handling across languages.
+
+### Forgetting the Asymmetric Range of 32-bit Signed Integers
+
+The 32-bit signed integer range is asymmetric: `-2^31` to `2^31 - 1`. This means the minimum value has a larger absolute value than the maximum. When checking for overflow, both boundaries must be validated separately. Simply checking against one limit and assuming symmetry causes edge cases like reversing `1534236469` to fail silently.

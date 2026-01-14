@@ -567,3 +567,27 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of verticies and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Processing Type 3 Edges After Type 1 and Type 2
+
+The order of processing matters significantly. Type 3 edges (usable by both Alice and Bob) should be processed first because they provide connectivity to both users with a single edge. If you process type 1 and type 2 edges first, you may use two separate edges to connect nodes that could have been connected by one type 3 edge, resulting in fewer removable edges.
+
+### Using a Single Union-Find Structure for Both Users
+
+Alice and Bob have different connectivity requirements since type 1 edges only work for Alice and type 2 edges only work for Bob. Using a single DSU structure fails to track their independent connectivity. You must maintain two separate Union-Find structures and update them according to which edge types each user can traverse.
+
+### Incorrect Counting of Used Type 3 Edges
+
+When processing a type 3 edge, it counts as "used" if it connects new components for either Alice or Bob (or both). A common mistake is counting it as used only if it helps both, or counting it twice. Use bitwise OR (`|`) on the union results: `alice.union() | bob.union()` returns 1 if the edge was useful for at least one user.
+
+### Not Verifying Full Connectivity for Both Users
+
+After processing all edges, you must verify that both Alice's and Bob's graphs are fully connected (single component each). Returning the edge count without this check can give a valid-looking answer even when full traversal is impossible. If either DSU has more than one component, return `-1`.
+
+### Off-by-One Errors in Component Counting
+
+The Union-Find structure should track the number of connected components, starting at `n` (number of nodes) and decreasing by 1 with each successful union. A graph is fully connected when exactly 1 component remains. Initializing the count incorrectly or not decrementing on successful unions leads to wrong connectivity checks.

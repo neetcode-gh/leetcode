@@ -1492,3 +1492,19 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.
+
+---
+
+## Common Pitfalls
+
+### Returning the First Cycle Edge Instead of the Last
+
+The problem asks for the edge that appears last in the input among all edges that could be removed to break the cycle. A common mistake is returning the first edge that creates a cycle during processing. When using Union-Find, processing edges in order naturally returns the correct answer, but DFS-based approaches must scan edges in reverse to find the last valid edge.
+
+### Treating the Graph as Directed
+
+This problem involves an undirected graph, but some solutions incorrectly handle edges as directed. When building the adjacency list, each edge `(u, v)` must be added in both directions. Forgetting this causes cycle detection to miss valid paths and return incorrect results.
+
+### Not Handling the Parent Node in DFS Cycle Detection
+
+When using DFS to detect cycles in an undirected graph, you must skip the parent node to avoid false positives. In an undirected graph, the edge `(u, v)` appears as both `u -> v` and `v -> u` in the adjacency list. Without parent tracking, DFS would immediately detect a "cycle" by going back to the node it just came from.

@@ -767,3 +767,19 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique frequncies possible.
+
+---
+
+## Common Pitfalls
+
+### Adding Zero Frequencies to the Used Set
+
+When a frequency is decremented to zero, adding it to the used frequency set prevents other characters from also being reduced to zero. Multiple characters can validly have frequency zero (meaning they are completely deleted), so zero should either not be added or handled specially.
+
+### Not Decrementing Until an Available Slot is Found
+
+Some implementations only check if a frequency is taken and decrement once. The correct approach requires a while loop that continues decrementing until finding an unused frequency or reaching zero. A single decrement may land on another taken frequency.
+
+### Counting Characters Instead of Frequencies
+
+The problem asks for minimum deletions to make frequencies unique, not to make characters unique. Confusing the two leads to counting unique characters or deleting entire character types rather than reducing specific frequency counts.

@@ -768,3 +768,46 @@ public class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Understanding the Circular Nature
+
+The senate voting is circular, meaning after the last senator votes, it wraps back to the first. A banned senator in round 1 could have banned someone who would act later in the same round or in subsequent rounds.
+
+```python
+# Wrong: Only considering senators ahead in the array
+j = i + 1
+while j < len(s) and s[j] == s[i]:
+    j += 1
+
+# Correct: Circular wrap-around
+j = (i + 1) % len(s)
+while s[j] == s[i]:
+    j = (j + 1) % len(s)
+```
+
+### Banning the Wrong Opponent
+
+Each senator should optimally ban the nearest opposing senator who would otherwise act before them in the next round. Banning a distant opponent wastes the opportunity and may lead to suboptimal outcomes.
+
+```python
+# Wrong strategy: Banning any random opponent
+# Correct strategy: Ban the next opponent in circular order
+```
+
+### Forgetting to Re-add Surviving Senators
+
+In the queue-based approach, when a senator bans an opponent, the survivor must be re-added to the queue to vote again in future rounds. The index must be incremented by `n` to maintain proper ordering.
+
+```python
+# Wrong: Not re-adding the survivor
+if rTurn < dTurn:
+    pass  # R survives but isn't re-added
+
+# Correct: Re-add survivor with updated index
+if rTurn < dTurn:
+    R.append(rTurn + n)
+```

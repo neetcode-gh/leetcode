@@ -743,3 +743,15 @@ class Solution {
 
 - Time complexity: $O(26 * n)$ since we have at most $26$ different characters.
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Returning the Character Instead of the Index
+
+The problem asks for the index of the first unique character, not the character itself. A common mistake is returning the character or returning a 1-based index instead of a 0-based index. Always double-check what the problem is asking for and ensure your return type matches.
+
+### Iterating Over the Hash Map Instead of the String
+
+When using a hash map to count frequencies, iterating over the map to find the first unique character loses the original order. Hash maps in most languages do not preserve insertion order. You must iterate over the original string in a second pass to find the first character with count equal to 1.

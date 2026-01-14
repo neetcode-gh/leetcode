@@ -844,3 +844,22 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Confusing the Pattern Order
+The "132 pattern" refers to the relative ordering of values, not indices. You need `nums[i] < nums[k] < nums[j]` where `i < j < k`. A common mistake is looking for values in the wrong order or confusing which index maps to which part of the pattern name.
+
+### Using Wrong Comparison Operators
+The pattern requires strict inequalities: `nums[i] < nums[k] < nums[j]`. Using `<=` instead of `<` will incorrectly accept patterns where two elements are equal.
+```python
+# Wrong: allows equal values
+if nums[i] <= nums[k] <= nums[j]:
+# Correct: requires strict inequalities
+if nums[i] < nums[k] < nums[j]:
+```
+
+### Forgetting to Track the Minimum Correctly
+In the stack-based approach, you must track the minimum value to the left of each potential "3" (middle element). Failing to update the minimum correctly or associating it with the wrong stack element leads to missing valid patterns or false positives.

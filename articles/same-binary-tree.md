@@ -937,3 +937,13 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Incorrect Null Check Order
+
+A common mistake is checking node values before verifying both nodes exist. If one node is `null` and you access its value, you get a null pointer exception. Always check if both nodes are `null` first, then if exactly one is `null`, before comparing values.
+
+### Comparing Only Values Without Structure
+
+Some solutions compare just the values using traversals like inorder or preorder, ignoring tree structure. Two trees can have identical traversal sequences but different structures. You must verify both the values and the structural positions match at every node.

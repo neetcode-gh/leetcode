@@ -527,3 +527,15 @@ class Solution {
 * Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ and $n$ are the lengths of the strings $ransomNote$ and $magazine$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Counting the Wrong String First
+
+A common mistake is counting characters from the ransom note first and then trying to match against the magazine. This leads to incorrect logic when checking availability. Always count the magazine characters first (the source), then verify against the ransom note requirements.
+
+### Not Handling Character Reuse Properly
+
+When using the brute force approach, forgetting to remove a character from the magazine after using it leads to incorrect results. Each magazine character can only be used once, so after matching a character, it must be marked as consumed to prevent reuse.

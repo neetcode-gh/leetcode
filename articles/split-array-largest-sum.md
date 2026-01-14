@@ -1811,3 +1811,27 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$, $s$ is the sum of all the elements in the array, and $k$ is the number of sub-arrays to form.
+
+---
+
+## Common Pitfalls
+
+### Setting Incorrect Binary Search Bounds
+
+The lower bound must be `max(nums)` (not `0` or `1`) because no subarray sum can be smaller than the largest single element. The upper bound is `sum(nums)` representing the case where all elements are in one subarray. Using incorrect bounds leads to invalid answers or infinite loops.
+
+### Off-by-One in Subarray Counting
+
+When checking if a target sum is feasible, starting the subarray count at `0` instead of `1` causes the algorithm to allow one extra split. The count should start at `1` since we always have at least one subarray before any splits occur.
+
+### Integer Overflow in Sum Calculations
+
+For large arrays with large values, the sum of elements can overflow 32-bit integers. Using `long` or equivalent 64-bit types for prefix sums and running totals prevents incorrect comparisons and ensures the binary search operates on valid values.
+
+### Greedy Check Not Resetting Current Sum
+
+In the feasibility check, when the current sum exceeds the target and a new subarray begins, the current sum must be reset to the current element (not to `0`). Resetting to `0` loses the current element and produces incorrect subarray counts.
+
+### Confusing Minimizing Maximum with Maximizing Minimum
+
+This problem asks to minimize the largest subarray sum, which means we want the smallest possible value that still allows a valid k-way split. Binary searching in the wrong direction (trying to maximize instead of minimize) yields incorrect results.

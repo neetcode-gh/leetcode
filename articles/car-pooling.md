@@ -1038,3 +1038,36 @@ class Solution {
 - Space complexity: $O(N)$
 
 > Where $n$ is the size of the array $trips$ and $N$ is the difference between the rightmost location and the leftmost location.
+
+---
+
+## Common Pitfalls
+
+### Not Processing Drop-offs Before Pickups at Same Location
+When a passenger is dropped off and another is picked up at the same location, the drop-off must happen first. Failing to sort events so that drop-offs (negative values) come before pickups at the same location causes false capacity violations.
+```python
+# Wrong: no tiebreaker for same location
+points.sort(key=lambda x: x[0])
+# Correct: drop-offs (negative) before pickups at same location
+points.sort(key=lambda x: (x[0], x[1]))
+```
+
+### Checking Passengers Still in Car at Drop-off Location
+Passengers are dropped off at the `end` location and are not in the car during that location. A common mistake is including passengers who should have already exited, leading to overcounting.
+```python
+# Wrong: includes passengers still at drop-off
+if trips[j][2] >= trips[i][1]:
+# Correct: only count if drop-off is strictly after pickup
+if trips[j][2] > trips[i][1]:
+```
+
+### Off-by-One Error in Difference Array Index
+When using a difference array, failing to account for the offset between actual locations and array indices causes incorrect passenger counts. This is especially problematic when locations do not start at zero.
+```python
+# Wrong: assumes locations start at 0
+passChange[start] += passengers
+passChange[end] -= passengers
+# Correct: adjust for minimum location offset
+passChange[start - L] += passengers
+passChange[end - L] -= passengers
+```

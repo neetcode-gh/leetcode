@@ -1781,3 +1781,19 @@ class Solution {
 - Space complexity: $O(2 ^ n)$
 
 > Where $n$ is the number of strings and $m$ is the maximum length of a string.
+
+---
+
+## Common Pitfalls
+
+### Not Filtering Strings with Internal Duplicates
+
+A string like `"aa"` or `"abca"` contains duplicate characters within itself. Such strings can never be part of a valid concatenation since the result must have all unique characters. Failing to preprocess and filter out these invalid strings leads to wasted computation and potentially incorrect results if the overlap check only compares against previously selected characters but not within the string itself.
+
+### Incorrect Bitmask Conflict Detection
+
+When using bitmasks, two strings conflict if their AND is non-zero (they share at least one character). A common mistake is using OR or XOR for conflict detection, or checking equality instead of bitwise AND. The correct check is `(mask1 & mask2) == 0` to confirm no overlapping characters before combining with `mask1 | mask2`.
+
+### Forgetting to Backtrack
+
+In the backtracking solution, after exploring the branch where a string is included, you must remove its characters from the set before exploring the skip branch. Forgetting to undo the state change causes characters from the "include" path to pollute the "skip" path, leading to false conflicts and suboptimal results. The bitmask approach avoids this issue since the mask is passed by value in recursion.

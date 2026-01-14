@@ -731,3 +731,23 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(\log n)$
+
+---
+
+## Common Pitfalls
+
+### Recursing on n-1 Directly Causes TLE
+
+The naive approach of recursively calling `dfs(n-1)` for the "eat one orange" option explores O(n) states, causing Time Limit Exceeded for large inputs. The key optimization is to never recurse on `n-1` directly. Instead, compute the cost to reach the nearest divisible number: `(n % 2) + 1 + dfs(n // 2)` or `(n % 3) + 1 + dfs(n // 3)`. This reduces the state space from O(n) to O(log n).
+
+### Missing Base Cases in Memoization
+
+The optimized solution requires explicit base cases for `n = 0` and `n = 1` before computing the recursive formula. Forgetting `dp[1] = 1` will cause infinite recursion or incorrect results since the formula `1 + (n % 2) + dfs(n // 2)` does not naturally terminate at 1. Always initialize the memoization cache with `{0: 0, 1: 1}`.
+
+### Integer Division Confusion Across Languages
+
+In the optimized recurrence, you compute `dfs(n // 2)` and `dfs(n // 3)`. Be careful with integer division semantics. In Python, `//` performs floor division. In JavaScript, you need `Math.floor(n / 2)`. Using regular division `/` in languages like JavaScript or Python 2 will produce floating-point results, causing cache misses and incorrect behavior.
+
+### Forgetting That All Three Options Must Be Considered
+
+Even in the optimized solution, you must consider both paths: reducing to a multiple of 2 and reducing to a multiple of 3. Some solutions incorrectly assume one division is always better. For example, with `n = 7`, going via 6 (divide by 3) takes 3 days, but going via 6 then 3 then 1 needs careful comparison. Always take the minimum of both division paths.

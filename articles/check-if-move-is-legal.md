@@ -623,3 +623,26 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Place the Piece Before Checking
+The move validation must include the piece being placed at `(rMove, cMove)`. If you forget to set `board[rMove][cMove] = color` before checking directions, you may incorrectly validate lines that don't actually start with your piece.
+```python
+# Must place the piece first:
+board[rMove][cMove] = color
+```
+
+### Not Requiring At Least One Opponent Piece Between
+A valid line must have at least one opponent piece between your placed piece and another piece of your color. Checking only that the endpoint matches your color without verifying `length >= 3` allows invalid moves where two of your pieces are adjacent.
+```python
+# Wrong: just checking board[row][col] == color
+# Correct:
+if board[row][col] == color:
+    return length >= 3  # Ensures at least one opponent piece in between
+```
+
+### Missing a Direction or Checking Only 4 Directions
+There are 8 possible directions (horizontal, vertical, and 4 diagonals). A common mistake is checking only 4 directions (e.g., only cardinal or only diagonal), which misses valid lines in the unchecked directions.

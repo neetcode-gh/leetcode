@@ -1080,3 +1080,27 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of rooms and $m$ is the number of meetings.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort Meetings by Start Time
+
+Meetings must be processed in chronological order. Without sorting, you cannot correctly determine which room becomes available first or when meetings need to be delayed.
+
+### Integer Overflow When Calculating Delayed End Times
+
+When meetings are delayed, end times can grow very large. Using `int` instead of `long` can cause overflow. Always use `long` or equivalent 64-bit integer types for end times.
+
+### Incorrect Tie-Breaking for Room Selection
+
+When multiple rooms are available, you must choose the room with the smallest index. When multiple rooms become free at the same time, you must also prefer the smaller index. Failing to implement this tie-breaking correctly leads to wrong answers.
+
+### Not Preserving Meeting Duration When Delaying
+
+When a meeting is delayed because no room is available, the meeting duration must remain the same. The new end time should be `earliest_available_time + (original_end - original_start)`, not simply the original end time.
+
+### Confusing Available vs Used Room Logic with Two Heaps
+
+When using two heaps, it is easy to forget to move rooms from the used heap back to the available heap when their meetings end. Always check and transfer rooms whose end time is at or before the current meeting's start time before attempting to assign a room.

@@ -828,3 +828,15 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ is the number of digits in the given integer.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Negative Numbers Are Not Palindromes
+
+Negative numbers have a minus sign at the front, so they can never be palindromes (e.g., `-121` reads as `121-` backwards). Failing to handle negative numbers as an early return case leads to incorrect results or issues with modulo operations on negative values.
+
+### Not Handling Numbers Ending in Zero
+
+Numbers ending in zero (except zero itself) cannot be palindromes because leading zeros are not allowed in integers. For example, `10` would need to be `01` reversed, which is not a valid representation. The half-reversal approach fails on these cases without explicit handling, as the loop condition `x > rev` may never be satisfied correctly.

@@ -929,3 +929,27 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Thinking You Need to Track Actual Subarrays
+
+A common mistake is trying to explicitly simulate which subarrays to increment, tracking their boundaries and overlaps. This leads to complex and inefficient solutions. The key insight is that you only need to count the number of new "layers" or "strokes" needed, which happens whenever the height increases from one element to the next. The greedy formula `target[0] + sum(max(target[i] - target[i-1], 0) for i in range(1, n))` captures this without tracking any subarray explicitly.
+
+### Forgetting to Initialize with the First Element
+
+The result must start with `target[0]`, not 0. The first element requires exactly `target[0]` operations to build from zero, regardless of what follows. Starting the result at 0 and only counting positive differences will miss all the operations needed to build the first element, giving an answer that is `target[0]` less than correct.
+
+### Confusing Increase vs Decrease Logic
+
+The greedy solution only adds to the result when `target[i] > target[i-1]`, not when it decreases. When the height decreases, existing operations "cover" the lower height naturally without needing new operations. Incorrectly adding something when the height decreases (like trying to "close" previous operations) will overcounting.
+
+### Using the Wrong Approach for Large Arrays
+
+The simulation approach with O(n^2) complexity or the segment tree approach with O(n log n) complexity will pass, but the O(n) greedy solution is much simpler and faster. If you find yourself implementing a segment tree or divide-and-conquer, step back and consider whether a simpler left-to-right scan could work. The pattern of counting increases is a common greedy technique for "painting" problems.
+
+### Integer Overflow in Sum Accumulation
+
+For large arrays with large values, the sum of all positive increases could exceed 32-bit integer limits. While this problem typically has constraints that prevent overflow, always be mindful when accumulating potentially large sums. Use 64-bit integers (`long` in Java, `long long` in C++) if the constraints allow very large values or many elements.

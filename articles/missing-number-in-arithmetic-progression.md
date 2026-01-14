@@ -494,3 +494,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the length of array `arr`.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Common Difference Calculation
+
+The common difference must be calculated as `(arr[n-1] - arr[0]) / n`, not `(arr[n-1] - arr[0]) / (n-1)`. Since one element is missing, the full sequence would have `n+1` elements with `n` gaps, making the divisor `n`.
+
+### Not Handling Zero Difference
+
+When the common difference is zero (all elements are the same), any position could be the "missing" element since the missing value equals all existing values. The linear search returns the first element in this case, which is correct.
+
+### Integer Division Truncation
+
+In languages where division truncates toward zero, negative arithmetic progressions may produce incorrect common differences. Ensure the division correctly handles both positive and negative sequences.

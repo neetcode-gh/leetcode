@@ -615,3 +615,19 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Not Tracking Parent Nodes
+
+Since the tree is given as an undirected edge list, each edge appears in both directions in the adjacency list. Without tracking the parent node during DFS, you will revisit the parent as if it were a child, causing infinite recursion or incorrect double-counting of edges. Always pass the parent node to recursive calls and skip it when iterating through neighbors.
+
+### Counting Edges Instead of Round Trips
+
+Each edge must be traversed twice (once going down to collect apples, once coming back up). A common mistake is adding 1 instead of 2 to the time when an edge needs to be traversed. This results in answers that are exactly half of the correct value.
+
+### Ignoring Apples in Subtrees
+
+Some solutions only check if the current child node has an apple, forgetting that we also need to traverse to a child if its subtree contains apples deeper down. The correct condition is: traverse to a child if `hasApple[child]` is true OR if `childTime > 0` (meaning the subtree required time, indicating apples exist deeper).

@@ -935,3 +935,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for recursion stack.
+
+---
+
+## Common Pitfalls
+
+### Confusing "Skip to Grandchildren" with "Must Rob Grandchildren"
+
+When robbing the current node, you cannot rob its immediate children, so you recursively consider the grandchildren. However, a common mistake is thinking you must rob the grandchildren. In reality, for each grandchild, you still have the choice to rob it or skip it. The recursive call on grandchildren will make this decision optimally. The constraint only prevents robbing adjacent nodes (parent-child), not skipping multiple levels.
+
+### Not Handling Null Children Properly
+
+When calculating the value of robbing the current node, you need to add values from grandchildren. If a child is null, accessing `child.left` or `child.right` will cause a null pointer error. Always check if the left or right child exists before attempting to access their children. A null child contributes 0 to the total, and its non-existent children also contribute 0.
+
+### Forgetting to Take Maximum in the Final Answer
+
+The optimal DFS solution returns a pair `[withRoot, withoutRoot]` representing the maximum money if we rob or skip the current node. At the root level, the final answer is the maximum of these two values, not just one of them. Forgetting to take this maximum and returning only `withRoot` or `withoutRoot` will give an incorrect result whenever the optimal strategy at the root differs from what you returned.

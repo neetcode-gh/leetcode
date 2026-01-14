@@ -2187,3 +2187,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$ in average case, $O(n ^ 2)$ in worst case.
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Naive Quick Sort Pivot Selection
+
+Choosing the first or last element as the pivot without any randomization or median selection causes O(n^2) time complexity on sorted or nearly-sorted arrays. Always use randomized pivot selection or median-of-three to avoid worst-case performance on common input patterns.
+
+### Forgetting to Handle Negative Numbers in Radix Sort
+
+Radix sort only works directly on non-negative integers. If you apply radix sort to an array containing negative numbers without first separating them, the algorithm produces incorrect results. You must handle negatives separately by converting them to positive, sorting, reversing, and negating back.
+
+### Stack Overflow in Recursive Implementations
+
+Deep recursion in merge sort or quick sort can cause stack overflow on very large arrays. For production code, consider iterative implementations or ensure tail-call optimization where available. Some languages have strict stack limits that recursive sorting algorithms can exceed.

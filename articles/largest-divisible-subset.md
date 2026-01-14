@@ -1527,3 +1527,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array First
+
+The divisibility property only guarantees transitivity when elements are sorted. If `a` divides `b` and `b` divides `c`, then `a` divides `c`, but this chain only works reliably when processing elements in ascending order. Skipping the sort step means you might miss valid subset extensions or incorrectly reject valid ones.
+
+### Checking Divisibility in the Wrong Direction
+
+After sorting in ascending order, when comparing `nums[i]` and `nums[j]` where `i < j`, you must check if `nums[j] % nums[i] == 0` (larger divisible by smaller). A common mistake is checking `nums[i] % nums[j] == 0`, which will always be false for distinct positive integers when `nums[i] < nums[j]`.
+
+### Only Returning the Length Instead of the Actual Subset
+
+The problem asks for the subset itself, not just its size. When using DP with length tracking only, you must also maintain a way to reconstruct the path, typically through parent pointers or by storing the actual subsets. Forgetting this reconstruction step means you can compute the correct length but cannot output the required elements.

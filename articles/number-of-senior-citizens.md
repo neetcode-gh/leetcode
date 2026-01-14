@@ -298,3 +298,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-By-One Index Errors
+
+The age is located at indices 11 and 12 (0-indexed). A common mistake is using the wrong indices, such as 10 and 11, or forgetting that substring methods in many languages use exclusive end indices. Always verify the exact positions based on the problem's string format specification.
+
+### Using Greater-Than-Or-Equal Instead of Greater-Than
+
+The problem asks for passengers strictly older than 60, not 60 or older. Using `>= 60` instead of `> 60` will incorrectly count 60-year-olds as senior citizens.

@@ -639,3 +639,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error in Loop Bounds
+
+The split must have at least one element on each side, so valid split indices are from `0` to `n-2` (inclusive). A common mistake is iterating up to `n-1`, which would leave the right side empty. Always ensure the loop condition is `i < n - 1` or equivalent.
+
+### Integer Overflow with Large Sums
+
+The array can contain values up to `10^9` and have up to `10^5` elements, so the total sum can exceed the 32-bit integer range. Using `int` for sums in Java, C++, or similar languages causes overflow and incorrect comparisons. Always use `long` or `long long` for the sum variables.
+
+### Comparing Sums Before Updating Them
+
+In the optimal one-pass approach, the order of operations matters. You must first add `nums[i]` to `left` and subtract from `right`, then compare. A common bug is comparing before updating, which checks the wrong split point. The correct sequence is: update sums, then check if `left >= right`.

@@ -1303,3 +1303,20 @@ class Solution {
 * Space complexity:
     * $O(1)$ extra space.
     * $O(n)$ for the output tree.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error When Splitting Arrays
+The split point `mid` represents the root's index in `inorder`. When slicing `preorder`, the left subtree uses `preorder[1:mid+1]` (not `preorder[1:mid]`), since there are exactly `mid` elements in the left subtree.
+```python
+# Wrong: preorder[1:mid]
+# Correct: preorder[1:mid+1]
+```
+
+### Building Right Subtree Before Left Subtree
+When using a global preorder index, the left subtree must be built first. Preorder visits root, then left, then right. Building right first consumes wrong nodes from the preorder array.
+
+### Confusing Preorder and Inorder Roles
+The root always comes from `preorder` (first element), while the split point is found in `inorder`. Swapping these roles produces an incorrect tree structure.

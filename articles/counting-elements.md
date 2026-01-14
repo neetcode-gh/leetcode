@@ -512,3 +512,35 @@ class Solution {
     - The overall space complexity is dependent on the space complexity of the sorting algorithm you're using. The space complexity of sorting algorithms built into programming languages are generally anywhere from $O(N)$ to $O(1)$.
 
 >  Where $N$ is the length of the input array `arr`.
+
+---
+
+## Common Pitfalls
+
+### Checking for x - 1 Instead of x + 1
+
+The problem asks to count elements `x` where `x + 1` exists in the array. A common mistake is checking for `x - 1` instead, which counts elements that have a predecessor rather than a successor.
+
+```python
+# Wrong: Checking for predecessor
+if x - 1 in hash_set:
+    count += 1
+
+# Correct: Checking for successor
+if x + 1 in hash_set:
+    count += 1
+```
+
+### Counting Unique Values Instead of All Occurrences
+
+The problem asks to count every element `x` where `x + 1` exists, including duplicates. Using a set for counting instead of iterating through the original array will miss duplicate elements.
+
+```python
+# Wrong: Only counts unique values
+hash_set = set(arr)
+count = sum(1 for x in hash_set if x + 1 in hash_set)
+
+# Correct: Count all occurrences including duplicates
+hash_set = set(arr)
+count = sum(1 for x in arr if x + 1 in hash_set)
+```

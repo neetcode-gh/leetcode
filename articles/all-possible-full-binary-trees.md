@@ -1267,3 +1267,39 @@ class Solution {
 
 - Time complexity: $O(2 ^ n)$
 - Space complexity: $O(n * 2 ^ n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Full Binary Trees Require Odd Node Counts
+A full binary tree can only exist when `n` is odd. Each node either has 0 or 2 children, so starting with 1 root and adding pairs means the total is always odd. Failing to check this leads to wasted computation or incorrect results.
+```python
+# Wrong: missing the odd check
+def allPossibleFBT(n):
+    if n == 1:
+        return [TreeNode(0)]
+    # Will waste time on even n values
+```
+
+### Reusing Tree Nodes Across Different Results
+When combining left and right subtrees, you must create a new root node for each combination. Reusing the same node object causes all trees to share structure, corrupting the results.
+```python
+# Wrong: reusing same root node
+root = TreeNode(0)
+for l in leftTrees:
+    for r in rightTrees:
+        root.left, root.right = l, r
+        res.append(root)  # All entries point to same node!
+```
+
+### Iterating Over Even Values for Subtree Sizes
+In a full binary tree, both left and right subtrees must also be full binary trees, meaning they need odd node counts. Iterating over all values instead of only odd values wastes time and produces empty results for even sizes.
+```python
+# Wrong: iterating all values
+for left in range(1, n):  # Includes even values
+    ...
+
+# Correct: step by 2 to only use odd values
+for left in range(1, n, 2):
+    ...

@@ -621,3 +621,19 @@ class RandomizedSet {
 
 - Time complexity: $O(1)$ for each function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Updating the Swapped Element's Index
+
+During removal, when swapping the element to delete with the last element, a critical step is updating the last element's index in the hash map before removing anything. Forgetting `numMap[last] = idx` causes the hash map to have a stale index for the swapped element, leading to incorrect behavior on subsequent operations involving that value.
+
+### Edge Case When Removing the Last Element
+
+When the element to remove is already at the last position (i.e., `idx == len(nums) - 1`), the swap operation effectively swaps the element with itself. While this works correctly in most implementations, some code paths may have issues if they delete from the map before updating it. The order of operations matters: update the map first, then remove from both the list and map.
+
+### Using Hash Map Only Without Array
+
+A common initial approach is to use only a hash map, which provides O(1) insert and delete but O(n) for `getRandom()` since hash maps do not support random index access. Converting keys to a list on each `getRandom()` call defeats the O(1) requirement. The combination of hash map plus array is essential, where the array enables O(1) random access and the hash map enables O(1) lookup for the swap-and-pop deletion technique.

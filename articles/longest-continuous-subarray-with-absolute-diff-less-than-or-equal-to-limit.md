@@ -1367,3 +1367,25 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Using Regular Queues Instead of Monotonic Deques
+
+A common mistake is to use regular queues or simply track a single max and min value. When the window shrinks, you lose track of the next maximum or minimum. Monotonic deques maintain candidates in order so that the front always gives the current extreme value for the window.
+
+### Removing the Wrong Element When Shrinking the Window
+
+When the left pointer moves, you must only remove elements from the deques if they match the element leaving the window. A subtle bug occurs when you pop from the deque unconditionally, which can remove elements that are still inside the valid window.
+
+### Not Maintaining Deque Invariants Correctly
+
+For the min deque to work correctly, it must remain monotonically increasing from front to back. For the max deque, it must remain monotonically decreasing. Forgetting to pop elements that violate these invariants before adding a new element leads to incorrect min/max values.
+
+### Comparing Indices Instead of Values
+
+When using deques that store indices instead of values, a common mistake is to compare indices when you should compare values, or vice versa. Be consistent about what the deque stores and ensure comparisons use the appropriate array lookups.
+
+### Off-by-One Errors in Window Size Calculation
+
+The window size is `right - left + 1`, not `right - left`. Forgetting the `+1` when updating the result will undercount the longest valid subarray by one element.

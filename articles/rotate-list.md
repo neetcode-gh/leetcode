@@ -1003,3 +1003,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Empty List or Single Node
+
+Forgetting to check if the list is empty (`head == null`) or has only one node causes null pointer exceptions. A single-node list rotated by any amount remains unchanged, but the code must handle this edge case explicitly.
+
+### Forgetting to Normalize k by List Length
+
+When `k` is larger than the list length or equals it, the rotation results in the same list. Failing to compute `k = k % length` before rotation leads to unnecessary traversals or incorrect results. Additionally, when `k % length == 0`, no rotation is needed and the original head should be returned.
+
+### Incorrectly Breaking and Reconnecting the List
+
+When creating the new list structure, forgetting to set the new tail's `next` to `null` creates a cycle in the linked list. Similarly, forgetting to connect the old tail to the old head leaves the list disconnected. Both pointer updates are essential for correct rotation.

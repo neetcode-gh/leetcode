@@ -234,3 +234,19 @@ class Solution {
 - Space complexity: $O(1)$ without considering $O(N)$ space for the output list.
 
 >  Where $N$ is the number of intervals in `intervals`
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Comparison Operators for Overlap Detection
+
+A frequent mistake is using `>=` or `<=` instead of `>` or `<` when checking for no overlap. The condition `start > remove_end or end < remove_start` correctly identifies non-overlapping intervals. Using `>=` or `<=` would incorrectly treat intervals that just touch the removal boundary as overlapping, leading to unnecessary splits or lost intervals.
+
+### Forgetting to Handle Both Left and Right Portions
+
+When an interval overlaps with the removal range, there can be zero, one, or two remaining portions. A common error is only checking for one side. You must independently check if `start < remove_start` (left portion exists) and if `end > remove_end` (right portion exists). An interval like `[1, 10]` with removal `[3, 7]` produces both `[1, 3]` and `[7, 10]`.
+
+### Modifying the Original Interval List In-Place
+
+Some developers try to modify the input list while iterating, which leads to index shifting issues or skipped elements. Instead, always build a new output list and append valid intervals or portions to it. This avoids off-by-one errors and makes the logic cleaner to reason about.

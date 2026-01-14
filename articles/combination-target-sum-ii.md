@@ -1000,12 +1000,12 @@ We need all unique combinations where each number can be used **at most once**, 
 
 To handle duplicates safely, we:
 
-1. **Sort the array**  
+1. **Sort the array**
    This groups equal numbers together, which helps us skip duplicates easily.
 
-2. Use **backtracking** where at each index we decide:  
-   - Take the number  
-   - Skip the number  
+2. Use **backtracking** where at each index we decide:
+   - Take the number
+   - Skip the number
 
 3. To avoid duplicate combinations:
    - If `candidates[i] == candidates[i - 1]` and we are still in the same level of recursion (`i > idx`),
@@ -1291,3 +1291,32 @@ class Solution {
 
 - Time complexity: $O(n * 2 ^ n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Generating Duplicate Combinations
+The input contains duplicates, and each element can only be used once. Without proper duplicate handling, `[1,1,2]` with target `3` might produce `[1,2]` twice. Always sort first and skip consecutive duplicates at the same recursion level.
+```python
+# Wrong: generates duplicates
+for i in range(idx, len(candidates)):
+    dfs(i + 1, ...)
+# Correct: skip duplicates at same level
+for i in range(idx, len(candidates)):
+    if i > idx and candidates[i] == candidates[i - 1]:
+        continue
+    dfs(i + 1, ...)
+```
+
+### Reusing Elements (Using `i` Instead of `i + 1`)
+Unlike Combination Sum I where elements can be reused, this problem requires each element to be used at most once. Recursing with the same index allows reuse.
+```python
+# Wrong: allows reusing same element
+dfs(i, cur, total + candidates[i])
+# Correct: move to next element
+dfs(i + 1, cur, total + candidates[i])
+```
+
+### Forgetting to Sort Before Skipping Duplicates
+The duplicate-skipping logic `candidates[i] == candidates[i-1]` only works on a sorted array. Without sorting, duplicates won't be adjacent and the skip logic fails silently, producing duplicate combinations.

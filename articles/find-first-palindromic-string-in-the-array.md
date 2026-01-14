@@ -301,3 +301,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the string array $words$ and $m$ is the average length of a word in the array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Return an Empty String
+
+A common mistake is forgetting to handle the case where no palindrome exists in the array. The problem requires returning an empty string `""` when no palindromic string is found, not `null` or throwing an error. Always ensure your function has a default return statement after the loop completes.
+
+### Continuing Search After Finding the First Palindrome
+
+Since the problem asks for the **first** palindromic string, you should return immediately upon finding one. A pitfall is iterating through the entire array and collecting all palindromes, then returning the first. This wastes time and misses the point of early termination, which is key to optimal performance.

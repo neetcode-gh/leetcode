@@ -288,14 +288,14 @@ class Solution {
 ### Intuition
 Instead of using recursion, we **build combinations level by level**.
 
-Start with an empty string.  
+Start with an empty string.
 For each digit:
 - Take all combinations built so far
 - Append every possible character mapped to the current digit
 - This creates a new list of combinations
 
 This is similar to **BFS / level-wise expansion**:
-- Each digit adds a new “layer” of characters
+- Each digit adds a new "layer" of characters
 - Combinations grow step by step until all digits are processed
 
 ### Algorithm
@@ -552,3 +552,29 @@ class Solution {
 - Space complexity:
     - $O(n)$ extra space.
     - $O(n * 4 ^ n)$ space for the output list.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Empty Input
+When `digits` is empty, returning `[""]` (list with empty string) is wrong. The correct answer is `[]` (empty list) since there are no combinations to form.
+```python
+# Wrong: returns list with empty string
+if not digits:
+    return [""]
+# Correct: return empty list
+if not digits:
+    return []
+```
+
+### Incorrect Digit-to-Letter Mapping
+Digit `7` maps to `"pqrs"` (4 letters) and digit `9` maps to `"wxyz"` (4 letters), not 3 letters each. Using `"qprs"` instead of `"pqrs"` for digit 7 produces wrong orderings.
+
+### Off-by-One in Digit Indexing
+When using an array for digit mapping, digits `0` and `1` have no letters. Forgetting this offset or incorrectly computing `digit - '0'` leads to index errors or wrong character mappings.
+```java
+// digitToChar[0] and digitToChar[1] should be empty
+String[] digitToChar = {"", "", "abc", "def", ...};
+// Access with: digitToChar[digit - '0']
+```

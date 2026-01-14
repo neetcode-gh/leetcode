@@ -1020,3 +1020,15 @@ class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the number of nodes in the given trees.
+
+---
+
+## Common Pitfalls
+
+### Collecting All Nodes Instead of Just Leaves
+
+A common mistake is to collect all node values during traversal instead of only the leaf nodes. Remember that a leaf is specifically a node with no left and no right child. Including internal nodes in your comparison will produce incorrect results.
+
+### Traversing in Wrong Order (Right Before Left)
+
+The problem requires leaves to match in left-to-right order. If you traverse right subtrees before left subtrees, you will collect leaves in the wrong sequence. Always process the left child before the right child in your DFS traversal.

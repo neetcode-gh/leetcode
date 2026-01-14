@@ -1248,3 +1248,59 @@ class BrowserHistory {
 - Space complexity: $O(m * n)$
 
 > Where $n$ is the number of visited urls, $m$ is the average length of each url, and $steps$ is the number of steps we go forward or back.
+
+---
+
+## Common Pitfalls
+
+### Not Clearing Forward History on Visit
+
+When visiting a new URL, the forward history must be invalidated. A common mistake is forgetting to clear the forward stack or reset the logical end pointer.
+
+```python
+# Wrong - forward history persists after new visit
+def visit(self, url: str) -> None:
+    self.back_history.append(url)
+    # Missing: self.front_history = []
+
+# Correct
+def visit(self, url: str) -> None:
+    self.back_history.append(url)
+    self.front_history = []  # Clear forward history
+```
+
+### Allowing Back to Go Before Homepage
+
+The homepage is always the first page and cannot be navigated before. A common mistake is not preserving at least one element in the back history.
+
+```python
+# Wrong - can empty the back history
+def back(self, steps: int) -> str:
+    while steps and self.back_history:
+        self.front_history.append(self.back_history.pop())
+        steps -= 1
+    return self.back_history[-1]  # IndexError when empty!
+
+# Correct - keep at least one element (homepage)
+def back(self, steps: int) -> str:
+    while steps and len(self.back_history) > 1:
+        self.front_history.append(self.back_history.pop())
+        steps -= 1
+    return self.back_history[-1]
+```
+
+### Confusing Array Index with Logical Size
+
+In the optimal dynamic array approach, using `len(history)` instead of `n` (logical size) for forward navigation causes accessing stale elements that should be considered deleted.
+
+```python
+# Wrong - uses physical array length
+def forward(self, steps: int) -> str:
+    self.cur = min(len(self.history) - 1, self.cur + steps)
+    return self.history[self.cur]
+
+# Correct - uses logical size
+def forward(self, steps: int) -> str:
+    self.cur = min(self.n - 1, self.cur + steps)
+    return self.history[self.cur]
+```

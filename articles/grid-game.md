@@ -647,3 +647,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Trying to Maximize Robot 1's Score
+
+A common misunderstanding is thinking Robot 1 should maximize its own score. The problem asks to minimize the score of Robot 2, which is a different objective. Robot 1 must strategically choose where to drop down to leave the least valuable remaining cells for Robot 2, not just greedily collect the most points.
+
+### Missing That Robot 2 Has Only Two Disjoint Choices
+
+After Robot 1 drops at column `i`, Robot 2 can only collect from either the top row after column `i` OR the bottom row before column `i`, never both. These regions are mutually exclusive because Robot 2 cannot move left. Failing to recognize this leads to overcounting what Robot 2 can collect.
+
+### Integer Overflow with Large Grid Values
+
+The grid values can be up to 10^5 and the grid can have up to 5 * 10^4 columns. The sum of all values can exceed the 32-bit integer limit. Use `long` or 64-bit integers for the prefix sums and running totals to avoid overflow errors that produce incorrect results.

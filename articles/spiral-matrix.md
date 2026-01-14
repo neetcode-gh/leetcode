@@ -880,3 +880,19 @@ class Solution {
     - $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Not Checking Boundaries After Each Direction
+
+After completing a horizontal traversal, the vertical bounds may have crossed (or vice versa). Failing to check `left < right && top < bottom` before the third and fourth directions causes duplicate elements to be added when the matrix reduces to a single row or column.
+
+### Mishandling Non-Square Matrices
+
+Rectangular matrices with significantly different row and column counts can cause issues if the algorithm assumes square behavior. The spiral may terminate early or add extra elements if boundary checks do not account for both dimensions independently.
+
+### Incorrect Direction Rotation
+
+When using direction vectors, rotating incorrectly (e.g., counterclockwise instead of clockwise, or incorrect sign changes) produces a non-spiral traversal pattern. The correct clockwise rotation transforms `(dr, dc)` to `(dc, -dr)`.

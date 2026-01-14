@@ -347,3 +347,13 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One with Range Boundaries
+When the range length is odd, whether you get an extra odd number depends on whether `low` (or `high`) is odd. Forgetting to check this boundary condition leads to undercounting by 1.
+
+### Using Division Without Considering Endpoints
+Simply computing `(high - low) / 2` ignores whether the range starts or ends on an odd number. The formula must account for the parity of the boundaries, not just the length.

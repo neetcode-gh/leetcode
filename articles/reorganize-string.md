@@ -1115,3 +1115,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space, since we have at most $26$ different characters.
     - $O(n)$ space for the output string.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Impossibility Check
+
+The condition for impossibility is when the most frequent character appears more than `(n + 1) / 2` times. Using `n / 2` or forgetting the ceiling division leads to incorrect rejection of valid inputs or acceptance of impossible cases.
+
+### Placing Characters at Wrong Indices in Greedy Approach
+
+When using the index-based greedy approach, characters must be placed at even indices first (0, 2, 4, ...) before wrapping to odd indices. Failing to reset the index to 1 after exceeding the array length results in index out-of-bounds errors or incorrect placements.
+
+### Re-inserting the Same Character into the Heap Immediately
+
+In the heap-based approach, the just-used character must be held back for one iteration before reinsertion. Pushing it back immediately allows it to be selected again on the next pop, creating adjacent duplicates.

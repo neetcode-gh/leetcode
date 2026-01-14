@@ -755,3 +755,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Floating-Point Precision Errors
+
+Using floating-point division to compute aspect ratios can lead to precision issues with large width/height values. Two ratios that should be equal may compare as unequal due to floating-point representation errors. The GCD-based approach avoids this by reducing ratios to their simplest integer form before comparison.
+
+### Integer Overflow in Pair Counting
+
+When counting pairs using the formula `c * (c - 1) / 2`, the multiplication can overflow if `c` is large and you are using 32-bit integers. Ensure you use a 64-bit integer type (like `long` in Java or `long long` in C++) for the result and intermediate calculations.
+
+### Incorrect Pair Counting Formula
+
+A common mistake is counting each pair twice by iterating over all `i != j` combinations, or forgetting to use the combination formula entirely. Remember that choosing 2 items from `c` items is `c * (c - 1) / 2`, not `c * c` or `c * (c - 1)`.

@@ -725,3 +725,19 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.
+
+---
+
+## Common Pitfalls
+
+### Not Updating maxf Correctly
+
+The variable `maxf` tracks the maximum frequency of any character in the current window. A common mistake is recalculating the maximum by iterating through all counts after shrinking the window. In the optimal solution, you do not need to decrease `maxf` when shrinking because keeping a stale (higher) `maxf` only makes the window condition stricter, which is still correct. However, misunderstanding this can lead to unnecessary complexity or bugs.
+
+### Shrinking the Window Too Aggressively
+
+When the window becomes invalid (`window size - maxf > k`), you only need to shrink it enough to make it valid again. A common error is resetting the left pointer too far or not updating character counts properly when moving the left pointer. Make sure to decrement the count of `s[l]` before incrementing `l`.
+
+### Confusing Window Size Calculation
+
+The window size is `r - l + 1`, not `r - l`. This off-by-one error is frequent and leads to incorrect validity checks. For example, if `l = 0` and `r = 2`, the window contains 3 characters, not 2. Always double-check your window size formula in the condition `(r - l + 1) - maxf <= k`.

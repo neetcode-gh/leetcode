@@ -516,3 +516,15 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Using the Wrong Overlap Condition
+
+Meetings overlap when `prev.end > curr.start`, not `prev.end >= curr.start`. If one meeting ends exactly when another starts, they do not overlap and can both be attended.
+
+### Forgetting to Sort Before Comparing Adjacent Meetings
+
+The sorting approach only works when meetings are sorted by start time. Comparing adjacent meetings in an unsorted list will miss overlaps between non-adjacent intervals.

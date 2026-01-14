@@ -428,3 +428,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Only Checking One Pattern
+
+An alternating binary string can start with either '0' (giving "010101...") or '1' (giving "101010..."). A common mistake is only counting mismatches against one pattern and returning that count. You must compare against both patterns and return the minimum of the two counts, or use the relationship that the two counts sum to the string length.
+
+### Incorrect Character-to-Integer Conversion
+
+When comparing characters to expected values (0 or 1), ensure proper conversion. In many languages, `'0'` and `'1'` are characters with ASCII values 48 and 49, not the integers 0 and 1. Use `c - '0'` or `parseInt(c)` to convert correctly. Directly comparing the character `'0'` to the integer `0` will give wrong results in most languages.

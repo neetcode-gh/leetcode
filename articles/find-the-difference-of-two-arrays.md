@@ -918,3 +918,15 @@ class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
+
+---
+
+## Common Pitfalls
+
+### Returning Duplicate Values in the Result
+
+The problem asks for distinct integers. If you iterate through the original arrays instead of sets, you might add the same value multiple times to your result. Always use sets or track seen values to ensure each element appears only once in the output.
+
+### Confusing Which Array Each Result Belongs To
+
+The output is a list of two lists: the first contains elements in `nums1` but not in `nums2`, and the second contains elements in `nums2` but not in `nums1`. Swapping these leads to incorrect results. Double-check which difference operation corresponds to which result list.

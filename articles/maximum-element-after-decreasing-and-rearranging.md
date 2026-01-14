@@ -326,3 +326,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Trying to Increase Values
+
+The problem only allows decreasing values, not increasing them. A common mistake is to think you can "fix" the array by increasing small values to meet the constraint. If a value is too small, you cannot raise it. Instead, you must accept that gap and move forward, potentially reducing subsequent values to maintain the `|arr[i] - arr[i-1]| <= 1` constraint.
+
+### Forgetting the First Element Must Be 1
+
+After rearranging and decreasing, the first element must equal exactly 1. Some solutions focus only on the adjacent difference constraint and forget this requirement. Even if you have a sorted array like `[2, 3, 4, 5]`, you must reduce the first element to 1, resulting in `[1, 2, 3, 4]` at best. The greedy approach handles this by initializing `prev = 0` and building from there.
+
+### Using Standard Sorting When Counting Sort Suffices
+
+While the sorting-based solution with `O(n log n)` complexity is correct, it misses an optimization opportunity. Since the maximum useful value is `n` (the array length), values larger than `n` can be treated as `n`. This observation enables a counting sort approach that achieves `O(n)` time complexity. Recognize when the value range is bounded to choose the most efficient algorithm.

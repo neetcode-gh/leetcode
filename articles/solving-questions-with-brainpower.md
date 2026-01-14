@@ -483,3 +483,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow with Point Accumulation
+
+The points can accumulate to values exceeding 32-bit integer limits. When summing points across many questions, the result may overflow `int`. Always use `long` or `long long` for the DP array and return type to handle large cumulative values safely.
+
+### Incorrect Jump Calculation After Solving a Question
+
+After solving question `i`, you must skip to question `i + 1 + brainpower[i]`, not `i + brainpower[i]`. The `+1` accounts for moving past the current question before skipping the required number. Missing this causes you to land on a question you should have skipped.
+
+### Wrong Iteration Direction in Bottom-Up DP
+
+The bottom-up approach must iterate from the last question to the first (right to left). Iterating left to right means `dp[i+1]` has not been computed yet when you need it. Always use a reverse loop: `for i in range(n-1, -1, -1)` in Python or `for (int i = n-1; i >= 0; i--)` in other languages.

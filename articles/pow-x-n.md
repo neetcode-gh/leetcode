@@ -680,3 +680,17 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Integer Overflow When Negating n
+
+When `n` is `Integer.MIN_VALUE` (-2147483648), computing `abs(n)` or `-n` overflows because the positive equivalent exceeds `Integer.MAX_VALUE`. Always cast to a `long` before taking the absolute value to avoid this undefined behavior.
+
+### Forgetting to Handle Negative Exponents
+
+A negative exponent means the result is `1 / x^|n|`. Omitting this reciprocal step returns the wrong answer for all negative `n` values. Compute the power using the absolute value, then invert if `n` was negative.
+
+### Using Brute Force for Large Exponents
+
+Multiplying `x` by itself `n` times works but times out for large `n` (e.g., `n = 2^31 - 1`). Binary exponentiation reduces the number of operations from O(n) to O(log n) by squaring the base and halving the exponent at each step.

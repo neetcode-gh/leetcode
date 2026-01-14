@@ -2131,3 +2131,19 @@ class Solution {
 - Space complexity: $O(n + m * k)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
+
+---
+
+## Common Pitfalls
+
+### Off-By-One Errors in Substring Boundaries
+
+When checking if `s[i:j+1]` matches a dictionary word, getting the indices wrong is a common mistake. In Python, `s[i:j]` excludes index `j`, so you need `s[i:j+1]` to include the character at position `j`. Similarly, when jumping to the next position after a match, you should move to `j+1`, not `j`.
+
+### Not Considering the Skip-Character Option
+
+At each position, you must always consider the option of skipping the current character (counting it as extra) with cost `1 + dp[i+1]`. If you only check dictionary matches without this fallback, positions where no dictionary word starts will cause incorrect results or infinite loops.
+
+### Inefficient Substring Matching Without Memoization or Trie
+
+The naive approach of checking all possible substrings against the dictionary for every position leads to exponential time complexity. Without memoization, the same subproblems are solved repeatedly. For large inputs, either use dynamic programming with memoization or build a Trie to efficiently find all dictionary words starting at each position.

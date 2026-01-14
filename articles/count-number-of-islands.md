@@ -1818,3 +1818,34 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
+
+---
+
+## Common Pitfalls
+
+### Not Marking Cells as Visited
+When exploring an island, you must mark cells as visited (either by changing them to `'0'` or using a visited set). Forgetting this causes infinite loops as the DFS/BFS keeps revisiting the same cells.
+```python
+# Wrong: doesn't mark visited, infinite loop
+if grid[r][c] == '1':
+    dfs(r + 1, c)
+# Correct: mark as visited
+if grid[r][c] == '1':
+    grid[r][c] = '0'  # or visited.add((r, c))
+    dfs(r + 1, c)
+```
+
+### Counting Every Land Cell Instead of Islands
+Each island should be counted once when you first encounter it. A common mistake is incrementing the count for every `'1'` cell rather than only incrementing when starting a new DFS/BFS traversal.
+
+### Incorrect Boundary Checks
+Always verify that row and column indices are within bounds before accessing the grid. Off-by-one errors or missing boundary checks cause index out of bounds errors.
+```python
+# Wrong: checks after access
+if grid[nr][nc] == '1' and 0 <= nr < rows:
+# Correct: check bounds first
+if 0 <= nr < rows and 0 <= nc < cols and grid[nr][nc] == '1':
+```
+
+### Diagonal Connections
+This problem only considers horizontal and vertical connections (4-directional). Including diagonal neighbors incorrectly merges separate islands and undercounts the total.

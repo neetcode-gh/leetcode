@@ -826,3 +826,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Middle Detection with Fast/Slow Pointers
+
+A common mistake is using the wrong loop condition for finding the middle. For this problem, when `fast` and `fast.next` are both not null, `slow` advances. If you use `fast.next` and `fast.next.next`, you may stop one node too early or too late, causing incorrect pairing of twin nodes.
+
+### Reversing the Wrong Half
+
+When reversing in-place, some developers accidentally reverse the first half when they intended to reverse the second half, or vice versa. This leads to incorrect twin pairings. Ensure you clearly track which portion of the list you are reversing and where the boundary lies after finding the middle.
+
+### Losing Track of Pointers During Reversal
+
+While reversing, failing to save the `next` pointer before modifying `cur.next` causes you to lose access to the rest of the list. Always store `nxt = cur.next` before setting `cur.next = prev`, then advance using the saved reference.

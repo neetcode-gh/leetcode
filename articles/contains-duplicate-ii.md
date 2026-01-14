@@ -504,3 +504,20 @@ class Solution {
 - Space complexity: $O(min(n, k))$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the maximum distance between two equal numbers.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error in Distance Check
+The condition requires the distance to be "at most k", meaning `abs(i - j) <= k`, not `< k`. Using strict inequality will miss valid pairs that are exactly `k` positions apart.
+```python
+# Wrong: Using strict inequality
+if nums[i] in mp and i - mp[nums[i]] < k:  # Misses distance == k
+
+# Correct: Use <= for "at most k"
+if nums[i] in mp and i - mp[nums[i]] <= k:
+```
+
+### Storing All Indices Instead of Most Recent
+The hash map only needs to store the most recent index for each value. Storing all indices wastes memory and complicates the logic. Since we iterate left to right, we only care about the closest previous occurrence.

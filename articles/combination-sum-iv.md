@@ -802,3 +802,29 @@ class Solution {
 - Space complexity: $O(t)$
 
 > Where $n$ is the size of the array $nums$ and $t$ is the given target.
+
+---
+
+## Common Pitfalls
+
+### Confusing Combinations vs Permutations
+This problem counts permutations (order matters), not combinations. `[1,2,1]` and `[1,1,2]` are counted separately. If you iterate over elements and track an index to avoid reusing earlier elements, you'll miss valid orderings.
+```python
+# Wrong: treats [1,2,1] and [2,1,1] as the same
+dfs(i + 1, total - nums[i])
+# Correct: always start from index 0 to allow all orderings
+for num in nums:
+    res += dfs(total - num)
+```
+
+### Missing Base Case for Zero Target
+Forgetting to return `1` when `total == 0`. This base case represents finding one valid way to form the target. Returning `0` here causes all counts to be zero.
+
+### Not Handling Negative Intermediate Results
+When using bottom-up DP with a hashmap, accessing `dp[total - num]` when `total - num` is negative or doesn't exist causes errors. Always check bounds or use `get()` with a default value.
+```python
+# Wrong: KeyError if total - num < 0 or not in dp
+dp[total] += dp[total - num]
+# Correct: use default value
+dp[total] += dp.get(total - num, 0)
+```

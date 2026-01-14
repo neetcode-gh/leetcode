@@ -1067,3 +1067,27 @@ class Codec {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Null Nodes
+
+A common mistake is not encoding null children in the serialized string. Without explicit null markers (like `"N"`), the tree structure becomes ambiguous during deserialization. Two different trees could produce the same serialized string if nulls are omitted.
+
+### Using a Global Index Without Proper State Management
+
+When deserializing with DFS, using a simple integer variable as an index fails because the index must persist across recursive calls. In many languages, primitive integers are passed by value, so the incremented index is lost when returning from recursion. The solution is to use a mutable wrapper (like an array or object) to maintain the index state.
+
+### Incorrect Order of Building Left and Right Subtrees
+
+The deserialization must rebuild children in the exact same order they were serialized. If you serialize using preorder (root, left, right), you must deserialize in preorder too. Building the right subtree before the left will produce an incorrect tree structure.
+
+### Not Handling Empty Trees
+
+An empty tree (null root) is a valid input that requires special handling. Forgetting to check for this case in both serialization and deserialization leads to null pointer exceptions or incorrect output.
+
+### Delimiter Conflicts with Node Values
+
+Using a delimiter that could appear in node values causes parsing errors. For example, if nodes can have negative values and you use `-` as a delimiter, parsing becomes ambiguous. Using a character that cannot appear in integer values (like `,`) avoids this issue.

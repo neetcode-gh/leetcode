@@ -836,3 +836,38 @@ class Solution {
 * Space complexity: $O(n ^ 2 + n * m)$
 
 > Where $n$ is the number of routes and $m$ is the maximum number of stops per bus route.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Source Equals Target Edge Case
+If the source and target are the same stop, no bus is needed. Forgetting this check causes unnecessary computation or incorrect results when the BFS never finds the target in its traversal.
+```python
+# Wrong: missing early return
+def numBusesToDestination(self, routes, source, target):
+    # starts BFS without checking source == target
+```
+
+### Counting Stops Instead of Bus Transfers
+The problem asks for minimum number of buses, not minimum stops visited. A common mistake is incrementing the counter for each stop rather than each bus transfer.
+```python
+# Wrong: incrementing for each stop
+for nxtStop in routes[bus]:
+    q.append(nxtStop)
+    res += 1  # Should be outside the inner loop
+```
+
+### Not Tracking Both Visited Buses and Visited Stops
+Only tracking visited stops leads to revisiting the same bus multiple times, causing TLE. Only tracking visited buses may revisit stops unnecessarily. Both sets are needed for efficiency.
+```python
+# Wrong: only tracking stops
+seen_stop = set()
+# Missing: seen_bus = set()
+```
+
+### Incorrect BFS Level Counting
+Incrementing the bus count at the wrong position (before checking if target is reached, or inside the wrong loop) leads to off-by-one errors in the result.
+
+### Building Inefficient Route Adjacency Graph
+When using routes as nodes, failing to deduplicate edges between routes that share multiple stops creates redundant work and can cause memory issues with large inputs.

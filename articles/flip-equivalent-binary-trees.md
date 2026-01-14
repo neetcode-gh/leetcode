@@ -1016,3 +1016,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Both Flip Orderings
+
+A common mistake is only checking if the trees match directly without considering the flipped case. The problem allows flipping at any node, so you must check both scenarios: (1) left matches left AND right matches right, OR (2) left matches right AND right matches left. Missing either case will produce incorrect results.
+
+### Incorrect Null Handling in Base Cases
+
+When comparing nodes, both null checks must be handled carefully. If only one node is null (but not both), the trees cannot be equivalent. Returning `true` when only one is null, or forgetting to handle the case where both are null, leads to incorrect behavior.
+
+### Not Checking Node Values Before Recursing
+
+Before exploring children, you must verify that the current nodes have the same value. Skipping this check and directly comparing children can cause false positives when nodes at the same position have different values but happen to have structurally similar subtrees.

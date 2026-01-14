@@ -745,3 +745,36 @@ class ZigzagIterator {
     - Although the size of the queue will reduce over time once we exhaust some shorter vectors, the space complexity for both functions is still $O(K)$.
 
 >  Where $K$ is the number of input vectors. Although it is always two in the setting of this problem, this variable becomes relevant once the input becomes $K$ vectors.
+
+---
+
+## Common Pitfalls
+
+### Skipping Empty Vectors in Initialization
+When one or both input vectors are empty, failing to handle them causes index errors or incorrect iteration. Empty vectors should either be skipped entirely or handled gracefully in the `next()` logic.
+
+```python
+# Wrong: Adding empty vectors to queue causes issues
+for index, vector in enumerate(self.vectors):
+    self.queue.append((index, 0))  # Should check: if len(vector) > 0
+```
+
+### Incrementing Element Pointer at Wrong Time
+In the two-pointer approach, the element index should only increment after completing a full round through all vectors (when `p_vec` wraps back to 0). Incrementing it every step breaks the zigzag order.
+
+```python
+# Wrong: Incrementing p_elem on every iteration
+self.p_vec = (self.p_vec + 1) % len(self.vectors)
+self.p_elem += 1  # Should only increment when p_vec == 0
+```
+
+### Not Returning After Finding a Valid Element
+In the two-pointer approach, after finding a valid element in a vector, you must return immediately. Continuing to iterate through other vectors in the same call corrupts the zigzag ordering and may return wrong elements.
+
+```python
+# Wrong: Missing early return
+if self.p_elem < len(curr_vec):
+    ret = curr_vec[self.p_elem]
+    # Missing: return ret after incrementing output_count!
+self.p_vec = (self.p_vec + 1) % len(self.vectors)
+```

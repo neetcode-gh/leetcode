@@ -1720,3 +1720,77 @@ class Solution {
 - Space complexity: $O(m + n * 2 ^ n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the sum of the lengths of the strings in the $wordDict$.
+
+---
+
+## Common Pitfalls
+
+### Not Handling the Base Case Correctly When Building Sentences
+When recursion reaches the end of the string, returning an empty list `[]` instead of a list with an empty string `[""]` causes all valid sentences to be lost since there's nothing to append the last word to.
+
+```python
+# Wrong: returns empty list, loses all sentences
+if i == len(s):
+    return []
+
+# Correct: returns list with empty string for concatenation
+if i == len(s):
+    return [""]
+```
+
+### Forgetting to Add Space Between Words
+When concatenating words to form sentences, forgetting to add spaces between words results in malformed output like "catsand" instead of "cats and".
+
+```python
+# Wrong: no space between words
+sentence = word + substr
+
+# Correct: add space only if there's a suffix
+sentence = word if not substr else word + " " + substr
+```
+
+### Using List Instead of Set for Dictionary Lookup
+Checking if a substring exists in the word dictionary using a list results in O(m * t) lookup per check instead of O(t). This significantly slows down the solution.
+
+```python
+# Wrong: O(m * t) lookup per check
+if s[i:j+1] in wordDict:  # wordDict is a list
+
+# Correct: O(t) lookup with hash set
+wordSet = set(wordDict)
+if s[i:j+1] in wordSet:
+```
+
+### Not Memoizing Results Leading to TLE
+Without memoization, the same suffix is recomputed many times, leading to exponential time complexity even when not necessary. This causes Time Limit Exceeded on inputs with many overlapping subproblems.
+
+```python
+# Wrong: recomputes same suffixes repeatedly
+def backtrack(i):
+    if i == len(s):
+        return [""]
+    res = []
+    for j in range(i, len(s)):
+        # ... no caching
+
+# Correct: cache results for each starting index
+def backtrack(i):
+    if i in cache:
+        return cache[i]
+    # ... compute and store in cache[i]
+```
+
+### Modifying Shared State Without Proper Backtracking
+When using a shared list to build the current path, forgetting to pop the last word after recursion corrupts the path for other branches.
+
+```python
+# Wrong: path keeps growing incorrectly
+cur.append(word)
+backtrack(j + 1)
+# forgot to pop!
+
+# Correct: restore state after recursion
+cur.append(word)
+backtrack(j + 1)
+cur.pop()
+```

@@ -1105,3 +1105,19 @@ class Solution {
 - Space complexity: $O(N)$
 
 > Where $N$ is the number of cells which contain gold.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Backtrack
+
+The most common mistake is forgetting to restore the cell's state after exploring a path. Whether using a visited set or modifying the grid directly, failing to backtrack means other paths starting from different cells cannot use that position. Always remove the cell from the visited set or restore its original value before returning.
+
+### Starting Only from Corner Cells
+
+Some solutions incorrectly assume the optimal path must start from a corner or edge. The problem allows starting from any cell containing gold, so you must try all possible starting positions. Missing interior starting cells can lead to suboptimal results.
+
+### Not Handling Zero Cells Correctly
+
+Cells with value zero cannot be visited, but some solutions forget to check for zeros when determining valid neighbors. Additionally, when using the grid modification approach to mark cells as visited (setting them to zero), ensure you save the original value before modification so it can be properly restored during backtracking.

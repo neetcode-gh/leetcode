@@ -1229,3 +1229,27 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of verticies and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Failing to Detect Cycles
+
+The problem requires returning `-1` if the graph contains a cycle, since cycles mean there are infinitely long paths. A common mistake is forgetting to track the current DFS path separately from globally visited nodes. Using only a single visited set will not distinguish between nodes that are ancestors in the current path (indicating a cycle) versus nodes that were visited in a completely different traversal.
+
+### Confusing Path Tracking with Global Visited
+
+When using DFS with memoization, you need two separate tracking mechanisms: one for nodes currently in the recursion stack (to detect cycles) and one for nodes that have been fully processed (to avoid recomputation). Mixing these up leads to either false cycle detection or infinite loops.
+
+### Not Propagating Color Counts Correctly
+
+When computing the maximum color count for a node, you must consider the counts from all reachable nodes, not just immediate neighbors. The DP state `count[node][color]` should represent the maximum count of that color on any path starting from that node. Forgetting to take the maximum across all neighbors or failing to add the current node's color contribution leads to incorrect results.
+
+### Processing Nodes Before All Predecessors Are Complete
+
+In the topological sort approach, a node should only be processed after all its incoming edges have been handled. If you process a node too early (before all predecessors have propagated their color counts), you'll miss potential maximum values from paths that haven't been fully computed yet.
+
+### Off-by-One Errors in Color Indexing
+
+Colors are given as lowercase letters but need to be converted to indices 0-25 for array access. A common bug is incorrectly converting characters (e.g., forgetting to subtract `'a'`) or mixing up when to add the current node's color contribution (should be added exactly once per node on the path).

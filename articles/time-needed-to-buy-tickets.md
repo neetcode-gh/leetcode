@@ -584,3 +584,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using the Wrong Bound for People After Position k
+
+For people standing after position `k`, they only get `tickets[k] - 1` turns before person `k` finishes (since person `k` completes on their final turn before these people get another chance). A common mistake is using `tickets[k]` for everyone, which overcounts the time contribution from people behind position `k`.
+
+### Confusing Position Index With Ticket Count
+
+When calculating contributions, you must use `min(tickets[i], tickets[k])` for `i <= k` and `min(tickets[i], tickets[k] - 1)` for `i > k`. Some solutions incorrectly compare indices instead of ticket counts, or forget to take the minimum, leading to counting more tickets than a person actually needs to buy.

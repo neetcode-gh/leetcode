@@ -2004,3 +2004,27 @@ class Solution {
 
 - Time complexity: $O(n ^ 2 \log n)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Time with Step Count
+
+A common mistake is treating "time" as the number of steps taken. In this problem, time represents the **maximum height** you must wait for the water to rise to before you can traverse your chosen path. It is not the path length.
+
+### Forgetting to Include Start and End Cells
+
+When calculating the minimum time, you must include both `grid[0][0]` and `grid[n-1][n-1]` in your considerations. The answer is at least `max(grid[0][0], grid[n-1][n-1])` since you must be able to stand on both endpoints.
+
+### Incorrect Binary Search Bounds
+
+When using binary search, setting the wrong initial bounds can cause issues. The lower bound should be the minimum value in the grid (or at least `grid[0][0]`), and the upper bound should be the maximum value. Using `0` to `n*n-1` works but is less precise.
+
+### Not Resetting Visited Array Between Searches
+
+In both the linear search and binary search DFS approaches, forgetting to reset the `visited` array between different attempts (for different time values) leads to incorrect results. Each DFS with a new threshold needs a fresh visited state.
+
+### Union-Find: Incorrect Node Indexing
+
+When using Kruskal's algorithm with DSU, a frequent bug is incorrectly converting 2D coordinates to 1D indices. The formula `r * N + c` must be used consistently, and you must ensure neighbors are already "open" (have height <= current time) before attempting to union them.

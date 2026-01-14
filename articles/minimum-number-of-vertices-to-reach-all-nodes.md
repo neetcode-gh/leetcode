@@ -955,3 +955,15 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Tracking Outgoing Edges Instead of Incoming
+
+The problem asks for nodes that cannot be reached from other nodes, which means nodes with zero incoming edges. Tracking outgoing edges instead will identify nodes that cannot reach others, which is the opposite of what is needed.
+
+### Overcomplicating With Graph Traversal
+
+Since the graph is acyclic and we only need nodes with no incoming edges, a simple pass through the edges is sufficient. Implementing full DFS or BFS adds unnecessary complexity and potential for bugs when a simple indegree check solves the problem optimally.

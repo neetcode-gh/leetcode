@@ -1161,3 +1161,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Comparing with Immediate Neighbor Instead of Maximum
+
+The problem requires removing nodes that have *any* larger value to their right, not just an immediately adjacent larger value. A node should be kept only if it is greater than or equal to all nodes to its right. Using the wrong comparison leads to incorrect removals.
+
+### Incorrect Stack Maintenance
+
+When using a monotonic stack, the stack must remain strictly decreasing. Forgetting to pop smaller elements before pushing, or using the wrong comparison operator (e.g., `>=` instead of `>`), breaks the invariant and produces wrong results.
+
+### Losing the New Head After Reversal
+
+In the reverse-twice approach, both reversals change which node is the head. Failing to capture and return the correct head after the second reversal causes the function to return a pointer into the middle of the list or a stale reference.

@@ -916,3 +916,48 @@ class StringIterator {
 - Since no precomputations are done, and `hasNext()` requires only $O(1)$ time, this solution is advantageous if `hasNext()` operation is performed most of the times.
 
 - This approach can be extended to include `previous()` and `hasPrevious()` operations, but this will require the use of some additional variables.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Multi-Digit Counts
+
+Counts can be more than one digit (e.g., "a12" means 12 a's). A common mistake is reading only a single digit.
+
+```python
+# Wrong - only reads single digit
+def next(self) -> str:
+    if self.num == 0:
+        self.ch = self.res[self.ptr]
+        self.ptr += 1
+        self.num = int(self.res[self.ptr])  # Fails for "a12"
+        self.ptr += 1
+    self.num -= 1
+    return self.ch
+
+# Correct - parse all consecutive digits
+def next(self) -> str:
+    if self.num == 0:
+        self.ch = self.res[self.ptr]
+        self.ptr += 1
+        while self.ptr < len(self.res) and self.res[self.ptr].isdigit():
+            self.num = self.num * 10 + int(self.res[self.ptr])
+            self.ptr += 1
+    self.num -= 1
+    return self.ch
+```
+
+### Incorrect hasNext() Logic with Demand Computation
+
+When using lazy parsing, `hasNext()` must check both whether unparsed string remains AND whether current character still has remaining count.
+
+```python
+# Wrong - only checks string position
+def hasNext(self) -> bool:
+    return self.ptr != len(self.res)  # Misses remaining count!
+
+# Correct - check both conditions
+def hasNext(self) -> bool:
+    return self.ptr != len(self.res) or self.num != 0
+```

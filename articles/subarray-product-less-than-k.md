@@ -611,3 +611,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Edge Case When k <= 1
+
+When `k` is `0` or `1`, no positive product can be less than `k`. Failing to handle this edge case leads to incorrect results or infinite loops. Always check `if k <= 1: return 0` at the start.
+
+### Using Strict Less-Than Comparison Incorrectly
+
+The problem asks for products **strictly less than** `k`, not less than or equal. Using `product <= k` instead of `product < k` will overcount subarrays where the product equals exactly `k`.
+
+### Integer Overflow in Product Calculation
+
+When multiplying elements together, the product can quickly exceed integer bounds. In languages like Java or C++, use `long` instead of `int` for the product variable to avoid overflow issues, especially with large arrays.

@@ -386,3 +386,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Including Triplets With Values Exceeding the Target
+
+A triplet where any element exceeds the corresponding target value can never be used because merging only takes the maximum at each position, so values can only increase. Failing to filter out these invalid triplets leads to incorrect results.
+
+### Checking Only for Exact Target Matches Without Filtering
+
+Some solutions check if a triplet matches the target at a position but forget to verify that the other positions do not exceed the target. A triplet like `[5, 2, 3]` matching `target[0] = 5` is useless if `target[1] = 1` because the 2 exceeds it.
+
+### Thinking You Need to Find a Single Triplet Equaling the Target
+
+The problem allows merging multiple triplets. You do not need one triplet that exactly equals the target. You need to find triplets that collectively can contribute each target value independently while never exceeding any target position.

@@ -741,3 +741,23 @@ class Solution {
 - Space complexity: $O(k)$
 
 > Where $n$ represents the total number of sticks, and $k$ denotes the number of sticks that must be visible from the left side.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Recurrence Relation
+
+The key insight is that we place sticks from tallest to shortest. The shortest remaining stick can either be placed at the leftmost position (becoming visible, contributing `dfs(N-1, K-1)`) or in one of `N-1` positions behind a taller stick (contributing `(N-1) * dfs(N-1, K)`). A common mistake is thinking the multiplier should be `N` instead of `N-1`, or confusing which stick is being placed.
+
+### Integer Overflow in the Multiplication Term
+
+The term `(N-1) * dfs(N-1, K)` can cause integer overflow in languages like Java and C++ when both values are large. Always cast to `long` before multiplication: `(long)(N-1) * dfs(N-1, K) % MOD`. Failing to do this produces incorrect results for large inputs.
+
+### Incorrect Base Cases
+
+The base cases require careful handling. When `N == K`, all remaining sticks must be visible (return 1). When `N == 0` or `K == 0` (but not both equal), it is impossible (return 0). A common error is returning 1 when `K == 0` regardless of `N`, or not handling the `N == K` case before checking `K == 0`.
+
+### Space-Optimized DP Update Order
+
+In the space-optimized version, updating `dp[K]` requires the old value of `dp[K-1]` (stored in `prev`) and the current `dp[K]`. If you update in the wrong order or forget to save `prev` before modifying `dp[K]`, you will use already-updated values and get wrong answers. Always save the current value before overwriting: `tmp = dp[K]; dp[K] = ...; prev = tmp`.

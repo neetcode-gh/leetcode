@@ -938,3 +938,15 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Grid Size with Value Range
+
+The grid has dimensions `n x n`, but values range from `1` to `n*n`. Using `n` instead of `n*n` as the upper bound when checking for missing or repeated values causes you to miss numbers greater than `n`. Always iterate through `1` to `n*n` when scanning for the missing and repeated values.
+
+### Integer Overflow in Math Approach
+
+When using the mathematical solution with sum of squares, the values can grow very large. For an `n x n` grid, the sum of squares formula involves `n^4` terms, which can overflow 32-bit integers. Use 64-bit integers (`long` in Java, `long long` in C++) for intermediate calculations to avoid incorrect results from overflow.

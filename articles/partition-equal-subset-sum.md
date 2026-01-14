@@ -1744,3 +1744,19 @@ public:
 - Space complexity: $O(target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Odd Sum Check
+
+The most common mistake is forgetting to check if the total sum is odd before proceeding. If `sum(nums)` is odd, it's impossible to split into two equal subsets, and you should immediately return `false`. Skipping this check leads to incorrect results or wasted computation.
+
+### Using Left-to-Right Iteration in Space-Optimized DP
+
+When using a 1D DP array, iterating from left to right causes elements to be counted multiple times in the same iteration. You must iterate from right to left (`target` down to `num`) to ensure each element is used at most once per subset, preserving the 0/1 knapsack property.
+
+### Integer Overflow in Target Calculation
+
+For languages without arbitrary precision integers, the sum of array elements can overflow if not handled carefully. Always use appropriate data types (like `long` in Java/C++) when computing the total sum before dividing by 2 to get the target.

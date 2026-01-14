@@ -483,3 +483,18 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Starting Deposit for Each Week
+Each Monday starts with `week_number` dollars (week 1 starts with 1, week 2 starts with 2, etc.), not always 1. Forgetting to increment the Monday deposit each week gives incorrect totals.
+```python
+# Wrong: always starting at 1
+if day % 7 == 0:
+    deposit = 1  # Should be 1 + (day // 7)
+```
+
+### Off-by-One in Week Calculation
+When computing complete weeks, using `(n + 6) // 7` instead of `n // 7` overcounts partial weeks as complete, leading to incorrect sums in the math-based approach.

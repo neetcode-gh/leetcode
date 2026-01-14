@@ -778,3 +778,15 @@ class Solution {
 * Space complexity: $O(m1 + m2)$
 
 > Where $n$ is the size of the input arrays, $m1$ is the maximum value in the array $seats$, and $m2$ is the maximum value in the array $students$.
+
+---
+
+## Common Pitfalls
+
+### Not Sorting Both Arrays
+
+The greedy solution requires sorting both the seats and students arrays before pairing. Sorting only one array or forgetting to sort altogether will produce incorrect results. The optimal pairing matches the i-th smallest student with the i-th smallest seat, which requires both arrays to be in sorted order.
+
+### Using Signed Subtraction Instead of Absolute Difference
+
+When calculating the distance between a seat and a student, you must use `abs(seats[i] - students[i])`, not just `seats[i] - students[i]`. If a student is at a larger position than their assigned seat, the subtraction would be negative, leading to an incorrect (and possibly negative) total. Always use the absolute value to measure distance.

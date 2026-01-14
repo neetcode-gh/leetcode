@@ -869,3 +869,17 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $M$ is the number of rows in the given matrix `picture`, and $N$ is the number of columns in it.
+
+## Common Pitfalls
+
+### Checking Only the Row or Only the Column
+
+A common mistake is to count a black pixel as lonely if it is the only black pixel in its row, without also verifying that it is the only black pixel in its column (or vice versa). Both conditions must be satisfied simultaneously for a pixel to be considered lonely.
+
+### Confusing Row and Column Indices
+
+When working with 2D matrices, it is easy to mix up row and column indices. Remember that `picture[i][j]` refers to row `i` and column `j`. Swapping these when updating or querying counts will produce incorrect results.
+
+### Forgetting to Handle Edge Cases with No Black Pixels
+
+If the matrix contains no black pixels at all, the answer is `0`. While most implementations handle this naturally, some solutions that assume at least one black pixel exists may encounter issues or unnecessary iterations.

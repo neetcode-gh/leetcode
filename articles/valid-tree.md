@@ -1137,3 +1137,19 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.
+
+---
+
+## Common Pitfalls
+
+### Detecting False Cycles Due to Parent Edges
+
+In an undirected graph represented with an adjacency list, each edge `(u, v)` appears twice: once in `adj[u]` and once in `adj[v]`. When traversing from node `u` to `v`, you will see `u` in `v`'s neighbor list. Without tracking the parent, this would incorrectly be detected as a cycle. Always pass and check the parent node to avoid this false positive.
+
+### Forgetting to Check Connectivity
+
+A graph can be cycle-free but still not be a valid tree if it is disconnected. After running DFS or BFS from any starting node, you must verify that all `n` nodes were visited. If `visited.size() < n`, the graph has multiple connected components and is not a valid tree.
+
+### Not Using the Edge Count Shortcut
+
+A valid tree with `n` nodes must have exactly `n - 1` edges. If there are more than `n - 1` edges, the graph definitely has a cycle. If there are fewer than `n - 1` edges, the graph cannot be connected. Checking this condition first can save unnecessary traversal and provides an early exit for invalid inputs.

@@ -805,3 +805,17 @@ class Solution {
 - Space complexity: $O(m + n)$
 
 > Where $m$ is the length of the string $num1$ and $n$ is the length of the string $num2$.
+
+## Common Pitfalls
+
+### Not Handling the Zero Case
+
+When either input is "0", the result must be "0". Failing to check this upfront can lead to returning an empty string or a string with leading zeros. Always check for zero inputs before proceeding with multiplication to avoid unnecessary computation and incorrect output formatting.
+
+### Incorrect Position Indexing for Digit Products
+
+When multiplying digit `i` of `num1` by digit `j` of `num2`, the result contributes to a specific position in the output array. If strings are reversed, the position is `i + j`; if not, careful index calculation is needed. Off-by-one errors in position calculation cause digits to be placed incorrectly, resulting in a wrong final product.
+
+### Forgetting to Handle Leading Zeros in the Result
+
+After populating the result array, there may be leading zeros (especially at the highest index positions after reversing). Skipping these zeros before converting to a string is essential. However, if all digits are zero (which should not happen if the zero case is handled), ensure at least one "0" is returned rather than an empty string.

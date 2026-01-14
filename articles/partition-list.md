@@ -665,3 +665,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Terminate the Right List
+
+After connecting the left list to the right list, you must set `rtail.next = null`. Without this, the last node of the right list may still point to a node in the left list from the original structure, creating a cycle and causing infinite loops.
+
+### Using Strict Greater Than Instead of Greater or Equal
+
+The partition condition requires nodes with values **less than** `x` to come first, and nodes **greater than or equal to** `x` to come second. Using `>` instead of `>=` for the right partition will incorrectly place nodes equal to `x` in the left partition.
+
+### Not Using Dummy Nodes
+
+Trying to handle the head of each partition manually without dummy nodes leads to complex edge case handling. Using dummy nodes (`left` and `right`) as placeholders simplifies the code and eliminates null checks when the first node is encountered for each partition.

@@ -915,3 +915,26 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Confusing Consecutive with Equal Elements
+The three-element partition allows either three equal elements OR three consecutive increasing elements, but not both conditions mixed. Writing `nums[i] == nums[i+1] + 1` instead of `nums[i] + 1 == nums[i+1]` reverses the direction and checks for decreasing sequences.
+```python
+# Wrong: nums[i] == nums[i+1] + 1 (checks decreasing)
+# Correct:
+nums[i] + 1 == nums[i + 1] and nums[i + 1] + 1 == nums[i + 2]
+```
+
+### Forgetting to Check Both 2-Element and 3-Element Options
+At each position, you must consider both taking 2 elements (if they're equal) AND taking 3 elements (if they form a valid pattern). Only checking one option or using `else if` when both could be valid may miss the correct partition path.
+```python
+# Must use OR logic to try both options:
+res = dfs(i + 2) if valid_pair else False
+res = res or dfs(i + 3) if valid_triple else res
+```
+
+### Off-by-One Errors in DP Array Indexing
+In the bottom-up DP approach, `dp[i]` represents whether the first `i` elements can be partitioned. When checking if elements form a valid pattern, you must use `nums[i-1]`, `nums[i-2]`, `nums[i-3]` (0-indexed array access) rather than `nums[i]`, which would be out of bounds or reference the wrong elements.

@@ -805,3 +805,19 @@ class Solution {
 * Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $folder$ and $m$ is the length of each string.
+
+---
+
+## Common Pitfalls
+
+### Matching Partial Folder Names as Subfolders
+
+A folder `/a/bc` is not a subfolder of `/a/b`, even though `/a/b` is a prefix of `/a/bc`. The subfolder relationship requires matching at a `/` boundary. Always append `/` when checking prefixes or compare path segments individually to avoid false positives.
+
+### Forgetting to Handle the Root Slash
+
+Every path starts with `/`, which creates an empty string when splitting by `/`. Failing to skip or handle this empty segment causes index errors or incorrect trie traversal. Ensure your parsing logic accounts for the leading slash.
+
+### Incorrect Sorting Assumptions
+
+When using the sorting approach, you must compare against the *last added result* folder, not any arbitrary previous folder. Since sorted order ensures parents come before children, only the most recent result can be the parent of the current folder. Comparing against all previous results is both unnecessary and error-prone.

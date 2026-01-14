@@ -684,3 +684,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Processing Nodes Individually Instead of by Level
+
+In BFS, you must process all nodes at the current level before moving to the next. A common mistake is to pop nodes one at a time without tracking how many belong to the current level. This causes nodes from different levels to be mixed together in the same output list.
+
+### Not Handling the Empty Tree Case
+
+When the root is `null`, the function should return an empty list. Forgetting this check can lead to null pointer exceptions when attempting to add the root to the queue or access its value.

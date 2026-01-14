@@ -394,3 +394,15 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$ since we have at most $26$ different characters.
+
+---
+
+## Common Pitfalls
+
+### Including Zero Frequencies
+
+Characters that do not appear in the string have frequency zero, which is technically even. However, you cannot use a zero-frequency character as the "even frequency" character because it does not exist in the string. Always filter out zero counts when looking for the minimum even frequency.
+
+### Swapping Odd and Even in the Difference
+
+The problem asks for `(odd frequency) - (even frequency)`, not the other way around. Maximizing `even - odd` instead gives the wrong answer. Pay attention to which frequency should be maximized and which should be minimized.

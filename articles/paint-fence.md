@@ -595,3 +595,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the number of fence posts.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Three Consecutive Constraint
+
+The problem forbids more than two consecutive posts with the same color. Some solvers mistakenly interpret this as no two adjacent posts can share a color, which is too restrictive. Two adjacent posts can have the same color as long as there is not a third consecutive post with that same color.
+
+### Incorrect Base Cases for Small n
+
+When n equals 1, there are exactly k ways. When n equals 2, there are k*k ways since any combination is valid (no three consecutive posts exist yet). Forgetting to handle these base cases or computing them incorrectly leads to wrong answers and potential index-out-of-bounds errors.
+
+### Deriving the Wrong Recurrence Relation
+
+The recurrence `totalWays(i) = (k-1) * (totalWays(i-1) + totalWays(i-2))` accounts for two scenarios: painting differently from the previous post, or painting the same as the previous post (which requires the two before that to be different). Confusing the logic of when same-color painting is allowed leads to an incorrect formula.

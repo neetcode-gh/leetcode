@@ -1628,3 +1628,27 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.
+
+---
+
+## Common Pitfalls
+
+### Querying an Invalid Range
+
+When the current number minus `k` is less than or equal to zero, or when `num - 1` is less than `num - k`, the query range becomes invalid. You must handle the case where there are no valid previous values to extend from, which means the current element starts a new subsequence of length 1.
+
+### Using the Wrong Data Structure
+
+This problem requires efficient range maximum queries and point updates. Using a simple DP array results in O(n*k) time complexity per element, which is too slow. A segment tree or similar data structure is necessary to achieve the O(log m) per-operation complexity needed for this problem.
+
+### Off-by-One in Range Boundaries
+
+The constraint requires `nums[j] - nums[i] <= k` with strict inequality `nums[j] > nums[i]`. This means you should query the range `[num - k, num - 1]`, not `[num - k, num]`. Including `num` in the query would violate the strictly increasing requirement.
+
+### Not Using Coordinate Compression When Needed
+
+When the maximum value in `nums` is very large but the number of distinct values is small, building a segment tree of size `max(nums)` wastes memory. Coordinate compression maps values to a smaller range, but you must ensure the compressed values maintain their relative ordering and the distance constraint is correctly applied to the original values, not the compressed indices.
+
+### Updating Before Querying
+
+The order of operations matters: you must query for the best previous subsequence before updating the current position. Updating first can cause the current element to incorrectly contribute to its own computation, leading to wrong answers.

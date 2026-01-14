@@ -566,3 +566,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Sorting Order
+
+The most common mistake is sorting only by start time without considering the end time. When two intervals share the same start, the longer one should come first (sort by end time descending). Otherwise, you might incorrectly count the longer interval as covered by the shorter one. For example, [1,4] and [1,2] with the same start: if [1,2] comes first, you'd miss that [1,2] is covered by [1,4].
+
+### Confusing Covered vs Overlapping
+
+An interval is covered only if another interval completely contains it (start <= start AND end >= end). Some solutions incorrectly check for overlap instead of complete containment. For [1,4] to cover [2,3], we need 1 <= 2 AND 4 >= 3. Partial overlaps like [1,3] and [2,4] don't count as one covering the other.
+
+### Off-by-One in Return Value
+
+The problem asks for the count of intervals remaining after removal, not the count of covered intervals. Some solutions return the number of covered intervals instead of subtracting from the total. If you find k covered intervals out of n total, return n - k, not k.

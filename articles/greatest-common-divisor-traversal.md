@@ -1820,3 +1820,27 @@ public class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum value in the array.
+
+---
+
+## Common Pitfalls
+
+### Not Handling the Value 1 as a Special Case
+
+The number 1 has no prime factors greater than 1, so it cannot share a common factor with any other number. If the array contains 1 and has more than one element, the answer is always `false`. Failing to check for this edge case will cause incorrect results or infinite loops during factorization.
+
+### Forgetting the Single Element Case
+
+When the array has only one element, all pairs are trivially traversable (there are no pairs to check). This should return `true` regardless of the value. Missing this base case leads to incorrect behavior, especially if your factorization or union-find logic assumes at least two elements.
+
+### Incorrect Prime Factorization
+
+When factorizing numbers, you must completely divide out each prime factor before moving to the next. A common bug is incrementing the factor without fully removing it, causing duplicate unions or missed factors. Use a `while` loop to divide out each prime completely: `while (num % prime == 0) num /= prime`.
+
+### Off-by-One Errors in Virtual Prime Nodes
+
+When using Union-Find with virtual nodes for primes (offset by `N`), ensure consistent indexing. Array indices run from `0` to `N-1`, while prime nodes are at positions `N + prime`. Mixing up these offsets or forgetting to add `N` when accessing prime nodes causes incorrect unions and false connectivity results.
+
+### Memory Issues with Large Prime Values
+
+When the maximum value in the array is large (up to 10^5 or 10^6), allocating arrays sized by the maximum value can consume significant memory. Ensure your sieve and Union-Find structures are appropriately sized as `N + MAX + 1` to accommodate both indices and virtual prime nodes without out-of-bounds errors.

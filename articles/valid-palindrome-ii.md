@@ -787,3 +787,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Only Trying One Deletion Option
+
+When a mismatch is found at positions `l` and `r`, you must check both possibilities: removing the character at `l` or removing the character at `r`. A common mistake is only trying one option (like always removing the left character). Both substrings `s[l+1...r]` and `s[l...r-1]` must be checked, and the answer is true if either forms a palindrome.
+
+### Forgetting That Zero Deletions Is Valid
+
+The problem asks if the string can become a palindrome by deleting at most one character. This includes deleting zero characters. If the original string is already a palindrome, the answer is true. Some solutions only consider the deletion case and forget to check if the string is already valid as-is.

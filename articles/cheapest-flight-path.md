@@ -922,3 +922,36 @@ class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
+
+---
+
+## Common Pitfalls
+
+### Confusing Stops vs Flights (Off-by-One)
+The problem allows at most `k` stops, which means at most `k+1` flights. A common mistake is running Bellman-Ford for `k` iterations instead of `k+1`, or checking `stops > k` when you should check `stops == k` before taking another flight.
+```python
+# Wrong: only k iterations (k flights, not k+1)
+for i in range(k):
+# Correct: k+1 iterations for k stops
+for i in range(k + 1):
+```
+
+### Not Using a Temporary Array in Bellman-Ford
+When relaxing edges, using the same array for both reading and writing allows paths from the current iteration to chain together, potentially exceeding the allowed number of flights in a single round.
+```python
+# Wrong: updates affect same iteration
+if prices[s] + p < prices[d]:
+    prices[d] = prices[s] + p
+# Correct: use temporary array
+if prices[s] + p < tmpPrices[d]:
+    tmpPrices[d] = prices[s] + p
+```
+
+### Using Standard Dijkstra Without Stop Tracking
+Standard Dijkstra finds the cheapest path but ignores the stop constraint. A path with fewer stops might be more expensive but still valid, while the cheapest path might exceed `k` stops. The state must include both cost and number of stops used.
+```python
+# Wrong: only tracks cost
+dist[city] = cost
+# Correct: track cost at each stop level
+dist[city][stops] = cost
+```

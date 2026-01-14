@@ -753,3 +753,24 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Initialize Prefix Sum Count with Zero
+The hash map must start with `{0: 1}` to count subarrays that start from index 0. Without this, subarrays where the prefix sum exactly equals the goal are missed.
+```python
+# Wrong: count = {}
+# Correct: count = {0: 1}
+```
+
+### Not Handling goal = 0 in Sliding Window
+When using the sliding window approach, `helper(goal - 1)` becomes `helper(-1)`. Without the early return for negative values, the window logic breaks and may produce incorrect results or infinite loops.
+```python
+# Wrong: missing the x < 0 check
+# Correct: if x < 0: return 0
+```
+
+### Breaking Early When Sum Exceeds Goal
+In the brute force approach, some incorrectly add a `break` when `curSum > goal`. This is wrong because the array contains only 0s and 1s, and adding more 0s keeps the sum unchanged, potentially finding more valid subarrays.

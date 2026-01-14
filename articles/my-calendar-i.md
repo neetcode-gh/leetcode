@@ -824,3 +824,19 @@ class MyCalendar {
 
 - Time complexity: $O(\log n)$ for each $book()$ function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Incorrect Overlap Condition
+
+A common mistake is using `<=` instead of `<` when checking for overlaps. The correct overlap condition is `startTime < end && start < endTime`. Since intervals are half-open `[start, end)`, an event ending exactly when another starts (e.g., `[10, 20)` and `[20, 30)`) does not constitute an overlap. Using `<=` would incorrectly reject valid adjacent bookings.
+
+### Forgetting to Handle Edge Cases for Empty Calendar
+
+When implementing the BST or binary search approach, forgetting to handle the case when the calendar is empty can lead to null pointer exceptions or incorrect behavior. Always check if the root is null (BST) or if the events list is empty before performing searches or comparisons.
+
+### Off-by-One Errors in Binary Search Neighbor Checks
+
+In the binary search with ordered set approach, a subtle bug occurs when checking neighbors at the insertion point. You must verify that `idx - 1` exists before accessing the previous event, and that `idx` is within bounds before accessing the next event. Failing to perform these boundary checks results in index out of bounds errors for edge cases like inserting at the beginning or end of the sorted list.

@@ -444,3 +444,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Counting All Brackets Instead of Unmatched
+
+The answer depends on unmatched brackets, not total brackets. Counting all `[` or `]` characters without first matching valid pairs will give an incorrect count. Only brackets that remain after matching contribute to the swap count.
+
+### Forgetting That One Swap Fixes Two Pairs
+
+Each swap can fix two unmatched bracket pairs simultaneously. Returning the unmatched count directly instead of dividing by 2 (with ceiling) will double the actual number of swaps needed.
+
+### Popping From Empty Stack
+
+When simulating with a stack, attempting to pop when encountering `]` without checking if the stack is empty will cause runtime errors. Only pop if there is a matching `[` available to pair with the current `]`.

@@ -1622,3 +1622,19 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Assuming Only One Inversion Exists
+
+When two nodes are swapped in a BST, there can be either one or two inversions in the inorder sequence depending on whether the swapped nodes are adjacent. Assuming only one inversion and not checking for a second one causes incorrect identification of the swapped nodes.
+
+### Swapping Node References Instead of Values
+
+The problem asks to recover the tree by swapping values, not by restructuring node pointers. Attempting to swap the actual node positions in the tree is unnecessarily complex and error-prone. Simply swap the `val` fields of the two identified nodes.
+
+### Incorrectly Identifying First and Second Nodes
+
+In the first inversion, `node1` is the larger (out-of-place) element, and `node2` is the smaller one. If a second inversion is found, `node2` should be updated to the smaller element of that inversion, while `node1` remains unchanged. Mixing up which node to update at each inversion leads to swapping the wrong pair.

@@ -1762,3 +1762,78 @@ class Solution {
 - Space complexity: $O(m ^ 2)$
 
 > Where $m$ is the size of the matrix used in matrix exponentiation $(5 X 5)$ and $n$ is the length of the permutation.
+
+---
+
+## Common Pitfalls
+
+### Confusing "Follows" vs "Precedes" Transitions
+
+The problem states which vowels can follow each vowel, but the DP recurrence requires knowing which vowels can precede each vowel. Mixing up the direction leads to wrong transition rules.
+
+```python
+# Incorrect - using "follows" direction for DP[i][v]
+# This computes what can come AFTER v, not what can come BEFORE v
+dp[i][a] = dp[i-1][a]  # wrong: 'a' follows 'a'?
+
+# Correct - 'a' can be preceded by 'e', 'i', or 'u'
+dp[i][a] = dp[i-1][e] + dp[i-1][i] + dp[i-1][u]
+```
+
+### Forgetting Modulo in Intermediate Sums
+
+With large `n`, intermediate sums overflow before taking the final modulo. Apply modulo after each addition to keep values within bounds.
+
+```python
+# Incorrect - sum overflows before modulo
+total = 0
+for next in follows[v]:
+    total += dfs(i + 1, next)
+return total % MOD
+
+# Correct - apply modulo after each addition
+total = 0
+for next in follows[v]:
+    total = (total + dfs(i + 1, next)) % MOD
+return total
+```
+
+### Incorrect Matrix Exponentiation Base Case
+
+When using matrix exponentiation, computing `T^n` instead of `T^(n-1)` is a common error. The initial state already represents strings of length 1, so only `n-1` transitions are needed.
+
+```python
+# Incorrect - one extra transition
+result = matrix_expo(base, n)
+
+# Correct - n-1 transitions from length 1 to length n
+result = matrix_expo(base, n - 1)
+```
+
+### Not Handling n=1 Edge Case
+
+For `n=1`, the answer is simply 5 (one for each vowel). Some implementations with matrix exponentiation or DP loops may fail if they do not handle this boundary correctly.
+
+```python
+# Incorrect - matrix_expo with exp=0 may not return identity
+def countVowelPermutation(n):
+    return sum_matrix(matrix_expo(base, n - 1))  # fails if n=1 and expo not handled
+
+# Correct - either handle n=1 explicitly or ensure expo(M, 0) returns identity
+def countVowelPermutation(n):
+    if n == 1:
+        return 5
+    return sum_matrix(matrix_expo(base, n - 1))
+```
+
+### Integer Overflow in Matrix Multiplication
+
+In languages without arbitrary precision integers (like Java, C++), multiplying two large values before taking modulo causes overflow. Cast to a larger type or restructure the multiplication.
+
+```cpp
+// Incorrect - integer overflow before modulo
+product[i][k] = (product[i][k] + a[i][j] * b[j][k]) % MOD;
+
+// Correct - use long long to prevent overflow
+product[i][k] = (product[i][k] + (long long)a[i][j] * b[j][k]) % MOD;
+```

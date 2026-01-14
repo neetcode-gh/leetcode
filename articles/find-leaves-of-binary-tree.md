@@ -742,3 +742,19 @@ class Solution {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the total number of nodes in the binary tree
+
+---
+
+## Common Pitfalls
+
+### Confusing Height with Depth
+
+Height is measured from the node down to its farthest leaf (leaves have height `0`), while depth is measured from the root down to the node. This problem requires height-based grouping, not depth. Using depth would group nodes by their distance from the root, which produces incorrect results since leaves at different depths would end up in different groups.
+
+### Returning Wrong Base Case Value
+
+The base case for `null` nodes should return `-1`, not `0`. Since leaves have height `0` (computed as `max(-1, -1) + 1`), returning `0` for `null` would incorrectly make leaves have height `1`. This off-by-one error shifts all groupings and produces wrong output.
+
+### Forgetting to Handle Result List Growth
+
+When directly inserting nodes into the result list by height index, you must check if the list has enough sublists before accessing `result[height]`. Failing to add a new sublist when `result.size() == height` causes an index out of bounds error. Always ensure the result list grows dynamically as you encounter nodes with new height values.

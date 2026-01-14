@@ -380,3 +380,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Using Subtraction for Comparator with Large Values
+
+When sorting intervals with coordinates that can be very large (up to 2^31 - 1) or very small (down to -2^31), using `a[0] - b[0]` as a comparator can cause integer overflow. For example, comparing `[-2147483648, 0]` with `[2147483647, 0]` would overflow. Always use `Integer.compare(a[0], b[0])` in Java or explicit comparison operators like `a[0] < b[0]` in other languages.
+
+### Not Updating the Overlap Region Correctly
+
+When merging overlapping balloons, you must shrink the overlap region by taking the minimum of the end values, not the maximum. If balloon A ends at 6 and balloon B ends at 4, the arrow must be shot at or before position 4 to hit both. Forgetting to update `prevEnd = min(curr[1], prevEnd)` will cause incorrect counts when a later balloon extends beyond the current overlap region.
+
+### Confusing Inclusive vs Exclusive Overlap Checks
+
+The problem states that balloons touching at a single point can be burst by one arrow. This means the overlap check should be `curr[0] <= prevEnd` (inclusive), not `curr[0] < prevEnd`. Missing this edge case will count extra arrows for balloons that just touch at their boundaries.

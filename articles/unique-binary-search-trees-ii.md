@@ -1376,3 +1376,19 @@ class Solution {
     - $O(n)$ for the recursion stack.
     - $O(n)$ extra space.
     - $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
+
+---
+
+## Common Pitfalls
+
+### Returning Empty List Instead of List with Null
+
+When the range is invalid (`left > right`), the base case should return a list containing `null` (representing an empty subtree), not an empty list. Returning an empty list causes the nested loops to skip all combinations, producing no trees at all.
+
+### Reusing Tree Nodes Across Different Trees
+
+In the space-optimized approach, left subtrees are shared across multiple result trees since they have identical structure and values. However, right subtrees need to be cloned with shifted values. Forgetting to create new nodes when shifting values causes all trees to share and mutate the same nodes incorrectly.
+
+### Incorrect Value Shifting for Right Subtrees
+
+When using the space-optimized DP approach, right subtree values must be shifted by the root value. A common mistake is applying the wrong offset or forgetting to recursively shift all nodes in the subtree. Each node in the right subtree should have `offset` added to its value.

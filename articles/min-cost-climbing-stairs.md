@@ -660,3 +660,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Goal Position
+
+The top of the staircase is at index `n` (one step past the last stair), not at index `n-1`. You need to reach beyond the last step, so your DP array or recursion must account for landing on position `n`, not just visiting the last cost element.
+
+### Forgetting You Can Start from Step 0 or Step 1
+
+The problem allows starting from either step `0` or step `1` without paying any cost initially. A common mistake is assuming you must start from step `0` only, which can lead to suboptimal solutions when starting from step `1` would be cheaper.
+
+### Incorrect Base Cases in DP
+
+When using bottom-up DP, the base cases should be `dp[0] = 0` and `dp[1] = 0` because you can stand on step `0` or step `1` for free before paying to move forward. Setting these incorrectly, such as `dp[0] = cost[0]`, misinterprets when you pay the cost.

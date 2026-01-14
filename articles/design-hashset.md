@@ -1938,3 +1938,44 @@ class MyHashSet {
 - Space complexity: $O(k)$
 
 > Where $k$ is the size of the set $(31251)$.
+
+---
+
+## Common Pitfalls
+
+### Adding Duplicate Keys
+
+The `add()` operation should be idempotent - adding an existing key should have no effect. A common mistake is not checking for duplicates before insertion.
+
+```python
+# Wrong - allows duplicates
+def add(self, key: int) -> None:
+    cur = self.set[key % len(self.set)]
+    while cur.next:
+        cur = cur.next
+    cur.next = ListNode(key)  # Always adds, even if exists!
+
+# Correct - check for existence first
+def add(self, key: int) -> None:
+    cur = self.set[key % len(self.set)]
+    while cur.next:
+        if cur.next.key == key:
+            return  # Already exists
+        cur = cur.next
+    cur.next = ListNode(key)
+```
+
+### Using XOR for Remove Without Checking Existence
+
+In the bit manipulation approach, using XOR to remove a key that doesn't exist will incorrectly add it instead.
+
+```python
+# Wrong - XOR toggles the bit regardless
+def remove(self, key: int) -> None:
+    self.set[key // 32] ^= self.getMask(key)  # Adds if not present!
+
+# Correct - only toggle if present
+def remove(self, key: int) -> None:
+    if self.contains(key):
+        self.set[key // 32] ^= self.getMask(key)
+```

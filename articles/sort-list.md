@@ -1442,3 +1442,17 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Incorrect Mid-Point Calculation for List Splitting
+
+When finding the middle of the linked list, starting `fast` at `head` instead of `head.next` can lead to incorrect splitting, especially for lists with two elements. This causes infinite recursion as the list never gets properly divided.
+
+### Forgetting to Disconnect the Two Halves
+
+After finding the middle node, you must set `mid.next = null` to properly split the list into two separate halves. Failing to disconnect them results in the merge sort operating on overlapping lists, causing incorrect results or infinite loops.
+
+### Not Handling Edge Cases for Empty or Single-Node Lists
+
+The base case must return immediately if `head` is null or `head.next` is null. Missing this check leads to null pointer exceptions or infinite recursion when the algorithm tries to split a list that cannot be divided further.

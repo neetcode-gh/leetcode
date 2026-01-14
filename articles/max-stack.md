@@ -1044,3 +1044,27 @@ class MaxStack {
 - Space Complexity: $O(N)$, the maximum size of the `heap`, `stack`, and `removed`.
 
 >  Where $N$ is the number of elements to add to the stack.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Synchronize Both Data Structures
+
+When using two balanced trees (or a stack + heap), removing an element from one structure without removing the corresponding entry from the other leads to stale data. Both `pop` and `popMax` must update both structures to maintain consistency.
+
+### Incorrect Handling of Duplicate Values
+
+Multiple elements can have the same value but different insertion indices. Using only the value as a key causes collisions and incorrect behavior. Always pair values with unique identifiers (like insertion count) to distinguish between duplicates.
+
+### Not Implementing Lazy Deletion Properly
+
+In the heap + lazy update approach, forgetting to skip removed elements before accessing the top of the stack or heap returns invalid data. The cleanup loop must run before every `top`, `pop`, `peekMax`, and `popMax` operation.
+
+### Using Wrong Comparator for Max Heap
+
+When implementing a max heap, accidentally using a min heap comparator (or vice versa) returns the wrong maximum element. Ensure the comparator orders elements so the largest value and most recent index appear at the top.
+
+### Integer Overflow in Counter
+
+If the counter used for unique indices is not managed properly and the stack experiences many push operations, the counter could overflow. While rare in practice, using a sufficiently large integer type prevents this edge case.

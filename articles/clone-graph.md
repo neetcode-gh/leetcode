@@ -713,3 +713,32 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Cycles
+Failing to track visited nodes causes infinite recursion when the graph contains cycles. Always use a map to store already-cloned nodes before processing neighbors.
+
+```python
+# Wrong: No visited tracking
+def dfs(node):
+    copy = Node(node.val)
+    for nei in node.neighbors:
+        copy.neighbors.append(dfs(nei))  # Infinite loop on cycles
+    return copy
+```
+
+### Cloning the Same Node Multiple Times
+Without a mapping from original to cloned nodes, the same node may be cloned multiple times, breaking the graph structure. Two neighbors pointing to the same original node should point to the same cloned node.
+
+```python
+# Wrong: Creates duplicate clones
+if nei not in oldToNew:
+    oldToNew[nei] = Node(nei.val)
+# Must add to map BEFORE recursing to handle back-edges
+```
+
+### Adding Clone to Map After Processing Neighbors
+The clone must be added to the map immediately after creation, before recursing on neighbors. Otherwise, back-edges to the current node will create a new clone instead of reusing the existing one.

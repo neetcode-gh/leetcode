@@ -1615,3 +1615,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Pre-Order or Post-Order Instead of In-Order
+
+A BST's defining property is that in-order traversal yields sorted values. Using pre-order or post-order traversal does not produce sorted output, so you cannot simply pick the k-th visited node. Always use in-order traversal (left, node, right) to get elements in ascending order.
+
+### Off-by-One Errors with k
+
+The k-th smallest element is at index k-1 in a zero-indexed array or corresponds to the k-th decrement of a counter starting at k. Mixing up one-based and zero-based indexing leads to returning the wrong element. Be consistent: if using a counter, return when it reaches zero; if using an array, access index k-1.
+
+### Not Stopping Early
+
+When counting nodes during traversal, there is no need to visit the entire tree once the k-th element is found. Failing to return early means wasted computation, especially in large trees where k is small. Use a flag or check the counter after each visit to terminate as soon as possible.

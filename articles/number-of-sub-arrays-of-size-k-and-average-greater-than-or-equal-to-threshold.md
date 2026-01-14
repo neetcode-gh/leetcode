@@ -784,3 +784,19 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the array $arr$ and $k$ is the size of the sub-array.
+
+---
+
+## Common Pitfalls
+
+### Integer Division Truncation
+
+When computing `sum / k` in languages like Java, C++, or Go, integer division truncates toward zero. If the sum is 15 and k is 4, `15 / 4` equals 3, not 3.75. This can cause false negatives when the true average meets the threshold but the truncated result does not. Multiplying the threshold by k and comparing sums directly avoids this issue.
+
+### Recalculating the Window Sum
+
+A common inefficiency is recalculating the sum for each window from scratch, leading to O(n*k) time complexity. The sliding window technique maintains a running sum, adding the new element and removing the old element in O(1) time per window.
+
+### Off-By-One Errors in Window Boundaries
+
+When sliding the window, it is easy to make mistakes with index calculations. Ensure the window always contains exactly k elements. Common errors include starting the right pointer at the wrong index or incorrectly computing when to start shrinking the window from the left.

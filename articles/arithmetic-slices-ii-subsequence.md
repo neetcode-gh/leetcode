@@ -1000,3 +1000,56 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Computing Differences
+The difference between two elements can exceed the range of a 32-bit integer (e.g., `INT_MAX - INT_MIN`). You must use a 64-bit integer type for the difference to avoid overflow and incorrect hash map lookups.
+```python
+# Wrong in languages with fixed-size integers:
+int diff = nums[i] - nums[j];  # Can overflow in Java/C++
+
+# Correct: use long
+long diff = (long)nums[i] - nums[j];
+```
+
+### Counting Pairs Instead of Subsequences of Length 3+
+The DP stores counts of subsequences of length 2 or more ending at each index. You only add to the result when extending an existing subsequence (making it length 3+), not when creating a new pair.
+```python
+# Wrong: adding 1 for every pair
+res += dp[j][diff] + 1  # Counts pairs, not just 3+ length
+
+# Correct: only count extensions of existing subsequences
+res += dp[j][diff]  # Only count when extending to 3+ elements
+dp[i][diff] += dp[j][diff] + 1  # Store for future extensions
+```
+
+### Using the Wrong Index Order in Nested Loops
+The outer loop must be the current index `i` and inner loop must iterate through all previous indices `j < i`. Reversing this order means you're trying to access DP values that haven't been computed yet.
+```python
+# Wrong: j as outer loop
+for j in range(n):
+    for i in range(j + 1, n):
+        diff = nums[i] - nums[j]
+        res += dp[j][diff]  # dp[j] not fully populated yet
+```
+
+### Forgetting to Handle Duplicate Values
+When the array contains duplicate values, multiple indices can have the same value. The DP must correctly accumulate counts from all valid previous indices, not just the first occurrence of a value.
+```python
+# Example: nums = [2, 2, 3, 4]
+# Both index 0 and 1 have value 2
+# Pattern [2,3,4] can start from either index 0 or 1
+```
+
+### Not Initializing DP Entries Before Access
+In some languages, accessing a missing key in a hash map returns null or throws an error. Ensure you handle missing keys by using default values or checking existence before access.
+```python
+# Wrong in Java: NullPointerException
+int count = dp[j].get(diff);  # Null if key doesn't exist
+
+# Correct: use getOrDefault
+int count = dp[j].getOrDefault(diff, 0);
+```

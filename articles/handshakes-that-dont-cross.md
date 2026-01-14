@@ -582,3 +582,27 @@ class Solution {
 - Time complexity: $O(numPeople)$
 
 - Space complexity: $O(numPeople)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Apply Modulo at Each Step
+
+The number of valid handshake arrangements grows exponentially and can overflow standard integer types. Applying modulo only at the end results in overflow before the modulo operation occurs. The modulo must be applied after each multiplication and addition to keep intermediate values within bounds.
+
+### Incorrect Indexing in the DP Recurrence
+
+The recurrence `dp[i] = sum(dp[j] * dp[i-j-1])` requires careful indexing. The sum runs from `j = 0` to `j = i-1`, and the index `i-j-1` must always be non-negative. Off-by-one errors in the loop bounds or index calculation lead to accessing invalid array positions or missing terms in the summation.
+
+### Not Recognizing the Catalan Number Pattern
+
+This problem is a classic application of Catalan numbers, but many solvers try to derive the recurrence from scratch without recognizing the pattern. The key insight is that pairing person 0 with person k splits the remaining people into two independent subproblems. Understanding this structure simplifies both the implementation and debugging.
+
+### Integer Overflow in Modular Arithmetic
+
+When computing `dp[j] * dp[i-j-1]`, the product of two values each less than 10^9 can exceed the 32-bit integer limit. Languages like Java, C++, and Go require explicit casting to 64-bit integers before multiplication, followed by the modulo operation. Failing to use 64-bit arithmetic causes silent overflow and incorrect results.
+
+### Miscomputing Modular Inverse for the Catalan Formula
+
+The closed-form Catalan formula requires division, which in modular arithmetic means multiplying by the modular inverse. Computing the inverse incorrectly or using the wrong formula for the inverse leads to wrong answers. The iterative inverse computation `inv[i] = m - (m/i) * inv[m%i] % m` must be implemented precisely with proper order of operations.

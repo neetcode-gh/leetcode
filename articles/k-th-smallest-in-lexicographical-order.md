@@ -406,3 +406,27 @@ class Solution {
 
 - Time complexity: $O((\log n) ^ 2)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Lexicographical Order with Numerical Order
+
+In lexicographical order, "10" comes before "2" because strings are compared character by character. Treating numbers numerically instead of as strings leads to completely wrong results. The sequence starts 1, 10, 100, ..., 2, 20, ....
+
+### Integer Overflow in Prefix Counting
+
+When counting numbers under a prefix, the prefix and its neighbor are multiplied by 10 repeatedly. For large `n`, these values can exceed 32-bit integer limits. Use 64-bit integers (`long` in Java, `long long` in C++) for the counting logic.
+
+### Incorrect Step Counting Logic
+
+The count function must include the prefix itself plus all its extensions up to `n`. The formula `min(neighbor, n + 1) - cur` counts numbers in the current level. A common error is using `n` instead of `n + 1`, which excludes the boundary value.
+
+### Off-by-One in Position Tracking
+
+The position variable `i` starts at 1 (representing we are at number 1). When moving to a child, increment `i` by 1. When skipping a subtree, increment `i` by the step count. Confusing these increments places you at the wrong number.
+
+### Not Handling Single-Digit to Multi-Digit Transitions
+
+When descending from prefix "1" to "10", you multiply by 10. But if `10 > n`, you cannot descend further. The algorithm must handle cases where the current prefix exceeds `n` after multiplication, which the count function naturally handles by returning 0.

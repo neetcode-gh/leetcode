@@ -618,3 +618,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Counting Fuel for the Capital Node
+
+The capital (node 0) does not need to travel anywhere, so you should not add fuel cost for passengers arriving at node 0. A common mistake is calculating `ceil(passengers / seats)` for the capital itself, which incorrectly inflates the total fuel cost.
+
+### Incorrect Ceiling Division
+
+When calculating cars needed, you need `ceil(passengers / seats)`. Integer division truncates, so `7 / 3 = 2` instead of the correct `3`. Use `(passengers + seats - 1) / seats` or a ceiling function to get the correct result. Floating-point division with casting can also introduce precision errors.
+
+### Revisiting the Parent in DFS
+
+Since the graph is undirected, the adjacency list includes edges in both directions. When traversing with DFS, you must skip the parent node to avoid infinite recursion. Forgetting to pass and check the parent parameter causes stack overflow or incorrect passenger counts.

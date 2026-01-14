@@ -810,3 +810,19 @@ class Solution {
 - Space complexity: $O(n)$ for recursion stack.
 
 > Where $n$ is the length of the first list and $m$ is the length of the second list.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors When Finding the Insertion Point
+
+The node at index `a - 1` should point to `list2`, and the tail of `list2` should point to the node at index `b + 1`. Using index `a` or `b` directly results in incorrect splicing.
+
+### Forgetting to Find the Tail of list2
+
+After connecting the node before position `a` to `list2`, you must traverse `list2` to find its tail and connect it to the remaining nodes of `list1`. Skipping this step leaves the merged list incomplete.
+
+### Not Handling the Removed Nodes
+
+The nodes from index `a` to `b` are no longer part of the result list. In languages without garbage collection, failing to properly handle these nodes can cause memory leaks.

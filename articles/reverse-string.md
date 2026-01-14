@@ -682,3 +682,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Incorrect Loop Termination Condition
+
+When using two pointers, the loop should terminate when `l >= r`, not when `l > r`. Using `l != r` works for odd-length strings but is less intuitive. The condition `l < r` correctly handles both even and odd length arrays.
+
+### Returning a New String Instead of Modifying In-Place
+
+The problem requires modifying the input array in-place. A common mistake is creating a new reversed array or string and returning it, which violates the in-place requirement and uses unnecessary extra space.

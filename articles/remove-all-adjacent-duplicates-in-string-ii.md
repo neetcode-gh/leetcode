@@ -971,3 +971,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Continuing After Removal Creates New Groups
+
+After removing `k` adjacent duplicates, the characters before and after the removed section may now be adjacent and form a new group of duplicates. A common mistake is stopping after a single removal pass. The solution must continue checking for new groups that may have been created by previous removals.
+
+### Resetting Count When Characters Match After Removal
+
+When using a stack-based approach, after removing `k` characters, the new top of the string may match the next character being processed. Failing to properly inherit or restore the count from before the removal leads to incorrect duplicate detection. The count must reflect the consecutive sequence that existed before the removal.
+
+### Off-by-One Errors in Substring Removal
+
+When removing `k` characters ending at index `i`, the removal range is from `i - k + 1` to `i` (inclusive). A common bug is using `i - k` as the start index or forgetting to adjust the current index after removal. Both the string length and the iteration index must be updated correctly to avoid processing removed characters or skipping valid ones.

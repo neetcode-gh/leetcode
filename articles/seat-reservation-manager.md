@@ -868,3 +868,19 @@ class SeatManager {
     - $O(\log n)$ time for each $reserve()$ function call.
     - $O(\log n)$ time for each $unreserve()$ function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Pre-populating All Seats in the Heap
+
+A common inefficiency is initializing the min-heap with all `n` seats upfront. This results in O(n log n) initialization time and O(n) space even when only a few reservations are made. The optimal approach uses lazy initialization: track a `nextSeat` counter and only add seats to the heap when they are unreserved.
+
+### Off-by-One Errors with 1-Based Seat Numbers
+
+Seat numbers in this problem are 1-indexed, but arrays are 0-indexed. A frequent mistake is confusing these indexing schemes, leading to returning seat 0 (invalid) or accessing `seats[seatNumber]` instead of `seats[seatNumber - 1]` when using a boolean array approach.
+
+### Using a Max-Heap Instead of a Min-Heap
+
+When implementing the heap-based solution, accidentally using a max-heap instead of a min-heap will return the largest available seat number instead of the smallest. Ensure you configure the heap correctly for minimum extraction, which may require using a custom comparator or negating values depending on your language.

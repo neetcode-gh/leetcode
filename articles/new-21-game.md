@@ -995,3 +995,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $k$ is the threshold score, $m$ is the maximum points per draw and $n$ is the upper bound on score.
+
+---
+
+## Common Pitfalls
+
+### Missing Edge Case When k is Zero
+
+When k equals 0, Alice never draws any cards and stays at score 0, which is always less than or equal to n. The probability is exactly 1.0 in this case. Failing to handle this edge case leads to division by zero or incorrect recursion that never terminates.
+
+### Incorrect Probability for Terminal States
+
+When the score is at least k, Alice stops drawing. The probability of success is 1 if the score is also at most n, and 0 otherwise. Some solutions incorrectly return 1 for all scores >= k, forgetting that scores above n are losing outcomes.
+
+### Floating Point Precision in Window Sum
+
+The sliding window optimization maintains a running sum of probabilities. Accumulated floating point errors from many additions and subtractions can cause the final probability to slightly exceed 1 or become negative. While typically not causing wrong answers on test cases, this can be addressed by clamping results to [0, 1].

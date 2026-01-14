@@ -964,3 +964,24 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Adding Node Value After Recursing on Children
+Preorder requires visiting the current node before its children. Adding the value after recursive calls produces postorder traversal instead.
+```python
+# Wrong: this is postorder, not preorder
+preorder(node.left)
+preorder(node.right)
+res.append(node.val)
+```
+
+### Pushing Left Child Before Right in Stack-Based Approach
+In the iterative approach, the right child must be pushed onto the stack before the left child. Since stacks are LIFO, pushing left first causes right to be processed first.
+```python
+# Wrong: processes right subtree before left
+stack.append(cur.left)   # should push right first
+stack.append(cur.right)
+```

@@ -514,3 +514,21 @@ class Solution {
 - Space complexity: $O(max(m, n))$
 
 > Where $m$ and $n$ are the lengths of the strings $a$ and $b$ respectively.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Final Carry
+After processing all digits, there may still be a carry of 1 that needs to be added to the result. Forgetting to check for this will produce incorrect results for cases like "1" + "1" = "10".
+```python
+# Wrong: missing final carry check
+return ''.join(res)
+# Correct: handle remaining carry
+if carry:
+    res.append('1')
+return ''.join(res)
+```
+
+### Processing Strings in Wrong Direction
+Binary addition must process digits from right to left (least significant to most significant). A common mistake is iterating from the start of the strings instead of the end, which produces completely wrong results.

@@ -901,3 +901,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output list.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Overlap Detection
+
+Using the wrong condition to detect overlapping intervals leads to incorrect merging. Two intervals `[a, b]` and `[c, d]` overlap when `a <= d` AND `c <= b`. A common mistake is checking only one direction or using strict inequality (`<` instead of `<=`), which fails for adjacent intervals like `[1, 2]` and `[2, 3]` that should merge.
+
+### Forgetting to Add the New Interval at the End
+
+When the new interval belongs after all existing intervals (its start is greater than all existing ends), the merging loop never triggers and the new interval is never added. The algorithm must append the new interval to the result after the loop completes if it was not already inserted.
+
+### Mutating the Original Input Array
+
+Some solutions modify the `newInterval` array during merging, which can cause issues if the caller expects the original input to remain unchanged. In languages where arrays are passed by reference, this side effect may lead to unexpected behavior in the calling code.

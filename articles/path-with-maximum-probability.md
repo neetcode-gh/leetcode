@@ -1339,3 +1339,19 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number nodes and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Using Min-Heap Instead of Max-Heap
+
+Unlike shortest path problems where we minimize distance, this problem requires maximizing probability. Using a min-heap (the default in most languages) will process low-probability paths first, leading to incorrect results or inefficiency. Always use a max-heap or negate the probabilities when using a min-heap.
+
+### Initializing Start Probability to Zero
+
+The starting node should have a probability of `1.0` (certainty), not `0.0`. Multiplying any edge probability by zero will always yield zero, preventing the algorithm from finding any valid path. Initialize `maxProb[start_node] = 1.0` before beginning the search.
+
+### Forgetting the Graph is Undirected
+
+Each edge connects two nodes bidirectionally, so you must add both directions to the adjacency list. Forgetting to add the reverse edge means some paths will be unreachable, potentially missing the optimal solution or returning zero when a valid path exists.

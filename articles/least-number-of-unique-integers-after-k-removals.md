@@ -722,3 +722,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Removing High-Frequency Elements First
+
+The greedy strategy requires removing elements with the *lowest* frequency first to maximize the reduction in unique count. Removing high-frequency elements wastes removals since you need more deletions to eliminate a single unique integer. Always sort frequencies in ascending order.
+
+### Counting Unique Integers Incorrectly
+
+A subtle bug is decrementing the unique count even when you cannot fully remove all occurrences of an integer. If `k` is less than the current frequency, you cannot eliminate that unique integer, so the count should not decrease. Only reduce the unique count when all occurrences are removed.
+
+### Forgetting Partial Removal Logic
+
+When `k` cannot fully cover the current frequency but can partially cover it, some implementations incorrectly skip this case entirely. While partial removal does not reduce the unique count, you still need to account for it when moving to the next frequency bucket in bucket sort approaches.

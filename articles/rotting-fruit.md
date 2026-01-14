@@ -887,3 +887,17 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
+
+## Common Pitfalls
+
+### Starting BFS from a Single Rotten Orange
+
+A common mistake is initializing BFS with only one rotten orange instead of all of them simultaneously. Since all rotten oranges spread rot at the same time, you must add every cell with value `2` to the queue before starting BFS. Starting from just one source gives incorrect time calculations.
+
+### Forgetting to Track Fresh Orange Count
+
+Some solutions forget to count fresh oranges initially and check if any remain unreachable. Without tracking the `fresh` count, you cannot determine whether all oranges can be rotted or if some are isolated. Always decrement `fresh` when an orange rots and return `-1` if `fresh > 0` after BFS completes.
+
+### Incrementing Time Incorrectly
+
+A subtle bug occurs when incrementing time after processing each individual orange rather than after each BFS level. Each level represents one minute, so you must process all oranges at the current level before incrementing time. Use a loop that processes `len(queue)` elements per iteration to correctly track levels.

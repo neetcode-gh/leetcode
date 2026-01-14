@@ -1227,3 +1227,19 @@ public:
 - Space complexity: $O(m)$
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.
+
+---
+
+## Common Pitfalls
+
+### Not Recognizing the Subset Sum Connection
+
+The problem appears to be about simulating stone collisions, but it is actually a partition problem. The key insight is that the final result equals the absolute difference between two groups of stones. Missing this connection leads to inefficient simulation approaches that fail on larger inputs.
+
+### Incorrect Target Calculation
+
+The target should be `stoneSum // 2` (floor division), representing the largest possible sum for one partition. Using ceiling division or forgetting to halve the sum leads to incorrect DP table dimensions or wrong final calculations.
+
+### Forward Iteration in Space-Optimized DP
+
+In the 1D DP approach, iterating from `0` to `target` instead of from `target` down to `stone` causes each stone to be counted multiple times. This happens because updated values at lower indices affect higher indices within the same iteration, violating the 0/1 knapsack constraint.

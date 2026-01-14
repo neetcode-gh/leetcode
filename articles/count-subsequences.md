@@ -1287,3 +1287,40 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $t$.
+
+---
+
+## Common Pitfalls
+
+### Confusing Subsequence with Substring
+A subsequence allows skipping characters while maintaining order, whereas a substring requires consecutive characters. This problem counts subsequences, so you must consider both skipping and using each character in `s`, not just sliding windows of consecutive characters.
+
+### Incorrect Base Case for Empty Target
+When the target string `t` is fully matched (`j == len(t)`), the function should return `1` (one valid way found), not `0`. Returning `0` here would cause all paths to report no valid subsequences.
+
+```python
+# Wrong: Returns 0 when target is matched
+if j == len(t):
+    return 0
+
+# Correct: Successfully formed one subsequence
+if j == len(t):
+    return 1
+```
+
+### Forgetting to Always Include the Skip Option
+At each position in `s`, you must always consider skipping the current character, regardless of whether it matches `t[j]`. A common mistake is only recursing when characters match, which misses valid subsequences that use later occurrences of the same character.
+
+```python
+# Wrong: Only recurses on match
+if s[i] == t[j]:
+    return dfs(i + 1, j + 1)
+
+# Correct: Always skip, optionally match
+res = dfs(i + 1, j)  # Always include skip
+if s[i] == t[j]:
+    res += dfs(i + 1, j + 1)  # Add match option
+```
+
+### Integer Overflow in Large Inputs
+The number of distinct subsequences can grow exponentially. In languages with fixed-size integers, the result may overflow. Some implementations use unsigned integers or modular arithmetic to handle this, depending on the problem constraints.

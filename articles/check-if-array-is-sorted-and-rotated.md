@@ -642,3 +642,18 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check the Wrap-Around
+A sorted and rotated array is circular, so you must compare the last element with the first element. Using `nums[i] > nums[i + 1]` without modulo wrapping misses the case where the "break" occurs between the last and first elements.
+```python
+# Wrong: if nums[i] > nums[i + 1]
+# Correct:
+if nums[i] > nums[(i + 1) % N]
+```
+
+### Expecting Strictly Increasing Order
+The problem allows non-decreasing order (duplicates are permitted). Checking for strict inequality `nums[i] >= nums[i+1]` instead of `nums[i] > nums[i+1]` incorrectly flags valid arrays like `[1, 1, 1]` or `[2, 2, 3, 1, 1]` as invalid.

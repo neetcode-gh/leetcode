@@ -976,3 +976,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Distinguishing Left and Right Children in Serialization
+
+A serialization like `"1,2,null"` is ambiguous without structure markers. The value 2 could be a left child or right child. Always use a consistent format that distinguishes left from right, such as `"value,left_serialization,right_serialization"` with explicit null markers for missing children.
+
+### Adding Duplicates Multiple Times to the Result
+
+When the same subtree structure appears three or more times, you should only add one representative to the result list. Track how many times each serialization has been seen and only add to the result on the second occurrence, not subsequent ones.
+
+### Quadratic Space from String Concatenation
+
+Naive string serialization creates strings proportional to subtree size, leading to O(n^2) total space for all serializations. The optimized approach assigns unique integer IDs to each subtree structure, keeping the representation size constant regardless of subtree depth.

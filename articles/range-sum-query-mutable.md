@@ -2982,3 +2982,19 @@ class NumArray {
     - $O(\log n)$ for each $update()$ function call.
     - $O(\log n)$ for each $sumRange()$ function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Update Value with Delta
+
+When updating a position, some implementations expect the new value while others expect the change (delta) from the old value. In a Fenwick tree, you typically need to compute `diff = newValue - oldValue` and propagate this difference. Passing the new value directly without computing the delta corrupts the tree, causing all subsequent queries to return incorrect results.
+
+### Wrong Index Manipulation in Fenwick Tree
+
+Fenwick trees use 1-based indexing internally because the operation `index & -index` gives 0 for index 0, causing an infinite loop. Forgetting to convert between 0-based problem indices and 1-based tree indices leads to skipped elements or out-of-bounds access. Always add 1 when accessing the tree and remember the tree array needs size `n + 1`.
+
+### Incorrect Segment Tree Range Boundaries
+
+In segment tree queries, the condition for checking if the current segment is completely outside the query range must be `start > right || end < left`, not using `>=` or `<=`. Similarly, checking if the segment is completely inside should be `start >= left && end <= right`. Mixing up these conditions causes partial overlaps to be incorrectly handled, returning wrong sums or missing contributions.

@@ -1038,3 +1038,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using the Same Element Twice
+You cannot use the same element twice to form a pair. When using a hash map, ensure you check that the found index differs from the current index, or use one-pass where you only look at previously seen elements.
+```python
+# Wrong: might return [i, i] when nums[i] * 2 == target
+if diff in indices:
+    return [i, indices[diff]]
+# Correct: ensure different indices
+if diff in indices and indices[diff] != i:
+    return [i, indices[diff]]
+```
+
+### Returning Values Instead of Indices
+The problem asks for indices, not the values themselves. A common mistake is returning the two numbers that sum to the target rather than their positions in the array.
+
+### Handling Duplicate Values
+When building a hash map with values as keys, duplicate values overwrite earlier indices. In the two-pass approach, this still works because you check `indices[diff] != i`. In the one-pass approach, you check for the complement before inserting the current element.
+
+### Wrong Complement Calculation
+The complement should be `target - nums[i]`, not `nums[i] - target`. Getting this backwards will search for the wrong value.

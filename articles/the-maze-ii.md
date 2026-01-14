@@ -975,3 +975,19 @@ struct Heap<T> {
 - Space complexity: $O(m \cdot n)$
 
 >  Where $m$ and $n$ are the number of rows and columns in `maze`.
+
+---
+
+## Common Pitfalls
+
+### Stopping BFS on First Arrival at Destination
+
+Unlike standard BFS where the first path to a node is the shortest, the ball can reach the same position via paths of different lengths due to variable rolling distances. You must continue exploring until all shorter paths are exhausted. The correct approach is to only finalize a distance when extracted from a priority queue or when no shorter path exists.
+
+### Counting Distance Incorrectly During Rolling
+
+The ball rolls through multiple cells before stopping, and each cell traversed counts as one unit of distance. A common error is counting only the stopping position or miscounting the cells rolled. Increment the counter inside the while loop as the ball moves, not after it stops.
+
+### Forgetting to Step Back After Hitting a Wall
+
+The rolling loop continues until the ball hits a wall or boundary, meaning the final position is invalid. You must subtract the direction vector once to get the actual stopping position. Forgetting this step causes the ball to be placed inside walls or outside the maze.

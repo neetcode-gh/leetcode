@@ -271,3 +271,17 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $N$ is the length of the input list
+
+## Common Pitfalls
+
+### Forgetting the All-Nines Case
+
+When all digits are `9` (e.g., `9 -> 9 -> 9`), adding one requires a new node at the front. Without a sentinel node or explicit handling, you may return a result missing the leading `1`, producing `0 -> 0 -> 0` instead of `1 -> 0 -> 0 -> 0`.
+
+### Processing Left-to-Right Instead of Right-to-Left
+
+Unlike arrays, singly linked lists cannot be traversed backwards. Naively incrementing from the head ignores how addition propagates carries from the least significant digit. This leads to incorrect results when carries need to cascade through multiple nodes.
+
+### Not Tracking the Rightmost Non-Nine Node
+
+The key insight is that only trailing nines become zeros, and the rightmost non-nine digit increments. Failing to track this node forces you to either reverse the list or use recursion, both adding unnecessary complexity or space overhead.

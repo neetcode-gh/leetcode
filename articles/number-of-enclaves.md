@@ -1243,3 +1243,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
+
+---
+
+## Common Pitfalls
+
+### Counting All Land Cells Instead of Enclaves Only
+
+A common mistake is to count all land cells that are not on the boundary. However, an enclave is defined as land that cannot reach any boundary cell through adjacent land connections. Interior land cells connected to boundary land are not enclaves and must be excluded from the count.
+
+### Starting DFS/BFS From Interior Cells Instead of Boundary
+
+The efficient approach starts traversal from boundary land cells and marks all reachable land. Starting from each interior cell and checking if it can reach the boundary is much slower and prone to errors. Always initiate searches from boundary cells to find non-enclave land.
+
+### Off-by-One Errors in Boundary Detection
+
+When checking if a cell is on the boundary, ensure you correctly identify cells where row equals 0 or `ROWS - 1`, and column equals 0 or `COLS - 1`. Using incorrect boundary conditions (like `row == ROWS` instead of `row == ROWS - 1`) will cause cells to be misclassified as boundary or interior cells.

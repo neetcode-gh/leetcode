@@ -436,3 +436,15 @@ struct Heap<T> {
 * Space complexity: $O(n)$
 
 > Where $n$ is the size of input array, $k$ is the number of seconds.
+
+---
+
+## Common Pitfalls
+
+### Using a Min-Heap Instead of Max-Heap
+
+This problem requires finding the maximum element repeatedly. Using a min-heap by mistake will give you the smallest pile instead of the richest one. In languages like Python where heapq is a min-heap by default, you need to negate values to simulate a max-heap.
+
+### Integer Overflow When Summing
+
+When calculating the final sum of remaining gifts, the result can exceed the range of a 32-bit integer if the input contains large values. Use a 64-bit integer type (like `long` in Java or `int64` in Go) for the sum to avoid overflow.

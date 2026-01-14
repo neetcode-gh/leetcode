@@ -1009,3 +1009,27 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Losing Track of Original Indices
+
+After sorting tasks by enqueue time, the original indices get shuffled. Failing to preserve and correctly reference the original task indices leads to returning the wrong execution order. Always attach the original index to each task before any sorting operation.
+
+### Incorrect Heap Comparison Priority
+
+The heap must prioritize by processing time first, then by original index for ties. Reversing this order or forgetting the tiebreaker causes incorrect task selection when multiple tasks have the same processing time.
+
+### Integer Overflow in Time Calculation
+
+When summing processing times, the cumulative time can exceed the 32-bit integer range for large inputs. Using a `long` or 64-bit integer for the time variable prevents overflow errors that lead to incorrect task availability checks.
+
+### Not Handling CPU Idle Time
+
+When no tasks are available in the heap but tasks remain pending, the CPU must jump forward in time to the next task's enqueue time. Forgetting this case causes an infinite loop or incorrect scheduling when there are gaps between task arrivals.
+
+### Inefficient Available Task Selection
+
+Using a list and sorting it each iteration instead of a proper min-heap results in $O(n^2 \log n)$ time complexity. The heap data structure is essential for efficiently selecting the minimum processing time task in $O(\log n)$ time.

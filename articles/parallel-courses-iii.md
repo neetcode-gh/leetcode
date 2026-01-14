@@ -1021,3 +1021,27 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
+
+---
+
+## Common Pitfalls
+
+### Confusing This With the Basic Parallel Courses Problem
+
+Unlike the simpler version where each course takes one semester, this problem assigns different durations to each course. The answer is not just the longest path by node count, but the longest path by total time. Each course's duration must be added to the path weight.
+
+### Incorrect Initialization of Course Times
+
+When using topological sort, each course's initial time should be its own duration, not zero. Failing to initialize `maxTime[i] = time[i]` means courses with no prerequisites will incorrectly have zero completion time.
+
+### Building the Adjacency List in the Wrong Direction
+
+For the DFS approach, edges should point from prerequisites to dependent courses (forward direction). For some formulations, you might need to reverse this. Mixing up directions leads to computing minimum time to reach a course instead of minimum time from a course to complete all dependents.
+
+### Forgetting That Parallel Execution Means Taking the Maximum
+
+When a course has multiple prerequisites, it cannot start until all prerequisites complete. This means taking the maximum completion time among all prerequisites, not the sum. Using addition instead of max will drastically overcount the total time.
+
+### Off-By-One Errors With 1-Indexed Courses
+
+Course numbers are often 1-indexed in the input, but the time array is 0-indexed. Accessing `time[course]` instead of `time[course - 1]` causes array index out of bounds or incorrect time values.

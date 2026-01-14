@@ -1474,3 +1474,17 @@ class Solution {
 
 - Time complexity: $O(n\log n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Only Counting LIS Length Without Tracking Count
+
+This problem requires counting how many subsequences achieve the maximum length, not just finding the length itself. A common mistake is to reuse standard LIS code that only tracks length. You must maintain both the length and the count of subsequences reaching that length at each position.
+
+### Resetting Count Instead of Accumulating
+
+When finding a subsequence of the same maximum length, you should add to the count, not reset it. Only reset the count when you find a strictly longer subsequence. Confusing these cases leads to undercounting valid subsequences.
+
+### Using Non-Strict Inequality for Increasing Check
+
+The problem asks for strictly increasing subsequences. Using `nums[j] >= nums[i]` instead of `nums[j] > nums[i]` will incorrectly include equal elements, leading to wrong answers on inputs with duplicate values.

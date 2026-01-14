@@ -390,3 +390,34 @@ From this [Stack Overflow](https://stackoverflow.com/questions/2869647/why-dfs-a
 > The only reason to use a BFS would be if you know your (undirected) graph is going to have long paths and small path cover (in other words, deep and narrow). In that case, BFS would require proportionally less memory for its queue than DFS' stack (both still linear of course).
 >
 > In all other cases, DFS is clearly the winner.
+
+---
+
+## Common Pitfalls
+
+### Using Simple Visited Set Instead of Three-Color Marking
+A basic visited set cannot distinguish between nodes currently being processed (in the current DFS path) and nodes fully processed. This fails to detect cycles properly, as revisiting a completed node is valid but revisiting a node in the current path indicates a cycle.
+```python
+# Wrong: simple visited set
+if node in visited:
+    return True  # Doesn't distinguish cycle from valid revisit
+visited.add(node)
+```
+
+### Not Checking That Leaf Nodes Equal Destination
+A leaf node (no outgoing edges) represents the end of a path. If any leaf is not the destination, the answer is false. Forgetting this check allows paths that end at wrong nodes to be accepted.
+```python
+# Wrong: missing leaf node check
+if len(graph[node]) == 0:
+    return True  # Should be: return node == destination
+```
+
+### Treating Destination with Outgoing Edges as Valid
+The destination must be a true endpoint with no outgoing edges. If the destination has outgoing edges, paths can continue beyond it, violating the requirement that all paths terminate at the destination.
+```python
+# Wrong: not checking destination has no outgoing edges
+# If graph[destination] is non-empty, paths continue past destination
+```
+
+### Not Handling Disconnected Nodes or Unreachable Destination
+If the source cannot reach the destination at all, or if some paths lead to dead ends that are not the destination, the answer should be false. Failing to explore all paths from source misses these cases.

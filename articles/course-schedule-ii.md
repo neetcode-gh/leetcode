@@ -1092,3 +1092,66 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
+
+---
+
+## Common Pitfalls
+
+### Confusing Cycle Detection with Visited Tracking
+
+In DFS-based topological sort, you need two separate tracking mechanisms: one for nodes currently in the DFS path (for cycle detection) and one for fully processed nodes. Using only one set leads to either false cycle detection or infinite loops.
+
+```python
+# Wrong: Using single visited set
+def dfs(course):
+    if course in visited:
+        return False  # Incorrectly treats revisit as cycle
+    visited.add(course)
+    for pre in prereq[course]:
+        if not dfs(pre):
+            return False
+    return True
+
+# Correct: Separate cycle and visit tracking
+def dfs(course):
+    if course in cycle:  # Currently in path = cycle
+        return False
+    if course in visit:  # Already processed = skip
+        return True
+    cycle.add(course)
+    for pre in prereq[course]:
+        if not dfs(pre):
+            return False
+    cycle.remove(course)
+    visit.add(course)
+    return True
+```
+
+### Building the Graph in the Wrong Direction
+
+The prerequisite pair `[a, b]` means "to take course `a`, you must first take course `b`". Building edges in the wrong direction results in an incorrect topological order.
+
+```python
+# Wrong: Edge direction reversed
+for crs, pre in prerequisites:
+    adj[pre].append(crs)  # This builds "pre -> crs" but for Kahn's we may need opposite
+
+# The correct direction depends on your algorithm:
+# For DFS that adds after processing: course -> prerequisites
+# For Kahn's: prerequisite -> course (then reverse) or course -> prerequisite
+```
+
+### Forgetting to Handle Disconnected Courses
+
+Courses with no prerequisites and no dependents still need to be included in the output. Forgetting to iterate over all courses means some valid courses might be missing from the result.
+
+```python
+# Wrong: Only processing courses that appear in prerequisites
+for crs, pre in prerequisites:
+    # Only touches courses mentioned in prerequisites
+
+# Correct: Process all courses from 0 to numCourses-1
+for i in range(numCourses):
+    if indegree[i] == 0:
+        queue.append(i)
+```

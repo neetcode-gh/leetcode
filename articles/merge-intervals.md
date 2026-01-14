@@ -880,3 +880,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the length of the array and $m$ is the maximum start value among all the intervals.
+
+---
+
+## Common Pitfalls
+
+### Using Strict Inequality for Overlap Check
+
+Two intervals overlap when `current.start <= last.end`, not `<`. Intervals `[1, 3]` and `[3, 5]` are considered overlapping and should merge to `[1, 5]`.
+
+### Forgetting to Update the End When Merging
+
+When merging overlapping intervals, the new end should be `max(last.end, current.end)`, not just `current.end`. An earlier interval might extend further than a later-starting one.
+
+### Not Sorting Before Processing
+
+The sorting approach assumes intervals are processed in order of start time. Without sorting, you cannot guarantee that overlapping intervals are adjacent, leading to missed merges.

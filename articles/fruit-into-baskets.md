@@ -1006,3 +1006,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Removing Zero-Count Entries from the Map
+
+When shrinking the window and decrementing fruit counts, forgetting to remove entries with count zero from the hash map causes the map size to incorrectly indicate more than two fruit types. Always check if a count becomes zero and remove that key from the map before checking the size constraint.
+
+### Off-by-One Errors in Window Size Calculation
+
+The window size is `r - l + 1`, not `r - l`. Forgetting the `+1` leads to undercounting the maximum fruits by one. This is especially easy to miss in the advanced sliding window approach where the final answer is `n - l`, which correctly accounts for the inclusive nature of the window.
+
+### Confusing "At Most Two Types" with "Exactly Two Types"
+
+The problem asks for at most two distinct fruit types, not exactly two. Some solutions incorrectly handle the case where all fruits are the same type (only one type present). The window should still be valid when containing just one fruit type, so the condition should check `count.size() > 2`, not `count.size() != 2`.

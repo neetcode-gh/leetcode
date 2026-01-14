@@ -178,3 +178,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Allowing Pointers to Cross Without Proper Bounds
+
+When moving pointers past consecutive matching characters, they can cross each other if the entire remaining string consists of the same character. The inner while loops must check `l <= r` to prevent accessing invalid indices or producing negative lengths.
+
+### Requiring Non-Empty Prefix and Suffix Separately
+
+The operation removes a non-empty prefix and a non-empty suffix of the same character. A common mistake is allowing one side to be empty, which violates the problem constraints. Both pointers must move at least once per valid operation.

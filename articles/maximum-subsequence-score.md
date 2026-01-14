@@ -773,3 +773,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using a Max-Heap Instead of a Min-Heap
+
+To maximize the sum of `k` elements from `nums1`, you need to keep the `k` largest values seen so far. This requires a min-heap so you can efficiently remove the smallest element when the heap exceeds size `k`. Using a max-heap makes it impossible to efficiently evict the smallest element, leading to incorrect tracking of the top `k` values.
+
+### Forgetting to Sort by nums2 in Descending Order
+
+The algorithm relies on processing elements in decreasing order of `nums2` values so that each new element becomes the new minimum. If you sort in ascending order or forget to sort entirely, the minimum tracking breaks and the score calculation becomes incorrect.
+
+### Not Updating the Sum When Removing from the Heap
+
+When the heap size exceeds `k` and you pop the smallest element, you must also subtract that element's value from your running sum. Forgetting to update the sum after removal causes it to include values no longer in the heap, producing inflated and incorrect scores.

@@ -1156,3 +1156,43 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Preorder Instead of Postorder
+
+Deleting leaves must be done bottom-up. If you check a node before processing its children (preorder), you miss newly created leaves when children are deleted.
+
+```python
+# Wrong: preorder - checks before children are processed
+if not root.left and not root.right and root.val == target:
+    return None
+root.left = self.removeLeafNodes(root.left, target)
+root.right = self.removeLeafNodes(root.right, target)
+
+# Correct: postorder - process children first
+root.left = self.removeLeafNodes(root.left, target)
+root.right = self.removeLeafNodes(root.right, target)
+if not root.left and not root.right and root.val == target:
+    return None
+```
+
+### Not Checking Both Conditions for Leaf Deletion
+
+A node should only be deleted if it is both a leaf (no children) AND has the target value. Missing either condition causes incorrect deletions.
+
+```python
+# Wrong: only checks value, deletes non-leaves
+if root.val == target:
+    return None
+
+# Wrong: deletes all leaves regardless of value
+if not root.left and not root.right:
+    return None
+
+# Correct: must be leaf AND have target value
+if not root.left and not root.right and root.val == target:
+    return None
+```

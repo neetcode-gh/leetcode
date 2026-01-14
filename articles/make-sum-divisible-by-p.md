@@ -493,3 +493,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Negative Modulo Results
+
+When computing `(curSum - remain) % p`, the result can be negative in many programming languages. Always add `p` before taking modulo: `(curSum - remain + p) % p`. Failing to do this causes incorrect hash map lookups and wrong answers.
+
+### Not Initializing the Hash Map with {0: -1}
+
+The hash map must start with `{0: -1}` to handle subarrays that start from index 0. Without this initialization, you cannot detect valid subarrays that begin at the first element of the array.
+
+### Returning the Wrong Value When No Valid Subarray Exists
+
+If the minimum length found equals `n` (the entire array), you must return `-1` because removing all elements leaves an empty array, which is invalid. A common mistake is forgetting this edge case and returning `n` instead.

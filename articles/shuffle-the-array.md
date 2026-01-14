@@ -506,3 +506,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Index for the Y Values
+
+The array is structured as `[x1, x2, ..., xn, y1, y2, ..., yn]`, where the `y` values start at index `n`, not index `n-1`. A common mistake is using `nums[n + i - 1]` instead of `nums[n + i]` when pairing `x[i]` with its corresponding `y` value, resulting in incorrect pairings.
+
+### Overwriting Values in In-Place Solutions
+
+When attempting an in-place shuffle without extra space, a frequent error is overwriting values before they have been used. The bit manipulation and multiplication/modulo approaches carefully encode two values in one element to avoid this, but implementing them incorrectly (such as reading from a position after it has already been modified) corrupts the data and produces wrong results.

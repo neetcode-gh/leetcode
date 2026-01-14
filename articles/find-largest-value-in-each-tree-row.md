@@ -961,3 +961,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Empty Tree
+
+Forgetting to check if the root is `null` before processing leads to null pointer exceptions or runtime errors. Always add an early return for the empty tree case, returning an empty list rather than attempting to traverse a non-existent tree.
+
+### Initializing Row Maximum Incorrectly
+
+When tracking the maximum value for each row, initializing `rowMax` to `0` or a small positive number fails for trees with negative values. The correct approach is to initialize `rowMax` with the first node's value in that row, or use `Integer.MIN_VALUE` (or equivalent) to ensure negative values are handled correctly.
+
+### Mixing Up Level Boundaries in BFS
+
+In BFS, you must process all nodes at the current level before moving to the next. A common mistake is not capturing the queue size before the inner loop, causing nodes from the next level to be processed prematurely. Always store `queue.size()` at the start of each level iteration and use that fixed count for the inner loop.

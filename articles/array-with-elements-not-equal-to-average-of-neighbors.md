@@ -681,3 +681,35 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Checking Only One Direction After Swapping
+When fixing a violation by swapping, the swap might create a new violation at the previous position. A single forward pass may not catch all cases, which is why some solutions use both forward and backward passes.
+```python
+# Wrong: only forward pass may leave violations
+for i in range(1, n - 1):
+    if 2 * nums[i] == nums[i-1] + nums[i+1]:
+        nums[i], nums[i+1] = nums[i+1], nums[i]
+# A backward pass is also needed
+```
+
+### Using Division for Average Check
+Using division to check if an element equals the average of its neighbors can introduce floating-point precision issues. Instead, multiply both sides by 2 to avoid division entirely.
+```python
+# Wrong: floating-point comparison
+if nums[i] == (nums[i-1] + nums[i+1]) / 2:
+
+# Correct: integer comparison
+if 2 * nums[i] == nums[i-1] + nums[i+1]:
+```
+
+### Forgetting to Handle Array Boundaries
+The check only applies to elements with both neighbors (indices 1 through n-2). Applying the average check to the first or last element causes index out of bounds errors.
+```python
+# Wrong: starts at index 0
+for i in range(len(nums) - 1):
+    if 2 * nums[i] == nums[i-1] + nums[i+1]:  # i=0 causes nums[-1] access
+```

@@ -1200,3 +1200,26 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Subarray Maximum Instead of Array Maximum
+The problem asks for subarrays where the **array's** maximum element appears at least `k` times, not subarrays where the subarray's maximum appears `k` times. You must first find the global maximum of the entire array, then count its occurrences.
+
+```python
+# Wrong: Finding max within each subarray
+for i in range(n):
+    for j in range(i, n):
+        if nums[i:j+1].count(max(nums[i:j+1])) >= k:  # Wrong max
+
+# Correct: Use the global array maximum
+maxi = max(nums)  # Find once, use for all subarrays
+```
+
+### Off-by-One Error in Counting Valid Subarrays
+When using the sliding window approach, a common mistake is miscounting the number of valid left endpoints. If the window `[l, r]` has exactly `k` occurrences of the max element with the max at position `l`, valid starting positions are `0` through `l` (inclusive), giving `l + 1` subarrays, not `l`.
+
+### Integer Overflow with Large Arrays
+The result can be very large (up to `n * (n + 1) / 2` for an array of size `n`). Using `int` instead of `long` in languages like Java or C++ will cause overflow for large inputs. Always use `long long` or `long` for the result variable.

@@ -1023,3 +1023,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Searching Beyond Array Length
+
+The special value `x` cannot exceed `n` (the array length) since there are at most `n` elements. Searching for values greater than `n` is unnecessary and can lead to incorrect results or wasted computation.
+
+### Using Strict Greater Than Instead of Greater Than or Equal
+
+The problem requires counting elements greater than or equal to `x`, not strictly greater than. Using the wrong comparison operator will lead to incorrect counts and potentially return `-1` when a valid answer exists, or return an incorrect special value.

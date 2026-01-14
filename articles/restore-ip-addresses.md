@@ -585,3 +585,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is equals to $3$ as there are at most three digits in a valid segment and $n$ is equals to $4$ as there are four segments in a valid IP.
+
+---
+
+## Common Pitfalls
+
+### Allowing Leading Zeros in Multi-Digit Segments
+
+Segments like "01" or "001" are invalid in IP addresses, but "0" alone is valid. The validation must specifically reject multi-digit segments that start with zero while accepting single-digit zeros.
+
+### Missing the Upper Bound Check for Segment Values
+
+Each segment must be at most 255. Forgetting to check this constraint or using `< 256` instead of `<= 255` can lead to subtle bugs, especially for three-digit segments like "256" which appear valid at first glance.
+
+### Not Validating Total String Length Early
+
+An IP address can have at most 12 digits (four segments of 3 digits each) and at least 4 digits (four segments of 1 digit each). Failing to check these bounds upfront leads to unnecessary computation on inputs that cannot possibly form valid IPs.

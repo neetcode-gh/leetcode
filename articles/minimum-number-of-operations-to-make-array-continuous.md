@@ -913,3 +913,27 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Remove Duplicates
+
+The continuous array must have `n` unique elements. If you count duplicates when determining how many elements can stay unchanged, you will overcount and return an incorrect (smaller) number of operations. Always deduplicate before processing.
+
+### Using Original Array Length Instead of Unique Count
+
+After removing duplicates, the unique array may be shorter than the original. If you use the original length `n` for window size calculations but iterate over the shorter unique array, your indexing will be off. Use the original `n` for the target range size but the unique array length for iteration bounds.
+
+### Off-by-One in Range Boundary
+
+The valid range for a continuous array starting at value `min` is `[min, min + n - 1]`. A common mistake is using `min + n` as the upper bound, which allows one extra value. This causes the algorithm to count elements that should not be in the window.
+
+### Not Counting the Starting Element
+
+When calculating how many elements are already in the valid range, some implementations forget to count the starting element itself. If the element at position `i` is the minimum, it should always be counted as one element that does not need replacement.
+
+### Binary Search Target Error
+
+When using binary search to find elements in range, the search should find the first position where `nums[j] >= nums[i] + n`. Searching for `nums[j] > nums[i] + n - 1` is equivalent but easy to get wrong. Off-by-one errors in binary search bounds lead to incorrect window sizes.

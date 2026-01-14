@@ -1075,3 +1075,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array
+
+The two-pointer and binary search approaches require a sorted array. Since we only care about the minimum and maximum values in each subsequence (not their order), sorting is valid and necessary. Forgetting to sort leads to incorrect results because the two-pointer logic assumes sorted order.
+
+### Integer Overflow in Power Calculation
+
+Computing `2^(r-l)` can produce astronomically large numbers. Using naive exponentiation without modular arithmetic causes overflow. You must use modular exponentiation or precompute powers with modulo applied at each step to avoid this issue.
+
+### Misunderstanding the Counting Formula
+
+For a valid range from index `l` to `r` where `nums[l]` is the minimum, there are `2^(r-l)` valid subsequences, not `2^(r-l+1)`. This is because we must include `nums[l]` (it's the minimum), but any subset of the remaining `r-l` elements can be included. Off-by-one errors in this exponent are common.

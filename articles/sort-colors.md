@@ -854,3 +854,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Incrementing the Current Pointer After Swapping with the Right Boundary
+
+In the Dutch National Flag algorithm, when you swap the current element with the right boundary (for value 2), you must not increment the current pointer. The swapped element from the right has not been examined yet and could be 0, 1, or 2.
+
+### Using Strict Less Than Instead of Less Than or Equal
+
+The loop condition must be `i <= r` not `i < r`. Using strict less than causes the algorithm to miss processing the element at position `r` when `i` equals `r`, potentially leaving an unsorted element.
+
+### Forgetting to Increment the Left Pointer After Swapping Zeros
+
+When swapping a 0 to the left boundary, both the left boundary pointer and the current pointer must advance. The left boundary moves to make room for the next 0, and the current pointer moves because the swapped element (which came from the left) is guaranteed to be 0 or 1, both of which are already correctly positioned.

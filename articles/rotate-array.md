@@ -850,3 +850,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the language.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle k Greater Than Array Length
+
+When `k` is larger than the array length `n`, rotating by `k` is the same as rotating by `k % n`. Failing to normalize `k` with the modulo operation leads to unnecessary iterations or index out of bounds errors. Always compute `k = k % n` before proceeding.
+
+### Incorrect Reversal Boundaries in the Three-Reverse Approach
+
+In the reverse approach, the three reversals must use precise boundaries: reverse the entire array, then reverse `[0, k-1]`, then reverse `[k, n-1]`. Using wrong indices like reversing `[0, k]` instead of `[0, k-1]` shifts the boundary incorrectly and produces a wrong result.
+
+### Modifying Array While Iterating Without Proper Tracking
+
+In the cyclic replacement approach, failing to track how many elements have been placed can cause infinite loops or incomplete rotations. This happens when `n` and `k` share a common divisor, creating multiple cycles. Always maintain a counter and start new cycles until all elements are moved.

@@ -1078,3 +1078,15 @@ class Solution {
 - Space complexity: $O(w)$
 
 > Where $n$ is the length of the $stones$ array and $w$ is the maximum value in the $stones$ array.
+
+---
+
+## Common Pitfalls
+
+### Using a Min-Heap Instead of Max-Heap
+
+Many languages provide min-heaps by default (like Python's `heapq`). You need to either use a max-heap or negate the values when inserting and extracting. Forgetting this results in smashing the two *smallest* stones instead of the two heaviest.
+
+### Forgetting to Handle the Empty Result Case
+
+After all smashing is complete, the stones array could be empty (all stones canceled out). Returning `stones[0]` without checking if the array is empty causes an index error. Always check if the result is empty and return `0` in that case.

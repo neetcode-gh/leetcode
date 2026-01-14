@@ -1214,3 +1214,27 @@ class Solution {
 - Space complexity: $O(2 ^ n)$
 
 > Where $n$ is the length of the target string, $m$ is the number of stickers and $k$ is the average length of each sticker.
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Stickers Can Be Reused
+
+A common mistake is treating each sticker as a one-time use item. The problem explicitly states that stickers can be used infinitely many times. Your solution must allow revisiting the same sticker multiple times to cover repeated characters in the target.
+
+### Inefficient State Representation
+
+Using the raw target string as the memoization key without normalization leads to redundant computation. Two different orderings of remaining characters (e.g., "abc" and "bac") represent the same problem state. Sorting the remaining string or using character frequency counts as the key significantly reduces the state space.
+
+### Not Pruning Useless Stickers
+
+Trying every sticker at each step without filtering wastes time. If a sticker does not contain the first remaining character of the target, it cannot make progress toward completion. Always check that a sticker can contribute before recursing with it.
+
+### Incorrect Handling of the Impossible Case
+
+Failing to detect when the target cannot be spelled leads to incorrect results or infinite loops. Before starting, verify that every character in the target appears in at least one sticker. During recursion, properly propagate infinity values when no valid solution exists for a subproblem.
+
+### Mutating Shared Data Structures
+
+Modifying the sticker's character count map in place without creating a copy causes incorrect results across recursive branches. Always work with a fresh copy of the frequency map when simulating the use of a sticker to avoid corrupting state for sibling recursive calls.

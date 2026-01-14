@@ -790,3 +790,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle the Last Word
+
+When iterating through the string looking for spaces to identify word boundaries, the last word has no trailing space. A common mistake is failing to reverse the final word because the loop only triggers reversal when encountering a space character.
+
+### Modifying Immutable Strings Directly
+
+In languages where strings are immutable (like Python, Java, and JavaScript), attempting to modify the string in place will fail. You must first convert the string to a mutable data structure like a character array, perform the reversals, then convert back to a string.

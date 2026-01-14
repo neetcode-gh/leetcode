@@ -444,3 +444,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Trailing Spaces
+
+Strings like `"Hello World   "` have trailing spaces after the last word. If you simply scan from the end without first skipping spaces, you will count zero characters. Always skip trailing spaces before counting the last word's length.
+
+### Assuming Single Spaces Between Words
+
+The input can have multiple consecutive spaces between words or at the beginning and end. Code that assumes exactly one space between words may produce incorrect results or fail on edge cases like `"   fly me   to   the moon  "`.

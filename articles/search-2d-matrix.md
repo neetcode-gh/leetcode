@@ -917,3 +917,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of matrix.
+
+---
+
+## Common Pitfalls
+
+### Confusing Row vs Column Indexing
+
+When converting a 1D index to 2D coordinates in the one-pass binary search approach, it is easy to mix up `row = m // COLS` and `col = m % COLS`. Using `ROWS` instead of `COLS` in these formulas will produce incorrect indices and lead to wrong answers or out-of-bounds errors.
+
+### Off-by-One Errors in Row Selection
+
+In the two-pass binary search approach, after identifying the candidate row, forgetting to recalculate `row = (top + bot) // 2` before the second binary search can cause you to search in the wrong row. Similarly, checking `top <= bot` incorrectly after the first loop can lead to false negatives.
+
+### Not Handling Empty Matrix
+
+Failing to check if the matrix is empty or if any row is empty before accessing `matrix[0]` will cause runtime errors. Always validate that both `ROWS > 0` and `COLS > 0` before proceeding with the search.

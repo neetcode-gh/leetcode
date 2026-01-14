@@ -683,3 +683,45 @@ class Solution {
     - $O(m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the number of queries.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error in Prefix Sum Query
+
+A classic mistake is using `prefix[r] - prefix[l]` instead of `prefix[r + 1] - prefix[l]`. The prefix array is 1-indexed to allow easy range queries, so the right endpoint needs the `+1` offset.
+
+```python
+# Incorrect - excludes the element at index r
+res[i] = prefix[r] - prefix[l]
+
+# Correct - includes the element at index r
+res[i] = prefix[r + 1] - prefix[l]
+```
+
+### Checking Only First or Last Character
+
+A vowel string must start AND end with a vowel. Checking only one condition will count words that should not be included.
+
+```python
+# Incorrect - only checks starting character
+if words[i][0] in vowels:
+    cnt += 1
+
+# Correct - checks both first and last characters
+if words[i][0] in vowels and words[i][-1] in vowels:
+    cnt += 1
+```
+
+### Hardcoding Vowels Incorrectly
+
+When using a bitmask or set for vowels, omitting one of the five vowels (a, e, i, o, u) leads to incorrect results. This is especially common when manually constructing the bitmask.
+
+```python
+# Incorrect - missing 'u'
+vowels = set("aeio")
+
+# Correct - all five vowels included
+vowels = set("aeiou")
+```

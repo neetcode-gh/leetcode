@@ -529,3 +529,21 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $n$ and $m$ are the total number of characters in both the arrays $word1$ and $word2$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Final Length Check
+When iterating through one array while comparing to the concatenated string of the other, returning `true` after matching all characters without verifying both strings have the same length. If `word2` is shorter than `word1`, all characters may match but the strings are not equivalent.
+
+```python
+# Wrong: missing final length check
+return True
+
+# Correct: verify all characters were consumed
+return i == len(s1)
+```
+
+### Comparing Array Lengths Instead of Total Characters
+Assuming arrays with the same number of elements will produce equivalent strings. The arrays `["ab", "c"]` and `["a", "bc"]` have different lengths but represent the same string `"abc"`.

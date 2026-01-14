@@ -1174,3 +1174,25 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of items and $E$ is the total number of $beforeItems$ dependencies.
+
+## Common Pitfalls
+
+### Forgetting to Assign Unique Group IDs to Ungrouped Items
+
+Items with `group[i] == -1` must each be assigned a unique group ID. A common mistake is to either skip these items or assign them all to the same group. If ungrouped items share a group ID, they will be forced to appear consecutively in the output, which may violate dependency constraints.
+
+### Only Performing One Level of Topological Sort
+
+This problem requires two separate topological sorts: one for items within groups and one for the groups themselves. Attempting to solve it with a single topological sort will fail because it cannot properly handle the constraint that items in the same group must appear consecutively.
+
+### Ignoring Cross-Group Dependencies When Building the Group Graph
+
+When item A depends on item B and they belong to different groups, B's group must come before A's group. Forgetting to add edges to the group graph for cross-group dependencies will result in incorrect group ordering and wrong answers.
+
+### Not Detecting Cycles in Both Graphs
+
+Cycles can exist in either the item graph or the group graph. If a cycle exists in either graph, no valid ordering exists and an empty array should be returned. Failing to check for cycles in both graphs can lead to infinite loops or incorrect outputs.
+
+### Incorrect Handling of Empty Groups
+
+After topological sorting, some groups may have no items assigned to them. When iterating through the sorted groups to build the final result, failing to handle empty groups gracefully can cause errors or incorrect output.

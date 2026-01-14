@@ -1023,3 +1023,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Ignoring Negative Numbers Can Become Positive
+
+Unlike maximum sum subarray, a very negative product can become the maximum after multiplying by another negative number. Tracking only the current maximum is insufficient. You must track both `curMax` and `curMin` because multiplying `curMin` by a negative number might produce the new maximum.
+
+### Forgetting to Handle Zeros
+
+A zero in the array resets the product to zero and effectively splits the array. After encountering a zero, the subarray must restart fresh. Failing to handle this case causes the algorithm to carry forward zero products incorrectly.
+
+### Not Saving the Previous Maximum Before Updating
+
+When computing the new `curMax` and `curMin`, the calculation for `curMin` may depend on the old value of `curMax`. Updating `curMax` first and then using the new value to compute `curMin` produces wrong results. Always store `curMax * num` in a temporary variable before updating either value.

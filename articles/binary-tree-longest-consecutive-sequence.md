@@ -495,3 +495,24 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the number of nodes in the input tree
+
+---
+
+## Common Pitfalls
+
+### Allowing Decreasing Sequences
+The problem asks for strictly increasing consecutive sequences where each child is exactly `parent.val + 1`. A common mistake is checking for any consecutive values (including decreasing) or allowing gaps.
+```python
+# Wrong: allows decreasing sequences
+if abs(p.val - parent.val) == 1:
+```
+
+### Not Resetting Length When Sequence Breaks
+When the consecutive pattern breaks, the length must reset to 1 (the current node starts a new sequence). Forgetting to reset causes incorrect counts.
+```python
+# Wrong: continues accumulating instead of resetting
+length = length + 1  # should be: length = 1 when pattern breaks
+```
+
+### Forgetting to Handle the Root Node
+The root node has no parent, so attempting to check `parent.val` without a null check causes errors. The root always starts a new sequence of length 1.

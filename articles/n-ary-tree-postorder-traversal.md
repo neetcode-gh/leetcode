@@ -627,3 +627,15 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Appending Node Value Before Processing Children
+
+In postorder traversal, the node's value must be added to the result after all its children have been processed. A common mistake is appending the node's value before or during the iteration over children. This produces preorder output instead of postorder. Always ensure the `res.append(node.val)` statement comes after the loop that recursively processes all children.
+
+### Forgetting to Reverse Children Order in Iterative Approach
+
+When using an explicit stack for iterative postorder traversal, children must be pushed in reverse order so that the leftmost child is processed first. If you push children in their natural order, the rightmost child will be popped and processed first, resulting in incorrect traversal order. Always iterate through children in reverse when adding them to the stack.

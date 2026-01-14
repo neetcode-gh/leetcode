@@ -1074,3 +1074,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Resetting Heights on Zero Cells
+
+When building the height array row by row, encountering a `0` should reset the height to `0` for that column. A common mistake is to simply add the previous height regardless of the current cell value, which incorrectly extends heights through `0` cells and produces invalid rectangles.
+
+### Forgetting Column Rearrangement is Allowed
+
+Unlike the standard largest rectangle in histogram problem, columns can be rearranged here. Attempting to use a monotonic stack approach without sorting the heights misses the key insight. Sorting heights in descending order allows greedy computation of the maximum area at each width.
+
+### Incorrect Area Formula After Sorting
+
+After sorting heights in descending order, the area at position `i` is `(i + 1) * heights[i]`, not `i * heights[i]`. The width is the number of columns considered so far (1-indexed), so using `i` instead of `i + 1` underestimates the width by one column.

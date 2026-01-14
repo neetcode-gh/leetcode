@@ -854,3 +854,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array
+
+The sliding window and binary search approaches only work on a sorted array. Without sorting, elements that could be incremented to match a target value are scattered throughout the array, making it impossible to find contiguous windows efficiently. Always sort first before applying the window techniques.
+
+### Integer Overflow in Cost Calculation
+
+When calculating the cost `(window_size) * target - window_sum`, the multiplication can overflow if using 32-bit integers. For large arrays with values up to 10^5, the product can exceed 2^31. Use `long` or `long long` for the `total` variable and cast appropriately before multiplication.
+
+### Incorrect Window Shrinking Condition
+
+A common mistake is using `>=` instead of `>` when checking if the window is invalid. The condition should be `nums[r] * (r - l + 1) > total + k` (strictly greater), not `>=`. Using `>=` would shrink valid windows prematurely, potentially missing the optimal answer.

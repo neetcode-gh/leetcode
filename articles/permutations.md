@@ -1160,3 +1160,19 @@ class Solution {
 
 - Time complexity: $O(n! * n)$
 - Space complexity: $O(n! * n)$ for the output list.
+
+---
+
+## Common Pitfalls
+
+### Adding Reference Instead of Copy
+
+When a complete permutation is found, you must add a copy of the current permutation list to the result. Adding the reference directly means all entries in the result will point to the same list, which gets modified during backtracking. Always use `perm.copy()`, `new ArrayList<>(perm)`, or equivalent.
+
+### Forgetting to Backtrack
+
+After recursively exploring with an element added to the permutation, you must remove it (backtrack) before trying the next element. Forgetting to pop the element or reset the visited flag results in incomplete exploration of the decision tree and missing permutations.
+
+### Inefficient Element Tracking
+
+Using linear search to check if an element is already in the permutation leads to O(n) overhead per check, resulting in O(n! * n^2) time complexity. Using a boolean visited array or bitmask reduces this to O(1) per check, achieving the optimal O(n! * n) complexity.

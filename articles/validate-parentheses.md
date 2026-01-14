@@ -579,3 +579,29 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Checking Stack Empty Before Popping
+When encountering a closing bracket, you must verify the stack is not empty before checking the top element. Attempting to pop from an empty stack causes an error.
+```python
+# Wrong: crashes on empty stack
+if stack[-1] == closeToOpen[c]:
+# Correct: check stack first
+if stack and stack[-1] == closeToOpen[c]:
+```
+
+### Forgetting to Check if Stack is Empty at the End
+After processing all characters, some opening brackets might remain unmatched. The string `"(()"` processes without errors but leaves `"("` on the stack, making it invalid.
+
+### Mixing Up Opening and Closing Brackets
+When building the bracket mapping, ensure closing brackets map to their corresponding opening brackets, not the other way around. The lookup should happen when you encounter a closing bracket.
+```python
+# Correct mapping: closing -> opening
+closeToOpen = {")": "(", "]": "[", "}": "{"}
+```
+
+### Using Wrong Data Structure
+Using a queue instead of a stack fails because parentheses follow LIFO (last-in, first-out) order. The most recent opening bracket must be closed first, which requires stack behavior.

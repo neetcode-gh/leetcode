@@ -301,3 +301,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space used
 
 >  where $N$ is the length of the input `s`
+
+---
+
+## Common Pitfalls
+
+### Reversing in the Wrong Order
+
+The two-step process must be done in the correct order: first reverse the entire string, then reverse each individual word. Doing it in reverse order (reversing each word first, then the whole string) produces the same result, but the logic is less intuitive when thinking about word order reversal.
+
+### Incorrect Word Boundary Detection
+
+When finding word boundaries, ensure you correctly handle the transition between words and spaces. Off-by-one errors when determining where a word ends can cause characters to be included in the wrong word or skipped entirely.
+
+### Not Handling Edge Cases
+
+Edge cases like a single word with no spaces, or strings that start or end with a space, need careful handling. The algorithm should work correctly regardless of word count or spacing patterns in the input.

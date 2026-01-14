@@ -891,3 +891,15 @@ class Solution {
     - $O((n - k) ^ 2)$ for the output matrix.
 
 > Where $n$ is the size of the given square grid and $k$ is the fixed size of the submatrix window.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Output Matrix Dimensions
+
+For an `n x n` input grid with a `3 x 3` window, the output matrix should be `(n-2) x (n-2)`, not `n x n` or `(n-1) x (n-1)`. This is because the 3x3 window cannot be centered on edge cells. Miscalculating the output dimensions leads to array index out of bounds errors or incorrect results.
+
+### Off-by-One Errors in Window Boundaries
+
+When iterating over the 3x3 window starting at position `(i, j)`, the window spans rows `i` to `i+2` and columns `j` to `j+2` (inclusive). A common mistake is using `i+3` or `j+3` as the upper bound in exclusive loop conditions but then accessing indices incorrectly, or confusing whether loop bounds should be inclusive or exclusive.

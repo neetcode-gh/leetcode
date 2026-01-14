@@ -556,3 +556,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Removing the Wrong Balloon
+
+When encountering consecutive same-colored balloons, some may instinctively remove the first balloon encountered or remove all of them. The correct strategy is to keep the balloon with the maximum removal time and remove all others, minimizing total cost.
+
+### Forgetting to Reset State Between Groups
+
+When processing groups of consecutive same-colored balloons, failing to reset the maximum or sum tracking variables when transitioning to a new color group leads to incorrect calculations. Each group must be processed independently.
+
+### Off-by-One Errors in Group Boundaries
+
+When using two pointers to identify groups of consecutive balloons, it is easy to mishandle the boundary conditions, either including an extra balloon from the next group or missing the last balloon in the current group. Carefully ensure the inner loop condition correctly identifies when colors change.

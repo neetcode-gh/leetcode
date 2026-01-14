@@ -901,3 +901,19 @@ class Solution {
     - $O(n)$ space for the output array.
 
 > Where $n$ and $m$ are the sizes of the arrays $spells$ and $potions$ respectively.
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow in Multiplication
+
+When multiplying `spell * potion`, the result can exceed the range of a 32-bit integer since both values can be up to 10^5, making the product up to 10^10. Always cast to `long` before multiplication or use a 64-bit integer type to avoid overflow and incorrect comparisons.
+
+### Off-by-One Errors in Binary Search
+
+A common mistake is incorrectly calculating the count of successful pairs after binary search. The binary search finds the first index where the condition is satisfied, and the count should be `len(potions) - idx`. Errors occur when using `<=` vs `<` in the binary search condition or when the index represents the wrong boundary.
+
+### Forgetting to Sort the Potions Array
+
+Binary search only works on sorted arrays. A frequent oversight is attempting to use binary search on the original unsorted `potions` array, which leads to incorrect results. The potions array must be sorted first, and for the two-pointer approach, both arrays need to be sorted while preserving the original spell order for the output.

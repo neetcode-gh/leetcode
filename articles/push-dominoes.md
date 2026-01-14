@@ -1477,3 +1477,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for only the output string.
+
+---
+
+## Common Pitfalls
+
+### Ignoring Force Cancellation
+
+When an 'R' force from the left and an 'L' force from the right reach the same domino at equal distances, they cancel out and the domino remains upright. Failing to handle this case by always picking one direction produces incorrect results for inputs like "R...L" where the middle dot should stay as '.'.
+
+### Not Handling Boundary Cases
+
+Dominoes at the edges may only have force from one direction. A domino with 'R' to its left but no 'L' to its right should fall right indefinitely. Similarly, 'L' without a preceding 'R' affects all dots to its left. Forgetting to check boundary conditions leads to index errors or missed updates.
+
+### Incorrect Distance Comparison
+
+When comparing distances from 'R' and 'L' forces, using the wrong comparison operator or miscalculating distances leads to dominoes falling in the wrong direction. The closer force wins, so if `distanceFromR < distanceFromL`, the domino falls right, not left.

@@ -1498,3 +1498,29 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Not Checking Start or End for Obstacles
+If either the starting cell `grid[0][0]` or the destination cell `grid[M-1][N-1]` contains an obstacle, there are zero paths. Forgetting this check leads to incorrect results.
+
+### Incorrect Base Case Initialization
+When filling the first row or first column, all cells after an obstacle should have zero paths. A common mistake is initializing the entire edge with `1`s without considering that obstacles block all subsequent cells.
+```python
+# Wrong: doesn't account for obstacles blocking the path
+for c in range(N):
+    dp[0][c] = 1
+# Correct: stop when hitting an obstacle
+for c in range(N):
+    if grid[0][c] == 1:
+        break
+    dp[0][c] = 1
+```
+
+### Confusing Obstacle Value with Path Count
+In the in-place approach, obstacles are marked as `1` in the input but need to become `0` in the DP array. Confusing these values causes obstacles to be counted as having one path.
+
+### Off-by-One Errors in Grid Iteration
+When iterating bottom-up or right-to-left, ensure loop bounds are correct. Starting at `M-1` and going to `0` requires `range(M-1, -1, -1)` in Python, not `range(M-1, 0, -1)` which skips the first row.

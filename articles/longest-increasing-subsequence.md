@@ -1972,3 +1972,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing the Binary Search Array with the Actual LIS
+
+In the binary search approach, the `dp` array at the end does not contain the actual longest increasing subsequence. It contains the smallest tail elements for subsequences of each length. The length of this array is the LIS length, but the elements themselves may not form a valid increasing subsequence from the original array.
+
+### Using Wrong Binary Search Condition
+
+When finding the position to replace in the `dp` array, you need to find the leftmost position where `dp[pos] >= nums[i]`. Using `>` instead of `>=` can lead to duplicate values being treated as increasing, which violates the strictly increasing requirement.
+
+### Returning Wrong Value in Bottom-Up DP
+
+In the O(n^2) DP approach, the answer is the maximum value across all `dp[i]`, not just `dp[n-1]`. The longest increasing subsequence might end at any index, not necessarily the last one. Returning only the last element of the DP array misses cases where the LIS ends earlier in the array.

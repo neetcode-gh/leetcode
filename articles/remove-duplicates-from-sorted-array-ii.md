@@ -850,3 +850,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Comparing with the Wrong Element
+
+In the optimal two-pointer solution, you should compare `nums[i]` with `nums[l - 2]`, not with `nums[l - 1]`. Comparing with `l - 1` only checks if the current element differs from the previous one, which doesn't prevent more than two consecutive duplicates. You need to look back two positions to ensure at most two occurrences of any value.
+
+### Forgetting the Base Case
+
+Arrays with 2 or fewer elements are already valid (each element can appear at most twice). Some solutions fail to handle these edge cases, leading to index out of bounds errors when checking `nums[l - 2]` with `l < 2`. Always either return early for small arrays or use a condition like `l < 2` to bypass the comparison.
+
+### Modifying the Wrong Position
+
+When using two pointers, the write pointer `l` should advance only after writing a valid element. A common bug is incrementing `l` before writing or writing to the wrong index. The pattern should be: check condition, write to `nums[l]`, then increment `l`. Writing to `nums[l++]` in languages that support it keeps this atomic.

@@ -1507,3 +1507,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Sorting by the Wrong Criterion
+
+Sorting by start time instead of end time (or vice versa without proper handling) leads to suboptimal solutions. While both can work, sorting by end time gives a cleaner greedy solution because the interval that ends earliest always leaves the most room for future intervals. Sorting by start time requires additional logic to handle overlaps correctly.
+
+### Incorrect Overlap Detection
+
+Using `<` instead of `<=` (or vice versa) when checking for overlaps causes off-by-one errors. Intervals `[1, 2]` and `[2, 3]` do NOT overlap because one ends exactly where the other begins. The condition should be `intervals[i][0] >= prevEnd` for non-overlapping, not `intervals[i][0] > prevEnd`.
+
+### Counting Kept Intervals Instead of Removed
+
+Confusing what to count leads to returning the wrong answer. The problem asks for the minimum number of intervals to REMOVE, not the maximum to keep. If you count intervals kept, remember to return `n - kept` as the final answer. This subtle difference causes many incorrect submissions.

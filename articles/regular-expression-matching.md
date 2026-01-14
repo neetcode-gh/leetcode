@@ -1460,3 +1460,27 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $p$.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding How Star Works
+
+The `*` character means "zero or more of the preceding element," not "zero or more of any character." A common mistake is treating `a*` as matching any sequence of characters. In reality, `a*` only matches zero or more 'a' characters. Similarly, `.*` matches zero or more of any single character (because `.` matches any character).
+
+### Forgetting That Star Can Match Zero Occurrences
+
+When encountering `x*` in the pattern, many solutions only consider the case where `x` matches at least one character. However, `x*` can also match zero characters, meaning the entire `x*` portion can be skipped. Both branches must be explored: skip `x*` entirely or consume a matching character while staying on the same pattern position.
+
+### Off-by-One Errors When Checking for Star
+
+The pattern must be checked carefully to see if the next character is `*`. A common bug is checking `p[j]` instead of `p[j+1]` for the star, or failing to verify that `j+1` is within bounds before accessing it. This leads to index out of bounds errors or incorrect pattern matching logic.
+
+### Not Handling Empty String or Pattern Edge Cases
+
+The base cases require careful handling. When the pattern is exhausted (`j == n`), the match is valid only if the string is also exhausted (`i == m`). However, when the string is exhausted but the pattern is not, matching can still succeed if the remaining pattern consists entirely of `x*` pairs. Failing to account for patterns like `a*b*c*` matching an empty string is a common oversight.
+
+### Incorrect DP State Transitions
+
+In the bottom-up DP approach, the iteration order matters. Processing from the end of both strings toward the beginning ensures that required subproblem solutions are available. A common mistake is iterating in the wrong direction or incorrectly referencing `dp[i+1][j+1]` when it has not been computed yet.

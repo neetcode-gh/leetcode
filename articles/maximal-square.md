@@ -1174,3 +1174,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number columns.
+
+---
+
+## Common Pitfalls
+
+### Returning the Side Length Instead of the Area
+
+The DP table stores the side length of the largest square, but the problem asks for the area. Forgetting to square the maximum side length before returning gives an incorrect answer.
+
+### Comparing Characters Instead of Character Values
+
+Matrix elements are characters (`'0'` and `'1'`), not integers. Comparing against integer `0` or `1` instead of character `'0'` or `'1'` causes the condition to always evaluate incorrectly, resulting in wrong DP values.
+
+### Incorrect DP Recurrence Direction
+
+The recurrence `dp[r][c] = 1 + min(dp[r+1][c], dp[r][c+1], dp[r+1][c+1])` assumes processing from bottom-right to top-left. Processing in the wrong direction (top-left to bottom-right without adjusting the formula) references uncomputed values and produces incorrect results.

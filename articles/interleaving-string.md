@@ -1499,3 +1499,19 @@ class Solution {
 - Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of the string $s1$ and $n$ is the length of the string $s2$.
+
+---
+
+## Common Pitfalls
+
+### Skipping the Length Check
+
+A quick optimization that many solutions miss is checking if `len(s1) + len(s2) == len(s3)` upfront. If the lengths do not match, interleaving is impossible regardless of the characters. Skipping this check leads to unnecessary computation and can cause index out-of-bounds errors in some implementations.
+
+### Confusing Position Tracking with Three Indices
+
+Since `k = i + j` always holds (where `k` is position in `s3`, `i` in `s1`, `j` in `s2`), you only need to track two indices. Some implementations incorrectly track all three independently, leading to inconsistent states or missed memoization opportunities. The key insight is that knowing positions in `s1` and `s2` uniquely determines the position in `s3`.
+
+### Greedy Character Matching
+
+When both `s1[i]` and `s2[j]` match `s3[k]`, you cannot greedily choose one over the other. Both branches must be explored. A common bug is to always prefer taking from `s1` (or `s2`) when both match, which fails for cases like `s1 = "a"`, `s2 = "a"`, `s3 = "aa"` where either order works but a greedy approach might get stuck.

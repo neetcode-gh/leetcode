@@ -1755,3 +1755,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Reset Consecutive Late Count
+
+When placing a 'P' (present) or 'A' (absent), the consecutive late count resets to 0. A common mistake is to carry forward the late count, which leads to undercounting valid sequences. Only placing 'L' increments the late counter; all other characters reset it.
+
+### Allowing More Than One Absence
+
+The problem states that a valid record has fewer than 2 absences, meaning at most 1 absence is allowed. Tracking the absence count incorrectly or allowing transitions that would result in 2 or more absences will produce an inflated count.
+
+### Integer Overflow Without Modular Arithmetic
+
+The number of valid records grows exponentially with n, and the problem requires the result modulo 10^9 + 7. Failing to apply the modulo operation after each addition can cause integer overflow, especially in languages with fixed-size integers like Java or C++.
+
+### Incorrect State Transitions for Late Count
+
+The late count can only be 0, 1, or 2. When adding 'L', you transition from late count k to k+1, but only if k < 2. Allowing a transition to late count 3 or mishandling the boundary condition will break the constraint of no more than 2 consecutive lates.
+
+### Misunderstanding the State Space
+
+The DP state requires tracking both the absence count (0 or 1) and the consecutive late count (0, 1, or 2), giving 6 total states per position. Collapsing these into fewer states or incorrectly indexing the state array leads to wrong answers.

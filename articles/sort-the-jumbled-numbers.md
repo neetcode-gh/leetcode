@@ -499,3 +499,17 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Not Handling Zero as a Special Case
+
+When using arithmetic to extract digits, the number zero requires special handling. The while loop `while (n > 0)` never executes for zero, leaving the mapped value uninitialized. You must explicitly handle `n == 0` by directly using `mapping[0]`.
+
+### Using an Unstable Sort Without Preserving Original Order
+
+The problem requires that elements with equal mapped values maintain their original relative order. Using an unstable sort without tracking original indices will produce incorrect results when multiple numbers map to the same value.
+
+### Integer Overflow When Building Mapped Values
+
+For very large numbers, the mapped value can potentially overflow. While this is less common in languages with arbitrary precision integers like Python, in languages like Java or C++ you should be aware of the maximum input constraints to ensure the mapped value fits within the integer type.

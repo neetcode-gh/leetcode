@@ -646,3 +646,13 @@ class MovingAverage {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
+
+## Common Pitfalls
+
+### Dividing by Window Size Before It Is Full
+
+When fewer than `size` elements have been added, the average should be calculated using the actual count of elements, not the window size. Dividing by `size` when only a few elements exist produces incorrect results. For example, with `size = 3` and only one element `5`, the average should be `5.0`, not `5/3 = 1.67`.
+
+### Not Removing the Oldest Element When Window Is Full
+
+When using a running sum approach, forgetting to subtract the element leaving the window causes the sum to grow unbounded. After receiving more than `size` elements, each new element should trigger removal of the oldest one from both the queue and the running sum. Failing to do this results in the average including more elements than the window size allows.

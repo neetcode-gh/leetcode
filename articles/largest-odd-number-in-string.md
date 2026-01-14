@@ -336,3 +336,15 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ for the output string.
+
+---
+
+## Common Pitfalls
+
+### Starting the Search from the Wrong End
+
+To find the largest odd number, you must keep the prefix as long as possible and only trim even digits from the end. Searching from the left or trying to find substrings that don't start at index 0 will miss the optimal answer. The largest odd substring always starts at the beginning of the string and extends to the rightmost odd digit.
+
+### Incorrectly Checking for Odd Digits
+
+A digit is odd if it is 1, 3, 5, 7, or 9. A common mistake is checking the wrong character or using incorrect modulo logic. Remember that `num[i]` is a character, so you need to convert it to its numeric value (e.g., `num[i] - '0'`) before checking if it's odd with `% 2 == 1` or `& 1`.

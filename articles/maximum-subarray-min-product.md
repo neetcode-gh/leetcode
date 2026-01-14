@@ -1581,3 +1581,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow Before Taking Modulo
+
+The min-product can be extremely large (minimum value up to `10^7` times sum up to `10^14`), exceeding 32-bit integer limits. You must use 64-bit integers for intermediate calculations and only apply modulo at the very end when returning the result. Applying modulo during comparisons breaks the max logic since you're comparing reduced values.
+
+### Confusing Min-Product with Other Formulas
+
+The min-product is `min(subarray) * sum(subarray)`, which combines both the minimum element and the subarray sum. This is different from problems involving just the minimum times length, or just the sum. Make sure to compute prefix sums for efficient range sum queries and track minimums correctly.
+
+### Off-by-One Errors with Prefix Sum Boundaries
+
+When using prefix sums, the sum of elements from index `l` to `r` (inclusive) is `prefix[r+1] - prefix[l]`, not `prefix[r] - prefix[l]`. Getting this boundary wrong by one index leads to incorrect subarray sums and wrong answers.

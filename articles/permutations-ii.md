@@ -1502,3 +1502,19 @@ class Solution {
 
 - Time complexity: $O(n! * n)$
 - Space complexity: $O(n! * n)$ for the output list.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array
+
+When using the boolean array approach to skip duplicates, the array must be sorted first so that duplicate values are adjacent. Without sorting, the condition `nums[i] == nums[i-1]` does not correctly identify duplicates, and the algorithm produces duplicate permutations.
+
+### Incorrect Duplicate Skipping Logic
+
+The condition to skip duplicates is subtle: skip when `i > 0 && nums[i] == nums[i-1] && !visit[i-1]`. Mistakenly using `visit[i-1]` instead of `!visit[i-1]` (or vice versa) still produces correct results but may generate duplicates or miss valid permutations. Understanding why we check if the previous duplicate was NOT used is key to correctness.
+
+### Using Wrong Sentinel Values
+
+When marking elements as "used" with a sentinel value (like `Integer.MIN_VALUE` or `-Infinity`), ensure the sentinel cannot appear as a valid input value. If the input can contain the sentinel value, the algorithm incorrectly skips valid elements or includes already-used elements.

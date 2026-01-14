@@ -703,3 +703,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Counting Distinct Strings Out of Order
+
+The k-th distinct string must be found in the original array order, not in any arbitrary order. A common mistake is collecting all distinct strings into a set and then trying to find the k-th one, but sets do not preserve insertion order in all languages. Always iterate through the original array in order when finding the k-th distinct string.
+
+### Returning Before Finding the K-th Distinct String
+
+If there are fewer than `k` distinct strings in the array, the function should return an empty string. Forgetting to handle this edge case or returning the last found distinct string instead of an empty string leads to incorrect results. Always check if `k` reaches zero before returning, and return empty string if the loop completes without finding enough distinct strings.

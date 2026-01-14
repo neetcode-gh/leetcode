@@ -1366,3 +1366,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
+
+## Common Pitfalls
+
+### Sorting by the Wrong Cost Difference
+
+The greedy approach requires sorting by `cost[B] - cost[A]` to determine which people benefit most from going to city B. A common mistake is sorting by `cost[A] - cost[B]` or by individual costs rather than the difference. This leads to suboptimal assignments because you are not correctly identifying the relative advantage of each city for each person.
+
+### Not Enforcing Equal Distribution to Both Cities
+
+The problem requires exactly `n` people to go to city A and `n` people to go to city B. A greedy approach that simply sends each person to their cheaper city without tracking counts will likely result in an unbalanced distribution. Always ensure your solution enforces the constraint that exactly half go to each city.
+
+### Off-by-One Errors in Index Calculation for DP
+
+In the bottom-up DP approach, the person index `i` is derived from `aCount + bCount`. A common error is using `i` instead of `i - 1` when accessing the costs array, or incorrectly computing which person corresponds to a given state. This leads to accessing wrong cost values or array index out of bounds errors.

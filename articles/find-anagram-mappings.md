@@ -558,3 +558,15 @@ class Solution {
 - Space complexity: $O(\log N)$
 
 >  Where $N$ is the number of integers in the list `nums1` and `nums2`.
+
+---
+
+## Common Pitfalls
+
+### Overwriting Indices for Duplicate Values
+
+When using a hash map, storing only a single index per value means duplicate values all map to the same index. If the problem requires distinct mappings for duplicates, use a list of indices or pop from a stack of indices instead.
+
+### Off-by-One Errors in Bit Manipulation
+
+When encoding indices into values using bit shifts, using too few bits causes index collisions for larger arrays. Ensure the shift amount is large enough to accommodate the maximum possible index value.

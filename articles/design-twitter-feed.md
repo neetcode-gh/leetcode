@@ -1795,3 +1795,49 @@ class Twitter {
 - Space complexity: $O(N * m + N * M + n)$
 
 > Where $n$ is the total number of $followeeIds$ associated with the $userId$, $m$ is the maximum number of tweets by any user ($m$ can be at most $10$), $N$ is the total number of $userIds$ and $M$ is the maximum number of followees for any user.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Include User's Own Tweets
+
+When building the news feed, a user should see their own tweets in addition to tweets from people they follow. A common mistake is only iterating through followees without including the user themselves.
+
+```python
+# Wrong - missing user's own tweets
+for followeeId in self.followMap[userId]:
+    # Only gets followees' tweets
+
+# Correct - include user in the feed
+self.followMap[userId].add(userId)  # Add self before iterating
+for followeeId in self.followMap[userId]:
+    # Now includes user's own tweets
+```
+
+### Using Wrong Heap Type or Direction
+
+The heap-based solution requires careful attention to whether you need a min-heap or max-heap. Since we want the most recent tweets (highest timestamp), using a min-heap requires negating timestamps, while a max-heap extracts them directly.
+
+```python
+# With min-heap, negate count to get max behavior
+heapq.heappush(minHeap, [count, tweetId, ...])  # count is negative
+
+# Common mistake: forgetting to negate when using min-heap
+heapq.heappush(minHeap, [self.time, tweetId, ...])  # Wrong if time is positive
+```
+
+### Allowing Self-Follow in Follow Method
+
+While the news feed logic may internally add the user to their own follow set, the `follow()` method should prevent explicit self-following to avoid duplicate entries or unexpected behavior.
+
+```python
+# Wrong - allows self-follow
+def follow(self, followerId: int, followeeId: int) -> None:
+    self.followMap[followerId].add(followeeId)
+
+# Correct - prevent self-follow
+def follow(self, followerId: int, followeeId: int) -> None:
+    if followerId != followeeId:
+        self.followMap[followerId].add(followeeId)
+```

@@ -612,3 +612,27 @@ struct Heap<T> {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the number of squares in `maze`.
+
+---
+
+## Common Pitfalls
+
+### Not Stopping at the Hole During Rolling
+
+Unlike Maze I and II, the ball must stop if it rolls over the hole. A common mistake is letting the ball continue past the hole to the wall. During each roll, check if the current position equals the hole and break the rolling loop immediately if so.
+
+### Incorrect Lexicographic Ordering of Directions
+
+When multiple paths have the same shortest distance, the lexicographically smallest path must be returned. The directions must be ordered as `d`, `l`, `r`, `u` (alphabetically) in the priority queue comparator, or the path strings must be compared correctly when distances are equal.
+
+### Priority Queue Not Comparing Paths Correctly
+
+The priority queue must order states first by distance, then by path string lexicographically. Using only distance comparison or comparing paths incorrectly leads to returning a non-lexicographically-smallest path among equally short paths.
+
+### Returning Path Without Reaching the Hole
+
+The ball must actually fall into the hole, not just pass over or stop adjacent to it. If the destination is never reached by any valid rolling path, return `"impossible"`. Ensure the hole check happens when the ball actually stops at or rolls into the hole position.
+
+### Not Tracking Visited States Properly
+
+Without proper visited tracking, the algorithm may revisit the same position multiple times, leading to infinite loops or incorrect paths. Mark positions as visited only after processing them from the priority queue, not when adding them, to ensure the shortest path is found first.

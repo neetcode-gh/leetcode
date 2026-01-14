@@ -683,3 +683,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the language.
+
+---
+
+## Common Pitfalls
+
+### Checking Only for Case Difference Without Same Letter
+
+A "bad" pair requires two conditions: the characters must be the **same letter** AND have **different cases**. Checking only `s[i] != s[i-1]` is insufficient because characters like 'a' and 'B' are different but not a bad pair. You must also verify they are the same letter when case is ignored.
+
+### Off-by-One Errors in Index Management
+
+When removing a bad pair and backtracking, the index must be decremented by 2 (not 1) to recheck the newly adjacent characters. Using `i -= 1` instead of `i -= 2` causes the algorithm to skip potential new bad pairs created by the removal.

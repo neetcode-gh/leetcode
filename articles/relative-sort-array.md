@@ -1124,3 +1124,15 @@ class Solution {
     - $O(n)$ space for the output list.
 
 > Where $n$ is the size of the array $arr1$, and $m$ is the size of the array $arr2$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort Elements Not in arr2
+
+After placing all elements that appear in `arr2` according to their relative order, the remaining elements must be sorted in ascending order and appended to the result. A common mistake is appending these leftover elements in their original order or in the order they were encountered, rather than sorting them first.
+
+### Modifying arr1 While Iterating Over It
+
+In brute force approaches that mark processed elements (e.g., setting them to -1), care must be taken to handle the iteration correctly. Modifying the array while iterating can lead to skipped elements or incorrect indexing. Using a separate data structure like a hash map to track counts avoids this issue entirely.

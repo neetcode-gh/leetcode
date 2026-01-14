@@ -900,3 +900,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Jump Value with Index
+
+The value `nums[i]` represents the maximum jump length, not the destination index. From position `i`, you can reach any index in `[i + 1, i + nums[i]]`, not just `i + nums[i]`. Treating the jump value as a fixed destination misses valid shorter jumps.
+
+### Not Handling Zero Values Correctly
+
+A zero at position `i` means you cannot move forward from that position. If all paths lead to a position with `nums[i] == 0` before reaching the end, the answer is `false`. Ensure your algorithm properly detects when you are stuck.
+
+### Iterating in the Wrong Direction for Greedy
+
+The greedy approach works backward, updating the goal position. A common mistake is iterating forward and incorrectly maintaining state. When going backward, the condition `i + nums[i] >= goal` correctly checks reachability.

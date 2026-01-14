@@ -838,3 +838,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Middle Character
+
+A common mistake is forgetting that a palindrome can have one character with an odd count placed in the center. After counting all pairs, you must check if any character has a leftover (odd count) and add 1 to the result if so. Without this, you will undercount the length for strings like `"abcba"` where `"c"` can be the center.
+
+### Case Sensitivity
+
+The problem distinguishes between uppercase and lowercase letters (`'A'` and `'a'` are different characters). A frequent error is treating them as the same character or forgetting to handle both cases. Make sure your counting logic accounts for the full character set specified in the problem constraints.

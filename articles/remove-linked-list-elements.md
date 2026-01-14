@@ -1045,3 +1045,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Head Node Removal
+
+When the head node itself contains the target value, returning `head` without adjustment results in incorrect output. This is why a dummy node pointing to the head is essential. The dummy node acts as a stable anchor, and returning `dummy.next` correctly handles cases where the original head is removed.
+
+### Advancing the Pointer After Removal
+
+When removing a node, a common mistake is advancing `curr` or `prev` immediately after the deletion. If you move `curr` forward after setting `prev.next = curr.next`, you skip the node that was just moved into position and may miss consecutive nodes with the target value. Only advance the pointer when no removal occurs; otherwise, keep it in place to check the newly linked node.

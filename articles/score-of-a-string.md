@@ -121,3 +121,13 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Off-by-One Error in Loop Bounds
+
+A frequent mistake is iterating to `n` instead of `n - 1`, causing an index out of bounds error when accessing `s[i + 1]`. Since you compare adjacent pairs, the loop should run from `0` to `len(s) - 2` inclusive, processing `n - 1` pairs for a string of length `n`.
+
+### Forgetting Absolute Value
+
+Some solutions subtract ASCII values without taking the absolute value, resulting in negative contributions to the score. The problem requires the sum of absolute differences, so always wrap the subtraction with `abs()` to handle cases where `s[i] > s[i + 1]`.

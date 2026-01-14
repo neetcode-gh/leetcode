@@ -927,3 +927,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow from Position Numbers
+
+Position numbers double at each level (`2 * num` for left child, `2 * num + 1` for right). In a deep, skewed tree, these values can overflow standard integer types. Use larger types like `unsigned long long` in C++ or `BigInt` in JavaScript, or normalize positions by subtracting the starting position at each level.
+
+### Miscounting the Width
+
+Width is defined as the number of nodes between the leftmost and rightmost positions on a level, inclusive. The formula is `rightmost - leftmost + 1`, not just the difference. Forgetting the `+ 1` gives a width that is one less than correct.
+
+### Incorrect Level Tracking in BFS
+
+When processing nodes level by level, you must correctly identify the first node of each new level to record its starting position. If you mix up the level boundaries or fail to update the starting position when entering a new level, the width calculation will be incorrect.

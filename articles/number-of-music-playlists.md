@@ -692,3 +692,25 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $g$ is the number of songs to listen and $n$ is the number of different songs.
+
+## Common Pitfalls
+
+### Forgetting the Gap Constraint for Replaying Songs
+
+A song can only be replayed after `k` other songs have been played. This means with `old_songs` distinct songs used, only `old_songs - k` are eligible for replay (if `old_songs > k`). Forgetting this constraint or using `old_songs` directly leads to overcounting.
+
+### Integer Overflow in Modular Arithmetic
+
+Multiplying two values before taking the modulo can overflow 32-bit integers. Always cast to `long` or `long long` before multiplication, then apply modulo. For example, `(n - oldSongs) * count` can overflow if not handled properly.
+
+### Incorrect Base Case Definition
+
+The base case should be `dp[0][0] = 1` (one way to have an empty playlist with zero songs used). Setting `dp[0][n] = 1` or other incorrect initializations will propagate errors through all subsequent states.
+
+### Confusing State Dimensions
+
+The DP state tracks `(playlist_length, distinct_songs_used)`. Confusing which dimension is which, or iterating in the wrong order, leads to accessing uncomputed states or incorrect transitions. In bottom-up, iterate playlist length in the outer loop and distinct songs in the inner loop.
+
+### Not Requiring Exactly N Distinct Songs
+
+The final answer must use exactly `n` distinct songs. A common error is returning `dp[goal][any]` summed over all possible song counts, when it should specifically be `dp[goal][n]`.

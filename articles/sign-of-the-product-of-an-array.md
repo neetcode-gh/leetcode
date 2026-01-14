@@ -315,3 +315,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Zero as a Special Case
+
+If any element in the array is zero, the entire product is zero, and the function should immediately return `0`. A common mistake is forgetting to check for zeros and only focusing on counting or tracking negative numbers, which leads to returning `1` or `-1` when the answer should be `0`.
+
+### Computing the Actual Product
+
+Attempting to calculate the actual product of all elements is unnecessary and dangerous. For large arrays or large values, the product can overflow even 64-bit integers, causing undefined behavior or incorrect results. The problem only asks for the sign, so you should track sign changes without computing the full product.

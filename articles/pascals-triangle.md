@@ -517,3 +517,15 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors with Row Indexing
+
+Pascal's Triangle is often 0-indexed, so row 0 is `[1]`, row 1 is `[1, 1]`, and so on. Confusing 0-indexed and 1-indexed row numbering leads to generating one too many or one too few rows. Always clarify whether `numRows` means the count of rows or the index of the last row.
+
+### Forgetting Edge Elements Are Always 1
+
+The first and last elements of every row are always `1`. When building rows iteratively, only the interior elements (positions 1 through `i-1` for row `i`) need to be computed as sums. Attempting to compute edge elements using the sum formula causes index-out-of-bounds errors.

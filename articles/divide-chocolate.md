@@ -342,3 +342,66 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the number of chunks in the chocolate, and $S$ is the total sweetness of the chocolate bar.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One in Number of Pieces
+
+The problem asks to divide chocolate among `k + 1` people (yourself plus `k` friends). A common mistake is dividing into exactly `k` pieces instead of `k + 1`.
+
+```python
+# Wrong: Dividing into k pieces
+number_of_people = k
+
+# Correct: Dividing into k + 1 pieces (you + k friends)
+number_of_people = k + 1
+```
+
+### Using Wrong Binary Search Variant
+
+This problem requires finding the maximum minimum value, which needs the "upper-bound" binary search variant. Using the standard lower-bound variant leads to incorrect results or infinite loops.
+
+```python
+# Wrong: Standard binary search (finds minimum)
+mid = (left + right) // 2
+
+# Correct: Upper-bound variant (finds maximum)
+mid = (left + right + 1) // 2
+```
+
+### Incorrect Greedy Cutting Logic
+
+When checking if a target sweetness is achievable, a common mistake is cutting as soon as accumulated sweetness equals the target, rather than when it reaches or exceeds the target. This fails when exact division is not possible.
+
+```python
+# Wrong: Only cut when exactly equal
+if cur_sweetness == mid:
+    people_with_chocolate += 1
+
+# Correct: Cut when >= target
+if cur_sweetness >= mid:
+    people_with_chocolate += 1
+    cur_sweetness = 0
+```
+
+### Forgetting to Reset Accumulator After Cutting
+
+After making a cut and counting a valid piece, forgetting to reset the sweetness accumulator causes incorrect counting of subsequent pieces.
+
+```python
+# Wrong: Not resetting after cut
+if cur_sweetness >= mid:
+    people_with_chocolate += 1
+    # Missing: cur_sweetness = 0
+
+# Correct: Reset accumulator after each cut
+if cur_sweetness >= mid:
+    people_with_chocolate += 1
+    cur_sweetness = 0
+```
+
+### Taking the First Valid Piece Instead of the Minimum
+
+Since you get the piece with minimum sweetness and friends take theirs first, the greedy approach naturally gives you the last remaining piece. Some mistakenly try to track the minimum explicitly, which complicates the solution unnecessarily.

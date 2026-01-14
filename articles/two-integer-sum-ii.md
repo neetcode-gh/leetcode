@@ -708,3 +708,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Returning 0-Indexed Instead of 1-Indexed Results
+
+The problem explicitly requires 1-indexed positions in the output. A common mistake is returning `[i, j]` instead of `[i + 1, j + 1]`. Always double-check the problem requirements for indexing conventions, as returning 0-indexed results will be marked as incorrect.
+
+### Not Leveraging the Sorted Property
+
+Since the array is already sorted, the two-pointer approach achieves O(n) time with O(1) space. Using a hash map still works but wastes the sorted property and uses O(n) extra space unnecessarily. While not incorrect, failing to recognize and use the sorted property results in a suboptimal solution.
+
+### Moving Both Pointers in the Same Direction
+
+In the two-pointer approach, when the sum is too large you should move the right pointer left, and when the sum is too small you should move the left pointer right. A common error is moving both pointers in the same direction or moving the wrong pointer, which causes the algorithm to miss the valid pair or loop infinitely.

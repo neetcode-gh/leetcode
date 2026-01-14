@@ -964,3 +964,27 @@ class Solution {
 - Space complexity: $O(m ^ 2)$
 
 > Where $m$ is the size of the $cuts$ array and $n$ is the length of the stick.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Cuts Array
+
+The cuts array is not guaranteed to be sorted in the input. Processing cuts in an unsorted order leads to incorrect subproblem definitions because the algorithm assumes cuts are ordered by position when dividing segments.
+
+### Not Adding Boundary Points (0 and n)
+
+In the bottom-up DP approach, the segment boundaries `0` and `n` must be included in the extended cuts array. Without these endpoints, the algorithm cannot properly represent the full stick or calculate costs for segments touching the edges.
+
+### Using Wrong Cost Calculation
+
+The cost of a cut equals the length of the current segment being cut, not the position of the cut itself. Confusing `cuts[mid]` (the cut position) with `cuts[j] - cuts[i]` (the segment length) produces incorrect results.
+
+### Incorrect Base Case Handling
+
+The base case occurs when no cuts exist within a segment, returning cost `0`. Returning `infinity` or failing to detect when `i > j` in the memoized solution causes the algorithm to miss valid states or compute incorrect minimum values.
+
+### State Space Confusion Between Approaches
+
+The recursive solutions using `(l, r)` positions vs. `(i, j)` cut indices define different state spaces. Mixing these representations or using position-based states without proper indexing leads to exponential state explosion and memory issues for large stick lengths.

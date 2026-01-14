@@ -1171,3 +1171,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
+
+---
+
+## Common Pitfalls
+
+### Starting BFS from Empty Rooms Instead of Treasures
+
+A common mistake is to run BFS from each empty room to find the nearest treasure, resulting in O((m*n)^2) time complexity. The optimal approach is multi-source BFS starting from all treasures simultaneously, which processes each cell exactly once.
+
+### Not Distinguishing Walls from Unvisited Cells
+
+Walls are represented by `-1` and should never be added to the queue or updated. Confusing the wall value with the infinity value (`2147483647`) for empty rooms can cause incorrect distance calculations or infinite loops.
+
+### Updating Distance Before Adding to Queue
+
+In BFS, the distance should be updated when a cell is first discovered (added to the queue), not when it is processed (removed from the queue). Updating too late can result in cells being added to the queue multiple times with different distances, leading to incorrect results and inefficiency.

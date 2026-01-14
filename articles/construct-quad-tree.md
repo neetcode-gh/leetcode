@@ -1467,3 +1467,32 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(\log n)$ for recursion stack.
+
+---
+
+## Common Pitfalls
+
+### Confusing Row and Column Offsets When Dividing Quadrants
+When dividing the grid into four quadrants, the top-left stays at `(r, c)`, but the other three quadrants need correct offsets. A common mistake is swapping row and column increments.
+```python
+# Wrong: Incorrect quadrant positions
+topRight = dfs(n//2, r + n//2, c)  # Should be (r, c + n//2)
+bottomLeft = dfs(n//2, r, c + n//2)  # Should be (r + n//2, c)
+```
+
+### Forgetting to Check All Four Children Are Leaves Before Merging
+When merging four children into a single leaf node, you must verify that all four children are leaves AND have the same value. Checking only the values without confirming they are leaves will incorrectly merge non-leaf nodes.
+```python
+# Wrong: Only checking values
+if topLeft.val == topRight.val == bottomLeft.val == bottomRight.val:
+    return Node(topLeft.val, True)
+
+# Correct: Check isLeaf AND values
+if (topLeft.isLeaf and topRight.isLeaf and
+    bottomLeft.isLeaf and bottomRight.isLeaf and
+    topLeft.val == topRight.val == bottomLeft.val == bottomRight.val):
+    return Node(topLeft.val, True)
+```
+
+### Using Wrong Grid Size for Recursion
+When dividing the grid, the new size should be `n // 2`, not `n - 1` or any other calculation. Each level of recursion should exactly halve the region size since the grid dimension is always a power of 2.

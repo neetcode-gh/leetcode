@@ -1127,3 +1127,19 @@ class Solution {
 - Space complexity: $O(min(n, m))$
 
 > Where $n$ and $m$ are the sizes of the arrays $nums1$ and $nums2$ respectively.
+
+---
+
+## Common Pitfalls
+
+### Not Recognizing This as LCS
+
+Many struggle to identify that this problem is equivalent to finding the Longest Common Subsequence (LCS). The "uncrossed lines" constraint naturally maps to the subsequence property where relative order must be preserved. Failing to make this connection leads to overcomplicated solutions.
+
+### Off-by-One Errors in DP Table
+
+When implementing the bottom-up DP solution, a common mistake is using incorrect indices. The DP table is typically sized `(n+1) x (m+1)` to handle base cases, but accessing `nums1[i]` vs `dp[i+1]` can be confusing. Ensure consistency between array indices and DP table indices.
+
+### Incorrect Pointer Movement in Space-Optimized DP
+
+When using space-optimized DP with a single array, forgetting to track the previous diagonal value before overwriting leads to incorrect results. The `prev` variable must capture `dp[j]` before it gets updated, as this value is needed for the next iteration's diagonal lookup.

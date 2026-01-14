@@ -697,3 +697,33 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Initialize the Hash Map with Zero Difference
+When the running sum (ones - zeros) becomes zero, the entire prefix from index 0 is valid. To handle this case uniformly, you must initialize the map with `{0: -1}` or handle it separately. Missing this causes incorrect results for subarrays starting at index 0.
+```python
+# Wrong: No initialization for diff == 0
+diff_index = {}  # Misses subarrays starting from index 0
+
+# Correct: Initialize with base case
+diff_index = {0: -1}  # or handle diff == 0 separately
+```
+
+### Updating Hash Map Before Checking for Duplicates
+You must check if the current difference already exists in the map BEFORE storing the current index. Storing first will overwrite the earlier index, and you want the earliest occurrence to maximize subarray length.
+```python
+# Wrong: Store before check overwrites earlier index
+diff_index[diff] = i
+if diff in diff_index:
+    res = max(res, i - diff_index[diff])  # Always 0!
+
+# Correct: Check first, then store only if new
+if diff not in diff_index:
+    diff_index[diff] = i
+```
+
+### Using Count of Ones Minus Zeros Without the Conversion Trick
+The key insight is treating 0s as -1s so that equal counts yield a sum of 0. If you track ones and zeros separately without using this transformation, you cannot efficiently detect when a subarray has equal counts using the hash map approach.

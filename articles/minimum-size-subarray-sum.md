@@ -677,3 +677,19 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Strict Equality Instead of Greater-Than-or-Equal
+
+The problem asks for sum greater than or equal to `target`, not exactly equal. A common bug is checking `if (sum == target)` instead of `if (sum >= target)`. This causes the algorithm to miss valid subarrays where the sum exceeds the target, often returning 0 when a valid answer exists.
+
+### Not Handling the No-Solution Case
+
+When no subarray sums to at least `target`, you must return 0. Initializing `res` to `n + 1` or infinity and forgetting to check this at the end leads to returning invalid values. Always verify whether `res` was ever updated before returning it.
+
+### Shrinking the Window Too Aggressively
+
+In the sliding window approach, some implementations shrink the window by moving the left pointer multiple times in a single iteration without rechecking the sum condition. The correct approach uses a while loop that continues shrinking only as long as `sum >= target`, updating the minimum length at each valid position.

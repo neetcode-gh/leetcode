@@ -1984,14 +1984,14 @@ This is the **same idea as divide and conquer**, but done **iteratively** instea
 We repeatedly merge the lists in **pairs**:
 
 - In one pass:
-  - Merge list 0 and list 1 → get M0  
-  - Merge list 2 and list 3 → get M1  
-  - Merge list 4 and list 5 → get M2  
-  - … and so on.
+  - Merge list 0 and list 1 -> get M0
+  - Merge list 2 and list 3 -> get M1
+  - Merge list 4 and list 5 -> get M2
+  - ... and so on.
 - After this pass, we have fewer lists (about half as many).
 - Repeat this process on the new list of merged lists until only **one** list remains.
 
-Each pairwise merge is just the usual **merge of two sorted linked lists**.  
+Each pairwise merge is just the usual **merge of two sorted linked lists**.
 By always merging lists two at a time, the total work is efficient and structured, similar to the merge step in merge sort.
 
 ### Algorithm
@@ -2460,3 +2460,27 @@ class Solution {
 - Space complexity: $O(k)$
 
 > Where $k$ is the total number of lists and $n$ is the total number of nodes across $k$ lists.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Empty Lists in the Input Array
+
+The input array `lists` may contain `null` or empty linked lists. Failing to check for these before accessing node values will cause null pointer exceptions. Always verify that a list is non-empty before processing it.
+
+### Forgetting to Advance the Chosen List's Pointer
+
+After selecting the smallest node from among the `k` lists, you must move that list's head pointer to the next node. Forgetting this step causes an infinite loop where the same node is repeatedly selected.
+
+### Incorrect Comparator for Min-Heap
+
+When using a priority queue or min-heap, the comparator must compare node values correctly. In some languages, the default heap is a max-heap (like Python's `heapq` with negative values or C++'s `priority_queue`). Using the wrong comparison direction results in a max-heap instead of a min-heap, producing an incorrectly sorted output.
+
+### Not Using a Dummy Node for the Result List
+
+Building the result list without a dummy head node requires special handling for the first node and complicates the logic. Using a dummy node simplifies the code by allowing uniform treatment of all nodes, then returning `dummy.next` as the result.
+
+### Modifying the Input Lists Array During Iteration
+
+When merging lists one by one or in the divide-and-conquer approach, be careful about how you update the `lists` array. Overwriting elements while still iterating can lead to incorrect merges or skipped lists. Either use a separate array for merged results or iterate carefully with proper indexing.

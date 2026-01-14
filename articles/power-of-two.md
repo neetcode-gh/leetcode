@@ -677,3 +677,15 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Non-Positive Numbers
+
+A common mistake is forgetting that `n` must be strictly positive. Zero and negative numbers cannot be powers of two, but the bit manipulation tricks like `n & (n - 1) == 0` will incorrectly return `true` for `n = 0`. Always check `n > 0` before applying bit operations.
+
+### Integer Overflow in Iterative Approaches
+
+When iteratively multiplying by `2` (e.g., `x *= 2`), the variable can overflow if using a 32-bit integer type. In languages like Java or C++, use a `long` or `long long` type for the accumulator to avoid wrapping around to negative values before reaching large inputs like `2^30`.

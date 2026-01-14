@@ -760,3 +760,58 @@ class WordDictionary {
 - Space complexity: $O(t + n)$
 
 > Where $n$ is the length of the string and $t$ is the total number of TrieNodes created in the Trie.
+
+---
+
+## Common Pitfalls
+
+### Returning True at Any Node Instead of Word-End Nodes
+
+When the search reaches the end of the pattern, you must check if the current node marks the end of a valid word, not just that the node exists. A prefix match is not the same as a word match.
+
+```python
+# Wrong - returns True for any prefix match
+def dfs(j, root):
+    # ... traversal logic ...
+    return True  # Incorrect: "app" would match if "apple" was added
+
+# Correct - check if current node is end of word
+def dfs(j, root):
+    # ... traversal logic ...
+    return cur.word  # Only True if a complete word ends here
+```
+
+### Not Exploring All Children for Wildcard
+
+When encountering a `.` wildcard, you must try all possible children nodes. A common mistake is returning after the first child or not iterating through all 26 possible characters.
+
+```python
+# Wrong - only checks first child
+if c == ".":
+    if cur.children and dfs(i + 1, list(cur.children.values())[0]):
+        return True
+
+# Correct - must try ALL children
+if c == ".":
+    for child in cur.children.values():
+        if dfs(i + 1, child):
+            return True
+    return False
+```
+
+### Confusing Node Existence with Word Existence
+
+When a character is not found in the Trie, return False immediately. However, when using wildcards, absence of any children should also return False, but only after checking all possibilities.
+
+```python
+# Pattern: handle missing paths correctly
+if c == ".":
+    for child in cur.children.values():
+        if child is not None and dfs(i + 1, child):
+            return True
+    return False  # No valid path found
+else:
+    if c not in cur.children:
+        return False  # Character path doesn't exist
+    cur = cur.children[c]
+```

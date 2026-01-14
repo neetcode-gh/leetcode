@@ -1085,3 +1085,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the grid.
+
+---
+
+## Common Pitfalls
+
+### Double Counting Shared Edges
+
+When two adjacent land cells share an edge, that edge should not contribute to the perimeter. A common mistake is to count all 4 sides for every land cell without subtracting the shared edges. Each adjacency between two land cells removes 2 from the total perimeter (1 from each cell).
+
+### Forgetting Boundary Conditions
+
+Edges at the grid boundary always contribute to the perimeter. When checking neighbors, failing to properly handle out-of-bounds indices can cause missed perimeter edges or array index errors. Always verify that neighbor coordinates are within valid grid bounds before accessing them.

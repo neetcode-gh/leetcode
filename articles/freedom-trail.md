@@ -1805,3 +1805,27 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the length of the $ring$ and $m$ is the length of the $key$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Ring is Circular
+
+The distance between two positions on the ring should consider both clockwise and counterclockwise directions. The minimum distance is `min(|i - j|, n - |i - j|)`. Using only the absolute difference ignores the wrap-around path, which may be shorter.
+
+### Not Counting Button Presses
+
+Each character in the key requires one button press after rotating to the correct position. A common mistake is only counting rotation steps and forgetting to add `1` for each character, or adding the total `m` button presses incorrectly.
+
+### Missing Memoization in Recursive Solutions
+
+Without memoization, the recursive solution has exponential time complexity because the same `(ring position, key index)` states are recomputed many times. The state space is only `O(n * m)`, so caching results is essential for efficiency.
+
+### Considering Only One Matching Position
+
+When a character appears multiple times in the ring, you must consider all occurrences and choose the one that minimizes total cost. Greedily picking the closest matching position without considering future characters leads to suboptimal solutions.
+
+### Incorrect State Transition in Bottom-Up DP
+
+In bottom-up approaches, the order of iteration matters. Processing from the last key character backwards and correctly propagating the minimum costs to earlier states is crucial. Reversing the direction or incorrectly indexing the DP table produces wrong answers.

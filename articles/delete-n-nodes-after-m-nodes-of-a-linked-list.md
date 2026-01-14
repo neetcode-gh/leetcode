@@ -291,3 +291,40 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $N$ is the length of the linked list pointed by `head`.
+
+## Common Pitfalls
+
+### Forgetting to Handle the End of the List
+
+When traversing through `m` nodes to keep or `n` nodes to delete, you must check for `null` at each step. If the list ends before completing a full cycle, failing to check will cause a null pointer exception.
+
+```python
+# Wrong: No null check during traversal
+while m_count != 0:
+    last_m_node = current_node
+    current_node = current_node.next  # Crashes if current_node is None
+    m_count -= 1
+
+# Correct: Always check for null
+while current_node is not None and m_count != 0:
+    last_m_node = current_node
+    current_node = current_node.next
+    m_count -= 1
+```
+
+### Not Updating the `lastMNode` Pointer Before Deletion
+
+The `lastMNode` pointer must be updated during the "keep m nodes" phase, not after. If you forget to track the last kept node, you cannot properly link it to the node after the deleted segment.
+
+```python
+# Wrong: lastMNode never gets updated
+while current_node is not None and m_count != 0:
+    current_node = current_node.next
+    m_count -= 1
+
+# Correct: Update lastMNode before moving forward
+while current_node is not None and m_count != 0:
+    last_m_node = current_node
+    current_node = current_node.next
+    m_count -= 1
+```

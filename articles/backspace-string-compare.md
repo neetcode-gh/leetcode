@@ -1029,3 +1029,28 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
+
+---
+
+## Common Pitfalls
+
+### Popping from Empty Stack
+When processing a backspace character, you must check if the stack is non-empty before popping, since backspaces at the start of a string have no effect.
+```python
+# Wrong: unconditional pop
+if char == '#':
+    stack.pop()
+# Right: check before popping
+if char == '#':
+    if stack:
+        stack.pop()
+```
+
+### Processing Strings Left-to-Right in Two-Pointer Approach
+The O(1) space two-pointer solution must iterate from right to left. Going left to right makes it impossible to know how many characters will be deleted ahead of time.
+```python
+# Wrong: left-to-right doesn't work for O(1) space
+for i in range(len(s)):  # can't determine final result this way
+# Right: right-to-left with backspace counting
+for i in range(len(s) - 1, -1, -1):
+```

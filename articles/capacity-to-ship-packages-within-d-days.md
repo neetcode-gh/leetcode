@@ -543,3 +543,21 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Wrong Binary Search Bounds
+The minimum capacity must be at least `max(weights)` (to ship the heaviest package), and the maximum is `sum(weights)` (ship everything in one day). Starting from 0 or 1 leads to invalid states where some packages cannot be shipped.
+
+```python
+# Wrong: minimum capacity too low
+l, r = 1, sum(weights)  # Should be: l = max(weights)
+```
+
+### Miscounting Days in Simulation
+A common mistake is not counting the first day or incrementing the day counter at the wrong time. The ship starts with capacity available on day 1, and a new day begins when the current package cannot fit.
+
+### Using Incorrect Binary Search Condition
+This is a "find minimum satisfying condition" problem. When the capacity works, you should search left (`r = mid - 1`) to find smaller valid capacities. Searching right instead returns a suboptimal answer.

@@ -1440,3 +1440,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Using a Dummy Node for Edge Cases
+
+When `left` equals 1, the head of the list changes after reversal. Without a dummy node pointing to the head, you lose the reference to the new head and cannot return the correct result. The dummy node provides a stable anchor that simplifies edge case handling when the reversal starts at the beginning.
+
+### Forgetting to Reconnect the Reversed Sublist
+
+After reversing the sublist, both ends must be reconnected to the rest of the list. A common mistake is connecting only one end, either forgetting to link the node before position `left` to the new sublist head, or forgetting to link the new sublist tail to the node after position `right`. Both connections are essential.
+
+### Incorrect Pointer Updates During In-Place Reversal
+
+The single-pass reversal approach requires careful tracking of multiple pointers. A frequent error is updating `leftPrev.next` before using it to access the original sublist head. Since `leftPrev.next` initially points to the first node being reversed (which becomes the tail), you must save this reference or use it correctly before overwriting it with the new head.

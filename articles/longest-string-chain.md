@@ -910,3 +910,19 @@ class Solution {
 - Space complexity: $O(n * m)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort by Length
+
+The most critical step is sorting words by length before processing. Without sorting, you may try to build chains from longer words to shorter ones, which violates the chain definition. Always sort in ascending order for bottom-up DP or descending order for top-down approaches to ensure predecessors are processed before their successors.
+
+### Incorrect Predecessor Check
+
+A common mistake is checking if two words differ by exactly one character without verifying the ordering. The predecessor must be formed by *removing* one character from the current word, not by *adding* or *replacing*. For example, "abc" is a predecessor of "abcd" only if you can form "abc" by deleting one character from "abcd" while maintaining the relative order of remaining characters.
+
+### Not Handling Duplicate Words
+
+The input may contain duplicate words. Using a hash map that maps words to indices can cause issues if duplicates exist since later occurrences overwrite earlier ones. Ensure your solution handles this correctly, either by using a set of words or by taking the maximum chain length among duplicates.

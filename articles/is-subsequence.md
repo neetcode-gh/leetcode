@@ -1070,3 +1070,15 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
+
+---
+
+## Common Pitfalls
+
+### Confusing Subsequence with Substring
+
+A subsequence does not require consecutive characters, only that the order is preserved. For example, `"ace"` is a subsequence of `"abcde"`, but `"aec"` is not because the order is violated. Make sure to only advance the pointer in `s` when characters match, not when looking for contiguous matches.
+
+### Forgetting to Handle Empty String Cases
+
+When `s` is empty, it is always a subsequence of any string `t` (including an empty `t`). When `t` is empty but `s` is not, the answer is always `false`. Failing to handle these edge cases can lead to index-out-of-bounds errors or incorrect results.

@@ -623,3 +623,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for the output array.
+
+---
+
+## Common Pitfalls
+
+### Confusing Index Parity with Sign Requirements
+
+A frequent mistake is mixing up which indices should hold positive versus negative numbers. Remember: even indices (0, 2, 4, ...) hold positive numbers, and odd indices (1, 3, 5, ...) hold negative numbers. Getting this reversed produces an invalid result.
+
+### Not Preserving Relative Order
+
+The problem requires maintaining the relative order of positive numbers among themselves and negative numbers among themselves. Simply swapping elements in place without careful tracking can violate this constraint. Using separate lists or two-pointer placement ensures order is preserved.
+
+### Forgetting to Handle Zero
+
+While the problem guarantees no zeros in the input, some implementations incorrectly treat zero as positive (since `0 > 0` is false) or fail to account for the sign check properly. Ensure your sign comparison logic matches the problem constraints exactly.

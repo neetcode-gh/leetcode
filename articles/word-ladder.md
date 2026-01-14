@@ -1762,3 +1762,85 @@ class Solution {
 - Space complexity: $O(m ^ 2 * n)$
 
 > Where $n$ is the number of words and $m$ is the length of the word.
+
+---
+
+## Common Pitfalls
+
+### Returning Distance Instead of Word Count
+The problem asks for the number of words in the transformation sequence, not the number of transformations (edges). Off-by-one errors occur when returning the edge count instead of the node count.
+
+```python
+# Wrong: returns number of transformations
+res = 0  # starts at 0, counts edges
+while q:
+    res += 1
+    # ...
+    if word == endWord:
+        return res  # off by one
+
+# Correct: count includes beginWord
+res = 1  # starts at 1, counts nodes
+```
+
+### Forgetting to Check if endWord Exists in wordList
+If the endWord is not in the word list, transformation is impossible. Skipping this check leads to unnecessary BFS traversal and potential incorrect results.
+
+```python
+# Wrong: missing check
+def ladderLength(beginWord, endWord, wordList):
+    # starts BFS immediately...
+
+# Correct: check first
+if endWord not in wordList:
+    return 0
+```
+
+### Not Marking Words as Visited Before Adding to Queue
+Adding a word to the queue without immediately marking it visited allows the same word to be added multiple times from different neighbors, causing duplicate processing and incorrect distance calculations.
+
+```python
+# Wrong: mark visited when dequeuing
+node = q.popleft()
+visit.add(node)  # too late, duplicates already in queue
+
+# Correct: mark visited when enqueuing
+if nei in words and nei not in visit:
+    visit.add(nei)  # mark immediately
+    q.append(nei)
+```
+
+### Comparing Characters at Same Position in Neighbor Generation
+When generating neighbor words by changing one character, forgetting to skip the original character at each position generates the same word as a "neighbor."
+
+```python
+# Wrong: includes original word as neighbor
+for c in 'abcdefghijklmnopqrstuvwxyz':
+    nei = word[:i] + c + word[i+1:]  # when c == word[i]
+
+# Correct: skip the original character
+for c in 'abcdefghijklmnopqrstuvwxyz':
+    if c == word[i]:
+        continue
+    nei = word[:i] + c + word[i+1:]
+```
+
+### Using DFS Instead of BFS for Shortest Path
+DFS finds *a* path but not necessarily the shortest. BFS guarantees the shortest path in an unweighted graph by exploring all nodes at distance k before distance k+1.
+
+```python
+# Wrong: DFS may find longer path first
+def dfs(word, depth):
+    if word == endWord:
+        return depth
+    for nei in getNeighbors(word):
+        result = dfs(nei, depth + 1)
+        if result:
+            return result  # not necessarily shortest
+
+# Correct: BFS guarantees shortest path
+while q:
+    word = q.popleft()
+    if word == endWord:
+        return distance[word]  # guaranteed shortest
+```

@@ -1027,3 +1027,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $m$ is the number of cells in the $board$ and $n$ is the length of the $word$.
+
+---
+
+## Common Pitfalls
+
+### Not Restoring the Cell After Backtracking
+
+When marking a cell as visited by changing its value (e.g., to `'#'`), forgetting to restore the original character after exploring all neighbors will permanently modify the board. This causes other paths starting from different cells to incorrectly treat valid cells as already visited.
+
+### Checking Visited Before Matching Character
+
+Placing the visited check before the character match check can cause subtle bugs. If a cell is marked visited with a special character like `'#'`, comparing `board[r][c] != word[i]` will correctly fail. However, if using a separate visited structure, the order of checks matters for correctness and clarity.
+
+### Forgetting to Match the First Character Before DFS
+
+Starting DFS from every cell without first checking if `board[r][c] == word[0]` wastes time exploring paths that cannot possibly match the word. While not incorrect, this optimization significantly improves performance on large boards.

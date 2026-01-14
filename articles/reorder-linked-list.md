@@ -1091,3 +1091,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Incorrectly Finding the Middle Node
+
+The slow/fast pointer technique must be initialized correctly. Starting both pointers at `head` versus starting `fast` at `head.next` affects whether `slow` ends at the last node of the first half or the first node of the second half. This off-by-one error leads to incorrect splitting and malformed results.
+
+### Forgetting to Disconnect the Two Halves
+
+After finding the middle, you must set `slow.next = None` to split the list into two independent halves. Without this, the reversal step creates a cycle or corrupts the original list structure, causing infinite loops during merging.
+
+### Losing References During Merge
+
+When interleaving nodes from the first and second halves, each `next` pointer reassignment breaks the original chain. Failing to save `tmp1 = first.next` and `tmp2 = second.next` before modifying pointers causes you to lose track of remaining nodes, resulting in an incomplete or broken list.

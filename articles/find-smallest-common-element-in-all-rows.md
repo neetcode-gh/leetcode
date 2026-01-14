@@ -1197,3 +1197,19 @@ Since we take one element from each row, this approach works correctly if there 
 - Space complexity: $O(n)$
 
 >  where $m$ is the number of rows and $n$ is the number of columns
+
+---
+
+## Common Pitfalls
+
+### Not Handling Duplicates in Non-Decreasing Arrays
+
+The problem states rows are sorted in strictly increasing order, but if the input contains non-decreasing order (with duplicates), the counting approach breaks. An element appearing twice in one row would be counted twice, potentially reaching the row count `n` without actually being present in all rows.
+
+### Returning the First Element Found Instead of the Smallest
+
+When iterating column-by-column or using binary search, ensure you process elements in order from smallest to largest. If you iterate row-by-row first, you might find a common element that is not the smallest one.
+
+### Off-by-One Errors in Binary Search Bounds
+
+When using the improved binary search with position tracking, be careful with the boundary conditions. Returning `-1` too early when `pos[i] >= m` is correct, but forgetting to update positions properly after a failed search can cause infinite loops or missed elements.

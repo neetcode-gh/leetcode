@@ -632,3 +632,13 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Forgetting to Handle All-Nines Input
+
+When the input is `[9, 9, 9]`, every digit carries over and you need a new leading digit. Returning `[0, 0, 0]` instead of `[1, 0, 0, 0]` is a common mistake when the carry-out case is not explicitly handled.
+
+### Modifying the Array While Iterating Forward
+
+Starting from index `0` and adding one there ignores how arithmetic carry propagates from the least significant digit. Always process from the last element toward the first to correctly simulate manual addition.

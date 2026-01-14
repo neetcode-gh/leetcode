@@ -701,3 +701,48 @@ class UndergroundSystem {
 - Space complexity: $O(n + N ^ 2)$
 
 > Where $n$ is the number of passengers, $N$ is the total number of stations, and $m$ is the average length of station name.
+
+---
+
+## Common Pitfalls
+
+### Integer Division Instead of Float Division
+
+When calculating the average time, using integer division will truncate the result. The problem requires a floating-point average, so ensure you cast to float before dividing.
+
+```python
+# Wrong - integer division in some languages
+return totalTime / count  # May truncate in Java/C++
+
+# Correct - explicit float conversion
+return float(totalTime) / count  # Python
+return (double) totalTime / count;  // Java/C++
+```
+
+### Route Key Collision with Simple Concatenation
+
+If station names can contain the delimiter character used in route keys, you may get false matches. For example, stations "A,B" and "C" would collide with "A" and "B,C" if using comma as delimiter.
+
+```python
+# Potential collision issue
+route = startStation + endStation  # "AB" + "C" == "A" + "BC"
+
+# Better - use a delimiter unlikely to appear in station names
+route = startStation + "," + endStation
+
+# Best - use a tuple as key (in languages that support it)
+route = (startStation, endStation)
+```
+
+### Not Cleaning Up Check-In Data
+
+After a passenger checks out, the check-in data is no longer needed. While not strictly incorrect, keeping stale check-in entries can waste memory in long-running systems.
+
+```python
+def checkOut(self, id: int, endStation: str, t: int) -> None:
+    startStation, time = self.checkInMap[id]
+    # ... update route statistics ...
+
+    # Optional cleanup to save memory
+    del self.checkInMap[id]
+```

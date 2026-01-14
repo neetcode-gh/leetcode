@@ -678,3 +678,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Simulating Instead of Counting
+
+The naive approach of simulating the full queue rotation process leads to O(n^2) time complexity. The key insight is that student order does not matter since they can rotate indefinitely. Simply counting how many students prefer each sandwich type is sufficient.
+
+### Not Recognizing the Stopping Condition
+
+The process stops when the top sandwich cannot be taken by any remaining student, not when all sandwiches are processed. If no student wants the current top sandwich, all remaining students will be unable to eat, even if later sandwiches in the stack match their preferences.

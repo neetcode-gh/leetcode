@@ -1730,3 +1730,27 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Confusing with Standard Falling Path Sum
+
+Unlike the standard falling path problem where you move to adjacent columns, this variant requires choosing a different column in each row. Using the adjacent-column logic from the standard problem will produce incorrect results.
+
+### O(n^3) Time Complexity Trap
+
+A naive approach checks all `n` columns from the previous row for each of `n^2` cells, resulting in O(n^3) time. The key optimization is tracking only the two smallest values from each row, since you only need the second smallest when the current column matches the smallest.
+
+### Edge Case with Single Column Grid
+
+When `n = 1`, there is only one column, making it impossible to pick a different column in each row after the first. The answer is simply `grid[0][0]` since a 1x1 grid has only one cell. Failing to handle this edge case causes index errors or infinite loops.
+
+### Incorrect Second Minimum Tracking
+
+When optimizing to O(n^2), you must correctly track both the minimum and second minimum values along with their column indices. Common mistakes include not updating both values properly, using the wrong index for comparison, or forgetting to handle ties when multiple columns have the same minimum value.
+
+### Integer Overflow with Large Negative Values
+
+Grid values can be negative, so initializing with `INT_MIN` as a sentinel can cause overflow when added to grid values. Use a distinct sentinel value or nullable type to distinguish uncomputed states from valid negative sums.

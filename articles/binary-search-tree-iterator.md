@@ -1274,3 +1274,29 @@ class BSTIterator {
 - Space complexity: $O(h)$
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
+
+---
+
+## Common Pitfalls
+
+### Using Preorder or Postorder Instead of Inorder
+BST iterator must return elements in ascending order, which requires inorder traversal (left, root, right). Using preorder or postorder traversal produces elements in the wrong order.
+
+### Forgetting to Traverse the Right Subtree After Popping
+When using the stack-based approach, after popping a node and returning its value, you must push the leftmost path of its right subtree onto the stack. Forgetting this step causes right subtrees to be skipped entirely.
+```python
+# Wrong: just pop and return
+node = stack.pop()
+return node.val
+
+# Correct: also handle right subtree
+node = stack.pop()
+cur = node.right
+while cur:
+    stack.append(cur)
+    cur = cur.left
+return node.val
+```
+
+### Incorrect hasNext() Implementation
+The `hasNext()` method must return `True` if there are more elements to iterate. For the stack-based approach, this means checking if either the stack is non-empty OR the current pointer is not null (depending on the implementation variant).

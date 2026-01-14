@@ -549,3 +549,15 @@ class Solution {
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Length First
+
+If two strings have different lengths, they cannot be anagrams. Skipping this early check means wasting time processing strings that could never match. Always compare lengths first and return `false` immediately if they differ.
+
+### Case Sensitivity Issues
+
+When the problem specifies lowercase letters only (as in this problem), case sensitivity is not an issue. However, if the problem allows mixed case, forgetting to normalize to the same case (e.g., converting both strings to lowercase) will cause incorrect results where "Listen" and "Silent" would wrongly be considered non-anagrams.

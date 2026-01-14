@@ -297,3 +297,13 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the number of elements in `nums`.
+
+## Common Pitfalls
+
+### Forgetting the Empty Array Case
+
+When `nums` is empty, the entire range `[lower, upper]` is missing. Failing to handle this edge case before iterating through the array leads to index out-of-bounds errors or incorrect results. Always check for an empty array first and return `[lower, upper]` as the single missing range.
+
+### Off-by-One Errors in Range Boundaries
+
+A common mistake is using incorrect boundary calculations when constructing missing ranges. For gaps before the first element, the range should be `[lower, nums[0] - 1]`, not `[lower, nums[0]]`. Similarly, for gaps between consecutive elements, the range is `[nums[i] + 1, nums[i + 1] - 1]`. Using `<=` instead of `<` in comparisons or forgetting to add/subtract 1 from boundaries results in including existing elements or missing valid gaps.

@@ -1330,3 +1330,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Original Number Must Be Broken
+
+A common mistake is allowing the original input `n` to remain unbroken. The problem requires at least one split, so returning `n` itself is invalid. For example, `integerBreak(4)` must return `4` (from `2 * 2`), not `4` unchanged. Ensure your base case or initialization forces at least one break for the original number while still allowing subproblems to use values directly.
+
+### Mishandling Small Values of n
+
+The cases `n = 2` and `n = 3` are special because breaking them actually produces a smaller product than keeping them whole (for subproblems). For `n = 2`, breaking gives `1 * 1 = 1` but we must return `1` since we must break. For `n = 3`, breaking gives at best `1 * 2 = 2`. Many solutions fail by not treating these edge cases differently from the general recursive case.
+
+### Using Factors of 1 or Factors Greater Than 4
+
+Breaking off a factor of 1 never helps since `1 * (n-1) < n`. Similarly, keeping any factor greater than 4 is suboptimal because it can always be split into smaller factors with a larger product. For example, `5` should be split into `2 + 3` giving `6` rather than kept as `5`. The optimal solution primarily uses factors of 2 and 3.

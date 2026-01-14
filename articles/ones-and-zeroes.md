@@ -1079,3 +1079,19 @@ class Solution {
 - Space complexity: $O(m * n + N)$
 
 > Where $N$ represents the number of binary strings, and $m$ and $n$ are the maximum allowable counts of zeros and ones, respectively.
+
+---
+
+## Common Pitfalls
+
+### Iterating Forward Instead of Backward in Space-Optimized DP
+
+When using the 2D space-optimized solution, iterating from small values to large values causes the same string to be counted multiple times in one iteration. You must iterate `j` from `m` down to `zeros` and `k` from `n` down to `ones` to ensure each string is used at most once per subset.
+
+### Confusing Zeros and Ones Counts
+
+Mixing up which index stores the count of zeros versus ones leads to incorrect budget checks. Consistently use index `0` for zeros and index `1` for ones (or vice versa) throughout the solution, and ensure the comparison matches this convention.
+
+### Treating This as Unbounded Knapsack
+
+This is a 0/1 knapsack problem where each string can be selected at most once. Solutions that allow selecting the same string multiple times will overcount and return incorrect results. Each string must be processed exactly once, either included or excluded.

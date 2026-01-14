@@ -2443,3 +2443,55 @@ class MyLinkedList {
     - $O(1)$ time for $addAtHead()$, $addAtTail()$.
     - $O(n)$ time for $get()$, $addAtIndex()$, $deleteAtIndex()$.
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Using Wrong Bound Check for addAtIndex vs deleteAtIndex
+
+The `addAtIndex` allows inserting at position `size` (appending), but `deleteAtIndex` does not allow deleting at position `size`. Using the same condition for both causes bugs.
+
+```python
+# addAtIndex: index == size is valid (append)
+def addAtIndex(self, index: int, val: int) -> None:
+    if index > self.size:  # Note: > not >=
+        return
+
+# deleteAtIndex: index == size is invalid
+def deleteAtIndex(self, index: int) -> None:
+    if index >= self.size:  # Note: >= not >
+        return
+```
+
+### Forgetting to Update Size
+
+Every insertion must increment size and every deletion must decrement it. Forgetting this causes subsequent operations to use stale bounds, leading to crashes or incorrect behavior.
+
+```python
+# Wrong: forgot to update size
+def addAtHead(self, val: int) -> None:
+    node = ListNode(val)
+    node.next = self.head.next
+    self.head.next = node
+    # Missing: self.size += 1
+
+# Correct
+def addAtHead(self, val: int) -> None:
+    node = ListNode(val)
+    node.next = self.head.next
+    self.head.next = node
+    self.size += 1
+```
+
+### Incorrect Pointer Order When Inserting
+
+When inserting a node, you must set the new node's `next` pointer before updating the previous node's `next`. Reversing this order loses the reference to the rest of the list.
+
+```python
+# Wrong: loses reference to rest of list
+prev.next = node
+node.next = prev.next  # node.next now points to itself!
+
+# Correct: set new node's next first
+node.next = prev.next
+prev.next = node
+```

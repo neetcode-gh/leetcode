@@ -914,3 +914,19 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Returning Early Without Checking Both Subtrees
+
+A common mistake in the recursive approach is returning as soon as you find `p` or `q`, without considering that the other target might be in a different subtree. The correct approach returns the current node if it matches a target, but the parent call must still check both subtree results to determine if the current node is the LCA.
+
+### Confusing Node Reference with Node Value
+
+The problem asks for the LCA of specific nodes `p` and `q`, not nodes with values `p.val` and `q.val`. Since tree nodes can have duplicate values, you must compare node references (`node == p`) rather than values (`node.val == p.val`). Using value comparison fails when multiple nodes share the same value.
+
+### Mishandling the Case Where One Node is Ancestor of the Other
+
+When `p` is an ancestor of `q` (or vice versa), the LCA is the ancestor node itself. A common bug is failing to recognize this case and continuing to search unnecessarily. In the optimal recursive solution, returning the node immediately when it matches `p` or `q` naturally handles this case, since the other target will be found in that node's subtree.

@@ -1189,3 +1189,19 @@ class Solution {
 - Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the input array and $m$ is the maximum value in the array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array First
+
+Optimal pairs in this problem are always adjacent elements in the sorted array. If you try to form pairs without sorting, you might pair elements that are far apart in value, leading to suboptimal or incorrect results. Always sort the array before applying either the DP or binary search approach.
+
+### Incorrect Greedy Pairing in Binary Search Validation
+
+When validating a threshold in the binary search approach, you must skip both elements when forming a pair (move to `i + 2`), not just one. A common bug is incrementing by 1 after forming a pair, which would allow the same element to be used in multiple pairs. Remember: if `nums[i]` and `nums[i+1]` form a valid pair, jump to index `i + 2` to ensure non-overlapping pairs.
+
+### Not Handling the Edge Case When p Equals Zero
+
+When `p = 0`, no pairs need to be formed, so the answer is always `0` regardless of the array contents. Some solutions fail to handle this edge case and may return incorrect results or encounter errors when attempting to form zero pairs. Always check for `p == 0` at the start and return `0` immediately.

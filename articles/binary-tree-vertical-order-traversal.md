@@ -1157,3 +1157,20 @@ public class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of nodes, $h$ is the height of the tree (i.e. maximum number of nodes in any vertical line of the tree), and $w$ is the width of the tree (i.e. maximum number of nodes in any of the levels of the tree).
+
+---
+
+## Common Pitfalls
+
+### Using DFS Without Tracking Row Index
+DFS does not visit nodes level by level, so nodes in the same column may be visited out of order. Without storing the row index alongside each value, nodes at the same column will appear in traversal order rather than top-to-bottom order, violating the problem's requirement.
+
+### Forgetting to Handle the Left-Before-Right Ordering
+When two nodes share the same row and column (which can happen with certain tree structures), the node that appears first from left to right in the tree should come first in the result. BFS naturally handles this, but DFS with unstable sorting can break this ordering.
+```python
+# Wrong: using regular sort instead of stable sort
+cols[col].sort(key=lambda x: x[0])  # May reorder same-row nodes
+```
+
+### Sorting Columns Instead of Tracking Min/Max
+Sorting all column keys at the end works but is less efficient. A common mistake is not realizing that column indices are consecutive integers from `minCol` to `maxCol`, allowing direct iteration without sorting.

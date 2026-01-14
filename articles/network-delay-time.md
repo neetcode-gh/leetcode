@@ -1470,3 +1470,19 @@ class Solution {
 - Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Returning Max Instead of Checking Unreachable Nodes
+
+The answer is the maximum time to reach any node, but only if all nodes are reachable. Some solutions return the maximum distance without first checking if any node remains at infinity. This returns an incorrect large value instead of -1 when nodes are unreachable.
+
+### Using 1-Based vs 0-Based Indexing
+
+Nodes are numbered from 1 to n, not 0 to n-1. Mixing up indexing when building the adjacency list or distance array causes out-of-bounds errors or skipped nodes. Consistently use either 1-based arrays of size n+1 or subtract 1 from all node numbers.
+
+### Revisiting Nodes Without Proper Checks
+
+In Dijkstra's algorithm, once a node is finalized (popped from the min-heap), its shortest distance is determined. Processing the same node again wastes time and can cause issues in some implementations. Always skip nodes that have already been visited or whose current distance exceeds the known shortest.

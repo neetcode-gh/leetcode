@@ -786,3 +786,16 @@ class Solution {
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of $chars$, $m$ is the number of words and $k$ is the average length of each word.
+
+---
+
+## Common Pitfalls
+
+### Modifying the Original Character Count Map
+
+When checking each word, you must use a fresh copy of the character counts or reset after each word. A common mistake is decrementing the original count map without restoring it, causing subsequent words to have fewer available characters than they should.
+
+### Checking Character Presence Without Frequency
+
+It is not enough to check if a character exists in `chars`; you must verify that the frequency of each character in the word does not exceed its frequency in `chars`. For example, "aab" cannot be formed from "ab" even though both 'a' and 'b' are present.
+

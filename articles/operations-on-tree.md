@@ -1626,3 +1626,19 @@ class LockingTree {
     - $O(1)$ time for each $lock()$ and $unlock()$ function call.
     - $O(n)$ time for each $upgrade()$ function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Checking All Ancestors for Upgrade
+
+The upgrade operation requires that no ancestor of the node is locked. Checking only the immediate parent is insufficient. You must traverse the entire path from the node to the root, verifying each ancestor is unlocked before proceeding.
+
+### Forgetting to Unlock Descendants Before Locking
+
+When upgrade succeeds, all locked descendants must be unlocked before locking the current node. Some solutions lock the node first, which means when traversing descendants, the node itself gets incorrectly counted or unlocked. Process descendants completely before modifying the current node.
+
+### Returning True When No Descendants Are Locked
+
+The upgrade operation requires at least one locked descendant. Even if all other conditions are met (node unlocked, ancestors unlocked), if no descendant is locked, the operation must return `false`. Always verify the locked descendant count is greater than zero before returning success.

@@ -1018,3 +1018,19 @@ class Solution {
 - Space complexity:
     - $O(n)$ for recursion stack.
     - $O(n)$ space for the output string.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Track Consecutive Characters
+
+A common mistake is only checking whether the last character matches the current one. The problem requires preventing three consecutive identical characters, not just two. You must track whether the last two characters are the same before deciding if you can add another of the same character.
+
+### Greedily Using the Same Character Without Switching
+
+Always picking the most frequent character without considering when to switch leads to suboptimal or invalid results. When you have used the most frequent character twice in a row, you must use a different character next, even if the most frequent one still has remaining count. Failing to switch results in either an invalid string or a shorter result than possible.
+
+### Not Handling the Case When No Valid Character Exists
+
+The algorithm must correctly terminate when no valid character can be added. This happens when all remaining characters would create three consecutive identical characters. Forgetting to handle this edge case can lead to infinite loops or incorrect outputs.

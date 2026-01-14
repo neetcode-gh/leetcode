@@ -708,7 +708,7 @@ This makes the problem a **shortest path in an unweighted graph**, so **Breadth 
 BFS explores level by level:
 - Level 1 → amounts reachable using 1 coin
 - Level 2 → amounts reachable using 2 coins
-- First time we reach `amount`, we’ve used the minimum coins.
+- First time we reach `amount`, we've used the minimum coins.
 
 ### Algorithm
 1. If `amount == 0`, return `0`
@@ -983,3 +983,29 @@ class Solution {
 - Space complexity: $O(t)$
 
 > Where $n$ is the length of the array $coins$ and $t$ is the given $amount$.
+
+---
+
+## Common Pitfalls
+
+### Using Greedy Instead of DP
+A common mistake is assuming a greedy approach (always picking the largest coin) works. For `coins = [1, 3, 4]` and `amount = 6`, greedy picks `[4, 1, 1]` (3 coins), but the optimal is `[3, 3]` (2 coins). The problem requires exploring all combinations.
+
+### Incorrect Handling of Impossible Cases
+Forgetting to return `-1` when the amount cannot be formed. Using `0` or leaving the result as infinity/large value causes wrong answers.
+```python
+# Wrong: returns large number instead of -1
+return dp[amount]
+# Correct: check if amount is reachable
+return dp[amount] if dp[amount] != amount + 1 else -1
+```
+
+### Integer Overflow When Adding 1 to Infinity
+When using `INT_MAX` or `Integer.MAX_VALUE` as the "impossible" sentinel, adding `1` causes overflow. Use `amount + 1` as the sentinel instead, since you can never need more than `amount` coins (when using coin value 1).
+```java
+// Wrong: 1 + INT_MAX overflows
+if (result != INT_MAX) res = min(res, 1 + result);
+// Correct: use amount + 1 as sentinel
+int[] dp = new int[amount + 1];
+Arrays.fill(dp, amount + 1);
+```

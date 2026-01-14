@@ -930,3 +930,19 @@ public class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $k$ is the number of cards to pick.
+
+---
+
+## Common Pitfalls
+
+### Treating This as a Standard Two-Pointer Problem
+
+Unlike typical two-pointer problems where pointers move toward each other, this problem requires taking cards from both ends that together form a contiguous "virtual" window. The cards you pick are not contiguous in the original array, which confuses many solvers into incorrect pointer movement logic.
+
+### Off-by-One Errors in Window Boundaries
+
+When using the sliding window approach (finding minimum sum of `n - k` elements), incorrect boundary calculations are common. The window size is `n - k`, not `k`. Additionally, when indexing the right portion of the array, using `n - right` instead of the correct index offset leads to accessing wrong elements.
+
+### Forgetting the Edge Case When k Equals n
+
+When `k` equals the array length, you must take all cards. The sliding window approach would have a window of size 0, which needs special handling to avoid division by zero or invalid array access. Simply return the total sum when `k == n`.

@@ -1326,3 +1326,28 @@ class Solution {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the length of the given string.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort Options Within Braces
+The problem requires the output to be in lexicographically sorted order. Options within braces like `{b,a,c}` must be sorted to `[a,b,c]` before generating combinations, otherwise the final result will be out of order.
+```python
+# Wrong: using options in original order
+options = ['b', 'a', 'c']
+# Correct: sort first
+options.sort()  # ['a', 'b', 'c']
+```
+
+### Incorrect Index Advancement After Closing Brace
+When parsing a brace group, after finding `}`, you must advance the index past the `}` character. Off-by-one errors here cause infinite loops or skipped characters.
+```python
+# Wrong: not advancing past '}'
+while s[pos] != '}':
+    pos += 1
+# Missing: pos += 1 after the loop
+```
+
+### Not Handling Single Characters Outside Braces
+Single characters outside braces (like `a` in `a{b,c}`) should be treated as a group with one option. Forgetting this case causes the character to be skipped entirely in the output.

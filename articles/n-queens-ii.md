@@ -1368,3 +1368,23 @@ class Solution {
 
 - Time complexity: $O(n!)$
 - Space complexity: $O(n)$ for recursion stack.
+
+---
+
+## Common Pitfalls
+
+### Checking Only Columns and Forgetting Diagonals
+
+A frequent mistake is checking only whether a column is occupied while neglecting diagonal conflicts. Queens attack along both diagonals, so you must verify the upper-left diagonal (where `row - col` is constant) and the upper-right diagonal (where `row + col` is constant). Missing either diagonal check will produce incorrect solution counts.
+
+### Incorrect Diagonal Index Calculation
+
+When using arrays to track diagonal occupancy, the negative diagonal `row - col` can produce negative indices. You must offset this value by adding `n` (i.e., use `row - col + n`) to ensure valid array indices. Forgetting this offset causes array index out of bounds errors or incorrect diagonal tracking.
+
+### Forgetting to Backtrack State
+
+After recursively exploring a placement and returning, you must undo the state changes (remove the queen from sets/arrays and reset the board position). Failing to properly backtrack leaves stale state that incorrectly blocks future valid placements, causing the algorithm to miss solutions or count incorrectly.
+
+### Scanning Below Current Row in Safety Check
+
+Since queens are placed row by row from top to bottom, only rows above the current row can contain previously placed queens. A common error is scanning the entire column or both diagonal directions (up and down). This is wasteful at best and can cause incorrect behavior if the board is not properly initialized. Only check upward directions: the column above, upper-left diagonal, and upper-right diagonal.

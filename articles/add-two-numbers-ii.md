@@ -776,3 +776,30 @@ class Solution {
 * Space complexity: $O(m + n)$
 
 > Where $m$ is the length of $l1$ and $n$ is the length of $l2$.
+
+---
+
+## Common Pitfalls
+
+### Adding Digits from Head Instead of Tail
+Unlike the basic "Add Two Numbers" problem, the digits here are stored most-significant-digit first. Trying to add digits directly from the head without reversing or using a stack produces wrong results since you are adding the wrong place values together.
+```python
+# Wrong: adding from head directly
+while l1 and l2:
+    total = l1.val + l2.val  # Misaligned place values
+```
+
+### Forgetting to Handle Lists of Different Lengths
+When lists have different lengths, the shorter list needs to be padded conceptually with leading zeros. Failing to align the lists properly before addition causes incorrect results.
+```python
+# Wrong: assuming lists are same length
+while l1 and l2:  # Stops early when one list ends
+    # ...
+```
+
+### Building Result in Wrong Order
+After computing digits from least to most significant, the result must be constructed so that the most significant digit is at the head. Appending to the tail instead of prepending creates a reversed result.
+```python
+# Wrong: appending to tail
+result.next = ListNode(digit)  # Should prepend: node.next = head; head = node
+```

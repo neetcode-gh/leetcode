@@ -2127,3 +2127,27 @@ class Codec {
     - `Deserialization` : $O(N)$. For deserialization, the space is mostly occupied by the two lists that we use. The space complexity there is $O(N)$. Note that when we re-initialize a list, the memory that was allocated earlier is deallocated by the garbage collector and it's essentially equal to a single list of size $O(N)$.
 
 >  Where $N$ is the number of nodes in the tree.
+
+---
+
+## Common Pitfalls
+
+### Losing Children Count Information
+
+Unlike binary trees where each node has exactly two children slots, n-ary trees have variable numbers of children. Failing to encode how many children each node has makes it impossible to correctly reconstruct the tree during deserialization. Each serialization approach must capture this information somehow (explicit count, sentinels, or parent references).
+
+### Incorrect Character Encoding for Values
+
+When converting node values to single characters using ASCII offsets (like `chr(val + 48)`), values outside the valid range cause issues. This approach only works for small, non-negative integers. Larger values or negative numbers require a different encoding strategy with proper delimiters.
+
+### Mishandling the Children List Initialization
+
+When creating nodes during deserialization, forgetting to initialize the children list (or initializing it as null instead of an empty list) causes null pointer exceptions when adding children later. Always initialize the children collection before attempting to add child nodes.
+
+### Confusing Parent-Child Relationship Direction
+
+In the parent-child ID approach, mixing up which ID refers to the parent versus the child node leads to a completely incorrect tree structure. The serialized data must clearly distinguish between a node's own identity and its parent's identity.
+
+### Off-by-One Errors in Sentinel-Based Approaches
+
+When using sentinels to mark the end of children (like `#`), forgetting to increment the index after consuming the sentinel causes the deserializer to get stuck or skip actual node values. The index must advance both when creating nodes and when encountering sentinels.

@@ -1021,3 +1021,13 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the length of the shortest string and $m$ is the number of strings.
+
+## Common Pitfalls
+
+### Not Handling Empty Strings in the Array
+
+If any string in the input array is empty, the longest common prefix must be an empty string. Failing to check for this case before accessing characters can lead to index out of bounds errors.
+
+### Accessing Characters Beyond String Length
+
+When comparing characters at a given index, you must ensure the index is valid for all strings being compared. A common mistake is to iterate based on one string's length without checking if shorter strings have characters at that position.

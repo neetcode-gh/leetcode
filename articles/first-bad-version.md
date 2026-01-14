@@ -770,3 +770,15 @@ class Solution : VersionControl {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Calculating Midpoint
+
+Using `(l + r) / 2` to calculate the midpoint can cause integer overflow when `l` and `r` are large values. For example, if both are close to `Integer.MAX_VALUE`, their sum overflows to a negative number. Always use `l + (r - l) / 2` or the equivalent in your language to safely compute the midpoint.
+
+### Off-by-One Errors in Loop Conditions
+
+Confusing `l < r` with `l <= r` leads to incorrect results or infinite loops. With `l < r`, the loop terminates when `l == r`, which points to the answer. With `l <= r`, you need a separate variable to track the result. Choose one pattern and apply it consistently, ensuring your boundary updates (`r = m` vs `r = m - 1`) match your loop condition.

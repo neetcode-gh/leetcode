@@ -417,3 +417,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Popping from an Empty Stack on ".."
+
+When encountering `..`, you should only pop from the stack if it is non-empty. Attempting to pop from an empty stack causes runtime errors in some languages, and logically, going to the parent of the root directory should simply stay at the root. Forgetting this check leads to crashes or incorrect path construction.
+
+### Treating "." and ".." as Valid Directory Names
+
+The single dot `.` means "current directory" and should be ignored, while `..` means "parent directory" and triggers a pop operation. A common mistake is pushing these onto the stack as if they were regular directory names, resulting in paths like `/home/./user/../..` instead of the simplified `/home`.
+
+### Not Handling Multiple Consecutive Slashes
+
+Paths like `//home///user` should be treated the same as `/home/user`. When splitting by `/` or processing character by character, multiple consecutive slashes produce empty strings. Failing to skip these empty strings can result in incorrect behavior or extra slashes in the output.

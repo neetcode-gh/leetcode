@@ -661,3 +661,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output list.
+
+---
+
+## Common Pitfalls
+
+### Character vs Integer Comparison
+
+The input is a string where boxes contain '0' or '1' as characters, not integers. Comparing `boxes[i] == 1` instead of `boxes[i] == '1'` will always evaluate to false in most languages, causing the algorithm to miss all balls.
+
+### Incorrect Order of Operations in Two-Pass
+
+In the optimal prefix sum approach, the order of updating `balls`, `moves`, and `res[i]` matters. Adding the current ball before calculating the result will cause off-by-one errors where the ball at position `i` incorrectly contributes to its own cost.
+
+### Off-by-One in Left/Right Contribution Formula
+
+When using the formula `i * leftCount - leftSum` for left contribution, using `i + 1` or indexing errors in prefix arrays can shift all calculations. Carefully verify that prefix arrays are 0-indexed or 1-indexed and adjust formulas accordingly.

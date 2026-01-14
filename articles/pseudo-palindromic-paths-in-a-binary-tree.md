@@ -1664,3 +1664,19 @@ class Solution {
 - Space complexity: $O(h)$
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Backtrack State
+
+When using DFS with a shared count array or bitmask, failing to restore the state after returning from recursive calls corrupts the path information for sibling subtrees. Always undo the toggle operation (XOR back or decrement count) before returning from the current node.
+
+### Checking Palindrome Condition at Non-Leaf Nodes
+
+The pseudo-palindrome check should only occur at leaf nodes (where both left and right children are null). Checking at internal nodes leads to counting incomplete paths and produces incorrect results. Always verify `node.left == null && node.right == null` before evaluating the palindrome condition.
+
+### Misunderstanding the Palindrome Condition
+
+A path can form a palindrome if at most one digit has an odd count (the middle element for odd-length palindromes). Using `odd == 0` instead of `odd <= 1` misses valid paths with odd length. The bitmask check `path & (path - 1) == 0` correctly identifies zero or one bit set.

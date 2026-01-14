@@ -1113,3 +1113,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Answer is Bounded by n+1
+
+The first missing positive is always in the range `[1, n+1]`. Many solutions fail by not recognizing this constraint and trying to handle arbitrarily large numbers. If the array contains `[1, 2, ..., n]`, the answer is `n+1`. This insight is crucial for achieving O(n) time and O(1) space.
+
+### Not Handling Negative Numbers and Zeros
+
+The array can contain negative numbers, zeros, and duplicates. Solutions that use the array itself as a hash map (via negative marking or cycle sort) must first handle or ignore non-positive values. Forgetting to skip or neutralize these values leads to index-out-of-bounds errors or incorrect markings.
+
+### Infinite Loops in Cycle Sort
+
+When using cycle sort, failing to check if `nums[i] != nums[nums[i] - 1]` before swapping causes infinite loops. If the current element equals the element at its target position (duplicate case), you must move forward instead of swapping. Always verify both the value is in range and the target position needs updating.
+
+### Corrupting Original Values Before Using Them
+
+In negative marking approaches, reading `nums[i]` after it has been negated gives the wrong value. Always use `abs(nums[i])` to retrieve the original value when the array has been modified. Similarly, marking a zero requires special handling since negating zero has no effect.

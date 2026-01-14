@@ -827,3 +827,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ and $m$ are the lengths of the given strings $s$ and $p$ respectively. $k$ is the size of the array $removable$.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Binary Search Bounds
+
+When setting up binary search, a common mistake is using incorrect bounds or midpoint calculations. The search space is `0` to `len(removable)`, not `0` to `len(removable) - 1`, because we need to consider removing zero characters as a valid option. Additionally, confusing `l < r` vs `l <= r` loop conditions leads to either infinite loops or missing valid answers.
+
+### Modifying the Original String Instead of Using a Copy
+
+When marking characters as removed (using `'#'` or similar), forgetting to create a fresh copy of the string for each binary search iteration causes state to persist incorrectly. The removed characters from a previous iteration pollute subsequent checks, leading to wrong results.
+
+### Incorrect Subsequence Check Logic
+
+The subsequence check must skip removed indices while still correctly advancing through both strings. A common bug is incrementing the pattern pointer even when the current character is marked as removed, or failing to increment the source pointer when characters do not match. Both lead to incorrect subsequence determinations.

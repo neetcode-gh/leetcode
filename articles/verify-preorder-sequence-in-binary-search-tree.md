@@ -528,3 +528,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the length of `preorder`
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Comparison Operator
+
+When checking if a value violates BST constraints, you must use less than or equal (`<=`) for the minimum limit check, not just less than. BSTs typically do not allow duplicate values, so a value equal to an ancestor it should be greater than is invalid.
+
+### Misunderstanding When to Update the Minimum Limit
+
+The minimum limit should only be updated when you pop elements from the stack (transitioning to a right subtree). A common mistake is updating the limit at the wrong time, such as when pushing elements. The limit represents the most recently left ancestor whose right subtree you are now in.
+
+### Not Maintaining a Decreasing Stack
+
+The stack should maintain a decreasing order from bottom to top. When you encounter a larger value, you pop smaller values to find the correct parent. Forgetting to maintain this invariant or popping incorrectly will cause the algorithm to fail on valid preorder sequences.

@@ -1064,3 +1064,28 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Only Checking the Root Node
+A tree is balanced only if every node (not just the root) has subtrees with heights differing by at most 1. Checking only the root misses imbalanced subtrees deeper in the tree.
+```python
+# Wrong: only checking root's children
+return abs(height(root.left) - height(root.right)) <= 1
+# Right: recursively check all nodes
+return abs(left - right) <= 1 and isBalanced(root.left) and isBalanced(root.right)
+```
+
+### Returning Height of 0 for Leaf Nodes
+A leaf node has height 1, not 0. Returning 0 for leaves causes off-by-one errors in height calculations. The base case should return 0 only for null nodes.
+```python
+# Wrong: returning 0 for leaves
+if not root.left and not root.right:
+    return 0
+# Right: null nodes return 0, leaves return 1
+if not root:
+    return 0
+return 1 + max(height(root.left), height(root.right))
+```

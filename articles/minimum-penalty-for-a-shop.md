@@ -1017,3 +1017,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Closing Time Semantics
+
+The shop closes at hour `i` means it is open during hours `0` to `i-1` and closed from hour `i` onward. Many solutions incorrectly interpret this as the shop being open during hour `i`, leading to off-by-one errors in penalty calculations.
+
+### Not Considering Closing at Hour 0 or Hour n
+
+Valid closing times range from `0` (never open) to `n` (open all day). Forgetting to check `i = 0` or `i = n` causes missing the optimal answer when the best strategy is to never open or stay open the entire day.
+
+### Returning Wrong Index on Tie
+
+When multiple closing times have the same minimum penalty, the problem asks for the earliest one. Using `<=` instead of `<` when updating the result, or not iterating in the correct order, can return a later hour instead of the earliest optimal hour.

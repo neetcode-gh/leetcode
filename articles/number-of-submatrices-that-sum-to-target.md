@@ -1126,3 +1126,27 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix.
+
+---
+
+## Common Pitfalls
+
+### Incorrect 2D Prefix Sum Formula
+
+The inclusion-exclusion principle for 2D prefix sums is error-prone. The correct formula is `subSum[r2][c2] - subSum[r1-1][c2] - subSum[r2][c1-1] + subSum[r1-1][c1-1]`. Forgetting to add back the top-left corner (which gets subtracted twice) leads to incorrect results.
+
+### Off-by-One Errors with Boundary Conditions
+
+When computing prefix sums or querying submatrix sums, accessing indices like `r1-1` or `c1-1` when `r1=0` or `c1=0` causes out-of-bounds errors. You must handle these boundary cases explicitly by checking if the index is valid before accessing.
+
+### Forgetting to Initialize Hash Map with Zero
+
+In the 1D subarray sum reduction, the hash map must be initialized with `{0: 1}` to count subarrays starting from the beginning of the row range. Without this initialization, you miss all submatrices whose sum equals exactly the target from the leftmost column.
+
+### Choosing the Wrong Dimension to Iterate
+
+The optimal approach iterates over the smaller dimension for the outer loops. If you iterate over rows when there are many more rows than columns, the time complexity becomes worse than necessary. Always consider iterating over `min(m, n)` for the pair loops.
+
+### Integer Overflow with Large Matrices
+
+When the matrix contains large values (positive or negative), prefix sums can overflow 32-bit integers. Use 64-bit integers or appropriate data types to handle cumulative sums, especially when the matrix is large.

@@ -723,3 +723,19 @@ class Solution {
 - Space complexity: $O(m)$
 
 >  Where $n$ is the length of `s` and $m$ is the number of unique characters allowed in the string. In this case, $m=26$.
+
+---
+
+## Common Pitfalls
+
+### Not Handling k Greater Than 26
+
+Since the string contains only lowercase English letters, it's impossible to have a substring of length greater than 26 with all unique characters. Forgetting to add an early return for `k > 26` leads to unnecessary computation or incorrect results when the problem guarantees such substrings cannot exist.
+
+### Incorrect Window Shrinking Logic
+
+In the sliding window approach, when a duplicate character is found, you must shrink the window from the left until the duplicate is removed. A common mistake is shrinking by exactly one position or shrinking until the window size is less than `k`. The correct approach is to shrink until the frequency of the newly added character becomes 1.
+
+### Off-by-One Errors in Loop Bounds
+
+When iterating through possible starting positions for substrings of length `k`, the loop should run from `0` to `n - k` (inclusive). Using `n - k + 1` as the upper bound or forgetting the inclusive boundary leads to either missing valid substrings or accessing indices out of bounds.

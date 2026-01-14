@@ -1600,3 +1600,26 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Confusing with Best Time to Buy and Sell Stock I
+This problem allows unlimited transactions, while Stock I only allows one. Using the Stock I approach (tracking min price and max difference) will undercount the total profit.
+
+### Missing Consecutive Gains
+The greedy approach works because consecutive daily gains are equivalent to one larger transaction. Buying at 1, selling at 5 equals buying at 1, selling at 3, buying at 3, selling at 5. Missing this insight leads to overcomplicating the solution.
+
+### Adding Negative Profits
+When using the greedy approach, only add the difference when `prices[i] > prices[i-1]`. Adding negative differences (price drops) reduces your profit incorrectly.
+```python
+# Wrong: adds negative changes too
+profit += prices[i] - prices[i - 1]
+# Correct: only add positive gains
+if prices[i] > prices[i - 1]:
+    profit += prices[i] - prices[i - 1]
+```
+
+### Off-by-One in Loop
+When comparing consecutive days, start the loop at index 1 (not 0) to safely access `prices[i-1]`. Starting at 0 causes an index out of bounds error.

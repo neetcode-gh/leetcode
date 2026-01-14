@@ -1190,3 +1190,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Euclidean Distance Instead of Manhattan Distance
+
+The problem specifies Manhattan distance `|x1 - x2| + |y1 - y2|`, not Euclidean distance. Using the wrong distance formula will produce incorrect edge weights and ultimately a wrong MST cost.
+
+### Forgetting to Handle Self-Loops in Edge Generation
+
+When generating all edges between points, ensure you only create edges between distinct points (i.e., `i != j`). Including self-loops with zero cost can corrupt the Union-Find structure or cause infinite loops in some implementations.
+
+### Not Stopping After N-1 Edges in MST Construction
+
+A spanning tree with `n` nodes has exactly `n-1` edges. Continuing to add edges after the MST is complete wastes time and, in some implementations, can cause issues. Always track the number of edges added and stop once you reach `n-1`.

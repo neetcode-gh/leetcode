@@ -1892,3 +1892,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Digit 5 Has No Valid Jumps
+
+The knight cannot jump to any digit from position 5 on the phone dial pad. A common mistake is either forgetting to include digit 5 in the initial count (for n=1) or incorrectly assuming it contributes to longer sequences. For n >= 2, digit 5 effectively becomes a dead end and contributes nothing to the count.
+
+### Integer Overflow Without Modulo Operations
+
+The number of valid phone numbers grows exponentially and quickly exceeds 32-bit integer limits. Failing to apply the modulo operation (10^9 + 7) after each addition leads to overflow. Apply modulo at every step where values are accumulated, not just at the final result.
+
+### Incorrect Jump Adjacency List
+
+The knight's L-shaped movement on a phone dial creates a specific jump pattern that must be encoded correctly. Common mistakes include forgetting certain jumps (like 0 can reach 4 and 6) or adding invalid jumps (like 5 reaching any digit, or digits jumping to themselves). Double-check the adjacency list against the actual phone pad layout.

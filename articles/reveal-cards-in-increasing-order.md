@@ -811,3 +811,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Deck First
+
+A common mistake is attempting to simulate the reveal process without first sorting the deck. The algorithm relies on assigning cards from smallest to largest, so forgetting to sort results in an incorrect arrangement where cards do not reveal in increasing order.
+
+### Skipping the Queue Rotation Step
+
+When simulating the reveal process, each card placement must be followed by rotating the next available index to the back of the queue. Forgetting this rotation step breaks the alternating pattern and places cards in wrong positions, causing the reveal sequence to be out of order.
+
+### Off-by-One Errors in Position Tracking
+
+The skip-and-place pattern requires careful index management. A common error is miscounting positions or incorrectly handling the wrap-around when traversing the result array. This leads to cards being placed at incorrect indices or infinite loops when positions are not properly marked as filled.

@@ -1164,3 +1164,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Incorrect Square-to-Coordinate Conversion
+
+The board uses a boustrophedon (zigzag) pattern starting from the bottom-left, with alternating row directions. A common mistake is not flipping the column index for odd rows or forgetting that row 0 in the board array corresponds to the top of the visual board. Always verify your conversion function with examples from different rows.
+
+### Marking the Wrong Square as Visited
+
+After taking a snake or ladder, you land on a different square than where you initially rolled to. The visited check should be based on the final destination after any snake/ladder, but the board position to check for snakes/ladders is the intermediate square. Confusing these leads to revisiting squares or missing valid paths.
+
+### Not Handling Squares Beyond the Board
+
+When rolling dice from a square close to the end, some rolls may exceed `n * n`. These rolls are invalid and should be skipped, not treated as reaching the destination. Always check `nextSquare > n * n` before processing a dice roll.

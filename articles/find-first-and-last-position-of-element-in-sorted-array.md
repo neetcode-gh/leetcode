@@ -882,3 +882,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Returning Early When Target Is Found
+
+Standard binary search returns immediately upon finding the target, but this gives an arbitrary occurrence, not the first or last. You must continue searching (leftward for first, rightward for last) even after finding a match to locate the boundary positions.
+
+### Not Handling the Target-Not-Found Case
+
+After performing binary search for the first occurrence, you must verify that the found index actually contains the target. If the target does not exist in the array, the binary search returns an insertion point, not a valid position. Always check bounds and value equality before returning.
+
+### Off-by-One Errors in Boundary Calculation
+
+When using lower-bound and upper-bound style searches, the upper bound points to one past the last occurrence. Forgetting to subtract 1 when computing the end position, or using incorrect loop conditions (`l <= r` vs `l < r`), leads to wrong indices or infinite loops.

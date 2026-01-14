@@ -816,3 +816,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Leveraging BST Property for Pruning
+
+Treating the tree as a regular binary tree and visiting every node wastes time. Since it is a BST, when the current node's value exceeds `high`, the entire right subtree contains only larger values and can be skipped. Similarly, when the value is below `low`, the left subtree can be skipped. Failing to prune these branches results in O(n) time even when only a small portion of nodes fall within the range.
+
+### Incorrect Range Boundary Checks
+
+Using strict inequalities (`<` and `>`) instead of inclusive checks (`<=` and `>=`) when determining whether to include the current node's value causes off-by-one errors. The condition should be `low <= node.val <= high` to include boundary values. Missing boundary values leads to incorrect sums when `low` or `high` exactly match node values in the tree.

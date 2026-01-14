@@ -1128,3 +1128,19 @@ public class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since output array size will be at most $2$.
+
+---
+
+## Common Pitfalls
+
+### Skipping the Verification Pass
+
+The Boyer-Moore voting algorithm only identifies candidates that might appear more than `n/3` times. After the first pass, you must verify each candidate by counting its actual occurrences. Skipping this step returns incorrect results when candidates do not actually exceed the threshold. This verification pass is essential, not optional.
+
+### Using Wrong Threshold Comparison
+
+The problem asks for elements appearing more than `n/3` times, meaning strictly greater than (>), not greater than or equal to (>=). Using `count >= n/3` includes elements that appear exactly `n/3` times, which is incorrect. Be precise with the comparison operator.
+
+### Incorrect Candidate Selection Order
+
+When implementing Boyer-Moore with two candidates, the order of conditions matters. You must first check if the current element matches an existing candidate before checking if a slot is empty. If you check for empty slots first, you might assign the same element to both candidate slots, wasting one slot and missing potential majority elements.

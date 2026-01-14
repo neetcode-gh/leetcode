@@ -1017,3 +1017,20 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Cooldown Day After Selling
+After selling, you must skip one day before buying again. A common mistake is transitioning directly to the buying state on the next day instead of skipping to `i + 2`.
+```python
+# Wrong: no cooldown after selling
+sell = dfs(i + 1, True) + prices[i]  # Should be i + 2
+```
+
+### Confusing the Buying and Selling States
+Mixing up which state allows buying versus selling leads to subtracting when you should add (or vice versa). When `buying=True`, you subtract the price; when `buying=False`, you add it.
+
+### Off-by-One Errors in Bottom-Up DP Bounds
+When iterating backward and accessing `dp[i + 2]`, forgetting to check bounds causes index out of range errors. The DP table needs size `n + 2` or proper boundary checks.

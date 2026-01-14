@@ -1706,3 +1706,27 @@ class Solution {
     - $O(m)$ space depending on the sorting algorithm.
 
 > Where $m$ is the number of meetings and $n$ is the number of people.
+
+---
+
+## Common Pitfalls
+
+### Ignoring the Time Ordering
+
+Processing meetings without sorting by time first causes secrets to propagate incorrectly. The secret can only spread chronologically, so meetings must be grouped and handled in ascending time order.
+
+### Not Resetting DSU Nodes After Each Time Slot
+
+In the Union-Find approach, failing to reset nodes that did not connect to person 0 allows stale union relationships to persist. After each time slot, any person not in the same component as person 0 must be reset to their own parent.
+
+### Using a Single Visited Set Across All Time Slots
+
+Reusing the same visited set across different time slots prevents the secret from spreading correctly within each slot. Each time group requires a fresh visited set since a person might need to be visited again at a later time.
+
+### Missing Bidirectional Edge Construction
+
+Only adding edges in one direction when building the adjacency list causes incomplete graph traversal. Both `adj[u].append(v)` and `adj[v].append(u)` are required since meetings are mutual.
+
+### Forgetting to Include firstPerson Initially
+
+Initializing the secret holders with only person 0 and forgetting to add `firstPerson` causes incorrect results. The problem states that person 0 shares the secret with `firstPerson` at time 0.

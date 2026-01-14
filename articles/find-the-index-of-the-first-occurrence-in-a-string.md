@@ -1345,3 +1345,15 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $heystack$ and $m$ is the length of the string $needle$.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Loop Bounds
+
+When iterating through the haystack, the loop should run from `0` to `n - m` inclusive. A common mistake is using `n - m - 1` or `n - 1` as the upper bound. The former misses the case where the needle appears at the very end, while the latter causes out-of-bounds access when comparing characters.
+
+### Not Handling Empty Needle
+
+When the needle is an empty string, the expected return value is `0` (the empty string is found at the beginning of any string). Forgetting to check for this edge case can lead to incorrect behavior or infinite loops in some implementations.

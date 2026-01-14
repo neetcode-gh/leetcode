@@ -909,3 +909,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Modifying the Matrix While Scanning
+
+Setting cells to zero while still scanning causes cascading updates where newly created zeros trigger more rows and columns to be zeroed. This produces incorrect results because the algorithm cannot distinguish between original zeros and zeros created during processing.
+
+### Forgetting to Track the First Row Separately
+
+In the space-optimized approach, `matrix[0][0]` serves double duty for marking both the first row and first column. Using a single variable to track both leads to incorrect results. A separate boolean is needed to track whether the first row originally contained a zero.
+
+### Incorrect Order of Final Updates
+
+When using the first row and column as markers, the order of applying updates matters. If you zero the first row or column too early, you lose the marker information needed to process the rest of the matrix. Always update the inner cells first, then handle the first row and column last.

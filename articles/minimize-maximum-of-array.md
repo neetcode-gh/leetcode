@@ -430,3 +430,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting That the First Element Cannot Be Reduced
+
+The operation only moves value from position `i` to position `i-1`. This means you can never reduce the first element `nums[0]}` since there is no position to its left. Many solutions incorrectly assume you can redistribute values in both directions. The first element sets a lower bound on the answer since it can only increase, never decrease.
+
+### Integer Overflow in Prefix Sum Calculations
+
+When computing prefix sums and comparing against `maxVal * (i + 1)`, the multiplication can overflow if using 32-bit integers. For arrays with large values (up to 10^9) and indices up to 10^5, the product can exceed 2^31. Always use 64-bit integers (`long`, `long long`, `Int64`) for the prefix sum and the multiplication result.
+
+### Off-by-One Errors in the Ceiling Division
+
+The greedy solution requires computing the ceiling of `prefixSum / (i + 1)`. A common mistake is using integer division directly, which gives the floor. The ceiling can be computed as `(prefixSum + i) / (i + 1)` or using explicit ceiling functions. Also ensure the divisor is `i + 1` (not `i`) since indices are 0-based but we need the count of elements.

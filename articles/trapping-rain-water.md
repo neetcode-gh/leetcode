@@ -1351,3 +1351,31 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Calculating Water at Boundary Bars
+The leftmost and rightmost bars can never hold water above them since there's no wall on one side to contain it. Including them in water calculations gives wrong results.
+
+### Using Current Bar Height Instead of Max Heights
+Water at each position depends on the minimum of the maximum heights to its left and right, minus the current height. Using the current bar's height in the max comparison instead of tracking running maximums is incorrect.
+```python
+# Wrong: comparing current height directly
+water = min(height[l], height[r]) - height[i]
+# Correct: use maximum heights seen so far
+water = min(leftMax, rightMax) - height[i]
+```
+
+### Negative Water Values
+When the current bar is taller than the limiting wall, the water calculation yields a negative value. This happens at peaks and should contribute zero water, not negative.
+```python
+# Wrong: can add negative water
+res += leftMax - height[i]
+# Correct: ensure non-negative
+res += max(0, min(leftMax, rightMax) - height[i])
+```
+
+### Wrong Pointer Movement in Two Pointers
+In the two-pointer approach, always move the pointer on the side with the smaller max height. Moving the wrong pointer breaks the invariant that the smaller side determines the water level.

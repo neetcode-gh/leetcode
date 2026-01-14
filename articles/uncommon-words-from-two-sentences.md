@@ -360,3 +360,15 @@ class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the lengths of the strings $s1$ and $s2$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding "Uncommon" Definition
+
+A word is uncommon if it appears exactly once across both sentences combined, not once per sentence. Some mistakenly check if a word appears in one sentence but not the other, which is incorrect. A word appearing twice in the same sentence is also not uncommon.
+
+### Incorrect String Splitting
+
+When splitting sentences into words, be careful with edge cases like multiple spaces or empty strings. The problem guarantees single spaces between words, but forgetting to handle the concatenation properly (e.g., not adding a space between `s1` and `s2`) can cause words at the boundary to merge incorrectly.

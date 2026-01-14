@@ -219,3 +219,17 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+## Common Pitfalls
+
+### Counting Empty Rows in Beam Calculations
+
+Rows with zero security devices should be skipped entirely. A common mistake is to update `prev = 0` when encountering an empty row, which resets the chain and causes incorrect beam counts. Only update `prev` when `curr > 0`.
+
+### Multiplying Beams Between Non-Adjacent Rows
+
+The problem states beams form between adjacent rows containing devices. This means if rows 0 and 2 have devices but row 1 is empty, beams still form between rows 0 and 2. The key insight is that "adjacent" refers to consecutive non-empty rows, not consecutive row indices.
+
+### Off-by-One Errors with Row Iteration
+
+When iterating from row 1 to the end, ensure `prev` is initialized correctly from row 0. Starting the loop at index 0 and trying to access `bank[-1]` or similar patterns will cause index errors or incorrect initialization.

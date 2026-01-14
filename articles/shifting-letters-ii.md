@@ -968,3 +968,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the size of the array $shifts$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Negative Modulo
+
+When shifting characters backward, the intermediate result can become negative before applying modulo 26. In many programming languages, the modulo of a negative number returns a negative result (e.g., `-1 % 26 = -1` in some languages). Always add 26 before taking the modulo to ensure the result is positive: `((shift + char) % 26 + 26) % 26`.
+
+### Off-by-One Error in Difference Array
+
+When using the sweep line or difference array technique, the cancellation must happen at index `r + 1`, not at `r`. Placing the cancellation at index `r` means the shift will not be applied to the last character in the range. Remember that `prefix_diff[right + 1] -= val` ensures the shift applies to all indices from `left` through `right` inclusive.
+
+### Overlooking Large Accumulated Shifts
+
+With many overlapping shifts, the cumulative value can grow very large (positive or negative). Taking modulo only at the end of all accumulations is correct, but some implementations attempt to normalize after each shift, which can introduce subtle bugs. Ensure you handle the final modulo operation correctly after summing all prefix values.

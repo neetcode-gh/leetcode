@@ -789,3 +789,15 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the length of the `nums` array.
+
+---
+
+## Common Pitfalls
+
+### Returning the First Unique Instead of the Largest
+
+When iterating through numbers, it is tempting to return immediately upon finding a unique number. However, the problem asks for the largest unique number. Without sorting or tracking the maximum, returning early may yield a smaller unique value when a larger one exists.
+
+### Confusing Unique with Distinct
+
+A number is unique if it appears exactly once in the array, not if it is different from its neighbors. Using logic that checks for distinct consecutive elements after sorting misses duplicates that are separated by other values in the original array.

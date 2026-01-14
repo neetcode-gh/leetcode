@@ -1869,3 +1869,46 @@ class Solution {
 - Space complexity: $O(n + (m * t))$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in $wordDict$ and $t$ is the maximum length of any word in $wordDict$.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error in DP Array Initialization
+The DP array needs size `n + 1` to represent the state after processing all characters. Using size `n` causes index-out-of-bounds when checking `dp[n]` as the base case.
+
+```python
+# Wrong: array too small
+dp = [False] * len(s)
+dp[len(s)] = True  # IndexError!
+
+# Correct: need n+1 elements
+dp = [False] * (len(s) + 1)
+dp[len(s)] = True
+```
+
+### Checking Substring Beyond String Length
+When iterating through possible word matches, failing to check if the word extends beyond the string causes substring errors or incorrect matches.
+
+```python
+# Wrong: may go out of bounds
+for w in wordDict:
+    if s[i:i + len(w)] == w:  # no length check
+
+# Correct: verify word fits in remaining string
+for w in wordDict:
+    if i + len(w) <= len(s) and s[i:i + len(w)] == w:
+```
+
+### Not Converting wordDict to a Set for Efficient Lookup
+Using a list for the word dictionary when checking substrings against it results in O(m) lookup time per check, causing TLE on large inputs.
+
+```python
+# Wrong: O(m) per lookup
+if s[i:j+1] in wordDict:  # wordDict is a list
+
+# Correct: O(1) average lookup
+wordSet = set(wordDict)
+if s[i:j+1] in wordSet:
+```
+

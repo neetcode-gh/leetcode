@@ -1056,3 +1056,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output string.
+
+---
+
+## Common Pitfalls
+
+### Only Handling One Direction
+
+A common mistake is only removing unmatched closing parentheses in a left-to-right pass and forgetting that opening parentheses can also be unmatched. For example, the string `"(((a"` has three unmatched `(` characters that need removal. You must either use a two-pass approach (first remove invalid `)`, then remove invalid `(`), or track indices of unmatched parentheses explicitly.
+
+### Removing Wrong Opening Parentheses
+
+When there are excess opening parentheses, some solutions incorrectly remove the first occurrences instead of the last ones. Since we process left-to-right to match parentheses, the unmatched `(` characters are always the rightmost ones. Removing from the left can break valid pairs that were already matched.
+
+### Modifying String While Iterating
+
+Attempting to modify the string in place while iterating over it leads to index shifting bugs. For instance, if you delete a character at index 3, all subsequent indices shift left by one. Use a separate result array or mark invalid positions first, then build the final string in a second pass.

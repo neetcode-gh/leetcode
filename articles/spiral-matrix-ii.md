@@ -929,3 +929,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$ for the output matrix.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Boundary Updates
+
+Failing to update boundaries (top, bottom, left, right) after filling each edge leads to overwriting previously filled cells or skipping cells entirely. Each boundary must be adjusted immediately after its corresponding edge is filled.
+
+### Off-by-One in Range Calculations
+
+When iterating along rows or columns, using inclusive vs exclusive bounds incorrectly causes cells to be missed or written twice. For example, after filling the top row from `left` to `right`, the next column fill should start from `top + 1`, not `top`.
+
+### Forgetting to Handle Odd-Sized Matrices
+
+For odd values of `n`, the center cell requires special attention. If the loop condition or boundary updates are off, the center cell may be skipped or the loop may not terminate correctly. The direction-based approach handles this naturally, but boundary-based approaches need careful loop conditions.

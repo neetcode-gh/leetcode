@@ -518,3 +518,15 @@ public class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Odd Numbers Must End With 1
+
+The defining property of an odd binary number is that its least significant bit (last character) must be `'1'`. A common mistake is placing all `1`s at the beginning without reserving one for the end, resulting in an even number. Always ensure exactly one `'1'` is placed at the last position.
+
+### Assuming the Input Always Has Multiple 1s
+
+When the input contains only a single `'1'`, the only valid output is that `'1'` at the end with all `'0'`s before it. Failing to handle this edge case (e.g., trying to place `count - 1` ones when `count` is 1) can cause index errors or incorrect string construction.

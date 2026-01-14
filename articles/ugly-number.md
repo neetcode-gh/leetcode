@@ -157,3 +157,15 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Non-Positive Numbers
+
+Ugly numbers are defined as positive integers. A common mistake is not checking for `n <= 0` at the start, which can lead to infinite loops when trying to divide zero or incorrect results for negative numbers. Always return `false` immediately for non-positive inputs.
+
+### Dividing by Primes in the Wrong Order
+
+While the order of dividing by 2, 3, and 5 does not affect correctness, some implementations accidentally skip primes or use incorrect loop conditions. Ensure each prime factor is completely divided out before moving to the next one, using a `while` loop rather than an `if` statement.

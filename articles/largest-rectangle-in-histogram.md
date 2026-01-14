@@ -1799,3 +1799,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Width Calculation
+
+When computing the width of a rectangle, it is easy to miscalculate the boundaries. The width should be `right - left - 1` when `left` and `right` are the indices of the nearest smaller bars (exclusive boundaries). Forgetting to subtract 1 or using inclusive boundaries incorrectly leads to wrong area calculations.
+
+### Forgetting to Process Remaining Stack Elements
+
+After iterating through all bars, the stack may still contain indices of bars that never encountered a shorter bar to their right. These bars can extend all the way to the end of the histogram. Failing to pop and process these remaining elements misses potentially valid rectangles.
+
+### Using Strict vs Non-Strict Inequality
+
+When comparing heights to decide whether to pop from the stack, using `>` versus `>=` matters. Using strict greater-than may cause bars of equal height to remain on the stack incorrectly, leading to wrong boundary calculations. The choice depends on how you handle the left boundary for bars with equal heights.
+
+### Incorrect Handling of Empty Stack
+
+When the stack becomes empty while computing the left boundary, it means no shorter bar exists to the left. The width should extend from index `0` to the current position. Using `stack[-1]` or `stack.top()` on an empty stack causes runtime errors or incorrect results if not handled explicitly.
+
+### Not Handling Single-Element Arrays
+
+Edge cases like arrays with a single bar or all bars having the same height require careful handling. The algorithm should correctly return the height of the single bar or the product of height and array length for uniform arrays without special-case bugs.

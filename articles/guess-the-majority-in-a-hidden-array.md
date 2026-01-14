@@ -303,6 +303,22 @@ class Solution {
 
 - Time complexity: $O(n)$
 
-- Space complexity: $O(1)$ 
+- Space complexity: $O(1)$
 
 >  Where $n$ is the number of queries.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding What Equal Query Results Mean
+
+When two queries that differ by exactly one index return the same count, the two differing indices must have the same value. Conversely, if the counts differ, those indices have different values. Confusing this relationship leads to incorrectly classifying elements as equal or different from the reference index.
+
+### Forgetting to Handle Indices 1, 2, and 3 Separately
+
+The standard approach compares `query(1, 2, 3, i)` with `query(0, 1, 2, 3)` to determine if index `i` matches index `0`. However, this only works for indices 4 and above. Indices 1, 2, and 3 require different query comparisons using `query(1, 2, 3, 4)` as the reference since they overlap with the base query indices.
+
+### Returning Wrong Index When Groups Are Equal
+
+When the count of elements equal to index `0` equals the count of different elements, there is no strict majority, so the function should return `-1`. A common mistake is returning `0` or `indexDiffer` in this case. The problem requires a strict majority, meaning one group must have more than half the elements.

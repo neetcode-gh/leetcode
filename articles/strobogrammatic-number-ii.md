@@ -666,3 +666,19 @@ class Solution {
     - Note: In javascript and python, in the last iteration the arrary, is the output array. Thus it will not be considered in auxiliary space. But still, the overall order of the complexity remains the same.
 
 >  Where $N$ is the length of strobogrammatic numbers we need to find.
+
+---
+
+## Common Pitfalls
+
+### Allowing Leading Zeros
+
+Numbers cannot have leading zeros (except for "0" itself when n=1). When building the outermost layer of digits, you must skip the (0, 0) pair to avoid generating invalid numbers like "010" or "00100".
+
+### Forgetting That 6 and 9 Map to Each Other
+
+Unlike 0, 1, and 8 which map to themselves when rotated 180 degrees, 6 becomes 9 and 9 becomes 6. The reversible pairs must include both (6, 9) and (9, 6) to correctly generate all strobogrammatic numbers.
+
+### Incorrect Base Cases for Odd vs Even Length
+
+For even-length numbers, the recursive base case is an empty string (length 0). For odd-length numbers, the center digit must be strobogrammatic by itself: only 0, 1, or 8. Mixing up these base cases or forgetting the odd-length center constraint will produce incorrect results.

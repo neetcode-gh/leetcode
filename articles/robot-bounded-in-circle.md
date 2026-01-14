@@ -223,3 +223,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Simulating Multiple Cycles Unnecessarily
+
+A common mistake is thinking you need to simulate 4 complete cycles of instructions to check if the robot returns to the origin. The key insight is that you only need one cycle: if the robot is not facing north after one cycle, it will eventually return to the origin regardless of its position.
+
+### Incorrect Direction Rotation Logic
+
+Mixing up left and right rotations is a frequent error. For a left turn, the new direction is `(-dirY, dirX)`, and for a right turn, it is `(dirY, -dirX)`. Swapping these formulas or making sign errors will cause incorrect position tracking.
+
+### Misunderstanding the Bounded Condition
+
+The robot is bounded if it returns to the origin OR if it is not facing north after one cycle. Some solutions incorrectly require both conditions, or only check if the robot returns to the origin, missing cases where the robot faces a different direction and will eventually cycle back.

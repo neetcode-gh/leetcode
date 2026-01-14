@@ -521,3 +521,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Selling Before Buying
+The sell day must come after the buy day. Calculating `prices[i] - prices[j]` where `j > i` means you're selling in the past, which is invalid.
+```python
+# Wrong: selling before buying
+for i in range(len(prices)):
+    for j in range(i):  # j < i means selling earlier
+        profit = prices[j] - prices[i]  # Backwards
+```
+
+### Returning Negative Profit
+If prices only decrease, the maximum profit is 0 (don't trade), not a negative number. Always ensure the result is at least 0.
+```python
+# Wrong: can return negative
+return maxPrice - minPrice  # Could be negative if maxPrice found before minPrice
+```

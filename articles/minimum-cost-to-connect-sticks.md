@@ -290,3 +290,19 @@ struct Heap<T> {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the length of the input array.
+
+---
+
+## Common Pitfalls
+
+### Using a Max-Heap Instead of a Min-Heap
+
+The greedy strategy requires always combining the two smallest sticks first. Using a max-heap retrieves the largest elements, which leads to suboptimal costs because larger values get added multiple times in subsequent operations.
+
+### Forgetting to Push the Combined Stick Back
+
+After popping two sticks and combining them, the new stick must be pushed back into the heap. Forgetting this step results in losing track of the combined stick, causing incorrect total cost calculations and potentially an infinite loop or early termination.
+
+### Not Handling the Single Stick Edge Case
+
+When the input contains only one stick, no combinations are needed, and the cost should be `0`. Failing to handle this edge case may cause attempts to pop from an empty heap or return an incorrect non-zero result.

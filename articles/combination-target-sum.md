@@ -528,3 +528,34 @@ class Solution {
 - Space complexity: $O(\frac{t}{m})$
 
 > Where $t$ is the given $target$ and $m$ is the minimum value in $nums$.
+
+---
+
+## Common Pitfalls
+
+### Moving to Next Index After Including an Element
+Since each number can be used unlimited times, after including `nums[i]`, you should stay at index `i`, not move to `i + 1`. Moving forward prevents reusing the same element.
+```python
+# Wrong: can't reuse the same number
+cur.append(nums[i])
+dfs(i + 1, cur, total + nums[i])
+# Correct: stay at same index to allow reuse
+cur.append(nums[i])
+dfs(i, cur, total + nums[i])
+```
+
+### Generating Duplicate Combinations
+Without maintaining an index, you might generate `[2,3]` and `[3,2]` as separate combinations. Always iterate from the current index forward, never backward, to ensure each combination is generated only once in sorted order.
+
+### Not Pruning When Sum Exceeds Target
+Continuing recursion when `total > target` wastes time exploring invalid paths. With sorted input, you can break early once `total + nums[j] > target` since all subsequent numbers are larger.
+```python
+# Inefficient: explores all paths
+for j in range(i, len(nums)):
+    dfs(j, cur, total + nums[j])
+# Optimized: stop early when sum exceeds target
+for j in range(i, len(nums)):
+    if total + nums[j] > target:
+        return
+    dfs(j, cur, total + nums[j])
+```

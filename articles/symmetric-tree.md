@@ -917,3 +917,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Comparing Wrong Node Pairs
+
+A frequent mistake is comparing `left.left` with `right.left` instead of `left.left` with `right.right`. For a mirror reflection, the left child of the left subtree must match the right child of the right subtree, and vice versa.
+
+### Forgetting to Handle Null Cases First
+
+When checking symmetry, you must handle the null cases before accessing node values. Checking `left.val == right.val` when either node is null will cause a null pointer exception. Always check if both are null (return true) or only one is null (return false) before comparing values.

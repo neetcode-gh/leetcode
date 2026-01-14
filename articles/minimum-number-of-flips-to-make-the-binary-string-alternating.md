@@ -1532,3 +1532,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Rotations Only Matter for Odd-Length Strings
+
+For even-length strings, rotating the string does not change the number of flips needed because the parity of each position remains the same after a full rotation cycle. The optimization to skip rotations when `n % 2 == 0` is critical for both correctness and performance. Without this check, you might perform unnecessary work or miss that the initial comparison already gives the optimal answer.
+
+### Incorrectly Handling the Doubled String in Sliding Window
+
+When using the sliding window approach with `s + s`, you must build alternating patterns of length `2n`, not `n`. If you only build patterns of length `n` and try to index beyond, you will get index-out-of-bounds errors or incorrect mismatch counts. Additionally, when the window slides, you must properly remove the contribution of the leftmost character before adding the new rightmost character.
+
+### Confusing Which Pattern Tracks Which Mismatches
+
+The two patterns `"010101..."` and `"101010..."` are complementary. If a position matches one pattern, it mismatches the other. When computing both diff counts simultaneously, ensure you are consistent: if `s[r] != alt1[r]`, increment `diff1`; if `s[r] != alt2[r]`, increment `diff2`. Mixing up which count corresponds to which pattern will produce incorrect minimum flip counts.

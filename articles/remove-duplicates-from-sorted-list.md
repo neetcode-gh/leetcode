@@ -625,3 +625,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Advancing the Pointer Incorrectly
+
+When removing a duplicate, you should only update `cur.next` to skip the duplicate node, but not advance `cur` itself. If you move `cur` forward after removing a node, you might skip checking whether the new next node is also a duplicate. Only advance `cur` when the next node has a different value.
+
+### Not Handling Null Pointers
+
+When accessing `cur.next.val`, you must first verify that `cur.next` is not null. Forgetting this check leads to null pointer exceptions on the last node or empty lists. Always structure your loop condition as `while cur and cur.next` or check `cur.next != null` before accessing its value.

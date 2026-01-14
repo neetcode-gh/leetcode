@@ -417,3 +417,15 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of strings in the array, and $m$ is the average length of these strings.
+
+---
+
+## Common Pitfalls
+
+### Applying Local Name Rules to the Domain
+
+A common mistake is applying the period-removal and plus-sign rules to the entire email address instead of just the local name. The domain portion (after the `@` symbol) must remain unchanged. Periods in domain names like `gmail.com` are meaningful and should never be removed.
+
+### Incorrect Handling of the Plus Sign
+
+Some solutions incorrectly remove only the `+` character itself rather than everything from `+` to the `@`. The rule states that everything after the first `+` in the local name should be ignored, not just the plus character. For example, in `test+spam@gmail.com`, the entire `+spam` portion must be discarded.

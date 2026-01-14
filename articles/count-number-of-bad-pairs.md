@@ -311,3 +311,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Counting Bad Pairs Directly
+Trying to count bad pairs directly with a hash map is error-prone. The cleaner approach is to count good pairs (where `nums[i] - i == nums[j] - j`) and subtract from total pairs.
+
+### Integer Overflow with Large Arrays
+With n up to 10^5, the total number of pairs is n*(n-1)/2 which can exceed 32-bit integer limits. Use `long` or 64-bit integers for the result.
+```java
+// Wrong: overflow for large n
+int res = 0;
+
+// Correct: use long
+long res = 0;
+```
+
+### Forgetting the Algebraic Transformation
+The key insight is rewriting `j - i != nums[j] - nums[i]` as `nums[i] - i != nums[j] - j`. Without this transformation, you cannot efficiently group elements using a hash map.

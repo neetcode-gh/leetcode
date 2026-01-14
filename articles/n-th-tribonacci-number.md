@@ -591,3 +591,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Incorrect Base Cases
+
+The tribonacci sequence has three base cases: T(0) = 0, T(1) = 1, and T(2) = 1. A common mistake is treating it like Fibonacci and only handling two base cases, or incorrectly setting T(0) = 1. Always explicitly check for `n == 0`, `n == 1`, and `n == 2` and return the correct values before entering the main computation loop.
+
+### Integer Overflow in Recursive Solution
+
+The naive recursive solution without memoization has exponential time complexity O(3^n), which causes timeout for even moderate values of n. Additionally, without memoization, the same subproblems are computed repeatedly, leading to massive redundant work. Always use memoization or an iterative approach to achieve linear time complexity.

@@ -1073,3 +1073,17 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Returning Diameter Instead of Height from DFS
+The DFS function must return height (for the parent to use), but update the global diameter. A common mistake is returning the diameter, which breaks the height calculation for ancestors.
+```python
+# Wrong: return left + right (diameter)
+# Correct: return 1 + max(left, right) (height)
+```
+
+### Assuming the Longest Path Goes Through the Root
+The diameter may pass through any node, not just the root. A solution that only calculates `leftHeight + rightHeight` at the root will fail on trees where the longest path is entirely within a subtree.

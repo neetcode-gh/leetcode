@@ -1059,3 +1059,19 @@ class Solution {
 - Space complexity: $O(d ^ n)$
 
 > Where $d$ is the number of digits $(0 - 9)$, $n$ is the number of wheels $(4)$, and $m$ is the number of deadends.
+
+---
+
+## Common Pitfalls
+
+### Not Checking if Starting Position is a Deadend
+
+The initial state "0000" might itself be a deadend. Failing to check this before starting BFS leads to incorrect exploration from an invalid starting point. Always verify "0000" is not in the deadends set before beginning the search.
+
+### Incorrect Wheel Wraparound Logic
+
+Turning a wheel from `9` up should go to `0`, and turning from `0` down should go to `9`. Using simple addition/subtraction without modular arithmetic causes invalid states like `-1` or `10`. Apply `(digit + move + 10) % 10` to handle wraparound correctly.
+
+### Adding to Visited Set After Dequeuing Instead of Before Enqueuing
+
+Marking nodes as visited when dequeuing rather than when enqueuing leads to the same state being added to the queue multiple times. This causes redundant processing and can significantly slow down the solution. Always mark a state as visited immediately when adding it to the queue.

@@ -1217,3 +1217,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Middle Finding for Odd-Length Lists
+
+When using fast and slow pointers, for odd-length lists the slow pointer ends up at the exact middle element. If you reverse starting from slow, the middle element ends up in the reversed half. This still works because we only compare until the reversed half is exhausted, but misunderstanding this can lead to off-by-one errors in the comparison loop.
+
+### Not Restoring the Original List
+
+The in-place reversal approach modifies the original linked list structure. If the problem requires the list to remain unchanged after the function call, or if subsequent operations depend on the original structure, you must reverse the second half back to its original order after the palindrome check.

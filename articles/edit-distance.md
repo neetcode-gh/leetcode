@@ -1493,3 +1493,27 @@ class Solution {
 - Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.
+
+---
+
+## Common Pitfalls
+
+### Confusing Insert and Delete Operations
+
+When converting `word1` to `word2`, an insert into `word1` is equivalent to advancing `j` (moving forward in `word2`), while a delete from `word1` advances `i`. Mixing these up leads to incorrect recurrence relations. Remember: insert adds a character to match `word2[j]`, delete removes `word1[i]`.
+
+### Incorrect Base Case Initialization
+
+The base cases require returning the number of remaining characters when one string is exhausted. A common mistake is returning `0` or forgetting to handle when `i == m` (return `n - j`) or `j == n` (return `m - i`). These represent the insertions or deletions needed to complete the transformation.
+
+### Forgetting to Add 1 for the Current Operation
+
+When characters don't match, you must add `1` to the minimum of the three recursive calls to account for the current operation. Forgetting this addition results in an answer that's always too small, as it doesn't count the edit being performed at the current position.
+
+### Off-by-One Errors in DP Table Dimensions
+
+The DP table needs dimensions `(m + 1) x (n + 1)` to accommodate the base cases where either string is empty. Using `m x n` causes index out of bounds errors when accessing `dp[m][j]` or `dp[i][n]` for the boundary conditions.
+
+### Not Handling Equal Characters Correctly
+
+When `word1[i] == word2[j]`, no operation is needed and you should directly use `dp[i+1][j+1]` without adding 1. A common mistake is still adding 1 or considering all three operations when characters match, leading to an inflated edit distance.

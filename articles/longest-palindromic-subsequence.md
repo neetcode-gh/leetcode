@@ -1192,3 +1192,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Subsequence with Substring
+
+A subsequence does not require contiguous characters, while a substring does. For the string `"bbbab"`, the longest palindromic subsequence is `"bbbb"` (length 4), but the longest palindromic substring is `"bbb"` (length 3). Make sure your solution allows skipping characters when they do not contribute to the palindrome.
+
+### Incorrect Base Case Handling
+
+When implementing the recursive or DP solution, a common error is mishandling the base cases. A single character (`i == j`) is always a palindrome of length 1, and when `i > j` (empty range), the length is 0. Forgetting to return 1 for single characters or incorrectly initializing the DP table leads to off-by-one errors.
+
+### Wrong Iteration Order in Bottom-Up DP
+
+In the bottom-up approach, the DP table must be filled in the correct order so that smaller subproblems are solved before larger ones. You need to iterate `i` from `n-1` down to `0` and `j` from `i` to `n-1`. Iterating in the wrong direction causes the algorithm to read uncomputed values, producing incorrect results.

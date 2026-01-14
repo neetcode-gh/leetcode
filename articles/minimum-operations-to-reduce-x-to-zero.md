@@ -1205,3 +1205,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Not Recognizing the Problem Transformation
+
+The key insight is that removing elements from both ends that sum to `x` is equivalent to finding the longest contiguous subarray that sums to `total - x`. Many solutions fail because they try to directly simulate removing from both ends, leading to inefficient or incorrect approaches.
+
+### Forgetting to Handle Edge Cases
+
+When `total == x`, the answer is `n` (remove all elements). When `total < x`, the answer is `-1` (impossible). When `target = total - x` is negative, return `-1`. Missing any of these edge cases causes wrong answers on specific test cases.
+
+### Overlapping Prefix and Suffix in Brute Force
+
+In approaches that combine prefix and suffix sums, you must ensure the prefix and suffix do not overlap (i.e., the suffix must start after the prefix ends). A common bug is allowing `j <= i` instead of `j > i`, which double-counts elements and produces incorrect results.

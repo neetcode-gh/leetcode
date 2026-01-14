@@ -1061,3 +1061,21 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Isolated Nodes
+When there are no edges, each node is its own component. Solutions that only iterate through edges will miss nodes with no connections and return 0 instead of n.
+```python
+# Wrong: misses isolated nodes
+for u, v in edges:
+    # only processes connected nodes
+```
+
+### Building a Directed Graph Instead of Undirected
+Edges must be added in both directions. Adding only `adj[u].append(v)` without `adj[v].append(u)` causes incomplete traversals and overcounts components.
+
+### Not Marking Nodes as Visited Before Exploring
+In BFS/DFS, marking a node as visited only after processing (instead of when first discovered) can cause nodes to be added to the queue multiple times, leading to incorrect counts or infinite loops.

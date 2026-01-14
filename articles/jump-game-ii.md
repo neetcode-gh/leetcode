@@ -923,3 +923,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Greedily Jumping to the Maximum Each Time
+
+A common mistake is to always jump to `i + nums[i]` (the farthest reachable position). This greedy choice does not guarantee the minimum number of jumps. Instead, you should consider all positions reachable from the current range and pick the one that maximizes your reach for the next jump.
+
+### Off-by-One Errors in Range Boundaries
+
+When implementing the BFS-style greedy solution, the window `[l, r]` represents the current level of reachable positions. Incorrectly updating `l` or `r` after processing a level can cause positions to be skipped or processed multiple times, leading to wrong jump counts.
+
+### Handling Zero-Value Elements
+
+If `nums[i] == 0`, you cannot make progress from position `i`. In recursive or DP solutions, this should return infinity (or a large value) to indicate an invalid path. Forgetting this check can cause incorrect results when a path leads to a dead end.

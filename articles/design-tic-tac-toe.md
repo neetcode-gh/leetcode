@@ -835,3 +835,47 @@ class TicTacToe {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the size of the Tic-Tac-Toe board.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Anti-Diagonal Check
+
+The anti-diagonal condition is often implemented incorrectly. Remember that for a cell to be on the anti-diagonal, the condition is `col == n - row - 1`, not `row + col == n`.
+
+```python
+# Wrong
+if row + col == n:  # Off by one error
+    self.antiDiagonal += currentPlayer
+
+# Correct
+if col == n - row - 1:
+    self.antiDiagonal += currentPlayer
+```
+
+### Forgetting the Center Cell in Odd-Sized Boards
+
+For odd-sized boards (e.g., 3x3), the center cell lies on both diagonals. Failing to update both diagonal counters when a move is placed at the center will cause incorrect win detection.
+
+```python
+# The center cell (1,1) in a 3x3 board satisfies BOTH conditions:
+# row == col (main diagonal)
+# col == n - row - 1 (anti-diagonal)
+# Both counters must be updated
+```
+
+### Using Separate Counters Per Player
+
+A common mistake is using separate counters for each player instead of a single counter with +1/-1 encoding. This doubles the space and complicates the win-checking logic.
+
+```python
+# Inefficient approach
+self.rows_p1 = [0] * n
+self.rows_p2 = [0] * n
+
+# Optimal approach - single counter with +1/-1
+self.rows = [0] * n
+currentPlayer = 1 if player == 1 else -1
+self.rows[row] += currentPlayer
+```

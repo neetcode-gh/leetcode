@@ -1775,3 +1775,27 @@ class Solution {
 
 - Time complexity: $O(n\log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Processing Nodes in Wrong Order
+
+The Union-Find solution requires processing nodes or edges in ascending order of their values. Processing in arbitrary order breaks the invariant that when two components merge, all previously processed nodes have smaller or equal values. This leads to incorrect path counts because paths may include nodes with values exceeding the endpoints.
+
+### Forgetting Single-Node Paths
+
+Every node by itself forms a valid good path (a path of length 0). The final answer must include `n` single-node paths in addition to paths between distinct nodes with matching values. Forgetting to add these results in an answer that is exactly `n` less than correct.
+
+### Incorrect Union-Find Merging Logic
+
+When unioning two components with the same maximum value, you must multiply their counts to get new good paths, then sum the counts. When values differ, the component with the smaller maximum value gets absorbed without creating new paths. Confusing these cases or incorrectly updating counts leads to wrong answers.
+
+### Double Counting Paths
+
+A path from node `A` to node `B` is the same as the path from `B` to `A`. When counting paths during BFS/DFS, ensure you only count each pair once. Using the condition `node >= startNode` when counting matching endpoints prevents counting the same path twice.
+
+### Not Using Path Compression in Union-Find
+
+Without path compression, the Union-Find operations can degrade to O(n) per operation, making the overall algorithm O(n^2). Always implement path compression in the `find` function to maintain near-constant amortized time complexity for Union-Find operations.

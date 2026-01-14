@@ -707,3 +707,26 @@ class CountSquares {
 
 - Time complexity: $O(1)$ for $add()$, $O(n)$ for $count()$.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Both Diagonal Conditions
+A common mistake is only checking that the side lengths are equal (`|px - x| == |py - y|`) without also verifying that the points are not on the same horizontal or vertical line. Both conditions are necessary for a valid square diagonal.
+
+```python
+# Wrong: Missing the x != px and y != py checks
+if abs(py - y) == abs(px - x):  # Accepts invalid diagonals
+    ...
+
+# Correct: Must also ensure points form a true diagonal
+if abs(py - y) == abs(px - x) and x != px and y != py:
+    ...
+```
+
+### Not Handling Duplicate Points
+The problem allows adding the same point multiple times. Using a set instead of a counter for point tracking will lose count information, causing incorrect results when the same point appears multiple times. The number of squares should multiply by the count of each required corner point.
+
+### Confusing Diagonal vs Adjacent Corners
+When iterating through stored points to find potential squares, some solutions incorrectly look for adjacent corners instead of diagonal corners. Given the query point `(px, py)` and a candidate diagonal `(x, y)`, the other two corners must be `(x, py)` and `(px, y)`, not `(px + side, py)` and `(px, py + side)`.

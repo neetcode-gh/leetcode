@@ -1025,3 +1025,81 @@ class SummaryRanges {
     - $O(\log n)$ time for each $addNum()$ function call.
     - $O(n)$ time for each $getIntervals()$ function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Handling Duplicates
+
+When adding numbers to the data stream, duplicates may appear. If using a list-based approach, duplicates cause intervals like `[1, 1]` to appear multiple times or create incorrect interval boundaries. Using a set automatically handles this.
+
+```python
+# Wrong: allows duplicates
+self.arr.append(value)
+
+# Correct: prevents duplicates
+self.arr.add(value)
+```
+
+### Off-by-One in Consecutive Check
+
+When merging intervals, two numbers are consecutive if they differ by exactly 1. A common mistake is using `>=` instead of `>` when checking for gaps, which incorrectly merges non-consecutive numbers.
+
+```python
+# Wrong: merges [1,2] and [2,3] into one interval incorrectly
+if arr[i] - arr[i - 1] >= 1:
+    # start new interval
+
+# Correct: only starts new interval when gap > 1
+if arr[i] - arr[i - 1] > 1:
+    res.append([start, arr[i - 1]])
+    start = arr[i]
+```
+
+### Forgetting the Final Interval
+
+When iterating through sorted numbers to build intervals, the loop only closes intervals when a gap is found. The last interval is never closed inside the loop and must be added after.
+
+```python
+# Wrong: missing final interval
+for i in range(1, n):
+    if lst[i] - lst[i - 1] > 1:
+        res.append([start, lst[i - 1]])
+        start = lst[i]
+return res  # Missing the last interval!
+
+# Correct: add final interval after loop
+res.append([start, lst[n - 1]])
+return res
+```
+
+### Incorrect Interval Extension Logic
+
+When using ordered structures and extending intervals on the fly, the condition to extend must check if the current number is exactly one more than the interval end, not just greater.
+
+```python
+# Wrong: extends interval incorrectly
+if res and res[-1][1] < n:
+    res[-1][1] = n
+
+# Correct: only extend if consecutive
+if res and res[-1][1] + 1 == n:
+    res[-1][1] = n
+else:
+    res.append([n, n])
+```
+
+### Empty Input Edge Case
+
+When `getIntervals()` is called before any numbers are added, or when all numbers have been processed, the function should return an empty list. Forgetting this check causes index errors.
+
+```python
+# Wrong: crashes on empty input
+start = self.arr[0]  # IndexError if empty
+
+# Correct: handle empty case first
+if not self.arr:
+    return []
+start = self.arr[0]
+```

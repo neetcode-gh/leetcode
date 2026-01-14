@@ -1157,3 +1157,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Handling Both Odd and Even Length Palindromes
+
+When expanding around centers, you must check both odd-length palindromes (single character center like `"aba"`) and even-length palindromes (between two characters like `"abba"`). Forgetting to handle one case means missing valid palindromes. Always expand from both `(i, i)` and `(i, i+1)` for each position.
+
+### Off-by-One Errors in Substring Extraction
+
+After finding the palindrome boundaries, extracting the correct substring is error-prone. If your left pointer `l` and right pointer `r` point to positions just outside the palindrome after expansion, you need to adjust them (e.g., `l+1` to `r-1`) before extracting. Verify your indices with simple test cases like `"a"` and `"aa"`.
+
+### Returning Wrong Result for Single Character Strings
+
+For an input like `"a"`, the longest palindromic substring is `"a"` itself. If you initialize your result string as empty and only update it when you find a longer palindrome, you might return an empty string for single-character inputs. Ensure your initialization handles this edge case correctly.

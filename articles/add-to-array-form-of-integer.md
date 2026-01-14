@@ -421,3 +421,23 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $num$ and $m$ is the number of digits in $k$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Final Carry
+After processing all digits of the array and `k`, there may still be a remaining carry. Forgetting to handle this results in incorrect answers for cases like `[9,9,9] + 1 = [1,0,0,0]`.
+```python
+# Wrong: stopping when array and k are exhausted
+while i >= 0 or k > 0:  # Missing: or carry > 0
+    # ...
+```
+
+### Processing Digits in Wrong Order
+The array stores the most significant digit first, but addition needs to start from the least significant digit. Forgetting to process from right to left (or reverse the array) produces wrong results.
+```python
+# Wrong: processing from left to right
+for i in range(len(num)):  # Should be range(len(num)-1, -1, -1)
+    k += num[i]
+```

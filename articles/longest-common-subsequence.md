@@ -1172,3 +1172,17 @@ class Solution {
 - Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of the string $text1$ and $n$ is the length of the string $text2$.
+
+## Common Pitfalls
+
+### Confusing Subsequence with Substring
+
+A subsequence does not require consecutive characters, whereas a substring does. A common mistake is to reset the count when characters do not match, which would find the longest common substring instead of subsequence. In LCS, when characters do not match, you take the maximum of skipping either character.
+
+### Off-by-One Errors in DP Table Indexing
+
+When using a 2D DP table, the dimensions should be `(m+1) x (n+1)` to account for the base case of empty strings. Accessing `dp[i+1][j+1]` when characters match requires careful attention to avoid index out of bounds errors.
+
+### Incorrect Iteration Direction in Bottom-Up DP
+
+In the bottom-up approach, iterating in the wrong direction can cause the algorithm to use uncomputed values. When processing from the end of the strings backward, ensure that `dp[i][j]` is computed after `dp[i+1][j+1]`, `dp[i+1][j]`, and `dp[i][j+1]` are already available.

@@ -249,3 +249,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Loop Bounds
+
+When iterating to compare adjacent elements, starting from index `0` instead of `1` can cause an out-of-bounds access when checking `nums[i-1]`. Always start from index `1` when comparing each element with its previous neighbor.
+
+### Forgetting Single-Element Arrays
+
+An array with only one element has no adjacent pairs to check, so it is trivially special. Forgetting this edge case can lead to incorrect logic or unnecessary iterations. The loop naturally handles this since iterating from `1` to `len(nums)` produces zero iterations when `len(nums) == 1`.

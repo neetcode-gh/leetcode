@@ -505,3 +505,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Starting the Result Counter at Zero
+
+A common mistake is initializing `res = 0` instead of `res = 1`. Since we are counting partitions and the string is non-empty, we always have at least one partition. Starting at zero would undercount by one because the final substring after the last split is never explicitly counted when we only increment on encountering duplicates.
+
+### Forgetting to Add the Character After Clearing the Set
+
+When a duplicate is found, some implementations clear the set but forget to add the current character to the fresh set. This leads to incorrect behavior because the duplicate character that triggered the new partition should be the first character of that new partition.
+
+### Treating the Problem as Finding Unique Substrings
+
+Some solvers confuse this with finding all unique substrings or counting unique characters globally. The goal is to partition the string such that each partition has unique characters within itself, not across the entire string. Each partition is independent and can reuse characters from previous partitions.

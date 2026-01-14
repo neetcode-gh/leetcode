@@ -1056,3 +1056,51 @@ class Solution {
 
 - Time complexity: $O(n ^ 3)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Treating the Graph as Undirected
+
+A common mistake is assuming that if bomb A can trigger bomb B, then B can also trigger A. This is incorrect because bombs have different radii. The graph is directed: an edge from A to B exists only if B is within A's blast radius.
+
+```python
+# Wrong: Adding bidirectional edges unconditionally
+if d <= r1 ** 2:
+    adj[i].append(j)
+    adj[j].append(i)  # Incorrect!
+
+# Correct: Check each direction separately
+if d <= r1 ** 2:
+    adj[i].append(j)
+if d <= r2 ** 2:
+    adj[j].append(i)
+```
+
+### Integer Overflow When Computing Distance
+
+When calculating the squared distance between bombs, the intermediate values can overflow 32-bit integers. Coordinates can be up to 10^5 and squaring the difference can exceed `INT_MAX`. Always use 64-bit integers for distance calculations.
+
+```java
+// Wrong: Overflow possible
+int d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+
+// Correct: Cast to long before multiplication
+long d = (long)(x1 - x2) * (x1 - x2) + (long)(y1 - y2) * (y1 - y2);
+```
+
+### Using Square Root for Distance Comparison
+
+Computing the actual Euclidean distance using `sqrt()` introduces floating-point precision errors. Instead, compare squared distances directly to avoid precision issues.
+
+```python
+# Wrong: Floating-point precision issues
+import math
+if math.sqrt((x1-x2)**2 + (y1-y2)**2) <= r1:
+    adj[i].append(j)
+
+# Correct: Compare squared values
+if (x1-x2)**2 + (y1-y2)**2 <= r1**2:
+    adj[i].append(j)
+```

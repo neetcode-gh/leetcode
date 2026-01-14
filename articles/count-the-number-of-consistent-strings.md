@@ -817,3 +817,39 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Where $n$ is the number of words, $m$ is the length of the string $allowed$, and $l$ is the length of the longest word.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Break Early
+
+When a word is found to be inconsistent, failing to break out of the inner loop wastes time checking remaining characters. This does not affect correctness but can significantly impact performance.
+
+```python
+# Incorrect - continues checking after finding invalid character
+for c in w:
+    if c not in allowed:
+        flag = False
+        # Missing break!
+
+# Correct - exits immediately when inconsistent
+for c in w:
+    if c not in allowed:
+        flag = False
+        break
+```
+
+### Incorrect Bitmask Check
+
+When using the bitmask approach, a common mistake is checking if the bit equals 1 instead of checking if it is non-zero. The bit position varies, so the result of the AND operation will be a power of 2, not necessarily 1.
+
+```python
+# Incorrect - bit & mask could be 2, 4, 8, etc., not 1
+if (bit & bit_mask) == 1:
+    res -= 1
+
+# Correct - check if the result is zero
+if (bit & bit_mask) == 0:
+    res -= 1
+```

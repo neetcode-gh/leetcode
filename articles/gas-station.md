@@ -713,3 +713,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Check Total Gas vs Total Cost First
+
+The greedy solution assumes a valid starting point exists if total gas is sufficient. However, skipping this global check can cause returning an invalid index when no solution exists. Always verify `sum(gas) >= sum(cost)` before applying the greedy logic, or the algorithm may return a false positive starting index.
+
+### Resetting to an Invalid Starting Index
+
+When the running tank goes negative at index `i`, the new candidate start should be `i + 1`. A common mistake is setting it to `i`, which is guaranteed to fail since we just proved the journey fails at that point. Additionally, when `i + 1` equals `n`, there's no valid start, but this is handled by the total gas check.
+
+### Not Understanding Why Failed Stations Can Be Skipped
+
+The greedy approach skips all stations between the previous start and the failing point. This works because if we cannot reach station `j` starting from station `i`, we also cannot reach `j` starting from any station between `i` and `j`. Those intermediate stations have strictly less accumulated gas when reaching `j`. Understanding this principle is key to trusting the linear-time solution.

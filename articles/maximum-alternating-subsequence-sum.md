@@ -648,3 +648,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Confusing Subsequence with Subarray
+
+A subsequence does not require elements to be contiguous, while a subarray does. In this problem, you can skip elements freely. For example, from `[4, 2, 5, 3]`, you can pick `[4, 2, 5]` (indices 0, 1, 2) or `[4, 5]` (indices 0, 2). Treating this as a subarray problem leads to incorrect answers.
+
+### Misunderstanding the Alternating Pattern
+
+The alternating sum starts with addition for the first picked element, then subtracts the second, adds the third, and so on. The pattern is based on the position within the chosen subsequence, not the original array indices. Starting with subtraction or miscounting the parity will produce wrong results.
+
+### Integer Overflow
+
+The sum can exceed 32-bit integer limits when the array is large and contains values up to $10^5$. Use `long` in Java/C++ or ensure your language handles big integers. Failing to account for this causes overflow errors on larger test cases.

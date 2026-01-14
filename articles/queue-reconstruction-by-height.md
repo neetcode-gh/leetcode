@@ -2384,3 +2384,19 @@ class Solution {
 
 - Time complexity: $O(n\log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Incorrect Sorting Order for Same Heights
+
+When two people have the same height, they must be sorted by k-value in the correct secondary order. For descending height approach, sort by k ascending (smaller k first). Reversing this order causes insertions to shift previously placed same-height people incorrectly.
+
+### Using Wrong Insertion Index
+
+The k-value represents how many people with height >= current person's height should be in front. When processing tallest-first, k directly gives the insertion index since all previously placed people are at least as tall. Misinterpreting k as the count of taller (not taller-or-equal) people leads to wrong placements.
+
+### Modifying List While Iterating
+
+Some implementations attempt to build the queue by modifying the input array in place or iterating while inserting. This causes elements to shift unexpectedly. Always use a separate result list and insert into it, or use the ascending height approach with pre-allocated slots.

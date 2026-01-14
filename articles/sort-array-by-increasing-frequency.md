@@ -152,3 +152,15 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Reversing the Tiebreaker Logic
+
+The problem requires that when frequencies are equal, larger values should come first (descending order by value). A common mistake is sorting by ascending value instead, which produces incorrect output for elements with the same frequency.
+
+### Sorting by Frequency in Descending Order
+
+The problem asks for increasing frequency order (less frequent elements first). Accidentally sorting by descending frequency places the most frequent elements first, which is the opposite of what is required.

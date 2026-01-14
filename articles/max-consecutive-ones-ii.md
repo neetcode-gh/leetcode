@@ -502,3 +502,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space used
 
 >  Where $n$ is the length of the input array `nums`.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Errors in Window Size Calculation
+
+When calculating the window size, remember that for indices `left` and `right`, the window size is `right - left + 1`, not `right - left`. Forgetting the `+1` results in consistently underreporting the maximum consecutive ones by one.
+
+### Incorrectly Handling the Zero Count Threshold
+
+The window becomes invalid when `numZeroes` reaches `2` (since we can only flip one zero). A common mistake is using `numZeroes > 1` in some places and `numZeroes == 2` in others, leading to inconsistent behavior. Be consistent with your threshold check and ensure you shrink the window only when you have exceeded the allowed number of zeros.
+
+### Not Updating the Maximum Before Shrinking
+
+Make sure to update the longest sequence answer at the right time. If you shrink the window first and then try to update the maximum, you might miss the optimal window size. In the sliding window approach, update the result after ensuring the window is valid, not before handling the invalid case.

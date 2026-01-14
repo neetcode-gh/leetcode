@@ -1224,3 +1224,27 @@ class Solution {
 - Space complexity: $O(m ^ 2)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the grid.
+
+---
+
+## Common Pitfalls
+
+### Double Counting Cherries When Robots Overlap
+Forgetting to check if both robots land on the same cell and counting cherries twice. When `c1 == c2`, you must only add `grid[r][c1]` once, not `grid[r][c1] + grid[r][c2]`.
+
+```python
+# Wrong: always adds both
+res = grid[r][c1] + grid[r][c2]
+
+# Correct: check for overlap
+res = grid[r][c1] + (grid[r][c2] if c1 != c2 else 0)
+```
+
+### Using 4 Directions Instead of 3
+Treating this like a general grid traversal where robots can move in any direction. Each robot can only move down-left, down, or down-right (3 choices), not up or stay in place. This gives 9 total combinations per step, not 16.
+
+### Incorrect State Space for Memoization
+Using only `(r, c1)` or `(r, c2)` for caching, forgetting that the state depends on both robot positions simultaneously. The correct state is `(r, c1, c2)` since both robots move together row by row.
+
+### Off-by-One Error on Base Case
+Checking `r == ROWS` instead of `r == ROWS - 1` for the base case. Since indexing is 0-based, the last row is at index `ROWS - 1`, and that is where you should collect final cherries and stop recursion.

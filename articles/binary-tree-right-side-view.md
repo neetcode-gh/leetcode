@@ -661,3 +661,28 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Only Traversing Right Children
+The rightmost visible node at each level is not always in the right subtree. When the right subtree is shorter than the left, deeper left nodes become visible from the right.
+```python
+# Wrong: misses left nodes visible at deeper levels
+def dfs(node):
+    if node:
+        res.append(node.val)
+        dfs(node.right)  # must also check node.left
+```
+
+### Using DFS With Left-First Traversal Without Adjustment
+In DFS, if you visit left children before right children, you must update (not just set) the result for each depth. Otherwise, only left-side nodes are captured.
+```python
+# Wrong with left-first DFS: captures left side, not right
+if depth == len(res):
+    res.append(node.val)  # never updates if left visited first
+```
+
+### Forgetting to Track Level Size in BFS
+In BFS, you must process all nodes at the current level before moving to the next. Without tracking the level size, you cannot determine which node is rightmost at each level.

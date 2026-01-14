@@ -1557,3 +1557,25 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Wrong Box Index Calculation
+The 3x3 box index formula `(r // 3) * 3 + (c // 3)` is easy to get wrong. A common mistake is using `(r // 3, c // 3)` as a tuple key but forgetting integer division, or computing `r // 3 + c // 3` which doesn't uniquely identify boxes.
+```python
+# Wrong: doesn't uniquely identify boxes
+box_idx = r // 3 + c // 3  # Box (0,1) and (1,0) both give 1
+# Correct: unique box index 0-8
+box_idx = (r // 3) * 3 + c // 3
+```
+
+### Not Skipping Empty Cells
+Empty cells are represented by `"."` and should be skipped entirely. Forgetting to check for empty cells before processing will cause errors or incorrect duplicate detection.
+
+### Checking Validity vs Solvability
+This problem only checks if the current board state is valid, not whether the puzzle is solvable. A board with no duplicates is valid even if it's impossible to complete.
+
+### Processing the Same Cell Multiple Times
+When iterating through the board, make sure each cell is only processed once. Some implementations accidentally check the same digit multiple times when validating rows, columns, and boxes separately.

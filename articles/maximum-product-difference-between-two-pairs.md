@@ -520,3 +520,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Track Both Maximums and Minimums Separately
+
+When updating the two largest values, failing to properly shift `max1` to `max2` before assigning the new `max1` causes the second maximum to be lost. Similarly for minimums. Always save the old value before overwriting.
+
+### Using Incorrect Initial Values
+
+Initializing `min1` and `min2` to `0` instead of infinity (or the maximum possible value) leads to incorrect results when all array elements are positive. Since the problem guarantees positive integers, initialize minimums to a large value like `INT_MAX` or `float('inf')`.

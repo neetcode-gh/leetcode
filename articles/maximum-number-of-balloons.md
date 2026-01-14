@@ -375,3 +375,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since $balloon$ has $5$ different characters.
+
+---
+
+## Common Pitfalls
+
+### Forgetting Double Letters
+
+The word "balloon" contains two `l`s and two `o`s. A common mistake is treating all characters equally without dividing the counts of `l` and `o` by 2. This results in overcounting the number of possible words that can be formed.
+
+### Not Checking for Missing Characters
+
+If any of the five required characters (`b`, `a`, `l`, `o`, `n`) is missing from the text, the answer is 0. Failing to handle this case (for example, by taking the minimum of an empty collection or dividing by zero) can cause runtime errors or incorrect results.

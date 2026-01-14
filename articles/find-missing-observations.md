@@ -433,3 +433,17 @@ class Solution {
     - $O(n)$ space for the output array.
 
 > Where $m$ is the size of the array $rolls$ and $n$ is the number of missing observations.
+
+## Common Pitfalls
+
+### Forgetting to Validate the Required Sum
+
+Before constructing the result, you must check that `nTotal` (the required sum for missing dice) falls within the valid range `[n, 6*n]`. If `nTotal < n`, it is impossible to assign at least 1 to each die. If `nTotal > 6*n`, it is impossible even if all dice show 6. Failing to return an empty array in these cases leads to incorrect or invalid outputs.
+
+### Integer Overflow When Computing Total Sum
+
+When calculating `mean * (n + m)`, both `n` and `m` can be large (up to 10^5), and the mean can be up to 6. The product can exceed the range of 32-bit integers in some languages. Ensure you use appropriate data types (e.g., `long` in Java) or rely on languages with arbitrary precision integers to avoid overflow.
+
+### Off-by-One Errors in Greedy Assignment
+
+When greedily assigning values, the formula `min(nTotal - remaining + 1, 6)` requires careful handling of the remaining count. If you decrement the count at the wrong time or miscalculate how much "room" is left for future dice, you may assign invalid values (less than 1 or greater than 6) or fail to distribute the sum correctly.

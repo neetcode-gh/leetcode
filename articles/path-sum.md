@@ -1177,3 +1177,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Checking Sum at Non-Leaf Nodes
+
+A frequent mistake is checking if the current sum equals the target at every node rather than only at leaf nodes. The problem specifically requires a root-to-leaf path, so internal nodes should not trigger a `true` result even if the running sum matches the target. Always verify that both `left` and `right` children are `null` before comparing sums.
+
+### Returning True on Null Nodes When Target is Zero
+
+Another pitfall is incorrectly returning `true` when reaching a `null` node if `targetSum` happens to be zero. An empty tree (null root) should return `false` regardless of the target value. The base case for `null` nodes should always return `false`, and the sum check should only occur at actual leaf nodes.

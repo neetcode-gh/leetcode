@@ -545,3 +545,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for the output array.
+
+---
+
+## Common Pitfalls
+
+### Assuming Squares Preserve Sorted Order
+
+A common mistake is assuming that squaring a sorted array keeps it sorted. This is false when negative numbers are present because squaring makes them positive, potentially larger than squared positive numbers. For example, `[-4, -1, 0, 3]` becomes `[16, 1, 0, 9]`, which is not sorted.
+
+### Forgetting to Handle Negative Numbers with Two Pointers
+
+When using two pointers, comparing `nums[l]` and `nums[r]` directly instead of their absolute values or squares leads to incorrect results. Negative numbers at the left end may have larger squares than positive numbers at the right end, so always compare absolute values or squared values.

@@ -1023,3 +1023,15 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows in the grid and $n$ is the number of columns in the grid.
+
+---
+
+## Common Pitfalls
+
+### Not Reducing k Modulo Total Elements
+
+When `k` is larger than the total number of elements (`m * n`), performing `k` shifts is redundant since the grid returns to its original state after every `m * n` shifts. Failing to reduce `k` with modulo leads to unnecessary iterations and potential timeout errors.
+
+### Incorrect 2D to 1D Index Conversion
+
+When flattening the grid or computing new positions, using incorrect formulas for converting between 2D coordinates `(r, c)` and 1D index causes elements to be placed in wrong positions. The correct formulas are: `index = r * n + c` and `r = index / n`, `c = index % n`.

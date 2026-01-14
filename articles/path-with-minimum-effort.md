@@ -1802,3 +1802,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given matrix.
+
+---
+
+## Common Pitfalls
+
+### Summing Differences Instead of Taking Maximum
+
+The effort of a path is defined as the maximum absolute difference along the path, not the sum. Using addition instead of `max()` when computing the new effort will give incorrect results. Always compute `newEffort = max(currentEffort, abs(height[current] - height[neighbor]))`.
+
+### Confusing Single-Cell Grids
+
+When the grid has only one cell, the answer is `0` since we are already at the destination. Some implementations may fail to handle this edge case, especially when the algorithm expects at least one move. Check for `ROWS == 1 && COLS == 1` as a base case or ensure your algorithm naturally returns `0`.
+
+### Incorrect Distance Initialization
+
+In Dijkstra's algorithm, all distances should be initialized to infinity except for the starting cell which should be `0`. Some implementations mistakenly initialize all distances to zero or forget to set the starting distance, causing the algorithm to skip valid relaxations or produce incorrect minimum efforts.

@@ -395,3 +395,15 @@ class Solution {
 - Space complexity: $O(L)$ extra space used
 
 >  Where $L$ is the length of the string and $N$ is the length of the `shift` array
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Take Modulo of Shift Amount
+
+When the shift amount exceeds the string length, shifting by `len(s)` positions returns the original string. Failing to take `amount % len(s)` before performing the shift can cause index out of bounds errors or inefficient operations when the shift amount is very large.
+
+### Confusing Left and Right Shift Directions
+
+A left shift moves characters from the front to the back, while a right shift moves characters from the back to the front. Mixing up these directions or incorrectly implementing the slicing logic results in the wrong output. Always verify which direction corresponds to which `direction` value (0 for left, 1 for right).

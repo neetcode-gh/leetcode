@@ -913,3 +913,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have at most 26 different characters.
+
+---
+
+## Common Pitfalls
+
+### Confusing Subsequence with Substring
+
+A subsequence does not require elements to be contiguous in the original string. Some solutions incorrectly enforce that characters must be adjacent in the input, which is the definition of a substring. Remember that you can skip characters while maintaining relative order.
+
+### Off-by-One Errors in Character Distance Calculation
+
+When checking if the difference between two characters is at most `k`, ensure you use the absolute value of the difference between their positions in the alphabet. A common mistake is comparing ASCII values directly without converting to 0-indexed positions, or forgetting to take the absolute value when the current character is alphabetically before the previous one.
+
+### Not Considering All Valid Previous Characters
+
+When computing the longest subsequence ending at a character, you must consider all previous characters within distance `k`, not just the immediately preceding one in the string. The optimal extension might come from any character in the range `[curr - k, curr + k]`, and failing to check the entire range leads to suboptimal answers.

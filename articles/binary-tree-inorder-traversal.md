@@ -917,3 +917,17 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Wrong Order of Operations in Recursion
+Inorder traversal requires visiting left, then current, then right. A common mistake is adding the current node's value before or after both recursive calls, which produces preorder or postorder results instead.
+```python
+# Wrong: res.append(node.val) before inorder(node.left)
+# Correct: inorder(node.left), then res.append(node.val)
+```
+
+### Forgetting to Move Right in Iterative Approach
+After popping and processing a node from the stack, you must move to its right child. Forgetting `cur = cur.right` causes an infinite loop since the same node keeps getting processed.

@@ -775,3 +775,39 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Bit Shift Operator
+
+When using the DP recurrence `dp[i] = dp[i >> 1] + (i & 1)`, a common mistake is using left shift instead of right shift, or confusing the operator precedence.
+
+```python
+# Wrong: Using left shift instead of right shift
+dp[i] = dp[i << 1] + (i & 1)  # This accesses invalid indices
+
+# Wrong: Operator precedence issue in some languages
+dp[i] = dp[i >> 1 + (i & 1)]  # Addition happens before shift
+
+# Correct
+dp[i] = dp[i >> 1] + (i & 1)
+```
+
+### Off-by-One in Loop Bounds
+
+The problem asks for bits count from `0` to `n` inclusive, meaning the result array should have `n + 1` elements. A common mistake is creating an array of size `n` or iterating up to `n - 1`.
+
+```python
+# Wrong: Array too small
+dp = [0] * n  # Missing dp[n]
+
+# Wrong: Loop doesn't include n
+for i in range(n):  # Should be range(n + 1)
+
+# Correct
+dp = [0] * (n + 1)
+for i in range(n + 1):
+    # process
+```

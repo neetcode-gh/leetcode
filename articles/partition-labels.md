@@ -234,3 +234,19 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the number of unique characters in the string $s$.
+
+---
+
+## Common Pitfalls
+
+### Not Precomputing Last Indices
+
+A common mistake is trying to find the last occurrence of each character on the fly during the main traversal. This leads to O(n^2) time complexity. You must precompute the last index of every character in a first pass to achieve O(n) time.
+
+### Forgetting to Reset Partition Size
+
+After completing a partition (when `i == end`), forgetting to reset the `size` counter to 0 causes partition sizes to accumulate incorrectly. Each new partition must start with a fresh count.
+
+### Off-by-One Errors with Partition Boundaries
+
+When checking if the current index equals the end of the partition, make sure to use the correct comparison. The partition ends when `i == end`, not `i > end` or `i >= end`. An off-by-one error here will either split partitions prematurely or merge partitions that should be separate.

@@ -882,3 +882,30 @@ class Solution {
 - Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
 
 > Where $n$ is the number of elements and $k$ is the number of elements to be picked.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Copy the Combination Before Adding to Results
+When adding the current combination to the result list, you must create a copy. Otherwise, subsequent modifications during backtracking will alter the already-added result.
+
+```python
+# Wrong: adds reference that gets modified
+res.append(comb)
+
+# Correct: adds a copy
+res.append(comb.copy())
+```
+
+### Missing the Backtrack Step
+After exploring a branch with an element included, you must remove it before exploring the next branch. Forgetting to pop leads to combinations with too many elements.
+
+```python
+comb.append(i)
+backtrack(i + 1, comb)
+# Missing: comb.pop()
+```
+
+### Using Wrong Loop Bounds
+Starting the loop at `0` instead of `start` causes duplicate combinations like `[1,2]` and `[2,1]`. The loop must start from the current position to ensure each combination is generated only once in sorted order.

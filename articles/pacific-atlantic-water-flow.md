@@ -1329,3 +1329,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Using the Wrong Flow Direction Comparison
+
+When starting from ocean borders and moving inward, the comparison must check if the neighbor height is greater than or equal to the current height (water flows uphill in reverse). Using the normal downhill comparison (`neighbor <= current`) gives incorrect reachability since the logic is reversed.
+
+### Running Separate DFS/BFS for Each Cell
+
+A brute force approach that runs a full traversal from every cell to check ocean reachability leads to O((m*n)^2) time complexity or worse. The efficient approach is to run only two traversals total: one multi-source search from all Pacific border cells and one from all Atlantic border cells.
+
+### Not Properly Handling Edge and Corner Cells
+
+Edge cells border one ocean while corner cells border both oceans. A common bug is forgetting that cells on the top row and left column touch the Pacific, while cells on the bottom row and right column touch the Atlantic. Missing any border initialization causes incomplete reachability sets.

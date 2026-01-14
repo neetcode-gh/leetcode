@@ -571,3 +571,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space used
 
 > Where $n$ is the number of arrays in $arrays$
+
+---
+
+## Common Pitfalls
+
+### Selecting Both Elements from the Same Array
+
+The problem requires elements to come from **two different arrays**. A common mistake is to find the global minimum and maximum across all elements without ensuring they belong to different arrays. For example, if one array contains both the smallest and largest values, using them would violate the constraint. The single scan solution handles this by comparing the current array's values against previously seen min/max values, guaranteeing they come from different arrays.
+
+### Forgetting to Use Absolute Difference
+
+Some solutions compute the difference without taking the absolute value. While the optimal solution always involves `max - min` (which is positive), intermediate calculations or edge cases might produce negative values. Always use `abs()` or structure your comparisons to ensure you're computing `|a - b|` rather than just `a - b`.
+
+### Not Exploiting the Sorted Property of Each Array
+
+Each individual array is sorted in ascending order. Failing to recognize this leads to unnecessarily iterating through all elements when only the first (minimum) and last (maximum) elements of each array matter. The brute force solution that checks every pair of elements is correct but inefficient; the optimized approaches leverage the sorted property to achieve linear time.

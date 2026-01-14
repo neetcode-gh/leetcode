@@ -629,3 +629,19 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$ since we have at most $52$ different characters.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Remove Characters with Zero Count
+
+When shrinking the window from the left, you must remove characters from the hash map when their count drops to zero. If you only decrement the count without removing the entry, the map size will incorrectly reflect more distinct characters than actually exist in the window, causing premature window shrinking.
+
+### Confusing "At Most Two" with "Exactly Two"
+
+The problem asks for substrings with *at most* two distinct characters, not exactly two. This means substrings with zero or one distinct character are also valid. Ensure your solution counts these cases correctly and does not skip windows with fewer than two distinct characters.
+
+### Incorrect Window Boundary Updates
+
+A common mistake is updating the result before fully adjusting the window to be valid. Always ensure the window contains at most two distinct characters before calculating and updating the maximum length. Update the result after the while loop that shrinks the window, not before.

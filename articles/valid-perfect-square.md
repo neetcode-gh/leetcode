@@ -885,3 +885,15 @@ class Solution {
 
 - Time complexity: $O(1)$ since we iterate at most $15$ times.
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Squaring
+
+When computing `m * m` in binary search or brute force approaches, the result can overflow if using 32-bit integers. For example, if `m = 46341`, then `m * m = 2147488281` which exceeds the maximum 32-bit signed integer. Always use `long` or `long long` for the squared value, or use division (`m > num / m`) to avoid overflow.
+
+### Floating-Point Precision Issues
+
+When using the built-in `sqrt()` function, floating-point precision can cause incorrect results. For example, `sqrt(2147395600)` might return `46339.999989...` which truncates to `46339` instead of `46340`. Always verify by squaring the integer result and comparing with the original number, rather than relying solely on the floating-point square root.

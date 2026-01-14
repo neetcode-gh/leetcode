@@ -411,3 +411,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $H$ is the height of the given tree.
+
+---
+
+## Common Pitfalls
+
+### Ignoring the BST Property
+
+Treating this problem like a general binary tree search by checking both left and right children at every node defeats the purpose of the BST structure. The BST property guarantees that the target can only be in one subtree, so always compare the target with the current node value to decide which direction to go.
+
+### Not Handling the Null Case
+
+Forgetting to check if `root` is `null` before accessing `root.val` will cause a null pointer exception. This check is essential both as a base case for recursion and as a loop termination condition for the iterative approach.

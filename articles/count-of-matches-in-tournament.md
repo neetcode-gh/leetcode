@@ -224,3 +224,19 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Overcomplicating with Simulation
+Many beginners implement a full round-by-round simulation when the mathematical insight `n - 1` gives the answer directly. Each match eliminates exactly one team, and to get from `n` teams to 1 winner requires eliminating `n - 1` teams.
+
+### Off-by-One in Winner Calculation
+When simulating, incorrectly calculating the number of teams advancing to the next round. The correct formula is `(n + 1) / 2` (integer division), not `n / 2`, because the bye team also advances.
+```python
+# Wrong: loses the bye team
+n = n // 2
+# Correct: includes bye team when n is odd
+n = (n + 1) // 2
+```

@@ -764,3 +764,39 @@ class Solution {
 * Space complexity: $O(m * l)$
 
 > Where $m$ is the number of words, $n$ is the length of the string $pref$ and $l$ is the maximum length of a word.
+
+---
+
+## Common Pitfalls
+
+### Checking Contains Instead of Starts With
+
+The problem asks for words that start with the prefix, not words that contain the prefix anywhere. Using a contains/includes check instead of a starts-with check will incorrectly count words where the prefix appears in the middle.
+
+```python
+# Wrong: Checks if prefix exists anywhere in the word
+if pref in word:
+    count += 1
+
+# Correct: Checks if word starts with prefix
+if word.startswith(pref):
+    count += 1
+```
+
+### Not Handling Words Shorter Than the Prefix
+
+When manually comparing characters, forgetting to check if the word is at least as long as the prefix leads to index out of bounds errors or incorrect matches.
+
+```python
+# Wrong: May cause index error if word is shorter than prefix
+for i in range(len(pref)):
+    if word[i] != pref[i]:  # Error when len(word) < len(pref)
+        break
+
+# Correct: Skip words shorter than the prefix
+if len(word) < len(pref):
+    continue
+for i in range(len(pref)):
+    if word[i] != pref[i]:
+        break
+```

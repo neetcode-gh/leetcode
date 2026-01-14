@@ -1512,3 +1512,40 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(k)$
+
+---
+
+## Common Pitfalls
+
+### Forcing Extension When Starting Fresh is Better
+When all previous DP values in the window are negative, it's better to start a new subsequence at the current index rather than extending. Failing to take `max(0, previous_max)` leads to suboptimal sums.
+
+```python
+# Wrong: always extends from previous
+cur = nums[i] + dq[0][1]
+
+# Correct: start fresh if previous max is negative
+cur = nums[i] + max(0, dq[0][1])
+```
+
+### Not Maintaining Monotonic Decreasing Order in Deque
+The deque must store values in decreasing order so the front always has the maximum. Forgetting to pop smaller values from the back before inserting breaks this invariant.
+
+```python
+# Wrong: just appends without cleanup
+dq.append((i, cur))
+
+# Correct: remove smaller values first
+while dq and cur > dq[-1][1]:
+    dq.pop()
+dq.append((i, cur))
+```
+
+### Incorrect Window Boundary Check
+The constraint allows elements at most `k` indices apart, meaning index `i` can extend from indices `i-k` through `i-1`. Using `< i - k` instead of `<= i - k - 1` (or equivalently `< i - k`) for removal is an off-by-one error.
+
+### Using O(nk) Approach for Large Inputs
+The naive DP solution that checks all `k` previous elements for each position times out on large inputs. Using a segment tree, heap, or monotonic deque is necessary to achieve `O(n log n)` or `O(n)` time.
+
+### Returning Maximum DP Value Instead of Tracking Running Maximum
+In some implementations, the maximum sum subsequence might not end at the last index. You must track the maximum across all DP values, not just return `dp[n-1]`.

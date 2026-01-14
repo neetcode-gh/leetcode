@@ -257,3 +257,19 @@ class Solution {
 - Space complexity: $O(N \cdot K)$
 
 >  Where $N$ is the length of `strings` and $K$ is the maximum length of a string in `strings`.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Negative Differences with Modulo
+
+When computing the difference between consecutive characters, `s[i] - s[i-1]` can be negative (e.g., going from 'z' to 'a'). Simply using modulo is not enough in some languages; you must add 26 before taking modulo to ensure a positive result: `(s[i] - s[i-1] + 26) % 26`. Failing to do this produces different hash keys for strings that should be grouped together.
+
+### Not Handling Single-Character Strings
+
+Single-character strings have no consecutive character pairs, producing an empty hash key. All single-character strings should be grouped together since any single character can shift to any other. Ensure your hash function handles this case correctly by returning a consistent empty or default key.
+
+### Using Absolute Difference Instead of Directional Difference
+
+The shifting sequence is directional: "az" and "za" have different patterns. Using `abs(s[i] - s[i-1])` would incorrectly group these together. The correct approach uses `(s[i] - s[i-1] + 26) % 26` to preserve the direction of the shift while handling wrap-around.

@@ -948,3 +948,15 @@ class Solution {
 - Space complexity: $O(g)$ for the output string.
 
 > Where $m$ is the length of the string $str1$, $n$ is the length of the string $str2$, and $g$ is the GCD of $m$ and $n$.
+
+---
+
+## Common Pitfalls
+
+### Skipping the Concatenation Check
+
+The key insight is that if a common divisor string exists, then `str1 + str2` must equal `str2 + str1`. Skipping this check and directly returning `str1[:gcd(len1, len2)]` will produce wrong answers for cases where no valid divisor exists, such as `str1 = "LEET"` and `str2 = "CODE"`.
+
+### Confusing GCD of Lengths with GCD of Strings
+
+The GCD of the string lengths tells you the candidate divisor length, but it does not guarantee that the prefix of that length actually divides both strings. You must verify that the candidate pattern repeats correctly to form both original strings, either through the concatenation check or by explicitly validating the pattern.

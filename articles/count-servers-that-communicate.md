@@ -894,3 +894,22 @@ class Solution {
 * Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix $grid$.
+
+---
+
+## Common Pitfalls
+
+### Counting Total Servers Instead of Communicating Servers
+A server only counts if it can communicate with at least one other server. Counting all servers (all cells with value 1) ignores the communication requirement.
+
+### Using OR Instead of Checking Both Row and Column Counts
+A server communicates if its row has 2+ servers OR its column has 2+ servers. Using AND would incorrectly require both conditions.
+```python
+# Wrong: requires both row AND column to have multiple servers
+if row_cnt[r] > 1 and col_cnt[c] > 1:
+# Correct: either condition is sufficient
+if row_cnt[r] > 1 or col_cnt[c] > 1:
+```
+
+### Double Counting Servers
+When processing rows and columns separately (in the space-optimized solution), servers that are in both a communicating row and a communicating column can be counted twice. Mark processed servers to avoid this.

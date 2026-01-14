@@ -785,3 +785,19 @@ We don't know what time and space the `knows(...)` API uses. Because it's not ou
 - Space complexity: $O(n)$
 
 >  Where $n$ is the number of nodes in the graph.
+
+---
+
+## Common Pitfalls
+
+### Skipping the Verification Step
+
+After finding a candidate using logical deduction, you must verify that the candidate truly knows nobody and is known by everyone. The candidate elimination only guarantees the candidate could be a celebrity, not that they definitely are one. Skipping verification can return false positives.
+
+### Starting the Candidate Search from Wrong Index
+
+In the logical deduction approach, starting from candidate 0 and iterating from index 1 is intentional. Starting the loop from index 0 with `knows(candidate, 0)` would incorrectly update the candidate when comparing a person to themselves, since `knows(0, 0)` might return true.
+
+### Calling knows(i, i) During Verification
+
+When verifying the candidate, always skip the case where `i == j`. Asking if someone knows themselves is undefined behavior in this problem and could return unexpected results that break your verification logic.

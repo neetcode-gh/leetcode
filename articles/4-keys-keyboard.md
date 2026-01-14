@@ -175,3 +175,22 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the maximum number of key presses allowed.
+
+---
+
+## Common Pitfalls
+
+### Miscounting the Copy-Paste Cost
+A complete copy-paste sequence requires 3 keys minimum: Ctrl-A, Ctrl-C, and one Ctrl-V. Each additional paste is just 1 more key. A common mistake is forgetting that the first paste after copying costs 3 total operations, not 2.
+```python
+# Wrong: assumes copy-paste costs 2 keys
+for j in range(i + 2, n + 1):
+# Correct: copy-paste needs at least 3 keys (Ctrl-A, Ctrl-C, Ctrl-V)
+for j in range(i + 3, n + 1):
+```
+
+### Ignoring Small n Base Cases
+For small values of `n` (typically n <= 6), just pressing 'A' repeatedly is optimal or nearly optimal. Trying to apply the copy-paste strategy too early wastes keystrokes on the copy operation when simply typing would yield more characters.
+
+### Wrong Multiplier Calculation
+When pasting `k` times after copying, the total becomes `(k+1) * original` (original plus k copies). A common error is calculating the multiplier as just `k` instead of `k+1`, or miscounting how many paste operations fit in the remaining keystrokes.

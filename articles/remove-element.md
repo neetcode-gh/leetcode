@@ -466,3 +466,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Returning the Wrong Value
+
+A common mistake is returning the length of the original array instead of the count of remaining elements. The problem asks for the number of elements that are not equal to `val`, which may be less than the original array length. Always return the write pointer position (`k` or `n`) that tracks how many valid elements exist after removal.
+
+### Incrementing the Pointer After a Swap
+
+When using the swap-with-end approach (Two Pointers - II), forgetting to recheck the current position after swapping leads to missed removals. After replacing `nums[i]` with the last element, the swapped element might also equal `val` and needs to be checked. Only increment `i` when the current element is valid; otherwise, decrement `n` and keep `i` unchanged.

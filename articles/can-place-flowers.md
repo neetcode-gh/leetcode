@@ -357,3 +357,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Mark Planted Flowers
+After deciding to plant a flower at position `i`, you must update the flowerbed to reflect the new flower. Otherwise, you may count overlapping positions as valid.
+
+```python
+# Wrong: not updating the flowerbed after planting
+if f[i-1] == 0 and f[i] == 0 and f[i+1] == 0:
+    n -= 1  # Missing: f[i] = 1
+```
+
+### Off-by-One Errors at Boundaries
+When not padding the array, forgetting to handle the first and last positions specially leads to index-out-of-bounds errors or incorrect neighbor checks.

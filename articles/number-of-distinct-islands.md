@@ -589,3 +589,19 @@ class Solution {
 - Space complexity: $O(M \cdot N)$
 
 >  Where $M$ is the number of rows, and $N$ is the number of columns
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Normalize Island Coordinates
+
+When comparing islands, you must translate each island's cells relative to a consistent origin (typically the first cell discovered). Without normalization, two identical shapes at different positions in the grid will appear different, leading to overcounting distinct islands.
+
+### Missing Backtrack Markers in Path Signatures
+
+When using path-based hashing, recording only the direction of each DFS move is insufficient. Different island shapes can produce identical direction sequences if backtracking is not recorded. Always append a marker (like "0") when returning from a recursive call to distinguish branching structures.
+
+### Using Mutable Data Structures as Hash Keys
+
+In languages like Python, using a list or set directly as a dictionary key will cause errors. You must convert to an immutable type (like `frozenset` or `tuple`) before adding to a set of unique islands. Similarly, in Java, ensure your island representation implements proper `hashCode()` and `equals()` methods if using custom objects.

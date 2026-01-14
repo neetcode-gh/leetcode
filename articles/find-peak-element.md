@@ -673,3 +673,17 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Incorrect Boundary Handling
+
+When accessing `nums[m-1]` or `nums[m+1]`, you must check that `m > 0` or `m < n-1` respectively to avoid array index out of bounds errors. Elements outside the array are conceptually negative infinity, so boundary elements can be peaks if they are greater than their single neighbor.
+
+### Using Wrong Loop Condition
+
+Using `l <= r` versus `l < r` changes the termination logic significantly. With `l < r`, when the loop exits, `l` and `r` converge to the peak index. With `l <= r`, you need explicit return statements inside the loop. Mixing these approaches incorrectly leads to infinite loops or missed peaks.
+
+### Misunderstanding the Peak Guarantee
+
+The problem guarantees that a peak always exists because adjacent elements are distinct and boundaries are treated as negative infinity. Some solutions incorrectly return -1 or handle the "no peak found" case, which is unnecessary. Understanding why a peak must exist (the array cannot be strictly increasing forever due to the right boundary) helps avoid overcomplicating the solution.

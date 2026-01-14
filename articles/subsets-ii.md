@@ -1009,3 +1009,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(2 ^ n)$ space for the output list.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sort the Array First
+
+Sorting is essential because it groups duplicate elements together, enabling the skip logic to work correctly. Without sorting, duplicates scattered throughout the array cannot be detected and skipped, resulting in duplicate subsets.
+
+### Incorrect Duplicate Skipping Condition
+
+The condition `j > i && nums[j] == nums[j-1]` must use `j > i`, not `j > 0` or `j >= i`. Using `j > 0` would skip the first occurrence of a duplicate at each recursion level, missing valid subsets. The check ensures we only skip duplicates after the first one at the current decision level.
+
+### Modifying the Subset Reference Incorrectly
+
+When adding subsets to the result, you must copy the current subset (e.g., `subset[:]` in Python or `new ArrayList<>(subset)` in Java). Adding the reference directly means all entries in the result will point to the same list, which gets modified during backtracking.

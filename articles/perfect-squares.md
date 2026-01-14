@@ -1141,3 +1141,19 @@ class Solution {
 
 - Time complexity: $O(\sqrt {n})$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Recognizing Overlapping Subproblems
+
+A common mistake is implementing plain recursion without memoization. The recursive solution recomputes the same subproblems many times (e.g., `dfs(5)` might be called from multiple paths). Without caching results, the solution becomes exponentially slow and will time out on larger inputs.
+
+### Incorrect Base Case or Initialization
+
+Forgetting to handle the base case `dp[0] = 0` or initializing the DP array incorrectly leads to wrong answers. The value `dp[0] = 0` is crucial because it represents that zero squares are needed to sum to zero. Similarly, initializing other values to `n` (worst case of all 1s) ensures the minimum is correctly computed.
+
+### Iterating Over Non-Perfect-Squares
+
+Some implementations mistakenly iterate through all numbers from 1 to target instead of only perfect squares. This wastes computation and can lead to incorrect state transitions. Always ensure the inner loop only considers values `i` where `i * i <= target`.

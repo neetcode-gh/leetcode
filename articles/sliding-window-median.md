@@ -1091,3 +1091,27 @@ class Solution {
     - $O(n - k + 1)$ space for output array.
 
 > Where $n$ is the size of the array $nums$ and $k$ is the size of the sliding window.
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Calculating Median
+
+When `k` is even, the median is the average of two middle elements. Adding two large integers before dividing can cause overflow. For example, if both elements are near `Integer.MAX_VALUE`, their sum overflows. Always cast to a larger type (like `long`) before adding: `(a + 0L + b) / 2.0`.
+
+### Incorrect Heap Balancing After Removal
+
+With the two-heap approach using lazy deletion, the balance between heaps can become incorrect. When an element is marked for deletion but sits in the middle of a heap, the heap sizes appear correct but the actual valid element count differs. Always track balance changes based on which heap the removed element logically belongs to, not just heap sizes.
+
+### Removing from Wrong Heap in Two-Heap Approach
+
+When the sliding window moves, the outgoing element must be removed from the correct heap. A common mistake is comparing the outgoing element to the wrong heap's top or using stale comparisons after rebalancing. Always compare with `small.top()` before any rebalancing operations to determine which heap contains the element.
+
+### Not Handling Duplicate Values Correctly
+
+Multisets and sorted lists handle duplicates, but standard sets and maps do not. Using a regular set causes duplicates to be lost, producing incorrect medians. When using a TreeSet in Java, you must store indices (not values) with a custom comparator to distinguish between equal values at different positions.
+
+### Off-by-One Errors in Median Index Calculation
+
+For odd `k`, the median is at index `k / 2`. For even `k`, the two middle elements are at indices `(k - 1) / 2` and `k / 2`. Mixing these up or using 1-based indexing instead of 0-based produces wrong results. Verify your indexing by testing with small examples like `k = 2` and `k = 3`.

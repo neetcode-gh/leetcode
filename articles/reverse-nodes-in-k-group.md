@@ -778,3 +778,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Remaining Nodes
+
+When there are fewer than `k` nodes remaining at the end of the list, they should be left as-is. A common mistake is attempting to reverse these remaining nodes anyway, which violates the problem requirements.
+
+### Incorrect Pointer Rewiring After Reversal
+
+After reversing a k-group, you must correctly connect the reversed segment back to the rest of the list. Failing to update `groupPrev.next` to point to the new head of the reversed segment (which was the k-th node) results in a broken list.
+
+### Losing Track of the Original First Node
+
+The original first node of each k-group becomes the last node after reversal. You need to save a reference to it before rewiring pointers, as it becomes the new `groupPrev` for the next iteration.
+
+### Off-by-One Errors When Counting k Nodes
+
+When checking if there are at least `k` nodes available, ensure your counting logic is correct. Starting the count at 0 vs 1, or using `<` vs `<=` incorrectly, can cause you to reverse groups of the wrong size.
+
+### Not Using a Dummy Node
+
+Without a dummy node before the head, handling the first k-group requires special case logic since there is no `groupPrev` node. Using a dummy simplifies the code and eliminates edge cases for updating the head of the list.

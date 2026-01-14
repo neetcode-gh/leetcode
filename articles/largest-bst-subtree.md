@@ -1345,3 +1345,19 @@ class Solution {
     - The recursion call stack can take at most $O(H)$ space; in the worst-case scenario, the height of the tree will equal $N$.
 
 >  Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
+
+---
+
+## Common Pitfalls
+
+### Only Checking Immediate Children Instead of Entire Subtrees
+
+A subtree is a valid BST only if all nodes in the left subtree are smaller than the root and all nodes in the right subtree are larger. Checking only the immediate left and right children misses violations deeper in the tree. Always propagate min/max bounds through the entire subtree to validate correctly.
+
+### Confusing BST Validity with Binary Tree Structure
+
+A binary tree where each node has at most two children is not automatically a BST. The BST property requires strict ordering across entire subtrees, not just parent-child relationships. Do not assume validity based on tree shape alone; always verify the ordering constraint.
+
+### Returning Wrong Size When Subtree Is Not a Valid BST
+
+When a subtree fails the BST check, its size should not be counted as a valid BST. Instead, return the maximum size found in its left or right child subtrees. Mixing up the return values causes incorrect propagation and wrong final answers.

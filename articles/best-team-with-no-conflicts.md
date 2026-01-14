@@ -1266,3 +1266,20 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Sorting by Age Instead of Score
+The problem requires sorting by score (with age as a tiebreaker) so that we only need to check if ages are compatible. Sorting by age first leads to a more complex conflict check and often incorrect results.
+```python
+# Wrong: pairs.sort(key=lambda x: x[1])  # sorting by age
+# Correct: pairs.sort()  # sort by score first, then age
+```
+
+### Misunderstanding the Conflict Condition
+A conflict occurs when a younger player has a strictly higher score than an older player. The condition is NOT simply "different ages with different scores." Players with the same age never conflict, regardless of scores.
+
+### Forgetting to Include the Player's Own Score
+When computing the DP value for a player, you must add their own score to the best team score from compatible previous players. Forgetting to add the current player's score gives an answer that is always one player short.

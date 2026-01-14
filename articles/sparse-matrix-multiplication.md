@@ -1308,3 +1308,17 @@ class Solution {
 - Space complexity: $O(m \cdot k + k \cdot n)$
 
 >  Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
+
+## Common Pitfalls
+
+### Not Skipping Zero Elements in the First Matrix
+
+The main optimization for sparse matrices is to skip multiplications when an element in `mat1` is zero. Checking only for zeros in `mat2` or not checking at all results in unnecessary computations and misses the performance benefit of sparse matrix multiplication.
+
+### Confusing Row and Column Indices During Multiplication
+
+In matrix multiplication, element `mat1[i][k]` multiplies with `mat2[k][j]` to contribute to `result[i][j]`. Mixing up the shared index `k` or the result indices `i` and `j` leads to incorrect results.
+
+### Initializing the Result Matrix Incorrectly
+
+The result matrix must be initialized with zeros and have dimensions `m x n` where `m` is the number of rows in `mat1` and `n` is the number of columns in `mat2`. Using wrong dimensions or forgetting to initialize with zeros causes index errors or incorrect sums.

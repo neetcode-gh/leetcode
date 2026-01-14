@@ -395,3 +395,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $N$ is the size of the list.
+
+---
+
+## Common Pitfalls
+
+### Missing the Tail-to-Head Boundary Case
+
+Only checking for normal insertion between two nodes (`prev.val <= insertVal <= curr.val`) without handling the wraparound point where the largest value connects to the smallest. At this boundary, the new value might be a new maximum (greater than tail) or new minimum (smaller than head), both of which should be inserted at this location.
+
+### Infinite Loop When All Values Are Equal
+
+When all nodes in the circular list have the same value, neither the normal insertion condition nor the boundary condition will ever be true. Without a fallback case that inserts the node after completing a full traversal, the algorithm loops forever. The solution must detect when it returns to the starting node without inserting.
+
+### Forgetting to Handle Empty List
+
+When the head is null, failing to create a self-referential node (where `node.next = node`) results in either a null pointer exception or an incorrectly formed list. The empty list case must create a new node that points to itself to maintain the circular property.

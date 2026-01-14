@@ -577,3 +577,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle the Initial Window
+
+A common mistake is updating the result before the window reaches size `k`. This can cause the algorithm to report incorrect maximum values from incomplete windows. Always ensure the window has exactly `k` elements before comparing with the result.
+
+### Not Removing the Outgoing Element Correctly
+
+When sliding the window, forgetting to subtract the vowel count of the element leaving the window (at position `l`) leads to an ever-increasing count. The window must maintain exactly `k` elements, so when adding a new element on the right, the leftmost element must be removed from the count if the window exceeds size `k`.
+
+### Case Sensitivity with Vowels
+
+If the input can contain uppercase letters, failing to handle case sensitivity causes vowels like `'A'` or `'E'` to be missed. Either convert the string to lowercase before processing or include both cases in the vowel set.

@@ -421,3 +421,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Skipping Non-Alphanumeric Characters
+
+The problem requires ignoring all characters that are not letters or digits. Forgetting to skip spaces, punctuation, and special characters will cause false negatives. For example, "A man, a plan, a canal: Panama" should be recognized as a palindrome, but including the spaces and punctuation in the comparison will incorrectly return false.
+
+### Case Sensitivity
+
+Letters must be compared in a case-insensitive manner. Comparing 'A' directly with 'a' will return false even though they should be treated as equal. Always convert both characters to the same case (lowercase or uppercase) before comparing.

@@ -337,3 +337,39 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Allowing Depth to Go Negative
+
+When processing `"../"`, you must ensure the depth does not go below zero. Going above the main folder is impossible, so decrementing when already at depth `0` produces wrong results.
+
+```python
+# Wrong: depth can become negative
+if log == "../":
+    depth -= 1
+
+# Correct: clamp at zero
+if log == "../":
+    depth = max(0, depth - 1)
+```
+
+### Forgetting to Handle the Current Directory Operation
+
+The operation `"./"` means stay in the current folder and should not change the depth. Treating it like a folder name and incrementing depth is a common mistake.
+
+```python
+# Wrong: treating "./" as a folder
+if log != "../":
+    depth += 1  # This incorrectly increments for "./"
+
+# Correct: explicitly skip "./"
+if log == "./":
+    continue
+elif log == "../":
+    depth = max(0, depth - 1)
+else:
+    depth += 1
+```

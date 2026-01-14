@@ -403,3 +403,15 @@ class Solution {
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the input string and $m$ is the number of unique characters in the strings.
+
+---
+
+## Common Pitfalls
+
+### Only Checking One Direction of Mapping
+
+Checking only that each character in `s` maps to a unique character in `t` is insufficient. You must also verify the reverse: that each character in `t` maps to a unique character in `s`. For example, `s = "ab"` and `t = "aa"` would pass a one-way check but fails the bidirectional requirement since both `'a'` and `'b'` map to `'a'`.
+
+### Assuming Same Character Sets
+
+The two strings may contain completely different character sets. Do not assume that a character appearing in `s` must also appear in `t`, or vice versa. The mapping must be established dynamically as you iterate through both strings.

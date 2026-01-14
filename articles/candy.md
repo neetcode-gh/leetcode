@@ -809,3 +809,32 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Giving Extra Candy for Equal Ratings
+Children with equal ratings do not need to have the same or related candy counts. Only strictly higher ratings require more candy than neighbors.
+
+```python
+# Wrong: treating equal ratings like higher ratings
+if ratings[i] >= ratings[i - 1]:
+    arr[i] = arr[i - 1] + 1
+```
+
+### Only Considering One Direction
+A single left-to-right pass handles the left neighbor constraint but ignores the right neighbor. The two-pass approach ensures both constraints are satisfied.
+
+### Not Taking Maximum in Second Pass
+In the right-to-left pass, simply setting `arr[i] = arr[i + 1] + 1` may violate the left neighbor constraint already established. You must take the maximum of the current value and the right constraint.
+
+```python
+# Wrong: overwrites left constraint
+arr[i] = arr[i + 1] + 1
+# Correct: preserves both constraints
+arr[i] = max(arr[i], arr[i + 1] + 1)
+```
+
+### Off-by-One in Peak Handling (One-Pass Solution)
+When counting increasing and decreasing sequences, the peak element gets counted in both. Forgetting to subtract `min(inc, dec)` results in overcounting candies.

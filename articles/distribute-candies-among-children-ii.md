@@ -824,3 +824,58 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Lower Bound for Child C
+
+When calculating valid values for child B, you must ensure child C does not exceed the limit. The lower bound `b_min = max(0, n - a - limit)` ensures that `c = n - a - b` stays within bounds.
+
+```python
+# Wrong: Only checking upper bound
+for b in range(min(n - a, limit) + 1):
+    c = n - a - b
+    if c >= 0:  # Missing: c <= limit check!
+        res += 1
+
+# Correct: Check both bounds
+b_max = min(n - a, limit)
+b_min = max(0, n - a - limit)  # Ensures c <= limit
+if b_max >= b_min:
+    res += b_max - b_min + 1
+```
+
+### Off-by-One Errors in Loop Bounds
+
+When iterating through candy values, remember that both 0 and `limit` are valid amounts. Using `range(limit)` instead of `range(limit + 1)` misses the case where a child gets exactly `limit` candies.
+
+```python
+# Wrong: Missing limit value
+for a in range(limit):  # Goes 0 to limit-1
+    ...
+
+# Correct: Include limit
+for a in range(limit + 1):  # Goes 0 to limit
+    ...
+
+# Also correct: Use min(n, limit) for optimization
+for a in range(min(n, limit) + 1):
+    ...
+```
+
+### Incorrect Inclusion-Exclusion Signs
+
+The inclusion-exclusion principle requires alternating signs: add for 0 violations, subtract for 1 violation, add for 2 violations, subtract for 3 violations. Getting the sign wrong produces incorrect results.
+
+```python
+# Wrong: All additions
+for j in range(4):
+    res += C3[j] * ways  # Should alternate signs!
+
+# Correct: Alternating signs based on j
+for j in range(4):
+    sign = 1 if j % 2 == 0 else -1
+    res += sign * C3[j] * ways
+```

@@ -1345,3 +1345,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n ^ 2)$
+
+---
+
+## Common Pitfalls
+
+### Iterating Through All 2^n Possibilities
+
+Since there are only n input strings but 2^n possible strings of length n, a missing string is guaranteed to exist. However, iterating through all 2^n possibilities is exponential and will time out for larger n. The optimal approach only needs to check n+1 candidates or use Cantor's diagonal argument.
+
+### Forgetting to Pad Binary Strings with Leading Zeros
+
+When converting integers to binary strings, the result may be shorter than n characters. Forgetting to pad with leading zeros (e.g., "1" instead of "001" for n=3) will cause the generated string to have incorrect length and fail comparison with input strings.
+
+### Misunderstanding Cantor's Diagonal Argument
+
+The diagonal approach flips the i-th character of the i-th string to guarantee the result differs from every input. A common mistake is flipping at fixed positions (like always the first character) or not understanding why the diagonal specifically ensures uniqueness.

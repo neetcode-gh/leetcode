@@ -1435,3 +1435,42 @@ class Solution {
 - Space complexity: $O(V ^ 2 + E + m)$
 
 > Where $m$ is the number of queries, $V$ is the number of courses, and $E$ is the number of prerequisites.
+
+---
+
+## Common Pitfalls
+
+### Confusing Edge Direction
+
+A common mistake is building the graph with edges pointing in the wrong direction. The prerequisite `[a, b]` means course `a` must be taken before course `b`, so `a -> b`. Reversing this leads to incorrect reachability results.
+
+```python
+# Wrong: edge points from course to prerequisite
+for pre, crs in prerequisites:
+    adj[crs].append(pre)  # Incorrect for "is a prerequisite of" queries
+
+# Correct: edge points from prerequisite to course
+for pre, crs in prerequisites:
+    adj[pre].append(crs)  # Now adj[u] contains courses that u is a prerequisite of
+```
+
+### Rerunning DFS for Every Query Without Memoization
+
+Running a fresh DFS for each query without caching results leads to repeated work. With many queries, this causes TLE. Always memoize visited pairs or precompute the full transitive closure.
+
+```python
+# Inefficient: no memoization
+def dfs(node, target):
+    if node == target:
+        return True
+    for nei in adj[node]:
+        if dfs(nei, target):
+            return True
+    return False
+
+# Each query starts from scratch - O(V+E) per query
+```
+
+### Not Handling Disconnected Nodes
+
+Courses with no prerequisites and no dependents are still valid nodes. Forgetting to initialize them in your adjacency list or prerequisite map causes KeyError or incorrect results when they appear in queries.

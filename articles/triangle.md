@@ -1132,3 +1132,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Using Top-Down DP Without Tracking the Minimum at the Bottom
+
+When using top-down dynamic programming, the minimum path sum ends up at one of the cells in the last row, not necessarily at a fixed position. A common mistake is to return `dp[n-1][0]` or `dp[n-1][n-1]` instead of finding the minimum across the entire bottom row. The bottom-up approach avoids this by naturally propagating the answer to `dp[0][0]`.
+
+### Incorrect Index Handling for Adjacent Cells
+
+In the triangle, a cell at position `(row, col)` can only move to `(row+1, col)` or `(row+1, col+1)`. A common error is to treat this like a standard grid where you can move to `col-1` as well. Since each row has exactly `row+1` elements, the valid adjacent indices are strictly `col` and `col+1` in the next row.
+
+### Forgetting to Handle Single-Element Triangles
+
+When the triangle has only one row with a single element, some implementations may fail if they assume there are at least two rows. Always ensure your base case or loop bounds correctly handle the edge case where `n == 1`, returning the single element as the answer.

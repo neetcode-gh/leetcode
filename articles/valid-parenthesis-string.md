@@ -1729,3 +1729,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting That Wildcards Have Three Options
+
+A common mistake is treating `'*'` as only representing `'('` or `')'`. Remember that `'*'` can also represent an empty string. This third option is crucial for cases like `"(*)"` where the `'*'` should be treated as empty to form a valid string.
+
+### Not Checking for Negative Open Count
+
+When processing `')'` or treating `'*'` as `')'`, you must ensure the open parenthesis count never goes negative. A negative count means there are more closing parentheses than opening ones at that point, which is invalid regardless of what comes later. Always check `open >= 0` before proceeding.
+
+### Ignoring the Position of Wildcards in Stack Approach
+
+In the stack-based solution, simply counting unmatched `'('` and `'*'` is not enough. You must also verify that each remaining `'('` has a `'*'` that appears after it (at a higher index). A `'*'` appearing before a `'('` cannot act as a matching `')'` for it.

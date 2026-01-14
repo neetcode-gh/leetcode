@@ -687,3 +687,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Assuming Only Lowercase Letters
+
+The input can contain uppercase letters and digits (ASCII 48-122), not just lowercase letters (97-122). Using an array of size 26 or only indexing by `c - 'a'` causes index out of bounds errors or incorrect results for uppercase letters and digits.
+
+### Not Grouping Same Characters Together
+
+The output must have all occurrences of each character adjacent to each other. Simply sorting by frequency without ensuring character grouping can interleave different characters with the same frequency, producing invalid output.
+
+### Using an Unstable Sort Without Grouping
+
+When sorting individual characters by frequency, an unstable sort may scatter characters with the same frequency. Either use bucket sort which naturally groups characters, or sort unique characters first and then build the result by repeating each character.

@@ -1249,3 +1249,17 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Connecting Nodes Across Different Levels
+
+When iterating through nodes, it is easy to accidentally set the last node of one level to point to the first node of the next level. Always track the level size or use a marker to know when a level ends, ensuring the rightmost node's `next` stays `null`.
+
+### Missing the Cross-Parent Connection
+
+For a node's right child, its `next` should be the left child of the node's `next` neighbor (if it exists). Forgetting this connection leaves gaps in the horizontal links, breaking the chain between subtrees rooted at different parents.
+
+### Assuming the Optimal Solution Works for Non-Perfect Trees
+
+The O(1) space solution leveraging the perfect binary tree structure (every node has 0 or 2 children, all leaves at same level) does not generalize. Applying it to arbitrary binary trees produces incorrect results because the assumptions about child existence fail.

@@ -855,3 +855,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Handle Equal Depths
+
+When using the height-based iteration approach, a common mistake is assuming `p` and `q` are always at different depths. If both nodes are at the same level, no adjustment is needed before the lockstep traversal. Failing to handle this case correctly can lead to infinite loops or null pointer exceptions.
+
+### Using Value Comparison Instead of Reference Comparison
+
+Since nodes can have duplicate values, comparing `p.val == q.val` is incorrect. You must compare node references (`p == q` or `p is q`) to determine when the two pointers have met at the same node. Using value comparison will produce wrong results when different nodes have the same value.
+
+### Not Recognizing the Linked List Intersection Pattern
+
+This problem is essentially finding the intersection of two linked lists (the paths from `p` and `q` to the root). The elegant two-pointer solution works because both pointers travel the same total distance before meeting. Missing this insight leads to more complex solutions using extra space for hash sets when O(1) space is achievable.

@@ -375,3 +375,19 @@ class Solution {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the number of nodes in the tree
+
+---
+
+## Common Pitfalls
+
+### Using Preorder Instead of Postorder
+
+Computing a subtree's average requires knowing the sum and count of all nodes in that subtree. Preorder traversal visits the parent before children, so you would not have the children's information when processing the parent. Postorder ensures children are processed first.
+
+### Integer Division Truncation
+
+When computing the average, dividing two integers truncates the decimal part in many languages. Always cast to floating-point before division (e.g., `1.0 * sum / count`) to get the correct average value.
+
+### Forgetting to Include the Current Node
+
+When aggregating values from children, you must add the current node's value and count it as well. A subtree rooted at a node includes that node itself, not just its descendants.

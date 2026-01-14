@@ -799,3 +799,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Treating the Graph as Directed Only
+
+A common mistake is building only a directed adjacency list based on the given edges. Since we need to traverse the entire tree starting from city 0, we must treat edges as undirected for traversal purposes while separately tracking the original direction to count reversals.
+
+### Reversing the Logic of Edge Direction Check
+
+When checking if an edge needs reversal, it is easy to get the condition backwards. Remember that edges pointing away from city 0 need reversal. If traversing from node A to neighbor B and the original edge is `(A, B)`, it points away from 0 and must be counted; if the original edge is `(B, A)`, it already points toward 0.
+
+### Not Handling the Sign Encoding for Node 0
+
+In the DFS-II approach that uses negative values to encode direction, node 0 cannot be represented as negative since `-0 == 0`. This edge case must be handled by using the parent check (`abs(nei) == parent`) rather than relying solely on sign for all nodes.

@@ -1138,3 +1138,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Impossible Case
+
+When an element appears exactly once, it is impossible to delete it since the minimum group size is 2. Failing to check for frequencies of 1 and return -1 will produce incorrect results for inputs that cannot be emptied.
+
+### Using Division Instead of Ceiling
+
+The greedy solution requires ceiling division (`ceil(count / 3)`), not floor division. Using `count / 3` will undercount operations for counts like 4, 5, 7, or 8 where remainders require additional groups.
+
+### Integer Overflow When Adding One
+
+In some languages, when using the formula `(count + 2) / 3` for ceiling division, adding 2 to a very large count could cause overflow. While unlikely given typical constraints, be aware of this when working with custom large inputs.

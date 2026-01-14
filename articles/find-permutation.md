@@ -839,3 +839,17 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $n$ is the size of the resultant array
+
+## Common Pitfalls
+
+### Forgetting to Handle the Final Element
+
+The result array has `n+1` elements for a string of length `n`. After processing all characters in the string, you must still handle the last number (`n+1`). Whether using a stack or reversing approach, forgetting to process this final element results in an incomplete permutation with missing or zero values.
+
+### Misunderstanding the Stack's Role
+
+When using a stack approach, the stack reverses the order of consecutive numbers during 'D' sequences. A common mistake is popping immediately on every character instead of accumulating during 'D' runs and only popping when encountering 'I'. This leads to incorrect orderings that do not satisfy the decrease constraints.
+
+### Off-by-One Index Errors
+
+The string uses 0-based indexing while the permutation uses values 1 to n+1. Converting between string indices and permutation values requires careful attention. For example, `s[i-1]` corresponds to the relationship between positions `i` and `i+1` in the result. Confusing these mappings produces permutations that do not match the input pattern.

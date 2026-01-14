@@ -962,3 +962,15 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Return -1 When No Lucky Integer Exists
+
+A lucky integer only exists if a number's value equals its frequency. If no such number is found, the function must return `-1`. Forgetting to initialize the result to `-1` or failing to handle the case where no lucky integer exists will produce incorrect output for inputs like `[1, 1]` where no number satisfies the condition.
+
+### Not Tracking the Maximum Lucky Integer
+
+When multiple lucky integers exist in the array, you must return the largest one. Simply returning the first lucky integer found without comparing it to previously found ones produces wrong results. Always use `max(result, num)` when a lucky integer is found, or iterate from largest to smallest and return immediately upon finding one.

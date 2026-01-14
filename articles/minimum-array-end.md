@@ -641,3 +641,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using 32-bit Integers Instead of 64-bit
+
+The result can exceed the range of a 32-bit integer. Since we are embedding the bits of `n-1` into the zero positions of `x`, the result can grow significantly larger than both `n` and `x`. Always use `long`, `long long`, `Int64`, or `BigInt` depending on your language to avoid overflow and incorrect results.
+
+### Misunderstanding Which Bits to Fill
+
+The algorithm fills the zero-bit positions of `x` with the bits of `n-1`, not `n`. A common mistake is using `n` directly, which gives an off-by-one error in the result. Remember that we need the `(n-1)`th valid number after `x` in the sequence, so we embed the binary representation of `n-1`, not `n`.
+
+### Confusing the AND Constraint with OR
+
+The problem requires that the AND of all array elements equals `x`, meaning every element must have all bits of `x` set to 1. Some solutions mistakenly treat this as an OR constraint. When constructing the answer, you must OR with `x` (or only modify zero-bit positions of `x`) to ensure the AND property is preserved across all elements in the sequence.

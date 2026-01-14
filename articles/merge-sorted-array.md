@@ -726,3 +726,15 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $m$ and $n$ represent the number of elements in the arrays $nums1$ and $nums2$, respectively.
+
+---
+
+## Common Pitfalls
+
+### Merging From the Front Instead of the Back
+
+When merging in place, starting from the front of `nums1` overwrites elements that have not yet been processed. This destroys data you still need. Always merge from the back of `nums1` where there is empty space, placing the largest elements first.
+
+### Forgetting to Copy Remaining Elements From `nums2`
+
+After the main merge loop, if there are remaining elements in `nums2`, they must be copied to `nums1`. Elements remaining in `nums1` are already in their correct positions, but leftover `nums2` elements need explicit placement. Missing this step leaves the result incomplete.

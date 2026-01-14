@@ -1878,3 +1878,27 @@ class Solution {
     - $O(m)$ space for the output array.
 
 > Where $m$ is the length of the array $queries$, $n$ is the length of the array $intervals$ and $k$ is the number of unique points.
+
+---
+
+## Common Pitfalls
+
+### Losing Original Query Order After Sorting
+
+When sorting queries for efficient processing, the original indices must be preserved. Returning results in sorted query order instead of the original order produces incorrect output. Always pair each query with its original index before sorting.
+
+### Forgetting to Remove Expired Intervals from the Heap
+
+Intervals that have ended (their right endpoint is less than the current query) must be removed from the heap before answering. Failing to pop expired intervals means the heap may return an interval that does not actually contain the query point.
+
+### Incorrect Event Ordering in Sweep Line Approach
+
+When multiple events occur at the same coordinate, processing order matters. Interval end events should typically be processed before query events at the same point to ensure intervals ending exactly at the query point are still considered active.
+
+### Using Wrong Interval Length Calculation
+
+The length of interval `[l, r]` is `r - l + 1`, not `r - l`. This off-by-one error affects which interval is considered smallest and leads to incorrect results when intervals differ by exactly one unit.
+
+### Not Handling Queries Outside All Intervals
+
+When no interval covers a query, the answer must be `-1`. Forgetting to initialize the result array with `-1` or not checking for an empty heap after removing expired intervals causes undefined or incorrect values to be returned.

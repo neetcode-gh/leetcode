@@ -488,3 +488,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Add the Starting Position
+
+A common mistake is forgetting to add the origin `(0, 0)` to the visited set before processing the path. The path can cross the starting point, so it must be tracked from the beginning. If you only add positions after moving, you will miss cases where the path returns to the origin.
+
+### Incorrect Coordinate Representation
+
+When storing coordinates in a hash set, using improper representations can cause collisions or misses. For example, concatenating coordinates as `x + y` instead of `x + "," + y` can produce identical strings for different coordinate pairs (e.g., `(1, 23)` and `(12, 3)` both become `"123"`). Always use a delimiter or tuple representation to ensure uniqueness.

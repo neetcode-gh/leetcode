@@ -590,3 +590,19 @@ class Codec {
 - Space complexity: $O(n * m)$
 
 > Where $n$ is the number of $longUrls$, $m$ is the average length of the URLs.
+
+---
+
+## Common Pitfalls
+
+### Not Handling Duplicate URLs Consistently
+
+If the same long URL is encoded multiple times, some implementations generate different short URLs each time, wasting storage. Using a bidirectional mapping (approach 3) ensures the same long URL always returns the same short URL, but this trade-off uses more memory.
+
+### Incorrect Parsing of the Short URL
+
+When decoding, you must correctly extract the ID from the short URL. Common mistakes include not handling the base URL prefix properly, using the wrong string split method, or forgetting to convert the extracted string to an integer before lookup.
+
+### Integer Overflow with Sequential IDs
+
+Using a simple incrementing integer ID works for small scale, but can overflow for very large numbers of URLs. In production systems, consider using larger integer types, UUIDs, or base62 encoding to handle billions of URLs while keeping short URLs compact.

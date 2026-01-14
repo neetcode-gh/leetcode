@@ -764,3 +764,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
+
+---
+
+## Common Pitfalls
+
+### Off-by-One in Substring Length
+
+The substring between two equal characters at indices `i` and `j` has length `j - i - 1`, not `j - i`. Using `j - i` includes one of the boundary characters in the count, giving an answer that is one larger than correct.
+
+### Returning Wrong Default Value
+
+When no two equal characters exist in the string, the answer should be `-1`. A common mistake is to initialize the result to `0` and forget to handle the case where no matching pair is found, incorrectly returning `0` instead of `-1`.

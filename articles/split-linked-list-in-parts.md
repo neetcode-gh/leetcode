@@ -712,3 +712,19 @@ class Solution {
 - Space complexity:
     - $O(1)$ extra space.
     - $O(n)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Sever the Link Between Parts
+
+After determining where each part ends, you must set the tail node's `next` pointer to `null`. Failing to do this leaves the parts still connected, causing the output to contain overlapping or incorrectly sized lists instead of independent segments.
+
+### Incorrect Distribution of Extra Nodes
+
+When `n % k != 0`, the first `remainder` parts should each have one extra node. A common mistake is distributing extra nodes to the wrong parts (e.g., the last parts instead of the first) or failing to decrement the remainder counter properly, resulting in unevenly sized parts.
+
+### Not Handling Empty Parts When k > n
+
+When there are more parts than nodes, some parts must be empty (null). Forgetting to account for this case can lead to index out of bounds errors or incorrect assignments when trying to set heads for parts that have no nodes.

@@ -901,3 +901,15 @@ class Solution {
 - Space complexity: $O(m + n)$
 
 > Where $m$ is the number of nodes in $subRoot$ and $n$ is the number of nodes in $root$.
+
+---
+
+## Common Pitfalls
+
+### Confusing Subtree with Substructure
+
+A subtree must match exactly from a node down to all its leaves. A common mistake is checking only if the values match without verifying that the entire structure below also matches. If `subRoot` has children, those children must also exist and match in the main tree. Simply finding a node with the same value is not sufficient.
+
+### Incorrect Null Handling in Tree Comparison
+
+When comparing two trees for equality, both trees must have `null` children in the same positions. A frequent error is returning `true` when one node is `null` and the other is not, or failing to check both left and right subtrees. The base case must ensure that both nodes being compared are either both `null` (return `true`) or both non-null with matching values before recursing.

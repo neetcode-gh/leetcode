@@ -1987,3 +1987,15 @@ func stringMatching(words []string) []string {
     - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
+
+---
+
+## Common Pitfalls
+
+### Comparing a Word Against Itself
+
+When checking if a word is a substring of another, you must skip the case where `i == j` (the same word). Without this check, every word would be found as a substring of itself and incorrectly added to the result.
+
+### Adding Duplicate Words to the Result
+
+If a word appears as a substring in multiple other words, you should add it to the result only once. Using a `break` statement after finding the first match, or using a set to track added words, prevents duplicates in the output.

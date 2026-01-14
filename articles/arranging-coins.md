@@ -812,3 +812,30 @@ class Solution {
 
 - Time complexity: $O(1)$ or $O(\sqrt {n})$ depending on the language.
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow When Computing `mid * (mid + 1)`
+When using binary search, computing `mid * (mid + 1)` can overflow for large values of `mid` if using 32-bit integers. Always cast to a larger type before multiplication.
+```java
+// Wrong: overflow when mid is large
+int coins = mid * (mid + 1) / 2;
+
+// Correct: cast to long first
+long coins = (long) mid * (mid + 1) / 2;
+```
+
+### Off-by-One Error in the Result
+The formula `k * (k + 1) / 2` gives the total coins needed for `k` complete rows. A common mistake is returning the wrong value when the sum exactly equals `n` or when determining whether to include the current row.
+```python
+# Wrong: returning l instead of l - 1 after binary search
+while l < r:
+    mid = (l + r) // 2
+    if mid * (mid + 1) // 2 <= n:
+        l = mid + 1
+    else:
+        r = mid
+return l  # Should be l - 1
+```

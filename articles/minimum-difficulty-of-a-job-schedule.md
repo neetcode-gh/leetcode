@@ -1462,3 +1462,27 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of jobs and $d$ is the number of days.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Impossible Case
+
+A common mistake is not checking whether it is possible to schedule the jobs. If the number of jobs `n` is less than the number of days `d`, there is no valid schedule since each day must have at least one job. Failing to return `-1` in this case leads to incorrect results or runtime errors.
+
+### Incorrect Day Difficulty Calculation
+
+The difficulty of a day is the maximum job difficulty among all jobs scheduled that day, not the sum. Some implementations mistakenly accumulate job difficulties instead of tracking the running maximum, leading to inflated results.
+
+### Off-by-One Errors in Loop Bounds
+
+When partitioning jobs across days, you must leave enough jobs for remaining days. For example, if you have `d` days left and are at position `i`, you can only extend the current day up to position `n - d`. Failing to enforce this constraint can result in invalid states where some days have no jobs.
+
+### Integer Overflow in DP Initialization
+
+When initializing DP values to represent "infinity," using `INT_MAX` directly can cause overflow when adding to it. Use a safe large value like `INT_MAX / 2` or check for overflow before arithmetic operations.
+
+### Misunderstanding the State Transitions
+
+In the optimized approaches, confusing when to add the current day's difficulty versus when to continue accumulating jobs for the same day leads to incorrect answers. The key is recognizing that ending a day means adding `cur_max` to the result and resetting for the next day.

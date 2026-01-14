@@ -1146,3 +1146,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Level Index with Value Parity
+
+Even-indexed levels (0, 2, 4, ...) must have odd VALUES, while odd-indexed levels (1, 3, 5, ...) must have even VALUES. It is easy to mix these up and check if values match the level parity, which is the opposite of what the problem requires. Remember: level parity and value parity must be different.
+
+### Using Non-Strict Inequality for Ordering
+
+The problem requires STRICTLY increasing order on even levels and STRICTLY decreasing order on odd levels. Using `<=` instead of `<` for increasing, or `>=` instead of `>` for decreasing, will incorrectly accept trees where adjacent nodes have equal values. Equal values at the same level should cause the function to return `false`.
+
+### Forgetting to Reset Previous Value Between Levels
+
+When processing each level, the `prev` tracking variable must be reset to an appropriate initial value (negative infinity for even levels, positive infinity for odd levels). If you forget to reset it or initialize it incorrectly, comparisons with the first node of each level will fail, causing valid trees to be rejected or invalid trees to be accepted.

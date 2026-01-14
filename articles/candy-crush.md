@@ -1275,3 +1275,22 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $m × n$ is the size of the grid `board`
+
+---
+
+## Common Pitfalls
+
+### Only Checking Exactly Three Adjacent Candies
+Groups can be longer than three candies. Checking only the center of a triplet misses candies at the ends of longer sequences. The solution must mark all candies in contiguous groups of three or more.
+
+### Crushing Before Fully Marking All Matches
+If you crush candies immediately upon finding a match, you may miss overlapping horizontal and vertical groups. All crushable candies must be identified first, then crushed together.
+
+### Incorrect Drop Logic
+When dropping candies, you must process each column from bottom to top, moving non-zero candies down to fill gaps. A common mistake is shifting candies horizontally or not properly tracking the lowest available position.
+
+```python
+# Wrong: dropping row by row instead of column by column
+for r in range(m - 1, -1, -1):
+    for c in range(n):  # Should iterate columns in outer loop
+```

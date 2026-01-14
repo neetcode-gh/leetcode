@@ -1341,3 +1341,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Adding Non-Leaf Node Values to the Sum
+
+A frequent mistake is adding the accumulated number to the result at every node instead of only at leaf nodes. The problem specifically asks for root-to-leaf path numbers, so you must check that both `left` and `right` children are null before adding to the sum. Adding at internal nodes will count partial paths and produce incorrect results.
+
+### Incorrect Number Accumulation Formula
+
+When building the number along a path, you must multiply the current accumulated value by 10 before adding the new digit: `num = num * 10 + node.val`. A common error is adding the digit first or forgetting to multiply, which produces single-digit values or incorrect concatenation. Remember that each level represents a new decimal place.
+
+### Not Handling Single-Node Trees
+
+When the tree has only a root node with no children, that single node is itself a leaf. Some implementations incorrectly return 0 for this case or fail to recognize it as a valid path. Ensure your base case properly handles when the root exists but has no children, returning just the root's value as the complete number.

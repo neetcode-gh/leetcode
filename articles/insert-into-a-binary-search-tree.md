@@ -585,3 +585,19 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $h$ is the height of the given binary search tree.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Return the New Node for Empty Trees
+
+When the tree is empty (root is null), failing to create and return a new node with the given value results in returning null instead of the single-node tree. The base case must explicitly handle this by returning `new TreeNode(val)`.
+
+### Not Linking the New Node Back to the Parent
+
+In the iterative approach, inserting the new node without properly linking it to the parent's left or right pointer means the node is created but never connected to the tree. The new node must be assigned to either `cur.left` or `cur.right` based on the comparison.
+
+### Incorrect Comparison Direction
+
+Comparing values with the wrong inequality operator (e.g., using `<` instead of `>`) causes nodes to be inserted on the wrong side of the tree, violating the BST property. Values greater than the current node must go right, and values less than or equal must go left.

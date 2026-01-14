@@ -431,3 +431,19 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Missing Subtractive Combinations
+
+Roman numerals use subtractive notation for 4, 9, 40, 90, 400, and 900 (IV, IX, XL, XC, CD, CM). A common mistake is only including the basic symbols (I, V, X, L, C, D, M) and trying to handle subtractive cases with complex conditional logic. The cleanest solution includes all 13 symbol-value pairs in your lookup table from the start.
+
+### Processing Values in Wrong Order
+
+When building the Roman numeral string, you must process values from largest to smallest. Starting with smaller values or processing in random order will produce incorrect results. For example, processing 1994 by handling ones before thousands would give an invalid representation.
+
+### Incorrect Division and Modulo Logic
+
+When computing how many times a symbol should appear, some implementations confuse the division and modulo operations. You need integer division to get the count of symbols, then modulo to get the remaining value. Mixing these up or forgetting to update the remaining number after each step leads to wrong outputs or infinite loops.

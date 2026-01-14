@@ -668,3 +668,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Knowing XOR Properties
+
+The optimal solution relies on understanding that `a ^ a = 0` and `a ^ 0 = a`. Candidates unfamiliar with bitwise operations often resort to hash sets or sorting, missing the elegant $O(1)$ space solution. Memorizing these XOR properties is essential for bit manipulation problems.
+
+### Using Extra Space Unnecessarily
+
+A common mistake is implementing a hash map or set to track occurrences when the problem explicitly asks for $O(1)$ extra space. While these approaches work functionally, they fail to meet the space constraint and miss the intended learning objective of the problem.

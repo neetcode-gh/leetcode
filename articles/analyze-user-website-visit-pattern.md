@@ -366,3 +366,45 @@ class Solution {
 - Space complexity: $O(n * u + n ^ 3 * w)$
 
 > Where $n$ is the size of the array $timestamp$, $u$ is the maximum length of any string in the array $username$, and $w$ is the maximum length of any string in the array $website$.
+
+---
+
+## Common Pitfalls
+
+### Counting Duplicate Patterns From the Same User
+When a user visits enough websites to generate the same 3-site pattern multiple times, you should only count that pattern once per user. Failing to use a set for each user's patterns will inflate the count incorrectly.
+```python
+# Wrong: counting duplicates from same user
+for i in range(len(cur)):
+    for j in range(i + 1, len(cur)):
+        for k in range(j + 1, len(cur)):
+            count[(cur[i], cur[j], cur[k])] += 1  # Same user counted multiple times
+
+# Correct: use set per user first
+patterns = set()
+for i, j, k in combinations:
+    patterns.add((cur[i], cur[j], cur[k]))
+for p in patterns:
+    count[p] += 1
+```
+
+### Not Sorting Visits by Timestamp Before Grouping
+The pattern must follow chronological order of visits. If you group websites by user without first sorting by timestamp, the patterns will be in arbitrary order and produce wrong results.
+```python
+# Wrong: not sorting by timestamp
+for i in range(n):
+    mp[username[i]].append(website[i])  # Order depends on input, not time
+
+# Correct: sort first
+arr.sort(key=lambda x: x[0])  # Sort by timestamp
+```
+
+### Incorrect Lexicographic Comparison for Tie-Breaking
+When multiple patterns have the same count, you must return the lexicographically smallest one. Comparing concatenated strings with a separator may not give correct lexicographic ordering of the tuple components.
+```python
+# Wrong: comparing by concatenated string may differ from tuple comparison
+if "a#z#b" < "aa#a#a":  # String comparison, not tuple comparison
+
+# Correct: compare as tuples or ensure proper tuple-based comparison
+if pattern < res:  # Where pattern and res are tuples
+```

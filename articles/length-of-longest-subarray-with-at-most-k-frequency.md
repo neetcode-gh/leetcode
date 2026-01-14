@@ -564,3 +564,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Decrement Frequency When Shrinking the Window
+
+When the left pointer moves, you must decrement the frequency count of the element being removed from the window. Failing to do this causes the frequency map to retain stale counts, leading to incorrect constraint checks and wrong answers.
+
+### Using the Wrong Comparison Operator for the Constraint
+
+The problem asks for elements appearing "at most k times," meaning frequency should be `<= k`. Using `< k` instead of `<= k` (or `> k` for violation checks) will incorrectly shrink the window too early or allow invalid windows.
+
+### Not Updating the Result at the Right Time
+
+In sliding window problems, update the maximum length after ensuring the window is valid, not before. Updating before shrinking the window can record an invalid window size, resulting in an answer that exceeds the actual longest valid subarray.

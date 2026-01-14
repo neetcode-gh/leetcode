@@ -1411,3 +1411,23 @@ class Solution {
 - Space complexity: $O(m + n)$
 
 > Where $n$ is the size of the array $flowers$, and $m$ is the size of the array $people$.
+
+---
+
+## Common Pitfalls
+
+### Losing Original Person Indices After Sorting
+
+When sorting people by arrival time for efficient processing, you must preserve their original indices to place results in the correct positions. Failing to track original indices means the output array will have counts in the wrong order, causing incorrect results.
+
+### Off-by-One Error in Bloom Period Boundaries
+
+A flower blooming from time `start` to time `end` is visible at both endpoints (inclusive). When using events or comparisons, ensure you use `<=` for start times and `<` for end times (when checking if a flower has stopped blooming before a person arrives). Using strict inequality for start or inclusive for end will miscount flowers.
+
+### Incorrect Event Timing in Line Sweep
+
+In the line sweep approach, the end event should be placed at `end + 1`, not at `end`. This is because a flower is still in bloom at time `end`. Placing the decrement event at `end` would incorrectly reduce the count for people arriving exactly at the end time.
+
+### Not Sorting Events Correctly When Times Are Equal
+
+When multiple events occur at the same time, the order of processing matters. Start events should generally be processed before queries at the same time, and queries before end events. Incorrect tie-breaking in sorting can lead to flowers being counted or not counted incorrectly for edge cases.

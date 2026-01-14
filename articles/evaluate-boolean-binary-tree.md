@@ -643,3 +643,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Confusing Leaf Detection with Null Check
+
+To identify a leaf node, check if `root.left` is null (since the problem guarantees full binary tree, both children are null or both exist). A common mistake is checking `root == null` instead, which would return incorrect results for the recursive base case.
+
+### Mixing Up Operator Values
+
+The problem uses `val == 2` for OR and `val == 3` for AND. Swapping these operators or using incorrect comparison values produces wrong boolean results. Always double-check the operator mapping: 0/1 for leaf values, 2 for OR, 3 for AND.

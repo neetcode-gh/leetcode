@@ -671,3 +671,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Loop Condition for Fast Pointer
+
+When using the fast and slow pointer technique, the loop condition must check both `fast` and `fast.next` before advancing. Checking only `fast` can cause a null pointer exception when trying to access `fast.next.next`. The correct condition is `while (fast != null && fast.next != null)`.
+
+### Off-by-One Error with Even-Length Lists
+
+For lists with an even number of nodes, there are two middle nodes. The problem typically asks for the second middle node, but some implementations accidentally return the first. Ensure your pointer movement logic returns the correct middle based on the problem requirements.

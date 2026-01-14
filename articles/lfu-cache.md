@@ -1436,3 +1436,27 @@ class LFUCache {
     - $O(1)$ time for initialization.
     - $O(1)$ time for each $get()$ and $put()$ function calls.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Update Minimum Frequency After Eviction
+
+When inserting a new key after eviction, the minimum frequency must be reset to 1 (since the new key starts with frequency 1). Failing to update `lfuCount` causes subsequent evictions to look in the wrong frequency bucket, potentially evicting recently accessed items or causing errors.
+
+### Not Incrementing Frequency on Both Get and Put
+
+Both `get()` and `put()` (when updating an existing key) should increment the frequency. A common mistake is only incrementing on `get()`, which causes keys that are repeatedly updated but never retrieved to have artificially low frequencies and get evicted prematurely.
+
+### Incorrect LRU Tie-Breaking Within Same Frequency
+
+When multiple keys share the same minimum frequency, the least recently used among them should be evicted. This requires maintaining insertion order within each frequency bucket. Using a regular set or unordered structure loses this ordering and leads to incorrect evictions.
+
+### Not Handling Zero Capacity Edge Case
+
+When the cache capacity is 0, all `put()` operations should be no-ops since nothing can be stored. Forgetting this check causes attempts to evict from an empty cache, leading to errors or incorrect behavior.
+
+### Failing to Move Keys Between Frequency Lists
+
+When a key's frequency increases, it must be removed from its current frequency list and added to the next frequency list. Forgetting to remove it from the old list causes the key to appear in multiple frequency buckets, corrupting the data structure and causing incorrect evictions.

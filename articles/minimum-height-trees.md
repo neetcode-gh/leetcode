@@ -1726,3 +1726,19 @@ class Solution {
 - Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Single Node Edge Case
+
+When `n = 1`, there are no edges and the only node `0` is trivially the root of a minimum height tree. Many solutions fail to handle this case, leading to empty results or index errors when trying to process an empty edge list.
+
+### Using a Visited Set Instead of Parent Tracking in DFS
+
+In tree traversal, using a full visited set is unnecessary overhead. Since trees have no cycles, simply passing the parent node to avoid revisiting the previous node is sufficient and more efficient. Using a visited set can also cause issues if not cleared properly between multiple DFS calls.
+
+### Incorrectly Implementing Leaf Removal in Topological Sort
+
+When peeling leaves layer by layer, a common mistake is modifying the degree array while iterating over the current batch of leaves. This can cause nodes to be processed prematurely or skipped entirely. Always process all current-level leaves before updating degrees for the next level.

@@ -1058,3 +1058,30 @@ class Solution {
     - $O(k ^ 2)$ space for the output matrix.
 
 > Where $n$ is the size of the array $rowConditions$, $m$ is the size of the array $colConditions$, and $k$ is the size of the output matrix.
+
+---
+
+## Common Pitfalls
+
+### Treating Row and Column Conditions as One Graph
+Row conditions and column conditions must be processed as two separate, independent graphs. Combining them into a single graph leads to incorrect cycle detection and wrong orderings since row ordering has no relation to column ordering.
+
+### Not Detecting Cycles Properly in DFS
+When using DFS for topological sort, you need both a `visited` set (permanently processed nodes) and a `path` set (nodes in current recursion stack). Using only one set fails to detect back edges that indicate cycles.
+```python
+# Wrong: single visited set misses cycles
+if src in visited:
+    return True  # Should check path set too
+
+# Correct: check both sets
+if src in path:
+    return False  # Cycle detected
+if src in visited:
+    return True   # Already processed
+```
+
+### Forgetting to Include Nodes Without Edges
+Numbers from 1 to k that don't appear in any condition still need positions in the matrix. The topological sort must iterate over all values 1 to k, not just those present in the edge list.
+
+### Off-by-One Errors with 1-Indexed Values
+The values are 1 to k (1-indexed) but arrays are typically 0-indexed. When building adjacency lists or index mappings, mixing these up causes index out of bounds errors or incorrect placements.

@@ -589,3 +589,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting That n Could Be the Missing Number
+
+The range is `[0, n]` for an array of length `n`, meaning `n` itself could be missing. Solutions that only check indices `0` to `n-1` will miss this case and fail to return `n` when all other numbers are present.
+
+### Integer Overflow in Sum-Based Approach
+
+When using the mathematical approach, computing the full expected sum `n * (n + 1) / 2` separately before subtracting can cause overflow for large `n`. Combining addition and subtraction in a single loop avoids this issue.

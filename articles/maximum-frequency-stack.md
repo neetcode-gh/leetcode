@@ -1110,3 +1110,27 @@ class FreqStack {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of elements in the stack.
+
+---
+
+## Common Pitfalls
+
+### Breaking Ties Incorrectly
+
+When multiple elements share the highest frequency, the most recently pushed one must be popped first. A common mistake is to pop an arbitrary element with the maximum frequency, or to pop the first occurrence instead of the last. The heap solution handles this by storing insertion order as a secondary sort key; the stack-of-stacks solution naturally maintains recency by using stack ordering within each frequency level.
+
+### Not Decrementing Frequency After Pop
+
+After popping an element, its frequency count must be decremented. Forgetting this step causes the data structure to believe the element still occurs at its previous frequency, leading to incorrect behavior on subsequent operations. Both the frequency map and any frequency-indexed structures must be updated consistently.
+
+### Mismanaging the Maximum Frequency Tracker
+
+The stack-of-stacks approach tracks `maxCnt` to know which stack to pop from. A subtle bug occurs when the stack at `maxCnt` becomes empty after a pop but `maxCnt` is not decremented. The next pop would then try to access an empty stack. Always check if the current frequency stack is empty after popping and reduce `maxCnt` accordingly.
+
+### Using a Single Stack and Scanning
+
+While conceptually simple, maintaining a single stack and scanning backwards to find the most frequent recent element leads to `O(n)` pop operations. This approach times out on large inputs. The key insight is that elements can exist at multiple frequency levels simultaneously (when pushed multiple times), which the stack-of-stacks approach leverages for `O(1)` operations.
+
+### Heap Stale Entries
+
+In the heap-based solution, old entries remain in the heap even after frequencies change through pops. While this doesn't affect correctness (since we decrement the frequency counter separately), it can cause memory bloat. Some implementations add lazy deletion, but the simpler approach is to accept that the heap may contain stale entries whose values no longer reflect current frequencies, relying on the frequency map as the source of truth.

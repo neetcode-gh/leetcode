@@ -1104,3 +1104,15 @@ class Solution {
 - Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
+
+---
+
+## Common Pitfalls
+
+### Including Duplicates in the Result
+
+The intersection should contain each common element only once, even if it appears multiple times in both arrays. For example, if `nums1 = [1, 1, 2]` and `nums2 = [1, 1]`, the result should be `[1]`, not `[1, 1]`. Using a set for the result or marking elements as "already added" prevents this issue.
+
+### Comparing Values Instead of Using Efficient Lookups
+
+A brute force approach comparing every pair of elements is O(n * m), which is inefficient for large arrays. The optimal approach uses a hash set for O(1) lookups, reducing time complexity to O(n + m). Always consider converting one array to a set before checking membership.

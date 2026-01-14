@@ -864,3 +864,23 @@ class Solution {
 - Space complexity: $O(k)$
 
 > Where $n$ is the number of marbles, and $k$ is the number of bags.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Score Contribution
+
+Each bag's score is the sum of its first and last marble weights. A common mistake is thinking only endpoints matter globally. The key insight is that internal partition points contribute `weights[i] + weights[i+1]` to the total score, while the first and last marbles of the entire array always contribute and cancel out in the difference.
+
+### Off-by-One in Number of Splits
+
+With k bags, we need exactly k-1 partition points (splits), not k. Selecting k splits creates k+1 bags. This off-by-one error leads to selecting too many or too few adjacent pair sums when computing max and min scores.
+
+### Not Handling k=1 Edge Case
+
+When k=1, there are no partition choices since all marbles go into one bag. The max and min scores are identical, so the answer is 0. Forgetting this case and attempting to select 0 elements from the splits array causes errors.
+
+### Integer Overflow in Sum Calculations
+
+Adjacent pair sums can be up to 2 * 10^9, and summing k-1 of them can overflow 32-bit integers. Using 64-bit integers (long in Java, int64 in Go) prevents overflow issues when computing max and min scores.

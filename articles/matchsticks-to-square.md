@@ -979,3 +979,27 @@ class Solution {
 
 - Time complexity: $O(n * 2 ^ n)$
 - Space complexity: $O(n + 2 ^ n)$
+
+---
+
+## Common Pitfalls
+
+### Not Checking If Total Length Is Divisible by 4
+
+Before attempting any backtracking, verify that the total sum of matchsticks is divisible by 4. Without this early check, the algorithm wastes time exploring configurations that can never form a valid square.
+
+### Missing the Single Matchstick Length Check
+
+If any single matchstick is longer than the target side length (`total / 4`), it is impossible to form a square. Failing to check this upfront leads to unnecessary recursion and potential timeout.
+
+### Not Sorting Matchsticks in Descending Order
+
+Sorting matchsticks in descending order significantly improves pruning efficiency. Placing larger matchsticks first causes invalid configurations to fail faster, reducing the search space dramatically. Without sorting, the algorithm may explore many more branches.
+
+### Redundant Exploration of Empty Sides
+
+When backtracking, if placing a matchstick on an empty side fails, there is no need to try other empty sides since they are equivalent. Breaking out of the loop when `sides[i] == 0` after backtracking prevents exploring symmetric, redundant configurations.
+
+### Integer Overflow in Bitmask DP
+
+When using bitmask DP, ensure the DP array size `(1 << n)` does not cause integer overflow. For `n` up to 15, this creates arrays of size 32768, which is manageable, but larger values can cause memory issues.

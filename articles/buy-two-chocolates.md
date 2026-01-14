@@ -453,3 +453,23 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Returning Leftover When You Cannot Afford Both Chocolates
+If the sum of the two cheapest chocolates exceeds your money, you should return the original money (buy nothing), not a negative leftover or zero.
+```python
+# Wrong: returning negative leftover
+return money - min1 - min2  # Could be negative
+# Correct: check if affordable first
+```
+
+### Not Updating Both Minimums Correctly
+When finding a new smallest price, forgetting to shift the old minimum to become the second minimum loses track of valid candidates.
+```python
+# Wrong: losing second minimum
+if p < min1:
+    min1 = p  # min2 is never updated with old min1
+```

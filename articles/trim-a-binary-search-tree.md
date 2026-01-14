@@ -870,3 +870,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Recursively Trim After Skipping a Node
+
+When a node's value is outside the range and you skip to its child, you must continue trimming that child subtree. A common mistake is to simply return the child without recursively processing it. The child itself or its descendants may also be outside the valid range and need trimming.
+
+### Confusing Which Subtree to Keep When Node is Out of Range
+
+When a node's value is greater than `high`, you should return the trimmed left subtree (not the right). When a node's value is less than `low`, you should return the trimmed right subtree (not the left). Mixing these up violates the BST property and produces incorrect results.
+
+### Not Handling the Case Where the Root Itself is Invalid
+
+The root node may be outside the `[low, high]` range, meaning the entire original root gets discarded. A common oversight is assuming the root will always be valid. Your solution must handle finding a new valid root by traversing into the appropriate subtree before beginning the main trimming logic.

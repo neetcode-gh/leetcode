@@ -1898,3 +1898,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $N$ is the length of `expression`
+
+---
+
+## Common Pitfalls
+
+### Evaluating Left-to-Right Instead of Right-to-Left
+
+A common mistake is trying to evaluate the expression from left to right. Ternary expressions are right-associative, meaning `T?T?1:2:3` should be parsed as `T?(T?1:2):3`, not `(T?T?1:2):3`. Processing from the right ensures nested expressions are resolved correctly before their parent expressions.
+
+### Incorrectly Matching `?` with `:`
+
+When expressions are deeply nested, finding the matching `:` for a given `?` is tricky. Each `?` must pair with exactly one `:`, but nested ternaries introduce additional `?` and `:` characters. Use a counter that increments for `?` and decrements for `:` to find the correct boundary between true and false branches.
+
+### Off-by-One Errors in Substring Extraction
+
+The atomic expression pattern is exactly 5 characters (`B?X:Y`), and miscounting indices when extracting or replacing substrings leads to incorrect results. Be careful with inclusive vs exclusive bounds in substring operations, especially when the expression shrinks after each reduction.

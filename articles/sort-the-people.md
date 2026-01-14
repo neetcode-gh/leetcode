@@ -482,3 +482,13 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Sorting in Ascending Instead of Descending Order
+
+The problem asks for people sorted by height in descending order (tallest first). A common mistake is to sort in ascending order and forget to reverse the result or adjust the comparator.
+
+### Losing the Name-Height Association After Sorting
+
+When sorting heights separately from names, you must maintain a way to retrieve the corresponding name for each height. Using a hash map or pairing heights with indices before sorting prevents this association from being lost.

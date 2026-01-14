@@ -554,3 +554,26 @@ class Solution {
 
 - Time complexity: $O(1)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Iterating Through All Numbers in the Range
+The brute force approach of ANDing every number from `left` to `right` will time out for large ranges. For example, when `left = 1` and `right = 2^31 - 1`, this requires billions of operations.
+
+### Misunderstanding the Common Prefix Property
+The result is the common binary prefix of `left` and `right` with trailing zeros. A common mistake is trying to AND only `left` and `right` directly, missing that intermediate values determine which bits survive.
+```python
+# Wrong: only checking left and right
+return left & right  # Misses intermediate values that clear bits
+```
+
+### Integer Overflow in Bit Calculations
+When calculating `(1 << (i + 1))` for bit position 31, the result exceeds 32-bit signed integer range in some languages. Use unsigned types or 64-bit integers to avoid overflow.
+```cpp
+// Wrong in C++: signed overflow at i=31
+int diff = (1 << (i + 1)) - remain;  // Overflow when i=31
+// Correct: use unsigned
+uint diff = (1ul << (i + 1)) - remain;
+```

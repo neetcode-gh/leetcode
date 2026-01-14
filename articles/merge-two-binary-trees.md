@@ -1349,3 +1349,15 @@ class Solution {
 - Space complexity: $O(min(m, n))$ for the stack.
 
 > Where $m$ and $n$ are the number of nodes in the given trees.
+
+---
+
+## Common Pitfalls
+
+### Not Handling the Case When One Tree is Null
+
+When one of the input trees is `null` at a position while the other is not, you should return the non-null subtree directly. Failing to handle this base case properly leads to null pointer exceptions or missing nodes in the result.
+
+### Modifying the Input Trees Unintentionally
+
+When using the in-place approach, the first tree is modified to become the merged result. If the original trees need to be preserved for other purposes, this causes unexpected side effects. Use the approach that creates a new tree if the inputs must remain unchanged.

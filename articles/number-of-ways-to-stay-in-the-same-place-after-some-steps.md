@@ -1016,3 +1016,19 @@ class Solution {
 - Space complexity: $O(min(n, m))$
 
 > Where $n$ is the number of steps and $m$ is the size of the array.
+
+---
+
+## Common Pitfalls
+
+### Not Bounding the Maximum Reachable Position
+
+Without optimization, the DP table would be `O(steps * arrLen)` which can be prohibitively large when `arrLen` is huge but `steps` is small. The key insight is that you can never move more than `steps` positions to the right (since you need steps to return). Always limit the effective array length to `min(steps, arrLen)` to avoid TLE or memory issues.
+
+### Incorrect Boundary Checks for Movement
+
+When at position `i`, moving left requires `i > 0` and moving right requires `i < arrLen - 1`. A common mistake is using `i < arrLen` for the right boundary (allowing out-of-bounds movement) or forgetting the left boundary check entirely. These off-by-one errors cause incorrect results or runtime errors.
+
+### Mixing Up the DP Transition Direction
+
+In bottom-up DP, you need to carefully track whether `dp[step][i]` represents the number of ways to reach position `i` after `step` moves (forward direction) or the number of ways to return to position 0 from position `i` with `step` moves remaining (backward direction). Mixing these up leads to incorrect recurrence relations and wrong answers.

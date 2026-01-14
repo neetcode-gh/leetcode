@@ -823,3 +823,19 @@ class Solution {
 - Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Boundary Initialization
+
+When using bottom-up DP, the extra row and column must be initialized to infinity (or a very large value), except for one cell that serves as the base case. Initializing boundaries to `0` instead of infinity causes the algorithm to prefer going out of bounds, producing incorrect minimum sums.
+
+### Integer Overflow with MAX_VALUE
+
+When adding `grid[r][c]` to `Integer.MAX_VALUE` (or equivalent), the result overflows to a negative number, which then incorrectly becomes the minimum. Use a large but safe value like `1 << 30` instead, or add overflow checks before the addition.
+
+### Wrong Iteration Direction in Space-Optimized Solution
+
+In the 1D DP optimization, the iteration direction matters. When processing from bottom-right to top-left, you must iterate columns right-to-left within each row. Iterating left-to-right overwrites values before they are used, corrupting the DP state and producing wrong answers.

@@ -1110,3 +1110,49 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Not Summing All Occurrences
+
+When you pick a number, you earn points from every occurrence of that number in the array. A common mistake is only counting it once instead of summing all instances.
+
+```python
+# Wrong: only counts one occurrence
+val[num] = num
+
+# Correct: sum all occurrences
+val[num] += num
+```
+
+### Forgetting to Skip Adjacent Values
+
+When you earn points for a number `x`, you must delete all instances of `x-1` and `x+1`. This means if you pick a value, you cannot pick the consecutive values. Missing this skip logic leads to incorrect results.
+
+```python
+# Wrong: doesn't skip consecutive numbers
+res = val[nums[i]] + dfs(i + 1)
+
+# Correct: skip next if consecutive
+if nums[i] + 1 == nums[i + 1]:
+    res = val[nums[i]] + dfs(i + 2)
+else:
+    res = val[nums[i]] + dfs(i + 1)
+```
+
+### Treating Non-Consecutive Numbers as Adjacent
+
+In the House Robber transformation, only consecutive numbers conflict. If numbers have gaps (e.g., 2 and 5), both can be taken without any penalty. Treating all numbers as adjacent loses points.
+
+```python
+# Wrong: always treats as adjacent
+earn2 = max(curEarn + earn1, earn2)
+
+# Correct: check if actually consecutive
+if i > 0 and nums[i] == nums[i - 1] + 1:
+    earn2 = max(curEarn + earn1, earn2)
+else:
+    earn2 = curEarn + earn2  # No conflict, add freely
+```

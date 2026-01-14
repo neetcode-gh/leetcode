@@ -740,3 +740,15 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Taking Maximum Y for Each X
+
+When multiple indices share the same x-value, only the maximum corresponding y-value matters. Using any y-value instead of tracking the maximum for each distinct x leads to suboptimal triplet selections.
+
+### Forgetting to Handle Fewer Than Three Distinct X-Values
+
+If there are fewer than 3 distinct x-values in the input, no valid triplet exists. Failing to check this condition before computing the sum causes index-out-of-bounds errors or returns an invalid result instead of `-1`.

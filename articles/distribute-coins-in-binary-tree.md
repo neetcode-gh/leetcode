@@ -1472,3 +1472,60 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Take Absolute Value
+
+The extra coins at a node can be positive (surplus) or negative (deficit). Both represent moves across the edge to the parent. Forgetting to take the absolute value counts deficits as negative moves, producing wrong results.
+
+```python
+# Wrong: Not taking absolute value
+extra_coins = cur.val - 1 + l_extra + r_extra
+self.res += extra_coins  # Negative values reduce count!
+
+# Correct: Take absolute value
+extra_coins = cur.val - 1 + l_extra + r_extra
+self.res += abs(extra_coins)
+```
+
+### Counting Moves at the Wrong Time
+
+In the DFS approach, moves should be counted after processing both children. Counting moves before the recursive calls or only for one child leads to incorrect totals.
+
+```python
+# Wrong: Counting before children are processed
+def dfs(cur):
+    self.res += abs(cur.val - 1)  # Children not accounted for!
+    dfs(cur.left)
+    dfs(cur.right)
+
+# Correct: Count after combining with children's results
+def dfs(cur):
+    l_extra = dfs(cur.left)
+    r_extra = dfs(cur.right)
+    extra_coins = cur.val - 1 + l_extra + r_extra
+    self.res += abs(extra_coins)
+    return extra_coins
+```
+
+### Returning Wrong Value from DFS
+
+The DFS function must return the net extra coins (surplus or deficit) that flow to the parent, not the move count. Returning the wrong value breaks the recursive accumulation.
+
+```python
+# Wrong: Returning the move count
+def dfs(cur):
+    moves = abs(cur.val - 1)
+    return moves  # Parent needs extra coins, not moves!
+
+# Correct: Return net extra coins for parent
+def dfs(cur):
+    l_extra = dfs(cur.left) if cur.left else 0
+    r_extra = dfs(cur.right) if cur.right else 0
+    extra_coins = cur.val - 1 + l_extra + r_extra
+    self.res += abs(extra_coins)
+    return extra_coins  # Net flow to parent
+```

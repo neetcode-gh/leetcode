@@ -695,3 +695,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ or $O(n)$ depending on the language.
+
+---
+
+## Common Pitfalls
+
+### Popping from an Empty Stack
+
+While the problem guarantees valid input where every star has a corresponding character to remove, defensive coding should still check for an empty stack before popping. In variations of this problem or with malformed input, popping from an empty stack causes runtime errors.
+
+### Modifying the String While Iterating
+
+In the brute force approach, removing characters shifts indices and changes the string length. Continuing iteration without adjusting the index leads to skipped characters or out-of-bounds access. Either restart iteration after each modification or adjust indices carefully.
+
+### Negative Index in Two-Pointer Approach
+
+When a star decrements the left pointer `l`, it can become negative if there are leading stars (though the problem constraints prevent this). In general scenarios, always ensure `l` stays non-negative before decrementing, or validate input constraints explicitly.

@@ -1363,3 +1363,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Assuming Node 0 Is Always the Root
+
+A common mistake is assuming node `0` is always the root of the tree. The root is the node with no incoming edges (no parent), which could be any node from `0` to `n-1`. You must explicitly find the root by identifying which node never appears in `leftChild` or `rightChild` arrays.
+
+### Forgetting to Check for Multiple Roots
+
+A valid binary tree has exactly one root. If multiple nodes have no parent (indegree of 0), the structure is a forest, not a single tree. Always verify that exactly one node qualifies as the root before proceeding with traversal.
+
+### Not Verifying All Nodes Are Reachable
+
+Even if you find a valid root and detect no cycles, you must confirm that all `n` nodes are reachable from the root. Disconnected components would mean some nodes are not part of the tree rooted at the identified root. After traversal, verify the count of visited nodes equals `n`.

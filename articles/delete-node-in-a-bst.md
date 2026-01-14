@@ -1290,3 +1290,51 @@ class Solution {
 - Space complexity: $O(1)$ extra space.
 
 > Where $h$ is the height of the given binary search tree.
+
+## Common Pitfalls
+
+### Confusing In-Order Successor with In-Order Predecessor
+
+When a node has two children, you can replace it with either the in-order successor (smallest in right subtree) or in-order predecessor (largest in left subtree). Mixing these up or searching in the wrong subtree leads to an invalid BST.
+
+```python
+# Wrong: Looking for successor in the LEFT subtree
+cur = root.left
+while cur.right:
+    cur = cur.right  # This finds the predecessor, not successor
+
+# Correct: Successor is the leftmost node in the RIGHT subtree
+cur = root.right
+while cur.left:
+    cur = cur.left
+```
+
+### Forgetting to Handle the Case When Key Is Not Found
+
+If the key does not exist in the BST, the function should return the tree unchanged. Failing to handle this case can lead to incorrect behavior or null pointer exceptions.
+
+```python
+# Wrong: Assumes key always exists
+def deleteNode(self, root, key):
+    # ... deletion logic without checking if key was found
+
+# Correct: Return unchanged tree if key not found
+def deleteNode(self, root, key):
+    if not root:
+        return root  # Key not found, return as-is
+    # ... continue with deletion logic
+```
+
+### Not Returning the Modified Subtree in Recursive Calls
+
+Each recursive call modifies a subtree and returns its new root. Forgetting to assign the return value back to `root.left` or `root.right` means the deletion is not reflected in the tree.
+
+```python
+# Wrong: Recursive call result is ignored
+if key > root.val:
+    self.deleteNode(root.right, key)  # Modification lost!
+
+# Correct: Assign the result back to the parent's child pointer
+if key > root.val:
+    root.right = self.deleteNode(root.right, key)
+```

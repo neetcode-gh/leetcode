@@ -1073,3 +1073,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Monotone Increasing Property
+
+A monotone increasing binary string means all `0`s come before all `1`s. Some incorrectly interpret this as strictly increasing values or allow alternating patterns. The valid forms are only: all zeros, all ones, or zeros followed by ones with exactly one transition point.
+
+### Forgetting to Track the Count of Ones
+
+The optimal solution relies on tracking how many `1`s have been seen so far. When encountering a `0`, you must decide whether to flip it to `1` or flip all previous `1`s to `0`. Forgetting to maintain this count leads to incorrect flip calculations.
+
+### Off-by-One Errors in Split Point Logic
+
+When using the prefix-suffix approach, the split point represents where zeros end and ones begin. The valid split points range from `0` (all ones) to `n` (all zeros). Missing the boundary cases or incorrectly indexing the prefix/suffix arrays causes wrong answers.

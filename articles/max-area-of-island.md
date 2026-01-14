@@ -1336,3 +1336,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Mark Cells as Visited
+
+A common mistake is not marking cells as visited before or immediately after processing them. This leads to infinite recursion in DFS or infinite loops in BFS, as the same cell gets added to the queue or call stack repeatedly. Always mark a cell as visited (either by using a separate visited set or by modifying the grid value to `0`) before exploring its neighbors.
+
+### Incorrect Boundary Checks
+
+Failing to properly check grid boundaries before accessing `grid[r][c]` causes index-out-of-bounds errors. The order of conditions matters: always check `r >= 0 && r < ROWS && c >= 0 && c < COLS` before checking `grid[r][c]`. Short-circuit evaluation prevents the array access when indices are invalid.
+
+### Counting Area Incorrectly in BFS
+
+In BFS, a subtle bug occurs when you increment the area count at the wrong time. The area should be incremented when a cell is added to the queue and marked as visited, not when it is dequeued. If you increment when dequeuing, you may count the same cell multiple times if it gets added to the queue from different neighbors before being processed.

@@ -1356,3 +1356,26 @@ class Solution {
 - Space complexity: $O(N M)$
 
 >  Where $N$ is the number of workers, and $M$ is the number of bikes.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Tie-Breaking Order
+The problem requires breaking ties by worker index first, then bike index. Sorting by (distance, bike, worker) instead of (distance, worker, bike) produces wrong assignments.
+
+```python
+# Wrong: bike index takes priority over worker index
+all_triplets.sort(key=lambda x: (x[0], x[2], x[1]))
+```
+
+### Using Euclidean Distance Instead of Manhattan Distance
+The problem specifically asks for Manhattan distance. Using Euclidean distance will give incorrect results.
+
+```python
+# Wrong: Euclidean distance
+distance = math.sqrt((w[0] - b[0])**2 + (w[1] - b[1])**2)
+```
+
+### Not Tracking Both Worker and Bike Availability
+When a worker-bike pair is assigned, both must be marked as taken. Forgetting to check either condition leads to double assignments.

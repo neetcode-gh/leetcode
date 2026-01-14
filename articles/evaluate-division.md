@@ -1659,3 +1659,19 @@ class Solution {
 - Space complexity: $O(n ^ 2 + m)$
 
 > Where $n$ is the number of unique strings and $m$ is the number of queries.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Add Reciprocal Edges
+
+When building the graph, each equation `a / b = value` must create two edges: `a -> b` with weight `value` AND `b -> a` with weight `1/value`. Forgetting the reciprocal edge means you can only traverse the relationship in one direction, causing valid queries to return `-1` when the path exists in reverse.
+
+### Not Handling Unknown Variables
+
+A query might contain variables that never appeared in any equation. Before starting BFS/DFS, you must check if both the source and target variables exist in the graph. Attempting to traverse from a non-existent node will cause null pointer errors or infinite loops depending on your implementation.
+
+### Incorrect Weight Multiplication Order in Union-Find
+
+In the weighted Union-Find approach, the weight calculation during union is subtle: when connecting `rootX` to `rootY`, the new weight for `rootX` must be `value * weight[y] / weight[x]`. Getting this formula wrong (such as dividing instead of multiplying, or using the wrong variables) will produce incorrect ratios for subsequent queries.

@@ -343,3 +343,27 @@ struct Heap<T> {
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of workers, and $k$ is the number of workers to be hired.
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Wage-to-Quality Ratio
+
+The key insight is that the worker with the highest ratio in the chosen group determines the "rate" for everyone. Some mistakenly try to minimize total wage directly or pick workers with the lowest individual wages, missing that all workers must be paid proportionally to their quality based on the maximum ratio in the group.
+
+### Using a Min-Heap Instead of a Max-Heap
+
+Once a worker's ratio is fixed as the group's rate, minimizing cost requires selecting workers with the smallest quality values. A max-heap is needed to efficiently remove the worker with the highest quality when the group exceeds size `k`. Using a min-heap evicts the wrong workers.
+
+### Forgetting to Track Running Total Quality
+
+Simply maintaining the heap is not enough. The running sum of qualities in the heap must be tracked separately. Recomputing the sum by iterating through the heap at each step results in O(k) overhead per iteration, degrading overall time complexity.
+
+### Computing Cost Before Heap Reaches Size k
+
+The minimum cost should only be computed when exactly `k` workers are in the heap. Calculating cost with fewer than `k` workers or updating the result before the heap is properly sized leads to invalid or suboptimal answers.
+
+### Integer Division Precision Loss
+
+When computing the wage-to-quality ratio, using integer division truncates the result and loses precision. The ratio must be computed using floating-point division to ensure accurate sorting and cost calculations.

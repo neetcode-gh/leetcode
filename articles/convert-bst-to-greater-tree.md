@@ -1278,3 +1278,51 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Using Standard In-Order Traversal Instead of Reverse In-Order
+Standard in-order traversal visits nodes from smallest to largest. For the Greater Tree, we need to accumulate sums from larger values first, requiring reverse in-order (right, node, left).
+
+```python
+# Wrong - standard in-order (left, node, right)
+dfs(node.left)
+node.val += curSum
+dfs(node.right)
+
+# Correct - reverse in-order (right, node, left)
+dfs(node.right)
+node.val += curSum
+dfs(node.left)
+```
+
+### Incorrect Order of Update and Accumulation
+A subtle bug occurs when you add to `curSum` before updating the node's value, or update the node before adding the original value to `curSum`. The sequence must be: save original, update node with accumulated sum, then add original to running sum.
+
+```python
+# Wrong - loses original value
+curSum += node.val
+node.val = curSum  # curSum already includes node.val
+
+# Correct
+tmp = node.val
+node.val += curSum
+curSum += tmp
+```
+
+### Forgetting to Handle Null Nodes in Recursive Calls
+Without a proper base case, the recursion will crash when reaching null children. Always check for null before processing a node.
+
+```python
+# Wrong - crashes on null nodes
+def dfs(node):
+    dfs(node.right)  # NullPointerException if node is None
+
+# Correct
+def dfs(node):
+    if not node:
+        return
+    dfs(node.right)
+```

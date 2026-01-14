@@ -730,3 +730,35 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Initializing Result to Zero Instead of Negative Infinity
+When all node values are negative, the maximum path sum is still negative. Initializing the result to 0 causes incorrect answers for trees with all negative values.
+```python
+# Wrong: fails for trees like [-3]
+res = 0  # should be: res = float('-inf') or root.val
+```
+
+### Forgetting to Clamp Negative Subtree Contributions to Zero
+A subtree with negative sum should not be included in the path. Failing to take `max(0, subtree_sum)` adds negative values that reduce the total.
+```python
+# Wrong: includes negative contributions
+leftMax = dfs(root.left)  # should be: max(dfs(root.left), 0)
+```
+
+### Returning the Full Path Sum Instead of Single-Branch Sum
+The recursive function must return only one branch (left OR right) to the parent, not both. Returning `node.val + leftMax + rightMax` allows invalid paths that fork at multiple nodes.
+```python
+# Wrong: returns both branches (creates invalid forking path)
+return node.val + leftMax + rightMax
+# Correct: return node.val + max(leftMax, rightMax)
+```
+
+### Not Considering Single-Node Paths
+A valid path can be just one node. The algorithm must consider `node.val` alone as a potential maximum, especially when both subtrees contribute negative values.
+
+### Confusing Path Sum With Downward Path
+The maximum path can go through any node as the "turning point" (left subtree -> node -> right subtree). This is different from paths that only go downward from root to leaf.

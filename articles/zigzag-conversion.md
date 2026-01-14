@@ -458,3 +458,35 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for the output string.
+
+---
+
+## Common Pitfalls
+
+### Not Handling the Single Row Edge Case
+When `numRows == 1`, the zigzag pattern is just the original string. Without this check, the increment becomes `2 * (1 - 1) = 0`, causing an infinite loop or division issues.
+
+```python
+# Wrong: Missing edge case
+increment = 2 * (numRows - 1)  # increment = 0 when numRows = 1
+for i in range(r, len(s), increment):  # Infinite loop!
+```
+
+### Incorrect Direction Toggle Logic
+When simulating the zigzag traversal, the direction should only flip when reaching the first or last row. A common mistake is toggling direction after every step, or only checking one boundary.
+
+```python
+# Wrong: Toggling every time or only checking one boundary
+row += dir
+if row == numRows - 1:  # Misses the top boundary!
+    dir *= -1
+```
+
+### Wrong Index Calculation for Middle Row Diagonal Characters
+In the mathematical approach, middle rows have two characters per cycle. The diagonal character position `i + increment - 2 * r` is often miscalculated, leading to missing characters or index out of bounds errors.
+
+```python
+# Wrong: Using incorrect offset formula
+if r > 0 and r < numRows - 1:
+    res.append(s[i + increment - r])  # Should be: i + increment - 2 * r
+```

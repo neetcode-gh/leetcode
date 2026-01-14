@@ -868,3 +868,21 @@ class Solution {
 * Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the input array $words$, and $m$ is the maximum length of a string.
+
+---
+
+## Common Pitfalls
+
+### Checking Only Prefix or Only Suffix
+The condition requires `words[i]` to be BOTH a prefix AND a suffix of `words[j]`. Checking only one condition will give incorrect results.
+```python
+# Wrong: only checks prefix
+if w2.startswith(w1):
+    res += 1
+# Correct: checks both conditions
+if w2.startswith(w1) and w2.endswith(w1):
+    res += 1
+```
+
+### Forgetting the Length Constraint
+A string cannot be a prefix or suffix of a shorter string. Failing to check `len(s1) <= len(s2)` before comparing can lead to index out of bounds errors or false positives.

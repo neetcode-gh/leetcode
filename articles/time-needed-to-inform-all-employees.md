@@ -864,3 +864,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for recursion stack.
+
+---
+
+## Common Pitfalls
+
+### Summing Instead of Taking Maximum Over Children
+
+The total time is the longest path from root to any leaf, not the sum of all inform times. When a manager informs multiple subordinates, they are informed simultaneously. You should take the maximum time among all subtrees, not add them together. Using sum instead of max produces answers that are way too large.
+
+### Forgetting That Leaf Nodes Have Zero Inform Time
+
+Employees with no subordinates (leaf nodes) have `informTime[i] = 0`. When building the adjacency list or computing times, ensure you handle this correctly. Some solutions mistakenly add inform time even for leaves or skip leaves entirely, leading to incorrect results.
+
+### Not Building the Adjacency List Correctly
+
+The `manager` array gives parent pointers, but for DFS/BFS you need children pointers. A common mistake is iterating incorrectly when building the adjacency list or accidentally including the head in some manager's list. The head has `manager[headID] = -1`, so you must skip adding edges for the head node.

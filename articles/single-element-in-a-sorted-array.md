@@ -881,3 +881,19 @@ class Solution {
 
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Array is Sorted
+
+Many candidates jump straight to the XOR solution without recognizing that the sorted property enables an $O(\log n)$ binary search approach. While XOR works correctly, it only achieves $O(n)$ time complexity and fails to leverage the key constraint that makes this problem unique.
+
+### Incorrect Index Parity Logic
+
+The binary search solution relies on understanding that before the single element, pairs start at even indices (index 0, 2, 4...) and after it, this pattern shifts. A common mistake is getting the parity check backwards or not properly handling whether to compare with the left or right neighbor based on the current index.
+
+### Off-by-One Errors in Boundary Checks
+
+When checking neighbors at `m-1` or `m+1`, failing to validate bounds can cause array index out-of-bounds errors. This is especially problematic at the edges of the array where the single element might be the first or last element.

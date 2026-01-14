@@ -378,3 +378,19 @@ class Solution {
 - Space complexity: $O(N)$
 
 > Where $N$ is the total number of digits in the array $nums$.
+
+---
+
+## Common Pitfalls
+
+### Using Numeric Comparison Instead of Concatenation Comparison
+
+Simply sorting numbers by their numeric value does not produce the correct order. For example, `9` should come before `34` because `"934" > "349"`, but `34 > 9` numerically. The correct approach is to compare `a + b` versus `b + a` as strings, where `+` denotes concatenation.
+
+### Forgetting the All-Zeros Edge Case
+
+When the input contains only zeros (e.g., `[0, 0, 0]`), the concatenated result would be `"000"`. The expected output is `"0"`, not `"000"`. Always check if the result starts with `'0'` and return `"0"` in that case, since a valid number representation should not have leading zeros unless the number itself is zero.
+
+### Incorrect Comparator Logic for Sorting
+
+When implementing a custom comparator, the logic must be consistent. For descending order (largest first), return true when `a + b > b + a`. Reversing this condition or using the wrong comparison operator will sort elements in ascending order, producing the smallest number instead of the largest.

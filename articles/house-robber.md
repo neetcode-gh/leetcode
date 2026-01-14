@@ -741,3 +741,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Incorrect Base Case Initialization
+
+In the bottom-up DP approach, `dp[1]` should be initialized as `max(nums[0], nums[1])`, not just `nums[1]`. This represents the maximum money obtainable from the first two houses. If you set `dp[1] = nums[1]`, you ignore the possibility that the first house might have more money, leading to suboptimal results.
+
+### Confusing the Recurrence Relation
+
+The recurrence `dp[i] = max(dp[i-1], nums[i] + dp[i-2])` represents choosing between skipping house `i` (keeping the best from `i-1`) or robbing house `i` (adding its value to the best from `i-2`). A common mistake is writing `dp[i] = max(dp[i-1] + nums[i], dp[i-2])`, which incorrectly adds the current house value when skipping it. Remember: robbing requires jumping over the previous house, not adding to it.
+
+### Not Handling Edge Cases for Empty or Single-Element Arrays
+
+When the input array is empty, return 0. When it has only one element, return that element. The bottom-up approach with a DP array requires at least two elements to initialize `dp[0]` and `dp[1]`. Failing to handle these edge cases causes index-out-of-bounds errors or incorrect results. The space-optimized solution with two variables naturally handles the single-element case but still needs an empty array check.

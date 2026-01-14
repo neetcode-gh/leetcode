@@ -519,3 +519,37 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Comparison in Brute Force
+
+When using nested loops, a common mistake is comparing an element with itself by starting the inner loop at `i` instead of `i + 1`.
+
+```python
+# Wrong: Compares element with itself
+for i in range(len(nums)):
+    for j in range(len(nums)):  # Should start at i + 1
+        if nums[i] == nums[j]:
+            return True
+
+# Correct: Skip self-comparison
+for i in range(len(nums)):
+    for j in range(i + 1, len(nums)):
+        if nums[i] == nums[j]:
+            return True
+```
+
+### Modifying Input Array Unexpectedly
+
+The sorting approach modifies the original array, which may not be acceptable in some contexts. If the original order matters, make a copy first.
+
+```python
+# Caution: This modifies the input
+nums.sort()
+
+# Safer: Sort a copy if original order matters
+sorted_nums = sorted(nums)
+```

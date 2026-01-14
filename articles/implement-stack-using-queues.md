@@ -863,3 +863,15 @@ class MyStack {
     - $O(1)$ time for each $push()$ function call.
     - $O(1)$ time for each $pop()$ function call.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Incorrect Rotation Count in Single Queue Approach
+
+When using one queue, after pushing a new element, the queue must be rotated exactly `size - 1` times to move the new element to the front. A common mistake is rotating `size` times, which brings the queue back to its original state and leaves the new element at the back. The loop should run `for i in range(len(q) - 1)`, not `for i in range(len(q))`.
+
+### Forgetting to Swap Queues in Two Queue Approach
+
+In the two-queue approach, after moving all elements from `q1` to `q2` behind the new element, the queues must be swapped so that `q1` always contains the elements in stack order. Forgetting to swap means subsequent `pop()` and `top()` operations will access the wrong queue, returning incorrect results or causing errors on an empty queue.

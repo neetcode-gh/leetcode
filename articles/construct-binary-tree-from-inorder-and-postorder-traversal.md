@@ -971,3 +971,32 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for recursion stack.
+
+---
+
+## Common Pitfalls
+
+### Building Left Subtree Before Right When Using Postorder Index
+When processing postorder from right to left, you must build the right subtree before the left subtree. The postorder array is structured as `[left, right, root]`, so when traversing backwards, we encounter right subtree elements first.
+```python
+# Wrong: Building left before right
+root.left = dfs(l, idx - 1)
+root.right = dfs(idx + 1, r)  # postIdx is now wrong
+
+# Correct: Build right first
+root.right = dfs(idx + 1, r)
+root.left = dfs(l, idx - 1)
+```
+
+### Off-by-One Errors in Array Slicing
+When slicing arrays for recursive calls, it's easy to miscalculate the postorder boundaries. The left subtree has `mid` elements, so `postorder[:mid]` is correct for the left subtree, and `postorder[mid:-1]` (excluding the root) is correct for the right subtree.
+```python
+# Wrong: Including the root in right subtree
+root.right = self.buildTree(inorder[mid + 1:], postorder[mid:])
+
+# Correct: Exclude the root (last element)
+root.right = self.buildTree(inorder[mid + 1:], postorder[mid:-1])
+```
+
+### Assuming Preorder Logic Works for Postorder
+In preorder traversal, the root is at the beginning of the array, but in postorder, the root is at the end. Using `postorder[0]` instead of `postorder[-1]` as the root will produce an incorrect tree.

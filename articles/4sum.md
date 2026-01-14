@@ -1338,3 +1338,30 @@ class Solution {
 - Space complexity:
     - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
     - $O(m)$ space for the output array.
+
+---
+
+## Common Pitfalls
+
+### Integer Overflow
+When summing four integers, the result can exceed the 32-bit integer range. Always use a 64-bit type (like `long` in Java/C++) for the sum calculation to avoid overflow.
+```java
+// Wrong: may overflow
+int sum = nums[i] + nums[j] + nums[left] + nums[right];
+// Correct: use long to prevent overflow
+long sum = (long)nums[i] + nums[j] + nums[left] + nums[right];
+```
+
+### Incorrect Duplicate Skipping
+When skipping duplicates, you must check against the previous element, not the next one. Also, the skip should only happen after processing the first occurrence, not before.
+```python
+# Wrong: skips before processing first occurrence
+if i > 0 and nums[i] == nums[i - 1]:  # This is correct for outer loops
+# Wrong for two-pointer: checking next instead of previous
+while left < right and nums[left] == nums[left + 1]:
+# Correct: skip after finding a match, check previous
+while left < right and nums[left] == nums[left - 1]:
+```
+
+### Forgetting to Sort the Array
+The two-pointer technique only works on a sorted array. Forgetting to sort first will cause the algorithm to miss valid quadruplets or produce incorrect results.

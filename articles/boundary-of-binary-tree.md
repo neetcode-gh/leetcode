@@ -867,3 +867,22 @@ class Solution {
 - Space complexity: $O(n)$
 
 >  Where $n$ is the number of nodes in the tree
+
+---
+
+## Common Pitfalls
+
+### Including Leaves in the Left or Right Boundary
+Leaf nodes should only appear once in the leaves section, not in the left or right boundary. Adding a leaf while traversing the left boundary causes duplicates in the result.
+```python
+# Wrong: not checking for leaf before adding to boundary
+while t is not None:
+    res.append(t.val)  # Should check: if not isLeaf(t)
+    t = t.left if t.left else t.right
+```
+
+### Incorrect Right Boundary Order
+The right boundary must be added in bottom-to-top order. A common mistake is adding nodes directly to the result during traversal (top-to-bottom), instead of using a stack or reversing at the end.
+
+### Missing the Single-Child Case in Boundary Traversal
+When traversing the left boundary, if a node has no left child, you must continue with the right child (and vice versa for the right boundary). Stopping traversal at missing children misses boundary nodes deeper in the tree.

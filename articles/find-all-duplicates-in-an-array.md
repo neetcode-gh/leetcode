@@ -877,3 +877,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Use Absolute Value When Accessing Indices
+
+In the negative marking approach, once a value at an index is negated, subsequent accesses using that value as an index will fail. Always use `abs(num) - 1` to compute the correct index, as the value itself may have been negated in a previous iteration.
+
+### Off-by-One Index Errors
+
+Since array values are in the range `[1, n]` but indices are `[0, n-1]`, you must subtract 1 when converting a value to an index. Forgetting this adjustment causes index out of bounds errors or marks the wrong positions.
+
+### Modifying the Array When It Should Be Preserved
+
+The negative marking approach modifies the input array in place. If the problem requires the original array to remain unchanged, or if the array is used elsewhere after the function call, you should either restore the array afterward or use a different approach like a hash set.

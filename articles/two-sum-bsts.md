@@ -1827,3 +1827,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $m$ and $n$ are the number of nodes in the two trees.
+
+---
+
+## Common Pitfalls
+
+### Treating the Trees as Regular Binary Trees
+
+A common mistake is ignoring the BST property and treating both trees as generic binary trees. This leads to inefficient solutions that don't leverage the sorted structure for binary search or two-pointer approaches. Always consider whether the BST ordering can help optimize your search.
+
+### Computing the Complement Incorrectly
+
+When searching for a pair that sums to the target, some forget to compute `target - value` correctly or accidentally search for the wrong value. For example, if `target = 9` and the current node has value `4`, you need to search for `5` in the other tree, not `9 - 4 = 5` with any other formula.
+
+### Modifying Tree Structure with Morris Traversal
+
+Morris traversal temporarily modifies tree pointers to achieve O(1) space. A pitfall is forgetting to restore the original tree structure after traversal or exiting early without cleanup. This can corrupt the tree for subsequent operations or cause infinite loops.

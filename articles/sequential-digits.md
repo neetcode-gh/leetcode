@@ -1155,3 +1155,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 > Since, we have at most $36$ valid numbers as per the given constraints.
+
+---
+
+## Common Pitfalls
+
+### Not Recognizing the Limited Search Space
+
+A common mistake is using a brute force approach that iterates through every number in the range `[low, high]`. Since there are only 36 possible sequential digit numbers (from "12" to "123456789"), iterating through potentially billions of numbers is extremely inefficient. Recognize that you should generate only the valid candidates.
+
+### Forgetting the Upper Bound on Starting Digits
+
+When building sequential digit numbers of length `d`, the starting digit cannot exceed `10 - d`. For example, a 4-digit sequential number cannot start with 7, 8, or 9 because there are not enough consecutive digits remaining. Failing to enforce this constraint leads to invalid numbers like "7890" which wraps around.
+
+### Returning Results Out of Order
+
+Some approaches like DFS generate numbers in an order that is not sorted (e.g., 12, 123, 1234, ..., 23, 234, ...). The problem expects results in ascending order. Remember to sort the final result if your generation method does not naturally produce sorted output.

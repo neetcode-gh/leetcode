@@ -1180,3 +1180,26 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
+
+---
+
+## Common Pitfalls
+
+### Returning Early When a Mismatch is Found
+A critical mistake is returning `false` immediately when finding a cell that exists in `grid2` but not in `grid1`. This leaves part of the island unexplored and unvisited, causing those cells to be counted as separate islands later.
+
+```python
+# Wrong: Early return leaves island partially visited
+if grid1[r][c] == 0:
+    return False  # Other cells in this island won't be marked
+
+# Correct: Continue exploring, track result with a variable
+res = grid1[r][c] == 1
+res &= dfs(r - 1, c)  # Must visit all cells
+```
+
+### Using OR Instead of AND for Recursive Results
+When combining results from the four directional DFS calls, using OR (`|`) instead of AND (`&`) will incorrectly mark an island as a sub-island if any single cell matches, rather than requiring all cells to match.
+
+### Checking the Wrong Grid for Land Cells
+When deciding whether to explore a neighboring cell, the check must be against `grid2` (where we're finding islands), not `grid1`. The `grid1` check determines validity, but `grid2` determines connectivity.

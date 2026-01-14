@@ -239,3 +239,19 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $N$ is the length of the internal array.
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Middle Element When Length Is Odd
+
+When the array length is odd, dividing it into two equal halves leaves one element in the middle. If `compareSub` returns `0` (both halves have equal sums), the larger integer must be this middle element. Failing to handle this case causes the algorithm to return an incorrect index or loop indefinitely.
+
+### Incorrect Subarray Index Calculation
+
+The `compareSub` API uses inclusive indices. A common mistake is miscalculating the end indices of the subarrays. For two adjacent subarrays of length `len` starting at `left`, the ranges are `[left, left + len - 1]` and `[left + len, left + 2*len - 1]`. Using `left + len` as the end of the first subarray causes overlapping or gaps.
+
+### Not Updating Search Boundaries Correctly
+
+After comparing subarrays, the search should continue in the half with the larger sum. A subtle bug is updating `left` incorrectly when the right subarray is larger. The new `left` should be `left + length`, not `left + length + 1`, since we are narrowing to exactly the right half.

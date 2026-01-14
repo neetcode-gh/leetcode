@@ -873,3 +873,46 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Misunderstanding the Triplet Count Formula
+
+When the XOR from index `i` to `k` equals zero, beginners often count it as just 1 triplet. However, `j` can be placed at any position from `i+1` to `k`, yielding `k - i` valid triplets for each such pair.
+
+```python
+# Incorrect - counts only one triplet per zero-XOR subarray
+if cur_xor == 0:
+    res += 1
+
+# Correct - counts all valid j positions
+if cur_xor == 0:
+    res += k - i
+```
+
+### Off-by-One Errors in Index Sum Tracking
+
+In the optimal solution, the index sum needs to track `i + 1` (not `i`) because we want the sum of starting positions for subarrays, and the formula `i * count - index_sum` requires this offset. Using just `i` leads to incorrect results.
+
+```python
+# Incorrect - missing the +1 offset
+index_sum[prefix] += i
+
+# Correct - accounts for 1-based position in contribution formula
+index_sum[prefix] += i + 1
+```
+
+### Forgetting to Initialize count[0] = 1
+
+The prefix XOR of 0 needs to be pre-initialized to handle subarrays starting from index 0. Without this initialization, valid triplets where the XOR from index 0 to some `k` equals zero will be missed.
+
+```python
+# Incorrect - misses subarrays starting from index 0
+count = defaultdict(int)
+
+# Correct - handles prefix XOR that equals a previously seen value at index 0
+count = defaultdict(int)
+count[0] = 1
+```

@@ -1119,3 +1119,27 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Trying to Count Exactly K Directly with a Single Sliding Window
+
+A single sliding window can only count subarrays with "at most k" distinct values, not "exactly k." To count exactly `k`, you must use the formula `atMostK(k) - atMostK(k-1)` or maintain two pointers to track a range of valid left boundaries.
+
+### Off-by-One Errors in Subarray Counting
+
+When counting subarrays ending at position `r`, the count is `r - l + 1`, not `r - l`. This represents all subarrays starting at any position from `l` to `r` and ending at `r`. Forgetting the `+1` leads to undercounting.
+
+### Not Properly Tracking When Distinct Count Changes
+
+When a new element is added, increment the distinct count only if its frequency becomes `1` (first occurrence). When removing, decrement the distinct count only when its frequency drops to `0`. Using set size directly on every operation is less efficient and error-prone.
+
+### Resetting State Incorrectly in the One-Pass Approach
+
+In the one-pass sliding window variant, when the distinct count exceeds `k`, you must reset the accumulated count `cnt` to `0`. Forgetting this reset causes the algorithm to incorrectly carry over counts from invalid window states.
+
+### Confusing the Two Left Pointers in One-Pass Solutions
+
+The one-pass approach uses two left pointers: `l_far` (leftmost valid start) and `l_near` (rightmost valid start where the leftmost element appears exactly once). Mixing up their roles or forgetting to update `l_far = l_near` when shrinking past `k` distinct values produces incorrect results.

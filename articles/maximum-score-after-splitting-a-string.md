@@ -923,3 +923,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Allowing Empty Substrings
+
+The problem requires both left and right substrings to be non-empty. Splitting at index `0` (empty left) or index `n` (empty right) is invalid. The loop should iterate from index `1` to `n-1`, not from `0` to `n`. Forgetting this constraint leads to incorrect boundary cases.
+
+### Counting Characters in the Wrong Substring
+
+When computing the score, zeros should be counted in the left substring only, and ones should be counted in the right substring only. A common mistake is counting ones on the left or zeros on the right, which inverts the logic and produces wrong results.

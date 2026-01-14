@@ -299,3 +299,24 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Wrap-Around Check
+Only checking consecutive word pairs without verifying that the last word connects back to the first word. In the space-optimized approach, this means checking that `sentence[0] == sentence[-1]`.
+
+```python
+# Wrong: only checks spaces
+for i in range(len(sentence)):
+    if sentence[i] == " " and sentence[i-1] != sentence[i+1]:
+        return False
+return True  # Missing wrap-around check
+
+# Correct: include wrap-around
+return sentence[0] == sentence[-1]
+```
+
+### Index Out of Bounds When Accessing Adjacent Characters
+When iterating through the string and finding a space at index `i`, accessing `sentence[i-1]` or `sentence[i+1]` without ensuring the space is not at the start or end of the string. The problem guarantees no leading or trailing spaces, but failing to account for this in other contexts causes errors.

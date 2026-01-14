@@ -667,3 +667,20 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Incorrect Integer Division with Negative Numbers
+Division in this problem truncates toward zero, but some languages (like Python) use floor division by default, which truncates toward negative infinity. This gives wrong results for negative numbers.
+```python
+# Wrong: -3 // 2 = -2 in Python (floor division)
+# Correct: int(-3 / 2) = -1 (truncation toward zero)
+```
+
+### Forgetting to Process the Last Number
+The algorithm typically processes a number when it encounters an operator. However, the last number in the expression has no operator after it, so it might never get processed unless you handle this edge case explicitly.
+
+### Not Handling Spaces Correctly
+The expression can contain spaces between numbers and operators. Failing to skip or remove spaces causes parsing errors or treats spaces as invalid characters.

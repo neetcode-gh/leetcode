@@ -784,3 +784,29 @@ class Solution {
 - Space complexity: $O(M)$
 
 >  Where $M$ is the number of nodes in the input tree.
+
+---
+
+## Common Pitfalls
+
+### Returning the Original Node Instead of a Clone
+A common mistake is returning the original node in the base case or forgetting to create a new node, which means the "clone" still shares references with the original tree.
+
+```python
+# Wrong: Returns original node
+if not root:
+    return root  # Fine for null, but ensure you create NEW nodes otherwise
+# Must use: node_copy = Node(root.val)
+```
+
+### Shallow Copying the Children List
+Directly assigning `node_copy.children = root.children` creates a shallow copy where both trees share the same child nodes. Each child must be recursively cloned.
+
+```python
+# Wrong: Shares children with original
+node_copy.children = root.children
+
+# Correct: Clone each child
+for child in root.children:
+    node_copy.children.append(self.cloneTree(child))
+```

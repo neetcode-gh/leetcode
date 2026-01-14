@@ -1040,3 +1040,19 @@ class Solution {
 - Space complexity: $O(1)$
 
 >  Where $n$ is the size of the linked list.
+
+---
+
+## Common Pitfalls
+
+### Stack Overflow with Deep Recursion
+
+The simple recursive solution uses $O(n)$ stack space. For very long linked lists, this can cause a stack overflow. Consider the square root decomposition or divide-and-conquer approaches to reduce recursion depth to $O(\sqrt{n})$ or $O(\log n)$ respectively.
+
+### Printing in Forward Order Instead of Reverse
+
+A common mistake in the recursive approach is calling `printValue()` before the recursive call, which prints nodes in forward order. The key insight is that the recursive call must happen **first**, and printing happens **after** the call returns, so the deepest nodes print first.
+
+### Incorrect Block Size Calculation in Square Root Decomposition
+
+When implementing square root decomposition, using integer division for the block size can lead to issues. Use `ceil(sqrt(n))` to ensure all nodes are covered. Also, ensure the recursion within each block stops at the block boundary, not at the end of the list.

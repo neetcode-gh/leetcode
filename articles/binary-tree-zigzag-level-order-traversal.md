@@ -1421,3 +1421,28 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Reversing Children Order Instead of Values
+A common mistake is trying to alternate the order of adding children to the queue (right-then-left vs left-then-right). This does not produce the correct zigzag pattern because it affects future levels, not just the current one.
+```python
+# Wrong: alternating child insertion order
+if level_num % 2 == 0:
+    queue.append(node.left); queue.append(node.right)
+else:
+    queue.append(node.right); queue.append(node.left)  # Breaks level structure
+```
+
+### Off-by-One Error in Level Index Check
+Confusing whether level 0 should be left-to-right or right-to-left. The problem defines level 0 (root level) as left-to-right, so odd-indexed levels should be reversed.
+```python
+# Wrong: reversing even levels instead of odd
+if len(res) % 2 == 0:  # Should be: if len(res) % 2 == 1
+    level.reverse()
+```
+
+### Using Deque Operations Incorrectly for Zigzag
+Some attempt to use `appendleft` and `append` alternately to avoid reversing, but this approach requires careful handling to avoid mixing up the traversal order with the output order, often leading to subtle bugs.

@@ -542,3 +542,53 @@ class SnakeGame {
     - $O(W \times H)$ is used by the `snake` and the `snake_set` data structures. At most, we can have snake that occupies all the cells of the grid.
 
 >  Where $W$ represents the width of the grid, $H$ represents the height of the grid, and $N$ represents the number of food items in the list.
+
+## Common Pitfalls
+
+### Confusing Width and Height with Row and Column
+
+The grid is defined as `width x height`, but positions are given as `[row, col]` where row corresponds to height and column corresponds to width. Mixing these up causes incorrect boundary checks.
+
+```python
+# Wrong: swapped width/height in boundary check
+crosses_boundary1 = newHead[0] < 0 or newHead[0] >= self.width   # Should be height
+crosses_boundary2 = newHead[1] < 0 or newHead[1] >= self.height  # Should be width
+
+# Correct
+crosses_boundary1 = newHead[0] < 0 or newHead[0] >= self.height  # row vs height
+crosses_boundary2 = newHead[1] < 0 or newHead[1] >= self.width   # col vs width
+```
+
+### Not Excluding Tail When Checking Self-Collision
+
+When the snake moves without eating, the tail vacates its position. The new head can legally occupy the old tail position. Failing to exclude the tail from collision detection causes false game-overs.
+
+```python
+# Wrong: doesn't account for tail moving
+bites_itself = newHead in self.snake_set
+
+# Correct: tail position will be vacated (unless eating)
+bites_itself = newHead in self.snake_set and newHead != self.snake[-1]
+```
+
+### Wrong Order of Operations When Eating Food
+
+When eating food, you must not remove the tail (so the snake grows). When not eating, you must remove the tail before adding the new head. Getting this order wrong causes the snake to grow incorrectly or the set to become inconsistent.
+
+```python
+# Wrong: always removes tail, then checks food
+tail = self.snake.pop()
+del self.snake_set[tail]
+if is_food:
+    # Too late - tail already removed!
+    pass
+
+# Correct: check food first, only remove tail if not eating
+if is_food:
+    self.food_index += 1
+else:
+    tail = self.snake.pop()
+    del self.snake_set[tail]
+self.snake.appendleft(newHead)
+self.snake_set[newHead] = 1
+```

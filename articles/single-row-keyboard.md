@@ -253,3 +253,15 @@ class Solution {
 - Space complexity: $O(1)$ constant space
 
 >  Where $n$ is the length of `word`.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Track the Previous Position
+
+A common mistake is calculating the distance from a fixed starting point (like index 0) for each character instead of from the previous character's position. The finger moves sequentially through the word, so each distance calculation must be relative to where the finger currently is.
+
+### Not Using Absolute Value for Distance
+
+When calculating the distance between two positions, forgetting to take the absolute value leads to negative distances when moving left on the keyboard. The time to move is always the magnitude of the difference, regardless of direction.

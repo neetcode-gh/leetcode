@@ -496,3 +496,40 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Adding Both Cities to the Set
+
+When using the hash set approach, only starting cities should be added to the set. Adding both starting and ending cities defeats the purpose since you need to find which destination is never a starting point.
+
+```python
+# Wrong - adds both cities
+for p in paths:
+    s.add(p[0])
+    s.add(p[1])  # Incorrect: this includes destinations
+
+# Correct - only add starting cities
+for p in paths:
+    s.add(p[0])
+```
+
+### Checking Starting Cities Instead of Destinations
+
+A common logic error is checking if starting cities are absent from the set of destinations, rather than checking if destinations are absent from the set of starting cities.
+
+```python
+# Wrong - checking the wrong direction
+s = set(p[1] for p in paths)  # Set of destinations
+for p in paths:
+    if p[0] not in s:  # Looking for start with no incoming path
+        return p[0]
+
+# Correct - find destination with no outgoing path
+s = set(p[0] for p in paths)  # Set of starting cities
+for p in paths:
+    if p[1] not in s:  # Destination that is never a start
+        return p[1]
+```

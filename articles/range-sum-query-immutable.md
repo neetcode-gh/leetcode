@@ -910,3 +910,15 @@ class NumArray {
 
 - Time complexity: $O(\log n)$ for each $sumRange()$ query, $O(n)$ for building the Segment Tree.
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One Error When Left Index Is Zero
+
+When using a prefix sum array where `prefix[i]` represents the sum from index 0 to i, computing `sumRange(0, right)` requires special handling. Attempting to access `prefix[-1]` causes an error. The fix is either to check `if left > 0` before subtracting, or use a prefix array of size `n + 1` where `prefix[0] = 0` so that `prefix[right + 1] - prefix[left]` always works without edge cases.
+
+### Modifying the Original Array After Preprocessing
+
+Since prefix sums are precomputed during initialization, any subsequent changes to the original array will not be reflected in query results. This approach only works for immutable arrays. If updates are needed, a different data structure like a segment tree or Fenwick tree must be used instead of static prefix sums.

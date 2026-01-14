@@ -397,3 +397,15 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Off-by-One in Window Boundaries
+
+The sliding window must have exactly `k` elements. A common bug is using `i <= len(blocks) - k` vs `i < len(blocks) - k + 1` incorrectly, causing either one too few or one too many windows to be checked. Trace through a small example like `blocks = "WBB", k = 2` to verify your loop bounds.
+
+### Forgetting to Update Count When Sliding
+
+When sliding the window, you must both remove the contribution of the element leaving the window and add the contribution of the element entering. Forgetting either update causes the count to drift from the actual number of white blocks in the current window.

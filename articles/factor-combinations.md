@@ -567,3 +567,19 @@ class Solution {
 - Space complexity: $O(n \cdot \log (n))$
 
 >  Where $n$ is the input integer `n`.
+
+---
+
+## Common Pitfalls
+
+### Generating Duplicate Combinations
+
+A common mistake is generating duplicate factor combinations like `[2, 6]` and `[6, 2]`. To avoid this, always ensure factors are added in non-decreasing order by only considering factors greater than or equal to the previous factor in the current combination.
+
+### Including 1 or n as Factors
+
+The problem explicitly excludes `1` and `n` itself as valid factors. Forgetting this constraint leads to including trivial factorizations like `[1, n]` or just `[n]` in the result. Always start factor candidates from `2` and stop before reaching `n`.
+
+### Inefficient Factor Search
+
+Searching for factors up to `n` instead of `sqrt(n)` leads to unnecessary iterations. Since factors come in pairs (if `i` divides `n`, then `n/i` also divides `n`), you only need to check up to the square root of the current product to find all factor pairs efficiently.

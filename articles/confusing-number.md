@@ -475,3 +475,23 @@ class Solution {
 - Space complexity: $O(L)$ extra space used
 
 >  Where $L$ is the maximum number of digits $n$ can have.
+
+---
+
+## Common Pitfalls
+
+### Confusing "Different" with "Invalid"
+A confusing number must be valid (all digits can be rotated) AND look different after rotation. Returning `true` for invalid digits like `2, 3, 4, 5, 7` instead of returning `false` is incorrect.
+
+```python
+# Wrong: treats invalid digits as confusing
+if ch not in invert_map:
+    return True  # Should be False
+
+# Correct
+if ch not in invert_map:
+    return False
+```
+
+### Forgetting to Reverse After Inversion
+Rotating 180 degrees means both inverting each digit AND reversing their order. Only inverting without reversing (or vice versa) gives the wrong result. For example, `69` inverts to `96` but must then reverse to `69`, so `69` is NOT confusing.

@@ -801,3 +801,15 @@ class Solution {
 - Space complexity: $O(N)$
 
 >  Where $N$ is the total number of items.
+
+---
+
+## Common Pitfalls
+
+### Assuming Each Student Has Exactly 5 Scores
+
+The problem guarantees each student has at least 5 scores, but they may have more. A common mistake is iterating through exactly 5 scores per student without properly handling the remaining scores. When using the sorting approach, make sure to skip all remaining scores for a student after summing their top 5. When using heaps, ensure you only extract exactly 5 elements regardless of the heap size.
+
+### Using the Wrong Heap Type
+
+When implementing the min heap solution, some developers confuse min and max heaps. The min heap approach works by maintaining only the top 5 scores: when a new score arrives and the heap size exceeds 5, you remove the minimum. If you accidentally use a max heap, you would remove the largest scores instead, keeping the smallest ones. Similarly, when using a max heap to get top scores, ensure you are extracting (not just peeking) the maximum values.

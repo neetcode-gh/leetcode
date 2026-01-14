@@ -946,3 +946,19 @@ class FirstUnique {
 - Space complexity: $O(N)$
 
 >  Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
+
+---
+
+## Common Pitfalls
+
+### Adding Initial Numbers Twice to the Queue
+
+In approaches that use both a queue and a hash map, calling `add()` for initial numbers while also directly pushing them to the queue results in duplicates. Either iterate through the initial array and call `add()` for each element (which handles both structures), or manually handle both structures without calling `add()`. Mixing both approaches corrupts the data structure.
+
+### Not Cleaning Stale Non-Unique Elements from the Queue
+
+When lazily removing non-unique elements, the queue may contain stale entries that are no longer unique. Failing to pop these entries before returning the front element causes `showFirstUnique()` to return a non-unique number. Always check the hash map status and remove invalidated entries from the front before returning.
+
+### Modifying Uniqueness Status Incorrectly on Duplicate Adds
+
+When a number is added for the third or subsequent time, its uniqueness status should remain `false`. A common bug is toggling the status back to `true` or re-adding it to the queue. The hash map should transition from "not seen" to "unique" to "non-unique" and never go back.

@@ -378,4 +378,25 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the input tree 
+>  Where $n$ is the number of nodes in the input tree
+
+---
+
+## Common Pitfalls
+
+### Mixing Up Increasing and Decreasing Directions
+A node with value `parent.val + 1` extends the increasing path from the child's perspective, but it is tracked as `dcr` (decreasing from root down). The naming can be confusing. Ensure you correctly match which direction each variable tracks.
+```python
+# If child.val = parent.val - 1, parent extends child's increasing path
+# If child.val = parent.val + 1, parent extends child's decreasing path
+```
+
+### Forgetting to Subtract 1 When Combining Paths
+When combining increasing and decreasing paths through a node, that node is counted in both. The formula is `inr + dcr - 1`, not `inr + dcr`.
+```python
+# Wrong: maxval = max(maxval, inr + dcr)
+# Correct: maxval = max(maxval, dcr + inr - 1)
+```
+
+### Only Considering One Child for Each Direction
+Both left and right children can contribute to either increasing or decreasing paths. You must take the maximum from both children for each direction, not assume left contributes to one and right to the other.

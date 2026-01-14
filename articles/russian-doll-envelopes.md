@@ -1463,3 +1463,21 @@ class Solution {
 
 - Time complexity: $O(n \log n)$
 - Space complexity: $O(n)$
+
+## Common Pitfalls
+
+### Sorting Heights in Wrong Order for Equal Widths
+
+The most critical mistake is sorting by height ascending when widths are equal. This allows multiple envelopes with the same width to be included in the LIS, violating the strict containment requirement. When widths are equal, sort heights in descending order to ensure only one envelope per width can be selected.
+
+### Using Non-Strict Inequality for Containment
+
+Some solutions check `width1 <= width2` and `height1 <= height2` instead of strict inequality. Envelopes must strictly contain each other, meaning both dimensions must be strictly greater. Using `<=` incorrectly allows envelopes of equal size to be nested.
+
+### Applying Standard LIS Without Dimension Reduction
+
+Attempting to run LIS on both dimensions simultaneously leads to an incorrect or overly complex solution. The key insight is that after sorting by width, the problem reduces to finding LIS on heights alone. Failing to recognize this reduction results in unnecessary complexity or wrong answers.
+
+### Off-by-One Errors in Binary Search
+
+When implementing the O(n log n) LIS solution, using the wrong binary search variant causes errors. You need to find the first element greater than or equal to the current height (lower bound), not strictly greater. Using upper bound or incorrect comparisons leads to wrong LIS lengths.

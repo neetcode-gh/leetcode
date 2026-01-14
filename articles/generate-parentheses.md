@@ -762,3 +762,19 @@ class Solution {
 
 - Time complexity: $O(\frac{4^n}{\sqrt{n}})$
 - Space complexity: $O(n)$
+
+---
+
+## Common Pitfalls
+
+### Using Wrong Condition for Adding Closing Parenthesis
+
+The condition to add `)` is `close < open`, not `close < n`. Adding a closing parenthesis is only valid when there are unmatched opening parentheses. Using `close < n` would generate invalid strings like `())(()` where closing brackets appear before their matching opens.
+
+### Forgetting to Backtrack When Using a Mutable Builder
+
+When using a mutable structure like a list or StringBuilder to build the string, you must remove the last character after the recursive call returns. Forgetting to pop/remove leads to corrupted strings in subsequent branches. The immutable string concatenation approach avoids this issue but is less memory efficient.
+
+### Misunderstanding the Base Case Condition
+
+The base case should check `open == n && close == n`, not just `length == 2n`. While both conditions are mathematically equivalent for valid paths, explicitly checking both counters makes the logic clearer and helps catch bugs where invalid strings might reach length `2n` through incorrect branching conditions.

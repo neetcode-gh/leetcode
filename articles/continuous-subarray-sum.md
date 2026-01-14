@@ -348,3 +348,32 @@ class Solution {
 - Space complexity: $O(k)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number that a subarray sum needs to be multiple of.
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Initialize Hash Map with `{0: -1}`
+The hash map must be initialized with remainder `0` at index `-1` to handle cases where the prefix sum itself (from index 0 to current) is divisible by `k`. Without this, you miss valid subarrays that start from index 0.
+
+```python
+# Wrong - misses subarrays starting at index 0
+remainder = {}
+
+# Correct
+remainder = {0: -1}
+```
+
+### Not Enforcing Minimum Subarray Length of 2
+The problem requires the subarray to have at least 2 elements. A common mistake is checking `i - remainder[r] >= 1` instead of `> 1`, which would accept single-element subarrays.
+
+```python
+# Wrong - accepts single-element subarrays
+elif i - remainder[r] >= 1:
+
+# Correct - ensures at least 2 elements
+elif i - remainder[r] > 1:
+```
+
+### Updating the Hash Map When Remainder Already Exists
+When the same remainder is seen again, you should NOT update its index. We need the earliest index for each remainder to maximize the subarray length and correctly detect valid subarrays. Updating would shrink the window and potentially miss valid answers.

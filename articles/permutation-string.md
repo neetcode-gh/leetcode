@@ -916,3 +916,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Not Checking Length Before Proceeding
+
+If `s1` is longer than `s2`, no permutation of `s1` can exist as a substring of `s2`. Forgetting this early check leads to unnecessary computation or index errors when initializing the sliding window.
+
+### Incorrect Window Size
+
+The sliding window must be exactly the length of `s1`. A common mistake is using a variable-size window or forgetting to remove the leftmost character when adding a new right character. This breaks the frequency comparison and produces incorrect results.
+
+### Mishandling the Matches Counter
+
+When updating the frequency counts during window sliding, the `matches` counter must be carefully updated. A character transition from matching to non-matching should decrement `matches`, and vice versa. Off-by-one errors in these conditions (e.g., checking `==` vs `+1` or `-1`) cause the algorithm to miss valid windows or report false positives.

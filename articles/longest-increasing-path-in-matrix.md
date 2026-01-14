@@ -1147,3 +1147,27 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given $matrix$.
+
+---
+
+## Common Pitfalls
+
+### Using a Visited Array Instead of Value Comparison
+
+Unlike typical graph traversal problems, this problem does not require a visited array. The strictly increasing constraint naturally prevents revisiting cells since you cannot go back to a smaller value. Using a visited array unnecessarily complicates the solution and can cause bugs when the same cell should be explored from different starting points.
+
+### Forgetting to Try All Starting Cells
+
+The longest increasing path might not start from any corner or edge cell. You must try starting the DFS from every cell in the matrix and track the global maximum. A common mistake is assuming the path starts from the minimum or maximum value cell.
+
+### Incorrect Memoization Key
+
+When memoizing results, the cache key should be just the cell coordinates `(r, c)`, not including the previous value. The longest path starting from a cell is independent of how you reached that cell because you can only move to strictly larger values. Including `prevVal` in the cache key wastes memory and misses cache hits.
+
+### Using Non-Strict Inequality
+
+The problem requires strictly increasing values. Using `>=` instead of `>` when comparing neighboring cells allows equal values to be included in the path, which violates the problem constraints and leads to incorrect answers or infinite loops.
+
+### Not Handling Edge Cases for Small Matrices
+
+For a 1x1 matrix, the answer is always 1. Some solutions fail to handle this case properly, especially when the logic assumes there will always be valid neighbors to explore.

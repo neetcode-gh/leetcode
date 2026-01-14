@@ -311,3 +311,19 @@ class Solution {
     - $O(1)$ extra space.
 
 > Where $n$ is the length of the given list, and $a$ and $b$ are two numbers passed to the $gcd()$ function.
+
+---
+
+## Common Pitfalls
+
+### Processing Newly Inserted Nodes
+
+After inserting a GCD node between `cur` and `cur.next`, forgetting to skip over the newly inserted node causes an infinite loop. The pointer must advance by two positions (`cur = cur.next.next`) to move past both the inserted node and reach the next original node that needs processing.
+
+### Incorrect GCD Implementation
+
+Implementing the Euclidean algorithm incorrectly by not handling the base case properly or swapping values in the wrong order. The algorithm should continue until one value becomes zero, and the order of operands in the modulo operation matters. Using `a % b` when `a < b` returns `a`, which is correct, but some implementations incorrectly assume `a > b`.
+
+### Off-by-One at List End
+
+Attempting to access `cur.next.val` when `cur.next` is null causes a null pointer exception. The loop condition must be `while cur.next` (not `while cur`) to ensure there is always a valid pair of adjacent nodes to compute the GCD between.

@@ -1344,3 +1344,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Modifying the Array When Not Allowed
+
+Some problem variants require not modifying the input array. Solutions like negative marking or in-place sorting alter the original data. Always check the constraints before choosing an approach that mutates the input.
+
+### Off-by-One Errors in Index Mapping
+
+Since values range from 1 to n but array indices start at 0, forgetting to subtract 1 when mapping values to indices causes out-of-bounds errors or incorrect results. For example, value `n` maps to index `n-1`, not index `n`.
+
+### Misunderstanding Floyd's Cycle Detection Entry Point
+
+In the fast and slow pointer approach, the meeting point of the two pointers is not the duplicate number. After they meet, you must start a new pointer from index 0 and move both pointers one step at a time until they meet again. This second meeting point is the cycle entry, which corresponds to the duplicate value.

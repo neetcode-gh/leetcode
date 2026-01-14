@@ -839,3 +839,19 @@ class Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Losing Track of the Next Node Before Unlinking
+
+When removing a node from its current position to reinsert it elsewhere, failing to save `cur.next` before modifying pointers causes the reference to the next node to be lost. Always store the next node in a temporary variable before performing any pointer manipulation.
+
+### Not Using a Dummy Node for Head Insertions
+
+When the smallest element is found later in the list and needs to become the new head, not using a dummy node makes head updates awkward and error-prone. A dummy node pointing to the head simplifies insertions at the beginning by providing a consistent previous node.
+
+### Incorrectly Advancing Pointers After Insertion
+
+After inserting a node into its correct sorted position, the `prev` pointer should not advance because the node that was after `cur` is now directly after `prev`. Advancing `prev` would skip a node. Only `cur` should be updated to `prev.next` to continue with the next unsorted element.

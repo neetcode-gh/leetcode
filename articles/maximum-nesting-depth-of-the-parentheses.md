@@ -619,3 +619,15 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Counting All Characters
+
+A frequent mistake is incrementing or decrementing the depth counter for every character in the string. The string may contain digits, operators, and other characters that should be ignored. Only parentheses `(` and `)` affect the nesting depth.
+
+### Updating Maximum at the Wrong Time
+
+When using a counter approach, the maximum depth should be updated after incrementing for `(`, not after decrementing for `)`. Updating after processing `)` will miss the peak depth that occurred when the matching `(` was processed.

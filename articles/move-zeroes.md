@@ -495,3 +495,13 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+## Common Pitfalls
+
+### Swapping When Pointers Are at the Same Position
+
+When both pointers `l` and `r` point to the same non-zero element, swapping is unnecessary and wastes operations. While this does not affect correctness, adding a check like `if (l != r)` before swapping improves efficiency and avoids redundant writes, which can matter for performance-sensitive applications.
+
+### Disrupting Relative Order of Non-Zero Elements
+
+The problem requires maintaining the relative order of non-zero elements. Some approaches incorrectly swap non-zero elements with each other or move them out of sequence. The two-pointer technique works because the left pointer only advances when a non-zero element is placed, ensuring all non-zero elements shift left in their original order while zeros naturally accumulate at the end.

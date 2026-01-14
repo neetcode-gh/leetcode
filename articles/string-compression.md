@@ -485,3 +485,19 @@ class Solution {
 
 * Time complexity: $O(n)$
 * Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting to Write Multi-Digit Counts Character by Character
+
+When the count of consecutive characters exceeds 9 (e.g., 12), you must write each digit separately ('1' then '2') rather than treating it as a single value. Failing to split the count into individual digit characters will produce incorrect output.
+
+### Writing Count for Single Characters
+
+The problem specifies that you should only write the count if it is greater than 1. A common mistake is writing "a1" instead of just "a" for a single occurrence. Always check `if (count > 1)` before appending the count to the result.
+
+### Overwriting Unprocessed Characters in In-Place Solutions
+
+When compressing in place, the write pointer can overwrite characters that haven't been read yet if not handled carefully. Since the compressed form is never longer than the original, this won't happen as long as you process groups completely before moving the write pointer forward.

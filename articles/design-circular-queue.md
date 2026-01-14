@@ -1935,3 +1935,68 @@ class MyCircularQueue {
 - Space complexity: $O(n)$
 
 > Where $n$ is the size of the queue.
+
+---
+
+## Common Pitfalls
+
+### Incorrect Modulo Arithmetic for Wrap-Around
+
+The circular nature requires careful modulo operations. A common mistake is forgetting to apply modulo when updating pointers, causing index out of bounds errors.
+
+```python
+# Wrong - no wrap-around
+def enQueue(self, value: int) -> bool:
+    if self.isFull():
+        return False
+    self.rear += 1  # Will exceed array bounds!
+    self.q[self.rear] = value
+    self.size += 1
+    return True
+
+# Correct - use modulo for circular behavior
+def enQueue(self, value: int) -> bool:
+    if self.isFull():
+        return False
+    self.rear = (self.rear + 1) % self.k
+    self.q[self.rear] = value
+    self.size += 1
+    return True
+```
+
+### Confusing Empty and Full States
+
+When using only front and rear pointers without a separate size variable, distinguishing between empty and full queue becomes ambiguous since both states can have `front == rear`.
+
+```python
+# Problematic - can't distinguish empty from full
+def isEmpty(self) -> bool:
+    return self.front == self.rear  # Also true when full!
+
+# Solution: Track size separately
+def isEmpty(self) -> bool:
+    return self.size == 0
+
+def isFull(self) -> bool:
+    return self.size == self.k
+```
+
+### Off-By-One Errors in Rear Initialization
+
+Initializing `rear` to `0` instead of `-1` causes the first element to be placed at index `1`, wasting space and causing incorrect behavior.
+
+```python
+# Wrong initialization
+def __init__(self, k: int):
+    self.q = [0] * k
+    self.front = 0
+    self.rear = 0  # First enQueue goes to index 1!
+    self.size = 0
+
+# Correct initialization
+def __init__(self, k: int):
+    self.q = [0] * k
+    self.front = 0
+    self.rear = -1  # First enQueue goes to index 0
+    self.size = 0
+```

@@ -533,3 +533,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space.
+
+---
+
+## Common Pitfalls
+
+### Returning the Meeting Point Instead of the Cycle Start
+
+When the slow and fast pointers first meet, that meeting point is inside the cycle but is not necessarily the cycle's starting node. You must perform the second phase: reset one pointer to the head and move both pointers one step at a time until they meet again at the actual cycle start.
+
+### Forgetting to Handle Lists Without Cycles
+
+If the fast pointer reaches null, the list has no cycle and the function should return null. Skipping this check and proceeding to the second phase causes null pointer exceptions when trying to find a cycle start that does not exist.
+
+### Incorrect Pointer Reset in the Second Phase
+
+After detecting the meeting point, one pointer must be reset to the head while the other stays at the meeting point. A common error is resetting both pointers or resetting to the wrong position, which causes the second phase to find an incorrect node or loop indefinitely.

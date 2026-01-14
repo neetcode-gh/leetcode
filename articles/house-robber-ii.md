@@ -958,3 +958,19 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
+
+---
+
+## Common Pitfalls
+
+### Forgetting the Single House Edge Case
+
+When there is only one house, the circular constraint does not apply since there is no adjacency conflict. If you split the problem into `nums[1:]` and `nums[:-1]` without handling this case, both subarrays become empty when `n=1`, and the function returns 0 instead of `nums[0]`. Always check if the array has only one element and return its value directly.
+
+### Incorrectly Handling the Circular Constraint
+
+The key insight is that the first and last houses cannot both be robbed. A common mistake is to add complex flag logic throughout the recursion when a simpler approach exists: run the standard House Robber algorithm twice, once excluding the first house and once excluding the last house. Taking the maximum of these two results correctly handles the circular dependency without overcomplicating the code.
+
+### Off-by-One Errors in Array Slicing
+
+When splitting the array into `nums[1:]` (exclude first) and `nums[:-1]` (exclude last), be careful with language-specific slicing syntax. In some languages, you need to manually copy subarrays or adjust loop bounds. An off-by-one error here can lead to including both the first and last houses in one subproblem, or excluding more houses than intended, producing incorrect results.
