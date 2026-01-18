@@ -94,6 +94,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxAscendingSum(int[] nums) {
+        int res = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            int curSum = nums[i];
+            for (int j = i + 1; j < nums.Length; j++) {
+                if (nums[j] <= nums[j - 1]) {
+                    break;
+                }
+                curSum += nums[j];
+            }
+            res = Math.Max(res, curSum);
+        }
+        return res;
+    }
+}
+```
+
 ```go
 func maxAscendingSum(nums []int) int {
     res := 0
@@ -245,6 +264,25 @@ class Solution {
             }
             curSum += nums[i];
             res = Math.max(res, curSum);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxAscendingSum(int[] nums) {
+        int res = nums[0];
+        int curSum = nums[0];
+
+        for (int i = 1; i < nums.Length; i++) {
+            if (nums[i] <= nums[i - 1]) {
+                curSum = 0;
+            }
+            curSum += nums[i];
+            res = Math.Max(res, curSum);
         }
 
         return res;

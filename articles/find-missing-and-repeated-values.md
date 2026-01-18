@@ -125,6 +125,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] FindMissingAndRepeatedValues(int[][] grid) {
+        int n = grid.Length;
+        int doubleVal = 0, missing = 0;
+
+        for (int num = 1; num <= n * n; num++) {
+            int cnt = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (grid[i][j] == num) {
+                        cnt++;
+                    }
+                }
+            }
+
+            if (cnt == 2) {
+                doubleVal = num;
+            } else if (cnt == 0) {
+                missing = num;
+            }
+        }
+
+        return new int[] { doubleVal, missing };
+    }
+}
+```
+
 ```go
 func findMissingAndRepeatedValues(grid [][]int) []int {
     n := len(grid)
@@ -333,6 +361,36 @@ class Solution {
         }
 
         return [doubleVal, missing];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] FindMissingAndRepeatedValues(int[][] grid) {
+        int N = grid.Length;
+        Dictionary<int, int> count = new Dictionary<int, int>();
+
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                int val = grid[i][j];
+                if (count.ContainsKey(val)) {
+                    count[val]++;
+                } else {
+                    count[val] = 1;
+                }
+            }
+        }
+
+        int doubleVal = 0, missing = 0;
+
+        for (int num = 1; num <= N * N; num++) {
+            int freq = count.ContainsKey(num) ? count[num] : 0;
+            if (freq == 0) missing = num;
+            if (freq == 2) doubleVal = num;
+        }
+
+        return new int[] { doubleVal, missing };
     }
 }
 ```
