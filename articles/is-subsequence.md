@@ -798,7 +798,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + m)$
+- Time complexity: $O(m)$
 - Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
