@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Used to defer lower-precedence operations while computing higher-precedence ones
+- **String Parsing** - Building multi-digit numbers from character sequences and handling whitespace
+- **Operator Precedence** - Understanding that multiplication/division must be evaluated before addition/subtraction
+
+---
+
 ## 1. Stack
 
 ### Intuition

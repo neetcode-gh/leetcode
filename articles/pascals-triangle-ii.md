@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Building each row from the previous row, using both top-down (recursive) and bottom-up (iterative) approaches
+- **Recursion** - Understanding how to compute a row by first computing all previous rows
+- **Combinatorics** - Recognizing that Pascal's Triangle values are binomial coefficients C(n, k) and computing them efficiently
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

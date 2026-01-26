@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Simultaneously traversing two strings with independent indices
+- **String Parsing** - Converting sequences of digit characters into numeric values
+- **Character Classification** - Distinguishing between alphabetic characters and digits
+
+---
+
 ## 1. Two Pointers
 
 ### Intuition

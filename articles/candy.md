@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Traversing and modifying arrays in both directions
+- **Greedy Algorithms** - Making locally optimal choices to achieve a global optimum
+- **Two-Pass Technique** - Processing data in multiple passes to satisfy multiple constraints
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

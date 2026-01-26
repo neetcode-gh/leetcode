@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible paths and undoing choices to try different options
+- **Depth First Search (DFS)** - Traversing a grid by exploring as far as possible along each branch
+- **2D Grid Traversal** - Moving in four directions (up, down, left, right) and handling boundaries
+- **Bitmask (for BFS solution)** - Using bits to efficiently track visited states
+
+---
+
 ## 1. Backtracking (DFS) - I
 
 ### Intuition

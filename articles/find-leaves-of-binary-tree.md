@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding how to navigate through tree nodes recursively
+- **Depth-First Search (DFS)** - Used to compute the height of each node from the bottom up
+- **Tree Height Calculation** - Understanding the concept of node height (distance to farthest leaf descendant)
+
+---
+
 ## 1. DFS (Depth-First Search) with sorting
 
 ### Intuition

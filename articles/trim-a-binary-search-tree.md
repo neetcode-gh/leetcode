@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST) properties** - Understanding that left subtree values are less than root and right subtree values are greater, which enables pruning decisions
+- **Recursion and DFS** - Traversing trees recursively and understanding how to rebuild tree structure during traversal
+- **Tree node manipulation** - Modifying parent-child relationships by reassigning left/right pointers
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

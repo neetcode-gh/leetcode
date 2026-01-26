@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Counting character occurrences in strings using arrays or dictionaries
+- **String Iteration** - Processing each character in a string and comparing across multiple strings
+- **Array Manipulation** - Using fixed-size arrays (size 26 for lowercase letters) as frequency counters
+
+---
+
 ## 1. Frequency Count
 
 ### Intuition

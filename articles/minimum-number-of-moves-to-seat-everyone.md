@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting Algorithms** - Understanding how sorting enables optimal greedy pairing
+- **Greedy Algorithms** - Matching smallest with smallest to minimize total distance
+- **Counting Sort** - Linear time sorting when value range is bounded
+- **Two Pointers** - Traversing two sorted arrays simultaneously
+
+---
+
 ## 1. Greedy + Sorting
 
 ### Intuition

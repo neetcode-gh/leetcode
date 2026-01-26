@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy Algorithms** - Making locally optimal choices to achieve a global optimum
+- **Sorting** - Ordering elements to prioritize selection of the best candidates
+- **Modular Arithmetic** - Understanding how positions repeat in tiled patterns using modulo operations
+- **2D Matrix Manipulation** - Working with row and column indices in a grid
+
+---
+
 ## 1. Greedy
 
 ### Intuition

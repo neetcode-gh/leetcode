@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Used to count occurrences of each task type
+- **Greedy Algorithms** - The optimal solution prioritizes the most frequent tasks first
+- **Heap / Priority Queue** - The efficient solution uses a max-heap to always select the highest-frequency task
+- **Queue Data Structure** - Used to track tasks in cooldown before they can be re-executed
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

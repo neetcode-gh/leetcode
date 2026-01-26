@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to group website visits by user and count pattern frequencies
+- **Sets** - Used to avoid counting duplicate patterns from the same user
+- **Sorting** - Required to process visits in chronological order
+- **Combinatorics (Triple Nested Loops)** - Generating all 3-element subsequences from a list
+
+---
+
 ## 1. Hash Map
 
 ### Intuition

@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding singly linked list structure, traversal, and node manipulation
+- **Merge Two Sorted Lists** - The fundamental operation used repeatedly in all approaches
+- **Min Heap / Priority Queue** - Used to efficiently find the smallest element among k lists
+- **Divide and Conquer** - Strategy to recursively split and merge lists in pairs
+- **Sorting** - Used in the brute force approach to sort all collected values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Used to track element occurrences in subarrays
+- **Array Traversal** - Iterating through arrays and maintaining running counts
+- **Boyer-Moore Voting Algorithm** - An optimal O(1) space technique for finding majority elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

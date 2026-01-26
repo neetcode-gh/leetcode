@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting Algorithms** - Understanding how sorting brings similar elements together for grouping problems
+- **Greedy Algorithms** - Making locally optimal choices (grouping consecutive sorted elements) to achieve a global optimum
+- **Counting Sort** - An efficient O(n + k) sorting technique when the range of values is bounded
+
+---
+
 ## 1. Sorting
 
 ### Intuition

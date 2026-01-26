@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array traversal** - Iterating through arrays and comparing adjacent elements
+- **Greedy algorithms** - Making locally optimal choices to achieve global optimum
+- **In-place modification** - Modifying array elements without extra space
+
+---
+
 ## 1. Greedy
 
 ### Intuition

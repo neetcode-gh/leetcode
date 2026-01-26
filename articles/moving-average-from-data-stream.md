@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queues/Deques** - Understanding FIFO data structures for maintaining a sliding window of elements
+- **Sliding Window** - Tracking a fixed-size window of recent elements as new data arrives
+- **Circular Arrays** - Using modular arithmetic to implement efficient fixed-size buffers
+
+---
+
 ## 1. Array or List
 
 ### Intuition

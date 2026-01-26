@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays/Matrices** - Understanding how to traverse and modify elements in a grid
+- **Depth First Search (DFS)** - Recursive exploration of connected components
+- **Breadth First Search (BFS)** - Level-by-level traversal using a queue
+- **Graph Traversal on Grids** - Treating grid cells as nodes with 4-directional neighbors
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

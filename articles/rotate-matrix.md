@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array Indexing** - Understanding how to access and modify elements using row and column indices
+- **Matrix Transpose** - Swapping elements across the main diagonal where element (i,j) swaps with (j,i)
+- **In-Place Manipulation** - Rotating elements within the matrix without using additional space for a copy
+- **Layer-by-Layer Processing** - Processing a matrix from outer boundaries inward, handling four elements at a time
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

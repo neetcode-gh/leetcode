@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap (Priority Queue)** - Two min-heaps are used to efficiently track available servers (by weight/index) and busy servers (by finish time)
+- **Simulation** - Understanding how to model time-based task assignment and server availability
+- **Custom Comparators** - Implementing multi-key ordering (weight, then index) for priority queue elements
+
+---
+
 ## 1. Brute Force (Simulation)
 
 ### Intuition

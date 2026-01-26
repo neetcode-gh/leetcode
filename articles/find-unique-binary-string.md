@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Using sets for O(1) lookup to check if a string exists
+- **Backtracking/Recursion** - Building solutions character by character and exploring possibilities
+- **Binary String Manipulation** - Converting between integers and binary representations
+- **Cantor's Diagonal Argument (Optional)** - A mathematical proof technique that guarantees constructing a unique element
+
+---
+
 ## 1. Backtracking (Recursion)
 
 ### Intuition

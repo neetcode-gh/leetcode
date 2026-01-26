@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversals** - Understanding inorder (left-root-right) and postorder (left-right-root) traversal orders
+- **Recursion / DFS** - Building trees recursively by dividing the problem into subtrees
+- **Hash Maps** - Mapping values to indices for O(1) lookup of root positions in inorder array
+- **Array Slicing** - Dividing arrays into subarrays for left and right subtree construction
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

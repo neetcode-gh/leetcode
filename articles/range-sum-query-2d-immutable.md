@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays (Matrices)** - Working with row and column indices to access and iterate over rectangular regions
+- **Prefix Sums** - Precomputing cumulative sums for constant-time range queries
+- **Inclusion-Exclusion Principle** - Computing 2D region sums by combining overlapping rectangular areas
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

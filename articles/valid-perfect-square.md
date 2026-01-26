@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal approach uses binary search to find the square root efficiently
+- **Integer Overflow Handling** - Squaring numbers can overflow 32-bit integers, requiring careful type management
+- **Bit Manipulation** - One advanced approach constructs the square root bit by bit
+- **Newton's Method** - Understanding iterative root-finding methods for the mathematical approach
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

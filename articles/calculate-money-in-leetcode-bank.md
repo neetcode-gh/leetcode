@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Basic Loops** - Iterating through sequences and tracking state across iterations
+- **Arithmetic Series** - Understanding how to sum sequences like 1+2+3+...+n
+- **Math Formulas** - Using closed-form expressions to compute sums efficiently
+
+---
+
 ## 1. Simulation
 
 ### Intuition

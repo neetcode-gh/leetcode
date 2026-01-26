@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth-First Search (BFS)** - Level-by-level graph traversal to find shortest paths in unweighted graphs
+- **Graph Modeling** - Recognizing when a problem can be modeled as a graph where states are nodes and transitions are edges
+- **HashSet for Visited States** - Efficiently tracking visited states to avoid revisiting and infinite loops
+- **String Manipulation** - Modifying individual characters in strings to generate neighbor states
+
+---
+
 ## 1. Breadth First Search - I
 
 ### Intuition

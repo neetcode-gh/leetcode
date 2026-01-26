@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Trie (Prefix Tree)** - Understanding how to build and traverse a trie for efficient prefix matching is crucial for the optimal solution
+- **Hash Map** - Used to precompute and store all prefix-suffix combinations for O(1) query lookups
+- **String Manipulation** - Generating all prefixes and suffixes of a word and combining them with delimiters
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

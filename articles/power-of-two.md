@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation** - Understanding binary representation of numbers and bitwise operators (AND, OR, shifts) is essential for the optimal solutions
+- **Recursion** - The recursive approach divides the problem by 2 at each step until reaching the base case
+- **Two's Complement** - Understanding how negative numbers are represented helps explain why `n & (-n)` isolates the lowest set bit
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

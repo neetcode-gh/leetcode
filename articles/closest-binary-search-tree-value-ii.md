@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that inorder traversal yields sorted values
+- **Inorder Traversal** - Traversing a BST to process nodes in ascending order
+- **Binary Search** - Finding insertion points or closest values in sorted arrays
+- **Heaps/Priority Queues** - Using max-heaps to maintain k closest elements efficiently
+- **Two Pointers/Sliding Window** - Expanding outward from a position to find k nearest values
+
+---
+
 ## 1. Sort With Custom Comparator
 
 ### Intuition

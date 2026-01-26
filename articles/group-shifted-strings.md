@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Grouping elements by a computed key and efficiently storing/retrieving collections
+- **String Manipulation** - Iterating through characters and computing relationships between adjacent characters
+- **Modular Arithmetic** - Handling wrap-around cases (like 'z' shifting to 'a') using modulo 26 operations
+
+---
+
 ## 1. Hashing
 
 ### Intuition

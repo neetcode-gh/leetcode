@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Understanding string slicing and concatenation operations
+- **Modulo Arithmetic** - Handling cases where shift amounts exceed string length
+- **Array Traversal** - Iterating through the shift operations array
+
+---
+
 ## 1. Simulation
 
 ### Intuition

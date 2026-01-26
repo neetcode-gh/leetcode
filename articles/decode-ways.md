@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down problems into smaller subproblems by making recursive function calls
+- **Dynamic Programming** - Using memoization to cache results and avoid redundant computation
+- **String Manipulation** - Parsing and extracting substrings, character comparisons
+
+---
+
 ## 1. Recursion
 
 ### Intuition

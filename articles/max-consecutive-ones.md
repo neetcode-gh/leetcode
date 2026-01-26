@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to traverse and access array elements sequentially
+- **Basic Iteration** - Using loops to scan through elements and track state with counters
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

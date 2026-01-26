@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Used to maintain a window of unique characters that can expand and shrink dynamically
+- **Hash Set** - Needed to track which characters are currently in the window for O(1) duplicate detection
+- **Hash Map (optional)** - The optimal solution uses a map to store character indices for direct pointer jumps
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

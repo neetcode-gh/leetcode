@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Finding elements or boundaries in sorted arrays in O(log N) time
+- **Lower/Upper Bound** - Using binary search variants to find first and last occurrences of a target
+- **Sorted Array Properties** - Leveraging the fact that duplicate elements are contiguous in sorted arrays
+
+---
+
 ## 1. Frequency Count
 
 ### Intuition

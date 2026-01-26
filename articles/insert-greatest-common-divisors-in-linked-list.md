@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure, traversal, and inserting nodes between existing nodes
+- **GCD (Greatest Common Divisor)** - Knowing the Euclidean algorithm for efficiently computing the GCD of two numbers
+- **Pointer Manipulation** - Safely adjusting next pointers without losing references or creating infinite loops
+
+---
+
 ## 1. Simulation
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Traversing and modifying arrays, especially from the end
+- **Basic Math Operations** - Understanding modulo (%) and integer division (/) for digit extraction
+- **Carry Propagation** - How carry works when adding numbers digit by digit
+
+---
+
 ## 1. Reverse and Add
 
 ### Intuition

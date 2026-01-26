@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists to model dependencies between nodes
+- **Topological Sort** - Ordering nodes in a directed acyclic graph such that for every edge u->v, u comes before v
+- **Depth-First Search (DFS)** - Traversing graphs recursively to detect cycles and build orderings
+- **Cycle Detection** - Identifying cycles in directed graphs using visited states (unvisited, visiting, visited)
+
+---
+
 ## 1. Topological Sort (DFS)
 
 ### Intuition

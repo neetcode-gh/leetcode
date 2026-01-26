@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation** - Understanding AND, OR, and bit shifting operations is essential for constructing valid sequences
+- **Binary Representation** - The optimal solution embeds bits of n-1 into zero-bit positions of x
+- **Number Theory Basics** - Understanding how bitwise AND constrains array elements helps identify the solution pattern
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

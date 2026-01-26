@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Using two pointers moving inward on a sorted array to find pairs with a target sum
+- **Sorting** - The two-pointer approach requires the array to be sorted first
+- **Handling Duplicates** - Skipping duplicate elements to avoid producing duplicate results
+- **Two Sum and Three Sum Problems** - 4Sum builds directly on the patterns from these simpler problems
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays and Iteration** - Understanding how to traverse arrays and compare adjacent elements
+- **Dynamic Programming Basics** - The DP approach tracks state transitions based on comparison direction (increasing vs decreasing)
+- **Sliding Window Technique** - One solution maintains a valid turbulent window that extends or resets based on alternation patterns
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

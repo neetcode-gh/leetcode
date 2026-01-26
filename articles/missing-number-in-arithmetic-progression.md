@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arithmetic Progression** - Understanding how to calculate the common difference and expected values at each position in a sequence
+- **Binary Search** - The optimal solution uses binary search to locate the missing element by comparing actual vs expected values
+
+---
+
 ## 1. Linear search
 
 ### Intuition

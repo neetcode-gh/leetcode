@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using key-value stores for O(1) lookups to associate data
+- **Sorting Algorithms** - Understanding how to sort arrays using built-in methods
+- **Custom Comparators** - Sorting based on criteria other than default ordering
+- **Index Tracking** - Maintaining associations between parallel arrays during transformations
+
+---
+
 ## 1. Hash Map
 
 ### Intuition

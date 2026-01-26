@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Computing cumulative sums to determine subarray sums in constant time
+- **Parity (Odd/Even) Properties** - Understanding that odd minus even equals odd, and even minus odd equals odd
+- **Dynamic Programming** - Breaking down problems into overlapping subproblems with memoization or tabulation
+- **Modular Arithmetic** - Applying modulo operations to prevent integer overflow in counting problems
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

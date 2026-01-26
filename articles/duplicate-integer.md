@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - The optimal solution uses a hash set for O(1) lookups to detect duplicates efficiently
+- **Sorting** - An alternative approach sorts the array to bring duplicates adjacent, then scans linearly
+- **Basic Array Traversal** - The brute force approach uses nested loops to compare all pairs of elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

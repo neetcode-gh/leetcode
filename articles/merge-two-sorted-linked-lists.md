@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure with value and next pointer
+- **Recursion** - Solving problems by breaking them into smaller subproblems
+- **Two Pointers** - Traversing multiple data structures simultaneously
+- **Dummy Nodes** - Using sentinel nodes to simplify edge case handling in linked lists
+
+---
+
 ## 1. Recursion
 
 ### Intuition

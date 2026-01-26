@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Understanding how to maintain a fixed-size window while iterating through an array
+- **Deque (Double-Ended Queue)** - Efficiently adding/removing elements from both ends in O(1) time
+- **Monotonic Queue** - Maintaining elements in sorted order within a queue for range queries
+- **Heap/Priority Queue** - Finding maximum/minimum elements efficiently with lazy deletion
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

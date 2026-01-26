@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting and Deduplication** - Removing duplicates and ordering elements for efficient processing
+- **Binary Search** - Finding boundary positions in sorted arrays in O(log n) time
+- **Sliding Window Technique** - Maintaining a valid window of consecutive values with two pointers
+- **Set/HashSet Operations** - Efficiently identifying and removing duplicate elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

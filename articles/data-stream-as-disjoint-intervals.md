@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting a collection of numbers to process them in order for interval construction
+- **Hash Sets** - Using sets to store unique values and eliminate duplicates efficiently
+- **Ordered Sets / Maps (TreeMap, SortedDict)** - Maintaining elements in sorted order for efficient insertion and traversal
+- **Interval Merging** - Identifying consecutive numbers and combining them into contiguous intervals
+
+---
+
 ## 1. Brute Force (Sorting)
 
 ### Intuition

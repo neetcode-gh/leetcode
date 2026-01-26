@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays/Matrices** - Understanding row and column indexing in matrices
+- **Nested Loops** - Iterating through all elements of a 2D array systematically
+- **In-Place Swapping** - Swapping elements without using extra space (for square matrices)
+
+---
+
 ## 1. Iteration - I
 
 ### Intuition

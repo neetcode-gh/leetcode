@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Priority Queue (Max Heap)** - Used to always select the character with the highest remaining frequency
+- **Hash Map** - For counting character frequencies in the string
+- **Greedy Algorithms** - The approach of always making the locally optimal choice (highest frequency character) to build the solution
+- **Queue Data Structure** - Used to manage the cooldown period for recently used characters
+
+---
+
 ## 1. Priority Queue
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure with value and next pointer, traversing linked lists
+- **Dummy Node Technique** - Using a sentinel node to simplify edge cases like removing the head
+- **Recursion** - Solving problems by breaking them into smaller subproblems on the remaining list
+- **Pointer Manipulation** - Updating next pointers to remove nodes and maintain list integrity
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

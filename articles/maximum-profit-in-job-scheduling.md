@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Using recursion with caching to avoid recomputing overlapping subproblems
+- **Sorting** - Sorting jobs by start time to enable efficient forward traversal
+- **Binary Search** - Finding the next non-overlapping job in O(log n) time instead of linear scan
+- **Interval Scheduling** - Understanding how to handle overlapping intervals and make optimal skip/take decisions
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

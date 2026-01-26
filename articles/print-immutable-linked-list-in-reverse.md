@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding how to traverse a singly linked list using the `getNext()` method
+- **Recursion** - The call stack naturally reverses order, printing nodes as the stack unwinds
+- **Stack Data Structure** - An iterative alternative that provides LIFO ordering to reverse the print sequence
+- **Two Pointers (Slow/Fast)** - The divide and conquer approach uses this technique to find the middle of a list segment
+
+---
+
 ## 1. Recursion
 
 ### Intuition

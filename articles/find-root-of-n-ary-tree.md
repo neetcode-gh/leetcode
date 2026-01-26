@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **N-ary Trees** - Understanding tree structures where nodes can have multiple children
+- **Hash Sets** - Using sets for O(1) lookups to track seen values
+- **Tree Properties** - Recognizing that the root is the only node not appearing as any other node's child
+
+---
+
 ## 1. O(n) Space
 
 ### Intuition

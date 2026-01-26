@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Depth First Search (DFS)** - Used to recursively explore all connected land cells in an island
+- **Breadth First Search (BFS)** - An alternative traversal using a queue to explore islands level by level
+- **Graph Traversal on Grids** - Treating 2D grids as graphs where adjacent cells are connected
+- **Union-Find (Disjoint Set Union)** - An advanced technique for grouping connected components efficiently
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

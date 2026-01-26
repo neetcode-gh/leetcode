@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Making decisions at each step and exploring all possibilities
+- **Dynamic Programming** - Memoization to cache results and avoid redundant calculations
+- **State Machine Thinking** - Tracking multiple states (buying vs. selling) throughout the problem
+- **Space Optimization** - Reducing DP table to constant space using rolling variables
+
+---
+
 ## 1. Recursion
 
 ### Intuition

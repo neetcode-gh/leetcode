@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with left and right children
+- **Breadth First Search (BFS)** - Level-order traversal forms the foundation for processing nodes level by level
+- **Queue Data Structure** - Essential for BFS to maintain the order of nodes to visit
+- **Level-Order Traversal** - Understanding how to track and separate nodes by their level in the tree
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

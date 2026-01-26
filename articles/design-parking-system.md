@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Using arrays to store and access data by index
+- **Index Mapping** - Converting between 1-indexed input and 0-indexed arrays
+
+---
+
 ## 1. Array - I
 
 ### Intuition

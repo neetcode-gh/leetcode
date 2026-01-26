@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Traversing singly linked lists and understanding node references vs values
+- **Hash Set** - Using sets to store and lookup node references in O(1) time
+- **Two Pointers** - Manipulating two pointers simultaneously to traverse linked structures
+- **List Length Calculation** - Computing the length of a linked list by traversal
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

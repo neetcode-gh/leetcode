@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays/Matrices** - Traversing and manipulating elements in a grid structure
+- **Dynamic Programming** - Building solutions from smaller subproblems and using recurrence relations
+- **Space Optimization** - Reducing space complexity by recognizing that only previous row/column values are needed
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

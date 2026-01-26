@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Required for efficiently processing substrings of fixed length without recomputing from scratch
+- **Hash Maps / Frequency Arrays** - Used to count and compare character frequencies between strings
+- **String Manipulation** - Understanding how to extract substrings and compare character patterns
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

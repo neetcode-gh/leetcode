@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Required to arrange potions in order so that successful pairs form a contiguous range
+- **Binary Search** - Used to efficiently find the threshold index where potions become successful
+- **Two Pointers** - Alternative approach processes sorted spells and potions simultaneously
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

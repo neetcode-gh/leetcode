@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting arrays with custom comparators (by start time, then by end time)
+- **Interval Problems** - Understanding interval containment and overlap concepts
+- **Greedy Algorithms** - Processing intervals in sorted order to make optimal decisions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

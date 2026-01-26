@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Efficiently searching sorted arrays to check element existence in O(log n) time
+- **Counting/Hashing** - Using frequency arrays or hash maps to count element occurrences
+- **Matrix Traversal** - Iterating through 2D arrays in row-major or column-major order
+
+---
+
 ## 1. Count Elements
 
 ### Intuition

@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting ensures that contiguous subarrays contain the smallest possible range of values
+- **Sliding Window** - A fixed-size window of k elements slides across the sorted array to find the minimum difference
+
+---
+
 ## 1. Sorting + Sliding Window
 
 ### Intuition

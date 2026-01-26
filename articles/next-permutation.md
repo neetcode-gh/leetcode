@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Manipulation** - In-place swapping and reversing elements
+- **Two Pointers Technique** - Using left and right pointers to reverse subarrays
+- **Lexicographic Ordering** - Understanding how sequences are compared and ordered
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

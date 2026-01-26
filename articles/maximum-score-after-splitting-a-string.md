@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - Precomputing cumulative counts to enable O(1) lookups for range queries
+- **String Traversal** - Iterating through a string while maintaining running counts of characters
+- **Algebraic Optimization** - Reformulating the score formula to reduce the problem to a single-pass solution
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

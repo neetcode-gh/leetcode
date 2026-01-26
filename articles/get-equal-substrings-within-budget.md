@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - Maintaining a dynamic window over an array to find optimal subarrays
+- **Two Pointers** - Using left and right pointers to efficiently traverse and adjust window boundaries
+- **ASCII Character Operations** - Computing differences between character codes
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

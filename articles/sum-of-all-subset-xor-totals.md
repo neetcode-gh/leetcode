@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion/Backtracking** - Used to generate all possible subsets by making include/exclude decisions for each element
+- **XOR Operation** - Understanding that XOR is self-inverse (a ^ a = 0) and its bit-level behavior
+- **Bit Manipulation** - Bitmasks can represent subsets, and the optimal solution uses OR and bit shifting
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

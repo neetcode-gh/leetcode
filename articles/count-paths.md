@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down the problem into smaller subproblems (paths from adjacent cells)
+- **Dynamic Programming (Memoization)** - Caching computed results to avoid redundant calculations
+- **Dynamic Programming (Tabulation)** - Building solutions bottom-up using a DP table
+- **Combinatorics** - Understanding that path counting is equivalent to choosing positions for moves
+
+---
+
 ## 1. Recursion
 
 ### Intuition

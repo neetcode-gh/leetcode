@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers technique** - Using pointers at both ends of a sorted array and moving them based on sum comparison
+- **Binary Search** - Efficiently finding a target value in a sorted array in O(log n) time
+- **Hash Maps** - Storing values and indices for O(1) lookup of complements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

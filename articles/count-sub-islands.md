@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Depth First Search (DFS)** - Recursively exploring connected components in a grid
+- **Breadth First Search (BFS)** - Level-by-level traversal using a queue for grid exploration
+- **2D Grid Traversal** - Navigating a matrix using four-directional movement (up, down, left, right)
+- **Union-Find (Disjoint Set Union)** - Grouping connected components and checking connectivity (for DSU solution)
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

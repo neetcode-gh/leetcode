@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using frequency maps to count occurrences and track available elements
+- **Sorting** - Processing elements in sorted order to greedily form consecutive groups
+- **Greedy Algorithms** - Always starting groups from the smallest available element to ensure valid consecutive sequences
+- **Heaps (Priority Queues)** - Efficiently retrieving and removing the minimum element when forming groups
+
+---
+
 ## 1. Sorting
 
 ### Intuition

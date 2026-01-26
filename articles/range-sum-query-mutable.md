@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Segment Trees** - Divide-and-conquer data structure enabling O(log n) range queries and point updates
+- **Binary Indexed Tree (Fenwick Tree)** - Space-efficient tree using bit manipulation for prefix sum queries and updates
+- **Square Root Decomposition** - Dividing arrays into blocks for balanced query and update performance
+- **Bit Manipulation** - Operations like `index & -index` used in Fenwick trees to navigate the tree structure
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

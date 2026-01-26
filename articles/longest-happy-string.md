@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy Algorithms** - Making locally optimal choices (using the most frequent valid character) to build a global solution
+- **Heaps (Priority Queues)** - Using a max-heap to efficiently retrieve the character with the highest remaining count
+- **Recursion** - Breaking down the problem into smaller subproblems with reduced character counts
+
+---
+
 ## 1. Greedy
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays/Matrices** - Understanding how to navigate and manipulate grid-based data structures
+- **Direction Vectors** - Using coordinate offsets to traverse in 8 directions (horizontal, vertical, diagonal)
+- **Boundary Checking** - Validating array indices to avoid out-of-bounds errors
+
+---
+
 ## 1. Iteration - I
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Traversal** - Iterating through characters in a string one by one
+- **Stack Data Structure** - Understanding how stacks work for tracking nested/paired elements
+- **Recursion Basics** - Using recursive function calls to process sequential data
+
+---
+
 ## 1. Recursion
 
 ### Intuition

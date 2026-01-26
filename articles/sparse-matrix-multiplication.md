@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Matrix Multiplication** - Understanding how to compute the dot product of rows and columns
+- **Sparse Matrix Concepts** - Recognizing that sparse matrices have mostly zero elements
+- **Two-Pointer Technique** - Merging or comparing two sorted sequences efficiently
+- **Compressed Sparse Formats** - Understanding CSR (Compressed Sparse Row) and CSC (Compressed Sparse Column) representations
+
+---
+
 ## 1. Naive Iteration
 
 ### Intuition

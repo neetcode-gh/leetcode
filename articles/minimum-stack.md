@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Understanding LIFO (Last In First Out) operations including push, pop, and peek
+- **Auxiliary Data Structures** - Using additional stacks or variables to track extra state alongside the main data structure
+- **Space-Time Tradeoffs** - Trading extra memory for faster operations (e.g., O(n) space for O(1) getMin)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

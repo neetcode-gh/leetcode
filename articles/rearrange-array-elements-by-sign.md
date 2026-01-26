@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding array indexing, traversal, and in-place modifications
+- **Two Pointers Technique** - Using multiple pointers to track different positions in an array simultaneously
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

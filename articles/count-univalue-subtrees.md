@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, nodes, and traversal patterns
+- **Depth First Search (DFS)** - Recursive traversal of tree structures from leaves to root
+- **Post-order Traversal** - Processing children before parent nodes to aggregate subtree information
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

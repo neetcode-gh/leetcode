@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding how to recursively navigate tree structures (DFS)
+- **Dynamic Programming on Trees** - Extending DP concepts to tree-based problems
+- **House Robber I** - The foundational problem that this extends to tree structures
+- **Memoization with Hash Maps** - Caching results using node references as keys
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Using memoization or tabulation to solve optimization problems with overlapping subproblems
+- **Multi-dimensional DP** - Managing state across 3 or 4 dimensions to track multiple path positions
+- **Path Finding in Grids** - Understanding movement constraints and handling obstacles in 2D matrices
+
+---
+
 ## 1. Recursion
 
 ### Intuition

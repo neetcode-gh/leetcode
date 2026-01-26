@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stacks** - Understanding LIFO (Last-In-First-Out) operations including push, pop, and peek
+- **Queues** - Understanding FIFO (First-In-First-Out) behavior and why it differs from stacks
+- **Amortized Analysis** - Recognizing when operations have different worst-case vs average-case time complexities
+
+---
+
 ## 1. Using Two Stacks (Brute Force)
 
 ### Intuition

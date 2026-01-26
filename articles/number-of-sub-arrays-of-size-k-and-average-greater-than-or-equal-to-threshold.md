@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Efficiently processing fixed-size subarrays by adding/removing elements at window boundaries
+- **Prefix Sum** - Precomputing cumulative sums to enable O(1) range sum queries
+- **Array Traversal** - Iterating through arrays with multiple pointers to define window boundaries
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

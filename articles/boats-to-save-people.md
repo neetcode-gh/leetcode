@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Understanding how to sort arrays and when sorting enables efficient solutions
+- **Two Pointers** - Using two pointers from opposite ends of a sorted array to find optimal pairings
+- **Greedy Algorithms** - Making locally optimal choices (pairing heaviest with lightest) to achieve global optimum
+
+---
+
 ## 1. Sorting + Two Pointers
 
 ### Intuition

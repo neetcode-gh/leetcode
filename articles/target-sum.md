@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion / Backtracking** - Exploring all possible combinations by making choices at each step
+- **Dynamic Programming (Memoization)** - Caching results of subproblems defined by index and running sum
+- **Dynamic Programming (Tabulation)** - Building solutions bottom-up using hash maps to track reachable sums
+
+---
+
 ## 1. Recursion
 
 ### Intuition

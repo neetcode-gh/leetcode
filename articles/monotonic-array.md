@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to iterate through arrays and access elements by index
+- **Comparison Operators** - Using comparison operators to check relationships between adjacent elements
+
+---
+
 ## 1. Two Pass
 
 ### Intuition

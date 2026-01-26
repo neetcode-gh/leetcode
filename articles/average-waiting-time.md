@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Simulation** - Processing events in order and tracking state over time
+- **Linear Array Traversal** - Iterating through customers in arrival order
+- **Basic Arithmetic** - Calculating wait times using max operations and running totals
+
+---
+
 ## 1. Simulation - I
 
 ### Intuition

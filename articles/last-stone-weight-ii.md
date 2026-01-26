@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Understanding both top-down (memoization) and bottom-up (tabulation) approaches
+- **0/1 Knapsack Problem** - Selecting items with constraints to optimize a value
+- **Subset Sum** - Determining if a subset with a target sum exists
+- **Recursion with Memoization** - Caching results of subproblems to avoid redundant computation
+
+---
+
 ## 1. Recursion
 
 ### Intuition

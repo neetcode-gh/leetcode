@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Basic array traversal and element access for computing range sums
+- **Prefix Sums** - Precomputing cumulative sums to enable constant-time range queries
+- **Segment Trees (Optional)** - Alternative data structure for range queries, though overkill for immutable arrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

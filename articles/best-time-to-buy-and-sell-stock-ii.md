@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Foundation for exploring all buy/sell decision combinations
+- **Dynamic Programming (Memoization)** - Optimizes recursion by caching computed states
+- **Dynamic Programming (Tabulation)** - Builds solutions iteratively from base cases
+- **Greedy Algorithms** - Key insight that capturing every upward price movement is optimal
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,9 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Efficiently searching a sorted range by repeatedly halving the search space based on comparison feedback
+
+---
+
 ## 1. Linear Search
 
 ### Intuition

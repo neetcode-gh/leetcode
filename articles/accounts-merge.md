@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to map keys to values and track relationships
+- **Graph Representation** - Building adjacency lists from problem constraints
+- **DFS/BFS Traversal** - Exploring all nodes in a connected component
+- **Union-Find (Disjoint Set Union)** - Understanding how to efficiently merge and query sets (for optimal solution)
+- **Connected Components** - Recognizing when a problem is about grouping related elements
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

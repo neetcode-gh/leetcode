@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays and In-Place Manipulation** - Modifying arrays without using extra space
+- **Two/Three Pointers Technique** - The Dutch National Flag algorithm uses three pointers to partition the array in one pass
+- **Counting Sort** - Leveraging the limited value range (only 0, 1, 2) for linear time sorting
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

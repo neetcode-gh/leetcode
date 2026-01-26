@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through adjacent pairs in an array
+- **Modulo Operator** - Using `% 2` to determine if a number is even or odd
+- **Bitwise AND** - Understanding that `n & 1` extracts the least significant bit to check parity
+
+---
+
 ## 1. Modulo Comparison
 
 ### Intuition

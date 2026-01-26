@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Required to process meetings in order by start time
+- **Min Heap / Priority Queue** - Used to efficiently track the earliest ending meeting room
+- **Intervals** - Understanding how to detect and handle overlapping time intervals
+- **Sweep Line Algorithm** - Alternative approach using event processing on a timeline
+- **Two Pointers** - Used in the approach that separates start and end times
+
+---
+
 ## 1. Min Heap
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to map characters to their custom ranking or priority
+- **Custom Sorting / Comparators** - Defining a custom comparison function to sort elements based on non-standard criteria
+- **Frequency Counting** - Counting occurrences of characters to reconstruct strings in a specific order
+
+---
+
 ## 1. Custom Comparator
 
 ### Intuition

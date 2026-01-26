@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Interval DP)** - Computing optimal results over ranges [l, r] with subproblems based on shrinking intervals
+- **Game Theory / Two-Player Games** - Understanding how to model turn-based games where both players play optimally
+- **Recursion with Memoization** - Converting recursive solutions to efficient DP by caching overlapping subproblems
+- **Mathematical Reasoning** - Recognizing that structural properties (even pile count, odd total) can lead to direct solutions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

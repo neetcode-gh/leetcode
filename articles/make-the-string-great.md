@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Used to track and remove adjacent "bad" character pairs efficiently
+- **ASCII Values** - Understanding character codes to detect case differences (uppercase and lowercase differ by 32)
+- **String Manipulation** - Basic operations like character comparison and building result strings
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

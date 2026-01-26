@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation** - Understanding binary representation and bitwise operations (AND, OR, shifts)
+- **Dynamic Programming** - Building solutions incrementally using previously computed results
+- **Binary Number System** - Understanding how integers are represented in binary and counting set bits
+
+---
+
 ## 1. Bit Manipulation - I
 
 ### Intuition

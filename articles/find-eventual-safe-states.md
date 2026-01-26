@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Understanding adjacency lists and how directed graphs are stored
+- **Depth-First Search (DFS)** - Traversing graphs and detecting cycles using visited states
+- **Memoization** - Caching results to avoid redundant computation during graph traversal
+- **Topological Sort** - Understanding Kahn's algorithm and processing nodes by in-degree/out-degree
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

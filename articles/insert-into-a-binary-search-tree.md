@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Trees** - Understanding the BST property where left subtree values are smaller and right subtree values are larger
+- **Tree Traversal** - Navigating through a tree by comparing values to decide left or right direction
+- **Recursion** - Using recursive calls to traverse down the tree and link new nodes back to parents
+
+---
+
 ## 1. Recursion
 
 ### Intuition

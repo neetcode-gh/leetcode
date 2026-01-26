@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - The brute force approach explores all possible interpretations using recursive backtracking
+- **Dynamic Programming (Memoization)** - Optimizing the recursive solution by caching subproblem results
+- **Stack Data Structure** - Used in one approach to track unmatched parentheses and wildcards
+- **Greedy Algorithms** - The optimal solution uses a greedy approach to track min/max possible open counts
+
+---
+
 ## 1. Recursion
 
 ### Intuition

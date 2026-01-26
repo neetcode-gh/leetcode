@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - The optimal solution uses a variable-size window to track valid subarrays with products below the threshold
+- **Prefix Sums** - The binary search approach converts products to sums using logarithms, requiring prefix sum knowledge
+- **Binary Search** - One solution uses binary search on prefix sums to find valid subarray endpoints
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

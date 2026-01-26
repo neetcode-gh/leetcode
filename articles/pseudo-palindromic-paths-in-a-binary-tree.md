@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding root-to-leaf paths and tree structure
+- **Depth First Search (DFS)** - Recursive and iterative tree traversal techniques
+- **Palindrome Properties** - A sequence can form a palindrome if at most one character has an odd count
+- **Bit Manipulation** - Using XOR to toggle bits and checking if at most one bit is set
+- **Backtracking** - Undoing state changes when returning from recursive calls
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Working with character arrays and building result strings
+- **Two Pointers / Linear Scan** - Tracking forces from both directions simultaneously
+- **BFS / Queue Simulation** - Simulating propagation of forces over time
+- **Greedy Algorithms** - Processing elements in a single pass while making local decisions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

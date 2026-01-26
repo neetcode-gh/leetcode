@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - Used to efficiently maintain a window of k characters while tracking character uniqueness
+- **Hash Map / Frequency Array** - Used to track character counts within the current window
+- **String Manipulation** - Understanding how to iterate through substrings and track character frequencies
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

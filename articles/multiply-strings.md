@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Converting characters to digits and building result strings
+- **Grade-School Multiplication** - Understanding how manual digit-by-digit multiplication works with carry propagation
+- **Arrays** - Using arrays to accumulate partial products at specific positions
+
+---
+
 ## 1. Multiplication & Addition
 
 ### Intuition

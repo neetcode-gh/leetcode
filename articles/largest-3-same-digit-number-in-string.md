@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Traversal** - Iterating through characters in a string and accessing elements by index
+- **Sliding Window (Fixed Size)** - Examining consecutive elements of a fixed length (in this case, 3 characters)
+- **String Comparison** - Comparing strings lexicographically or converting substrings to integers for comparison
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

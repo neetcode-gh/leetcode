@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Building solutions by solving smaller subproblems and combining results
+- **String Building** - Constructing strings by wrapping smaller strings with character pairs
+- **BFS / Level-Order Traversal** - Iteratively expanding partial solutions layer by layer (for iterative approach)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

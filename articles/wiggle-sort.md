@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - One approach sorts the array first, then swaps adjacent pairs to create the wiggle pattern
+- **Heap / Priority Queue** - Max-heap can extract elements in descending order to fill odd indices first
+- **Greedy Algorithms** - The optimal O(n) solution uses a single-pass greedy approach, swapping neighbors when the wiggle property is violated
+
+---
+
 ## 1. Max-Heap
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Building solutions by breaking problems into smaller subproblems with base cases
+- **Dynamic Programming** - Using memoization or tabulation to avoid redundant computations
+- **Subsequences** - Understanding the difference between subsequences (non-contiguous) and substrings (contiguous)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

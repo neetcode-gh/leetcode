@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Monotonic Stack** - Using a stack to efficiently track elements in increasing/decreasing order
+- **Next Smaller Element Pattern** - Finding the nearest smaller element on left and right for each position
+- **Divide and Conquer** - Breaking problems into subproblems based on minimum elements (for segment tree approach)
+- **Array Traversal** - Iterating through arrays while maintaining state
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

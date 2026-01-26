@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (0/1 Knapsack Pattern)** - This problem is a classic subset sum variant of the knapsack problem
+- **Recursion with Memoization** - Essential for the top-down DP approach to avoid redundant calculations
+- **Subset Sum Problem** - Core concept of determining if a subset with a target sum exists
+- **Space Optimization in DP** - Techniques to reduce 2D DP to 1D using reverse iteration
+
+---
+
 ## 1. Recursion
 
 ### Intuition

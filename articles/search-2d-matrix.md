@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays (Matrices)** - Understanding how to traverse and access elements in a matrix using row and column indices
+- **Binary Search** - The divide-and-conquer search algorithm for sorted data with O(log n) time complexity
+- **Matrix Index Conversion** - Converting between 1D indices and 2D (row, col) coordinates using division and modulo operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

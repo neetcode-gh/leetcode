@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps/Dictionaries** - Grouping items by a common key and storing lists as values
+- **String Manipulation** - Iterating through characters and building new strings
+- **Sorting** - Understanding how sorting can normalize strings for comparison
+- **Character Frequency Counting** - Using arrays or maps to count occurrences of each character
+- **Hash Keys** - Creating immutable, hashable keys from mutable data (e.g., tuples from lists)
+
+---
+
 ## 1. Sorting
 
 ### Intuition

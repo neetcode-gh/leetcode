@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - The optimal solutions use sliding window technique with variable window sizes to track subarrays
+- **Hash Maps** - Used to track frequency counts of elements within the current window
+- **Two Pointers** - Advanced solutions use multiple left pointers to track ranges of valid starting positions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Efficiently searching a sorted or monotonic search space by halving the range
+- **Subsequence Checking (Two Pointers)** - Verifying if one string is a subsequence of another using two pointers
+- **Hash Set** - Tracking removed indices for O(1) lookup during subsequence validation
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

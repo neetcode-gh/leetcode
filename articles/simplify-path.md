@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Using push/pop operations to track directory hierarchy
+- **String Parsing** - Splitting strings by delimiters and handling edge cases like empty strings
+- **Unix Path Semantics** - Understanding that `.` means current directory and `..` means parent directory
+
+---
+
 ## 1. Stack - I
 
 ### Intuition

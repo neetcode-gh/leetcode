@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Traversing nodes using next pointers
+- **Hash Sets** - O(1) lookup to track visited nodes
+- **Fast and Slow Pointers (Floyd's Algorithm)** - Two-pointer technique for cycle detection with O(1) space
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

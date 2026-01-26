@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Indexing** - Calculating source and destination indices based on position formulas
+- **Bit Manipulation** - Packing and unpacking multiple values in a single integer for in-place solutions
+- **Modular Arithmetic** - Using multiplication and modulo to encode/decode values without overflow
+
+---
+
 ## 1. Iteration (Extra Space)
 
 ### Intuition

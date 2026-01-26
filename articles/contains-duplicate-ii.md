@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map / Hash Set** - Used for O(1) lookups to track element indices or check for duplicates within a window
+- **Sliding Window Technique** - Maintaining a fixed-size window of elements as you iterate through the array
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

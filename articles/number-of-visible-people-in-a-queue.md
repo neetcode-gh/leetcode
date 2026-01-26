@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Monotonic Stack** - The optimal solution uses a monotonic decreasing stack to track visible people efficiently
+- **Stack Operations** - Understanding push, pop, and peek operations for tracking element relationships
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

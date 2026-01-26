@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - The main solution sorts arrival times to process monsters in order of urgency
+- **Greedy Algorithms** - Understanding that eliminating the earliest-arriving monster first is always optimal
+- **Min-Heap / Priority Queue** - An alternative approach uses a min-heap to extract minimum arrival times on demand
+
+---
+
 ## 1. Sorting
 
 ### Intuition

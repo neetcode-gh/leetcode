@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph traversal (DFS/BFS)** - Exploring connected components in a 2D grid
+- **2D grid manipulation** - Handling row/column indices and boundary conditions
+- **Union-Find (Disjoint Set Union)** - Grouping connected cells and tracking component membership
+- **Flood fill algorithm** - Marking all cells belonging to a connected region
+
+---
+
 ## 1. Depth First Search - I
 
 ### Intuition

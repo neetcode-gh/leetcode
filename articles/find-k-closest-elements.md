@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Used to efficiently locate the position closest to the target value in a sorted array
+- **Two Pointers** - Used to expand or shrink a window from both ends to find the k closest elements
+- **Sorting with Custom Comparators** - Understanding how to sort elements by custom criteria (distance from target)
+
+---
+
 ## 1. Sorting (Custom Comparator)
 
 ### Intuition

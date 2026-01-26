@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Node traversal, insertion, and pointer manipulation
+- **Insertion Sort Algorithm** - Understanding how elements are shifted to maintain sorted order
+- **Dummy Node Technique** - Using a sentinel node to simplify edge cases at the head of a list
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to count element frequencies efficiently
+- **Sorting** - Sorting elements by custom criteria (frequency in this case)
+- **Heap/Priority Queue** - Using min-heaps to maintain the top k elements efficiently
+- **Bucket Sort** - Understanding how to use array indices as buckets for counting-based sorting
+
+---
+
 ## 1. Sorting
 
 ### Intuition

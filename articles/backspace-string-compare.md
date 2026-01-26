@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack** - Simulating the typing process with push/pop operations for characters and backspaces
+- **Two Pointers** - Comparing strings in reverse without extra space
+- **String Manipulation** - Building and comparing processed strings
+
+---
+
 ## 1. Stack
 
 ### Intuition

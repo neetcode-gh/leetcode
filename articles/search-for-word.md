@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible paths by making choices, recursing, and undoing choices to try alternatives
+- **Depth-First Search (DFS)** - Traversing a graph or grid by exploring as far as possible along each branch before backtracking
+- **2D Grid Traversal** - Moving through a matrix in four directions while tracking visited cells to avoid revisiting
+- **Recursion** - Understanding recursive function calls and base cases for termination
+
+---
+
 ## 1. Backtracking (Hash Set)
 
 ### Intuition

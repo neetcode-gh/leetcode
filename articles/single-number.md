@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation (XOR)** - The optimal solution relies on XOR properties: a ^ a = 0 and a ^ 0 = a
+- **Hash Set** - Used in O(n) space solutions to track which numbers have been seen
+- **Sorting** - Alternative approach that groups duplicates together for easy identification
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

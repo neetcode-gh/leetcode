@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Substring Search** - Checking if one string appears within another using built-in methods or algorithms
+- **Sorting** - Ordering elements by a custom criterion (e.g., string length) to optimize comparisons
+- **String Matching Algorithms** - KMP, Rabin-Karp, or Z-Algorithm for efficient pattern matching (for advanced solutions)
+- **Trie Data Structure** - Building a suffix trie to efficiently find substring relationships (for optimal solution)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

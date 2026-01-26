@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting with Custom Comparators** - Sorting by multiple criteria (ID ascending, score descending)
+- **Hash Maps** - Grouping data by keys to organize scores by student ID
+- **Heaps (Priority Queues)** - Using min heaps to maintain only the top K elements efficiently, or max heaps to extract the largest scores
+
+---
+
 ## 1. Using Sorting
 
 ### Intuition

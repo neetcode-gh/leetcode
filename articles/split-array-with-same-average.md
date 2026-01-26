@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Used to explore all possible ways to partition elements into two groups
+- **Memoization / Dynamic Programming** - Required to optimize the recursive solution by caching subproblem results
+- **Subset Sum Problem** - This problem is a variant where we find subsets with specific sum constraints
+- **Mathematical reasoning with averages** - Understanding that equal averages means `sum(A) * len(B) == sum(B) * len(A)` to avoid floating-point issues
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

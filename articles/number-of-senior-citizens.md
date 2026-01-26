@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Indexing and Slicing** - Extracting characters or substrings from specific positions in a string
+- **String to Integer Conversion** - Parsing numeric characters into integer values
+- **ASCII Character Arithmetic** - Converting digit characters to their numeric values using ASCII codes
+
+---
+
 ## 1. String Parsing
 
 ### Intuition

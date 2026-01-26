@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal solution uses binary search on the answer space to find the minimum valid eating speed
+- **Search Space Reduction** - Understanding how to identify monotonic properties that allow binary search on a range of possible answers
+- **Ceiling Division** - Calculating hours per pile requires rounding up, which is essential for correct time computation
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

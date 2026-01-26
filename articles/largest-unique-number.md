@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting frequency of elements efficiently in O(1) per operation
+- **Sorting** - Sorting arrays and iterating in sorted order to find elements with specific properties
+- **Frequency Counting** - Tracking how many times each element appears in an array
+
+---
+
 ## 1. Sorting
 
 ### Intuition

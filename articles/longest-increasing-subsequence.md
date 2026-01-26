@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for tracking optimal subsequences
+- **Binary Search** - Finding insertion positions in a sorted array to achieve O(n log n) time complexity
+- **Recursion** - Breaking down the problem into subproblems of including or excluding each element
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Counting character occurrences in a string
+- **Custom Comparators** - Sorting based on frequency rather than natural ordering
+- **Bucket Sort** - Grouping elements by frequency for linear time complexity
+
+---
+
 ## 1. Sorting
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break down string problems into smaller subproblems
+- **Dynamic Programming (Memoization)** - Caching recursive results to avoid redundant computation
+- **2D Dynamic Programming** - Building solutions using a 2D table where states depend on two string indices
+- **String Manipulation** - Working with string indices and character comparisons
+
+---
+
 ## 1. Recursion
 
 ### Intuition

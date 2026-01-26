@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Used for O(1) lookup to efficiently check if an element's successor exists
+- **Array Traversal** - Iterating through arrays and understanding linear search complexity
+- **Sorting** - Understanding how sorting brings related elements together for optimized approaches
+
+---
+
 ## 1. Search with Array
 
 ### Intuition

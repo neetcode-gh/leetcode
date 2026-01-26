@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure and traversal patterns
+- **Breadth First Search (BFS)** - Level-order traversal ensures correct top-to-bottom ordering within columns
+- **Hash Maps** - Used to group nodes by their column index for efficient lookup
+- **Sorting** - Required to order columns from left to right in some approaches
+
+---
+
 ## 1. Breadth First Search + Sorting
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - Used to compute the sum of elements to the left of each index in O(1) time
+- **Suffix Sums** - Used to compute the sum of elements to the right of each index efficiently
+- **Sorted Array Properties** - Understanding that in a sorted array, left elements are smaller and right elements are larger eliminates the need for absolute values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

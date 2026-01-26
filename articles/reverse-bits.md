@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Number Representation** - Understanding how integers are represented as 32-bit binary sequences
+- **Bit Manipulation Operators** - Familiarity with AND (&), OR (|), left shift (<<), and right shift (>>) operations
+- **Extracting and Setting Individual Bits** - Knowing how to isolate a specific bit and place it at a desired position
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

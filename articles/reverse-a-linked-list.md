@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding node structure with value and next pointer, and basic traversal
+- **Pointer Manipulation** - Ability to redirect node pointers without losing references to other nodes
+- **Recursion Basics** - Understanding how recursive calls work with the call stack for the recursive solution
+
+---
+
 ## 1. Recursion
 
 ### Intuition

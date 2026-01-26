@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversals** - Understanding preorder traversal (root-left-right) for string construction
+- **Recursion / DFS** - Traversing trees recursively to build the string representation
+- **String Building** - Efficiently concatenating strings using StringBuilder or list accumulation
+- **Stack-based Iteration** - Converting recursive DFS to iterative using an explicit stack
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

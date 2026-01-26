@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Storing and looking up key-value pairs in O(1) time
+- **String Iteration** - Traversing characters in a string by index
+- **Bijective Mapping** - Understanding one-to-one correspondence between two sets
+
+---
+
 ## 1. Hash Map (Two Pass)
 
 ### Intuition

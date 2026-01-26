@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Used to order players by score/age to simplify conflict detection
+- **Dynamic Programming (Memoization)** - Required for the top-down recursive approach with caching
+- **Dynamic Programming (Tabulation)** - Used in the bottom-up iterative approach
+- **Segment Trees** - Optional for the O(n log n) optimization to efficiently query maximum values
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

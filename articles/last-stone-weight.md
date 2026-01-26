@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap / Priority Queue** - Efficiently retrieving and removing the maximum (or minimum) element
+- **Sorting** - Sorting arrays to process elements in order
+- **Simulation** - Implementing step-by-step processes as described in problem statements
+
+---
+
 ## 1. Sorting
 
 ### Intuition

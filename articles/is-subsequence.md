@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Traversing two sequences simultaneously with independent pointers
+- **Recursion** - Breaking down the problem into smaller subproblems with base cases
+- **Dynamic Programming** - Using memoization or tabulation to avoid redundant computations
+
+---
+
 ## 1. Recursion
 
 ### Intuition

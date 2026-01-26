@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Used to track unique palindromic subsequences and avoid duplicates
+- **String Traversal** - Iterating through strings and accessing characters by index
+- **Prefix Sum (for optimal solutions)** - Precomputing character counts to efficiently query ranges
+- **Bit Manipulation (for optimal solutions)** - Using bitmasks to track seen characters in O(1) space
+
+---
+
 ## 1. Brute Force (Recursion)
 
 ### Intuition

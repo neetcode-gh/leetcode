@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack** - Used to track indices of unmatched opening parentheses for later removal
+- **Parentheses Matching** - Understanding when parentheses are balanced and how to identify invalid ones
+- **Two-Pass String Processing** - First pass removes invalid closing parens, second pass removes unmatched opening parens
+- **String Manipulation** - Building result strings efficiently using arrays or StringBuilder
+
+---
+
 ## 1. Stack
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Exploring all possible assignments by making choices at each step and backtracking
+- **Dynamic Programming** - Using memoization to cache overlapping subproblems and avoid redundant computation
+- **Greedy algorithms** - Making locally optimal choices (sorting by cost difference) to achieve a global optimum
+- **Sorting** - Understanding custom comparators and how sorting by a derived value can enable optimal selection
+
+---
+
 ## 1. Recursion
 
 ### Intuition

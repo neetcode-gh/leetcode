@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with left and right children
+- **Recursion** - The recursive DFS solution relies on the call stack to traverse the tree
+- **Stack Data Structure** - The iterative solution uses a stack to simulate recursion
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

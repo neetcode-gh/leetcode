@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Working with substrings and character-by-character comparison
+- **Two Pointers** - Scanning two strings simultaneously to find mismatches
+- **Edit Distance Concept** - Understanding the three edit operations: insert, delete, and replace
+
+---
+
 ## 1. One Pass Algorithm
 
 ### Intuition

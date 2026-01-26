@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Basic operations like substring comparison and character indexing
+- **KMP Algorithm (Optional)** - Understanding the Longest Proper Prefix Suffix (LPS) array for efficient pattern matching
+- **Rolling Hash / Rabin-Karp (Optional)** - Using hash functions to compare substrings in O(1) time
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Finding minimum elements and their indices in an array
+- **Simulation** - Implementing step-by-step operations as described in the problem
+- **Min-Heap (Priority Queue)** - Efficiently retrieving and updating minimum elements
+- **Tie-Breaking Logic** - Handling cases where multiple elements share the same value
+
+---
+
 ## 1. Simulation
 
 ### Intuition

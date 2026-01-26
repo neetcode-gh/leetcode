@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Simulation** - Executing step-by-step instructions to track state changes
+- **2D Coordinate Systems** - Working with x, y positions and direction vectors
+- **Direction Vectors** - Representing and rotating directions (90-degree turns)
+- **Mathematical Reasoning** - Understanding why a cycle forms based on final direction
+
+---
+
 ## 1. Simulation
 
 ### Intuition

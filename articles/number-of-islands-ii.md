@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Union-Find (Disjoint Set Union)** - Data structure for tracking connected components with efficient union and find operations
+- **Path Compression** - Optimization technique to flatten the Union-Find tree during find operations
+- **Union by Rank** - Optimization to keep the Union-Find tree balanced by attaching smaller trees under larger ones
+- **2D to 1D Index Mapping** - Converting grid coordinates (row, col) to a single index using row * cols + col
+
+---
+
 ## 1. Union Find
 
 ### Intuition

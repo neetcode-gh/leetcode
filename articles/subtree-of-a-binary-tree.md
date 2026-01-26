@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding node structure with left/right children and how to traverse trees
+- **Depth First Search (DFS)** - Used to traverse every node in the main tree and compare subtrees recursively
+- **Tree Comparison** - Checking if two trees are structurally identical with matching values at each node
+
+---
+
 ## 1. Depth First Search (DFS)
 
 ### Intuition

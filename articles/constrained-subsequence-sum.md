@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Understanding both top-down (memoization) and bottom-up approaches
+- **Sliding Window Maximum** - Finding the maximum value within a fixed-size window efficiently
+- **Monotonic Deque** - Maintaining a deque with elements in monotonic order for O(1) max queries
+- **Segment Trees** - Range maximum queries and point updates for optimization
+- **Heaps / Priority Queues** - Using max-heaps to track the maximum value in a sliding window
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

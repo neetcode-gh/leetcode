@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Trying every number at each step and recursively solving for the remaining sum
+- **Dynamic Programming (Memoization)** - Caching results for each target value to avoid recomputation
+- **Dynamic Programming (Tabulation)** - Building the count of ways from 0 up to the target
+- **Permutations vs Combinations** - Understanding that this problem counts permutations (order matters)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

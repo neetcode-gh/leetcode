@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Arranging elements to efficiently identify the largest side and compare sums
+- **Prefix Sum** - Maintaining running totals to quickly compute the sum of smaller sides
+- **Polygon Inequality** - Understanding that the longest side must be strictly less than the sum of all other sides
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

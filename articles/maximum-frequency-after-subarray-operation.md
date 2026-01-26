@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Kadane's Algorithm** - The optimized solutions use Kadane's algorithm to find maximum subarray sums
+- **Hash Maps** - Used for tracking frequency counts and running sums for each value
+- **Subarray Problems** - Understanding how to enumerate and process contiguous subarrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

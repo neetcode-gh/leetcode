@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding array indexing and in-place modification
+- **Two Pointers** - Using two pointers to partition or rearrange elements within an array
+
+---
+
 ## 1. Extra Space
 
 ### Intuition

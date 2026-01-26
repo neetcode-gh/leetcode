@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Required to count occurrences of each element in the array
+- **Recursion** - The base approach explores all possible deletion choices recursively
+- **Dynamic Programming (Memoization)** - Used to optimize the recursive solution by caching subproblem results
+- **Basic Math (Ceiling Division)** - The greedy solution relies on understanding ceiling division for optimal grouping
+
+---
+
 ## 1. Recursion
 
 ### Intuition

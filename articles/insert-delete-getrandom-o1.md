@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Understanding O(1) average-case insert, delete, and lookup operations
+- **Dynamic Arrays** - Understanding how arrays support O(1) random access and O(1) amortized append/pop at the end
+- **Swap-and-Pop Technique** - Knowing how to achieve O(1) deletion from an unordered collection by swapping with the last element
+
+---
+
 ## 1. Hash Map
 
 ### Intuition

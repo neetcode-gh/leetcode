@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with parent pointers and traversal concepts
+- **Hash Sets** - Using sets for O(1) lookup to track visited nodes
+- **Two Pointers** - The technique of using two pointers that traverse at different rates or from different starting points (similar to finding intersection of linked lists)
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

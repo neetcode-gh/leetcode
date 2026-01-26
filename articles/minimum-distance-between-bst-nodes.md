@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST) Properties** - Understanding that in a BST, left subtree values are smaller and right subtree values are larger than the root
+- **Tree Traversal (DFS)** - Ability to traverse binary trees using depth-first search, particularly inorder traversal
+- **Inorder Traversal** - Knowing that inorder traversal of a BST produces values in sorted (ascending) order
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

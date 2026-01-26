@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Traversal (DFS/BFS)** - Web pages form a graph where URLs are nodes and links are edges; traversal explores all reachable pages
+- **Hash Sets** - Used to track visited URLs and prevent infinite loops from cycles
+- **String Parsing** - Extracting hostnames from URLs to filter which pages to crawl
+
+---
+
 ## 1. Depth-first search
 
 ### Intuition

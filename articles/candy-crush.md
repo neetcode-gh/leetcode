@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays / Matrices** - Traversing grids and accessing elements by row and column
+- **Simulation** - Implementing step-by-step processes that repeat until a condition is met
+- **Set Data Structure** - Storing unique positions to mark candies for removal
+- **In-place Modification** - Modifying arrays without using extra space by marking elements
+
+---
+
 ## 1. Separate Steps: Find, Crush, Drop
 
 ### Intuition

@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal solution uses binary search on an unsorted array by comparing neighbors to determine which half contains a peak
+- **Array Neighbor Comparison** - Understanding how to safely compare elements with their neighbors while handling boundary conditions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

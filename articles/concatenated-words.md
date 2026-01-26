@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Using sets for O(1) lookups to check if a word exists in the dictionary
+- **Recursion** - Breaking down strings into prefix/suffix and recursively checking validity
+- **Dynamic Programming** - Using memoization to avoid recomputing results for the same substrings
+- **String Manipulation** - Splitting strings into substrings and concatenating words
+
+---
+
 ## 1. Brute Force (Backtracking)
 
 ### Intuition

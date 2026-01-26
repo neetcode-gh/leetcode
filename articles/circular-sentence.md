@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Splitting strings by delimiters and accessing characters by index
+- **Modular Arithmetic** - Using the modulo operator for wrap-around indexing in circular structures
+
+---
+
 ## 1. Splitting the String
 
 ### Intuition

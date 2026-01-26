@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree/Graph Representation** - Understanding how to represent trees using adjacency lists
+- **Depth First Search (DFS)** - Ability to traverse trees recursively while computing subtree properties like height
+- **Breadth First Search (BFS) / Topological Sort** - Understanding level-by-level processing and leaf removal techniques
+- **Tree Properties** - Familiarity with concepts like tree diameter, centroids, and the relationship between tree structure and height
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

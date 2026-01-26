@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Custom Comparators for Sorting** - Defining comparison logic based on string concatenation rather than numeric value
+- **String Manipulation** - Converting integers to strings and concatenating them for comparison
+- **Greedy Algorithms** - Making locally optimal choices (ordering pairs) to achieve global optimum
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Using memoization to explore partition choices efficiently
+- **Greedy + Sorting** - Recognizing that partition costs can be reduced to selecting adjacent pair sums
+- **Heap / Priority Queue** - Efficiently tracking the k smallest and largest elements
+- **Problem Decomposition** - Understanding that first and last elements always contribute and cancel out
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

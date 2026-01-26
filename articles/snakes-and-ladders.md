@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth First Search (BFS)** - Finding shortest paths in unweighted graphs using level-order traversal
+- **Graph Representation** - Understanding implicit graphs where moves define edges
+- **2D Array Indexing** - Converting between 1D positions and 2D coordinates with alternating row directions
+- **Queue Data Structure** - FIFO operations for BFS traversal
+
+---
+
 ## 1. Breadth First Search - I
 
 ### Intuition

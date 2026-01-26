@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - The core technique for exploring all possible subsets through recursive inclusion/exclusion decisions
+- **Sorting** - Required to group duplicate elements together so they can be properly skipped
+- **Recursion** - Understanding how to build solutions incrementally and backtrack when needed
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

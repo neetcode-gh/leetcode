@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break down problems into smaller subproblems with base cases
+- **Dynamic Programming** - Recognizing overlapping subproblems and using memoization or tabulation
+- **Combinatorics** - Counting arrangements and understanding the recurrence relation for permutations
+- **Modular Arithmetic** - Working with results modulo 10^9 + 7 to prevent integer overflow
+
+---
+
 ## 1. Recursion
 
 ### Intuition

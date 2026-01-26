@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up tabulation approaches
+- **Combinatorics** - Understanding how to count arrangements with constraints (permutations with restrictions)
+- **Modular Arithmetic** - Performing operations under modulo to handle large numbers without overflow
+- **State Space Design** - Defining DP states with multiple dimensions (playlist length and distinct songs used)
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

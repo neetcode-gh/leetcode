@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - The base solutions use recursive depth-first exploration of grid cells
+- **Dynamic Programming (Memoization)** - Caching overlapping subproblems with state (row, col, moves) is essential for efficiency
+- **2D Grid/Matrix Traversal** - Moving in four directions and handling boundary conditions
+- **Modular Arithmetic** - Results must be computed modulo 10^9 + 7 to prevent overflow
+
+---
+
 ## 1. Recursion
 
 ### Intuition

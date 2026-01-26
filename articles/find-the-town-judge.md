@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Basics (Directed Graphs)** - Understanding how to model relationships as directed edges between nodes
+- **Indegree and Outdegree** - Counting incoming and outgoing edges for each vertex in a graph
+- **Arrays/Hash Maps** - Using arrays or dictionaries to count occurrences
+
+---
+
 ## 1. Indegree & Outdegree
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, root, leaf nodes, and traversal concepts
+- **Depth First Search (DFS)** - Recursive tree traversal to explore paths from root to leaves
+- **Recursion** - Using recursive function calls to traverse tree structures
+
+---
+
 ## 1. Depth First Search - I
 
 ### Intuition

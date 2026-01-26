@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to traverse and find maximum elements in an array
+- **Sliding Window Technique** - Using two pointers to efficiently process subarrays without recomputing from scratch
+- **Subarray Counting** - Recognizing patterns for counting valid subarrays based on window positions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

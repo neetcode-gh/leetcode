@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from equations where variables are nodes and ratios are edge weights
+- **BFS/DFS Graph Traversal** - Finding paths between nodes while accumulating products of edge weights
+- **Union-Find (Disjoint Set Union)** - Advanced technique for tracking connected components with weighted relationships
+- **Hash Maps** - Storing graph edges and tracking visited nodes during traversal
+- **Floyd-Warshall Algorithm** - All-pairs shortest path concept adapted for computing transitive ratios
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

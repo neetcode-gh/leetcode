@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting element frequencies efficiently for O(n) time solutions
+- **Sorting** - Understanding that after sorting, the majority element occupies the middle position
+- **Boyer-Moore Voting Algorithm** - The candidate elimination technique that finds majority elements in O(1) space
+- **Bit Manipulation** - Constructing numbers bit by bit by counting set bits across all elements (for the bit manipulation approach)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

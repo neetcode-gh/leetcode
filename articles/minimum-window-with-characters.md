@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used for counting character frequencies in both the target string and current window
+- **Sliding Window Technique** - The optimal solution uses a dynamic window that expands and contracts to find the minimum valid substring
+- **Two Pointers** - Left and right pointers manage the window boundaries while traversing the string
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

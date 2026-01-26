@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Data Structures** - Understanding how N-ary trees differ from binary trees (nodes can have multiple children)
+- **Recursion** - The recursive DFS solution relies on understanding how recursive calls process children before the parent
+- **Stack** - The iterative solution uses a stack to simulate recursion and manage traversal order
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

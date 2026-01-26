@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through a sorted array while comparing consecutive elements to detect gaps
+- **Interval Representation** - Understanding how to construct and return ranges as pairs of start and end values
+- **Edge Case Handling** - Managing boundary conditions such as empty arrays, gaps before the first element, and gaps after the last element
+
+---
+
 ## 1. Linear Scan
 
 ### Intuition

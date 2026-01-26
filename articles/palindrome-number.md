@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Converting integers to strings and comparing characters
+- **Math Operations (Modulo/Division)** - Extracting and removing digits from integers
+- **Two Pointers** - Comparing elements from both ends of a sequence
+
+---
+
 ## 1. Convert to String
 
 ### Intuition

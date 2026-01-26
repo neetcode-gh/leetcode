@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down problems into smaller subproblems
+- **Dynamic Programming** - Memoization and tabulation techniques for optimization
+- **Interval DP** - Solving problems by considering all possible subranges and combining results
+- **Array Manipulation** - Padding arrays with boundary values to simplify edge cases
+
+---
+
 ## 1. Brute Force (Recursion)
 
 ### Intuition

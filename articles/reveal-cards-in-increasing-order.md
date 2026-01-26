@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queue Data Structure** - Understanding FIFO operations (enqueue, dequeue) is essential for simulating the card reveal process
+- **Deque (Double-ended Queue)** - Some solutions use deque for efficient insertion/removal at both ends
+- **Sorting** - The solution requires sorting the deck to process cards in order
+- **Simulation Techniques** - The problem involves simulating a process either forward or in reverse
+
+---
+
 ## 1. Simulation Using Queue - I
 
 ### Intuition

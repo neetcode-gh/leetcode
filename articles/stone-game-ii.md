@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Caching optimal results for each game state to avoid redundant computation
+- **Game Theory / Minimax** - Understanding two-player optimal play where one player maximizes and the other minimizes
+- **Suffix Sum** - Precomputing cumulative sums from right to left to efficiently calculate remaining stones
+- **Multi-dimensional State Tracking** - Managing DP states with multiple parameters (position, M value, whose turn)
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

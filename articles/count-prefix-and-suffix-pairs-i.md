@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Checking prefixes and suffixes of strings using character comparison or built-in methods
+- **Nested Loops** - Iterating through all pairs of elements in an array with O(n^2) complexity
+- **Trie Data Structure** - Understanding how tries store strings and enable efficient prefix lookups (for optimal solution)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

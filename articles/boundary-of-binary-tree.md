@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding preorder, inorder, and postorder traversal patterns
+- **Recursion** - Using recursive functions to traverse tree structures and collect nodes
+- **Stack Data Structure** - Using a stack to reverse the order of elements (for the right boundary)
+
+---
+
 ## 1. Simple Solution
 
 ### Intuition

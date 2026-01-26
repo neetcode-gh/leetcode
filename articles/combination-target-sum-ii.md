@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring choices by including/excluding elements and undoing decisions when needed
+- **Recursion** - Building combinations by making decisions at each index in the array
+- **Sorting** - Arranging elements to group duplicates together for efficient skip logic
+- **Handling duplicates** - Skipping repeated elements at the same recursion level to avoid duplicate combinations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

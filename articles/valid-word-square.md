@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays / Matrices** - Understanding row and column indexing and how to traverse a matrix
+- **String Manipulation** - Building strings character by character and comparing strings
+- **Matrix Symmetry** - Understanding how to check if position (i, j) relates to position (j, i)
+
+---
+
 ## 1. Storing New Words
 
 ### Intuition

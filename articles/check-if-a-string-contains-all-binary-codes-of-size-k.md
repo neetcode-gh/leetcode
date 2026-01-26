@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Storing and checking unique substrings efficiently
+- **Sliding Window** - Processing fixed-size windows over a string without redundant computation
+- **Bit Manipulation** - Using bitwise operations to represent binary strings as integers
+- **Binary Number Representation** - Converting between binary strings and decimal integers
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

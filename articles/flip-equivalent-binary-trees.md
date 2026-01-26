@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure with left and right children
+- **Tree Traversal (DFS/BFS)** - Visiting nodes recursively or iteratively using stacks/queues
+- **Recursion** - Comparing subtrees and handling base cases with null nodes
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

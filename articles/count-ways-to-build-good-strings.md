@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Using memoization (top-down) or tabulation (bottom-up) to solve counting problems
+- **Recursion** - Breaking down the problem into smaller subproblems by exploring different choices
+- **Modular Arithmetic** - Applying modulo operations during intermediate calculations to prevent overflow
+
+---
+
 ## 1. Recursion
 
 ### Intuition

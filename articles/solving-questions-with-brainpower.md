@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking problems into smaller subproblems with base cases
+- **Dynamic Programming** - Optimizing recursive solutions by storing computed results
+- **Memoization** - Caching function results to avoid redundant calculations
+- **Bottom-Up DP** - Iteratively building solutions from smaller subproblems to larger ones
+
+---
+
 ## 1. Recursion
 
 ### Intuition

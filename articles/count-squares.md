@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to store and retrieve point counts in O(1) time
+- **Coordinate Geometry** - Understanding axis-aligned squares and diagonal relationships between corners
+- **Nested Hash Maps** - Using two-level hash maps to efficiently query points by x-coordinate then y-coordinate
+
+---
+
 ## 1. Hash Map - I
 
 ### Intuition

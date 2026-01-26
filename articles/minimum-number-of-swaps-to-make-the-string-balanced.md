@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Used to track unmatched opening brackets during traversal
+- **Bracket Matching** - Understanding how to pair opening and closing brackets in sequence
+- **Greedy Algorithms** - The optimal solutions use greedy reasoning to count minimum swaps needed
+
+---
+
 ## 1. Stack
 
 ### Intuition

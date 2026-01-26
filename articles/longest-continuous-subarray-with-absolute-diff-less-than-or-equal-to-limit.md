@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - Expanding and shrinking a window while maintaining validity conditions
+- **Heaps (Priority Queues)** - Using max-heap and min-heap to track extreme values in a dynamic set
+- **Monotonic Deques** - Maintaining increasing or decreasing order to efficiently track min/max in a sliding window
+- **Balanced BST / Sorted Containers** - Using TreeMap, multiset, or SortedDict for ordered element storage
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

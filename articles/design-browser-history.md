@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stacks** - LIFO data structure for managing back and forward navigation history
+- **Dynamic Arrays** - Using arrays with a cursor pointer to track current position
+- **Doubly Linked Lists** - Nodes with prev/next pointers for bidirectional traversal
+
+---
+
 ## 1. Two Stacks
 
 ### Intuition

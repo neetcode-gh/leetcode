@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets and Hash Maps** - Used for O(1) lookup to track seen elements or count frequencies
+- **Array Index Manipulation** - Understanding how values in range [1, n] can map to indices [0, n-1]
+- **In-Place Array Modification** - The optimal solution uses negative marking to avoid extra space
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

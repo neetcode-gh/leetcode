@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Trie (Prefix Tree)** - Building and traversing a trie for efficient prefix-based lookups
+- **Hash Maps** - Storing and retrieving key-value pairs for sentence frequencies
+- **Sorting** - Custom sorting by multiple criteria (frequency descending, then alphabetically)
+- **Heap / Priority Queue** - Using heaps to efficiently find top-k elements
+
+---
+
 ## 1. Trie
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, nodes, levels, and parent-child relationships
+- **Breadth First Search (BFS)** - Level-order traversal using a queue to process nodes level by level
+- **Depth First Search (DFS)** - Recursive and iterative tree traversal techniques
+- **Parity Checking** - Determining if numbers are odd or even using modulo operations
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

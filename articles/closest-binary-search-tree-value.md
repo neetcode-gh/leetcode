@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST) properties** - Understanding that left subtree values are smaller and right subtree values are larger than the root
+- **Tree traversal techniques** - Specifically inorder traversal which produces sorted values in a BST
+- **Binary search** - Using BST structure to efficiently narrow down the search space
+- **Stack-based iteration** - Converting recursive tree traversal to iterative using an explicit stack
+
+---
+
 ## 1. Recursive Inorder + Linear search, O(N) time
 
 ### Intuition

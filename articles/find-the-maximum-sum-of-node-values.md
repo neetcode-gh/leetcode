@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Traversal (DFS)** - Used to traverse the tree structure and combine subtree results
+- **Dynamic Programming** - Tracking even/odd parity states to ensure valid XOR operation counts
+- **Bit Manipulation (XOR)** - Understanding XOR properties, including self-cancellation (a ^ k ^ k = a)
+- **Greedy Algorithms** - The optimal greedy approach selects nodes based on delta values
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

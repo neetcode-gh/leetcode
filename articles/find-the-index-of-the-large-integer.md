@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The core technique used to repeatedly halve the search space based on comparison results
+- **Array Manipulation** - Understanding how to work with subarrays and index calculations
+
+---
+
 ## 1. Binary Search
 
 ### Intuition

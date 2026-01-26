@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Used to expand around centers and verify palindromes by comparing characters from both ends
+- **Dynamic Programming (2D)** - The DP solution uses a table where `dp[i][j]` indicates if the substring from index i to j is a palindrome
+- **String Manipulation** - Understanding substrings, character indexing, and string slicing
+- **Manacher's Algorithm (Advanced)** - Optional but provides the optimal O(n) solution by reusing palindrome information
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting events or intervals by start/end points
+- **Min-Heap (Priority Queue)** - Efficiently tracking and removing minimum elements
+- **Line Sweep / Difference Array** - Processing interval changes as discrete events
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

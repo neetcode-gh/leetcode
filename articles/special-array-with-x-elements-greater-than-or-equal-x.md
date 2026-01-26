@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through arrays and counting elements meeting a condition
+- **Binary Search** - Searching on a monotonic property to find an optimal value
+- **Sorting** - Arranging elements to enable efficient counting of elements greater than or equal to a threshold
+- **Counting Sort** - Using a frequency array when values are bounded by array length
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash maps/dictionaries** - Storing key-value pairs with efficient lookup
+- **Binary search** - Finding the largest timestamp less than or equal to the query in O(log n)
+- **Sorted data structures** - Maintaining timestamps in sorted order for efficient searching
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

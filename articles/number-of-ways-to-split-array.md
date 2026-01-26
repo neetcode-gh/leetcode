@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Computing cumulative sums to efficiently calculate subarray sums in O(1) time
+- **Array Traversal** - Iterating through arrays and maintaining running totals
+- **Integer Overflow** - Understanding when to use long/long long for large sums
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

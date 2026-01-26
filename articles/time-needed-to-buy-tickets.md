@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queue data structure** - Simulating the ticket line with FIFO behavior
+- **Array iteration** - Processing elements in circular order using modulo arithmetic
+- **Mathematical reasoning** - The optimal solution calculates contributions directly without simulation
+
+---
+
 ## 1. Queue
 
 ### Intuition

@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - Maintaining a fixed-size window that slides across an array while tracking window properties
+- **Array Traversal** - Iterating through arrays while maintaining running sums and tracking maximum values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

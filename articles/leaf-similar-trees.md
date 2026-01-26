@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, node representation, and the concept of leaf nodes (nodes with no children)
+- **Depth-First Search (DFS)** - Recursive traversal of trees and understanding pre-order traversal to visit nodes in left-to-right order
+- **Recursion** - Writing recursive functions with base cases and recursive calls
+- **Stacks** - For iterative DFS implementations, understanding LIFO data structure for managing traversal state
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

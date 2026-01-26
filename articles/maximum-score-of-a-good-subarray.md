@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Expanding a window from a fixed center point while tracking the minimum element
+- **Monotonic Stack** - Finding next/previous smaller elements to determine valid ranges for each minimum value
+- **Binary Search** - Efficiently finding boundaries where elements satisfy a threshold condition
+- **Greedy Algorithms** - Making locally optimal expansion choices to maximize the global score
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

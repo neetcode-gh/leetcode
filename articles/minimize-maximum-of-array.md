@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Searching on the answer space when the problem has monotonic properties
+- **Prefix Sum** - Computing cumulative sums to analyze constraints across array segments
+- **Greedy Algorithms** - Understanding how local optimal choices lead to global optimal solutions
+
+---
+
 ## 1. Binary Search
 
 ### Intuition

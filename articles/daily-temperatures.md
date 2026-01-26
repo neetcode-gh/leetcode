@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Monotonic Stack** - Using a stack that maintains elements in increasing or decreasing order to efficiently find the next greater element
+- **Array Traversal** - Iterating through arrays both forward and backward to compute results
+- **Dynamic Programming (Basic)** - Reusing previously computed results to skip unnecessary comparisons
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

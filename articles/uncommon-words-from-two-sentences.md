@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries or hash maps to count frequencies of elements
+- **String Manipulation** - Splitting strings into words and iterating through them
+
+---
+
 ## 1. Hash Map - I
 
 ### Intuition

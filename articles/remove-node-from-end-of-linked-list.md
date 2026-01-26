@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding how singly linked lists work, including node structure and traversal
+- **Two Pointers Technique** - Using multiple pointers to track different positions in a data structure simultaneously
+- **Dummy Node Pattern** - Creating a sentinel node to simplify edge cases like removing the head node
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

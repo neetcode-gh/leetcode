@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break problems into smaller subproblems and define base cases
+- **Dynamic Programming (0/1 Knapsack)** - This problem is a variant of the classic knapsack with two constraints instead of one
+- **Memoization** - Caching results of subproblems to avoid redundant computations
+- **Multidimensional DP** - Working with 2D and 3D DP tables for problems with multiple state variables
+
+---
+
 ## 1. Recursion
 
 ### Intuition

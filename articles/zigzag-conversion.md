@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Building strings from characters and concatenating multiple strings
+- **Pattern Recognition** - Identifying mathematical formulas to calculate character positions in repeating patterns
+- **Array/List Operations** - Using multiple lists to collect characters row by row
+
+---
+
 ## 1. Iteration - I
 
 ### Intuition

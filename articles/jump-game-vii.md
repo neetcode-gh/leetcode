@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Caching recursive subproblem results to avoid recomputation
+- **Breadth First Search (BFS)** - Level-by-level traversal for reachability problems
+- **Sliding Window Technique** - Maintaining a window of valid elements as you iterate
+- **Two Pointers** - Using pointers to track ranges efficiently in linear time
+
+---
+
 ## 1. Brute Force (Memoization)
 
 ### Intuition

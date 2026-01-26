@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Breaking down problems into overlapping subproblems with optimal substructure
+- **Memoization** - Caching recursive results to avoid redundant computation
+- **Circular Array Distance** - Calculating minimum distance in a wrap-around structure
+- **State Space Analysis** - Identifying the parameters that define unique subproblems (position, index)
+- **Bottom-Up DP Conversion** - Translating recursive solutions into iterative table-filling approaches
+
+---
+
 ## 1. Recursion
 
 ### Intuition

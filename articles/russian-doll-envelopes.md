@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting with custom comparators** - Sorting by multiple criteria (width ascending, height descending for equal widths)
+- **Longest Increasing Subsequence (LIS)** - The classic DP problem that this reduces to after sorting
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for optimization problems
+- **Binary Search** - Used in the O(n log n) LIS solution to efficiently find insertion positions
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

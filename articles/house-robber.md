@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming Fundamentals** - Understanding optimal substructure and overlapping subproblems
+- **Recursion** - Breaking down problems into smaller subproblems
+- **Memoization** - Caching computed results to avoid redundant calculations
+- **Array Traversal** - Iterating through elements while maintaining state
+
+---
+
 ## 1. Recursion
 
 ### Intuition

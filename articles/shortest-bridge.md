@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Depth First Search (DFS)** - Used to identify and mark all cells of one island before searching for the bridge
+- **Breadth First Search (BFS)** - Essential for finding the shortest path (minimum flips) between the two islands since BFS explores by levels
+- **Graph Traversal on Grids** - Understanding 4-directional movement and boundary checking in 2D matrices
+- **Visited State Management** - Tracking visited cells to avoid infinite loops, either with a separate data structure or by modifying the grid
+
+---
+
 ## 1. Depth First Search + Breadth First Search - I
 
 ### Intuition

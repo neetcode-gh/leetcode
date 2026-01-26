@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break down problems into smaller subproblems
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches
+- **0/1 Knapsack Pattern** - This problem can be modeled as selecting items with costs and benefits
+
+---
+
 ## 1. Recursion
 
 ### Intuition

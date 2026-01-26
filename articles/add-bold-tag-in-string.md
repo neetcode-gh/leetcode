@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Matching** - Finding all occurrences of substrings within a larger string
+- **Boolean Arrays for Marking** - Using a boolean array to mark positions that satisfy certain conditions
+- **Interval Merging Concepts** - Understanding how overlapping or adjacent marked regions should be merged together
+
+---
+
 ## 1. Mark Bold Characters
 
 ### Intuition

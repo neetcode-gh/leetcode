@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding node structure, traversal, and how to find the length of a list
+- **Pointer Manipulation** - Reconnecting nodes by changing next pointers to restructure the list
+- **Modular Arithmetic** - Using modulo to normalize rotation count when it exceeds list length
+- **Circular Linked List** - The technique of connecting tail to head to form a cycle, then breaking it at the new position
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

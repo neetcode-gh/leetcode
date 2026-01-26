@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Understanding push and pop operations and LIFO (Last-In-First-Out) behavior
+- **Simulation** - Mimicking a process step-by-step to verify if a sequence of operations is valid
+- **Two Pointers** - Using indices to track positions in multiple arrays simultaneously
+
+---
+
 ## 1. Stack
 
 ### Intuition

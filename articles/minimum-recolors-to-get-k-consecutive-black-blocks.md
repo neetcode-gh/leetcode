@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window (Fixed Size)** - Maintaining a window of exactly k elements and updating counts as the window slides
+- **String Manipulation** - Counting specific characters within substrings efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

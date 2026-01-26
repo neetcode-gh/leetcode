@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dijkstra's Algorithm** - Finding the shortest path with weighted edges (rolling distances)
+- **Priority Queue / Min-Heap** - Efficiently extracting the minimum distance state and comparing paths lexicographically
+- **String Comparison** - Tie-breaking between equal-distance paths requires lexicographic ordering
+- **2D Matrix Navigation** - Rolling the ball in four directions while checking for the hole
+
+---
+
 ## 1. Dijkstra's
 
 ### Intuition

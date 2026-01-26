@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge lists to represent directed graphs
+- **Topological Sort** - Ordering nodes in a directed acyclic graph such that all edges point forward
+- **Cycle Detection** - Identifying cycles in directed graphs using DFS path tracking or in-degree analysis
+- **DFS and BFS** - Implementing depth-first and breadth-first traversals for graph algorithms
+
+---
+
 ## 1. Topological Sort (DFS)
 
 ### Intuition

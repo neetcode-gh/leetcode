@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting with Custom Comparators** - Sorting elements based on a computed value (distance) rather than the elements themselves
+- **Euclidean Distance** - Understanding that distance from origin is sqrt(x^2 + y^2), and that squared distance preserves ordering
+- **Heap Data Structure** - Using min-heaps and max-heaps to efficiently track smallest/largest elements
+- **QuickSelect Algorithm** - Partitioning arrays to find the k-th element in average O(n) time without full sorting
+
+---
+
 ## 1. Sorting
 
 ### Intuition

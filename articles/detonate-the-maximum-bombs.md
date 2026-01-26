@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Understanding how to build an adjacency list from problem constraints
+- **Depth-First Search (DFS)** - Used to traverse the directed graph and count reachable bombs
+- **Breadth-First Search (BFS)** - Alternative traversal method for exploring the chain reaction level by level
+- **Euclidean Distance** - Understanding how to calculate distance between points and compare with radius
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

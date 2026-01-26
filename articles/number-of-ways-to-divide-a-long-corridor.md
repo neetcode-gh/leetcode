@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Used to count valid ways by tracking seat counts in each section
+- **Memoization** - Caching subproblem results to avoid redundant computation
+- **Modular Arithmetic** - Required for handling large results modulo 10^9+7
+- **Combinatorics** - The optimal approach counts divider positions between seat pairs using multiplication
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Data Structure** - Understanding parent-child relationships and tree traversal patterns
+- **Depth-First Search (DFS)** - Recursive and iterative traversal of tree nodes to visit all descendants
+- **Breadth-First Search (BFS)** - Level-by-level tree traversal using a queue
+- **Building Adjacency Lists** - Converting parent array representation to child adjacency lists for efficient traversal
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

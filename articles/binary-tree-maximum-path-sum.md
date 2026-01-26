@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding nodes, left/right children, and tree traversal
+- **Depth-First Search (DFS)** - Recursively visiting all nodes in a tree
+- **Recursion with Return Values** - Functions that both compute results and return values to parent calls
+- **Handling Negative Numbers** - Knowing when to exclude negative contributions from sums
+- **Global vs Local State** - Tracking a global maximum while computing local path values
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

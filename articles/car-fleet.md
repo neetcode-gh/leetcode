@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting arrays of pairs/tuples by custom criteria
+- **Stack** - Using a stack to track and merge elements based on conditions
+- **Time-Distance Calculations** - Computing arrival times from position, speed, and target
+
+---
+
 ## 1. Stack
 
 ### Intuition

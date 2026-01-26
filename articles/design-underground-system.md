@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to store and retrieve passenger check-in data and route statistics in O(1) time
+- **Object-Oriented Design** - Understanding how to design a class with multiple methods that share state
+
+---
+
 ## 1. Two HashMaps
 
 ### Intuition

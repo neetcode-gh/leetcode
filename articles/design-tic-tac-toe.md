@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays** - Creating and traversing matrices to represent game boards
+- **Diagonal Traversal** - Identifying main diagonal (row == col) and anti-diagonal (col == n - row - 1) patterns
+- **Counting Techniques** - Using running sums to track game state efficiently
+
+---
+
 ## 1. Optimized Brute Force
 
 ### Intuition

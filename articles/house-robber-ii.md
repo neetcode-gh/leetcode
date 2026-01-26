@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (1D)** - The core technique for solving the linear house robber subproblems
+- **House Robber I** - This problem extends the original by adding a circular constraint
+- **Recursion with Memoization** - Understanding how to cache subproblem results for top-down DP
+
+---
+
 ## 1. Recursion
 
 ### Intuition

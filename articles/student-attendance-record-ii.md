@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both memoization (top-down) and tabulation (bottom-up) approaches for counting problems
+- **State Machine Design** - Modeling problems with multiple constraints as transitions between discrete states
+- **Modular Arithmetic** - Applying modulo operations to prevent integer overflow in counting problems
+
+---
+
 ## 1. Dynamic Programming (Top-Down) - I
 
 ### Intuition

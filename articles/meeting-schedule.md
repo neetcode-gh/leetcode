@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Required to process meetings in order and enable efficient overlap detection
+- **Intervals** - Understanding how to represent and compare time intervals
+- **Overlap Detection** - Knowing how to determine if two intervals share common time
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Basics** - Understanding node structure, traversal, and pointer manipulation
+- **Two-Pointer Technique** - Using multiple pointers to traverse a list simultaneously (for finding the k-th node from the end)
+- **Recursion** - Understanding recursive function calls and how they can track positions from both ends
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

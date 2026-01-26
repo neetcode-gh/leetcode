@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that inorder traversal yields sorted elements
+- **Inorder Tree Traversal** - Both recursive and iterative implementations
+- **Stack Data Structure** - Used to simulate recursion for space-efficient iterative traversal
+
+---
+
 ## 1. Flattening the BST (DFS)
 
 ### Intuition

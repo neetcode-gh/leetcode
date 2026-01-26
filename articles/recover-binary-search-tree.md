@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST) Properties** - Understanding that inorder traversal of a valid BST produces a sorted sequence
+- **Inorder Traversal** - Both recursive and iterative implementations for visiting nodes in left-root-right order
+- **Tree Validation** - Checking if a binary tree satisfies BST constraints using min/max bounds
+- **Morris Traversal (Optional)** - Space-optimized tree traversal technique using threading for O(1) space solution
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

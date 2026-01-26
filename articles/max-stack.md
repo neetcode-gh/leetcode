@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stacks** - Understanding LIFO operations (push, pop, top) and their O(1) time complexity
+- **Balanced Binary Search Trees / Sorted Sets** - Using self-balancing trees (TreeSet, SortedList) for O(log n) insertion, deletion, and ordered access
+- **Heaps / Priority Queues** - Implementing max heaps for efficient maximum element retrieval
+- **Lazy Deletion** - Deferring actual removal by marking elements as deleted and cleaning up on access
+
+---
+
 ## 1. Two Balanced Trees
 
 ### Intuition

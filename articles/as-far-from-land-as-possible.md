@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth-First Search (BFS)** - Core algorithm for finding shortest distances in unweighted graphs/grids
+- **Multi-source BFS** - Extending BFS to start from multiple source nodes simultaneously
+- **2D Grid Traversal** - Navigating a matrix using 4-directional movement
+- **Dynamic Programming** - Alternative approach using two-pass distance propagation
+
+---
+
 ## 1. Brute Force (BFS)
 
 ### Intuition

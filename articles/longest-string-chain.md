@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches are used to build optimal chains
+- **Hash Map** - Storing words for O(1) lookup when checking if predecessors exist
+- **Sorting** - Words must be sorted by length to ensure proper processing order in DP
+- **String Manipulation** - Generating predecessors by removing one character at each position
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

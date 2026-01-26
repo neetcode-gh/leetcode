@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST) properties** - Understanding that inorder traversal yields sorted values and how to search in O(log n) time
+- **Tree traversal (DFS)** - Recursively visiting all nodes to collect values or search for complements
+- **Hash Sets** - Storing values for O(1) lookup when checking if a complement exists
+- **Two Pointers technique** - Using pointers on sorted lists to efficiently find pairs that sum to a target
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

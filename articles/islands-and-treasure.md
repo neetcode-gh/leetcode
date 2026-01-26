@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array (Grid) Traversal** - Iterating through rows and columns of a matrix
+- **Breadth First Search (BFS)** - Finding shortest paths in unweighted graphs/grids
+- **Multi-Source BFS** - Starting BFS from multiple sources simultaneously for optimal distance calculation
+- **Backtracking** - Exploring all paths with state restoration for brute force solutions
+
+---
+
 ## 1. Brute Force (Backtracking)
 
 ### Intuition

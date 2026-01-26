@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap / Priority Queue** - A max-heap efficiently maintains the k smallest quality values while allowing removal of the largest
+- **Sorting** - Workers must be sorted by wage-to-quality ratio to process candidates in increasing rate order
+- **Greedy Algorithms** - The optimal solution greedily selects workers with the smallest qualities for a fixed rate
+
+---
+
 ## 1. Greedy + Max-Heap
 
 ### Intuition

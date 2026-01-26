@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Using left and right pointers to swap elements in place
+- **In-place Array Manipulation** - Modifying arrays without using extra space
+- **String Reversal** - Reversing a sequence of characters using two pointers
+
+---
+
 ## 1. Reverse the Whole String and Then Reverse Each Word
 
 ### Intuition

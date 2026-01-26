@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking problems into smaller subproblems with base cases
+- **Dynamic Programming** - Using memoization or tabulation to avoid redundant calculations
+- **Array Traversal** - Iterating through arrays and checking element relationships
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Understanding how to sort strings lexicographically to enable efficient prefix matching
+- **Binary Search** - Using binary search to find the first element matching a prefix in a sorted array
+- **String Manipulation** - Working with prefixes and comparing strings character by character
+- **Two Pointers** - Maintaining a window of valid candidates that shrinks as the prefix grows
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Integer Arithmetic** - Using modulo (%) to extract digits and integer division (/) to remove digits
+- **Overflow Detection** - Understanding 32-bit signed integer bounds and checking for overflow before it occurs
+- **Handling Negative Numbers** - Knowing how modulo and division behave differently for negative values across languages
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

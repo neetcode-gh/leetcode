@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Top-down recursion with caching to avoid redundant calculations
+- **Dynamic Programming (Tabulation)** - Bottom-up iterative approach for building solutions
+- **Probability Basics** - Understanding how probabilities combine and average
+- **Sliding Window Technique** - Optimizing sum calculations over a moving range of values
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

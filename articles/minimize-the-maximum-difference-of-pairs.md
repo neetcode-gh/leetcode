@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Optimal pairs are adjacent elements in sorted order, making sorting essential for the greedy approach
+- **Dynamic Programming (Memoization)** - The take/skip decision pattern with overlapping subproblems requires DP for efficient solutions
+- **Binary Search** - The optimal solution uses binary search on the answer space to find the minimum valid threshold
+- **Greedy Algorithms** - Understanding when greedy choices (pairing adjacent elements) lead to optimal solutions
+
+---
+
 ## 1. Greedy + Dynamic Programming (Top-Down)
 
 ### Intuition

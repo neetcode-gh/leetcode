@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Comparing characters and understanding prefix matching operations
+- **Trie (Prefix Tree)** - A tree-based data structure for efficient prefix storage and lookup
+- **Array/List Traversal** - Iterating through collections of strings
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

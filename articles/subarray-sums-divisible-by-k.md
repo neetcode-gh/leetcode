@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - The solution uses prefix sums to efficiently compute subarray sums
+- **Modular Arithmetic** - Understanding how remainders work, especially that two numbers with the same remainder mod k have a difference divisible by k
+- **Hash Maps** - Used to count occurrences of each remainder for efficient lookup
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

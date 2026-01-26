@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation Basics** - Understanding bitwise operators (AND, OR, XOR, NOT) and how they work at the binary level
+- **Two's Complement Representation** - How negative numbers are represented in binary using 32-bit signed integers
+- **Binary Addition** - Understanding how carry propagation works when adding binary numbers bit by bit
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

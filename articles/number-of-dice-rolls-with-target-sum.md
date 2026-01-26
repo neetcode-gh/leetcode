@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking the problem into smaller subproblems by considering each die roll
+- **Dynamic Programming** - Using memoization or tabulation to avoid redundant calculations
+- **Modular arithmetic** - Applying modulo operations to prevent integer overflow
+- **State representation** - Defining DP states based on number of dice and remaining target sum
+
+---
+
 ## 1. Recursion
 
 ### Intuition

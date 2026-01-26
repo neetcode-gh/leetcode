@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that in a BST, all nodes in the right subtree are greater than the current node
+- **Tree Traversal (In-Order)** - Visiting nodes in sorted order (left, node, right) and reverse in-order (right, node, left) for descending order
+- **Depth First Search (DFS)** - Recursively traversing tree structures to process each node
+- **Stack (for Iterative DFS)** - Converting recursive tree traversal to an iterative approach using an explicit stack
+
+---
+
 ## 1. Depth First Search (Two Pass)
 
 ### Intuition

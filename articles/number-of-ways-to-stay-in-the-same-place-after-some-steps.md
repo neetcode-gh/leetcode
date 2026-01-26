@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Using memoization (top-down) or tabulation (bottom-up) to solve problems with overlapping subproblems
+- **Recursion** - Breaking down problems into smaller cases and identifying base cases
+- **State Space Optimization** - Recognizing when to bound the search space (e.g., you cannot move further than `steps` positions)
+- **Modular Arithmetic** - Working with results modulo 10^9 + 7 to handle large numbers
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

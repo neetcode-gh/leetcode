@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how recursive functions call themselves with smaller subproblems
+- **Dynamic Programming Basics** - Recognizing overlapping subproblems and optimal substructure
+- **Memoization** - Caching computed results to avoid redundant calculations in recursive solutions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

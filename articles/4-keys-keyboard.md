@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (1D)** - Building up solutions using a DP array where each state depends on previous states
+- **Optimization Problems** - Understanding how to maximize a value by choosing between different actions at each step
+- **State Transition Analysis** - Reasoning about which previous states can lead to the current state
+
+---
+
 ## 1. Dynamic Programming
 
 ### Intuition

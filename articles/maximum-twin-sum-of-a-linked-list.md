@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Basics** - Understanding node structure and traversal techniques
+- **Two Pointers** - Using two pointers to traverse from opposite ends of a data structure
+- **Slow/Fast Pointer Technique** - Finding the middle of a linked list using two pointers moving at different speeds
+- **Linked List Reversal** - Reversing a linked list in-place by manipulating node pointers
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

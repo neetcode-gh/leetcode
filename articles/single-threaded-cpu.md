@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Min-Heap (Priority Queue)** - Essential for efficiently selecting the task with minimum processing time among available tasks
+- **Sorting** - Tasks must be processed in order of enqueue time, requiring initial sorting or a heap
+- **Simulation** - Understanding how to model a single-threaded CPU processing tasks over time
+- **Index Tracking** - Preserving original task indices after sorting to return the correct execution order
+
+---
+
 ## 1. Two Min-Heaps
 
 ### Intuition

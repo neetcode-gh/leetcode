@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking / Recursion** - Used to explore all possible ways to split the string and validate sequences
+- **String to Integer Conversion** - Building numbers digit by digit from string characters
+- **Stack-based Iteration** - Alternative to recursion for simulating DFS without the call stack
+- **Pruning Techniques** - Early termination when the current number exceeds the previous value
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

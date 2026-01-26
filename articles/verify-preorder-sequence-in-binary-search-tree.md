@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that left subtree values are less than root and right subtree values are greater
+- **Preorder Traversal** - Knowing the order of visiting nodes (root, left subtree, right subtree)
+- **Monotonic Stack** - Using a stack that maintains increasing or decreasing order to track ancestors
+- **Recursion with Bounds** - Validating BST nodes by passing min/max constraints through recursive calls
+
+---
+
 ## 1. Monotonic Stack
 
 ### Intuition

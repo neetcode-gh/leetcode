@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy algorithms** - Making locally optimal choices (prioritizing high-value bits) to achieve global optimum
+- **Bit manipulation** - Using XOR to flip bits and bit shifting to calculate binary values
+- **Binary number representation** - Understanding positional value where leftmost bits contribute more
+- **2D array traversal** - Iterating through rows and columns of a matrix
+
+---
+
 ## 1. Greedy (Overwriting the Input)
 
 ### Intuition

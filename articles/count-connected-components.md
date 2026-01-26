@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge lists for efficient traversal
+- **Depth First Search (DFS)** - Recursively exploring all reachable nodes from a starting point
+- **Breadth First Search (BFS)** - Level-by-level traversal using a queue to visit connected nodes
+- **Union-Find (Disjoint Set Union)** - Efficiently grouping nodes into sets with union and find operations
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

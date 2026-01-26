@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Used to traverse both strings simultaneously while matching characters
+- **Subsequences** - Understanding what makes one string a subsequence of another
+- **Greedy Algorithms** - Recognizing that matching characters from left to right is optimal
+
+---
+
 ## 1. Two Pointers
 
 ### Intuition

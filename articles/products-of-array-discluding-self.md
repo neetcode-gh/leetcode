@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum/Product** - Understanding how to build cumulative products from left-to-right and right-to-left to avoid recomputation
+- **Array Traversal** - Making multiple passes through an array to build intermediate results efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

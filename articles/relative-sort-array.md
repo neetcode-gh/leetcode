@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting element frequencies and mapping values to their ordering priorities
+- **Sorting** - Understanding built-in sort functions and custom comparators
+- **Counting Sort** - Linear time sorting when the value range is bounded
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

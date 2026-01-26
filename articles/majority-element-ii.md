@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting element frequencies in a single pass for O(n) time solutions
+- **Boyer-Moore Voting Algorithm** - Understanding how candidate elimination works to find majority elements in O(1) space
+- **Mathematical Reasoning** - Recognizing that at most 2 elements can appear more than n/3 times, which constrains the solution space
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - The core approach explores all combinations of strings using recursion with backtracking
+- **Bit Manipulation** - Optimized solutions use bitmasks to represent character sets for O(1) conflict detection
+- **Hash Sets** - Used to track which characters are already used in the current concatenation
+- **Dynamic Programming** - The iterative solution builds up valid character set combinations
+
+---
+
 ## 1. Backtracking (Hash Set)
 
 ### Intuition

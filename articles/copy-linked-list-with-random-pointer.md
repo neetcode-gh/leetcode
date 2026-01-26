@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structures with next pointers and traversal techniques
+- **Hash Maps** - Using dictionaries to map original nodes to their copies for O(1) lookup
+- **Recursion** - Building deep copies by recursively processing next and random pointers
+- **Pointer Manipulation** - Modifying node pointers to interleave or rearrange list structure
+
+---
+
 ## 1. Recursion + Hash Map
 
 ### Intuition

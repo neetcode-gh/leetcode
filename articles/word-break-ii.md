@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Core technique for exploring all possible word segmentations by trying each valid prefix and recursing on the remainder
+- **Dynamic Programming (Memoization)** - Caching results for each starting index avoids recomputing the same suffix segmentations
+- **Trie Data Structure** - Optional optimization for efficient prefix matching when the dictionary has many words with common prefixes
+- **Hash Sets** - Converting the word dictionary to a set enables O(1) word lookup instead of O(m) list search
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Depth-First Search (DFS)** - The solution explores paths in a grid using recursive DFS with 4-directional movement
+- **Dynamic Programming with Memoization** - Caching results for each cell to avoid redundant path computations
+- **Topological Sort (Kahn's Algorithm)** - An alternative BFS approach using indegrees to process cells in dependency order
+- **Graph Concepts (DAG)** - Understanding that strictly increasing values create a directed acyclic graph structure
+
+---
+
 ## 1. Recursion
 
 ### Intuition

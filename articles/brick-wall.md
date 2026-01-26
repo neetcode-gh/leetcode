@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Using hash maps to count frequencies and find the most common element efficiently
+- **Prefix Sum** - Computing cumulative sums to track edge positions between bricks
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

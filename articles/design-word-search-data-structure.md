@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Trie (Prefix Tree)** - A tree-like data structure used for efficient storage and retrieval of strings
+- **Depth-First Search (DFS)** - Used to traverse the Trie when encountering wildcard characters
+- **Recursion** - The DFS approach uses recursive calls to explore all possible character matches for wildcards
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

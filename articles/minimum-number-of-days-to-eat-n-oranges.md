@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Caching recursive results to avoid redundant computation
+- **Recursion** - Breaking down problems into smaller subproblems with base cases
+- **BFS (Breadth-First Search)** - Finding shortest paths in unweighted graphs by exploring level by level
+- **Greedy Algorithms** - Making locally optimal choices to reach a global optimum
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

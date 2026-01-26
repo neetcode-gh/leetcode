@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting element frequencies efficiently in O(1) per operation
+- **Hash Sets** - Tracking elements with odd occurrences using add/remove toggle logic
+- **Sorting** - Grouping identical elements together for run-length analysis
+
+---
+
 ## 1. Sorting
 
 ### Intuition

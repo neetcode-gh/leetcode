@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding pre-order, in-order, and post-order traversal patterns
+- **Binary Search Tree (BST) Validation** - Knowing the BST property and how to verify if a tree is a valid BST
+- **Recursion with Return Values** - Returning multiple pieces of information (min, max, size) from recursive calls
+- **Post-Order Traversal** - Processing children before the parent to aggregate information bottom-up
+
+---
+
 ## 1. Pre-Order Traversal
 
 ### Intuition

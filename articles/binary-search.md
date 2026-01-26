@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how arrays are indexed and accessed
+- **Sorted Arrays** - Recognizing properties of sorted data that enable efficient searching
+- **Recursion** - Writing and understanding recursive functions with base cases
+- **Time Complexity** - Understanding O(log n) vs O(n) and why halving the search space is efficient
+
+---
+
 ## 1. Recursive Binary Search
 
 ### Intuition

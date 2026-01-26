@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Using memoization or tabulation to solve optimization problems with overlapping subproblems
+- **2D/3D Arrays** - Working with multi-dimensional data structures for state representation
+- **Recursion with Multiple Variables** - Tracking multiple entities (two robots) simultaneously through recursive state exploration
+
+---
+
 ## 1. Recursion
 
 ### Intuition

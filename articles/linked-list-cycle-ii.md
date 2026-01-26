@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Traversing nodes and understanding pointer references
+- **Hash Sets** - O(1) lookup to track visited nodes
+- **Floyd's Cycle Detection Algorithm** - Understanding how fast/slow pointers detect cycles
+- **Cycle Start Detection Math** - The mathematical proof for why resetting one pointer to head finds the cycle start
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

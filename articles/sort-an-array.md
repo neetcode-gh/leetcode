@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion and Divide & Conquer** - Most efficient sorting algorithms (Quick Sort, Merge Sort) recursively divide the problem into subproblems
+- **Arrays and In-Place Manipulation** - Understanding how to swap elements and modify arrays without extra space
+- **Binary Heap Data Structure** - Required for understanding Heap Sort and the heapify operation
+- **Hash Maps** - Used in Counting Sort to track frequency of elements
+
+---
+
 ## 1. Quick Sort
 
 ### Intuition

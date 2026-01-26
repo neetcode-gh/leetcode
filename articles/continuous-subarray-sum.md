@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Used for O(1) lookups to store and retrieve the first occurrence of each remainder value
+- **Prefix Sum** - Computing cumulative sums to efficiently determine subarray sums
+- **Modular Arithmetic** - Understanding how remainders work and that equal remainders at two indices indicate a sum divisible by k
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

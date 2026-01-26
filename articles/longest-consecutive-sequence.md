@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - O(1) average lookup time and membership testing for efficient sequence detection
+- **Hash Maps** - Storing and updating sequence boundary lengths for the union-find-like approach
+- **Sorting** - Understanding how sorting groups consecutive numbers together
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

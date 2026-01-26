@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation** - Understanding binary representation, XOR, AND, and bit shifting operations
+- **Recursion** - The base approach recursively processes each set bit from highest to lowest
+- **Gray Codes** - The elegant solution relies on understanding Gray code sequences where consecutive numbers differ by one bit
+
+---
+
 ## 1. Math (Recursion)
 
 ### Intuition

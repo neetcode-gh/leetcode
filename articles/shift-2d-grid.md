@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays / Matrices** - Traversing and manipulating elements using row and column indices
+- **Array Rotation** - Understanding how elements shift positions in a circular manner
+- **Index Mapping** - Converting between 2D coordinates (row, column) and 1D linear indices
+- **Modular Arithmetic** - Using modulo to handle wrap-around when positions exceed array bounds
+
+---
+
 ## 1. Simulation (Extra Space)
 
 ### Intuition

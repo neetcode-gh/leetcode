@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - This problem requires 2D DP with either memoization (top-down) or tabulation (bottom-up) to build optimal substructure
+- **Longest Common Subsequence (LCS)** - The SCS length equals len(str1) + len(str2) - LCS_length, so understanding LCS helps grasp the relationship
+- **String Reconstruction from DP Tables** - After computing DP values, you need to trace back through the table to construct the actual result string
+- **Recursion with Memoization** - The top-down approach uses recursive calls with caching to avoid redundant computations
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

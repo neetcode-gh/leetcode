@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Understanding how to build solutions from subproblems, similar to House Robber pattern
+- **Hash Maps** - Grouping and summing values by key to precompute totals for each unique number
+- **Sorting** - Ordering elements to process consecutive values together
+
+---
+
 ## 1. Recursion
 
 ### Intuition

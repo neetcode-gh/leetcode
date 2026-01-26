@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree/Graph Data Structures** - Understanding how to represent hierarchical relationships using adjacency lists
+- **Depth First Search (DFS)** - Recursively traversing tree structures and tracking accumulated values along paths
+- **Breadth First Search (BFS)** - Level-by-level traversal using queues to process nodes
+- **Topological Sort** - Processing nodes in dependency order, particularly Kahn's algorithm using indegrees
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

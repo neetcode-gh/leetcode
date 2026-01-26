@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (2D)** - Managing DP states with two dimensions (house index and color)
+- **Memoization** - Caching results for (house, color) pairs to avoid recomputation
+- **Minimum/Second-Minimum Tracking** - Optimizing from O(k^2) to O(k) by tracking the two smallest values
+- **Space Optimization** - Reducing from O(n*k) to O(k) or O(1) space by only keeping necessary previous row data
+
+---
+
 ## 1. Memoization
 
 ### Intuition

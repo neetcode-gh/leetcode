@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Using binary search to find a target value or boundary in a sorted space
+- **Two Pointers Technique** - Efficiently traversing sorted arrays from both ends to count elements meeting certain conditions
+- **Sorted Array Properties** - Leveraging the sorted nature of arrays to optimize counting and searching operations
+- **Handling Negative Numbers** - Understanding how multiplication sign rules affect product ordering
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

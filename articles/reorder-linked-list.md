@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding singly linked list structure and pointer manipulation
+- **Fast and Slow Pointers** - Using two pointers moving at different speeds to find the middle of a list
+- **Linked List Reversal** - Reversing a linked list in-place using iterative pointer swapping
+- **Merging Linked Lists** - Interleaving nodes from two separate lists into one
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

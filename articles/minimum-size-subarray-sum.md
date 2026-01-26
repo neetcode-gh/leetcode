@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Dynamically adjusting a window of elements by moving left and right pointers to find optimal subarrays
+- **Prefix Sum Arrays** - Precomputing cumulative sums to enable O(1) range sum queries
+- **Binary Search** - Efficiently finding target values or boundaries in sorted data in O(log n) time
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding array indexing and how to create arrays of a specific size
+- **Basic Iteration** - Using loops to traverse and populate arrays
+
+---
+
 ## 1. Iteration (Two Pass)
 
 ### Intuition

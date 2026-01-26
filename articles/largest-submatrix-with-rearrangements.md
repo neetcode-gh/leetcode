@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Matrix Traversal** - Understanding how to iterate through rows and columns of a matrix
+- **Greedy Algorithms** - Making locally optimal choices to find a global optimum
+- **Sorting** - Sorting arrays and understanding how sorted order enables efficient computations
+- **Histogram/Height Arrays** - Building cumulative heights column-wise (similar to "Largest Rectangle in Histogram")
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

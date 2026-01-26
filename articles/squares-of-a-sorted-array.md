@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Used to compare elements from both ends of the sorted array simultaneously
+- **Sorting Algorithms** - Understanding time complexity trade-offs between sorting vs. linear approaches
+- **Absolute Values** - Recognizing that negative numbers become positive when squared, affecting order
+
+---
+
 ## 1. Sorting
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding preorder, inorder, and postorder traversal patterns
+- **Postorder Traversal** - Processing children before parents, which is essential for bottom-up tree modifications
+- **Recursion** - Writing recursive functions that return modified subtrees to their parent
+
+---
+
 ## 1. Recursion (Postorder Traversal)
 
 ### Intuition

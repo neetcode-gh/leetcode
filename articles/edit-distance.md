@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - This classic DP problem requires understanding both top-down (memoization) and bottom-up (tabulation) approaches
+- **Recursion with Memoization** - The top-down solution builds on recursive thinking with caching to avoid redundant computation
+- **2D DP Tables** - The bottom-up solution uses a 2D table where dp[i][j] represents the edit distance for substrings
+- **Space Optimization** - Advanced solutions reduce space from O(m*n) to O(min(m,n)) by observing that only adjacent rows are needed
+
+---
+
 ## 1. Recursion
 
 ### Intuition

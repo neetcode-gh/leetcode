@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Data Structure** - Understanding parent-child relationships and traversing trees represented as edge lists
+- **Depth First Search (DFS) on Trees** - Recursively exploring tree nodes while tracking the parent to avoid revisiting
+- **Topological Sort (Kahn's Algorithm)** - Processing nodes from leaves to root using indegree tracking and a queue
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

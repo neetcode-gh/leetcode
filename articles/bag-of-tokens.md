@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - The greedy approach requires sorting tokens to access smallest and largest values efficiently
+- **Two Pointers** - Used to track the smallest (left) and largest (right) tokens simultaneously
+- **Greedy Algorithms** - Understanding when local optimal choices lead to global optimal solutions
+
+---
+
 ## 1. Greedy + Two Pointers
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Top-down DP with caching avoids recomputing overlapping subproblems
+- **Dynamic Programming (Tabulation)** - Bottom-up DP iteratively builds solutions from smaller subproblems
+- **Partitioning Problems** - The problem requires optimally partitioning jobs across days
+- **Monotonic Stack** - The optimized O(n*d) solution uses a decreasing stack to efficiently track maximum values
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Basic array traversal and accessing elements by index
+- **Sorting** - Understanding how sorting works and its time complexity
+- **Greedy Algorithms** - Making locally optimal choices to find a global optimum
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

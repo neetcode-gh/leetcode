@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how recursive function calls work and how to define base cases
+- **Backtracking** - The pattern of exploring choices, making a decision, recursing, and then undoing the decision
+- **Arrays/Lists** - Working with dynamic lists and understanding how to add/remove elements
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

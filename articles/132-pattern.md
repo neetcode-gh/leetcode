@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Monotonic Stacks** - The optimal solution uses a decreasing monotonic stack to efficiently track potential pattern candidates
+- **Array Traversal Patterns** - Understanding both left-to-right and right-to-left traversal strategies
+- **Tracking Running Minimum/Maximum** - Maintaining the minimum value seen so far while iterating through an array
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Understanding LIFO operations (push, pop, peek) and when to use stacks
+- **Monotonic Stack** - A stack that maintains elements in strictly increasing or decreasing order for efficient range queries
+- **Amortized Analysis** - Understanding why each element is pushed and popped at most once across all operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

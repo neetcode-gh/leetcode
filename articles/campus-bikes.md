@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting with Custom Comparators** - Sorting objects by multiple criteria with tie-breaking rules
+- **Manhattan Distance** - Calculating distance as |x1-x2| + |y1-y2| on a 2D grid
+- **Greedy Algorithms** - Assigning resources optimally based on priority ordering
+- **Bucket Sort** - Using value ranges to group and process data without comparison sorting
+- **Priority Queue / Heap** - Efficiently retrieving minimum or maximum elements
+
+---
+
 ## 1. Sorting
 
 ### Intuition

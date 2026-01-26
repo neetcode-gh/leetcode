@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Understanding how to iterate through arrays and compute cumulative values
+- **Prefix Sums** - The optimized solution uses prefix sums to efficiently calculate contributions from left and right
+- **Two-Pass Technique** - The optimal approach processes the array in two passes (left-to-right and right-to-left)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

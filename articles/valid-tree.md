@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building and working with adjacency lists for undirected graphs
+- **Depth-First Search (DFS)** - Traversing graphs recursively while tracking visited nodes
+- **Breadth-First Search (BFS)** - Level-by-level graph traversal using a queue
+- **Union-Find (Disjoint Set Union)** - Efficiently tracking connected components and detecting cycles
+
+---
+
 ## 1. Cycle Detection (DFS)
 
 ### Intuition

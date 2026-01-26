@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap / Priority Queue** - The optimal solution uses two heaps (max-heap and min-heap) to efficiently track the median as elements stream in
+- **Sorting** - Understanding how sorting enables finding the median helps grasp the brute force approach and why heaps improve upon it
+- **Data Stream Design** - This problem requires designing a class that handles continuous data input while maintaining efficient query operations
+
+---
+
 ## 1. Sorting
 
 ### Intuition

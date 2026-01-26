@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to efficiently track and count elements with the same transformed value
+- **Algebraic Manipulation** - Rearranging the bad pair condition to group elements efficiently
+- **Counting Pairs** - Understanding how to count total pairs and use complementary counting (total pairs minus good pairs)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

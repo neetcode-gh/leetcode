@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion / DFS** - Traversing nested structures of arbitrary depth
+- **Stacks** - Simulating recursion iteratively and managing traversal state
+- **Iterator Pattern** - Implementing next() and hasNext() methods for lazy evaluation
+
+---
+
 ## 1. Recursion (Flatten And Store Into Global List)
 
 ### Intuition

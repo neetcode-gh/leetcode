@@ -1,7 +1,15 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Understanding adjacency lists and how nodes connect to neighbors
+- **DFS/BFS Traversal** - Traversing all nodes in a graph using depth-first or breadth-first search
+- **Hash Maps** - Using a map to track visited nodes and prevent infinite loops in cyclic graphs
+
+---
+
 ## 1. Depth First Seacrh
 
 ### Intuition
-The graph may contain **cycles**, so we cannot simply copy nodes recursively without remembering what we’ve already copied.  
+The graph may contain **cycles**, so we cannot simply copy nodes recursively without remembering what we've already copied.  
 To handle this, we use a **map (old → new)**:
 
 - When we first see a node, we create its copy.

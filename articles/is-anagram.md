@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries or hash tables to count character frequencies
+- **Sorting** - Sorting strings or arrays to compare elements in a consistent order
+- **Arrays** - Using fixed-size arrays as an efficient alternative to hash maps for limited character sets
+
+---
+
 ## 1. Sorting
 
 ### Intuition

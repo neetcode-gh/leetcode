@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (1D)** - The core approach involves building optimal subsequences by tracking states for each character position
+- **Recursion with Memoization** - Understanding how to convert brute-force recursion into efficient top-down DP
+- **ASCII Character Manipulation** - Working with character codes to calculate alphabetical distances between letters
+
+---
+
 ## 1. Recursion
 
 ### Intuition

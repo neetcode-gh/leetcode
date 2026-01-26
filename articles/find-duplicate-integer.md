@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Manipulation** - Working with array indices and understanding value-to-index mappings
+- **Hash Sets** - Using sets for O(1) lookup to detect duplicates
+- **Floyd's Cycle Detection** - The fast and slow pointer technique for detecting cycles in linked list-like structures
+- **Binary Search on Value Range** - Applying binary search to count-based problems rather than sorted arrays
+
+---
+
 ## 1. Sorting
 
 ### Intuition

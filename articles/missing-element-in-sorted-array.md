@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal solution uses binary search to find the position containing the k-th missing number in logarithmic time
+- **Sorted Array Properties** - Understanding how to calculate missing elements between consecutive values in a sorted sequence
+
+---
+
 ## 1. Iteration
 
 ### Intuition

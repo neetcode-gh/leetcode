@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding how to navigate through tree nodes using parent-child relationships
+- **Depth First Search (DFS)** - Recursively exploring paths from root to leaves while maintaining state
+- **Path Tracking** - Accumulating values along a tree path and recognizing leaf nodes (nodes with no children)
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

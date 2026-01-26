@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Matrix Traversal** - Iterating through rows and columns of a grid using nested loops
+- **Counting with Arrays** - Using auxiliary arrays to track counts per row and column
+- **In-place Marking** - Modifying grid values to mark visited or processed cells (for space-optimized solution)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

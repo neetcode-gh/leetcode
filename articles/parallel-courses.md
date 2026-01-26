@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency List)** - Required to model course dependencies as a directed graph
+- **Topological Sort (Kahn's Algorithm)** - Primary technique using BFS to process nodes level by level
+- **In-degree Tracking** - Understanding how to count and update incoming edges for each node
+- **Cycle Detection in Directed Graphs** - Needed to identify impossible course schedules
+- **Depth-First Search (DFS)** - Alternative approach for both cycle detection and longest path computation
+
+---
+
 ## 1. Breadth-First Search (Kahn's Algorithm)
 
 ### Intuition

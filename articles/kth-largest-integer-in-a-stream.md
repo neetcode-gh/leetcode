@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap Data Structure** - Understanding min-heaps and how they maintain the smallest element at the root
+- **Priority Queues** - Using built-in heap implementations for efficient insertion and extraction
+- **Sorting Algorithms** - Understanding basic sorting as a baseline approach
+
+---
+
 ## 1. Sorting
 
 ### Intuition

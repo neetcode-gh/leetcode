@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Understanding LIFO (Last-In-First-Out) operations for push and pop
+- **Hash Maps** - Using dictionaries to map closing brackets to their corresponding opening brackets
+- **String Traversal** - Iterating through characters in a string one by one
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

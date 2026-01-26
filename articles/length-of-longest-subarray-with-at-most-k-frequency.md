@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Maintaining a dynamic window with two pointers that expands and contracts based on constraints
+- **Hash Maps** - Tracking element frequencies within the current window efficiently
+- **Frequency Counting** - Incrementing and decrementing counts as elements enter and leave the window
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

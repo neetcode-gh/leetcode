@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Used to store character-to-index mappings for O(1) position lookups
+- **Array Indexing** - Understanding how to precompute and access positions efficiently
+- **Absolute Value** - Distance calculations require taking the absolute difference between positions
+
+---
+
 ## 1. Storing indexes for all letters
 
 ### Intuition

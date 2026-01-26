@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Iterating through and comparing elements in 2D arrays
+- **Greedy Algorithms** - Making locally optimal choices to build a global solution
+- **Sets / Hash Sets** - Tracking unique values to verify coverage of required conditions
+
+---
+
 ## 1. Greedy
 
 ### Intuition

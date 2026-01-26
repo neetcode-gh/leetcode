@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation** - Understanding binary representation, bitwise AND, and how powers of two appear in binary
+- **Logarithms** - Using logarithms to determine exponents and checking for integer results
+- **Power of Two Detection** - The trick that n & (n-1) == 0 identifies powers of two
+
+---
+
 ## 1. Recursion
 
 ### Intuition

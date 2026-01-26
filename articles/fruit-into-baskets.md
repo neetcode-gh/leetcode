@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - Maintaining a dynamic window that expands and contracts based on constraints
+- **Hash Map/Dictionary** - Tracking counts of elements within the current window
+- **Two Pointers** - Managing left and right boundaries of a subarray
+- **Window Invariant** - Understanding how to restore validity when constraints are violated
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

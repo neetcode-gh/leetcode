@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Used to count ways to form the target by choosing characters from word columns
+- **Memoization** - Caching results for (target index, column index) pairs to avoid recomputation
+- **Character Frequency Preprocessing** - Precomputing character counts at each column position optimizes the solution
+- **Modular Arithmetic** - Required for handling large results modulo 10^9+7
+
+---
+
 ## 1. Recursion
 
 ### Intuition

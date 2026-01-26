@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - The key insight is that picking k cards from ends leaves a contiguous window of n-k cards
+- **Prefix and Suffix Sums** - Used to compute sums of left and right segments in constant time
+- **Two Pointers** - The optimal solution slides a virtual window that wraps around the array ends
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

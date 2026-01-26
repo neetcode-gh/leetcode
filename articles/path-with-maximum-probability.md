@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists to represent weighted undirected graphs
+- **Dijkstra's Algorithm** - Finding optimal paths using a priority queue (max-heap for this problem)
+- **Priority Queue / Heap** - Efficiently extracting the maximum or minimum element
+- **Bellman-Ford Algorithm** - Relaxing edges iteratively to find optimal paths
+
+---
+
 ## 1. Dijkstra's Algorithm - I
 
 ### Intuition

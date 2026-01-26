@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Understanding memoization and tabulation techniques for optimization
+- **Longest Common Subsequence (LCS)** - Recognizing this classic DP pattern since uncrossed lines is equivalent to LCS
+- **Recursion** - Writing recursive functions with base cases and recursive transitions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

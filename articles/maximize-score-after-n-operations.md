@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **GCD (Greatest Common Divisor)** - Computing GCD using Euclidean algorithm and understanding its properties
+- **Backtracking** - Exploring all possible pairings through recursive enumeration with state restoration
+- **Bitmask Dynamic Programming** - Using bitmasks to represent subsets of elements and memoizing states efficiently
+
+---
+
 ## 1. Brute Force (Backtracking)
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possibilities by making choices, recursing, and undoing choices
+- **Factorization** - Finding divisors of a number and understanding factor pairs
+- **Recursion** - Building solutions incrementally through recursive calls
+- **Avoiding Duplicates** - Maintaining sorted order in combinations to prevent duplicate results
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

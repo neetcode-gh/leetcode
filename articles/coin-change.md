@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Exploring all possible coin choices by reducing the problem to smaller subproblems
+- **Dynamic Programming (Memoization)** - Storing results of overlapping subproblems to optimize recursive solutions
+- **Dynamic Programming (Tabulation)** - Building the minimum coins array from smaller amounts to larger
+- **Breadth-First Search (BFS)** - Treating amounts as graph nodes to find the shortest path (minimum coins)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down nested structures by calling a function within itself to handle inner patterns
+- **Stack Data Structure** - Using a stack to simulate recursion iteratively and manage nested bracket levels
+- **String Manipulation** - Building and repeating substrings based on parsed numeric multipliers
+
+---
+
 ## 1. Recursion
 
 ### Intuition

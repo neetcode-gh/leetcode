@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth-First Search (BFS)** - Finding the shortest path in an unweighted graph using level-order traversal
+- **Graph Representation** - Building adjacency lists and understanding implicit graphs where nodes are words
+- **Hash Maps and Hash Sets** - For O(1) word lookups and tracking visited nodes
+- **String Manipulation** - Generating neighbor words by changing one character at a time
+- **Queue Data Structure** - Essential for implementing BFS traversal
+
+---
+
 ## 1. Breadth First Search - I
 
 ### Intuition

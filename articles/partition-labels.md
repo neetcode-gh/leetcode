@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to store and quickly lookup the last occurrence index of each character
+- **Greedy Algorithms** - The solution makes locally optimal choices (extending partition to farthest last occurrence) to achieve the global optimum
+- **Two Pointers / Sliding Window** - Tracking the current position and the end boundary of each partition
+
+---
+
 ## 1. Two Pointers (Greedy)
 
 ### Intuition

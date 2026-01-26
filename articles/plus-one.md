@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Indexing** - Accessing and modifying elements by index, especially iterating from the end of an array
+- **Recursion Basics** - Breaking problems into smaller subproblems and handling base cases
+- **Carry Propagation** - Understanding how arithmetic addition handles overflow when a digit exceeds 9
+
+---
+
 ## 1. Recursion
 
 ### Intuition

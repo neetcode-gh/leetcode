@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Basics** - Understanding tree structure, nodes, and parent-child relationships
+- **Depth-First Search (DFS)** - Recursive and iterative traversal techniques
+- **Tree Height Calculation** - Computing the height of a subtree recursively
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

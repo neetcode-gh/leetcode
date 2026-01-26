@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Traversal** - Iterating through nodes and manipulating pointers
+- **Merge Sort Algorithm** - Understanding divide-and-conquer sorting with O(n log n) complexity
+- **Two Pointers (Slow/Fast)** - Finding the middle of a linked list using the tortoise and hare technique
+- **Merging Two Sorted Lists** - Combining two sorted sequences into one sorted sequence
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

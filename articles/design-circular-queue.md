@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Fixed-size data structures with index-based access
+- **Modulo Arithmetic** - Using the % operator for circular/wrap-around behavior
+- **Linked Lists** - Singly and doubly linked structures for dynamic memory allocation
+- **Queue Operations** - Understanding enqueue, dequeue, front, and rear operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

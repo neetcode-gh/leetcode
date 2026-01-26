@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for optimization problems
+- **Hash Sets** - Efficient O(1) lookup for dictionary word matching
+- **String Manipulation** - Substring extraction and comparison
+- **Trie Data Structure** - Prefix tree for efficient word matching (used in optimized solutions)
+- **Recursion with Memoization** - Avoiding redundant computation in recursive solutions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

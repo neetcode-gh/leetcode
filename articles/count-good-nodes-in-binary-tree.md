@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structures with left and right children
+- **Depth First Search (DFS)** - Traversing trees recursively while passing state (max value) down each path
+- **Breadth First Search (BFS)** - Level-order traversal using a queue with associated path information
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

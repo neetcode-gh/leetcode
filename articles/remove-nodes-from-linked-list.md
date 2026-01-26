@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding singly linked list structure, traversal, and pointer manipulation
+- **Monotonic Stack** - Using a stack that maintains elements in strictly increasing or decreasing order
+- **Linked List Reversal** - Reversing a linked list in-place using iterative pointer swapping
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

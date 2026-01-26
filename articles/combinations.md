@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break problems into smaller subproblems with base cases
+- **Backtracking** - Making choices (include/exclude), exploring paths, and undoing choices
+- **Bit Manipulation** - Using bitmasks to represent subsets (for the bit manipulation approach)
+- **Combinatorics Basics** - Understanding what combinations are and how they differ from permutations
+
+---
+
 ## 1. Backtracking - I
 
 ### Intuition

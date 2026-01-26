@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding how nodes connect via left and right children
+- **Depth-First Search (DFS)** - Traversing trees recursively and returning computed values from subtrees
+- **Multi-State Return Values** - Tracking multiple pieces of information (increasing/decreasing lengths) at each node
+- **Path Combination Logic** - Merging paths from left and right subtrees through a common node
+
+---
+
 ## 1. Brute Force (Time Limit Exceeded)
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy Algorithms** - Recognizing when local decisions can determine global validity
+- **Array Traversal** - Iterating through arrays while maintaining running totals
+- **Two Pointers** - Using pointers from opposite ends to efficiently narrow down candidates
+- **Circular Array Handling** - Working with wrap-around indices using modular arithmetic
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

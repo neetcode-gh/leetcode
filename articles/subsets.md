@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Used to explore the decision tree where each element is either included or excluded
+- **Backtracking** - Needed to undo choices (remove elements) after exploring one branch of the decision tree
+- **Bit Manipulation** - Alternative approach uses bitmasks to represent subset membership
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

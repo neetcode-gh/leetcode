@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion with Memoization** - Avoiding redundant calculations by caching subproblem results
+- **Dynamic Programming** - Building solutions bottom-up from smaller subproblems
+- **Space Optimization** - Reducing DP space complexity by using rolling arrays
+
+---
+
 ## 1. Recursion
 
 ### Intuition

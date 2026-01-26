@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Traversal (DFS/BFS)** - Exploring connected components in a 2D grid using depth-first or breadth-first search
+- **Flood Fill Algorithm** - Marking all connected cells starting from a given position
+- **Union-Find (Disjoint Set Union)** - Alternative approach using DSU to group connected components and check connectivity
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

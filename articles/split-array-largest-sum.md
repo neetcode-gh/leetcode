@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Exploring all possible split points by recursively solving subproblems
+- **Dynamic Programming** - Using memoization or tabulation to cache overlapping subproblems
+- **Binary Search on Answer** - Searching for the minimum feasible value when the check function is monotonic
+- **Greedy Algorithms** - Validating a candidate answer by greedily forming subarrays
+- **Prefix Sums** - Efficiently computing subarray sums for optimized feasibility checks
+
+---
+
 ## 1. Recursion
 
 ### Intuition

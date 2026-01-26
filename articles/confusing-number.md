@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Dictionaries** - Used to map digits to their rotated counterparts for O(1) lookup
+- **String Manipulation** - Converting integers to strings and reversing strings
+- **Modular Arithmetic** - Extracting digits using modulo and integer division operations
+
+---
+
 ## 1. Invert and Reverse
 
 ### Intuition

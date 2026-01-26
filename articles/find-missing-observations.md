@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Basic Math (Mean and Sum)** - The solution requires calculating target sums from the given mean and distributing values across dice
+- **Greedy Distribution** - Assigning values to dice while respecting constraints (1-6 per die) uses greedy thinking to maximize or evenly distribute values
+- **Boundary Validation** - Checking whether a valid solution exists requires understanding the min/max possible sums for n dice
+
+---
+
 ## 1. Math - I
 
 ### Intuition

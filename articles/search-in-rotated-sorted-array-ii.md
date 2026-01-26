@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The divide-and-conquer search algorithm that eliminates half the search space at each step
+- **Rotated Sorted Arrays** - Understanding how rotation affects a sorted array and identifying which half remains sorted
+- **Handling Duplicates** - Recognizing when duplicates prevent determining the sorted half and falling back to linear elimination
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

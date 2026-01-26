@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Hash Sets** - Counting character frequencies or tracking characters with odd counts
+- **Palindrome Properties** - Understanding that palindromes require character pairs (even counts) with at most one odd-count character in the middle
+- **Bit Manipulation (Optional)** - Using bitmasks to track odd/even character counts for a space-optimized solution
+
+---
+
 ## 1. Hash Map
 
 ### Intuition

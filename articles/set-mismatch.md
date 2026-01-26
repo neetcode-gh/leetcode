@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Iterating through and manipulating array elements
+- **Hash Maps / Frequency Counting** - Tracking how many times each element appears
+- **Sorting** - Understanding how sorted order reveals duplicates and gaps
+- **Math (Sum Formulas)** - Using arithmetic sum formulas to detect missing or duplicate values
+- **Bit Manipulation (XOR)** - Understanding XOR properties for finding unique elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

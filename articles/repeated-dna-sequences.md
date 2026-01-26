@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - Maintaining a fixed-size window that slides across the string to extract substrings
+- **Hash Set / Hash Map** - Tracking seen sequences and counting occurrences for duplicate detection
+- **String Manipulation** - Extracting substrings efficiently for comparison and storage
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Building solutions from smaller subproblems using recurrence relations
+- **Catalan Numbers** - Recognizing problems that count non-crossing arrangements, which follow the Catalan sequence
+- **Modular Arithmetic** - Applying modulo operations to prevent integer overflow and computing modular inverses for division
+
+---
+
 ## 1. Bottom-Up Dynamic Programming
 
 ### Intuition

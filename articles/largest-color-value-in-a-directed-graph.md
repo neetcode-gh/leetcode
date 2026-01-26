@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge lists for directed graphs
+- **Depth-First Search (DFS)** - Traversing graphs and tracking visited nodes to avoid infinite loops
+- **Cycle Detection** - Identifying cycles in directed graphs using path tracking during DFS
+- **Topological Sort** - Processing nodes in dependency order using Kahn's algorithm (BFS with indegree)
+- **Dynamic Programming on Graphs** - Propagating and aggregating values (color counts) along graph paths
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

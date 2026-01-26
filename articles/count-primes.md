@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prime Number Definition** - Understanding that a prime number has exactly two divisors: 1 and itself
+- **Square Root Optimization** - Knowing that factors come in pairs, so checking up to sqrt(n) is sufficient
+- **Sieve of Eratosthenes** - Understanding this classic algorithm for efficiently finding all primes up to a limit
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

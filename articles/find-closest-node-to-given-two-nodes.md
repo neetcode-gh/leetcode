@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Understanding adjacency lists and how to represent directed graphs from edge arrays
+- **Breadth-First Search (BFS)** - Computing shortest distances in unweighted graphs using queue-based traversal
+- **Depth-First Search (DFS)** - Traversing graph paths iteratively or recursively while tracking visited nodes
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

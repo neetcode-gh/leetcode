@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Traversal (DFS/BFS)** - The ball's movement through the maze is modeled as graph exploration
+- **Dijkstra's Algorithm** - The optimal solution uses Dijkstra's to find the shortest weighted path
+- **Priority Queue / Min-Heap** - Required for efficient implementation of Dijkstra's algorithm
+- **2D Matrix Navigation** - Rolling the ball requires moving in four directions until hitting a wall
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

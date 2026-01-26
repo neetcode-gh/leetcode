@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Iteration** - Traversing rows of a 2D grid and processing each element
+- **String Counting** - Counting occurrences of a specific character in a string
+- **Basic Math (Multiplication)** - Understanding that pairs between two groups form a * b combinations
+
+---
+
 ## 1. Counting
 
 ### Intuition

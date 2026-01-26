@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Used for O(1) lookups to store and retrieve the first occurrence of each running sum value
+- **Prefix Sum / Running Sum** - Tracking cumulative sums to enable efficient subarray sum calculations
+- **Array Transformation** - Converting the problem by treating 0s as -1s to leverage prefix sum properties
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

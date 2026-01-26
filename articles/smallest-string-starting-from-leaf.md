@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding tree structure and how to navigate parent-child relationships
+- **Depth First Search (DFS)** - Recursively exploring all paths from root to leaves
+- **String Manipulation** - Building and comparing strings, particularly prepending characters
+- **Lexicographic Comparison** - Determining which string comes first alphabetically
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

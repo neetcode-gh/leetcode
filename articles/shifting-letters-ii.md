@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays and String Manipulation** - Understanding how to iterate and modify character arrays using ASCII values and modular arithmetic
+- **Prefix Sum / Difference Arrays** - The sweep line technique uses difference arrays to efficiently apply range updates, which is essential for the optimal solution
+- **Modular Arithmetic** - Handling wraparound when shifting characters beyond 'z' or before 'a' requires understanding modulo operations with negative numbers
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

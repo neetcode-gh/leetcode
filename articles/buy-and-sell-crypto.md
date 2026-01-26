@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Iterating through elements and tracking values
+- **Two Pointers** - Using multiple pointers to track buy and sell positions
+- **Greedy Algorithms** - Making locally optimal choices (tracking minimum buy price) for global optimization
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

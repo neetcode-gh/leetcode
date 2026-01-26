@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Basic iteration and manipulation of array elements
+- **Interval Problems** - Understanding how to represent and compare ranges (start, end)
+- **Merging Logic** - Detecting overlap between intervals and combining them into a single interval
+- **Binary Search** (for optimized solution) - Finding insertion points in sorted arrays
+
+---
+
 ## 1. Linear Search
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy Algorithms** - Making optimal local decisions at each step (prioritizing $10 bills for $15 change to preserve flexibility)
+- **Basic Iteration** - Processing elements sequentially while maintaining state
+- **Simple Counting** - Tracking quantities of different bill denominations using variables
+
+---
+
 ## 1. Iteration - I
 
 ### Intuition

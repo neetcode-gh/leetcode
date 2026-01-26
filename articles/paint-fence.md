@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming Fundamentals** - Understanding overlapping subproblems and optimal substructure
+- **Recurrence Relations** - Deriving and implementing formulas that relate current state to previous states
+- **Memoization** - Caching recursive results to avoid redundant computation
+- **Space Optimization** - Reducing DP table to constant space when only previous states are needed
+
+---
+
 ## 1. Top-Down Dynamic Programming (Recursion + Memoization)
 
 ### Intuition

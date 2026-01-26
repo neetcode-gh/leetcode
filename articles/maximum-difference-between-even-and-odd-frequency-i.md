@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Counting occurrences of elements using dictionaries or arrays
+- **Parity (Odd/Even)** - Determining whether a number is odd or even using modulo or bitwise operations
+
+---
+
 ## 1. Counting
 
 ### Intuition

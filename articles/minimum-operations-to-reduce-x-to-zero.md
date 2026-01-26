@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Used to efficiently compute sums of subarrays without recalculating from scratch
+- **Sliding Window** - The optimal solution transforms the problem into finding the longest subarray with a target sum
+- **Hash Map** - Used to store prefix sums for O(1) lookup of complement values
+- **Binary Search** - An alternative approach to find matching prefix sums in sorted prefix arrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge lists for undirected graphs
+- **Depth First Search (DFS)** - Traversing graphs and detecting cycles with parent tracking
+- **Union-Find (Disjoint Set Union)** - Efficiently tracking connected components and detecting when edges create cycles
+
+---
+
 ## 1. Cycle Detection (DFS)
 
 ### Intuition

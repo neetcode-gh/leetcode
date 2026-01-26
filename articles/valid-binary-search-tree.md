@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that left subtree values must be less than the node and right subtree values must be greater
+- **Tree Traversal (DFS/BFS)** - Navigating through tree nodes using depth-first or breadth-first approaches
+- **Recursion** - Passing constraints (valid ranges) down through recursive calls
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

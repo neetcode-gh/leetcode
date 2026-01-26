@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Counting character occurrences efficiently
+- **Palindrome Properties** - Understanding that palindromes require at most one character with odd frequency
+- **Set Data Structure** - Using sets to track elements with odd occurrences
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

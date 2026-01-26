@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion and Divide-and-Conquer** - Breaking a problem in half repeatedly to reduce complexity
+- **Binary Exponentiation** - The mathematical property that x^n = (x^2)^(n/2) for even n
+- **Bit Manipulation Basics** - Using bitwise AND and right shift to check odd/even and halve values
+- **Handling Edge Cases** - Managing negative exponents and integer overflow when negating values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

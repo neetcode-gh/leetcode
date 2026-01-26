@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency List)** - Required to model course dependencies as a directed graph
+- **Depth-First Search (DFS)** - Core traversal technique used to explore dependency chains
+- **Memoization** - Essential for caching computed results to avoid redundant DFS calls
+- **Topological Sort (Kahn's Algorithm)** - Alternative approach using BFS with in-degree tracking
+- **Directed Acyclic Graphs (DAGs)** - Understanding that course prerequisites form a DAG structure
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both memoization (top-down) and tabulation (bottom-up) approaches
+- **Hash Maps** - Storing counts of subsequences keyed by their common difference
+- **Subsequences** - Understanding how to count and extend subsequences
+- **Arithmetic Sequences** - Recognizing sequences with constant differences between consecutive elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

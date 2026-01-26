@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorted Array Properties** - Understanding that the minimum is at the start and maximum at the end of a sorted array
+- **Tracking Global Extremes** - Maintaining running minimum and maximum values across multiple data sources
+- **Greedy Approach** - Making locally optimal choices to build towards the global solution
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

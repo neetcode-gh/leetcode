@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth-First Search (BFS)** - Level-order traversal for finding shortest paths in unweighted graphs
+- **Hash Maps** - Building mappings between stops and routes for efficient lookups
+- **Graph Modeling** - Representing real-world problems (bus routes) as graph structures
+- **Sets for Visited Tracking** - Using sets to avoid revisiting nodes and prevent infinite loops
+
+---
+
 ## 1. Breadth First Search (Stops as Nodes)
 
 ### Intuition

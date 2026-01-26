@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding parent-child relationships and what makes a valid binary tree
+- **Depth First Search (DFS)** - Recursive and iterative tree traversal to visit all nodes
+- **Breadth First Search (BFS)** - Level-order traversal using a queue
+- **Indegree Counting** - Tracking incoming edges to identify root nodes and detect multiple parents
+- **Union-Find (Disjoint Set Union)** - Detecting cycles and verifying connectivity in graph structures
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

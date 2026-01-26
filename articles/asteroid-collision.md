@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Understanding LIFO (Last In, First Out) operations: push, pop, peek
+- **Array Iteration** - Processing elements sequentially from left to right
+- **Simulation Problems** - Modeling real-world processes step by step in code
+- **Conditional Logic** - Handling multiple cases based on element comparisons (direction and size)
+
+---
+
 ## 1. Stack
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Functions** - Understanding how keys map to indices via modulo operations
+- **Linked Lists** - Implementing node-based structures for collision handling (chaining)
+- **Arrays** - Using direct addressing with fixed-size arrays
+
+---
+
 ## 1. Array
 
 ### Intuition

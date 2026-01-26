@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth-First Search (BFS)** - The core algorithm for level-by-level traversal, essential for tracking time units
+- **Multi-source BFS** - Starting BFS from multiple sources simultaneously rather than a single source
+- **Queue data structure** - Used to process cells in FIFO order during BFS traversal
+- **2D grid traversal** - Navigating a matrix using directional vectors (up, down, left, right)
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - The optimal solution uses a stack to evaluate nested expressions from right to left
+- **String Manipulation** - Parsing and substring extraction are fundamental to all approaches
+- **Recursion** - The recursive solution and binary tree approach rely on recursive expression evaluation
+- **Binary Trees** - One approach builds a tree structure from the ternary expression for evaluation
+
+---
+
 ## 1. Find Rightmost Atomic Expression
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array (Grid) Traversal** - Iterating through rows and columns of a matrix
+- **Depth First Search (DFS)** - Recursive exploration of connected components in a grid
+- **Breadth First Search (BFS)** - Level-by-level traversal using a queue
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

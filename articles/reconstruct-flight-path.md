@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency List)** - Building and traversing a directed graph from edge pairs
+- **Depth First Search (DFS)** - Recursive and iterative graph traversal with backtracking
+- **Eulerian Path** - Understanding when a path exists that uses every edge exactly once (Hierholzer's Algorithm)
+- **Sorting** - Needed to ensure lexicographically smallest result when multiple paths exist
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

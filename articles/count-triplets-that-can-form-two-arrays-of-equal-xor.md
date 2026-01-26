@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bitwise XOR** - Understanding XOR properties like a XOR a = 0 and a XOR 0 = a
+- **Prefix Sums/XOR** - Using cumulative operations to compute subarray results efficiently
+- **Hash Maps** - Tracking counts and index sums for O(1) lookups in the optimal solution
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

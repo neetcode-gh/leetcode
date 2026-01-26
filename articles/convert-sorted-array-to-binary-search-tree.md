@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Trees (BST)** - Understanding BST properties where left subtree values are less than root and right subtree values are greater
+- **Recursion** - Building solutions by breaking problems into smaller subproblems
+- **Divide and Conquer** - Splitting an array at the middle element to create balanced subtrees
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

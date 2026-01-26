@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure with value and next pointer, and how to traverse a linked list
+- **Two Pointers (Fast & Slow)** - The technique of using two pointers moving at different speeds to find middle elements or detect cycles
+- **Arrays** - Using dynamic arrays to store elements for indexed access
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary tree structure** - Understanding nodes with left/right children and null references
+- **Tree traversal (DFS)** - Recursively visiting nodes in a binary tree
+- **Recursion** - Using recursive function calls to process tree structures
+- **Base case handling** - Properly handling null nodes as termination conditions
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

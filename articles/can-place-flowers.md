@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Traversing arrays and checking adjacent elements
+- **Greedy Algorithms** - Making locally optimal choices (planting when possible) to achieve the best result
+- **Boundary Handling** - Managing edge cases at the start and end of arrays
+
+---
+
 ## 1. Iteration - I
 
 ### Intuition

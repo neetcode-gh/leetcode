@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - Computing range sums efficiently in O(1) time after O(n) preprocessing
+- **Game Theory / Minimax** - Understanding how to minimize the opponent's maximum gain rather than maximizing your own score
+- **2D Grid Traversal** - Reasoning about constrained movement paths in a grid (only right and down moves)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

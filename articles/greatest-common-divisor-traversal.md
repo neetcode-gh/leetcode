@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Traversal (DFS/BFS)** - The problem models indices as nodes and requires checking if all nodes are connected in a single component
+- **Union-Find (Disjoint Set Union)** - Optimal solutions use DSU to efficiently track and merge connected components
+- **Greatest Common Divisor (GCD)** - Understanding how to compute GCD and recognizing when two numbers share common factors
+- **Prime Factorization** - Breaking numbers into prime factors to efficiently determine shared factors between numbers
+- **Sieve of Eratosthenes** - Precomputing smallest prime factors enables O(log n) factorization per number
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

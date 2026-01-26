@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Comparing characters, extracting substrings, and iterating through strings
+- **Sorting** - Understanding lexicographic string ordering for the sorting approach
+- **Trie Data Structure** - Building and traversing a prefix tree for the optimal solution
+
+---
+
 ## 1. Horizontal Scanning
 
 ### Intuition

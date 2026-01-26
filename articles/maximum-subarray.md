@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Kadane's Algorithm** - The classic O(n) solution for maximum subarray problems using dynamic programming
+- **Dynamic Programming** - Understanding how to build solutions from subproblems (top-down and bottom-up approaches)
+- **Divide and Conquer** - Alternative approach that splits the array and handles cross-boundary subarrays
+- **Recursion with Memoization** - Converting recursive solutions to efficient DP solutions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

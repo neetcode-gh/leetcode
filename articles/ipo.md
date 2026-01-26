@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap / Priority Queue** - Understanding min-heaps and max-heaps for efficient extraction of minimum and maximum elements
+- **Greedy Algorithms** - Recognizing when selecting the locally optimal choice leads to a globally optimal solution
+- **Sorting** - Sorting data to process elements in a specific order
+
+---
+
 ## 1. Two Heaps
 
 ### Intuition

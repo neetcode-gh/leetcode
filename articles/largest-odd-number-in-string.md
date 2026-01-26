@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Traversal** - Iterating through characters in a string from left to right or right to left
+- **Substrings** - Extracting portions of a string using indices
+- **Odd/Even Number Properties** - A number is odd if and only if its last digit is odd (1, 3, 5, 7, or 9)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

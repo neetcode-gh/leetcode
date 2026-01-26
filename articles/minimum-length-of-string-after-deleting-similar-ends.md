@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Using pointers at both ends of an array/string to process elements
+- **Greedy Algorithms** - Making locally optimal choices that lead to a globally optimal solution
+- **String Manipulation** - Working with character comparisons and substrings
+
+---
+
 ## 1. Greedy + Two Pointers
 
 ### Intuition

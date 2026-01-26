@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Traversal (DFS/BFS)** - Required to propagate the secret through connected meeting participants
+- **Union-Find (Disjoint Set Union)** - An alternative approach that efficiently tracks connected components of people
+- **Sorting** - Meetings must be processed in chronological order to correctly simulate secret spreading
+- **Hash Maps and Adjacency Lists** - Used to group meetings by time and build graphs for each time slot
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding nodes with value and next/prev pointers
+- **Pointer Manipulation** - Rewiring node connections for insertion and deletion
+- **Dummy/Sentinel Nodes** - Using placeholder nodes to simplify edge cases at list boundaries
+
+---
+
 ## 1. Singly Linked List
 
 ### Intuition

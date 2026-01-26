@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the root
+- **Recursion** - Breaking down the problem by choosing each node as the root and solving for left and right subtrees
+- **Dynamic Programming** - Using memoization or bottom-up tabulation to avoid redundant calculations
+- **Catalan Numbers** - Optional but helpful for understanding the mathematical formula behind the count of unique BSTs
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Used to explore all possible subsets of words by making include/exclude decisions at each step
+- **Hash Maps / Frequency Arrays** - Needed to track letter counts and determine if a word can be formed with available letters
+- **Recursion** - The core technique for exploring the decision tree of word combinations
+- **Bit Manipulation (optional)** - Alternative approach using bitmasks to represent subsets
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from relationships between elements
+- **Topological Sort** - Ordering nodes in a directed acyclic graph based on dependencies
+- **Depth First Search (DFS)** - Recursive graph traversal with cycle detection using visited states
+- **Kahn's Algorithm (BFS)** - Iterative topological sort using in-degree counting
+- **String Comparison** - Extracting ordering rules by comparing adjacent strings character by character
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

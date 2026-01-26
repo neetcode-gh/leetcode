@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to traverse and modify array elements by index
+- **Two Pointers Technique** - Using multiple pointers to track positions during array manipulation
+- **In-Place Modification** - Modifying an array without using extra space
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - The brute-force approach explores all possible orderings of cuts using recursive function calls
+- **Dynamic Programming (Memoization)** - Overlapping subproblems require caching results to avoid redundant computation
+- **Interval DP** - The problem structure involves optimizing over contiguous segments/intervals
+- **Sorting** - Cut positions must be sorted to efficiently define subproblems by cut indices
+
+---
+
 ## 1. Recursion
 
 ### Intuition

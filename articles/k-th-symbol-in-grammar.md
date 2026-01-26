@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Tracing values back through parent-child relationships in a recursive structure
+- **Binary Tree Concepts** - Understanding how positions in a row relate to parent positions in the previous row
+- **Bit Manipulation** - Using XOR for flipping values and bit counting to determine parity
+- **Binary Search** - Narrowing down position ranges by halving the search space
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

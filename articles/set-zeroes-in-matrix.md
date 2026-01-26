@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays / Matrices** - Traversing and modifying elements in a matrix using row and column indices
+- **In-Place Modification** - Updating data structures without using extra space proportional to input size
+- **Marker Techniques** - Using parts of the input as flags to track state during processing
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

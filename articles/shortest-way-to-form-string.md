@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Subsequence Concept** - Understanding what makes one string a subsequence of another
+- **Two Pointers Technique** - Using pointers to traverse and compare strings efficiently
+- **Binary Search** - Finding elements in sorted arrays for optimized character lookups
+- **Precomputation / Dynamic Programming** - Building lookup tables to enable O(1) queries for next character positions
+
+---
+
 ## 1. Concatenate until Subsequence
 
 ### Intuition

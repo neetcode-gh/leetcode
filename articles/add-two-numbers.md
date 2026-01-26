@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Traversing and creating new nodes in a singly linked list
+- **Recursion** - Understanding how to break down problems into smaller subproblems
+- **Carry Propagation** - How carry works when adding numbers digit by digit
+
+---
+
 ## 1. Recursion
 
 ### Intuition

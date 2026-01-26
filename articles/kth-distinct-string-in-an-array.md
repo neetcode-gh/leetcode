@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting occurrences of elements with O(1) average lookup and insertion
+- **Hash Sets** - Tracking unique elements and checking membership efficiently
+- **Array Traversal** - Iterating through arrays while maintaining order
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

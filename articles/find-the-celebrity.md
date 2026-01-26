@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Logical Deduction** - The optimal solution uses elimination to narrow down candidates in a single pass
+- **Graph Concepts** - Understanding directed relationships (who knows whom) as a graph problem
+- **Caching/Memoization** - Optional optimization to avoid redundant API calls
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

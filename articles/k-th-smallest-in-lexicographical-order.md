@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Lexicographical Ordering** - Understanding that strings are compared character by character, so "10" < "2" because '1' < '2'
+- **Tree/Trie Traversal** - Visualizing numbers as a tree where each prefix extends to its children (1 -> 10, 11, ..., 19)
+- **Counting Nodes in a Subtree** - Calculating how many numbers exist under a given prefix without enumeration
+- **Binary Search Concepts** - Using count-based navigation to skip large portions of the search space
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

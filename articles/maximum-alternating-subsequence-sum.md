@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down problems into smaller subproblems with base cases and recursive cases
+- **Dynamic Programming** - Recognizing overlapping subproblems and using memoization to avoid redundant computation
+- **State Machine DP** - Tracking multiple states (even/odd position) and transitioning between them optimally
+
+---
+
 ## 1. Recursion
 
 ### Intuition

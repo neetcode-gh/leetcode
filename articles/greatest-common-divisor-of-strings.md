@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **GCD (Greatest Common Divisor)** - Understanding and implementing the Euclidean algorithm
+- **String Manipulation** - Working with substrings, concatenation, and repetition
+- **Modular Arithmetic** - Using modulo operations for cyclic indexing and divisibility checks
+
+---
+
 ## 1. Iteration
 
 ### Intuition

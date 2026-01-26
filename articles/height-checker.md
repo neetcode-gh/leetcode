@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Creating a sorted copy to compare against the original order
+- **Counting Sort** - Using frequency arrays for efficient sorting when values are constrained to a small range
+
+---
+
 ## 1. Sorting
 
 ### Intuition

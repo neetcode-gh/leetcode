@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Traversing, reversing, and building linked lists
+- **Stacks** - Using LIFO property to reverse order of elements
+- **Carry Propagation** - How carry works when adding numbers digit by digit
+
+---
+
 ## 1. Reverse List
 
 ### Intuition

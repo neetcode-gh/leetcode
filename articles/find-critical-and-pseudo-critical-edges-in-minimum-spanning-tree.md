@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Minimum Spanning Tree (MST)** - Understanding what an MST is and why it has exactly V-1 edges for V vertices
+- **Kruskal's Algorithm** - Building an MST by sorting edges by weight and greedily adding non-cycle-forming edges
+- **Union-Find (Disjoint Set Union)** - Efficiently tracking connected components with path compression and union by rank
+- **Graph Connectivity** - Determining if a graph remains connected after removing an edge
+
+---
+
 ## 1. Kruskal's Algorithm - I
 
 ### Intuition

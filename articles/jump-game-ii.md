@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Caching recursive subproblem results to avoid recomputation
+- **Dynamic Programming (Tabulation)** - Building solutions bottom-up using iterative DP
+- **Greedy Algorithms** - Making locally optimal choices that lead to a global optimum
+- **BFS Level-by-Level Traversal** - Processing nodes in layers to find minimum steps
+
+---
+
 ## 1. Recursion
 
 ### Intuition

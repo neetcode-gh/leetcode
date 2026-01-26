@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Ordering meetings by start time to process them chronologically
+- **Heap / Priority Queue** - Efficiently finding the minimum element (earliest available room or end time)
+- **Simulation** - Tracking state changes over time as meetings are assigned and rooms become available
+- **Greedy Selection** - Choosing the optimal room based on availability and room number constraints
+
+---
+
 ## 1. Sorting + Brute Force
 
 ### Intuition

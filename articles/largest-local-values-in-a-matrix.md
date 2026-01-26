@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays (Matrices)** - Understanding how to traverse and access elements in a grid
+- **Nested Loops** - Iterating over both rows and columns, plus sub-regions within the matrix
+- **Finding Maximum Values** - Tracking the maximum element within a sliding window region
+
+---
+
 ## 1. Iteration
 
 ### Intuition

@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to iterate through and access array elements by index
+- **Two Pointers Technique** - Moving pointers from opposite ends of an array to efficiently search for optimal pairs
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

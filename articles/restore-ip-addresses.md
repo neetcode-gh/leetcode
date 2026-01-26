@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible combinations by making choices and undoing them when they lead to invalid solutions
+- **Recursion** - Breaking down the problem into smaller subproblems (placing one IP segment at a time)
+- **String Manipulation** - Extracting and validating substrings for IP segment constraints
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

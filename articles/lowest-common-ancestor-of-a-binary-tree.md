@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure and parent-child relationships
+- **Depth First Search (DFS)** - Recursive tree traversal to explore all nodes and combine subtree results
+- **Breadth First Search (BFS)** - Level-order traversal using a queue to build parent pointers
+- **Hash Maps** - Storing parent references for each node to trace paths back to the root
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

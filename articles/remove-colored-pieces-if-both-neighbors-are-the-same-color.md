@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Iterating through strings and checking character patterns
+- **Two Pointers** - Using pointers to track consecutive runs of characters
+- **Greedy Algorithms** - Making locally optimal choices to find the global optimum
+- **Game Theory Basics** - Understanding turn-based games and win conditions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

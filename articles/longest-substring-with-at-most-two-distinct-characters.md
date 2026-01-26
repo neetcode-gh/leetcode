@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Essential for efficiently finding the longest valid substring without rechecking overlapping portions
+- **Hash Map / Dictionary** - Used to track character frequencies within the current window and count distinct characters
+- **Two Pointers** - The sliding window is implemented using left and right pointers to define window boundaries
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

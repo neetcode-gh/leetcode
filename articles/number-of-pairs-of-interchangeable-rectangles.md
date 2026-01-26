@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to count and group items by a computed key
+- **Ratio/Proportion Comparison** - Understanding when two fractions (width/height) are equivalent
+- **Combinatorics (Counting Pairs)** - Using the formula n*(n-1)/2 to count pairs from n items
+- **Greatest Common Divisor (GCD)** - Reducing fractions to their simplest form to avoid floating-point precision issues
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Storing optimal results for each position to avoid recomputation
+- **Game Theory / Minimax** - Modeling optimal play where both players make the best possible moves
+- **Score Difference Tracking** - Using relative advantage (current player's score minus opponent's score) to simplify two-player game logic
+- **Space Optimization** - Reducing DP space from O(n) to O(1) using rolling arrays when only recent states are needed
+
+---
+
 ## 1. Dynamic Programming (Top-Down) - I
 
 ### Intuition

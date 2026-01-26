@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth First Search (BFS)** - BFS guarantees the shortest path in unweighted graphs since it explores nodes level by level
+- **8-Directional Grid Traversal** - Unlike typical grid problems, this one allows diagonal movement requiring all 8 neighbor checks
+- **Queue-based Level Order Processing** - Understanding how to process BFS by levels to track path length accurately
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

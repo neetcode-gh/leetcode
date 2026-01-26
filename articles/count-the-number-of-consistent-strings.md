@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Using sets for O(1) average-time membership checking
+- **Bit Manipulation** - Representing sets of characters as bitmasks for efficient lookups
+- **Character Encoding** - Converting characters to array indices using ASCII values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

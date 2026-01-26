@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array/Matrix Traversal** - Iterating through rows and columns of a matrix
+- **Boundary Checking** - Handling edge cases when accessing neighbors near matrix boundaries
+- **Sliding Window (2D)** - Processing fixed-size windows centered at each cell
+- **Bit Manipulation (Optional)** - For space-optimized solutions that encode values in-place
+
+---
+
 ## 1. Iteration (Using Extra Matrix)
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Number Representation** - Understanding that odd numbers must end with bit 1, and higher-order bits contribute more to value
+- **String Manipulation** - Converting between strings and character arrays, swapping elements
+- **Greedy Algorithms** - The optimal structure can be determined without exhaustive search
+- **Two Pointers (optional)** - An efficient in-place partitioning approach similar to quicksort's partition step
+
+---
+
 ## 1. Sorting
 
 ### Intuition

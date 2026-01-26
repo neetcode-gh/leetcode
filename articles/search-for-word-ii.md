@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible paths by making choices, recursing, and undoing choices to try alternatives
+- **Depth-First Search (DFS)** - Traversing a graph or grid by exploring as far as possible along each branch before backtracking
+- **Trie (Prefix Tree)** - A tree data structure used for efficient prefix matching and word storage
+- **2D Grid Traversal** - Moving through a matrix in four directions (up, down, left, right) while handling boundaries
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

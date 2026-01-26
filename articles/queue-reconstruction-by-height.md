@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Custom Sorting** - Sorting with multiple criteria (height and k-value)
+- **Greedy Algorithms** - Processing people in an order that simplifies placement decisions
+- **List Insertion** - Understanding how inserting at an index shifts subsequent elements
+- **Segment Tree / Binary Indexed Tree** - For optimal solutions tracking available slots efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

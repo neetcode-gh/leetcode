@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Enables O(1) subarray sum queries after O(n) preprocessing
+- **Hash Map** - Used to count occurrences of prefix sums for efficient lookup
+- **Sliding Window / Two Pointers** - Alternative approach using "at most K" technique
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

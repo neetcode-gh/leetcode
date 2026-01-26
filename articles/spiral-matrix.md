@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array Traversal** - Navigating through rows and columns of a matrix
+- **Boundary Tracking** - Maintaining and shrinking top, bottom, left, right boundaries layer by layer
+- **Direction Vectors** - Using coordinate deltas to control and rotate movement direction
+- **Recursion** - Breaking down the spiral into smaller sub-problems (inner layers)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - Used to efficiently compute subarray sums in constant time
+- **Modular Arithmetic** - Understanding how remainders work and handling negative modulo results
+- **Hash Maps** - Used to store and look up prefix sum remainders for O(1) access
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

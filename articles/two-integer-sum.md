@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to store values and their indices for O(1) lookup of complements
+- **Two Pointers technique** - Understanding how sorting enables the two-pointer approach for finding pairs
+- **Array traversal** - Iterating through arrays while tracking indices and values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

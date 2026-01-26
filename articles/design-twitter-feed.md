@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Mapping user IDs to their tweets and follow relationships
+- **Hash Sets** - Tracking followee relationships with O(1) add/remove/lookup
+- **Heap / Priority Queue** - Merging k sorted lists efficiently to find top-k elements
+- **Sorting** - Custom comparators for ordering tweets by timestamp
+
+---
+
 ## 1. Sorting
 
 ### Intuition

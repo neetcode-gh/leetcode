@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Efficiently narrows down the search space by halving it each iteration
+- **Integer Overflow Handling** - Squaring large numbers can overflow; use 64-bit types for intermediate calculations
+- **Bit Manipulation** - Used in the recursive approach with right/left shifts to divide/multiply by powers of 2
+- **Newton's Method** - An iterative numerical technique that converges quickly to the square root
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

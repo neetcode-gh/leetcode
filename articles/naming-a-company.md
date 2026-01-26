@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Using sets for O(1) lookups to check if swapped names already exist
+- **Hash Maps** - Grouping strings by their first character for efficient processing
+- **String Manipulation** - Extracting substrings and swapping characters
+- **Set Intersection** - Understanding how to count common elements between two sets to identify invalid swaps
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

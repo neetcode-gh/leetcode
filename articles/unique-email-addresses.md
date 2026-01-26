@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Used to store and count unique email addresses efficiently
+- **String Manipulation** - Splitting strings, replacing characters, and extracting substrings
+
+---
+
 ## 1. Built-In Functions
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Understanding memoization (top-down) and tabulation (bottom-up) approaches
+- **2D Grid Traversal** - Navigating through rows and columns of a matrix
+- **Recursion** - Building solutions by breaking problems into smaller subproblems
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

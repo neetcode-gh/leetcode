@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking problems into smaller subproblems and combining results
+- **Dynamic Programming** - Memoization (top-down) and tabulation (bottom-up) techniques
+- **Mathematical Reasoning** - Understanding why certain factors (like 3) maximize products
+
+---
+
 ## 1. Recursion (Brute Force)
 
 ### Intuition

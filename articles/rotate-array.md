@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Manipulation** - Understanding how to modify arrays in-place by swapping and shifting elements
+- **Modular Arithmetic** - Using the modulo operator to handle rotation amounts larger than array length
+- **Array Reversal** - The technique of reversing a subarray in-place using two pointers
+- **Cyclic Traversal** - Following cycles in an array where each element points to its destination position
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

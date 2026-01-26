@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Basic array traversal and element access
+- **Prefix and Suffix Arrays** - Precomputing running maximums from both directions
+- **Two Pointers** - Using left and right pointers that move toward each other based on conditions
+- **Stack** - Using a monotonic stack to track indices and compute bounded regions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

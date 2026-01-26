@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stacks** - Understanding LIFO behavior to reverse sequences of elements
+- **Greedy Algorithms** - Making locally optimal choices to achieve the lexicographically smallest result
+- **Array Manipulation** - In-place reversal of subarrays and two-pointer techniques
+
+---
+
 ## 1. Using Stack
 
 ### Intuition

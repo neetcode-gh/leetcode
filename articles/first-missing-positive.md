@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **In-Place Array Modification** - Using the input array itself as auxiliary storage to achieve O(1) space
+- **Cycle Sort** - Placing elements at their "correct" indices through swapping
+- **Index Mapping** - Understanding that value `v` should be at index `v-1` for positive integers
+- **Negative Marking Technique** - Using the sign of array elements as boolean flags
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

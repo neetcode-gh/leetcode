@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Used for O(1) lookups to check if a coordinate has been visited
+- **Coordinate Systems** - Understanding how to represent and track 2D positions
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

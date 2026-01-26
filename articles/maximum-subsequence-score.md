@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap / Priority Queue** - Min-heap is used to maintain the k largest elements from nums1 efficiently
+- **Sorting** - Pairs are sorted by nums2 values to process elements in decreasing order of the minimum candidate
+- **Greedy Algorithms** - Understanding when to include/exclude elements to maximize the score
+- **Two Arrays Coordination** - Working with parallel arrays where indices must be processed together
+
+---
+
 ## 1. Brute Force (Recursion)
 
 ### Intuition

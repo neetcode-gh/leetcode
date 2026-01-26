@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Theory Basics** - Understanding nodes, edges, and weighted graphs
+- **Minimum Spanning Tree (MST)** - The concept of connecting all nodes with minimum total edge weight
+- **Union-Find (Disjoint Set Union)** - Data structure for efficiently tracking connected components and detecting cycles
+- **Priority Queue / Heap** - For efficiently selecting the minimum weight edge in Prim's algorithm
+- **Sorting** - Sorting edges by weight for Kruskal's algorithm
+
+---
+
 ## 1. Kruskal's Algorithm
 
 ### Intuition

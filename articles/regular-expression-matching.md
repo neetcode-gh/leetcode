@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down the matching problem into smaller subproblems with base cases
+- **Dynamic Programming (Memoization)** - Caching results to avoid redundant computations in overlapping subproblems
+- **Dynamic Programming (Tabulation)** - Building solutions bottom-up using a 2D table
+
+---
+
 ## 1. Recursion
 
 ### Intuition

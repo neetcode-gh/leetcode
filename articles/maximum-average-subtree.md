@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding nodes, children, and subtree relationships
+- **Postorder Traversal** - Processing children before the parent node in tree traversal
+- **Recursion** - Using recursive functions to aggregate information from subtrees
+
+---
+
 ## 1. Postorder Traversal
 
 ### Intuition

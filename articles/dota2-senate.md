@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queues** - The optimal solution uses two queues to track senator positions and simulate the voting process efficiently
+- **Greedy Algorithms** - Understanding when to make locally optimal choices (banning the nearest opponent) to achieve the global optimum
+- **Simulation** - The brute force approach involves directly simulating the circular voting process
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

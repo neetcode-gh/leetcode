@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Basic Array Iteration** - Traversing an array and examining each element
+- **Sign Rules for Multiplication** - Understanding how negative and zero values affect product signs
+- **Early Termination** - Returning immediately when a zero is encountered to avoid unnecessary computation
+
+---
+
 ## 1. Count Negative Numbers
 
 ### Intuition

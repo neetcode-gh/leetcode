@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through arrays and comparing adjacent elements
+- **Modulo Arithmetic** - Using modulo to handle circular array indexing (wrap-around)
+- **Sorted Array Properties** - Understanding non-decreasing order and rotation concepts
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

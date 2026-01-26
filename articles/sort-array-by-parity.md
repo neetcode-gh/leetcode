@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Basic array traversal and in-place modification
+- **Two Pointers Technique** - Used for optimal O(n) in-place partitioning solutions
+- **Bit Manipulation Basics** - Using bitwise AND (`num & 1`) or modulo to check parity (even/odd)
+
+---
+
 ## 1. Sorting
 
 ### Intuition

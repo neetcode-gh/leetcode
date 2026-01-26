@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Tracking consecutive character counts and efficiently handling removals
+- **Two Pointers** - Using read and write pointers to modify strings in-place
+- **String Manipulation** - Working with mutable character arrays and substring operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

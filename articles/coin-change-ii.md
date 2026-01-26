@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down the problem into smaller subproblems by making choices at each step
+- **Dynamic Programming (Memoization)** - Caching results of subproblems to avoid redundant computation
+- **Dynamic Programming (Tabulation)** - Building solutions bottom-up using a DP table
+- **Unbounded Knapsack pattern** - Understanding how to count combinations when items can be used multiple times
+
+---
+
 ## 1. Recursion
 
 ### Intuition

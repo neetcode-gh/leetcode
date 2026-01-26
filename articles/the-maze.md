@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph traversal (DFS/BFS)** - The maze is modeled as a graph where stopping positions are nodes
+- **2D matrix/grid navigation** - Understanding how to move in four directions and handle boundaries
+- **Visited array tracking** - Preventing revisiting the same positions to avoid infinite loops
+- **Recursion** - The DFS solution uses recursive calls to explore all paths
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Used to traverse and write to the array simultaneously while tracking consecutive characters
+- **In-Place Array Modification** - Understanding how to modify an array without using additional space proportional to input size
+- **String to Integer Conversion** - Converting count values to individual digit characters for multi-digit numbers
+
+---
+
 ## 1. Using Extra Space
 
 ### Intuition

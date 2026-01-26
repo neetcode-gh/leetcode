@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Storing and updating player scores with O(1) access
+- **Heaps / Priority Queues** - Efficiently finding the top K elements without sorting everything
+- **Sorted Maps / TreeMaps** - Maintaining scores in sorted order for efficient range queries
+- **Sorting** - Understanding how to sort values in descending order for the brute force approach
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

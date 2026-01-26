@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking problems into smaller subproblems and understanding base cases
+- **Dynamic Programming Fundamentals** - Recognizing overlapping subproblems and optimal substructure
+- **Memoization** - Caching results to avoid redundant computation in recursive solutions
+- **2D DP State Transitions** - Managing state with multiple dimensions (pile index and coins remaining)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

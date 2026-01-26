@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Data Structures** - Modeling hierarchical relationships like directories and subdirectories
+- **Hash Maps/Dictionaries** - Storing and retrieving children nodes by name efficiently
+- **String Parsing** - Splitting file paths by delimiters and traversing path components
+- **Object-Oriented Design** - Creating classes to represent files and directories with their attributes
+
+---
+
 ## 1. Using separate Directory and File List
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Used to maintain a dynamic window of characters while tracking constraints
+- **Hash Map / Dictionary** - Required to count character frequencies and track distinct characters in the current window
+- **Binary Search (optional)** - One approach uses binary search on the answer length combined with fixed-size windows
+
+---
+
 ## 1. Binary Search + Fixed Size Sliding Window
 
 ### Intuition

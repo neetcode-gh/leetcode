@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Kadane's Algorithm** - Foundation for finding maximum subarray sum; extended here to handle circular arrays
+- **Prefix and Suffix Sums** - Used to efficiently compute wrap-around subarray sums
+- **Circular Array Handling** - Understanding how subarrays can wrap from end to beginning
+- **Maximum Subarray Problem** - This problem builds directly on the classic maximum subarray solution
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Depth First Search (DFS)** - Recursive traversal to explore connected components and paths in grids
+- **Breadth First Search (BFS)** - Level-by-level traversal as an alternative approach for grid exploration
+- **2D Matrix/Grid Traversal** - Moving in four directions and tracking visited cells
+- **Multi-source Search** - Starting BFS/DFS from multiple boundary cells simultaneously
+
+---
+
 ## 1. Brute Force (Backtracking)
 
 ### Intuition

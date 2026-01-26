@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down string parsing problems into subproblems and combining results
+- **String Parsing** - Extracting characters and groups from formatted strings with special delimiters
+- **Backtracking** - Building combinations incrementally and undoing choices to explore all possibilities
+- **Sorting** - Ensuring output is in lexicographical order by sorting options within brace groups
+
+---
+
 ## 1. Recursion
 
 ### Intuition

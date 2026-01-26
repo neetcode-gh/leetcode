@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Used to efficiently track which numbers are present in the array
+- **Array Index Manipulation** - Understanding how values in range [1, n] map to array indices [0, n-1]
+- **In-Place Array Modification (Negative Marking)** - The optimal solution modifies the input array to mark visited indices
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

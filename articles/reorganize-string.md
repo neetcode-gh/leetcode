@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Frequency Counting** - Using arrays or hash maps to count character occurrences in a string
+- **Greedy Algorithms** - Making locally optimal choices (placing most frequent characters first) to achieve a global solution
+- **Heap / Priority Queue** - Efficiently retrieving the maximum frequency element for character placement
+
+---
+
 ## 1. Frequency Count
 
 ### Intuition

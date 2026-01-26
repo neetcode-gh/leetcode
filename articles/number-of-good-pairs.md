@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to count frequencies of elements in O(1) time
+- **Combinatorics** - Understanding how to count pairs using the formula n*(n-1)/2 for choosing 2 items from n
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Number System** - Understanding how binary addition works with carry propagation
+- **String Manipulation** - Iterating through strings, reversing, and building result strings character by character
+- **Two Pointers** - Using two pointers to traverse strings of different lengths simultaneously from the end
+
+---
+
 ## 1. Iteration
 
 ### Intuition

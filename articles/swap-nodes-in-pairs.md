@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding node structure, traversal, and pointer manipulation in singly linked lists
+- **In-Place Pointer Manipulation** - Reversing or reordering nodes by changing next pointers without extra data structures
+- **Dummy Node Technique** - Using a sentinel node to simplify edge cases when the head of the list changes
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

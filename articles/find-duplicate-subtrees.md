@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, nodes, and recursive tree definitions
+- **Depth-First Search (DFS)** - Traversing trees using pre-order, in-order, or post-order traversal
+- **Tree Serialization** - Converting tree structures into string representations for comparison
+- **Hash Maps** - Using dictionaries to store and lookup values efficiently for duplicate detection
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

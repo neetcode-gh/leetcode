@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency Lists)** - Building and traversing graphs using adjacency lists for directed edges
+- **Breadth-First Search (BFS)** - Using BFS to find shortest paths in unweighted graphs
+- **State-Space Search** - Tracking visited states as (node, additional_info) pairs rather than just nodes
+- **Hash Sets** - Efficiently checking and storing visited states to avoid revisiting
+
+---
+
 ## 1. Breadth First Search - I
 
 ### Intuition

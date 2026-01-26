@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Using a stack for LIFO operations and building results incrementally
+- **Greedy Algorithms** - Making locally optimal choices to achieve a globally optimal result
+- **String Manipulation** - Converting between strings and character arrays, handling leading zeros
+- **Monotonic Stack** - Maintaining a stack where elements follow a specific order (non-increasing or non-decreasing)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

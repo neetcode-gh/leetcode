@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Building strings by concatenation and extracting substrings based on indices
+- **Delimiter Design** - Understanding how to choose separators that won't conflict with input content
+- **Length-Prefix Encoding** - Using string lengths to unambiguously mark boundaries between encoded segments
+
+---
+
 ## 1. Encoding & Decoding
 
 ### Intuition

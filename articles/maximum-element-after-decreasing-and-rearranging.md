@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - The solution requires sorting the array to process elements in order
+- **Greedy Algorithms** - Understanding when local optimal choices lead to global optimal solutions
+- **Counting Sort** - The optimized solution uses counting sort to achieve linear time complexity
+
+---
+
 ## 1. Greedy + Sorting
 
 ### Intuition

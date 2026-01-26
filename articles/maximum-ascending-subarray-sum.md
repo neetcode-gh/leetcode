@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through arrays and comparing adjacent elements
+- **Subarray Concepts** - Understanding contiguous sequences within an array
+- **Running Sum** - Maintaining a cumulative sum while iterating through elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

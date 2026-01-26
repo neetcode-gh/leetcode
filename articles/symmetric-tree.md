@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding nodes, left/right children, and tree traversal basics
+- **Recursion** - Writing recursive functions that process tree nodes and combine results from subtrees
+- **DFS/BFS on Trees** - Traversing trees iteratively using stacks (DFS) or queues (BFS)
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Kadane's Algorithm)** - Understanding how to track optimal subarray values while iterating through an array
+- **Handling Negative Numbers in Products** - Recognizing that a negative times a negative becomes positive, requiring tracking of both min and max
+- **Prefix/Suffix Products** - Using cumulative products from both directions to find optimal subarrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

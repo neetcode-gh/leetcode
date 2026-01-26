@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Used to count the frequency of each element in a single pass
+- **Array Traversal** - Understanding how to iterate through arrays and track maximum values
+- **Frequency Counting** - Concept of counting occurrences and comparing counts to values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Breaking down problems into overlapping subproblems with memoization or tabulation
+- **State Transitions** - Understanding how to model transitions between different states (vowels in this case)
+- **Modular Arithmetic** - Handling large numbers with modulo operations to prevent overflow
+- **Matrix Exponentiation (Optional)** - Using matrix multiplication for O(log n) solutions to linear recurrences
+
+---
+
 ## 1. Recursion
 
 ### Intuition

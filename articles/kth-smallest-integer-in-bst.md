@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST)** - Understanding the BST property where left subtree values are smaller and right subtree values are larger than the root
+- **Tree Traversal (DFS)** - Ability to traverse trees using depth-first search techniques
+- **Inorder Traversal** - Knowing that inorder traversal of a BST produces values in sorted order
+- **Stack Data Structure** - For implementing iterative tree traversal solutions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition  

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Using left and right pointers to identify groups of consecutive characters
+- **Arithmetic Series Formula** - Calculating the sum 1 + 2 + ... + n = n*(n+1)/2 for counting substrings
+- **String Traversal** - Iterating through strings and comparing adjacent characters
+
+---
+
 ## 1. Arithmetic Sequence
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Tracks which frequencies are already used to detect and resolve conflicts
+- **Frequency Counting** - Counting character occurrences is the foundation for all approaches
+- **Greedy Algorithms** - Decrementing frequencies until finding an available slot minimizes deletions
+- **Heap / Priority Queue** - The max-heap approach processes frequencies from largest to smallest
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

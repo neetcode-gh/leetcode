@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Searching on a sorted range of possible answer values rather than array indices
+- **Binary Search on Answer** - Using binary search to find the optimal value that satisfies a condition
+- **Greedy Algorithms** - Validating a candidate answer by greedily partitioning the array
+
+---
+
 ## 1. Binary Search + Greedy
 
 ### Intuition

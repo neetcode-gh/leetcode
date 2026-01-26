@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible partitions and undoing choices to try alternatives
+- **Recursion** - Breaking down the problem into smaller subproblems
+- **Palindrome Checking** - Using two pointers to verify if a substring is a palindrome
+- **Dynamic Programming** - Precomputing palindrome substrings for O(1) lookup
+
+---
+
 ## 1. Backtracking - I
 
 ### Intuition

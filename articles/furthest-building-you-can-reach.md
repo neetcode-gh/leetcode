@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy Algorithms** - Understanding when local optimal choices lead to global optimal solutions
+- **Heaps (Priority Queues)** - Using min-heaps and max-heaps to efficiently track extreme values
+- **Binary Search** - Searching for optimal values in a sorted or monotonic space
+- **Sorting** - Ordering elements to make greedy decisions on largest/smallest values
+
+---
+
 ## 1. Brute Force (Greedy)
 
 ### Intuition

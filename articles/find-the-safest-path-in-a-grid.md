@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Multi-Source BFS** - Used to compute minimum distances from all thief cells simultaneously
+- **Dijkstra's Algorithm** - Modified to maximize the minimum distance along a path using a max-heap
+- **Binary Search** - Alternative approach to find the maximum safeness factor by testing thresholds
+- **0-1 BFS** - An optimization using a deque when edge weights are limited to 0 or 1
+- **Priority Queue/Heap** - Essential data structure for efficient Dijkstra implementation
+
+---
+
 ## 1. Multi Source BFS + Dijkstra's Algorithm
 
 ### Intuition

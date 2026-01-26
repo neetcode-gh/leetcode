@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Used to store and quickly lookup the integer value for each Roman numeral character
+- **String Iteration** - Traversing through a string character by character while comparing adjacent elements
+- **Conditional Logic** - Determining when to add vs subtract based on comparing current and next values
+
+---
+
 ## 1. Hash Map
 
 ### Intuition

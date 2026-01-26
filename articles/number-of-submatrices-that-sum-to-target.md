@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum (1D and 2D)** - Used to efficiently compute subarray/submatrix sums in O(1) time after preprocessing
+- **Hash Map** - Used to count prefix sums and find pairs that differ by the target value
+- **Subarray Sum Equals K Pattern** - The optimal solution reduces the 2D problem to multiple 1D subarray sum problems
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

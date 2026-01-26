@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Searching over a monotonic answer space to find optimal values
+- **Greedy Simulation** - Simulating a process with greedy decisions to validate a candidate answer
+- **Problem Decomposition** - Breaking down optimization problems into feasibility checks
+
+---
+
 ## 1. Linear Search
 
 ### Intuition

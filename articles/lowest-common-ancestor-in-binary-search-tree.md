@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the node's value
+- **Tree Traversal** - Ability to navigate through a tree using recursion or iteration
+- **Recursion (optional)** - One approach uses recursive calls to traverse down the tree until the split point is found
+
+---
+
 ## 1. Recursion
 
 ### Intuition

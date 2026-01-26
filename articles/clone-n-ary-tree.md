@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Traversal** - Understanding recursive and iterative approaches to visit all nodes in a tree
+- **N-ary Tree Structure** - Working with trees where each node can have any number of children
+- **Stack/Queue Data Structures** - Using stacks for DFS and queues for BFS in iterative solutions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Tables / Frequency Counting** - Tracking character counts to compare substrings
+- **Sliding Window Technique** - Efficiently checking fixed-size substrings without rebuilding counts
+- **String Manipulation** - Working with substrings and character comparisons
+- **Sorting** - Used in the brute-force approach to compare permutations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

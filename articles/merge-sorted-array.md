@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to access and modify elements by index
+- **Two Pointers** - Traversing arrays from different directions simultaneously
+- **In-place Algorithms** - Modifying data structures without using extra space
+
+---
+
 ## 1. Sorting
 
 ### Intuition

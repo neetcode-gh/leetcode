@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stacks** - The core data structure used to maintain elements by frequency level
+- **Hash Maps** - Used for tracking element frequencies and grouping elements by frequency
+- **Heaps/Priority Queues** - One solution approach uses heaps to efficiently retrieve the most frequent element
+- **Data Structure Design** - Understanding how to combine multiple data structures to achieve efficient operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

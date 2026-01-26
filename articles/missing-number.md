@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bitwise XOR** - The XOR approach uses the property that a number XORed with itself equals zero to cancel out all present numbers
+- **Math (Sum Formula)** - The mathematical approach uses the sum formula for consecutive integers to find the missing value
+- **Hash Set** - One solution uses constant-time lookups to identify which number from the expected range is absent
+
+---
+
 ## 1. Sorting
 
 ### Intuition

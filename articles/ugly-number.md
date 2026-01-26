@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prime Factorization** - Understanding how to break down a number into its prime factors
+- **Modulo and Division Operations** - Using the modulo operator to check divisibility and integer division to reduce numbers
+
+---
+
 ## 1. Math
 
 ### Intuition

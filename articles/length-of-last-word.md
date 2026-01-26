@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Traversal** - Iterating through characters in a string from either direction
+- **Two-Pointer Technique** - Using index variables to track positions while scanning
+- **Edge Case Handling** - Managing trailing spaces and multiple consecutive spaces in strings
+
+---
+
 ## 1. Iteration - I
 
 ### Intuition

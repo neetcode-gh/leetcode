@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap/Priority Queue** - A min-heap efficiently retrieves the two smallest elements for each combination step
+- **Greedy Algorithms** - Understanding why combining smallest sticks first minimizes total cost (similar to Huffman coding)
+
+---
+
 ## 1. Greedy
 
 ### Intuition

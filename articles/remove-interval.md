@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Intervals** - Understanding interval representation as [start, end] pairs
+- **Interval Overlap Detection** - Determining when two intervals overlap or are disjoint
+- **Array Iteration** - Traversing a list of intervals and building a result list
+
+---
+
 ## 1. Sweep Line, One Pass
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding how to navigate tree structures using left and right children
+- **Recursion** - Using recursive calls to evaluate subtrees before combining results at parent nodes
+- **Post-order Traversal** - Evaluating children before the parent, which is essential for expression tree evaluation
+- **Boolean Logic** - Understanding AND/OR operations and how to combine boolean values
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

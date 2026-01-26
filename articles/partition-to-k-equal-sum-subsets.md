@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible ways to assign elements to subsets and undoing choices when they don't lead to a solution
+- **Recursion** - Building subsets recursively and understanding the call stack
+- **Bit Manipulation** - Using bitmasks to efficiently represent which elements have been used (for optimized solutions)
+- **Dynamic Programming** - Memoizing states to avoid redundant computation in the bitmask DP approach
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

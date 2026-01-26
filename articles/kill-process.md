@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Data Structures** - Understanding parent-child relationships and tree traversal concepts
+- **Hash Maps** - Using dictionaries/maps for O(1) lookups to build adjacency lists
+- **Depth First Search (DFS)** - Recursively traversing tree structures to visit all descendants
+- **Breadth First Search (BFS)** - Level-order traversal using queues as an alternative to DFS
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

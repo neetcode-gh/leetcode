@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - The optimal solution maintains a fixed-size window that slides across the string
+- **Hash Set / Set Operations** - Used for O(1) vowel membership checking
+- **Prefix Sum** - An alternative approach uses cumulative sums to answer range queries efficiently
+- **Bit Manipulation (optional)** - Advanced optimization uses bitmasks for faster vowel checking
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

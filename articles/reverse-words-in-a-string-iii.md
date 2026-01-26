@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Using pointers to identify word boundaries and reverse segments
+- **String Manipulation** - Splitting strings and working with character arrays
+- **In-place Reversal** - Swapping characters within a word without extra space
+
+---
+
 ## 1. Convert To String Array
 
 ### Intuition

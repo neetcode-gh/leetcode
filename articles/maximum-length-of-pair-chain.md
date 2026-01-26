@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Pairs must be sorted by end value for greedy approach or by start value for binary search
+- **Greedy Algorithms** - The optimal solution uses interval scheduling greedy strategy
+- **Dynamic Programming** - Both top-down and bottom-up DP approaches are presented
+- **Binary Search** - Used in the optimized DP solution similar to Longest Increasing Subsequence
+
+---
+
 ## 1. Recursion
 
 ### Intuition

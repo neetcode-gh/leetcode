@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **BFS (Breadth-First Search)** - Finding shortest paths in unweighted graphs by level-order traversal
+- **Bidirectional BFS** - Optimizing BFS by searching from both start and target simultaneously
+- **Recursion with Memoization** - Caching results to avoid redundant computations in DFS
+- **Coordinate Symmetry** - Exploiting problem symmetry to reduce search space
+
+---
+
 ## 1. BFS (Breadth-First Search)
 
 ### Intuition

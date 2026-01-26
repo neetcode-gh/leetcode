@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming Fundamentals** - Understanding how to break problems into overlapping subproblems and use memoization or tabulation
+- **2D Grid/Matrix Traversal** - Ability to navigate and process elements in a 2D array with boundary checks
+- **Recursion with Memoization** - Converting recursive solutions to top-down DP by caching computed results
+
+---
+
 ## 1. Recursion
 
 ### Intuition

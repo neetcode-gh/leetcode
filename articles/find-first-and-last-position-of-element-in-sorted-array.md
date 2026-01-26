@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Finding elements in sorted arrays with O(log n) time complexity
+- **Lower Bound / Upper Bound** - Modifying binary search to find the first or last occurrence of a target
+- **Sorted Array Properties** - Understanding that duplicates appear consecutively in sorted arrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

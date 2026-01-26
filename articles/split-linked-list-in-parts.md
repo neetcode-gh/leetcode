@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Traversal** - Need to traverse the list to count nodes and split at specific positions
+- **Linked List Manipulation** - Severing links by setting `next` pointers to `null` to create separate parts
+- **Division and Modulo Operations** - Used to calculate base part size (`n / k`) and distribute remainder (`n % k`)
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

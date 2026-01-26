@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Traversal (DFS/BFS)** - Exploring grid cells using depth-first or breadth-first search with 4-directional movement
+- **Binary Search** - Using binary search on the answer to optimize searching for the minimum valid time
+- **Dijkstra's Algorithm** - Finding shortest paths with modified cost function (minimizing maximum edge weight)
+- **Union-Find (Disjoint Set Union)** - Tracking connected components as cells become accessible over time
+- **Priority Queue / Min-Heap** - Efficiently selecting the next cell with minimum cost in greedy approaches
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

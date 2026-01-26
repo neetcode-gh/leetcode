@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Understanding adjacency lists and how graphs are stored in memory
+- **Depth-First Search (DFS)** - Traversing graphs recursively or with an explicit stack
+- **Breadth-First Search (BFS)** - Level-order traversal of graphs using a queue
+- **Union-Find (Disjoint Set Union)** - Efficiently grouping and querying connected components
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

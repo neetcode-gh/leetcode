@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Number Representation** - Understanding how integers are stored as sequences of bits (0s and 1s)
+- **Bitwise AND Operator** - Using `&` to check if specific bits are set
+- **Bit Shifting** - Using left shift (`<<`) and right shift (`>>`) to move bits or create masks
+- **Bitwise Tricks** - Understanding that `n & (n-1)` removes the rightmost set bit
+
+---
+
 ## 1. Bit Mask - I
 
 ### Intuition

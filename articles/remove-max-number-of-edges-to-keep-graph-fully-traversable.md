@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Union-Find (Disjoint Set Union)** - Implementing DSU with path compression and union by rank for efficient component tracking
+- **Graph Connectivity** - Understanding when a graph is fully connected (single component)
+- **Greedy Algorithms** - Processing edges in optimal order to maximize removable edges
+- **Multiple Data Structures** - Maintaining separate Union-Find structures for different constraints
+
+---
+
 ## 1. Disjoint Set Union
 
 ### Intuition

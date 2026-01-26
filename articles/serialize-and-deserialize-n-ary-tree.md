@@ -1,3 +1,14 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **N-ary Trees** - Understanding tree nodes with a variable number of children stored in a list
+- **Tree Traversal (DFS)** - Recursively visiting all nodes in preorder fashion
+- **Tree Traversal (BFS)** - Level-order traversal using a queue to process nodes level by level
+- **Hash Maps** - Mapping node identities to their parent-child relationships during reconstruction
+- **Recursion** - Serializing and deserializing tree structures requires recursive processing
+- **String Encoding** - Converting tree structure to string format and parsing it back
+
+---
+
 ## 1. Parent Child relationships
 
 ### Intuition

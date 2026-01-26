@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Greedy Algorithms** - Making locally optimal choices (extend partition as long as possible) to achieve a global optimum
+- **HashSet Operations** - Using sets for O(1) membership checks to detect duplicate characters
+- **Bit Manipulation** - Using bitmasks to represent sets of characters efficiently with bitwise AND and OR operations
+
+---
+
 ## 1. Greedy (Hash Set)
 
 ### Intuition

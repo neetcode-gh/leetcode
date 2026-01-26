@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays/Matrices** - Navigating and manipulating grid-based data structures
+- **Depth First Search (DFS)** - Recursive traversal to explore all connected components
+- **Breadth First Search (BFS)** - Level-by-level traversal using a queue
+- **Union-Find (Disjoint Set Union)** - Data structure for efficiently tracking connected components
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

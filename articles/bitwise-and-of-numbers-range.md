@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation** - Understanding bitwise AND, OR, and shift operations
+- **Binary Number Representation** - Recognizing how numbers are represented in binary and how bits change across a range
+- **Common Bit Tricks** - Techniques like clearing the rightmost set bit using n & (n-1)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

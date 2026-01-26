@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure, traversal, and pointer manipulation
+- **Two Pointers** - Building and maintaining separate lists for partitioning
+- **Dummy Nodes** - Using sentinel nodes to simplify edge case handling when building linked lists
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

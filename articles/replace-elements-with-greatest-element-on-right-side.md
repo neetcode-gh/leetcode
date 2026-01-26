@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through arrays both forward and backward
+- **Suffix Maximum Pattern** - Maintaining a running maximum while traversing from right to left
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

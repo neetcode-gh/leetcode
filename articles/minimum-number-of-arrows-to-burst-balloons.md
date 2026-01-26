@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting intervals by start or end values for greedy processing
+- **Greedy Algorithms** - Making optimal local choices for interval scheduling problems
+- **Interval Overlap Detection** - Determining when two intervals share common points
+
+---
+
 ## 1. Greedy (Sort By Start Value)
 
 ### Intuition

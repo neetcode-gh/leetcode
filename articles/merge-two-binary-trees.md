@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with left and right children
+- **Depth First Search (DFS)** - Recursively or iteratively traversing tree structures
+- **Recursion** - Solving problems by breaking them into smaller subproblems with base cases
+- **Stack** - Using explicit stacks to convert recursive solutions to iterative ones
+
+---
+
 ## 1. Depth First Search (Creating New Tree)
 
 ### Intuition

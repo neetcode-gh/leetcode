@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array Manipulation** - Creating and filling matrices with values
+- **Boundary Tracking** - Maintaining and updating top, bottom, left, right boundaries during traversal
+- **Direction Vectors** - Using coordinate deltas `(dr, dc)` to control movement direction
+- **Simulation** - Following a defined pattern (spiral) to systematically fill cells
+
+---
+
 ## 1. Iteration
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to group and track maximum values by key
+- **Sorting** - Sorting values to find the top k elements efficiently
+- **Heaps/Priority Queues** - Maintaining the k largest elements using a min-heap of fixed size
+
+---
+
 ## 1. Hash Map
 
 ### Intuition

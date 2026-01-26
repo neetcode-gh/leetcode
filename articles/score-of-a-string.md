@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String iteration** - Traversing through characters in a string using indices
+- **ASCII values** - Converting characters to their numeric ASCII codes for comparison
+- **Absolute value** - Computing the non-negative difference between two numbers
+
+---
+
 ## 1. Iteration
 
 ### Intuition

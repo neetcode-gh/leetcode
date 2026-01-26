@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting allows us to efficiently find valid ranges where min + max satisfies the condition
+- **Two Pointers** - Used to find valid subsequence ranges from both ends of the sorted array
+- **Binary Search** - Alternative approach to find the rightmost valid index for each starting element
+- **Modular Arithmetic** - Required for computing powers of 2 modulo 10^9+7 to count subsequences
+
+---
+
 ## 1. Brute Force (Recursion)
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting intervals by start or end time to enable efficient processing
+- **Greedy algorithms** - Selecting intervals that leave maximum room for future choices
+- **Dynamic Programming** - Using memoization or tabulation to count optimal non-overlapping intervals
+- **Binary Search** - Finding the last non-overlapping interval efficiently in optimized DP solutions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

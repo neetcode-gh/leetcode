@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Used to build optimal subsequences by tracking states
+- **Longest Increasing Subsequence (LIS)** - This problem is a variant of the classic LIS problem with non-strict inequality
+- **Binary Search** - Used to optimize the LIS approach from O(n^2) to O(n log n)
+- **Upper Bound vs Lower Bound** - Understanding when to use each for subsequence problems
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Combinatorics Basics** - Understanding how to count combinations and permutations for distribution problems
+- **Enumeration Techniques** - Iterating through all valid possibilities systematically
+- **Inclusion-Exclusion Principle** - Computing counts by adding/subtracting overlapping sets to avoid overcounting
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

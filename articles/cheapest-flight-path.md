@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists to represent weighted directed graphs
+- **Dijkstra's Algorithm** - Finding shortest paths in weighted graphs using a min-heap/priority queue
+- **Bellman-Ford Algorithm** - Relaxing edges iteratively to find shortest paths with edge count constraints
+- **Priority Queue/Min-Heap** - Efficiently extracting minimum cost states during graph traversal
+
+---
+
 ## 1. Dijkstra's Algorithm
 
 ### Intuition

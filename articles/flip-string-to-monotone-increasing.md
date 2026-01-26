@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Breaking problems into overlapping subproblems with optimal substructure
+- **Memoization** - Caching recursive results to avoid redundant computation
+- **Prefix/Suffix Arrays** - Precomputing cumulative counts for efficient range queries
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

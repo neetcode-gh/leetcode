@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Managing a fixed-size window that moves through an array
+- **Two Heaps Pattern** - Using a max-heap and min-heap together to track medians efficiently
+- **Balanced Binary Search Trees / Multisets** - Maintaining sorted order with O(log n) insertions and deletions
+- **Sorting** - Understanding how median is calculated from sorted elements
+
+---
+
 ## 1. Brute Force (Sorting)
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion and Backtracking** - Used to explore all possible ways to partition characters into two subsequences
+- **Palindrome Checking** - Understanding how to verify if a string reads the same forwards and backwards using two pointers
+- **Bitmask/Bit Manipulation** - Representing subsets of characters as binary numbers for efficient enumeration
+- **Dynamic Programming (Longest Palindromic Subsequence)** - Computing the LPS of a string using DP to optimize the solution
+
+---
+
 ## 1. Recursion (Backtracking)
 
 ### Intuition

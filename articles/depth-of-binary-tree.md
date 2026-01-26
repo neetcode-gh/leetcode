@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with left/right children
+- **Recursion** - Writing functions that call themselves with smaller subproblems
+- **Depth-First Search (DFS)** - Traversing trees by exploring as deep as possible before backtracking
+- **Breadth-First Search (BFS)** - Traversing trees level by level using a queue
+
+---
+
 ## 1. Recursive DFS
 
 ### **Intuition**

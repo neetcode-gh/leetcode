@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal solution uses binary search on a sorted array to achieve O(log n) time complexity
+- **Bit Manipulation (XOR)** - Understanding that a ^ a = 0 and a ^ 0 = a enables an elegant O(n) solution
+- **Array Index Parity** - Recognizing how pairs align at even/odd indices helps determine which half contains the single element
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

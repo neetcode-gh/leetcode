@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - One approach sorts the array to easily access the two largest and two smallest elements
+- **Single-Pass Min/Max Tracking** - The optimal solution tracks the top 2 maximum and minimum values in one pass
+- **Basic Array Manipulation** - Understanding how to iterate and compare elements efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

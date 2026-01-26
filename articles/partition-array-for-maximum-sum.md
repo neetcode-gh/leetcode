@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Recursion with Memoization)** - Core technique for solving this optimization problem efficiently
+- **Array Partitioning** - Understanding how to split arrays into contiguous subarrays
+- **Subarray Maximum Tracking** - Needed to find the maximum element within sliding windows
+- **Space Optimization in DP** - Useful for reducing memory usage with circular buffer technique
+
+---
+
 ## 1. Recursion
 
 ### Intuition

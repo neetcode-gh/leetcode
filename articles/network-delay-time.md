@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency List)** - Building and traversing weighted directed graphs
+- **Depth First Search (DFS)** - Recursive graph traversal with path tracking
+- **Shortest Path Algorithms** - Understanding Dijkstra's, Bellman-Ford, and Floyd-Warshall concepts
+- **Priority Queue / Min-Heap** - Efficiently extracting minimum elements for Dijkstra's algorithm
+- **Hash Maps** - Storing distances and graph edges for quick lookups
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

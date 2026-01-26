@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break problems into smaller subproblems and handle base cases
+- **Dynamic Programming** - Both memoization (top-down) and tabulation (bottom-up) approaches
+- **Hash Set** - Using sets for O(1) lookup to efficiently check if a word exists in the dictionary
+- **String Manipulation** - Substring operations and string comparison
+- **Trie (Optional)** - A tree-based data structure for efficient prefix matching and word lookup
+
+---
+
 ## 1. Recursion
 
 ### Intuition

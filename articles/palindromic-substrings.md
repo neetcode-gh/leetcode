@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Used to check if a substring is a palindrome by comparing characters from both ends
+- **Dynamic Programming (2D)** - Needed for the DP approach to store palindrome status of substrings
+- **String Manipulation** - Understanding how to extract and compare substrings efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

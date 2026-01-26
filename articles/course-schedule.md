@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge pairs to represent directed graphs
+- **Depth-First Search (DFS)** - Recursive graph traversal for exploring dependencies and detecting cycles
+- **Topological Sort (Kahn's Algorithm)** - BFS-based approach using indegree to determine if a valid ordering exists
+- **Cycle Detection** - Tracking nodes in the current recursion path to identify back edges indicating cycles
+
+---
+
 ## 1. Cycle Detection (DFS)
 
 ### Intuition

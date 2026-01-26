@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building and traversing adjacency lists
+- **Depth First Search (DFS)** - Recursive graph traversal and backtracking
+- **Cycle Detection** - Using three-color marking (white/gray/black) to detect back edges in directed graphs
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

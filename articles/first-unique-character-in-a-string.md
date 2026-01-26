@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to count character frequencies in O(1) time per operation
+- **String Iteration** - Traversing strings and accessing characters by index
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

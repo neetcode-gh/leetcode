@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Used to manage both operator precedence and nested parentheses
+- **String Parsing** - Building multi-digit numbers and identifying operators, parentheses, and whitespace
+- **Operator Precedence** - Multiplication/division before addition/subtraction
+- **Recursion** - One approach uses recursive calls to handle nested parentheses
+- **Basic Calculator II** - This problem extends Basic Calculator II by adding parentheses support
+
+---
+
 ## 1. Stack
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Exploring all valid orderings by branching on pickup and delivery choices
+- **Dynamic Programming** - Memoizing states to avoid redundant computation of overlapping subproblems
+- **Combinatorics** - Understanding permutations and how constraints reduce valid arrangements
+- **Modular Arithmetic** - Applying modulo operations to prevent integer overflow in large results
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map / Hash Set** - Used to count frequencies or track seen values in a single pass through the grid
+- **Mathematical Formulas for Sums** - The optimal solution uses sum and sum of squares formulas to derive the missing and repeated values without extra space
+- **2D Array Traversal** - The problem requires iterating through all cells in an n x n grid
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

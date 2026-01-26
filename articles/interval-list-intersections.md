@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Intervals** - Understanding interval representation and overlap detection logic
+- **Two Pointers** - Using two indices to traverse two sorted lists simultaneously
+- **Line Sweep Algorithm** - Processing events at specific points to track active intervals
+- **Sorted Arrays** - Leveraging sorted order to optimize comparison-based algorithms
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

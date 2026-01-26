@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph traversal (DFS)** - Exploring all cells belonging to an island in a 2D grid
+- **Coordinate normalization** - Translating island shapes relative to an origin for comparison
+- **Hashing** - Using sets and hashable data structures to store unique island signatures
+- **Path encoding** - Recording traversal directions to create unique signatures for island shapes
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

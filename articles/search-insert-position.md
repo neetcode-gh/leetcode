@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to traverse and access elements by index
+- **Binary Search** - Knowing how to efficiently search in a sorted array by repeatedly halving the search space
+
+---
+
 ## 1. Linear Search
 
 ### Intuition

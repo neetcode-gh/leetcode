@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Used to arrange elements so we can pick from smallest and largest ends
+- **Two Pointers** - Needed to efficiently pick elements from both ends of the sorted array
+- **Greedy Algorithms** - Understanding why interleaving small and large values guarantees a valid arrangement
+
+---
+
 ## 1. Greedy
 
 ### Intuition

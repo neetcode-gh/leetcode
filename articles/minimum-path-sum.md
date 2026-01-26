@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - The brute force solution explores all paths using recursive calls
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up (tabulation) approaches are used
+- **2D Grid Traversal** - Understanding how to navigate a grid moving only right or down
+- **Space Optimization** - The optimal solution reduces 2D DP to 1D by reusing a single array
+
+---
+
 ## 1. Recursion
 
 ### Intuition

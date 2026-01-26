@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Basic array indexing and iteration
+- **Two Pointers** - Using pointers at opposite ends to traverse and modify data
+- **In-place Modification** - Modifying data structures without using extra space
+
+---
+
 ## 1. Array
 
 ### Intuition

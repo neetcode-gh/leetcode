@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal solution adapts binary search to work on a rotated array by determining which half contains the minimum
+- **Array Rotation Concept** - Understanding how rotation shifts elements helps identify the sorted and unsorted portions of the array
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

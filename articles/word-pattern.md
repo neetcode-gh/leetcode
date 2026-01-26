@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries for efficient key-value lookups and storing mappings
+- **Bijection Concept** - Understanding one-to-one correspondence where each key maps to exactly one value and vice versa
+- **String Manipulation** - Splitting strings by delimiters and iterating through characters
+
+---
+
 ## 1. Two Hash Maps
 
 ### Intuition

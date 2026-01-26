@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Using LIFO operations to track and remove elements in reverse order
+- **Two Pointers Technique** - Using read and write pointers to modify an array in-place
+- **String Manipulation** - Converting between strings and character arrays, building strings efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

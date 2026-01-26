@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure, traversal, and pointer manipulation
+- **Recursion** - Breaking problems into subproblems and handling base cases
+- **Linked List Reversal** - Reversing a linked list using pointer manipulation
+- **Dummy Nodes** - Using sentinel nodes to simplify edge cases at the head of a list
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Computing cumulative sums to efficiently query range sums in O(1) time
+- **Array Traversal** - Iterating through arrays while maintaining running totals
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

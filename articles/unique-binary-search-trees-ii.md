@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the root
+- **Recursion** - Building solutions by combining results from recursive subproblems
+- **Dynamic Programming** - Using memoization to cache and reuse previously computed subtrees
+- **Tree Construction** - Creating and linking tree nodes to build complete tree structures
+
+---
+
 ## 1. Recursion
 
 ### Intuition

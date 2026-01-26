@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Traversal** - Navigating through nodes using next pointers
+- **Pointer Manipulation** - Updating next pointers to skip or remove nodes from the list
+- **In-Place Modification** - Modifying a data structure without using extra space for a new copy
+
+---
+
 ## 1. Traverse Linked List and Delete In Place
 
 ### Intuition

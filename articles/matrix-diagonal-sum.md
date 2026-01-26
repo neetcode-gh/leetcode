@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array Traversal** - Understanding how to access elements in a matrix using row and column indices
+- **Diagonal Patterns** - Recognizing that primary diagonal has i==j and secondary diagonal has i+j==n-1
+
+---
+
 ## 1. Iteration
 
 ### Intuition

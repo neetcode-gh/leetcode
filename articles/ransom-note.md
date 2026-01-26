@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Used to efficiently count and compare character occurrences between two strings
+- **String Iteration** - Understanding how to traverse characters in a string and perform lookups
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

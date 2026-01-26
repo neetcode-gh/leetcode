@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting with Custom Comparators** - Engineers are sorted by efficiency in descending order to fix the minimum efficiency
+- **Heap / Priority Queue (Min-Heap)** - Used to efficiently maintain the k largest speeds as we iterate
+- **Greedy Algorithms** - The key insight is fixing the minimum efficiency and maximizing the speed sum
+- **Modular Arithmetic** - The result must be returned modulo 10^9 + 7, applied only at the end
+
+---
+
 ## 1. Brute Force (Recursion)
 
 ### Intuition

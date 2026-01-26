@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queues** - Understanding FIFO (First-In-First-Out) operations including enqueue and dequeue
+- **Stacks** - Understanding LIFO (Last-In-First-Out) behavior and why it differs from queues
+- **Linked Lists** - Basic understanding for the queue-of-queues approach that uses a linked structure
+
+---
+
 ## 1. Using Two Queues
 
 ### Intuition

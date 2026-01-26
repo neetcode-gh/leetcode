@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Array Manipulation** - Working with grids, understanding row and column indexing
+- **Two Pointers Technique** - Using a pointer to track the next available position while iterating through elements
+- **Gravity Simulation** - Moving elements (stones) toward a direction until they hit an obstacle or boundary
+- **Matrix Rotation** - Transforming coordinates from original position (r,c) to rotated position for 90-degree clockwise rotation
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

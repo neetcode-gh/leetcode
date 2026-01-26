@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with left and right children
+- **Breadth-First Search (BFS)** - Level-by-level traversal using a queue
+- **Depth-First Search (DFS)** - Recursive traversal of tree structures
+- **Stack-based Iteration** - Converting recursive DFS to iterative form using an explicit stack
+
+---
+
 ## 1. Breadth First Search
 
 ### **Intuition**

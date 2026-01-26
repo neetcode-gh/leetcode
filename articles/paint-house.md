@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming Fundamentals** - Understanding how to build optimal solutions from subproblems
+- **Recursion with Memoization** - Converting brute force recursion to efficient top-down DP
+- **State Transitions** - Tracking which color was used previously to enforce the adjacent constraint
+- **Space Optimization** - Reducing DP space from O(n) to O(1) by only storing the previous row's values
+
+---
+
 ## 1. Recursion
 
 ### Intuition

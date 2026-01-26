@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Building solutions through recursive function calls
+- **Backtracking** - Exploring solution paths and undoing choices when they lead to invalid states
+- **Dynamic Programming** - Building larger solutions from smaller subproblems
+- **String Manipulation** - Building and validating strings character by character
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

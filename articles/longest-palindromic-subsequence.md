@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (2D)** - The solution requires a 2D DP table to track palindrome lengths for substrings defined by two indices
+- **Recursion with Memoization** - Top-down approaches use recursive calls with caching to avoid recomputation
+- **Longest Common Subsequence (LCS)** - One approach reduces this problem to finding the LCS between the string and its reverse
+- **String Manipulation** - Understanding how to work with substrings and character comparisons
+
+---
+
 ## 1. Dynamic Programming (Top Down)
 
 ### Intuition

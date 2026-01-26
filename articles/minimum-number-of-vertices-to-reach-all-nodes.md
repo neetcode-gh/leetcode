@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency List)** - Required to store and traverse the directed graph
+- **Depth First Search (DFS)** - One approach uses DFS to identify reachable nodes
+- **Indegree Concept** - The optimal solution identifies nodes with zero incoming edges
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

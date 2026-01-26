@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Divide and Conquer** - Breaking problems into subproblems by splitting at key points (like minimum elements)
+- **Segment Trees** - Efficient range minimum queries for optimizing divide and conquer approaches
+- **Greedy Algorithms** - Recognizing that counting upward slopes gives the optimal answer
+- **Array Traversal** - Processing adjacent element differences in a single pass
+
+---
+
 ## 1. Simulation
 
 ### Intuition

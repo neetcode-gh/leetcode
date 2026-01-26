@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to count the frequency of each element in the array
+- **Custom Comparators** - Sorting with multi-level criteria (primary by frequency, secondary by value)
+- **Sorting Algorithms** - Understanding how to apply custom sort keys or comparator functions
+
+---
+
 ## 1. Custom Sort
 
 ### Intuition

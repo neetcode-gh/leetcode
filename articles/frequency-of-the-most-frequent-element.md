@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Arranging elements to enable efficient window-based approaches
+- **Sliding Window** - Maintaining a dynamic window with adjustable boundaries
+- **Prefix Sum** - Efficiently computing range sums for cost calculations
+- **Binary Search** - Finding optimal boundaries in sorted data
+- **Greedy Reasoning** - Understanding why the target value must exist in the original array
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

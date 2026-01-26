@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Building justified lines requires precise string concatenation and padding
+- **Greedy Algorithms** - Words are greedily packed into each line until no more fit
+- **Modular Arithmetic** - Space distribution uses division and remainder to spread spaces evenly among gaps
+
+---
+
 ## 1. Iteration
 
 ### Intuition

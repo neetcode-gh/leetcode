@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding recursive calls and building results through multiple levels
+- **Backtracking** - Exploring all branches of a decision tree and building combinations step by step
+- **Hash Maps/Dictionaries** - Mapping keys (digits) to values (corresponding letters)
+- **String Manipulation** - Concatenating characters to build strings
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

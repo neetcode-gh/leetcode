@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, nodes, left/right children, and null nodes
+- **Recursion** - Both solutions rely on recursive tree traversal patterns
+- **Tree Height Calculation** - Computing the height of a subtree recursively
+- **Depth First Search (DFS)** - Postorder traversal for the optimized solution
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

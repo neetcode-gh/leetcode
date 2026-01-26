@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Interactive/Query-Based Problems** - Understanding how to extract information through limited API calls rather than direct array access
+- **Counting and Grouping** - Tracking counts of elements that share properties without knowing their actual values
+- **Logical Deduction** - Using comparison results to infer relationships between elements
+
+---
+
 ## 1. n Queries
 
 ### Intuition

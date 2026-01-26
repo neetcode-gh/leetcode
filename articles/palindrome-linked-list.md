@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Traversal** - Understanding how to iterate through a singly linked list
+- **Two Pointers (Fast & Slow)** - Used to find the middle of the list in one pass
+- **In-place List Reversal** - Reversing a linked list without extra space
+- **Stack Data Structure** - LIFO behavior useful for comparing elements from both ends
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

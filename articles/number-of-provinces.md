@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation (Adjacency Matrix)** - Understanding how to represent connections between nodes in a 2D matrix
+- **Depth First Search (DFS)** - Recursive traversal technique used to explore all reachable nodes from a starting point
+- **Breadth First Search (BFS)** - Level-by-level traversal using a queue to explore connected nodes
+- **Union-Find (Disjoint Set Union)** - Data structure for efficiently tracking and merging connected components
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

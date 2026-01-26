@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - Essential for computing range sums in O(1) time after O(n) preprocessing
+- **Monotonic Stack** - Used to efficiently find the nearest smaller element on both sides for each index
+- **Divide and Conquer** - Alternative approach that recursively processes subarrays based on minimum elements
+- **Segment Tree (optional)** - Advanced data structure for O(log n) range minimum queries
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

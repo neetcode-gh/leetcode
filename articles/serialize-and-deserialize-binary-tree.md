@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree node structure with left and right children
+- **Tree Traversal (DFS)** - Preorder traversal visits root, then left subtree, then right subtree
+- **Tree Traversal (BFS)** - Level-order traversal processes nodes level by level using a queue
+- **Recursion** - Building and reconstructing trees requires recursive thinking
+- **String Manipulation** - Encoding tree structure into strings and parsing them back
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

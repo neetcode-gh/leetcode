@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree/Graph Representation** - Understanding how to represent trees using adjacency lists and traversing undirected graphs
+- **Depth First Search (DFS)** - Ability to traverse trees recursively while tracking parent nodes to avoid revisiting
+- **Ceiling Division** - Knowing how to compute the ceiling of integer division (e.g., using `(a + b - 1) / b` or math.ceil)
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

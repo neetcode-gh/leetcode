@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Roman Numeral System** - Understanding symbols (I, V, X, L, C, D, M) and subtractive notation (IV, IX, etc.)
+- **Greedy Algorithm** - Processing values from largest to smallest to build optimal solutions
+- **Modular Arithmetic** - Using division and modulo to extract digits from numbers
+
+---
+
 ## 1. Math - I
 
 ### Intuition

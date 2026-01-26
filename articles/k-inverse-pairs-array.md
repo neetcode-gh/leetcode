@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Building solutions from smaller subproblems using both top-down (memoization) and bottom-up (tabulation) approaches
+- **Inverse Pairs in Permutations** - Understanding that an inverse pair (i, j) means i < j but arr[i] > arr[j]
+- **Modular Arithmetic** - Performing addition and subtraction under modulo to prevent integer overflow
+- **Sliding Window Optimization** - Recognizing when consecutive DP states share overlapping terms that can be computed incrementally
+- **Prefix Sums** - Using cumulative sums to compute range queries in constant time
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

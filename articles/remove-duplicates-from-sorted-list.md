@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Fundamentals** - Understanding node structure, traversal, and pointer manipulation
+- **Recursion** - Processing linked lists recursively from the tail back to the head
+- **Sorted Data Structures** - Leveraging the fact that duplicates are adjacent in sorted lists
+
+---
+
 ## 1. Recursion
 
 ### Intuition

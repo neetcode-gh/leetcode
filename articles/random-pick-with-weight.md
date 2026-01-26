@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - Used to build cumulative weight ranges for efficient probability mapping
+- **Binary Search** - Required for the optimized O(log n) solution to find the target weight segment
+- **Probability Concepts** - Understanding weighted random selection where larger weights have proportionally higher selection chances
+
+---
+
 ## 1. Prefix Sum + Linear Search
 
 ### Intuition

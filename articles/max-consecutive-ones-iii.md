@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to traverse and manipulate array elements
+- **Sliding Window Technique** - Maintaining a dynamic window over a contiguous subarray while tracking specific conditions
+- **Two Pointers** - Using left and right pointers to efficiently process subarrays without nested iteration
+- **Prefix Sum** - Precomputing cumulative sums to enable O(1) range queries
+- **Binary Search** - Finding target values or boundaries in sorted data in O(log n) time
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

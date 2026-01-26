@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting the array enables efficient duplicate handling and two-pointer technique
+- **Two pointers** - The optimal solution uses two pointers to find pairs that sum to a target
+- **Hash maps** - An alternative approach uses hash maps for O(1) lookups
+- **Handling duplicates** - Skipping duplicate values to avoid repeated triplets in the result
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

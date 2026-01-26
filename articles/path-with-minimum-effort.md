@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dijkstra's Algorithm** - Finding shortest paths using a priority queue with modified cost function
+- **Binary Search** - Searching for the minimum feasible effort value
+- **Depth First Search (DFS)** - Checking path reachability under a given constraint
+- **Union-Find / Disjoint Set Union (DSU)** - Connecting components to determine reachability (Kruskal's approach)
+- **2D Grid Traversal** - Moving in four directions and handling grid boundaries
+
+---
+
 ## 1. Dijkstra's Algorithm
 
 ### Intuition

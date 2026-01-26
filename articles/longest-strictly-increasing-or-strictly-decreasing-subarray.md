@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through arrays and comparing adjacent elements
+- **Basic Iteration Patterns** - Tracking running counters and updating maximum values during a single pass
+- **Monotonic Sequences** - Understanding strictly increasing and strictly decreasing patterns and how they break
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Required to process intervals in order by start time for efficient merging
+- **Intervals** - Understanding how to represent, compare, and merge overlapping ranges
+- **Sweep Line Algorithm** - Alternative approach that tracks active intervals using events on a timeline
+
+---
+
 ## 1. Sorting
 
 ### Intuition

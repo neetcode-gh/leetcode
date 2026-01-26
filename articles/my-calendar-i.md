@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Interval Overlap Detection** - Understanding when two intervals conflict using start and end time comparisons
+- **Binary Search Trees** - Organizing intervals in a tree structure for efficient insertion and lookup
+- **Binary Search** - Finding insertion points in sorted collections to efficiently check neighbors
+
+---
+
 ## 1. Iteration
 
 ### Intuition

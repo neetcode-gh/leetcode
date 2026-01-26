@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Used to precompute counts of characters before each position
+- **Suffix Sum** - Used to precompute counts of characters from each position onward
+- **String Iteration** - Processing characters sequentially while maintaining running totals
+- **Greedy Optimization** - Tracking the optimal answer while iterating through possible choices
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

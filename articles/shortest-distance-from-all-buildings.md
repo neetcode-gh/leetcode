@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Breadth First Search (BFS)** - The core algorithm for finding shortest distances from each source to all reachable cells
+- **Multi-source BFS** - Understanding how to run BFS from multiple starting points and accumulate distances
+- **Graph Traversal on Grids** - 4-directional movement, boundary checking, and handling obstacles in 2D matrices
+- **Distance Accumulation** - Tracking cumulative distances and reachability counts across multiple BFS runs
+
+---
+
 ## 1. BFS from Empty Land to All Houses
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Custom Comparators** - Writing comparison functions to define custom sorting orders
+- **Digit Manipulation** - Extracting and transforming individual digits using modulo and division
+- **Stable Sorting** - Understanding that stable sorts preserve relative order of equal elements
+- **String/Number Conversion** - Converting between numeric and string representations
+
+---
+
 ## 1. Convert To Strings + Sorting
 
 ### Intuition

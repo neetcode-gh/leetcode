@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sum** - Precomputing cumulative sums to answer range queries in O(1) time
+- **Hash Set** - Using sets for O(1) character lookup when checking vowels
+- **Bit Manipulation (Optional)** - Using bitmasks as an alternative to hash sets for membership testing
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

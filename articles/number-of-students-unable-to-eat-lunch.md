@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queue Data Structure** - FIFO structure for managing elements that need to be processed in order
+- **Simulation** - Implementing step-by-step processes exactly as described in the problem
+- **Frequency Counting** - Using arrays or hash maps to count occurrences of different values
+
+---
+
 ## 1. Queue
 
 ### Intuition

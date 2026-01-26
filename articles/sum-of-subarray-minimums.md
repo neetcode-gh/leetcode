@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Monotonic Stack** - Used to efficiently find next/previous smaller elements for each position in O(n) time
+- **Contribution Technique** - Understanding how to count each element's contribution across all subarrays rather than iterating through each subarray
+- **Modular Arithmetic** - Applying modulo operations correctly to prevent integer overflow in the result
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

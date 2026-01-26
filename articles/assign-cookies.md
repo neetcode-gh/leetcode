@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Required to process children and cookies in order of greed/size
+- **Two Pointers** - Efficiently matching sorted children with sorted cookies
+- **Greedy Algorithms** - Understanding why assigning the smallest sufficient cookie maximizes satisfaction
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

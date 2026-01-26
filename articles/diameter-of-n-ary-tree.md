@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **N-ary Trees** - Understanding tree structures where each node can have multiple children
+- **Recursion** - The solution uses recursive tree traversal to compute heights/depths
+- **Tree Height vs Depth** - Height is distance down to leaves; depth is distance from root
+
+---
+
 ## 1. Distance with Height
 
 The **height** of a node is defined as the length of the longest downward path to a leaf node from that node.

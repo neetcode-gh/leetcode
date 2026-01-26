@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Exploring all possible subsets by including or excluding each element
+- **Hash maps** - Tracking element counts to check for conflicts efficiently
+- **Recursion** - Building subsets through recursive decision trees
+- **Dynamic programming (optional)** - Optimized solutions use DP similar to the house robber problem
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Using boolean arrays to track state and linear scanning for finding elements
+- **Heap / Priority Queue** - Understanding min-heap operations for efficient retrieval of the smallest element
+- **Ordered Set** - Using balanced binary search trees (TreeSet, SortedSet) for maintaining sorted elements with efficient min retrieval
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

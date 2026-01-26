@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Building permutations by reducing to smaller subproblems
+- **Backtracking** - Exploring choices, then undoing them to try alternatives
+- **Arrays and List Operations** - Inserting elements at various positions and swapping
+- **Bit Manipulation (Optional)** - Using bitmasks to efficiently track used elements
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Using sets for O(1) lookups to check membership efficiently
+- **String Manipulation** - Parsing and splitting strings, working with substrings and prefixes
+- **Sorting** - Understanding how lexicographic sorting groups related strings together
+- **Trie Data Structure** - Building and traversing prefix trees for hierarchical string matching
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

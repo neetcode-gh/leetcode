@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **2D Arrays/Matrices** - Iterating through rows and columns
+- **Counting Arrays** - Precomputing row and column counts for efficient lookups
+- **Two-Pass Algorithms** - First pass to gather statistics, second pass to compute results
+
+---
+
 ## 1. Counting with Arrays
 
 ### Intuition

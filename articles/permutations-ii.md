@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Building permutations by exploring choices and undoing them
+- **Recursion** - The recursive nature of generating all permutations
+- **Hash Set / Hash Map** - Tracking duplicates or counting element frequencies
+- **Sorting** - Arranging elements so duplicates are adjacent for easier handling
+- **Duplicate Handling** - Understanding how to skip duplicate elements to avoid repeated permutations
+
+---
+
 ## 1. Backtracking (Hash Set)
 
 ### Intuition

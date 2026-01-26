@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting Algorithms** - Understanding how sorting works and its O(n log n) time complexity
+- **Heap Data Structure** - Using min-heaps to efficiently track the k largest elements
+- **QuickSelect Algorithm** - Partitioning arrays around a pivot to find the k-th element in average O(n) time
+- **Two Pointers / Partitioning** - Rearranging elements based on comparison with a pivot value
+
+---
+
 ## 1. Sorting
 
 ### Intuition

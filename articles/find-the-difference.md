@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps / Frequency Counting** - Used to count character occurrences and find the extra character
+- **ASCII Values** - Understanding character-to-integer conversion for sum-based solutions
+- **Bit Manipulation (XOR)** - The optimal solution uses XOR properties where a ^ a = 0 to find the unique character
+
+---
+
 ## 1. Two Hash Maps
 
 ### Intuition

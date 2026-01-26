@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - The optimal solution uses sets for O(1) lookup and set difference operations
+- **Set Operations** - Understanding union, intersection, and difference of sets
+- **Two Pointers** - Used in the sorting-based approach to efficiently compare sorted arrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Number Base Conversion** - Converting numbers between different bases (especially base-26)
+- **Modular Arithmetic** - Using modulo and integer division to extract digits
+- **Recursion** - Breaking down problems into smaller subproblems with base cases
+- **ASCII/Character Manipulation** - Converting between characters and their numeric values
+
+---
+
 ## 1. Recursion
 
 ### Intuition

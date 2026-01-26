@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Heap / Priority Queue** - Using min-heap or max-heap to efficiently track extreme values
+- **Sliding Window** - Maintaining a valid window while tracking which elements are represented
+- **Sorting** - Sorting pairs of values and using sorted order to find optimal ranges
+- **Bit Manipulation** - Understanding odd/even properties and operations like doubling and halving
+
+---
+
 ## 1. Sorting + Sliding Window
 
 ### Intuition

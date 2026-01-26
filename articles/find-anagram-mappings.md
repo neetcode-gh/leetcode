@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to store value-to-index mappings for O(1) lookup
+- **Array Traversal** - Basic iteration to build mappings between two arrays
+- **Bit Manipulation (Optional)** - The advanced solution encodes indices into values using bit shifts
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

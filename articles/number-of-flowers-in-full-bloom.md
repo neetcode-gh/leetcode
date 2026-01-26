@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting arrays and maintaining original indices while sorting
+- **Binary Search** - Finding positions in sorted arrays efficiently
+- **Heap / Priority Queue** - Using min-heaps to process elements in sorted order dynamically
+- **Two Pointers** - Traversing multiple sorted arrays simultaneously
+- **Line Sweep** - Processing events (start/end times) in chronological order to track state changes
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Queues** - FIFO data structure for maintaining insertion order of elements
+- **Hash Maps** - Tracking element counts and uniqueness status in O(1) time
+- **LinkedHashSet / OrderedDict** - Combining hash map O(1) lookups with insertion order preservation
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

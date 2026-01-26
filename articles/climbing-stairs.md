@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding recursive function calls and base cases
+- **Dynamic Programming** - Memoization (top-down) and tabulation (bottom-up) approaches to optimize overlapping subproblems
+- **Fibonacci Sequence** - Recognizing patterns where each value depends on the previous two values
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Iterator Design Pattern** - Understanding how to implement `next()` and `hasNext()` methods to traverse elements sequentially
+- **Two-Pointer Technique** - Using multiple pointers to track positions across different data structures
+- **Queue Data Structure** - Using FIFO queues to manage and cycle through elements efficiently
+- **Modular Arithmetic** - Using the modulo operator to cycle through indices in a round-robin fashion
+
+---
+
 ## 1. Two-Pointers
 
 ### Intuition

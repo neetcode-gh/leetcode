@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Understanding push/pop operations and how stacks model nested or hierarchical state
+- **String Comparison** - Comparing strings for equality to distinguish between different folder operations
+
+---
+
 ## 1. Stack
 
 ### Intuition

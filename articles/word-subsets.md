@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Character Frequency Counting** - Using arrays or hash maps to count occurrences of each character in a string
+- **Hash Maps** - For efficient frequency lookups and comparisons
+- **Greedy Optimization** - Combining multiple constraints into a single merged requirement to reduce comparisons
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Strings** - Understanding string indexing and character access
+- **Two Pointers** - Using multiple indices to traverse data structures simultaneously
+- **StringBuilder / String Concatenation** - Efficiently building strings in loops to avoid O(n^2) complexity
+
+---
+
 ## 1. Two Pointers - I
 
 ### Intuition

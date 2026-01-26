@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Searching for the optimal value in a sorted search space
+- **Arithmetic Series** - The formula for sum of first k integers: k * (k + 1) / 2
+- **Basic Math** - Solving quadratic inequalities and using the quadratic formula
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Understanding how to traverse and manipulate array elements
+- **Sliding Window Technique** - Maintaining a dynamic window over a contiguous subarray while tracking specific conditions
+- **Two Pointers** - Using left and right pointers to efficiently process subarrays without nested iteration
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

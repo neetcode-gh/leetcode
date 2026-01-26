@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - Caching results for states defined by position, remaining deletions, and run information
+- **Run-Length Encoding** - Understanding how consecutive character runs are compressed (e.g., "aaa" becomes "a3")
+- **Multi-dimensional State Management** - Tracking position, deletion budget, previous character, and count simultaneously
+- **Optimization Thresholds** - Recognizing that encoded length only increases at specific counts (1, 9, 99)
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

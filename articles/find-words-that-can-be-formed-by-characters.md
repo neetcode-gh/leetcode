@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps/Dictionaries** - Counting character frequencies and performing lookups
+- **String Iteration** - Traversing characters in strings to build frequency counts
+- **Arrays as Fixed-Size Maps** - Using arrays of size 26 for lowercase letter counting as an optimization
+
+---
+
 ## 1. Hash Map (Two Pass)
 
 ### Intuition

@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting intervals and queries to process them in order
+- **Min Heap / Priority Queue** - Efficiently retrieving the smallest interval covering a query
+- **Sweep Line Algorithm** - Processing events (interval starts, ends, queries) in sorted order
+- **Segment Trees with Lazy Propagation** - Advanced technique for range minimum queries and updates
+- **Coordinate Compression** - Mapping large coordinate values to smaller indices
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

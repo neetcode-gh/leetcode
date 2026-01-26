@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down problems into smaller subproblems with base cases
+- **Dynamic Programming** - Memoization and tabulation techniques to avoid redundant computation
+- **Graph Traversal** - Understanding state transitions as edges in an implicit graph
+- **Matrix Exponentiation** - Using matrix multiplication to compute recurrences in O(log n) time (for optimal solution)
+
+---
+
 ## 1. Recursion
 
 ### Intuition

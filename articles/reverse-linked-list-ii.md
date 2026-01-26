@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Reverse Linked List (Basic)** - This problem builds on the standard linked list reversal technique
+- **Dummy Node Technique** - Using a dummy node to simplify edge cases when the head might change
+- **Linked List Traversal** - Navigating to specific positions in a linked list by counting nodes
+- **Pointer Manipulation** - Carefully managing multiple pointers to disconnect, reverse, and reconnect list segments
+
+---
+
 ## 1. Recursion - I
 
 ### Intuition

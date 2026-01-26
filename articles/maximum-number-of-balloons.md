@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map / Dictionary** - Storing and retrieving key-value pairs for frequency counting
+- **Character Frequency Counting** - Counting occurrences of each character in a string
+- **Finding Minimum Across Values** - Determining the limiting factor from multiple constraints
+
+---
+
 ## 1. Hash Map - I
 
 ### Intuition

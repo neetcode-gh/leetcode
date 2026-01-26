@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Storing and retrieving key-value pairs in O(1) time
+- **Heaps / Priority Queues** - Efficiently accessing the maximum or minimum element
+- **Sorted Sets / TreeSets** - Maintaining elements in sorted order with efficient insertion and deletion
+- **Lazy Deletion** - Marking entries as invalid rather than removing them immediately from data structures
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

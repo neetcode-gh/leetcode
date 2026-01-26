@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Arrays** - Traversing and comparing elements in an array
+- **Monotonic Stack** - Understanding how to maintain a stack with elements in decreasing/increasing order
+- **Reverse Iteration** - Processing arrays from right to left for optimization
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

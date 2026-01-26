@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Essential for storing operands and applying operators in LIFO order
+- **String Parsing** - Converting string tokens to integers and identifying operators
+- **Basic Arithmetic Operations** - Handling addition, subtraction, multiplication, and integer division with truncation toward zero
+- **Postfix Expression Evaluation** - Understanding that operators apply to the two most recent operands
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

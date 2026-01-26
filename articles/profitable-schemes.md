@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **0/1 Knapsack Problem** - This is a variation with two constraints (members and profit)
+- **Recursion** - Building decision trees where each item can be included or excluded
+- **Memoization** - Caching results to avoid redundant computation in overlapping subproblems
+- **Dynamic Programming** - Converting recursive solutions to iterative bottom-up approaches
+- **Modular Arithmetic** - Handling large results with modulo operations to prevent overflow
+
+---
+
 ## 1. Recursion
 
 ### Intuition

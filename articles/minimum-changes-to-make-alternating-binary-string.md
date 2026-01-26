@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Iteration** - Comparing each character against expected patterns requires basic string traversal
+- **XOR Operation** - Using XOR to toggle between 0 and 1 provides an elegant way to alternate expected characters
+- **Counting and Comparison** - Understanding that mismatches for two complementary patterns sum to the string length enables optimization
+
+---
+
 ## 1. Start with Zero and One
 
 ### Intuition

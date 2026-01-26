@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding how nodes connect via left and right children
+- **Tree Traversal Orders** - Knowing what preorder (root-left-right) and inorder (left-root-right) sequences represent
+- **Recursion / DFS** - Building solutions by breaking problems into subproblems on left and right subtrees
+- **Hash Maps** - Using dictionaries for O(1) index lookups to optimize from O(n^2) to O(n)
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Converting numbers to strings and extracting substrings for digit analysis
+- **Breadth-First Search (BFS)** - Using a queue to explore candidates level by level in increasing order
+- **Depth-First Search (DFS)** - Using recursion to build numbers by extending with consecutive digits
+- **Sliding Window** - Extracting fixed-length substrings from a template string
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

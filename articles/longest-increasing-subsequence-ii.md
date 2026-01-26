@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Understanding DP transitions for subsequence problems where each element depends on previous valid elements
+- **Segment Trees** - Implementing range maximum queries and point updates efficiently in O(log n) time
+- **Coordinate Compression** - Mapping large value ranges to smaller indices when the actual values are sparse
+
+---
+
 ## 1. Brute Force (Recursion)
 
 ### Intuition

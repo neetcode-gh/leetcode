@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - The problem has optimal substructure and overlapping subproblems, making DP essential
+- **Recursion with Memoization** - Top-down approaches cache results to avoid recomputing the same states
+- **Queues/Deques** - Space-optimized solutions use queues to track pass expiration within sliding windows
+
+---
+
 ## 1. Recursion
 
 ### Intuition

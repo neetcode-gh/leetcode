@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Building solutions from overlapping subproblems with optimal substructure
+- **Memoization** - Caching recursive results to avoid redundant computation
+- **Prefix/Suffix Maximum Arrays** - Precomputing running maximums from left-to-right and right-to-left
+- **2D Array Traversal** - Processing matrices row by row with state transitions
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for counting subproblems
+- **Longest Increasing Subsequence (LIS)** - Understanding the classic LIS problem and its O(n^2) DP solution
+- **Recursion with Backtracking** - Exploring all possible subsequences by making choices at each position
+- **Binary Search** - Used in the optimized O(n log n) solution for efficient lookups
+- **Prefix Sums** - Accumulating counts to efficiently query ranges in the optimized approach
+
+---
+
 ## 1. Recursion
 
 ### Intuition

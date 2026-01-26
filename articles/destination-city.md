@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Used for O(1) lookup to check if a city is a starting point
+- **Hash Map** - Used to model the path chain from starting city to destination city
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

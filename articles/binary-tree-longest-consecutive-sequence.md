@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding how nodes connect via left and right children
+- **Depth-First Search (DFS)** - Traversing trees using both top-down and bottom-up recursive approaches
+- **Passing State Through Recursion** - Carrying information (parent value, sequence length) down or up the tree
+
+---
+
 ## 1. Top Down Depth-first Search
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Used to explore all possible ways to partition matchsticks into 4 equal groups
+- **Recursion** - Understanding recursive function calls and how to backtrack by undoing choices
+- **Bitmask Dynamic Programming** - An optimization technique using binary representation to track subsets of used elements
+
+---
+
 ## 1. Backtracking (Brute Force)
 
 ### Intuition

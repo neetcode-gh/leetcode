@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Functions** - Understanding how keys map to bucket indices via modulo operations
+- **Linked Lists** - Implementing node-based structures for collision handling (separate chaining)
+- **Binary Search Trees** - Understanding BST operations for an optimized collision resolution approach
+- **Bit Manipulation** - Using bitwise operations (OR, AND, XOR) for space-efficient storage
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

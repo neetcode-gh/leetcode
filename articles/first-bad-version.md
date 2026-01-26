@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Efficiently searching in a sorted/monotonic space by repeatedly halving the search range
+- **Avoiding Integer Overflow** - Using `l + (r - l) / 2` instead of `(l + r) / 2` to compute midpoints safely
+- **Lower Bound Concept** - Finding the first element that satisfies a condition in a monotonic sequence
+
+---
+
 ## 1. Brute Force (Linear Search)
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window** - The optimal solution uses a variable-size window that expands and contracts based on validity conditions
+- **Hash Map / Frequency Counting** - Tracking character frequencies within the current window to determine the most frequent character
+- **Two Pointers** - Managing left and right pointers to define and adjust the window boundaries
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

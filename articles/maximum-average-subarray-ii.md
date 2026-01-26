@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search on Real Numbers** - Searching over a continuous range rather than discrete indices
+- **Prefix Sums** - Computing cumulative sums to efficiently query subarray sums
+- **Sliding Window** - Understanding how to efficiently compute values over fixed-size windows
+
+---
+
 ## 1. Iterative
 
 ### Intuition

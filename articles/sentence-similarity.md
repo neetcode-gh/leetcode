@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map** - Using dictionaries to map keys to values for O(1) average lookup time
+- **Hash Set** - Using sets for O(1) membership testing to check if elements belong to a collection
+
+---
+
 ## 1. Using Hash Map and Hash Set
 
 ### Intuition

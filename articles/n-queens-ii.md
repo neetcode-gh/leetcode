@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Backtracking** - Understanding how to explore all possibilities by making choices and undoing them when they lead to invalid states
+- **Recursion** - The solution builds the board row by row using recursive calls
+- **2D Arrays/Matrices** - Working with board representations and understanding coordinate systems
+- **Diagonal Patterns** - Recognizing that cells on the same diagonal share the property (row + col) or (row - col)
+
+---
+
 ## 1. Backtracking
 
 ### Intuition

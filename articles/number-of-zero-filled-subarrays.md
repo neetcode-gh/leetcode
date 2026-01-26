@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Array Traversal** - Iterating through arrays while tracking consecutive elements
+- **Counting Subarrays** - Understanding that a sequence of k consecutive elements contains k*(k+1)/2 subarrays
+- **Arithmetic Series** - Using the formula 1 + 2 + ... + k = k*(k+1)/2 to count subarrays efficiently
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

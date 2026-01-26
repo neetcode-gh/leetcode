@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Structure** - Understanding how nodes connect via left and right children
+- **Recursion** - Using recursive calls to naturally traverse tree structures
+- **Stacks** - Simulating recursion iteratively by explicitly managing the call stack
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

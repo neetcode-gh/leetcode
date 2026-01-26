@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Concatenating strings and comparing string contents
+- **Two Pointers** - Using multiple index variables to traverse data structures simultaneously
+- **Array Iteration** - Traversing arrays of strings and individual characters within strings
+
+---
+
 ## 1. Concatenate Strings
 
 ### Intuition

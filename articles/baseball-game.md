@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Stack Data Structure** - Operations like push, pop, and accessing the top element
+- **String Parsing** - Converting string inputs to integers and handling special characters
+
+---
+
 ## 1. Stack - I
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - The foundation for building the brute-force and memoized solutions
+- **Dynamic Programming** - Understanding both top-down (memoization) and bottom-up approaches for optimization
+- **Breadth-First Search (BFS)** - Used to model the problem as a shortest path search
+- **Math (Number Theory)** - Understanding perfect squares and Lagrange's four square theorem for the optimal solution
+
+---
+
 ## 1. Recursion
 
 ### Intuition

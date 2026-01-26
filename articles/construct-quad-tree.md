@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion / Divide and Conquer** - Recursively dividing a grid into four equal quadrants
+- **2D Arrays / Matrices** - Working with grid coordinates and subregion boundaries
+- **Tree Data Structures** - Understanding quad trees where each node has exactly four children
+
+---
+
 ## 1. Recursion
 
 ### Intuition

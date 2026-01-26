@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Tree Traversal** - Understanding left/right child relationships and how to build binary trees
+- **N-ary Tree Structure** - Familiarity with trees where nodes can have multiple children stored in a list
+- **BFS (Breadth-First Search)** - Using queues to process nodes level by level
+- **DFS (Depth-First Search)** - Recursive tree traversal for encoding/decoding operations
+- **Left-Child Right-Sibling Representation** - The key encoding technique where first child becomes left child and siblings chain as right children
+
+---
+
 ## 1. BFS (Breadth-First Search) Traversal
 
 ### Intuition

@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge pairs to represent directed graphs
+- **Depth-First Search (DFS)** - Recursive graph traversal for path finding and reachability queries
+- **Topological Sort (Kahn's Algorithm)** - BFS-based approach using indegree to process nodes in dependency order
+- **Memoization** - Caching computed results to avoid redundant DFS traversals
+- **Floyd-Warshall Algorithm** - Dynamic programming approach for computing transitive closure in O(V^3) time
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

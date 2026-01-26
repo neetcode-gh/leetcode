@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Counting element frequencies efficiently using key-value data structures
+- **Sorting** - Understanding how to sort arrays and the time complexity implications
+- **Greedy Algorithms** - Making locally optimal choices (removing least frequent elements first) to achieve a global optimum
+- **Heaps/Priority Queues** - For the min-heap approach, understanding how to efficiently extract minimum values
+
+---
+
 ## 1. Sorting
 
 ### Intuition

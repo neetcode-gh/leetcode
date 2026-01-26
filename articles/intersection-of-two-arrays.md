@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Using sets for O(1) lookups and storing unique elements
+- **Hash Map** - Tracking element presence or counts with key-value pairs
+- **Two Pointers** - Using two indices to traverse sorted arrays efficiently
+- **Sorting** - Understanding how sorted order enables efficient comparison algorithms
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

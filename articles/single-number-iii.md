@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation (XOR)** - Understanding XOR properties (a ^ a = 0, a ^ 0 = a) and how to isolate the rightmost set bit using x & (-x)
+- **Hash Map / Hash Set** - Used for counting occurrences or tracking seen elements in O(n) space solutions
+- **Sorting** - Alternative approach where duplicates become adjacent, allowing linear scan to find unique elements
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

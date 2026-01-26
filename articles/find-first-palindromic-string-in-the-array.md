@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Manipulation** - Reversing strings and comparing characters
+- **Two Pointers** - Using left and right pointers to check palindrome properties efficiently
+- **Array Iteration** - Iterating through arrays and returning early when a condition is met
+
+---
+
 ## 1. Reverse String
 
 ### Intuition

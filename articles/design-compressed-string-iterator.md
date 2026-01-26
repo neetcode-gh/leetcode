@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **String Parsing** - Extracting characters and numeric values from a formatted string
+- **Iterator Pattern** - Understanding how iterators maintain state between successive calls
+- **Arrays/Lists** - Using dynamic arrays to store precomputed results
+
+---
+
 ## 1. Uncompressing the String (Time Limit Exceeded)
 
 ### Intuition

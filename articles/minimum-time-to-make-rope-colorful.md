@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Using multiple indices to traverse arrays and identify groups of consecutive elements
+- **Greedy Algorithms** - Making locally optimal choices (keeping the most expensive balloon) to achieve a globally optimal solution
+- **String Traversal** - Iterating through characters while comparing adjacent elements
+
+---
+
 ## 1. Two Pointers - I
 
 ### Intuition

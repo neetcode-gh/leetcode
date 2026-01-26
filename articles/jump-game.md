@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Understanding how to break down problems into smaller subproblems by exploring all possible paths
+- **Dynamic Programming (Memoization)** - Caching results of subproblems to avoid redundant computation
+- **Greedy Algorithms** - Recognizing when a locally optimal choice leads to a globally optimal solution
+- **Array Traversal** - Iterating through arrays both forward and backward
+
+---
+
 ## 1. Recursion
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to store bidirectional mappings between long and short URLs for O(1) lookup
+- **String Manipulation** - Required for parsing URLs, extracting indices, and constructing short URL codes
+- **System Design Basics** - Understanding trade-offs between different encoding strategies (sequential IDs vs random codes)
+
+---
+
 ## 1. List
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Using a read pointer and write pointer to modify arrays in-place
+- **In-Place Array Modification** - Overwriting elements without using extra space
+- **Sorted Array Properties** - Leveraging the fact that duplicates are always adjacent in sorted arrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

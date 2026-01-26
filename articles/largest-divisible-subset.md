@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - The problem requires caching recursive results to avoid recomputation
+- **Sorting** - Elements must be sorted first to establish the divisibility chain property
+- **Divisibility and Modulo Operations** - Understanding when one number divides another evenly
+- **Recursion** - Top-down approaches use recursive function calls with state tracking
+
+---
+
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition

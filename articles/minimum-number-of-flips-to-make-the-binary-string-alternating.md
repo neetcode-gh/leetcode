@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sliding Window Technique** - Efficiently processing subarrays/substrings by maintaining a window of fixed or variable size
+- **String Manipulation** - Working with rotations and pattern matching in strings
+- **Modular Arithmetic** - Using mod operator to simulate circular array traversal
+- **Dynamic Programming** - Tracking state transitions as elements shift positions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

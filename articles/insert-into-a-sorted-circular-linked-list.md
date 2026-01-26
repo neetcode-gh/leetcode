@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding node structure, traversal, and insertion operations
+- **Two Pointers Technique** - Using multiple pointers to track positions while traversing
+- **Circular Data Structures** - Handling wrap-around logic where the tail connects back to the head
+
+---
+
 ## 1. Two-Pointers Iteration
 
 ### Intuition

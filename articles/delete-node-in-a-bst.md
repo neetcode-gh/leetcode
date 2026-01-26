@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree Properties** - Understanding that left children are smaller and right children are larger than the parent
+- **Tree Traversal** - Navigating BST nodes using the ordering property to find specific values
+- **In-Order Successor/Predecessor** - Finding the next or previous node in sorted order for node replacement during deletion
+
+---
+
 ## 1. Recursion - I
 
 ### Intuition

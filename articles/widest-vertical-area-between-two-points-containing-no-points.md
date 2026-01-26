@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Sorting** - Sorting points by x-coordinate allows finding the maximum gap between consecutive points efficiently
+- **Array Iteration** - Scanning through sorted points to compute differences between adjacent x-coordinates
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

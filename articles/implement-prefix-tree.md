@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Tree Data Structures** - Understanding parent-child relationships and tree traversal
+- **Hash Maps / Arrays for Children** - Storing and accessing child nodes efficiently
+- **String Processing** - Character-by-character iteration and ASCII manipulation
+- **Object-Oriented Design** - Creating classes with methods that maintain internal state
+
+---
+
 ## 1. Prefix Tree (Array)
 
 ### Intuition

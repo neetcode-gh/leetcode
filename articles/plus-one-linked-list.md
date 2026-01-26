@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked List Traversal** - Iterating through nodes using next pointers to find specific elements
+- **Sentinel/Dummy Node Pattern** - Using a placeholder node before the head to simplify edge cases like inserting at the beginning
+- **Carry Propagation** - Understanding how addition works digit by digit, where trailing 9s become 0s and carry forward
+
+---
+
 ## 1. Sentinel Head + Textbook Addition
 
 ### Intuition

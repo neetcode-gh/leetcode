@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Deque (Double-Ended Queue)** - Adding to front and removing from back in O(1) time
+- **Hash Set** - O(1) lookup for collision detection
+- **2D Coordinate Systems** - Working with row/column positions and boundary checking
+
+---
+
 ## 1. Queue and Hash Set
 
 ### Intuition

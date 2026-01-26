@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Map (Frequency Counting)** - Tracking how many times each element has been placed to determine which row it belongs to
+- **2D Arrays** - Dynamically building and managing a list of lists to store the result
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

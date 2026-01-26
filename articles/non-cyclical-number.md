@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Set** - Detecting previously seen values to identify cycles
+- **Floyd's Cycle Detection (Fast/Slow Pointers)** - Detecting cycles without extra space
+- **Digit Manipulation** - Extracting digits using modulo and integer division
+
+---
+
 ## 1. Hash Set
 
 ### Intuition

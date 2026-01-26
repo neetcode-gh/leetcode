@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Max-Heap / Priority Queue** - Efficiently finding and removing the maximum element, then inserting a new value
+- **Simulation** - Implementing step-by-step processes as described in the problem statement
+- **Square Root Operations** - Understanding floor of square root and how to compute it
+
+---
+
 ## 1. Simulation
 
 ### Intuition

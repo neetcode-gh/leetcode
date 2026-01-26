@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - O(1) key-value lookups for storing cache entries
+- **Doubly Linked Lists** - O(1) insertion and deletion for maintaining element order
+- **LRU Cache Concept** - Understanding eviction based on recency (this problem extends it with frequency)
+- **Cache Design Patterns** - Combining multiple data structures for efficient operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

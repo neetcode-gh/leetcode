@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Prefix Sums** - The optimal solution relies on the property that subarray sums can be computed as differences of prefix sums
+- **Hash Maps** - Used to store prefix sum frequencies for O(1) lookups when searching for complement values
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Storing and retrieving key-value pairs in O(1) time for tracking character indices
+- **String Traversal** - Iterating through characters in a string with their indices
+- **Array as Map** - Using a fixed-size array as an efficient alternative to hash maps when keys are bounded (e.g., 26 lowercase letters)
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

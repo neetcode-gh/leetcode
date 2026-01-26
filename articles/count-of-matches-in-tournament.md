@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Basic Math** - Understanding that each match eliminates exactly one team
+- **Simulation** - Iteratively modeling the tournament rounds until a winner emerges
+- **Logical Reasoning** - Recognizing the invariant that n-1 matches are needed to eliminate n-1 teams
+
+---
+
 ## 1. Simulation
 
 ### Intuition

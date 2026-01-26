@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Finding elements in sorted arrays with O(log n) time complexity
+- **Peak Finding** - Using binary search to locate the maximum element in a bitonic/mountain array
+- **Modified Binary Search** - Adapting binary search for both ascending and descending sorted sequences
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

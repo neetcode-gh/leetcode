@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Used to map alien characters to their index positions for O(1) lookups
+- **Custom Comparators** - Defining custom sorting logic to compare strings based on non-standard ordering
+- **String Comparison** - Comparing strings character by character, including handling prefix cases
+
+---
+
 ## 1. Sorting
 
 ### Intuition

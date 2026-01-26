@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Mapping values to indices for O(1) lookups
+- **Monotonic Stack** - Maintaining a stack in decreasing order to find next greater elements efficiently
+- **Array Traversal** - Iterating through arrays from different directions
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

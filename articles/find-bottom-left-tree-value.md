@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure, nodes, left/right children, and tree depth concepts
+- **Breadth-First Search (BFS)** - Level-order traversal using a queue to process nodes level by level
+- **Depth-First Search (DFS)** - Recursive and iterative tree traversal techniques with depth tracking
+
+---
+
 ## 1. Breadth First Search
 
 ### Intuition

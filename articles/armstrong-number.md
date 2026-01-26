@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Digit Extraction** - Using modulo and division to extract individual digits from a number
+- **Exponentiation** - Raising numbers to a power
+- **Basic Math** - Understanding number properties and digit counting techniques
+
+---
+
 ## 1. Calculate k by Converting to String
 
 ### Intuition

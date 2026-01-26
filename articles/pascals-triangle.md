@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming** - Building each row using values from the previous row
+- **2D Arrays** - Storing and accessing the triangle structure
+- **Combinatorics** - Understanding that each element is a binomial coefficient C(n, k) and can be computed incrementally
+
+---
+
 ## 1. Combinatorics
 
 ### Intuition

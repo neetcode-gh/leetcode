@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps** - Using dictionaries to group and count elements by key in O(1) average time
+- **Coordinate Geometry** - Understanding slopes and collinearity of points on a 2D plane
+- **Greatest Common Divisor (GCD)** - Reducing fractions to canonical form to avoid floating point precision issues
+- **Nested Loops** - Iterating through pairs or triplets of elements for comparison
+
+---
+
 ## 1. Math
 
 ### Intuition

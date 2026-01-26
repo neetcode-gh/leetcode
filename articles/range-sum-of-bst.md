@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search Tree (BST) Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the current node
+- **Depth First Search (DFS)** - Recursive tree traversal to visit all nodes and accumulate values
+- **Tree Pruning** - Using BST ordering to skip entire subtrees that cannot contain values in the target range
+
+---
+
 ## 1. Depth First Search
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Dynamic Programming (Memoization)** - The core technique used to avoid recomputing subproblems when exploring different sticker combinations
+- **Hash Maps / Frequency Counting** - Used to track character counts in stickers and remaining target characters
+- **Recursion with State** - Building solutions by recursively trying different sticker choices
+- **Bitmask DP (for bottom-up approach)** - Representing which characters have been covered using binary representation
+
+---
+
 ## 1. Dynamic Programming (Top-Down) - I
 
 ### Intuition

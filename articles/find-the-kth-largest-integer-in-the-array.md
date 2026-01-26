@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Custom Comparators** - Needed to compare numeric strings by length first, then lexicographically
+- **Heap/Priority Queue** - Used in heap-based solutions to efficiently find the kth largest element
+- **Quick Select Algorithm** - An optimization for finding the kth element in average O(n) time
+- **String Comparison** - Understanding why default string comparison fails for numeric strings of different lengths
+
+---
+
 ## 1. Sorting
 
 ### Intuition

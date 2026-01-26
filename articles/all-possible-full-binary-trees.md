@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Trees** - Understanding tree structure and node creation
+- **Recursion** - Breaking down problems by combining solutions to subproblems
+- **Dynamic Programming (Memoization)** - Caching results to avoid redundant computation
+
+---
+
 ## 1. Recursion
 
 ### Intuition

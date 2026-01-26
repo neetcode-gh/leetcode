@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Linked Lists** - Understanding singly linked list structure and node traversal
+- **Pointer Manipulation** - Rewiring node connections by modifying next pointers
+- **Two Pointers** - Tracking multiple positions in a linked list simultaneously
+
+---
+
 ## 1. Convert To Array
 
 ### Intuition

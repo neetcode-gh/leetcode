@@ -1,3 +1,13 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building and traversing adjacency lists for trees
+- **Depth First Search (DFS)** - Recursive tree traversal with constraints on node values
+- **Breadth First Search (BFS)** - Iterative exploration using queues with filtering conditions
+- **Union-Find (Disjoint Set Union)** - Merging components incrementally with path compression and union by rank/size
+- **Sorting with Custom Comparators** - Processing nodes or edges in a specific order based on values
+
+---
+
 ## 1. Brute Force (DFS)
 
 ### Intuition

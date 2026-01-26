@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - The optimal solutions use binary search to achieve O(log n) time complexity
+- **Arrays** - Understanding array indexing and how rotation affects a sorted array
+- **Sorted Array Properties** - Recognizing how a rotated sorted array forms two sorted subarrays
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

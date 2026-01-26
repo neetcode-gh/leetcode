@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers** - Using pointers from both ends of a string to compare characters efficiently
+- **String Manipulation** - Filtering characters, converting case, and reversing strings
+- **Character Classification** - Identifying alphanumeric vs non-alphanumeric characters
+
+---
+
 ## 1. Reverse String
 
 ### Intuition

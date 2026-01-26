@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Two Pointers Technique** - Using pointers from both ends of a string to compare characters
+- **Palindrome Fundamentals** - Understanding how to check if a string reads the same forwards and backwards
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

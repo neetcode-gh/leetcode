@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Binary Search** - Efficiently searching in sorted data by eliminating half the search space
+- **Two Pointers** - Merging or comparing elements from two sorted arrays
+- **Median Calculation** - Understanding how to find the middle value(s) for odd and even length arrays
+- **Array Partitioning** - Conceptually dividing arrays to balance elements on left and right sides
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Sets** - Used to track seen digits in rows, columns, and boxes for duplicate detection
+- **2D Array Traversal** - Understanding how to iterate through a 9x9 grid and compute box indices
+- **Bit Manipulation** - The optimized solution uses bitmasks to represent seen digits compactly
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

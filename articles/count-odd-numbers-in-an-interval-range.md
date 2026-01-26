@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Bit Manipulation Basics** - Using bitwise AND to check if a number is odd
+- **Integer Division** - Understanding how floor division affects counting calculations
+- **Range Counting** - Computing counts in a range by subtracting prefix counts
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Graph Representation** - Building adjacency lists from edge lists to represent graph connections
+- **Depth First Search (DFS)** - Recursively traversing all nodes in a graph while tracking visited nodes
+- **Breadth First Search (BFS)** - Level-by-level graph traversal using a queue
+- **Hash Set** - Efficiently storing and checking edge directions in O(1) time
+
+---
+
 ## 1. Depth First Search - I
 
 ### Intuition

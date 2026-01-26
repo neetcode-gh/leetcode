@@ -1,3 +1,11 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Doubly Linked Lists** - Implementing nodes with prev/next pointers for O(1) insertion and removal from both ends
+- **Hash Maps** - Using dictionaries for O(1) key-to-node lookup to enable fast cache access
+- **Data Structure Design** - Combining multiple data structures (hash map + linked list) to achieve desired time complexity for all operations
+
+---
+
 ## 1. Brute Force
 
 ### Intuition

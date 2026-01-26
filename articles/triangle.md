@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking down problems into smaller subproblems with base cases
+- **Memoization** - Caching recursive results to avoid redundant computation
+- **Dynamic Programming** - Building solutions bottom-up using previously computed values
+- **2D Arrays** - Working with triangular data structures and understanding index relationships
+
+---
+
 ## 1. Recursion
 
 ### Intuition

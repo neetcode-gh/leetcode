@@ -1,3 +1,10 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Hash Maps (Dictionaries)** - Used to count character frequencies across all strings
+- **Modular Arithmetic** - Understanding divisibility to check if characters can be evenly distributed
+
+---
+
 ## 1. Frequency Count (Hash Map)
 
 ### Intuition

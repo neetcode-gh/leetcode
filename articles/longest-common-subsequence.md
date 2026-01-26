@@ -1,3 +1,12 @@
+## Prerequisites
+Before attempting this problem, you should be comfortable with:
+- **Recursion** - Breaking problems into subproblems and understanding recursive call stacks
+- **Dynamic Programming (Memoization)** - Caching results to avoid redundant computation in overlapping subproblems
+- **Dynamic Programming (Tabulation)** - Building solutions bottom-up using 2D arrays
+- **Space Optimization** - Reducing 2D DP to 1D by recognizing which previous states are needed
+
+---
+
 ## 1. Recursion
 
 ### Intuition
