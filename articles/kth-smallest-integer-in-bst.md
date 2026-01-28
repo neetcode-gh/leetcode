@@ -210,12 +210,13 @@ func kthSmallest(root *TreeNode, k int) int {
             return
         }
 
-        dfs(node.Left)
         arr = append(arr, node.Val)
+        dfs(node.Left)
         dfs(node.Right)
     }
 
     dfs(root)
+	sort.Ints(arr)
     return arr[k-1]
 }
 ```
