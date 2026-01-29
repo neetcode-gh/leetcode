@@ -825,7 +825,7 @@ class Solution {
 
 ## Common Pitfalls
 
-### Integer Overflow When Computing `mid * (mid + 1)`
+### Integer Overflow When Computing mid * (mid + 1)
 When using binary search, computing `mid * (mid + 1)` can overflow for large values of `mid` if using 32-bit integers. Always cast to a larger type before multiplication.
 ```java
 // Wrong: overflow when mid is large

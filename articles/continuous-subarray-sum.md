@@ -361,7 +361,7 @@ class Solution {
 
 ## Common Pitfalls
 
-### Forgetting to Initialize Hash Map with `{0: -1}`
+### Forgetting to Initialize Hash Map with {0: -1}
 The hash map must be initialized with remainder `0` at index `-1` to handle cases where the prefix sum itself (from index 0 to current) is divisible by `k`. Without this, you miss valid subarrays that start from index 0.
 
 ```python

@@ -743,6 +743,6 @@ class Solution {
 
 When merging in place, starting from the front of `nums1` overwrites elements that have not yet been processed. This destroys data you still need. Always merge from the back of `nums1` where there is empty space, placing the largest elements first.
 
-### Forgetting to Copy Remaining Elements From `nums2`
+### Forgetting to Copy Remaining Elements From nums2
 
 After the main merge loop, if there are remaining elements in `nums2`, they must be copied to `nums1`. Elements remaining in `nums1` are already in their correct positions, but leftover `nums2` elements need explicit placement. Missing this step leaves the result incomplete.

@@ -886,7 +886,7 @@ class PrefixTree {
 
 ## Common Pitfalls
 
-### Confusing `search` and `startsWith`
+### Confusing search and startsWith
 
 A frequent mistake is returning `true` in `search()` whenever the traversal completes successfully, without checking the `endOfWord` flag. The `search()` method must verify that the final node marks the end of a complete word, while `startsWith()` only checks if the prefix path exists. For example, if "apple" is inserted, `search("app")` should return `false` (no word ends there), but `startsWith("app")` should return `true`.
 

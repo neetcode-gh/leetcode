@@ -615,7 +615,7 @@ class Solution {
 
 ## Common Pitfalls
 
-### Modifying `k` Without Restoring It
+### Modifying k Without Restoring It
 
 When using `k` directly as a counter (decrementing when encountering zeros), remember that this mutates the input parameter. If you need to use `k` again later or if the problem requires preserving it, use a separate variable. Additionally, when shrinking the window, you must restore `k` by incrementing it when a zero leaves the window.
 

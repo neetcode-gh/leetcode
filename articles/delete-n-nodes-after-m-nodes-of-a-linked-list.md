@@ -320,7 +320,7 @@ while current_node is not None and m_count != 0:
     m_count -= 1
 ```
 
-### Not Updating the `lastMNode` Pointer Before Deletion
+### Not Updating the lastMNode Pointer Before Deletion
 
 The `lastMNode` pointer must be updated during the "keep m nodes" phase, not after. If you forget to track the last kept node, you cannot properly link it to the node after the deleted segment.
 

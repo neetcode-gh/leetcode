@@ -1318,7 +1318,7 @@ for i in range(idx, len(candidates)):
     dfs(i + 1, ...)
 ```
 
-### Reusing Elements (Using `i` Instead of `i + 1`)
+### Reusing Elements (Using i Instead of i + 1)
 Unlike Combination Sum I where elements can be reused, this problem requires each element to be used at most once. Recursing with the same index allows reuse.
 ```python
 # Wrong: allows reusing same element

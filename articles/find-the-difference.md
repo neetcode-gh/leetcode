@@ -949,7 +949,7 @@ class Solution {
 
 ## Common Pitfalls
 
-### Forgetting to Handle Empty String `s`
+### Forgetting to Handle Empty String s
 
 When `s` is an empty string, `t` contains exactly one character (the added one). Solutions that iterate through `s` first or rely on finding a mismatch between sorted strings must handle this edge case. The XOR and sum-based approaches naturally handle this since XORing or summing over an empty string contributes nothing.
 
