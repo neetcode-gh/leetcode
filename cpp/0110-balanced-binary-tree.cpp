@@ -21,27 +21,40 @@
 class Solution {
 public:
     bool isBalanced(TreeNode* root) {
-        int height = 0;
-        return dfs(root, height);
+        return dfs(root).first;
     }
+    // bool isBalanced(TreeNode* root) {
+    //     int height = 0;
+    //     return dfs(root, height);
+    // }
+
 private:
-    bool dfs(TreeNode* root, int& height) {
-        if (root == NULL) {
-            height = -1;
-            return true;
-        }
-        
-        int left = 0;
-        int right = 0;
-        
-        if (!dfs(root->left, left) || !dfs(root->right, right)) {
-            return false;
-        }
-        if (abs(left - right) > 1) {
-            return false;
-        }
-        
-        height = 1 + max(left, right);
-        return true;
+    pair<bool, int> dfs(TreeNode* root) {
+        if (!root) return {true, 0};
+
+        auto left = dfs(root->left);
+        auto right = dfs(root->right);
+
+        bool balanced = left.first && right.first && abs(left.second - right.second) <= 1;
+        return {balanced, 1 + max(left.second, right.second)};
     }
+    // bool dfs(TreeNode* root, int& height) {
+    //     if (root == NULL) {
+    //         height = -1;
+    //         return true;
+    //     }
+        
+    //     int left = 0;
+    //     int right = 0;
+        
+    //     if (!dfs(root->left, left) || !dfs(root->right, right)) {
+    //         return false;
+    //     }
+    //     if (abs(left - right) > 1) {
+    //         return false;
+    //     }
+        
+    //     height = 1 + max(left, right);
+    //     return true;
+    // }
 };
