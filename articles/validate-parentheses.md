@@ -512,6 +512,8 @@ public class Solution {
 ```
 
 ```go
+import "github.com/a234567894/gods/stacks/linkedliststack"
+
 func isValid(s string) bool {
     stack := linkedliststack.New()
     closeToOpen := map[rune]rune{')': '(', ']': '[', '}': '{'}

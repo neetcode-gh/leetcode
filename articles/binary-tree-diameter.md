@@ -925,6 +925,8 @@ public class Solution {
 ```
 
 ```go
+import "github.com/a234567894/gods/stacks/linkedliststack"
+
 /**
  * Definition for a binary tree node.
  * type TreeNode struct {
