@@ -497,8 +497,6 @@ class LFUCache {
 ```
 
 ```rust
-use std::collections::HashMap;
-
 struct LFUCache {
     capacity: usize,
     timestamp: i32,
@@ -1503,8 +1501,6 @@ class LFUCache {
 ```
 
 ```rust
-use std::collections::HashMap;
-
 struct DLNode {
     val: i32,
     prev: usize,

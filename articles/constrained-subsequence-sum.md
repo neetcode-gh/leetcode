@@ -1401,8 +1401,6 @@ struct Heap<T> {
 ```
 
 ```rust
-use std::collections::BinaryHeap;
-
 impl Solution {
     pub fn constrained_subset_sum(nums: Vec<i32>, k: i32) -> i32 {
         let k = k as usize;

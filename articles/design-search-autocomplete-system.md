@@ -550,8 +550,6 @@ class AutocompleteSystem {
 ```
 
 ```rust
-use std::collections::HashMap;
-
 struct TrieNode {
     children: HashMap<char, usize>,
     sentences: HashMap<String, i32>,
@@ -1262,8 +1260,6 @@ class AutocompleteSystem {
 ```
 
 ```rust
-use std::collections::{BinaryHeap, HashMap};
-
 struct TrieNode {
     children: HashMap<char, usize>,
     sentences: HashMap<String, i32>,

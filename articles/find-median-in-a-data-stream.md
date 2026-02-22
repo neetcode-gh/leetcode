@@ -621,8 +621,6 @@ class MedianFinder {
 ```
 
 ```rust
-use std::cmp::Reverse;
-
 struct MedianFinder {
     small_heap: BinaryHeap<i32>,           // max-heap for smaller half
     large_heap: BinaryHeap<Reverse<i32>>,  // min-heap for larger half

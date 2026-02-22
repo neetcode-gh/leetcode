@@ -259,9 +259,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 impl Solution {
     pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         fn dfs(cur: &Option<Rc<RefCell<TreeNode>>>, num: i32) -> i32 {
@@ -593,10 +590,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::collections::VecDeque;
-use std::rc::Rc;
-
 impl Solution {
     pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         let root = match root {
@@ -955,9 +948,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 impl Solution {
     pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         let mut res = 0;
@@ -1437,9 +1427,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 impl Solution {
     pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
         let mut res = 0;

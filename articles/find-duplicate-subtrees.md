@@ -419,9 +419,6 @@ class Solution {
 // comparison of tree node pointers, which doesn't directly
 // translate to Rust's Rc<RefCell<TreeNode>>. We use index-based
 // tracking instead.
-use std::rc::Rc;
-use std::cell::RefCell;
-
 impl Solution {
     pub fn find_duplicate_subtrees(
         root: Option<Rc<RefCell<TreeNode>>>,
@@ -750,9 +747,6 @@ class Solution {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 impl Solution {
     pub fn find_duplicate_subtrees(
         root: Option<Rc<RefCell<TreeNode>>>,
@@ -1090,9 +1084,6 @@ class Solution {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 impl Solution {
     pub fn find_duplicate_subtrees(
         root: Option<Rc<RefCell<TreeNode>>>,

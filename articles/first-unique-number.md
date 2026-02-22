@@ -1010,8 +1010,6 @@ class FirstUnique {
 ```
 
 ```rust
-use std::collections::BTreeSet;
-
 struct FirstUnique {
     set_queue: BTreeSet<(usize, i32)>,  // (insertion order, value)
     is_unique: HashMap<i32, bool>,

@@ -482,8 +482,6 @@ class Solution {
 ```
 
 ```rust
-use std::collections::HashMap;
-
 impl Solution {
     pub fn min_stickers(stickers: Vec<String>, target: String) -> i32 {
         let stick_count: Vec<HashMap<u8, i32>> = stickers
@@ -1009,8 +1007,6 @@ class Solution {
 ```
 
 ```rust
-use std::collections::HashMap;
-
 impl Solution {
     pub fn min_stickers(stickers: Vec<String>, target: String) -> i32 {
         let stick_count: Vec<HashMap<u8, i32>> = stickers

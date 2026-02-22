@@ -351,9 +351,6 @@ class BSTIterator {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 struct BSTIterator {
     arr: Vec<i32>,
     itr: usize,
@@ -721,9 +718,6 @@ class BSTIterator {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 struct BSTIterator {
     arr: Vec<i32>,
     itr: usize,
@@ -1070,9 +1064,6 @@ class BSTIterator {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 struct BSTIterator {
     stack: Vec<Rc<RefCell<TreeNode>>>,
 }
@@ -1396,9 +1387,6 @@ class BSTIterator {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 struct BSTIterator {
     cur: Option<Rc<RefCell<TreeNode>>>,
     stack: Vec<Rc<RefCell<TreeNode>>>,

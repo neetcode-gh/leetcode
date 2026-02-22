@@ -766,8 +766,6 @@ class Solution {
 ```
 
 ```rust
-use std::collections::HashMap;
-
 struct TrieNode {
     children: HashMap<(u8, u8), TrieNode>,
     count: i32,

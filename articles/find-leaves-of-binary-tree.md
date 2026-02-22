@@ -435,9 +435,6 @@ class Solution {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 impl Solution {
     pub fn find_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
         let mut pairs: Vec<(i32, i32)> = Vec::new();
@@ -793,9 +790,6 @@ class Solution {
 ```
 
 ```rust
-use std::rc::Rc;
-use std::cell::RefCell;
-
 impl Solution {
     pub fn find_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
         let mut solution: Vec<Vec<i32>> = Vec::new();

@@ -177,9 +177,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 impl Solution {
     pub fn closest_value(root: Option<Rc<RefCell<TreeNode>>>, target: f64) -> i32 {
         let mut nums = Vec::new();
@@ -440,9 +437,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 impl Solution {
     pub fn closest_value(root: Option<Rc<RefCell<TreeNode>>>, target: f64) -> i32 {
         let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
@@ -656,9 +650,6 @@ class Solution {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 impl Solution {
     pub fn closest_value(root: Option<Rc<RefCell<TreeNode>>>, target: f64) -> i32 {
         let mut curr = root;

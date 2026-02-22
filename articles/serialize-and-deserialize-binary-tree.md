@@ -507,9 +507,6 @@ class Codec {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::rc::Rc;
-
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
 // pub struct TreeNode {
@@ -1137,10 +1134,6 @@ class Codec {
 ```
 
 ```rust
-use std::cell::RefCell;
-use std::collections::VecDeque;
-use std::rc::Rc;
-
 // Definition for a binary tree node.
 // #[derive(Debug, PartialEq, Eq)]
 // pub struct TreeNode {

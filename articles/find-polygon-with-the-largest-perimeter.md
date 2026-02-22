@@ -718,8 +718,6 @@ struct Heap<T> {
 ```
 
 ```rust
-use std::cmp::Reverse;
-
 impl Solution {
     pub fn largest_perimeter(nums: Vec<i32>) -> i64 {
         let mut max_heap = BinaryHeap::new();

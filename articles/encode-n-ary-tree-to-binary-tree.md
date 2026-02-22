@@ -778,8 +778,6 @@ class Codec {
 // Uses TreeNode with Option<Rc<RefCell<TreeNode>>>
 // and a custom NaryNode for the N-ary tree.
 
-use std::collections::VecDeque;
-
 struct Codec;
 
 impl Codec {
