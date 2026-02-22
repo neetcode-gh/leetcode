@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Used to track element occurrences in subarrays
 - **Array Traversal** - Iterating through arrays and maintaining running counts
 - **Boyer-Moore Voting Algorithm** - An optimal O(1) space technique for finding majority elements
@@ -250,6 +252,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_index(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+
+        for i in 0..n - 1 {
+            let mut left_cnt: HashMap<i32, i32> = HashMap::new();
+            for l in 0..=i {
+                *left_cnt.entry(nums[l]).or_insert(0) += 1;
+            }
+
+            let mut right_cnt: HashMap<i32, i32> = HashMap::new();
+            for r in i + 1..n {
+                *right_cnt.entry(nums[r]).or_insert(0) += 1;
+            }
+
+            for (&num, &cnt) in &left_cnt {
+                if cnt > (i as i32 + 1) / 2
+                    && *right_cnt.get(&num).unwrap_or(&0) > (n as i32 - i as i32 - 1) / 2
+                {
+                    return i as i32;
+                }
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -271,8 +303,8 @@ For each position, we only need to check if the current element is dominant in b
 
 1. Initialize a left frequency map (empty) and a right frequency map (containing all elements).
 2. Iterate through each index `i`:
-   - Move `nums[i]` from right to left (increment left count, decrement right count).
-   - Check if `nums[i]` appears more than half the time in both the left segment (length `i+1`) and right segment (length `n-i-1`).
+    - Move `nums[i]` from right to left (increment left count, decrement right count).
+    - Check if `nums[i]` appears more than half the time in both the left segment (length `i+1`) and right segment (length `n-i-1`).
 3. Return the first index where the condition holds.
 4. Return `-1` if no valid split is found.
 
@@ -500,6 +532,35 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_index(nums: Vec<i32>) -> i32 {
+        let mut left: HashMap<i32, i32> = HashMap::new();
+        let mut right: HashMap<i32, i32> = HashMap::new();
+        let n = nums.len() as i32;
+
+        for &num in &nums {
+            *right.entry(num).or_insert(0) += 1;
+        }
+
+        for i in 0..nums.len() {
+            let num = nums[i];
+            *left.entry(num).or_insert(0) += 1;
+            *right.get_mut(&num).unwrap() -= 1;
+
+            let left_len = i as i32 + 1;
+            let right_len = n - i as i32 - 1;
+
+            if 2 * left[&num] > left_len && 2 * right[&num] > right_len {
+                return i as i32;
+            }
+        }
+
+        -1
     }
 }
 ```
@@ -795,6 +856,40 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_index(nums: Vec<i32>) -> i32 {
+        let (mut majority, mut count) = (0, 0i32);
+        for &num in &nums {
+            if count == 0 {
+                majority = num;
+            }
+            count += if num == majority { 1 } else { -1 };
+        }
+
+        let mut left_cnt = 0i32;
+        let mut right_cnt = nums.iter().filter(|&&x| x == majority).count() as i32;
+        let n = nums.len() as i32;
+
+        for i in 0..nums.len() {
+            if nums[i] == majority {
+                left_cnt += 1;
+                right_cnt -= 1;
+            }
+
+            let left_len = i as i32 + 1;
+            let right_len = n - i as i32 - 1;
+
+            if 2 * left_cnt > left_len && 2 * right_cnt > right_len {
+                return i as i32;
+            }
+        }
+
+        -1
     }
 }
 ```

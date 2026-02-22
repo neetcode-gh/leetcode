@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Depth First Search (DFS)** - Used to recursively explore all connected land cells in an island
 - **Breadth First Search (BFS)** - An alternative traversal using a queue to explore islands level by level
 - **Graph Traversal on Grids** - Treating 2D grids as graphs where adjacent cells are connected
@@ -10,10 +12,12 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 An island is a group of connected `1`s.
 To find the **maximum area**, we explore each island fully and count how many cells it contains.
 
 Depth First Search (`dfs`) helps us:
+
 - Start from a land cell
 - Visit all connected land cells (up, down, left, right)
 - Count the size of that island
@@ -22,13 +26,14 @@ Depth First Search (`dfs`) helps us:
 We mark cells as visited so we don't count the same cell twice.
 
 ### Algorithm
+
 1. Initialize a visited set to track already counted cells.
 2. For each cell in the grid:
-   - If it is land (`1`) and not visited, run `dfs` from it.
+    - If it is land (`1`) and not visited, run `dfs` from it.
 3. `dfs`:
-   - Stop if out of bounds, water (`0`), or already visited.
-   - Mark the cell as visited.
-   - Return `1 + area from all 4 neighbors`.
+    - Stop if out of bounds, water (`0`), or already visited.
+    - Mark the cell as visited.
+    - Return `1 + area from all 4 neighbors`.
 4. After each `dfs` call, update the maximum area.
 5. Return the maximum area found.
 
@@ -298,6 +303,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_area_of_island(mut grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+
+        fn dfs(grid: &mut Vec<Vec<i32>>, r: i32, c: i32, rows: i32, cols: i32) -> i32 {
+            if r < 0 || r >= rows || c < 0 || c >= cols
+                || grid[r as usize][c as usize] == 0
+            {
+                return 0;
+            }
+            grid[r as usize][c as usize] = 0;
+            1 + dfs(grid, r + 1, c, rows, cols)
+                + dfs(grid, r - 1, c, rows, cols)
+                + dfs(grid, r, c + 1, rows, cols)
+                + dfs(grid, r, c - 1, rows, cols)
+        }
+
+        let mut area = 0;
+        for r in 0..rows as i32 {
+            for c in 0..cols as i32 {
+                if grid[r as usize][c as usize] == 1 {
+                    area = area.max(dfs(&mut grid, r, c, rows as i32, cols as i32));
+                }
+            }
+        }
+        area
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -312,10 +349,12 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
+
 An island is a group of connected `1`s.
 To find the **maximum area**, we explore each island completely and count how many cells it has.
 
 Using **Breadth First Search (`bfs`)**:
+
 - Start from a land cell (`1`)
 - Visit all connected land cells level by level
 - Count each visited cell as part of the island
@@ -323,15 +362,16 @@ Using **Breadth First Search (`bfs`)**:
 - Track the largest island size found
 
 ### Algorithm
+
 1. Iterate through every cell in the grid.
 2. When a land cell (`1`) is found:
-   - Start `bfs` from that cell.
-   - Mark it as visited by setting it to `0`.
-   - Initialize area count to `1`.
+    - Start `bfs` from that cell.
+    - Mark it as visited by setting it to `0`.
+    - Initialize area count to `1`.
 3. During `bfs`:
-   - Pop a cell from the queue.
-   - Check its 4 neighbors (up, down, left, right).
-   - If a neighbor is valid land (`1`), add it to the queue, mark it `0`, and increase area.
+    - Pop a cell from the queue.
+    - Check its 4 neighbors (up, down, left, right).
+    - If a neighbor is valid land (`1`), add it to the queue, mark it `0`, and increase area.
 4. After `bfs` completes, update the maximum area.
 5. Continue scanning the grid.
 6. Return the maximum area found.
@@ -709,6 +749,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_area_of_island(mut grid: Vec<Vec<i32>>) -> i32 {
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut area = 0;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 {
+                    let mut queue = VecDeque::new();
+                    grid[r][c] = 0;
+                    queue.push_back((r as i32, c as i32));
+                    let mut res = 1;
+
+                    while let Some((row, col)) = queue.pop_front() {
+                        for &(dr, dc) in &directions {
+                            let nr = row + dr;
+                            let nc = col + dc;
+                            if nr < 0 || nc < 0 || nr >= rows as i32
+                                || nc >= cols as i32
+                                || grid[nr as usize][nc as usize] == 0
+                            {
+                                continue;
+                            }
+                            queue.push_back((nr, nc));
+                            grid[nr as usize][nc as usize] = 0;
+                            res += 1;
+                        }
+                    }
+                    area = area.max(res);
+                }
+            }
+        }
+
+        area
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -723,10 +804,12 @@ class Solution {
 ## 3. Disjoint Set Union
 
 ### Intuition
+
 Think of each land cell (`1`) as a node in a graph.  
 If two land cells are adjacent (up, down, left, right), they belong to the **same island**.
 
 Using **Disjoint Set Union (Union-Find)**:
+
 - Each land cell starts as its own component
 - When two neighboring land cells are found, we **union** them
 - The size of a connected component represents the **area of that island**
@@ -735,15 +818,16 @@ Using **Disjoint Set Union (Union-Find)**:
 This approach is useful when you want to group connected components efficiently.
 
 ### Algorithm
+
 1. Treat each cell as a unique node using `index = r * COLS + c`.
 2. Initialize DSU with `ROWS * COLS` elements.
 3. Traverse the grid:
-   - If the current cell is land (`1`):
-     - Check its `4` neighbors.
-     - If a neighbor is also land, union the two cells.
+    - If the current cell is land (`1`):
+        - Check its `4` neighbors.
+        - If a neighbor is also land, union the two cells.
 4. After unions, for each land cell:
-   - Find the size of its connected component.
-   - Update the maximum area.
+    - Find the size of its connected component.
+    - Update the maximum area.
 5. Return the maximum area found.
 
 ::tabs-start
@@ -1333,6 +1417,84 @@ class Solution {
         }
 
         return area
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+        true
+    }
+
+    fn get_size(&mut self, node: usize) -> usize {
+        let p = self.find(node);
+        self.size[p]
+    }
+}
+
+impl Solution {
+    pub fn max_area_of_island(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut dsu = DSU::new(rows * cols);
+
+        let directions: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+        let mut area = 0usize;
+
+        let index = |r: usize, c: usize| r * cols + c;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 {
+                    for &(dr, dc) in &directions {
+                        let nr = r as i32 + dr;
+                        let nc = c as i32 + dc;
+                        if nr < 0 || nc < 0 || nr >= rows as i32
+                            || nc >= cols as i32
+                            || grid[nr as usize][nc as usize] == 0
+                        {
+                            continue;
+                        }
+                        dsu.union(index(r, c), index(nr as usize, nc as usize));
+                    }
+                    area = area.max(dsu.get_size(index(r, c)));
+                }
+            }
+        }
+
+        area as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Custom Comparators** - Writing comparison functions to define custom sorting orders
 - **Digit Manipulation** - Extracting and transforming individual digits using modulo and division
 - **Stable Sorting** - Understanding that stable sorts preserve relative order of equal elements
@@ -215,6 +217,27 @@ class Solution {
         pairs.sort { $0.0 < $1.0 }
 
         return pairs.map { nums[$0.1] }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_jumbled(mapping: Vec<i32>, nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut pairs: Vec<(i32, usize)> = Vec::with_capacity(n);
+
+        for i in 0..n {
+            let num_str = nums[i].to_string();
+            let mut mapped_n = 0;
+            for c in num_str.bytes() {
+                mapped_n = mapped_n * 10 + mapping[(c - b'0') as usize];
+            }
+            pairs.push((mapped_n, i));
+        }
+
+        pairs.sort_by_key(|p| p.0);
+        pairs.iter().map(|p| nums[p.1]).collect()
     }
 }
 ```
@@ -498,6 +521,37 @@ class Solution {
         pairs.sort { $0.0 < $1.0 }
 
         return pairs.map { nums[$0.1] }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_jumbled(mapping: Vec<i32>, nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut pairs: Vec<(i32, usize)> = Vec::with_capacity(n);
+
+        for i in 0..n {
+            let mut mapped_n = 0;
+            let mut base = 1;
+            let mut num = nums[i];
+
+            if num == 0 {
+                mapped_n = mapping[0];
+            } else {
+                while num > 0 {
+                    let digit = (num % 10) as usize;
+                    num /= 10;
+                    mapped_n += base * mapping[digit];
+                    base *= 10;
+                }
+            }
+
+            pairs.push((mapped_n, i));
+        }
+
+        pairs.sort_by_key(|p| p.0);
+        pairs.iter().map(|p| nums[p.1]).collect()
     }
 }
 ```

@@ -289,6 +289,39 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut visit = vec![vec![false; n]; n];
+
+        fn dfs(
+            grid: &Vec<Vec<i32>>, visit: &mut Vec<Vec<bool>>,
+            r: i32, c: i32, t: i32,
+        ) -> i32 {
+            let n = grid.len() as i32;
+            if r < 0 || c < 0 || r >= n || c >= n || visit[r as usize][c as usize] {
+                return 1_000_000;
+            }
+            let t = t.max(grid[r as usize][c as usize]);
+            if r == n - 1 && c == n - 1 {
+                return t;
+            }
+            visit[r as usize][c as usize] = true;
+            let res = dfs(grid, visit, r + 1, c, t)
+                .min(dfs(grid, visit, r - 1, c, t))
+                .min(dfs(grid, visit, r, c + 1, t))
+                .min(dfs(grid, visit, r, c - 1, t));
+            visit[r as usize][c as usize] = false;
+            res
+        }
+
+        dfs(&grid, &mut visit, 0, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -674,6 +707,56 @@ class Solution {
         }
 
         return maxH
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut min_h = grid[0][0];
+        let mut max_h = grid[0][0];
+        for row in &grid {
+            for &val in row {
+                min_h = min_h.min(val);
+                max_h = max_h.max(val);
+            }
+        }
+
+        let mut visit = vec![vec![false; n]; n];
+
+        fn dfs(
+            grid: &Vec<Vec<i32>>, visit: &mut Vec<Vec<bool>>,
+            r: i32, c: i32, t: i32,
+        ) -> bool {
+            let n = grid.len() as i32;
+            if r < 0 || c < 0 || r >= n || c >= n
+                || visit[r as usize][c as usize]
+                || grid[r as usize][c as usize] > t
+            {
+                return false;
+            }
+            if r == n - 1 && c == n - 1 {
+                return true;
+            }
+            visit[r as usize][c as usize] = true;
+            dfs(grid, visit, r + 1, c, t)
+                || dfs(grid, visit, r - 1, c, t)
+                || dfs(grid, visit, r, c + 1, t)
+                || dfs(grid, visit, r, c - 1, t)
+        }
+
+        for t in min_h..max_h {
+            if dfs(&grid, &mut visit, 0, 0, t) {
+                return t;
+            }
+            for row in visit.iter_mut() {
+                row.fill(false);
+            }
+        }
+        max_h
     }
 }
 ```
@@ -1107,6 +1190,60 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut min_h = grid[0][0];
+        let mut max_h = grid[0][0];
+        for row in &grid {
+            for &val in row {
+                min_h = min_h.min(val);
+                max_h = max_h.max(val);
+            }
+        }
+
+        let mut visit = vec![vec![false; n]; n];
+
+        fn dfs(
+            grid: &Vec<Vec<i32>>, visit: &mut Vec<Vec<bool>>,
+            r: i32, c: i32, t: i32,
+        ) -> bool {
+            let n = grid.len() as i32;
+            if r < 0 || c < 0 || r >= n || c >= n
+                || visit[r as usize][c as usize]
+                || grid[r as usize][c as usize] > t
+            {
+                return false;
+            }
+            if r == n - 1 && c == n - 1 {
+                return true;
+            }
+            visit[r as usize][c as usize] = true;
+            dfs(grid, visit, r + 1, c, t)
+                || dfs(grid, visit, r - 1, c, t)
+                || dfs(grid, visit, r, c + 1, t)
+                || dfs(grid, visit, r, c - 1, t)
+        }
+
+        let (mut lo, mut hi) = (min_h, max_h);
+        while lo < hi {
+            let mid = (lo + hi) >> 1;
+            if dfs(&grid, &mut visit, 0, 0, mid) {
+                hi = mid;
+            } else {
+                lo = mid + 1;
+            }
+            for row in visit.iter_mut() {
+                row.fill(false);
+            }
+        }
+        hi
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1456,6 +1593,39 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut visit = vec![vec![false; n]; n];
+        let mut heap = BinaryHeap::new();
+        let directions = [(0i32, 1i32), (0, -1), (1, 0), (-1, 0)];
+
+        heap.push(Reverse((grid[0][0], 0usize, 0usize)));
+        visit[0][0] = true;
+
+        while let Some(Reverse((t, r, c))) = heap.pop() {
+            if r == n - 1 && c == n - 1 {
+                return t;
+            }
+            for &(dr, dc) in &directions {
+                let nr = r as i32 + dr;
+                let nc = c as i32 + dc;
+                if nr >= 0 && nc >= 0 && (nr as usize) < n && (nc as usize) < n {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if !visit[nr][nc] {
+                        visit[nr][nc] = true;
+                        heap.push(Reverse((t.max(grid[nr][nc]), nr, nc)));
+                    }
+                }
+            }
+        }
+        n as i32 * n as i32
     }
 }
 ```
@@ -2004,6 +2174,79 @@ class Solution {
             }
         }
         return -1
+    }
+}
+```
+
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            size: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, x: usize) -> usize {
+        if self.parent[x] != x {
+            self.parent[x] = self.find(self.parent[x]);
+        }
+        self.parent[x]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let (mut pu, mut pv) = (self.find(u), self.find(v));
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+
+    fn connected(&mut self, u: usize, v: usize) -> bool {
+        self.find(u) == self.find(v)
+    }
+}
+
+impl Solution {
+    pub fn swim_in_water(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut dsu = DSU::new(n * n);
+        let mut positions: Vec<(i32, usize, usize)> = Vec::new();
+        for r in 0..n {
+            for c in 0..n {
+                positions.push((grid[r][c], r, c));
+            }
+        }
+        positions.sort();
+        let directions: [(i32, i32); 4] = [(0, 1), (1, 0), (0, -1), (-1, 0)];
+
+        for &(t, r, c) in &positions {
+            for &(dr, dc) in &directions {
+                let nr = r as i32 + dr;
+                let nc = c as i32 + dc;
+                if nr >= 0 && nc >= 0 && (nr as usize) < n && (nc as usize) < n {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if grid[nr][nc] <= t {
+                        dsu.union(r * n + c, nr * n + nc);
+                    }
+                }
+            }
+            if dsu.connected(0, n * n - 1) {
+                return t;
+            }
+        }
+        n as i32 * n as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays (Matrices)** - Understanding how to traverse and access elements in a grid
 - **Nested Loops** - Iterating over both rows and columns, plus sub-regions within the matrix
 - **Finding Maximum Values** - Tracking the maximum element within a sliding window region
@@ -16,9 +18,9 @@ For each position in the output matrix, we need to find the maximum value in the
 
 1. Create an output matrix of size `(n-2) x (n-2)`.
 2. For each position `(i, j)` in the output matrix:
-   - Scan the 3x3 region starting at `(i, j)` in the input grid.
-   - Find the maximum value among all 9 cells.
-   - Store this maximum at position `(i, j)` in the output.
+    - Scan the 3x3 region starting at `(i, j)` in the input grid.
+    - Find the maximum value among all 9 cells.
+    - Store this maximum at position `(i, j)` in the output.
 3. Return the output matrix.
 
 ::tabs-start
@@ -178,20 +180,39 @@ class Solution {
 ```swift
 class Solution {
     func largestLocal(_ grid: [[Int]]) -> [[Int]] {
-        let N = grid.count
-        var res = [[Int]](repeating: [Int](repeating: 0, count: N - 2), count: N - 2)
+        let n = grid.count
+        let k = 3
+        let st = SparseTable(grid)
+        var res = [[Int]](repeating: [Int](repeating: 0, count: n - k + 1), count: n - k + 1)
 
-        for i in 0..<(N - 2) {
-            for j in 0..<(N - 2) {
-                for r in i..<(i + 3) {
-                    for c in j..<(j + 3) {
-                        res[i][j] = max(res[i][j], grid[r][c])
+        for i in 0...(n - k) {
+            for j in 0...(n - k) {
+                res[i][j] = st.query(i, j, i + k - 1, j + k - 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_local(grid: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = grid.len();
+        let mut res = vec![vec![0; n - 2]; n - 2];
+
+        for i in 0..n - 2 {
+            for j in 0..n - 2 {
+                for r in i..i + 3 {
+                    for c in j..j + 3 {
+                        res[i][j] = res[i][j].max(grid[r][c]);
                     }
                 }
             }
         }
 
-        return res
+        res
     }
 }
 ```
@@ -216,11 +237,11 @@ While the simple iteration works well for a fixed 3x3 window, a Sparse Table all
 ### Algorithm
 
 1. Build a 2D Sparse Table during preprocessing:
-   - `sparseTable[r][c][i][j]` stores the maximum in the submatrix starting at `(r, c)` with dimensions `(2^i) x (2^j)`.
-   - Build iteratively: first handle single rows/columns, then combine four quadrants for larger regions.
+    - `sparseTable[r][c][i][j]` stores the maximum in the submatrix starting at `(r, c)` with dimensions `(2^i) x (2^j)`.
+    - Build iteratively: first handle single rows/columns, then combine four quadrants for larger regions.
 2. For each query `(x1, y1, x2, y2)`:
-   - Compute the appropriate power-of-two dimensions that cover the range.
-   - Combine up to four overlapping submatrices to get the maximum.
+    - Compute the appropriate power-of-two dimensions that cover the range.
+    - Combine up to four overlapping submatrices to get the maximum.
 3. Apply queries for each `(n-k+1) x (n-k+1)` output position with window size `k=3`.
 
 ::tabs-start
@@ -885,6 +906,84 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+struct SparseTable {
+    sparse_table: Vec<Vec<Vec<Vec<i32>>>>,
+    log: Vec<usize>,
+}
+
+impl SparseTable {
+    fn new(grid: &Vec<Vec<i32>>) -> Self {
+        let n = grid.len();
+        let mut log = vec![0usize; n + 1];
+        for i in 2..=n {
+            log[i] = log[i / 2] + 1;
+        }
+
+        let max_log = log[n];
+        let mut sparse_table = vec![vec![vec![vec![0i32; max_log + 1]; max_log + 1]; n]; n];
+
+        for r in 0..n {
+            for c in 0..n {
+                sparse_table[r][c][0][0] = grid[r][c];
+            }
+        }
+
+        for i in 0..=max_log {
+            for j in 0..=max_log {
+                for r in 0..n - (1 << i) + 1 {
+                    for c in 0..n - (1 << j) + 1 {
+                        if i == 0 && j == 0 {
+                            continue;
+                        }
+                        if i == 0 {
+                            sparse_table[r][c][i][j] = sparse_table[r][c][i][j - 1]
+                                .max(sparse_table[r][c + (1 << (j - 1))][i][j - 1]);
+                        } else if j == 0 {
+                            sparse_table[r][c][i][j] = sparse_table[r][c][i - 1][j]
+                                .max(sparse_table[r + (1 << (i - 1))][c][i - 1][j]);
+                        } else {
+                            sparse_table[r][c][i][j] = sparse_table[r][c][i - 1][j - 1]
+                                .max(sparse_table[r + (1 << (i - 1))][c][i - 1][j - 1])
+                                .max(sparse_table[r][c + (1 << (j - 1))][i - 1][j - 1])
+                                .max(sparse_table[r + (1 << (i - 1))][c + (1 << (j - 1))][i - 1][j - 1]);
+                        }
+                    }
+                }
+            }
+        }
+
+        SparseTable { sparse_table, log }
+    }
+
+    fn query(&self, x1: usize, y1: usize, x2: usize, y2: usize) -> i32 {
+        let lx = self.log[x2 - x1 + 1];
+        let ly = self.log[y2 - y1 + 1];
+        self.sparse_table[x1][y1][lx][ly]
+            .max(self.sparse_table[x2 - (1 << lx) + 1][y1][lx][ly])
+            .max(self.sparse_table[x1][y2 - (1 << ly) + 1][lx][ly])
+            .max(self.sparse_table[x2 - (1 << lx) + 1][y2 - (1 << ly) + 1][lx][ly])
+    }
+}
+
+impl Solution {
+    pub fn largest_local(grid: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = grid.len();
+        let k = 3;
+        let st = SparseTable::new(&grid);
+        let mut res = vec![vec![0; n - k + 1]; n - k + 1];
+
+        for i in 0..=n - k {
+            for j in 0..=n - k {
+                res[i][j] = st.query(i, j, i + k - 1, j + k - 1);
+            }
+        }
+
+        res
     }
 }
 ```

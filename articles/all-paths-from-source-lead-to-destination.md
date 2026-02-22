@@ -375,6 +375,47 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn leads_to_destination(
+        n: i32, edges: Vec<Vec<i32>>, source: i32, destination: i32,
+    ) -> bool {
+        let n = n as usize;
+        let source = source as usize;
+        let destination = destination as usize;
+
+        let mut graph = vec![vec![]; n];
+        for edge in &edges {
+            graph[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        // 0 = unvisited, 1 = GRAY, 2 = BLACK
+        let mut states = vec![0u8; n];
+
+        fn leads_to_dest(
+            graph: &Vec<Vec<usize>>, node: usize, dest: usize, states: &mut Vec<u8>,
+        ) -> bool {
+            if states[node] != 0 {
+                return states[node] == 2;
+            }
+            if graph[node].is_empty() {
+                return node == dest;
+            }
+            states[node] = 1;
+            for &next_node in &graph[node] {
+                if !leads_to_dest(graph, next_node, dest, states) {
+                    return false;
+                }
+            }
+            states[node] = 2;
+            true
+        }
+
+        leads_to_dest(&graph, source, destination, &mut states)
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

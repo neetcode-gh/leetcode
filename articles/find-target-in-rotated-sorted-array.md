@@ -129,6 +129,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        for i in 0..nums.len() {
+            if nums[i] == target {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -499,6 +512,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l < r {
+            let m = (l + r) / 2;
+            if nums[m as usize] > nums[r as usize] {
+                l = m + 1;
+            } else {
+                r = m;
+            }
+        }
+
+        let pivot = l;
+
+        let result = Self::binary_search(&nums, target, 0, pivot - 1);
+        if result != -1 {
+            return result;
+        }
+
+        Self::binary_search(&nums, target, pivot, nums.len() as i32 - 1)
+    }
+
+    fn binary_search(nums: &[i32], target: i32, mut left: i32, mut right: i32) -> i32 {
+        while left <= right {
+            let mid = (left + right) / 2;
+            if nums[mid as usize] == target {
+                return mid;
+            } else if nums[mid as usize] < target {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -854,6 +907,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l < r {
+            let m = (l + r) / 2;
+            if nums[m as usize] > nums[r as usize] {
+                l = m + 1;
+            } else {
+                r = m;
+            }
+        }
+
+        let pivot = l;
+        l = 0;
+        r = nums.len() as i32 - 1;
+
+        if target >= nums[pivot as usize] && target <= nums[r as usize] {
+            l = pivot;
+        } else {
+            r = pivot - 1;
+        }
+
+        while l <= r {
+            let m = (l + r) / 2;
+            if nums[m as usize] == target {
+                return m;
+            } else if nums[m as usize] < target {
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1108,6 +1201,36 @@ class Solution {
             }
         }
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l <= r {
+            let mid = (l + r) / 2;
+            if target == nums[mid as usize] {
+                return mid;
+            }
+
+            if nums[l as usize] <= nums[mid as usize] {
+                if target > nums[mid as usize] || target < nums[l as usize] {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            } else {
+                if target < nums[mid as usize] || target > nums[r as usize] {
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+        }
+        -1
     }
 }
 ```

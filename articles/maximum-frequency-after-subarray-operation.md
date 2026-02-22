@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Kadane's Algorithm** - The optimized solutions use Kadane's algorithm to find maximum subarray sums
 - **Hash Maps** - Used for tracking frequency counts and running sums for each value
 - **Subarray Problems** - Understanding how to enumerate and process contiguous subarrays
@@ -16,11 +18,11 @@ The operation lets us pick a subarray and add a constant to every element in it.
 
 1. Count how many times `k` appears in the array (call it `cntK`).
 2. For each possible value `num` from `1` to `50` (excluding `k`):
-   - For each starting index `i`:
-     - Reset the count and iterate through all ending indices `j`.
-     - Increment count when we see `num` (it becomes `k` after the operation).
-     - Decrement `cntK` when we see `k` (it changes to something else).
-     - Track the maximum of `cntK + count`.
+    - For each starting index `i`:
+        - Reset the count and iterate through all ending indices `j`.
+        - Increment count when we see `num` (it becomes `k` after the operation).
+        - Decrement `cntK` when we see `k` (it changes to something else).
+        - Track the maximum of `cntK + count`.
 3. Return the maximum frequency found.
 
 ::tabs-start
@@ -115,7 +117,7 @@ class Solution {
      */
     maxFrequency(nums, k) {
         const n = nums.length;
-        let cntK = nums.filter(x => x === k).length;
+        let cntK = nums.filter((x) => x === k).length;
         let res = cntK;
 
         for (let num = 1; num <= 50; num++) {
@@ -259,12 +261,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut cnt_k = nums.iter().filter(|&&x| x == k).count() as i32;
+        let mut res = cnt_k;
+
+        for num in 1..=50 {
+            if num == k {
+                continue;
+            }
+            for i in 0..n {
+                let tmp = cnt_k;
+                let mut cnt = 0;
+                for j in i..n {
+                    if nums[j] == num {
+                        cnt += 1;
+                    } else if nums[j] == k {
+                        cnt_k -= 1;
+                    }
+                    res = res.max(cnt + cnt_k);
+                }
+                cnt_k = tmp;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(50 * n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(50 * n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -278,12 +310,12 @@ The brute force tries all subarrays, but we can use Kadane's algorithm to find t
 
 1. Count how many times `k` appears in the array (call it `cntK`).
 2. For each possible value `i` from `1` to `50` (excluding `k`):
-   - Initialize `cnt = 0`.
-   - For each element in the array:
-     - Add `1` if the element equals `i`.
-     - Subtract `1` if the element equals `k`.
-     - Reset `cnt` to `0` if it goes negative (Kadane's reset).
-     - Track the maximum of `cntK + cnt`.
+    - Initialize `cnt = 0`.
+    - For each element in the array:
+        - Add `1` if the element equals `i`.
+        - Subtract `1` if the element equals `k`.
+        - Reset `cnt` to `0` if it goes negative (Kadane's reset).
+        - Track the maximum of `cntK + cnt`.
 3. Return the maximum frequency found.
 
 ::tabs-start
@@ -486,12 +518,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let cnt_k = nums.iter().filter(|&&x| x == k).count() as i32;
+        let mut res = 0;
+
+        for i in 1..=50 {
+            if i == k {
+                continue;
+            }
+            let mut cnt = 0;
+            for &num in &nums {
+                if num == i {
+                    cnt += 1;
+                }
+                if num == k {
+                    cnt -= 1;
+                }
+                cnt = cnt.max(0);
+                res = res.max(cnt_k + cnt);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(50 * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(50 * n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -505,8 +564,8 @@ We can process all target values simultaneously in a single pass. For each numbe
 
 1. Maintain a hash map `cnt` where `cnt[num]` represents the best running sum ending at the current position for converting `num` to `k`.
 2. For each element in the array:
-   - Update `cnt[num] = max(cnt[num], cnt[k]) + 1`.
-   - Track the maximum value of `cnt[num] - cnt[k]`.
+    - Update `cnt[num] = max(cnt[num], cnt[k]) + 1`.
+    - Track the maximum value of `cnt[num] - cnt[k]`.
 3. Return `cnt[k] + res`, where `res` is the maximum gain found.
 
 ::tabs-start
@@ -639,12 +698,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let mut cnt = HashMap::new();
+        let mut res = 0;
+        for &num in &nums {
+            let prev = *cnt.get(&num).unwrap_or(&0).max(cnt.get(&k).unwrap_or(&0));
+            *cnt.entry(num).or_insert(0) = prev + 1;
+            res = res.max(cnt[&num] - cnt.get(&k).unwrap_or(&0));
+        }
+        *cnt.get(&k).unwrap_or(&0) + res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(50)$
+- Time complexity: $O(n)$
+- Space complexity: $O(50)$
 
 ---
 

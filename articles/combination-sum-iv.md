@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Trying every number at each step and recursively solving for the remaining sum
 - **Dynamic Programming (Memoization)** - Caching results for each target value to avoid recomputation
 - **Dynamic Programming (Tabulation)** - Building the count of ways from 0 up to the target
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 We need to count all possible combinations (with different orderings counted separately) that sum to the target. At each step, we can pick any number from the array and subtract it from our remaining sum. This naturally leads to a recursive approach where we try every number at each position.
 
 ### Algorithm
+
 1. Sort the array to enable early termination when a number exceeds the remaining sum.
 2. Define a recursive function that takes the current remaining total.
 3. Base case: if total equals `0`, we found a valid combination, return `1`.
@@ -207,6 +211,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum4(nums: Vec<i32>, target: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+
+        fn dfs(nums: &[i32], total: i32) -> i32 {
+            if total == 0 { return 1; }
+            let mut res = 0;
+            for &num in nums {
+                if total < num { break; }
+                res += dfs(nums, total - num);
+            }
+            res
+        }
+
+        dfs(&nums, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -221,9 +246,11 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 The recursive solution has overlapping subproblems since the same remaining total can be reached through different paths. By caching results for each total value, we avoid redundant computations. This memoization transforms exponential time complexity into polynomial.
 
 ### Algorithm
+
 1. Sort the array and initialize a memoization map with base case: `memo[0] = 1`.
 2. Define a recursive function that checks the memo before computing.
 3. For each number that does not exceed the current total, add the result of the recursive call with the reduced total.
@@ -446,6 +473,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum4(nums: Vec<i32>, target: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let mut memo = HashMap::new();
+        memo.insert(0, 1);
+
+        fn dfs(nums: &[i32], total: i32, memo: &mut HashMap<i32, i32>) -> i32 {
+            if let Some(&val) = memo.get(&total) {
+                return val;
+            }
+            let mut res = 0;
+            for &num in nums {
+                if total < num { break; }
+                res += dfs(nums, total - num, memo);
+            }
+            memo.insert(total, res);
+            res
+        }
+
+        dfs(&nums, target, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -460,9 +513,11 @@ class Solution {
 ## 3. Dynamic Programming (Bottom-Up) - I
 
 ### Intuition
+
 Instead of working backwards from the target, we can build up the solution by computing the number of ways to reach each sum from 0 to target. For each sum, we check all numbers in the array and add the ways to reach the sum minus that number.
 
 ### Algorithm
+
 1. Initialize a DP map with `dp[0] = 1` (one way to make sum `0`: use nothing).
 2. Iterate through all totals from `1` to target.
 3. For each total and each number in the array, if total minus the number exists in `dp`, add that count to `dp[total]`.
@@ -615,6 +670,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum4(nums: Vec<i32>, target: i32) -> i32 {
+        let mut dp = HashMap::new();
+        dp.insert(0, 1);
+
+        for total in 1..=target {
+            dp.insert(total, 0);
+            for &num in &nums {
+                let prev = *dp.get(&(total - num)).unwrap_or(&0);
+                *dp.get_mut(&total).unwrap() += prev;
+            }
+        }
+
+        *dp.get(&target).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -629,9 +703,11 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up) - II
 
 ### Intuition
+
 We can also work backwards from the target. Starting at the target, each number represents how many ways we can reach the target from that sum. When we subtract a number from the current total, we propagate the count to the resulting sum.
 
 ### Algorithm
+
 1. Sort the array and initialize `dp[target] = 1`.
 2. Iterate from target down to `1`.
 3. For each total with a non-zero count, and for each number that does not exceed the total, add `dp[total]` to `dp[total - num]`.
@@ -803,6 +879,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum4(nums: Vec<i32>, target: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let mut dp = HashMap::new();
+        dp.insert(target, 1);
+
+        for total in (1..=target).rev() {
+            let curr = match dp.get(&total) {
+                Some(&v) => v,
+                None => continue,
+            };
+            for &num in &nums {
+                if total < num { break; }
+                *dp.entry(total - num).or_insert(0) += curr;
+            }
+        }
+
+        *dp.get(&0).unwrap_or(&0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -817,7 +917,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Confusing Combinations vs Permutations
+
 This problem counts permutations (order matters), not combinations. `[1,2,1]` and `[1,1,2]` are counted separately. If you iterate over elements and track an index to avoid reusing earlier elements, you'll miss valid orderings.
+
 ```python
 # Wrong: treats [1,2,1] and [2,1,1] as the same
 dfs(i + 1, total - nums[i])
@@ -827,10 +929,13 @@ for num in nums:
 ```
 
 ### Missing Base Case for Zero Target
+
 Forgetting to return `1` when `total == 0`. This base case represents finding one valid way to form the target. Returning `0` here causes all counts to be zero.
 
 ### Not Handling Negative Intermediate Results
+
 When using bottom-up DP with a hashmap, accessing `dp[total - num]` when `total - num` is negative or doesn't exist causes errors. Always check bounds or use `get()` with a default value.
+
 ```python
 # Wrong: KeyError if total - num < 0 or not in dp
 dp[total] += dp[total - num]

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Using pointers to identify word boundaries and reverse segments
 - **String Manipulation** - Splitting strings and working with character arrays
 - **In-place Reversal** - Swapping characters within a word without extra space
@@ -121,6 +123,17 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_words(s: String) -> String {
+        s.split(' ')
+            .map(|w| w.chars().rev().collect::<String>())
+            .collect::<Vec<_>>()
+            .join(" ")
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -141,8 +154,8 @@ Instead of splitting into an array, we can build the result string character by 
 1. Initialize an empty temporary string `tmp_str` and an empty result string `res`.
 2. Iterate through each character in the input (plus one extra position to handle the last word).
 3. If we reach a space or the end of the string:
-   - Append `tmp_str` to `res`, then clear `tmp_str`.
-   - If not at the end, append a space to `res`.
+    - Append `tmp_str` to `res`, then clear `tmp_str`.
+    - If not at the end, append a space to `res`.
 4. Otherwise, prepend the current character to `tmp_str` (building the word in reverse).
 5. Return `res`.
 
@@ -323,6 +336,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_words(s: String) -> String {
+        let chars: Vec<char> = s.chars().collect();
+        let mut tmp_str = String::new();
+        let mut res = String::new();
+
+        for r in 0..=chars.len() {
+            if r == chars.len() || chars[r] == ' ' {
+                res.push_str(&tmp_str);
+                tmp_str.clear();
+                if r != chars.len() {
+                    res.push(' ');
+                }
+            } else {
+                tmp_str.insert(0, chars[r]);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,9 +379,9 @@ We can reverse each word in place by identifying word boundaries and using two p
 1. Convert the string to a character array.
 2. Use pointer `l` to track the start of the current word.
 3. Iterate with pointer `r` through the array:
-   - When `r` reaches a space or the end of the string, we have found a complete word.
-   - Use two temporary pointers to swap characters from both ends of this word toward the center.
-   - Update `l` to `r + 1` for the next word.
+    - When `r` reaches a space or the end of the string, we have found a complete word.
+    - Use two temporary pointers to swap characters from both ends of this word toward the center.
+    - Update `l` to `r + 1` for the next word.
 4. Convert the character array back to a string and return.
 
 ::tabs-start
@@ -526,6 +562,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_words(s: String) -> String {
+        let mut chars: Vec<u8> = s.into_bytes();
+        let n = chars.len();
+        let mut l = 0;
+        for r in 0..=n {
+            if r == n || chars[r] == b' ' {
+                chars[l..r].reverse();
+                l = r + 1;
+            }
+        }
+        String::from_utf8(chars).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -545,10 +598,10 @@ This is a cleaner variation of the two-pointer approach. Instead of checking for
 
 1. Convert the string to a character array.
 2. Iterate through the array with index `i`:
-   - Skip spaces until finding a non-space character (start of a word).
-   - From that position, use index `j` to find where the word ends (next space or end of array).
-   - Call a helper function to reverse characters between indices `i` and `j - 1`.
-   - Move `i` to `j` to continue with the next word.
+    - Skip spaces until finding a non-space character (start of a word).
+    - From that position, use index `j` to find where the word ends (next space or end of array).
+    - Call a helper function to reverse characters between indices `i` and `j - 1`.
+    - Move `i` to `j` to continue with the next word.
 3. Return the modified array as a string.
 
 ::tabs-start
@@ -788,6 +841,28 @@ class Solution {
             i += 1
         }
         return String(arr)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reverse_words(s: String) -> String {
+        let mut arr: Vec<u8> = s.into_bytes();
+        let n = arr.len();
+        let mut i = 0;
+        while i < n {
+            if arr[i] != b' ' {
+                let mut j = i;
+                while j < n && arr[j] != b' ' {
+                    j += 1;
+                }
+                arr[i..j].reverse();
+                i = j;
+            }
+            i += 1;
+        }
+        String::from_utf8(arr).unwrap()
     }
 }
 ```

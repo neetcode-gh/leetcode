@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Optimal pairs are adjacent elements in sorted order, making sorting essential for the greedy approach
 - **Dynamic Programming (Memoization)** - The take/skip decision pattern with overlapping subproblems requires DP for efficient solutions
 - **Binary Search** - The optimal solution uses binary search on the answer space to find the minimum valid threshold
@@ -20,11 +22,11 @@ This is a classic DP problem: at each position, we decide whether to pair the cu
 1. Sort the array.
 2. Define `dfs(i, pairs)` as the minimum possible maximum difference when considering elements from index `i` onward and needing `pairs` more pairs.
 3. Base cases:
-   - If `pairs == p`, return `0` (no more pairs needed).
-   - If `i >= n - 1`, return infinity (cannot form more pairs).
+    - If `pairs == p`, return `0` (no more pairs needed).
+    - If `i >= n - 1`, return infinity (cannot form more pairs).
 4. At each position, choose the better option:
-   - **Take**: Pair elements at `i` and `i+1`, recursively solve for `i+2` with one fewer pair needed. The result is the `max` of this pair's difference and the recursive result.
-   - **Skip**: Move to `i+1` without pairing.
+    - **Take**: Pair elements at `i` and `i+1`, recursively solve for `i+2` with one fewer pair needed. The result is the `max` of this pair's difference and the recursive result.
+    - **Skip**: Move to `i+1` without pairing.
 5. Return the `min` of take and skip.
 
 ::tabs-start
@@ -251,6 +253,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimize_max(nums: Vec<i32>, p: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len();
+        let mut dp = HashMap::new();
+
+        fn dfs(
+            i: usize, pairs: i32, nums: &[i32], p: i32,
+            dp: &mut HashMap<(usize, i32), i32>,
+        ) -> i32 {
+            if pairs == p { return 0; }
+            if i >= nums.len() - 1 { return i32::MAX; }
+            if let Some(&v) = dp.get(&(i, pairs)) { return v; }
+
+            let take = (nums[i + 1] - nums[i]).max(dfs(i + 2, pairs + 1, nums, p, dp));
+            let skip = dfs(i + 1, pairs, nums, p, dp);
+            let res = take.min(skip);
+            dp.insert((i, pairs), res);
+            res
+        }
+
+        dfs(0, 0, &nums, p, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -274,10 +304,10 @@ The same logic as the top-down approach, but we fill the DP table iteratively fr
 2. Create a 2D DP table where `dp[i][pairs]` represents the minimum maximum difference starting from index `i` with `pairs` pairs still needed.
 3. Initialize `dp[i][0] = 0` for all `i` (no pairs needed means `0` difference).
 4. Fill the table from `i = n - 2` down to `0`:
-   - For each number of pairs from `1` to `p`:
-     - **Take**: `max(nums[i+1] - nums[i], dp[i+2][pairs-1])`
-     - **Skip**: `dp[i+1][pairs]`
-     - Store the `min` of take and skip.
+    - For each number of pairs from `1` to `p`:
+        - **Take**: `max(nums[i+1] - nums[i], dp[i+2][pairs-1])`
+        - **Skip**: `dp[i+1][pairs]`
+        - Store the `min` of take and skip.
 5. Return `dp[0][p]`.
 
 ::tabs-start
@@ -519,6 +549,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimize_max(nums: Vec<i32>, p: i32) -> i32 {
+        let mut nums = nums;
+        let p = p as usize;
+        nums.sort();
+        let n = nums.len();
+
+        let mut dp = vec![vec![i32::MAX; p + 1]; n + 1];
+        for i in 0..=n {
+            dp[i][0] = 0;
+        }
+
+        for i in (0..=(n as i32 - 2).max(0) as usize).rev() {
+            for pairs in 1..=p {
+                let mut take = i32::MAX;
+                if i + 1 < n {
+                    let next = if i + 2 <= n { dp[i + 2][pairs - 1] } else { i32::MAX };
+                    take = (nums[i + 1] - nums[i]).max(next);
+                }
+                let skip = dp[i + 1][pairs];
+                dp[i][pairs] = take.min(skip);
+            }
+        }
+
+        dp[0][p]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -541,11 +601,11 @@ Since each row of the DP table only depends on the next two rows, we can reduce 
 1. Sort the array.
 2. Use three arrays `dp`, `dp1`, and `dp2` of size `p + 1`, all initialized to infinity except index `0` which is `0`.
 3. Iterate from `i = n - 1` down to `0`:
-   - For each `pairs` from `1` to `p`:
-     - **Take**: `max(nums[i+1] - nums[i], dp2[pairs-1])` if `i + 1 < n`
-     - **Skip**: `dp1[pairs]`
-     - `dp[pairs] = min(take, skip)`
-   - Rotate: `dp2 = dp1`, `dp1 = dp`, reset `dp`.
+    - For each `pairs` from `1` to `p`:
+        - **Take**: `max(nums[i+1] - nums[i], dp2[pairs-1])` if `i + 1 < n`
+        - **Skip**: `dp1[pairs]`
+        - `dp[pairs] = min(take, skip)`
+    - Rotate: `dp2 = dp1`, `dp1 = dp`, reset `dp`.
 4. Return `dp1[p]`.
 
 ::tabs-start
@@ -831,6 +891,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimize_max(nums: Vec<i32>, p: i32) -> i32 {
+        let mut nums = nums;
+        let p = p as usize;
+        nums.sort();
+        let n = nums.len();
+
+        let mut dp = vec![i32::MAX; p + 1];
+        let mut dp1 = vec![i32::MAX; p + 1];
+        let mut dp2 = vec![i32::MAX; p + 1];
+        dp[0] = 0;
+        dp1[0] = 0;
+        dp2[0] = 0;
+
+        for i in (0..n).rev() {
+            for pairs in 1..=p {
+                let mut take = i32::MAX;
+                if i + 1 < n {
+                    take = (nums[i + 1] - nums[i]).max(dp2[pairs - 1]);
+                }
+                let skip = dp1[pairs];
+                dp[pairs] = take.min(skip);
+            }
+            dp2 = dp1.clone();
+            dp1 = dp.clone();
+            dp.fill(i32::MAX);
+            dp[0] = 0;
+        }
+
+        dp1[p]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -855,10 +950,10 @@ The answer lies between 0 and `max - min` of the sorted array, so we binary sear
 1. Handle edge case: if `p == 0`, return `0`.
 2. Sort the array.
 3. Binary search on threshold between `0` and `nums[n-1] - nums[0]`:
-   - For each threshold `mid`, check if we can greedily form `p` pairs:
-     - Scan the sorted array. If `nums[i+1] - nums[i] <= mid`, count a pair and skip to `i+2`. Otherwise move to `i+1`.
-     - If count reaches `p`, the threshold is valid.
-   - If valid, try a smaller threshold. Otherwise try larger.
+    - For each threshold `mid`, check if we can greedily form `p` pairs:
+        - Scan the sorted array. If `nums[i+1] - nums[i] <= mid`, count a pair and skip to `i+2`. Otherwise move to `i+1`.
+        - If count reaches `p`, the threshold is valid.
+    - If valid, try a smaller threshold. Otherwise try larger.
 4. Return the smallest valid threshold.
 
 ::tabs-start
@@ -1186,6 +1281,47 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimize_max(nums: Vec<i32>, p: i32) -> i32 {
+        if p == 0 { return 0; }
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len();
+
+        let is_valid = |threshold: i32| -> bool {
+            let (mut i, mut cnt) = (0, 0);
+            while i < n - 1 {
+                if (nums[i] - nums[i + 1]).abs() <= threshold {
+                    cnt += 1;
+                    i += 2;
+                } else {
+                    i += 1;
+                }
+                if cnt == p { return true; }
+            }
+            false
+        };
+
+        let mut l = 0;
+        let mut r = nums[n - 1] - nums[0];
+        let mut res = r;
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+            if is_valid(m) {
+                res = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        res
     }
 }
 ```

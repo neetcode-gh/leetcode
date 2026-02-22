@@ -255,6 +255,35 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+
+        fn dfs(r: usize, c1: i32, c2: i32, grid: &Vec<Vec<i32>>, rows: usize, cols: i32) -> i32 {
+            if c1 < 0 || c2 < 0 || c1 >= cols || c2 >= cols || c1 > c2 {
+                return 0;
+            }
+            let (c1u, c2u) = (c1 as usize, c2 as usize);
+            if r == rows - 1 {
+                return grid[r][c1u] + if c1 == c2 { 0 } else { grid[r][c2u] };
+            }
+            let mut res = 0;
+            for c1_d in -1..=1 {
+                for c2_d in -1..=1 {
+                    res = res.max(dfs(r + 1, c1 + c1_d, c2 + c2_d, grid, rows, cols));
+                }
+            }
+            res + grid[r][c1u] + if c1 == c2 { 0 } else { grid[r][c2u] }
+        }
+
+        dfs(0, 0, cols as i32 - 1, &grid, rows, cols as i32)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -582,6 +611,44 @@ class Solution {
         }
 
         return dfs(0, 0, COLS - 1)
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut cache = vec![vec![vec![-1; cols]; cols]; rows];
+
+        fn dfs(
+            r: usize, c1: i32, c2: i32, grid: &Vec<Vec<i32>>,
+            cache: &mut Vec<Vec<Vec<i32>>>, rows: usize, cols: i32,
+        ) -> i32 {
+            if c1.min(c2) < 0 || c1.max(c2) >= cols {
+                return 0;
+            }
+            let (c1u, c2u) = (c1 as usize, c2 as usize);
+            if cache[r][c1u][c2u] != -1 {
+                return cache[r][c1u][c2u];
+            }
+            if r == rows - 1 {
+                cache[r][c1u][c2u] = grid[r][c1u] + if c1 == c2 { 0 } else { grid[r][c2u] };
+                return cache[r][c1u][c2u];
+            }
+            let mut res = 0;
+            for c1_d in -1..=1 {
+                for c2_d in -1..=1 {
+                    res = res.max(dfs(r + 1, c1 + c1_d, c2 + c2_d, grid, cache, rows, cols));
+                }
+            }
+            cache[r][c1u][c2u] = res + grid[r][c1u] + if c1 == c2 { 0 } else { grid[r][c2u] };
+            cache[r][c1u][c2u]
+        }
+
+        dfs(0, 0, cols as i32 - 1, &grid, &mut cache, rows, cols as i32)
     }
 }
 ```
@@ -928,6 +995,44 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut dp = vec![vec![vec![0; cols]; cols]; rows];
+
+        for r in (0..rows).rev() {
+            for c1 in 0..cols {
+                for c2 in 0..cols {
+                    let mut res = grid[r][c1];
+                    if c1 != c2 {
+                        res += grid[r][c2];
+                    }
+                    if r != rows - 1 {
+                        let mut max_cherries = 0;
+                        for d1 in -1i32..=1 {
+                            for d2 in -1i32..=1 {
+                                let nc1 = c1 as i32 + d1;
+                                let nc2 = c2 as i32 + d2;
+                                if nc1 >= 0 && nc1 < cols as i32 && nc2 >= 0 && nc2 < cols as i32 {
+                                    max_cherries = max_cherries.max(dp[r + 1][nc1 as usize][nc2 as usize]);
+                                }
+                            }
+                        }
+                        res += max_cherries;
+                    }
+                    dp[r][c1][c2] = res;
+                }
+            }
+        }
+
+        dp[0][0][cols - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1220,6 +1325,40 @@ class Solution {
         }
 
         return dp[0][COLS - 1]
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut dp = vec![vec![0; cols]; cols];
+
+        for r in (0..rows).rev() {
+            let mut cur_dp = vec![vec![0; cols]; cols];
+            for c1 in 0..cols {
+                for c2 in c1..cols {
+                    let mut max_cherries = 0;
+                    let cherries = grid[r][c1] + if c1 == c2 { 0 } else { grid[r][c2] };
+                    for d1 in -1i32..=1 {
+                        for d2 in -1i32..=1 {
+                            let nc1 = c1 as i32 + d1;
+                            let nc2 = c2 as i32 + d2;
+                            if nc1 >= 0 && nc1 < cols as i32 && nc2 >= 0 && nc2 < cols as i32 {
+                                max_cherries = max_cherries.max(cherries + dp[nc1 as usize][nc2 as usize]);
+                            }
+                        }
+                    }
+                    cur_dp[c1][c2] = max_cherries;
+                }
+            }
+            dp = cur_dp;
+        }
+
+        dp[0][cols - 1]
     }
 }
 ```

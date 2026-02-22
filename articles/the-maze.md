@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph traversal (DFS/BFS)** - The maze is modeled as a graph where stopping positions are nodes
 - **2D matrix/grid navigation** - Understanding how to move in four directions and handle boundaries
 - **Visited array tracking** - Preventing revisiting the same positions to avoid infinite loops
@@ -19,14 +21,14 @@ We can model this as a graph where each stopping position is a node, and edges c
 
 1. Create a visited matrix to track stopping positions already explored.
 2. Define a recursive `dfs` function:
-   - If the current position was already visited, return `false`.
-   - If the current position equals the destination, return `true`.
-   - Mark the current position as visited.
-   - For each of the four directions (up, down, left, right):
-     - Roll the ball continuously until it hits a wall or boundary.
-     - Step back one position to find where the ball actually stops.
-     - Recursively call `dfs` from this stopping position.
-   - Return `true` if any direction leads to the destination.
+    - If the current position was already visited, return `false`.
+    - If the current position equals the destination, return `true`.
+    - Mark the current position as visited.
+    - For each of the four directions (up, down, left, right):
+        - Roll the ball continuously until it hits a wall or boundary.
+        - Step back one position to find where the ball actually stops.
+        - Recursively call `dfs` from this stopping position.
+    - Return `true` if any direction leads to the destination.
 3. Start `dfs` from the initial position and return the result.
 
 ::tabs-start
@@ -66,7 +68,7 @@ class Solution:
 class Solution {
     public boolean dfs(int m, int n, int[][] maze, int[] curr, int[] destination,
                 boolean[][] visit) {
-                    
+
         if (visit[curr[0]][curr[1]]) {
             return false;
         }
@@ -127,7 +129,7 @@ public:
                 r += dirX[i];
                 c += dirY[i];
             }
-            // Revert the last move to get the cell to which the ball rolls. 
+            // Revert the last move to get the cell to which the ball rolls.
             if (dfs(m, n, maze, {r - dirX[i], c - dirY[i]}, destination, visit)) {
                 return true;
             }
@@ -174,7 +176,16 @@ class Solution {
                 c += dirY[i];
             }
             // Revert the last move to get the cell to which the ball rolls.
-            if (this.dfs(m, n, maze, [r - dirX[i], c - dirY[i]], destination, visit)) {
+            if (
+                this.dfs(
+                    m,
+                    n,
+                    maze,
+                    [r - dirX[i], c - dirY[i]],
+                    destination,
+                    visit,
+                )
+            ) {
                 return true;
             }
         }
@@ -301,6 +312,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_path(maze: Vec<Vec<i32>>, start: Vec<i32>, destination: Vec<i32>) -> bool {
+        let m = maze.len();
+        let n = maze[0].len();
+        let mut visit = vec![vec![false; n]; m];
+        let dest = [destination[0] as usize, destination[1] as usize];
+
+        fn dfs(
+            maze: &[Vec<i32>], curr: [usize; 2], dest: &[usize; 2],
+            visit: &mut Vec<Vec<bool>>, m: usize, n: usize,
+        ) -> bool {
+            if visit[curr[0]][curr[1]] {
+                return false;
+            }
+            if curr[0] == dest[0] && curr[1] == dest[1] {
+                return true;
+            }
+            visit[curr[0]][curr[1]] = true;
+            let dir_x: [i32; 4] = [0, 1, 0, -1];
+            let dir_y: [i32; 4] = [-1, 0, 1, 0];
+
+            for i in 0..4 {
+                let (mut r, mut c) = (curr[0] as i32, curr[1] as i32);
+                while r >= 0 && (r as usize) < m && c >= 0 && (c as usize) < n
+                    && maze[r as usize][c as usize] == 0
+                {
+                    r += dir_x[i];
+                    c += dir_y[i];
+                }
+                r -= dir_x[i];
+                c -= dir_y[i];
+                if dfs(maze, [r as usize, c as usize], dest, visit, m, n) {
+                    return true;
+                }
+            }
+            false
+        }
+
+        dfs(&maze, [start[0] as usize, start[1] as usize], &dest, &mut visit, m, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,7 +363,7 @@ class Solution {
 - Time complexity: $O(m \cdot n \cdot (m + n))$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m$ and $n$ are the number of rows and columns in `maze`.
+> Where $m$ and $n$ are the number of rows and columns in `maze`.
 
 ---
 
@@ -325,12 +380,12 @@ The core rolling mechanic remains the same: the ball rolls until hitting a wall,
 1. Initialize a visited matrix and a queue with the starting position.
 2. Mark the starting position as visited.
 3. While the queue is not empty:
-   - Dequeue the current position.
-   - If it equals the destination, return `true`.
-   - For each of the four directions:
-     - Roll the ball until it hits a wall or boundary.
-     - Step back to find the stopping position.
-     - If not visited, mark it visited and add to the queue.
+    - Dequeue the current position.
+    - If it equals the destination, return `true`.
+    - For each of the four directions:
+        - Roll the ball until it hits a wall or boundary.
+        - Step back to find the stopping position.
+        - If not visited, mark it visited and add to the queue.
 4. If the queue empties without finding the destination, return `false`.
 
 ::tabs-start
@@ -342,7 +397,7 @@ class Solution:
         n = len(maze[0])
         visit = [[False] * n for _ in range(m)]
         queue = deque()
-        
+
         queue.append(start)
         visit[start[0]][start[1]] = True
         dirX = [0, 1, 0, -1]
@@ -567,6 +622,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_path(maze: Vec<Vec<i32>>, start: Vec<i32>, destination: Vec<i32>) -> bool {
+        let m = maze.len();
+        let n = maze[0].len();
+        let mut visit = vec![vec![false; n]; m];
+        let dir_x: [i32; 4] = [0, 1, 0, -1];
+        let dir_y: [i32; 4] = [-1, 0, 1, 0];
+
+        let (sr, sc) = (start[0] as usize, start[1] as usize);
+        let (dr, dc) = (destination[0] as usize, destination[1] as usize);
+
+        let mut queue = VecDeque::new();
+        queue.push_back((sr, sc));
+        visit[sr][sc] = true;
+
+        while let Some((cr, cc)) = queue.pop_front() {
+            if cr == dr && cc == dc {
+                return true;
+            }
+            for i in 0..4 {
+                let (mut r, mut c) = (cr as i32, cc as i32);
+                while r >= 0 && (r as usize) < m && c >= 0 && (c as usize) < n
+                    && maze[r as usize][c as usize] == 0
+                {
+                    r += dir_x[i];
+                    c += dir_y[i];
+                }
+                r -= dir_x[i];
+                c -= dir_y[i];
+                let (ur, uc) = (r as usize, c as usize);
+                if !visit[ur][uc] {
+                    queue.push_back((ur, uc));
+                    visit[ur][uc] = true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -574,7 +671,7 @@ class Solution {
 - Time complexity: $O(m \cdot n \cdot (m + n))$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m$ and $n$ are the number of rows and columns in `maze`.
+> Where $m$ and $n$ are the number of rows and columns in `maze`.
 
 ---
 

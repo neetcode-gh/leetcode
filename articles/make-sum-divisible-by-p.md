@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - Used to efficiently compute subarray sums in constant time
 - **Modular Arithmetic** - Understanding how remainders work and handling negative modulo results
 - **Hash Maps** - Used to store and look up prefix sum remainders for O(1) access
@@ -16,9 +18,9 @@ We need to find the shortest subarray to remove so that the remaining elements s
 
 1. Compute the total sum of the array. If it is already divisible by `p`, return `0`.
 2. For each possible subarray length `l` from `1` to `n - 1`:
-   - Use a sliding window to compute the sum of each subarray of length `l`.
-   - For each window position, calculate the remaining sum (total minus window sum).
-   - If the remaining sum is divisible by `p`, return `l`.
+    - Use a sliding window to compute the sum of each subarray of length `l`.
+    - For each window position, calculate the remaining sum (total minus window sum).
+    - If the remaining sum is divisible by `p`, return `l`.
 3. If no valid subarray is found, return `-1`.
 
 ::tabs-start
@@ -236,6 +238,36 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_subarray(nums: Vec<i32>, p: i32) -> i32 {
+        let n = nums.len();
+        let tot_sum: i64 = nums.iter().map(|&x| x as i64).sum();
+
+        if tot_sum % p as i64 == 0 {
+            return 0;
+        }
+
+        for l in 1..n {
+            let mut cur_sum: i64 = 0;
+            for i in 0..n {
+                cur_sum += nums[i] as i64;
+                if i >= l {
+                    cur_sum -= nums[i - l] as i64;
+                }
+
+                let remain_sum = tot_sum - cur_sum;
+                if remain_sum % p as i64 == 0 {
+                    return l as i32;
+                }
+            }
+        }
+
+        -1
     }
 }
 ```
@@ -491,6 +523,35 @@ class Solution {
         }
 
         return res == nums.count ? -1 : res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_subarray(nums: Vec<i32>, p: i32) -> i32 {
+        let total: i64 = nums.iter().map(|&x| x as i64).sum();
+        let remain = (total % p as i64) as i32;
+        if remain == 0 {
+            return 0;
+        }
+
+        let n = nums.len();
+        let mut res = n;
+        let mut cur_sum: i64 = 0;
+        let mut map = HashMap::new();
+        map.insert(0i32, -1i32);
+
+        for i in 0..n {
+            cur_sum = (cur_sum + nums[i] as i64) % p as i64;
+            let prefix = ((cur_sum as i32 - remain + p) % p) as i32;
+            if let Some(&idx) = map.get(&prefix) {
+                res = res.min(i as i32 as usize - idx as usize);
+            }
+            map.insert(cur_sum as i32, i as i32);
+        }
+
+        if res == n { -1 } else { res as i32 }
     }
 }
 ```

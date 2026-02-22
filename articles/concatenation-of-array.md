@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding array indexing and how to create arrays of a specific size
 - **Basic Iteration** - Using loops to traverse and populate arrays
 
@@ -12,6 +14,7 @@ Before attempting this problem, you should be comfortable with:
 To concatenate an array with itself, we need to create a new array that contains all elements of the original array twice, maintaining the same order. The elements at indices $0$ to $n - 1$ are followed by the same elements at indices $n$ to $2n - 1$.
 
 For example, if `nums = [1, 2, 3]`:
+
 - The first three elements of `ans` will be `nums[0]`, `nums[1]`, `nums[2]` -> `[1, 2, 3]`
 - The next three elements of `ans` will also be `nums[0]`, `nums[1]`, `nums[2]` -> `[1, 2, 3]`
 - Result: `[1, 2, 3, 1, 2, 3]`
@@ -136,6 +139,20 @@ class Solution {
             }
         }
         return ans
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_concatenation(nums: Vec<i32>) -> Vec<i32> {
+        let mut ans = Vec::with_capacity(2 * nums.len());
+        for _ in 0..2 {
+            for &num in &nums {
+                ans.push(num);
+            }
+        }
+        ans
     }
 }
 ```
@@ -274,6 +291,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_concatenation(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut ans = vec![0; 2 * n];
+        for i in 0..n {
+            ans[i] = nums[i];
+            ans[i + n] = nums[i];
+        }
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +317,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Incorrect Result Array Size
+
 Allocating an array of size `n` instead of `2n` causes an index out of bounds error when writing to the second half.
 
 ```python
@@ -297,4 +329,5 @@ ans = [0] * (2 * n)
 ```
 
 ### Off-by-One When Using Index Offset
+
 When using the one-pass approach with `ans[i + n] = nums[i]`, forgetting that indices are zero-based or miscalculating the offset leads to incorrect placement of elements in the second half.

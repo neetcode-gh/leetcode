@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap (Priority Queue)** - Two min-heaps are used to efficiently track available servers (by weight/index) and busy servers (by finish time)
 - **Simulation** - Understanding how to model time-based task assignment and server availability
 - **Custom Comparators** - Implementing multi-key ordering (weight, then index) for priority queue elements
@@ -16,11 +18,11 @@ We simulate the process step by step. For each task, we advance `time` to when t
 
 1. Initialize arrays to track each server's availability status and finish time.
 2. For each task at index `t`:
-   - Set `time` to at least `t` (the task's arrival time).
-   - Mark servers as available if their finish time is at or before current `time`.
-   - If no servers are available, advance `time` to the earliest finish time and update availability.
-   - Find the available server with the smallest weight (and smallest index for ties).
-   - Assign the task to that server, mark it unavailable, and set its finish time.
+    - Set `time` to at least `t` (the task's arrival time).
+    - Mark servers as available if their finish time is at or before current `time`.
+    - If no servers are available, advance `time` to the earliest finish time and update availability.
+    - Find the available server with the smallest weight (and smallest index for ties).
+    - Assign the task to that server, mark it unavailable, and set its finish time.
 3. Return the list of assigned server indices.
 
 ::tabs-start
@@ -405,6 +407,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn assign_tasks(servers: Vec<i32>, tasks: Vec<i32>) -> Vec<i32> {
+        let n = servers.len();
+        let m = tasks.len();
+        let mut available = vec![true; n];
+        let mut finish_time = vec![0i32; n];
+        let mut res = vec![0i32; m];
+        let mut time = 0i32;
+
+        for t in 0..m {
+            time = time.max(t as i32);
+            for i in 0..n {
+                if finish_time[i] <= time {
+                    available[i] = true;
+                }
+            }
+            if !available.iter().any(|&v| v) {
+                time = *finish_time.iter().min().unwrap();
+                for i in 0..n {
+                    if finish_time[i] <= time {
+                        available[i] = true;
+                    }
+                }
+            }
+            let mut min_idx: i32 = -1;
+            for i in 0..n {
+                if available[i]
+                    && (min_idx == -1
+                        || servers[i] < servers[min_idx as usize]
+                        || (servers[i] == servers[min_idx as usize]
+                            && i < min_idx as usize))
+                {
+                    min_idx = i as i32;
+                }
+            }
+            res[t] = min_idx;
+            available[min_idx as usize] = false;
+            finish_time[min_idx as usize] = time + tasks[t];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -427,14 +474,14 @@ Using two heaps makes server selection efficient. One heap holds available serve
 ### Algorithm
 
 1. Create two heaps:
-   - `available`: min-heap ordered by (`weight`, `index`) for free servers.
-   - `unavailable`: min-heap ordered by finish `time` for busy servers.
+    - `available`: min-heap ordered by (`weight`, `index`) for free servers.
+    - `unavailable`: min-heap ordered by finish `time` for busy servers.
 2. Add all servers to `available`.
 3. For each task at index `i`:
-   - Set `time` to at least `i`.
-   - If no server is available, advance `time` to the earliest finish `time` in `unavailable`.
-   - Move all servers from `unavailable` whose finish `time` is at or before `time` to `available`.
-   - Pop the best server from `available`, assign the task, and push it to `unavailable` with its new finish `time`.
+    - Set `time` to at least `i`.
+    - If no server is available, advance `time` to the earliest finish `time` in `unavailable`.
+    - Move all servers from `unavailable` whose finish `time` is at or before `time` to `available`.
+    - Pop the best server from `available`, assign the task, and push it to `unavailable` with its new finish `time`.
 4. Return the result array.
 
 ::tabs-start
@@ -776,6 +823,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn assign_tasks(servers: Vec<i32>, tasks: Vec<i32>) -> Vec<i32> {
+        let n = servers.len();
+        let m = tasks.len();
+        let mut res = vec![0i32; m];
+
+        // available: (weight, index)
+        let mut available = BinaryHeap::new();
+        // unavailable: (finish_time, weight, index)
+        let mut unavailable = BinaryHeap::new();
+
+        for i in 0..n {
+            available.push(Reverse((servers[i], i as i32)));
+        }
+
+        let mut time = 0i32;
+        for i in 0..m {
+            time = time.max(i as i32);
+
+            if available.is_empty() {
+                if let Some(&Reverse((ft, _, _))) = unavailable.peek() {
+                    time = ft;
+                }
+            }
+
+            while let Some(&Reverse((ft, w, idx))) = unavailable.peek() {
+                if ft > time {
+                    break;
+                }
+                unavailable.pop();
+                available.push(Reverse((w, idx)));
+            }
+
+            if let Some(Reverse((w, idx))) = available.pop() {
+                res[i] = idx;
+                unavailable.push(Reverse((time + tasks[i], w, idx)));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -798,13 +890,13 @@ This is a variation of the two-heap approach with slightly different state track
 ### Algorithm
 
 1. Create two heaps:
-   - `available`: min-heap storing (`weight`, `index`, `timeFree`) for available servers.
-   - `unavailable`: min-heap storing (`timeFree`, `weight`, `index`) for busy servers.
+    - `available`: min-heap storing (`weight`, `index`, `timeFree`) for available servers.
+    - `unavailable`: min-heap storing (`timeFree`, `weight`, `index`) for busy servers.
 2. Add all servers to `available` with initial `timeFree` of `0`.
 3. For each task at index `i`:
-   - Move servers from `unavailable` to `available` while their finish `time` is at or before `i`, or while `available` is empty (must wait for a server).
-   - Pop the best server from `available`.
-   - Assign the task and push the server to `unavailable` with updated finish `time`: `max(timeFree, i) + task duration`.
+    - Move servers from `unavailable` to `available` while their finish `time` is at or before `i`, or while `available` is empty (must wait for a server).
+    - Pop the best server from `available`.
+    - Assign the task and push the server to `unavailable` with updated finish `time`: `max(timeFree, i) + task duration`.
 4. Return the result array.
 
 ::tabs-start
@@ -1115,6 +1207,48 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn assign_tasks(servers: Vec<i32>, tasks: Vec<i32>) -> Vec<i32> {
+        let n = servers.len();
+        let m = tasks.len();
+        let mut res = vec![0i32; m];
+
+        // available: (weight, index, time_free)
+        let mut available = BinaryHeap::new();
+        // unavailable: (time_free, weight, index)
+        let mut unavailable = BinaryHeap::new();
+
+        for i in 0..n {
+            available.push(Reverse((servers[i], i as i32, 0i32)));
+        }
+
+        for i in 0..m {
+            while (!unavailable.is_empty()
+                && {
+                    let &Reverse((tf, _, _)) = unavailable.peek().unwrap();
+                    tf <= i as i32
+                })
+                || available.is_empty()
+            {
+                let Reverse((tf, w, idx)) = unavailable.pop().unwrap();
+                available.push(Reverse((w, idx, tf)));
+            }
+
+            let Reverse((w, idx, tf)) = available.pop().unwrap();
+            res[i] = idx;
+            unavailable.push(Reverse((
+                tf.max(i as i32) + tasks[i],
+                w,
+                idx,
+            )));
+        }
+
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting arrays and maintaining original indices while sorting
 - **Binary Search** - Finding positions in sorted arrays efficiently
 - **Heap / Priority Queue** - Using min-heaps to process elements in sorted order dynamically
@@ -188,6 +190,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
+        let m = people.len();
+        let mut res = vec![0; m];
+
+        for i in 0..m {
+            let mut count = 0;
+            for flower in &flowers {
+                if flower[0] <= people[i] && people[i] <= flower[1] {
+                    count += 1;
+                }
+            }
+            res[i] = count;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -210,9 +233,9 @@ Instead of checking every flower for every person, we can process people in sort
 1. Sort people by arrival time while preserving their original indices.
 2. Create two min-heaps: one containing all flower start times, another containing all flower end times.
 3. For each person (in sorted order):
-   - Pop all start times less than or equal to the person's arrival time and increment the `count`.
-   - Pop all end times strictly less than the person's arrival time and decrement the `count`.
-   - Record the current `count` for this person's original index.
+    - Pop all start times less than or equal to the person's arrival time and increment the `count`.
+    - Pop all end times strictly less than the person's arrival time and decrement the `count`.
+    - Record the current `count` for this person's original index.
 4. Return the result array.
 
 ::tabs-start
@@ -520,6 +543,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
+        let m = people.len();
+        let mut res = vec![0; m];
+
+        let mut sorted_people: Vec<(i32, usize)> =
+            people.iter().enumerate().map(|(i, &p)| (p, i)).collect();
+        sorted_people.sort_unstable();
+
+        let mut start_heap = BinaryHeap::new();
+        let mut end_heap = BinaryHeap::new();
+        for f in &flowers {
+            start_heap.push(Reverse(f[0]));
+            end_heap.push(Reverse(f[1]));
+        }
+
+        let mut count = 0;
+        for (p, index) in sorted_people {
+            while let Some(&Reverse(top)) = start_heap.peek() {
+                if top <= p {
+                    start_heap.pop();
+                    count += 1;
+                } else {
+                    break;
+                }
+            }
+            while let Some(&Reverse(top)) = end_heap.peek() {
+                if top < p {
+                    end_heap.pop();
+                    count -= 1;
+                } else {
+                    break;
+                }
+            }
+            res[index] = count;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -543,9 +609,9 @@ We can optimize the two-heap approach by sorting the flowers by start time and u
 2. Sort flowers by their start times.
 3. Use a single min-heap to track end times of currently blooming flowers.
 4. For each person (in sorted order):
-   - Push the end times of all flowers with start time less than or equal to the person's arrival time.
-   - Pop all end times strictly less than the person's arrival time (flowers that stopped blooming).
-   - The heap size is the count of flowers currently in bloom for this person.
+    - Push the end times of all flowers with start time less than or equal to the person's arrival time.
+    - Pop all end times strictly less than the person's arrival time (flowers that stopped blooming).
+    - The heap size is the count of flowers currently in bloom for this person.
 5. Return the result array.
 
 ::tabs-start
@@ -823,6 +889,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
+        let m = people.len();
+        let mut res = vec![0; m];
+        let mut indexed_people: Vec<(i32, usize)> =
+            people.iter().enumerate().map(|(i, &p)| (p, i)).collect();
+        indexed_people.sort_unstable();
+
+        let mut sorted_flowers = flowers.clone();
+        sorted_flowers.sort_unstable();
+
+        let mut end_heap = BinaryHeap::new();
+        let mut j = 0;
+        let n = sorted_flowers.len();
+
+        for (p, index) in indexed_people {
+            while j < n && sorted_flowers[j][0] <= p {
+                end_heap.push(Reverse(sorted_flowers[j][1]));
+                j += 1;
+            }
+            while let Some(&Reverse(top)) = end_heap.peek() {
+                if top < p {
+                    end_heap.pop();
+                } else {
+                    break;
+                }
+            }
+            res[index] = end_heap.len() as i32;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,9 +948,9 @@ Rather than using heaps, we can separate the start and end times into two sorted
 2. Sort people by arrival time while preserving their original indices.
 3. Initialize two pointers `i` and `j` for start and end arrays, and a running `count`.
 4. For each person (in sorted order):
-   - Advance pointer `i` through all start times less than or equal to the person's time, incrementing `count`.
-   - Advance pointer `j` through all end times strictly less than the person's time, decrementing `count`.
-   - Record the `count` for this person's original index.
+    - Advance pointer `i` through all start times less than or equal to the person's time, incrementing `count`.
+    - Advance pointer `j` through all end times strictly less than the person's time, decrementing `count`.
+    - Record the `count` for this person's original index.
 5. Return the result array.
 
 ::tabs-start
@@ -1140,6 +1242,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
+        let m = people.len();
+        let mut res = vec![0; m];
+
+        let mut start: Vec<i32> = flowers.iter().map(|f| f[0]).collect();
+        let mut end: Vec<i32> = flowers.iter().map(|f| f[1]).collect();
+        start.sort_unstable();
+        end.sort_unstable();
+
+        let mut people_index: Vec<(i32, usize)> =
+            people.iter().enumerate().map(|(idx, &p)| (p, idx)).collect();
+        people_index.sort_unstable();
+
+        let mut count = 0i32;
+        let mut i = 0;
+        let mut j = 0;
+
+        for (time, index) in people_index {
+            while i < start.len() && start[i] <= time {
+                count += 1;
+                i += 1;
+            }
+            while j < end.len() && end[j] < time {
+                count -= 1;
+                j += 1;
+            }
+            res[index] = count;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1163,8 +1301,8 @@ The line sweep technique treats flower blooms as events on a timeline. Each flow
 2. Sort all events by time.
 3. Sort people by arrival time while preserving their original indices.
 4. Use a pointer to traverse events. For each person:
-   - Process all events with time less than or equal to the person's arrival time, updating the running `count`.
-   - Record the `count` for this person's original index.
+    - Process all events with time less than or equal to the person's arrival time, updating the running `count`.
+    - Record the `count` for this person's original index.
 5. Return the result array.
 
 ::tabs-start
@@ -1409,6 +1547,37 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn full_bloom_flowers(flowers: Vec<Vec<i32>>, people: Vec<i32>) -> Vec<i32> {
+        let mut events: Vec<(i32, i32)> = Vec::with_capacity(flowers.len() * 2);
+        for f in &flowers {
+            events.push((f[0], 1));
+            events.push((f[1] + 1, -1));
+        }
+
+        events.sort_unstable();
+        let mut queries: Vec<(i32, usize)> =
+            people.iter().enumerate().map(|(i, &p)| (p, i)).collect();
+        queries.sort_unstable();
+
+        let mut res = vec![0; people.len()];
+        let mut count = 0i32;
+        let mut j = 0;
+
+        for (time, index) in queries {
+            while j < events.len() && events[j].0 <= time {
+                count += events[j].1;
+                j += 1;
+            }
+            res[index] = count;
+        }
+
+        res
     }
 }
 ```

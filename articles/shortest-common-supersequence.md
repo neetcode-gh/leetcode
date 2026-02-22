@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - This problem requires 2D DP with either memoization (top-down) or tabulation (bottom-up) to build optimal substructure
 - **Longest Common Subsequence (LCS)** - The SCS length equals len(str1) + len(str2) - LCS_length, so understanding LCS helps grasp the relationship
 - **String Reconstruction from DP Tables** - After computing DP values, you need to trace back through the table to construct the actual result string
@@ -19,11 +21,11 @@ Using recursion with memoization, at each position we have a choice: if the char
 
 1. Define a recursive function `dfs(i, j)` that returns the shortest supersequence starting from indices `i` and `j`.
 2. Base cases:
-   - If `i` reaches the end of `str1`, return the remaining suffix of `str2`.
-   - If `j` reaches the end of `str2`, return the remaining suffix of `str1`.
+    - If `i` reaches the end of `str1`, return the remaining suffix of `str2`.
+    - If `j` reaches the end of `str2`, return the remaining suffix of `str1`.
 3. Recursive case:
-   - If `str1[i] == str2[j]`, include this character once and recurse on `(i+1, j+1)`.
-   - Otherwise, try both options: include `str1[i]` and recurse on `(i+1, j)`, or include `str2[j]` and recurse on `(i, j+1)`. Pick the shorter result.
+    - If `str1[i] == str2[j]`, include this character once and recurse on `(i+1, j+1)`.
+    - Otherwise, try both options: include `str1[i]` and recurse on `(i+1, j)`, or include `str2[j]` and recurse on `(i, j+1)`. Pick the shorter result.
 4. Memoize results to avoid recomputation.
 5. Return the result of `dfs(0, 0)`.
 
@@ -467,6 +469,60 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_common_supersequence(str1: String, str2: String) -> String {
+        let s1: Vec<u8> = str1.bytes().collect();
+        let s2: Vec<u8> = str2.bytes().collect();
+        let (n, m) = (s1.len(), s2.len());
+        let mut cache: Vec<Vec<Option<Vec<u8>>>> = vec![vec![None; m + 1]; n + 1];
+
+        fn dfs(
+            i: usize, j: usize, s1: &[u8], s2: &[u8],
+            n: usize, m: usize, cache: &mut Vec<Vec<Option<Vec<u8>>>>,
+        ) -> Vec<u8> {
+            if cache[i][j].is_some() {
+                return cache[i][j].clone().unwrap();
+            }
+            if i == n {
+                let res: Vec<u8> = s2[j..].iter().rev().cloned().collect();
+                cache[i][j] = Some(res.clone());
+                return res;
+            }
+            if j == m {
+                let res: Vec<u8> = s1[i..].iter().rev().cloned().collect();
+                cache[i][j] = Some(res.clone());
+                return res;
+            }
+
+            let res = if s1[i] == s2[j] {
+                let mut r = dfs(i + 1, j + 1, s1, s2, n, m, cache);
+                r.push(s1[i]);
+                r
+            } else {
+                let r1 = dfs(i + 1, j, s1, s2, n, m, cache);
+                let r2 = dfs(i, j + 1, s1, s2, n, m, cache);
+                if r1.len() < r2.len() {
+                    let mut r = r1;
+                    r.push(s1[i]);
+                    r
+                } else {
+                    let mut r = r2;
+                    r.push(s2[j]);
+                    r
+                }
+            };
+            cache[i][j] = Some(res.clone());
+            res
+        }
+
+        let mut result = dfs(0, 0, &s1, &s2, n, m, &mut cache);
+        result.reverse();
+        String::from_utf8(result).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -492,9 +548,9 @@ The DP table stores the length of the shortest supersequence from each state `(i
 2. Base cases: return `m - j` or `n - i` when one string is exhausted.
 3. Recursive case: if characters match, add `1` and recurse on `(i+1, j+1)`. Otherwise, take the minimum of recursing on `(i+1, j)` or `(i, j+1)`, plus `1`.
 4. After computing the DP table, trace back:
-   - Start at `(0, 0)`.
-   - If characters match, include it and move both pointers.
-   - Otherwise, follow the direction with the smaller DP value.
+    - Start at `(0, 0)`.
+    - If characters match, include it and move both pointers.
+    - Otherwise, follow the direction with the smaller DP value.
 5. Append any remaining characters from either string.
 6. Return the constructed string.
 
@@ -994,6 +1050,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_common_supersequence(str1: String, str2: String) -> String {
+        let s1: Vec<u8> = str1.bytes().collect();
+        let s2: Vec<u8> = str2.bytes().collect();
+        let (n, m) = (s1.len(), s2.len());
+        let mut dp = vec![vec![-1i32; m + 1]; n + 1];
+
+        fn dfs(i: usize, j: usize, s1: &[u8], s2: &[u8],
+               n: usize, m: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if dp[i][j] != -1 { return dp[i][j]; }
+            if i == n { dp[i][j] = (m - j) as i32; return dp[i][j]; }
+            if j == m { dp[i][j] = (n - i) as i32; return dp[i][j]; }
+
+            dp[i][j] = if s1[i] == s2[j] {
+                1 + dfs(i + 1, j + 1, s1, s2, n, m, dp)
+            } else {
+                1 + dfs(i + 1, j, s1, s2, n, m, dp)
+                    .min(dfs(i, j + 1, s1, s2, n, m, dp))
+            };
+            dp[i][j]
+        }
+
+        dfs(0, 0, &s1, &s2, n, m, &mut dp);
+
+        let mut res = Vec::new();
+        let (mut i, mut j) = (0usize, 0usize);
+        while i < n || j < m {
+            if i == n { res.extend_from_slice(&s2[j..]); break; }
+            if j == m { res.extend_from_slice(&s1[i..]); break; }
+            if s1[i] == s2[j] {
+                res.push(s1[i]); i += 1; j += 1;
+            } else if dp[i + 1][j] < dp[i][j + 1] {
+                res.push(s1[i]); i += 1;
+            } else {
+                res.push(s2[j]); j += 1;
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1017,11 +1117,11 @@ The base cases initialize the first row and column with prefixes of each string.
 
 1. Create a 2D table `dp` of size `(n+1) x (m+1)` to store strings.
 2. Fill base cases:
-   - `dp[0][j] = str2[0..j-1]` for all `j`.
-   - `dp[i][0] = str1[0..i-1]` for all `i`.
+    - `dp[0][j] = str2[0..j-1]` for all `j`.
+    - `dp[i][0] = str1[0..i-1]` for all `i`.
 3. Fill the table row by row:
-   - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = dp[i-1][j-1] + str1[i-1]`.
-   - Otherwise, pick the shorter of `dp[i-1][j] + str1[i-1]` or `dp[i][j-1] + str2[j-1]`.
+    - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = dp[i-1][j-1] + str1[i-1]`.
+    - Otherwise, pick the shorter of `dp[i-1][j] + str1[i-1]` or `dp[i][j-1] + str2[j-1]`.
 4. Return `dp[n][m]`.
 
 ::tabs-start
@@ -1257,6 +1357,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_common_supersequence(str1: String, str2: String) -> String {
+        let s1: Vec<u8> = str1.bytes().collect();
+        let s2: Vec<u8> = str2.bytes().collect();
+        let (n, m) = (s1.len(), s2.len());
+        let mut dp = vec![vec![Vec::<u8>::new(); m + 1]; n + 1];
+
+        for i in 0..=n {
+            for j in 0..=m {
+                if i == 0 {
+                    dp[i][j] = s2[..j].to_vec();
+                } else if j == 0 {
+                    dp[i][j] = s1[..i].to_vec();
+                } else if s1[i - 1] == s2[j - 1] {
+                    let mut prev = dp[i - 1][j - 1].clone();
+                    prev.push(s1[i - 1]);
+                    dp[i][j] = prev;
+                } else if dp[i - 1][j].len() < dp[i][j - 1].len() {
+                    let mut prev = dp[i - 1][j].clone();
+                    prev.push(s1[i - 1]);
+                    dp[i][j] = prev;
+                } else {
+                    let mut prev = dp[i][j - 1].clone();
+                    prev.push(s2[j - 1]);
+                    dp[i][j] = prev;
+                }
+            }
+        }
+
+        String::from_utf8(dp[n][m].clone()).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1281,11 +1416,11 @@ This is the standard approach for the problem: compute the DP table of lengths b
 1. Create a 2D table `dp` of size `(n+1) x (m+1)` to store lengths.
 2. Fill base cases: `dp[0][j] = j` and `dp[i][0] = i`.
 3. Fill the table:
-   - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = 1 + dp[i-1][j-1]`.
-   - Otherwise, set `dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])`.
+    - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = 1 + dp[i-1][j-1]`.
+    - Otherwise, set `dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])`.
 4. Trace back from `(n, m)`:
-   - If characters match, include it and move diagonally.
-   - Otherwise, follow the smaller value (up or left) and include that character.
+    - If characters match, include it and move diagonally.
+    - Otherwise, follow the smaller value (up or left) and include that character.
 5. Append remaining characters from either string.
 6. Reverse the result and return.
 
@@ -1708,6 +1843,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_common_supersequence(str1: String, str2: String) -> String {
+        let s1: Vec<u8> = str1.bytes().collect();
+        let s2: Vec<u8> = str2.bytes().collect();
+        let (n, m) = (s1.len(), s2.len());
+        let mut dp = vec![vec![0i32; m + 1]; n + 1];
+
+        for i in 0..=n {
+            for j in 0..=m {
+                if i == 0 {
+                    dp[i][j] = j as i32;
+                } else if j == 0 {
+                    dp[i][j] = i as i32;
+                } else if s1[i - 1] == s2[j - 1] {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];
+                } else {
+                    dp[i][j] = 1 + dp[i - 1][j].min(dp[i][j - 1]);
+                }
+            }
+        }
+
+        let mut res = Vec::new();
+        let (mut i, mut j) = (n, m);
+        while i > 0 && j > 0 {
+            if s1[i - 1] == s2[j - 1] {
+                res.push(s1[i - 1]); i -= 1; j -= 1;
+            } else if dp[i - 1][j] < dp[i][j - 1] {
+                res.push(s1[i - 1]); i -= 1;
+            } else {
+                res.push(s2[j - 1]); j -= 1;
+            }
+        }
+        while i > 0 { res.push(s1[i - 1]); i -= 1; }
+        while j > 0 { res.push(s2[j - 1]); j -= 1; }
+
+        res.reverse();
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1735,7 +1912,7 @@ After the main traceback loop terminates (when either `i` or `j` reaches 0), the
 
 ### Inefficient String Concatenation
 
-Building the result string by repeated concatenation in languages like Java or Python can lead to O(n * m * (n + m)) time complexity due to string immutability. Use a StringBuilder, list, or similar mutable structure and reverse at the end for optimal performance.
+Building the result string by repeated concatenation in languages like Java or Python can lead to O(n _ m _ (n + m)) time complexity due to string immutability. Use a StringBuilder, list, or similar mutable structure and reverse at the end for optimal performance.
 
 ### Off-by-One Errors in DP Indices
 

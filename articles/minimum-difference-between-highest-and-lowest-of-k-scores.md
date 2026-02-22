@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting ensures that contiguous subarrays contain the smallest possible range of values
 - **Sliding Window** - A fixed-size window of k elements slides across the sorted array to find the minimum difference
 
@@ -17,9 +19,9 @@ When we need to minimize the difference between the highest and lowest values am
 2. Initialize two pointers: `l = 0` and `r = k - 1` to represent a window of size `k`.
 3. Initialize `res` to infinity to track the minimum difference found.
 4. While `r` is within bounds:
-   - Compute `nums[r] - nums[l]` (the difference between `max` and `min` in this window).
-   - Update `res` with the minimum of the current `res` and this difference.
-   - Slide the window by incrementing both `l` and `r`.
+    - Compute `nums[r] - nums[l]` (the difference between `max` and `min` in this window).
+    - Update `res` with the minimum of the current `res` and this difference.
+    - Slide the window by incrementing both `l` and `r`.
 5. Return `res`.
 
 ::tabs-start
@@ -160,6 +162,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_difference(mut nums: Vec<i32>, k: i32) -> i32 {
+        nums.sort();
+        let k = k as usize;
+        let mut l = 0;
+        let mut r = k - 1;
+        let mut res = i32::MAX;
+
+        while r < nums.len() {
+            res = res.min(nums[r] - nums[l]);
+            l += 1;
+            r += 1;
+        }
+
+        res
     }
 }
 ```

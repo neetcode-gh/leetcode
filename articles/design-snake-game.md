@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Deque (Double-Ended Queue)** - Adding to front and removing from back in O(1) time
 - **Hash Set** - O(1) lookup for collision detection
 - **2D Coordinate Systems** - Working with row/column positions and boundary checking
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Queue and Hash Set
 
 ### Intuition
+
 The snake game requires tracking the snake's body as it moves and grows. A deque (double-ended queue) is perfect because we add to the front (new head position) and remove from the back (tail moves forward). To quickly check whether the snake bites itself, we also maintain a hash set of all occupied cells. When the snake eats food, the tail stays in place so the snake grows. The score equals the number of food items eaten, which is the snake length minus `1`.
 
 ### Algorithm
+
 1. **Initialization:** Create a deque with the snake starting at `(0, 0)`. Add this position to a hash set. Store the grid dimensions, food list, and a food index starting at `0`. Define movement deltas for U, D, L, R.
 2. **move(direction):** Calculate the new head position by applying the direction delta.
 3. Check if the new head is out of bounds. If so, return `-1`.
@@ -34,38 +38,38 @@ class SnakeGame:
         self.food = food
         self.food_index = 0
         self.movement = {'U': [-1, 0], 'L': [0, -1], 'R': [0, 1], 'D': [1, 0]}
-        
+
 
     def move(self, direction: str) -> int:
         newHead = (self.snake[0][0] + self.movement[direction][0],
                    self.snake[0][1] + self.movement[direction][1])
-        
+
         # Boundary conditions.
         crosses_boundary1 = newHead[0] < 0 or newHead[0] >= self.height
         crosses_boundary2 = newHead[1] < 0 or newHead[1] >= self.width
-        
+
         # Checking if the snake bites itself.
         bites_itself = newHead in self.snake_set and newHead != self.snake[-1]
-     
+
         # If any of the terminal conditions are satisfied, then we exit with rcode -1.
         if crosses_boundary1 or crosses_boundary2 or bites_itself:
             return -1
 
         # Note the food list could be empty at this point.
         next_food_item = self.food[self.food_index] if self.food_index < len(self.food) else None
-        
+
         # If there's an available food item and it is on the cell occupied by the snake after the move, eat it
         if self.food_index < len(self.food) and \
             next_food_item[0] == newHead[0] and \
                 next_food_item[1] == newHead[1]:  # eat food
             self.food_index += 1
-        else:    # not eating food: delete tail                 
-            tail = self.snake.pop()  
+        else:    # not eating food: delete tail
+            tail = self.snake.pop()
             del self.snake_set[tail]
-            
+
         # A new head always gets added
         self.snake.appendleft(newHead)
-        
+
         # Also add the head to the set
         self.snake_set[newHead] = 1
 
@@ -124,7 +128,7 @@ class SnakeGame {
 
         // Checking if the snake bites itself.
         boolean bitesItself = this.snakeMap.containsKey(newHead) && !(newHead.getKey() == currentTail.getKey() && newHead.getValue() == currentTail.getValue());
-        
+
         // If any of the terminal conditions are satisfied, then we exit with rcode -1.
         if (crossesBoundary1 || crossesBoundary2 || bitesItself) {
             return -1;
@@ -149,7 +153,7 @@ class SnakeGame {
 
         return this.snake.size() - 1;
     }
-    
+
 }
 ```
 
@@ -199,7 +203,7 @@ public:
         bool crossesBoundary2 = newHeadColumn < 0 || newHeadColumn >= this->width;
 
         // Checking if the snake bites itself.
-        bool bitesItself = this->snakeSet.count(pairToString(newHeadRow, newHeadColumn)) && 
+        bool bitesItself = this->snakeSet.count(pairToString(newHeadRow, newHeadColumn)) &&
                           !(newHead.first == currentTail.first && newHead.second == currentTail.second);
 
         // If any of the terminal conditions are satisfied, then we exit with rcode -1.
@@ -238,14 +242,14 @@ class SnakeGame {
      */
     constructor(width, height, food) {
         this.snake = new Deque(); // Using @datastructures-js/deque
-        this.snake.pushFront([0, 0]);    // snake head is at the front
+        this.snake.pushFront([0, 0]); // snake head is at the front
         this.snakeSet = new Set();
         this.snakeSet.add('0,0');
         this.width = width;
         this.height = height;
         this.food = food;
         this.foodIndex = 0;
-        this.movement = {'U': [-1, 0], 'L': [0, -1], 'R': [0, 1], 'D': [1, 0]};
+        this.movement = { U: [-1, 0], L: [0, -1], R: [0, 1], D: [1, 0] };
     }
 
     /**
@@ -254,8 +258,10 @@ class SnakeGame {
      */
     move(direction) {
         let currentHead = this.snake.front();
-        let newHead = [currentHead[0] + this.movement[direction][0],
-                       currentHead[1] + this.movement[direction][1]];
+        let newHead = [
+            currentHead[0] + this.movement[direction][0],
+            currentHead[1] + this.movement[direction][1],
+        ];
 
         // Boundary conditions.
         let crossesBoundary1 = newHead[0] < 0 || newHead[0] >= this.height;
@@ -265,7 +271,8 @@ class SnakeGame {
         let newHeadKey = newHead[0] + ',' + newHead[1];
         let currentTail = this.snake.back();
         let tailKey = currentTail[0] + ',' + currentTail[1];
-        let bitesItself = this.snakeSet.has(newHeadKey) && newHeadKey !== tailKey;
+        let bitesItself =
+            this.snakeSet.has(newHeadKey) && newHeadKey !== tailKey;
 
         // If any of the terminal conditions are satisfied, then we exit with rcode -1.
         if (crossesBoundary1 || crossesBoundary2 || bitesItself) {
@@ -273,14 +280,21 @@ class SnakeGame {
         }
 
         // Note the food list could be empty at this point.
-        let nextFoodItem = this.foodIndex < this.food.length ? this.food[this.foodIndex] : null;
+        let nextFoodItem =
+            this.foodIndex < this.food.length
+                ? this.food[this.foodIndex]
+                : null;
 
         // If there's an available food item and it is on the cell occupied by the snake after the move, eat it
-        if (this.foodIndex < this.food.length &&
+        if (
+            this.foodIndex < this.food.length &&
             nextFoodItem[0] === newHead[0] &&
-            nextFoodItem[1] === newHead[1]) {  // eat food
+            nextFoodItem[1] === newHead[1]
+        ) {
+            // eat food
             this.foodIndex++;
-        } else {    // not eating food: delete tail
+        } else {
+            // not eating food: delete tail
             let tail = this.snake.popBack();
             this.snakeSet.delete(tail[0] + ',' + tail[1]);
         }
@@ -536,11 +550,81 @@ class SnakeGame {
 }
 ```
 
+```rust
+struct SnakeGame {
+    snake: VecDeque<(i32, i32)>,
+    snake_set: HashSet<(i32, i32)>,
+    food: Vec<Vec<i32>>,
+    food_index: usize,
+    width: i32,
+    height: i32,
+}
+
+impl SnakeGame {
+    fn new(width: i32, height: i32, food: Vec<Vec<i32>>) -> Self {
+        let mut snake = VecDeque::new();
+        snake.push_back((0, 0));
+        let mut snake_set = HashSet::new();
+        snake_set.insert((0, 0));
+        SnakeGame {
+            snake,
+            snake_set,
+            food,
+            food_index: 0,
+            width,
+            height,
+        }
+    }
+
+    fn make_move(&mut self, direction: &str) -> i32 {
+        let (dr, dc) = match direction {
+            "U" => (-1, 0),
+            "D" => (1, 0),
+            "L" => (0, -1),
+            "R" => (0, 1),
+            _ => (0, 0),
+        };
+
+        let head = *self.snake.front().unwrap();
+        let new_head_row = head.0 + dr;
+        let new_head_col = head.1 + dc;
+
+        let crosses_boundary = new_head_row < 0
+            || new_head_row >= self.height
+            || new_head_col < 0
+            || new_head_col >= self.width;
+
+        let tail = *self.snake.back().unwrap();
+        let new_head = (new_head_row, new_head_col);
+        let bites_itself = self.snake_set.contains(&new_head) && new_head != tail;
+
+        if crosses_boundary || bites_itself {
+            return -1;
+        }
+
+        if self.food_index < self.food.len()
+            && self.food[self.food_index][0] == new_head_row
+            && self.food[self.food_index][1] == new_head_col
+        {
+            self.food_index += 1;
+        } else {
+            let tail = self.snake.pop_back().unwrap();
+            self.snake_set.remove(&tail);
+        }
+
+        self.snake.push_front(new_head);
+        self.snake_set.insert(new_head);
+
+        self.snake.len() as i32 - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time Complexity: 
+- Time Complexity:
     - The time complexity of the `move` function is $O(1)$.
     - The time taken to calculate `bites_itself` is constant since we are using a dictionary to search for the element.
     - The time taken to add and remove an element from the queue is also constant.
@@ -549,7 +633,7 @@ class SnakeGame {
     - $O(N)$ is used by the `food` data structure.
     - $O(W \times H)$ is used by the `snake` and the `snake_set` data structures. At most, we can have snake that occupies all the cells of the grid.
 
->  Where $W$ represents the width of the grid, $H$ represents the height of the grid, and $N$ represents the number of food items in the list.
+> Where $W$ represents the width of the grid, $H$ represents the height of the grid, and $N$ represents the number of food items in the list.
 
 ## Common Pitfalls
 

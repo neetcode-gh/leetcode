@@ -231,6 +231,35 @@ class MyHashSet {
 }
 ```
 
+
+```rust
+struct MyHashSet {
+    data: Vec<i32>,
+}
+
+impl MyHashSet {
+    fn new() -> Self {
+        Self { data: Vec::new() }
+    }
+
+    fn add(&mut self, key: i32) {
+        if !self.contains(key) {
+            self.data.push(key);
+        }
+    }
+
+    fn remove(&mut self, key: i32) {
+        if let Some(pos) = self.data.iter().position(|&x| x == key) {
+            self.data.remove(pos);
+        }
+    }
+
+    fn contains(&self, key: i32) -> bool {
+        self.data.contains(&key)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -424,6 +453,31 @@ class MyHashSet {
 
     func contains(_ key: Int) -> Bool {
         return data[key]
+    }
+}
+```
+
+
+```rust
+struct MyHashSet {
+    data: Vec<bool>,
+}
+
+impl MyHashSet {
+    fn new() -> Self {
+        Self { data: vec![false; 1_000_001] }
+    }
+
+    fn add(&mut self, key: i32) {
+        self.data[key as usize] = true;
+    }
+
+    fn remove(&mut self, key: i32) {
+        self.data[key as usize] = false;
+    }
+
+    fn contains(&self, key: i32) -> bool {
+        self.data[key as usize]
     }
 }
 ```
@@ -874,6 +928,44 @@ class MyHashSet {
             cur = cur.next!
         }
         return false
+    }
+}
+```
+
+
+```rust
+struct MyHashSet {
+    buckets: Vec<Vec<i32>>,
+}
+
+impl MyHashSet {
+    fn new() -> Self {
+        Self {
+            buckets: vec![Vec::new(); 10_000],
+        }
+    }
+
+    fn hash(key: i32) -> usize {
+        key as usize % 10_000
+    }
+
+    fn add(&mut self, key: i32) {
+        let idx = Self::hash(key);
+        if !self.buckets[idx].contains(&key) {
+            self.buckets[idx].push(key);
+        }
+    }
+
+    fn remove(&mut self, key: i32) {
+        let idx = Self::hash(key);
+        if let Some(pos) = self.buckets[idx].iter().position(|&x| x == key) {
+            self.buckets[idx].remove(pos);
+        }
+    }
+
+    fn contains(&self, key: i32) -> bool {
+        let idx = Self::hash(key);
+        self.buckets[idx].contains(&key)
     }
 }
 ```
@@ -1672,6 +1764,42 @@ class MyHashSet {
 }
 ```
 
+
+```rust
+struct MyHashSet {
+    buckets: Vec<BTreeSet<i32>>,
+    size: usize,
+}
+
+impl MyHashSet {
+    fn new() -> Self {
+        Self {
+            buckets: (0..10_000).map(|_| BTreeSet::new()).collect(),
+            size: 10_000,
+        }
+    }
+
+    fn hash(&self, key: i32) -> usize {
+        key as usize % self.size
+    }
+
+    fn add(&mut self, key: i32) {
+        let idx = self.hash(key);
+        self.buckets[idx].insert(key);
+    }
+
+    fn remove(&mut self, key: i32) {
+        let idx = self.hash(key);
+        self.buckets[idx].remove(&key);
+    }
+
+    fn contains(&self, key: i32) -> bool {
+        let idx = self.hash(key);
+        self.buckets[idx].contains(&key)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1935,6 +2063,37 @@ class MyHashSet {
 
     func contains(_ key: Int) -> Bool {
         return (set[key / 32] & getMask(key)) != 0
+    }
+}
+```
+
+
+```rust
+struct MyHashSet {
+    set: Vec<u32>,
+}
+
+impl MyHashSet {
+    fn new() -> Self {
+        Self { set: vec![0; 31251] }
+    }
+
+    fn get_mask(key: i32) -> u32 {
+        1 << (key % 32)
+    }
+
+    fn add(&mut self, key: i32) {
+        self.set[key as usize / 32] |= Self::get_mask(key);
+    }
+
+    fn remove(&mut self, key: i32) {
+        if self.contains(key) {
+            self.set[key as usize / 32] ^= Self::get_mask(key);
+        }
+    }
+
+    fn contains(&self, key: i32) -> bool {
+        (self.set[key as usize / 32] & Self::get_mask(key)) != 0
     }
 }
 ```

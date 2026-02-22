@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists to represent weighted undirected graphs
 - **Dijkstra's Algorithm** - Finding optimal paths using a priority queue (max-heap for this problem)
 - **Priority Queue / Heap** - Efficiently extracting the maximum or minimum element
@@ -155,7 +157,7 @@ class Solution {
             adj.get(dst).push([src, succProb[i]]);
         }
 
-        let pq = new MaxPriorityQueue(x => x[0]);
+        let pq = new MaxPriorityQueue((x) => x[0]);
         pq.enqueue([1.0, start_node]);
         let visited = new Set();
 
@@ -372,6 +374,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_probability(
+        n: i32, edges: Vec<Vec<i32>>, succ_prob: Vec<f64>,
+        start_node: i32, end_node: i32,
+    ) -> f64 {
+        let n = n as usize;
+        let (start, end) = (start_node as usize, end_node as usize);
+        let mut adj = vec![vec![]; n];
+
+        for (i, edge) in edges.iter().enumerate() {
+            let (src, dst) = (edge[0] as usize, edge[1] as usize);
+            adj[src].push((dst, succ_prob[i]));
+            adj[dst].push((src, succ_prob[i]));
+        }
+
+        let mut max_prob = vec![0.0f64; n];
+        max_prob[start] = 1.0;
+        let mut pq = BinaryHeap::new();
+        pq.push((std::cmp::Reverse((-1.0f64).to_bits()), start));
+
+        while let Some((std::cmp::Reverse(bits), node)) = pq.pop() {
+            let curr_prob = -f64::from_bits(bits);
+            if node == end {
+                return curr_prob;
+            }
+            if curr_prob < max_prob[node] {
+                continue;
+            }
+            for &(nei, edge_prob) in &adj[node] {
+                let new_prob = curr_prob * edge_prob;
+                if new_prob > max_prob[nei] {
+                    max_prob[nei] = new_prob;
+                    pq.push((std::cmp::Reverse((-new_prob).to_bits()), nei));
+                }
+            }
+        }
+
+        0.0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,7 +581,7 @@ class Solution {
 
         let maxProb = Array(n).fill(0);
         maxProb[start_node] = 1.0;
-        let pq = new MaxPriorityQueue(x => x[1]);
+        let pq = new MaxPriorityQueue((x) => x[1]);
         pq.enqueue([start_node, 1.0]);
 
         while (!pq.isEmpty()) {
@@ -752,6 +797,49 @@ class Solution {
         }
 
         return 0.0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_probability(
+        n: i32, edges: Vec<Vec<i32>>, succ_prob: Vec<f64>,
+        start_node: i32, end_node: i32,
+    ) -> f64 {
+        let n = n as usize;
+        let (start, end) = (start_node as usize, end_node as usize);
+        let mut adj = vec![vec![]; n];
+
+        for (i, edge) in edges.iter().enumerate() {
+            let (src, dst) = (edge[0] as usize, edge[1] as usize);
+            adj[src].push((dst, succ_prob[i]));
+            adj[dst].push((src, succ_prob[i]));
+        }
+
+        let mut max_prob = vec![0.0f64; n];
+        max_prob[start] = 1.0;
+        let mut pq = BinaryHeap::new();
+        pq.push((std::cmp::Reverse((-1.0f64).to_bits()), start));
+
+        while let Some((std::cmp::Reverse(bits), node)) = pq.pop() {
+            let curr_prob = -f64::from_bits(bits);
+            if node == end {
+                return curr_prob;
+            }
+            if curr_prob < max_prob[node] {
+                continue;
+            }
+            for &(nei, edge_prob) in &adj[node] {
+                let new_prob = curr_prob * edge_prob;
+                if new_prob > max_prob[nei] {
+                    max_prob[nei] = new_prob;
+                    pq.push((std::cmp::Reverse((-new_prob).to_bits()), nei));
+                }
+            }
+        }
+
+        0.0
     }
 }
 ```
@@ -1017,6 +1105,39 @@ class Solution {
         }
 
         return maxProb[end_node]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_probability(
+        n: i32, edges: Vec<Vec<i32>>, succ_prob: Vec<f64>,
+        start_node: i32, end_node: i32,
+    ) -> f64 {
+        let n = n as usize;
+        let mut max_prob = vec![0.0f64; n];
+        max_prob[start_node as usize] = 1.0;
+
+        for _ in 0..n {
+            let mut updated = false;
+            for (j, edge) in edges.iter().enumerate() {
+                let (src, dst) = (edge[0] as usize, edge[1] as usize);
+                if max_prob[src] * succ_prob[j] > max_prob[dst] {
+                    max_prob[dst] = max_prob[src] * succ_prob[j];
+                    updated = true;
+                }
+                if max_prob[dst] * succ_prob[j] > max_prob[src] {
+                    max_prob[src] = max_prob[dst] * succ_prob[j];
+                    updated = true;
+                }
+            }
+            if !updated {
+                break;
+            }
+        }
+
+        max_prob[end_node as usize]
     }
 }
 ```
@@ -1336,6 +1457,42 @@ class Solution {
         }
 
         return maxProb[end_node]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_probability(
+        n: i32, edges: Vec<Vec<i32>>, succ_prob: Vec<f64>,
+        start_node: i32, end_node: i32,
+    ) -> f64 {
+        let n = n as usize;
+        let (start, end) = (start_node as usize, end_node as usize);
+        let mut adj = vec![vec![]; n];
+
+        for (i, edge) in edges.iter().enumerate() {
+            let (src, dst) = (edge[0] as usize, edge[1] as usize);
+            adj[src].push((dst, succ_prob[i]));
+            adj[dst].push((src, succ_prob[i]));
+        }
+
+        let mut max_prob = vec![0.0f64; n];
+        max_prob[start] = 1.0;
+        let mut queue = VecDeque::new();
+        queue.push_back(start);
+
+        while let Some(node) = queue.pop_front() {
+            for &(nei, edge_prob) in &adj[node] {
+                let new_prob = max_prob[node] * edge_prob;
+                if new_prob > max_prob[nei] {
+                    max_prob[nei] = new_prob;
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        max_prob[end]
     }
 }
 ```

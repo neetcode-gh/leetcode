@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Used to explore all possible ways to partition matchsticks into 4 equal groups
 - **Recursion** - Understanding recursive function calls and how to backtrack by undoing choices
 - **Bitmask Dynamic Programming** - An optimization technique using binary representation to track subsets of used elements
@@ -258,6 +260,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn makesquare(matchsticks: Vec<i32>) -> bool {
+        let sum: i32 = matchsticks.iter().sum();
+        if sum % 4 != 0 {
+            return false;
+        }
+
+        let mut sides = [0i32; 4];
+
+        fn dfs(matchsticks: &[i32], sides: &mut [i32; 4], i: usize) -> bool {
+            if i == matchsticks.len() {
+                return sides[0] == sides[1]
+                    && sides[1] == sides[2]
+                    && sides[2] == sides[3];
+            }
+            for j in 0..4 {
+                sides[j] += matchsticks[i];
+                if dfs(matchsticks, sides, i + 1) {
+                    return true;
+                }
+                sides[j] -= matchsticks[i];
+            }
+            false
+        }
+
+        dfs(&matchsticks, &mut sides, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,10 +311,10 @@ The brute force approach explores many redundant paths. We can prune significant
 1. Calculate the total length and target side length. Return `false` if total is not divisible by `4`.
 2. Sort matchsticks in descending order for early pruning.
 3. In the recursive function, try placing the current matchstick on each side:
-   - Skip if adding the matchstick would exceed the target length.
-   - If placement succeeds recursively, return `true`.
-   - Backtrack by removing the matchstick.
-   - If the current side is empty after backtracking, stop trying other sides (they are equivalent).
+    - Skip if adding the matchstick would exceed the target length.
+    - If placement succeeds recursively, return `true`.
+    - Backtrack by removing the matchstick.
+    - If the current side is empty after backtracking, stop trying other sides (they are equivalent).
 4. Return `true` if all matchsticks are placed successfully.
 
 ::tabs-start
@@ -582,6 +615,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn makesquare(mut matchsticks: Vec<i32>) -> bool {
+        let total_length: i32 = matchsticks.iter().sum();
+        if total_length % 4 != 0 {
+            return false;
+        }
+
+        let length = total_length / 4;
+        let mut sides = [0i32; 4];
+        matchsticks.sort_unstable_by(|a, b| b.cmp(a));
+
+        fn dfs(matchsticks: &[i32], sides: &mut [i32; 4], index: usize, length: i32) -> bool {
+            if index == matchsticks.len() {
+                return true;
+            }
+            for i in 0..4 {
+                if sides[i] + matchsticks[index] <= length {
+                    sides[i] += matchsticks[index];
+                    if dfs(matchsticks, sides, index + 1, length) {
+                        return true;
+                    }
+                    sides[i] -= matchsticks[index];
+                }
+                if sides[i] == 0 {
+                    break;
+                }
+            }
+            false
+        }
+
+        dfs(&matchsticks, &mut sides, 0, length)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -603,8 +672,8 @@ We can represent which matchsticks have been used with a bitmask. For each subse
 2. Sort matchsticks in descending order for better pruning.
 3. Use a DP array where `dp[mask]` stores the partial sum of the current incomplete side for that subset of used matchsticks.
 4. Starting from the full bitmask, recursively try removing each matchstick:
-   - If the resulting partial sum plus the matchstick does not exceed the target, update `dp[mask]`.
-   - Use modulo to reset when a side is completed.
+    - If the resulting partial sum plus the matchstick does not exceed the target, update `dp[mask]`.
+    - Use modulo to reset when a side is completed.
 5. Return `true` if `dp[fullMask] == 0`, meaning all sides completed perfectly.
 
 ::tabs-start
@@ -977,6 +1046,52 @@ class Solution {
         }
 
         return dfs((1 << n) - 1) == 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn makesquare(mut matchsticks: Vec<i32>) -> bool {
+        let total_length: i32 = matchsticks.iter().sum();
+        if total_length % 4 != 0 {
+            return false;
+        }
+
+        let length = total_length / 4;
+        if *matchsticks.iter().max().unwrap() > length {
+            return false;
+        }
+
+        matchsticks.sort_unstable_by(|a, b| b.cmp(a));
+        let n = matchsticks.len();
+        let mut dp = vec![i32::MIN; 1 << n];
+
+        fn dfs(matchsticks: &[i32], dp: &mut Vec<i32>, mask: usize, n: usize, length: i32) -> i32 {
+            if mask == 0 {
+                return 0;
+            }
+            if dp[mask] != i32::MIN {
+                return dp[mask];
+            }
+            for i in 0..n {
+                if mask & (1 << i) != 0 {
+                    let res = dfs(matchsticks, dp, mask ^ (1 << i), n, length);
+                    if res >= 0 && res + matchsticks[i] <= length {
+                        dp[mask] = (res + matchsticks[i]) % length;
+                        return dp[mask];
+                    }
+                    if mask == (1 << n) - 1 {
+                        dp[mask] = -1;
+                        return -1;
+                    }
+                }
+            }
+            dp[mask] = -1;
+            dp[mask]
+        }
+
+        dfs(&matchsticks, &mut dp, (1 << n) - 1, n, length) == 0
     }
 }
 ```

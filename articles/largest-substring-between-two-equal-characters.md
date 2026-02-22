@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Storing and retrieving key-value pairs in O(1) time for tracking character indices
 - **String Traversal** - Iterating through characters in a string with their indices
 - **Array as Map** - Using a fixed-size array as an efficient alternative to hash maps when keys are bounded (e.g., 26 lowercase letters)
@@ -167,6 +169,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_length_between_equal_characters(s: String) -> i32 {
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+        let mut res = -1;
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                if bytes[i] == bytes[j] {
+                    res = res.max((j - i - 1) as i32);
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -186,8 +207,8 @@ To maximize the distance between two equal characters, we want the first occurre
 
 1. Create two maps: one for the first index of each character, one for the last index.
 2. Iterate through the string:
-   - If the character has not been seen, record its first index.
-   - Otherwise, update its last index.
+    - If the character has not been seen, record its first index.
+    - Otherwise, update its last index.
 3. For each character that has both a first and last index, compute the distance and track the maximum.
 4. Return the maximum distance found.
 
@@ -388,6 +409,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_length_between_equal_characters(s: String) -> i32 {
+        let mut first_idx = HashMap::new();
+        let mut last_idx = HashMap::new();
+        let mut res = -1;
+
+        for (i, c) in s.chars().enumerate() {
+            if !first_idx.contains_key(&c) {
+                first_idx.insert(c, i);
+            } else {
+                last_idx.insert(c, i);
+            }
+        }
+
+        for (&c, &li) in &last_idx {
+            res = res.max((li - first_idx[&c] - 1) as i32);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -407,8 +452,8 @@ We only need to track the first occurrence of each character. As we encounter a 
 
 1. Create a hash map to store the first index of each character.
 2. Iterate through the string:
-   - If the character exists in the map, compute the distance from its first index and update the maximum.
-   - Otherwise, store the current index as the first occurrence.
+    - If the character exists in the map, compute the distance from its first index and update the maximum.
+    - Otherwise, store the current index as the first occurrence.
 3. Return the maximum distance found.
 
 ::tabs-start
@@ -570,6 +615,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_length_between_equal_characters(s: String) -> i32 {
+        let mut char_index = HashMap::new();
+        let mut res = -1;
+
+        for (i, c) in s.chars().enumerate() {
+            if let Some(&idx) = char_index.get(&c) {
+                res = res.max((i - idx - 1) as i32);
+            } else {
+                char_index.insert(c, i);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -589,9 +653,9 @@ Since the input contains only lowercase letters, we can replace the hash map wit
 
 1. Create an array of size `26`, initialized to `-1` (indicating unseen characters).
 2. Iterate through the string:
-   - Convert the character to an index (`0-25`).
-   - If the index has been seen (value is not `-1`), compute the distance and update the maximum.
-   - Otherwise, store the current position as the first occurrence.
+    - Convert the character to an index (`0-25`).
+    - If the index has been seen (value is not `-1`), compute the distance and update the maximum.
+    - Otherwise, store the current position as the first occurrence.
 3. Return the maximum distance found.
 
 ::tabs-start
@@ -762,6 +826,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_length_between_equal_characters(s: String) -> i32 {
+        let mut first_idx = [-1i32; 26];
+        let mut res = -1;
+
+        for (i, b) in s.bytes().enumerate() {
+            let j = (b - b'a') as usize;
+            if first_idx[j] != -1 {
+                res = res.max(i as i32 - first_idx[j] - 1);
+            } else {
+                first_idx[j] = i as i32;
+            }
+        }
+
+        res
     }
 }
 ```

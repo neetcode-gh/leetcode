@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy Algorithms** - Making locally optimal choices (extend partition as long as possible) to achieve a global optimum
 - **HashSet Operations** - Using sets for O(1) membership checks to detect duplicate characters
 - **Bit Manipulation** - Using bitmasks to represent sets of characters efficiently with bitwise AND and OR operations
@@ -18,8 +20,8 @@ We use a hash set to track characters in the current substring. When we see a ch
 
 1. Initialize a set `curSet` to track characters in the current partition and `res = 1` for the result count.
 2. Iterate through each character in the string:
-   - If the character is already in `curSet`, increment `res` and clear the set.
-   - Add the current character to `curSet`.
+    - If the character is already in `curSet`, increment `res` and clear the set.
+    - Add the current character to `curSet`.
 3. Return `res`.
 
 ::tabs-start
@@ -159,6 +161,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn partition_string(s: String) -> i32 {
+        let mut cur_set = HashSet::new();
+        let mut res = 1;
+        for c in s.chars() {
+            if cur_set.contains(&c) {
+                res += 1;
+                cur_set.clear();
+            }
+            cur_set.insert(c);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -181,8 +200,8 @@ This approach avoids the overhead of clearing the set and uses constant extra sp
 1. Create an array `lastIdx` of size `26` initialized to `-1`, tracking the last seen index of each character.
 2. Initialize `res = 1` and `start = 0` to mark the beginning of the current partition.
 3. For each character at index `i`:
-   - If `lastIdx[char]` >= `start`, this character appeared in the current partition, so start a new partition by setting `start = i` and incrementing `res`.
-   - Update `lastIdx[char] = i`.
+    - If `lastIdx[char]` >= `start`, this character appeared in the current partition, so start a new partition by setting `start = i` and incrementing `res`.
+    - Update `lastIdx[char] = i`.
 4. Return `res`.
 
 ::tabs-start
@@ -340,6 +359,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn partition_string(s: String) -> i32 {
+        let mut last_idx = [-1i32; 26];
+        let mut res = 1;
+        let mut start = 0i32;
+        for (i, c) in s.chars().enumerate() {
+            let j = (c as u8 - b'a') as usize;
+            if last_idx[j] >= start {
+                start = i as i32;
+                res += 1;
+            }
+            last_idx[j] = i as i32;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,7 +400,7 @@ This is the most space-efficient approach and uses fast bitwise operations to ch
 1. Initialize `res = 1` and `mask = 0`.
 2. For each character, compute its bit position `i = char - 'a'`.
 3. If the bit at position `i` is already set in `mask` (i.e., `mask & (1 << i)` is non-zero), we have a duplicate:
-   - Reset `mask = 0` and increment `res`.
+    - Reset `mask = 0` and increment `res`.
 4. Set the bit for the current character: `mask |= (1 << i)`.
 5. Return `res`.
 
@@ -503,6 +541,24 @@ class Solution {
             mask |= 1 << i
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn partition_string(s: String) -> i32 {
+        let mut res = 1;
+        let mut mask = 0u32;
+        for c in s.bytes() {
+            let i = (c - b'a') as u32;
+            if mask & (1 << i) != 0 {
+                mask = 0;
+                res += 1;
+            }
+            mask |= 1 << i;
+        }
+        res
     }
 }
 ```

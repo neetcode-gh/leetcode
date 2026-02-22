@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure with left and right children
 - **Breadth-First Search (BFS)** - Level-by-level traversal using a queue
 - **Depth-First Search (DFS)** - Recursive traversal of tree structures
@@ -27,10 +29,10 @@ This approach ensures that every node is visited exactly once and inverted immed
 1. If the tree is empty, return `null`.
 2. Initialize a queue and insert the `root` node.
 3. While the queue is not empty:
-   - Remove the front node.
-   - Swap its `left` and `right` children.
-   - If the `left` child exists, add it to the queue.
-   - If the `right` child exists, add it to the queue.
+    - Remove the front node.
+    - Swap its `left` and `right` children.
+    - If the `left` child exists, add it to the queue.
+    - If the `right` child exists, add it to the queue.
 4. After all nodes are processed, return the `root` as the inverted tree.
 
 <details>
@@ -38,122 +40,108 @@ This approach ensures that every node is visited exactly once and inverted immed
 
 ```markdown
 Input Tree:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 2 │           │ 7 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 1 │ │ 3 │     │ 6 │ │ 9 │
-    └───┘ └───┘     └───┘ └───┘
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 2 │ │ 7 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 1 │ │ 3 │ │ 6 │ │ 9 │
+└───┘ └───┘ └───┘ └───┘
 
 Queue: [4]
 ```
 
-
 **BFS Traversal (Level by Level):**
-
-
 
 **Step 1:** Dequeue node 4, swap its children (2 <-> 7)
 
 ```markdown
-  Swap children of node 4:
+Swap children of node 4:
 
       Before:              After:
          4                    4
         / \                  / \
        2   7        →       7   2
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │ ← swapped!
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 6 │ │ 9 │ │ 1 │ │ 3 │
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │  ← swapped!
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 6 │ │ 9 │     │ 1 │ │ 3 │
-    └───┘ └───┘     └───┘ └───┘
-
-  Queue: [7, 2]
+Queue: [7, 2]
 ```
-
-
 
 **Step 2:** Dequeue node 7, swap its children (6 <-> 9)
 
 ```markdown
-  Swap children of node 7:
+Swap children of node 7:
 
       Before:              After:
          7                    7
         / \                  / \
        6   9        →       9   6
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 9 │ │ 6 │ │ 1 │ │ 3 │ ← swapped 9,6!
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 9 │ │ 6 │     │ 1 │ │ 3 │  ← swapped 9,6!
-    └───┘ └───┘     └───┘ └───┘
-
-  Queue: [2, 9, 6]
+Queue: [2, 9, 6]
 ```
-
-
 
 **Step 3:** Dequeue node 2, swap its children (1 <-> 3)
 
 ```markdown
-  Swap children of node 2:
+Swap children of node 2:
 
       Before:              After:
          2                    2
         / \                  / \
        1   3        →       3   1
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 9 │ │ 6 │ │ 3 │ │ 1 │ ← swapped 3,1!
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 9 │ │ 6 │     │ 3 │ │ 1 │  ← swapped 3,1!
-    └───┘ └───┘     └───┘ └───┘
-
-  Queue: [9, 6, 3, 1]
+Queue: [9, 6, 3, 1]
 ```
-
-
 
 **Steps 4-7:** Dequeue nodes 9, 6, 3, 1
 
 ```markdown
-  All are leaf nodes (no children to swap)
+All are leaf nodes (no children to swap)
 
-  Queue: [] (empty)
+Queue: [] (empty)
 ```
-
-
 
 **Final Inverted Tree:**
 
@@ -403,21 +391,6 @@ class Solution {
 ```
 
 ```swift
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     public var val: Int
- *     public var left: TreeNode?
- *     public var right: TreeNode?
- *     public init() { self.val = 0; self.left = nil; self.right = nil; }
- *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
- *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
- *         self.val = val
- *         self.left = left
- *         self.right = right
- *     }
- * }
- */
 class Solution {
     func invertTree(_ root: TreeNode?) -> TreeNode? {
         guard let root = root else { return nil }
@@ -436,6 +409,32 @@ class Solution {
             }
         }
         return root
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn invert_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if root.is_none() {
+            return None;
+        }
+        let mut queue = VecDeque::new();
+        queue.push_back(root.clone().unwrap());
+        while let Some(node) = queue.pop_front() {
+            let mut node_ref = node.borrow_mut();
+            let left = node_ref.left.take();
+            let right = node_ref.right.take();
+            node_ref.left = right;
+            node_ref.right = left;
+            if let Some(ref l) = node_ref.left {
+                queue.push_back(l.clone());
+            }
+            if let Some(ref r) = node_ref.right {
+                queue.push_back(r.clone());
+            }
+        }
+        root
     }
 }
 ```
@@ -478,166 +477,146 @@ The inversion happens during the descent of the recursion, and each subtree beco
 
 ```markdown
 Input Tree:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 2 │           │ 7 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 1 │ │ 3 │     │ 6 │ │ 9 │
-    └───┘ └───┘     └───┘ └───┘
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 2 │ │ 7 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 1 │ │ 3 │ │ 6 │ │ 9 │
+└───┘ └───┘ └───┘ └───┘
 ```
 
-
 **DFS Recursive Traversal (Top-Down):**
-
-
 
 **Call 1:** `invertTree(4)`
 
 ```markdown
-  Swap children of node 4:
+Swap children of node 4:
 
       Before:              After:
          4                    4
         / \                  / \
        2   7        →       7   2
 
+Current state:
+┌───┐
+│ 4 │ ← processing
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │ ← swapped!
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 6 │ │ 9 │ │ 1 │ │ 3 │
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │  ← processing
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │  ← swapped!
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 6 │ │ 9 │     │ 1 │ │ 3 │
-    └───┘ └───┘     └───┘ └───┘
-
-  → Recurse on left child (now 7)
+→ Recurse on left child (now 7)
 ```
-
-
 
 **Call 2:** `invertTree(7)`
 
 ```markdown
-  Swap children of node 7:
+Swap children of node 7:
 
       Before:              After:
          7                    7
         / \                  / \
        6   9        →       9   6
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 9 │ │ 6 │ │ 1 │ │ 3 │ ← swapped 9,6!
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 9 │ │ 6 │     │ 1 │ │ 3 │  ← swapped 9,6!
-    └───┘ └───┘     └───┘ └───┘
-
-  → Recurse on left child (now 9)
+→ Recurse on left child (now 9)
 ```
-
-
 
 **Call 3:** `invertTree(9)`
 
 ```markdown
-  Node 9 is a leaf (no children to swap)
+Node 9 is a leaf (no children to swap)
 
     ┌───┐
     │ 9 │  ← leaf node, nothing to swap
     └───┘
 
-  → Return to Call 2
+→ Return to Call 2
 ```
-
-
 
 **Call 4:** `invertTree(6)`
 
 ```markdown
-  Node 6 is a leaf (no children to swap)
+Node 6 is a leaf (no children to swap)
 
     ┌───┐
     │ 6 │  ← leaf node, nothing to swap
     └───┘
 
-  → Return to Call 2, then return to Call 1
+→ Return to Call 2, then return to Call 1
 ```
-
-
 
 **Call 5:** `invertTree(2)`
 
 ```markdown
-  Swap children of node 2:
+Swap children of node 2:
 
       Before:              After:
          2                    2
         / \                  / \
        1   3        →       3   1
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │ ← processing
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 9 │ │ 6 │ │ 3 │ │ 1 │ ← swapped 3,1!
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │  ← processing
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 9 │ │ 6 │     │ 3 │ │ 1 │  ← swapped 3,1!
-    └───┘ └───┘     └───┘ └───┘
-
-  → Recurse on left child (now 3)
+→ Recurse on left child (now 3)
 ```
-
-
 
 **Call 6:** `invertTree(3)`
 
 ```markdown
-  Node 3 is a leaf (no children to swap)
+Node 3 is a leaf (no children to swap)
 
     ┌───┐
     │ 3 │  ← leaf node, nothing to swap
     └───┘
 
-  → Return to Call 5
+→ Return to Call 5
 ```
-
-
 
 **Call 7:** `invertTree(1)`
 
 ```markdown
-  Node 1 is a leaf (no children to swap)
+Node 1 is a leaf (no children to swap)
 
     ┌───┐
     │ 1 │  ← leaf node, nothing to swap
     └───┘
 
-  → Return to Call 5, then return to Call 1
+→ Return to Call 5, then return to Call 1
 ```
-
-
 
 **Final Inverted Tree:**
 
@@ -882,6 +861,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn invert_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if let Some(node) = root.as_ref() {
+            let mut node_ref = node.borrow_mut();
+            let left = node_ref.left.take();
+            let right = node_ref.right.take();
+            node_ref.left = right;
+            node_ref.right = left;
+            Self::invert_tree(node_ref.left.clone());
+            Self::invert_tree(node_ref.right.clone());
+        }
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -904,10 +900,11 @@ The idea is the same as recursive DFS:
 
 But instead of the call stack, we use our own **stack data structure**.
 
-The process is:  
-1. Push the root into the stack.  
-2. Pop the top node, **swap its children**.  
-3. Push its children onto the stack (if they exist).  
+The process is:
+
+1. Push the root into the stack.
+2. Pop the top node, **swap its children**.
+3. Push its children onto the stack (if they exist).
 4. Continue until the stack is empty.
 
 This simulates the recursive DFS in an iterative manner and works well when recursion depth may be too large.
@@ -919,10 +916,10 @@ This simulates the recursive DFS in an iterative manner and works well when recu
 1. If `root` is `null`, return `null`.
 2. Initialize a stack with `root`.
 3. While stack is not empty:
-   - Pop a node.
-   - Swap its `left` and `right` pointers.
-   - If the `left` child exists, push it to the stack.
-   - If the `right` child exists, push it to the stack.
+    - Pop a node.
+    - Swap its `left` and `right` pointers.
+    - If the `left` child exists, push it to the stack.
+    - If the `right` child exists, push it to the stack.
 4. Return the `root`.
 
 <details>
@@ -930,168 +927,148 @@ This simulates the recursive DFS in an iterative manner and works well when recu
 
 ```markdown
 Input Tree:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 2 │           │ 7 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 1 │ │ 3 │     │ 6 │ │ 9 │
-    └───┘ └───┘     └───┘ └───┘
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 2 │ │ 7 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 1 │ │ 3 │ │ 6 │ │ 9 │
+└───┘ └───┘ └───┘ └───┘
 
 Stack: [4]
 ```
 
-
 **Iterative DFS using Stack:**
-
-
 
 **Step 1:** Pop node 4, swap its children (2 <-> 7)
 
 ```markdown
-  Swap children of node 4:
+Swap children of node 4:
 
       Before:              After:
          4                    4
         / \                  / \
        2   7        →       7   2
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │ ← swapped!
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 6 │ │ 9 │ │ 1 │ │ 3 │
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │  ← swapped!
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 6 │ │ 9 │     │ 1 │ │ 3 │
-    └───┘ └───┘     └───┘ └───┘
-
-  Stack: [7, 2]  (pushed children)
+Stack: [7, 2] (pushed children)
 ```
-
-
 
 **Step 2:** Pop node 2, swap its children (1 <-> 3)
 
 ```markdown
-  Swap children of node 2:
+Swap children of node 2:
 
       Before:              After:
          2                    2
         / \                  / \
        1   3        →       3   1
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │ ← processing
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 6 │ │ 9 │ │ 3 │ │ 1 │ ← swapped 3,1!
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │  ← processing
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 6 │ │ 9 │     │ 3 │ │ 1 │  ← swapped 3,1!
-    └───┘ └───┘     └───┘ └───┘
-
-  Stack: [7, 3, 1]  (pushed children)
+Stack: [7, 3, 1] (pushed children)
 ```
-
-
 
 **Step 3:** Pop node 1 (leaf node)
 
 ```markdown
-  Node 1 is a leaf (no children to swap)
+Node 1 is a leaf (no children to swap)
 
     ┌───┐
     │ 1 │  ← leaf node, nothing to swap
     └───┘
 
-  Stack: [7, 3]
+Stack: [7, 3]
 ```
-
-
 
 **Step 4:** Pop node 3 (leaf node)
 
 ```markdown
-  Node 3 is a leaf (no children to swap)
+Node 3 is a leaf (no children to swap)
 
     ┌───┐
     │ 3 │  ← leaf node, nothing to swap
     └───┘
 
-  Stack: [7]
+Stack: [7]
 ```
-
-
 
 **Step 5:** Pop node 7, swap its children (6 <-> 9)
 
 ```markdown
-  Swap children of node 7:
+Swap children of node 7:
 
       Before:              After:
          7                    7
         / \                  / \
        6   9        →       9   6
 
+Current state:
+┌───┐
+│ 4 │
+└─┬─┘
+┌───────┴───────┐
+┌─┴─┐ ┌─┴─┐
+│ 7 │ │ 2 │
+└─┬─┘ └─┬─┘
+┌──┴──┐ ┌──┴──┐
+┌─┴─┐ ┌─┴─┐ ┌─┴─┐ ┌─┴─┐
+│ 9 │ │ 6 │ │ 3 │ │ 1 │ ← swapped 9,6!
+└───┘ └───┘ └───┘ └───┘
 
-  Current state:
-               ┌───┐
-               │ 4 │
-               └─┬─┘
-         ┌───────┴───────┐
-       ┌─┴─┐           ┌─┴─┐
-       │ 7 │           │ 2 │
-       └─┬─┘           └─┬─┘
-      ┌──┴──┐         ┌──┴──┐
-    ┌─┴─┐ ┌─┴─┐     ┌─┴─┐ ┌─┴─┐
-    │ 9 │ │ 6 │     │ 3 │ │ 1 │  ← swapped 9,6!
-    └───┘ └───┘     └───┘ └───┘
-
-  Stack: [9, 6]  (pushed children)
+Stack: [9, 6] (pushed children)
 ```
-
-
 
 **Step 6:** Pop node 6 (leaf node)
 
 ```markdown
-  Node 6 is a leaf (no children to swap)
+Node 6 is a leaf (no children to swap)
 
     ┌───┐
     │ 6 │  ← leaf node, nothing to swap
     └───┘
 
-  Stack: [9]
+Stack: [9]
 ```
-
-
 
 **Step 7:** Pop node 9 (leaf node)
 
 ```markdown
-  Node 9 is a leaf (no children to swap)
+Node 9 is a leaf (no children to swap)
 
     ┌───┐
     │ 9 │  ← leaf node, nothing to swap
     └───┘
 
-  Stack: [] (empty)
+Stack: [] (empty)
 ```
-
-
 
 **Final Inverted Tree:**
 
@@ -1353,6 +1330,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn invert_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if root.is_none() {
+            return None;
+        }
+        let mut stack = vec![root.clone().unwrap()];
+        while let Some(node) = stack.pop() {
+            let mut node_ref = node.borrow_mut();
+            let left = node_ref.left.take();
+            let right = node_ref.right.take();
+            node_ref.left = right;
+            node_ref.right = left;
+            if let Some(ref l) = node_ref.left {
+                stack.push(l.clone());
+            }
+            if let Some(ref r) = node_ref.right {
+                stack.push(r.clone());
+            }
+        }
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1365,10 +1367,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Handling Null Root
+
 Forgetting to check for a null root causes null pointer exceptions. Always return null immediately if the root is null.
 
 ### Swapping After Recursive Calls
+
 If you swap children after making recursive calls, you end up swapping already-inverted subtrees back. The swap must happen before or the recursion will undo the inversion.
+
 ```python
 # Wrong: swaps after recursion undoes the inversion
 self.invertTree(root.left)
@@ -1381,7 +1386,9 @@ self.invertTree(root.right)
 ```
 
 ### Using Wrong References After Swap
+
 After swapping, `root.left` now points to what was previously `root.right`. When recursing, make sure you're using the correct references for the swapped children.
 
 ### Modifying While Traversing Incorrectly
+
 In iterative approaches, ensure you push children to the stack after swapping, not before. Pushing before the swap means you're adding references to positions that will change.

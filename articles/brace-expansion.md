@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down string parsing problems into subproblems and combining results
 - **String Parsing** - Extracting characters and groups from formatted strings with special delimiters
 - **Backtracking** - Building combinations incrementally and undoing choices to explore all possibilities
@@ -10,17 +12,19 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 The string consists of segments that are either single characters or groups of options inside braces. We process the string from left to right, extracting the options for each position. For the first position, we get all possible characters (sorted if from braces), then recursively generate all words from the remaining string. Each option at the current position is combined with each word from the recursive result.
 
 ### Algorithm
+
 1. Define a helper function to extract options at the current position:
-   - If the character is not `'{'`, return just that character.
-   - Otherwise, collect all characters until `'}'`, sort them, and return the list.
+    - If the character is not `'{'`, return just that character.
+    - Otherwise, collect all characters until `'}'`, sort them, and return the list.
 2. Define a recursive function to generate all words from a starting position:
-   - Base case: if at the end of the string, return a list containing an empty string.
-   - Get the options for the current position and the starting index of the remaining string.
-   - Recursively generate all words from the remaining string.
-   - Combine each option with each word from the recursive result.
+    - Base case: if at the end of the string, return a list containing an empty string.
+    - Get the options for the current position and the starting index of the remaining string.
+    - Recursively generate all words from the remaining string.
+    - Combine each option with each word from the recursive result.
 3. Call the recursive function starting at position `0` and return the result.
 
 ::tabs-start
@@ -132,39 +136,39 @@ public:
                  }
                 startPos++;
             }
-            
+
             // Sort the list
             sort(firstOptions.begin(), firstOptions.end());
         }
-        
+
         // Increment it to point to the next character to be considered
         return startPos + 1;
     }
-    
+
     vector<string> findAllWords(string& s, int startPos) {
         // Return empty string list if the string is empty
         if (startPos == s.size()) {
             return {""};
         }
-        
+
         vector<char> firstOptions;
-        
+
         // Store the characters for the first index as string in firstOptions
         int remStringStartPos = storeFirstOptions(s, startPos, firstOptions);
         vector<string> wordsWithRemString = findAllWords(s, remStringStartPos);
-        
+
         vector<string> expandedWords;
-        
+
         // Create new words by adding the character at the beginning
         for (char c : firstOptions) {
             for (string word : wordsWithRemString) {
                 expandedWords.push_back(c + word);
             }
         }
-        
+
         return expandedWords;
     }
-    
+
     vector<string> expand(string s) {
         return findAllWords(s, 0);
     }
@@ -200,7 +204,7 @@ class Solution {
         const findAllWords = (startPos) => {
             // Return empty string list if the string is empty
             if (startPos === s.length) {
-                return [""];
+                return [''];
             }
 
             const firstOptions = [];
@@ -426,6 +430,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn expand(s: String) -> Vec<String> {
+        let chars: Vec<u8> = s.into_bytes();
+
+        fn store_first_options(chars: &[u8], start_pos: usize, first_options: &mut Vec<u8>) -> usize {
+            let mut pos = start_pos;
+            if chars[pos] != b'{' {
+                first_options.push(chars[pos]);
+            } else {
+                while chars[pos] != b'}' {
+                    if chars[pos] >= b'a' && chars[pos] <= b'z' {
+                        first_options.push(chars[pos]);
+                    }
+                    pos += 1;
+                }
+                first_options.sort();
+            }
+            pos + 1
+        }
+
+        fn find_all_words(chars: &[u8], start_pos: usize) -> Vec<String> {
+            if start_pos == chars.len() {
+                return vec![String::new()];
+            }
+
+            let mut first_options = Vec::new();
+            let rem_start = store_first_options(chars, start_pos, &mut first_options);
+            let words_with_rem = find_all_words(chars, rem_start);
+
+            let mut expanded = Vec::new();
+            for &c in &first_options {
+                for word in &words_with_rem {
+                    let mut new_word = String::with_capacity(1 + word.len());
+                    new_word.push(c as char);
+                    new_word.push_str(word);
+                    expanded.push(new_word);
+                }
+            }
+            expanded
+        }
+
+        find_all_words(&chars, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,23 +485,25 @@ class Solution {
 
 - Space complexity: $O(N \cdot 3^{N/7})$
 
->  Where $N$ is the length of the given string.
+> Where $N$ is the length of the given string.
 
 ---
 
 ## 2. Iteration
 
 ### Intuition
+
 Instead of using recursion, we can build the words iteratively. Starting with an empty string, we process each segment of the input. For each segment, we take all current words and extend each one with every option from that segment. This is similar to a Cartesian product, building up the result position by position.
 
 ### Algorithm
+
 1. Initialize `expandedWords` with a single empty string.
 2. Iterate through the input string:
-   - Extract the options at the current position (single char or sorted chars from braces).
-   - For each existing word in `expandedWords` and each option:
-     - Create a new word by appending the option to the existing word.
-   - Replace `expandedWords` with the newly created words.
-   - Move the position to the next segment.
+    - Extract the options at the current position (single char or sorted chars from braces).
+    - For each existing word in `expandedWords` and each option:
+        - Create a new word by appending the option to the existing word.
+    - Replace `expandedWords` with the newly created words.
+    - Move the position to the next segment.
 3. Return `expandedWords`.
 
 ::tabs-start
@@ -568,16 +621,16 @@ public:
         // Increment it to point to the next character to be considered
         return startPos + 1;
     }
-    
+
     vector<string> expand(string s) {
         vector<string> expandedWords = {""};
-        
+
         int startPos = 0;
         while (startPos < s.size()) {
             vector<string> firstOptions;
             // Store the characters for the first index as string in firstOptions
             int remStringStartPos = storeFirstOptions(s, startPos, firstOptions);
-            
+
             vector<string> currWords;
             // Append the string in the list firstOptions to string in expandedWords
             for (string word : expandedWords) {
@@ -622,7 +675,7 @@ class Solution {
             return startPos + 1;
         };
 
-        let expandedWords = [""];
+        let expandedWords = [''];
         let startPos = 0;
         while (startPos < s.length) {
             const firstOptions = [];
@@ -843,6 +896,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn expand(s: String) -> Vec<String> {
+        let chars: Vec<u8> = s.into_bytes();
+
+        fn store_first_options(chars: &[u8], start_pos: usize, first_options: &mut Vec<String>) -> usize {
+            let mut pos = start_pos;
+            if chars[pos] != b'{' {
+                first_options.push(String::from(chars[pos] as char));
+            } else {
+                while chars[pos] != b'}' {
+                    if chars[pos] >= b'a' && chars[pos] <= b'z' {
+                        first_options.push(String::from(chars[pos] as char));
+                    }
+                    pos += 1;
+                }
+                first_options.sort();
+            }
+            pos + 1
+        }
+
+        let mut expanded_words = vec![String::new()];
+        let mut start_pos = 0;
+        while start_pos < chars.len() {
+            let mut first_options = Vec::new();
+            let rem_start = store_first_options(&chars, start_pos, &mut first_options);
+
+            let mut curr_words = Vec::new();
+            for word in &expanded_words {
+                for c in &first_options {
+                    curr_words.push(format!("{}{}", word, c));
+                }
+            }
+
+            expanded_words = curr_words;
+            start_pos = rem_start;
+        }
+
+        expanded_words
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -851,25 +947,27 @@ class Solution {
 
 - Space complexity: $O(N \cdot 3^{N/7})$
 
->  Where $N$ is the length of the given string.
+> Where $N$ is the length of the given string.
 
 ---
 
 ## 3. Backtracking
 
 ### Intuition
+
 Backtracking is a natural fit for generating all combinations. First, we parse the input string to extract all options for each position. Then we build words character by character: at each position, we try each available option, add it to the current word, recurse to the next position, and then remove it (backtrack) to try the next option.
 
 ### Algorithm
+
 1. Parse the input string to create a list of options for each position:
-   - For each segment, extract either a single character or sorted characters from braces.
+    - For each segment, extract either a single character or sorted characters from braces.
 2. Define a recursive backtracking function:
-   - Base case: if the current string length equals the number of positions, add it to the result.
-   - Get the options for the current position.
-   - For each option:
-     - Append the character to the current string.
-     - Recurse to fill the next position.
-     - Remove the last character (backtrack).
+    - Base case: if the current string length equals the number of positions, add it to the result.
+    - Get the options for the current position.
+    - For each option:
+        - Append the character to the current string.
+        - Recurse to fill the next position.
+        - Remove the last character (backtrack).
 3. Call the backtracking function with an empty string and return the result.
 
 ::tabs-start
@@ -878,7 +976,7 @@ Backtracking is a natural fit for generating all combinations. First, we parse t
 class Solution:
     def expand(self, s: str) -> List[str]:
         all_options = []
-        
+
         # Store all options for each position
         def store_all_options():
             pos = 0
@@ -897,23 +995,23 @@ class Solution:
                     curr_options.sort()
                 all_options.append(curr_options)
                 pos += 1
-        
+
         def generate_words(curr_string, expanded_words):
             # If the currString is complete, we can store and return
             if len(curr_string) == len(all_options):
                 expanded_words.append(''.join(curr_string))
                 return
-            
+
             # Fetch the options for the current index
             curr_options = all_options[len(curr_string)]
-            
+
             # Add the character and go into recursion
             for c in curr_options:
                 curr_string.append(c)
                 generate_words(curr_string, expanded_words)
                 # Backtrack to previous state
                 curr_string.pop()
-        
+
         # Store the character options for different indices
         store_all_options()
         expanded_words = []
@@ -928,7 +1026,7 @@ class Solution {
     void storeAllOptions(String s) {
         for (int pos = 0; pos < s.length(); pos++) {
             List<Character> currOptions = new ArrayList<>();
-            
+
             // If the first character is not '{', it means a single character
              if (s.charAt(pos) != '{') {
                  currOptions.add(s.charAt(pos));
@@ -943,21 +1041,21 @@ class Solution {
                  // Sort the list
                  Collections.sort(currOptions);
              }
-            
+
             allOptions.add(currOptions);
         }
     }
-    
+
     void generateWords(StringBuilder currString, List<String> expandedWords) {
         // If the currString is complete, we can store and return
         if (currString.length() == allOptions.size()) {
             expandedWords.add(currString.toString());
             return;
         }
-        
+
         // Fetch the options for the current index
         List<Character> currOptions = allOptions.get(currString.length());
-            
+
         // Add the character and go into recursion
         for (char c : currOptions) {
             currString.append(c);
@@ -970,7 +1068,7 @@ class Solution {
     public String[] expand(String s) {
         // Store the character options for different indices
         storeAllOptions(s);
-        
+
         List<String> expandedWords = new ArrayList<>();
         generateWords(new StringBuilder(), expandedWords);
         return expandedWords.toArray(new String[0]);
@@ -982,11 +1080,11 @@ class Solution {
 class Solution {
 public:
     vector<vector<char>> allOptions;
-    
+
     void storeAllOptions(string& s) {
         for (int pos = 0; pos < s.size(); pos++) {
             vector<char> currOptions;
-            
+
             // If the first character is not '{', it means a single character
             if (s[pos] != '{') {
                 currOptions.push_back(s[pos]);
@@ -1004,14 +1102,14 @@ public:
             allOptions.push_back(currOptions);
         }
     }
-    
+
     void generateWords(string currString, vector<string>& expandedWords) {
         // If the currString is complete, we can store and return
         if (currString.size() == allOptions.size()) {
             expandedWords.push_back(currString);
             return;
         }
-        
+
         // Fetch the options for the current index
         vector<char> currOptions = allOptions[currString.size()];
 
@@ -1023,11 +1121,11 @@ public:
             currString.pop_back();
         }
     }
-    
+
     vector<string> expand(string s) {
         // Store the character options for different indices
         storeAllOptions(s);
-        
+
         vector<string> expandedWords;
         generateWords("", expandedWords);
         return expandedWords;
@@ -1043,7 +1141,7 @@ class Solution {
      */
     expand(s) {
         const allOptions = [];
-        
+
         // Store all options for each position
         const storeAllOptions = () => {
             let pos = 0;
@@ -1067,17 +1165,17 @@ class Solution {
                 pos++;
             }
         };
-        
+
         const generateWords = (currString, expandedWords) => {
             // If the currString is complete, we can store and return
             if (currString.length === allOptions.length) {
                 expandedWords.push(currString.join(''));
                 return;
             }
-            
+
             // Fetch the options for the current index
             const currOptions = allOptions[currString.length];
-            
+
             // Add the character and go into recursion
             for (const c of currOptions) {
                 currString.push(c);
@@ -1086,7 +1184,7 @@ class Solution {
                 currString.pop();
             }
         };
-        
+
         // Store the character options for different indices
         storeAllOptions();
         const expandedWords = [];
@@ -1326,6 +1424,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn expand(s: String) -> Vec<String> {
+        let chars: Vec<u8> = s.into_bytes();
+        let mut all_options: Vec<Vec<u8>> = Vec::new();
+
+        // Store all options for each position
+        let mut pos = 0;
+        while pos < chars.len() {
+            let mut curr_options = Vec::new();
+            if chars[pos] != b'{' {
+                curr_options.push(chars[pos]);
+            } else {
+                while chars[pos] != b'}' {
+                    if chars[pos] >= b'a' && chars[pos] <= b'z' {
+                        curr_options.push(chars[pos]);
+                    }
+                    pos += 1;
+                }
+                curr_options.sort();
+            }
+            all_options.push(curr_options);
+            pos += 1;
+        }
+
+        let mut expanded_words = Vec::new();
+        let mut curr_string = Vec::new();
+        Self::generate_words(&all_options, &mut curr_string, &mut expanded_words);
+        expanded_words
+    }
+
+    fn generate_words(
+        all_options: &[Vec<u8>],
+        curr_string: &mut Vec<u8>,
+        expanded_words: &mut Vec<String>,
+    ) {
+        if curr_string.len() == all_options.len() {
+            expanded_words.push(String::from_utf8(curr_string.clone()).unwrap());
+            return;
+        }
+
+        let curr_options = &all_options[curr_string.len()];
+        for &c in curr_options {
+            curr_string.push(c);
+            Self::generate_words(all_options, curr_string, expanded_words);
+            curr_string.pop();
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1334,14 +1483,16 @@ class Solution {
 
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of the given string.
+> Where $N$ is the length of the given string.
 
 ---
 
 ## Common Pitfalls
 
 ### Forgetting to Sort Options Within Braces
+
 The problem requires the output to be in lexicographically sorted order. Options within braces like `{b,a,c}` must be sorted to `[a,b,c]` before generating combinations, otherwise the final result will be out of order.
+
 ```python
 # Wrong: using options in original order
 options = ['b', 'a', 'c']
@@ -1350,7 +1501,9 @@ options.sort()  # ['a', 'b', 'c']
 ```
 
 ### Incorrect Index Advancement After Closing Brace
+
 When parsing a brace group, after finding `}`, you must advance the index past the `}` character. Off-by-one errors here cause infinite loops or skipped characters.
+
 ```python
 # Wrong: not advancing past '}'
 while s[pos] != '}':
@@ -1359,4 +1512,5 @@ while s[pos] != '}':
 ```
 
 ### Not Handling Single Characters Outside Braces
+
 Single characters outside braces (like `a` in `a{b,c}`) should be treated as a group with one option. Forgetting this case causes the character to be skipped entirely in the output.

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Building solutions by breaking problems into smaller subproblems with base cases
 - **Dynamic Programming** - Using memoization or tabulation to avoid redundant computations
 - **Subsequences** - Understanding the difference between subsequences (non-contiguous) and substrings (contiguous)
@@ -15,6 +17,7 @@ This problem asks how many **distinct subsequences** of string `s` are equal to 
 A subsequence is formed by deleting some characters from `s` without changing the order of the remaining characters.
 
 At every position in `s`, we have a choice:
+
 - **skip** the current character in `s`
 - **use** the current character, but only if it matches the current character in `t`
 
@@ -27,17 +30,17 @@ If we successfully match all characters of `t`, we have found one valid subseque
 
 1. If `t` is longer than `s`, return `0` immediately since it is impossible.
 2. Define a recursive function `dfs(i, j)`:
-   - `i` is the current index in `s`
-   - `j` is the current index in `t`
+    - `i` is the current index in `s`
+    - `j` is the current index in `t`
 3. If `j` reaches the end of `t`:
-   - Return `1` because a valid subsequence has been formed
+    - Return `1` because a valid subsequence has been formed
 4. If `i` reaches the end of `s` before `t` is finished:
-   - Return `0` because no valid subsequence can be formed
+    - Return `0` because no valid subsequence can be formed
 5. Always consider skipping the current character in `s`:
-   - `res = dfs(i + 1, j)`
+    - `res = dfs(i + 1, j)`
 6. If `s[i] == t[j]`:
-   - Also consider using this character to match `t[j]`
-   - Add `dfs(i + 1, j + 1)` to `res`
+    - Also consider using this character to match `t[j]`
+    - Add `dfs(i + 1, j + 1)` to `res`
 7. Return the total count `res`
 8. Start the recursion from `(0, 0)` and return the final result
 
@@ -245,6 +248,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        if t.len() > s.len() {
+            return 0;
+        }
+
+        fn dfs(s: &[u8], t: &[u8], i: usize, j: usize) -> i32 {
+            if j == t.len() {
+                return 1;
+            }
+            if i == s.len() {
+                return 0;
+            }
+            let mut res = dfs(s, t, i + 1, j);
+            if s[i] == t[j] {
+                res += dfs(s, t, i + 1, j + 1);
+            }
+            res
+        }
+
+        dfs(s, t, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,6 +296,7 @@ This problem asks us to count how many **distinct subsequences** of string `s` a
 The recursive solution works by trying all possibilities, but it repeats the same subproblems many times. To make it efficient, we use **top-down dynamic programming (memoization)**.
 
 A state is uniquely identified by:
+
 - `i`: the current index in `s`
 - `j`: the current index in `t`
 
@@ -277,22 +309,22 @@ By storing the result for each `(i, j)` pair, we avoid recomputing the same stat
 
 1. If the length of `t` is greater than the length of `s`, return `0` since it is impossible to form `t`.
 2. Create a memoization map `dp` where:
-   - the key is `(i, j)`
-   - the value is the number of ways to form `t[j:]` from `s[i:]`
+    - the key is `(i, j)`
+    - the value is the number of ways to form `t[j:]` from `s[i:]`
 3. Define a recursive function `dfs(i, j)`:
-   - `i` represents the current position in `s`
-   - `j` represents the current position in `t`
+    - `i` represents the current position in `s`
+    - `j` represents the current position in `t`
 4. If `j` reaches the end of `t`:
-   - Return `1` because a valid subsequence has been formed
+    - Return `1` because a valid subsequence has been formed
 5. If `i` reaches the end of `s` before `t` is fully matched:
-   - Return `0`
+    - Return `0`
 6. If the state `(i, j)` is already in `dp`:
-   - Return the cached result
+    - Return the cached result
 7. Always consider skipping the current character in `s`:
-   - `res = dfs(i + 1, j)`
+    - `res = dfs(i + 1, j)`
 8. If `s[i]` matches `t[j]`:
-   - Also consider using this character
-   - Add `dfs(i + 1, j + 1)` to `res`
+    - Also consider using this character
+    - Add `dfs(i + 1, j + 1)` to `res`
 9. Store `res` in `dp[(i, j)]` and return it
 10. Start the recursion from `(0, 0)` and return the final result
 
@@ -529,6 +561,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let m = s.len();
+        let n = t.len();
+        if n > m {
+            return 0;
+        }
+        let mut dp = vec![vec![-1i32; n + 1]; m + 1];
+
+        fn dfs(s: &[u8], t: &[u8], i: usize, j: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if j == t.len() {
+                return 1;
+            }
+            if i == s.len() {
+                return 0;
+            }
+            if dp[i][j] != -1 {
+                return dp[i][j];
+            }
+            let mut res = dfs(s, t, i + 1, j, dp);
+            if s[i] == t[j] {
+                res += dfs(s, t, i + 1, j + 1, dp);
+            }
+            dp[i][j] = res;
+            res
+        }
+
+        dfs(s, t, 0, 0, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,6 +615,7 @@ We want to count how many **distinct subsequences** of string `s` are equal to s
 
 A subsequence is formed by deleting characters from `s` without changing the order.  
 So for every character in `s`, we have a choice:
+
 - **skip** it
 - **use** it (only if it matches the current character in `t`)
 
@@ -562,17 +630,17 @@ By filling a DP table from the end of the strings toward the beginning, we ensur
 
 1. Let `m = len(s)` and `n = len(t)`.
 2. Create a 2D DP table `dp` of size `(m + 1) x (n + 1)`:
-   - `dp[i][j]` represents the number of ways to form `t[j:]` from `s[i:]`
+    - `dp[i][j]` represents the number of ways to form `t[j:]` from `s[i:]`
 3. Initialize the base case:
-   - For all `i`, set `dp[i][n] = 1`
-   - This means there is exactly one way to form an empty string `t` (by choosing nothing)
+    - For all `i`, set `dp[i][n] = 1`
+    - This means there is exactly one way to form an empty string `t` (by choosing nothing)
 4. Fill the table from bottom to top and right to left:
 5. For each position `(i, j)`:
-   - Always consider skipping `s[i]`:
-     - `dp[i][j] = dp[i + 1][j]`
-   - If `s[i] == t[j]`:
-     - Also consider using `s[i]` to match `t[j]`
-     - Add `dp[i + 1][j + 1]` to `dp[i][j]`
+    - Always consider skipping `s[i]`:
+        - `dp[i][j] = dp[i + 1][j]`
+    - If `s[i] == t[j]`:
+        - Also consider using `s[i]` to match `t[j]`
+        - Add `dp[i + 1][j + 1]` to `dp[i][j]`
 6. After filling the table, `dp[0][0]` contains the total number of distinct subsequences
 7. Return `dp[0][0]`
 
@@ -785,6 +853,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let m = s.len();
+        let n = t.len();
+        let mut dp = vec![vec![0i32; n + 1]; m + 1];
+
+        for i in 0..=m {
+            dp[i][n] = 1;
+        }
+
+        for i in (0..m).rev() {
+            for j in (0..n).rev() {
+                dp[i][j] = dp[i + 1][j];
+                if s[i] == t[j] {
+                    dp[i][j] += dp[i + 1][j + 1];
+                }
+            }
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -803,15 +898,18 @@ class Solution {
 We want to count how many **distinct subsequences** of string `s` are equal to string `t`.
 
 From the bottom-up DP approach, we know that:
+
 - `dp[i][j]` depends only on values from the **next row** (`i + 1`)
 - we never need older rows once a new row is computed
 
 This means we can **optimize space** by keeping only two 1D arrays:
+
 - one representing results for `i + 1`
 - one representing results for the current `i`
 
 The key idea stays the same:
 At each position, we can either:
+
 - skip the current character in `s`
 - or use it if it matches the current character in `t`
 
@@ -819,18 +917,18 @@ At each position, we can either:
 
 1. Let `m = len(s)` and `n = len(t)`.
 2. Create two 1D arrays of size `n + 1`:
-   - `dp` represents results for the next row (`i + 1`)
-   - `nextDp` represents results for the current row (`i`)
+    - `dp` represents results for the next row (`i + 1`)
+    - `nextDp` represents results for the current row (`i`)
 3. Initialize the base case:
-   - Set `dp[n] = 1` and `nextDp[n] = 1`
-   - There is exactly one way to form an empty `t`
+    - Set `dp[n] = 1` and `nextDp[n] = 1`
+    - There is exactly one way to form an empty `t`
 4. Iterate over string `s` from right to left:
 5. For each index `i`, iterate over string `t` from right to left:
-   - Always carry over the value from skipping `s[i]`:
-     - `nextDp[j] = dp[j]`
-   - If `s[i] == t[j]`:
-     - Add the number of ways from matching both characters:
-       - `nextDp[j] += dp[j + 1]`
+    - Always carry over the value from skipping `s[i]`:
+        - `nextDp[j] = dp[j]`
+    - If `s[i] == t[j]`:
+        - Add the number of ways from matching both characters:
+            - `nextDp[j] += dp[j + 1]`
 6. After finishing the row, copy `nextDp` into `dp`
 7. After processing all characters, `dp[0]` contains the total number of distinct subsequences
 8. Return `dp[0]`
@@ -1035,6 +1133,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let m = s.len();
+        let n = t.len();
+        let mut dp = vec![0i32; n + 1];
+        let mut next_dp = vec![0i32; n + 1];
+        dp[n] = 1;
+        next_dp[n] = 1;
+
+        for i in (0..m).rev() {
+            for j in (0..n).rev() {
+                next_dp[j] = dp[j];
+                if s[i] == t[j] {
+                    next_dp[j] += dp[j + 1];
+                }
+            }
+            dp = next_dp.clone();
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1053,10 +1178,11 @@ class Solution {
 We want to count how many **distinct subsequences** of `s` equal `t`.
 
 From the classic DP idea:
+
 - `dp[i][j]` = number of ways to form `t[j:]` using `s[i:]`
 - Transition:
-  - always can skip `s[i]` -> `dp[i+1][j]`
-  - if `s[i] == t[j]`, we can also match them -> `dp[i+1][j+1]`
+    - always can skip `s[i]` -> `dp[i+1][j]`
+    - if `s[i] == t[j]`, we can also match them -> `dp[i+1][j+1]`
 
 The space-optimized version uses a 1D array where `dp[j]` represents the values from the "next row" (`i+1`).
 But when updating `dp[j]` in-place, we still need access to the old value of `dp[j+1]` (which corresponds to `dp[i+1][j+1]`).
@@ -1067,16 +1193,16 @@ To solve this without an extra array, we carry that needed diagonal value using 
 
 1. Let `m = len(s)` and `n = len(t)`.
 2. Create a 1D array `dp` of size `n + 1`:
-   - `dp[j]` represents the number of ways to form `t[j:]` using the suffix of `s` currently being processed
+    - `dp[j]` represents the number of ways to form `t[j:]` using the suffix of `s` currently being processed
 3. Initialize the base case:
-   - `dp[n] = 1` because there is exactly one way to form an empty `t` (choose nothing)
+    - `dp[n] = 1` because there is exactly one way to form an empty `t` (choose nothing)
 4. Iterate through `s` from right to left (from `m - 1` down to `0`):
-   - Set `prev = 1` which corresponds to the diagonal value `dp[i+1][n]` (always `1`)
+    - Set `prev = 1` which corresponds to the diagonal value `dp[i+1][n]` (always `1`)
 5. For each character `s[i]`, iterate through `t` from right to left (from `n - 1` down to `0`):
-   - Start with `res = dp[j]` (skipping `s[i]`)
-   - If `s[i] == t[j]`, add `prev` (matching both characters)
-   - Update `prev` to the old `dp[j]` before overwriting it (so it becomes the next diagonal)
-   - Write `dp[j] = res`
+    - Start with `res = dp[j]` (skipping `s[i]`)
+    - If `s[i] == t[j]`, add `prev` (matching both characters)
+    - Update `prev` to the old `dp[j]` before overwriting it (so it becomes the next diagonal)
+    - Write `dp[j] = res`
 6. After processing all characters, `dp[0]` contains the total number of distinct subsequences of `s` that equal `t`
 7. Return `dp[0]`
 
@@ -1287,6 +1413,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let m = s.len();
+        let n = t.len();
+        let mut dp = vec![0i32; n + 1];
+        dp[n] = 1;
+
+        for i in (0..m).rev() {
+            let mut prev = 1;
+            for j in (0..n).rev() {
+                let mut res = dp[j];
+                if s[i] == t[j] {
+                    res += prev;
+                }
+                prev = dp[j];
+                dp[j] = res;
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1301,9 +1454,11 @@ class Solution {
 ## Common Pitfalls
 
 ### Confusing Subsequence with Substring
+
 A subsequence allows skipping characters while maintaining order, whereas a substring requires consecutive characters. This problem counts subsequences, so you must consider both skipping and using each character in `s`, not just sliding windows of consecutive characters.
 
 ### Incorrect Base Case for Empty Target
+
 When the target string `t` is fully matched (`j == len(t)`), the function should return `1` (one valid way found), not `0`. Returning `0` here would cause all paths to report no valid subsequences.
 
 ```python
@@ -1317,6 +1472,7 @@ if j == len(t):
 ```
 
 ### Forgetting to Always Include the Skip Option
+
 At each position in `s`, you must always consider skipping the current character, regardless of whether it matches `t[j]`. A common mistake is only recursing when characters match, which misses valid subsequences that use later occurrences of the same character.
 
 ```python
@@ -1331,4 +1487,5 @@ if s[i] == t[j]:
 ```
 
 ### Integer Overflow in Large Inputs
+
 The number of distinct subsequences can grow exponentially. In languages with fixed-size integers, the result may overflow. Some implementations use unsigned integers or modular arithmetic to handle this, depending on the problem constraints.

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through arrays and counting elements meeting a condition
 - **Binary Search** - Searching on a monotonic property to find an optimal value
 - **Sorting** - Arranging elements to enable efficient counting of elements greater than or equal to a threshold
@@ -173,6 +175,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn special_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len() as i32;
+        for i in 1..=n {
+            let count = nums.iter().filter(|&&num| num >= i).count() as i32;
+            if count == i {
+                return i;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -192,11 +209,11 @@ Instead of checking every value linearly, we can use binary search on the answer
 
 1. Set search bounds: `l = 1` and `r = n` (the array length).
 2. While `l <= r`:
-   - Calculate `mid = (l + r) / 2`.
-   - Count elements greater than or equal to `mid`.
-   - If count equals `mid`, return `mid`.
-   - If count is less than `mid`, search the lower half by setting `r = mid - 1`.
-   - Otherwise, search the upper half by setting `l = mid + 1`.
+    - Calculate `mid = (l + r) / 2`.
+    - Count elements greater than or equal to `mid`.
+    - If count equals `mid`, return `mid`.
+    - If count is less than `mid`, search the lower half by setting `r = mid - 1`.
+    - Otherwise, search the upper half by setting `l = mid + 1`.
 3. Return `-1` if no special value exists.
 
 ::tabs-start
@@ -389,6 +406,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn special_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len() as i32;
+        let (mut l, mut r) = (1, n);
+        while l <= r {
+            let mid = (l + r) / 2;
+            let cnt = nums.iter().filter(|&&num| num >= mid).count() as i32;
+            if cnt == mid {
+                return mid;
+            }
+            if cnt < mid {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -409,9 +448,9 @@ After sorting the array, we can efficiently determine how many elements are grea
 1. Sort the array in ascending order.
 2. Initialize `totalRight = n` (all elements to the right including current).
 3. Traverse the sorted array:
-   - If `nums[i]` equals `totalRight`, or `totalRight` falls strictly between `prev` and `nums[i]`, return `totalRight`.
-   - Skip duplicate elements.
-   - Update `prev` and move to the next distinct element, updating `totalRight`.
+    - If `nums[i]` equals `totalRight`, or `totalRight` falls strictly between `prev` and `nums[i]`, return `totalRight`.
+    - Skip duplicate elements.
+    - Update `prev` and move to the next distinct element, updating `totalRight`.
 4. Return `-1` if no special value is found.
 
 ::tabs-start
@@ -630,6 +669,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn special_array(nums: Vec<i32>) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len() as i32;
+        let mut i = 0i32;
+        let mut prev = -1;
+        let mut total_right = n;
+
+        while i < n {
+            if nums[i as usize] == total_right
+                || (prev < total_right && total_right < nums[i as usize])
+            {
+                return total_right;
+            }
+
+            while i + 1 < n && nums[i as usize] == nums[(i + 1) as usize] {
+                i += 1;
+            }
+
+            prev = nums[i as usize];
+            i += 1;
+            total_right = n - i;
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -650,9 +720,9 @@ After sorting, we use two pointers: one for the candidate value `j` and another 
 1. Sort the array in ascending order.
 2. Initialize `i = 0` (array pointer) and `j = 1` (candidate value).
 3. While both pointers are within valid bounds:
-   - Advance `i` past all elements smaller than `j`.
-   - If the count of remaining elements `(n - i)` equals `j`, return `j`.
-   - Increment `j` to try the next candidate.
+    - Advance `i` past all elements smaller than `j`.
+    - If the count of remaining elements `(n - i)` equals `j`, return `j`.
+    - Increment `j` to try the next candidate.
 4. Return `-1` if no special value exists.
 
 ::tabs-start
@@ -828,6 +898,30 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn special_array(nums: Vec<i32>) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len() as i32;
+        let mut i = 0i32;
+        let mut j = 1i32;
+
+        while i < n && j <= n {
+            while i < n && j > nums[i as usize] {
+                i += 1;
+            }
+            if j == n - i {
+                return j;
+            }
+            j += 1;
+        }
+
+        -1
     }
 }
 ```
@@ -1022,6 +1116,28 @@ class Solution {
             }
         }
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn special_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut count = vec![0i32; n + 1];
+        for &num in &nums {
+            let index = num.min(n as i32) as usize;
+            count[index] += 1;
+        }
+
+        let mut total_right = 0;
+        for i in (0..=n).rev() {
+            total_right += count[i];
+            if i as i32 == total_right {
+                return total_right;
+            }
+        }
+        -1
     }
 }
 ```

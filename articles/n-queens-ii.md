@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Understanding how to explore all possibilities by making choices and undoing them when they lead to invalid states
 - **Recursion** - The solution builds the board row by row using recursive calls
 - **2D Arrays/Matrices** - Working with board representations and understanding coordinate systems
@@ -17,12 +19,12 @@ We place queens row by row, ensuring each placement is valid before moving to th
 
 1. Initialize a `res` counter for valid solutions and create an empty board.
 2. Define a backtracking function that takes the current `r` (row):
-   - If `r` equals `n`, increment the solution count and return.
-   - For each `c` (column) in the row:
-     - Check if the position is `isSafe` by scanning the column above, the upper-left diagonal, and the upper-right diagonal for existing queens.
-     - If safe, place a queen at this position.
-     - Recursively call backtrack for the next row.
-     - Remove the queen (backtrack) to try other columns.
+    - If `r` equals `n`, increment the solution count and return.
+    - For each `c` (column) in the row:
+        - Check if the position is `isSafe` by scanning the column above, the upper-left diagonal, and the upper-right diagonal for existing queens.
+        - If safe, place a queen at this position.
+        - Recursively call backtrack for the next row.
+        - Remove the queen (backtrack) to try other columns.
 3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
@@ -399,6 +401,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_n_queens(n: i32) -> i32 {
+        let n = n as usize;
+        let mut board = vec![vec!['.'; n]; n];
+        let mut res = 0;
+        Self::backtrack(0, &mut board, &mut res, n);
+        res
+    }
+
+    fn backtrack(r: usize, board: &mut Vec<Vec<char>>, res: &mut i32, n: usize) {
+        if r == n {
+            *res += 1;
+            return;
+        }
+        for c in 0..n {
+            if Self::is_safe(r, c, board, n) {
+                board[r][c] = 'Q';
+                Self::backtrack(r + 1, board, res, n);
+                board[r][c] = '.';
+            }
+        }
+    }
+
+    fn is_safe(r: usize, c: usize, board: &Vec<Vec<char>>, n: usize) -> bool {
+        for i in (0..r).rev() {
+            if board[i][c] == 'Q' { return false; }
+        }
+        let (mut i, mut j) = (r as i32 - 1, c as i32 - 1);
+        while i >= 0 && j >= 0 {
+            if board[i as usize][j as usize] == 'Q' { return false; }
+            i -= 1;
+            j -= 1;
+        }
+        let (mut i, mut j) = (r as i32 - 1, c as i32 + 1);
+        while i >= 0 && (j as usize) < n {
+            if board[i as usize][j as usize] == 'Q' { return false; }
+            i -= 1;
+            j += 1;
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -418,12 +465,12 @@ Instead of scanning the board to check for conflicts, we can track which columns
 
 1. Create three hash sets: one for `col` (columns), one for `posDiag` (positive diagonals with `row + col`), and one for `negDiag` (negative diagonals with `row - col`).
 2. Define a backtracking function that takes the current `r` (row):
-   - If `r` equals `n`, increment the solution count and return.
-   - For each `c` (column) in the row:
-     - If `c` or either diagonal is already in the corresponding set, skip this column.
-     - Add `c` and both diagonal identifiers to their respective sets.
-     - Recursively call backtrack for the next row.
-     - Remove `c` and diagonal identifiers from the sets (backtrack).
+    - If `r` equals `n`, increment the solution count and return.
+    - For each `c` (column) in the row:
+        - If `c` or either diagonal is already in the corresponding set, skip this column.
+        - Add `c` and both diagonal identifiers to their respective sets.
+        - Recursively call backtrack for the next row.
+        - Remove `c` and diagonal identifiers from the sets (backtrack).
 3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
@@ -729,6 +776,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_n_queens(n: i32) -> i32 {
+        let n = n as usize;
+        let mut col = HashSet::new();
+        let mut pos_diag = HashSet::new();
+        let mut neg_diag = HashSet::new();
+        let mut res = 0;
+
+        Self::backtrack(0, n, &mut col, &mut pos_diag, &mut neg_diag, &mut res);
+        res
+    }
+
+    fn backtrack(
+        r: usize, n: usize,
+        col: &mut HashSet<i32>,
+        pos_diag: &mut HashSet<i32>,
+        neg_diag: &mut HashSet<i32>,
+        res: &mut i32,
+    ) {
+        if r == n {
+            *res += 1;
+            return;
+        }
+        for c in 0..n {
+            let (ci, ri) = (c as i32, r as i32);
+            if col.contains(&ci) || pos_diag.contains(&(ri + ci))
+                || neg_diag.contains(&(ri - ci))
+            {
+                continue;
+            }
+            col.insert(ci);
+            pos_diag.insert(ri + ci);
+            neg_diag.insert(ri - ci);
+
+            Self::backtrack(r + 1, n, col, pos_diag, neg_diag, res);
+
+            col.remove(&ci);
+            pos_diag.remove(&(ri + ci));
+            neg_diag.remove(&(ri - ci));
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -748,12 +840,12 @@ Hash sets have some overhead for insertions and lookups. Since the board size is
 
 1. Create three boolean arrays: `col[n]`, `posDiag[2n]`, and `negDiag[2n]`.
 2. Define a backtracking function that takes the current `r` (row):
-   - If `r` equals `n`, increment the solution count and return.
-   - For each `c` (column) in the row:
-     - Check `col[c]`, `posDiag[r + c]`, and `negDiag[r - c + n]`. If any is `true`, skip this column.
-     - Set all three to `true`.
-     - Recursively call backtrack for the next row.
-     - Set all three back to `false` (backtrack).
+    - If `r` equals `n`, increment the solution count and return.
+    - For each `c` (column) in the row:
+        - Check `col[c]`, `posDiag[r + c]`, and `negDiag[r - c + n]`. If any is `true`, skip this column.
+        - Set all three to `true`.
+        - Recursively call backtrack for the next row.
+        - Set all three back to `false` (backtrack).
 3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
@@ -1048,6 +1140,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_n_queens(n: i32) -> i32 {
+        let n = n as usize;
+        let mut col = vec![false; n];
+        let mut pos_diag = vec![false; 2 * n];
+        let mut neg_diag = vec![false; 2 * n];
+        let mut res = 0;
+
+        Self::backtrack(0, n, &mut col, &mut pos_diag, &mut neg_diag, &mut res);
+        res
+    }
+
+    fn backtrack(
+        r: usize, n: usize,
+        col: &mut Vec<bool>,
+        pos_diag: &mut Vec<bool>,
+        neg_diag: &mut Vec<bool>,
+        res: &mut i32,
+    ) {
+        if r == n {
+            *res += 1;
+            return;
+        }
+        for c in 0..n {
+            if col[c] || pos_diag[r + c] || neg_diag[r - c + n] {
+                continue;
+            }
+            col[c] = true;
+            pos_diag[r + c] = true;
+            neg_diag[r - c + n] = true;
+
+            Self::backtrack(r + 1, n, col, pos_diag, neg_diag, res);
+
+            col[c] = false;
+            pos_diag[r + c] = false;
+            neg_diag[r - c + n] = false;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1067,12 +1201,12 @@ Bit manipulation offers the most compact representation for tracking occupied co
 
 1. Initialize three integers `col`, `posDiag`, and `negDiag` to `0`.
 2. Define a backtracking function that takes the current `r` (row):
-   - If `r` equals `n`, increment the solution count and return.
-   - For each `c` (column) in the row:
-     - Check if the bit at position `c` in `col`, position `r + c` in `posDiag`, or position `r - c + n` in `negDiag` is set. If any is set, skip this column.
-     - Toggle the corresponding bits using XOR.
-     - Recursively call backtrack for the next row.
-     - Toggle the bits again to restore the previous state (backtrack).
+    - If `r` equals `n`, increment the solution count and return.
+    - For each `c` (column) in the row:
+        - Check if the bit at position `c` in `col`, position `r + c` in `posDiag`, or position `r - c + n` in `negDiag` is set. If any is set, skip this column.
+        - Toggle the corresponding bits using XOR.
+        - Recursively call backtrack for the next row.
+        - Toggle the bits again to restore the previous state (backtrack).
 3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
@@ -1367,6 +1501,43 @@ class Solution {
 
         backtrack(0)
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn total_n_queens(n: i32) -> i32 {
+        let n = n as usize;
+        let mut res = 0;
+        Self::backtrack(0, n, 0, 0, 0, &mut res);
+        res
+    }
+
+    fn backtrack(
+        r: usize, n: usize,
+        col: u32, pos_diag: u32, neg_diag: u32,
+        res: &mut i32,
+    ) {
+        if r == n {
+            *res += 1;
+            return;
+        }
+        for c in 0..n {
+            if (col & (1 << c)) != 0
+                || (pos_diag & (1 << (r + c))) != 0
+                || (neg_diag & (1 << (r - c + n))) != 0
+            {
+                continue;
+            }
+            Self::backtrack(
+                r + 1, n,
+                col ^ (1 << c),
+                pos_diag ^ (1 << (r + c)),
+                neg_diag ^ (1 << (r - c + n)),
+                res,
+            );
+        }
     }
 }
 ```

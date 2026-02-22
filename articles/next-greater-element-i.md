@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Mapping values to indices for O(1) lookups
 - **Monotonic Stack** - Maintaining a stack in decreasing order to find next greater elements efficiently
 - **Array Traversal** - Iterating through arrays from different directions
@@ -17,9 +19,9 @@ This works but is inefficient since we repeat the scan for every element in `num
 ### Algorithm
 
 1. For each number in `nums1`:
-   - Scan `nums2` from right to left.
-   - Track the most recent element that is greater than the current number.
-   - When we find the current number in `nums2`, stop and record the tracked greater element (or `-1` if none found).
+    - Scan `nums2` from right to left.
+    - Track the most recent element that is greater than the current number.
+    - When we find the current number in `nums2`, stop and record the tracked greater element (or `-1` if none found).
 2. Return the results.
 
 ::tabs-start
@@ -199,6 +201,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn next_greater_element(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let n = nums2.len();
+        let mut res = Vec::new();
+        for &num in &nums1 {
+            let mut next_greater = -1;
+            for j in (0..n).rev() {
+                if nums2[j] > num {
+                    next_greater = nums2[j];
+                } else if nums2[j] == num {
+                    break;
+                }
+            }
+            res.push(next_greater);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,15 +239,15 @@ class Solution {
 
 Instead of scanning from the end each time, we can iterate through `nums2` from left to right. For each element that appears in `nums1`, we look ahead to find the next greater element. A hash map stores the index of each `nums1` element, so we can quickly check if a number from `nums2` is one we care about.
 
-This is still O(m * n) in the worst case, but we skip elements not in `nums1`.
+This is still O(m \* n) in the worst case, but we skip elements not in `nums1`.
 
 ### Algorithm
 
 1. Build a hash map that maps each element in `nums1` to its index.
 2. Initialize result array with all `-1` values.
 3. Iterate through `nums2`. For each element that exists in the hash map:
-   - Scan forward to find the first greater element.
-   - Store the result at the corresponding index.
+    - Scan forward to find the first greater element.
+    - Store the result at the corresponding index.
 4. Return the result array.
 
 ::tabs-start
@@ -447,6 +470,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn next_greater_element(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let nums1_idx: HashMap<i32, usize> = nums1.iter().enumerate().map(|(i, &v)| (v, i)).collect();
+        let mut res = vec![-1; nums1.len()];
+
+        for i in 0..nums2.len() {
+            if !nums1_idx.contains_key(&nums2[i]) {
+                continue;
+            }
+            for j in i + 1..nums2.len() {
+                if nums2[j] > nums2[i] {
+                    let idx = nums1_idx[&nums2[i]];
+                    res[idx] = nums2[j];
+                    break;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -471,9 +517,9 @@ The stack maintains decreasing order from bottom to top. When a new element is l
 1. Build a hash map that maps each element in `nums1` to its index.
 2. Initialize result array with all `-1` values.
 3. Iterate through `nums2` with a stack:
-   - While the stack is not empty and the current element is greater than the stack top:
-     - Pop the top, find its index in `nums1`, and set `result[index]` to current element.
-   - If current element is in `nums1`, push it onto the stack.
+    - While the stack is not empty and the current element is greater than the stack top:
+        - Pop the top, find its index in `nums1`, and set `result[index]` to current element.
+    - If current element is in `nums1`, push it onto the stack.
 4. Return the result array.
 
 ::tabs-start
@@ -693,6 +739,32 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn next_greater_element(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let nums1_idx: HashMap<i32, usize> = nums1.iter().enumerate().map(|(i, &v)| (v, i)).collect();
+        let mut res = vec![-1; nums1.len()];
+        let mut stack: Vec<i32> = Vec::new();
+
+        for &num in &nums2 {
+            while let Some(&top) = stack.last() {
+                if num > top {
+                    stack.pop();
+                    let idx = nums1_idx[&top];
+                    res[idx] = num;
+                } else {
+                    break;
+                }
+            }
+            if nums1_idx.contains_key(&num) {
+                stack.push(num);
+            }
+        }
+        res
     }
 }
 ```

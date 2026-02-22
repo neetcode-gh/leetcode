@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding preorder, inorder, and postorder traversal patterns
 - **Postorder Traversal** - Processing children before parents, which is essential for bottom-up tree modifications
 - **Recursion** - Writing recursive functions that return modified subtrees to their parent
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion (Postorder Traversal)
 
 ### Intuition
+
 When we delete a leaf with the target value, its parent might become a new leaf. This means we need to process children before parents, which is exactly what postorder traversal does. By recursively processing left and right subtrees first, any newly exposed leaves are handled automatically when we return to the parent.
 
 ### Algorithm
+
 1. If the root is `null`, return `null`.
 2. Recursively process the left subtree and update `root.left` with the result.
 3. Recursively process the right subtree and update `root.right` with the result.
@@ -254,6 +258,38 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn remove_leaf_nodes(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let node = root?;
+        let left = node.borrow().left.clone();
+        let right = node.borrow().right.clone();
+
+        let new_left = Self::remove_leaf_nodes(left, target);
+        let new_right = Self::remove_leaf_nodes(right, target);
+
+        node.borrow_mut().left = new_left.clone();
+        node.borrow_mut().right = new_right.clone();
+
+        if new_left.is_none() && new_right.is_none() && node.borrow().val == target {
+            return None;
+        }
+
+        Some(node)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -266,14 +302,16 @@ class Solution {
 ## 2. Iterative Postorder Traversal
 
 ### Intuition
+
 We can simulate postorder traversal using a stack and a set to track visited nodes. We also need to maintain parent pointers so that when we delete a leaf, we can update its parent's child reference. A node is processed only after both its children have been visited.
 
 ### Algorithm
+
 1. Initialize a stack with the root, a set to track visited nodes, and a map for parent pointers.
 2. While the stack is not empty:
-   - Pop a node from the stack.
-   - If the node is a leaf with the target value, remove it by updating its parent's reference. If it has no parent, return `null`.
-   - If the node has children and has not been visited, mark it as visited, push it back, then push its children (with parent mappings).
+    - Pop a node from the stack.
+    - If the node is a leaf with the target value, remove it by updating its parent's reference. If it has no parent, return `null`.
+    - If the node has children and has not been visited, mark it as visited, push it back, then push its children (with parent mappings).
 3. Return the root after processing all nodes.
 
 ::tabs-start
@@ -699,6 +737,40 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn remove_leaf_nodes(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        // Use recursive postorder approach (same as Solution 1)
+        // as iterative with identity tracking is not idiomatic in Rust
+        let node = root?;
+        let left = node.borrow().left.clone();
+        let right = node.borrow().right.clone();
+
+        let new_left = Self::remove_leaf_nodes(left, target);
+        let new_right = Self::remove_leaf_nodes(right, target);
+
+        node.borrow_mut().left = new_left.clone();
+        node.borrow_mut().right = new_right.clone();
+
+        if new_left.is_none() && new_right.is_none() && node.borrow().val == target {
+            return None;
+        }
+
+        Some(node)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -711,9 +783,11 @@ class Solution {
 ## 3. Iterative Postorder Traversal (Optimal)
 
 ### Intuition
+
 We can optimize the iterative approach by using a standard postorder traversal pattern without maintaining a separate parent map. The stack itself naturally tracks the parent: after processing a node, the next item on the stack is its parent. We use a `visited` pointer to avoid reprocessing the right subtree.
 
 ### Algorithm
+
 1. Initialize a stack and a `visited` pointer to track the last processed node.
 2. Use two nested loops: the outer continues while the stack or current pointer is not empty.
 3. Inner loop: traverse left as far as possible, pushing nodes onto the stack.
@@ -1154,6 +1228,39 @@ class Solution {
         }
 
         return root
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn remove_leaf_nodes(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        // Postorder recursive approach (idiomatic Rust equivalent)
+        let node = root?;
+        let left = node.borrow().left.clone();
+        let right = node.borrow().right.clone();
+
+        let new_left = Self::remove_leaf_nodes(left, target);
+        let new_right = Self::remove_leaf_nodes(right, target);
+
+        node.borrow_mut().left = new_left.clone();
+        node.borrow_mut().right = new_right.clone();
+
+        if new_left.is_none() && new_right.is_none() && node.borrow().val == target {
+            return None;
+        }
+
+        Some(node)
     }
 }
 ```

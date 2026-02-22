@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming Fundamentals** - Understanding how to break problems into overlapping subproblems and use memoization or tabulation
 - **2D Grid/Matrix Traversal** - Ability to navigate and process elements in a 2D array with boundary checks
 - **Recursion with Memoization** - Converting recursive solutions to top-down DP by caching computed results
@@ -16,8 +18,8 @@ A falling path starts at any cell in the first row and moves to an adjacent cell
 
 1. Define `dfs(r, c)` that returns the minimum path sum starting from cell `(r, c)` to the bottom row.
 2. Base cases:
-   - If `r == n`, we've gone past the last row, return `0`.
-   - If `c` is out of bounds, return `Infinity` (invalid path).
+    - If `r == n`, we've gone past the last row, return `0`.
+    - If `c` is out of bounds, return `Infinity` (invalid path).
 3. Return `matrix[r][c]` plus the minimum of `dfs(r+1, c-1)`, `dfs(r+1, c)`, and `dfs(r+1, c+1)`.
 4. Try starting from each column in row `0` and return the minimum result.
 
@@ -210,6 +212,34 @@ class Solution {
             res = min(res, dfs(0, c))
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(matrix: Vec<Vec<i32>>) -> i32 {
+        let n = matrix.len();
+
+        fn dfs(matrix: &Vec<Vec<i32>>, r: usize, c: i32, n: usize) -> i32 {
+            if r == n {
+                return 0;
+            }
+            if c < 0 || c >= n as i32 {
+                return i32::MAX;
+            }
+            let c = c as usize;
+            matrix[r][c]
+                + dfs(matrix, r + 1, c as i32 - 1, n)
+                    .min(dfs(matrix, r + 1, c as i32, n))
+                    .min(dfs(matrix, r + 1, c as i32 + 1, n))
+        }
+
+        let mut res = i32::MAX;
+        for c in 0..n {
+            res = res.min(dfs(&matrix, 0, c as i32, n));
+        }
+        res
     }
 }
 ```
@@ -487,6 +517,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(matrix: Vec<Vec<i32>>) -> i32 {
+        let n = matrix.len();
+        let mut cache = vec![vec![i32::MIN; n]; n];
+
+        fn dfs(
+            matrix: &Vec<Vec<i32>>,
+            cache: &mut Vec<Vec<i32>>,
+            r: usize,
+            c: i32,
+            n: usize,
+        ) -> i32 {
+            if r == n {
+                return 0;
+            }
+            if c < 0 || c >= n as i32 {
+                return i32::MAX;
+            }
+            let c = c as usize;
+            if cache[r][c] != i32::MIN {
+                return cache[r][c];
+            }
+            cache[r][c] = matrix[r][c]
+                + dfs(matrix, cache, r + 1, c as i32 - 1, n)
+                    .min(dfs(matrix, cache, r + 1, c as i32, n))
+                    .min(dfs(matrix, cache, r + 1, c as i32 + 1, n));
+            cache[r][c]
+        }
+
+        let mut res = i32::MAX;
+        for c in 0..n {
+            res = res.min(dfs(&matrix, &mut cache, 0, c as i32, n));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,12 +575,12 @@ We can solve this iteratively by building up solutions row by row. For each cell
 
 1. Initialize a 1D `dp` array with the first row of the matrix.
 2. For each subsequent row `r`:
-   - Track `leftUp` (the previous row's value to the left) to avoid overwriting issues.
-   - For each column `c`:
-     - `midUp = dp[c]` (directly above).
-     - `rightUp = dp[c+1]` if within bounds, else infinity.
-     - Update `dp[c] = matrix[r][c] + min(leftUp, midUp, rightUp)`.
-     - Set `leftUp = midUp` for the next iteration.
+    - Track `leftUp` (the previous row's value to the left) to avoid overwriting issues.
+    - For each column `c`:
+        - `midUp = dp[c]` (directly above).
+        - `rightUp = dp[c+1]` if within bounds, else infinity.
+        - Update `dp[c] = matrix[r][c] + min(leftUp, midUp, rightUp)`.
+        - Set `leftUp = midUp` for the next iteration.
 3. Return the minimum value in the final `dp` array.
 
 ::tabs-start
@@ -713,6 +782,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(matrix: Vec<Vec<i32>>) -> i32 {
+        let n = matrix.len();
+        let mut dp = matrix[0].clone();
+
+        for r in 1..n {
+            let mut left_up = i32::MAX;
+            for c in 0..n {
+                let mid_up = dp[c];
+                let right_up = if c < n - 1 { dp[c + 1] } else { i32::MAX };
+                dp[c] = matrix[r][c] + mid_up.min(left_up).min(right_up);
+                left_up = mid_up;
+            }
+        }
+
+        *dp.iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -732,8 +822,8 @@ If we are allowed to modify the input matrix, we can avoid using any extra space
 
 1. Start from the second row (index `1`).
 2. For each cell `(r, c)`:
-   - Compute the minimum of the three cells above: `(r-1, c-1)`, `(r-1, c)`, `(r-1, c+1)` (treating out-of-bounds as infinity).
-   - Add this minimum to `matrix[r][c]`.
+    - Compute the minimum of the three cells above: `(r-1, c-1)`, `(r-1, c)`, `(r-1, c+1)` (treating out-of-bounds as infinity).
+    - Add this minimum to `matrix[r][c]`.
 3. After processing all rows, return the minimum value in the last row.
 
 ::tabs-start
@@ -904,6 +994,25 @@ class Solution {
         }
 
         return matrix[n - 1].min()!
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(mut matrix: Vec<Vec<i32>>) -> i32 {
+        let n = matrix.len();
+
+        for r in 1..n {
+            for c in 0..n {
+                let mid = matrix[r - 1][c];
+                let left = if c > 0 { matrix[r - 1][c - 1] } else { i32::MAX };
+                let right = if c < n - 1 { matrix[r - 1][c + 1] } else { i32::MAX };
+                matrix[r][c] += mid.min(left).min(right);
+            }
+        }
+
+        *matrix[n - 1].iter().min().unwrap()
     }
 }
 ```

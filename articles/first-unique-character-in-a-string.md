@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to count character frequencies in O(1) time per operation
 - **String Iteration** - Traversing strings and accessing characters by index
 
@@ -178,6 +180,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_uniq_char(s: String) -> i32 {
+        let s = s.as_bytes();
+        for i in 0..s.len() {
+            let mut flag = true;
+            for j in 0..s.len() {
+                if i == j { continue; }
+                if s[i] == s[j] {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag { return i as i32; }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +369,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_uniq_char(s: String) -> i32 {
+        let mut count = HashMap::new();
+        for c in s.chars() {
+            *count.entry(c).or_insert(0) += 1;
+        }
+
+        for (i, c) in s.chars().enumerate() {
+            if count[&c] == 1 {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -366,8 +406,8 @@ We can optimize the second pass by iterating over the hash map instead of the st
 
 1. Create a hash map where each character maps to its first occurrence index.
 2. Iterate through the string:
-   - If the character is not in the map, store its index.
-   - If it already exists, mark it as non-unique by setting the value to `n`.
+    - If the character is not in the map, store its index.
+    - If it already exists, mark it as non-unique by setting the value to `n`.
 3. Find the minimum value in the hash map.
 4. Return the minimum index if it's less than `n`, otherwise return `-1`.
 
@@ -573,6 +613,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_uniq_char(s: String) -> i32 {
+        let n = s.len();
+        let s_bytes = s.as_bytes();
+        let mut count = HashMap::new();
+
+        for (i, &b) in s_bytes.iter().enumerate() {
+            if !count.contains_key(&b) {
+                count.insert(b, i);
+            } else {
+                count.insert(b, n);
+            }
+        }
+
+        let mut res = n;
+        for &index in count.values() {
+            res = res.min(index);
+        }
+
+        if res == n { -1 } else { res as i32 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -592,9 +657,9 @@ Since the string contains only lowercase letters, we can iterate through all 26 
 
 1. Initialize `res` to the string length `n`.
 2. For each character from `'a'` to `'z'`:
-   - Find its first occurrence index using `indexOf` (or equivalent).
-   - Find its last occurrence index using `lastIndexOf`.
-   - If both indices are equal and the character exists, update `res` with the minimum.
+    - Find its first occurrence index using `indexOf` (or equivalent).
+    - Find its last occurrence index using `lastIndexOf`.
+    - If both indices are equal and the character exists, update `res` with the minimum.
 3. Return `res` if it's less than `n`, otherwise return `-1`.
 
 ::tabs-start
@@ -740,6 +805,26 @@ class Solution {
         }
 
         return res == n ? -1 : res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn first_uniq_char(s: String) -> i32 {
+        let n = s.len();
+        let s_bytes = s.as_bytes();
+        let mut res = n;
+
+        for ch in b'a'..=b'z' {
+            if let Some(first_index) = s_bytes.iter().position(|&b| b == ch) {
+                if s_bytes.iter().rposition(|&b| b == ch) == Some(first_index) {
+                    res = res.min(first_index);
+                }
+            }
+        }
+
+        if res == n { -1 } else { res as i32 }
     }
 }
 ```

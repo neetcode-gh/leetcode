@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Character Frequency Counting** - Using arrays or hash maps to count occurrences of each character in a string
 - **Hash Maps** - For efficient frequency lookups and comparisons
 - **Greedy Optimization** - Combining multiple constraints into a single merged requirement to reduce comparisons
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 A word from `words1` is "universal" if every word in `words2` is a subset of it. For a word to be a subset of another, every character must appear at least as many times in the target word. The straightforward approach is to check each word in `words1` against all words in `words2`, comparing character frequencies to determine if all `words2` words are subsets of `words1`.
 
 ### Algorithm
+
 1. Iterate through each word `w1` in `words1`.
 2. Count the frequency of each character in `w1`.
 3. For each word `w2` in `words2`, count its character frequencies.
@@ -286,6 +290,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_subsets(words1: Vec<String>, words2: Vec<String>) -> Vec<String> {
+        let mut res = Vec::new();
+
+        for w1 in &words1 {
+            let mut count1 = [0i32; 26];
+            for &b in w1.as_bytes() {
+                count1[(b - b'a') as usize] += 1;
+            }
+
+            let mut is_subset = true;
+            for w2 in &words2 {
+                let mut count2 = [0i32; 26];
+                for &b in w2.as_bytes() {
+                    count2[(b - b'a') as usize] += 1;
+                }
+
+                for i in 0..26 {
+                    if count2[i] > count1[i] {
+                        is_subset = false;
+                        break;
+                    }
+                }
+
+                if !is_subset {
+                    break;
+                }
+            }
+
+            if is_subset {
+                res.push(w1.clone());
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,9 +346,11 @@ class Solution {
 ## 2. Greedy + Hash Map
 
 ### Intuition
+
 Instead of checking every word in `words2` for each candidate, we can precompute a single "maximum requirement" array. The key insight is that if a word is universal, it must satisfy all words in `words2` simultaneously. This means for each character, we only need the maximum count required across all words in `words2`. By merging all requirements into one frequency map, we reduce the problem to a single comparison per candidate `word`.
 
 ### Algorithm
+
 1. Build a combined frequency map for `words2`: for each character, store the maximum count needed across all words.
 2. Iterate through each word `w` in `words1`.
 3. Count the frequency of each character in `w`.
@@ -603,6 +649,45 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn word_subsets(words1: Vec<String>, words2: Vec<String>) -> Vec<String> {
+        let mut count2 = [0i32; 26];
+        for w in &words2 {
+            let mut count_w = [0i32; 26];
+            for &b in w.as_bytes() {
+                count_w[(b - b'a') as usize] += 1;
+            }
+            for i in 0..26 {
+                count2[i] = count2[i].max(count_w[i]);
+            }
+        }
+
+        let mut res = Vec::new();
+        for w in &words1 {
+            let mut count_w = [0i32; 26];
+            for &b in w.as_bytes() {
+                count_w[(b - b'a') as usize] += 1;
+            }
+
+            let mut flag = true;
+            for i in 0..26 {
+                if count_w[i] < count2[i] {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if flag {
+                res.push(w.clone());
+            }
+        }
+
+        res
     }
 }
 ```

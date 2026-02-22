@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting Algorithms** - Understanding how sorting enables optimal greedy pairing
 - **Greedy Algorithms** - Matching smallest with smallest to minimize total distance
 - **Counting Sort** - Linear time sorting when value range is bounded
@@ -148,12 +150,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_moves_to_seat(mut seats: Vec<i32>, mut students: Vec<i32>) -> i32 {
+        seats.sort();
+        students.sort();
+
+        seats.iter().zip(students.iter())
+            .map(|(s, st)| (s - st).abs())
+            .sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -170,9 +185,9 @@ Two pointers traverse the count arrays, finding the next available seat and next
 1. Create count arrays for seats and students up to the maximum position.
 2. Use two pointers `i` and `j` starting at position 0.
 3. While unmatched pairs remain:
-   - Advance `i` until `count_seats[i] > 0`.
-   - Advance `j` until `count_students[j] > 0`.
-   - Add `|i - j|` to `res`, decrement both counts.
+    - Advance `i` until `count_seats[i] > 0`.
+    - Advance `j` until `count_students[j] > 0`.
+    - Add `|i - j|` to `res`, decrement both counts.
 4. Return the total.
 
 ::tabs-start
@@ -188,7 +203,7 @@ class Solution:
             count_seats[seat] += 1
         for student in students:
             count_students[student] += 1
-        
+
         i = j = res = 0
         remain = len(seats)
         while remain:
@@ -288,7 +303,10 @@ class Solution {
         for (let seat of seats) count_seats[seat]++;
         for (let student of students) count_students[student]++;
 
-        let i = 0, j = 0, res = 0, remain = seats.length;
+        let i = 0,
+            j = 0,
+            res = 0,
+            remain = seats.length;
         while (remain > 0) {
             if (count_seats[i] === 0) {
                 i++;
@@ -458,12 +476,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_moves_to_seat(seats: Vec<i32>, students: Vec<i32>) -> i32 {
+        let max_index = (*seats.iter().max().unwrap())
+            .max(*students.iter().max().unwrap()) as usize + 1;
+
+        let mut count_seats = vec![0i32; max_index];
+        let mut count_students = vec![0i32; max_index];
+
+        for &s in &seats { count_seats[s as usize] += 1; }
+        for &s in &students { count_students[s as usize] += 1; }
+
+        let (mut i, mut j, mut res, mut remain) = (0usize, 0usize, 0i32, seats.len() as i32);
+        while remain > 0 {
+            if count_seats[i] == 0 { i += 1; continue; }
+            if count_students[j] == 0 { j += 1; continue; }
+            res += (i as i32 - j as i32).abs();
+            count_seats[i] -= 1;
+            count_students[j] -= 1;
+            remain -= 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m1 + m2)$
-* Space complexity: $O(m1 + m2)$
+- Time complexity: $O(n + m1 + m2)$
+- Space complexity: $O(m1 + m2)$
 
 > Where $n$ is the size of the input arrays, $m1$ is the maximum value in the array $seats$, and $m2$ is the maximum value in the array $students$.
 
@@ -482,10 +526,10 @@ This optimization reduces iterations when there are many duplicates, though the 
 1. Create count arrays for seats and students.
 2. Use two pointers `i` and `j` starting at position 0.
 3. While unmatched pairs remain:
-   - Advance `i` until `count_seats[i] > 0`.
-   - Advance `j` until `count_students[j] > 0`.
-   - Compute `tmp = min(count_seats[i], count_students[j])`.
-   - Add `|i - j| * tmp` to `res`, decrement counts by `tmp`.
+    - Advance `i` until `count_seats[i] > 0`.
+    - Advance `j` until `count_students[j] > 0`.
+    - Compute `tmp = min(count_seats[i], count_students[j])`.
+    - Add `|i - j| * tmp` to `res`, decrement counts by `tmp`.
 4. Return the total.
 
 ::tabs-start
@@ -604,7 +648,10 @@ class Solution {
         for (let s of seats) count_seats[s]++;
         for (let s of students) count_students[s]++;
 
-        let remain = seats.length, i = 0, j = 0, res = 0;
+        let remain = seats.length,
+            i = 0,
+            j = 0,
+            res = 0;
         while (remain > 0) {
             if (count_seats[i] === 0) {
                 i++;
@@ -779,12 +826,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_moves_to_seat(seats: Vec<i32>, students: Vec<i32>) -> i32 {
+        let max_seat = *seats.iter().max().unwrap() as usize;
+        let max_student = *students.iter().max().unwrap() as usize;
+
+        let mut count_seats = vec![0i32; max_seat + 1];
+        let mut count_students = vec![0i32; max_student + 1];
+
+        for &s in &seats { count_seats[s as usize] += 1; }
+        for &s in &students { count_students[s as usize] += 1; }
+
+        let (mut remain, mut i, mut j, mut res) =
+            (seats.len() as i32, 0usize, 0usize, 0i32);
+        while remain > 0 {
+            if count_seats[i] == 0 { i += 1; continue; }
+            if count_students[j] == 0 { j += 1; continue; }
+            let tmp = count_seats[i].min(count_students[j]);
+            res += (i as i32 - j as i32).abs() * tmp;
+            count_seats[i] -= tmp;
+            count_students[j] -= tmp;
+            remain -= tmp;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m1 + m2)$
-* Space complexity: $O(m1 + m2)$
+- Time complexity: $O(n + m1 + m2)$
+- Space complexity: $O(m1 + m2)$
 
 > Where $n$ is the size of the input arrays, $m1$ is the maximum value in the array $seats$, and $m2$ is the maximum value in the array $students$.
 

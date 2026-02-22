@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Used to count occurrences of each task type
 - **Greedy Algorithms** - The optimal solution prioritizes the most frequent tasks first
 - **Heap / Priority Queue** - The efficient solution uses a max-heap to always select the highest-frequency task
@@ -26,26 +28,26 @@ This is a direct, brute-force simulation: very easy to understand, but not effic
 1. Count how many times each task appears (e.g., using an array of size 26 or a map).
 2. Build a list/array of pairs: `(remaining_count, task_id)` for all tasks with count > 0.
 3. Maintain:
-   - `time` = 0 (total time elapsed),
-   - A list/array `processed` storing, for each time unit, **which task** was executed (or an indicator like `-1` for idle).
+    - `time` = 0 (total time elapsed),
+    - A list/array `processed` storing, for each time unit, **which task** was executed (or an indicator like `-1` for idle).
 4. While there are still tasks left in the list:
-   1. Set `best_task_index = -1`.
-   2. For each task in the list:
-      - Check if this task was **not executed in any of the last `n` time units**
-        (i.e., its `task_id` does not appear in `processed[max(0, time − n) .. time − 1]`).
-      - If it is allowed and either:
-        - `best_task_index == -1`, or
-        - its `remaining_count` is **greater** than the current best's `remaining_count`,
-        then update `best_task_index` to this task.
-   3. Increase `time` by 1 (we are filling one time unit).
-   4. If `best_task_index != -1`:
-      - Execute that task in this time unit:
-        - Decrease its `remaining_count` by 1.
-        - If its `remaining_count` becomes 0, remove it from the list.
-        - Append its `task_id` to `processed`.
-     Otherwise:
-      - No valid task can be executed (all are in cooldown), so:
-        - Append an idle marker (e.g., `-1`) to `processed`.
+    1. Set `best_task_index = -1`.
+    2. For each task in the list:
+        - Check if this task was **not executed in any of the last `n` time units**
+          (i.e., its `task_id` does not appear in `processed[max(0, time − n) .. time − 1]`).
+        - If it is allowed and either:
+            - `best_task_index == -1`, or
+            - its `remaining_count` is **greater** than the current best's `remaining_count`,
+              then update `best_task_index` to this task.
+    3. Increase `time` by 1 (we are filling one time unit).
+    4. If `best_task_index != -1`:
+        - Execute that task in this time unit:
+            - Decrease its `remaining_count` by 1.
+            - If its `remaining_count` becomes 0, remove it from the list.
+            - Append its `task_id` to `processed`.
+              Otherwise:
+        - No valid task can be executed (all are in cooldown), so:
+            - Append an idle marker (e.g., `-1`) to `processed`.
 5. When the list of tasks becomes empty, return `time` as the total minimum time required.
 
 ::tabs-start
@@ -422,6 +424,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn least_interval(tasks: Vec<char>, n: i32) -> i32 {
+        let mut count = [0i32; 26];
+        for &task in &tasks {
+            count[(task as u8 - b'A') as usize] += 1;
+        }
+
+        let mut arr: Vec<[i32; 2]> = Vec::new();
+        for i in 0..26 {
+            if count[i] > 0 {
+                arr.push([count[i], i as i32]);
+            }
+        }
+
+        let mut time: i32 = 0;
+        let mut processed: Vec<i32> = Vec::new();
+        while !arr.is_empty() {
+            let mut maxi: i32 = -1;
+            for i in 0..arr.len() {
+                let start = 0.max(time - n) as usize;
+                let end = time as usize;
+                let ok = (start..end).all(|j| {
+                    j >= processed.len() || processed[j] != arr[i][1]
+                });
+                if !ok {
+                    continue;
+                }
+                if maxi == -1 || arr[maxi as usize][0] < arr[i][0] {
+                    maxi = i as i32;
+                }
+            }
+
+            time += 1;
+            let mut cur = -1;
+            if maxi != -1 {
+                let mi = maxi as usize;
+                cur = arr[mi][1];
+                arr[mi][0] -= 1;
+                if arr[mi][0] == 0 {
+                    arr.remove(mi);
+                }
+            }
+            processed.push(cur);
+        }
+        time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -437,7 +489,7 @@ class Solution {
 
 ### Intuition
 
-We always want to run the task that still has the **most remaining occurrences**, because those are the hardest to fit into the schedule (they need more slots with cooldown gaps).  
+We always want to run the task that still has the **most remaining occurrences**, because those are the hardest to fit into the schedule (they need more slots with cooldown gaps).
 
 So we:
 
@@ -456,18 +508,18 @@ This way we always use the CPU as efficiently as possible while respecting the c
 3. Create an empty **queue** (FIFO) to store pairs: `(remaining_count_after_running, next_available_time)`.
 4. Set `time = 0`.
 5. While the heap is not empty **or** the cooldown queue is not empty:
-   1. Increment `time` by 1.
-   2. If the heap is **not** empty:
-      - Pop the task with the largest remaining count.
-      - "Run" it once: `remaining_count -= 1`.
-      - If `remaining_count > 0`, push `(remaining_count, time + n)` into the cooldown queue (it can be used again after `n` units).
-   3. Check the front of the cooldown queue:
-      - While the task at the front has `next_available_time == time`,
-        remove it from the queue and push its `remaining_count` back into the max-heap.
-   4. (Optional optimization)
-      - If the heap is empty **and** the cooldown queue is not empty:
-        - Let `next_time` be the `next_available_time` of the front element in the cooldown queue.
-        - Set `time = next_time` (fast-forward), then process step 3 again for that time.
+    1. Increment `time` by 1.
+    2. If the heap is **not** empty:
+        - Pop the task with the largest remaining count.
+        - "Run" it once: `remaining_count -= 1`.
+        - If `remaining_count > 0`, push `(remaining_count, time + n)` into the cooldown queue (it can be used again after `n` units).
+    3. Check the front of the cooldown queue:
+        - While the task at the front has `next_available_time == time`,
+          remove it from the queue and push its `remaining_count` back into the max-heap.
+    4. (Optional optimization)
+        - If the heap is empty **and** the cooldown queue is not empty:
+            - Let `next_time` be the `next_available_time` of the front element in the cooldown queue.
+            - Set `time = next_time` (fast-forward), then process step 3 again for that time.
 6. When both the heap and cooldown queue are empty, return `time` as the minimum time required to finish all tasks.
 
 ::tabs-start
@@ -764,6 +816,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn least_interval(tasks: Vec<char>, n: i32) -> i32 {
+        let mut count = [0i32; 26];
+        for &task in &tasks {
+            count[(task as u8 - b'A') as usize] += 1;
+        }
+
+        let mut max_heap = BinaryHeap::new();
+        for &cnt in &count {
+            if cnt > 0 {
+                max_heap.push(cnt);
+            }
+        }
+
+        let mut time = 0;
+        let mut q: VecDeque<(i32, i32)> = VecDeque::new();
+        while !max_heap.is_empty() || !q.is_empty() {
+            time += 1;
+
+            if max_heap.is_empty() {
+                time = q.front().unwrap().1;
+            } else {
+                let cnt = max_heap.pop().unwrap() - 1;
+                if cnt > 0 {
+                    q.push_back((cnt, time + n));
+                }
+            }
+
+            if let Some(&(c, t)) = q.front() {
+                if t == time {
+                    q.pop_front();
+                    max_heap.push(c);
+                }
+            }
+        }
+
+        time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -784,7 +878,7 @@ Instead of simulating the whole schedule, we can think in terms of **slots**:
 - Let `maxf` be the **maximum frequency** of any task (e.g., if `A` appears 5 times, `B` 3 times, then `maxf = 5`).
 - Imagine placing all copies of the most frequent task in a row:
 
-  `A _ _ A _ _ A _ _ A _ _ A`
+    `A _ _ A _ _ A _ _ A _ _ A`
 
 - There are `maxf - 1` **gaps** between these most frequent tasks.
 - Each gap must be at least size `n` to satisfy the cooldown.
@@ -807,7 +901,7 @@ Finally:
 2. Find `maxf` = maximum frequency among all tasks.
 3. Compute initial idle slots: `idle = (maxf - 1) * n`.
 4. For each other task with count `c`:
-   - Decrease `idle` by `min(maxf - 1, c)` (this task helps fill gaps).
+    - Decrease `idle` by `min(maxf - 1, c)` (this task helps fill gaps).
 5. If `idle` is still positive, total time = `len(tasks) + idle`.
 6. If `idle` is zero or negative, total time = `len(tasks)` (no extra idle time needed).
 7. Return this total time.
@@ -987,6 +1081,26 @@ class Solution {
         }
 
         return max(0, idle) + tasks.count
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn least_interval(tasks: Vec<char>, n: i32) -> i32 {
+        let mut count = [0i32; 26];
+        for &task in &tasks {
+            count[(task as u8 - b'A') as usize] += 1;
+        }
+
+        count.sort();
+        let maxf = count[25];
+        let mut idle = (maxf - 1) * n;
+
+        for i in (0..25).rev() {
+            idle -= (maxf - 1).min(count[i]);
+        }
+        0.max(idle) + tasks.len() as i32
     }
 }
 ```
@@ -1206,6 +1320,23 @@ class Solution {
 
         let time = (maxf - 1) * (n + 1) + maxCount
         return max(tasks.count, time)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn least_interval(tasks: Vec<char>, n: i32) -> i32 {
+        let mut count = [0i32; 26];
+        for &task in &tasks {
+            count[(task as u8 - b'A') as usize] += 1;
+        }
+
+        let maxf = *count.iter().max().unwrap();
+        let max_count = count.iter().filter(|&&c| c == maxf).count() as i32;
+
+        let time = (maxf - 1) * (n + 1) + max_count;
+        time.max(tasks.len() as i32)
     }
 }
 ```

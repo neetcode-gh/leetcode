@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array Manipulation** - Creating and filling matrices with values
 - **Boundary Tracking** - Maintaining and updating top, bottom, left, right boundaries during traversal
 - **Direction Vectors** - Using coordinate deltas `(dr, dc)` to control movement direction
@@ -17,10 +19,10 @@ We fill an n x n matrix with values from 1 to n^2 in spiral order. Think of peel
 
 1. Initialize an `n x n` matrix with zeros and set boundaries: `left = 0`, `right = n - 1`, `top = 0`, `bottom = n - 1`.
 2. Start with `val = 1` and continue while `left <= right`:
-   - Fill the top row from `left` to `right`, then increment `top`.
-   - Fill the right column from `top` to `bottom`, then decrement `right`.
-   - Fill the bottom row from `right` to `left`, then decrement `bottom`.
-   - Fill the left column from `bottom` to `top`, then increment `left`.
+    - Fill the top row from `left` to `right`, then increment `top`.
+    - Fill the right column from `top` to `bottom`, then decrement `right`.
+    - Fill the bottom row from `right` to `left`, then decrement `bottom`.
+    - Fill the left column from `bottom` to `top`, then increment `left`.
 3. Return the filled matrix.
 
 ::tabs-start
@@ -333,6 +335,46 @@ class Solution {
         }
 
         return mat
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        let mut mat = vec![vec![0i32; n]; n];
+        let (mut left, mut right) = (0i32, n as i32 - 1);
+        let (mut top, mut bottom) = (0i32, n as i32 - 1);
+        let mut val = 1;
+
+        while left <= right {
+            for c in left..=right {
+                mat[top as usize][c as usize] = val;
+                val += 1;
+            }
+            top += 1;
+
+            for r in top..=bottom {
+                mat[r as usize][right as usize] = val;
+                val += 1;
+            }
+            right -= 1;
+
+            for c in (left..=right).rev() {
+                mat[bottom as usize][c as usize] = val;
+                val += 1;
+            }
+            bottom -= 1;
+
+            for r in (top..=bottom).rev() {
+                mat[r as usize][left as usize] = val;
+                val += 1;
+            }
+            left += 1;
+        }
+
+        mat
     }
 }
 ```
@@ -705,6 +747,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        let mut mat = vec![vec![0i32; n]; n];
+
+        fn fill(mat: &mut Vec<Vec<i32>>, left: i32, right: i32, top: i32, bottom: i32, val: i32) {
+            if left > right || top > bottom {
+                return;
+            }
+            let mut v = val;
+            let (mut l, mut r, mut t, mut b) = (left, right, top, bottom);
+
+            for c in l..=r {
+                mat[t as usize][c as usize] = v;
+                v += 1;
+            }
+            t += 1;
+
+            for row in t..=b {
+                mat[row as usize][r as usize] = v;
+                v += 1;
+            }
+            r -= 1;
+
+            for c in (l..=r).rev() {
+                mat[b as usize][c as usize] = v;
+                v += 1;
+            }
+            b -= 1;
+
+            for row in (t..=b).rev() {
+                mat[row as usize][l as usize] = v;
+                v += 1;
+            }
+            l += 1;
+
+            fill(mat, l, r, t, b, v);
+        }
+
+        fill(&mut mat, 0, n as i32 - 1, 0, n as i32 - 1, 1);
+        mat
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -726,10 +814,10 @@ Instead of tracking four boundaries, we can use direction vectors to navigate th
 
 1. Initialize an `n x n` matrix with zeros. Set starting position `(r, c) = (0, 0)` and direction `(dr, dc) = (0, 1)` (moving right).
 2. For each value from `1` to `n^2`:
-   - Place the value at position `(r, c)`.
-   - Check if the next position (with wraparound) is already filled.
-   - If so, rotate direction by setting `(dr, dc) = (dc, -dr)`.
-   - Move to the next position: `r += dr`, `c += dc`.
+    - Place the value at position `(r, c)`.
+    - Check if the next position (with wraparound) is already filled.
+    - If so, rotate direction by setting `(dr, dc) = (dc, -dr)`.
+    - Move to the next position: `r += dr`, `c += dc`.
 3. Return the filled matrix.
 
 ::tabs-start
@@ -928,6 +1016,32 @@ class Solution {
         }
 
         return mat
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn generate_matrix(n: i32) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        let mut mat = vec![vec![0i32; n]; n];
+        let (mut r, mut c) = (0i32, 0i32);
+        let (mut dr, mut dc) = (0i32, 1i32);
+
+        for val in 0..n * n {
+            mat[r as usize][c as usize] = val as i32 + 1;
+            let next_r = ((r + dr) % n as i32 + n as i32) % n as i32;
+            let next_c = ((c + dc) % n as i32 + n as i32) % n as i32;
+            if mat[next_r as usize][next_c as usize] != 0 {
+                let temp = dr;
+                dr = dc;
+                dc = -temp;
+            }
+            r += dr;
+            c += dc;
+        }
+
+        mat
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph traversal (DFS/BFS)** - Exploring connected components in a 2D grid
 - **2D grid manipulation** - Handling row/column indices and boundary conditions
 - **Union-Find (Disjoint Set Union)** - Grouping connected cells and tracking component membership
@@ -18,10 +20,10 @@ A closed island is a group of land cells (`0`s) that is completely surrounded by
 1. Create a `visited` set to track explored cells.
 2. For each unvisited land cell, start a `dfs`.
 3. In the `dfs`:
-   - If out of bounds, return `false` (not closed).
-   - If the cell is water or already `visited`, return `true` (valid boundary).
-   - Mark the cell as `visited`.
-   - Recursively check all four neighbors, combining results with AND logic (all must be valid for the island to be closed).
+    - If out of bounds, return `false` (not closed).
+    - If the cell is water or already `visited`, return `true` (valid boundary).
+    - Mark the cell as `visited`.
+    - Recursively check all four neighbors, combining results with AND logic (all must be valid for the island to be closed).
 4. If the `dfs` returns `true` for an island, increment the result counter.
 5. Return the total count of closed islands.
 
@@ -359,6 +361,52 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn closed_island(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let directions = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut visit = vec![vec![false; cols]; rows];
+
+        fn dfs(
+            grid: &[Vec<i32>], visit: &mut Vec<Vec<bool>>,
+            directions: &[(i32, i32)], r: i32, c: i32,
+            rows: i32, cols: i32,
+        ) -> bool {
+            if r < 0 || c < 0 || r == rows || c == cols {
+                return false;
+            }
+            let (ru, cu) = (r as usize, c as usize);
+            if grid[ru][cu] == 1 || visit[ru][cu] {
+                return true;
+            }
+            visit[ru][cu] = true;
+            let mut res = true;
+            for &(dr, dc) in directions {
+                if !dfs(grid, visit, directions, r + dr, c + dc, rows, cols) {
+                    res = false;
+                }
+            }
+            res
+        }
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 0 && !visit[r][c] {
+                    if dfs(&grid, &mut visit, &directions,
+                           r as i32, c as i32, rows as i32, cols as i32) {
+                        res += 1;
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -711,6 +759,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn closed_island(grid: Vec<Vec<i32>>) -> i32 {
+        let mut grid = grid;
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let dirs: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+
+        fn dfs(grid: &mut Vec<Vec<i32>>, r: i32, c: i32,
+               rows: i32, cols: i32, dirs: &[(i32, i32); 4]) {
+            if r < 0 || c < 0 || r >= rows || c >= cols
+                || grid[r as usize][c as usize] == 1
+            {
+                return;
+            }
+            grid[r as usize][c as usize] = 1;
+            for &(dr, dc) in dirs {
+                dfs(grid, r + dr, c + dc, rows, cols, dirs);
+            }
+        }
+
+        let (r_i32, c_i32) = (rows as i32, cols as i32);
+        for r in 0..rows as i32 {
+            dfs(&mut grid, r, 0, r_i32, c_i32, &dirs);
+            dfs(&mut grid, r, c_i32 - 1, r_i32, c_i32, &dirs);
+        }
+        for c in 0..cols as i32 {
+            dfs(&mut grid, 0, c, r_i32, c_i32, &dirs);
+            dfs(&mut grid, r_i32 - 1, c, r_i32, c_i32, &dirs);
+        }
+
+        let mut res = 0;
+        for r in 1..rows as i32 - 1 {
+            for c in 1..cols as i32 - 1 {
+                if grid[r as usize][c as usize] == 0 {
+                    dfs(&mut grid, r, c, r_i32, c_i32, &dirs);
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -734,9 +827,9 @@ BFS provides an iterative alternative to `dfs` for exploring islands. Starting f
 2. For each unvisited land cell, start a `bfs`.
 3. Initialize a queue with the starting cell and a flag `isClosed = true`.
 4. While the queue is not empty:
-   - Dequeue a cell and explore its four neighbors.
-   - If a neighbor is out of bounds, set `isClosed = false` (but continue `bfs` to mark all cells).
-   - If the neighbor is valid land and unvisited, mark it `visited` and add to queue.
+    - Dequeue a cell and explore its four neighbors.
+    - If a neighbor is out of bounds, set `isClosed = false` (but continue `bfs` to mark all cells).
+    - If the neighbor is valid land and unvisited, mark it `visited` and add to queue.
 5. After `bfs` completes, if `isClosed` is `true`, increment the result.
 6. Return the total count of closed islands.
 
@@ -1123,6 +1216,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn closed_island(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let directions = [(0i32, 1i32), (0, -1), (1, 0), (-1, 0)];
+        let mut visit = vec![vec![false; cols]; rows];
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 0 && !visit[r][c] {
+                    let mut queue = VecDeque::new();
+                    queue.push_back((r, c));
+                    visit[r][c] = true;
+                    let mut is_closed = true;
+
+                    while let Some((x, y)) = queue.pop_front() {
+                        for &(dr, dc) in &directions {
+                            let nx = x as i32 + dr;
+                            let ny = y as i32 + dc;
+                            if nx < 0 || ny < 0
+                                || nx >= rows as i32
+                                || ny >= cols as i32
+                            {
+                                is_closed = false;
+                                continue;
+                            }
+                            let (nx, ny) = (nx as usize, ny as usize);
+                            if grid[nx][ny] == 1 || visit[nx][ny] {
+                                continue;
+                            }
+                            visit[nx][ny] = true;
+                            queue.push_back((nx, ny));
+                        }
+                    }
+                    if is_closed {
+                        res += 1;
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1144,8 +1284,8 @@ We can model this problem using Union-Find (DSU). Each land cell belongs to a co
 
 1. Create a DSU with size `ROWS * COLS + 1`, where index `N = ROWS * COLS` represents the boundary.
 2. For each land cell, check its four neighbors:
-   - If the neighbor is out of bounds, `union` the cell with the boundary node `N`.
-   - If the neighbor is valid land, `union` the two cells.
+    - If the neighbor is out of bounds, `union` the cell with the boundary node `N`.
+    - If the neighbor is valid land, `union` the two cells.
 3. Find the `root` of the boundary node.
 4. Iterate through all land cells. If a cell is its own `root` (representative of a component) and that `root` differs from the boundary `root`, count it.
 5. Return the count of distinct closed island components.
@@ -1734,6 +1874,87 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let (pu, pv) = (self.find(u), self.find(v));
+        if pu == pv { return false; }
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn closed_island(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let n = rows * cols;
+        let mut dsu = DSU::new(n);
+        let directions: [i32; 5] = [0, 1, 0, -1, 0];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 0 {
+                    for d in 0..4 {
+                        let nr = r as i32 + directions[d];
+                        let nc = c as i32 + directions[d + 1];
+                        if nr < 0 || nc < 0
+                            || nr == rows as i32
+                            || nc == cols as i32
+                        {
+                            dsu.union(n, r * cols + c);
+                        } else if grid[nr as usize][nc as usize] == 0 {
+                            dsu.union(
+                                r * cols + c,
+                                nr as usize * cols + nc as usize,
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        let root_n = dsu.find(n);
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 0 {
+                    let node = r * cols + c;
+                    let root = dsu.find(node);
+                    if root == node && root != root_n {
+                        res += 1;
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```

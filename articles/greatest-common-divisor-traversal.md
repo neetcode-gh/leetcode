@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Traversal (DFS/BFS)** - The problem models indices as nodes and requires checking if all nodes are connected in a single component
 - **Union-Find (Disjoint Set Union)** - Optimal solutions use DSU to efficiently track and merge connected components
 - **Greatest Common Divisor (GCD)** - Understanding how to compute GCD and recognizing when two numbers share common factors
@@ -325,6 +327,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut visit = vec![false; n];
+        let mut adj = vec![vec![]; n];
+
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                if gcd(nums[i], nums[j]) > 1 {
+                    adj[i].push(j);
+                    adj[j].push(i);
+                }
+            }
+        }
+
+        fn dfs(node: usize, adj: &Vec<Vec<usize>>, visit: &mut Vec<bool>) {
+            visit[node] = true;
+            for &nei in &adj[node] {
+                if !visit[nei] {
+                    dfs(nei, adj, visit);
+                }
+            }
+        }
+
+        dfs(0, &adj, &mut visit);
+        visit.iter().all(|&v| v)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -346,8 +383,8 @@ Instead of building explicit edges between indices, we can connect indices throu
 2. Maintain a map from prime factors to the first index containing that factor.
 3. For each number, factorize it by trial division.
 4. For each prime factor found:
-   - If seen before, union the current index with the stored index.
-   - Otherwise, store the current index for this factor.
+    - If seen before, union the current index with the stored index.
+    - Otherwise, store the current index for this factor.
 5. Check if all indices belong to one connected component.
 
 ::tabs-start
@@ -724,6 +761,83 @@ public class Solution {
         }
 
         return uf.IsConnected();
+    }
+}
+```
+
+```rust
+struct UnionFind {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+    n: usize,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+            n,
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv { return false; }
+        self.n -= 1;
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+
+    fn is_connected(&self) -> bool {
+        self.n == 1
+    }
+}
+
+impl Solution {
+    pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut uf = UnionFind::new(n);
+        let mut factor_index: HashMap<i32, usize> = HashMap::new();
+
+        for i in 0..n {
+            let mut num = nums[i];
+            let mut f = 2;
+            while f * f <= num {
+                if num % f == 0 {
+                    if let Some(&idx) = factor_index.get(&f) {
+                        uf.union(i, idx);
+                    } else {
+                        factor_index.insert(f, i);
+                    }
+                    while num % f == 0 {
+                        num /= f;
+                    }
+                }
+                f += 1;
+            }
+            if num > 1 {
+                if let Some(&idx) = factor_index.get(&num) {
+                    uf.union(i, idx);
+                } else {
+                    factor_index.insert(num, i);
+                }
+            }
+        }
+
+        uf.is_connected()
     }
 }
 ```
@@ -1159,6 +1273,89 @@ public class Solution {
 }
 ```
 
+```rust
+struct UnionFind {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            size: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv { return false; }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+}
+
+impl Solution {
+    pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        if n == 1 { return true; }
+        if nums.iter().any(|&x| x == 1) { return false; }
+
+        let max_val = *nums.iter().max().unwrap() as usize;
+        let mut sieve = vec![0usize; max_val + 1];
+        let mut p = 2;
+        while p * p <= max_val {
+            if sieve[p] == 0 {
+                let mut composite = p * p;
+                while composite <= max_val {
+                    if sieve[composite] == 0 {
+                        sieve[composite] = p;
+                    }
+                    composite += p;
+                }
+            }
+            p += 1;
+        }
+
+        let mut uf = UnionFind::new(n + max_val + 1);
+        for i in 0..n {
+            let mut num = nums[i] as usize;
+            if sieve[num] == 0 {
+                uf.union(i, n + num);
+                continue;
+            }
+            while num > 1 {
+                let prime = if sieve[num] != 0 { sieve[num] } else { num };
+                uf.union(i, n + prime);
+                while num % prime == 0 {
+                    num /= prime;
+                }
+            }
+        }
+
+        let root = uf.find(0);
+        for i in 1..n {
+            if uf.find(i) != root {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1470,6 +1667,65 @@ public class Solution {
                 DFS(nei, adj, visited);
             }
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        if n == 1 { return true; }
+        if nums.iter().any(|&x| x == 1) { return false; }
+
+        let max_val = *nums.iter().max().unwrap() as usize;
+        let mut sieve = vec![0usize; max_val + 1];
+        let mut p = 2;
+        while p * p <= max_val {
+            if sieve[p] == 0 {
+                let mut composite = p * p;
+                while composite <= max_val {
+                    if sieve[composite] == 0 {
+                        sieve[composite] = p;
+                    }
+                    composite += p;
+                }
+            }
+            p += 1;
+        }
+
+        let mut adj: HashMap<usize, Vec<usize>> = HashMap::new();
+        for i in 0..n {
+            let mut num = nums[i] as usize;
+            if sieve[num] == 0 {
+                adj.entry(i).or_default().push(n + num);
+                adj.entry(n + num).or_default().push(i);
+                continue;
+            }
+            while num > 1 {
+                let prime = if sieve[num] != 0 { sieve[num] } else { num };
+                adj.entry(i).or_default().push(n + prime);
+                adj.entry(n + prime).or_default().push(i);
+                while num % prime == 0 {
+                    num /= prime;
+                }
+            }
+        }
+
+        let mut visited = HashSet::new();
+        fn dfs(node: usize, adj: &HashMap<usize, Vec<usize>>, visited: &mut HashSet<usize>) {
+            visited.insert(node);
+            if let Some(neighbors) = adj.get(&node) {
+                for &nei in neighbors {
+                    if !visited.contains(&nei) {
+                        dfs(nei, adj, visited);
+                    }
+                }
+            }
+        }
+
+        dfs(0, &adj, &mut visited);
+        (0..n).all(|i| visited.contains(&i))
     }
 }
 ```
@@ -1818,6 +2074,71 @@ public class Solution {
         if (!adj.ContainsKey(v)) adj[v] = new List<int>();
         adj[u].Add(v);
         adj[v].Add(u);
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_traverse_all_pairs(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        if n == 1 { return true; }
+        if nums.iter().any(|&x| x == 1) { return false; }
+
+        let max_val = *nums.iter().max().unwrap() as usize;
+        let mut sieve = vec![0usize; max_val + 1];
+        let mut p = 2;
+        while p * p <= max_val {
+            if sieve[p] == 0 {
+                let mut composite = p * p;
+                while composite <= max_val {
+                    if sieve[composite] == 0 {
+                        sieve[composite] = p;
+                    }
+                    composite += p;
+                }
+            }
+            p += 1;
+        }
+
+        let mut adj: HashMap<usize, Vec<usize>> = HashMap::new();
+        let add_edge = |adj: &mut HashMap<usize, Vec<usize>>, u: usize, v: usize| {
+            adj.entry(u).or_default().push(v);
+            adj.entry(v).or_default().push(u);
+        };
+
+        for i in 0..n {
+            let mut num = nums[i] as usize;
+            if sieve[num] == 0 {
+                add_edge(&mut adj, i, n + num);
+                continue;
+            }
+            while num > 1 {
+                let prime = if sieve[num] != 0 { sieve[num] } else { num };
+                add_edge(&mut adj, i, n + prime);
+                while num % prime == 0 {
+                    num /= prime;
+                }
+            }
+        }
+
+        let mut visited = HashSet::new();
+        let mut queue = VecDeque::new();
+        queue.push_back(0);
+        visited.insert(0);
+
+        while let Some(node) = queue.pop_front() {
+            if let Some(neighbors) = adj.get(&node) {
+                for &nei in neighbors {
+                    if !visited.contains(&nei) {
+                        visited.insert(nei);
+                        queue.push_back(nei);
+                    }
+                }
+            }
+        }
+
+        (0..n).all(|i| visited.contains(&i))
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - The optimal solution uses a variable-size window to track valid subarrays with products below the threshold
 - **Prefix Sums** - The binary search approach converts products to sums using logarithms, requiring prefix sum knowledge
 - **Binary Search** - One solution uses binary search on prefix sums to find valid subarray endpoints
@@ -16,11 +18,11 @@ The most straightforward approach is to check every possible subarray. For each 
 
 1. Initialize a counter `res = 0`.
 2. For each starting index `i` from `0` to `n - 1`:
-   - Set `curProd = 1`.
-   - For each ending index `j` from `i` to `n - 1`:
-     - Multiply `curProd` by `nums[j]`.
-     - If `curProd >= k`, `break` out of the inner loop.
-     - Otherwise, increment `res`.
+    - Set `curProd = 1`.
+    - For each ending index `j` from `i` to `n - 1`:
+        - Multiply `curProd` by `nums[j]`.
+        - If `curProd >= k`, `break` out of the inner loop.
+        - Otherwise, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -184,6 +186,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subarray_product_less_than_k(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut cur_prod = 1;
+            for j in i..n {
+                cur_prod *= nums[j];
+                if cur_prod >= k {
+                    break;
+                }
+                res += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -204,8 +228,8 @@ Products grow multiplicatively, which makes binary search tricky with raw values
 1. Handle the edge case: if `k <= 1`, return `0` (no positive product can be less than `1` or less).
 2. Build a prefix sum array of logarithms: `logs[i+1] = logs[i] + log(nums[i])`.
 3. For each starting index `i`:
-   - Binary search for the smallest index `j` where `logs[j] >= logs[i] + log(k)`.
-   - The count of valid subarrays starting at `i` is `j - (i + 1)`.
+    - Binary search for the smallest index `j` where `logs[j] >= logs[i] + log(k)`.
+    - The count of valid subarrays starting at `i` is `j - (i + 1)`.
 4. Sum all counts and return.
 
 ::tabs-start
@@ -310,7 +334,8 @@ class Solution {
         }
         let res = 0;
         for (let i = 0; i < n; i++) {
-            let l = i + 1, r = n + 1;
+            let l = i + 1,
+                r = n + 1;
             while (l < r) {
                 let mid = (l + r) >> 1;
                 if (logs[mid] < logs[i] + logK - 1e-12) {
@@ -440,6 +465,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subarray_product_less_than_k(nums: Vec<i32>, k: i32) -> i32 {
+        if k <= 1 {
+            return 0;
+        }
+        let n = nums.len();
+        let mut logs = vec![0.0f64; n + 1];
+        let log_k = (k as f64).ln();
+        for i in 0..n {
+            logs[i + 1] = logs[i] + (nums[i] as f64).ln();
+        }
+        let mut res = 0i32;
+        for i in 0..n {
+            let mut l = i + 1;
+            let mut r = n + 1;
+            while l < r {
+                let mid = (l + r) >> 1;
+                if logs[mid] < logs[i] + log_k - 1e-12 {
+                    l = mid + 1;
+                } else {
+                    r = mid;
+                }
+            }
+            res += (l - (i + 1)) as i32;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,9 +515,9 @@ Since all numbers are positive, the product of a subarray increases as we add el
 
 1. Initialize `l = 0`, `product = 1`, and `res = 0`.
 2. For each `r` from `0` to `n - 1`:
-   - Multiply `product` by `nums[r]`.
-   - While `product >= k` and `l <= r`, divide `product` by `nums[l]` and increment `l`.
-   - Add `r - l + 1` to `res` (this counts all subarrays ending at `r` with product < k).
+    - Multiply `product` by `nums[r]`.
+    - While `product >= k` and `l <= r`, divide `product` by `nums[l]` and increment `l`.
+    - Add `r - l + 1` to `res` (this counts all subarrays ending at `r` with product < k).
 3. Return `res`.
 
 ::tabs-start
@@ -609,6 +665,26 @@ class Solution {
             res += r - l + 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_subarray_product_less_than_k(nums: Vec<i32>, k: i32) -> i32 {
+        let mut res = 0;
+        let mut l = 0usize;
+        let mut product = 1i64;
+        let k = k as i64;
+        for r in 0..nums.len() {
+            product *= nums[r] as i64;
+            while l <= r && product >= k {
+                product /= nums[l] as i64;
+                l += 1;
+            }
+            res += (r - l + 1) as i32;
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array (Grid) Traversal** - Iterating through rows and columns of a matrix
 - **Depth First Search (DFS)** - Recursive exploration of connected components in a grid
 - **Breadth First Search (BFS)** - Level-by-level traversal using a queue
@@ -17,9 +19,9 @@ The perimeter of an island comes from the edges of land cells that touch either 
 1. Traverse the grid to find the first land cell.
 2. Start `dfs` from that cell, marking cells as visited.
 3. For each cell in the `dfs`:
-   - If out of bounds or water, return `1` (found a perimeter edge).
-   - If already visited, return `0`.
-   - Otherwise, mark as visited and recursively call `dfs` on all four neighbors.
+    - If out of bounds or water, return `1` (found a perimeter edge).
+    - If already visited, return `0`.
+    - Otherwise, mark as visited and recursively call `dfs` on all four neighbors.
 4. Sum up the returned values to get the total perimeter.
 
 ::tabs-start
@@ -303,6 +305,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn island_perimeter(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut visited = vec![vec![false; cols]; rows];
+
+        fn dfs(
+            grid: &[Vec<i32>],
+            visited: &mut Vec<Vec<bool>>,
+            i: i32,
+            j: i32,
+            rows: i32,
+            cols: i32,
+        ) -> i32 {
+            if i < 0 || j < 0 || i >= rows || j >= cols
+                || grid[i as usize][j as usize] == 0
+            {
+                return 1;
+            }
+            if visited[i as usize][j as usize] {
+                return 0;
+            }
+            visited[i as usize][j as usize] = true;
+            dfs(grid, visited, i, j + 1, rows, cols)
+                + dfs(grid, visited, i + 1, j, rows, cols)
+                + dfs(grid, visited, i, j - 1, rows, cols)
+                + dfs(grid, visited, i - 1, j, rows, cols)
+        }
+
+        let (r, c) = (rows as i32, cols as i32);
+        for i in 0..rows {
+            for j in 0..cols {
+                if grid[i][j] == 1 {
+                    return dfs(&grid, &mut visited, i as i32, j as i32, r, c);
+                }
+            }
+        }
+        0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,9 +370,9 @@ BFS offers a level-by-level traversal of the island. Starting from any land cell
 1. Find the first land cell and initialize a queue with it.
 2. Use a `visited` set to avoid reprocessing cells.
 3. While the queue is not empty:
-   - Dequeue a cell and check all four neighbors.
-   - If a neighbor is out of bounds or water, increment the perimeter.
-   - If a neighbor is unvisited land, mark it visited and enqueue it.
+    - Dequeue a cell and check all four neighbors.
+    - If a neighbor is out of bounds or water, increment the perimeter.
+    - If a neighbor is unvisited land, mark it visited and enqueue it.
 4. Return the accumulated perimeter.
 
 ::tabs-start
@@ -676,6 +721,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn island_perimeter(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut visited = vec![vec![false; cols]; rows];
+        let directions = [(0i32, 1i32), (1, 0), (0, -1), (-1, 0)];
+
+        for i in 0..rows {
+            for j in 0..cols {
+                if grid[i][j] == 1 {
+                    let mut queue = VecDeque::new();
+                    queue.push_back((i, j));
+                    visited[i][j] = true;
+                    let mut perimeter = 0;
+
+                    while let Some((x, y)) = queue.pop_front() {
+                        for &(dx, dy) in &directions {
+                            let nx = x as i32 + dx;
+                            let ny = y as i32 + dy;
+                            if nx < 0
+                                || ny < 0
+                                || nx >= rows as i32
+                                || ny >= cols as i32
+                                || grid[nx as usize][ny as usize] == 0
+                            {
+                                perimeter += 1;
+                            } else {
+                                let (ux, uy) = (nx as usize, ny as usize);
+                                if !visited[ux][uy] {
+                                    visited[ux][uy] = true;
+                                    queue.push_back((ux, uy));
+                                }
+                            }
+                        }
+                    }
+                    return perimeter;
+                }
+            }
+        }
+        0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -698,7 +788,7 @@ Instead of graph traversal, we can directly iterate through every cell. For each
 1. Initialize a perimeter counter to `0`.
 2. Iterate through every cell in the grid.
 3. For each land cell, check all four directions:
-   - Add `1` to the perimeter if the neighbor is out of bounds or water.
+    - Add `1` to the perimeter if the neighbor is out of bounds or water.
 4. Return the total perimeter.
 
 ::tabs-start
@@ -871,6 +961,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn island_perimeter(grid: Vec<Vec<i32>>) -> i32 {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut res = 0;
+        for i in 0..m {
+            for j in 0..n {
+                if grid[i][j] == 1 {
+                    if i + 1 >= m || grid[i + 1][j] == 0 { res += 1; }
+                    if j + 1 >= n || grid[i][j + 1] == 0 { res += 1; }
+                    if i == 0 || grid[i - 1][j] == 0 { res += 1; }
+                    if j == 0 || grid[i][j - 1] == 0 { res += 1; }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -893,9 +1004,9 @@ Every land cell contributes `4` to the perimeter initially. However, when two la
 1. Initialize perimeter to `0`.
 2. Iterate through every cell in the grid.
 3. For each land cell:
-   - Add `4` to the perimeter.
-   - If the cell above is also land, subtract `2`.
-   - If the cell to the left is also land, subtract `2`.
+    - Add `4` to the perimeter.
+    - If the cell above is also land, subtract `2`.
+    - If the cell to the left is also land, subtract `2`.
 4. Return the total perimeter.
 
 ::tabs-start
@@ -1081,6 +1192,30 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn island_perimeter(grid: Vec<Vec<i32>>) -> i32 {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut res = 0;
+        for r in 0..m {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    res += 4;
+                    if r > 0 && grid[r - 1][c] == 1 {
+                        res -= 2;
+                    }
+                    if c > 0 && grid[r][c - 1] == 1 {
+                        res -= 2;
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```

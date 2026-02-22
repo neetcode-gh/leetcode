@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Used to track unique palindromic subsequences and avoid duplicates
 - **String Traversal** - Iterating through strings and accessing characters by index
 - **Prefix Sum (for optimal solutions)** - Precomputing character counts to efficiently query ranges
@@ -18,9 +20,9 @@ A length-3 palindrome has the form `aba` where the first and third characters ar
 1. Use a set to store unique palindromic subsequences.
 2. Define a recursive function `rec(i, cur)` where `i` is the current index and `cur` is the current subsequence being built.
 3. If `cur` has length `3`:
-   - Check if it's a palindrome (first and last characters match).
-   - If yes, add it to the set.
-   - Return.
+    - Check if it's a palindrome (first and last characters match).
+    - If yes, add it to the set.
+    - Return.
 4. If `i` reaches the end of the string, return.
 5. Make two recursive calls: skip the current character, or include it.
 6. Start with `rec(0, "")` and return the size of the set.
@@ -227,6 +229,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = HashSet::new();
+
+        fn rec(s: &[u8], i: usize, cur: &mut Vec<u8>, res: &mut HashSet<[u8; 3]>) {
+            if cur.len() == 3 {
+                if cur[0] == cur[2] {
+                    res.insert([cur[0], cur[1], cur[2]]);
+                }
+                return;
+            }
+            if i == s.len() {
+                return;
+            }
+            rec(s, i + 1, cur, res);
+            cur.push(s[i]);
+            rec(s, i + 1, cur, res);
+            cur.pop();
+        }
+
+        let mut cur = Vec::new();
+        rec(s, 0, &mut cur, &mut res);
+        res.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,9 +279,9 @@ Instead of generating all subsequences recursively, we can use three nested loop
 
 1. Use a set to store unique palindromic subsequences.
 2. For each index `i` from `0` to `n-3`:
-   - For each index `j` from `i+1` to `n-2`:
-     - For each index `k` from `j+1` to `n-1`:
-       - If `s[i] == s[k]`, add the string `s[i] + s[j] + s[k]` to the set.
+    - For each index `j` from `i+1` to `n-2`:
+        - For each index `k` from `j+1` to `n-1`:
+            - If `s[i] == s[k]`, add the string `s[i] + s[j] + s[k]` to the set.
 3. Return the size of the set.
 
 ::tabs-start
@@ -413,6 +444,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = HashSet::new();
+
+        for i in 0..s.len().saturating_sub(2) {
+            for j in (i + 1)..s.len().saturating_sub(1) {
+                for k in (j + 1)..s.len() {
+                    if s[i] != s[k] {
+                        continue;
+                    }
+                    res.insert([s[i], s[j], s[k]]);
+                }
+            }
+        }
+        res.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -428,16 +480,16 @@ class Solution {
 
 ### Intuition
 
-Since we only have 26 lowercase letters, there are at most 26 * 26 = 676 possible palindromes of length 3 (26 choices for the end characters, 26 for the middle). We can check each potential palindrome by scanning the string once to see if it exists as a subsequence.
+Since we only have 26 lowercase letters, there are at most 26 \* 26 = 676 possible palindromes of length 3 (26 choices for the end characters, 26 for the middle). We can check each potential palindrome by scanning the string once to see if it exists as a subsequence.
 
 ### Algorithm
 
 1. Initialize `res = 0`.
 2. For each possible end character (a to z):
-   - For each possible middle character (a to z):
-     - Form the palindrome string `ends + mid + ends`.
-     - Scan through the input string trying to match this `3`-character sequence in order.
-     - If matched, increment `res`.
+    - For each possible middle character (a to z):
+        - Form the palindrome string `ends + mid + ends`.
+        - Scan through the input string trying to match this `3`-character sequence in order.
+        - If matched, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -647,6 +699,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = 0;
+        for ends in b'a'..=b'z' {
+            for mid in b'a'..=b'z' {
+                let seq = [ends, mid, ends];
+                let mut idx = 0;
+                for &c in s {
+                    if seq[idx] == c {
+                        idx += 1;
+                        if idx == 3 {
+                            break;
+                        }
+                    }
+                }
+                if idx == 3 {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -670,9 +749,9 @@ Instead of checking all possible palindromes, we can iterate through the string 
 2. Maintain a set of characters seen so far (characters to the left).
 3. Use a set to store unique palindromes found.
 4. For each character `s[i]` in the string:
-   - Decrement its count in the right frequency array.
-   - For each letter that appears in both left set and right array, add `(s[i], letter)` to the result set (representing the palindrome `letter + s[i] + letter`).
-   - Add `s[i]` to the left set.
+    - Decrement its count in the right frequency array.
+    - For each letter that appears in both left set and right array, add `(s[i], letter)` to the result set (representing the palindrome `letter + s[i] + letter`).
+    - Add `s[i]` to the left set.
 5. Return the size of the result set.
 
 ::tabs-start
@@ -921,6 +1000,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = HashSet::new();
+        let mut left = [false; 26];
+        let mut right = [0i32; 26];
+
+        for &c in s {
+            right[(c - b'a') as usize] += 1;
+        }
+
+        for &ch in s {
+            let idx = (ch - b'a') as usize;
+            right[idx] -= 1;
+
+            for j in 0..26 {
+                if left[j] && right[j] > 0 {
+                    res.insert((ch, j as u8));
+                }
+            }
+            left[idx] = true;
+        }
+
+        res.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -943,9 +1051,9 @@ We can precompute prefix counts for each character, allowing us to quickly deter
 1. Build a prefix count array where `prefix[i][c]` = count of character `c` in `s[0..i-1]`.
 2. Track the first and last index of each character.
 3. For each character that appears at least twice (has different first and last indices):
-   - Let `l = firstIndex` and `r = lastIndex`.
-   - For each possible middle character, check if `prefix[r][mid] - prefix[l+1][mid] > 0`.
-   - If yes, that palindrome exists; increment the result.
+    - Let `l = firstIndex` and `r = lastIndex`.
+    - For each possible middle character, check if `prefix[r][mid] - prefix[l+1][mid] > 0`.
+    - If yes, that palindrome exists; increment the result.
 4. Return the total count.
 
 ::tabs-start
@@ -1255,6 +1363,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut prefix = vec![[0i32; 26]; n + 1];
+        let mut first_index = [-1i32; 26];
+        let mut last_index = [-1i32; 26];
+
+        for i in 0..n {
+            let j = (s[i] - b'a') as usize;
+            if first_index[j] == -1 {
+                first_index[j] = i as i32;
+            }
+            last_index[j] = i as i32;
+            prefix[i + 1] = prefix[i];
+            prefix[i + 1][j] += 1;
+        }
+
+        let mut res = 0;
+        for ends in 0..26 {
+            if first_index[ends] == -1 || first_index[ends] == last_index[ends] {
+                continue;
+            }
+            let l = first_index[ends] as usize;
+            let r = last_index[ends] as usize;
+            for mid in 0..26 {
+                if prefix[r][mid] - prefix[l + 1][mid] > 0 {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1273,10 +1418,10 @@ For a length-3 palindrome with character `c` at both ends, we need at least two 
 ### Algorithm
 
 1. For each character `c` from 'a' to 'z':
-   - Find the first index `l` and last index `r` of `c` in the string.
-   - If `c` doesn't appear twice, skip it.
-   - Collect all distinct characters between indices `l+1` and `r-1` into a set.
-   - Add the size of this set to the result.
+    - Find the first index `l` and last index `r` of `c` in the string.
+    - If `c` doesn't appear twice, skip it.
+    - Collect all distinct characters between indices `l+1` and `r-1` into a set.
+    - Add the size of this set to the result.
 2. Return the total result.
 
 ::tabs-start
@@ -1461,6 +1606,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = 0;
+
+        for c in b'a'..=b'z' {
+            let l = s.iter().position(|&x| x == c);
+            let r = s.iter().rposition(|&x| x == c);
+            if let (Some(l), Some(r)) = (l, r) {
+                if l == r {
+                    continue;
+                }
+                let mut mids = HashSet::new();
+                for j in (l + 1)..r {
+                    mids.insert(s[j]);
+                }
+                res += mids.len() as i32;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1480,11 +1651,11 @@ The previous approach uses a set to track distinct middle characters, which has 
 
 1. First pass: Record the first and last index of each character in the string.
 2. For each character that appears at least twice:
-   - Let `l = firstIndex` and `r = lastIndex`.
-   - Initialize a bitmask `mask = 0`.
-   - For each index from `l+1` to `r-1`:
-     - If the character at that index is not already in the mask, add it and increment the result.
-   - The mask tracks which middle characters we've already counted.
+    - Let `l = firstIndex` and `r = lastIndex`.
+    - Initialize a bitmask `mask = 0`.
+    - For each index from `l+1` to `r-1`:
+        - If the character at that index is not already in the mask, add it and increment the result.
+    - The mask tracks which middle characters we've already counted.
 3. Return the total count.
 
 ::tabs-start
@@ -1777,6 +1948,43 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_palindromic_subsequence(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut first_index = [-1i32; 26];
+        let mut last_index = [-1i32; 26];
+
+        for (i, &c) in s.iter().enumerate() {
+            let j = (c - b'a') as usize;
+            if first_index[j] == -1 {
+                first_index[j] = i as i32;
+            }
+            last_index[j] = i as i32;
+        }
+
+        let mut res = 0;
+        for ends in 0..26 {
+            if first_index[ends] == -1 || first_index[ends] == last_index[ends] {
+                continue;
+            }
+            let l = first_index[ends] as usize;
+            let r = last_index[ends] as usize;
+            let mut mask = 0u32;
+            for i in (l + 1)..r {
+                let c = (s[i] - b'a') as u32;
+                if mask & (1 << c) != 0 {
+                    continue;
+                }
+                mask |= 1 << c;
+                res += 1;
+            }
+        }
+        res
     }
 }
 ```

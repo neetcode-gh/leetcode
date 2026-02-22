@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Indexing and Slicing** - Extracting characters or substrings from specific positions in a string
 - **String to Integer Conversion** - Parsing numeric characters into integer values
 - **ASCII Character Arithmetic** - Converting digit characters to their numeric values using ASCII codes
@@ -16,9 +18,9 @@ Each passenger detail string has a fixed format where the age is encoded at posi
 
 1. Initialize a counter `res` to `0`.
 2. For each detail string `d`:
-   - Extract the substring from index `11` to `13` (exclusive).
-   - Parse it as an integer.
-   - If the value is greater than `60`, increment `res`.
+    - Extract the substring from index `11` to `13` (exclusive).
+    - Parse it as an integer.
+    - If the value is greater than `60`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -137,6 +139,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_seniors(details: Vec<String>) -> i32 {
+        let mut res = 0;
+        for d in &details {
+            let age: i32 = d[11..13].parse().unwrap();
+            if age > 60 {
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -156,10 +173,10 @@ Instead of creating a substring and parsing it, we can directly extract the two 
 
 1. Initialize a counter `res` to `0`.
 2. For each detail string `d`:
-   - Get the character at index `11` and convert to its numeric value: `ten = d[11] - '0'`.
-   - Get the character at index `12` and convert to its numeric value: `one = d[12] - '0'`.
-   - Compute `age = 10 * ten + one`.
-   - If `age > 60`, increment `res`.
+    - Get the character at index `11` and convert to its numeric value: `ten = d[11] - '0'`.
+    - Get the character at index `12` and convert to its numeric value: `one = d[12] - '0'`.
+    - Compute `age = 10 * ten + one`.
+    - If `age > 60`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -296,6 +313,24 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_seniors(details: Vec<String>) -> i32 {
+        let mut res = 0;
+        for d in &details {
+            let bytes = d.as_bytes();
+            let ten = (bytes[11] - b'0') as i32;
+            let one = (bytes[12] - b'0') as i32;
+            let age = one + 10 * ten;
+            if age > 60 {
+                res += 1;
+            }
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy Algorithms** - Making locally optimal choices to achieve a global optimum
 - **Sorting** - Ordering elements to prioritize selection of the best candidates
 - **Modular Arithmetic** - Understanding how positions repeat in tiled patterns using modulo operations
@@ -20,9 +22,9 @@ For each position `(r, c)` in the pattern, we calculate how many times it appear
 ### Algorithm
 
 1. For each position `(r, c)` in the `sideLength x sideLength` pattern:
-   - Calculate how many times this position appears horizontally: `(1 + (width - c - 1) / sideLength)`.
-   - Calculate how many times it appears vertically: `(1 + (height - r - 1) / sideLength)`.
-   - Multiply these to get the total count for this position.
+    - Calculate how many times this position appears horizontally: `(1 + (width - c - 1) / sideLength)`.
+    - Calculate how many times it appears vertically: `(1 + (height - r - 1) / sideLength)`.
+    - Multiply these to get the total count for this position.
 2. Collect all counts into a list.
 3. Sort the counts in descending order.
 4. Sum the top `maxOnes` counts to get the maximum number of ones possible.
@@ -33,12 +35,12 @@ For each position `(r, c)` in the pattern, we calculate how many times it appear
 class Solution:
     def maximumNumberOfOnes(self, width: int, height: int, sideLength: int, maxOnes: int) -> int:
         count = []
-        
+
         for r in range(sideLength):
             for c in range(sideLength):
                 num = (1 + (width - c - 1) // sideLength) * (1 + (height - r - 1) // sideLength)
                 count.append(num)
-                
+
         count.sort(reverse=True)
         return sum(count[:maxOnes])
 ```
@@ -47,19 +49,19 @@ class Solution:
 class Solution {
     public int maximumNumberOfOnes(int width, int height, int sideLength, int maxOnes) {
         List<Integer> count = new ArrayList<>();
-        
+
         for (int r = 0; r < sideLength; ++r) {
             for (int c = 0; c < sideLength; ++c) {
-                count.add((1 + (width - 1 - c) / sideLength) * (1 + (height - 1 - r) / sideLength));   
+                count.add((1 + (width - 1 - c) / sideLength) * (1 + (height - 1 - r) / sideLength));
             }
         }
-        
+
         count.sort(Comparator.reverseOrder());
         int answer = 0;
         for (int i = 0; i < maxOnes; ++i) {
             answer += count.get(i);
         }
-        
+
         return answer;
     }
 }
@@ -70,21 +72,21 @@ class Solution {
 public:
     int maximumNumberOfOnes(int width, int height, int sideLength, int maxOnes) {
         vector<int> count;
-        
+
         for (int r = 0; r < sideLength; ++r) {
             for (int c = 0; c < sideLength; ++c) {
-                count.push_back((1 + (width - 1 - c) / sideLength) * 
+                count.push_back((1 + (width - 1 - c) / sideLength) *
                                 (1 + (height - 1 - r) / sideLength));
             }
         }
-        
+
         sort(count.begin(), count.end(), greater<int>());
-        
+
         int answer = 0;
         for (int i = 0; i < maxOnes; ++i) {
             answer += count[i];
         }
-        
+
         return answer;
     }
 };
@@ -104,8 +106,10 @@ class Solution {
 
         for (let r = 0; r < sideLength; ++r) {
             for (let c = 0; c < sideLength; ++c) {
-                count.push((1 + Math.floor((width - 1 - c) / sideLength)) *
-                           (1 + Math.floor((height - 1 - r) / sideLength)));
+                count.push(
+                    (1 + Math.floor((width - 1 - c) / sideLength)) *
+                        (1 + Math.floor((height - 1 - r) / sideLength)),
+                );
             }
         }
 
@@ -214,6 +218,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_number_of_ones(width: i32, height: i32, side_length: i32, max_ones: i32) -> i32 {
+        let mut count = Vec::new();
+
+        for r in 0..side_length {
+            for c in 0..side_length {
+                count.push(
+                    (1 + (width - 1 - c) / side_length)
+                        * (1 + (height - 1 - r) / side_length),
+                );
+            }
+        }
+
+        count.sort_unstable_by(|a, b| b.cmp(a));
+
+        let mut answer = 0;
+        for i in 0..max_ones as usize {
+            answer += count[i];
+        }
+
+        answer
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -229,6 +259,7 @@ class Solution {
 ### Intuition
 
 Instead of computing and sorting all positions, we can directly calculate the answer by analyzing the structure of the tiled matrix. The matrix divides into regions based on how the `sideLength` pattern tiles:
+
 - Full tiles that appear `(height / sideLength) * (width / sideLength)` times.
 - Partial tiles along the right edge, bottom edge, and bottom-right corner.
 
@@ -277,16 +308,16 @@ class Solution {
     public int maximumNumberOfOnes(int width, int height, int sideLength, int maxOnes) {
         int answer = maxOnes * ((height / sideLength) * (width / sideLength));
         int remain = maxOnes;
-        
+
         int cnt1 = Math.min((height % sideLength) * (width % sideLength), remain);
         answer += ((height / sideLength) + (width / sideLength) + 1) * cnt1;
         remain -= cnt1;
-        
+
         if (height / sideLength > width / sideLength) {
             int cnt2 = Math.min(((width % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (height / sideLength) * cnt2;
             remain -= cnt2;
-            
+
             int cnt3 = Math.min(((height % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (width / sideLength) * cnt3;
             remain -= cnt3;
@@ -294,12 +325,12 @@ class Solution {
             int cnt2 = Math.min(((height % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (width / sideLength) * cnt2;
             remain -= cnt2;
-            
+
             int cnt3 = Math.min(((width % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (height / sideLength) * cnt3;
             remain -= cnt3;
         }
-        
+
         return answer;
     }
 }
@@ -311,16 +342,16 @@ public:
     int maximumNumberOfOnes(int width, int height, int sideLength, int maxOnes) {
         int answer = maxOnes * ((height / sideLength) * (width / sideLength));
         int remain = maxOnes;
-        
+
         int cnt1 = min((height % sideLength) * (width % sideLength), remain);
         answer += ((height / sideLength) + (width / sideLength) + 1) * cnt1;
         remain -= cnt1;
-        
+
         if (height / sideLength > width / sideLength) {
             int cnt2 = min(((width % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (height / sideLength) * cnt2;
             remain -= cnt2;
-            
+
             int cnt3 = min(((height % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (width / sideLength) * cnt3;
             remain -= cnt3;
@@ -328,12 +359,12 @@ public:
             int cnt2 = min(((height % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (width / sideLength) * cnt2;
             remain -= cnt2;
-            
+
             int cnt3 = min(((width % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
             answer += (height / sideLength) * cnt3;
             remain -= cnt3;
         }
-        
+
         return answer;
     }
 };
@@ -349,27 +380,52 @@ class Solution {
      * @return {number}
      */
     maximumNumberOfOnes(width, height, sideLength, maxOnes) {
-        let answer = maxOnes * (Math.floor(height / sideLength) * Math.floor(width / sideLength));
+        let answer =
+            maxOnes *
+            (Math.floor(height / sideLength) * Math.floor(width / sideLength));
         let remain = maxOnes;
 
-        let cnt1 = Math.min((height % sideLength) * (width % sideLength), remain);
-        answer += (Math.floor(height / sideLength) + Math.floor(width / sideLength) + 1) * cnt1;
+        let cnt1 = Math.min(
+            (height % sideLength) * (width % sideLength),
+            remain,
+        );
+        answer +=
+            (Math.floor(height / sideLength) +
+                Math.floor(width / sideLength) +
+                1) *
+            cnt1;
         remain -= cnt1;
 
         if (Math.floor(height / sideLength) > Math.floor(width / sideLength)) {
-            let cnt2 = Math.min(((width % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
+            let cnt2 = Math.min(
+                (width % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
             answer += Math.floor(height / sideLength) * cnt2;
             remain -= cnt2;
 
-            let cnt3 = Math.min(((height % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
+            let cnt3 = Math.min(
+                (height % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
             answer += Math.floor(width / sideLength) * cnt3;
             remain -= cnt3;
         } else {
-            let cnt2 = Math.min(((height % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
+            let cnt2 = Math.min(
+                (height % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
             answer += Math.floor(width / sideLength) * cnt2;
             remain -= cnt2;
 
-            let cnt3 = Math.min(((width % sideLength) * sideLength) - ((height % sideLength) * (width % sideLength)), remain);
+            let cnt3 = Math.min(
+                (width % sideLength) * sideLength -
+                    (height % sideLength) * (width % sideLength),
+                remain,
+            );
             answer += Math.floor(height / sideLength) * cnt3;
             remain -= cnt3;
         }
@@ -505,6 +561,45 @@ class Solution {
         }
 
         return answer
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_number_of_ones(width: i32, height: i32, side_length: i32, max_ones: i32) -> i32 {
+        let mut answer = max_ones * ((height / side_length) * (width / side_length));
+        let mut remain = max_ones;
+
+        let cnt1 = ((height % side_length) * (width % side_length)).min(remain);
+        answer += ((height / side_length) + (width / side_length) + 1) * cnt1;
+        remain -= cnt1;
+
+        if height / side_length > width / side_length {
+            let cnt2 = (((width % side_length) * side_length)
+                - ((height % side_length) * (width % side_length)))
+            .min(remain);
+            answer += (height / side_length) * cnt2;
+            remain -= cnt2;
+
+            let cnt3 = (((height % side_length) * side_length)
+                - ((height % side_length) * (width % side_length)))
+            .min(remain);
+            answer += (width / side_length) * cnt3;
+        } else {
+            let cnt2 = (((height % side_length) * side_length)
+                - ((height % side_length) * (width % side_length)))
+            .min(remain);
+            answer += (width / side_length) * cnt2;
+            remain -= cnt2;
+
+            let cnt3 = (((width % side_length) * side_length)
+                - ((height % side_length) * (width % side_length)))
+            .min(remain);
+            answer += (height / side_length) * cnt3;
+        }
+
+        answer
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Searching on the answer space when the problem has monotonic properties
 - **Prefix Sum** - Computing cumulative sums to analyze constraints across array segments
 - **Greedy Algorithms** - Understanding how local optimal choices lead to global optimal solutions
@@ -18,8 +20,8 @@ Since the answer lies between 0 and the maximum element, we can binary search fo
 
 1. Binary search on the answer between `0` and `max(nums)`.
 2. For each candidate maximum `mid`, check validity:
-   - Iterate through the array maintaining a running `prefix_sum`.
-   - If at any index `i`, the `prefix_sum` exceeds `mid * (i + 1)`, the candidate is too small.
+    - Iterate through the array maintaining a running `prefix_sum`.
+    - If at any index `i`, the `prefix_sum` exceeds `mid * (i + 1)`, the candidate is too small.
 3. If valid, try a smaller maximum. If invalid, try a larger one.
 4. Return the smallest valid maximum.
 
@@ -271,6 +273,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimize_array_value(nums: Vec<i32>) -> i32 {
+        let is_valid = |max_val: i32| -> bool {
+            let mut prefix_sum: i64 = 0;
+            for i in 0..nums.len() {
+                prefix_sum += nums[i] as i64;
+                if prefix_sum > max_val as i64 * (i as i64 + 1) {
+                    return false;
+                }
+            }
+            true
+        };
+
+        let mut left = 0;
+        let mut right = *nums.iter().max().unwrap();
+
+        while left < right {
+            let mid = left + (right - left) / 2;
+            if is_valid(mid) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        left
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,9 +327,9 @@ The overall answer is the maximum of these values across all prefixes. We cannot
 
 1. Initialize `res` and `total` with the first element (the first element cannot be reduced).
 2. For each subsequent index `i`:
-   - Add `nums[i]` to the running `total`.
-   - Compute the ceiling of `total / (i + 1)`.
-   - Update `res` to be the maximum of itself and this ceiling.
+    - Add `nums[i]` to the running `total`.
+    - Compute the ceiling of `total / (i + 1)`.
+    - Update `res` to be the maximum of itself and this ceiling.
 3. Return `res`.
 
 ::tabs-start
@@ -428,6 +461,23 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimize_array_value(nums: Vec<i32>) -> i32 {
+        let mut res = nums[0];
+        let mut total = nums[0] as i64;
+
+        for i in 1..nums.len() {
+            total += nums[i] as i64;
+            let ceil = ((total + i as i64) / (i as i64 + 1)) as i32;
+            res = res.max(ceil);
+        }
+
+        res
     }
 }
 ```

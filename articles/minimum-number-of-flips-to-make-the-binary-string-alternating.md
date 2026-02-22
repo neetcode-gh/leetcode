@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Efficiently processing subarrays/substrings by maintaining a window of fixed or variable size
 - **String Manipulation** - Working with rotations and pattern matching in strings
 - **Modular Arithmetic** - Using mod operator to simulate circular array traversal
@@ -19,9 +21,9 @@ We generate both alternating patterns of length `n`, then for each of the `n` po
 
 1. Build two target patterns: `alt1` starting with `'0'` and `alt2` starting with `'1'`.
 2. For each rotation index `i` from `0` to `n-1`:
-   - Create the rotated string by moving the first `i` characters to the end.
-   - Count mismatches with both `alt1` and `alt2`.
-   - Update the minimum flip count.
+    - Create the rotated string by moving the first `i` characters to the end.
+    - Count mismatches with both `alt1` and `alt2`.
+    - Update the minimum flip count.
 3. Return the minimum found.
 
 ::tabs-start
@@ -279,6 +281,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_flips(s: String) -> i32 {
+        let n = s.len();
+        let s = s.as_bytes();
+        let mut res = n as i32;
+        let alt1: Vec<u8> = (0..n).map(|i| if i % 2 == 0 { b'0' } else { b'1' }).collect();
+        let alt2: Vec<u8> = (0..n).map(|i| if i % 2 == 0 { b'1' } else { b'0' }).collect();
+
+        let diff = |a: &[u8], b: &[u8]| -> i32 {
+            a.iter().zip(b.iter()).filter(|(x, y)| x != y).count() as i32
+        };
+
+        for i in 0..n {
+            let new_s: Vec<u8> = s[i..].iter().chain(s[..i].iter()).copied().collect();
+            res = res.min(diff(&alt1, &new_s).min(diff(&alt2, &new_s)));
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,10 +324,10 @@ This saves the O(n) space needed to store rotated strings while maintaining the 
 ### Algorithm
 
 1. For each starting position `i`:
-   - Initialize counters for mismatches against `"010..."` and `"101..."`.
-   - Walk through `n` characters using modular indexing `(i + k) % n`.
-   - Toggle the expected character as we go.
-   - Track the minimum between both pattern mismatches.
+    - Initialize counters for mismatches against `"010..."` and `"101..."`.
+    - Walk through `n` characters using modular indexing `(i + k) % n`.
+    - Toggle the expected character as we go.
+    - Track the minimum between both pattern mismatches.
 2. Return the overall minimum.
 
 ::tabs-start
@@ -539,6 +564,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_flips(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = n as i32;
+
+        for i in 0..n {
+            let mut start0 = if s[i] != b'0' { 1 } else { 0 };
+            let mut start1 = if s[i] != b'1' { 1 } else { 0 };
+            let mut c = b'0';
+            let mut j = (i + 1) % n;
+
+            while j != i {
+                if s[j] != c { start1 += 1; }
+                if s[j] == c { start0 += 1; }
+                c = if c == b'1' { b'0' } else { b'1' };
+                j = (j + 1) % n;
+            }
+
+            res = res.min(start1.min(start0));
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,9 +614,9 @@ This transforms the O(n^2) brute force into O(n) by avoiding recalculation of th
 1. Double the string: `s = s + s`.
 2. Build alternating patterns of length `2n`.
 3. Use two pointers `l` and `r` to maintain a window of size `n`:
-   - As `r` expands, update `diff1` and `diff2` based on mismatches at position `r`.
-   - When window exceeds size `n`, remove contribution from position `l` and advance `l`.
-   - When window is exactly size `n`, record the minimum of `diff1` and `diff2`.
+    - As `r` expands, update `diff1` and `diff2` based on mismatches at position `r`.
+    - When window exceeds size `n`, remove contribution from position `l` and advance `l`.
+    - When window is exactly size `n`, record the minimum of `diff1` and `diff2`.
 4. Return the minimum.
 
 ::tabs-start
@@ -874,6 +927,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_flips(s: String) -> i32 {
+        let n = s.len();
+        let s = s.as_bytes();
+        let doubled: Vec<u8> = s.iter().chain(s.iter()).copied().collect();
+        let alt1: Vec<u8> = (0..doubled.len()).map(|i| if i % 2 == 0 { b'0' } else { b'1' }).collect();
+        let alt2: Vec<u8> = (0..doubled.len()).map(|i| if i % 2 == 0 { b'1' } else { b'0' }).collect();
+
+        let mut res = n as i32;
+        let (mut diff1, mut diff2, mut l) = (0i32, 0i32, 0usize);
+
+        for r in 0..doubled.len() {
+            if doubled[r] != alt1[r] { diff1 += 1; }
+            if doubled[r] != alt2[r] { diff2 += 1; }
+
+            if r - l + 1 > n {
+                if doubled[l] != alt1[l] { diff1 -= 1; }
+                if doubled[l] != alt2[l] { diff2 -= 1; }
+                l += 1;
+            }
+
+            if r - l + 1 == n {
+                res = res.min(diff1.min(diff2));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -895,10 +980,10 @@ Using modular indexing `s[r % n]` simulates the doubled string. We track the exp
 
 1. Initialize difference counters and window boundaries.
 2. For `r` from 0 to `2n - 1`:
-   - Compute expected character at position `r` for pattern starting with '0'.
-   - Update both mismatch counts based on whether `s[r % n]` matches.
-   - If window exceeds size `n`, remove contribution from `s[l]` and advance `l`.
-   - When window equals size `n`, update minimum.
+    - Compute expected character at position `r` for pattern starting with '0'.
+    - Update both mismatch counts based on whether `s[r % n]` matches.
+    - If window exceeds size `n`, remove contribution from `s[l]` and advance `l`.
+    - When window equals size `n`, update minimum.
 3. Toggle expected characters as window slides.
 
 ::tabs-start
@@ -1186,6 +1271,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_flips(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = n as i32;
+        let (mut diff1, mut diff2, mut l) = (0i32, 0i32, 0usize);
+        let mut rstart_0 = b'0';
+        let mut lstart_0 = b'0';
+
+        for r in 0..2 * n {
+            if s[r % n] != rstart_0 { diff1 += 1; }
+            if s[r % n] == rstart_0 { diff2 += 1; }
+
+            if r - l + 1 > n {
+                if s[l] != lstart_0 { diff1 -= 1; }
+                if s[l] == lstart_0 { diff2 -= 1; }
+                l += 1;
+                lstart_0 = if lstart_0 == b'0' { b'1' } else { b'0' };
+            }
+
+            if r - l + 1 == n {
+                res = res.min(diff1.min(diff2));
+            }
+
+            rstart_0 = if rstart_0 == b'0' { b'1' } else { b'0' };
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1209,9 +1327,9 @@ For odd-length strings, rotating changes parity. After one rotation, positions t
 2. Compute `start_0 = n - start_1` for pattern `"010..."`.
 3. If `n` is even, rotations do not change the answer, so return `min(start_0, start_1)`.
 4. For odd `n`, simulate each rotation:
-   - Swap `dp0` and `dp1` (parity flip).
-   - Adjust counts based on the character that rotated.
-   - Track minimum across all rotations.
+    - Swap `dp0` and `dp1` (parity flip).
+    - Adjust counts based on the character that rotated.
+    - Track minimum across all rotations.
 
 ::tabs-start
 
@@ -1531,6 +1649,45 @@ class Solution {
         }
 
         return ans
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_flips(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len() as i32;
+
+        let mut start_1 = 0i32;
+        for i in 0..n as usize {
+            if i & 1 == 1 {
+                start_1 += if s[i] == b'1' { 1 } else { 0 };
+            } else {
+                start_1 += if s[i] == b'0' { 1 } else { 0 };
+            }
+        }
+
+        let start_0 = n - start_1;
+        let mut ans = start_0.min(start_1);
+        if n % 2 == 0 {
+            return ans;
+        }
+
+        let (mut dp0, mut dp1) = (start_0, start_1);
+        for &c in s.iter() {
+            std::mem::swap(&mut dp0, &mut dp1);
+            if c == b'1' {
+                dp0 += 1;
+                dp1 -= 1;
+            } else {
+                dp0 -= 1;
+                dp1 += 1;
+            }
+            ans = ans.min(dp0.min(dp1));
+        }
+
+        ans
     }
 }
 ```

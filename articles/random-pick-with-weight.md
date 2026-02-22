@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - Used to build cumulative weight ranges for efficient probability mapping
 - **Binary Search** - Required for the optimized O(log n) solution to find the target weight segment
 - **Probability Concepts** - Understanding weighted random selection where larger weights have proportionally higher selection chances
@@ -16,9 +18,9 @@ To pick an index with probability proportional to its weight, imagine laying all
 
 1. In the constructor, store the weights and compute their total sum.
 2. For `pickIndex()`:
-   - Generate a random number between `0` and the total sum.
-   - Iterate through weights, accumulating a running sum.
-   - Return the first index where the running sum exceeds the random target.
+    - Generate a random number between `0` and the total sum.
+    - Iterate through weights, accumulating a running sum.
+    - Return the first index where the running sum exceeds the random target.
 3. This linear scan takes `O(n)` per pick.
 
 ::tabs-start
@@ -215,12 +217,40 @@ class Solution {
 }
 ```
 
+```rust
+use rand::Rng;
+
+struct Solution {
+    w: Vec<i32>,
+    total: i32,
+}
+
+impl Solution {
+    fn new(w: Vec<i32>) -> Self {
+        let total = w.iter().sum();
+        Solution { w, total }
+    }
+
+    fn pick_index(&self) -> i32 {
+        let target = self.total as f64 * rand::thread_rng().gen::<f64>();
+        let mut cur_sum = 0;
+        for i in 0..self.w.len() {
+            cur_sum += self.w[i];
+            if cur_sum as f64 > target {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for initializing and $O(n)$ for each $pickIndex()$ function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ for initializing and $O(n)$ for each $pickIndex()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -234,9 +264,9 @@ The linear search can be optimized using binary search. By precomputing a prefix
 
 1. In the constructor, build a prefix sum array where `prefix[i]` is the sum of weights from index `0` to `i - 1`.
 2. For `pickIndex()`:
-   - Generate a random number between `0` and the total sum (last element of prefix array).
-   - Binary search for the leftmost index where the prefix sum exceeds the target.
-   - Return that index minus `1` (adjusting for the prefix array offset).
+    - Generate a random number between `0` and the total sum (last element of prefix array).
+    - Binary search for the leftmost index where the prefix sum exceeds the target.
+    - Return that index minus `1` (adjusting for the prefix array offset).
 3. This achieves `O(log n)` per pick.
 
 ::tabs-start
@@ -334,7 +364,8 @@ class Solution {
     pickIndex() {
         const total = this.prefix[this.prefix.length - 1];
         const target = total * Math.random();
-        let l = 1, r = this.prefix.length;
+        let l = 1,
+            r = this.prefix.length;
         while (l < r) {
             const mid = (l + r) >> 1;
             if (this.prefix[mid] <= target) {
@@ -457,12 +488,45 @@ class Solution {
 }
 ```
 
+```rust
+use rand::Rng;
+
+struct Solution {
+    prefix: Vec<i32>,
+}
+
+impl Solution {
+    fn new(w: Vec<i32>) -> Self {
+        let mut prefix = vec![0];
+        for &wgt in &w {
+            prefix.push(*prefix.last().unwrap() + wgt);
+        }
+        Solution { prefix }
+    }
+
+    fn pick_index(&self) -> i32 {
+        let target = *self.prefix.last().unwrap() as f64
+            * rand::thread_rng().gen::<f64>();
+        let (mut l, mut r) = (1, self.prefix.len());
+        while l < r {
+            let mid = (l + r) >> 1;
+            if self.prefix[mid] as f64 <= target {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+        l as i32 - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for initializing and $O(\log n)$ for each $pickIndex()$ function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ for initializing and $O(\log n)$ for each $pickIndex()$ function call.
+- Space complexity: $O(n)$
 
 ---
 

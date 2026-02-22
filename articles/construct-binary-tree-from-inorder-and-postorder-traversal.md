@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversals** - Understanding inorder (left-root-right) and postorder (left-right-root) traversal orders
 - **Recursion / DFS** - Building trees recursively by dividing the problem into subtrees
 - **Hash Maps** - Mapping values to indices for O(1) lookup of root positions in inorder array
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 The last element of postorder is always the root. Once we identify the root, we find it in the inorder array. Everything to the left of the root in inorder belongs to the left subtree, and everything to the right belongs to the right subtree. We recursively apply this logic, slicing the arrays accordingly.
 
 ### Algorithm
+
 1. If `postorder` or `inorder` is empty, return `null`.
 2. Create the root node using the last element of `postorder`.
 3. Find the index `mid` of the root value in `inorder`.
@@ -308,6 +312,38 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn build_tree(inorder: Vec<i32>, postorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        if postorder.is_empty() || inorder.is_empty() {
+            return None;
+        }
+
+        let root_val = *postorder.last().unwrap();
+        let root = Rc::new(RefCell::new(TreeNode::new(root_val)));
+        let mid = inorder.iter().position(|&x| x == root_val).unwrap();
+
+        root.borrow_mut().left = Self::build_tree(
+            inorder[..mid].to_vec(),
+            postorder[..mid].to_vec(),
+        );
+        root.borrow_mut().right = Self::build_tree(
+            inorder[mid + 1..].to_vec(),
+            postorder[mid..postorder.len() - 1].to_vec(),
+        );
+
+        Some(root)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,16 +356,18 @@ class Solution {
 ## 2. Hash Map + Depth First Search
 
 ### Intuition
+
 The previous approach has O(n) lookup time when finding the root in `inorder`. By precomputing a hash map that stores each value's index in `inorder`, we achieve O(1) lookups. We also avoid creating new arrays by using index boundaries instead.
 
 ### Algorithm
+
 1. Build a hash map mapping each value in `inorder` to its index.
 2. Maintain a pointer `postIdx` starting at the end of `postorder`.
 3. Define `dfs(l, r)` that builds the tree for the `inorder` range `[l, r]`:
-   - If `l > r`, return `null`.
-   - Pop the current root from `postorder` (decrement `postIdx`), create a node.
-   - Find the root's index in `inorder` using the hash map.
-   - Build the right subtree first (since we're processing `postorder` from the end), then the left subtree.
+    - If `l > r`, return `null`.
+    - Pop the current root from `postorder` (decrement `postIdx`), create a node.
+    - Find the root's index in `inorder` using the hash map.
+    - Build the right subtree first (since we're processing `postorder` from the end), then the left subtree.
 4. Return the result of `dfs(0, n-1)`.
 
 ::tabs-start
@@ -633,6 +671,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_tree(inorder: Vec<i32>, postorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        let inorder_idx: HashMap<i32, usize> = inorder
+            .iter()
+            .enumerate()
+            .map(|(i, &v)| (v, i))
+            .collect();
+        let mut post_idx = postorder.len() as i32 - 1;
+
+        fn dfs(
+            l: i32, r: i32,
+            postorder: &[i32],
+            inorder_idx: &HashMap<i32, usize>,
+            post_idx: &mut i32,
+        ) -> Option<Rc<RefCell<TreeNode>>> {
+            if l > r {
+                return None;
+            }
+
+            let root_val = postorder[*post_idx as usize];
+            *post_idx -= 1;
+            let root = Rc::new(RefCell::new(TreeNode::new(root_val)));
+            let idx = *inorder_idx.get(&root_val).unwrap() as i32;
+            root.borrow_mut().right = dfs(idx + 1, r, postorder, inorder_idx, post_idx);
+            root.borrow_mut().left = dfs(l, idx - 1, postorder, inorder_idx, post_idx);
+            Some(root)
+        }
+
+        dfs(
+            0,
+            inorder.len() as i32 - 1,
+            &postorder,
+            &inorder_idx,
+            &mut post_idx,
+        )
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -645,17 +723,19 @@ class Solution {
 ## 3. Depth First Search (Optimal)
 
 ### Intuition
+
 We can eliminate the hash map by using a boundary-based approach. Instead of explicitly finding the root's position, we pass a "limit" value that tells us when to stop building the current subtree. When we encounter the limit in `inorder`, we know the current subtree is complete. This approach processes both arrays from right to left.
 
 ### Algorithm
+
 1. Initialize pointers `postIdx` and `inIdx` both at the last index.
 2. Define `dfs(limit)` that builds the subtree bounded by `limit`:
-   - If `postIdx < 0`, return `null`.
-   - If `inorder[inIdx]` equals `limit`, decrement `inIdx` and return `null` (subtree boundary reached).
-   - Create a node with `postorder[postIdx]`, decrement `postIdx`.
-   - Build the right subtree with limit set to the current node's value.
-   - Build the left subtree with the original limit.
-   - Return the node.
+    - If `postIdx < 0`, return `null`.
+    - If `inorder[inIdx]` equals `limit`, decrement `inIdx` and return `null` (subtree boundary reached).
+    - Create a node with `postorder[postIdx]`, decrement `postIdx`.
+    - Build the right subtree with limit set to the current node's value.
+    - Build the left subtree with the original limit.
+    - Return the node.
 3. Call `dfs` with an impossible limit value (like infinity) and return the result.
 
 ::tabs-start
@@ -974,6 +1054,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_tree(inorder: Vec<i32>, postorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut post_idx = postorder.len() as i32 - 1;
+        let mut in_idx = inorder.len() as i32 - 1;
+
+        fn dfs(
+            limit: i64,
+            inorder: &[i32],
+            postorder: &[i32],
+            post_idx: &mut i32,
+            in_idx: &mut i32,
+        ) -> Option<Rc<RefCell<TreeNode>>> {
+            if *post_idx < 0 {
+                return None;
+            }
+            if inorder[*in_idx as usize] as i64 == limit {
+                *in_idx -= 1;
+                return None;
+            }
+
+            let root_val = postorder[*post_idx as usize];
+            *post_idx -= 1;
+            let root = Rc::new(RefCell::new(TreeNode::new(root_val)));
+            root.borrow_mut().right = dfs(root_val as i64, inorder, postorder, post_idx, in_idx);
+            root.borrow_mut().left = dfs(limit, inorder, postorder, post_idx, in_idx);
+            Some(root)
+        }
+
+        dfs(i64::MAX, &inorder, &postorder, &mut post_idx, &mut in_idx)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -986,7 +1100,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Building Left Subtree Before Right When Using Postorder Index
+
 When processing postorder from right to left, you must build the right subtree before the left subtree. The postorder array is structured as `[left, right, root]`, so when traversing backwards, we encounter right subtree elements first.
+
 ```python
 # Wrong: Building left before right
 root.left = dfs(l, idx - 1)
@@ -998,7 +1114,9 @@ root.left = dfs(l, idx - 1)
 ```
 
 ### Off-by-One Errors in Array Slicing
+
 When slicing arrays for recursive calls, it's easy to miscalculate the postorder boundaries. The left subtree has `mid` elements, so `postorder[:mid]` is correct for the left subtree, and `postorder[mid:-1]` (excluding the root) is correct for the right subtree.
+
 ```python
 # Wrong: Including the root in right subtree
 root.right = self.buildTree(inorder[mid + 1:], postorder[mid:])
@@ -1008,4 +1126,5 @@ root.right = self.buildTree(inorder[mid + 1:], postorder[mid:-1])
 ```
 
 ### Assuming Preorder Logic Works for Postorder
+
 In preorder traversal, the root is at the beginning of the array, but in postorder, the root is at the end. Using `postorder[0]` instead of `postorder[-1]` as the root will produce an incorrect tree.

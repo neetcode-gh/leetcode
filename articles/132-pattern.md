@@ -211,6 +211,30 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find132pattern(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+
+        for k in 2..n {
+            for j in (1..k).rev() {
+                if nums[j] <= nums[k] {
+                    continue;
+                }
+
+                for i in (0..j).rev() {
+                    if nums[i] < nums[k] {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        false
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -422,6 +446,29 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find132pattern(nums: Vec<i32>) -> bool {
+        let mut stack: Vec<[i32; 2]> = Vec::new(); // pair [num, minLeft]
+        let mut cur_min = nums[0];
+
+        for i in 1..nums.len() {
+            while !stack.is_empty() && nums[i] >= stack.last().unwrap()[0] {
+                stack.pop();
+            }
+            if !stack.is_empty() && nums[i] > stack.last().unwrap()[1] {
+                return true;
+            }
+
+            stack.push([nums[i], cur_min]);
+            cur_min = cur_min.min(nums[i]);
+        }
+
+        false
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -624,6 +671,28 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find132pattern(nums: Vec<i32>) -> bool {
+        let mut stack: Vec<i32> = Vec::new();
+        let mut k = i32::MIN;
+
+        for i in (0..nums.len()).rev() {
+            if nums[i] < k {
+                return true;
+            }
+
+            while !stack.is_empty() && *stack.last().unwrap() < nums[i] {
+                k = stack.pop().unwrap();
+            }
+            stack.push(nums[i]);
+        }
+
+        false
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,6 +915,33 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find132pattern(nums: Vec<i32>) -> bool {
+        let mut nums = nums;
+        let n = nums.len();
+        let mut stk_top = n;
+        let mut k = i32::MIN;
+
+        for i in (0..n).rev() {
+            if nums[i] < k {
+                return true;
+            }
+
+            while stk_top < n && nums[i] > nums[stk_top] {
+                k = nums[stk_top];
+                stk_top += 1;
+            }
+
+            stk_top -= 1;
+            nums[stk_top] = nums[i];
+        }
+
+        false
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

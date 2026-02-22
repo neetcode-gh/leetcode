@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding preorder, inorder, and postorder traversal patterns
 - **Recursion** - Using recursive functions to traverse tree structures and collect nodes
 - **Stack Data Structure** - Using a stack to reverse the order of elements (for the right boundary)
@@ -9,19 +11,21 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Simple Solution
 
 ### Intuition
+
 The boundary of a binary tree consists of three parts traversed in order: the left boundary (top to bottom, excluding leaves), all leaf nodes (left to right), and the right boundary (bottom to top, excluding leaves). We handle each part separately: traverse down the left edge, collect all leaves via recursion, and traverse down the right edge while using a stack to reverse the order.
 
 ### Algorithm
+
 1. If the root is `null`, return an empty list.
 2. Add the root to the result if it is not a leaf.
 3. Traverse the left boundary:
-   - Start from `root.left` and keep moving left (or right if left is `null`).
-   - Add each non-leaf node to the result.
+    - Start from `root.left` and keep moving left (or right if left is `null`).
+    - Add each non-leaf node to the result.
 4. Collect all leaf nodes using a recursive helper that adds leaves left to right.
 5. Traverse the right boundary:
-   - Start from `root.right` and keep moving right (or left if right is `null`).
-   - Push each non-leaf node onto a stack.
-   - Pop all values from the stack and add them to the result (reversing the order).
+    - Start from `root.right` and keep moving right (or left if right is `null`).
+    - Push each non-leaf node onto a stack.
+    - Pop all values from the stack and add them to the result (reversing the order).
 6. Return the result.
 
 ::tabs-start
@@ -30,7 +34,7 @@ The boundary of a binary tree consists of three parts traversed in order: the le
 class Solution:
     def isLeaf(self, t: Optional[TreeNode]) -> bool:
         return t.left is None and t.right is None
-    
+
     def addLeaves(self, res: List[int], root: Optional[TreeNode]) -> None:
         if self.isLeaf(root):
             res.append(root.val)
@@ -39,15 +43,15 @@ class Solution:
                 self.addLeaves(res, root.left)
             if root.right is not None:
                 self.addLeaves(res, root.right)
-    
+
     def boundaryOfBinaryTree(self, root: Optional[TreeNode]) -> List[int]:
         res = []
         if root is None:
             return res
-        
+
         if not self.isLeaf(root):
             res.append(root.val)
-        
+
         t = root.left
         while t is not None:
             if not self.isLeaf(t):
@@ -56,9 +60,9 @@ class Solution:
                 t = t.left
             else:
                 t = t.right
-        
+
         self.addLeaves(res, root)
-        
+
         stack = []
         t = root.right
         while t is not None:
@@ -68,10 +72,10 @@ class Solution:
                 t = t.right
             else:
                 t = t.left
-        
+
         while stack:
             res.append(stack.pop())
-        
+
         return res
 ```
 
@@ -119,7 +123,7 @@ class Solution {
         }
 
         addLeaves(res, root);
-        
+
         Stack<Integer> s = new Stack<>();
         t = root.right;
         while (t != null) {
@@ -146,7 +150,7 @@ public:
     bool isLeaf(TreeNode* t) {
         return t->left == nullptr && t->right == nullptr;
     }
-    
+
     void addLeaves(vector<int>& res, TreeNode* root) {
         if (isLeaf(root)) {
             res.push_back(root->val);
@@ -159,17 +163,17 @@ public:
             }
         }
     }
-    
+
     vector<int> boundaryOfBinaryTree(TreeNode* root) {
         vector<int> res;
         if (root == nullptr) {
             return res;
         }
-        
+
         if (!isLeaf(root)) {
             res.push_back(root->val);
         }
-        
+
         TreeNode* t = root->left;
         while (t != nullptr) {
             if (!isLeaf(t)) {
@@ -181,9 +185,9 @@ public:
                 t = t->right;
             }
         }
-        
+
         addLeaves(res, root);
-        
+
         stack<int> s;
         t = root->right;
         while (t != nullptr) {
@@ -196,12 +200,12 @@ public:
                 t = t->left;
             }
         }
-        
+
         while (!s.empty()) {
             res.push_back(s.top());
             s.pop();
         }
-        
+
         return res;
     }
 };
@@ -446,6 +450,77 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn boundary_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let root = match root {
+            Some(r) => r,
+            None => return res,
+        };
+
+        if !Self::is_leaf(&root) {
+            res.push(root.borrow().val);
+        }
+
+        // Left boundary
+        let mut t = root.borrow().left.clone();
+        while let Some(node) = t {
+            if !Self::is_leaf(&node) {
+                res.push(node.borrow().val);
+            }
+            let next = if node.borrow().left.is_some() {
+                node.borrow().left.clone()
+            } else {
+                node.borrow().right.clone()
+            };
+            t = next;
+        }
+
+        // Leaves
+        Self::add_leaves(&root, &mut res);
+
+        // Right boundary (reversed)
+        let mut stack = Vec::new();
+        t = root.borrow().right.clone();
+        while let Some(node) = t {
+            if !Self::is_leaf(&node) {
+                stack.push(node.borrow().val);
+            }
+            let next = if node.borrow().right.is_some() {
+                node.borrow().right.clone()
+            } else {
+                node.borrow().left.clone()
+            };
+            t = next;
+        }
+        while let Some(val) = stack.pop() {
+            res.push(val);
+        }
+
+        res
+    }
+
+    fn is_leaf(node: &Rc<RefCell<TreeNode>>) -> bool {
+        let n = node.borrow();
+        n.left.is_none() && n.right.is_none()
+    }
+
+    fn add_leaves(node: &Rc<RefCell<TreeNode>>, res: &mut Vec<i32>) {
+        if Self::is_leaf(node) {
+            res.push(node.borrow().val);
+        } else {
+            if let Some(ref left) = node.borrow().left {
+                Self::add_leaves(left, res);
+            }
+            if let Some(ref right) = node.borrow().right {
+                Self::add_leaves(right, res);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -453,24 +528,26 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the tree
+> Where $n$ is the number of nodes in the tree
 
 ---
 
 ## 2. Using PreOrder Traversal
 
 ### Intuition
+
 We can collect all boundary nodes in a single preorder traversal by tracking where each node belongs. Using a flag system, we mark nodes as: root (`0`), left boundary (`1`), right boundary (`2`), or internal (`3`). During traversal, we determine each child's flag based on the parent's flag and whether siblings exist. Left boundary nodes go directly to the result, right boundary nodes are collected in reverse order, and leaves are gathered separately.
 
 ### Algorithm
+
 1. Create three lists: `left_boundary`, `right_boundary`, and `leaves`.
 2. Perform a preorder traversal with a flag indicating the node's role:
-   - If the node is on the right boundary (flag = `2`), prepend its value to `right_boundary`.
-   - If the node is on the left boundary or is the root (flag = `0` or `1`), append its value to `left_boundary`.
-   - If the node is a leaf and not already counted, append to `leaves`.
+    - If the node is on the right boundary (flag = `2`), prepend its value to `right_boundary`.
+    - If the node is on the left boundary or is the root (flag = `0` or `1`), append its value to `left_boundary`.
+    - If the node is a leaf and not already counted, append to `leaves`.
 3. For each child, calculate its flag:
-   - Left child inherits left boundary status, or becomes right boundary if it is the only child of a right boundary node.
-   - Right child inherits right boundary status, or becomes left boundary if it is the only child of a left boundary node.
+    - Left child inherits left boundary status, or becomes right boundary if it is the only child of a right boundary node.
+    - Right child inherits right boundary status, or becomes left boundary if it is the only child of a left boundary node.
 4. Concatenate `left_boundary + leaves + right_boundary` and return.
 
 ::tabs-start
@@ -483,19 +560,19 @@ class Solution:
         left_boundary.extend(leaves)
         left_boundary.extend(right_boundary)
         return left_boundary
-    
+
     def is_leaf(self, cur):
         return cur.left is None and cur.right is None
-    
+
     def is_right_boundary(self, flag):
         return flag == 2
-    
+
     def is_left_boundary(self, flag):
         return flag == 1
-    
+
     def is_root(self, flag):
         return flag == 0
-    
+
     def left_child_flag(self, cur, flag):
         if self.is_left_boundary(flag) or self.is_root(flag):
             return 1
@@ -503,7 +580,7 @@ class Solution:
             return 2
         else:
             return 3
-    
+
     def right_child_flag(self, cur, flag):
         if self.is_right_boundary(flag) or self.is_root(flag):
             return 2
@@ -511,18 +588,18 @@ class Solution:
             return 1
         else:
             return 3
-    
+
     def preorder(self, cur, left_boundary, right_boundary, leaves, flag):
         if cur is None:
             return
-        
+
         if self.is_right_boundary(flag):
             right_boundary.insert(0, cur.val)
         elif self.is_left_boundary(flag) or self.is_root(flag):
             left_boundary.append(cur.val)
         elif self.is_leaf(cur):
             leaves.append(cur.val)
-            
+
         self.preorder(cur.left, left_boundary, right_boundary, leaves, self.left_child_flag(cur, flag))
         self.preorder(cur.right, left_boundary, right_boundary, leaves, self.right_child_flag(cur, flag))
 ```
@@ -596,24 +673,24 @@ public:
         left_boundary.insert(left_boundary.end(), right_boundary.begin(), right_boundary.end());
         return left_boundary;
     }
-    
+
 private:
     bool isLeaf(TreeNode* cur) {
         return cur->left == nullptr && cur->right == nullptr;
     }
-    
+
     bool isRightBoundary(int flag) {
         return flag == 2;
     }
-    
+
     bool isLeftBoundary(int flag) {
         return flag == 1;
     }
-    
+
     bool isRoot(int flag) {
         return flag == 0;
     }
-    
+
     int leftChildFlag(TreeNode* cur, int flag) {
         if (isLeftBoundary(flag) || isRoot(flag)) {
             return 1;
@@ -623,7 +700,7 @@ private:
             return 3;
         }
     }
-    
+
     int rightChildFlag(TreeNode* cur, int flag) {
         if (isRightBoundary(flag) || isRoot(flag)) {
             return 2;
@@ -633,7 +710,7 @@ private:
             return 3;
         }
     }
-    
+
     void preorder(TreeNode* cur, vector<int>& left_boundary, vector<int>& right_boundary, vector<int>& leaves, int flag) {
         if (cur == nullptr) {
             return;
@@ -646,7 +723,7 @@ private:
         } else if (isLeaf(cur)) {
             leaves.push_back(cur->val);
         }
-        
+
         preorder(cur->left, left_boundary, right_boundary, leaves, leftChildFlag(cur, flag));
         preorder(cur->right, left_boundary, right_boundary, leaves, rightChildFlag(cur, flag));
     }
@@ -660,7 +737,9 @@ class Solution {
      * @return {number[]}
      */
     boundaryOfBinaryTree(root) {
-        const left_boundary = [], right_boundary = [], leaves = [];
+        const left_boundary = [],
+            right_boundary = [],
+            leaves = [];
         this.preorder(root, left_boundary, right_boundary, leaves, 0);
         left_boundary.push(...leaves);
         left_boundary.push(...right_boundary);
@@ -716,8 +795,20 @@ class Solution {
             leaves.push(cur.val);
         }
 
-        this.preorder(cur.left, left_boundary, right_boundary, leaves, this.leftChildFlag(cur, flag));
-        this.preorder(cur.right, left_boundary, right_boundary, leaves, this.rightChildFlag(cur, flag));
+        this.preorder(
+            cur.left,
+            left_boundary,
+            right_boundary,
+            leaves,
+            this.leftChildFlag(cur, flag),
+        );
+        this.preorder(
+            cur.right,
+            left_boundary,
+            right_boundary,
+            leaves,
+            this.rightChildFlag(cur, flag),
+        );
     }
 }
 ```
@@ -867,6 +958,72 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn boundary_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut left_boundary = Vec::new();
+        let mut right_boundary = Vec::new();
+        let mut leaves = Vec::new();
+
+        Self::preorder(&root, 0, &mut left_boundary, &mut right_boundary, &mut leaves);
+
+        left_boundary.extend(leaves);
+        left_boundary.extend(right_boundary);
+        left_boundary
+    }
+
+    fn is_leaf(node: &Rc<RefCell<TreeNode>>) -> bool {
+        let n = node.borrow();
+        n.left.is_none() && n.right.is_none()
+    }
+
+    fn left_child_flag(cur: &Rc<RefCell<TreeNode>>, flag: i32) -> i32 {
+        if flag == 1 || flag == 0 {
+            1
+        } else if flag == 2 && cur.borrow().right.is_none() {
+            2
+        } else {
+            3
+        }
+    }
+
+    fn right_child_flag(cur: &Rc<RefCell<TreeNode>>, flag: i32) -> i32 {
+        if flag == 2 || flag == 0 {
+            2
+        } else if flag == 1 && cur.borrow().left.is_none() {
+            1
+        } else {
+            3
+        }
+    }
+
+    fn preorder(
+        cur: &Option<Rc<RefCell<TreeNode>>>,
+        flag: i32,
+        left_boundary: &mut Vec<i32>,
+        right_boundary: &mut Vec<i32>,
+        leaves: &mut Vec<i32>,
+    ) {
+        if let Some(node) = cur {
+            if flag == 2 {
+                right_boundary.insert(0, node.borrow().val);
+            } else if flag == 1 || flag == 0 {
+                left_boundary.push(node.borrow().val);
+            } else if Self::is_leaf(node) {
+                leaves.push(node.borrow().val);
+            }
+
+            let lf = Self::left_child_flag(node, flag);
+            let rf = Self::right_child_flag(node, flag);
+            let left = node.borrow().left.clone();
+            let right = node.borrow().right.clone();
+            Self::preorder(&left, lf, left_boundary, right_boundary, leaves);
+            Self::preorder(&right, rf, left_boundary, right_boundary, leaves);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -874,14 +1031,16 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the tree
+> Where $n$ is the number of nodes in the tree
 
 ---
 
 ## Common Pitfalls
 
 ### Including Leaves in the Left or Right Boundary
+
 Leaf nodes should only appear once in the leaves section, not in the left or right boundary. Adding a leaf while traversing the left boundary causes duplicates in the result.
+
 ```python
 # Wrong: not checking for leaf before adding to boundary
 while t is not None:
@@ -890,7 +1049,9 @@ while t is not None:
 ```
 
 ### Incorrect Right Boundary Order
+
 The right boundary must be added in bottom-to-top order. A common mistake is adding nodes directly to the result during traversal (top-to-bottom), instead of using a stack or reversing at the end.
 
 ### Missing the Single-Child Case in Boundary Traversal
+
 When traversing the left boundary, if a node has no left child, you must continue with the right child (and vice versa for the right boundary). Stopping traversal at missing children misses boundary nodes deeper in the tree.

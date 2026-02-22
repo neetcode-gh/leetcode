@@ -270,6 +270,33 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn add_binary(a: String, b: String) -> String {
+        let mut res = String::new();
+        let mut carry = 0;
+
+        let a: Vec<u8> = a.bytes().rev().collect();
+        let b: Vec<u8> = b.bytes().rev().collect();
+
+        for i in 0..a.len().max(b.len()) {
+            let digit_a = if i < a.len() { (a[i] - b'0') as i32 } else { 0 };
+            let digit_b = if i < b.len() { (b[i] - b'0') as i32 } else { 0 };
+
+            let total = digit_a + digit_b + carry;
+            res.insert(0, char::from(b'0' + (total % 2) as u8));
+            carry = total / 2;
+        }
+
+        if carry > 0 {
+            res.insert(0, '1');
+        }
+
+        res
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -514,6 +541,35 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn add_binary(a: String, b: String) -> String {
+        let mut res = Vec::new();
+        let mut carry = 0;
+
+        let a = a.as_bytes();
+        let b = b.as_bytes();
+        let mut i = a.len() as i32 - 1;
+        let mut j = b.len() as i32 - 1;
+
+        while i >= 0 || j >= 0 || carry > 0 {
+            let digit_a = if i >= 0 { (a[i as usize] - b'0') as i32 } else { 0 };
+            let digit_b = if j >= 0 { (b[j as usize] - b'0') as i32 } else { 0 };
+
+            let total = digit_a + digit_b + carry;
+            res.push(b'0' + (total % 2) as u8);
+            carry = total / 2;
+
+            i -= 1;
+            j -= 1;
+        }
+
+        res.reverse();
+        String::from_utf8(res).unwrap()
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

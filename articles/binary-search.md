@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how arrays are indexed and accessed
 - **Sorted Arrays** - Recognizing properties of sorted data that enable efficient searching
 - **Recursion** - Writing and understanding recursive functions with base cases
@@ -26,9 +28,9 @@ The recursive version simply expresses this idea as a function that keeps callin
 2. If `l > r`, the range is empty, return `-1`.
 3. Compute the middle index `m = (l + r) // 2`.
 4. Compare `nums[m]` with `target`:
-   - If equal, return `m`.
-   - If `nums[m] < target`, recursively search `[m + 1, r]`.
-   - If `nums[m] > target`, recursively search `[l, m - 1]`.
+    - If equal, return `m`.
+    - If `nums[m] < target`, recursively search `[m + 1, r]`.
+    - If `nums[m] > target`, recursively search `[l, m - 1]`.
 5. Start the recursion with the full range `[0, n - 1]`.
 6. Return the final result.
 
@@ -38,44 +40,45 @@ The recursive version simply expresses this idea as a function that keeps callin
 Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Initial Array:**
+
 ```markdown
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 ```
-
 
 **Call 1:** binary_search(l=0, r=5)
-```markdown
-   L         M              R
-   ↓         ↓              ↓
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
 
-  l = 0, r = 5, m = 2
-  nums[M] = nums[2] = 3
-  3 < 9 (target)
-  → Search right half: binary_search(3, 5)
+```markdown
+L M R
+↓ ↓ ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+
+l = 0, r = 5, m = 2
+nums[M] = nums[2] = 3
+3 < 9 (target)
+→ Search right half: binary_search(3, 5)
 ```
 
-
 **Call 2:** binary_search(l=3, r=5)
+
 ```markdown
                   L    M    R
                   ↓    ↓    ↓
+
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 
-  l = 3, r = 5, m = 4
-  nums[M] = nums[4] = 9
-  9 == 9 (target) ✓ Found!
+l = 3, r = 5, m = 4
+nums[M] = nums[4] = 9
+9 == 9 (target) ✓ Found!
 ```
-
 
 **Result: index 4**
 
@@ -245,6 +248,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        Self::binary_search(0, nums.len() as i32 - 1, &nums, target)
+    }
+
+    fn binary_search(l: i32, r: i32, nums: &[i32], target: i32) -> i32 {
+        if l > r {
+            return -1;
+        }
+        let m = l + (r - l) / 2;
+        if nums[m as usize] == target {
+            return m;
+        }
+        if nums[m as usize] < target {
+            Self::binary_search(m + 1, r, nums, target)
+        } else {
+            Self::binary_search(l, m - 1, nums, target)
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,13 +291,13 @@ We adjust the left and right pointers until we either find the target or the poi
 ### Algorithm
 
 1. Initialize two pointers:
-   - `l = 0` (start of array)
-   - `r = len(nums) - 1` (end of array)
+    - `l = 0` (start of array)
+    - `r = len(nums) - 1` (end of array)
 2. While `l <= r`:
-   - Compute `m = l + (r - l) // 2` (safe midpoint).
-   - If `nums[m] == target`, return `m`.
-   - If `nums[m] < target`, move search to the right half: update `l = m + 1`.
-   - If `nums[m] > target`, move search to the left half: update `r = m - 1`.
+    - Compute `m = l + (r - l) // 2` (safe midpoint).
+    - If `nums[m] == target`, return `m`.
+    - If `nums[m] < target`, move search to the right half: update `l = m + 1`.
+    - If `nums[m] > target`, move search to the left half: update `r = m - 1`.
 3. If the loop ends without finding the target, return `-1`.
 
 <details>
@@ -280,42 +306,43 @@ We adjust the left and right pointers until we either find the target or the poi
 Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 
 **Initial Array:**
+
 ```markdown
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 ```
-
 
 **Step 1:** L = 0, R = 5, M = 2
-```markdown
-   L         M              R
-   ↓         ↓              ↓
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
 
-  nums[M] = nums[2] = 3
-  3 < 9 (target)
-  → Search right half: L = M + 1 = 3
+```markdown
+L M R
+↓ ↓ ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+
+nums[M] = nums[2] = 3
+3 < 9 (target)
+→ Search right half: L = M + 1 = 3
 ```
 
-
 **Step 2:** L = 3, R = 5, M = 4
+
 ```markdown
                   L    M    R
                   ↓    ↓    ↓
+
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 
-  nums[M] = nums[4] = 9
-  9 == 9 (target) ✓ Found!
+nums[M] = nums[4] = 9
+9 == 9 (target) ✓ Found!
 ```
-
 
 **Result: index 4**
 
@@ -491,6 +518,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+            if nums[m as usize] > target {
+                r = m - 1;
+            } else if nums[m as usize] < target {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -513,12 +560,12 @@ Then we simply check whether the element just before that boundary is the target
 
 1. Set `l = 0` and `r = len(nums)` (right is one past the last index).
 2. While `l < r`:
-   - Compute midpoint `m`.
-   - If `nums[m] > target`, shrink the right side: `r = m`.
-   - Otherwise (`nums[m] <= target`), shrink the left side: `l = m + 1`.
+    - Compute midpoint `m`.
+    - If `nums[m] > target`, shrink the right side: `r = m`.
+    - Otherwise (`nums[m] <= target`), shrink the left side: `l = m + 1`.
 3. After the loop:
-   - `l` is the upper bound: first index where `nums[l] > target`.
-   - So the potential location of the target is `l - 1`.
+    - `l` is the upper bound: first index where `nums[l] > target`.
+    - So the potential location of the target is `l - 1`.
 4. If `l > 0` and `nums[l - 1] == target`, return `l - 1`.
 5. Otherwise, return `-1` (target not found).
 
@@ -530,70 +577,72 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 The upper bound approach finds the first index where value > target, then checks index - 1.
 
 **Initial Array:**
+
 ```markdown
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 
 Note: R starts at index 6 (past end of array)
 ```
 
-
 **Step 1:** L = 0, R = 6, M = 3
-```markdown
-   L              M                   R
-   ↓              ↓                   ↓
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
 
-  nums[M] = nums[3] = 5
-  5 <= 9 (target)
-  → Move left pointer: L = M + 1 = 4
+```markdown
+L M R
+↓ ↓ ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │ (6)
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+
+nums[M] = nums[3] = 5
+5 <= 9 (target)
+→ Move left pointer: L = M + 1 = 4
 ```
 
-
 **Step 2:** L = 4, R = 6, M = 5
+
 ```markdown
                        L    M        R
                        ↓    ↓        ↓
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
 
-  nums[M] = nums[5] = 12
-  12 > 9 (target)
-  → Move right pointer: R = M = 5
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │ (6)
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+
+nums[M] = nums[5] = 12
+12 > 9 (target)
+→ Move right pointer: R = M = 5
 ```
 
-
 **Step 3:** L = 4, R = 5, M = 4
+
 ```markdown
                       L,M   R
                        ↓    ↓
+
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 
-  nums[M] = nums[4] = 9
-  9 <= 9 (target)
-  → Move left pointer: L = M + 1 = 5
+nums[M] = nums[4] = 9
+9 <= 9 (target)
+→ Move left pointer: L = M + 1 = 5
 ```
-
 
 **Final Check:**
+
 ```markdown
-  L = 5 (upper bound: first index where value > target)
-  L - 1 = 4
-  nums[4] = 9 == 9 (target) ✓
+L = 5 (upper bound: first index where value > target)
+L - 1 = 4
+nums[4] = 9 == 9 (target) ✓
 
-  Return L - 1 = 4
+Return L - 1 = 4
 ```
-
 
 **Result: index 4**
 
@@ -752,6 +801,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len());
+
+        while l < r {
+            let m = l + (r - l) / 2;
+            if nums[m] > target {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        if l > 0 && nums[l - 1] == target {
+            (l - 1) as i32
+        } else {
+            -1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -767,21 +838,21 @@ class Solution {
 
 Lower bound binary search finds the **first index where a value is greater than or equal to the target**.  
 This means if the target exists in the array, this lower-bound index will point exactly to its first occurrence.  
-So instead of directly searching for equality, we search for the **leftmost position** where the target *could* appear, then verify it.
+So instead of directly searching for equality, we search for the **leftmost position** where the target _could_ appear, then verify it.
 
 This approach is especially useful for sorted arrays because it avoids overshooting and naturally handles duplicates.
 
 ### Algorithm
 
 1. Initialize:
-   - `l = 0`
-   - `r = len(nums)` (right is one past the last index).
+    - `l = 0`
+    - `r = len(nums)` (right is one past the last index).
 2. While `l < r`:
-   - Compute midpoint `m`.
-   - If `nums[m] >= target`, shrink the search to the left half: `r = m`.
-   - Otherwise (`nums[m] < target`), search in the right half: `l = m + 1`.
+    - Compute midpoint `m`.
+    - If `nums[m] >= target`, shrink the search to the left half: `r = m`.
+    - Otherwise (`nums[m] < target`), search in the right half: `l = m + 1`.
 3. After the loop:
-   - `l` is the lower bound: first index where value >= `target`.
+    - `l` is the lower bound: first index where value >= `target`.
 4. If `l` is within bounds and `nums[l] == target`, return `l`.
 5. Otherwise, return `-1` (the target is not in the array).
 
@@ -793,70 +864,72 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 The lower bound approach finds the first index where value >= target.
 
 **Initial Array:**
+
 ```markdown
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 
 Note: R starts at index 6 (past end of array)
 ```
 
-
 **Step 1:** L = 0, R = 6, M = 3
-```markdown
-   L              M                   R
-   ↓              ↓                   ↓
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
 
-  nums[M] = nums[3] = 5
-  5 < 9 (target)
-  → Move left pointer: L = M + 1 = 4
+```markdown
+L M R
+↓ ↓ ↓
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │ (6)
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+
+nums[M] = nums[3] = 5
+5 < 9 (target)
+→ Move left pointer: L = M + 1 = 4
 ```
 
-
 **Step 2:** L = 4, R = 6, M = 5
+
 ```markdown
                        L    M        R
                        ↓    ↓        ↓
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
 
-  nums[M] = nums[5] = 12
-  12 >= 9 (target)
-  → Move right pointer: R = M = 5
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │ (6)
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+
+nums[M] = nums[5] = 12
+12 >= 9 (target)
+→ Move right pointer: R = M = 5
 ```
 
-
 **Step 3:** L = 4, R = 5, M = 4
+
 ```markdown
                       L,M   R
                        ↓    ↓
+
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 
-  nums[M] = nums[4] = 9
-  9 >= 9 (target)
-  → Move right pointer: R = M = 4
+nums[M] = nums[4] = 9
+9 >= 9 (target)
+→ Move right pointer: R = M = 4
 ```
-
 
 **Final Check:**
+
 ```markdown
-  L = 4, R = 4 → Loop ends (L == R)
-  L = 4 is within bounds (< 6)
-  nums[4] = 9 == 9 (target) ✓
+L = 4, R = 4 → Loop ends (L == R)
+L = 4 is within bounds (< 6)
+nums[4] = 9 == 9 (target) ✓
 
-  Return L = 4
+Return L = 4
 ```
-
 
 **Result: index 4**
 
@@ -1015,6 +1088,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len());
+
+        while l < r {
+            let m = l + (r - l) / 2;
+            if nums[m] >= target {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        if l < nums.len() && nums[l] == target {
+            l as i32
+        } else {
+            -1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1034,13 +1129,13 @@ Input: nums = [-1, 0, 3, 5, 9, 12], target = 9
 Built-in functions abstract the binary search logic. Here is how they work internally:
 
 **Initial Array:**
+
 ```markdown
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
+0 1 2 3 4 5
 ```
-
 
 **Using Python's `bisect_left` (or similar):**
 
@@ -1050,59 +1145,63 @@ The function finds the leftmost position where target can be inserted to maintai
                         ↓
                    bisect_left
                     returns 4
-┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
-└────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
-```
 
+┌────┬────┬────┬────┬────┬────┐
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
+└────┴────┴────┴────┴────┴────┘
+0 1 2 3 4 5
+```
 
 **Internal Binary Search (what the built-in does):**
 
 Step 1: L = 0, R = 6, M = 3
+
 ```markdown
-   L              M                   R
-   ↓              ↓                   ↓
+L M R
+↓ ↓ ↓
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │ (6)
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
-  nums[3] = 5 < 9 → L = 4
+0 1 2 3 4 5
+nums[3] = 5 < 9 → L = 4
 ```
 
 Step 2: L = 4, R = 6, M = 5
+
 ```markdown
                        L    M        R
                        ↓    ↓        ↓
+
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │     (6)
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │ (6)
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
-  nums[5] = 12 >= 9 → R = 5
+0 1 2 3 4 5
+nums[5] = 12 >= 9 → R = 5
 ```
 
 Step 3: L = 4, R = 5, M = 4
+
 ```markdown
                       L,M   R
                        ↓    ↓
+
 ┌────┬────┬────┬────┬────┬────┐
-│ -1 │  0 │  3 │  5 │  9 │ 12 │
+│ -1 │ 0 │ 3 │ 5 │ 9 │ 12 │
 └────┴────┴────┴────┴────┴────┘
-   0    1    2    3    4    5
-  nums[4] = 9 >= 9 → R = 4
+0 1 2 3 4 5
+nums[4] = 9 >= 9 → R = 4
 ```
 
 Loop ends: L = 4
 
-
 **Verification:**
+
 ```markdown
-  index = 4
-  nums[4] = 9 == 9 (target) ✓
+index = 4
+nums[4] = 9 == 9 (target) ✓
 
-  Return 4
+Return 4
 ```
-
 
 **Result: index 4**
 
@@ -1190,6 +1289,17 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> i32 {
+        match nums.binary_search(&target) {
+            Ok(index) => index as i32,
+            Err(_) => -1,
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1202,7 +1312,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Integer Overflow When Calculating Mid
+
 Using `(l + r) / 2` can overflow when `l` and `r` are large. Use `l + (r - l) / 2` instead to safely compute the midpoint.
+
 ```python
 # Wrong: can overflow in some languages
 m = (l + r) // 2
@@ -1211,10 +1323,13 @@ m = l + (r - l) // 2
 ```
 
 ### Infinite Loop Due to Wrong Pointer Update
+
 Updating `l = m` instead of `l = m + 1` (or `r = m` instead of `r = m - 1` in some variants) can cause an infinite loop when `l` and `r` are adjacent.
 
 ### Off-by-One Errors with Loop Condition
+
 Using `while l <= r` vs `while l < r` changes the behavior significantly. Mixing these up with the wrong pointer updates causes bugs. Be consistent with your chosen template.
 
 ### Not Checking if Target Was Actually Found
+
 Binary search converges to a position, but that position might not contain the target. Always verify that `nums[result] == target` before returning the index.

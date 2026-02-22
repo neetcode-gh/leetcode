@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - The core technique used to avoid recomputing subproblems when exploring different sticker combinations
 - **Hash Maps / Frequency Counting** - Used to track character counts in stickers and remaining target characters
 - **Recursion with State** - Building solutions by recursively trying different sticker choices
@@ -479,6 +481,77 @@ class Solution {
 }
 ```
 
+```rust
+use std::collections::HashMap;
+
+impl Solution {
+    pub fn min_stickers(stickers: Vec<String>, target: String) -> i32 {
+        let stick_count: Vec<HashMap<u8, i32>> = stickers
+            .iter()
+            .map(|s| {
+                let mut map = HashMap::new();
+                for &c in s.as_bytes() {
+                    *map.entry(c).or_insert(0) += 1;
+                }
+                map
+            })
+            .collect();
+
+        let mut dp = HashMap::new();
+
+        fn dfs(
+            t: &str,
+            stick: &mut HashMap<u8, i32>,
+            stick_count: &[HashMap<u8, i32>],
+            dp: &mut HashMap<String, i32>,
+        ) -> i32 {
+            if t.is_empty() {
+                return 0;
+            }
+            if let Some(&cached) = dp.get(t) {
+                return cached;
+            }
+            let res_base = if stick.is_empty() { 0 } else { 1 };
+            let mut remain = String::new();
+            for &c in t.as_bytes() {
+                if let Some(cnt) = stick.get_mut(&c) {
+                    if *cnt > 0 {
+                        *cnt -= 1;
+                        continue;
+                    }
+                }
+                remain.push(c as char);
+            }
+            let mut res = res_base;
+            if !remain.is_empty() {
+                let first = remain.as_bytes()[0];
+                let mut used = i32::MAX;
+                for s in stick_count {
+                    if !s.contains_key(&first) {
+                        continue;
+                    }
+                    let mut new_stick = s.clone();
+                    let curr = dfs(&remain, &mut new_stick, stick_count, dp);
+                    if curr != i32::MAX {
+                        used = used.min(curr);
+                    }
+                }
+                dp.insert(remain, used);
+                if used != i32::MAX && res != i32::MAX {
+                    res += used;
+                } else {
+                    res = i32::MAX;
+                }
+            }
+            res
+        }
+
+        let res = dfs(&target, &mut HashMap::new(), &stick_count, &mut dp);
+        if res == i32::MAX { -1 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -935,6 +1008,75 @@ class Solution {
 }
 ```
 
+```rust
+use std::collections::HashMap;
+
+impl Solution {
+    pub fn min_stickers(stickers: Vec<String>, target: String) -> i32 {
+        let stick_count: Vec<HashMap<u8, i32>> = stickers
+            .iter()
+            .map(|s| {
+                let mut counter = HashMap::new();
+                for &c in s.as_bytes() {
+                    *counter.entry(c).or_insert(0) += 1;
+                }
+                counter
+            })
+            .collect();
+
+        let mut dp = HashMap::new();
+        dp.insert(String::new(), 0);
+
+        let mut sorted_target: Vec<u8> = target.bytes().collect();
+        sorted_target.sort();
+        let sorted_target = String::from_utf8(sorted_target).unwrap();
+
+        fn dfs(
+            t: &str,
+            stick_count: &[HashMap<u8, i32>],
+            dp: &mut HashMap<String, i32>,
+        ) -> i32 {
+            if let Some(&cached) = dp.get(t) {
+                return cached;
+            }
+            let tar_mp: HashMap<u8, i32> = {
+                let mut m = HashMap::new();
+                for &c in t.as_bytes() {
+                    *m.entry(c).or_insert(0) += 1;
+                }
+                m
+            };
+            let first = t.as_bytes()[0];
+            let mut res = i32::MAX;
+            for s in stick_count {
+                if !s.contains_key(&first) {
+                    continue;
+                }
+                let mut remain = Vec::new();
+                for (&c, &count) in &tar_mp {
+                    let need = count - s.get(&c).copied().unwrap_or(0);
+                    for _ in 0..need.max(0) {
+                        remain.push(c);
+                    }
+                }
+                remain.sort();
+                let remain_str = String::from_utf8(remain).unwrap();
+                let mut cur = dfs(&remain_str, stick_count, dp);
+                if cur == i32::MAX {
+                    cur -= 1;
+                }
+                res = res.min(1 + cur);
+            }
+            dp.insert(t.to_string(), res);
+            res
+        }
+
+        let ans = dfs(&sorted_target, &stick_count, &mut dp);
+        if ans == i32::MAX { -1 } else { ans }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1211,6 +1353,40 @@ class Solution {
         }
 
         return dp[N - 1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_stickers(stickers: Vec<String>, target: String) -> i32 {
+        let target = target.as_bytes();
+        let n = target.len();
+        let big_n = 1 << n;
+        let mut dp = vec![-1i32; big_n];
+        dp[0] = 0;
+
+        for t in 0..big_n {
+            if dp[t] == -1 {
+                continue;
+            }
+            for s in &stickers {
+                let mut next_t = t;
+                for &c in s.as_bytes() {
+                    for i in 0..n {
+                        if target[i] == c && ((next_t >> i) & 1) == 0 {
+                            next_t |= 1 << i;
+                            break;
+                        }
+                    }
+                }
+                if dp[next_t] == -1 || dp[next_t] > dp[t] + 1 {
+                    dp[next_t] = dp[t] + 1;
+                }
+            }
+        }
+
+        dp[big_n - 1]
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - Maintaining a fixed-size window that slides across the string to extract substrings
 - **Hash Set / Hash Map** - Tracking seen sequences and counting occurrences for duplicate detection
 - **String Manipulation** - Extracting substrings efficiently for comparison and storage
@@ -167,6 +169,31 @@ class Solution {
             seen.insert(cur)
         }
         return Array(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {
+        let s = s.as_bytes();
+        let mut seen = HashSet::new();
+        let mut res = HashSet::new();
+
+        if s.len() < 10 {
+            return vec![];
+        }
+
+        for l in 0..=s.len() - 10 {
+            let cur = &s[l..l + 10];
+            if !seen.insert(cur) {
+                res.insert(cur);
+            }
+        }
+
+        res.into_iter()
+            .map(|b| String::from_utf8_lossy(b).into_owned())
+            .collect()
     }
 }
 ```
@@ -376,6 +403,31 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {
+        let s = s.as_bytes();
+        if s.len() < 10 {
+            return vec![];
+        }
+
+        let mut mp = HashMap::new();
+        let mut res = Vec::new();
+
+        for l in 0..=s.len() - 10 {
+            let cur = &s[l..l + 10];
+            let count = mp.entry(cur).or_insert(0);
+            *count += 1;
+            if *count == 2 {
+                res.push(String::from_utf8_lossy(cur).into_owned());
+            }
+        }
+
+        res
     }
 }
 ```
@@ -737,6 +789,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {
+        let s = s.as_bytes();
+        let n = s.len();
+        if n < 10 {
+            return vec![];
+        }
+
+        let mut cnt: HashMap<i64, i32> = HashMap::new();
+        let mut res = Vec::new();
+        let base1: i64 = 31;
+        let base2: i64 = 37;
+        let mut hash1: i64 = 0;
+        let mut hash2: i64 = 0;
+        let mut power1: i64 = 1;
+        let mut power2: i64 = 1;
+        let mod1: i64 = 685683731;
+        let mod2: i64 = 768258391;
+
+        for _ in 0..9 {
+            power1 = (power1 * base1) % mod1;
+            power2 = (power2 * base2) % mod2;
+        }
+
+        for i in 0..n {
+            hash1 = (hash1 * base1 + s[i] as i64) % mod1;
+            hash2 = (hash2 * base2 + s[i] as i64) % mod2;
+
+            if i >= 9 {
+                let key = (hash1 << 31) | hash2;
+                let count = cnt.entry(key).or_insert(0);
+                *count += 1;
+                if *count == 2 {
+                    res.push(
+                        String::from_utf8_lossy(&s[i - 9..=i]).into_owned(),
+                    );
+                }
+
+                hash1 = (hash1 - power1 * s[i - 9] as i64 % mod1 + mod1) % mod1;
+                hash2 = (hash2 - power2 * s[i - 9] as i64 % mod2 + mod2) % mod2;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -972,6 +1073,47 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_repeated_dna_sequences(s: String) -> Vec<String> {
+        let s = s.as_bytes();
+        if s.len() < 10 {
+            return vec![];
+        }
+
+        let mp = |c: u8| -> i32 {
+            match c {
+                b'A' => 0,
+                b'C' => 1,
+                b'G' => 2,
+                b'T' => 3,
+                _ => 0,
+            }
+        };
+
+        let mut cnt: HashMap<i32, i32> = HashMap::new();
+        let mut res = Vec::new();
+        let mut mask: i32 = 0;
+
+        for i in 0..s.len() {
+            mask = ((mask << 2) | mp(s[i])) & 0xFFFFF;
+
+            if i >= 9 {
+                let count = cnt.entry(mask).or_insert(0);
+                *count += 1;
+                if *count == 2 {
+                    res.push(
+                        String::from_utf8_lossy(&s[i - 9..=i]).into_owned(),
+                    );
+                }
+            }
+        }
+
+        res
     }
 }
 ```

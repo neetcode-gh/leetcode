@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency List)** - Required to model course dependencies as a directed graph
 - **Topological Sort (Kahn's Algorithm)** - Primary technique using BFS to process nodes level by level
 - **In-degree Tracking** - Understanding how to count and update incoming edges for each node
@@ -23,9 +25,9 @@ If we cannot complete all courses (due to a cycle), we return -1.
 1. Build an adjacency list and compute in-degrees for all courses.
 2. Initialize a queue with all courses having in-degree `0` (no prerequisites).
 3. Process the queue level by level, where each level represents a semester:
-   - For each course in the current level, decrement the in-degree of its dependent courses.
-   - Add any course whose in-degree becomes `0` to the next level.
-   - Increment the semester counter.
+    - For each course in the current level, decrement the in-degree of its dependent courses.
+    - Add any course whose in-degree becomes `0` to the next level.
+    - Increment the semester counter.
 4. If all courses are processed, return the number of semesters. Otherwise, return `-1`.
 
 ::tabs-start
@@ -132,7 +134,7 @@ public:
                 bfsQueue.push_back(node);
             }
         }
-        
+
         // start learning with BFS
         while (!bfsQueue.empty()) {
             // start new semester
@@ -383,6 +385,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_semesters(n: i32, relations: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut graph = vec![vec![]; n + 1];
+        let mut in_count = vec![0i32; n + 1];
+
+        for rel in &relations {
+            graph[rel[0] as usize].push(rel[1] as usize);
+            in_count[rel[1] as usize] += 1;
+        }
+
+        let mut step = 0;
+        let mut studied_count = 0;
+        let mut queue: Vec<usize> = (1..=n).filter(|&node| in_count[node] == 0).collect();
+
+        while !queue.is_empty() {
+            step += 1;
+            let mut next_queue = vec![];
+            for node in queue {
+                studied_count += 1;
+                for &end_node in &graph[node] {
+                    in_count[end_node] -= 1;
+                    if in_count[end_node] == 0 {
+                        next_queue.push(end_node);
+                    }
+                }
+            }
+            queue = next_queue;
+        }
+
+        if studied_count == n { step } else { -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,7 +428,7 @@ class Solution {
 - Time complexity: $O(N + E)$
 - Space complexity: $O(N + E)$
 
->  Where $E$ is the length of `relations` and $N$ is the number of courses.
+> Where $E$ is the length of `relations` and $N$ is the number of courses.
 
 ---
 
@@ -406,11 +444,11 @@ This approach uses two DFS passes: first to detect cycles (making it impossible 
 
 1. Build an adjacency list from the relations.
 2. First `dfs` pass: detect cycles using three states (unvisited, visiting, visited).
-   - If we encounter a node in the "visiting" state, a cycle exists.
-   - Return `-1` if any cycle is found.
+    - If we encounter a node in the "visiting" state, a cycle exists.
+    - Return `-1` if any cycle is found.
 3. Second `dfs` pass: compute the longest path starting from each node.
-   - For each node, recursively find the maximum path length through its neighbors.
-   - Cache results to avoid redundant computation.
+    - For each node, recursively find the maximum path length through its neighbors.
+    - Cache results to avoid redundant computation.
 4. Return the maximum path length across all nodes.
 
 ::tabs-start
@@ -887,6 +925,61 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_semesters(n: i32, relations: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut graph = vec![vec![]; n + 1];
+        for rel in &relations {
+            graph[rel[0] as usize].push(rel[1] as usize);
+        }
+
+        let mut visited = vec![0i32; n + 1];
+
+        fn dfs_check_cycle(node: usize, graph: &[Vec<usize>], visited: &mut [i32]) -> i32 {
+            if visited[node] != 0 {
+                return visited[node];
+            }
+            visited[node] = -1;
+            for &end_node in &graph[node] {
+                if dfs_check_cycle(end_node, graph, visited) == -1 {
+                    return -1;
+                }
+            }
+            visited[node] = 1;
+            1
+        }
+
+        for node in 1..=n {
+            if dfs_check_cycle(node, &graph, &mut visited) == -1 {
+                return -1;
+            }
+        }
+
+        let mut visited_length = vec![0i32; n + 1];
+
+        fn dfs_max_path(node: usize, graph: &[Vec<usize>], visited_length: &mut [i32]) -> i32 {
+            if visited_length[node] != 0 {
+                return visited_length[node];
+            }
+            let mut max_length = 1;
+            for &end_node in &graph[node] {
+                let length = dfs_max_path(end_node, graph, visited_length);
+                max_length = max_length.max(length + 1);
+            }
+            visited_length[node] = max_length;
+            max_length
+        }
+
+        let mut max_length = 1;
+        for node in 1..=n {
+            max_length = max_length.max(dfs_max_path(node, &graph, &mut visited_length));
+        }
+        max_length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -894,7 +987,7 @@ class Solution {
 - Time complexity: $O(N + E)$
 - Space complexity: $O(N + E)$
 
->  Where $E$ is the length of `relations` and $N$ is the number of courses.
+> Where $E$ is the length of `relations` and $N$ is the number of courses.
 
 ---
 
@@ -910,10 +1003,10 @@ When we finish processing a node, we store its longest path length. If we ever e
 
 1. Build an adjacency list from the relations.
 2. Run `dfs` from each unvisited node:
-   - Mark the node as visiting (`-1`).
-   - Recursively compute the longest path through neighbors.
-   - If any neighbor returns `-1`, propagate the cycle indicator.
-   - Store the computed path length and return it.
+    - Mark the node as visiting (`-1`).
+    - Recursively compute the longest path through neighbors.
+    - If any neighbor returns `-1`, propagate the cycle indicator.
+    - Store the computed path length and return it.
 3. Track the maximum path length across all nodes.
 4. Return `-1` if a cycle was detected, otherwise return the maximum path length.
 
@@ -1270,6 +1363,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_semesters(n: i32, relations: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut graph = vec![vec![]; n + 1];
+        for rel in &relations {
+            graph[rel[0] as usize].push(rel[1] as usize);
+        }
+
+        let mut visited = vec![0i32; n + 1];
+
+        fn dfs(node: usize, graph: &[Vec<usize>], visited: &mut [i32]) -> i32 {
+            if visited[node] != 0 {
+                return visited[node];
+            }
+            visited[node] = -1;
+            let mut max_length = 1;
+            for &end_node in &graph[node] {
+                let length = dfs(end_node, graph, visited);
+                if length == -1 {
+                    return -1;
+                }
+                max_length = max_length.max(length + 1);
+            }
+            visited[node] = max_length;
+            max_length
+        }
+
+        let mut max_length = -1;
+        for node in 1..=n {
+            let length = dfs(node, &graph, &mut visited);
+            if length == -1 {
+                return -1;
+            }
+            max_length = max_length.max(length);
+        }
+        max_length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1277,7 +1411,7 @@ class Solution {
 - Time complexity: $O(N + E)$
 - Space complexity: $O(N + E)$
 
->  Where $E$ is the length of `relations` and $N$ is the number of courses.
+> Where $E$ is the length of `relations` and $N$ is the number of courses.
 
 ---
 

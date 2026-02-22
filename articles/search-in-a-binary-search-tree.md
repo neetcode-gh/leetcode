@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Trees (BST)** - Understanding the BST property where left subtree values are smaller and right subtree values are larger than the root
 - **Tree Traversal** - Navigating through tree nodes by following left and right child pointers
 - **Recursion** - Using recursive function calls to process tree structures with appropriate base cases
@@ -178,26 +180,34 @@ class Solution {
 ```
 
 ```swift
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     public var val: Int
- *     public var left: TreeNode?
- *     public var right: TreeNode?
- *     public init() { self.val = 0; self.left = nil; self.right = nil; }
- *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
- *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
- *         self.val = val
- *         self.left = left
- *         self.right = right
- *     }
- * }
- */
 class Solution {
     func searchBST(_ root: TreeNode?, _ val: Int) -> TreeNode? {
         guard let root = root else { return nil }
         if root.val == val { return root }
         return val < root.val ? searchBST(root.left, val) : searchBST(root.right, val)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search_bst(
+        root: Option<Rc<RefCell<TreeNode>>>, val: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        match root {
+            None => None,
+            Some(node) => {
+                let n = node.borrow();
+                if n.val == val {
+                    drop(n);
+                    Some(node)
+                } else if val < n.val {
+                    Self::search_bst(n.left.clone(), val)
+                } else {
+                    Self::search_bst(n.right.clone(), val)
+                }
+            }
+        }
     }
 }
 ```
@@ -222,8 +232,8 @@ Instead of using the call stack for recursion, we can use a simple loop. At each
 ### Algorithm
 
 1. While `root` is not `null` and `root.val` does not equal the target:
-   - If the target is less than `root.val`, move to `root.left`.
-   - Otherwise, move to `root.right`.
+    - If the target is less than `root.val`, move to `root.left`.
+    - Otherwise, move to `root.right`.
 2. Return `root` (either the found node or `null`).
 
 ::tabs-start
@@ -407,6 +417,28 @@ class Solution {
             node = val < node!.val ? node!.left : node!.right
         }
         return node
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search_bst(
+        root: Option<Rc<RefCell<TreeNode>>>, val: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut cur = root;
+        while let Some(node) = cur {
+            let n = node.borrow();
+            if n.val == val {
+                drop(n);
+                return Some(node);
+            } else if val < n.val {
+                cur = n.left.clone();
+            } else {
+                cur = n.right.clone();
+            }
+        }
+        None
     }
 }
 ```

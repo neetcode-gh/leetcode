@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure and tree traversal concepts
 - **Depth First Search (DFS)** - Recursive traversal with depth tracking to identify the first node at each level
 - **Breadth First Search (BFS)** - Level-order traversal using a queue to process nodes level by level
@@ -13,7 +15,8 @@ Before attempting this problem, you should be comfortable with:
 To see the **right side** of a tree, at each depth we only care about the **first node we encounter when looking from the right**.
 
 If we perform DFS by visiting:
-1. **Right child first**, then  
+
+1. **Right child first**, then
 2. Left child
 
 …then the **first node we reach at every depth** is the visible right-side node.
@@ -25,10 +28,10 @@ We store that node the moment we first reach that depth.
 1. Create an empty list `res` to store the right-side values.
 2. Define a `dfs` function that takes a `node` and its `depth`.
 3. In the `dfs`:
-   - If the `node` is `null` → return.
-   - If `depth == len(res)` → this is the first node at this depth → append its value.
-   - Recursively visit the right child first.
-   - Then recursively visit the left child.
+    - If the `node` is `null` → return.
+    - If `depth == len(res)` → this is the first node at this depth → append its value.
+    - Recursively visit the right child first.
+    - Then recursively visit the left child.
 4. Start `dfs` from the root at depth `0`.
 5. Return `res`.
 
@@ -304,6 +307,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        Self::dfs(&root, 0, &mut res);
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, depth: usize, res: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            if depth == res.len() {
+                res.push(n.val);
+            }
+            Self::dfs(&n.right, depth + 1, res);
+            Self::dfs(&n.left, depth + 1, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -321,6 +345,7 @@ In BFS we explore the tree level by level.
 If we look at each level from **left to right**, the **last node we encounter at that level** is the one visible from the right side.
 
 So for every level:
+
 - Traverse all nodes.
 - Remember the **rightmost node**.
 - Add it to the answer.
@@ -330,12 +355,12 @@ So for every level:
 1. If the tree is empty → return an empty list.
 2. Initialize a queue with the root.
 3. While the queue is not empty:
-   - Determine how many nodes are in the current level (`level_size`).
-   - For each node in the level:
-     - Pop it from the queue.
-     - Update `rightmost_node` to this node.
-     - Push its left child, then right child (if they exist).
-   - After finishing the level, append `rightmost_node`'s value to the result.
+    - Determine how many nodes are in the current level (`level_size`).
+    - For each node in the level:
+        - Pop it from the queue.
+        - Update `rightmost_node` to this node.
+        - Push its left child, then right child (if they exist).
+    - After finishing the level, append `rightmost_node`'s value to the result.
 4. Return the result list.
 
 ::tabs-start
@@ -663,6 +688,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn right_side_view(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let mut q: VecDeque<Option<Rc<RefCell<TreeNode>>>> = VecDeque::new();
+        q.push_back(root);
+
+        while !q.is_empty() {
+            let mut right_side = None;
+            let q_len = q.len();
+
+            for _ in 0..q_len {
+                if let Some(Some(node)) = q.pop_front() {
+                    let node_ref = node.borrow();
+                    right_side = Some(node_ref.val);
+                    q.push_back(node_ref.left.clone());
+                    q.push_back(node_ref.right.clone());
+                }
+            }
+            if let Some(val) = right_side {
+                res.push(val);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -675,7 +728,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Only Traversing Right Children
+
 The rightmost visible node at each level is not always in the right subtree. When the right subtree is shorter than the left, deeper left nodes become visible from the right.
+
 ```python
 # Wrong: misses left nodes visible at deeper levels
 def dfs(node):
@@ -685,7 +740,9 @@ def dfs(node):
 ```
 
 ### Using DFS With Left-First Traversal Without Adjustment
+
 In DFS, if you visit left children before right children, you must update (not just set) the result for each depth. Otherwise, only left-side nodes are captured.
+
 ```python
 # Wrong with left-first DFS: captures left side, not right
 if depth == len(res):
@@ -693,4 +750,5 @@ if depth == len(res):
 ```
 
 ### Forgetting to Track Level Size in BFS
+
 In BFS, you must process all nodes at the current level before moving to the next. Without tracking the level size, you cannot determine which node is rightmost at each level.

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency Matrix)** - Understanding how to represent connections between nodes in a 2D matrix
 - **Depth First Search (DFS)** - Recursive traversal technique used to explore all reachable nodes from a starting point
 - **Breadth First Search (BFS)** - Level-by-level traversal using a queue to explore connected nodes
@@ -18,12 +20,12 @@ A province is a group of directly or indirectly connected cities. This is essent
 1. Create a `visited` array of size `n` initialized to `false`.
 2. Initialize province count `res` to `0`.
 3. For each city `i` from `0` to `n-1`:
-   - If city `i` is not visited:
-     - Increment `res` (found a new province).
-     - Run `dfs` from city `i` to mark all connected cities as visited.
+    - If city `i` is not visited:
+        - Increment `res` (found a new province).
+        - Run `dfs` from city `i` to mark all connected cities as visited.
 4. In the `dfs`:
-   - Mark the current node as visited.
-   - For each neighbor `nei` that is connected and not visited, recursively call `dfs`.
+    - Mark the current node as visited.
+    - For each neighbor `nei` that is connected and not visited, recursively call `dfs`.
 5. Return `res`.
 
 ::tabs-start
@@ -243,12 +245,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_circle_num(is_connected: Vec<Vec<i32>>) -> i32 {
+        let n = is_connected.len();
+        let mut visited = vec![false; n];
+        let mut res = 0;
+
+        fn dfs(node: usize, is_connected: &Vec<Vec<i32>>, visited: &mut Vec<bool>, n: usize) {
+            visited[node] = true;
+            for nei in 0..n {
+                if is_connected[node][nei] == 1 && !visited[nei] {
+                    dfs(nei, is_connected, visited, n);
+                }
+            }
+        }
+
+        for i in 0..n {
+            if !visited[i] {
+                dfs(i, &is_connected, &mut visited, n);
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -262,12 +291,12 @@ Instead of using a separate visited array, we can use the diagonal of the adjace
 
 1. Initialize province count `res` to `0`.
 2. For each city `i` from `0` to `n-1`:
-   - If `isConnected[i][i]` equals `1` (not yet visited):
-     - Increment `res`.
-     - Run `dfs` from city `i`.
+    - If `isConnected[i][i]` equals `1` (not yet visited):
+        - Increment `res`.
+        - Run `dfs` from city `i`.
 3. In the `dfs`:
-   - Set `isConnected[node][node] = 0` to mark as visited.
-   - For each neighbor `nei` that is connected and whose diagonal is still `1`, recursively call `dfs`.
+    - Set `isConnected[node][node] = 0` to mark as visited.
+    - For each neighbor `nei` that is connected and whose diagonal is still `1`, recursively call `dfs`.
 4. Return `res`.
 
 ::tabs-start
@@ -358,7 +387,11 @@ class Solution {
         const dfs = (node) => {
             isConnected[node][node] = 0;
             for (let nei = 0; nei < n; nei++) {
-                if (node !== nei && isConnected[node][nei] === 1 && isConnected[nei][nei] === 1) {
+                if (
+                    node !== nei &&
+                    isConnected[node][nei] === 1 &&
+                    isConnected[nei][nei] === 1
+                ) {
                     dfs(nei);
                 }
             }
@@ -481,12 +514,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_circle_num(mut is_connected: Vec<Vec<i32>>) -> i32 {
+        let n = is_connected.len();
+        let mut res = 0;
+
+        fn dfs(node: usize, is_connected: &mut Vec<Vec<i32>>, n: usize) {
+            is_connected[node][node] = 0;
+            for nei in 0..n {
+                if node != nei && is_connected[node][nei] == 1 && is_connected[nei][nei] == 1 {
+                    dfs(nei, is_connected, n);
+                }
+            }
+        }
+
+        for i in 0..n {
+            if is_connected[i][i] == 1 {
+                dfs(i, &mut is_connected, n);
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -501,12 +560,12 @@ class Solution {
 1. Create a `visited` array of size `n` initialized to `false`.
 2. Initialize province count `res` to `0` and create an empty queue.
 3. For each city `i` from `0` to `n-1`:
-   - If city `i` is not visited:
-     - Increment `res`.
-     - Mark city `i` as visited and add it to the queue.
-     - While the queue is not empty:
-       - Dequeue a city `node`.
-       - For each neighbor `nei` that is connected and not visited, mark it visited and enqueue it.
+    - If city `i` is not visited:
+        - Increment `res`.
+        - Mark city `i` as visited and add it to the queue.
+        - While the queue is not empty:
+            - Dequeue a city `node`.
+            - For each neighbor `nei` that is connected and not visited, mark it visited and enqueue it.
 4. Return `res`.
 
 ::tabs-start
@@ -739,12 +798,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_circle_num(is_connected: Vec<Vec<i32>>) -> i32 {
+        let n = is_connected.len();
+        let mut visited = vec![false; n];
+        let mut res = 0;
+
+        for i in 0..n {
+            if !visited[i] {
+                res += 1;
+                visited[i] = true;
+                let mut q = VecDeque::new();
+                q.push_back(i);
+                while let Some(node) = q.pop_front() {
+                    for nei in 0..n {
+                        if is_connected[node][nei] == 1 && !visited[nei] {
+                            visited[nei] = true;
+                            q.push_back(nei);
+                        }
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -758,8 +845,8 @@ The Union-Find (Disjoint Set Union) data structure is designed for efficiently m
 
 1. Initialize a DSU with `n` components, where each city is its own parent.
 2. For each pair of cities `(i, j)` where `isConnected[i][j] == 1`:
-   - Call `union(i, j)` to merge their components.
-   - The `union` operation decrements the component count if the cities were in different components.
+    - Call `union(i, j)` to merge their components.
+    - The `union` operation decrements the component count if the cities were in different components.
 3. Return the final component count from the DSU.
 
 ::tabs-start
@@ -790,7 +877,7 @@ class DSU:
             self.Size[pv] += self.Size[pu]
             self.Parent[pu] = pv
         return True
-    
+
     def numOfComps(self):
         return self.components
 
@@ -803,7 +890,7 @@ class Solution:
             for j in range(n):
                 if isConnected[i][j]:
                     dsu.union(i, j)
-        
+
         return dsu.numOfComps()
 ```
 
@@ -922,7 +1009,9 @@ public:
 ```javascript
 class DSU {
     constructor(n) {
-        this.Parent = Array(n + 1).fill(0).map((_, i) => i);
+        this.Parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
         this.Size = Array(n + 1).fill(1);
         this.components = n;
     }
@@ -964,9 +1053,9 @@ class DSU {
      * @param {number} v
      * @return {boolean}
      */
-     numOfComps() {
+    numOfComps() {
         return this.components;
-     }
+    }
 }
 
 class Solution {
@@ -1200,12 +1289,69 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+    components: i32,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            size: vec![1; n],
+            components: n as i32,
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        self.components -= 1;
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn find_circle_num(is_connected: Vec<Vec<i32>>) -> i32 {
+        let n = is_connected.len();
+        let mut dsu = DSU::new(n);
+        for i in 0..n {
+            for j in 0..n {
+                if is_connected[i][j] == 1 {
+                    dsu.union(i, j);
+                }
+            }
+        }
+        dsu.components
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 

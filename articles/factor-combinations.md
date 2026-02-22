@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Exploring all possibilities by making choices, recursing, and undoing choices
 - **Factorization** - Finding divisors of a number and understanding factor pairs
 - **Recursion** - Building solutions incrementally through recursive calls
@@ -19,12 +21,12 @@ The key insight is that if we have a product, we only need to try factors up to 
 
 1. Start with `factors = [n]` and an empty result list.
 2. In the backtracking function:
-   - If `factors` has more than one element, it represents a valid combination, so add a copy to the result.
-   - Pop the last factor (call it `lastFactor`).
-   - Determine the starting point: use `2` if `factors` is empty, otherwise use the last remaining factor.
-   - For each `i` from the starting point up to `sqrt(lastFactor)`:
-     - If `i` divides `lastFactor`, push both `i` and `lastFactor/i`, recurse, then pop both to backtrack.
-   - Restore `lastFactor` to `factors` before returning.
+    - If `factors` has more than one element, it represents a valid combination, so add a copy to the result.
+    - Pop the last factor (call it `lastFactor`).
+    - Determine the starting point: use `2` if `factors` is empty, otherwise use the last remaining factor.
+    - For each `i` from the starting point up to `sqrt(lastFactor)`:
+        - If `i` divides `lastFactor`, push both `i` and `lastFactor/i`, recurse, then pop both to backtrack.
+    - Restore `lastFactor` to `factors` before returning.
 3. Return the result list.
 
 ::tabs-start
@@ -35,9 +37,9 @@ class Solution:
         # Got a solution.
         if len(factors) > 1:
             ans.append(factors.copy())
-        
+
         last_factor = factors.pop()
-        
+
         i = 2 if not factors else factors[-1]
         while i <= last_factor // i:
             if last_factor % i == 0:
@@ -49,10 +51,10 @@ class Solution:
                 factors.pop()
                 factors.pop()
             i += 1
-        
+
         # Add last_factor back to factors to restore it.
         factors.append(last_factor)
-    
+
     def getFactors(self, n: int) -> List[List[int]]:
         ans = []
         self._backtracking([n], ans)
@@ -68,7 +70,7 @@ class Solution {
         }
 
         final int lastFactor = factors.removeLast();
-        
+
         for (int i = factors.isEmpty() ? 2 : factors.peekLast(); i <=  lastFactor / i; ++i) {
             if (lastFactor % i == 0) {
                 // Add i and lastFactor / i.
@@ -146,7 +148,11 @@ class Solution {
 
         const lastFactor = factors.pop();
 
-        for (let i = factors.length === 0 ? 2 : factors[factors.length - 1]; i <= Math.floor(lastFactor / i); ++i) {
+        for (
+            let i = factors.length === 0 ? 2 : factors[factors.length - 1];
+            i <= Math.floor(lastFactor / i);
+            ++i
+        ) {
             if (lastFactor % i === 0) {
                 // Add i and lastFactor / i.
                 factors.push(i);
@@ -326,6 +332,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_factors(n: i32) -> Vec<Vec<i32>> {
+        let mut ans = Vec::new();
+
+        fn backtracking(factors: &mut Vec<i32>, ans: &mut Vec<Vec<i32>>) {
+            if factors.len() > 1 {
+                ans.push(factors.clone());
+            }
+
+            let last_factor = factors.pop().unwrap();
+
+            let start = if factors.is_empty() {
+                2
+            } else {
+                *factors.last().unwrap()
+            };
+            let mut i = start;
+            while i <= last_factor / i {
+                if last_factor % i == 0 {
+                    factors.push(i);
+                    factors.push(last_factor / i);
+                    backtracking(factors, ans);
+                    factors.pop();
+                    factors.pop();
+                }
+                i += 1;
+            }
+
+            factors.push(last_factor);
+        }
+
+        let mut factors = vec![n];
+        backtracking(&mut factors, &mut ans);
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,7 +379,7 @@ class Solution {
 
 - Space complexity: $O(\log (n))$
 
->  Where $n$ is the input integer `n`.
+> Where $n$ is the input integer `n`.
 
 ---
 
@@ -350,11 +395,11 @@ This approach creates new factor lists for each branch rather than modifying and
 
 1. Initialize a stack with `[n]` and an empty result list.
 2. While the stack is not empty:
-   - Pop a factor list and extract its last element as `lastFactor`.
-   - Determine the starting point: `2` if empty, otherwise the last remaining factor.
-   - For each `i` from the starting point up to `sqrt(lastFactor)`:
-     - If `i` divides `lastFactor`, create a new list with the remaining factors plus `i` and `lastFactor/i`.
-     - Push this new list onto the stack and add it to the result.
+    - Pop a factor list and extract its last element as `lastFactor`.
+    - Determine the starting point: `2` if empty, otherwise the last remaining factor.
+    - For each `i` from the starting point up to `sqrt(lastFactor)`:
+        - If `i` divides `lastFactor`, create a new list with the remaining factors plus `i` and `lastFactor/i`.
+        - Push this new list onto the stack and add it to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -370,7 +415,7 @@ class Solution {
         while (!stack.isEmpty()) {
             final LinkedList<Integer> factors = stack.pop();
             final int lastFactor = factors.removeLast();
-            
+
             for (int i = factors.isEmpty() ? 2 : factors.peekLast(); i <=  lastFactor / i; ++i) {
                 if (lastFactor % i == 0) {
                     // Add i and lastFactor / i.
@@ -432,10 +477,15 @@ class Solution {
             const factors = stack.pop();
             const lastFactor = factors.pop();
 
-            const start = factors.length === 0 ? 2 : factors[factors.length - 1];
+            const start =
+                factors.length === 0 ? 2 : factors[factors.length - 1];
             for (let i = start; i <= Math.floor(lastFactor / i); i++) {
                 if (lastFactor % i === 0) {
-                    const newFactors = [...factors, i, Math.floor(lastFactor / i)];
+                    const newFactors = [
+                        ...factors,
+                        i,
+                        Math.floor(lastFactor / i),
+                    ];
                     stack.push(newFactors);
                     ans.push(newFactors);
                 }
@@ -567,6 +617,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_factors(n: i32) -> Vec<Vec<i32>> {
+        let mut ans = Vec::new();
+        let mut stack: Vec<Vec<i32>> = vec![vec![n]];
+
+        while let Some(mut factors) = stack.pop() {
+            let last_factor = factors.pop().unwrap();
+
+            let start = if factors.is_empty() {
+                2
+            } else {
+                *factors.last().unwrap()
+            };
+            let mut i = start;
+            while i <= last_factor / i {
+                if last_factor % i == 0 {
+                    let mut new_factors = factors.clone();
+                    new_factors.push(i);
+                    new_factors.push(last_factor / i);
+                    stack.push(new_factors.clone());
+                    ans.push(new_factors);
+                }
+                i += 1;
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -575,7 +657,7 @@ class Solution {
 
 - Space complexity: $O(n \cdot \log (n))$
 
->  Where $n$ is the input integer `n`.
+> Where $n$ is the input integer `n`.
 
 ---
 

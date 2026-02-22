@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down the problem into smaller subproblems by making choices at each step
 - **Dynamic Programming (Memoization)** - Caching results of subproblems to avoid redundant computation
 - **Dynamic Programming (Tabulation)** - Building solutions bottom-up using a DP table
@@ -14,6 +16,7 @@ Before attempting this problem, you should be comfortable with:
 This problem asks us to find the number of different ways to make up a given amount using unlimited coins of given denominations.
 
 At every step, we make a choice for the current coin:
+
 - **skip the coin** and move to the next one
 - **use the coin** and reduce the remaining amount
 
@@ -27,17 +30,17 @@ By sorting the coins and always moving forward in the list, we avoid counting th
 
 1. Sort the coin denominations to maintain a consistent order.
 2. Define a recursive function `dfs(i, a)`:
-   - `i` is the current coin index
-   - `a` is the remaining amount
+    - `i` is the current coin index
+    - `a` is the remaining amount
 3. If the remaining amount `a` becomes `0`:
-   - Return `1` because a valid combination is formed
+    - Return `1` because a valid combination is formed
 4. If all coins are exhausted (`i` goes out of bounds):
-   - Return `0` because no combination can be formed
+    - Return `0` because no combination can be formed
 5. Initialize a result counter `res` to `0`
 6. If the current coin can be used (`a >= coins[i]`):
-   - Option 1: Skip the current coin and move to the next one
-   - Option 2: Use the current coin and reduce the amount (stay at the same index)
-   - Add the results of both options to `res`
+    - Option 1: Skip the current coin and move to the next one
+    - Option 2: Use the current coin and reduce the amount (stay at the same index)
+    - Add the results of both options to `res`
 7. Return `res` as the number of ways for the current state
 8. Start the recursion from coin index `0` with the full amount
 
@@ -245,6 +248,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+        let mut coins = coins;
+        coins.sort();
+
+        fn dfs(coins: &[i32], i: usize, a: i32) -> i32 {
+            if a == 0 {
+                return 1;
+            }
+            if i >= coins.len() {
+                return 0;
+            }
+            let mut res = 0;
+            if a >= coins[i] {
+                res = dfs(coins, i + 1, a);
+                res += dfs(coins, i, a - coins[i]);
+            }
+            res
+        }
+
+        dfs(&coins, 0, amount)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,6 +294,7 @@ This problem is about counting how many **different combinations** of coins can 
 The pure recursive solution works, but it recomputes the same subproblems again and again. To optimize this, we use **top-down dynamic programming (memoization)**.
 
 Each state is uniquely defined by:
+
 - the current coin index `i`
 - the remaining amount `a`
 
@@ -277,21 +307,21 @@ By storing results for each state, we avoid repeated calculations and greatly im
 
 1. Sort the coin denominations to keep combinations in a fixed order.
 2. Create a 2D memo table `memo` where:
-   - `memo[i][a]` stores the number of ways to form amount `a` using coins from index `i` onward
+    - `memo[i][a]` stores the number of ways to form amount `a` using coins from index `i` onward
 3. Define a recursive function `dfs(i, a)`:
-   - `i` is the current coin index
-   - `a` is the remaining amount
+    - `i` is the current coin index
+    - `a` is the remaining amount
 4. If `a` becomes `0`:
-   - Return `1` since a valid combination is formed
+    - Return `1` since a valid combination is formed
 5. If all coins are exhausted (`i` is out of bounds):
-   - Return `0` because no combination can be formed
+    - Return `0` because no combination can be formed
 6. If the current state is already computed in `memo`:
-   - Return the stored value
+    - Return the stored value
 7. Initialize the result `res` to `0`
 8. If the current coin can be used (`a >= coins[i]`):
-   - Option 1: Skip the current coin and move to the next one
-   - Option 2: Use the current coin and reduce the amount (stay at the same index)
-   - Add both results to `res`
+    - Option 1: Skip the current coin and move to the next one
+    - Option 2: Use the current coin and reduce the amount (stay at the same index)
+    - Add both results to `res`
 9. Store `res` in `memo[i][a]`
 10. Start the recursion from index `0` with the full amount
 11. Return the final result
@@ -537,6 +567,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+        let mut coins = coins;
+        coins.sort();
+        let n = coins.len();
+        let a = amount as usize;
+        let mut memo = vec![vec![-1i32; a + 1]; n + 1];
+
+        fn dfs(coins: &[i32], memo: &mut Vec<Vec<i32>>, i: usize, a: i32) -> i32 {
+            if a == 0 { return 1; }
+            if i >= coins.len() { return 0; }
+            if memo[i][a as usize] != -1 { return memo[i][a as usize]; }
+
+            let mut res = 0;
+            if a >= coins[i] {
+                res = dfs(coins, memo, i + 1, a);
+                res += dfs(coins, memo, i, a - coins[i]);
+            }
+            memo[i][a as usize] = res;
+            res
+        }
+
+        dfs(&coins, &mut memo, 0, amount)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +615,7 @@ This problem asks for the number of different ways to make up a given amount usi
 Instead of using recursion, we can solve this using **bottom-up dynamic programming**, where we build the answer step by step using a table.
 
 The key idea is to define a state that represents:
+
 - how many ways we can form a certain amount
 - using coins starting from a particular index
 
@@ -567,15 +626,15 @@ By filling the DP table from the base cases upward, we ensure that all required 
 1. Sort the coin denominations to maintain a consistent order and avoid duplicate combinations.
 2. Let `n` be the number of coins.
 3. Create a 2D DP table `dp` of size `(n + 1) x (amount + 1)`:
-   - `dp[i][a]` represents the number of ways to form amount `a` using coins from index `i` onward
+    - `dp[i][a]` represents the number of ways to form amount `a` using coins from index `i` onward
 4. Initialize the base case:
-   - For any `i`, set `dp[i][0] = 1` since there is exactly one way to make amount `0` (choose no coins)
+    - For any `i`, set `dp[i][0] = 1` since there is exactly one way to make amount `0` (choose no coins)
 5. Iterate through the coins in reverse order:
 6. For each coin index `i` and for each amount `a` from `0` to `amount`:
-   - If the current coin can be used (`a >= coins[i]`):
-     - Option 1: Skip the current coin -> `dp[i + 1][a]`
-     - Option 2: Use the current coin -> `dp[i][a - coins[i]]`
-     - Add both options to get `dp[i][a]`
+    - If the current coin can be used (`a >= coins[i]`):
+        - Option 1: Skip the current coin -> `dp[i + 1][a]`
+        - Option 2: Use the current coin -> `dp[i][a - coins[i]]`
+        - Add both options to get `dp[i][a]`
 7. After filling the table, the answer is stored in `dp[0][amount]`
 8. Return `dp[0][amount]`
 
@@ -796,6 +855,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+        let mut coins = coins;
+        coins.sort();
+        let n = coins.len();
+        let amount = amount as usize;
+        let mut dp = vec![vec![0i32; amount + 1]; n + 1];
+
+        for i in 0..=n {
+            dp[i][0] = 1;
+        }
+
+        for i in (0..n).rev() {
+            for a in 0..=amount {
+                if a >= coins[i] as usize {
+                    dp[i][a] = dp[i + 1][a];
+                    dp[i][a] += dp[i][a - coins[i] as usize];
+                }
+            }
+        }
+
+        dp[0][amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -814,6 +900,7 @@ class Solution {
 This problem asks for the number of different combinations of coins that can make up a given amount, where each coin can be used unlimited times and the order of coins does not matter.
 
 In the bottom-up dynamic programming approach, we used a 2D table to store results for each coin index and amount. However, each row only depends on:
+
 - the row below it (skipping the coin)
 - the current row itself (using the same coin)
 
@@ -822,16 +909,16 @@ Because of this, we can **optimize the space** and store only one 1D array at a 
 ### Algorithm
 
 1. Create a 1D array `dp` of size `amount + 1`:
-   - `dp[a]` represents the number of ways to form amount `a` using coins processed so far
+    - `dp[a]` represents the number of ways to form amount `a` using coins processed so far
 2. Initialize `dp[0] = 1` since there is exactly one way to form amount `0`
 3. Iterate through the coins in reverse order:
 4. For each coin:
-   - Create a new array `nextDP` to store updated results
-   - Set `nextDP[0] = 1` as the base case
+    - Create a new array `nextDP` to store updated results
+    - Set `nextDP[0] = 1` as the base case
 5. For each amount `a` from `1` to `amount`:
-   - First copy the value from `dp[a]` (skipping the current coin)
-   - If the current coin can be used (`a - coins[i] >= 0`):
-     - Add `nextDP[a - coins[i]]` (using the current coin again)
+    - First copy the value from `dp[a]` (skipping the current coin)
+    - If the current coin can be used (`a - coins[i] >= 0`):
+        - Add `nextDP[a - coins[i]]` (using the current coin again)
 6. Replace `dp` with `nextDP` after processing the current coin
 7. After all coins are processed, `dp[amount]` contains the total number of combinations
 8. Return `dp[amount]`
@@ -1025,6 +1112,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+        let amount = amount as usize;
+        let mut dp = vec![0i32; amount + 1];
+        dp[0] = 1;
+
+        for i in (0..coins.len()).rev() {
+            let mut next_dp = vec![0i32; amount + 1];
+            next_dp[0] = 1;
+
+            for a in 1..=amount {
+                next_dp[a] = dp[a];
+                if a >= coins[i] as usize {
+                    next_dp[a] += next_dp[a - coins[i] as usize];
+                }
+            }
+            dp = next_dp;
+        }
+
+        dp[amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1041,10 +1153,12 @@ class Solution {
 ### Intuition
 
 We need to count how many **different combinations** of coins can make up a given amount, where:
+
 - each coin can be used unlimited times
 - the order of coins does **not** matter
 
 From earlier dynamic programming approaches, we observe that for each coin, the number of ways to form an amount only depends on:
+
 - the number of ways to form the same amount without using the coin
 - the number of ways to form a smaller amount using the current coin
 
@@ -1055,12 +1169,12 @@ The DP array always represents the number of ways to form each amount using the 
 ### Algorithm
 
 1. Create a 1D array `dp` of size `amount + 1`:
-   - `dp[a]` represents the number of ways to form amount `a`
+    - `dp[a]` represents the number of ways to form amount `a`
 2. Initialize `dp[0] = 1` since there is exactly one way to form amount `0`
 3. Iterate through the coins in reverse order:
 4. For each coin, iterate through all amounts from `1` to `amount`:
-   - If the current coin value is less than or equal to the amount:
-     - Add `dp[a - coin]` to `dp[a]`
+    - If the current coin value is less than or equal to the amount:
+        - Add `dp[a - coin]` to `dp[a]`
 5. After processing all coins, `dp[amount]` holds the total number of combinations
 6. Return `dp[amount]`
 
@@ -1201,6 +1315,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn change(amount: i32, coins: Vec<i32>) -> i32 {
+        let amount = amount as usize;
+        let mut dp = vec![0i32; amount + 1];
+        dp[0] = 1;
+
+        for i in (0..coins.len()).rev() {
+            for a in 1..=amount {
+                if coins[i] as usize <= a {
+                    dp[a] += dp[a - coins[i] as usize];
+                }
+            }
+        }
+
+        dp[amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1215,6 +1349,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Counting Permutations Instead of Combinations
+
 Iterating over amounts in the outer loop and coins in the inner loop counts permutations (order matters), not combinations. This causes [1,2] and [2,1] to be counted as different ways.
 
 ```python
@@ -1230,9 +1365,11 @@ for coin in coins:
 ```
 
 ### Forgetting the Base Case
+
 Not initializing `dp[0] = 1` means there is no way to build any amount. The base case represents the one valid way to make amount 0: use no coins.
 
 ### Allowing Negative Array Access
+
 When checking `dp[a - coins[i]]`, failing to verify `a >= coins[i]` first causes negative index access or runtime errors.
 
 ```python

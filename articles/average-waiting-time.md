@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Simulation** - Processing events in order and tracking state over time
 - **Linear Array Traversal** - Iterating through customers in arrival order
 - **Basic Arithmetic** - Calculating wait times using max operations and running totals
@@ -16,9 +18,9 @@ We simulate the chef serving customers one by one. The chef can only start a new
 
 1. Initialize `t` (current time) and `total` (total waiting time) to `0`.
 2. For each customer with arrival time and order duration:
-   - If the chef is still busy (`t > arrival`), add the extra wait to `total`.
-   - Otherwise, update `t` to the arrival time.
-   - Add the order time to both `total` and `t`.
+    - If the chef is still busy (`t > arrival`), add the extra wait to `total`.
+    - Otherwise, update `t` to the arrival time.
+    - Add the order time to both `total` and `t`.
 3. Return `total` divided by the number of customers.
 
 ::tabs-start
@@ -194,6 +196,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn average_waiting_time(customers: Vec<Vec<i32>>) -> f64 {
+        let mut t: i64 = 0;
+        let mut total: i64 = 0;
+
+        for c in &customers {
+            let arrival = c[0] as i64;
+            let order = c[1] as i64;
+            if t > arrival {
+                total += t - arrival;
+            } else {
+                t = arrival;
+            }
+            total += order;
+            t += order;
+        }
+
+        total as f64 / customers.len() as f64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,8 +238,8 @@ This is a more concise version of the simulation. The key observation is that th
 
 1. Initialize `t` (finish time) and `total` to `0`.
 2. For each customer:
-   - Update `t` to `max(t, arrival) + order` (when the order finishes).
-   - Add `t - arrival` to `total` (customer's wait time).
+    - Update `t` to `max(t, arrival) + order` (when the order finishes).
+    - Add `t - arrival` to `total` (customer's wait time).
 3. Return `total` divided by the number of customers.
 
 ::tabs-start
@@ -351,6 +376,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn average_waiting_time(customers: Vec<Vec<i32>>) -> f64 {
+        let mut t: i64 = 0;
+        let mut total: i64 = 0;
+
+        for c in &customers {
+            let arrival = c[0] as i64;
+            let order = c[1] as i64;
+            t = t.max(arrival) + order;
+            total += t - arrival;
+        }
+
+        total as f64 / customers.len() as f64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,7 +406,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Integer Overflow
+
 With large arrival times and order durations, the sum of waiting times can exceed 32-bit integer limits. Use 64-bit integers for accumulating totals.
+
 ```java
 // Wrong: int can overflow
 int total = 0;
@@ -372,7 +417,9 @@ long total = 0;
 ```
 
 ### Confusing Waiting Time with Service Time
+
 Waiting time is from arrival until the order is complete (includes cooking time), not just the time spent waiting before cooking starts.
+
 ```python
 # Wrong: only counting idle wait time
 wait = max(0, t - arrival)
@@ -381,7 +428,9 @@ wait = (max(t, arrival) + order) - arrival
 ```
 
 ### Forgetting to Update Current Time
+
 When a customer arrives after the chef is idle, the current time must jump forward to the arrival time, not stay at the previous finish time.
+
 ```python
 # Wrong: always adding order time to current t
 t += order

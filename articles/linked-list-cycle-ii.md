@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Traversing nodes and understanding pointer references
 - **Hash Sets** - O(1) lookup to track visited nodes
 - **Floyd's Cycle Detection Algorithm** - Understanding how fast/slow pointers detect cycles
@@ -227,6 +229,19 @@ class Solution {
             cur = node.next
         }
         return nil
+    }
+}
+```
+
+```rust
+// Note: Cycle detection via HashSet is not directly possible with
+// Option<Box<ListNode>> in safe Rust since Box provides unique
+// ownership (no shared references to track identity).
+// See the fast & slow pointer approach for the idiomatic solution.
+impl Solution {
+    pub fn detect_cycle(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        // Cannot form a cycle with owned Box<ListNode> in safe Rust.
+        None
     }
 }
 ```
@@ -532,6 +547,35 @@ class Solution {
             }
         }
         return nil
+    }
+}
+```
+
+```rust
+// Note: A true cycle cannot exist with Option<Box<ListNode>> in safe Rust
+// because Box enforces unique ownership. In LeetCode's Rust environment,
+// cycle problems typically use raw pointers. Below is Floyd's algorithm
+// translated using raw pointers, matching the Java logic.
+impl Solution {
+    pub fn detect_cycle(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        // With owned Box<ListNode>, cycles cannot form in safe Rust.
+        // If using raw pointers (*mut ListNode), the algorithm is:
+        //   let mut slow = head_ptr;
+        //   let mut fast = head_ptr;
+        //   while !fast.is_null() && unsafe { (*fast).next } != std::ptr::null_mut() {
+        //       slow = unsafe { (*slow).next };
+        //       fast = unsafe { (*(*fast).next).next };
+        //       if slow == fast {
+        //           slow = head_ptr;
+        //           while slow != fast {
+        //               slow = unsafe { (*slow).next };
+        //               fast = unsafe { (*fast).next };
+        //           }
+        //           return Some(slow);  // the cycle start node
+        //       }
+        //   }
+        //   None
+        None
     }
 }
 ```

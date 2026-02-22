@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency Lists)** - Building and traversing graphs using adjacency lists for directed edges
 - **Breadth-First Search (BFS)** - Using BFS to find shortest paths in unweighted graphs
 - **State-Space Search** - Tracking visited states as (node, additional_info) pairs rather than just nodes
@@ -19,10 +21,10 @@ We need to find shortest paths from node `0` to all other nodes, but with a twis
 2. Initialize the answer array with `-1` for all nodes.
 3. Start `BFS` from node `0` with no previous edge color (allowing either color first).
 4. For each state `(node, length, edgeColor)`:
-   - If this node has not been visited before, record `length` as its answer.
-   - If the last edge was not red, explore all red edges to neighbors.
-   - If the last edge was not blue, explore all blue edges to neighbors.
-   - Track visited states as `(node, color)` to avoid cycles.
+    - If this node has not been visited before, record `length` as its answer.
+    - If the last edge was not red, explore all red edges to neighbors.
+    - If the last edge was not blue, explore all blue edges to neighbors.
+    - Track visited states as `(node, color)` to avoid cycles.
 5. Return the answer array.
 
 ::tabs-start
@@ -380,6 +382,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_alternating_paths(n: i32, red_edges: Vec<Vec<i32>>, blue_edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut red = vec![vec![]; n];
+        let mut blue = vec![vec![]; n];
+        for edge in &red_edges {
+            red[edge[0] as usize].push(edge[1] as usize);
+        }
+        for edge in &blue_edges {
+            blue[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        let mut answer = vec![-1; n];
+        let mut q = VecDeque::new();
+        q.push_back((0usize, 0i32, -1i32)); // (node, length, edge_color)
+        let mut visit = HashSet::new();
+        visit.insert((0, -1));
+
+        while let Some((node, length, edge_color)) = q.pop_front() {
+            if answer[node] == -1 {
+                answer[node] = length;
+            }
+
+            if edge_color != 0 {
+                for &nei in &red[node] {
+                    if visit.insert((nei, 0)) {
+                        q.push_back((nei, length + 1, 0));
+                    }
+                }
+            }
+            if edge_color != 1 {
+                for &nei in &blue[node] {
+                    if visit.insert((nei, 1)) {
+                        q.push_back((nei, length + 1, 1));
+                    }
+                }
+            }
+        }
+        answer
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -403,8 +449,8 @@ This approach uses a cleaner state representation. Instead of tracking the edge 
 2. Create a 2D distance array initialized to infinity, with `dist[0][0] = dist[0][1] = 0`.
 3. Start `BFS` with two initial states: `(0, 0)` and `(0, 1)` representing starting with red or blue.
 4. For each state `(node, color)`:
-   - Explore neighbors through edges of the current color.
-   - If `dist[neighbor][opposite_color] > dist[node][color] + 1`, update it and enqueue.
+    - Explore neighbors through edges of the current color.
+    - If `dist[neighbor][opposite_color] > dist[node][color] + 1`, update it and enqueue.
 5. The answer for each node is the minimum of `dist[node][0]` and `dist[node][1]`.
 6. Return `-1` for nodes where both distances remain infinity.
 
@@ -768,6 +814,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_alternating_paths(n: i32, red_edges: Vec<Vec<i32>>, blue_edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let build_graph = |edges: &Vec<Vec<i32>>| -> Vec<Vec<usize>> {
+            let mut adj = vec![vec![]; n];
+            for edge in edges {
+                adj[edge[0] as usize].push(edge[1] as usize);
+            }
+            adj
+        };
+
+        let adj = [build_graph(&red_edges), build_graph(&blue_edges)];
+        let inf = i32::MAX;
+        let mut dist = vec![[inf; 2]; n];
+        dist[0][0] = 0;
+        dist[0][1] = 0;
+
+        let mut q = VecDeque::new();
+        q.push_back((0usize, 0usize));
+        q.push_back((0usize, 1usize));
+
+        while let Some((node, color)) = q.pop_front() {
+            for &nei in &adj[color][node] {
+                if dist[nei][color ^ 1] > dist[node][color] + 1 {
+                    dist[nei][color ^ 1] = dist[node][color] + 1;
+                    q.push_back((nei, color ^ 1));
+                }
+            }
+        }
+
+        (0..n)
+            .map(|i| {
+                let d = dist[i][0].min(dist[i][1]);
+                if d == inf { -1 } else { d }
+            })
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,10 +878,10 @@ While `BFS` is typically preferred for shortest path problems, `DFS` can also wo
 2. Initialize a 2D distance array with infinity, setting `dist[0][0] = dist[0][1] = 0`.
 3. Run `DFS` starting from node `0` with color `0` (red), then again with color `1` (blue).
 4. In `DFS` for state `(node, color)`:
-   - For each neighbor reachable via the current color:
-     - If `dist[neighbor][opposite_color] > dist[node][color] + 1`:
-       - Update the distance.
-       - Recursively call `DFS` on the neighbor with the opposite color.
+    - For each neighbor reachable via the current color:
+        - If `dist[neighbor][opposite_color] > dist[node][color] + 1`:
+            - Update the distance.
+            - Recursively call `DFS` on the neighbor with the opposite color.
 5. Build the answer by taking the minimum of both color distances for each node.
 6. Return `-1` for unreachable nodes.
 
@@ -1130,6 +1217,46 @@ class Solution {
                 dfs(nei, color ^ 1)
             }
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn shortest_alternating_paths(n: i32, red_edges: Vec<Vec<i32>>, blue_edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let build_graph = |edges: &Vec<Vec<i32>>| -> Vec<Vec<usize>> {
+            let mut adj = vec![vec![]; n];
+            for edge in edges {
+                adj[edge[0] as usize].push(edge[1] as usize);
+            }
+            adj
+        };
+
+        let adj = [build_graph(&red_edges), build_graph(&blue_edges)];
+        let inf = i32::MAX;
+        let mut dist = vec![[inf; 2]; n];
+        dist[0][0] = 0;
+        dist[0][1] = 0;
+
+        fn dfs(node: usize, color: usize, adj: &[Vec<Vec<usize>>; 2], dist: &mut Vec<[i32; 2]>) {
+            for &nei in &adj[color][node] {
+                if dist[nei][color ^ 1] > dist[node][color] + 1 {
+                    dist[nei][color ^ 1] = dist[node][color] + 1;
+                    dfs(nei, color ^ 1, adj, dist);
+                }
+            }
+        }
+
+        dfs(0, 0, &adj, &mut dist);
+        dfs(0, 1, &adj, &mut dist);
+
+        (0..n)
+            .map(|i| {
+                let d = dist[i][0].min(dist[i][1]);
+                if d == inf { -1 } else { d }
+            })
+            .collect()
     }
 }
 ```

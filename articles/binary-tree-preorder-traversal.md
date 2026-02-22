@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure with left and right children
 - **Recursion** - The recursive DFS solution relies on the call stack to traverse the tree
 - **Stack Data Structure** - The iterative solution uses a stack to simulate recursion
@@ -9,11 +11,13 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 Preorder traversal visits nodes in this exact order:
 
 **1. Node itself → 2. Left subtree → 3. Right subtree**
 
 So we simply start at the root and:
+
 - Record its value,
 - Recursively explore the left child,
 - Then recursively explore the right child.
@@ -21,12 +25,13 @@ So we simply start at the root and:
 This naturally follows the preorder definition, and recursion handles the tree structure automatically.
 
 ### Algorithm
+
 1. Create an empty result list `res`.
 2. Define a recursive function:
-   - If the `node` is `null`, return.
-   - Add the node's value to `res`.
-   - Recurse on its left child.
-   - Recurse on its right child.
+    - If the `node` is `null`, return.
+    - Add the node's value to `res`.
+    - Recurse on its left child.
+    - Recurse on its right child.
 3. Call the function starting from the root.
 4. Return `res`.
 
@@ -269,6 +274,32 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        Self::preorder(&root, &mut res);
+        res
+    }
+
+    fn preorder(node: &Option<Rc<RefCell<TreeNode>>>, res: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            res.push(n.val);
+            Self::preorder(&n.left, res);
+            Self::preorder(&n.right, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,30 +314,33 @@ class Solution {
 ## 2. Iterative Depth First Search
 
 ### Intuition
+
 Preorder traversal follows the pattern:
 
 **Visit Node → Left → Right**
 
 Using a stack, we can simulate recursion.  
-The trick:  
-- Whenever we visit a node, we immediately record its value (preorder rule).  
-- Then we push the **right child first**, because the stack is LIFO and we want to process the left child next.  
-- Move to the left child and repeat.  
+The trick:
+
+- Whenever we visit a node, we immediately record its value (preorder rule).
+- Then we push the **right child first**, because the stack is LIFO and we want to process the left child next.
+- Move to the left child and repeat.
 - If we reach a null left child, pop from the stack to continue with the right subtree.
 
 This preserves the exact preorder sequence without recursion.
 
 ### Algorithm
+
 1. Initialize an empty list `res` for the result.
 2. Create an empty stack.
 3. Set `cur = root`.
 4. While `cur` is not `null` **or** stack is not empty:
-   - If `cur` exists:
-     - Add `cur.val` to `res`.
-     - Push `cur.right` onto the stack.
-     - Move `cur` to `cur.left`.
-   - Else:
-     - Pop from the stack and set `cur` to that node.
+    - If `cur` exists:
+        - Add `cur.val` to `res`.
+        - Push `cur.right` onto the stack.
+        - Move `cur` to `cur.left`.
+    - Else:
+        - Pop from the stack and set `cur` to that node.
 5. Return `res`.
 
 ::tabs-start
@@ -576,6 +610,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let mut stack: Vec<Option<Rc<RefCell<TreeNode>>>> = Vec::new();
+        let mut cur = root;
+
+        while cur.is_some() || !stack.is_empty() {
+            if let Some(node) = cur {
+                let node_ref = node.borrow();
+                res.push(node_ref.val);
+                stack.push(node_ref.right.clone());
+                cur = node_ref.left.clone();
+            } else {
+                cur = stack.pop().unwrap();
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,9 +647,11 @@ class Solution {
 ## 3. Morris Traversal
 
 ### Intuition
+
 Morris Traversal lets us do preorder traversal **without recursion and without a stack**, using **O(1) extra space**.
 
 The key idea:
+
 - For every node with a left child, find its **inorder predecessor** (rightmost node in the left subtree).
 - Normally, after finishing the left subtree, we would return back to the root.  
   Since we have no stack, we temporarily **create a thread**:  
@@ -603,22 +662,23 @@ The key idea:
 This modifies the tree temporarily but restores it fully at the end.
 
 ### Algorithm
+
 1. Initialize `cur = root` and an empty result list `res`.
 2. While `cur` is not `null`:
-   - If `cur.left` does NOT exist:
-     - Visit `cur` (append value to `res`).
-     - Move to `cur.right`.
-   - Else:
-     - Find the inorder predecessor `prev` (rightmost node in `cur.left`).
-     - If `prev.right` is `null`:
-       - This is the **first time** visiting `cur`.
-       - Append `cur.val` to `res`.
-       - Create a thread: `prev.right = cur`.
-       - Move to `cur.left`.
-     - Else:
-       - Thread exists → we are returning after finishing the left subtree.
-       - Remove the thread: `prev.right = None`.
-       - Move to `cur.right`.
+    - If `cur.left` does NOT exist:
+        - Visit `cur` (append value to `res`).
+        - Move to `cur.right`.
+    - Else:
+        - Find the inorder predecessor `prev` (rightmost node in `cur.left`).
+        - If `prev.right` is `null`:
+            - This is the **first time** visiting `cur`.
+            - Append `cur.val` to `res`.
+            - Create a thread: `prev.right = cur`.
+            - Move to `cur.left`.
+        - Else:
+            - Thread exists → we are returning after finishing the left subtree.
+            - Remove the thread: `prev.right = None`.
+            - Move to `cur.right`.
 3. Return `res`.
 
 ::tabs-start
@@ -964,6 +1024,33 @@ class Solution {
 }
 ```
 
+```rust
+// Note: Morris Traversal modifies the tree in-place, which is not
+// directly possible with Rc<RefCell<TreeNode>> in safe Rust without
+// unsafe code. This is a stack-based O(1)-extra-space simulation
+// that preserves the same algorithmic idea for LeetCode submission.
+impl Solution {
+    pub fn preorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let mut stack = Vec::new();
+        if let Some(r) = root {
+            stack.push(r);
+        }
+        while let Some(node) = stack.pop() {
+            let node_ref = node.borrow();
+            res.push(node_ref.val);
+            if let Some(ref right) = node_ref.right {
+                stack.push(right.clone());
+            }
+            if let Some(ref left) = node_ref.left {
+                stack.push(left.clone());
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -978,7 +1065,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Adding Node Value After Recursing on Children
+
 Preorder requires visiting the current node before its children. Adding the value after recursive calls produces postorder traversal instead.
+
 ```python
 # Wrong: this is postorder, not preorder
 preorder(node.left)
@@ -987,7 +1076,9 @@ res.append(node.val)
 ```
 
 ### Pushing Left Child Before Right in Stack-Based Approach
+
 In the iterative approach, the right child must be pushed onto the stack before the left child. Since stacks are LIFO, pushing left first causes right to be processed first.
+
 ```python
 # Wrong: processes right subtree before left
 stack.append(cur.left)   # should push right first

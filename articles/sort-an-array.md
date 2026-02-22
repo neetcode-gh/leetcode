@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion and Divide & Conquer** - Most efficient sorting algorithms (Quick Sort, Merge Sort) recursively divide the problem into subproblems
 - **Arrays and In-Place Manipulation** - Understanding how to swap elements and modify arrays without extra space
 - **Binary Heap Data Structure** - Required for understanding Heap Sort and the heapify operation
@@ -18,9 +20,9 @@ Quick sort works by selecting a `pivot` element and partitioning the array so th
 1. Base case: if the subarray has 0 or 1 elements, handle directly with a simple swap if needed.
 2. Select `pivot` using median-of-three: compare elements at `left`, `middle`, and `right` positions.
 3. Partition the array:
-   - Move elements smaller than `pivot` to the left side.
-   - Move elements larger than `pivot` to the right side.
-   - Place the `pivot` in its final sorted position.
+    - Move elements smaller than `pivot` to the left side.
+    - Move elements larger than `pivot` to the right side.
+    - Place the `pivot` in its final sorted position.
 4. Recursively apply quick sort to the `left` and `right` partitions.
 5. Return the sorted array.
 
@@ -425,6 +427,60 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        if n > 1 {
+            Self::quick_sort(&mut nums, 0, n as i32 - 1);
+        }
+        nums
+    }
+
+    fn partition(nums: &mut Vec<i32>, left: i32, right: i32) -> i32 {
+        let (l, r) = (left as usize, right as usize);
+        let mid = ((left + right) >> 1) as usize;
+        nums.swap(mid, l + 1);
+
+        if nums[l] > nums[r] { nums.swap(l, r); }
+        if nums[l + 1] > nums[r] { nums.swap(l + 1, r); }
+        if nums[l] > nums[l + 1] { nums.swap(l, l + 1); }
+
+        let pivot = nums[l + 1];
+        let mut i = left + 1;
+        let mut j = right;
+
+        loop {
+            i += 1;
+            while nums[i as usize] < pivot { i += 1; }
+            j -= 1;
+            while nums[j as usize] > pivot { j -= 1; }
+            if i > j { break; }
+            nums.swap(i as usize, j as usize);
+        }
+
+        nums[(l + 1)] = nums[j as usize];
+        nums[j as usize] = pivot;
+        j
+    }
+
+    fn quick_sort(nums: &mut Vec<i32>, left: i32, right: i32) {
+        if right <= left + 1 {
+            if right == left + 1
+                && nums[right as usize] < nums[left as usize]
+            {
+                nums.swap(left as usize, right as usize);
+            }
+            return;
+        }
+
+        let j = Self::partition(nums, left, right);
+        Self::quick_sort(nums, left, j - 1);
+        Self::quick_sort(nums, j + 1, right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -445,9 +501,9 @@ Merge sort divides the array into two halves, recursively sorts each half, and t
 1. Base case: if the subarray has one or zero elements, it is already sorted.
 2. Find the middle index and recursively sort the left half (`l` to `mid`) and right half (`mid + 1` to `r`).
 3. Merge the two sorted halves:
-   - Create temporary arrays for `left` and `right` portions.
-   - Compare elements from both arrays and place the smaller one into the result.
-   - Copy any remaining elements from either array.
+    - Create temporary arrays for `left` and `right` portions.
+    - Compare elements from both arrays and place the smaller one into the result.
+    - Copy any remaining elements from either array.
 4. Return the sorted array.
 
 ::tabs-start
@@ -796,6 +852,48 @@ class Solution {
             arr[k] = right[j]
             j += 1
             k += 1
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        if n > 1 {
+            Self::merge_sort(&mut nums, 0, n - 1);
+        }
+        nums
+    }
+
+    fn merge_sort(arr: &mut Vec<i32>, l: usize, r: usize) {
+        if l >= r { return; }
+        let m = (l + r) / 2;
+        Self::merge_sort(arr, l, m);
+        Self::merge_sort(arr, m + 1, r);
+        Self::merge(arr, l, m, r);
+    }
+
+    fn merge(arr: &mut Vec<i32>, l: usize, m: usize, r: usize) {
+        let mut temp = Vec::new();
+        let (mut i, mut j) = (l, m + 1);
+
+        while i <= m && j <= r {
+            if arr[i] <= arr[j] {
+                temp.push(arr[i]);
+                i += 1;
+            } else {
+                temp.push(arr[j]);
+                j += 1;
+            }
+        }
+
+        while i <= m { temp.push(arr[i]); i += 1; }
+        while j <= r { temp.push(arr[j]); j += 1; }
+
+        for k in l..=r {
+            arr[k] = temp[k - l];
         }
     }
 }
@@ -1154,6 +1252,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        Self::heap_sort(&mut nums);
+        nums
+    }
+
+    fn heapify(arr: &mut Vec<i32>, n: usize, i: usize) {
+        let l = (i << 1) + 1;
+        let r = (i << 1) + 2;
+        let mut largest = i;
+
+        if l < n && arr[l] > arr[largest] {
+            largest = l;
+        }
+        if r < n && arr[r] > arr[largest] {
+            largest = r;
+        }
+        if largest != i {
+            arr.swap(i, largest);
+            Self::heapify(arr, n, largest);
+        }
+    }
+
+    fn heap_sort(arr: &mut Vec<i32>) {
+        let n = arr.len();
+        for i in (0..n / 2).rev() {
+            Self::heapify(arr, n, i);
+        }
+        for i in (1..n).rev() {
+            arr.swap(0, i);
+            Self::heapify(arr, i, 0);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1175,8 +1310,8 @@ Counting sort works by counting the frequency of each distinct value, then recon
 2. Create a `count` map to store the frequency of each value.
 3. Iterate through the array, incrementing the count for each value.
 4. Iterate from `min` to `max` value:
-   - For each value with a positive count, place it into the array the appropriate number of times.
-   - Decrement the count as values are placed.
+    - For each value with a positive count, place it into the array the appropriate number of times.
+    - Decrement the count as values are placed.
 5. Return the sorted array.
 
 ::tabs-start
@@ -1423,6 +1558,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        Self::counting_sort(&mut nums);
+        nums
+    }
+
+    fn counting_sort(arr: &mut Vec<i32>) {
+        let mut count = HashMap::new();
+        let mut min_val = arr[0];
+        let mut max_val = arr[0];
+
+        for &val in arr.iter() {
+            min_val = min_val.min(val);
+            max_val = max_val.max(val);
+            *count.entry(val).or_insert(0) += 1;
+        }
+
+        let mut index = 0;
+        for val in min_val..=max_val {
+            let mut c = *count.get(&val).unwrap_or(&0);
+            while c > 0 {
+                arr[index] = val;
+                index += 1;
+                c -= 1;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1444,10 +1610,10 @@ Radix sort processes integers digit by digit, from least significant to most sig
 
 1. Separate numbers into `negatives` (converted to positive) and `positives`.
 2. For each group, apply radix sort:
-   - Determine the maximum element to know how many digit passes are needed.
-   - For each digit position (units, tens, hundreds, etc.):
-     - Use counting sort based on the current digit.
-     - Maintain stability by processing from right to left.
+    - Determine the maximum element to know how many digit passes are needed.
+    - For each digit position (units, tens, hundreds, etc.):
+        - Use counting sort based on the current digit.
+        - Maintain stability by processing from right to left.
 3. Reverse the sorted `negatives` and negate them back.
 4. Concatenate `negatives` and `positives` to form the final sorted array.
 
@@ -1943,6 +2109,67 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut negatives: Vec<i32> = nums.iter().filter(|&&x| x < 0).map(|&x| -x).collect();
+        let mut positives: Vec<i32> = nums.iter().filter(|&&x| x >= 0).copied().collect();
+
+        if !negatives.is_empty() {
+            Self::radix_sort(&mut negatives);
+            negatives.reverse();
+            for v in negatives.iter_mut() {
+                *v = -*v;
+            }
+        }
+
+        if !positives.is_empty() {
+            Self::radix_sort(&mut positives);
+        }
+
+        let mut index = 0;
+        for &num in &negatives {
+            nums[index] = num;
+            index += 1;
+        }
+        for &num in &positives {
+            nums[index] = num;
+            index += 1;
+        }
+        nums
+    }
+
+    fn count_sort(arr: &mut Vec<i32>, d: i32) {
+        let n = arr.len();
+        let mut count = [0usize; 10];
+        for &num in arr.iter() {
+            count[((num / d) % 10) as usize] += 1;
+        }
+        for i in 1..10 {
+            count[i] += count[i - 1];
+        }
+
+        let mut res = vec![0i32; n];
+        for i in (0..n).rev() {
+            let idx = ((arr[i] / d) % 10) as usize;
+            res[count[idx] - 1] = arr[i];
+            count[idx] -= 1;
+        }
+
+        arr.copy_from_slice(&res);
+    }
+
+    fn radix_sort(arr: &mut Vec<i32>) {
+        let max_element = *arr.iter().max().unwrap();
+        let mut d = 1;
+        while max_element / d > 0 {
+            Self::count_sort(arr, d);
+            d *= 10;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1964,9 +2191,9 @@ Shell sort is a generalization of insertion sort that allows exchanges of elemen
 
 1. Start with a `gap` of `n / 2`.
 2. For each `gap` value:
-   - Perform a gapped insertion sort: for each element, compare with elements `gap` positions behind.
-   - Shift elements forward by `gap` until the correct position is found.
-   - Insert the element.
+    - Perform a gapped insertion sort: for each element, compare with elements `gap` positions behind.
+    - Shift elements forward by `gap` until the correct position is found.
+    - Insert the element.
 3. Reduce the `gap` by half and repeat until `gap` is `0`.
 4. Return the sorted array.
 
@@ -2185,6 +2412,33 @@ class Solution {
                 nums[j + gap] = tmp
             }
             gap /= 2
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        if n == 1 { return nums; }
+        Self::shell_sort(&mut nums, n);
+        nums
+    }
+
+    fn shell_sort(nums: &mut Vec<i32>, n: usize) {
+        let mut gap = n / 2;
+        while gap >= 1 {
+            for i in gap..n {
+                let tmp = nums[i];
+                let mut j = i as i32 - gap as i32;
+                while j >= 0 && nums[j as usize] > tmp {
+                    nums[(j as usize) + gap] = nums[j as usize];
+                    j -= gap as i32;
+                }
+                nums[(j + gap as i32) as usize] = tmp;
+            }
+            gap /= 2;
         }
     }
 }

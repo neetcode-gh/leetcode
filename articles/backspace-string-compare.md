@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack** - Simulating the typing process with push/pop operations for characters and backspaces
 - **Two Pointers** - Comparing strings in reverse without extra space
 - **String Manipulation** - Building and comparing processed strings
@@ -16,8 +18,8 @@ The backspace character `#` removes the previous character, which is exactly wha
 
 1. Create a helper function that converts a string to its final form using a stack.
 2. For each character in the string:
-   - If it's `#` and the stack is not empty, pop from the stack.
-   - Otherwise, push the character onto the stack.
+    - If it's `#` and the stack is not empty, pop from the stack.
+    - Otherwise, push the character onto the stack.
 3. Convert the stack to a string.
 4. Compare the converted versions of both input strings.
 
@@ -194,6 +196,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn backspace_compare(s: String, t: String) -> bool {
+        fn convert(s: &str) -> String {
+            let mut res: Vec<char> = Vec::new();
+            for c in s.chars() {
+                if c == '#' {
+                    res.pop();
+                } else {
+                    res.push(c);
+                }
+            }
+            res.into_iter().collect()
+        }
+        convert(&s) == convert(&t)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,9 +237,9 @@ Instead of building the result from the beginning, we can iterate from the end. 
 1. Create a helper function that processes a string from right to left.
 2. Start from the last character and maintain a backspace counter.
 3. For each character going backward:
-   - If it's `#`, increment the backspace count.
-   - Else if the backspace count is positive, decrement it (skip this character).
-   - Otherwise, add the character to the result.
+    - If it's `#`, increment the backspace count.
+    - Else if the backspace count is positive, decrement it (skip this character).
+    - Otherwise, add the character to the result.
 4. Compare the processed versions of both strings.
 
 ::tabs-start
@@ -404,6 +425,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn backspace_compare(s: String, t: String) -> bool {
+        fn convert(s: &str) -> Vec<char> {
+            let chars: Vec<char> = s.chars().collect();
+            let mut res: Vec<char> = Vec::new();
+            let mut backspace = 0;
+            for i in (0..chars.len()).rev() {
+                if chars[i] == '#' {
+                    backspace += 1;
+                } else if backspace > 0 {
+                    backspace -= 1;
+                } else {
+                    res.push(chars[i]);
+                }
+            }
+            res
+        }
+        convert(&s) == convert(&t)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -425,14 +469,14 @@ We can compare the strings character by character without building the full resu
 
 1. Initialize two pointers at the end of each string.
 2. Create a helper function that finds the next valid character index by:
-   - Counting backspaces encountered.
-   - Skipping characters that would be deleted.
-   - Returning the index of the next valid character (or `-1` if none).
+    - Counting backspaces encountered.
+    - Skipping characters that would be deleted.
+    - Returning the index of the next valid character (or `-1` if none).
 3. While either pointer is valid:
-   - Find the next valid character in each string.
-   - Compare them (treat out-of-bounds as empty).
-   - If they differ, return `false`.
-   - Move both pointers left.
+    - Find the next valid character in each string.
+    - Compare them (treat out-of-bounds as empty).
+    - If they differ, return `false`.
+    - Move both pointers left.
 4. Return `true` if we finish without finding a mismatch.
 
 ::tabs-start
@@ -764,6 +808,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn backspace_compare(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+
+        fn next_valid_char(s: &[u8], mut index: i32) -> i32 {
+            let mut backspace = 0;
+            while index >= 0 {
+                if s[index as usize] == b'#' {
+                    backspace += 1;
+                } else if backspace > 0 {
+                    backspace -= 1;
+                } else {
+                    break;
+                }
+                index -= 1;
+            }
+            index
+        }
+
+        let mut index_s = s.len() as i32 - 1;
+        let mut index_t = t.len() as i32 - 1;
+
+        while index_s >= 0 || index_t >= 0 {
+            index_s = next_valid_char(s, index_s);
+            index_t = next_valid_char(t, index_t);
+
+            let char_s = if index_s >= 0 { s[index_s as usize] } else { 0 };
+            let char_t = if index_t >= 0 { t[index_t as usize] } else { 0 };
+
+            if char_s != char_t {
+                return false;
+            }
+
+            index_s -= 1;
+            index_t -= 1;
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -785,10 +873,10 @@ This is a more compact version of the two-pointer approach. Instead of using a h
 
 1. Initialize pointers at the end of both strings and backspace counters for each.
 2. Loop until both pointers are exhausted:
-   - For each string, skip backward while there are backspaces to apply or `#` characters to count.
-   - Compare the current valid characters from both strings.
-   - If they don't match, check if both pointers are `-1` (both exhausted). If not, return `false`.
-   - Move both pointers left and continue.
+    - For each string, skip backward while there are backspaces to apply or `#` characters to count.
+    - Compare the current valid characters from both strings.
+    - If they don't match, check if both pointers are `-1` (both exhausted). If not, return `false`.
+    - Move both pointers left and continue.
 3. Return `true` if all comparisons passed.
 
 ::tabs-start
@@ -1029,6 +1117,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn backspace_compare(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let mut index_s = s.len() as i32 - 1;
+        let mut index_t = t.len() as i32 - 1;
+        let mut backspace_s = 0;
+        let mut backspace_t = 0;
+
+        loop {
+            while index_s >= 0
+                && (backspace_s > 0 || s[index_s as usize] == b'#')
+            {
+                backspace_s += if s[index_s as usize] == b'#' { 1 } else { -1 };
+                index_s -= 1;
+            }
+
+            while index_t >= 0
+                && (backspace_t > 0 || t[index_t as usize] == b'#')
+            {
+                backspace_t += if t[index_t as usize] == b'#' { 1 } else { -1 };
+                index_t -= 1;
+            }
+
+            if !(index_s >= 0
+                && index_t >= 0
+                && s[index_s as usize] == t[index_t as usize])
+            {
+                return index_s == -1 && index_t == -1;
+            }
+            index_s -= 1;
+            index_t -= 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1043,7 +1169,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Popping from Empty Stack
+
 When processing a backspace character, you must check if the stack is non-empty before popping, since backspaces at the start of a string have no effect.
+
 ```python
 # Wrong: unconditional pop
 if char == '#':
@@ -1055,7 +1183,9 @@ if char == '#':
 ```
 
 ### Processing Strings Left-to-Right in Two-Pointer Approach
+
 The O(1) space two-pointer solution must iterate from right to left. Going left to right makes it impossible to know how many characters will be deleted ahead of time.
+
 ```python
 # Wrong: left-to-right doesn't work for O(1) space
 for i in range(len(s)):  # can't determine final result this way

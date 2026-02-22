@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Monotonic Stack** - The optimal solution uses a monotonic decreasing stack to track visible people efficiently
 - **Stack Operations** - Understanding push, pop, and peek operations for tracking element relationships
 
@@ -15,8 +17,8 @@ For each person in the queue, we want to count how many people they can see to t
 
 1. For each person at index `i`, initialize a counter and track the maximum height seen so far.
 2. Iterate through all people to the right (from `j = i + 1` to `n - 1`):
-   - If the minimum of `heights[i]` and `heights[j]` is greater than the max height between them, increment `cnt`.
-   - Update the max height to include `heights[j]`.
+    - If the minimum of `heights[i]` and `heights[j]` is greater than the max height between them, increment `cnt`.
+    - Update the max height to include `heights[j]`.
 3. Store `cnt` for person `i` and return `res`.
 
 ::tabs-start
@@ -184,6 +186,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_see_persons_count(heights: Vec<i32>) -> Vec<i32> {
+        let n = heights.len();
+        let mut res = vec![0; n];
+        for i in 0..n {
+            let mut maxi = 0;
+            let mut cnt = 0;
+            for j in (i + 1)..n {
+                if heights[i].min(heights[j]) > maxi {
+                    cnt += 1;
+                }
+                maxi = maxi.max(heights[j]);
+            }
+            res[i] = cnt;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -203,9 +226,9 @@ A monotonic decreasing stack helps us efficiently find visibility relationships.
 
 1. Initialize `res` array with zeros and an empty stack to store indices.
 2. Iterate through `heights` from left to right:
-   - While the stack is not empty and `heights[stack[-1]] < h`, pop and increment their count (they can see the current person).
-   - If the stack is not empty, the top person can see the current person, so increment their count.
-   - Push the current index onto the stack.
+    - While the stack is not empty and `heights[stack[-1]] < h`, pop and increment their count (they can see the current person).
+    - If the stack is not empty, the top person can see the current person, so increment their count.
+    - Push the current index onto the stack.
 3. Return `res`.
 
 ::tabs-start
@@ -382,6 +405,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_see_persons_count(heights: Vec<i32>) -> Vec<i32> {
+        let n = heights.len();
+        let mut res = vec![0; n];
+        let mut stack: Vec<usize> = Vec::new();
+
+        for i in 0..n {
+            let h = heights[i];
+            while let Some(&top) = stack.last() {
+                if heights[top] >= h { break; }
+                res[stack.pop().unwrap()] += 1;
+            }
+            if let Some(&top) = stack.last() {
+                res[top] += 1;
+            }
+            stack.push(i);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -401,9 +447,9 @@ We can also solve this by iterating from right to left. For each person, we coun
 
 1. Initialize `res` array with zeros and an empty stack to store heights.
 2. Iterate through `heights` from right to left:
-   - While the stack is not empty and `stack[-1] < heights[i]`, pop and increment `res[i]`.
-   - If the stack is not empty after popping, increment `res[i]` by `1` (the first taller or equal person is visible).
-   - Push `heights[i]` onto the stack.
+    - While the stack is not empty and `stack[-1] < heights[i]`, pop and increment `res[i]`.
+    - If the stack is not empty after popping, increment `res[i]` by `1` (the first taller or equal person is visible).
+    - Push `heights[i]` onto the stack.
 3. Return `res`.
 
 ::tabs-start
@@ -580,6 +626,29 @@ class Solution {
             stack.append(heights[i])
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_see_persons_count(heights: Vec<i32>) -> Vec<i32> {
+        let n = heights.len();
+        let mut res = vec![0; n];
+        let mut stack: Vec<i32> = Vec::new();
+
+        for i in (0..n).rev() {
+            while let Some(&top) = stack.last() {
+                if top >= heights[i] { break; }
+                stack.pop();
+                res[i] += 1;
+            }
+            if !stack.is_empty() {
+                res[i] += 1;
+            }
+            stack.push(heights[i]);
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting element frequencies efficiently using key-value data structures
 - **Sorting** - Understanding how to sort arrays and the time complexity implications
 - **Greedy Algorithms** - Making locally optimal choices (removing least frequent elements first) to achieve a global optimum
@@ -18,8 +20,8 @@ To minimize the number of unique integers after removing `k` elements, we should
 1. Count the frequency of each integer using a hash map.
 2. Extract the frequency values and sort them in ascending order.
 3. Iterate through the sorted frequencies:
-   - If `k` is large enough to remove all occurrences of this integer, subtract the frequency from `k` and decrease the unique count.
-   - Otherwise, we cannot fully remove this integer, so return the remaining unique count.
+    - If `k` is large enough to remove all occurrences of this integer, subtract the frequency from `k` and decrease the unique count.
+    - Otherwise, we cannot fully remove this integer, so return the remaining unique count.
 4. If all integers can be removed, return `0`.
 
 ::tabs-start
@@ -217,6 +219,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_least_num_of_unique_ints(arr: Vec<i32>, k: i32) -> i32 {
+        let mut freq_map = HashMap::new();
+        for &num in &arr {
+            *freq_map.entry(num).or_insert(0) += 1;
+        }
+
+        let mut freq: Vec<i32> = freq_map.values().cloned().collect();
+        freq.sort();
+
+        let mut k = k;
+        let n = freq.len();
+        for i in 0..n {
+            if k >= freq[i] {
+                k -= freq[i];
+            } else {
+                return (n - i) as i32;
+            }
+        }
+        0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,9 +264,9 @@ A min-heap naturally gives us access to the smallest frequency first. Instead of
 1. Build a frequency map of all integers.
 2. Insert all frequency values into a min-heap.
 3. While `k > 0` and the heap is not empty:
-   - Pop the smallest frequency.
-   - If `k` can cover this frequency, subtract it from `k` and decrement the result count.
-   - Otherwise, stop (we cannot fully remove this integer).
+    - Pop the smallest frequency.
+    - If `k` can cover this frequency, subtract it from `k` and decrement the result count.
+    - Otherwise, stop (we cannot fully remove this integer).
 4. Return the remaining unique count.
 
 ::tabs-start
@@ -459,6 +486,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_least_num_of_unique_ints(arr: Vec<i32>, k: i32) -> i32 {
+        let mut freq_map = HashMap::new();
+        for &num in &arr {
+            *freq_map.entry(num).or_insert(0) += 1;
+        }
+
+        let mut min_heap = BinaryHeap::new();
+        for &count in freq_map.values() {
+            min_heap.push(Reverse(count));
+        }
+
+        let mut k = k;
+        let mut res = min_heap.len() as i32;
+        while k > 0 && !min_heap.is_empty() {
+            let Reverse(f) = min_heap.pop().unwrap();
+            if k >= f {
+                k -= f;
+                res -= 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -479,9 +533,9 @@ Since frequencies are bounded by the array length, we can use bucket sort to avo
 1. Build a frequency map of all integers.
 2. Create a frequency list (bucket array) where `freqList[f]` counts how many integers have frequency `f`.
 3. Iterate `f` from `1` to the array length:
-   - Calculate how many integers with frequency `f` can be fully removed given the remaining `k`.
-   - Subtract the cost from `k` and reduce the result count.
-   - If `k` cannot remove all integers at this frequency, compute partial removal and break.
+    - Calculate how many integers with frequency `f` can be fully removed given the remaining `k`.
+    - Subtract the cost from `k` and reduce the result count.
+    - If `k` cannot remove all integers at this frequency, compute partial removal and break.
 4. Return the remaining unique count.
 
 ::tabs-start
@@ -725,6 +779,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_least_num_of_unique_ints(arr: Vec<i32>, k: i32) -> i32 {
+        let mut freq_map = HashMap::new();
+        for &num in &arr {
+            *freq_map.entry(num).or_insert(0i32) += 1;
+        }
+
+        let mut freq_list = vec![0i32; arr.len() + 1];
+        for &f in freq_map.values() {
+            freq_list[f as usize] += 1;
+        }
+
+        let mut k = k;
+        let mut res = freq_map.len() as i32;
+        for f in 1..freq_list.len() {
+            let f = f as i32;
+            let mut remove = freq_list[f as usize];
+            if k >= f * remove {
+                k -= f * remove;
+                res -= remove;
+            } else {
+                remove = k / f;
+                res -= remove;
+                break;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -738,7 +824,7 @@ class Solution {
 
 ### Removing High-Frequency Elements First
 
-The greedy strategy requires removing elements with the *lowest* frequency first to maximize the reduction in unique count. Removing high-frequency elements wastes removals since you need more deletions to eliminate a single unique integer. Always sort frequencies in ascending order.
+The greedy strategy requires removing elements with the _lowest_ frequency first to maximize the reduction in unique count. Removing high-frequency elements wastes removals since you need more deletions to eliminate a single unique integer. Always sort frequencies in ascending order.
 
 ### Counting Unique Integers Incorrectly
 

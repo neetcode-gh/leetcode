@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down problems into smaller subproblems with base cases
 - **Dynamic Programming** - Memoization and tabulation techniques to avoid redundant computation
 - **Graph Traversal** - Understanding state transitions as edges in an implicit graph
@@ -266,6 +268,34 @@ class Solution {
             res = (res + dfs(n - 1, next)) % MOD
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn knight_dialer(n: i32) -> i32 {
+        if n == 1 { return 10; }
+        const MOD: i32 = 1_000_000_007;
+        let jumps: Vec<Vec<usize>> = vec![
+            vec![4,6], vec![6,8], vec![7,9], vec![4,8], vec![0,3,9],
+            vec![], vec![0,1,7], vec![2,6], vec![1,3], vec![2,4],
+        ];
+
+        fn dfs(n: i32, d: usize, jumps: &Vec<Vec<usize>>) -> i32 {
+            if n == 0 { return 1; }
+            let mut res: i64 = 0;
+            for &next in &jumps[d] {
+                res = (res + dfs(n - 1, next, jumps) as i64) % 1_000_000_007;
+            }
+            res as i32
+        }
+
+        let mut res: i64 = 0;
+        for d in 0..10 {
+            res = (res + dfs(n - 1, d, &jumps) as i64) % MOD as i64;
+        }
+        res as i32
     }
 }
 ```
@@ -585,6 +615,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn knight_dialer(n: i32) -> i32 {
+        if n == 1 { return 10; }
+        const MOD: i64 = 1_000_000_007;
+        let jumps: Vec<Vec<usize>> = vec![
+            vec![4,6], vec![6,8], vec![7,9], vec![4,8], vec![0,3,9],
+            vec![], vec![0,1,7], vec![2,6], vec![1,3], vec![2,4],
+        ];
+        let n = n as usize;
+        let mut dp = vec![vec![-1i64; n + 1]; 10];
+
+        fn dfs(n: usize, d: usize, jumps: &Vec<Vec<usize>>, dp: &mut Vec<Vec<i64>>) -> i64 {
+            if n == 0 { return 1; }
+            if dp[d][n] != -1 { return dp[d][n]; }
+            dp[d][n] = 0;
+            for &next in &jumps[d] {
+                dp[d][n] = (dp[d][n] + dfs(n - 1, next, jumps, dp)) % 1_000_000_007;
+            }
+            dp[d][n]
+        }
+
+        let mut res: i64 = 0;
+        for d in 0..10 {
+            res = (res + dfs(n - 1, d, &jumps, &mut dp)) % MOD;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,7 +665,7 @@ Instead of recursing from the top, we can build up from the base case. Starting 
 
 1. Initialize `dp[d][0] = 1` for all digits (base case).
 2. For each step from `1` to `n-1`:
-   - For each digit `d`, sum up `dp[j][step-1]` for all `j` in `jumps[d]`.
+    - For each digit `d`, sum up `dp[j][step-1]` for all `j` in `jumps[d]`.
 3. The answer is the sum of `dp[d][n-1]` for all digits `d`.
 
 ::tabs-start
@@ -869,6 +930,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn knight_dialer(n: i32) -> i32 {
+        if n == 1 { return 10; }
+        const MOD: i64 = 1_000_000_007;
+        let jumps: Vec<Vec<usize>> = vec![
+            vec![4,6], vec![6,8], vec![7,9], vec![4,8], vec![0,3,9],
+            vec![], vec![0,1,7], vec![2,6], vec![1,3], vec![2,4],
+        ];
+        let n = n as usize;
+        let mut dp = vec![vec![0i64; n + 1]; 10];
+        for d in 0..10 {
+            dp[d][0] = 1;
+        }
+        for step in 1..n {
+            for d in 0..10 {
+                for &j in &jumps[d] {
+                    dp[d][step] = (dp[d][step] + dp[j][step - 1]) % MOD;
+                }
+            }
+        }
+        let mut res: i64 = 0;
+        for d in 0..10 {
+            res = (res + dp[d][n - 1]) % MOD;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -888,9 +979,9 @@ Since each step only depends on the previous step, we don't need to store the en
 
 1. Initialize `dp` array with `1` for each digit.
 2. For each step:
-   - Create a new `nextDp` array initialized to `0`.
-   - For each digit `d`, add `dp[d]` to `nextDp[j]` for each `j` in `jumps[d]`.
-   - Replace `dp` with `nextDp`.
+    - Create a new `nextDp` array initialized to `0`.
+    - For each digit `d`, add `dp[d]` to `nextDp[j]` for each `j` in `jumps[d]`.
+    - Replace `dp` with `nextDp`.
 3. Sum all values in `dp` for the final answer.
 
 ::tabs-start
@@ -1147,6 +1238,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn knight_dialer(n: i32) -> i32 {
+        if n == 1 { return 10; }
+        const MOD: i64 = 1_000_000_007;
+        let jumps: Vec<Vec<usize>> = vec![
+            vec![4,6], vec![6,8], vec![7,9], vec![4,8], vec![0,3,9],
+            vec![], vec![0,1,7], vec![2,6], vec![1,3], vec![2,4],
+        ];
+        let mut dp = vec![1i64; 10];
+        for _ in 0..(n - 1) {
+            let mut next_dp = vec![0i64; 10];
+            for d in 0..10 {
+                for &j in &jumps[d] {
+                    next_dp[j] = (next_dp[j] + dp[d]) % MOD;
+                }
+            }
+            dp = next_dp;
+        }
+        dp.iter().fold(0i64, |acc, &x| (acc + x) % MOD) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1354,6 +1469,26 @@ class Solution {
         }
 
         return jumps.reduce(0) { ($0 + $1) % MOD }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn knight_dialer(n: i32) -> i32 {
+        if n == 1 { return 10; }
+        const MOD: i64 = 1_000_000_007;
+        let mut jumps: [i64; 4] = [1, 4, 2, 2]; // [D, A, B, C]
+        for _ in 0..(n - 1) {
+            let tmp = [
+                jumps[3],
+                (2 * jumps[2] + 2 * jumps[3]) % MOD,
+                jumps[1],
+                (2 * jumps[0] + jumps[1]) % MOD,
+            ];
+            jumps = tmp;
+        }
+        (jumps.iter().sum::<i64>() % MOD) as i32
     }
 }
 ```
@@ -1891,6 +2026,55 @@ class Solution {
             e >>= 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn knight_dialer(n: i32) -> i32 {
+        if n == 1 { return 10; }
+        const MOD: i64 = 1_000_000_007;
+        let jumps: Vec<Vec<usize>> = vec![
+            vec![4,6], vec![6,8], vec![7,9], vec![4,8], vec![0,3,9],
+            vec![], vec![0,1,7], vec![2,6], vec![1,3], vec![2,4],
+        ];
+
+        let mut mat = vec![vec![0i64; 10]; 10];
+        for i in 0..10 {
+            for &j in &jumps[i] {
+                mat[i][j] = 1;
+            }
+        }
+
+        let multiply = |a: &Vec<Vec<i64>>, b: &Vec<Vec<i64>>| -> Vec<Vec<i64>> {
+            let mut product = vec![vec![0i64; 10]; 10];
+            for i in 0..10 {
+                for j in 0..10 {
+                    for k in 0..10 {
+                        product[i][k] = (product[i][k] + a[i][j] * b[j][k]) % MOD;
+                    }
+                }
+            }
+            product
+        };
+
+        let mut res = vec![vec![0i64; 10]; 10];
+        for i in 0..10 { res[i][i] = 1; }
+        let mut exp = n - 1;
+        while exp > 0 {
+            if exp & 1 == 1 { res = multiply(&res, &mat); }
+            mat = multiply(&mat, &mat);
+            exp >>= 1;
+        }
+
+        let mut ans: i64 = 0;
+        for i in 0..10 {
+            for j in 0..10 {
+                ans = (ans + res[i][j]) % MOD;
+            }
+        }
+        ans as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking the problem into smaller subproblems by considering each die roll
 - **Dynamic Programming** - Using memoization or tabulation to avoid redundant calculations
 - **Modular arithmetic** - Applying modulo operations to prevent integer overflow
@@ -224,6 +226,30 @@ class Solution {
             res = (res + count(n - 1, target - val, k)) % MOD
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_rolls_to_target(n: i32, k: i32, target: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+
+        fn count(n: i32, target: i32, k: i32) -> i32 {
+            if n == 0 {
+                return if target == 0 { 1 } else { 0 };
+            }
+            if target < 0 {
+                return 0;
+            }
+            let mut res = 0;
+            for val in 1..=k {
+                res = (res + count(n - 1, target - val, k)) % MOD;
+            }
+            res
+        }
+
+        count(n, target, k)
     }
 }
 ```
@@ -532,6 +558,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_rolls_to_target(n: i32, k: i32, target: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k, target) = (n as usize, k as usize, target as usize);
+        let mut dp = vec![vec![-1i32; target + 1]; n + 1];
+
+        fn count(
+            n: usize, target: usize, k: usize, dp: &mut Vec<Vec<i32>>,
+        ) -> i32 {
+            if n == 0 {
+                return if target == 0 { 1 } else { 0 };
+            }
+            if dp[n][target] != -1 {
+                return dp[n][target];
+            }
+            let mut res = 0i32;
+            for val in 1..=k {
+                if target >= val {
+                    res = (res + count(n - 1, target - val, k, dp)) % MOD;
+                }
+            }
+            dp[n][target] = res;
+            res
+        }
+
+        count(n, target, k, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -554,9 +611,9 @@ Instead of recursion with memoization, we can build the solution iteratively fro
 1. Create a 2D array `dp` of size `(n + 1) x (target + 1)`, initialized to 0.
 2. Set `dp[0][0] = 1` (one way to achieve sum 0 with 0 dice).
 3. For each die `i` from 1 to `n`:
-   - For each face value `val` from 1 to `k`:
-     - For each possible sum `t` from `val` to `target`:
-       - Add `dp[i - 1][t - val]` to `dp[i][t]`.
+    - For each face value `val` from 1 to `k`:
+        - For each possible sum `t` from `val` to `target`:
+            - Add `dp[i - 1][t - val]` to `dp[i][t]`.
 4. Return `dp[n][target]`.
 
 ::tabs-start
@@ -726,6 +783,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_rolls_to_target(n: i32, k: i32, target: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k, target) = (n as usize, k as usize, target as usize);
+        let mut dp = vec![vec![0i32; target + 1]; n + 1];
+        dp[0][0] = 1;
+
+        for i in 1..=n {
+            for val in 1..=k {
+                for t in val..=target {
+                    dp[i][t] = (dp[i][t] + dp[i - 1][t - val]) % MOD;
+                }
+            }
+        }
+
+        dp[n][target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -741,18 +819,18 @@ class Solution {
 
 ### Intuition
 
-In the bottom-up approach, we only need the previous row to compute the current row. This observation allows us to reduce space from O(n * target) to O(target) by using two 1D arrays: one for the current state and one for the next state. After processing each die, we swap the arrays.
+In the bottom-up approach, we only need the previous row to compute the current row. This observation allows us to reduce space from O(n \* target) to O(target) by using two 1D arrays: one for the current state and one for the next state. After processing each die, we swap the arrays.
 
 ### Algorithm
 
 1. Create a 1D array `dp` of size `target + 1`, initialized to 0.
 2. Set `dp[0] = 1`.
 3. For each die (from 0 to `n - 1`):
-   - Create a new array `next_dp` initialized to 0.
-   - For each face value `val` from 1 to `k`:
-     - For each sum `total` from `val` to `target`:
-       - Add `dp[total - val]` to `next_dp[total]`.
-   - Replace `dp` with `next_dp`.
+    - Create a new array `next_dp` initialized to 0.
+    - For each face value `val` from 1 to `k`:
+        - For each sum `total` from `val` to `target`:
+            - Add `dp[total - val]` to `next_dp[total]`.
+    - Replace `dp` with `next_dp`.
 4. Return `dp[target]`.
 
 ::tabs-start
@@ -933,6 +1011,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_rolls_to_target(n: i32, k: i32, target: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k, target) = (n as usize, k as usize, target as usize);
+        let mut dp = vec![0i32; target + 1];
+        dp[0] = 1;
+
+        for _ in 0..n {
+            let mut next_dp = vec![0i32; target + 1];
+            for val in 1..=k {
+                for total in val..=target {
+                    next_dp[total] =
+                        (next_dp[total] + dp[total - val]) % MOD;
+                }
+            }
+            dp = next_dp;
+        }
+
+        dp[target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -955,10 +1057,10 @@ We can use a single array and iterate backwards to avoid overwriting values we s
 1. Create a 1D array `dp` of size `target + 1`, initialized to 0.
 2. Set `dp[0] = 1`.
 3. For each die (from 0 to `n - 1`):
-   - Iterate `t` from `target` down to 0:
-     - Store the current value `ways = dp[t]` and reset `dp[t] = 0`.
-     - If `ways > 0`, for each face value `val` from 1 to `min(k, target - t)`:
-       - Add `ways` to `dp[t + val]`.
+    - Iterate `t` from `target` down to 0:
+        - Store the current value `ways = dp[t]` and reset `dp[t] = 0`.
+        - If `ways > 0`, for each face value `val` from 1 to `min(k, target - t)`:
+            - Add `ways` to `dp[t + val]`.
 4. Return `dp[target]`.
 
 ::tabs-start
@@ -1150,6 +1252,31 @@ class Solution {
         }
 
         return dp[target]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_rolls_to_target(n: i32, k: i32, target: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k, target) = (n as usize, k as usize, target as usize);
+        let mut dp = vec![0i32; target + 1];
+        dp[0] = 1;
+
+        for _ in 0..n {
+            for t in (0..=target).rev() {
+                let ways = dp[t];
+                dp[t] = 0;
+                if ways > 0 {
+                    for val in 1..=k.min(target - t) {
+                        dp[t + val] = (dp[t + val] + ways) % MOD;
+                    }
+                }
+            }
+        }
+
+        dp[target]
     }
 }
 ```

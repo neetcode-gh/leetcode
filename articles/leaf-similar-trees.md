@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, node representation, and the concept of leaf nodes (nodes with no children)
 - **Depth-First Search (DFS)** - Recursive traversal of trees and understanding pre-order traversal to visit nodes in left-to-right order
 - **Recursion** - Writing recursive functions with base cases and recursive calls
@@ -17,9 +19,9 @@ Two trees are leaf-similar if their leaf nodes, read from left to right, form th
 
 1. Create a helper function `dfs` that traverses a tree and appends leaf values to a list.
 2. For each node:
-   - If it's `null`, return immediately.
-   - If it's a leaf (no left or right child), add its value to the list.
-   - Otherwise, recursively process the left subtree, then the right subtree.
+    - If it's `null`, return immediately.
+    - If it's a leaf (no left or right child), add its value to the list.
+    - Otherwise, recursively process the left subtree, then the right subtree.
 3. Collect leaves from both trees into separate lists.
 4. Compare the two lists and return whether they are equal.
 
@@ -303,6 +305,40 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn leaf_similar(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        fn dfs(root: &Option<Rc<RefCell<TreeNode>>>, leaf: &mut Vec<i32>) {
+            if let Some(node) = root {
+                let node = node.borrow();
+                if node.left.is_none() && node.right.is_none() {
+                    leaf.push(node.val);
+                    return;
+                }
+                dfs(&node.left, leaf);
+                dfs(&node.right, leaf);
+            }
+        }
+
+        let mut leaf1 = vec![];
+        let mut leaf2 = vec![];
+        dfs(&root1, &mut leaf1);
+        dfs(&root2, &mut leaf2);
+        leaf1 == leaf2
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,7 +360,7 @@ Instead of storing both leaf sequences and comparing at the end, we can collect 
 
 1. Traverse the first tree using DFS and store all leaf values in a stack (leaves appear in reverse order due to left-to-right traversal).
 2. Define a second DFS function for the second tree that traverses right-to-left:
-   - If a leaf is found, pop from the stack and compare. Return `false` on mismatch or if the stack is empty.
+    - If a leaf is found, pop from the stack and compare. Return `false` on mismatch or if the stack is empty.
 3. After traversing the second tree, check that the stack is empty (no extra leaves in the first tree).
 4. Return `true` only if all leaves matched and both trees had the same number of leaves.
 
@@ -666,6 +702,52 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn leaf_similar(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        fn dfs(root: &Option<Rc<RefCell<TreeNode>>>, leaf: &mut Vec<i32>) {
+            if let Some(node) = root {
+                let node = node.borrow();
+                if node.left.is_none() && node.right.is_none() {
+                    leaf.push(node.val);
+                    return;
+                }
+                dfs(&node.left, leaf);
+                dfs(&node.right, leaf);
+            }
+        }
+
+        fn dfs1(root: &Option<Rc<RefCell<TreeNode>>>, leaf: &mut Vec<i32>) -> bool {
+            if let Some(node) = root {
+                let node = node.borrow();
+                if node.left.is_none() && node.right.is_none() {
+                    if leaf.is_empty() {
+                        return false;
+                    }
+                    return leaf.pop().unwrap() == node.val;
+                }
+                return dfs1(&node.right, leaf) && dfs1(&node.left, leaf);
+            }
+            true
+        }
+
+        let mut leaf1 = vec![];
+        dfs(&root1, &mut leaf1);
+        dfs1(&root2, &mut leaf1) && leaf1.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -688,8 +770,8 @@ Rather than collecting all leaves first, we can compare leaves one at a time usi
 1. Initialize two stacks, one for each tree, and push their root nodes.
 2. Create a helper function `getPathLeaf` that pops nodes from a stack until a leaf is found, pushing children along the way.
 3. While both stacks are non-empty:
-   - Get the next leaf from each stack.
-   - If the values differ, return `false`.
+    - Get the next leaf from each stack.
+    - If the values differ, return `false`.
 4. After the loop, return `true` only if both stacks are empty (both trees exhausted their leaves together).
 
 ::tabs-start
@@ -1017,6 +1099,50 @@ class Solution {
             }
         }
         return -1
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn leaf_similar(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        fn get_path_leaf(
+            stack: &mut Vec<Option<Rc<RefCell<TreeNode>>>>,
+        ) -> i32 {
+            while let Some(Some(node_rc)) = stack.pop() {
+                let node = node_rc.borrow();
+                if node.right.is_some() {
+                    stack.push(node.right.clone());
+                }
+                if node.left.is_some() {
+                    stack.push(node.left.clone());
+                }
+                if node.left.is_none() && node.right.is_none() {
+                    return node.val;
+                }
+            }
+            -1
+        }
+
+        let mut stack1 = vec![root1];
+        let mut stack2 = vec![root2];
+
+        while !stack1.is_empty() && !stack2.is_empty() {
+            if get_path_leaf(&mut stack1) != get_path_leaf(&mut stack2) {
+                return false;
+            }
+        }
+        stack1.is_empty() && stack2.is_empty()
     }
 }
 ```

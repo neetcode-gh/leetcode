@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stacks** - The core data structure used to maintain elements by frequency level
 - **Hash Maps** - Used for tracking element frequencies and grouping elements by frequency
 - **Heaps/Priority Queues** - One solution approach uses heaps to efficiently retrieve the most frequent element
@@ -258,6 +260,40 @@ class FreqStack {
             }
         }
         return -1
+    }
+}
+```
+
+```rust
+struct FreqStack {
+    cnt: HashMap<i32, i32>,
+    stack: Vec<i32>,
+}
+
+impl FreqStack {
+    fn new() -> Self {
+        FreqStack {
+            cnt: HashMap::new(),
+            stack: Vec::new(),
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        self.stack.push(val);
+        *self.cnt.entry(val).or_insert(0) += 1;
+    }
+
+    fn pop(&mut self) -> i32 {
+        let max_cnt = *self.cnt.values().max().unwrap_or(&0);
+        for i in (0..self.stack.len()).rev() {
+            let val = self.stack[i];
+            if self.cnt[&val] == max_cnt {
+                *self.cnt.get_mut(&val).unwrap() -= 1;
+                self.stack.remove(i);
+                return val;
+            }
+        }
+        -1
     }
 }
 ```
@@ -538,6 +574,36 @@ class FreqStack {
         let top = heap.removeFirst()
         cnt[top.val]! -= 1
         return top.val
+    }
+}
+```
+
+```rust
+struct FreqStack {
+    heap: BinaryHeap<(i32, i32, i32)>,
+    cnt: HashMap<i32, i32>,
+    index: i32,
+}
+
+impl FreqStack {
+    fn new() -> Self {
+        FreqStack {
+            heap: BinaryHeap::new(),
+            cnt: HashMap::new(),
+            index: 0,
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        *self.cnt.entry(val).or_insert(0) += 1;
+        self.heap.push((self.cnt[&val], self.index, val));
+        self.index += 1;
+    }
+
+    fn pop(&mut self) -> i32 {
+        let (_, _, val) = self.heap.pop().unwrap();
+        *self.cnt.get_mut(&val).unwrap() -= 1;
+        val
     }
 }
 ```
@@ -833,6 +899,43 @@ class FreqStack {
 }
 ```
 
+```rust
+struct FreqStack {
+    cnt: HashMap<i32, i32>,
+    stacks: HashMap<i32, Vec<i32>>,
+    max_cnt: i32,
+}
+
+impl FreqStack {
+    fn new() -> Self {
+        FreqStack {
+            cnt: HashMap::new(),
+            stacks: HashMap::new(),
+            max_cnt: 0,
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        let val_cnt = *self.cnt.entry(val).or_insert(0) + 1;
+        self.cnt.insert(val, val_cnt);
+        if val_cnt > self.max_cnt {
+            self.max_cnt = val_cnt;
+            self.stacks.entry(val_cnt).or_insert_with(Vec::new);
+        }
+        self.stacks.get_mut(&val_cnt).unwrap().push(val);
+    }
+
+    fn pop(&mut self) -> i32 {
+        let res = self.stacks.get_mut(&self.max_cnt).unwrap().pop().unwrap();
+        *self.cnt.get_mut(&res).unwrap() -= 1;
+        if self.stacks[&self.max_cnt].is_empty() {
+            self.max_cnt -= 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1105,6 +1208,40 @@ class FreqStack {
             stacks.removeLast()
         }
         return res
+    }
+}
+```
+
+```rust
+struct FreqStack {
+    cnt: HashMap<i32, usize>,
+    stacks: Vec<Vec<i32>>,
+}
+
+impl FreqStack {
+    fn new() -> Self {
+        FreqStack {
+            cnt: HashMap::new(),
+            stacks: vec![vec![]],
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        let val_cnt = *self.cnt.entry(val).or_insert(0) + 1;
+        self.cnt.insert(val, val_cnt);
+        if val_cnt == self.stacks.len() {
+            self.stacks.push(vec![]);
+        }
+        self.stacks[val_cnt].push(val);
+    }
+
+    fn pop(&mut self) -> i32 {
+        let res = self.stacks.last_mut().unwrap().pop().unwrap();
+        *self.cnt.get_mut(&res).unwrap() -= 1;
+        if self.stacks.last().unwrap().is_empty() {
+            self.stacks.pop();
+        }
+        res
     }
 }
 ```

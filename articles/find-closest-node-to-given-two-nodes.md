@@ -353,6 +353,53 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
+        let n = edges.len();
+        let mut adj = vec![vec![]; n];
+        for i in 0..n {
+            if edges[i] != -1 {
+                adj[i].push(edges[i] as usize);
+            }
+        }
+
+        let bfs = |src: usize| -> Vec<i32> {
+            let mut dist = vec![-1i32; n];
+            let mut q = VecDeque::new();
+            q.push_back((src, 0i32));
+            dist[src] = 0;
+            while let Some((node, d)) = q.pop_front() {
+                for &nei in &adj[node] {
+                    if dist[nei] == -1 {
+                        q.push_back((nei, d + 1));
+                        dist[nei] = d + 1;
+                    }
+                }
+            }
+            dist
+        };
+
+        let node1_dist = bfs(node1 as usize);
+        let node2_dist = bfs(node2 as usize);
+
+        let mut res = -1i32;
+        let mut res_dist = i32::MAX;
+        for i in 0..n {
+            if node1_dist[i] != -1 && node2_dist[i] != -1 {
+                let dist = node1_dist[i].max(node2_dist[i]);
+                if dist < res_dist {
+                    res_dist = dist;
+                    res = i as i32;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -675,6 +722,47 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
+        let n = edges.len();
+
+        let bfs = |src: usize| -> Vec<i32> {
+            let mut dist = vec![-1i32; n];
+            let mut q = VecDeque::new();
+            q.push_back(src);
+            dist[src] = 0;
+            while let Some(node) = q.pop_front() {
+                let nei = edges[node];
+                if nei == -1 || dist[nei as usize] != -1 {
+                    continue;
+                }
+                q.push_back(nei as usize);
+                dist[nei as usize] = dist[node] + 1;
+            }
+            dist
+        };
+
+        let node1_dist = bfs(node1 as usize);
+        let node2_dist = bfs(node2 as usize);
+
+        let mut res = -1i32;
+        let mut res_dist = i32::MAX;
+        for i in 0..n {
+            if node1_dist[i] != -1 && node2_dist[i] != -1 {
+                let dist = node1_dist[i].max(node2_dist[i]);
+                if dist < res_dist {
+                    res_dist = dist;
+                    res = i as i32;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -971,6 +1059,44 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
+        let n = edges.len();
+
+        fn dfs(node: usize, edges: &[i32], dist: &mut Vec<i32>) {
+            let nei = edges[node];
+            if nei != -1 && dist[nei as usize] == -1 {
+                dist[nei as usize] = dist[node] + 1;
+                dfs(nei as usize, edges, dist);
+            }
+        }
+
+        let mut node1_dist = vec![-1i32; n];
+        let mut node2_dist = vec![-1i32; n];
+        node1_dist[node1 as usize] = 0;
+        node2_dist[node2 as usize] = 0;
+
+        dfs(node1 as usize, &edges, &mut node1_dist);
+        dfs(node2 as usize, &edges, &mut node2_dist);
+
+        let mut res = -1i32;
+        let mut res_dist = i32::MAX;
+        for i in 0..n {
+            if node1_dist[i].min(node2_dist[i]) != -1 {
+                let dist = node1_dist[i].max(node2_dist[i]);
+                if dist < res_dist {
+                    res_dist = dist;
+                    res = i as i32;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1249,6 +1375,43 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
+        let n = edges.len();
+
+        let dfs = |start: usize| -> Vec<i32> {
+            let mut dist = vec![-1i32; n];
+            let mut node = start;
+            dist[node] = 0;
+            while edges[node] != -1 && dist[edges[node] as usize] == -1 {
+                let nei = edges[node] as usize;
+                dist[nei] = dist[node] + 1;
+                node = nei;
+            }
+            dist
+        };
+
+        let node1_dist = dfs(node1 as usize);
+        let node2_dist = dfs(node2 as usize);
+
+        let mut res = -1i32;
+        let mut res_dist = i32::MAX;
+        for i in 0..n {
+            if node1_dist[i].min(node2_dist[i]) != -1 {
+                let dist = node1_dist[i].max(node2_dist[i]);
+                if dist < res_dist {
+                    res_dist = dist;
+                    res = i as i32;
+                }
+            }
+        }
+        res
     }
 }
 ```

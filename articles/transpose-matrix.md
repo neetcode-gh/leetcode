@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays/Matrices** - Understanding row and column indexing in matrices
 - **Nested Loops** - Iterating through all elements of a 2D array systematically
 - **In-Place Swapping** - Swapping elements without using extra space (for square matrices)
@@ -166,6 +168,24 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn transpose(matrix: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = vec![vec![0; rows]; cols];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                res[c][r] = matrix[r][c];
+            }
+        }
+
+        res
     }
 }
 ```
@@ -431,6 +451,36 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn transpose(matrix: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+
+        if rows == cols {
+            let mut matrix = matrix;
+            for r in 0..rows {
+                for c in 0..r {
+                    let tmp = matrix[r][c];
+                    matrix[r][c] = matrix[c][r];
+                    matrix[c][r] = tmp;
+                }
+            }
+            return matrix;
+        }
+
+        let mut res = vec![vec![0; rows]; cols];
+        for r in 0..rows {
+            for c in 0..cols {
+                res[c][r] = matrix[r][c];
+            }
+        }
+
+        res
     }
 }
 ```

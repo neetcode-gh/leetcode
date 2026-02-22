@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from equations where variables are nodes and ratios are edge weights
 - **BFS/DFS Graph Traversal** - Finding paths between nodes while accumulating products of edge weights
 - **Union-Find (Disjoint Set Union)** - Advanced technique for tracking connected components with weighted relationships
@@ -20,13 +22,13 @@ BFS works well here because we explore all neighbors at the current distance bef
 
 1. Build an adjacency list where each variable maps to a list of `(neighbor, weight)` pairs. For each equation `a / b = value`, add edges `a -> b` with weight `value` and `b -> a` with weight `1/value`.
 2. For each query `(src, target)`:
-   - If either variable is not in the graph, return `-1`.
-   - Initialize a queue with `(src, 1.0)` and a visited set.
-   - While the queue is not empty:
-     - Dequeue a node and its accumulated weight.
-     - If this node equals `target`, return the accumulated weight.
-     - For each unvisited neighbor, enqueue it with the updated weight (current weight multiplied by edge weight).
-   - If `target` is never reached, return `-1`.
+    - If either variable is not in the graph, return `-1`.
+    - Initialize a queue with `(src, 1.0)` and a visited set.
+    - While the queue is not empty:
+        - Dequeue a node and its accumulated weight.
+        - If this node equals `target`, return the accumulated weight.
+        - For each unvisited neighbor, enqueue it with the updated weight (current weight multiplied by edge weight).
+    - If `target` is never reached, return `-1`.
 3. Return the results for all queries.
 
 ::tabs-start
@@ -413,6 +415,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calc_equation(
+        equations: Vec<Vec<String>>,
+        values: Vec<f64>,
+        queries: Vec<Vec<String>>,
+    ) -> Vec<f64> {
+        let mut adj: HashMap<String, Vec<(String, f64)>> = HashMap::new();
+
+        for (i, eq) in equations.iter().enumerate() {
+            let a = &eq[0];
+            let b = &eq[1];
+            adj.entry(a.clone()).or_default().push((b.clone(), values[i]));
+            adj.entry(b.clone()).or_default().push((a.clone(), 1.0 / values[i]));
+        }
+
+        let bfs = |src: &str, target: &str| -> f64 {
+            if !adj.contains_key(src) || !adj.contains_key(target) {
+                return -1.0;
+            }
+            let mut queue = VecDeque::new();
+            let mut visited = HashSet::new();
+            queue.push_back((src.to_string(), 1.0));
+            visited.insert(src.to_string());
+
+            while let Some((node, weight)) = queue.pop_front() {
+                if node == target {
+                    return weight;
+                }
+                if let Some(neighbors) = adj.get(&node) {
+                    for (nei, nei_weight) in neighbors {
+                        if !visited.contains(nei) {
+                            visited.insert(nei.clone());
+                            queue.push_back((nei.clone(), weight * nei_weight));
+                        }
+                    }
+                }
+            }
+            -1.0
+        };
+
+        queries.iter().map(|q| bfs(&q[0], &q[1])).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -436,11 +484,11 @@ DFS is often simpler to implement recursively. At each step, we check if we have
 
 1. Build the same adjacency list as in BFS.
 2. For each query `(src, target)`:
-   - If either variable is not in the graph, return `-1`.
-   - If `src == target`, return `1.0` (any variable divided by itself is `1`).
-   - Mark `src` as visited and explore all neighbors recursively.
-   - For each unvisited neighbor, recursively search for `target`. If found, multiply the result by the edge weight and return.
-   - If no path is found, return `-1`.
+    - If either variable is not in the graph, return `-1`.
+    - If `src == target`, return `1.0` (any variable divided by itself is `1`).
+    - Mark `src` as visited and explore all neighbors recursively.
+    - For each unvisited neighbor, recursively search for `target`. If found, multiply the result by the edge weight and return.
+    - If no path is found, return `-1`.
 3. Return the results for all queries.
 
 ::tabs-start
@@ -787,6 +835,59 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calc_equation(
+        equations: Vec<Vec<String>>,
+        values: Vec<f64>,
+        queries: Vec<Vec<String>>,
+    ) -> Vec<f64> {
+        let mut adj: HashMap<String, Vec<(String, f64)>> = HashMap::new();
+
+        for (i, eq) in equations.iter().enumerate() {
+            let a = &eq[0];
+            let b = &eq[1];
+            adj.entry(a.clone()).or_default().push((b.clone(), values[i]));
+            adj.entry(b.clone()).or_default().push((a.clone(), 1.0 / values[i]));
+        }
+
+        fn dfs(
+            src: &str,
+            target: &str,
+            adj: &HashMap<String, Vec<(String, f64)>>,
+            visited: &mut HashSet<String>,
+        ) -> f64 {
+            if !adj.contains_key(src) || !adj.contains_key(target) {
+                return -1.0;
+            }
+            if src == target {
+                return 1.0;
+            }
+            visited.insert(src.to_string());
+            if let Some(neighbors) = adj.get(src) {
+                for (nei, weight) in neighbors {
+                    if !visited.contains(nei) {
+                        let result = dfs(nei, target, adj, visited);
+                        if result != -1.0 {
+                            return weight * result;
+                        }
+                    }
+                }
+            }
+            -1.0
+        }
+
+        queries
+            .iter()
+            .map(|q| {
+                let mut visited = HashSet::new();
+                dfs(&q[0], &q[1], &adj, &mut visited)
+            })
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -813,8 +914,8 @@ To query `x/y`, we find both roots. If they differ, no path exists. If they matc
 3. The `union` operation connects two variables: find both roots, and if different, set one root's parent to the other and adjust the weight to maintain the given ratio.
 4. Process all equations by calling `union` for each pair.
 5. For each query `(x, y)`:
-   - If either variable is unknown or they have different roots, return `-1`.
-   - Otherwise, return `weight[x] / weight[y]`.
+    - If either variable is unknown or they have different roots, return `-1`.
+    - Otherwise, return `weight[x] / weight[y]`.
 
 ::tabs-start
 
@@ -1328,6 +1429,76 @@ class Solution {
 }
 ```
 
+```rust
+struct UnionFind {
+    parent: HashMap<String, String>,
+    weight: HashMap<String, f64>,
+}
+
+impl UnionFind {
+    fn new() -> Self {
+        UnionFind {
+            parent: HashMap::new(),
+            weight: HashMap::new(),
+        }
+    }
+
+    fn add(&mut self, x: &str) {
+        if !self.parent.contains_key(x) {
+            self.parent.insert(x.to_string(), x.to_string());
+            self.weight.insert(x.to_string(), 1.0);
+        }
+    }
+
+    fn find(&mut self, x: &str) -> String {
+        if self.parent[x] != x {
+            let orig_parent = self.parent[x].clone();
+            let root = self.find(&orig_parent);
+            let w = self.weight[x] * self.weight[&orig_parent];
+            self.parent.insert(x.to_string(), root);
+            self.weight.insert(x.to_string(), w);
+        }
+        self.parent[x].clone()
+    }
+
+    fn union(&mut self, x: &str, y: &str, value: f64) {
+        self.add(x);
+        self.add(y);
+        let root_x = self.find(x);
+        let root_y = self.find(y);
+        if root_x != root_y {
+            let w = value * self.weight[y] / self.weight[x];
+            self.parent.insert(root_x.clone(), root_y);
+            self.weight.insert(root_x, w);
+        }
+    }
+
+    fn get_ratio(&mut self, x: &str, y: &str) -> f64 {
+        if !self.parent.contains_key(x)
+            || !self.parent.contains_key(y)
+            || self.find(x) != self.find(y)
+        {
+            return -1.0;
+        }
+        self.weight[x] / self.weight[y]
+    }
+}
+
+impl Solution {
+    pub fn calc_equation(
+        equations: Vec<Vec<String>>,
+        values: Vec<f64>,
+        queries: Vec<Vec<String>>,
+    ) -> Vec<f64> {
+        let mut uf = UnionFind::new();
+        for (i, eq) in equations.iter().enumerate() {
+            uf.union(&eq[0], &eq[1], values[i]);
+        }
+        queries.iter().map(|q| uf.get_ratio(&q[0], &q[1])).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1352,8 +1523,8 @@ This approach trades query time for preprocessing time. After running Floyd-Wars
 1. Build a graph where `graph[a][b] = value` for equation `a/b = value`, and `graph[b][a] = 1/value`.
 2. Run Floyd-Warshall: for each intermediate node `k`, and for each pair of nodes `(i, j)` connected through `k`, compute `graph[i][j] = graph[i][k] * graph[k][j]` if this path does not already exist.
 3. For each query `(a, b)`:
-   - If `a` is in the graph and `b` is reachable from `a`, return `graph[a][b]`.
-   - Otherwise, return `-1`.
+    - If `a` is in the graph and `b` is reachable from `a`, return `graph[a][b]`.
+    - Otherwise, return `-1`.
 
 ::tabs-start
 
@@ -1657,6 +1828,54 @@ class Solution {
                 return -1.0
             }
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn calc_equation(
+        equations: Vec<Vec<String>>,
+        values: Vec<f64>,
+        queries: Vec<Vec<String>>,
+    ) -> Vec<f64> {
+        let mut graph: HashMap<String, HashMap<String, f64>> = HashMap::new();
+
+        for (i, eq) in equations.iter().enumerate() {
+            let a = &eq[0];
+            let b = &eq[1];
+            let value = values[i];
+            graph.entry(a.clone()).or_default().insert(b.clone(), value);
+            graph.entry(b.clone()).or_default().insert(a.clone(), 1.0 / value);
+        }
+
+        let keys: Vec<String> = graph.keys().cloned().collect();
+        for k in &keys {
+            let k_neighbors: Vec<String> = graph.get(k).unwrap().keys().cloned().collect();
+            for i in &k_neighbors {
+                for j in &k_neighbors {
+                    let has_ij = graph.get(i).map_or(true, |m| !m.contains_key(j));
+                    if has_ij {
+                        let ik = graph[i][k];
+                        let kj = graph[k][j];
+                        graph.entry(i.clone()).or_default().insert(j.clone(), ik * kj);
+                    }
+                }
+            }
+        }
+
+        queries
+            .iter()
+            .map(|q| {
+                let a = &q[0];
+                let b = &q[1];
+                graph
+                    .get(a)
+                    .and_then(|m| m.get(b))
+                    .copied()
+                    .unwrap_or(-1.0)
+            })
+            .collect()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Counting occurrences of elements using dictionaries or arrays
 - **Parity (Odd/Even)** - Determining whether a number is odd or even using modulo or bitwise operations
 
@@ -192,12 +194,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_difference(s: String) -> i32 {
+        let mut count = [0i32; 26];
+        for c in s.bytes() {
+            count[(c - b'a') as usize] += 1;
+        }
+
+        let mut res = i32::MIN;
+        for &odd in &count {
+            if odd == 0 || odd % 2 == 0 { continue; }
+            for &even in &count {
+                if even == 0 || even % 2 == 1 { continue; }
+                res = res.max(odd - even);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -220,7 +243,7 @@ Instead of checking all pairs, we can observe that to maximize `odd - even`, we 
 class Solution:
     def maxDifference(self, s: str) -> int:
         count = Counter(s)
-        oddMax, evenMin = 0, len(s) 
+        oddMax, evenMin = 0, len(s)
 
         for cnt in count.values():
             if cnt & 1:
@@ -288,7 +311,8 @@ class Solution {
             count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
         }
 
-        let oddMax = 0, evenMin = s.length;
+        let oddMax = 0,
+            evenMin = s.length;
         for (const c of count) {
             if (c & 1) {
                 oddMax = Math.max(oddMax, c);
@@ -391,6 +415,29 @@ class Solution {
         }
 
         return oddMax - evenMin
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_difference(s: String) -> i32 {
+        let mut count = [0i32; 26];
+        for c in s.bytes() {
+            count[(c - b'a') as usize] += 1;
+        }
+
+        let mut odd_max = 0;
+        let mut even_min = s.len() as i32;
+        for &c in &count {
+            if c & 1 == 1 {
+                odd_max = odd_max.max(c);
+            } else if c > 0 {
+                even_min = even_min.min(c);
+            }
+        }
+
+        odd_max - even_min
     }
 }
 ```

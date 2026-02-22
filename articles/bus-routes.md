@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Breadth-First Search (BFS)** - Level-order traversal for finding shortest paths in unweighted graphs
 - **Hash Maps** - Building mappings between stops and routes for efficient lookups
 - **Graph Modeling** - Representing real-world problems (bus routes) as graph structures
@@ -21,9 +23,9 @@ The key insight is that when we board a bus, we can reach all stops on that rout
 2. Build a mapping from each stop to the list of bus routes that serve it.
 3. Initialize BFS from the source stop, tracking visited stops and visited buses.
 4. For each level of BFS (representing one bus ride):
-   - For each stop at the current level, check all buses that serve this stop.
-   - For each unvisited bus, add all its stops to the next BFS level.
-   - Mark buses and stops as visited to avoid revisiting.
+    - For each stop at the current level, check all buses that serve this stop.
+    - For each unvisited bus, add all its stops to the next BFS level.
+    - Mark buses and stops as visited to avoid revisiting.
 5. If we reach the target stop, return the number of bus rides taken.
 6. If BFS completes without finding the target, return `-1`.
 
@@ -34,13 +36,13 @@ class Solution:
     def numBusesToDestination(self, routes: List[List[int]], source: int, target: int) -> int:
         if source == target:
             return 0
-        
+
         n = len(routes)
         stops = defaultdict(list)
         for bus in range(n):
             for stop in routes[bus]:
                 stops[stop].append(bus)
-        
+
         seen_bus = set()
         seen_stop = set([source])
         res = 0
@@ -60,7 +62,7 @@ class Solution:
                         seen_stop.add(nxtStop)
                         q.append(nxtStop)
             res += 1
-        
+
         return -1
 ```
 
@@ -176,7 +178,7 @@ class Solution {
             for (let k = 0; k < size; k++) {
                 let stop = q.pop();
                 if (stop === target) return res;
-                for (let bus of (stops.get(stop) || [])) {
+                for (let bus of stops.get(stop) || []) {
                     if (seenBus.has(bus)) continue;
                     seenBus.add(bus);
                     for (let nxtStop of routes[bus]) {
@@ -362,12 +364,64 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_buses_to_destination(routes: Vec<Vec<i32>>, source: i32, target: i32) -> i32 {
+        if source == target {
+            return 0;
+        }
+
+        let n = routes.len();
+        let mut stops: HashMap<i32, Vec<usize>> = HashMap::new();
+        for bus in 0..n {
+            for &stop in &routes[bus] {
+                stops.entry(stop).or_default().push(bus);
+            }
+        }
+
+        let mut seen_bus = HashSet::new();
+        let mut seen_stop = HashSet::new();
+        seen_stop.insert(source);
+        let mut q = VecDeque::new();
+        q.push_back(source);
+        let mut res = 0;
+
+        while !q.is_empty() {
+            let size = q.len();
+            for _ in 0..size {
+                let stop = q.pop_front().unwrap();
+                if stop == target {
+                    return res;
+                }
+                if let Some(buses) = stops.get(&stop) {
+                    for &bus in buses {
+                        if seen_bus.contains(&bus) {
+                            continue;
+                        }
+                        seen_bus.insert(bus);
+                        for &nxt_stop in &routes[bus] {
+                            if seen_stop.contains(&nxt_stop) {
+                                continue;
+                            }
+                            seen_stop.insert(nxt_stop);
+                            q.push_back(nxt_stop);
+                        }
+                    }
+                }
+            }
+            res += 1;
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of routes and $m$ is the maximum number of stops per bus route.
 
@@ -388,8 +442,8 @@ This approach can be more efficient when there are many stops but fewer routes, 
 3. Build an adjacency list between routes: two routes are neighbors if they share a stop.
 4. Start BFS from all routes that contain the source stop.
 5. For each level of BFS:
-   - Check if the current route contains the target stop; if so, return the current distance.
-   - Add all neighboring routes (connected via shared stops) to the queue.
+    - Check if the current route contains the target stop; if so, return the current distance.
+    - Add all neighboring routes (connected via shared stops) to the queue.
 6. If BFS completes without finding a route containing the target, return `-1`.
 
 ::tabs-start
@@ -837,12 +891,71 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_buses_to_destination(routes: Vec<Vec<i32>>, source: i32, target: i32) -> i32 {
+        if source == target {
+            return 0;
+        }
+
+        let n = routes.len();
+        let mut adj_list: Vec<Vec<usize>> = vec![vec![]; n];
+        let mut stop_to_routes: HashMap<i32, Vec<usize>> = HashMap::new();
+        for bus in 0..n {
+            for &stop in &routes[bus] {
+                stop_to_routes.entry(stop).or_default().push(bus);
+            }
+        }
+
+        if !stop_to_routes.contains_key(&source) || !stop_to_routes.contains_key(&target) {
+            return -1;
+        }
+
+        let mut has_edge = vec![vec![false; n]; n];
+        for buses in stop_to_routes.values() {
+            for i in 0..buses.len() {
+                for j in (i + 1)..buses.len() {
+                    let (b1, b2) = (buses[i], buses[j]);
+                    if !has_edge[b1][b2] {
+                        has_edge[b1][b2] = true;
+                        has_edge[b2][b1] = true;
+                        adj_list[b1].push(b2);
+                        adj_list[b2].push(b1);
+                    }
+                }
+            }
+        }
+
+        let target_routes: HashSet<usize> = stop_to_routes[&target].iter().copied().collect();
+        let mut q: VecDeque<usize> = stop_to_routes[&source].iter().copied().collect();
+        let mut res = 1;
+
+        while !q.is_empty() {
+            let size = q.len();
+            for _ in 0..size {
+                let node = q.pop_front().unwrap();
+                if target_routes.contains(&node) {
+                    return res;
+                }
+                while let Some(nxt_bus) = adj_list[node].pop() {
+                    if !adj_list[nxt_bus].is_empty() {
+                        q.push_back(nxt_bus);
+                    }
+                }
+            }
+            res += 1;
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 + n * m)$
-* Space complexity: $O(n ^ 2 + n * m)$
+- Time complexity: $O(n ^ 2 + n * m)$
+- Space complexity: $O(n ^ 2 + n * m)$
 
 > Where $n$ is the number of routes and $m$ is the maximum number of stops per bus route.
 
@@ -851,7 +964,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting the Source Equals Target Edge Case
+
 If the source and target are the same stop, no bus is needed. Forgetting this check causes unnecessary computation or incorrect results when the BFS never finds the target in its traversal.
+
 ```python
 # Wrong: missing early return
 def numBusesToDestination(self, routes, source, target):
@@ -859,7 +974,9 @@ def numBusesToDestination(self, routes, source, target):
 ```
 
 ### Counting Stops Instead of Bus Transfers
+
 The problem asks for minimum number of buses, not minimum stops visited. A common mistake is incrementing the counter for each stop rather than each bus transfer.
+
 ```python
 # Wrong: incrementing for each stop
 for nxtStop in routes[bus]:
@@ -868,7 +985,9 @@ for nxtStop in routes[bus]:
 ```
 
 ### Not Tracking Both Visited Buses and Visited Stops
+
 Only tracking visited stops leads to revisiting the same bus multiple times, causing TLE. Only tracking visited buses may revisit stops unnecessarily. Both sets are needed for efficiency.
+
 ```python
 # Wrong: only tracking stops
 seen_stop = set()
@@ -876,7 +995,9 @@ seen_stop = set()
 ```
 
 ### Incorrect BFS Level Counting
+
 Incrementing the bus count at the wrong position (before checking if target is reached, or inside the wrong loop) leads to off-by-one errors in the result.
 
 ### Building Inefficient Route Adjacency Graph
+
 When using routes as nodes, failing to deduplicate edges between routes that share multiple stops creates redundant work and can cause memory issues with large inputs.

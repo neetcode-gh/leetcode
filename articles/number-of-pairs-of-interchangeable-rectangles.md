@@ -1,8 +1,10 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to count and group items by a computed key
 - **Ratio/Proportion Comparison** - Understanding when two fractions (width/height) are equivalent
-- **Combinatorics (Counting Pairs)** - Using the formula n*(n-1)/2 to count pairs from n items
+- **Combinatorics (Counting Pairs)** - Using the formula n\*(n-1)/2 to count pairs from n items
 - **Greatest Common Divisor (GCD)** - Reducing fractions to their simplest form to avoid floating-point precision issues
 
 ---
@@ -17,8 +19,8 @@ Two rectangles are interchangeable if they have the same aspect ratio (width div
 
 1. Initialize a counter `res` to `0`.
 2. For each rectangle `i` from `1` to `n-1`:
-   - For each rectangle `j` from `0` to `i-1`:
-     - If `rectangles[i][0] / rectangles[i][1]` equals `rectangles[j][0] / rectangles[j][1]`, increment `res`.
+    - For each rectangle `j` from `0` to `i-1`:
+        - If `rectangles[i][0] / rectangles[i][1]` equals `rectangles[j][0] / rectangles[j][1]`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -152,6 +154,24 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn interchangeable_rectangles(rectangles: Vec<Vec<i32>>) -> i64 {
+        let mut res: i64 = 0;
+        for i in 1..rectangles.len() {
+            for j in 0..i {
+                if rectangles[i][0] as f64 / rectangles[i][1] as f64
+                    == rectangles[j][0] as f64 / rectangles[j][1] as f64
+                {
+                    res += 1;
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -338,6 +358,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn interchangeable_rectangles(rectangles: Vec<Vec<i32>>) -> i64 {
+        let mut count = HashMap::new();
+        for rect in &rectangles {
+            let ratio = rect[0] as f64 / rect[1] as f64;
+            let bits = ratio.to_bits();
+            *count.entry(bits).or_insert(0i64) += 1;
+        }
+
+        let mut res: i64 = 0;
+        for &c in count.values() {
+            if c > 1 {
+                res += c * (c - 1) / 2;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -358,9 +399,9 @@ We can optimize the two-pass approach into a single pass. As we process each rec
 1. Create a hash map `count` to store the frequency of each aspect ratio.
 2. Initialize `res` to `0`.
 3. For each rectangle:
-   - Compute its aspect ratio.
-   - Add the current count for this ratio to `res` (each previous rectangle with this ratio forms a pair).
-   - Increment the count for this ratio in the map.
+    - Compute its aspect ratio.
+    - Add the current count for this ratio to `res` (each previous rectangle with this ratio forms a pair).
+    - Increment the count for this ratio in the map.
 4. Return `res`.
 
 ::tabs-start
@@ -488,6 +529,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn interchangeable_rectangles(rectangles: Vec<Vec<i32>>) -> i64 {
+        let mut count = HashMap::new();
+        let mut res: i64 = 0;
+        for rect in &rectangles {
+            let ratio = rect[0] as f64 / rect[1] as f64;
+            let bits = ratio.to_bits();
+            let entry = count.entry(bits).or_insert(0i64);
+            res += *entry;
+            *entry += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,11 +566,11 @@ Using floating-point division for ratios can lead to precision issues with very 
 1. Create a hash map `count` to store the frequency of each normalized ratio.
 2. Initialize `res` to `0`.
 3. For each rectangle:
-   - Compute the `GCD` of width and height.
-   - Divide both by the `GCD` to get the reduced form.
-   - Create a unique hash key by combining the reduced width and height (e.g., using bit shifting).
-   - Add the current count for this key to `res`.
-   - Increment the count for this key in the map.
+    - Compute the `GCD` of width and height.
+    - Divide both by the `GCD` to get the reduced form.
+    - Create a unique hash key by combining the reduced width and height (e.g., using bit shifting).
+    - Add the current count for this key to `res`.
+    - Increment the count for this key in the map.
 4. Return `res`.
 
 ::tabs-start
@@ -754,6 +812,36 @@ class Solution {
             count[key, default: 0] += 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn interchangeable_rectangles(rectangles: Vec<Vec<i32>>) -> i64 {
+        fn gcd(mut a: i64, mut b: i64) -> i64 {
+            while b != 0 {
+                let t = a % b;
+                a = b;
+                b = t;
+            }
+            a
+        }
+
+        fn hash(a: i64, b: i64) -> i64 {
+            a | (b << 31)
+        }
+
+        let mut res: i64 = 0;
+        let mut count = HashMap::new();
+        for rect in &rectangles {
+            let g = gcd(rect[0] as i64, rect[1] as i64);
+            let key = hash(rect[0] as i64 / g, rect[1] as i64 / g);
+            let entry = count.entry(key).or_insert(0i64);
+            res += *entry;
+            *entry += 1;
+        }
+        res
     }
 }
 ```

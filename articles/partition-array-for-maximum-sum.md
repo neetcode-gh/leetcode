@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Recursion with Memoization)** - Core technique for solving this optimization problem efficiently
 - **Array Partitioning** - Understanding how to split arrays into contiguous subarrays
 - **Subarray Maximum Tracking** - Needed to find the maximum element within sliding windows
@@ -20,10 +22,10 @@ At each position, we have a choice: end the current subarray at any of the next 
 1. Define a recursive function starting at index `i`.
 2. Base case: if `i` reaches the end of the array, return `0`.
 3. For each possible subarray ending at positions `i` to `min(i + k - 1, n - 1)`:
-   - Track the maximum element seen so far in this subarray.
-   - Calculate the sum contribution as max element times window size.
-   - Recursively solve for the rest of the array starting at `j + 1`.
-   - Keep track of the best total sum.
+    - Track the maximum element seen so far in this subarray.
+    - Calculate the sum contribution as max element times window size.
+    - Recursively solve for the rest of the array starting at `j + 1`.
+    - Keep track of the best total sum.
 4. Return the maximum sum found.
 
 ::tabs-start
@@ -232,6 +234,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_after_partitioning(arr: Vec<i32>, k: i32) -> i32 {
+        fn dfs(i: usize, arr: &[i32], k: usize) -> i32 {
+            if i >= arr.len() {
+                return 0;
+            }
+            let mut cur_max = 0;
+            let mut res = 0;
+            for j in i..arr.len().min(i + k) {
+                cur_max = cur_max.max(arr[j]);
+                let window_size = (j - i + 1) as i32;
+                res = res.max(dfs(j + 1, arr, k) + cur_max * window_size);
+            }
+            res
+        }
+
+        dfs(0, &arr, k as usize)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -257,9 +281,9 @@ This is the memoized version of the recursive approach. We store computed result
 2. Define a recursive function with memoization starting at index `i`.
 3. If `i` is in the cache, return the cached value immediately.
 4. Try all possible subarray lengths from `1` to `k`:
-   - Track the maximum element in the current window.
-   - Calculate contribution and add the recursive result for the remaining array.
-   - Take the maximum across all choices.
+    - Track the maximum element in the current window.
+    - Calculate contribution and add the recursive result for the remaining array.
+    - Take the maximum across all choices.
 5. Store the result in the cache and return it.
 
 ::tabs-start
@@ -498,6 +522,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_after_partitioning(arr: Vec<i32>, k: i32) -> i32 {
+        let n = arr.len();
+        let k = k as usize;
+        let mut cache = vec![-1; n + 1];
+        cache[n] = 0;
+
+        fn dfs(i: usize, arr: &[i32], k: usize, cache: &mut [i32]) -> i32 {
+            if cache[i] != -1 {
+                return cache[i];
+            }
+            let mut cur_max = 0;
+            let mut res = 0;
+            for j in i..arr.len().min(i + k) {
+                cur_max = cur_max.max(arr[j]);
+                let window_size = (j - i + 1) as i32;
+                res = res.max(dfs(j + 1, arr, k, cache) + cur_max * window_size);
+            }
+            cache[i] = res;
+            res
+        }
+
+        dfs(0, &arr, k, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -521,11 +573,11 @@ Starting from the last element and working backwards, we build up solutions to l
 
 1. Create a DP array of size `n + 1` initialized to `0` (base case is `dp[n] = 0`).
 2. Iterate from `i = n - 1` down to `0`:
-   - Track the maximum element for the current window starting at `i`.
-   - For each valid window ending at `j` (up to `i + k - 1`):
-     - Update the maximum element.
-     - Calculate the sum as max element times window size plus `dp[j + 1]`.
-     - Update `dp[i]` with the maximum value found.
+    - Track the maximum element for the current window starting at `i`.
+    - For each valid window ending at `j` (up to `i + k - 1`):
+        - Update the maximum element.
+        - Calculate the sum as max element times window size plus `dp[j + 1]`.
+        - Update `dp[i]` with the maximum value found.
 3. Return `dp[0]` as the answer.
 
 ::tabs-start
@@ -704,6 +756,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_after_partitioning(arr: Vec<i32>, k: i32) -> i32 {
+        let n = arr.len();
+        let k = k as usize;
+        let mut dp = vec![0; n + 1];
+
+        for i in (0..n).rev() {
+            let mut cur_max = 0;
+            for j in i..n.min(i + k) {
+                cur_max = cur_max.max(arr[j]);
+                let window_size = (j - i + 1) as i32;
+                dp[i] = dp[i].max(dp[j + 1] + cur_max * window_size);
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -728,10 +801,10 @@ We use modulo arithmetic to wrap around and reuse array positions. This techniqu
 1. Create a DP array of size `k` (using circular indexing).
 2. Initialize `dp[0] = arr[0]` as the base case.
 3. Iterate from `i = 1` to `n - 1`:
-   - For each position, look backwards at windows of size `1` to `k`.
-   - Track the maximum element in each window.
-   - Compute the sum using circular array indexing: `dp[(j-1) % k]` for the previous subproblem.
-   - Store the best result at `dp[i % k]`.
+    - For each position, look backwards at windows of size `1` to `k`.
+    - Track the maximum element in each window.
+    - Compute the sum using circular array indexing: `dp[(j-1) % k]` for the previous subproblem.
+    - Store the best result at `dp[i % k]`.
 4. Return `dp[(n-1) % k]` as the answer.
 
 ::tabs-start
@@ -957,6 +1030,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_after_partitioning(arr: Vec<i32>, k: i32) -> i32 {
+        let n = arr.len();
+        let k = k as usize;
+        let mut dp = vec![0i32; k];
+        dp[0] = arr[0];
+
+        for i in 1..n {
+            let mut cur_max = 0;
+            let mut max_at_i = 0;
+            let mut j = i as i32;
+            while j > i as i32 - k as i32 {
+                if j < 0 {
+                    break;
+                }
+                let ju = j as usize;
+                cur_max = cur_max.max(arr[ju]);
+                let window_size = (i - ju + 1) as i32;
+                let cur_sum = cur_max * window_size;
+                let sub_sum = if ju > 0 { dp[(ju - 1) % k] } else { 0 };
+                max_at_i = max_at_i.max(cur_sum + sub_sum);
+                j -= 1;
+            }
+            dp[i % k] = max_at_i;
+        }
+
+        dp[(n - 1) % k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -981,4 +1086,3 @@ When iterating through possible partition endpoints, the window size is `j - i +
 ### Forgetting to Track Running Maximum
 
 For each partition starting at index `i`, you must track the maximum element seen so far as you extend the window. Recalculating the maximum from scratch for each window length turns an O(n*k) solution into O(n*k^2).
-

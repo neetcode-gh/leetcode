@@ -147,6 +147,21 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        fn dfs(n: i32, i: i32) -> i32 {
+            if i >= n {
+                return if i == n { 1 } else { 0 };
+            }
+            dfs(n, i + 1) + dfs(n, i + 2)
+        }
+        dfs(n, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,6 +347,29 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        let n = n as usize;
+        let mut cache = vec![-1; n];
+
+        fn dfs(n: usize, i: usize, cache: &mut Vec<i32>) -> i32 {
+            if i >= n {
+                return if i == n { 1 } else { 0 };
+            }
+            if cache[i] != -1 {
+                return cache[i];
+            }
+            cache[i] = dfs(n, i + 1, cache) + dfs(n, i + 2, cache);
+            cache[i]
+        }
+
+        dfs(n, 0, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +533,25 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        let n = n as usize;
+        if n <= 2 {
+            return n as i32;
+        }
+        let mut dp = vec![0; n + 1];
+        dp[1] = 1;
+        dp[2] = 2;
+        for i in 3..=n {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -653,6 +710,24 @@ class Solution {
         }
 
         return one
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        let mut one = 1;
+        let mut two = 1;
+
+        for _ in 0..n - 1 {
+            let temp = one;
+            one = one + two;
+            two = temp;
+        }
+
+        one
     }
 }
 ```
@@ -992,6 +1067,49 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        if n == 1 {
+            return 1;
+        }
+
+        fn matrix_mult(a: &[[i64; 2]; 2], b: &[[i64; 2]; 2]) -> [[i64; 2]; 2] {
+            [
+                [
+                    a[0][0] * b[0][0] + a[0][1] * b[1][0],
+                    a[0][0] * b[0][1] + a[0][1] * b[1][1],
+                ],
+                [
+                    a[1][0] * b[0][0] + a[1][1] * b[1][0],
+                    a[1][0] * b[0][1] + a[1][1] * b[1][1],
+                ],
+            ]
+        }
+
+        fn matrix_pow(m: &[[i64; 2]; 2], mut p: i32) -> [[i64; 2]; 2] {
+            let mut result = [[1i64, 0], [0, 1]];
+            let mut base = *m;
+
+            while p > 0 {
+                if p % 2 == 1 {
+                    result = matrix_mult(&result, &base);
+                }
+                base = matrix_mult(&base, &base);
+                p /= 2;
+            }
+
+            result
+        }
+
+        let m = [[1i64, 1], [1, 0]];
+        let result = matrix_pow(&m, n);
+        result[0][0] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1112,6 +1230,19 @@ class Solution {
         let psi = (1.0 - sqrt5) / 2.0
         let n = n + 1
         return Int(round((pow(phi, Double(n)) - pow(psi, Double(n))) / sqrt5))
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn climb_stairs(n: i32) -> i32 {
+        let sqrt5 = 5.0_f64.sqrt();
+        let phi = (1.0 + sqrt5) / 2.0;
+        let psi = (1.0 - sqrt5) / 2.0;
+        let n = n as f64 + 1.0;
+        ((phi.powf(n) - psi.powf(n)) / sqrt5).round() as i32
     }
 }
 ```

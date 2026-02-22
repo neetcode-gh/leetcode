@@ -1,9 +1,11 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Top-down DP with caching avoids recomputing overlapping subproblems
 - **Dynamic Programming (Tabulation)** - Bottom-up DP iteratively builds solutions from smaller subproblems
 - **Partitioning Problems** - The problem requires optimally partitioning jobs across days
-- **Monotonic Stack** - The optimized O(n*d) solution uses a decreasing stack to efficiently track maximum values
+- **Monotonic Stack** - The optimized O(n\*d) solution uses a decreasing stack to efficiently track maximum values
 
 ---
 
@@ -19,9 +21,9 @@ We need to split `n` jobs across `d` days, where each day must have at least one
 2. Use memoization with state `(i, d, cur_max)` where `i` is the current job index, `d` is the number of remaining days, and `cur_max` is the maximum difficulty for the current day so far.
 3. Base case: if `i == n`, return `0` if `d == 0`, otherwise infinity (invalid).
 4. At each job `i`:
-   - Update `cur_max` with the current job's difficulty.
-   - Option 1: include the next job in the current day (continue without decrementing `d`).
-   - Option 2: end the current day by adding `cur_max` and start a new day with the next job.
+    - Update `cur_max` with the current job's difficulty.
+    - Option 1: include the next job in the current day (continue without decrementing `d`).
+    - Option 2: end the current day by adding `cur_max` and start a new day with the next job.
 5. Return the minimum of both options.
 
 ::tabs-start
@@ -327,6 +329,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_difficulty(job_difficulty: Vec<i32>, d: i32) -> i32 {
+        let n = job_difficulty.len();
+        let d = d as usize;
+        if n < d {
+            return -1;
+        }
+
+        let m = *job_difficulty.iter().max().unwrap() as usize;
+        let mut dp = vec![vec![vec![-1i32; m + 5]; d + 1]; n];
+
+        fn dfs(
+            i: usize, d: usize, cur_max: i32,
+            jobs: &[i32], dp: &mut Vec<Vec<Vec<i32>>>,
+        ) -> i32 {
+            if i == jobs.len() {
+                return if d == 0 { 0 } else { i32::MAX / 2 };
+            }
+            if d == 0 {
+                return i32::MAX / 2;
+            }
+            let idx = (cur_max + 1) as usize;
+            if dp[i][d][idx] != -1 {
+                return dp[i][d][idx];
+            }
+            let max_so_far = cur_max.max(jobs[i]);
+            let res = dfs(i + 1, d, max_so_far, jobs, dp)
+                .min(max_so_far + dfs(i + 1, d - 1, -1, jobs, dp));
+            dp[i][d][idx] = res;
+            res
+        }
+
+        dfs(0, d, -1, &job_difficulty, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,8 +390,8 @@ The previous approach tracks `cur_max` as part of the state, which can lead to m
 2. Define `dfs(i, d)` as the minimum difficulty to schedule jobs from index `i` onward over `d` days.
 3. Base case: if `d == 1`, return the maximum difficulty among all remaining jobs.
 4. For each possible split point `j` from `i+1` to `n-1`:
-   - Track the running maximum from `i` to `j-1` as the difficulty of the current day.
-   - Recursively solve for jobs starting at `j` with `d-1` days.
+    - Track the running maximum from `i` to `j-1` as the difficulty of the current day.
+    - Recursively solve for jobs starting at `j` with `d-1` days.
 5. Return the minimum total difficulty found.
 
 ::tabs-start
@@ -666,6 +706,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_difficulty(job_difficulty: Vec<i32>, d: i32) -> i32 {
+        let n = job_difficulty.len();
+        let d = d as usize;
+        if n < d {
+            return -1;
+        }
+
+        let mut dp = vec![vec![-1i32; d + 1]; n];
+
+        fn dfs(i: usize, d: usize, jobs: &[i32], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if dp[i][d] != -1 {
+                return dp[i][d];
+            }
+            let n = jobs.len();
+            let mut maxi = jobs[i];
+            if d == 1 {
+                for j in i..n {
+                    maxi = maxi.max(jobs[j]);
+                }
+                dp[i][d] = maxi;
+                return maxi;
+            }
+            let mut res = i32::MAX / 2;
+            for j in i + 1..n {
+                res = res.min(maxi + dfs(j, d - 1, jobs, dp));
+                maxi = maxi.max(jobs[j]);
+            }
+            dp[i][d] = res;
+            res
+        }
+
+        dfs(0, d, &job_difficulty, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -688,10 +766,10 @@ We can convert the top-down recursion into an iterative bottom-up approach. Defi
 1. Create a 2D DP table where `dp[i][day]` represents the minimum difficulty starting from job `i` with `day` days remaining.
 2. Initialize `dp[n][0] = 0` (no jobs, no days needed).
 3. Iterate `day` from `1` to `d`:
-   - For each starting position `i` from `n-1` down to `0`:
-     - Try ending the current day at each position `j` from `i` to `n-day`.
-     - Track the running maximum as the day's difficulty.
-     - Update `dp[i][day]` with the minimum of `max + dp[j+1][day-1]`.
+    - For each starting position `i` from `n-1` down to `0`:
+        - Try ending the current day at each position `j` from `i` to `n-day`.
+        - Track the running maximum as the day's difficulty.
+        - Update `dp[i][day]` with the minimum of `max + dp[j+1][day-1]`.
 4. Return `dp[0][d]`.
 
 ::tabs-start
@@ -911,6 +989,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_difficulty(job_difficulty: Vec<i32>, d: i32) -> i32 {
+        let n = job_difficulty.len();
+        let d = d as usize;
+        if n < d {
+            return -1;
+        }
+
+        let inf = i32::MAX / 2;
+        let mut dp = vec![vec![inf; d + 1]; n + 1];
+        dp[n][0] = 0;
+
+        for day in 1..=d {
+            for i in (0..n).rev() {
+                let mut maxi = 0;
+                for j in i..=n - day {
+                    maxi = maxi.max(job_difficulty[j]);
+                    dp[i][day] = dp[i][day].min(maxi + dp[j + 1][day - 1]);
+                }
+            }
+        }
+
+        dp[0][d]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -932,10 +1038,10 @@ Notice that when computing `dp[i][day]`, we only need values from `dp[j][day-1]`
 
 1. Create a 1D DP array of size `n+1`, initialized to infinity except `dp[n] = 0`.
 2. Iterate `day` from `1` to `d`:
-   - For each starting position `i` from `0` to `n-day`:
-     - Reset `dp[i]` to infinity.
-     - Track the running maximum while iterating `j` from `i` to `n-day`.
-     - Update `dp[i]` with the minimum of `max + dp[j+1]`.
+    - For each starting position `i` from `0` to `n-day`:
+        - Reset `dp[i]` to infinity.
+        - Track the running maximum while iterating `j` from `i` to `n-day`.
+        - Update `dp[i]` with the minimum of `max + dp[j+1]`.
 3. Return `dp[0]`.
 
 ::tabs-start
@@ -1157,6 +1263,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_difficulty(job_difficulty: Vec<i32>, d: i32) -> i32 {
+        let n = job_difficulty.len();
+        let d = d as usize;
+        if n < d {
+            return -1;
+        }
+
+        let inf = i32::MAX / 2;
+        let mut dp = vec![inf; n + 1];
+        dp[n] = 0;
+
+        for day in 1..=d {
+            for i in 0..=n - day {
+                let mut maxi = 0;
+                dp[i] = inf;
+                for j in i..=n - day {
+                    maxi = maxi.max(job_difficulty[j]);
+                    dp[i] = dp[i].min(maxi + dp[j + 1]);
+                }
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1178,14 +1313,14 @@ The bottleneck in the previous approaches is finding the optimal partition for e
 
 1. Create a DP array to store minimum difficulty ending at each position.
 2. For each day from `1` to `d`:
-   - Create a new DP array for the current day.
-   - Use a monotonic decreasing stack to track job indices.
-   - For each job `i`:
-     - Initialize: current job starts a new segment after the previous day's best ending.
-     - While the stack is not empty and the top job has difficulty `<=` current job:
-       - Pop the top and update the current DP by potentially replacing that job's max with the current job's difficulty.
-     - If the stack is not empty, also consider inheriting the DP value from the stack top (the current job is dominated by a larger previous job).
-     - Push the current index onto the stack.
+    - Create a new DP array for the current day.
+    - Use a monotonic decreasing stack to track job indices.
+    - For each job `i`:
+        - Initialize: current job starts a new segment after the previous day's best ending.
+        - While the stack is not empty and the top job has difficulty `<=` current job:
+            - Pop the top and update the current DP by potentially replacing that job's max with the current job's difficulty.
+        - If the stack is not empty, also consider inheriting the DP value from the stack top (the current job is dominated by a larger previous job).
+        - Push the current index onto the stack.
 3. Return the last element of the final DP array.
 
 ::tabs-start
@@ -1459,6 +1594,46 @@ class Solution {
         }
 
         return dp[n - 1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_difficulty(job_difficulty: Vec<i32>, d: i32) -> i32 {
+        let n = job_difficulty.len();
+        let d = d as usize;
+        if n < d {
+            return -1;
+        }
+
+        let inf = i32::MAX / 2;
+        let mut dp = vec![inf; n];
+
+        for day in 1..=d {
+            let mut next_dp = vec![inf; n];
+            let mut stack: Vec<usize> = Vec::new();
+
+            for i in day - 1..n {
+                next_dp[i] = if i > 0 { dp[i - 1] } else { 0 } + job_difficulty[i];
+                while let Some(&top) = stack.last() {
+                    if job_difficulty[top] <= job_difficulty[i] {
+                        let j = stack.pop().unwrap();
+                        next_dp[i] = next_dp[i]
+                            .min(next_dp[j] - job_difficulty[j] + job_difficulty[i]);
+                    } else {
+                        break;
+                    }
+                }
+                if let Some(&top) = stack.last() {
+                    next_dp[i] = next_dp[i].min(next_dp[top]);
+                }
+                stack.push(i);
+            }
+            dp = next_dp;
+        }
+
+        dp[n - 1]
     }
 }
 ```

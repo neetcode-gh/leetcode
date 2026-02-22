@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Understanding adjacency lists and how graphs are stored in memory
 - **Depth-First Search (DFS)** - Traversing graphs recursively or with an explicit stack
 - **Breadth-First Search (BFS)** - Level-order traversal of graphs using a queue
@@ -17,10 +19,10 @@ A graph is bipartite if we can split its nodes into two groups such that every e
 
 1. Create a `color` array initialized to `0` (unvisited). Use `1` and `-1` as the two colors.
 2. Define a recursive `dfs` function that takes a node `i` and a color `c`:
-   - Assign `color[i] = c`.
-   - For each neighbor, if it has the same color, return `false`.
-   - If the neighbor is unvisited, recursively call `dfs` with the opposite color. If that returns `false`, propagate the failure.
-   - Return `true` if all neighbors pass.
+    - Assign `color[i] = c`.
+    - For each neighbor, if it has the same color, return `false`.
+    - If the neighbor is unvisited, recursively call `dfs` with the opposite color. If that returns `false`, propagate the failure.
+    - Return `true` if all neighbors pass.
 3. For each node, if unvisited, run `dfs` with color `1`. If any `dfs` fails, return `false`.
 4. Return `true` if all components are bipartite.
 
@@ -264,6 +266,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_bipartite(graph: Vec<Vec<i32>>) -> bool {
+        let n = graph.len();
+        let mut color = vec![0i32; n];
+
+        fn dfs(graph: &Vec<Vec<i32>>, color: &mut Vec<i32>, i: usize, c: i32) -> bool {
+            color[i] = c;
+            for &nei in &graph[i] {
+                let nei = nei as usize;
+                if color[nei] == c {
+                    return false;
+                }
+                if color[nei] == 0 && !dfs(graph, color, nei, -c) {
+                    return false;
+                }
+            }
+            true
+        }
+
+        for i in 0..n {
+            if color[i] == 0 && !dfs(&graph, &mut color, i, 1) {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,11 +317,11 @@ BFS provides another way to check 2-colorability. Starting from an uncolored nod
 
 1. Create a `color` array initialized to `0`.
 2. For each node `i` from `0` to `n-1`:
-   - If already colored, skip it.
-   - Initialize a queue with node `i` and set `color[i] = -1`.
-   - While the queue is not empty:
-     - Dequeue a node.
-     - For each neighbor: if it has the same color, return `false`. If uncolored, assign the opposite color and enqueue it.
+    - If already colored, skip it.
+    - Initialize a queue with node `i` and set `color[i] = -1`.
+    - While the queue is not empty:
+        - Dequeue a node.
+        - For each neighbor: if it has the same color, return `false`. If uncolored, assign the opposite color and enqueue it.
 3. Return `true` if all nodes are processed without conflict.
 
 ::tabs-start
@@ -527,6 +559,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_bipartite(graph: Vec<Vec<i32>>) -> bool {
+        let n = graph.len();
+        let mut color = vec![0i32; n];
+
+        for i in 0..n {
+            if color[i] != 0 {
+                continue;
+            }
+            let mut q = VecDeque::new();
+            q.push_back(i);
+            color[i] = -1;
+
+            while let Some(node) = q.pop_front() {
+                for &nei in &graph[node] {
+                    let nei = nei as usize;
+                    if color[nei] == color[node] {
+                        return false;
+                    } else if color[nei] == 0 {
+                        q.push_back(nei);
+                        color[nei] = -color[node];
+                    }
+                }
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,11 +611,11 @@ Iterative DFS uses an explicit stack instead of recursion to traverse the graph.
 
 1. Create a `color` array initialized to `0`.
 2. For each node `i` from `0` to `n-1`:
-   - If already colored, skip it.
-   - Set `color[i] = -1` and push `i` onto the stack.
-   - While the stack is not empty:
-     - Pop a node.
-     - For each neighbor: if it has the same color, return `false`. If uncolored, assign the opposite color and push it onto the stack.
+    - If already colored, skip it.
+    - Set `color[i] = -1` and push `i` onto the stack.
+    - While the stack is not empty:
+        - Pop a node.
+        - For each neighbor: if it has the same color, return `false`. If uncolored, assign the opposite color and push it onto the stack.
 3. Return `true` if no conflicts are found.
 
 ::tabs-start
@@ -778,6 +841,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_bipartite(graph: Vec<Vec<i32>>) -> bool {
+        let n = graph.len();
+        let mut color = vec![0i32; n];
+        let mut stack = Vec::new();
+
+        for i in 0..n {
+            if color[i] != 0 {
+                continue;
+            }
+            color[i] = -1;
+            stack.push(i);
+            while let Some(node) = stack.pop() {
+                for &nei in &graph[node] {
+                    let nei = nei as usize;
+                    if color[node] == color[nei] {
+                        return false;
+                    }
+                    if color[nei] == 0 {
+                        stack.push(nei);
+                        color[nei] = -color[node];
+                    }
+                }
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -799,10 +893,10 @@ DSU (Union-Find) offers an alternative perspective. For a bipartite graph, a nod
 
 1. Initialize a DSU structure with `n` nodes.
 2. For each node:
-   - If it has no neighbors, continue.
-   - For each neighbor:
-     - If the node and neighbor are in the same set, return `false`.
-     - Union the neighbor with the first neighbor of the current node (grouping all neighbors together).
+    - If it has no neighbors, continue.
+    - For each neighbor:
+        - If the node and neighbor are in the same set, return `false`.
+        - Union the neighbor with the first neighbor of the current node (grouping all neighbors together).
 3. Return `true` if no conflict is detected.
 
 ::tabs-start
@@ -1216,6 +1310,65 @@ class Solution {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        DSU {
+            parent: (0..n).collect(),
+            size: vec![0; n],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] > self.size[pv] {
+            self.parent[pv] = pu;
+        } else if self.size[pu] < self.size[pv] {
+            self.parent[pu] = pv;
+        } else {
+            self.parent[pv] = pu;
+            self.size[pu] += 1;
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn is_bipartite(graph: Vec<Vec<i32>>) -> bool {
+        let n = graph.len();
+        let mut dsu = DSU::new(n);
+
+        for node in 0..n {
+            for &nei in &graph[node] {
+                let nei = nei as usize;
+                if dsu.find(node) == dsu.find(nei) {
+                    return false;
+                }
+                let first = graph[node][0] as usize;
+                dsu.union(first, nei);
+            }
+        }
+        true
     }
 }
 ```

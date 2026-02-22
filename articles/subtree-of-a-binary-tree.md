@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding node structure with left/right children and how to traverse trees
 - **Depth First Search (DFS)** - Used to traverse every node in the main tree and compare subtrees recursively
 - **Tree Comparison** - Checking if two trees are structurally identical with matching values at each node
@@ -9,12 +11,14 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search (DFS)
 
 ### Intuition
+
 To check whether one tree is a subtree of another, we do two things:
 
 1. **Walk through every node** of the main tree (`root`) using DFS.
 2. At each node, **check if the subtree starting here is exactly the same** as `subRoot`.
 
 So for every node in the big tree:
+
 - If its value matches `subRoot`'s root, we compare both subtrees fully.
 - If they are identical, `subRoot` is a subtree.
 - Otherwise, continue searching on the left and right children.
@@ -22,16 +26,18 @@ So for every node in the big tree:
 The helper `sameTree` simply checks whether two trees match **exactly**, node-for-node.
 
 ### Algorithm
+
 1. If `subRoot` is empty → return `true` (empty tree is always a subtree).
 2. If `root` is empty but `subRoot` is not → return `false`.
 3. At the current `root` node:
-   - If `sameTree(root, subRoot)` is `true`, return `true`.
+    - If `sameTree(root, subRoot)` is `true`, return `true`.
 4. Recursively check:
-   - `isSubtree(root.left, subRoot)`
-   - `isSubtree(root.right, subRoot)`
+    - `isSubtree(root.left, subRoot)`
+    - `isSubtree(root.right, subRoot)`
 5. Return `true` if either side returns `true`.
 
 **sameTree(root1, root2):**
+
 1. If both nodes are `null` → return `true`.
 2. If only one is `null` → return `false`.
 3. If values differ → return `false`.
@@ -373,6 +379,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_subtree(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        sub_root: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        if sub_root.is_none() {
+            return true;
+        }
+        if root.is_none() {
+            return false;
+        }
+        if Self::same_tree(&root, &sub_root) {
+            return true;
+        }
+        let node = root.as_ref().unwrap().borrow();
+        Self::is_subtree(node.left.clone(), sub_root.clone())
+            || Self::is_subtree(node.right.clone(), sub_root)
+    }
+
+    fn same_tree(
+        root: &Option<Rc<RefCell<TreeNode>>>,
+        sub_root: &Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        match (root, sub_root) {
+            (None, None) => true,
+            (Some(a), Some(b)) => {
+                let a = a.borrow();
+                let b = b.borrow();
+                a.val == b.val
+                    && Self::same_tree(&a.left, &b.left)
+                    && Self::same_tree(&a.right, &b.right)
+            }
+            _ => false,
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,36 +438,36 @@ Instead of comparing trees directly, we can first turn each tree into a **string
 1. **Serialize** both `root` and `subRoot` into strings using the same traversal (for example, preorder).
 2. While serializing, we **must include markers for `null` children** (like `#`) and separators (like `$`) so different shapes don't accidentally look the same in the string.
 3. Once we have:
-   - `S_root`  = serialization of the main tree
-   - `S_sub`   = serialization of the subtree
-   the problem becomes:
-   **"Is `S_sub` a substring of `S_root`?"**
+    - `S_root` = serialization of the main tree
+    - `S_sub` = serialization of the subtree
+      the problem becomes:
+      **"Is `S_sub` a substring of `S_root`?"**
 
 To efficiently check this, we can use a linear-time pattern matching algorithm (like **Z-function** or **KMP**) instead of naive substring search.
 
 ### Algorithm
 
 1. **Serialize a tree**
-   - Use preorder traversal.
-   - For each node:
-     - Append a separator (e.g., `$`) + node value.
-   - For each `null` child, append a special marker (e.g., `#$` or just `#`).
-   - This ensures structure and values are uniquely encoded.
+    - Use preorder traversal.
+    - For each node:
+        - Append a separator (e.g., `$`) + node value.
+    - For each `null` child, append a special marker (e.g., `#$` or just `#`).
+    - This ensures structure and values are uniquely encoded.
 
 2. **Build strings**
-   - Let `S_sub`  = serialization of `subRoot`.
-   - Let `S_root` = serialization of `root`.
+    - Let `S_sub` = serialization of `subRoot`.
+    - Let `S_root` = serialization of `root`.
 
 3. **Combine for pattern matching**
-   - Build a combined string:
-     `combined = S_sub + "|" + S_root`
-     (`|` is just a separator that does not appear in the serializations.)
+    - Build a combined string:
+      `combined = S_sub + "|" + S_root`
+      (`|` is just a separator that does not appear in the serializations.)
 
 4. **Run pattern matching**
-   - Compute the Z-array (or use another pattern-matching algorithm) on `combined`.
-   - Let `m = length(S_sub)`.
-   - Scan the Z-values:
-     - If any `Z[i] == m`, then `S_sub` appears completely starting at that position → `subRoot` is a subtree → return `true`.
+    - Compute the Z-array (or use another pattern-matching algorithm) on `combined`.
+    - Let `m = length(S_sub)`.
+    - Scan the Z-values:
+        - If any `Z[i] == m`, then `S_sub` appears completely starting at that position → `subRoot` is a subtree → return `true`.
 
 5. If no such position is found, return `false`.
 
@@ -897,6 +942,64 @@ class Solution {
             }
         }
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    fn serialize(root: &Option<Rc<RefCell<TreeNode>>>) -> String {
+        match root {
+            None => "$#".to_string(),
+            Some(node) => {
+                let node = node.borrow();
+                format!(
+                    "${}{}{}",
+                    node.val,
+                    Self::serialize(&node.left),
+                    Self::serialize(&node.right)
+                )
+            }
+        }
+    }
+
+    fn z_function(s: &[u8]) -> Vec<usize> {
+        let n = s.len();
+        let mut z = vec![0usize; n];
+        let (mut l, mut r) = (0usize, 0usize);
+
+        for i in 1..n {
+            if i <= r {
+                z[i] = (r - i + 1).min(z[i - l]);
+            }
+            while i + z[i] < n && s[z[i]] == s[i + z[i]] {
+                z[i] += 1;
+            }
+            if i + z[i] > 0 && i + z[i] - 1 > r {
+                l = i;
+                r = i + z[i] - 1;
+            }
+        }
+        z
+    }
+
+    pub fn is_subtree(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        sub_root: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        let serialized_root = Self::serialize(&root);
+        let serialized_sub_root = Self::serialize(&sub_root);
+        let combined = format!("{}|{}", serialized_sub_root, serialized_root);
+
+        let z_values = Self::z_function(combined.as_bytes());
+        let sub_len = serialized_sub_root.len();
+
+        for i in (sub_len + 1)..combined.len() {
+            if z_values[i] == sub_len {
+                return true;
+            }
+        }
+        false
     }
 }
 ```

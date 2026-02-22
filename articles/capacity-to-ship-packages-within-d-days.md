@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Searching over a monotonic answer space to find optimal values
 - **Greedy Simulation** - Simulating a process with greedy decisions to validate a candidate answer
 - **Problem Decomposition** - Breaking down optimization problems into feasibility checks
@@ -16,8 +18,8 @@ The minimum possible ship capacity must be at least as large as the heaviest pac
 
 1. Initialize the result to the maximum weight in the array (the minimum possible capacity).
 2. For the current capacity, simulate shipping by iterating through packages:
-   - Keep a running total of the current ship's load.
-   - When adding a package would exceed capacity, start a new ship.
+    - Keep a running total of the current ship's load.
+    - When adding a package would exceed capacity, start a new ship.
 3. If the number of ships used is within the allowed days, return the current capacity.
 4. Otherwise, increment the capacity by 1 and repeat.
 
@@ -217,6 +219,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn ship_within_days(weights: Vec<i32>, days: i32) -> i32 {
+        let mut res = *weights.iter().max().unwrap();
+        loop {
+            let mut ships = 1;
+            let mut cap = res;
+            for &w in &weights {
+                if cap - w < 0 {
+                    ships += 1;
+                    cap = res;
+                }
+                cap -= w;
+            }
+            if ships <= days {
+                return res;
+            }
+            res += 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -236,10 +261,10 @@ Instead of checking every capacity linearly, we can use binary search because th
 
 1. Set the binary search range: `left` = max(weights), `right` = sum(weights).
 2. While `left` <= `right`:
-   - Calculate `mid` = (`left` + `right`) / 2.
-   - Simulate shipping with capacity `mid` by greedily filling each day's ship.
-   - If we can ship within the allowed days, update the result and search the left half (`r` = `mid` - 1).
-   - Otherwise, search the right half (`l` = `mid` + 1).
+    - Calculate `mid` = (`left` + `right`) / 2.
+    - Simulate shipping with capacity `mid` by greedily filling each day's ship.
+    - If we can ship within the allowed days, update the result and search the left half (`r` = `mid` - 1).
+    - Otherwise, search the right half (`l` = `mid` + 1).
 3. Return the minimum valid capacity found.
 
 ::tabs-start
@@ -545,6 +570,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn ship_within_days(weights: Vec<i32>, days: i32) -> i32 {
+        let mut l = *weights.iter().max().unwrap();
+        let mut r: i32 = weights.iter().sum();
+        let mut res = r;
+
+        let can_ship = |cap: i32| -> bool {
+            let mut ships = 1;
+            let mut curr_cap = cap;
+            for &w in &weights {
+                if curr_cap - w < 0 {
+                    ships += 1;
+                    if ships > days {
+                        return false;
+                    }
+                    curr_cap = cap;
+                }
+                curr_cap -= w;
+            }
+            true
+        };
+
+        while l <= r {
+            let cap = (l + r) / 2;
+            if can_ship(cap) {
+                res = res.min(cap);
+                r = cap - 1;
+            } else {
+                l = cap + 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +620,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Wrong Binary Search Bounds
+
 The minimum capacity must be at least `max(weights)` (to ship the heaviest package), and the maximum is `sum(weights)` (ship everything in one day). Starting from 0 or 1 leads to invalid states where some packages cannot be shipped.
 
 ```python
@@ -565,7 +629,9 @@ l, r = 1, sum(weights)  # Should be: l = max(weights)
 ```
 
 ### Miscounting Days in Simulation
+
 A common mistake is not counting the first day or incrementing the day counter at the wrong time. The ship starts with capacity available on day 1, and a new day begins when the current package cannot fit.
 
 ### Using Incorrect Binary Search Condition
+
 This is a "find minimum satisfying condition" problem. When the capacity works, you should search left (`r = mid - 1`) to find smaller valid capacities. Searching right instead returns a suboptimal answer.

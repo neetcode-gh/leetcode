@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Breaking down problems into overlapping subproblems with optimal substructure
 - **Memoization** - Caching recursive results to avoid redundant computation
 - **Circular Array Distance** - Calculating minimum distance in a wrap-around structure
@@ -23,9 +25,9 @@ Since the ring is circular, the distance between two positions is the minimum of
 1. Define a recursive function `dfs(r, k)` where `r` is the current ring position and `k` is the current index in the key.
 2. Base case: if `k` equals the key length, return `0`.
 3. For each position `i` in the ring where `ring[i]` matches `key[k]`:
-   - Calculate the minimum rotation distance (direct or wrap-around).
-   - Recursively solve for the rest of the key starting from position `i`.
-   - Track the minimum total cost.
+    - Calculate the minimum rotation distance (direct or wrap-around).
+    - Recursively solve for the rest of the key starting from position `i`.
+    - Track the minimum total cost.
 4. Add `1` for the button press at each step.
 5. Return the minimum total from `dfs(0, 0)`.
 
@@ -216,6 +218,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_rotate_steps(ring: String, key: String) -> i32 {
+        let ring = ring.as_bytes();
+        let key = key.as_bytes();
+
+        fn dfs(r: usize, k: usize, ring: &[u8], key: &[u8]) -> i32 {
+            if k == key.len() {
+                return 0;
+            }
+            let n = ring.len();
+            let mut res = i32::MAX;
+            for i in 0..n {
+                if ring[i] == key[k] {
+                    let diff = (r as i32 - i as i32).abs();
+                    let min_dist = diff.min(n as i32 - diff);
+                    res = res.min(min_dist + 1 + dfs(i, k + 1, ring, key));
+                }
+            }
+            res
+        }
+
+        dfs(0, 0, ring, key)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -242,8 +271,8 @@ The state is defined by two parameters: current ring position and current key in
 3. If `k` equals key length, return `0`.
 4. If `dp[r][k]` is already computed, return it.
 5. For each ring position `i` matching `key[k]`:
-   - Compute distance as `min(|r - i|, n - |r - i|)`.
-   - Update the result with `distance + 1 + dfs(i, k + 1)`.
+    - Compute distance as `min(|r - i|, n - |r - i|)`.
+    - Update the result with `distance + 1 + dfs(i, k + 1)`.
 6. Store and return `dp[r][k]`.
 7. Call `dfs(0, 0)` for the final answer.
 
@@ -508,6 +537,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_rotate_steps(ring: String, key: String) -> i32 {
+        let ring = ring.as_bytes();
+        let key = key.as_bytes();
+        let n = ring.len();
+        let m = key.len();
+        let mut dp = vec![vec![-1i32; m]; n];
+
+        fn dfs(r: usize, k: usize, ring: &[u8], key: &[u8], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if k == key.len() {
+                return 0;
+            }
+            if dp[r][k] != -1 {
+                return dp[r][k];
+            }
+            let n = ring.len();
+            let mut res = i32::MAX;
+            for i in 0..n {
+                if ring[i] == key[k] {
+                    let diff = (r as i32 - i as i32).abs();
+                    let min_dist = diff.min(n as i32 - diff);
+                    res = res.min(min_dist + 1 + dfs(i, k + 1, ring, key, dp));
+                }
+            }
+            dp[r][k] = res;
+            res
+        }
+
+        dfs(0, 0, ring, key, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -534,8 +597,8 @@ The value `dp[k][r]` represents the minimum steps to spell `key[k:]` starting fr
 3. Iterate `k` from `m - 1` down to `0`.
 4. For each ring position `r`, find all positions `i` where `ring[i] == key[k]`.
 5. For each matching position, compute:
-   - `distance = min(|r - i|, n - |r - i|)`
-   - `dp[k][r] = min(dp[k][r], distance + 1 + dp[k + 1][i])`
+    - `distance = min(|r - i|, n - |r - i|)`
+    - `dp[k][r] = min(dp[k][r], distance + 1 + dp[k + 1][i])`
 6. Return `dp[0][0]`.
 
 ::tabs-start
@@ -776,6 +839,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_rotate_steps(ring: String, key: String) -> i32 {
+        let ring = ring.as_bytes();
+        let key = key.as_bytes();
+        let n = ring.len();
+        let m = key.len();
+        let mut dp = vec![vec![i32::MAX; n]; m + 1];
+
+        for i in 0..n {
+            dp[m][i] = 0;
+        }
+
+        for k in (0..m).rev() {
+            for r in 0..n {
+                for i in 0..n {
+                    if ring[i] == key[k] {
+                        let diff = (r as i32 - i as i32).abs();
+                        let min_dist = diff.min(n as i32 - diff);
+                        dp[k][r] = dp[k][r].min(min_dist + 1 + dp[k + 1][i]);
+                    }
+                }
+            }
+        }
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,7 +883,7 @@ class Solution {
 
 ### Intuition
 
-Since each DP row only depends on the next row, we can reduce space from O(n * m) to O(n) by keeping just two arrays: one for the current key index and one for the next.
+Since each DP row only depends on the next row, we can reduce space from O(n \* m) to O(n) by keeping just two arrays: one for the current key index and one for the next.
 
 Additionally, precomputing the positions of each character in the ring using an adjacency list speeds up lookups.
 
@@ -1056,6 +1148,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_rotate_steps(ring: String, key: String) -> i32 {
+        let ring = ring.as_bytes();
+        let key = key.as_bytes();
+        let n = ring.len();
+        let m = key.len();
+        let mut dp = vec![0i32; n];
+
+        let mut adj = vec![vec![]; 26];
+        for i in 0..n {
+            adj[(ring[i] - b'a') as usize].push(i);
+        }
+
+        for k in (0..m).rev() {
+            let mut next_dp = vec![i32::MAX; n];
+            let c = (key[k] - b'a') as usize;
+            for r in 0..n {
+                for &i in &adj[c] {
+                    let diff = (r as i32 - i as i32).abs();
+                    let min_dist = diff.min(n as i32 - diff);
+                    next_dp[r] = next_dp[r].min(min_dist + 1 + dp[i]);
+                }
+            }
+            dp = next_dp;
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1080,8 +1204,8 @@ Initially, we set `dp[i]` to the distance from position `0` to position `i`. The
 1. Initialize `dp[i] = min(i, n - i)` for each ring position (distance from `0`).
 2. Build an adjacency list for quick character position lookups.
 3. For each key index `k` from `1` to `m - 1`:
-   - For each position `r` matching `key[k]`, find the minimum cost among all positions matching `key[k - 1]`.
-   - Update `dp[r]` with this minimum cost plus the rotation distance.
+    - For each position `r` matching `key[k]`, find the minimum cost among all positions matching `key[k - 1]`.
+    - Update `dp[r]` with this minimum cost plus the rotation distance.
 4. Find the minimum value among positions matching the last key character.
 5. Add `m` for all button presses and return.
 
@@ -1383,6 +1507,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_rotate_steps(ring: String, key: String) -> i32 {
+        let ring = ring.as_bytes();
+        let key = key.as_bytes();
+        let n = ring.len();
+        let m = key.len();
+        let mut dp: Vec<i32> = (0..n).map(|i| (i as i32).min(n as i32 - i as i32)).collect();
+
+        let mut adj = vec![vec![]; 26];
+        for i in 0..n {
+            adj[(ring[i] - b'a') as usize].push(i);
+        }
+
+        for k in 1..m {
+            let c = (key[k] - b'a') as usize;
+            let prev_c = (key[k - 1] - b'a') as usize;
+            for &r in &adj[c] {
+                let mut min_dist = i32::MAX;
+                for &i in &adj[prev_c] {
+                    let diff = (r as i32 - i as i32).abs();
+                    min_dist = min_dist.min(diff.min(n as i32 - diff) + dp[i]);
+                }
+                dp[r] = min_dist;
+            }
+        }
+
+        let last_c = (key[m - 1] - b'a') as usize;
+        let mut result = i32::MAX;
+        for &i in &adj[last_c] {
+            result = result.min(dp[i]);
+        }
+
+        result + m as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1407,11 +1569,11 @@ Since the adjacency list positions are naturally sorted by index, we can use a t
 1. Precompute sorted position lists for each character.
 2. Initialize two arrays: `dp` for current state and `nextDp` for the next iteration.
 3. For each key character (right to left):
-   - Use a pointer to track position in the sorted list of matching indices.
-   - For each ring position `r`:
-     - If `ring[r]` matches the key character, copy the value from `dp`.
-     - Otherwise, find the nearest matching position in each direction using the sorted list.
-     - Compute minimum cost considering wrap-around distances.
+    - Use a pointer to track position in the sorted list of matching indices.
+    - For each ring position `r`:
+        - If `ring[r]` matches the key character, copy the value from `dp`.
+        - Otherwise, find the nearest matching position in each direction using the sorted list.
+        - Compute minimum cost considering wrap-around distances.
 4. Swap arrays and continue.
 5. Return `dp[0] + m`.
 
@@ -1803,6 +1965,54 @@ class Solution {
         }
 
         return dp[0] + m
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_rotate_steps(ring: String, key: String) -> i32 {
+        let ring = ring.as_bytes();
+        let key = key.as_bytes();
+        let n = ring.len();
+        let m = key.len();
+
+        let mut dp = vec![0i32; n];
+        let mut next_dp = vec![0i32; n];
+        let mut adj = vec![vec![]; 26];
+
+        for i in 0..n {
+            adj[(ring[i] - b'a') as usize].push(i);
+        }
+
+        for k in (0..m).rev() {
+            let c = (key[k] - b'a') as usize;
+            let mut it = 0;
+            let big_n = adj[c].len();
+
+            for r in 0..n {
+                if (ring[r] - b'a') as usize != c {
+                    next_dp[r] = i32::MAX;
+                    while it < big_n && adj[c][it] < r {
+                        it += 1;
+                    }
+
+                    let next_idx = if it < big_n { adj[c][it] } else { adj[c][0] };
+                    let prev_idx = if it > 0 { adj[c][it - 1] } else { adj[c][big_n - 1] };
+
+                    let dist1 = if r > prev_idx { r - prev_idx } else { n - (prev_idx - r) };
+                    let dist2 = if next_idx > r { next_idx - r } else { n - (r - next_idx) };
+
+                    next_dp[r] = (dist1 as i32 + dp[prev_idx]).min(dist2 as i32 + dp[next_idx]);
+                } else {
+                    next_dp[r] = dp[r];
+                }
+            }
+
+            std::mem::swap(&mut dp, &mut next_dp);
+        }
+
+        dp[0] + m as i32
     }
 }
 ```

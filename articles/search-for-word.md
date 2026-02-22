@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Exploring all possible paths by making choices, recursing, and undoing choices to try alternatives
 - **Depth-First Search (DFS)** - Traversing a graph or grid by exploring as far as possible along each branch before backtracking
 - **2D Grid Traversal** - Moving through a matrix in four directions while tracking visited cells to avoid revisiting
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Backtracking (Hash Set)
 
 ### Intuition
+
 We need to check if the word can be formed by walking **up/down/left/right** on the grid, using **each cell at most once** in the same path.
 
 So for every cell, we try to start the word there:
+
 - If the current cell matches the current character, we move to its 4 neighbors for the next character.
 - While exploring, we mark the cell as **visited** (in a hash set) so we don't reuse it in the same path.
 - If a path fails, we **undo (backtrack)** the visit and try other directions.
@@ -20,14 +24,15 @@ So for every cell, we try to start the word there:
 If we ever match all characters, we return `true` (found the word).
 
 ### Algorithm
+
 1. For each cell in the grid, attempt to start matching `word` from that cell.
 2. Use `DFS` with `(row, col, i)` where `i` is the index in `word` we need to match.
 3. In `DFS`:
-   - If `i == len(word)`, all characters matched → return `true`.
-   - If out of bounds, mismatch, or already visited → return `false`.
-   - Mark `(row, col)` as visited.
-   - Recurse to 4 neighbors with `i + 1`.
-   - Unmark `(row, col)` (backtrack).
+    - If `i == len(word)`, all characters matched → return `true`.
+    - If out of bounds, mismatch, or already visited → return `false`.
+    - Mark `(row, col)` as visited.
+    - Recurse to 4 neighbors with `i + 1`.
+    - Unmark `(row, col)` (backtrack).
 4. If any start cell returns `true`, answer is `true`; otherwise `false`.
 
 ::tabs-start
@@ -343,6 +348,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
+        let rows = board.len();
+        let cols = board[0].len();
+        let word: Vec<char> = word.chars().collect();
+        let mut path = HashSet::new();
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if Self::dfs(&board, &word, r as i32, c as i32, 0, &mut path) {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    fn dfs(
+        board: &Vec<Vec<char>>, word: &[char],
+        r: i32, c: i32, i: usize,
+        path: &mut HashSet<(i32, i32)>,
+    ) -> bool {
+        if i == word.len() { return true; }
+        if r < 0 || c < 0 || r >= board.len() as i32
+            || c >= board[0].len() as i32
+            || board[r as usize][c as usize] != word[i]
+            || path.contains(&(r, c))
+        {
+            return false;
+        }
+
+        path.insert((r, c));
+        let res = Self::dfs(board, word, r + 1, c, i + 1, path)
+            || Self::dfs(board, word, r - 1, c, i + 1, path)
+            || Self::dfs(board, word, r, c + 1, i + 1, path)
+            || Self::dfs(board, word, r, c - 1, i + 1, path);
+        path.remove(&(r, c));
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -357,6 +405,7 @@ class Solution {
 ## 2. Backtracking (Visited Array)
 
 ### Intuition
+
 We try to form the word by **walking through adjacent cells** (up, down, left, right) in the grid.
 Each cell can be used **only once in the current path**, so we keep a `visited` matrix to mark cells that are already part of the path.
 
@@ -365,14 +414,15 @@ If at any point the character doesn't match, goes out of bounds, or the cell is 
 If all characters are matched successfully, the word exists in the grid and we return `true`.
 
 ### Algorithm
+
 1. Create a `visited` matrix of the same size as the board.
 2. For every cell `(r, c)` in the grid, start a `DFS` to match the word from index `0`.
 3. In `DFS` `(r, c, i)`:
-   - If `i == len(word)`, all characters are matched → return `true`.
-   - If out of bounds, character mismatch, or already visited → return `false`.
-   - Mark the current cell as visited.
-   - Recurse to the 4 neighboring cells with `i + 1`.
-   - Unmark the cell (backtrack).
+    - If `i == len(word)`, all characters are matched → return `true`.
+    - If out of bounds, character mismatch, or already visited → return `false`.
+    - Mark the current cell as visited.
+    - Recurse to the 4 neighboring cells with `i + 1`.
+    - Unmark the cell (backtrack).
 4. If any `DFS` call returns `true`, return `true`.
 5. If all starts fail, return `false`.
 
@@ -693,6 +743,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn exist(board: Vec<Vec<char>>, word: String) -> bool {
+        let rows = board.len();
+        let cols = board[0].len();
+        let word: Vec<char> = word.chars().collect();
+        let mut visited = vec![vec![false; cols]; rows];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if Self::dfs(&board, &word, r as i32, c as i32, 0, &mut visited) {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    fn dfs(
+        board: &Vec<Vec<char>>, word: &[char],
+        r: i32, c: i32, i: usize,
+        visited: &mut Vec<Vec<bool>>,
+    ) -> bool {
+        if i == word.len() { return true; }
+        if r < 0 || c < 0 || r >= board.len() as i32
+            || c >= board[0].len() as i32
+        {
+            return false;
+        }
+        let (ru, cu) = (r as usize, c as usize);
+        if board[ru][cu] != word[i] || visited[ru][cu] {
+            return false;
+        }
+
+        visited[ru][cu] = true;
+        let res = Self::dfs(board, word, r + 1, c, i + 1, visited)
+            || Self::dfs(board, word, r - 1, c, i + 1, visited)
+            || Self::dfs(board, word, r, c + 1, i + 1, visited)
+            || Self::dfs(board, word, r, c - 1, i + 1, visited);
+        visited[ru][cu] = false;
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -707,19 +802,23 @@ class Solution {
 ## 3. Backtracking (Optimal)
 
 ### Intuition
+
 We want to check if the word can be formed by moving **up/down/left/right** in the grid, using each cell **at most once** in a single path.
 
 Instead of keeping a separate `visited` matrix (extra space), we temporarily **mark the current cell as used** by replacing its character with a special value (like `'#'`).
 This means:
+
 - If we ever see `'#'`, we know this cell is already in our current path → we can't reuse it.
 - After exploring from that cell, we **restore** the original character (this is the "backtrack" step), so other paths can use it.
 
 So the idea is:
+
 - Try every cell as a starting point.
 - Do `DFS` to match the word character by character.
 - Mark → explore neighbors → unmark.
 
 ### Algorithm
+
 1. Let `ROWS`, `COLS` be grid size.
 2. Define `dfs(r, c, i)` meaning: "Can we match `word[i...]` starting from cell `(r, c)`?"
 3. Base case: if `i == len(word)`, we matched all characters → return `true`.
@@ -1024,6 +1123,49 @@ class Solution {
             }
         }
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn exist(mut board: Vec<Vec<char>>, word: String) -> bool {
+        let rows = board.len();
+        let cols = board[0].len();
+        let word: Vec<char> = word.chars().collect();
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if Self::dfs(&mut board, &word, r as i32, c as i32, 0) {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+
+    fn dfs(
+        board: &mut Vec<Vec<char>>, word: &[char],
+        r: i32, c: i32, i: usize,
+    ) -> bool {
+        if i == word.len() { return true; }
+        if r < 0 || c < 0 || r >= board.len() as i32
+            || c >= board[0].len() as i32
+        {
+            return false;
+        }
+        let (ru, cu) = (r as usize, c as usize);
+        if board[ru][cu] != word[i] || board[ru][cu] == '#' {
+            return false;
+        }
+
+        board[ru][cu] = '#';
+        let res = Self::dfs(board, word, r + 1, c, i + 1)
+            || Self::dfs(board, word, r - 1, c, i + 1)
+            || Self::dfs(board, word, r, c + 1, i + 1)
+            || Self::dfs(board, word, r, c - 1, i + 1);
+        board[ru][cu] = word[i];
+        res
     }
 }
 ```

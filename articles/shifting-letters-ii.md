@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays and String Manipulation** - Understanding how to iterate and modify character arrays using ASCII values and modular arithmetic
 - **Prefix Sum / Difference Arrays** - The sweep line technique uses difference arrays to efficiently apply range updates, which is essential for the optimal solution
 - **Modular Arithmetic** - Handling wraparound when shifting characters beyond 'z' or before 'a' requires understanding modulo operations with negative numbers
@@ -18,9 +20,9 @@ This approach is simple but slow because we might repeatedly process the same ch
 
 1. Convert the string to an array of integers (0-25 representing 'a'-'z').
 2. For each shift `[l, r, d]`:
-   - Iterate through indices from `l` to `r`.
-   - Add `1` if direction is forward, subtract `1` if backward.
-   - Apply modulo `26` to handle wraparound.
+    - Iterate through indices from `l` to `r`.
+    - Add `1` if direction is forward, subtract `1` if backward.
+    - Apply modulo `26` to handle wraparound.
 3. Convert the integer array back to characters.
 4. Return the resulting string.
 
@@ -198,6 +200,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shifting_letters(s: String, shifts: Vec<Vec<i32>>) -> String {
+        let mut letters: Vec<i32> = s.bytes().map(|b| (b - b'a') as i32).collect();
+
+        for shift in &shifts {
+            let (l, r, d) = (shift[0] as usize, shift[1] as usize, shift[2]);
+            for i in l..=r {
+                letters[i] = (letters[i] + if d == 1 { 1 } else { -1 } + 26) % 26;
+            }
+        }
+
+        letters.iter().map(|&c| (c as u8 + b'a') as char).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -221,12 +240,12 @@ For a shift affecting range `[l, r]`, we add the shift value at index `l` and su
 
 1. Create a difference array `prefix_diff` of size `n + 1`, initialized to zeros.
 2. For each shift `[l, r, d]`:
-   - Add `+1` or `-1` (based on direction) at index `l`.
-   - Subtract the same value at index `r + 1`.
+    - Add `+1` or `-1` (based on direction) at index `l`.
+    - Subtract the same value at index `r + 1`.
 3. Compute the running sum while traversing the string:
-   - Maintain a cumulative `diff` variable.
-   - For each index, add the net shift to the character.
-   - Apply modulo `26` arithmetic for wraparound.
+    - Maintain a cumulative `diff` variable.
+    - For each index, add the net shift to the character.
+    - Apply modulo `26` arithmetic for wraparound.
 4. Return the resulting string.
 
 ::tabs-start
@@ -474,6 +493,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shifting_letters(s: String, shifts: Vec<Vec<i32>>) -> String {
+        let n = s.len();
+        let mut prefix_diff = vec![0i32; n + 1];
+
+        for shift in &shifts {
+            let (left, right, d) = (shift[0] as usize, shift[1] as usize, shift[2]);
+            let val = if d == 1 { 1 } else { -1 };
+            prefix_diff[left] += val;
+            prefix_diff[right + 1] -= val;
+        }
+
+        let mut res: Vec<i32> = s.bytes().map(|b| (b - b'a') as i32).collect();
+        let mut diff = 0i32;
+
+        for i in 0..n {
+            diff += prefix_diff[i];
+            res[i] = ((res[i] + diff % 26) + 26) % 26;
+        }
+
+        res.iter().map(|&c| (c as u8 + b'a') as char).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -497,11 +542,11 @@ When querying, the prefix sum at any index gives us the total accumulated shift 
 
 1. Initialize a BIT of size `n + 2`.
 2. For each shift `[l, r, d]`:
-   - Perform a range update by calling `update(l, delta)` and `update(r + 1, -delta)`, where `delta` is `+1` or `-1`.
+    - Perform a range update by calling `update(l, delta)` and `update(r + 1, -delta)`, where `delta` is `+1` or `-1`.
 3. For each character in the string:
-   - Query the BIT to get the total shift at that position.
-   - Apply the shift with modulo `26` arithmetic.
-   - Build the result character.
+    - Query the BIT to get the total shift at that position.
+    - Apply the shift with modulo `26` arithmetic.
+    - Build the result character.
 4. Return the resulting string.
 
 ::tabs-start
@@ -964,6 +1009,66 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+struct BIT {
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl BIT {
+    fn new(size: usize) -> Self {
+        let n = size + 2;
+        BIT { tree: vec![0; n], n }
+    }
+
+    fn update(&mut self, index: usize, delta: i32) {
+        let mut i = index + 1;
+        while i < self.n {
+            self.tree[i] += delta;
+            i += i & i.wrapping_neg();
+        }
+    }
+
+    fn prefix_sum(&self, index: usize) -> i32 {
+        let mut i = index + 1;
+        let mut sum = 0;
+        while i > 0 {
+            sum += self.tree[i];
+            i -= i & i.wrapping_neg();
+        }
+        sum
+    }
+
+    fn range_update(&mut self, left: usize, right: usize, delta: i32) {
+        self.update(left, delta);
+        self.update(right + 1, -delta);
+    }
+}
+
+impl Solution {
+    pub fn shifting_letters(s: String, shifts: Vec<Vec<i32>>) -> String {
+        let n = s.len();
+        let mut bit = BIT::new(n);
+
+        for shift in &shifts {
+            let (left, right, d) = (shift[0] as usize, shift[1] as usize, shift[2]);
+            let delta = if d == 1 { 1 } else { -1 };
+            bit.range_update(left, right, delta);
+        }
+
+        let bytes = s.as_bytes();
+        let mut res = String::with_capacity(n);
+        for i in 0..n {
+            let sh = bit.prefix_sum(i) % 26;
+            let code = ((bytes[i] as i32 - b'a' as i32 + sh) % 26 + 26) % 26;
+            res.push((code as u8 + b'a') as char);
+        }
+
+        res
     }
 }
 ```

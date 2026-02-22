@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Understanding LIFO (Last In, First Out) operations: push, pop, peek
 - **Array Iteration** - Processing elements sequentially from left to right
 - **Simulation Problems** - Modeling real-world processes step by step in code
@@ -18,9 +20,9 @@ Collisions only happen when a right-moving asteroid (positive) meets a left-movi
 1. Initialize an empty stack.
 2. For each asteroid, if it's positive or the stack is empty or the top is negative, push it.
 3. If the asteroid is negative and the top is positive, compare sizes:
-   - If the top is smaller, pop it and continue checking.
-   - If they're equal, pop the top and discard the current asteroid.
-   - If the top is larger, discard the current asteroid.
+    - If the top is smaller, pop it and continue checking.
+    - If they're equal, pop the top and discard the current asteroid.
+    - If the top is larger, discard the current asteroid.
 4. After processing all asteroids, the stack contains the survivors.
 
 ::tabs-start
@@ -223,6 +225,32 @@ class Solution {
             }
         }
         return stack
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn asteroid_collision(asteroids: Vec<i32>) -> Vec<i32> {
+        let mut stack: Vec<i32> = Vec::new();
+        for &asteroid in &asteroids {
+            let mut a = asteroid;
+            while !stack.is_empty() && a < 0 && *stack.last().unwrap() > 0 {
+                let diff = a + stack.last().unwrap();
+                if diff < 0 {
+                    stack.pop();
+                } else if diff > 0 {
+                    a = 0;
+                } else {
+                    a = 0;
+                    stack.pop();
+                }
+            }
+            if a != 0 {
+                stack.push(a);
+            }
+        }
+        stack
     }
 }
 ```
@@ -491,6 +519,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn asteroid_collision(asteroids: Vec<i32>) -> Vec<i32> {
+        let mut arr = asteroids;
+        let mut j: i32 = -1;
+
+        for i in 0..arr.len() {
+            let mut a = arr[i];
+            while j >= 0 && arr[j as usize] > 0 && a < 0 {
+                if arr[j as usize] > a.abs() {
+                    a = 0;
+                    break;
+                } else if arr[j as usize] == a.abs() {
+                    j -= 1;
+                    a = 0;
+                    break;
+                } else {
+                    j -= 1;
+                }
+            }
+            if a != 0 {
+                j += 1;
+                arr[j as usize] = a;
+            }
+        }
+
+        arr[..((j + 1) as usize)].to_vec()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -503,7 +562,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Assuming All Asteroids Collide
+
 Not all asteroids collide. Two asteroids moving in the same direction (both positive or both negative) never collide. A negative asteroid followed by a positive asteroid also never collide since they move apart.
+
 ```python
 # Wrong: checking if signs differ without considering direction
 if asteroids[i] * asteroids[j] < 0:  # collision!
@@ -512,7 +573,9 @@ if stack[-1] > 0 and a < 0:  # potential collision
 ```
 
 ### Forgetting Chain Reactions
+
 A single incoming asteroid can destroy multiple asteroids on the stack. You need a loop, not just a single comparison.
+
 ```python
 # Wrong: only one comparison
 if stack and a < 0 and stack[-1] > 0:
@@ -523,7 +586,9 @@ while stack and a < 0 and stack[-1] > 0:
 ```
 
 ### Incorrect Size Comparison
+
 When comparing asteroid sizes, remember that negative asteroids have negative values. Use absolute value for size comparison.
+
 ```python
 # Wrong: comparing raw values
 if stack[-1] > a:  # incorrect when a is negative

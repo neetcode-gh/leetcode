@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree Properties** - Understanding that inorder traversal yields sorted elements
 - **Inorder Tree Traversal** - Both recursive and iterative implementations
 - **Stack Data Structure** - Used to simulate recursion for space-efficient iterative traversal
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Flattening the BST (DFS)
 
 ### Intuition
+
 The simplest approach is to perform an inorder traversal of the BST upfront and store all values in an array. Since inorder traversal of a BST visits nodes in ascending order, the array will be sorted. Then, `next()` simply returns the next element from the array, and `hasNext()` checks if there are more elements remaining.
 
 ### Algorithm
+
 1. In the constructor, perform a recursive inorder DFS traversal of the tree.
 2. Store each visited node's value in an array.
 3. Maintain an iterator pointer starting at index `0`.
@@ -346,6 +350,43 @@ class BSTIterator {
 }
 ```
 
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+struct BSTIterator {
+    arr: Vec<i32>,
+    itr: usize,
+}
+
+impl BSTIterator {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        let mut arr = Vec::new();
+        Self::dfs(&root, &mut arr);
+        BSTIterator { arr, itr: 0 }
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            Self::dfs(&n.left, arr);
+            arr.push(n.val);
+            Self::dfs(&n.right, arr);
+        }
+    }
+
+    fn next(&mut self) -> i32 {
+        let val = self.arr[self.itr];
+        self.itr += 1;
+        val
+    }
+
+    fn has_next(&self) -> bool {
+        self.itr < self.arr.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -360,9 +401,11 @@ class BSTIterator {
 ## 2. Flatten the BST (Iterative DFS)
 
 ### Intuition
+
 This is the same approach as the recursive version, but implemented iteratively using an explicit stack. We simulate the recursion by pushing nodes onto the stack, going left as far as possible, then processing nodes and going right. The result is the same sorted array of values.
 
 ### Algorithm
+
 1. In the constructor, use a stack to perform iterative inorder traversal.
 2. Push nodes onto the stack while going left, then pop and add to the array, then go right.
 3. Store all values in an array and maintain an iterator pointer.
@@ -677,6 +720,44 @@ class BSTIterator {
 }
 ```
 
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+struct BSTIterator {
+    arr: Vec<i32>,
+    itr: usize,
+}
+
+impl BSTIterator {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        let mut arr = Vec::new();
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut cur = root;
+        while cur.is_some() || !stack.is_empty() {
+            while let Some(node) = cur {
+                stack.push(node.clone());
+                cur = node.borrow().left.clone();
+            }
+            let node = stack.pop().unwrap();
+            arr.push(node.borrow().val);
+            cur = node.borrow().right.clone();
+        }
+        BSTIterator { arr, itr: 0 }
+    }
+
+    fn next(&mut self) -> i32 {
+        let val = self.arr[self.itr];
+        self.itr += 1;
+        val
+    }
+
+    fn has_next(&self) -> bool {
+        self.itr < self.arr.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -691,9 +772,11 @@ class BSTIterator {
 ## 3. Iterative DFS - I
 
 ### Intuition
+
 Instead of flattening the entire tree upfront, we can save memory by only keeping track of the path from the root to the current position. We initialize the stack with all nodes along the leftmost path. When `next()` is called, we pop the top node, and if it has a right child, we push all nodes along the leftmost path of the right subtree. This way, the stack always contains the ancestors needed to continue the traversal.
 
 ### Algorithm
+
 1. In the constructor, push all nodes from root to the leftmost leaf onto the stack.
 2. For `next()`, pop the top node from the stack as the result.
 3. If the popped node has a right child, push all nodes from the right child down to its leftmost descendant.
@@ -986,6 +1069,42 @@ class BSTIterator {
 }
 ```
 
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+struct BSTIterator {
+    stack: Vec<Rc<RefCell<TreeNode>>>,
+}
+
+impl BSTIterator {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        let mut stack = Vec::new();
+        let mut cur = root;
+        while let Some(node) = cur {
+            stack.push(node.clone());
+            cur = node.borrow().left.clone();
+        }
+        BSTIterator { stack }
+    }
+
+    fn next(&mut self) -> i32 {
+        let node = self.stack.pop().unwrap();
+        let val = node.borrow().val;
+        let mut cur = node.borrow().right.clone();
+        while let Some(n) = cur {
+            self.stack.push(n.clone());
+            cur = n.borrow().left.clone();
+        }
+        val
+    }
+
+    fn has_next(&self) -> bool {
+        !self.stack.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1000,9 +1119,11 @@ class BSTIterator {
 ## 4. Iterative DFS - II
 
 ### Intuition
+
 This is a slight variation of the previous approach. Instead of initializing the stack in the constructor, we defer the leftward traversal to the `next()` method. We keep a pointer to the current node and only push nodes onto the stack when `next()` is called. This makes the constructor `O(1)` but the logic is essentially the same.
 
 ### Algorithm
+
 1. In the constructor, store the root as the current node and initialize an empty stack.
 2. For `next()`, push all nodes from the current node down to its leftmost descendant onto the stack.
 3. Pop the top node from the stack, set the current node to its right child.
@@ -1274,6 +1395,40 @@ class BSTIterator {
 }
 ```
 
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+struct BSTIterator {
+    cur: Option<Rc<RefCell<TreeNode>>>,
+    stack: Vec<Rc<RefCell<TreeNode>>>,
+}
+
+impl BSTIterator {
+    fn new(root: Option<Rc<RefCell<TreeNode>>>) -> Self {
+        BSTIterator {
+            cur: root,
+            stack: Vec::new(),
+        }
+    }
+
+    fn next(&mut self) -> i32 {
+        while let Some(node) = self.cur.take() {
+            self.cur = node.borrow().left.clone();
+            self.stack.push(node);
+        }
+        let node = self.stack.pop().unwrap();
+        let val = node.borrow().val;
+        self.cur = node.borrow().right.clone();
+        val
+    }
+
+    fn has_next(&self) -> bool {
+        self.cur.is_some() || !self.stack.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1288,10 +1443,13 @@ class BSTIterator {
 ## Common Pitfalls
 
 ### Using Preorder or Postorder Instead of Inorder
+
 BST iterator must return elements in ascending order, which requires inorder traversal (left, root, right). Using preorder or postorder traversal produces elements in the wrong order.
 
 ### Forgetting to Traverse the Right Subtree After Popping
+
 When using the stack-based approach, after popping a node and returning its value, you must push the leftmost path of its right subtree onto the stack. Forgetting this step causes right subtrees to be skipped entirely.
+
 ```python
 # Wrong: just pop and return
 node = stack.pop()
@@ -1307,4 +1465,5 @@ return node.val
 ```
 
 ### Incorrect hasNext() Implementation
+
 The `hasNext()` method must return `True` if there are more elements to iterate. For the stack-based approach, this means checking if either the stack is non-empty OR the current pointer is not null (depending on the implementation variant).

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph traversal (DFS)** - Exploring all cells belonging to an island in a 2D grid
 - **Coordinate normalization** - Translating island shapes relative to an origin for comparison
 - **Hashing** - Using sets and hashable data structures to store unique island signatures
@@ -17,8 +19,8 @@ Two islands are considered the same if one can be translated (shifted) to match 
 
 1. Use `dfs` to explore each island, recording cells as offsets from the starting cell (origin).
 2. For each newly discovered island, compare it against all previously stored unique islands:
-   - If sizes differ, they are different.
-   - Otherwise, compare cell by cell.
+    - If sizes differ, they are different.
+    - Otherwise, compare cell by cell.
 3. If the island matches none of the stored islands, add it to the unique list.
 4. Return the count of unique islands.
 
@@ -27,7 +29,7 @@ Two islands are considered the same if one can be translated (shifted) to match 
 ```python
 class Solution:
     def numDistinctIslands(self, grid: List[List[int]]) -> int:
-        
+
         def current_island_is_unique():
             for other_island in unique_islands:
                 if len(other_island) != len(current_island):
@@ -38,7 +40,7 @@ class Solution:
                 else:
                     return False
             return True
-            
+
         # Do a DFS to find all cells in the current island.
         def dfs(row, col):
             if row < 0 or col < 0 or row >= len(grid) or col >= len(grid[0]):
@@ -51,7 +53,7 @@ class Solution:
             dfs(row - 1, col)
             dfs(row, col + 1)
             dfs(row, col - 1)
-        
+
         # Repeatedly start DFS's as long as there are islands remaining.
         seen = set()
         unique_islands = []
@@ -74,11 +76,11 @@ class Solution {
     private List<List<int[]>> uniqueIslands = new ArrayList<>(); // All known unique islands.
     private List<int[]> currentIsland = new ArrayList<>(); // Current Island
     private int[][] grid; // Input grid
-    private boolean[][] seen; // Cells that have been explored. 
-     
-    public int numDistinctIslands(int[][] grid) {   
+    private boolean[][] seen; // Cells that have been explored.
+
+    public int numDistinctIslands(int[][] grid) {
         this.grid = grid;
-        this.seen = new boolean[grid.length][grid[0].length];   
+        this.seen = new boolean[grid.length][grid[0].length];
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[0].length; col++) {
                 dfs(row, col);
@@ -103,7 +105,7 @@ class Solution {
         }
         return uniqueIslands.size();
     }
-    
+
     private void dfs(int row, int col) {
         if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) return;
         if (seen[row][col] || grid[row][col] == 0) return;
@@ -114,7 +116,7 @@ class Solution {
         dfs(row, col + 1);
         dfs(row, col - 1);
     }
-    
+
     private boolean currentIslandUnique() {
         for (List<int[]> otherIsland : uniqueIslands) {
             if (currentIsland.size() != otherIsland.size()) {
@@ -126,7 +128,7 @@ class Solution {
         }
         return true;
     }
-    
+
     private boolean equalIslands(List<int[]> island1, List<int[]> island2) {
         for (int i = 0; i < island1.size(); i++) {
             if (island1.get(i)[0] != island2.get(i)[0] || island1.get(i)[1] != island2.get(i)[1]) {
@@ -138,6 +140,60 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct_islands(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut seen = vec![vec![false; cols]; rows];
+        let mut unique_islands: Vec<Vec<(i32, i32)>> = Vec::new();
+
+        fn dfs(
+            grid: &[Vec<i32>], seen: &mut Vec<Vec<bool>>,
+            r: i32, c: i32, island: &mut Vec<(i32, i32)>,
+        ) {
+            if r < 0 || c < 0
+                || r >= grid.len() as i32
+                || c >= grid[0].len() as i32
+            {
+                return;
+            }
+            let (ru, cu) = (r as usize, c as usize);
+            if seen[ru][cu] || grid[ru][cu] == 0 {
+                return;
+            }
+            seen[ru][cu] = true;
+            island.push((r, c));
+            dfs(grid, seen, r + 1, c, island);
+            dfs(grid, seen, r - 1, c, island);
+            dfs(grid, seen, r, c + 1, island);
+            dfs(grid, seen, r, c - 1, island);
+        }
+
+        for row in 0..rows {
+            for col in 0..cols {
+                let mut current_island = Vec::new();
+                dfs(&grid, &mut seen, row as i32, col as i32,
+                    &mut current_island);
+                if current_island.is_empty() {
+                    continue;
+                }
+                let min_col = current_island.iter()
+                    .map(|&(_, c)| c).min().unwrap();
+                let normalized: Vec<(i32, i32)> = current_island
+                    .iter()
+                    .map(|&(r, c)| (r - row as i32, c - min_col))
+                    .collect();
+                if !unique_islands.iter().any(|other| *other == normalized) {
+                    unique_islands.push(normalized);
+                }
+            }
+        }
+        unique_islands.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -145,7 +201,7 @@ class Solution {
 - Time complexity: $O(M^2 \cdot N^2)$
 - Space complexity: $O(N \cdot M)$
 
->  Where $M$ is the number of rows, and $N$ is the number of columns
+> Where $M$ is the number of rows, and $N$ is the number of columns
 
 ---
 
@@ -179,7 +235,7 @@ class Solution:
             dfs(row - 1, col)
             dfs(row, col + 1)
             dfs(row, col - 1)
-        
+
         # Repeatedly start DFS's as long as there are islands remaining.
         seen = set()
         unique_islands = set()
@@ -191,37 +247,37 @@ class Solution:
                 dfs(row, col)
                 if current_island:
                     unique_islands.add(frozenset(current_island))
-        
+
         return len(unique_islands)
 ```
 
 ```java
 class Solution {
-    
+
     private int[][] grid;
     private boolean[][] seen;
     private Set<Pair<Integer, Integer>> currentIsland;
     private int currRowOrigin;
     private int currColOrigin;
-    
+
     private void dfs(int row, int col) {
         if (row < 0 || row >= grid.length || col < 0 || col >= grid[0].length) {
             return;
         }
         if (grid[row][col] == 0 || seen[row][col]) {
             return;
-        }    
+        }
         seen[row][col] = true;
         currentIsland.add(new Pair<>(row - currRowOrigin, col - currColOrigin));
         dfs(row + 1, col);
         dfs(row - 1, col);
         dfs(row, col + 1);
-        dfs(row, col - 1);    
+        dfs(row, col - 1);
     }
-    
+
     public int numDistinctIslands(int[][] grid) {
         this.grid = grid;
-        this.seen = new boolean[grid.length][grid[0].length];   
+        this.seen = new boolean[grid.length][grid[0].length];
         Set<Set<Pair<Integer, Integer>>> islands = new HashSet<>();
         for (int row = 0; row < grid.length; row++) {
             for (int col = 0; col < grid[0].length; col++) {
@@ -233,8 +289,54 @@ class Solution {
                     islands.add(currentIsland);
                 }
             }
-        }         
+        }
         return islands.size();
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_distinct_islands(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut seen = vec![vec![false; cols]; rows];
+        let mut islands: HashSet<BTreeSet<(i32, i32)>> = HashSet::new();
+
+        fn dfs(
+            grid: &[Vec<i32>], seen: &mut Vec<Vec<bool>>,
+            r: i32, c: i32, origin_r: i32, origin_c: i32,
+            island: &mut BTreeSet<(i32, i32)>,
+        ) {
+            if r < 0 || c < 0
+                || r >= grid.len() as i32
+                || c >= grid[0].len() as i32
+            {
+                return;
+            }
+            let (ru, cu) = (r as usize, c as usize);
+            if grid[ru][cu] == 0 || seen[ru][cu] {
+                return;
+            }
+            seen[ru][cu] = true;
+            island.insert((r - origin_r, c - origin_c));
+            dfs(grid, seen, r + 1, c, origin_r, origin_c, island);
+            dfs(grid, seen, r - 1, c, origin_r, origin_c, island);
+            dfs(grid, seen, r, c + 1, origin_r, origin_c, island);
+            dfs(grid, seen, r, c - 1, origin_r, origin_c, island);
+        }
+
+        for row in 0..rows {
+            for col in 0..cols {
+                let mut current_island = BTreeSet::new();
+                dfs(&grid, &mut seen, row as i32, col as i32,
+                    row as i32, col as i32, &mut current_island);
+                if !current_island.is_empty() {
+                    islands.insert(current_island);
+                }
+            }
+        }
+        islands.len() as i32
     }
 }
 ```
@@ -246,7 +348,7 @@ class Solution {
 - Time complexity: $O(M \cdot N)$
 - Space complexity: $O(M \cdot N)$
 
->  Where $M$ is the number of rows, and $N$ is the number of columns
+> Where $M$ is the number of rows, and $N$ is the number of columns
 
 ---
 
@@ -281,7 +383,7 @@ class Solution:
             dfs(row, col + 1, "R")
             dfs(row, col - 1, "L")
             path_signature.append("0")
-        
+
         # Repeatedly start DFS's as long as there are islands remaining.
         seen = set()
         unique_islands = set()
@@ -291,18 +393,18 @@ class Solution:
                 dfs(row, col, "0")
                 if path_signature:
                     unique_islands.add(tuple(path_signature))
-        
+
         return len(unique_islands)
 ```
 
 ```java
 class Solution {
-    
+
     private int[][] grid;
     private boolean[][] visited;
     private StringBuffer currentIsland;
 
-    public int numDistinctIslands(int[][] grid) {  
+    public int numDistinctIslands(int[][] grid) {
         this.grid = grid;
         this.visited = new boolean[grid.length][grid[0].length];
         Set<String> islands = new HashSet<>();
@@ -318,7 +420,7 @@ class Solution {
         }
         return islands.size();
     }
-   
+
     private void dfs(int row, int col, char dir) {
         if (row < 0 || col < 0 || row >= grid.length || col >= grid[0].length) {
             return;
@@ -343,7 +445,7 @@ private:
     vector<vector<int>>* grid;
     vector<vector<bool>> visited;
     string currentIsland;
-    
+
     void dfs(int row, int col, char dir) {
         if (row < 0 || col < 0 || row >= grid->size() || col >= (*grid)[0].size()) {
             return;
@@ -359,13 +461,13 @@ private:
         dfs(row, col - 1, 'L');
         currentIsland += '0';
     }
-    
+
 public:
     int numDistinctIslands(vector<vector<int>>& grid) {
         this->grid = &grid;
         visited = vector<vector<bool>>(grid.size(), vector<bool>(grid[0].size(), false));
         unordered_set<string> islands;
-        
+
         for (int row = 0; row < grid.size(); row++) {
             for (int col = 0; col < grid[0].size(); col++) {
                 currentIsland = "";
@@ -390,7 +492,7 @@ class Solution {
     numDistinctIslands(grid) {
         this.grid = grid;
         this.visited = Array.from({ length: grid.length }, () =>
-            Array(grid[0].length).fill(false)
+            Array(grid[0].length).fill(false),
         );
         const islands = new Set();
 
@@ -408,7 +510,12 @@ class Solution {
     }
 
     dfs(row, col, dir) {
-        if (row < 0 || col < 0 || row >= this.grid.length || col >= this.grid[0].length) {
+        if (
+            row < 0 ||
+            col < 0 ||
+            row >= this.grid.length ||
+            col >= this.grid[0].length
+        ) {
             return;
         }
         if (this.visited[row][col] || this.grid[row][col] === 0) {
@@ -590,6 +697,54 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_distinct_islands(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut visited = vec![vec![false; cols]; rows];
+        let mut islands: HashSet<String> = HashSet::new();
+
+        fn dfs(
+            grid: &[Vec<i32>], visited: &mut Vec<Vec<bool>>,
+            row: i32, col: i32, dir: u8, path: &mut Vec<u8>,
+        ) {
+            if row < 0 || col < 0
+                || row >= grid.len() as i32
+                || col >= grid[0].len() as i32
+            {
+                return;
+            }
+            let (r, c) = (row as usize, col as usize);
+            if visited[r][c] || grid[r][c] == 0 {
+                return;
+            }
+            visited[r][c] = true;
+            path.push(dir);
+            dfs(grid, visited, row + 1, col, b'D', path);
+            dfs(grid, visited, row - 1, col, b'U', path);
+            dfs(grid, visited, row, col + 1, b'R', path);
+            dfs(grid, visited, row, col - 1, b'L', path);
+            path.push(b'0');
+        }
+
+        for row in 0..rows {
+            for col in 0..cols {
+                let mut path = Vec::new();
+                dfs(&grid, &mut visited, row as i32, col as i32,
+                    b'0', &mut path);
+                if !path.is_empty() {
+                    islands.insert(
+                        String::from_utf8(path).unwrap(),
+                    );
+                }
+            }
+        }
+        islands.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,7 +752,7 @@ class Solution {
 - Time complexity: $O(M \cdot N)$
 - Space complexity: $O(M \cdot N)$
 
->  Where $M$ is the number of rows, and $N$ is the number of columns
+> Where $M$ is the number of rows, and $N$ is the number of columns
 
 ---
 

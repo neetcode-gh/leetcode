@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Divide and Conquer** - Breaking problems into subproblems by splitting at key points (like minimum elements)
 - **Segment Trees** - Efficient range minimum queries for optimizing divide and conquer approaches
 - **Greedy Algorithms** - Recognizing that counting upward slopes gives the optimal answer
@@ -226,12 +228,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_number_operations(target: Vec<i32>) -> i32 {
+        fn rec(target: &[i32], l: i32, r: i32, h: i32) -> i32 {
+            if l > r { return 0; }
+            let (l, r) = (l as usize, r as usize);
+            let mut min_idx = l;
+            for i in l + 1..=r {
+                if target[i] < target[min_idx] {
+                    min_idx = i;
+                }
+            }
+            let res = target[min_idx] - h;
+            res + rec(target, l as i32, min_idx as i32 - 1, target[min_idx])
+                + rec(target, min_idx as i32 + 1, r as i32, target[min_idx])
+        }
+
+        rec(&target, 0, target.len() as i32 - 1, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -247,9 +271,9 @@ The logic remains the same: divide at the minimum, but now we query the segment 
 
 1. Build a segment tree that stores indices of minimum values for each range.
 2. Use the same recursive divide-and-conquer approach:
-   - Query the segment tree for the minimum index in the current range.
-   - Add the difference between the minimum value and current height.
-   - Recursively process left and right subranges.
+    - Query the segment tree for the minimum index in the current range.
+    - Add the difference between the minimum value and current height.
+    - Recursively process left and right subranges.
 3. Return the total operation count.
 
 ::tabs-start
@@ -807,12 +831,74 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    a: Vec<i32>,
+    tree: Vec<usize>,
+    n: usize,
+}
+
+impl SegmentTree {
+    fn new(arr: &[i32]) -> Self {
+        let mut n = 1;
+        while n < arr.len() { n <<= 1; }
+        let mut a = vec![i32::MAX; n];
+        a[..arr.len()].copy_from_slice(arr);
+        let mut st = Self { a, tree: vec![0; 2 * n], n };
+        st.build();
+        st
+    }
+
+    fn build(&mut self) {
+        for i in 0..self.n {
+            self.tree[self.n + i] = i;
+        }
+        for i in (1..self.n).rev() {
+            let a = self.tree[i << 1];
+            let b = self.tree[(i << 1) | 1];
+            self.tree[i] = if self.a[a] <= self.a[b] { a } else { b };
+        }
+    }
+
+    fn query(&self, ql: usize, qh: usize) -> usize {
+        self._query(1, 0, self.n - 1, ql, qh)
+    }
+
+    fn _query(&self, node: usize, l: usize, h: usize, ql: usize, qh: usize) -> usize {
+        if ql > h || qh < l { return usize::MAX; }
+        if l >= ql && h <= qh { return self.tree[node]; }
+        let mid = (l + h) >> 1;
+        let a = self._query(node << 1, l, mid, ql, qh);
+        let b = self._query((node << 1) | 1, mid + 1, h, ql, qh);
+        if a == usize::MAX { return b; }
+        if b == usize::MAX { return a; }
+        if self.a[a] <= self.a[b] { a } else { b }
+    }
+}
+
+impl Solution {
+    pub fn min_number_operations(target: Vec<i32>) -> i32 {
+        let seg = SegmentTree::new(&target);
+
+        fn rec(target: &[i32], seg: &SegmentTree, l: i32, r: i32, h: i32) -> i32 {
+            if l > r { return 0; }
+            let min_idx = seg.query(l as usize, r as usize);
+            let res = target[min_idx] - h;
+            res + rec(target, seg, l, min_idx as i32 - 1, target[min_idx])
+                + rec(target, seg, min_idx as i32 + 1, r, target[min_idx])
+        }
+
+        rec(&target, &seg, 0, target.len() as i32 - 1, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -828,8 +914,8 @@ The key insight: we only need new operations when the height increases. The tota
 
 1. Initialize result with `target[0]` (operations needed for the first element).
 2. For each subsequent element:
-   - If `target[i] > target[i-1]`, add the difference to result.
-   - Otherwise, add nothing (existing operations cover this).
+    - If `target[i] > target[i-1]`, add the difference to result.
+    - Otherwise, add nothing (existing operations cover this).
 3. Return the result.
 
 ::tabs-start
@@ -932,12 +1018,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_number_operations(target: Vec<i32>) -> i32 {
+        let mut res = target[0];
+        for i in 1..target.len() {
+            res += (target[i] - target[i - 1]).max(0);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

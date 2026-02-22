@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - O(1) average lookup time and membership testing for efficient sequence detection
 - **Hash Maps** - Storing and updating sequence boundary lengths for the union-find-like approach
 - **Sorting** - Understanding how sorting groups consecutive numbers together
@@ -20,12 +22,12 @@ Even though this method works, it does unnecessary repeated work because many se
 1. Convert the input list to a set for **O(1)** lookups.
 2. Initialize `res` to store the maximum streak length.
 3. For each number `num` in the original list:
-   - Start a new streak count at 0.
-   - Set `curr = num`.
-   - While `curr` exists in the set:
-     - Increase the streak count.
-     - Move to the next number (`curr += 1`).
-   - Update `res` with the longest streak found so far.
+    - Start a new streak count at 0.
+    - Set `curr = num`.
+    - While `curr` exists in the set:
+        - Increase the streak count.
+        - Move to the next number (`curr += 1`).
+    - Update `res` with the longest streak found so far.
 4. Return `res` after checking all numbers.
 
 ::tabs-start
@@ -195,6 +197,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let store: HashSet<i32> = nums.iter().cloned().collect();
+
+        for &num in &nums {
+            let mut streak = 0;
+            let mut curr = num;
+            while store.contains(&curr) {
+                streak += 1;
+                curr += 1;
+            }
+            res = res.max(streak);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -219,18 +241,18 @@ This approach is simpler and more organized than the brute force method because 
 1. If the input list is empty, return `0`.
 2. Sort the array in non-decreasing order.
 3. Initialize:
-   - `res` to track the longest streak,
-   - `curr` as the first number,
-   - `streak` as `0`,
-   - index `i = 0`.
+    - `res` to track the longest streak,
+    - `curr` as the first number,
+    - `streak` as `0`,
+    - index `i = 0`.
 4. While `i` is within bounds:
-   - If `nums[i]` does not match `curr`, reset:
-     - `curr = nums[i]`
-     - `streak = 0`
-   - Skip over all duplicates of `curr` by advancing `i` while `nums[i] == curr`.
-   - Increase `streak` by `1` since we found the expected number.
-   - Increase `curr` by `1` to expect the next number in the sequence.
-   - Update `res` with the maximum streak found so far.
+    - If `nums[i]` does not match `curr`, reset:
+        - `curr = nums[i]`
+        - `streak = 0`
+    - Skip over all duplicates of `curr` by advancing `i` while `nums[i] == curr`.
+    - Increase `streak` by `1` since we found the expected number.
+    - Increase `curr` by `1` to expect the next number in the sequence.
+    - Update `res` with the maximum streak found so far.
 5. Return `res` after scanning the entire list.
 
 ::tabs-start
@@ -457,6 +479,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
+        if nums.is_empty() {
+            return 0;
+        }
+        let mut nums = nums;
+        nums.sort();
+
+        let mut res = 0;
+        let mut curr = nums[0];
+        let mut streak = 0;
+        let mut i = 0;
+
+        while i < nums.len() {
+            if curr != nums[i] {
+                curr = nums[i];
+                streak = 0;
+            }
+            while i < nums.len() && nums[i] == curr {
+                i += 1;
+            }
+            streak += 1;
+            curr += 1;
+            res = res.max(streak);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -482,11 +535,11 @@ This makes the solution efficient and clean because each number contributes to t
 1. Convert the list into a set `numSet` for O(1) lookups.
 2. Initialize `longest` to track the length of the longest consecutive sequence.
 3. For each number `num` in `numSet`:
-   - Check if `num - 1` is **not** in the set:
-     - If true, `num` is the start of a sequence.
-     - Initialize `length = 1`.
-     - While `num + length` exists in the set, increase `length`.
-   - Update `longest` with the maximum length found.
+    - Check if `num - 1` is **not** in the set:
+        - If true, `num` is the start of a sequence.
+        - Initialize `length = 1`.
+        - While `num + length` exists in the set, increase `length`.
+    - Update `longest` with the maximum length found.
 4. Return `longest` after scanning all numbers.
 
 ::tabs-start
@@ -662,6 +715,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
+        let num_set: HashSet<i32> = nums.iter().cloned().collect();
+        let mut longest = 0;
+
+        for &num in &num_set {
+            if !num_set.contains(&(num - 1)) {
+                let mut length = 1;
+                while num_set.contains(&(num + length)) {
+                    length += 1;
+                }
+                longest = longest.max(length);
+            }
+        }
+        longest
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -690,14 +763,14 @@ This keeps the whole operation very efficient and avoids repeated work.
 1. Create a hash map `mp` that stores sequence lengths at boundary positions.
 2. Initialize `res = 0` to store the longest sequence found.
 3. For each number `num` in the input:
-   - If `num` is already in `mp`, skip it.
-   - Compute the new sequence length:
-     - `length = mp[num - 1] + mp[num + 1] + 1`
-   - Store this length at `num`.
-   - Update the boundaries:
-     - Left boundary: `mp[num - mp[num - 1]] = length`
-     - Right boundary: `mp[num + mp[num + 1]] = length`
-   - Update `res` to keep track of the longest sequence.
+    - If `num` is already in `mp`, skip it.
+    - Compute the new sequence length:
+        - `length = mp[num - 1] + mp[num + 1] + 1`
+    - Store this length at `num`.
+    - Update the boundaries:
+        - Left boundary: `mp[num - mp[num - 1]] = length`
+        - Right boundary: `mp[num + mp[num + 1]] = length`
+    - Update `res` to keep track of the longest sequence.
 4. Return `res` after processing all numbers.
 
 ::tabs-start
@@ -869,6 +942,28 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_consecutive(nums: Vec<i32>) -> i32 {
+        let mut mp: HashMap<i32, i32> = HashMap::new();
+        let mut res = 0;
+
+        for &num in &nums {
+            if !mp.contains_key(&num) {
+                let left = *mp.get(&(num - 1)).unwrap_or(&0);
+                let right = *mp.get(&(num + 1)).unwrap_or(&0);
+                let length = left + right + 1;
+                mp.insert(num, length);
+                mp.insert(num - left, length);
+                mp.insert(num + right, length);
+                res = res.max(length);
+            }
+        }
+        res
     }
 }
 ```

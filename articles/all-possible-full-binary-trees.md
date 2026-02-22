@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure and node creation
 - **Recursion** - Breaking down problems by combining solutions to subproblems
 - **Dynamic Programming (Memoization)** - Caching results to avoid redundant computation
@@ -18,10 +20,10 @@ We try all possible ways to distribute `n-1` nodes between left and right. For e
 
 1. Base cases: If `n == 0`, return an empty list. If `n == 1`, return a list with a single node.
 2. For `l` from `0` to `n-1`:
-   - Set `r = n - 1 - l` (remaining nodes for the right subtree).
-   - Recursively get all full binary trees with `l` nodes for the left.
-   - Recursively get all full binary trees with `r` nodes for the right.
-   - For each combination of left and right subtree, create a new root and add it to the `res`.
+    - Set `r = n - 1 - l` (remaining nodes for the right subtree).
+    - Recursively get all full binary trees with `l` nodes for the left.
+    - Recursively get all full binary trees with `r` nodes for the right.
+    - For each combination of left and right subtree, create a new root and add it to the `res`.
 3. Return the `res` list.
 
 ::tabs-start
@@ -353,6 +355,47 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn all_possible_fbt(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        fn backtrack(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+            if n == 0 {
+                return vec![];
+            }
+            if n == 1 {
+                return vec![Some(Rc::new(RefCell::new(TreeNode::new(0))))];
+            }
+
+            let mut res = vec![];
+            for l in 0..n {
+                let r = n - 1 - l;
+                let left_trees = backtrack(l);
+                let right_trees = backtrack(r);
+
+                for t1 in &left_trees {
+                    for t2 in &right_trees {
+                        let mut node = TreeNode::new(0);
+                        node.left = t1.clone();
+                        node.right = t2.clone();
+                        res.push(Some(Rc::new(RefCell::new(node))));
+                    }
+                }
+            }
+            res
+        }
+
+        backtrack(n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,9 +418,9 @@ Additionally, we only need to try odd values for the `left` subtree size since e
 1. If `n` is even, return an empty list (impossible to form a full binary tree).
 2. If `n == 1`, return a list with a single node.
 3. For `left` from `1` to `n-1`, stepping by `2` (odd values only):
-   - Recursively get all full binary trees with `left` nodes.
-   - Recursively get all full binary trees with `n - 1 - left` nodes.
-   - Combine each pair under a new `root` and add to the `res`.
+    - Recursively get all full binary trees with `left` nodes.
+    - Recursively get all full binary trees with `n - 1 - left` nodes.
+    - Combine each pair under a new `root` and add to the `res`.
 4. Return the `res` list.
 
 ::tabs-start
@@ -619,6 +662,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn all_possible_fbt(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        if n % 2 == 0 {
+            return vec![];
+        }
+        if n == 1 {
+            return vec![Some(Rc::new(RefCell::new(TreeNode::new(0))))];
+        }
+
+        let mut res = vec![];
+        let mut left = 1;
+        while left < n {
+            let left_sub_tree = Self::all_possible_fbt(left);
+            let right_sub_tree = Self::all_possible_fbt(n - 1 - left);
+            for l in &left_sub_tree {
+                for r in &right_sub_tree {
+                    let mut node = TreeNode::new(0);
+                    node.left = l.clone();
+                    node.right = r.clone();
+                    res.push(Some(Rc::new(RefCell::new(node))));
+                }
+            }
+            left += 2;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -640,13 +713,13 @@ By caching results in a hash map or array, we ensure each subproblem is solved o
 
 1. Create a memoization map `dp` to store results for each `n`.
 2. Define a recursive function `dfs(n)`:
-   - If `n` is even, return an empty list.
-   - If `n == 1`, return a list with a single node.
-   - If `dp[n]` exists, return it.
-   - For `left` from `1` to `n-1`, stepping by `2`:
-     - Recursively get left and right subtrees.
-     - Combine all pairs under new roots.
-   - Store the `res` in `dp[n]` and return it.
+    - If `n` is even, return an empty list.
+    - If `n == 1`, return a list with a single node.
+    - If `dp[n]` exists, return it.
+    - For `left` from `1` to `n-1`, stepping by `2`:
+        - Recursively get left and right subtrees.
+        - Combine all pairs under new roots.
+    - Store the `res` in `dp[n]` and return it.
 3. Call `dfs(n)` and return the result.
 
 ::tabs-start
@@ -968,6 +1041,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn all_possible_fbt(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let n = n as usize;
+        let mut dp: Vec<Option<Vec<Option<Rc<RefCell<TreeNode>>>>>> = vec![None; n + 1];
+
+        fn dfs(
+            n: usize,
+            dp: &mut Vec<Option<Vec<Option<Rc<RefCell<TreeNode>>>>>>,
+        ) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+            if n % 2 == 0 {
+                return vec![];
+            }
+            if n == 1 {
+                return vec![Some(Rc::new(RefCell::new(TreeNode::new(0))))];
+            }
+            if let Some(cached) = &dp[n] {
+                return cached.clone();
+            }
+
+            let mut res = vec![];
+            let mut left = 1;
+            while left < n {
+                let left_sub_tree = dfs(left, dp);
+                let right_sub_tree = dfs(n - 1 - left, dp);
+                for l in &left_sub_tree {
+                    for r in &right_sub_tree {
+                        let mut node = TreeNode::new(0);
+                        node.left = l.clone();
+                        node.right = r.clone();
+                        res.push(Some(Rc::new(RefCell::new(node))));
+                    }
+                }
+                left += 2;
+            }
+
+            dp[n] = Some(res.clone());
+            res
+        }
+
+        dfs(n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -991,10 +1109,10 @@ For each odd value, we combine previously computed smaller trees to form larger 
 2. Create an array `dp` where `dp[i]` will store all full binary trees with `i` nodes.
 3. Initialize `dp[1]` with a single node.
 4. For `nodes` from `3` to `n`, stepping by `2`:
-   - For `left` from `1` to `nodes-1`, stepping by `2`:
-     - Set `right = nodes - 1 - left`.
-     - For each tree in `dp[left]` and each tree in `dp[right]`:
-       - Create a new `root` combining them and add to `dp[nodes]`.
+    - For `left` from `1` to `nodes-1`, stepping by `2`:
+        - Set `right = nodes - 1 - left`.
+        - For each tree in `dp[left]` and each tree in `dp[right]`:
+            - Create a new `root` combining them and add to `dp[nodes]`.
 5. Return `dp[n]`.
 
 ::tabs-start
@@ -1269,6 +1387,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn all_possible_fbt(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let n = n as usize;
+        if n % 2 == 0 {
+            return vec![];
+        }
+
+        let mut dp: Vec<Vec<Option<Rc<RefCell<TreeNode>>>>> = vec![vec![]; n + 1];
+        dp[1] = vec![Some(Rc::new(RefCell::new(TreeNode::new(0))))];
+
+        let mut nodes = 3;
+        while nodes <= n {
+            let mut res = vec![];
+            let mut left = 1;
+            while left < nodes {
+                let right = nodes - 1 - left;
+                for t1 in &dp[left] {
+                    for t2 in &dp[right] {
+                        let mut node = TreeNode::new(0);
+                        node.left = t1.clone();
+                        node.right = t2.clone();
+                        res.push(Some(Rc::new(RefCell::new(node))));
+                    }
+                }
+                left += 2;
+            }
+            dp[nodes] = res;
+            nodes += 2;
+        }
+
+        dp[n].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1281,7 +1435,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting That Full Binary Trees Require Odd Node Counts
+
 A full binary tree can only exist when `n` is odd. Each node either has 0 or 2 children, so starting with 1 root and adding pairs means the total is always odd. Failing to check this leads to wasted computation or incorrect results.
+
 ```python
 # Wrong: missing the odd check
 def allPossibleFBT(n):
@@ -1291,7 +1447,9 @@ def allPossibleFBT(n):
 ```
 
 ### Reusing Tree Nodes Across Different Results
+
 When combining left and right subtrees, you must create a new root node for each combination. Reusing the same node object causes all trees to share structure, corrupting the results.
+
 ```python
 # Wrong: reusing same root node
 root = TreeNode(0)
@@ -1302,7 +1460,9 @@ for l in leftTrees:
 ```
 
 ### Iterating Over Even Values for Subtree Sizes
+
 In a full binary tree, both left and right subtrees must also be full binary trees, meaning they need odd node counts. Iterating over all values instead of only odd values wastes time and produces empty results for even sizes.
+
 ```python
 # Wrong: iterating all values
 for left in range(1, n):  # Includes even values
@@ -1311,3 +1471,4 @@ for left in range(1, n):  # Includes even values
 # Correct: step by 2 to only use odd values
 for left in range(1, n, 2):
     ...
+```

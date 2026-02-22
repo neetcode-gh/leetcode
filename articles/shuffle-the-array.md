@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Indexing** - Calculating source and destination indices based on position formulas
 - **Bit Manipulation** - Packing and unpacking multiple values in a single integer for in-place solutions
 - **Modular Arithmetic** - Using multiplication and modulo to encode/decode values without overflow
@@ -16,8 +18,8 @@ The array is given as `[x1, x2, ..., xn, y1, y2, ..., yn]` and we need to rearra
 
 1. Create an empty result array.
 2. Loop `i` from `0` to `n - 1`:
-   - Append `nums[i]` (the x value) to the result.
-   - Append `nums[i + n]` (the corresponding y value) to the result.
+    - Append `nums[i]` (the x value) to the result.
+    - Append `nums[i + n]` (the corresponding y value) to the result.
 3. Return the result array.
 
 ::tabs-start
@@ -130,6 +132,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shuffle(nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        let mut res = Vec::with_capacity(2 * n);
+        for i in 0..n {
+            res.push(nums[i]);
+            res.push(nums[i + n]);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -149,9 +165,9 @@ To shuffle in-place without extra space, we can encode two values in a single ar
 
 1. Choose `M = max(nums) + 1` or a constant like `1001`.
 2. For each index `i` from `0` to `2n - 1`:
-   - If `i` is even, the value should come from position `i / 2` (an `x` value).
-   - If `i` is odd, the value should come from position `n + i / 2` (a `y` value).
-   - Add `(nums[source] % M) * M` to `nums[i]`.
+    - If `i` is even, the value should come from position `i / 2` (an `x` value).
+    - If `i` is odd, the value should come from position `n + i / 2` (a `y` value).
+    - Add `(nums[source] % M) * M` to `nums[i]`.
 3. Divide each element by `M` to get the final shuffled array.
 4. Return the modified array.
 
@@ -311,6 +327,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shuffle(mut nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        let m = 1001;
+        for i in 0..2 * n {
+            if i % 2 == 0 {
+                nums[i] += (nums[i / 2] % m) * m;
+            } else {
+                nums[i] += (nums[n + i / 2] % m) * m;
+            }
+        }
+        for i in 0..2 * n {
+            nums[i] /= m;
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,12 +365,12 @@ Similar to the multiplication approach, we can use bit manipulation to pack two 
 ### Algorithm
 
 1. For each `i` from `0` to `n - 1`:
-   - Combine `nums[i]` (`x`) and `nums[i + n]` (`y`) into `nums[i]` using: `nums[i] = (nums[i] << 10) | nums[i + n]`.
+    - Combine `nums[i]` (`x`) and `nums[i + n]` (`y`) into `nums[i]` using: `nums[i] = (nums[i] << 10) | nums[i + n]`.
 2. Starting from `i = n - 1` down to `0`, and using a pointer `j` starting at `2n - 1`:
-   - Extract `y = nums[i] & ((1 << 10) - 1)`.
-   - Extract `x = nums[i] >> 10`.
-   - Place `nums[j] = y` and `nums[j - 1] = x`.
-   - Decrement `j` by 2.
+    - Extract `y = nums[i] & ((1 << 10) - 1)`.
+    - Extract `x = nums[i] >> 10`.
+    - Place `nums[j] = y` and `nums[j - 1] = x`.
+    - Decrement `j` by 2.
 3. Return the modified array.
 
 ::tabs-start
@@ -504,6 +540,28 @@ class Solution {
         }
 
         return nums
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn shuffle(mut nums: Vec<i32>, n: i32) -> Vec<i32> {
+        let n = n as usize;
+        for i in 0..n {
+            nums[i] = (nums[i] << 10) | nums[i + n]; // Store x, y in nums[i]
+        }
+
+        let mut j = 2 * n - 1;
+        for i in (0..n).rev() {
+            let y = nums[i] & ((1 << 10) - 1);
+            let x = nums[i] >> 10;
+            nums[j] = y;
+            nums[j - 1] = x;
+            j = j.wrapping_sub(2);
+        }
+
+        nums
     }
 }
 ```

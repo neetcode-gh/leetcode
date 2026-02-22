@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding left/right child relationships and how to build binary trees
 - **N-ary Tree Structure** - Familiarity with trees where nodes can have multiple children stored in a list
 - **BFS (Breadth-First Search)** - Using queues to process nodes level by level
@@ -17,21 +19,23 @@ To encode an N-ary tree into a binary tree, we need a consistent rule for repres
 ### Algorithm
 
 **Encode:**
+
 1. If the root is `null`, return `null`.
 2. Create a binary tree root with the same value.
 3. Use a queue storing pairs of (binary node, N-ary node).
 4. For each N-ary node's children:
-   - Link them as a chain: first child to `left`, rest as `right` siblings.
-   - Add each child pair to the queue.
+    - Link them as a chain: first child to `left`, rest as `right` siblings.
+    - Add each child pair to the queue.
 5. Return the binary tree root.
 
 **Decode:**
+
 1. If the root is `null`, return `null`.
 2. Create an N-ary root with the same value and an empty children list.
 3. Use a queue storing pairs of (N-ary node, binary node).
 4. For each binary node:
-   - Traverse the `left` child's `right` chain to reconstruct all children.
-   - Add each child pair to the queue.
+    - Traverse the `left` child's `right` chain to reconstruct all children.
+    - Add each child pair to the queue.
 5. Return the N-ary tree root.
 
 ::tabs-start
@@ -159,7 +163,7 @@ class Codec {
         if (root == null) {
             return null;
         }
-        
+
         TreeNode newRoot = new TreeNode(root.val);
         Pair<TreeNode, Node> head = new Pair<TreeNode, Node>(newRoot, root);
 
@@ -175,7 +179,7 @@ class Codec {
             // Encoding the children nodes into a list of TreeNode.
             TreeNode prevBNode = null;
             TreeNode headBNode = null;
-            
+
             for (Node nChild : nNode.children) {
                 TreeNode newBNode = new TreeNode(nChild.val);
                 if (prevBNode == null) {
@@ -201,7 +205,7 @@ class Codec {
         if (root == null) {
             return null;
         }
-        
+
         Node newRoot = new Node(root.val, new ArrayList<Node>());
 
         // adding the first element to kickoff the loop
@@ -217,7 +221,7 @@ class Codec {
             // Decoding the children list
             TreeNode firstChild = bNode.left;
             TreeNode sibling = firstChild;
-            
+
             while (sibling != null) {
                 Node nChild = new Node(sibling.val, new ArrayList<Node>());
                 nNode.children.add(nChild);
@@ -271,18 +275,18 @@ public:
     // Encodes an n-ary tree to a binary tree.
     TreeNode* encode(Node* root) {
         if (!root) return nullptr;
-        
+
         TreeNode* rootNode = new TreeNode(root->val);
         queue<pair<TreeNode*, Node*>> q;
         q.push({rootNode, root});
-        
+
         while (!q.empty()) {
             auto [parent, curr] = q.front();
             q.pop();
-            
+
             TreeNode* prevBNode = nullptr;
             TreeNode* headBNode = nullptr;
-            
+
             // Traverse each child one by one
             for (Node* child : curr->children) {
                 TreeNode* newBNode = new TreeNode(child->val);
@@ -294,29 +298,29 @@ public:
                 prevBNode = newBNode;
                 q.push({newBNode, child});
             }
-            
+
             // Use the first child in the left node of parent
             parent->left = headBNode;
         }
-        
+
         return rootNode;
     }
-    
+
     // Decodes your binary tree to an n-ary tree.
     Node* decode(TreeNode* data) {
         if (!data) return nullptr;
-        
+
         Node* rootNode = new Node(data->val, vector<Node*>());
         queue<pair<Node*, TreeNode*>> q;
         q.push({rootNode, data});
-        
+
         while (!q.empty()) {
             auto [parent, curr] = q.front();
             q.pop();
-            
+
             TreeNode* firstChild = curr->left;
             TreeNode* sibling = firstChild;
-            
+
             while (sibling) {
                 Node* newNode = new Node(sibling->val, vector<Node*>());
                 parent->children.push_back(newNode);
@@ -324,7 +328,7 @@ public:
                 sibling = sibling->right;
             }
         }
-        
+
         return rootNode;
     }
 };
@@ -353,15 +357,14 @@ public:
  */
 
 class Codec {
-    constructor() {
-    }
+    constructor() {}
 
     /**
      * @param {_Node|null} root
      * @return {TreeNode|null}
      */
     // Encodes an n-ary tree to a binary tree.
-    encode = function(root) {
+    encode = function (root) {
         if (!root) {
             return null;
         }
@@ -391,14 +394,14 @@ class Codec {
         }
 
         return rootNode;
-    }
+    };
 
     /**
      * @param {TreeNode|null} data
      * @return {_Node|null}
      */
     // Decodes your binary tree to an n-ary tree.
-    decode = function(data) {
+    decode = function (data) {
         if (!data) {
             return null;
         }
@@ -420,7 +423,7 @@ class Codec {
         }
 
         return rootNode;
-    }
+    };
 }
 ```
 
@@ -765,20 +768,93 @@ class Codec {
 }
 ```
 
+```rust
+// Definition for a Node.
+// struct Node {
+//     val: i32,
+//     children: Vec<Option<Rc<RefCell<Node>>>>,
+// }
+
+// Uses TreeNode with Option<Rc<RefCell<TreeNode>>>
+// and a custom NaryNode for the N-ary tree.
+
+use std::collections::VecDeque;
+
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    // Encodes an n-ary tree to a binary tree.
+    fn encode(&self, root: Option<Rc<RefCell<NaryNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let root = root?;
+        let root_val = root.borrow().val;
+        let root_node = Rc::new(RefCell::new(TreeNode::new(root_val)));
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, Rc<RefCell<NaryNode>>)> = VecDeque::new();
+        queue.push_back((root_node.clone(), root));
+
+        while let Some((parent, curr)) = queue.pop_front() {
+            let mut prev_b_node: Option<Rc<RefCell<TreeNode>>> = None;
+            let mut head_b_node: Option<Rc<RefCell<TreeNode>>> = None;
+
+            for child in &curr.borrow().children {
+                if let Some(child_rc) = child {
+                    let new_b_node = Rc::new(RefCell::new(TreeNode::new(child_rc.borrow().val)));
+                    if let Some(prev) = &prev_b_node {
+                        prev.borrow_mut().right = Some(new_b_node.clone());
+                    } else {
+                        head_b_node = Some(new_b_node.clone());
+                    }
+                    prev_b_node = Some(new_b_node.clone());
+                    queue.push_back((new_b_node, child_rc.clone()));
+                }
+            }
+
+            parent.borrow_mut().left = head_b_node;
+        }
+
+        Some(root_node)
+    }
+
+    // Decodes your binary tree to an n-ary tree.
+    fn decode(&self, data: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<NaryNode>>> {
+        let data = data?;
+        let root_val = data.borrow().val;
+        let root_node = Rc::new(RefCell::new(NaryNode { val: root_val, children: vec![] }));
+        let mut queue: VecDeque<(Rc<RefCell<NaryNode>>, Rc<RefCell<TreeNode>>)> = VecDeque::new();
+        queue.push_back((root_node.clone(), data));
+
+        while let Some((parent, curr)) = queue.pop_front() {
+            let mut sibling = curr.borrow().left.clone();
+            while let Some(sib) = sibling {
+                let new_node = Rc::new(RefCell::new(NaryNode { val: sib.borrow().val, children: vec![] }));
+                parent.borrow_mut().children.push(Some(new_node.clone()));
+                queue.push_back((new_node, sib.clone()));
+                sibling = sib.borrow().right.clone();
+            }
+        }
+
+        Some(root_node)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time complexity: $O(N)$
 
-- Space complexity: 
+- Space complexity:
     - `encode()` : $O(L)$.
 
     - `decode()` : $O(L)$.
 
     - Since $L$ is proportional to $N$ in the worst case, we could further generalize the space complexity to $O(N)$.
 
->  Where $N$ is the number of nodes in the N-ary tree, and $L$ is the maximum number of nodes that reside at the same level.
+> Where $N$ is the number of nodes in the N-ary tree, and $L$ is the maximum number of nodes that reside at the same level.
 
 ---
 
@@ -791,6 +867,7 @@ DFS offers a more elegant recursive solution using the same left-child right-sib
 ### Algorithm
 
 **Encode:**
+
 1. If the root is `null`, return `null`.
 2. Create a binary node with the root's value.
 3. Recursively encode the first child and set it as `left`.
@@ -798,12 +875,13 @@ DFS offers a more elegant recursive solution using the same left-child right-sib
 5. Return the binary node.
 
 **Decode:**
+
 1. If the root is `null`, return `null`.
 2. Create an N-ary node with the root's value and an empty children list.
 3. Start at the binary node's `left` child.
 4. While the current sibling exists:
-   - Recursively decode it and add to the children list.
-   - Move to the `right` sibling.
+    - Recursively decode it and add to the children list.
+    - Move to the `right` sibling.
 5. Return the N-ary node.
 
 ::tabs-start
@@ -977,40 +1055,40 @@ public:
         if (!root) {
             return nullptr;
         }
-        
+
         TreeNode* rootNode = new TreeNode(root->val);
-        
+
         if (root->children.size() > 0) {
             Node* firstChild = root->children[0];
             rootNode->left = encode(firstChild);
         }
-        
+
         // the parent for the rest of the children
         TreeNode* curr = rootNode->left;
-        
+
         // encode the rest of the children
         for (int i = 1; i < root->children.size(); i++) {
             curr->right = encode(root->children[i]);
             curr = curr->right;
         }
-        
+
         return rootNode;
     }
-    
+
     // Decodes your binary tree to an n-ary tree.
     Node* decode(TreeNode* root) {
         if (!root) {
             return nullptr;
         }
-        
+
         Node* rootNode = new Node(root->val);
-        
+
         TreeNode* curr = root->left;
         while (curr) {
             rootNode->children.push_back(decode(curr));
             curr = curr->right;
         }
-        
+
         return rootNode;
     }
 };
@@ -1039,15 +1117,14 @@ public:
  */
 
 class Codec {
-    constructor() {
-    }
+    constructor() {}
 
     /**
      * @param {_Node|null} root
      * @return {TreeNode|null}
      */
     // Encodes an n-ary tree to a binary tree.
-    encode = function(root) {
+    encode = function (root) {
         if (!root) {
             return null;
         }
@@ -1069,14 +1146,14 @@ class Codec {
         }
 
         return rootNode;
-    }
+    };
 
     /**
      * @param {TreeNode|null} data
      * @return {_Node|null}
      */
     // Decodes your binary tree to an n-ary tree.
-    decode = function(data) {
+    decode = function (data) {
         if (!data) {
             return null;
         }
@@ -1090,7 +1167,7 @@ class Codec {
         }
 
         return rootNode;
-    }
+    };
 }
 ```
 
@@ -1348,6 +1425,62 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    // Encodes an n-ary tree to a binary tree (DFS).
+    fn encode(&self, root: Option<Rc<RefCell<NaryNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let root = root?;
+        let root_ref = root.borrow();
+        let mut root_node = TreeNode::new(root_ref.val);
+
+        if !root_ref.children.is_empty() {
+            if let Some(first_child) = &root_ref.children[0] {
+                root_node.left = self.encode(Some(first_child.clone()));
+            }
+        }
+
+        let root_rc = Rc::new(RefCell::new(root_node));
+        let mut curr = root_rc.borrow().left.clone();
+
+        for i in 1..root_ref.children.len() {
+            if let Some(child) = &root_ref.children[i] {
+                let encoded = self.encode(Some(child.clone()));
+                if let Some(c) = &curr {
+                    c.borrow_mut().right = encoded.clone();
+                }
+                curr = encoded;
+            }
+        }
+
+        Some(root_rc)
+    }
+
+    // Decodes your binary tree to an n-ary tree (DFS).
+    fn decode(&self, data: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<NaryNode>>> {
+        let data = data?;
+        let data_ref = data.borrow();
+        let mut children = vec![];
+
+        let mut curr = data_ref.left.clone();
+        while let Some(c) = curr {
+            children.push(self.decode(Some(c.clone())));
+            curr = c.borrow().right.clone();
+        }
+
+        Some(Rc::new(RefCell::new(NaryNode {
+            val: data_ref.val,
+            children,
+        })))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1361,7 +1494,7 @@ class Codec {
 
     - And this consumption of call stack space is the main space complexity for our DFS algorithm. As we can see, the size of the call stack at any moment is exactly the number of level where the currently visited node resides, e.g. for the root node (level 0), the recursive call stack is empty.
 
->  Where $N$ is the number of nodes in the N-ary tree, and $D$ is the depth of the N-ary tree.
+> Where $N$ is the number of nodes in the N-ary tree, and $D$ is the depth of the N-ary tree.
 
 ---
 

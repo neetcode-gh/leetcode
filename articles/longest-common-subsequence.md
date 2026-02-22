@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking problems into subproblems and understanding recursive call stacks
 - **Dynamic Programming (Memoization)** - Caching results to avoid redundant computation in overlapping subproblems
 - **Dynamic Programming (Tabulation)** - Building solutions bottom-up using 2D arrays
@@ -173,6 +175,27 @@ class Solution {
         }
 
         return dfs(0, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+        let t1 = text1.as_bytes();
+        let t2 = text2.as_bytes();
+
+        fn dfs(t1: &[u8], t2: &[u8], i: usize, j: usize) -> i32 {
+            if i == t1.len() || j == t2.len() {
+                return 0;
+            }
+            if t1[i] == t2[j] {
+                return 1 + dfs(t1, t2, i + 1, j + 1);
+            }
+            dfs(t1, t2, i + 1, j).max(dfs(t1, t2, i, j + 1))
+        }
+
+        dfs(t1, t2, 0, 0)
     }
 }
 ```
@@ -444,6 +467,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+        let t1 = text1.as_bytes();
+        let t2 = text2.as_bytes();
+        let mut memo = vec![vec![-1i32; t2.len()]; t1.len()];
+
+        fn dfs(t1: &[u8], t2: &[u8], i: usize, j: usize, memo: &mut Vec<Vec<i32>>) -> i32 {
+            if i == t1.len() || j == t2.len() {
+                return 0;
+            }
+            if memo[i][j] != -1 {
+                return memo[i][j];
+            }
+            if t1[i] == t2[j] {
+                memo[i][j] = 1 + dfs(t1, t2, i + 1, j + 1, memo);
+            } else {
+                memo[i][j] = dfs(t1, t2, i + 1, j, memo)
+                    .max(dfs(t1, t2, i, j + 1, memo));
+            }
+            memo[i][j]
+        }
+
+        dfs(t1, t2, 0, 0, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -652,6 +703,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+        let t1 = text1.as_bytes();
+        let t2 = text2.as_bytes();
+        let m = t1.len();
+        let n = t2.len();
+        let mut dp = vec![vec![0i32; n + 1]; m + 1];
+
+        for i in (0..m).rev() {
+            for j in (0..n).rev() {
+                if t1[i] == t2[j] {
+                    dp[i][j] = 1 + dp[i + 1][j + 1];
+                } else {
+                    dp[i][j] = dp[i][j + 1].max(dp[i + 1][j]);
+                }
+            }
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -674,8 +749,8 @@ Looking at the bottom-up recurrence, each cell `dp[i][j]` only depends on the cu
 1. If `text1` is shorter, swap the strings to minimize space usage.
 2. Initialize two arrays `prev` and `curr` of size `n+1`.
 3. Iterate `i` from `m-1` down to `0`:
-   - For each `j` from `n-1` down to `0`, compute `curr[j]` using `prev[j+1]`, `prev[j]`, and `curr[j+1]`.
-   - Swap `prev` and `curr`.
+    - For each `j` from `n-1` down to `0`, compute `curr[j]` using `prev[j+1]`, `prev[j]`, and `curr[j+1]`.
+    - Swap `prev` and `curr`.
 4. Return `prev[0]`.
 
 ::tabs-start
@@ -909,6 +984,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+        let (t1, t2) = if text1.len() >= text2.len() {
+            (text1.as_bytes(), text2.as_bytes())
+        } else {
+            (text2.as_bytes(), text1.as_bytes())
+        };
+
+        let mut prev = vec![0i32; t2.len() + 1];
+        let mut curr = vec![0i32; t2.len() + 1];
+
+        for i in (0..t1.len()).rev() {
+            for j in (0..t2.len()).rev() {
+                if t1[i] == t2[j] {
+                    curr[j] = 1 + prev[j + 1];
+                } else {
+                    curr[j] = curr[j + 1].max(prev[j]);
+                }
+            }
+            std::mem::swap(&mut prev, &mut curr);
+            curr.fill(0);
+        }
+
+        prev[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -931,12 +1035,12 @@ We can reduce space further by using a single array and a temporary variable. Wh
 1. If `text1` is shorter, swap strings for minimal space.
 2. Initialize a single array `dp` of size `n+1`.
 3. Iterate `i` from `m-1` down to `0`:
-   - Set `prev = 0` (represents `dp[i+1][n]`).
-   - For each `j` from `n-1` down to `0`:
-     - Save `temp = dp[j]` (the old value before update).
-     - If characters match, set `dp[j] = 1 + prev`.
-     - Otherwise, set `dp[j] = max(dp[j], dp[j+1])`.
-     - Update `prev = temp`.
+    - Set `prev = 0` (represents `dp[i+1][n]`).
+    - For each `j` from `n-1` down to `0`:
+        - Save `temp = dp[j]` (the old value before update).
+        - If characters match, set `dp[j] = 1 + prev`.
+        - Otherwise, set `dp[j] = max(dp[j], dp[j+1])`.
+        - Update `prev = temp`.
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -1169,6 +1273,35 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_common_subsequence(text1: String, text2: String) -> i32 {
+        let (t1, t2) = if text1.len() >= text2.len() {
+            (text1.as_bytes(), text2.as_bytes())
+        } else {
+            (text2.as_bytes(), text1.as_bytes())
+        };
+
+        let mut dp = vec![0i32; t2.len() + 1];
+
+        for i in (0..t1.len()).rev() {
+            let mut prev = 0;
+            for j in (0..t2.len()).rev() {
+                let temp = dp[j];
+                if t1[i] == t2[j] {
+                    dp[j] = 1 + prev;
+                } else {
+                    dp[j] = dp[j].max(dp[j + 1]);
+                }
+                prev = temp;
+            }
+        }
+
+        dp[0]
     }
 }
 ```

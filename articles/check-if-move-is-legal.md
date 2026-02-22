@@ -350,6 +350,49 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn check_move(board: &mut Vec<Vec<char>>, r_move: i32, c_move: i32, color: char) -> bool {
+        let rows = board.len() as i32;
+        let cols = board[0].len() as i32;
+        let direction: Vec<[i32; 2]> = vec![
+            [1, 0], [-1, 0], [0, 1], [0, -1],
+            [1, 1], [-1, -1], [1, -1], [-1, 1],
+        ];
+
+        board[r_move as usize][c_move as usize] = color;
+
+        for d in &direction {
+            if Self::legal(board, r_move, c_move, color, d, rows, cols) {
+                return true;
+            }
+        }
+        false
+    }
+
+    fn legal(board: &Vec<Vec<char>>, mut row: i32, mut col: i32, color: char, direc: &[i32; 2], rows: i32, cols: i32) -> bool {
+        let (dr, dc) = (direc[0], direc[1]);
+        row += dr;
+        col += dc;
+        let mut length = 1;
+
+        while row >= 0 && row < rows && col >= 0 && col < cols {
+            length += 1;
+            if board[row as usize][col as usize] == '.' {
+                return false;
+            }
+            if board[row as usize][col as usize] == color {
+                return length >= 3;
+            }
+            row += dr;
+            col += dc;
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -621,6 +664,43 @@ class Solution {
             }
         }
         return false
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn check_move(board: &mut Vec<Vec<char>>, r_move: i32, c_move: i32, color: char) -> bool {
+        let rows = board.len() as i32;
+        let cols = board[0].len() as i32;
+        let direction = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
+
+        board[r_move as usize][c_move as usize] = color;
+
+        for d in 0..9 {
+            let mut row = r_move;
+            let mut col = c_move;
+            let mut length = 1;
+            loop {
+                row += direction[d];
+                col += direction[d + 1];
+
+                if row < 0 || col < 0 || row >= rows || col >= cols
+                    || board[row as usize][col as usize] == '.'
+                {
+                    break;
+                }
+                if board[row as usize][col as usize] == color {
+                    if length > 1 {
+                        return true;
+                    }
+                    break;
+                }
+                length += 1;
+            }
+        }
+        false
     }
 }
 ```

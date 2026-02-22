@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree (BST) Properties** - Understanding that in a BST, left subtree values are smaller and right subtree values are larger than the root
 - **Tree Traversal (DFS)** - Ability to traverse binary trees using depth-first search, particularly inorder traversal
 - **Inorder Traversal** - Knowing that inorder traversal of a BST produces values in sorted (ascending) order
@@ -360,6 +362,57 @@ class Solution {
 }
 ```
 
+```rust
+use std::ptr;
+
+impl Solution {
+    pub fn min_diff_in_bst(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        Self::dfs(&root, &root)
+    }
+
+    fn dfs(
+        root: &Option<Rc<RefCell<TreeNode>>>,
+        node: &Option<Rc<RefCell<TreeNode>>>,
+    ) -> i32 {
+        match node {
+            None => i32::MAX,
+            Some(n) => {
+                let nb = n.borrow();
+                let mut res = Self::dfs1(root, node);
+                res = res.min(Self::dfs(root, &nb.left));
+                res = res.min(Self::dfs(root, &nb.right));
+                res
+            }
+        }
+    }
+
+    fn dfs1(
+        root: &Option<Rc<RefCell<TreeNode>>>,
+        node: &Option<Rc<RefCell<TreeNode>>>,
+    ) -> i32 {
+        match root {
+            None => i32::MAX,
+            Some(r) => {
+                let rb = r.borrow();
+                let node_rc = node.as_ref().unwrap();
+                let same = ptr::eq(
+                    r.as_ptr() as *const (),
+                    node_rc.as_ptr() as *const (),
+                );
+                let mut res = if !same {
+                    (rb.val - node_rc.borrow().val).abs()
+                } else {
+                    i32::MAX
+                };
+                res = res.min(Self::dfs1(&rb.left, node));
+                res = res.min(Self::dfs1(&rb.right, node));
+                res
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -661,6 +714,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_diff_in_bst(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut arr = Vec::new();
+        Self::dfs(&root, &mut arr);
+        let mut res = arr[1] - arr[0];
+        for i in 2..arr.len() {
+            res = res.min(arr[i] - arr[i - 1]);
+        }
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            Self::dfs(&n.left, arr);
+            arr.push(n.val);
+            Self::dfs(&n.right, arr);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,10 +757,10 @@ Instead of storing all values in an array and then finding the minimum differenc
 1. Maintain a `prev` pointer to track the previously visited node during inorder traversal.
 2. Initialize `res` to infinity.
 3. Perform inorder traversal:
-   - Recurse on the left subtree.
-   - If `prev` exists, update `res` with `min(res, current.val - prev.val)`.
-   - Set `prev` to the current node.
-   - Recurse on the right subtree.
+    - Recurse on the left subtree.
+    - If `prev` exists, update `res` with `min(res, current.val - prev.val)`.
+    - Set `prev` to the current node.
+    - Recurse on the right subtree.
 4. Return `res`.
 
 ::tabs-start
@@ -972,6 +1048,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_diff_in_bst(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut prev = None;
+        let mut res = i32::MAX;
+        Self::dfs(&root, &mut prev, &mut res);
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, prev: &mut Option<i32>, res: &mut i32) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            Self::dfs(&n.left, prev, res);
+            if let Some(p) = *prev {
+                *res = (*res).min(n.val - p);
+            }
+            *prev = Some(n.val);
+            Self::dfs(&n.right, prev, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -991,10 +1090,10 @@ The recursive inorder traversal can be converted to an iterative version using a
 
 1. Initialize an empty stack and set `cur` to the root. Maintain `prev` to track the previous node.
 2. While the stack is not empty or `cur` is not `null`:
-   - Push all left descendants of `cur` onto the stack.
-   - Pop a node from the stack.
-   - If `prev` exists, update the minimum difference.
-   - Set `prev` to the current node and move `cur` to the right child.
+    - Push all left descendants of `cur` onto the stack.
+    - Pop a node from the stack.
+    - If `prev` exists, update the minimum difference.
+    - Set `prev` to the current node and move `cur` to the right child.
 3. Return the minimum difference found.
 
 ::tabs-start
@@ -1308,6 +1407,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_diff_in_bst(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut prev: Option<i32> = None;
+        let mut res = i32::MAX;
+        let mut cur = root;
+
+        while !stack.is_empty() || cur.is_some() {
+            while let Some(node) = cur {
+                cur = node.borrow().left.clone();
+                stack.push(node);
+            }
+
+            let node = stack.pop().unwrap();
+            let val = node.borrow().val;
+            if let Some(p) = prev {
+                res = res.min(val - p);
+            }
+            prev = Some(val);
+            cur = node.borrow().right.clone();
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1327,12 +1454,12 @@ Morris traversal allows us to perform inorder traversal without using a stack or
 
 1. Initialize `cur` to the root and `prevVal` to track the value of the previous node visited.
 2. While `cur` is not `null`:
-   - If `cur` has no left child:
-     - Process `cur` (compare with `prevVal` and update minimum).
-     - Update `prevVal` and move to the right child.
-   - Else, find the inorder predecessor (rightmost node in left subtree):
-     - If the predecessor's right pointer is `null`, set it to `cur` and move left.
-     - If the predecessor's right pointer is `cur`, restore it to `null`, process `cur`, update `prevVal`, and move right.
+    - If `cur` has no left child:
+        - Process `cur` (compare with `prevVal` and update minimum).
+        - Update `prevVal` and move to the right child.
+    - Else, find the inorder predecessor (rightmost node in left subtree):
+        - If the predecessor's right pointer is `null`, set it to `cur` and move left.
+        - If the predecessor's right pointer is `cur`, restore it to `null`, process `cur`, update `prevVal`, and move right.
 3. Return the minimum difference found.
 
 ::tabs-start
@@ -1731,6 +1858,35 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_diff_in_bst(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        // Morris traversal is not idiomatic in Rust with Rc<RefCell<TreeNode>>
+        // due to shared ownership constraints. Use iterative inorder instead.
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut prev_val = i32::MAX;
+        let mut res = i32::MAX;
+        let mut cur = root;
+
+        while !stack.is_empty() || cur.is_some() {
+            while let Some(node) = cur {
+                cur = node.borrow().left.clone();
+                stack.push(node);
+            }
+            let node = stack.pop().unwrap();
+            let val = node.borrow().val;
+            if prev_val != i32::MAX {
+                res = res.min(val - prev_val);
+            }
+            prev_val = val;
+            cur = node.borrow().right.clone();
+        }
+
+        res
     }
 }
 ```

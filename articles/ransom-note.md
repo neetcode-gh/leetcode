@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Used to efficiently count and compare character occurrences between two strings
 - **String Iteration** - Understanding how to traverse characters in a string and perform lookups
 
@@ -15,8 +17,8 @@ For each character in the ransom note, we search for a matching character in the
 
 1. Convert the magazine string to a mutable list of characters.
 2. For each character `c` in the ransom note:
-   - If `c` is not in the magazine list, return `false`.
-   - Otherwise, remove one occurrence of `c` from the magazine list.
+    - If `c` is not in the magazine list, return `false`.
+    - Otherwise, remove one occurrence of `c` from the magazine list.
 3. If all characters are found, return `true`.
 
 ::tabs-start
@@ -31,7 +33,7 @@ class Solution:
                 return False
             else:
                 magazine.remove(c)
-        
+
         return True
 ```
 
@@ -78,7 +80,7 @@ class Solution {
      * @return {boolean}
      */
     canConstruct(ransomNote, magazine) {
-        let mag = magazine.split("");
+        let mag = magazine.split('');
 
         for (let c of ransomNote) {
             let idx = mag.indexOf(c);
@@ -161,12 +163,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_construct(ransom_note: String, magazine: String) -> bool {
+        let mut mag: Vec<char> = magazine.chars().collect();
+
+        for c in ransom_note.chars() {
+            if let Some(idx) = mag.iter().position(|&x| x == c) {
+                mag.remove(idx);
+            } else {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ and $n$ are the lengths of the strings $ransomNote$ and $magazine$, respectively.
 
@@ -183,7 +203,7 @@ Instead of searching and removing characters one by one, we can count the freque
 1. Count the frequency of each character in the ransom note (`countR`).
 2. Count the frequency of each character in the magazine (`countM`).
 3. For each character in `countR`:
-   - If `countM[c] < countR[c]`, return `false`.
+    - If `countM[c] < countR[c]`, return `false`.
 4. Return `true`.
 
 ::tabs-start
@@ -368,12 +388,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_construct(ransom_note: String, magazine: String) -> bool {
+        let mut count_r = [0i32; 26];
+        let mut count_m = [0i32; 26];
+
+        for c in ransom_note.bytes() {
+            count_r[(c - b'a') as usize] += 1;
+        }
+
+        for c in magazine.bytes() {
+            count_m[(c - b'a') as usize] += 1;
+        }
+
+        for i in 0..26 {
+            if count_m[i] < count_r[i] {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ and $n$ are the lengths of the strings $ransomNote$ and $magazine$, respectively.
 
@@ -390,8 +435,8 @@ We can optimize further by using a single count array. First, we count all chara
 1. Create a count array of size 26 (for lowercase letters).
 2. For each character in the magazine, increment its count.
 3. For each character in the ransom note:
-   - Decrement its count.
-   - If the count becomes negative, return `false`.
+    - Decrement its count.
+    - If the count becomes negative, return `false`.
 4. Return `true`.
 
 ::tabs-start
@@ -526,12 +571,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_construct(ransom_note: String, magazine: String) -> bool {
+        let mut count = [0i32; 26];
+        for c in magazine.bytes() {
+            count[(c - b'a') as usize] += 1;
+        }
+        for c in ransom_note.bytes() {
+            count[(c - b'a') as usize] -= 1;
+            if count[(c - b'a') as usize] < 0 {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ and $n$ are the lengths of the strings $ransomNote$ and $magazine$, respectively.
 

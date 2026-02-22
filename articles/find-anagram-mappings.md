@@ -162,6 +162,25 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn anagram_mappings(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let mut mappings = vec![0i32; nums1.len()];
+
+        for i in 0..nums1.len() {
+            for j in 0..nums2.len() {
+                if nums1[i] == nums2[j] {
+                    mappings[i] = j as i32;
+                    break;
+                }
+            }
+        }
+        mappings
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,6 +343,25 @@ class Solution {
         }
 
         return mappings
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn anagram_mappings(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let mut value_to_pos = HashMap::new();
+        for (i, &num) in nums2.iter().enumerate() {
+            value_to_pos.insert(num, i as i32);
+        }
+
+        let mut mappings = vec![0i32; nums1.len()];
+        for (i, &num) in nums1.iter().enumerate() {
+            mappings[i] = value_to_pos[&num];
+        }
+
+        mappings
     }
 }
 ```
@@ -554,6 +592,32 @@ class Solution {
         }
 
         return mappings
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn anagram_mappings(mut nums1: Vec<i32>, mut nums2: Vec<i32>) -> Vec<i32> {
+        let bits_to_shift = 7;
+        let num_to_get_last_bits = (1 << bits_to_shift) - 1;
+
+        for i in 0..nums1.len() {
+            nums1[i] = (nums1[i] << bits_to_shift) + i as i32;
+            nums2[i] = (nums2[i] << bits_to_shift) + i as i32;
+        }
+
+        nums1.sort();
+        nums2.sort();
+
+        let mut mappings = vec![0i32; nums1.len()];
+        for i in 0..nums1.len() {
+            mappings[(nums1[i] & num_to_get_last_bits) as usize] =
+                nums2[i] & num_to_get_last_bits;
+        }
+
+        mappings
     }
 }
 ```

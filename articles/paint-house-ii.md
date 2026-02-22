@@ -1,9 +1,11 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (2D)** - Managing DP states with two dimensions (house index and color)
 - **Memoization** - Caching results for (house, color) pairs to avoid recomputation
 - **Minimum/Second-Minimum Tracking** - Optimizing from O(k^2) to O(k) by tracking the two smallest values
-- **Space Optimization** - Reducing from O(n*k) to O(k) or O(1) space by only keeping necessary previous row data
+- **Space Optimization** - Reducing from O(n\*k) to O(k) or O(1) space by only keeping necessary previous row data
 
 ---
 
@@ -180,8 +182,14 @@ class Solution {
             let minRemainingCost = Infinity;
             for (let nextColor = 0; nextColor < k; nextColor++) {
                 if (color === nextColor) continue;
-                let currentRemainingCost = memoSolve(houseNumber + 1, nextColor);
-                minRemainingCost = Math.min(currentRemainingCost, minRemainingCost);
+                let currentRemainingCost = memoSolve(
+                    houseNumber + 1,
+                    nextColor,
+                );
+                minRemainingCost = Math.min(
+                    currentRemainingCost,
+                    minRemainingCost,
+                );
             }
             const totalCost = costs[houseNumber][color] + minRemainingCost;
             memo.set(key, totalCost);
@@ -362,6 +370,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost_ii(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        if n == 0 { return 0; }
+        let k = costs[0].len();
+        let mut memo = HashMap::new();
+
+        fn memo_solve(
+            house: usize, color: usize, costs: &Vec<Vec<i32>>,
+            k: usize, n: usize, memo: &mut HashMap<(usize, usize), i32>,
+        ) -> i32 {
+            if house == n - 1 {
+                return costs[house][color];
+            }
+            if let Some(&val) = memo.get(&(house, color)) {
+                return val;
+            }
+            let mut min_remaining = i32::MAX;
+            for next_color in 0..k {
+                if next_color == color { continue; }
+                min_remaining = min_remaining.min(
+                    memo_solve(house + 1, next_color, costs, k, n, memo),
+                );
+            }
+            let total = costs[house][color] + min_remaining;
+            memo.insert((house, color), total);
+            total
+        }
+
+        let mut min_cost = i32::MAX;
+        for color in 0..k {
+            min_cost = min_cost.min(memo_solve(0, color, &costs, k, n, &mut memo));
+        }
+        min_cost
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,7 +417,7 @@ class Solution {
 
 - Space complexity: $O(n \cdot k)$
 
->  Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
+> Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
 
 ---
 
@@ -380,7 +427,7 @@ class Solution {
 
 We can solve this iteratively by building up the minimum costs house by house. For each house and each color, we need the minimum cost from the previous house excluding that same color.
 
-The straightforward approach checks all `k` colors from the previous row to find the minimum, giving O(k) work per cell and O(n * k^2) overall.
+The straightforward approach checks all `k` colors from the previous row to find the minimum, giving O(k) work per cell and O(n \* k^2) overall.
 
 ### Algorithm
 
@@ -482,9 +529,16 @@ class Solution {
         for (let house = 1; house < n; house++) {
             for (let color = 0; color < k; color++) {
                 let minCost = Infinity;
-                for (let previousColor = 0; previousColor < k; previousColor++) {
+                for (
+                    let previousColor = 0;
+                    previousColor < k;
+                    previousColor++
+                ) {
                     if (color === previousColor) continue;
-                    minCost = Math.min(minCost, costs[house - 1][previousColor]);
+                    minCost = Math.min(
+                        minCost,
+                        costs[house - 1][previousColor],
+                    );
                 }
                 costs[house][color] += minCost;
             }
@@ -602,6 +656,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost_ii(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        if n == 0 { return 0; }
+        let k = costs[0].len();
+        let mut costs = costs;
+
+        for house in 1..n {
+            for color in 0..k {
+                let mut min_cost = i32::MAX;
+                for prev_color in 0..k {
+                    if color == prev_color { continue; }
+                    min_cost = min_cost.min(costs[house - 1][prev_color]);
+                }
+                costs[house][color] += min_cost;
+            }
+        }
+
+        *costs[n - 1].iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -610,7 +688,7 @@ class Solution {
 
 - Space complexity: $O(1)$ if done in-place, $O(n \cdot k)$ if input is copied.
 
->  Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
+> Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
 
 ---
 
@@ -737,7 +815,11 @@ class Solution {
             const currentRow = new Array(k).fill(0);
             for (let color = 0; color < k; color++) {
                 let minCost = Infinity;
-                for (let previousColor = 0; previousColor < k; previousColor++) {
+                for (
+                    let previousColor = 0;
+                    previousColor < k;
+                    previousColor++
+                ) {
                     if (color === previousColor) continue;
                     minCost = Math.min(minCost, previousRow[previousColor]);
                 }
@@ -874,6 +956,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost_ii(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        if n == 0 { return 0; }
+        let k = costs[0].len();
+
+        let mut previous_row = costs[0].clone();
+
+        for house in 1..n {
+            let mut current_row = vec![0; k];
+            for color in 0..k {
+                let mut min_cost = i32::MAX;
+                for prev_color in 0..k {
+                    if color == prev_color { continue; }
+                    min_cost = min_cost.min(previous_row[prev_color]);
+                }
+                current_row[color] = costs[house][color] + min_cost;
+            }
+            previous_row = current_row;
+        }
+
+        *previous_row.iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -882,7 +991,7 @@ class Solution {
 
 - Space complexity: $O(k)$
 
->  Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
+> Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
 
 ---
 
@@ -892,14 +1001,14 @@ class Solution {
 
 The O(k^2) time per house comes from finding the minimum in the previous row for each color. But notice: for all colors except one, we just need the global minimum of the previous row. The exception is when the current color matches the minimum color from the previous row, in which case we need the second minimum.
 
-By precomputing the minimum and second minimum colors from each row, we can update each cell in O(1) time, reducing the overall complexity to O(n * k).
+By precomputing the minimum and second minimum colors from each row, we can update each cell in O(1) time, reducing the overall complexity to O(n \* k).
 
 ### Algorithm
 
 1. For each house (starting from index `1`), first find the indices of the minimum and second minimum costs in the previous row.
 2. For each color in the current row:
-   - If this color matches the minimum color from the previous row, add the second minimum cost.
-   - Otherwise, add the minimum cost.
+    - If this color matches the minimum color from the previous row, add the second minimum cost.
+    - Otherwise, add the minimum cost.
 3. Repeat until all houses are processed.
 4. Return the minimum value in the final row.
 
@@ -982,18 +1091,18 @@ class Solution {
 public:
     int minCostII(vector<vector<int>>& costs) {
         if (costs.size() == 0) return 0;
-        
+
         int k = costs[0].size();
         int n = costs.size();
-        
+
         for (int house = 1; house < n; house++) {
             // Find the minimum and second minimum color in the PREVIOUS row.
             int minColor = -1;
             int secondMinColor = -1;
-            
+
             for (int color = 0; color < k; color++) {
                 int cost = costs[house - 1][color];
-                
+
                 if (minColor == -1 || cost < costs[house - 1][minColor]) {
                     secondMinColor = minColor;
                     minColor = color;
@@ -1001,7 +1110,7 @@ public:
                     secondMinColor = color;
                 }
             }
-            
+
             // And now calculate the new costs for the current row.
             for (int color = 0; color < k; color++) {
                 if (color == minColor) {
@@ -1011,13 +1120,13 @@ public:
                 }
             }
         }
-        
+
         // Find the minimum in the last row.
         int min = INT_MAX;
         for (int c : costs[n - 1]) {
             min = std::min(min, c);
         }
-        
+
         return min;
     }
 };
@@ -1047,7 +1156,10 @@ class Solution {
                 if (minColor === null || cost < costs[house - 1][minColor]) {
                     secondMinColor = minColor;
                     minColor = color;
-                } else if (secondMinColor === null || cost < costs[house - 1][secondMinColor]) {
+                } else if (
+                    secondMinColor === null ||
+                    cost < costs[house - 1][secondMinColor]
+                ) {
                     secondMinColor = color;
                 }
             }
@@ -1213,6 +1325,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost_ii(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        if n == 0 { return 0; }
+        let k = costs[0].len();
+        let mut costs = costs;
+
+        for house in 1..n {
+            let mut min_color: i32 = -1;
+            let mut second_min_color: i32 = -1;
+            for color in 0..k {
+                let cost = costs[house - 1][color];
+                if min_color == -1 || cost < costs[house - 1][min_color as usize] {
+                    second_min_color = min_color;
+                    min_color = color as i32;
+                } else if second_min_color == -1 || cost < costs[house - 1][second_min_color as usize] {
+                    second_min_color = color as i32;
+                }
+            }
+
+            for color in 0..k {
+                if color as i32 == min_color {
+                    costs[house][color] += costs[house - 1][second_min_color as usize];
+                } else {
+                    costs[house][color] += costs[house - 1][min_color as usize];
+                }
+            }
+        }
+
+        *costs[n - 1].iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1221,7 +1368,7 @@ class Solution {
 
 - Space complexity: $O(1)$
 
->  Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
+> Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
 
 ---
 
@@ -1231,14 +1378,14 @@ class Solution {
 
 Building on the previous optimization, we realize we do not actually need to store the entire previous row. We only need three pieces of information: the minimum cost, the second minimum cost, and which color achieved the minimum.
 
-By tracking just these three values as we process each house, we can compute everything in O(1) space while maintaining O(n * k) time complexity.
+By tracking just these three values as we process each house, we can compute everything in O(1) space while maintaining O(n \* k) time complexity.
 
 ### Algorithm
 
 1. Initialize by finding the minimum cost, second minimum cost, and minimum color index from the first row.
 2. For each subsequent house, iterate through all colors:
-   - If the current color equals the previous minimum color, the cost is `current_cost + prev_second_min`.
-   - Otherwise, the cost is `current_cost + prev_min`.
+    - If the current color equals the previous minimum color, the cost is `current_cost + prev_second_min`.
+    - Otherwise, the cost is `current_cost + prev_min`.
 3. Track the new minimum, second minimum, and minimum color as you process each color.
 4. After processing all houses, the final minimum cost is the answer.
 
@@ -1402,7 +1549,9 @@ class Solution {
         if (n === 0) return 0;
         const k = costs[0].length;
 
-        let prevMin = null, prevSecondMin = null, prevMinColor = null;
+        let prevMin = null,
+            prevSecondMin = null,
+            prevMinColor = null;
         for (let color = 0; color < k; color++) {
             const cost = costs[0][color];
             if (prevMin === null || cost < prevMin) {
@@ -1415,7 +1564,9 @@ class Solution {
         }
 
         for (let house = 1; house < n; house++) {
-            let min = null, secondMin = null, minColor = null;
+            let min = null,
+                secondMin = null,
+                minColor = null;
             for (let color = 0; color < k; color++) {
                 let cost = costs[house][color];
                 if (color === prevMinColor) {
@@ -1625,6 +1776,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost_ii(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        if n == 0 { return 0; }
+        let k = costs[0].len();
+
+        let mut prev_min: i32 = -1;
+        let mut prev_second_min: i32 = -1;
+        let mut prev_min_color: i32 = -1;
+        for color in 0..k {
+            let cost = costs[0][color];
+            if prev_min == -1 || cost < prev_min {
+                prev_second_min = prev_min;
+                prev_min_color = color as i32;
+                prev_min = cost;
+            } else if prev_second_min == -1 || cost < prev_second_min {
+                prev_second_min = cost;
+            }
+        }
+
+        for house in 1..n {
+            let mut min_cost: i32 = -1;
+            let mut second_min: i32 = -1;
+            let mut min_color: i32 = -1;
+            for color in 0..k {
+                let mut cost = costs[house][color];
+                cost += if color as i32 == prev_min_color {
+                    prev_second_min
+                } else {
+                    prev_min
+                };
+                if min_cost == -1 || cost < min_cost {
+                    second_min = min_cost;
+                    min_color = color as i32;
+                    min_cost = cost;
+                } else if second_min == -1 || cost < second_min {
+                    second_min = cost;
+                }
+            }
+            prev_min = min_cost;
+            prev_second_min = second_min;
+            prev_min_color = min_color;
+        }
+
+        prev_min
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1633,7 +1834,7 @@ class Solution {
 
 - Space complexity: $O(1)$
 
->  Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
+> Where $n$ is the number of houses in a row, and $k$ is the number of colors available for painting.
 
 ---
 
@@ -1641,7 +1842,7 @@ class Solution {
 
 ### Using O(k^2) Time Per House Without Optimization
 
-The naive approach of checking all k colors from the previous row for each of k colors in the current row results in O(n*k^2) time. For large k values, this times out. The key insight is that you only need to track the minimum and second minimum costs from the previous row, reducing per-house work to O(k).
+The naive approach of checking all k colors from the previous row for each of k colors in the current row results in O(n\*k^2) time. For large k values, this times out. The key insight is that you only need to track the minimum and second minimum costs from the previous row, reducing per-house work to O(k).
 
 ### Not Handling the Case When k Equals 1
 

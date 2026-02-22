@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the node's value
 - **Tree Traversal** - Ability to navigate through a tree using recursion or iteration
 - **Recursion (optional)** - One approach uses recursive calls to traverse down the tree until the split point is found
@@ -26,12 +28,12 @@ For two nodes `p` and `q`:
 
 1. Start from the `root`.
 2. While at a node:
-   - If both `p` and `q` have values **less than** the current node's value:
-     - Move to the **left child**.
-   - Else if both `p` and `q` have values **greater than** the current node's value:
-     - Move to the **right child**.
-   - Otherwise:
-     - The current node is the **LCA** -> return it.
+    - If both `p` and `q` have values **less than** the current node's value:
+        - Move to the **left child**.
+    - Else if both `p` and `q` have values **greater than** the current node's value:
+        - Move to the **right child**.
+    - Otherwise:
+        - The current node is the **LCA** -> return it.
 3. If the tree is empty, return `null`.
 
 ::tabs-start
@@ -277,6 +279,41 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn lowest_common_ancestor(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let root = root?;
+        let p_val = p.as_ref()?.borrow().val;
+        let q_val = q.as_ref()?.borrow().val;
+        let root_val = root.borrow().val;
+
+        if p_val.max(q_val) < root_val {
+            Self::lowest_common_ancestor(
+                root.borrow().left.clone(), p, q,
+            )
+        } else if p_val.min(q_val) > root_val {
+            Self::lowest_common_ancestor(
+                root.borrow().right.clone(), p, q,
+            )
+        } else {
+            Some(root)
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -310,10 +347,10 @@ This avoids recursion and simply walks down the tree until the split point is fo
 
 1. Set `cur = root`.
 2. While `cur` is not `null`:
-   - If `p.val` and `q.val` are both **greater** than `cur.val` -> go right.
-   - Else if both are **smaller** -> go left.
-   - Otherwise:
-     - You've found the **first node** where their paths separate -> return `cur` (the LCA).
+    - If `p.val` and `q.val` are both **greater** than `cur.val` -> go right.
+    - Else if both are **smaller** -> go left.
+    - Otherwise:
+        - You've found the **first node** where their paths separate -> return `cur` (the LCA).
 3. Return `null` if tree is empty (should not happen for valid input).
 
 ::tabs-start
@@ -559,6 +596,40 @@ class Solution {
             }
         }
         return nil
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn lowest_common_ancestor(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let p_val = p.as_ref()?.borrow().val;
+        let q_val = q.as_ref()?.borrow().val;
+        let mut cur = root;
+
+        while let Some(node) = cur {
+            let node_val = node.borrow().val;
+            if p_val > node_val && q_val > node_val {
+                cur = node.borrow().right.clone();
+            } else if p_val < node_val && q_val < node_val {
+                cur = node.borrow().left.clone();
+            } else {
+                return Some(node);
+            }
+        }
+        None
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation (XOR)** - The optimal solution relies on XOR properties: a ^ a = 0 and a ^ 0 = a
 - **Hash Set** - Used in O(n) space solutions to track which numbers have been seen
 - **Sorting** - Alternative approach that groups duplicates together for easy identification
@@ -13,6 +15,7 @@ Before attempting this problem, you should be comfortable with:
 We are given an array where **every element appears twice except one**, and we need to find that unique element.
 
 The brute force idea is straightforward:
+
 - for each element in the array
 - check whether it appears **anywhere else**
 - if it does not match with any other element, then it must be the single number
@@ -24,11 +27,11 @@ This approach is simple and easy to understand, especially for beginners, becaus
 1. Loop through each index `i` in the array:
 2. Assume the current element `nums[i]` is unique (`flag = true`).
 3. Loop through the array again with index `j`:
-   - If `i != j` and `nums[i] == nums[j]`:
-     - the element is not unique
-     - set `flag = false` and stop checking
+    - If `i != j` and `nums[i] == nums[j]`:
+        - the element is not unique
+        - set `flag = false` and stop checking
 4. After the inner loop:
-   - If `flag` is still `true`, return `nums[i]`
+    - If `flag` is still `true`, return `nums[i]`
 5. Since the problem guarantees exactly one unique element, the function will always return an answer.
 
 ::tabs-start
@@ -187,6 +190,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        for i in 0..n {
+            let mut flag = true;
+            for j in 0..n {
+                if i != j && nums[i] == nums[j] {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                return nums[i];
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -203,10 +227,12 @@ class Solution {
 We are given an array where **every number appears exactly twice except one**, and we need to find that single number.
 
 A convenient way to solve this is by using a **hash set** to track numbers as we iterate:
+
 - when we see a number **for the first time**, we add it to the set
 - when we see the **same number again**, we remove it from the set
 
 Because:
+
 - duplicates are added once and removed once
 - only the number that appears **exactly once** will remain in the set
 
@@ -216,12 +242,12 @@ At the end, the set will contain **only one element**, which is the answer.
 
 1. Initialize an empty set `seen`.
 2. Traverse each number `num` in the array:
-   - If `num` is already in `seen`:
-     - remove it from the set
-   - Otherwise:
-     - add it to the set
+    - If `num` is already in `seen`:
+        - remove it from the set
+    - Otherwise:
+        - add it to the set
 3. After processing all numbers:
-   - the set contains exactly one element
+    - the set contains exactly one element
 4. Return the only element from the set.
 
 ::tabs-start
@@ -361,6 +387,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> i32 {
+        let mut seen = HashSet::new();
+        for &num in &nums {
+            if !seen.remove(&num) {
+                seen.insert(num);
+            }
+        }
+        *seen.iter().next().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,10 +417,12 @@ class Solution {
 We are given an array where **every element appears exactly twice except one**, and we need to find that unique element.
 
 Sorting helps simplify the problem:
+
 - after sorting, **duplicate numbers appear next to each other**
 - the single number will be the **only element that does not have an identical neighbor**
 
 So we can scan the array in steps of two:
+
 - if `nums[i] == nums[i + 1]`, they form a valid pair → skip both
 - if they are not equal, then `nums[i]` must be the unique element
 
@@ -391,12 +433,12 @@ This approach avoids extra space and relies on the structure created by sorting.
 1. Sort the array `nums`.
 2. Initialize an index `i = 0`.
 3. While `i < len(nums) - 1`:
-   - If `nums[i] == nums[i + 1]`:
-     - move to the next pair by setting `i += 2`
-   - Else:
-     - return `nums[i]` (this is the single number)
+    - If `nums[i] == nums[i + 1]`:
+        - move to the next pair by setting `i += 2`
+    - Else:
+        - return `nums[i]` (this is the single number)
 4. If the loop ends, the unique element must be the **last element**:
-   - return `nums[i]`
+    - return `nums[i]`
 
 ::tabs-start
 
@@ -537,6 +579,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> i32 {
+        let mut nums = nums;
+        nums.sort_unstable();
+        let mut i = 0;
+        while i < nums.len() - 1 {
+            if nums[i] == nums[i + 1] {
+                i += 2;
+            } else {
+                return nums[i];
+            }
+        }
+        nums[i]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,11 +615,13 @@ We are given an array where **every number appears exactly twice except one**, a
 This problem is a perfect fit for **bit manipulation**, specifically the XOR (`^`) operation.
 
 Key properties of XOR:
+
 - `a ^ a = 0` (a number XORed with itself cancels out)
 - `a ^ 0 = a` (XOR with `0` keeps the number unchanged)
 - XOR is **commutative and associative**, so order does not matter
 
 Because of these properties:
+
 - all numbers that appear twice will cancel each other out
 - the number that appears once will remain
 
@@ -567,9 +629,9 @@ Because of these properties:
 
 1. Initialize `res = 0`.
 2. Iterate through each number in the array:
-   - update `res = res ^ num`
+    - update `res = res ^ num`
 3. After processing all numbers:
-   - `res` contains the single number
+    - `res` contains the single number
 4. Return `res`.
 
 ::tabs-start
@@ -666,6 +728,18 @@ class Solution {
             res ^= num
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        for &num in &nums {
+            res ^= num;
+        }
+        res
     }
 }
 ```

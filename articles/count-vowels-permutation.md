@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Breaking down problems into overlapping subproblems with memoization or tabulation
 - **State Transitions** - Understanding how to model transitions between different states (vowels in this case)
 - **Modular Arithmetic** - Handling large numbers with modulo operations to prevent overflow
@@ -282,6 +284,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_vowel_permutation(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let follows: [&[usize]; 5] = [
+            &[1],          // 'a' -> 'e'
+            &[0, 2],       // 'e' -> 'a', 'i'
+            &[0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            &[2, 4],       // 'o' -> 'i', 'u'
+            &[0],          // 'u' -> 'a'
+        ];
+
+        fn dfs(i: i32, v: usize, n: i32, follows: &[&[usize]; 5]) -> i64 {
+            if i == n { return 1; }
+            let mut total = 0i64;
+            for &next in follows[v] {
+                total = (total + dfs(i + 1, next, n, follows)) % 1_000_000_007;
+            }
+            total
+        }
+
+        let mut res = 0i64;
+        for vowel in 0..5 {
+            res = (res + dfs(1, vowel, n, &follows)) % MOD;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,9 +334,9 @@ The plain recursion recomputes the same subproblems many times. For example, cou
 1. Define the transition rules mapping each vowel to its valid successors.
 2. Create a memoization cache (2D array or hash map) for states `(position, vowel)`.
 3. Create a recursive function that:
-   - Returns `1` if position equals `n`.
-   - Returns cached result if the state was computed before.
-   - Otherwise, computes the sum of counts from all valid successors and caches it.
+    - Returns `1` if position equals `n`.
+    - Returns cached result if the state was computed before.
+    - Otherwise, computes the sum of counts from all valid successors and caches it.
 4. Start the recursion from position `1` with each of the 5 vowels.
 5. Return the total count modulo `10^9 + 7`.
 
@@ -613,6 +645,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_vowel_permutation(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let follows: [&[usize]; 5] = [
+            &[1],          // 'a' -> 'e'
+            &[0, 2],       // 'e' -> 'a', 'i'
+            &[0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            &[2, 4],       // 'o' -> 'i', 'u'
+            &[0],          // 'u' -> 'a'
+        ];
+        let n = n as usize;
+        let mut dp = vec![vec![-1i64; 5]; n];
+
+        fn dfs(i: usize, v: usize, n: usize, follows: &[&[usize]; 5], dp: &mut Vec<Vec<i64>>) -> i64 {
+            if i == n { return 1; }
+            if dp[i][v] != -1 { return dp[i][v]; }
+            let mut total = 0i64;
+            for &next in follows[v] {
+                total = (total + dfs(i + 1, next, n, follows, dp)) % 1_000_000_007;
+            }
+            dp[i][v] = total;
+            total
+        }
+
+        let mut res = 0i64;
+        for vowel in 0..5 {
+            res = (res + dfs(1, vowel, n, &follows, &mut dp)) % MOD;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -633,8 +699,8 @@ Instead of recursion with memoization, we can build the solution iteratively fro
 1. Create a 2D DP array of size `(n+1) x 5`.
 2. Initialize `dp[1][v] = 1` for all vowels (there is one string of length `1` for each vowel).
 3. For each length `i` from `2` to `n`:
-   - For each vowel `v`, sum up `dp[i-1][prev]` for all vowels `prev` that can precede `v`.
-   - Note: we need to reverse the transition rules (find what can come before, not after).
+    - For each vowel `v`, sum up `dp[i-1][prev]` for all vowels `prev` that can precede `v`.
+    - Note: we need to reverse the transition rules (find what can come before, not after).
 4. Sum `dp[n][v]` for all vowels `v`.
 5. Return the result modulo `10^9 + 7`.
 
@@ -909,6 +975,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_vowel_permutation(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let follows: [&[usize]; 5] = [
+            &[1],          // 'a' -> 'e'
+            &[0, 2],       // 'e' -> 'a', 'i'
+            &[0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            &[2, 4],       // 'o' -> 'i', 'u'
+            &[0],          // 'u' -> 'a'
+        ];
+        let n = n as usize;
+        let mut dp = vec![vec![0i64; 5]; n + 1];
+
+        for v in 0..5 {
+            dp[1][v] = 1;
+        }
+
+        for i in 2..=n {
+            for v in 0..5 {
+                for &next_v in follows[v] {
+                    dp[i][v] = (dp[i][v] + dp[i - 1][next_v]) % MOD;
+                }
+            }
+        }
+
+        let mut result = 0i64;
+        for v in 0..5 {
+            result = (result + dp[n][v]) % MOD;
+        }
+        result as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -928,9 +1029,9 @@ In the bottom-up approach, we only need the previous row to compute the current 
 
 1. Initialize an array `dp` of size 5, all set to `1` (representing strings of length `1`).
 2. For each length from `2` to `n`:
-   - Create a new array `next_dp` of size 5.
-   - For each vowel `v`, compute `next_dp[v]` as the sum of `dp[prev]` for all valid predecessors.
-   - Replace `dp` with `next_dp`.
+    - Create a new array `next_dp` of size 5.
+    - For each vowel `v`, compute `next_dp[v]` as the sum of `dp[prev]` for all valid predecessors.
+    - Replace `dp` with `next_dp`.
 3. Sum all values in `dp`.
 4. Return the result modulo `10^9 + 7`.
 
@@ -1189,6 +1290,39 @@ class Solution {
             result = (result + count) % MOD
         }
         return result
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_vowel_permutation(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let follows: [&[usize]; 5] = [
+            &[1],          // 'a' -> 'e'
+            &[0, 2],       // 'e' -> 'a', 'i'
+            &[0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            &[2, 4],       // 'o' -> 'i', 'u'
+            &[0],          // 'u' -> 'a'
+        ];
+
+        let mut dp = [1i64; 5];
+
+        for _ in 2..=n {
+            let mut next_dp = [0i64; 5];
+            for v in 0..5 {
+                for &next_v in follows[v] {
+                    next_dp[v] = (next_dp[v] + dp[next_v]) % MOD;
+                }
+            }
+            dp = next_dp;
+        }
+
+        let mut result = 0i64;
+        for &count in &dp {
+            result = (result + count) % MOD;
+        }
+        result as i32
     }
 }
 ```
@@ -1759,6 +1893,59 @@ class Solution {
             }
         }
         return ans
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_vowel_permutation(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+
+        fn mat_mul(a: &[[i64; 5]; 5], b: &[[i64; 5]; 5]) -> [[i64; 5]; 5] {
+            let mut product = [[0i64; 5]; 5];
+            for i in 0..5 {
+                for j in 0..5 {
+                    for k in 0..5 {
+                        product[i][k] = (product[i][k] + a[i][j] * b[j][k]) % MOD;
+                    }
+                }
+            }
+            product
+        }
+
+        fn mat_expo(base: &[[i64; 5]; 5], exp: i32) -> [[i64; 5]; 5] {
+            let mut result = [[0i64; 5]; 5];
+            for i in 0..5 { result[i][i] = 1; }
+            let mut base = *base;
+            let mut e = exp;
+            while e > 0 {
+                if e % 2 == 1 {
+                    result = mat_mul(&result, &base);
+                }
+                base = mat_mul(&base, &base);
+                e /= 2;
+            }
+            result
+        }
+
+        let follows: [[i64; 5]; 5] = [
+            [0, 1, 0, 0, 0], // 'a' -> 'e'
+            [1, 0, 1, 0, 0], // 'e' -> 'a', 'i'
+            [1, 1, 0, 1, 1], // 'i' -> 'a', 'e', 'o', 'u'
+            [0, 0, 1, 0, 1], // 'o' -> 'i', 'u'
+            [1, 0, 0, 0, 0], // 'u' -> 'a'
+        ];
+
+        let result = mat_expo(&follows, n - 1);
+
+        let mut ans = 0i64;
+        for i in 0..5 {
+            for j in 0..5 {
+                ans = (ans + result[i][j]) % MOD;
+            }
+        }
+        ans as i32
     }
 }
 ```

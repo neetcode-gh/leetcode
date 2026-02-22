@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Basics** - Understanding tree structure, nodes, and parent-child relationships
 - **Breadth-First Search (BFS)** - Level-order traversal using a queue data structure
 - **Depth-First Search (DFS)** - Recursive tree traversal techniques
@@ -18,10 +20,10 @@ The width of a level is defined by the distance between the leftmost and rightmo
 1. Initialize `res = 0` and a queue with `(root, 1, 0)` representing `(node, position, level)`.
 2. Track `prevLevel` and `prevNum` to record the first position on each level.
 3. While the queue is not empty:
-   - Dequeue `(node, num, level)`.
-   - If `level > prevLevel`, update `prevLevel` and `prevNum` to the current level and position.
-   - Update `res = max(res, num - prevNum + 1)`.
-   - Enqueue the left child with position `2 * num` and the right child with `2 * num + 1`, both at `level + 1`.
+    - Dequeue `(node, num, level)`.
+    - If `level > prevLevel`, update `prevLevel` and `prevNum` to the current level and position.
+    - Update `res = max(res, num - prevNum + 1)`.
+    - Enqueue the left child with position `2 * num` and the right child with `2 * num + 1`, both at `level + 1`.
 4. Return `res`.
 
 ::tabs-start
@@ -343,6 +345,49 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let root = match root {
+            Some(r) => r,
+            None => return 0,
+        };
+
+        let mut res: u64 = 0;
+        // (node, num, level)
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, u64, i32)> = VecDeque::new();
+        queue.push_back((root, 1, 0));
+        let mut prev_level = 0;
+        let mut prev_num: u64 = 1;
+
+        while let Some((node, num, level)) = queue.pop_front() {
+            if level > prev_level {
+                prev_level = level;
+                prev_num = num;
+            }
+
+            res = res.max(num - prev_num + 1);
+            let node_ref = node.borrow();
+            if let Some(ref left) = node_ref.left {
+                queue.push_back((Rc::clone(left), 2 * num, level + 1));
+            }
+            if let Some(ref right) = node_ref.right {
+                queue.push_back((Rc::clone(right), 2 * num + 1, level + 1));
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,11 +407,11 @@ Position numbers can grow large in deep skewed trees, potentially causing overfl
 
 1. Initialize `res = 0` and a queue with `(root, 0)`.
 2. While the queue is not empty:
-   - Record `start` as the position of the first node in the current level.
-   - For each node in the current level:
-     - Compute `curNum = num - start` to normalize.
-     - Update `res = max(res, curNum + 1)`.
-     - Enqueue children with positions `2 * curNum` and `2 * curNum + 1`.
+    - Record `start` as the position of the first node in the current level.
+    - For each node in the current level:
+        - Compute `curNum = num - start` to normalize.
+        - Update `res = max(res, curNum + 1)`.
+        - Enqueue children with positions `2 * curNum` and `2 * curNum + 1`.
 3. Return `res`.
 
 ::tabs-start
@@ -644,6 +689,48 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let root = match root {
+            Some(r) => r,
+            None => return 0,
+        };
+
+        let mut res: u64 = 0;
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, u64)> = VecDeque::new();
+        queue.push_back((root, 0));
+
+        while !queue.is_empty() {
+            let start = queue.front().unwrap().1;
+            let size = queue.len();
+
+            for _ in 0..size {
+                let (node, num) = queue.pop_front().unwrap();
+                let cur_num = num - start;
+                res = res.max(cur_num + 1);
+                let node_ref = node.borrow();
+                if let Some(ref left) = node_ref.left {
+                    queue.push_back((Rc::clone(left), 2 * cur_num));
+                }
+                if let Some(ref right) = node_ref.right {
+                    queue.push_back((Rc::clone(right), 2 * cur_num + 1));
+                }
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,11 +750,11 @@ We can also solve this with DFS by recording the first position encountered at e
 
 1. Maintain a map `first` where `first[level]` stores the position of the first node visited at that level.
 2. Define `dfs(node, level, curNum)`:
-   - If `node` is null, return.
-   - If `level` not in `first`, set `first[level] = curNum`.
-   - Update `res = max(res, curNum - first[level] + 1)`.
-   - Recurse on left child with `level + 1` and position `2 * (curNum - first[level])`.
-   - Recurse on right child with `level + 1` and position `2 * (curNum - first[level]) + 1`.
+    - If `node` is null, return.
+    - If `level` not in `first`, set `first[level] = curNum`.
+    - Update `res = max(res, curNum - first[level] + 1)`.
+    - Recurse on left child with `level + 1` and position `2 * (curNum - first[level])`.
+    - Recurse on right child with `level + 1` and position `2 * (curNum - first[level]) + 1`.
 3. Call `dfs(root, 0, 0)` and return `res`.
 
 ::tabs-start
@@ -926,6 +1013,44 @@ class Solution {
         res = max(res, curNum - first[level]! + 1)
         dfs(node.left, level + 1, 2 * (curNum - first[level]!))
         dfs(node.right, level + 1, 2 * (curNum - first[level]!) + 1)
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn width_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut first: HashMap<i32, u64> = HashMap::new();
+        let mut res: u64 = 0;
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            level: i32, cur_num: u64,
+            first: &mut HashMap<i32, u64>, res: &mut u64,
+        ) {
+            let node = match node {
+                Some(n) => n,
+                None => return,
+            };
+
+            first.entry(level).or_insert(cur_num);
+            let f = *first.get(&level).unwrap();
+            *res = (*res).max(cur_num - f + 1);
+
+            let node_ref = node.borrow();
+            dfs(&node_ref.left, level + 1, 2 * (cur_num - f), first, res);
+            dfs(&node_ref.right, level + 1, 2 * (cur_num - f) + 1, first, res);
+        }
+
+        dfs(&root, 0, 0, &mut first, &mut res);
+        res as i32
     }
 }
 ```

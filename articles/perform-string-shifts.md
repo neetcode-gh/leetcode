@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Understanding string slicing and concatenation operations
 - **Modulo Arithmetic** - Handling cases where shift amounts exceed string length
 - **Array Traversal** - Iterating through the shift operations array
@@ -101,9 +103,7 @@ class Solution {
                 s = s.substring(amount) + s.substring(0, amount);
             } else {
                 // Move necessary amount of characters from end to front
-                s =
-                    s.substring(len - amount) +
-                    s.substring(0, len - amount);
+                s = s.substring(len - amount) + s.substring(0, len - amount);
             }
         }
 
@@ -196,6 +196,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn string_shift(s: String, shift: Vec<Vec<i32>>) -> String {
+        let mut s: Vec<u8> = s.into_bytes();
+        let len = s.len();
+        for m in &shift {
+            let direction = m[0];
+            let amount = m[1] as usize % len;
+            if direction == 0 {
+                s.rotate_left(amount);
+            } else {
+                s.rotate_right(amount);
+            }
+        }
+        String::from_utf8(s).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -203,7 +222,7 @@ class Solution {
 - Time complexity: $O(N * L)$
 - Space complexity: $O(L)$ extra space used
 
->  Where $L$ is the length of the string and $N$ is the length of the `shift` array
+> Where $L$ is the length of the string and $N$ is the length of the `shift` array
 
 ---
 
@@ -395,6 +414,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn string_shift(s: String, shift: Vec<Vec<i32>>) -> String {
+        let mut left_shifts: i32 = 0;
+        for m in &shift {
+            if m[0] == 1 {
+                left_shifts -= m[1];
+            } else {
+                left_shifts += m[1];
+            }
+        }
+        let n = s.len() as i32;
+        let left_shifts = ((left_shifts % n) + n) % n;
+        let mut bytes = s.into_bytes();
+        bytes.rotate_left(left_shifts as usize);
+        String::from_utf8(bytes).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,7 +441,7 @@ class Solution {
 - Time complexity: $O(N + L)$
 - Space complexity: $O(L)$ extra space used
 
->  Where $L$ is the length of the string and $N$ is the length of the `shift` array
+> Where $L$ is the length of the string and $N$ is the length of the `shift` array
 
 ---
 

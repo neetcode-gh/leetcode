@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency List)** - Building and traversing weighted directed graphs
 - **Depth First Search (DFS)** - Recursive graph traversal with path tracking
 - **Shortest Path Algorithms** - Understanding Dijkstra's, Bellman-Ford, and Floyd-Warshall concepts
@@ -11,26 +13,30 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 We want to know **how long it takes for a signal to reach all nodes** starting from node `k`.
 
 Using **DFS**, we try all possible paths from `k` and keep track of the **minimum time** needed to reach each node.
+
 - If we reach a node with a **better (smaller) time**, we update it.
 - If the current path is already worse than a known path, we stop exploring it (pruning).
 
 After exploring all reachable paths:
+
 - The answer is the **maximum time** among all nodes (last node to receive the signal).
 - If any node is unreachable, return `-1`.
 
 ### Algorithm
+
 1. Build a graph from `times` where each edge has a weight.
 2. Initialize a distance array with `∞` for all nodes.
 3. Start `dfs` from node `k` with time `0`.
 4. During `dfs`:
-   - If current time ≥ known shortest time, stop.
-   - Otherwise, update the shortest time and continue `dfs` to neighbors.
+    - If current time ≥ known shortest time, stop.
+    - Otherwise, update the shortest time and continue `dfs` to neighbors.
 5. After `dfs`:
-   - Take the maximum distance.
-   - If any distance is `∞`, return `-1`, else return the maximum.
+    - Take the maximum distance.
+    - If any distance is `∞`, return `-1`, else return the maximum.
 
 ::tabs-start
 
@@ -282,6 +288,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn network_delay_time(times: Vec<Vec<i32>>, n: i32, k: i32) -> i32 {
+        let n = n as usize;
+        let k = k as usize;
+        let mut adj: HashMap<usize, Vec<(usize, i32)>> = HashMap::new();
+        for time in &times {
+            adj.entry(time[0] as usize).or_default().push((time[1] as usize, time[2]));
+        }
+        let mut dist = vec![i32::MAX; n + 1];
+
+        fn dfs(node: usize, time: i32, adj: &HashMap<usize, Vec<(usize, i32)>>, dist: &mut Vec<i32>) {
+            if time >= dist[node] {
+                return;
+            }
+            dist[node] = time;
+            if let Some(neighbors) = adj.get(&node) {
+                for &(nei, w) in neighbors {
+                    dfs(nei, time + w, adj, dist);
+                }
+            }
+        }
+
+        dfs(k, 0, &adj, &mut dist);
+        let res = *dist[1..=n].iter().max().unwrap();
+        if res == i32::MAX { -1 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,24 +332,28 @@ class Solution {
 ## 2. Floyd Warshall Algorithm
 
 ### Intuition
+
 We want the **shortest time between every pair of nodes** so that we can easily know how long it takes for the signal to reach all nodes starting from `k`.
 
-**Floyd–Warshall** is an *all-pairs shortest path* algorithm:
+**Floyd–Warshall** is an _all-pairs shortest path_ algorithm:
+
 - It repeatedly tries to improve the shortest path between every `(i, j)` by allowing an intermediate node `mid`.
 - After processing all intermediates, `dist[i][j]` stores the shortest time from `i` to `j`.
 
 Once all shortest paths are known:
+
 - Look at the row corresponding to the starting node `k`.
 - The **maximum value in that row** is the time when the last node receives the signal.
 - If any node is unreachable (distance = ∞), return `-1`.
 
 ### Algorithm
+
 1. Create a `dist` matrix initialized with `∞`.
 2. Set `dist[u][v] = w` for every directed edge `(u → v)` with weight `w`.
 3. Set `dist[i][i] = 0` for all nodes.
 4. For each node `mid`:
-   - For every pair `(i, j)`, update
-     `dist[i][j] = min(dist[i][j], dist[i][mid] + dist[mid][j])`
+    - For every pair `(i, j)`, update
+      `dist[i][j] = min(dist[i][j], dist[i][mid] + dist[mid][j])`
 5. Take the maximum distance from node `k` to all nodes.
 6. If the maximum is `∞`, return `-1`; otherwise return it.
 
@@ -567,6 +607,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn network_delay_time(times: Vec<Vec<i32>>, n: i32, k: i32) -> i32 {
+        let n = n as usize;
+        let inf = i32::MAX / 2;
+        let mut dist = vec![vec![inf; n]; n];
+
+        for i in 0..n {
+            dist[i][i] = 0;
+        }
+        for time in &times {
+            let (u, v, w) = (time[0] as usize - 1, time[1] as usize - 1, time[2]);
+            dist[u][v] = w;
+        }
+
+        for mid in 0..n {
+            for i in 0..n {
+                for j in 0..n {
+                    dist[i][j] = dist[i][j].min(dist[i][mid] + dist[mid][j]);
+                }
+            }
+        }
+
+        let res = *dist[k as usize - 1].iter().max().unwrap();
+        if res == inf { -1 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -581,23 +650,27 @@ class Solution {
 ## 3. Bellman Ford Algorithm
 
 ### Intuition
+
 We want the **shortest time for a signal to reach every node** starting from node `k`.
 
 **Bellman–Ford** works by:
+
 - Relaxing (updating) all edges repeatedly.
 - Each relaxation tries to improve the shortest distance to a node using one more edge.
 - After `n - 1` rounds, all shortest paths are guaranteed to be found (because the longest simple path has at most `n - 1` edges).
 
 Once distances are finalized:
+
 - The **maximum distance** tells us when the last node receives the signal.
 - If any node is still unreachable (`∞`), return `-1`.
 
 ### Algorithm
+
 1. Initialize a distance array `dist` of size `n` with `∞`.
 2. Set `dist[k - 1] = 0` (source node).
 3. Repeat `n - 1` times:
-   - For every edge `(u → v, w)`:
-     - If `dist[u] + w < dist[v]`, update `dist[v]`.
+    - For every edge `(u → v, w)`:
+        - If `dist[u] + w < dist[v]`, update `dist[v]`.
 4. Find the maximum value in `dist`.
 5. If the maximum is `∞`, return `-1`; otherwise return it.
 
@@ -785,6 +858,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn network_delay_time(times: Vec<Vec<i32>>, n: i32, k: i32) -> i32 {
+        let n = n as usize;
+        let mut dist = vec![i32::MAX; n];
+        dist[k as usize - 1] = 0;
+
+        for _ in 0..n - 1 {
+            for time in &times {
+                let (u, v, w) = (time[0] as usize - 1, time[1] as usize - 1, time[2]);
+                if dist[u] != i32::MAX && dist[u] + w < dist[v] {
+                    dist[v] = dist[u] + w;
+                }
+            }
+        }
+
+        let max_dist = *dist.iter().max().unwrap();
+        if max_dist == i32::MAX { -1 } else { max_dist }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -799,9 +894,11 @@ class Solution {
 ## 4. Shortest Path Faster Algorithm
 
 ### Intuition
+
 **SPFA (Shortest Path Faster Algorithm)** is an optimized version of Bellman–Ford.
 
 Instead of relaxing **all edges every time**, we:
+
 - Only re-process nodes whose distance was **actually improved**
 - Use a **queue** to propagate distance updates efficiently
 
@@ -810,16 +907,17 @@ Whenever a node’s shortest time decreases, its neighbors might also get a shor
 This avoids unnecessary work and is usually much faster in practice.
 
 ### Algorithm
+
 1. Build an adjacency list from `times`.
 2. Initialize `dist` for all nodes as `∞`.
 3. Set `dist[k] = 0` and push `(k, 0)` into a queue.
 4. While the queue is not empty:
-   - Pop `(node, time)`
-   - If `time > dist[node]`, skip it (outdated path)
-   - For each neighbor:
-     - If `time + weight < dist[neighbor]`:
-       - Update `dist[neighbor]`
-       - Push `(neighbor, newTime)` into the queue
+    - Pop `(node, time)`
+    - If `time > dist[node]`, skip it (outdated path)
+    - For each neighbor:
+        - If `time + weight < dist[neighbor]`:
+            - Update `dist[neighbor]`
+            - Push `(neighbor, newTime)` into the queue
 5. Take the maximum value in `dist`.
 6. If any node is unreachable (`∞`), return `-1`; otherwise return the max time.
 
@@ -1114,6 +1212,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn network_delay_time(times: Vec<Vec<i32>>, n: i32, k: i32) -> i32 {
+        let n = n as usize;
+        let mut adj: Vec<Vec<(usize, i32)>> = vec![vec![]; n + 1];
+        for time in &times {
+            adj[time[0] as usize].push((time[1] as usize, time[2]));
+        }
+
+        let mut dist = vec![i32::MAX; n + 1];
+        dist[k as usize] = 0;
+        let mut q = VecDeque::new();
+        q.push_back((k as usize, 0));
+
+        while let Some((node, time)) = q.pop_front() {
+            if dist[node] < time {
+                continue;
+            }
+            for &(nei, w) in &adj[node] {
+                if time + w < dist[nei] {
+                    dist[nei] = time + w;
+                    q.push_back((nei, time + w));
+                }
+            }
+        }
+
+        let res = *dist[1..=n].iter().max().unwrap();
+        if res == i32::MAX { -1 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1128,9 +1258,11 @@ class Solution {
 ## 5. Dijkstra's Algorithm
 
 ### Intuition
+
 **Dijkstra's Algorithm** finds the shortest time from the source node `k` to all other nodes when all edge weights are **non-negative**.
 
 The key idea:
+
 - Always expand the node that currently has the **smallest known time**
 - Once a node is picked from the min-heap, its shortest time is **final**
 - Use a **min-heap (priority queue)** to always process the closest node next
@@ -1138,14 +1270,15 @@ The key idea:
 By doing this, we gradually spread the signal in increasing order of time.
 
 ### Algorithm
+
 1. Build an adjacency list from `times`.
 2. Use a min-heap initialized with `(0, k)` (time, node).
 3. Maintain a `visited` set to avoid reprocessing nodes.
 4. While the heap is not empty:
-   - Pop the node with the smallest time.
-   - If already `visited`, skip.
-   - Mark it `visited` and update the current time.
-   - Push all unvisited neighbors with updated times into the heap.
+    - Pop the node with the smallest time.
+    - If already `visited`, skip.
+    - Mark it `visited` and update the current time.
+    - Push all unvisited neighbors with updated times into the heap.
 5. If all `n` nodes are `visited`, return the maximum time used.
 6. Otherwise, return `-1` (some nodes are unreachable).
 
@@ -1468,6 +1601,39 @@ class Solution {
             }
         }
         return visit.count == n ? t : -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn network_delay_time(times: Vec<Vec<i32>>, n: i32, k: i32) -> i32 {
+        let n = n as usize;
+        let mut edges: HashMap<usize, Vec<(usize, i32)>> = HashMap::new();
+        for time in &times {
+            edges.entry(time[0] as usize).or_default().push((time[1] as usize, time[2]));
+        }
+
+        let mut min_heap = BinaryHeap::new();
+        min_heap.push(Reverse((0i32, k as usize)));
+        let mut visited = HashSet::new();
+        let mut t = 0;
+
+        while let Some(Reverse((w1, n1))) = min_heap.pop() {
+            if !visited.insert(n1) {
+                continue;
+            }
+            t = w1;
+            if let Some(neighbors) = edges.get(&n1) {
+                for &(n2, w2) in neighbors {
+                    if !visited.contains(&n2) {
+                        min_heap.push(Reverse((w1 + w2, n2)));
+                    }
+                }
+            }
+        }
+
+        if visited.len() == n { t } else { -1 }
     }
 }
 ```

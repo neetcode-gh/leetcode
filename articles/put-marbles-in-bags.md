@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Using memoization to explore partition choices efficiently
 - **Greedy + Sorting** - Recognizing that partition costs can be reduced to selecting adjacent pair sums
 - **Heap / Priority Queue** - Efficiently tracking the k smallest and largest elements
@@ -17,11 +19,11 @@ We need to partition marbles into k bags and find the difference between maximum
 
 1. Define a recursive function `dfs(i, k)` that returns `[maxScore, minScore]` for partitioning marbles from index `i` with `k` cuts remaining.
 2. Base cases:
-   - If `k == 0`, no more cuts needed, return `[0, 0]`.
-   - If we reach the end or don't have enough elements for remaining cuts, return invalid values.
+    - If `k == 0`, no more cuts needed, return `[0, 0]`.
+    - If we reach the end or don't have enough elements for remaining cuts, return invalid values.
 3. At each position, we have two choices:
-   - Make a partition here: add `weights[i] + weights[i + 1]` to the score and recurse with `k - 1`.
-   - Skip this position: recurse with the same `k`.
+    - Make a partition here: add `weights[i] + weights[i + 1]` to the score and recurse with `k - 1`.
+    - Skip this position: recurse with the same `k`.
 4. Track both max and min across all choices.
 5. Return `maxScore - minScore` from the initial call.
 
@@ -309,6 +311,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn put_marbles(weights: Vec<i32>, k: i32) -> i64 {
+        let n = weights.len();
+        let k = k as usize;
+        let mut cache: HashMap<(usize, usize), [i64; 2]> = HashMap::new();
+
+        fn dfs(
+            i: usize, k: usize, weights: &[i32], n: usize,
+            cache: &mut HashMap<(usize, usize), [i64; 2]>,
+        ) -> [i64; 2] {
+            if let Some(&v) = cache.get(&(i, k)) {
+                return v;
+            }
+            if k == 0 {
+                return [0, 0];
+            }
+            if i == n - 1 || n - i - 1 < k {
+                return [-1_000_000_000_000_000, 1_000_000_000_000_000];
+            }
+
+            let mut res = [0i64, 1_000_000_000_000_000i64];
+            let pair = weights[i] as i64 + weights[i + 1] as i64;
+
+            let cur = dfs(i + 1, k - 1, weights, n, cache);
+            res[0] = res[0].max(pair + cur[0]);
+            res[1] = res[1].min(pair + cur[1]);
+
+            let cur = dfs(i + 1, k, weights, n, cache);
+            res[0] = res[0].max(cur[0]);
+            res[1] = res[1].min(cur[1]);
+
+            cache.insert((i, k), res);
+            res
+        }
+
+        let ans = dfs(0, k - 1, &weights, n, &mut cache);
+        ans[0] - ans[1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,6 +592,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn put_marbles(weights: Vec<i32>, k: i32) -> i64 {
+        if k == 1 {
+            return 0;
+        }
+
+        let n = weights.len();
+        let mut splits: Vec<i32> = (0..n - 1)
+            .map(|i| weights[i] + weights[i + 1])
+            .collect();
+
+        splits.sort_unstable();
+        let cnt = (k - 1) as usize;
+
+        let min_score: i64 = splits[..cnt].iter().map(|&x| x as i64).sum();
+        let max_score: i64 = splits[splits.len() - cnt..].iter().map(|&x| x as i64).sum();
+
+        max_score - min_score
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -570,8 +637,8 @@ Instead of sorting all adjacent pair sums, we can use two heaps to efficiently t
 1. If `k == 1`, return 0.
 2. Initialize a min-heap and a max-heap, both of size at most `k-1`.
 3. For each adjacent pair sum `weights[i] + weights[i+1]`:
-   - Add to the min-heap. If size exceeds `k-1`, remove the smallest.
-   - Add to the max-heap. If size exceeds `k-1`, remove the largest.
+    - Add to the min-heap. If size exceeds `k-1`, remove the smallest.
+    - Add to the max-heap. If size exceeds `k-1`, remove the largest.
 4. Sum all elements in the min-heap for the max score.
 5. Sum all elements in the max-heap for the min score.
 6. Return `maxScore - minScore`.
@@ -865,6 +932,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn put_marbles(weights: Vec<i32>, k: i32) -> i64 {
+        if k == 1 {
+            return 0;
+        }
+        let k = k as usize;
+
+        let mut max_heap = BinaryHeap::new();
+        let mut min_heap: BinaryHeap<Reverse<i32>> = BinaryHeap::new();
+
+        for i in 0..weights.len() - 1 {
+            let split = weights[i] + weights[i + 1];
+
+            // min-heap of size k-1 to keep k-1 largest
+            max_heap.push(Reverse(split));
+            if max_heap.len() > k - 1 {
+                max_heap.pop();
+            }
+
+            // max-heap of size k-1 to keep k-1 smallest
+            min_heap.push(Reverse(split));
+            if min_heap.len() > k - 1 {
+                min_heap.pop();
+            }
+        }
+
+        let max_score: i64 = max_heap.iter().map(|&Reverse(x)| x as i64).sum();
+        let min_score: i64 = min_heap.iter().map(|&Reverse(x)| x as i64).sum();
+
+        max_score - min_score
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -892,4 +994,4 @@ When k=1, there are no partition choices since all marbles go into one bag. The 
 
 ### Integer Overflow in Sum Calculations
 
-Adjacent pair sums can be up to 2 * 10^9, and summing k-1 of them can overflow 32-bit integers. Using 64-bit integers (long in Java, int64 in Go) prevents overflow issues when computing max and min scores.
+Adjacent pair sums can be up to 2 \* 10^9, and summing k-1 of them can overflow 32-bit integers. Using 64-bit integers (long in Java, int64 in Go) prevents overflow issues when computing max and min scores.

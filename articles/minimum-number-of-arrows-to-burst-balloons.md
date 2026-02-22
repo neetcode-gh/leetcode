@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting intervals by start or end values for greedy processing
 - **Greedy Algorithms** - Making optimal local choices for interval scheduling problems
 - **Interval Overlap Detection** - Determining when two intervals share common points
@@ -19,8 +21,8 @@ When we encounter a new balloon, we check if it overlaps with the previous group
 1. Sort the intervals by their starting position.
 2. Initialize `res` as the total number of balloons and track the previous interval's end.
 3. For each subsequent balloon:
-   - If it overlaps with the previous group (its start is at or before the tracked end), decrement `res` and update the tracked end to be the minimum of both ends.
-   - Otherwise, start a new group by updating the tracked end to this balloon's end.
+    - If it overlaps with the previous group (its start is at or before the tracked end), decrement `res` and update the tracked end to be the minimum of both ends.
+    - Otherwise, start a new group by updating the tracked end to this balloon's end.
 4. Return `res`.
 
 ::tabs-start
@@ -204,6 +206,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_min_arrow_shots(mut points: Vec<Vec<i32>>) -> i32 {
+        points.sort();
+        let mut res = points.len() as i32;
+        let mut prev_end = points[0][1];
+
+        for i in 1..points.len() {
+            if points[i][0] <= prev_end {
+                res -= 1;
+                prev_end = prev_end.min(points[i][1]);
+            } else {
+                prev_end = points[i][1];
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -226,8 +249,8 @@ This is a classic interval scheduling pattern: always pick the earliest finishin
 1. Sort the balloons by their ending position.
 2. Start with one arrow at the end of the first balloon.
 3. For each subsequent balloon:
-   - If it starts after the current arrow position, shoot a new arrow at this balloon's end and increment `res`.
-   - Otherwise, the current arrow already covers this balloon.
+    - If it starts after the current arrow position, shoot a new arrow at this balloon's end and increment `res`.
+    - Otherwise, the current arrow already covers this balloon.
 4. Return the total arrow count.
 
 ::tabs-start
@@ -378,6 +401,25 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_min_arrow_shots(mut points: Vec<Vec<i32>>) -> i32 {
+        points.sort_by_key(|p| p[1]);
+        let mut res = 1;
+        let mut prev_end = points[0][1];
+
+        for i in 1..points.len() {
+            if points[i][0] > prev_end {
+                prev_end = points[i][1];
+                res += 1;
+            }
+        }
+
+        res
     }
 }
 ```

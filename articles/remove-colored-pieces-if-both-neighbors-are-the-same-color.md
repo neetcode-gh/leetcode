@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Iterating through strings and checking character patterns
 - **Two Pointers** - Using pointers to track consecutive runs of characters
 - **Greedy Algorithms** - Making locally optimal choices to find the global optimum
@@ -225,6 +227,35 @@ class Solution {
         while true {
             if !removeChar("A") { return false }
             if !removeChar("B") { return true }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn winner_of_game(colors: String) -> bool {
+        let mut s: Vec<u8> = colors.into_bytes();
+
+        fn remove_char(s: &mut Vec<u8>, c: u8) -> bool {
+            let mut i = 1;
+            while i < s.len().saturating_sub(1) {
+                if s[i] != c {
+                    i += 1;
+                    continue;
+                }
+                if s[i - 1] == c && s[i + 1] == c {
+                    s.remove(i);
+                    return true;
+                }
+                i += 1;
+            }
+            false
+        }
+
+        loop {
+            if !remove_char(&mut s, b'A') { return false; }
+            if !remove_char(&mut s, b'B') { return true; }
         }
     }
 }
@@ -456,6 +487,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn winner_of_game(colors: String) -> bool {
+        let colors = colors.as_bytes();
+        let mut alice = 0i32;
+        let mut bob = 0i32;
+        let mut l = 0usize;
+
+        for r in 0..colors.len() {
+            if colors[l] != colors[r] {
+                l = r;
+            }
+            let extra = r as i32 - l as i32 - 1;
+            if extra > 0 {
+                if colors[l] == b'A' {
+                    alice += 1;
+                } else {
+                    bob += 1;
+                }
+            }
+        }
+
+        alice > bob
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,6 +704,29 @@ class Solution {
         }
 
         return alice > bob
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn winner_of_game(colors: String) -> bool {
+        let colors = colors.as_bytes();
+        let mut alice = 0i32;
+        let mut bob = 0i32;
+
+        for i in 1..colors.len().saturating_sub(1) {
+            if colors[i - 1] == colors[i] && colors[i] == colors[i + 1] {
+                if colors[i] == b'A' {
+                    alice += 1;
+                }
+                if colors[i] == b'B' {
+                    bob += 1;
+                }
+            }
+        }
+
+        alice > bob
     }
 }
 ```

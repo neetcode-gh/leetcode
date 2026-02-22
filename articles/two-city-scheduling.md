@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Exploring all possible assignments by making choices at each step and backtracking
 - **Dynamic Programming** - Using memoization to cache overlapping subproblems and avoid redundant computation
 - **Greedy algorithms** - Making locally optimal choices (sorting by cost difference) to achieve a global optimum
@@ -225,6 +227,30 @@ class Solution {
         }
 
         return dfs(0, n, n)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len() / 2;
+
+        fn dfs(costs: &[Vec<i32>], i: usize, a_count: usize, b_count: usize) -> i32 {
+            if i == costs.len() {
+                return 0;
+            }
+            let mut res = i32::MAX;
+            if a_count > 0 {
+                res = costs[i][0] + dfs(costs, i + 1, a_count - 1, b_count);
+            }
+            if b_count > 0 {
+                res = res.min(costs[i][1] + dfs(costs, i + 1, a_count, b_count - 1));
+            }
+            res
+        }
+
+        dfs(&costs, 0, n, n)
     }
 }
 ```
@@ -510,6 +536,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len() / 2;
+        let mut dp = vec![vec![-1i32; n + 1]; n + 1];
+
+        fn dfs(
+            costs: &[Vec<i32>],
+            dp: &mut Vec<Vec<i32>>,
+            i: usize,
+            a_count: usize,
+            b_count: usize,
+        ) -> i32 {
+            if i == costs.len() {
+                return 0;
+            }
+            if dp[a_count][b_count] != -1 {
+                return dp[a_count][b_count];
+            }
+            let mut res = i32::MAX;
+            if a_count > 0 {
+                res = costs[i][0] + dfs(costs, dp, i + 1, a_count - 1, b_count);
+            }
+            if b_count > 0 {
+                res = res.min(costs[i][1] + dfs(costs, dp, i + 1, a_count, b_count - 1));
+            }
+            dp[a_count][b_count] = res;
+            res
+        }
+
+        dfs(&costs, &mut dp, 0, n, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -531,10 +592,10 @@ Instead of recursion with memoization, we can build the solution iteratively. We
 
 1. Initialize `dp[0][0] = 0` (no people assigned, zero cost).
 2. For each state `(aCount, bCount)`:
-   - Compute the person index as `i = aCount + bCount`.
-   - If `aCount > 0`, consider the option of sending person `i-1` to city A.
-   - If `bCount > 0`, consider the option of sending person `i-1` to city B.
-   - Take the minimum of valid options.
+    - Compute the person index as `i = aCount + bCount`.
+    - If `aCount > 0`, consider the option of sending person `i-1` to city A.
+    - If `bCount > 0`, consider the option of sending person `i-1` to city B.
+    - Take the minimum of valid options.
 3. Return `dp[n][n]`.
 
 ::tabs-start
@@ -756,6 +817,35 @@ class Solution {
         }
 
         return dp[n][n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len() / 2;
+        let mut dp = vec![vec![0i32; n + 1]; n + 1];
+
+        for a_count in 0..=n {
+            for b_count in 0..=n {
+                let i = a_count + b_count;
+                if i == 0 {
+                    continue;
+                }
+                dp[a_count][b_count] = i32::MAX;
+                if a_count > 0 {
+                    dp[a_count][b_count] =
+                        dp[a_count][b_count].min(dp[a_count - 1][b_count] + costs[i - 1][0]);
+                }
+                if b_count > 0 {
+                    dp[a_count][b_count] =
+                        dp[a_count][b_count].min(dp[a_count][b_count - 1] + costs[i - 1][1]);
+                }
+            }
+        }
+
+        dp[n][n]
     }
 }
 ```
@@ -1010,6 +1100,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len() / 2;
+        let mut dp = vec![0i32; n + 1];
+
+        for a_count in 0..=n {
+            for b_count in 0..=n {
+                let i = a_count + b_count;
+                if i == 0 {
+                    continue;
+                }
+                let tmp = dp[b_count];
+                dp[b_count] = i32::MAX;
+                if a_count > 0 {
+                    dp[b_count] = dp[b_count].min(tmp + costs[i - 1][0]);
+                }
+                if b_count > 0 {
+                    dp[b_count] = dp[b_count].min(dp[b_count - 1] + costs[i - 1][1]);
+                }
+            }
+        }
+
+        dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1219,6 +1337,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_city_sched_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let mut diffs: Vec<(i32, i32, i32)> = costs
+            .iter()
+            .map(|c| (c[1] - c[0], c[0], c[1]))
+            .collect();
+        diffs.sort_unstable();
+
+        let mut res = 0;
+        let half = diffs.len() / 2;
+        for (i, d) in diffs.iter().enumerate() {
+            if i < half {
+                res += d.2;
+            } else {
+                res += d.1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1365,6 +1506,20 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn two_city_sched_cost(mut costs: Vec<Vec<i32>>) -> i32 {
+        costs.sort_unstable_by_key(|c| c[1] - c[0]);
+        let n = costs.len() / 2;
+        let mut res = 0;
+        for i in 0..n {
+            res += costs[i][1] + costs[i + n][0];
+        }
+        res
     }
 }
 ```

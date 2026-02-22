@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Ordering meetings by start time to process them chronologically
 - **Heap / Priority Queue** - Efficiently finding the minimum element (earliest available room or end time)
 - **Simulation** - Tracking state changes over time as meetings are assigned and rooms become available
@@ -18,9 +20,9 @@ Meetings must be processed in order of their start times. For each meeting, we c
 1. Sort meetings by start time.
 2. Initialize arrays `rooms` (end times) and `meeting_count`, both of size `n`.
 3. For each meeting `(start, end)`:
-   - Scan rooms `0` to `n` - `1`. If `rooms[i]` <= `start`, assign the meeting: set `rooms[i]` = `end`, increment `meeting_count[i]`, and move to the next meeting.
-   - While scanning, track `min_room` as the room with the earliest end time.
-   - If no room is free, assign to `min_room`: set `rooms[min_room]` += `(end - start)` and increment `meeting_count[min_room]`.
+    - Scan rooms `0` to `n` - `1`. If `rooms[i]` <= `start`, assign the meeting: set `rooms[i]` = `end`, increment `meeting_count[i]`, and move to the next meeting.
+    - While scanning, track `min_room` as the room with the earliest end time.
+    - If no room is free, assign to `min_room`: set `rooms[min_room]` += `(end - start)` and increment `meeting_count[min_room]`.
 4. Return the index with the maximum count (smallest index on ties).
 
 ::tabs-start
@@ -337,6 +339,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn most_booked(n: i32, meetings: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut meetings = meetings;
+        meetings.sort();
+        let mut rooms = vec![0i64; n]; // end times
+        let mut meeting_count = vec![0i32; n];
+
+        for meeting in &meetings {
+            let (start, end) = (meeting[0] as i64, meeting[1] as i64);
+            let mut min_room = 0;
+            let mut found = false;
+
+            for i in 0..n {
+                if rooms[i] <= start {
+                    meeting_count[i] += 1;
+                    rooms[i] = end;
+                    found = true;
+                    break;
+                }
+                if rooms[min_room] > rooms[i] {
+                    min_room = i;
+                }
+            }
+
+            if !found {
+                meeting_count[min_room] += 1;
+                rooms[min_room] += end - start;
+            }
+        }
+
+        meeting_count
+            .iter()
+            .enumerate()
+            .max_by_key(|&(_, &count)| count)
+            .unwrap()
+            .0 as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,9 +405,9 @@ Scanning all rooms for each meeting is slow. Instead, we use two min-heaps: one 
 3. Initialize an empty min-heap `used` storing `(end_time, room)`.
 4. Initialize an array `count` of size `n`.
 5. For each `(start, end)`:
-   - While `used` is not empty and `used[0].end_time` <= `start`, pop from `used` and push the room to `available`.
-   - If `available` is empty, pop `(end_time, room)` from `used`, update `end` = `end_time` + `(end - start)`, and push room to `available`.
-   - Pop `room` from `available`, push `(end, room)` to `used`, and increment `count[room]`.
+    - While `used` is not empty and `used[0].end_time` <= `start`, pop from `used` and push the room to `available`.
+    - If `available` is empty, pop `(end_time, room)` from `used`, update `end` = `end_time` + `(end - start)`, and push room to `available`.
+    - Pop `room` from `available`, push `(end, room)` to `used`, and increment `count[room]`.
 6. Return the index with maximum count.
 
 ::tabs-start
@@ -744,6 +788,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn most_booked(n: i32, meetings: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut meetings = meetings;
+        meetings.sort();
+
+        // Min-heap of available room numbers
+        let mut available = BinaryHeap::new();
+        for i in 0..n {
+            available.push(Reverse(i));
+        }
+        // Min-heap of (end_time, room) for rooms in use
+        let mut used: BinaryHeap<Reverse<(i64, usize)>> = BinaryHeap::new();
+        let mut count = vec![0i32; n];
+
+        for meeting in &meetings {
+            let (start, end) = (meeting[0] as i64, meeting[1] as i64);
+
+            // Free up rooms whose meetings have ended
+            while let Some(&Reverse((end_time, _))) = used.peek() {
+                if end_time <= start {
+                    let Reverse((_, room)) = used.pop().unwrap();
+                    available.push(Reverse(room));
+                } else {
+                    break;
+                }
+            }
+
+            let mut new_end = end;
+            if available.is_empty() {
+                let Reverse((end_time, room)) = used.pop().unwrap();
+                new_end = end_time + (end - start);
+                available.push(Reverse(room));
+            }
+
+            let Reverse(room) = available.pop().unwrap();
+            used.push(Reverse((new_end, room)));
+            count[room] += 1;
+        }
+
+        count
+            .iter()
+            .enumerate()
+            .max_by_key(|&(_, &c)| c)
+            .unwrap()
+            .0 as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -767,10 +862,10 @@ We can simplify to a single heap that tracks `(end_time, room)`. Initially all r
 2. Initialize a min-heap `available` with `(0, room)` for each room `0` to `n` - `1`.
 3. Initialize an array `count` of size `n`.
 4. For each `(start, end)`:
-   - While `available[0].end_time` < `start`, pop `(_, room)` and push `(start, room)`.
-   - Pop `(end_time, room)` from the heap.
-   - Push `(end_time + (end - start), room)` back to the heap.
-   - Increment `count[room]`.
+    - While `available[0].end_time` < `start`, pop `(_, room)` and push `(start, room)`.
+    - Pop `(end_time, room)` from the heap.
+    - Push `(end_time + (end - start), room)` back to the heap.
+    - Increment `count[room]`.
 5. Return the index with maximum count.
 
 ::tabs-start
@@ -1075,6 +1170,48 @@ class Solution {
             }
         }
         return maxRoom
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn most_booked(n: i32, meetings: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut meetings = meetings;
+        meetings.sort();
+
+        // Min-heap of (end_time, room)
+        let mut available: BinaryHeap<Reverse<(i64, usize)>> = BinaryHeap::new();
+        for i in 0..n {
+            available.push(Reverse((0i64, i)));
+        }
+        let mut count = vec![0i32; n];
+
+        for meeting in &meetings {
+            let (start, end) = (meeting[0] as i64, meeting[1] as i64);
+
+            // Update rooms that are free before this meeting starts
+            while let Some(&Reverse((et, _))) = available.peek() {
+                if et < start {
+                    let Reverse((_, room)) = available.pop().unwrap();
+                    available.push(Reverse((start, room)));
+                } else {
+                    break;
+                }
+            }
+
+            let Reverse((end_time, room)) = available.pop().unwrap();
+            available.push(Reverse((end_time + (end - start), room)));
+            count[room] += 1;
+        }
+
+        count
+            .iter()
+            .enumerate()
+            .max_by_key(|&(_, &c)| c)
+            .unwrap()
+            .0 as i32
     }
 }
 ```

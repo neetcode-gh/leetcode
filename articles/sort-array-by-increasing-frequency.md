@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to count the frequency of each element in the array
 - **Custom Comparators** - Sorting with multi-level criteria (primary by frequency, secondary by value)
 - **Sorting Algorithms** - Understanding how to apply custom sort keys or comparator functions
@@ -16,8 +18,8 @@ We need to sort elements by how often they appear, with less frequent elements c
 
 1. Count the frequency of each number using a hash map.
 2. Sort the array using a custom comparator that:
-   - Compares by frequency first (lower frequency comes first).
-   - If frequencies are equal, compares by `value` (larger `value` comes first).
+    - Compares by frequency first (lower frequency comes first).
+    - If frequencies are equal, compares by `value` (larger `value` comes first).
 3. Return the sorted array.
 
 ::tabs-start
@@ -150,6 +152,30 @@ class Solution {
             }
             return a > b
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn frequency_sort(nums: Vec<i32>) -> Vec<i32> {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut nums = nums;
+        nums.sort_by(|a, b| {
+            let fa = count[a];
+            let fb = count[b];
+            if fa != fb {
+                fa.cmp(&fb)
+            } else {
+                b.cmp(a)
+            }
+        });
+
+        nums
     }
 }
 ```

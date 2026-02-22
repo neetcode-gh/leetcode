@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Creating a sorted copy to compare against the original order
 - **Counting Sort** - Using frequency arrays for efficient sorting when values are constrained to a small range
 
@@ -141,6 +143,24 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn height_checker(heights: Vec<i32>) -> i32 {
+        let mut expected = heights.clone();
+        expected.sort();
+
+        let mut res = 0;
+        for i in 0..heights.len() {
+            if heights[i] != expected[i] {
+                res += 1;
+            }
+        }
+
+        res
     }
 }
 ```
@@ -361,6 +381,33 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn height_checker(heights: Vec<i32>) -> i32 {
+        let mut count = [0; 101];
+        for &h in &heights {
+            count[h as usize] += 1;
+        }
+
+        let mut expected = Vec::new();
+        for h in 1..=100 {
+            for _ in 0..count[h] {
+                expected.push(h as i32);
+            }
+        }
+
+        let mut res = 0;
+        for i in 0..heights.len() {
+            if heights[i] != expected[i] {
+                res += 1;
+            }
+        }
+
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Exploring all possible combinations by making choices and undoing them when they lead to invalid solutions
 - **Recursion** - Breaking down the problem into smaller subproblems (placing one IP segment at a time)
 - **String Manipulation** - Extracting and validating substrings for IP segment constraints
@@ -257,6 +259,47 @@ class Solution {
 
         backtrack(0, 0, "")
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn restore_ip_addresses(s: String) -> Vec<String> {
+        let mut res = Vec::new();
+        if s.len() > 12 {
+            return res;
+        }
+
+        fn backtrack(s: &str, i: usize, dots: usize, cur_ip: &mut String, res: &mut Vec<String>) {
+            if dots == 4 && i == s.len() {
+                res.push(cur_ip[..cur_ip.len() - 1].to_string());
+                return;
+            }
+            if dots > 4 {
+                return;
+            }
+
+            for j in i..s.len().min(i + 3) {
+                if i != j && s.as_bytes()[i] == b'0' {
+                    continue;
+                }
+                let part = &s[i..=j];
+                if let Ok(num) = part.parse::<i32>() {
+                    if num < 256 {
+                        let prev_len = cur_ip.len();
+                        cur_ip.push_str(part);
+                        cur_ip.push('.');
+                        backtrack(s, j + 1, dots + 1, cur_ip, res);
+                        cur_ip.truncate(prev_len);
+                    }
+                }
+            }
+        }
+
+        let mut cur_ip = String::new();
+        backtrack(&s, 0, 0, &mut cur_ip, &mut res);
+        res
     }
 }
 ```
@@ -581,6 +624,53 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn restore_ip_addresses(s: String) -> Vec<String> {
+        let mut res = Vec::new();
+        if s.len() > 12 {
+            return res;
+        }
+
+        let is_valid = |num: &str| -> bool {
+            if num.len() > 1 && num.starts_with('0') {
+                return false;
+            }
+            num.parse::<i32>().map_or(false, |v| v <= 255)
+        };
+
+        for seg1 in 1..4 {
+            for seg2 in 1..4 {
+                for seg3 in 1..4 {
+                    for seg4 in 1..4 {
+                        if seg1 + seg2 + seg3 + seg4 != s.len() {
+                            continue;
+                        }
+
+                        let num1 = &s[0..seg1];
+                        let num2 = &s[seg1..seg1 + seg2];
+                        let num3 = &s[seg1 + seg2..seg1 + seg2 + seg3];
+                        let num4 = &s[seg1 + seg2 + seg3..];
+
+                        if is_valid(num1)
+                            && is_valid(num2)
+                            && is_valid(num3)
+                            && is_valid(num4)
+                        {
+                            res.push(format!(
+                                "{}.{}.{}.{}",
+                                num1, num2, num3, num4
+                            ));
+                        }
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```

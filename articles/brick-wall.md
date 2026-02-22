@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map** - Using hash maps to count frequencies and find the most common element efficiently
 - **Prefix Sum** - Computing cumulative sums to track edge positions between bricks
 
@@ -18,8 +20,8 @@ The brute force approach is straightforward: for every possible vertical positio
 1. Calculate the total width of the wall by summing the bricks in the first row.
 2. For each row, compute the cumulative positions where gaps exist (edges between bricks).
 3. For each possible vertical line position from `1` to `width - 1`:
-   - Count how many rows do not have a gap at this position (these are the bricks that would be cut).
-   - Track the minimum number of cuts found.
+    - Count how many rows do not have a gap at this position (these are the bricks that would be cut).
+    - Track the minimum number of cuts found.
 4. Return the minimum cut count.
 
 ::tabs-start
@@ -298,6 +300,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn least_bricks(wall: Vec<Vec<i32>>) -> i32 {
+        let n = wall.len();
+        let m: i32 = wall[0].iter().sum();
+
+        let gaps: Vec<HashSet<i32>> = wall
+            .iter()
+            .map(|row| {
+                let mut gap = 0;
+                row.iter()
+                    .map(|&brick| {
+                        gap += brick;
+                        gap
+                    })
+                    .collect()
+            })
+            .collect();
+
+        let mut res = n as i32;
+        for line in 1..m {
+            let mut cuts = 0;
+            for i in 0..n {
+                if !gaps[i].contains(&line) {
+                    cuts += 1;
+                }
+            }
+            res = res.min(cuts);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +532,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn least_bricks(wall: Vec<Vec<i32>>) -> i32 {
+        let mut count_gap: HashMap<i32, i32> = HashMap::new();
+        count_gap.insert(0, 0);
+
+        for row in &wall {
+            let mut total = 0;
+            for i in 0..row.len() - 1 {
+                total += row[i];
+                *count_gap.entry(total).or_insert(0) += 1;
+            }
+        }
+
+        wall.len() as i32 - *count_gap.values().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,7 +565,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Counting the Wall Edge as a Valid Gap
+
 The rightmost edge of the wall (at position equal to total width) should not be counted as a gap since a line there wouldn't cross any bricks anyway. Including it inflates the gap count and gives wrong answers.
+
 ```python
 # Wrong: counting all gaps including the last one
 for brick in row:
@@ -523,7 +581,9 @@ for i in range(len(row) - 1):
 ```
 
 ### Returning Maximum Gaps Instead of Minimum Cuts
+
 The answer is `number_of_rows - max_gaps`, not just `max_gaps`. Maximizing gaps minimizes cuts, but forgetting to subtract from total rows returns the wrong value.
 
 ### Not Handling Rows with Single Bricks
+
 If a row contains only one brick spanning the entire width, it has no internal gaps. The hash map initialization with `{0: 0}` handles the edge case where no gaps exist, ensuring the answer defaults to cutting through all rows.

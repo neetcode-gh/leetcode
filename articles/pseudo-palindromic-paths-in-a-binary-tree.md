@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding root-to-leaf paths and tree structure
 - **Depth First Search (DFS)** - Recursive and iterative tree traversal techniques
 - **Palindrome Properties** - A sequence can form a palindrome if at most one character has an odd count
@@ -18,11 +20,11 @@ A path can form a palindrome if at most one digit has an odd count (that digit w
 
 1. Initialize a frequency map for digits (1-9) and an `odd` counter.
 2. Define `dfs(node)`:
-   - If `null`, return `0`.
-   - Increment the count for `node.val`. Update `odd` accordingly (increment if count became odd, decrement if it became even).
-   - If it is a leaf node, return `1` if `odd <= 1`, else `0`.
-   - Otherwise, recurse on both children and sum results.
-   - Before returning, undo the changes (decrement count, restore `odd`).
+    - If `null`, return `0`.
+    - Increment the count for `node.val`. Update `odd` accordingly (increment if count became odd, decrement if it became even).
+    - If it is a leaf node, return `1` if `odd <= 1`, else `0`.
+    - Otherwise, recurse on both children and sum results.
+    - Before returning, undo the changes (decrement count, restore `odd`).
 3. Return `dfs(root)`.
 
 ::tabs-start
@@ -364,6 +366,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pseudo_palindromic_paths(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, count: &mut HashMap<i32, i32>, odd: &mut i32) -> i32 {
+            let node = match node {
+                Some(n) => n,
+                None => return 0,
+            };
+            let n = node.borrow();
+            let val = n.val;
+            *count.entry(val).or_insert(0) += 1;
+            let odd_change = if count[&val] % 2 == 1 { 1 } else { -1 };
+            *odd += odd_change;
+
+            let res = if n.left.is_none() && n.right.is_none() {
+                if *odd <= 1 { 1 } else { 0 }
+            } else {
+                dfs(&n.left, count, odd) + dfs(&n.right, count, odd)
+            };
+
+            *odd -= odd_change;
+            *count.get_mut(&val).unwrap() -= 1;
+            res
+        }
+
+        let mut count = HashMap::new();
+        let mut odd = 0;
+        dfs(&root, &mut count, &mut odd)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -385,10 +419,10 @@ Instead of a hash map, we use a fixed-size array since node values are limited t
 
 1. Create an array `count[10]` initialized to 0, and an `odd` counter.
 2. Define `dfs(node, odd)`:
-   - If null, return 0.
-   - Toggle `count[node.val]` using XOR. Update `odd` based on whether the count is now odd or even.
-   - If it is a leaf and `odd <= 1`, return 1. Otherwise recurse on children.
-   - Restore `odd` and toggle `count[node.val]` back before returning.
+    - If null, return 0.
+    - Toggle `count[node.val]` using XOR. Update `odd` based on whether the count is now odd or even.
+    - If it is a leaf and `odd <= 1`, return 1. Otherwise recurse on children.
+    - Restore `odd` and toggle `count[node.val]` back before returning.
 3. Return `dfs(root, 0)`.
 
 ::tabs-start
@@ -708,6 +742,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pseudo_palindromic_paths(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, count: &mut [i32; 10], odd: i32) -> i32 {
+            let node = match node {
+                Some(n) => n,
+                None => return 0,
+            };
+            let n = node.borrow();
+            let v = n.val as usize;
+            count[v] ^= 1;
+            let odd = odd + if count[v] == 1 { 1 } else { -1 };
+
+            let res = if n.left.is_none() && n.right.is_none() && odd <= 1 {
+                1
+            } else {
+                dfs(&n.left, count, odd) + dfs(&n.right, count, odd)
+            };
+
+            let _odd = odd + if count[v] == 1 { 1 } else { -1 };
+            count[v] ^= 1;
+            res
+        }
+
+        let mut count = [0i32; 10];
+        dfs(&root, &mut count, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -728,10 +792,10 @@ We can encode all parity information in a single integer using bits. Each bit po
 ### Algorithm
 
 1. Define `dfs(node, path)`:
-   - If null, return 0.
-   - Toggle the bit for `node.val`: `path ^= (1 << node.val)`.
-   - If it is a leaf, return 1 if `(path & (path - 1)) == 0`, else 0.
-   - Otherwise, return `dfs(left, path) + dfs(right, path)`.
+    - If null, return 0.
+    - Toggle the bit for `node.val`: `path ^= (1 << node.val)`.
+    - If it is a leaf, return 1 if `(path & (path - 1)) == 0`, else 0.
+    - Otherwise, return `dfs(left, path) + dfs(right, path)`.
 2. Call `dfs(root, 0)`.
 
 ::tabs-start
@@ -983,6 +1047,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pseudo_palindromic_paths(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, path: i32) -> i32 {
+            let node = match node {
+                Some(n) => n,
+                None => return 0,
+            };
+            let n = node.borrow();
+            let new_path = path ^ (1 << n.val);
+            if n.left.is_none() && n.right.is_none() {
+                return if (new_path & (new_path - 1)) == 0 { 1 } else { 0 };
+            }
+            dfs(&n.left, new_path) + dfs(&n.right, new_path)
+        }
+
+        dfs(&root, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1004,10 +1089,10 @@ BFS traverses level by level using a queue. We pair each node with its current p
 
 1. Initialize a queue with `(root, 0)`.
 2. While the queue is not empty:
-   - Dequeue `(node, path)`.
-   - Update `path ^= (1 << node.val)`.
-   - If it is a leaf, increment the count if `(path & (path - 1)) == 0`.
-   - Otherwise, enqueue children with the updated path.
+    - Dequeue `(node, path)`.
+    - Update `path ^= (1 << node.val)`.
+    - If it is a leaf, increment the count if `(path & (path - 1)) == 0`.
+    - Otherwise, enqueue children with the updated path.
 3. Return the count.
 
 ::tabs-start
@@ -1328,6 +1413,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pseudo_palindromic_paths(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let root = match root {
+            Some(r) => r,
+            None => return 0,
+        };
+        let mut res = 0;
+        let mut queue = VecDeque::new();
+        queue.push_back((root, 0i32));
+
+        while let Some((node, path)) = queue.pop_front() {
+            let n = node.borrow();
+            let new_path = path ^ (1 << n.val);
+
+            if n.left.is_none() && n.right.is_none() {
+                if (new_path & (new_path - 1)) == 0 {
+                    res += 1;
+                }
+                continue;
+            }
+
+            if let Some(ref left) = n.left {
+                queue.push_back((Rc::clone(left), new_path));
+            }
+            if let Some(ref right) = n.right {
+                queue.push_back((Rc::clone(right), new_path));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1347,10 +1467,10 @@ We can simulate recursive DFS using an explicit stack. Each stack entry contains
 
 1. Initialize a stack with `(root, 0)`.
 2. While the stack is not empty:
-   - Pop `(node, path)`.
-   - Update `path ^= (1 << node.val)`.
-   - If it is a leaf, increment the count if `(path & (path - 1)) == 0`.
-   - Otherwise, push children (with updated path) onto the stack.
+    - Pop `(node, path)`.
+    - Update `path ^= (1 << node.val)`.
+    - If it is a leaf, increment the count if `(path & (path - 1)) == 0`.
+    - Otherwise, push children (with updated path) onto the stack.
 3. Return the count.
 
 ::tabs-start
@@ -1662,6 +1782,39 @@ class Solution {
         }
 
         return count
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn pseudo_palindromic_paths(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let root = match root {
+            Some(r) => r,
+            None => return 0,
+        };
+        let mut count = 0;
+        let mut stack: Vec<(Rc<RefCell<TreeNode>>, i32)> = vec![(root, 0)];
+
+        while let Some((node, path)) = stack.pop() {
+            let n = node.borrow();
+            let new_path = path ^ (1 << n.val);
+
+            if n.left.is_none() && n.right.is_none() {
+                if (new_path & (new_path - 1)) == 0 {
+                    count += 1;
+                }
+            } else {
+                if let Some(ref right) = n.right {
+                    stack.push((Rc::clone(right), new_path));
+                }
+                if let Some(ref left) = n.left {
+                    stack.push((Rc::clone(left), new_path));
+                }
+            }
+        }
+
+        count
     }
 }
 ```

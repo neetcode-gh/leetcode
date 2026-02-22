@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency List)** - Required to model course dependencies as a directed graph
 - **Depth-First Search (DFS)** - Core traversal technique used to explore dependency chains
 - **Memoization** - Essential for caching computed results to avoid redundant DFS calls
@@ -21,10 +23,10 @@ For each course, we need to find the maximum time required to complete it and al
 1. Build an adjacency list where each course points to its dependent courses.
 2. Use a hash map to cache the maximum completion time starting from each course.
 3. For each course, run `dfs`:
-   - Return the cached value if already computed.
-   - Recursively compute the maximum time through all dependent courses.
-   - Add the current course's duration to get the total time from this course.
-   - Cache and return the result.
+    - Return the cached value if already computed.
+    - Recursively compute the maximum time through all dependent courses.
+    - Add the current course's duration to get the total time from this course.
+    - Cache and return the result.
 4. Return the maximum value among all courses' completion times.
 
 ::tabs-start
@@ -329,6 +331,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_time(n: i32, relations: Vec<Vec<i32>>, time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n + 1];
+        for rel in &relations {
+            adj[rel[0] as usize].push(rel[1] as usize);
+        }
+
+        let mut max_time = vec![-1i32; n + 1];
+
+        fn dfs(src: usize, adj: &[Vec<usize>], time: &[i32], max_time: &mut [i32]) -> i32 {
+            if max_time[src] != -1 {
+                return max_time[src];
+            }
+            let mut res = time[src - 1];
+            for &nei in &adj[src] {
+                res = res.max(time[src - 1] + dfs(nei, adj, time, max_time));
+            }
+            max_time[src] = res;
+            res
+        }
+
+        for i in 1..=n {
+            dfs(i, &adj, &time, &mut max_time);
+        }
+
+        *max_time[1..=n].iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -353,9 +387,9 @@ We use a two-phase approach: first push a node onto the stack, then when we pop 
 1. Build an adjacency list for course dependencies.
 2. Initialize arrays to track the maximum time for each course and whether each course is fully processed.
 3. For each unvisited course, start an iterative `dfs`:
-   - Push the course onto the stack.
-   - When popping, if not processed, mark as processing and push back, then push all unvisited neighbors.
-   - When popping a processed node, compute its max time as its duration plus the maximum of its neighbors' times.
+    - Push the course onto the stack.
+    - When popping, if not processed, mark as processing and push back, then push all unvisited neighbors.
+    - When popping a processed node, compute its max time as its duration plus the maximum of its neighbors' times.
 4. Return the maximum completion time across all courses.
 
 ::tabs-start
@@ -691,6 +725,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_time(n: i32, relations: Vec<Vec<i32>>, time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        for rel in &relations {
+            adj[(rel[0] - 1) as usize].push((rel[1] - 1) as usize);
+        }
+
+        let mut max_time = vec![-1i32; n];
+        let mut processed = vec![false; n];
+
+        for i in 0..n {
+            if max_time[i] == -1 {
+                let mut stack = vec![i];
+                while let Some(node) = stack.pop() {
+                    if processed[node] {
+                        let best = adj[node].iter()
+                            .map(|&nei| max_time[nei])
+                            .max()
+                            .unwrap_or(0);
+                        max_time[node] = time[node] + best;
+                    } else {
+                        processed[node] = true;
+                        stack.push(node);
+                        for &nei in &adj[node] {
+                            if max_time[nei] == -1 {
+                                stack.push(nei);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        *max_time.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -716,8 +790,8 @@ For each course, we track the maximum time needed to reach it (including its own
 2. Initialize each course's max time to its own duration.
 3. Add all courses with in-degree `0` to the queue.
 4. Process courses in topological order:
-   - For each dependent course, update its max time to be the maximum of its current value and the predecessor's time plus its own duration.
-   - Decrement the in-degree and add to the queue when it reaches `0`.
+    - For each dependent course, update its max time to be the maximum of its current value and the predecessor's time plus its own duration.
+    - Decrement the in-degree and add to the queue when it reaches `0`.
 5. Return the maximum completion time across all courses.
 
 ::tabs-start
@@ -1019,6 +1093,42 @@ class Solution {
         }
 
         return maxTime.max()!
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_time(n: i32, relations: Vec<Vec<i32>>, time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        let mut indegree = vec![0i32; n];
+        let mut max_time = time.clone();
+
+        for rel in &relations {
+            let (src, dst) = ((rel[0] - 1) as usize, (rel[1] - 1) as usize);
+            adj[src].push(dst);
+            indegree[dst] += 1;
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 0..n {
+            if indegree[i] == 0 {
+                queue.push_back(i);
+            }
+        }
+
+        while let Some(node) = queue.pop_front() {
+            for &nei in &adj[node] {
+                max_time[nei] = max_time[nei].max(max_time[node] + time[nei]);
+                indegree[nei] -= 1;
+                if indegree[nei] == 0 {
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        *max_time.iter().max().unwrap()
     }
 }
 ```

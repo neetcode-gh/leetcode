@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Understanding LIFO operations (push, pop, peek) and when to use stacks
 - **Monotonic Stack** - A stack that maintains elements in strictly increasing or decreasing order for efficient range queries
 - **Amortized Analysis** - Understanding why each element is pushed and popped at most once across all operations
@@ -16,11 +18,11 @@ The stock span is the number of consecutive days (including today) where the pri
 
 1. Maintain an array `arr` to store all prices seen so far.
 2. For each `next(price)` call:
-   - Append the new price to `arr`.
-   - Start from the second-to-last index and move backward.
-   - Count consecutive days where `arr[i] <= price`.
-   - Stop when we find a price greater than the current one or reach the beginning.
-   - Return the count (current position minus the stopping index).
+    - Append the new price to `arr`.
+    - Start from the second-to-last index and move backward.
+    - Count consecutive days where `arr[i] <= price`.
+    - Stop when we find a price greater than the current one or reach the beginning.
+    - Return the count (current position minus the stopping index).
 
 ::tabs-start
 
@@ -170,6 +172,27 @@ class StockSpanner {
 }
 ```
 
+```rust
+struct StockSpanner {
+    arr: Vec<i32>,
+}
+
+impl StockSpanner {
+    fn new() -> Self {
+        StockSpanner { arr: Vec::new() }
+    }
+
+    fn next(&mut self, price: i32) -> i32 {
+        self.arr.push(price);
+        let mut i = self.arr.len() as i32 - 2;
+        while i >= 0 && self.arr[i as usize] <= price {
+            i -= 1;
+        }
+        self.arr.len() as i32 - i - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -195,11 +218,11 @@ The stack remains in decreasing order of prices, so each element is pushed and p
 
 1. Initialize an empty stack that stores pairs of `(price, span)`.
 2. For each `next(price)` call:
-   - Start with `span = 1` (counting today).
-   - While the stack is not empty and the top price is less than or equal to the current price:
-     - Pop the top element and add its span to the current span.
-   - Push `(price, span)` onto the stack.
-   - Return `span`.
+    - Start with `span = 1` (counting today).
+    - While the stack is not empty and the top price is less than or equal to the current price:
+        - Pop the top element and add its span to the current span.
+    - Push `(price, span)` onto the stack.
+    - Return `span`.
 
 ::tabs-start
 
@@ -349,6 +372,32 @@ class StockSpanner {
         }
         stack.append((price, span))
         return span
+    }
+}
+```
+
+```rust
+struct StockSpanner {
+    stack: Vec<(i32, i32)>, // (price, span)
+}
+
+impl StockSpanner {
+    fn new() -> Self {
+        StockSpanner { stack: Vec::new() }
+    }
+
+    fn next(&mut self, price: i32) -> i32 {
+        let mut span = 1;
+        while let Some(&(p, s)) = self.stack.last() {
+            if p <= price {
+                span += s;
+                self.stack.pop();
+            } else {
+                break;
+            }
+        }
+        self.stack.push((price, span));
+        span
     }
 }
 ```

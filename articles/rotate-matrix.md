@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array Indexing** - Understanding how to access and modify elements using row and column indices
 - **Matrix Transpose** - Swapping elements across the main diagonal where element (i,j) swaps with (j,i)
 - **In-Place Manipulation** - Rotating elements within the matrix without using additional space for a copy
@@ -14,10 +16,12 @@ Before attempting this problem, you should be comfortable with:
 We are given an `n x n` matrix and need to rotate it **90 degrees clockwise**.
 
 A direct and beginner-friendly way to think about this is:
+
 - create a **new matrix** where each element from the original matrix is placed in its rotated position
 - after building this rotated version, copy it back into the original matrix
 
 The key observation for a 90° clockwise rotation is:
+
 - an element at position `(i, j)` in the original `matrix`
 - moves to position `(j, n - 1 - i)` in the rotated `matrix`
 
@@ -28,8 +32,8 @@ By applying this rule to every cell, we can construct the rotated matrix easily.
 1. Let `n` be the size of the `matrix`.
 2. Create a new `n x n` `matrix` called `rotated`, initially filled with zeros.
 3. Traverse each cell `(i, j)` of the original `matrix`:
-   - place its value into the rotated position:
-     - `rotated[j][n - 1 - i] = matrix[i][j]`
+    - place its value into the rotated position:
+        - `rotated[j][n - 1 - i] = matrix[i][j]`
 4. After filling the `rotated` `matrix`, copy all values back into the original `matrix`.
 5. The original `matrix` is now rotated 90 degrees clockwise.
 
@@ -198,6 +202,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rotate(matrix: &mut Vec<Vec<i32>>) {
+        let n = matrix.len();
+        let mut rotated = vec![vec![0; n]; n];
+        for i in 0..n {
+            for j in 0..n {
+                rotated[j][n - 1 - i] = matrix[i][j];
+            }
+        }
+        for i in 0..n {
+            for j in 0..n {
+                matrix[i][j] = rotated[i][j];
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,10 +239,12 @@ We want to rotate an `n x n` matrix **90 degrees clockwise**, but this time **in
 A useful way to visualize this is to rotate the matrix **layer by layer**, starting from the outermost layer and moving inward.
 
 For each square layer:
+
 - elements move in groups of **four**
 - each element in the group shifts to its new rotated position
 
 Specifically, for a given layer:
+
 - **`top-left` → `top-right`**
 - **`top-right` → `bottom-right`**
 - **`bottom-right` → `bottom-left`**
@@ -230,21 +255,21 @@ By rotating these four cells at a time, we complete the rotation without needing
 ### Algorithm
 
 1. Initialize two pointers:
-   - `l = 0` → left boundary of the current layer
-   - `r = n - 1` → right boundary of the current layer
+    - `l = 0` → left boundary of the current layer
+    - `r = n - 1` → right boundary of the current layer
 2. While `l < r` (process each layer):
 3. For each position `i` in the current layer (from `0` to `r - l - 1`):
-   - Identify:
-     - `top = l`
-     - `bottom = r`
-   - Save the **`top-left`** value temporarily
-   - Move **`bottom-left` → `top-left`**
-   - Move **`bottom-right` → `bottom-left`**
-   - Move **`top-right` → `bottom-right`**
-   - Move saved **`top-left` → `top-right`**
+    - Identify:
+        - `top = l`
+        - `bottom = r`
+    - Save the **`top-left`** value temporarily
+    - Move **`bottom-left` → `top-left`**
+    - Move **`bottom-right` → `bottom-left`**
+    - Move **`top-right` → `bottom-right`**
+    - Move saved **`top-left` → `top-right`**
 4. After finishing one layer:
-   - increment `l`
-   - decrement `r`
+    - increment `l`
+    - decrement `r`
 5. Continue until all layers are rotated.
 
 ::tabs-start
@@ -507,6 +532,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rotate(matrix: &mut Vec<Vec<i32>>) {
+        let mut l = 0;
+        let mut r = matrix.len() - 1;
+        while l < r {
+            for i in 0..(r - l) {
+                let top = l;
+                let bottom = r;
+                let top_left = matrix[top][l + i];
+                matrix[top][l + i] = matrix[bottom - i][l];
+                matrix[bottom - i][l] = matrix[bottom][r - i];
+                matrix[bottom][r - i] = matrix[top + i][r];
+                matrix[top + i][r] = top_left;
+            }
+            r -= 1;
+            l += 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -523,10 +570,12 @@ class Solution {
 We want to rotate an `n x n` `matrix` **90 degrees clockwise** in-place.
 
 A very clean way to do this is to break the rotation into **two simple operations**:
+
 1. **Reverse the `matrix` vertically**
 2. **Transpose the `matrix`**
 
 Why this works:
+
 - Reversing the `matrix` flips it upside down
 - Transposing swaps rows with columns
 - Doing both together results in a 90° clockwise rotation
@@ -536,11 +585,11 @@ This method is elegant, easy to remember, and avoids extra space.
 ### Algorithm
 
 1. Reverse the `matrix` vertically:
-   - the first row becomes the last
-   - the last row becomes the first
+    - the first row becomes the last
+    - the last row becomes the first
 2. Transpose the `matrix`:
-   - swap elements across the main diagonal
-   - for all `i < j`, swap `matrix[i][j]` with `matrix[j][i]`
+    - swap elements across the main diagonal
+    - for all `i < j`, swap `matrix[i][j]` with `matrix[j][i]`
 3. The `matrix` is now rotated 90 degrees clockwise in-place.
 
 ::tabs-start
@@ -680,6 +729,24 @@ class Solution {
         for i in 0..<matrix.count {
             for j in i + 1..<matrix.count {
                 (matrix[i][j], matrix[j][i]) = (matrix[j][i], matrix[i][j])
+            }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rotate(matrix: &mut Vec<Vec<i32>>) {
+        let n = matrix.len();
+        // Reverse the matrix vertically
+        matrix.reverse();
+        // Transpose the matrix
+        for i in 0..n {
+            for j in (i + 1)..n {
+                let tmp = matrix[i][j];
+                matrix[i][j] = matrix[j][i];
+                matrix[j][i] = tmp;
             }
         }
     }

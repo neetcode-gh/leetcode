@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists to model dependencies between nodes
 - **Topological Sort** - Ordering nodes in a directed acyclic graph such that for every edge u->v, u comes before v
 - **Depth-First Search (DFS)** - Traversing graphs recursively to detect cycles and build orderings
@@ -17,8 +19,8 @@ This problem requires ordering items while respecting two types of constraints: 
 
 1. Assign unique group IDs to items without a group (those with `group[i] == -1`).
 2. Build two adjacency lists:
-   - Item graph: edges from prerequisite items to dependent items.
-   - Group graph: edges from prerequisite groups to dependent groups (only when items are in different groups).
+    - Item graph: edges from prerequisite items to dependent items.
+    - Group graph: edges from prerequisite groups to dependent groups (only when items are in different groups).
 3. Perform topological sort on the item graph using `dfs` to get item ordering.
 4. Perform topological sort on the group graph using `dfs` to get group ordering.
 5. If either sort detects a cycle, return an empty array.
@@ -602,6 +604,75 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_items(n: i32, m: i32, group: Vec<i32>, before_items: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut m = m as usize;
+        let mut group = group;
+        for i in 0..n {
+            if group[i] == -1 {
+                group[i] = m as i32;
+                m += 1;
+            }
+        }
+
+        let mut item_adj = vec![vec![]; n];
+        let mut group_adj = vec![vec![]; m];
+        for i in 0..n {
+            for &par in &before_items[i] {
+                let par = par as usize;
+                item_adj[par].push(i);
+                if group[i] != group[par] {
+                    group_adj[group[par] as usize].push(group[i] as usize);
+                }
+            }
+        }
+
+        let itm = Self::topo_sort(&item_adj, n);
+        if itm.is_empty() { return vec![]; }
+        let grp = Self::topo_sort(&group_adj, m);
+        if grp.is_empty() { return vec![]; }
+
+        let mut grouping = vec![vec![]; m];
+        for &i in &itm {
+            grouping[group[i] as usize].push(i as i32);
+        }
+
+        let mut res = vec![];
+        for &g in &grp {
+            res.extend_from_slice(&grouping[g]);
+        }
+        res
+    }
+
+    fn topo_sort(adj: &[Vec<usize>], n: usize) -> Vec<usize> {
+        let mut visited = vec![0u8; n];
+        let mut topo = vec![];
+
+        fn dfs(node: usize, adj: &[Vec<usize>], visited: &mut [u8], topo: &mut Vec<usize>) -> bool {
+            if visited[node] == 1 { return true; }
+            if visited[node] == 2 { return false; }
+            visited[node] = 1;
+            for &neighbor in &adj[node] {
+                if dfs(neighbor, adj, visited, topo) { return true; }
+            }
+            topo.push(node);
+            visited[node] = 2;
+            false
+        }
+
+        for i in 0..n {
+            if visited[i] == 0 && dfs(i, adj, &mut visited, &mut topo) {
+                return vec![];
+            }
+        }
+        topo.reverse();
+        topo
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -626,9 +697,9 @@ Kahn's algorithm offers an iterative approach to topological sorting using in-de
 3. For the item graph, add an edge from each prerequisite to the dependent item.
 4. For the group graph, add an edge when a dependency crosses group boundaries.
 5. Perform Kahn's algorithm on items:
-   - Start with all items having `indegree` `0`.
-   - Process items, reducing `indegree`s of neighbors.
-   - If the result size does not equal `n`, return empty (cycle detected).
+    - Start with all items having `indegree` `0`.
+    - Process items, reducing `indegree`s of neighbors.
+    - If the result size does not equal `n`, return empty (cycle detected).
 6. Perform Kahn's algorithm on groups similarly.
 7. Group the topologically sorted items by their group ID.
 8. Output items in group topological order.
@@ -1171,6 +1242,77 @@ class Solution {
         }
 
         return topo.count == N ? topo : []
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_items(n: i32, m: i32, group: Vec<i32>, before_items: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut m = m as usize;
+        let mut group = group;
+        for i in 0..n {
+            if group[i] == -1 {
+                group[i] = m as i32;
+                m += 1;
+            }
+        }
+
+        let mut item_adj = vec![vec![]; n];
+        let mut group_adj = vec![vec![]; m];
+        let mut item_indegree = vec![0i32; n];
+        let mut group_indegree = vec![0i32; m];
+
+        for i in 0..n {
+            for &par in &before_items[i] {
+                let par = par as usize;
+                item_adj[par].push(i);
+                item_indegree[i] += 1;
+                if group[i] != group[par] {
+                    group_adj[group[par] as usize].push(group[i] as usize);
+                    group_indegree[group[i] as usize] += 1;
+                }
+            }
+        }
+
+        let itm = Self::topo_sort(&item_adj, &mut item_indegree, n);
+        if itm.is_empty() { return vec![]; }
+        let grp = Self::topo_sort(&group_adj, &mut group_indegree, m);
+        if grp.is_empty() { return vec![]; }
+
+        let mut grouping: HashMap<i32, Vec<i32>> = HashMap::new();
+        for &i in &itm {
+            grouping.entry(group[i]).or_default().push(i as i32);
+        }
+
+        let mut res = vec![];
+        for &g in &grp {
+            if let Some(items) = grouping.get(&(g as i32)) {
+                res.extend_from_slice(items);
+            }
+        }
+        res
+    }
+
+    fn topo_sort(adj: &[Vec<usize>], indegree: &mut [i32], n: usize) -> Vec<usize> {
+        let mut q = VecDeque::new();
+        let mut topo = vec![];
+        for i in 0..n {
+            if indegree[i] == 0 {
+                q.push_back(i);
+            }
+        }
+        while let Some(node) = q.pop_front() {
+            topo.push(node);
+            for &neighbor in &adj[node] {
+                indegree[neighbor] -= 1;
+                if indegree[neighbor] == 0 {
+                    q.push_back(neighbor);
+                }
+            }
+        }
+        if topo.len() == n { topo } else { vec![] }
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Monotonic Stack** - Used to efficiently find next/previous smaller elements for each position in O(n) time
 - **Contribution Technique** - Understanding how to count each element's contribution across all subarrays rather than iterating through each subarray
 - **Modular Arithmetic** - Applying modulo operations correctly to prevent integer overflow in the result
@@ -16,10 +18,10 @@ For each subarray, we need to find its minimum element and add it to the total s
 
 1. Initialize `res = 0` to store the sum of minimums.
 2. For each starting index `i`:
-   - Initialize `minVal = arr[i]`.
-   - For each ending index `j` from `i` to `n - 1`:
-     - Update `minVal = min(minVal, arr[j])`.
-     - Add `minVal` to `res` (modulo 10^9 + 7).
+    - Initialize `minVal = arr[i]`.
+    - For each ending index `j` from `i` to `n - 1`:
+        - Update `minVal = min(minVal, arr[j])`.
+        - Add `minVal` to `res` (modulo 10^9 + 7).
 3. Return `res`.
 
 ::tabs-start
@@ -182,6 +184,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_subarray_mins(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0i64;
+        const MOD: i64 = 1_000_000_007;
+
+        for i in 0..n {
+            let mut min_val = arr[i] as i64;
+            for j in i..n {
+                min_val = min_val.min(arr[j] as i64);
+                res = (res + min_val) % MOD;
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,9 +224,9 @@ Instead of computing minimums for each subarray, we can ask: for each element, h
 1. Use a stack to find `prevSmaller[i]`: the index of the previous smaller element (or -1 if none).
 2. Use another stack pass to find `nextSmaller[i]`: the index of the next smaller or equal element (or `n` if none). We use "smaller or equal" on one side to avoid double counting.
 3. For each element at index `i`:
-   - `left = i - prevSmaller[i]` is the count of valid starting positions.
-   - `right = nextSmaller[i] - i` is the count of valid ending positions.
-   - Add `arr[i] * left * right` to the result.
+    - `left = i - prevSmaller[i]` is the count of valid starting positions.
+    - `right = nextSmaller[i] - i` is the count of valid ending positions.
+    - Add `arr[i] * left * right` to the result.
 4. Return `res` modulo 10^9 + 7.
 
 ::tabs-start
@@ -540,6 +562,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_subarray_mins(arr: Vec<i32>) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = arr.len();
+
+        let mut prev_smaller = vec![-1i32; n];
+        let mut stack: Vec<usize> = Vec::new();
+        for i in 0..n {
+            while let Some(&top) = stack.last() {
+                if arr[top] > arr[i] {
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+            prev_smaller[i] = stack.last().map_or(-1, |&v| v as i32);
+            stack.push(i);
+        }
+
+        let mut next_smaller = vec![n as i32; n];
+        stack.clear();
+        for i in (0..n).rev() {
+            while let Some(&top) = stack.last() {
+                if arr[top] >= arr[i] {
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+            next_smaller[i] = stack.last().map_or(n as i32, |&v| v as i32);
+            stack.push(i);
+        }
+
+        let mut res = 0i64;
+        for i in 0..n {
+            let left = (i as i64) - (prev_smaller[i] as i64);
+            let right = (next_smaller[i] as i64) - (i as i64);
+            res = (res + arr[i] as i64 * left * right) % MOD;
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -560,12 +628,12 @@ We can combine finding the previous smaller and next smaller into a single pass.
 1. Pad the array with negative infinity at both ends.
 2. Maintain a stack of `(index, value)` pairs.
 3. For each element in the padded array:
-   - While the stack is not empty and the current element is smaller than the stack top:
-     - Pop the top element (index `j`, value `m`).
-     - `left = j - stack_top_index` (or `j + 1` if stack is empty).
-     - `right = i - j`.
-     - Add `m * left * right` to the result.
-   - Push the current `(index, value)` onto the stack.
+    - While the stack is not empty and the current element is smaller than the stack top:
+        - Pop the top element (index `j`, value `m`).
+        - `left = j - stack_top_index` (or `j + 1` if stack is empty).
+        - `right = i - j`.
+        - Add `m * left * right` to the result.
+    - Push the current `(index, value)` onto the stack.
 4. Return `res` modulo 10^9 + 7.
 
 ::tabs-start
@@ -784,6 +852,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_subarray_mins(arr: Vec<i32>) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let mut res = 0i64;
+        let mut new_arr = Vec::with_capacity(arr.len() + 2);
+        new_arr.push(i32::MIN);
+        new_arr.extend_from_slice(&arr);
+        new_arr.push(i32::MIN);
+
+        let mut stack: Vec<(usize, i64)> = Vec::new();
+
+        for i in 0..new_arr.len() {
+            while let Some(&(j, m)) = stack.last() {
+                if (new_arr[i] as i64) < m {
+                    stack.pop();
+                    let left = if let Some(&(idx, _)) = stack.last() {
+                        (j - idx) as i64
+                    } else {
+                        (j + 1) as i64
+                    };
+                    let right = (i - j) as i64;
+                    res = (res + m * left * right) % MOD;
+                } else {
+                    break;
+                }
+            }
+            stack.push((i, new_arr[i] as i64));
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -803,12 +906,12 @@ We can eliminate the sentinel values by handling the edge cases explicitly. Inst
 
 1. Initialize an empty stack and `res = 0`.
 2. Iterate from `i = 0` to `n` (inclusive):
-   - While the stack is not empty and (we're at the end OR `arr[i] < arr[stack_top]`):
-     - Pop index `j` from the stack.
-     - `left = j - stack_top` (or `j + 1` if stack is empty).
-     - `right = i - j`.
-     - Add `arr[j] * left * right` to `res`.
-   - Push `i` onto the stack.
+    - While the stack is not empty and (we're at the end OR `arr[i] < arr[stack_top]`):
+        - Pop index `j` from the stack.
+        - `left = j - stack_top` (or `j + 1` if stack is empty).
+        - `right = i - j`.
+        - Add `arr[j] * left * right` to `res`.
+    - Push `i` onto the stack.
 3. Return `res` modulo 10^9 + 7.
 
 ::tabs-start
@@ -1004,6 +1107,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_subarray_mins(arr: Vec<i32>) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = arr.len();
+        let mut stack: Vec<usize> = Vec::new();
+        let mut res = 0i64;
+
+        for i in 0..=n {
+            while let Some(&top) = stack.last() {
+                if i == n || arr[i] < arr[top] {
+                    stack.pop();
+                    let j = top;
+                    let left = (j as i64) - stack.last().map_or(-1i64, |&v| v as i64);
+                    let right = (i as i64) - (j as i64);
+                    res = (res + arr[j] as i64 * left * right) % MOD;
+                } else {
+                    break;
+                }
+            }
+            stack.push(i);
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1023,12 +1154,12 @@ We can think of this problem dynamically. Let `dp[i]` represent the sum of minim
 
 1. Initialize `dp` array and an empty stack.
 2. For each index `i`:
-   - Pop elements from the stack while `arr[stack_top] > arr[i]`.
-   - Let `j` be the stack top after popping (or -1 if empty). This is the index of the previous smaller or equal element.
-   - `dp[i] = dp[j] + arr[i] * (i - j)`:
-     - `dp[j]` accounts for subarrays ending before `j` where `arr[i]` is not the minimum.
-     - `arr[i] * (i - j)` accounts for subarrays from positions `j+1` to `i` where `arr[i]` is the minimum.
-   - Add `dp[i]` to `res` and push `i` onto the stack.
+    - Pop elements from the stack while `arr[stack_top] > arr[i]`.
+    - Let `j` be the stack top after popping (or -1 if empty). This is the index of the previous smaller or equal element.
+    - `dp[i] = dp[j] + arr[i] * (i - j)`:
+        - `dp[j]` accounts for subarrays ending before `j` where `arr[i]` is not the minimum.
+        - `arr[i] * (i - j)` accounts for subarrays from positions `j+1` to `i` where `arr[i]` is the minimum.
+    - Add `dp[i]` to `res` and push `i` onto the stack.
 3. Return `res` modulo 10^9 + 7.
 
 ::tabs-start
@@ -1239,6 +1370,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_subarray_mins(arr: Vec<i32>) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = arr.len();
+        let mut dp = vec![0i64; n];
+        let mut stack: Vec<usize> = Vec::new();
+        let mut res = 0i64;
+
+        for i in 0..n {
+            while let Some(&top) = stack.last() {
+                if arr[top] > arr[i] {
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+
+            let j = stack.last().map_or(-1i64, |&v| v as i64);
+            dp[i] = ((if j != -1 { dp[j as usize] } else { 0 })
+                + arr[i] as i64 * (i as i64 - j)) % MOD;
+            res = (res + dp[i]) % MOD;
+            stack.push(i);
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1256,7 +1417,7 @@ When there are duplicate values in the array, using strict less-than (`<`) on bo
 
 ### Integer Overflow in Contribution Calculation
 
-The contribution formula `arr[i] * left * right` can overflow a 32-bit integer when the array is large. With `n` up to 30,000 and values up to 30,000, the product can reach approximately 2.7 * 10^13. Always use 64-bit integers for the multiplication and apply the modulo operation at each step.
+The contribution formula `arr[i] * left * right` can overflow a 32-bit integer when the array is large. With `n` up to 30,000 and values up to 30,000, the product can reach approximately 2.7 \* 10^13. Always use 64-bit integers for the multiplication and apply the modulo operation at each step.
 
 ### Incorrect Boundary Initialization
 

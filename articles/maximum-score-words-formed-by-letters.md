@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Used to explore all possible subsets of words by making include/exclude decisions at each step
 - **Hash Maps / Frequency Arrays** - Needed to track letter counts and determine if a word can be formed with available letters
 - **Recursion** - The core technique for exploring the decision tree of word combinations
@@ -17,12 +19,12 @@ We need to select a subset of words to maximize total score, where each word con
 
 1. Build a frequency count of available letters.
 2. Define a recursive function that processes words one by one:
-   - Base case: if all words are processed, return `0`.
-   - Always try skipping the current word.
-   - If the current word can be formed with available letters:
-     - Subtract its letter requirements from the count.
-     - Recursively process remaining words and add the word's score.
-     - Restore the letter counts (backtrack).
+    - Base case: if all words are processed, return `0`.
+    - Always try skipping the current word.
+    - If the current word can be formed with available letters:
+        - Subtract its letter requirements from the count.
+        - Recursively process remaining words and add the word's score.
+        - Restore the letter counts (backtrack).
 3. Return the maximum score from either skipping or including the word.
 
 ::tabs-start
@@ -409,6 +411,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score_words(words: Vec<String>, letters: Vec<char>, score: Vec<i32>) -> i32 {
+        let mut letter_cnt = [0i32; 26];
+        for &c in &letters {
+            letter_cnt[(c as u8 - b'a') as usize] += 1;
+        }
+
+        fn can_form_word(word: &str, letter_cnt: &[i32; 26]) -> bool {
+            let mut word_cnt = [0i32; 26];
+            for c in word.bytes() {
+                let idx = (c - b'a') as usize;
+                word_cnt[idx] += 1;
+                if word_cnt[idx] > letter_cnt[idx] {
+                    return false;
+                }
+            }
+            true
+        }
+
+        fn get_score(word: &str, score: &[i32]) -> i32 {
+            word.bytes().map(|c| score[(c - b'a') as usize]).sum()
+        }
+
+        fn backtrack(i: usize, words: &[String], letter_cnt: &mut [i32; 26], score: &[i32]) -> i32 {
+            if i == words.len() {
+                return 0;
+            }
+            let mut res = backtrack(i + 1, words, letter_cnt, score);
+            if can_form_word(&words[i], letter_cnt) {
+                for c in words[i].bytes() {
+                    letter_cnt[(c - b'a') as usize] -= 1;
+                }
+                res = res.max(get_score(&words[i], score) + backtrack(i + 1, words, letter_cnt, score));
+                for c in words[i].bytes() {
+                    letter_cnt[(c - b'a') as usize] += 1;
+                }
+            }
+            res
+        }
+
+        backtrack(0, &words, &mut letter_cnt, &score)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,12 +478,12 @@ The basic backtracking approach recalculates letter frequencies and scores for e
 
 1. Build a frequency count of available letters.
 2. Precompute for each word:
-   - Its character frequency array (`26` elements for each letter).
-   - Its total score based on the given scoring array.
+    - Its character frequency array (`26` elements for each letter).
+    - Its total score based on the given scoring array.
 3. Use backtracking as before, but now:
-   - Check validity by comparing frequency arrays (`26` comparisons).
-   - Update letter counts by subtracting/adding the precomputed frequencies.
-   - Use the precomputed score directly.
+    - Check validity by comparing frequency arrays (`26` comparisons).
+    - Update letter counts by subtracting/adding the precomputed frequencies.
+    - Use the precomputed score directly.
 
 ::tabs-start
 
@@ -826,6 +874,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score_words(words: Vec<String>, letters: Vec<char>, score: Vec<i32>) -> i32 {
+        let mut letter_cnt = [0i32; 26];
+        for &c in &letters {
+            letter_cnt[(c as u8 - b'a') as usize] += 1;
+        }
+
+        let n = words.len();
+        let mut word_scores = vec![0i32; n];
+        let mut word_freqs = vec![[0i32; 26]; n];
+
+        for i in 0..n {
+            for c in words[i].bytes() {
+                let idx = (c - b'a') as usize;
+                word_freqs[i][idx] += 1;
+                word_scores[i] += score[idx];
+            }
+        }
+
+        fn backtrack(
+            i: usize, n: usize, letter_cnt: &mut [i32; 26],
+            word_freqs: &[[i32; 26]], word_scores: &[i32],
+        ) -> i32 {
+            if i == n {
+                return 0;
+            }
+            let mut res = backtrack(i + 1, n, letter_cnt, word_freqs, word_scores);
+            let can_include = (0..26).all(|j| word_freqs[i][j] <= letter_cnt[j]);
+            if can_include {
+                for j in 0..26 {
+                    letter_cnt[j] -= word_freqs[i][j];
+                }
+                res = res.max(word_scores[i] + backtrack(i + 1, n, letter_cnt, word_freqs, word_scores));
+                for j in 0..26 {
+                    letter_cnt[j] += word_freqs[i][j];
+                }
+            }
+            res
+        }
+
+        backtrack(0, n, &mut letter_cnt, &word_freqs, &word_scores)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -847,12 +941,12 @@ Instead of recursive backtracking, we can iterate through all possible subsets u
 
 1. Precompute frequency arrays and scores for all words.
 2. Iterate through all bitmasks from `0` to `2^n - 1`:
-   - For each bitmask, create a copy of the available letter counts.
-   - For each bit set in the mask:
-     - Check if the corresponding word can be formed with remaining letters.
-     - If not, mark this subset as invalid and break.
-     - If yes, subtract the word's letters and add its score.
-   - If the subset is valid, update the maximum score.
+    - For each bitmask, create a copy of the available letter counts.
+    - For each bit set in the mask:
+        - Check if the corresponding word can be formed with remaining letters.
+        - If not, mark this subset as invalid and break.
+        - If yes, subtract the word's letters and add its score.
+    - If the subset is valid, update the maximum score.
 3. Return the maximum score found.
 
 ::tabs-start
@@ -1227,6 +1321,59 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score_words(words: Vec<String>, letters: Vec<char>, score: Vec<i32>) -> i32 {
+        let mut letter_cnt = [0i32; 26];
+        for &c in &letters {
+            letter_cnt[(c as u8 - b'a') as usize] += 1;
+        }
+
+        let n = words.len();
+        let mut word_scores = vec![0i32; n];
+        let mut word_freqs = vec![[0i32; 26]; n];
+
+        for i in 0..n {
+            for c in words[i].bytes() {
+                let idx = (c - b'a') as usize;
+                word_freqs[i][idx] += 1;
+                word_scores[i] += score[idx];
+            }
+        }
+
+        let mut res = 0;
+        for mask in 0..(1 << n) {
+            let mut cur_score = 0;
+            let mut cur_letter_cnt = letter_cnt;
+            let mut valid = true;
+
+            for i in 0..n {
+                if mask & (1 << i) != 0 {
+                    for j in 0..26 {
+                        if word_freqs[i][j] > cur_letter_cnt[j] {
+                            valid = false;
+                            break;
+                        }
+                    }
+                    if !valid { break; }
+
+                    for j in 0..26 {
+                        cur_letter_cnt[j] -= word_freqs[i][j];
+                    }
+                    cur_score += word_scores[i];
+                }
+            }
+
+            if valid {
+                res = res.max(cur_score);
+            }
+        }
+
+        res
     }
 }
 ```

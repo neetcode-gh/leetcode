@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building and traversing adjacency lists for trees
 - **Depth First Search (DFS)** - Recursive tree traversal with constraints on node values
 - **Breadth First Search (BFS)** - Iterative exploration using queues with filtering conditions
@@ -18,8 +20,8 @@ A good path starts and ends with nodes having the same value, and all nodes alon
 
 1. Build an adjacency list from the edges.
 2. For each node `startNode`, run a `dfs`:
-   - Only traverse to children with values less than or equal to `vals[startNode]`.
-   - Count nodes that have the same value as `startNode` and have index greater than or equal to `startNode` (to avoid double counting).
+    - Only traverse to children with values less than or equal to `vals[startNode]`.
+    - Count nodes that have the same value as `startNode` and have index greater than or equal to `startNode` (to avoid double counting).
 3. Sum up all counts and return the total.
 
 ::tabs-start
@@ -345,6 +347,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
+        let n = vals.len();
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        fn dfs(
+            node: usize, start_node: usize, parent: i32,
+            vals: &[i32], adj: &[Vec<usize>],
+        ) -> i32 {
+            if vals[node] > vals[start_node] {
+                return 0;
+            }
+            let mut res = 0;
+            if vals[node] == vals[start_node] && node >= start_node {
+                res += 1;
+            }
+            for &child in &adj[node] {
+                if child as i32 == parent {
+                    continue;
+                }
+                res += dfs(child, start_node, node as i32, vals, adj);
+            }
+            res
+        }
+
+        let mut res = 0;
+        for node in 0..n {
+            res += dfs(node, node, -1, &vals, &adj);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -364,9 +406,9 @@ This is the same logic as the `dfs` approach but uses `bfs` instead. Starting fr
 
 1. Build an adjacency list from the edges.
 2. For each node `startNode`, run a `bfs`:
-   - Use a queue and a visited set.
-   - Only add neighbors to the queue if their value is at most `vals[startNode]`.
-   - Count nodes with the same value as `startNode` and index at least `startNode`.
+    - Use a queue and a visited set.
+    - Only add neighbors to the queue if their value is at most `vals[startNode]`.
+    - Count nodes with the same value as `startNode` and index at least `startNode`.
 3. Return the total count.
 
 ::tabs-start
@@ -689,6 +731,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
+        let n = vals.len();
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        let mut res = 0;
+        for start_node in 0..n {
+            let mut q = VecDeque::new();
+            let mut visited = HashSet::new();
+            q.push_back(start_node);
+            visited.insert(start_node);
+            let mut count = 0;
+
+            while let Some(node) = q.pop_front() {
+                if vals[node] == vals[start_node] && node >= start_node {
+                    count += 1;
+                }
+                for &child in &adj[node] {
+                    if !visited.contains(&child) && vals[child] <= vals[start_node] {
+                        visited.insert(child);
+                        q.push_back(child);
+                    }
+                }
+            }
+
+            res += count;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,9 +789,9 @@ Processing nodes in increasing order of their values allows us to incrementally 
 1. Group nodes by their values and sort the values in ascending order.
 2. Initialize a Union-Find structure.
 3. For each value (from smallest to largest):
-   - For each node with this value, union it with neighbors having smaller or equal values.
-   - Group nodes with the current value by their connected component roots.
-   - For each component, if `k` nodes have the current value, add `1 + 2 + ... + k = k*(k+1)/2` to the `res` (or equivalently, add incrementally).
+    - For each node with this value, union it with neighbors having smaller or equal values.
+    - Group nodes with the current value by their connected component roots.
+    - For each component, if `k` nodes have the current value, add `1 + 2 + ... + k = k*(k+1)/2` to the `res` (or equivalently, add incrementally).
 4. Return the total `res`.
 
 ::tabs-start
@@ -1289,6 +1369,85 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
+        let n = vals.len();
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        let mut val_to_index: BTreeMap<i32, Vec<usize>> = BTreeMap::new();
+        for i in 0..n {
+            val_to_index.entry(vals[i]).or_default().push(i);
+        }
+
+        let mut dsu = DSU::new(n);
+        let mut res = 0i32;
+
+        for (_, nodes) in &val_to_index {
+            for &i in nodes {
+                for &nei in &adj[i] {
+                    if vals[nei] <= vals[i] {
+                        dsu.union(nei, i);
+                    }
+                }
+            }
+
+            let mut count: HashMap<usize, i32> = HashMap::new();
+            for &i in nodes {
+                let root = dsu.find(i);
+                let c = count.entry(root).or_insert(0);
+                *c += 1;
+                res += *c;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1310,8 +1469,8 @@ Instead of grouping nodes by value, we can sort the edges by the maximum value o
 2. Sort edges by the maximum of `vals[u]` and `vals[v]`.
 3. Start with `n` good paths (each node alone is a valid path).
 4. For each edge, union the two endpoints:
-   - If the representatives have different values, the one with the smaller value gets absorbed.
-   - If they have equal values, multiply the counts from both sides to get new good paths, then merge.
+    - If the representatives have different values, the one with the smaller value gets absorbed.
+    - If they have equal values, multiply the counts from both sides to get new good paths, then merge.
 5. Return the total `res`.
 
 ::tabs-start
@@ -1775,6 +1934,68 @@ class Solution {
             res += dsu.union(edge[0], edge[1])
         }
         return res
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    count: Vec<i32>,
+    vals: Vec<i32>,
+}
+
+impl DSU {
+    fn new(n: usize, vals: &[i32]) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            count: vec![1; n],
+            vals: vals.to_vec(),
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> i32 {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return 0;
+        }
+        if self.vals[pu] < self.vals[pv] {
+            self.parent[pu] = pv;
+        } else if self.vals[pu] > self.vals[pv] {
+            self.parent[pv] = pu;
+        } else {
+            self.parent[pv] = pu;
+            let result = self.count[pu] * self.count[pv];
+            self.count[pu] += self.count[pv];
+            return result;
+        }
+        0
+    }
+}
+
+impl Solution {
+    pub fn number_of_good_paths(vals: Vec<i32>, edges: Vec<Vec<i32>>) -> i32 {
+        let n = vals.len();
+        let mut dsu = DSU::new(n, &vals);
+
+        let mut sorted_edges = edges.clone();
+        sorted_edges.sort_unstable_by_key(|e| {
+            vals[e[0] as usize].max(vals[e[1] as usize])
+        });
+
+        let mut res = n as i32;
+        for edge in &sorted_edges {
+            res += dsu.union(edge[0] as usize, edge[1] as usize);
+        }
+        res
     }
 }
 ```

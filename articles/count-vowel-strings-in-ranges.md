@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum** - Precomputing cumulative sums to answer range queries in O(1) time
 - **Hash Set** - Using sets for O(1) character lookup when checking vowels
 - **Bit Manipulation (Optional)** - Using bitmasks as an alternative to hash sets for membership testing
@@ -17,11 +19,11 @@ A word is a "vowel string" if it starts and ends with a vowel (a, e, i, o, u). F
 1. Create a set of vowels for O(1) lookup.
 2. Initialize an empty result list.
 3. For each query `(start, end)`:
-   - Initialize a counter to `0`.
-   - For each word from index `start` to `end`:
-     - Check if the first and last characters are both vowels.
-     - If so, increment the counter.
-   - Append the counter to the result list.
+    - Initialize a counter to `0`.
+    - For each word from index `start` to `end`:
+        - Check if the first and last characters are both vowels.
+        - If so, increment the counter.
+    - Append the counter to the result list.
 4. Return the result list.
 
 ::tabs-start
@@ -213,6 +215,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn vowel_strings(words: Vec<String>, queries: Vec<Vec<i32>>) -> Vec<i32> {
+        let vowels: HashSet<u8> = [b'a', b'e', b'i', b'o', b'u'].into();
+        let mut res = Vec::with_capacity(queries.len());
+
+        for q in &queries {
+            let (start, end) = (q[0] as usize, q[1] as usize);
+            let mut count = 0;
+
+            for i in start..=end {
+                let w = words[i].as_bytes();
+                if vowels.contains(&w[0]) && vowels.contains(&w[w.len() - 1]) {
+                    count += 1;
+                }
+            }
+
+            res.push(count);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,10 +264,10 @@ The brute force approach recomputes the count for overlapping or similar ranges 
 1. Create a set of vowels for O(1) lookup.
 2. Build a prefix sum array of size `n+1`, initialized to `0`.
 3. For each word at index `i`:
-   - Set `prefix[i+1] = prefix[i]`.
-   - If the word starts and ends with a vowel, increment `prefix[i+1]`.
+    - Set `prefix[i+1] = prefix[i]`.
+    - If the word starts and ends with a vowel, increment `prefix[i+1]`.
 4. For each query `(l, r)`:
-   - The answer is `prefix[r+1] - prefix[l]`.
+    - The answer is `prefix[r+1] - prefix[l]`.
 5. Return the results.
 
 ::tabs-start
@@ -450,6 +477,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn vowel_strings(words: Vec<String>, queries: Vec<Vec<i32>>) -> Vec<i32> {
+        let vowels: HashSet<u8> = [b'a', b'e', b'i', b'o', b'u'].into();
+        let n = words.len();
+        let mut prefix_cnt = vec![0i32; n + 1];
+
+        for i in 0..n {
+            let w = words[i].as_bytes();
+            prefix_cnt[i + 1] = prefix_cnt[i];
+            if vowels.contains(&w[0]) && vowels.contains(&w[w.len() - 1]) {
+                prefix_cnt[i + 1] += 1;
+            }
+        }
+
+        queries
+            .iter()
+            .map(|q| {
+                let (l, r) = (q[0] as usize, q[1] as usize);
+                prefix_cnt[r + 1] - prefix_cnt[l]
+            })
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -474,11 +527,11 @@ Instead of using a hash set to check vowels, we can use a bitmask. Since there a
 1. Create a bitmask for vowels by setting bits for `'a'`, `'e'`, `'i'`, `'o'`, `'u'`.
 2. Build a prefix sum array.
 3. For each word:
-   - Check if the first character's bit is set in the vowel mask.
-   - Check if the last character's bit is set in the vowel mask.
-   - If both are `true`, increment the prefix sum.
+    - Check if the first character's bit is set in the vowel mask.
+    - Check if the last character's bit is set in the vowel mask.
+    - If both are `true`, increment the prefix sum.
 4. For each query `(l, r)`:
-   - The answer is `prefix[r+1] - prefix[l]`.
+    - The answer is `prefix[r+1] - prefix[l]`.
 5. Return the results.
 
 ::tabs-start
@@ -677,6 +730,35 @@ class Solution {
             let l = q[0], r = q[1]
             return prefix[r + 1] - prefix[l]
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn vowel_strings(words: Vec<String>, queries: Vec<Vec<i32>>) -> Vec<i32> {
+        let mut vowels = 0u32;
+        for c in "aeiou".bytes() {
+            vowels |= 1 << (c - b'a');
+        }
+
+        let n = words.len();
+        let mut prefix = vec![0i32; n + 1];
+        for i in 0..n {
+            let w = words[i].as_bytes();
+            let f = w[0] - b'a';
+            let l = w[w.len() - 1] - b'a';
+            let is_vowel = if (1 << f) & vowels != 0 && (1 << l) & vowels != 0 { 1 } else { 0 };
+            prefix[i + 1] = prefix[i] + is_vowel;
+        }
+
+        queries
+            .iter()
+            .map(|q| {
+                let (l, r) = (q[0] as usize, q[1] as usize);
+                prefix[r + 1] - prefix[l]
+            })
+            .collect()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search on Real Numbers** - Searching over a continuous range rather than discrete indices
 - **Prefix Sums** - Computing cumulative sums to efficiently query subarray sums
 - **Sliding Window** - Understanding how to efficiently compute values over fixed-size windows
@@ -18,11 +20,11 @@ For each starting index, we extend the subarray one element at a time, maintaini
 
 1. Initialize `res` to negative infinity.
 2. For each starting index `s` from `0` to `n - k`:
-   - Initialize `sum_val = 0`.
-   - For each ending index `i` from `s` to `n - 1`:
-     - Add `nums[i]` to `sum_val`.
-     - If the subarray length `i - s + 1 >= k`:
-       - Compute average and update `res` if larger.
+    - Initialize `sum_val = 0`.
+    - For each ending index `i` from `s` to `n - 1`:
+        - Add `nums[i]` to `sum_val`.
+        - If the subarray length `i - s + 1 >= k`:
+            - Compute average and update `res` if larger.
 3. Return `res`.
 
 ::tabs-start
@@ -55,7 +57,7 @@ class Solution {
                     res = Math.max(res, sum * 1.0 / (i - s + 1));
             }
         }
-        
+
         return res;
     }
 }
@@ -95,8 +97,7 @@ class Solution {
             let sum = 0;
             for (let i = s; i < nums.length; i++) {
                 sum += nums[i];
-                if (i - s + 1 >= k)
-                    res = Math.max(res, sum / (i - s + 1));
+                if (i - s + 1 >= k) res = Math.max(res, sum / (i - s + 1));
             }
         }
 
@@ -160,6 +161,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_average(nums: Vec<i32>, k: i32) -> f64 {
+        let k = k as usize;
+        let mut res = f64::NEG_INFINITY;
+
+        for s in 0..=nums.len() - k {
+            let mut sum = 0i64;
+            for i in s..nums.len() {
+                sum += nums[i] as i64;
+                if i - s + 1 >= k {
+                    res = res.max(sum as f64 / (i - s + 1) as f64);
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -167,7 +189,7 @@ class Solution {
 - Time complexity: $O(n^2)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the number of elements in the array `nums`.
+> Where $n$ is the number of elements in the array `nums`.
 
 ---
 
@@ -183,14 +205,14 @@ To check this, we subtract `mid` from each element. Now we need to find a subarr
 
 1. Initialize `min_val` and `max_val` as the minimum and maximum of `nums`.
 2. Binary search while the error exceeds `0.00001`:
-   - Compute `mid = (min_val + max_val) / 2`.
-   - Call `check(nums, mid, k)` to see if a valid subarray exists.
-   - If `true`, set `min_val = mid` (answer is at least `mid`).
-   - Otherwise, set `max_val = mid`.
+    - Compute `mid = (min_val + max_val) / 2`.
+    - Call `check(nums, mid, k)` to see if a valid subarray exists.
+    - If `true`, set `min_val = mid` (answer is at least `mid`).
+    - Otherwise, set `max_val = mid`.
 3. The `check` function:
-   - Compute prefix sums of `nums[i] - mid`.
-   - Track `min_sum` as the minimum prefix sum seen at least `k` positions before.
-   - If `current_sum - min_sum >= 0` at any point, return `true`.
+    - Compute prefix sums of `nums[i] - mid`.
+    - Track `min_sum` as the minimum prefix sum seen at least `k` positions before.
+    - If `current_sum - min_sum >= 0` at any point, return `true`.
 4. Return `min_val`.
 
 ::tabs-start
@@ -203,10 +225,10 @@ class Solution:
         for n in nums:
             max_val = max(max_val, n)
             min_val = min(min_val, n)
-        
+
         prev_mid = max_val
         error = float('inf')
-        
+
         while error > 0.00001:
             mid = (max_val + min_val) * 0.5
             if self.check(nums, mid, k):
@@ -215,27 +237,27 @@ class Solution:
                 max_val = mid
             error = abs(prev_mid - mid)
             prev_mid = mid
-        
+
         return min_val
-    
+
     def check(self, nums: List[int], mid: float, k: int) -> bool:
         sum_val = 0
         prev = 0
         min_sum = 0
-        
+
         for i in range(k):
             sum_val += nums[i] - mid
-        
+
         if sum_val >= 0:
             return True
-        
+
         for i in range(k, len(nums)):
             sum_val += nums[i] - mid
             prev += nums[i - k] - mid
             min_sum = min(prev, min_sum)
             if sum_val >= min_sum:
                 return True
-        
+
         return False
 ```
 
@@ -296,15 +318,15 @@ public:
     double findMaxAverage(vector<int>& nums, int k) {
         double max_val = INT_MIN;
         double min_val = INT_MAX;
-        
+
         for (int n : nums) {
             max_val = max(max_val, (double)n);
             min_val = min(min_val, (double)n);
         }
-        
+
         double prev_mid = max_val;
         double error = INT_MAX;
-        
+
         while (error > 0.00001) {
             double mid = (max_val + min_val) * 0.5;
             if (check(nums, mid, k))
@@ -314,20 +336,20 @@ public:
             error = abs(prev_mid - mid);
             prev_mid = mid;
         }
-        
+
         return min_val;
     }
-    
+
 private:
     bool check(vector<int>& nums, double mid, int k) {
         double sum = 0, prev = 0, min_sum = 0;
-        
+
         for (int i = 0; i < k; i++)
             sum += nums[i] - mid;
-        
+
         if (sum >= 0)
             return true;
-        
+
         for (int i = k; i < nums.size(); i++) {
             sum += nums[i] - mid;
             prev += nums[i - k] - mid;
@@ -335,7 +357,7 @@ private:
             if (sum >= min_sum)
                 return true;
         }
-        
+
         return false;
     }
 };
@@ -362,10 +384,8 @@ class Solution {
 
         while (error > 0.00001) {
             let mid = (max_val + min_val) * 0.5;
-            if (this.check(nums, mid, k))
-                min_val = mid;
-            else
-                max_val = mid;
+            if (this.check(nums, mid, k)) min_val = mid;
+            else max_val = mid;
             error = Math.abs(prev_mid - mid);
             prev_mid = mid;
         }
@@ -380,20 +400,19 @@ class Solution {
      * @return {boolean}
      */
     check(nums, mid, k) {
-        let sum = 0, prev = 0, min_sum = 0;
+        let sum = 0,
+            prev = 0,
+            min_sum = 0;
 
-        for (let i = 0; i < k; i++)
-            sum += nums[i] - mid;
+        for (let i = 0; i < k; i++) sum += nums[i] - mid;
 
-        if (sum >= 0)
-            return true;
+        if (sum >= 0) return true;
 
         for (let i = k; i < nums.length; i++) {
             sum += nums[i] - mid;
             prev += nums[i - k] - mid;
             min_sum = Math.min(prev, min_sum);
-            if (sum >= min_sum)
-                return true;
+            if (sum >= min_sum) return true;
         }
 
         return false;
@@ -534,6 +553,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_average(nums: Vec<i32>, k: i32) -> f64 {
+        let k = k as usize;
+        let mut max_val = *nums.iter().max().unwrap() as f64;
+        let mut min_val = *nums.iter().min().unwrap() as f64;
+
+        let mut prev_mid = max_val;
+        let mut error = f64::INFINITY;
+
+        while error > 0.00001 {
+            let mid = (max_val + min_val) * 0.5;
+            if Self::check(&nums, mid, k) {
+                min_val = mid;
+            } else {
+                max_val = mid;
+            }
+            error = (prev_mid - mid).abs();
+            prev_mid = mid;
+        }
+
+        min_val
+    }
+
+    fn check(nums: &[i32], mid: f64, k: usize) -> bool {
+        let mut sum = 0.0_f64;
+        let mut prev = 0.0_f64;
+        let mut min_sum = 0.0_f64;
+
+        for i in 0..k {
+            sum += nums[i] as f64 - mid;
+        }
+        if sum >= 0.0 {
+            return true;
+        }
+
+        for i in k..nums.len() {
+            sum += nums[i] as f64 - mid;
+            prev += nums[i - k] as f64 - mid;
+            min_sum = min_sum.min(prev);
+            if sum >= min_sum {
+                return true;
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,7 +616,7 @@ class Solution {
     - To sum up, the time complexity of the algorithm would be $O(N \cdot K) = O(N \cdot \log_2 \frac{(\text{max\_val} - \text{min\_val})}{0.00001})$.
 - Space complexity: $O(1)$ constant space
 
->  Where $N$ is the number of elements in the array, and `range` is the difference between the maximal and minimal values in the array, i.e. `range = max_val - min_val`, and finally `error` is the precision required in the problem.
+> Where $N$ is the number of elements in the array, and `range` is the difference between the maximal and minimal values in the array, i.e. `range = max_val - min_val`, and finally `error` is the precision required in the problem.
 
 ---
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to map alien characters to their index positions for O(1) lookups
 - **Custom Comparators** - Defining custom sorting logic to compare strings based on non-standard ordering
 - **String Comparison** - Comparing strings character by character, including handling prefix cases
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Sorting
 
 ### Intuition
+
 If the words are sorted according to the alien dictionary order, they should remain in the same order after sorting. The key insight is that we can create a mapping from each character to its position in the alien alphabet, then use this mapping to define a custom comparator for sorting.
 
 ### Algorithm
+
 1. Create a mapping from each character to its index position in the `order` string.
 2. Define a comparison function that compares two words character by character using the alien order indices.
 3. For characters that differ, the word with the smaller index character comes first.
@@ -221,6 +225,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_alien_sorted(words: Vec<String>, order: String) -> bool {
+        let mut order_index = [0usize; 26];
+        for (i, b) in order.bytes().enumerate() {
+            order_index[(b - b'a') as usize] = i;
+        }
+
+        let mut sorted_words = words.clone();
+        sorted_words.sort_by(|w1, w2| {
+            let b1 = w1.as_bytes();
+            let b2 = w2.as_bytes();
+            for i in 0..b1.len().min(b2.len()) {
+                if b1[i] != b2[i] {
+                    return order_index[(b1[i] - b'a') as usize]
+                        .cmp(&order_index[(b2[i] - b'a') as usize]);
+                }
+            }
+            b1.len().cmp(&b2.len())
+        });
+
+        words == sorted_words
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,9 +265,11 @@ class Solution {
 ## 2. Comparing adjacent words
 
 ### Intuition
+
 For a list to be sorted, each adjacent pair must be in the correct order. Instead of sorting, we can directly verify that each word is lexicographically less than or equal to the next word according to the alien order. This avoids the overhead of sorting.
 
 ### Algorithm
+
 1. Create a mapping from each character to its index position in the `order` string.
 2. Iterate through adjacent pairs of words (`w1`, `w2`) in the array.
 3. Compare characters at each position until a difference is found or one word ends.
@@ -469,6 +501,38 @@ class Solution {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_alien_sorted(words: Vec<String>, order: String) -> bool {
+        let mut order_index = [0usize; 26];
+        for (i, b) in order.bytes().enumerate() {
+            order_index[(b - b'a') as usize] = i;
+        }
+
+        for i in 0..words.len() - 1 {
+            let w1 = words[i].as_bytes();
+            let w2 = words[i + 1].as_bytes();
+
+            for j in 0..w1.len() {
+                if j == w2.len() {
+                    return false;
+                }
+
+                if w1[j] != w2[j] {
+                    if order_index[(w1[j] - b'a') as usize]
+                        > order_index[(w2[j] - b'a') as usize]
+                    {
+                        return false;
+                    }
+                    break;
+                }
+            }
+        }
+        true
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Doubly Linked Lists** - Implementing nodes with prev/next pointers for O(1) insertion and removal from both ends
 - **Hash Maps** - Using dictionaries for O(1) key-to-node lookup to enable fast cache access
 - **Data Structure Design** - Combining multiple data structures (hash map + linked list) to achieve desired time complexity for all operations
@@ -15,34 +17,34 @@ To follow **LRU (Least Recently Used)** behavior:
 
 - Whenever we **access** a key, we move it to the **end** of the list (most recently used).
 - When inserting a new key:
-  - If the key already exists → update its value and move it to the end.
-  - If the cache is full → remove the **first** element (least recently used).
-  - Then add the new key at the end.
+    - If the key already exists → update its value and move it to the end.
+    - If the cache is full → remove the **first** element (least recently used).
+    - Then add the new key at the end.
 
 ### Algorithm
 
 1. **Initialization**
-   - Store the cache as a list.
-   - Store the capacity.
+    - Store the cache as a list.
+    - Store the capacity.
 
 2. **`get(key)`**
-   - Loop through the list to find the key.
-   - If found:
-     - Remove it from its current position.
-     - Append it to the end (mark as recently used).
-     - Return its value.
-   - If not found, return `-1`.
+    - Loop through the list to find the key.
+    - If found:
+        - Remove it from its current position.
+        - Append it to the end (mark as recently used).
+        - Return its value.
+    - If not found, return `-1`.
 
 3. **`put(key, value)`**
-   - Look for the key in the list.
-     - If found:
-       - Remove it.
-       - Update the value.
-       - Append it to the end.
-       - Return.
-   - If not found:
-     - If the cache is full, remove the **first** element.
-     - Append `[key, value]` to the end.
+    - Look for the key in the list.
+        - If found:
+            - Remove it.
+            - Update the value.
+            - Append it to the end.
+            - Return.
+    - If not found:
+        - If the cache is full, remove the **first** element.
+        - Append `[key, value]` to the end.
 
 ::tabs-start
 
@@ -363,6 +365,47 @@ class LRUCache {
 }
 ```
 
+```rust
+struct LRUCache {
+    cache: Vec<[i32; 2]>,
+    capacity: usize,
+}
+
+impl LRUCache {
+    fn new(capacity: i32) -> Self {
+        Self {
+            cache: Vec::new(),
+            capacity: capacity as usize,
+        }
+    }
+
+    fn get(&mut self, key: i32) -> i32 {
+        for i in 0..self.cache.len() {
+            if self.cache[i][0] == key {
+                let tmp = self.cache.remove(i);
+                self.cache.push(tmp);
+                return tmp[1];
+            }
+        }
+        -1
+    }
+
+    fn put(&mut self, key: i32, value: i32) {
+        for i in 0..self.cache.len() {
+            if self.cache[i][0] == key {
+                self.cache.remove(i);
+                self.cache.push([key, value]);
+                return;
+            }
+        }
+        if self.cache.len() == self.capacity {
+            self.cache.remove(0);
+        }
+        self.cache.push([key, value]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,49 +427,51 @@ To do that, we combine:
 2. **Doubly Linked List** -> quickly move nodes to the **most recently used** position and remove the **least recently used** node from the other end in O(1).
 
 We keep:
+
 - The **most recently used** node near the **`right`** side.
 - The **least recently used** node near the **`left`** side.
 
 Whenever we:
+
 - **Get** a key: move that node to the `right` (most recently used).
 - **Put** a key:
-  - If it exists: update value and move it to the `right`.
-  - If it's new:
-    - If at capacity: remove the leftmost real node (LRU).
-    - Insert the new node at the `right`.
+    - If it exists: update value and move it to the `right`.
+    - If it's new:
+        - If at capacity: remove the leftmost real node (LRU).
+        - Insert the new node at the `right`.
 
 Dummy `left` and `right` nodes make insert/remove logic cleaner.
 
 ### Algorithm
 
 1. **Data Structures**
-   - A hash map `cache` that maps `key -> node`.
-   - A doubly linked list with:
-     - `left` dummy: before the least recently used node.
-     - `right` dummy: after the most recently used node.
+    - A hash map `cache` that maps `key -> node`.
+    - A doubly linked list with:
+        - `left` dummy: before the least recently used node.
+        - `right` dummy: after the most recently used node.
 
 2. **Helper: `remove(node)`**
-   - Unlink `node` from the list by connecting its `prev` and `next` nodes.
+    - Unlink `node` from the list by connecting its `prev` and `next` nodes.
 
 3. **Helper: `insert(node)`**
-   - Insert `node` just before `right` (mark as most recently used).
+    - Insert `node` just before `right` (mark as most recently used).
 
 4. **`get(key)`**
-   - If `key` not in `cache`, return `-1`.
-   - Otherwise:
-     - Remove its node from the list.
-     - Insert it again near `right` (mark as recently used).
-     - Return the node's value.
+    - If `key` not in `cache`, return `-1`.
+    - Otherwise:
+        - Remove its node from the list.
+        - Insert it again near `right` (mark as recently used).
+        - Return the node's value.
 
 5. **`put(key, value)`**
-   - If `key` already exists:
-     - Remove its old node from the list.
-   - Create or update the node and store it in `cache[key]`.
-   - Insert the node near `right`.
-   - If `len(cache) > capacity`:
-     - Take the node right after `left` (this is LRU).
-     - Remove it from the list.
-     - Delete its key from the hash map.
+    - If `key` already exists:
+        - Remove its old node from the list.
+    - Create or update the node and store it in `cache[key]`.
+    - Insert the node near `right`.
+    - If `len(cache) > capacity`:
+        - Take the node right after `left` (this is LRU).
+        - Remove it from the list.
+        - Delete its key from the hash map.
 
 This way, both `get` and `put` run in **O(1)** time, and the LRU policy is always maintained.
 
@@ -973,6 +1018,81 @@ class LRUCache {
 }
 ```
 
+```rust
+struct LRUCache {
+    cap: usize,
+    map: HashMap<i32, usize>,
+    entries: Vec<(i32, i32)>,   // (key, val)
+    prev: Vec<usize>,
+    next: Vec<usize>,
+    head: usize,                // dummy head (LRU side)
+    tail: usize,                // dummy tail (MRU side)
+}
+
+impl LRUCache {
+    fn new(capacity: i32) -> Self {
+        // index 0 = dummy head, index 1 = dummy tail
+        let entries = vec![(0, 0), (0, 0)];
+        let prev = vec![0, 0]; // head.prev=0, tail.prev=head(0)
+        let next = vec![1, 1]; // head.next=tail(1), tail.next=1
+        Self {
+            cap: capacity as usize,
+            map: HashMap::new(),
+            entries,
+            prev,
+            next,
+            head: 0,
+            tail: 1,
+        }
+    }
+
+    fn detach(&mut self, idx: usize) {
+        let p = self.prev[idx];
+        let n = self.next[idx];
+        self.next[p] = n;
+        self.prev[n] = p;
+    }
+
+    fn attach_before_tail(&mut self, idx: usize) {
+        let p = self.prev[self.tail];
+        self.next[p] = idx;
+        self.prev[idx] = p;
+        self.next[idx] = self.tail;
+        self.prev[self.tail] = idx;
+    }
+
+    fn get(&mut self, key: i32) -> i32 {
+        if let Some(&idx) = self.map.get(&key) {
+            self.detach(idx);
+            self.attach_before_tail(idx);
+            return self.entries[idx].1;
+        }
+        -1
+    }
+
+    fn put(&mut self, key: i32, value: i32) {
+        if let Some(&idx) = self.map.get(&key) {
+            self.entries[idx].1 = value;
+            self.detach(idx);
+            self.attach_before_tail(idx);
+        } else {
+            let idx = self.entries.len();
+            self.entries.push((key, value));
+            self.prev.push(0);
+            self.next.push(0);
+            self.map.insert(key, idx);
+            self.attach_before_tail(idx);
+
+            if self.map.len() > self.cap {
+                let lru = self.next[self.head];
+                self.detach(lru);
+                self.map.remove(&self.entries[lru].0);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -997,6 +1117,7 @@ This is perfect for an LRU cache:
 - When the cache exceeds capacity, we remove the key that is at the **front** of the order (the least recently used).
 
 So the ordered map itself handles:
+
 - Fast lookups (like a normal hash map)
 - Fast updates of usage order (moving keys to the end)
 - Fast removal of the least recently used key (from the front)
@@ -1006,23 +1127,23 @@ This gives a clean and concise LRU implementation using library support.
 ### Algorithm
 
 1. **Initialization**
-   - Create an ordered map `cache`.
-   - Store the maximum capacity `cap`.
+    - Create an ordered map `cache`.
+    - Store the maximum capacity `cap`.
 
 2. **`get(key)`**
-   - If `key` is not in `cache`, return `-1`.
-   - Otherwise:
-     - Move `key` to the "most recent" position in the ordered map.
-     - Return the associated value.
+    - If `key` is not in `cache`, return `-1`.
+    - Otherwise:
+        - Move `key` to the "most recent" position in the ordered map.
+        - Return the associated value.
 
 3. **`put(key, value)`**
-   - If `key` is already in `cache`:
-     - Update its value.
-     - Move `key` to the "most recent" position.
-   - If `key` is not in `cache`:
-     - Insert `(key, value)` into `cache` at the "most recent" position.
-   - If the size of `cache` is now greater than `cap`:
-     - Remove the **least recently used** key (the one at the "oldest" position in the ordered map).
+    - If `key` is already in `cache`:
+        - Update its value.
+        - Move `key` to the "most recent" position.
+    - If `key` is not in `cache`:
+        - Insert `(key, value)` into `cache` at the "most recent" position.
+    - If the size of `cache` is now greater than `cap`:
+        - Remove the **least recently used** key (the one at the "oldest" position in the ordered map).
 
 This uses the built-in ordered map to achieve LRU behavior with **O(1)** average time for both `get` and `put`.
 
@@ -1286,6 +1407,52 @@ class LRUCache {
 
         cache[key] = value
         keyOrder.append(key)
+    }
+}
+```
+
+```rust
+struct LRUCache {
+    cap: usize,
+    map: HashMap<i32, usize>,
+    order: Vec<i32>,
+}
+
+impl LRUCache {
+    fn new(capacity: i32) -> Self {
+        Self {
+            cap: capacity as usize,
+            map: HashMap::new(),
+            order: Vec::new(),
+        }
+    }
+
+    fn touch(&mut self, key: i32) {
+        if let Some(pos) = self.order.iter().position(|&k| k == key) {
+            self.order.remove(pos);
+        }
+        self.order.push(key);
+    }
+
+    fn get(&mut self, key: i32) -> i32 {
+        if let Some(&val) = self.map.get(&key) {
+            self.touch(key);
+            return val as i32;
+        }
+        -1
+    }
+
+    fn put(&mut self, key: i32, value: i32) {
+        if self.map.contains_key(&key) {
+            self.touch(key);
+        } else {
+            if self.map.len() == self.cap {
+                let lru = self.order.remove(0);
+                self.map.remove(&lru);
+            }
+            self.order.push(key);
+        }
+        self.map.insert(key, value as usize);
     }
 }
 ```

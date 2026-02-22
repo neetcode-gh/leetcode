@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **GCD (Greatest Common Divisor)** - Understanding and implementing the Euclidean algorithm
 - **String Manipulation** - Working with substrings, concatenation, and repetition
 - **Modular Arithmetic** - Using modulo operations for cyclic indexing and divisibility checks
@@ -15,9 +17,9 @@ A string `t` divides both `str1` and `str2` only if its length divides both stri
 ### Algorithm
 
 1. For each possible length `l` from `min(len1, len2)` down to `1`:
-   - Check if `l` divides both `len1` and `len2`.
-   - Extract the prefix `str1[:l]` as the candidate divisor.
-   - Check if repeating this prefix `len1/l` times equals `str1` and `len2/l` times equals `str2`.
+    - Check if `l` divides both `len1` and `len2`.
+    - Extract the prefix `str1[:l]` as the candidate divisor.
+    - Check if repeating this prefix `len1/l` times equals `str1` and `len2/l` times equals `str2`.
 2. Return the first valid prefix found.
 3. If no valid divisor exists, return an empty string.
 
@@ -239,6 +241,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn gcd_of_strings(str1: String, str2: String) -> String {
+        let len1 = str1.len();
+        let len2 = str2.len();
+        let b1 = str1.as_bytes();
+        let b2 = str2.as_bytes();
+
+        let is_divisor = |l: usize| -> bool {
+            if len1 % l != 0 || len2 % l != 0 {
+                return false;
+            }
+            let sub = &b1[..l];
+            let f1 = len1 / l;
+            let f2 = len2 / l;
+            let repeated1: Vec<u8> = sub.iter().copied().cycle().take(l * f1).collect();
+            let repeated2: Vec<u8> = sub.iter().copied().cycle().take(l * f2).collect();
+            repeated1 == b1 && repeated2 == b2
+        };
+
+        for l in (1..=len1.min(len2)).rev() {
+            if is_divisor(l) {
+                return str1[..l].to_string();
+            }
+        }
+
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -260,9 +293,9 @@ Instead of constructing repeated strings and comparing them (which uses extra sp
 
 1. Ensure `str1` is the longer string by swapping if necessary.
 2. For each possible length `l` from `n` down to `1`:
-   - Check if `l` divides both lengths.
-   - Verify that `str1[i] == str2[i % l]` for all positions in `str1`.
-   - Verify that `str2[i] == str2[i % l]` for positions from `l` to `n`.
+    - Check if `l` divides both lengths.
+    - Verify that `str1[i] == str2[i % l]` for all positions in `str1`.
+    - Verify that `str2[i] == str2[i % l]` for positions from `l` to `n`.
 3. Return the prefix `str2[:l]` if all checks pass.
 4. Return an empty string if no valid divisor exists.
 
@@ -578,6 +611,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn gcd_of_strings(str1: String, str2: String) -> String {
+        let (mut s1, mut s2) = (str1.as_bytes().to_vec(), str2.as_bytes().to_vec());
+        let (mut m, mut n) = (s1.len(), s2.len());
+        if m < n {
+            std::mem::swap(&mut s1, &mut s2);
+            std::mem::swap(&mut m, &mut n);
+        }
+
+        for l in (1..=n).rev() {
+            if m % l != 0 || n % l != 0 {
+                continue;
+            }
+
+            let mut valid = true;
+            for i in 0..m {
+                if s1[i] != s2[i % l] {
+                    valid = false;
+                    break;
+                }
+            }
+            if !valid { continue; }
+
+            for i in l..n {
+                if s2[i] != s2[i % l] {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if valid {
+                return String::from_utf8(s2[..l].to_vec()).unwrap();
+            }
+        }
+
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -721,6 +795,23 @@ class Solution {
         }
         let g = gcd(str1.count, str2.count)
         return String(str1.prefix(g))
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn gcd_of_strings(str1: String, str2: String) -> String {
+        if format!("{}{}", str1, str2) != format!("{}{}", str2, str1) {
+            return String::new();
+        }
+
+        fn gcd(a: usize, b: usize) -> usize {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        let g = gcd(str1.len(), str2.len());
+        str1[..g].to_string()
     }
 }
 ```
@@ -944,6 +1035,34 @@ class Solution {
         }
 
         return String(s1[0..<g])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn gcd_of_strings(str1: String, str2: String) -> String {
+        fn gcd(a: usize, b: usize) -> usize {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        let g = gcd(str1.len(), str2.len());
+        let s1 = str1.as_bytes();
+        let s2 = str2.as_bytes();
+
+        for i in 0..s1.len() {
+            if s1[i] != s1[i % g] {
+                return String::new();
+            }
+        }
+
+        for i in 0..s2.len() {
+            if s2[i] != s1[i % g] {
+                return String::new();
+            }
+        }
+
+        str1[..g].to_string()
     }
 }
 ```

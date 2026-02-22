@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion with Memoization** - Avoiding redundant calculations by caching subproblem results
 - **Dynamic Programming** - Building solutions bottom-up from smaller subproblems
 - **Space Optimization** - Reducing DP space complexity by using rolling arrays
@@ -204,6 +206,26 @@ class Solution {
         }
 
         return min(1, rec(query_row, query_glass))
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn champagne_tower(poured: i32, query_row: i32, query_glass: i32) -> f64 {
+        fn rec(poured: i32, row: i32, glass: i32) -> f64 {
+            if row < 0 || glass < 0 || glass > row {
+                return 0.0;
+            }
+            if row == 0 && glass == 0 {
+                return poured as f64;
+            }
+            let left_parent = (rec(poured, row - 1, glass - 1) - 1.0).max(0.0);
+            let right_parent = (rec(poured, row - 1, glass) - 1.0).max(0.0);
+            (left_parent + right_parent) / 2.0
+        }
+
+        (rec(poured, query_row, query_glass)).min(1.0)
     }
 }
 ```
@@ -475,6 +497,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn champagne_tower(poured: i32, query_row: i32, query_glass: i32) -> f64 {
+        let qr = query_row as usize;
+        let mut memo: Vec<Vec<f64>> = (0..qr + 5)
+            .map(|i| vec![-1.0; i + 1])
+            .collect();
+        memo[0][0] = poured as f64;
+
+        fn rec(memo: &mut Vec<Vec<f64>>, row: i32, glass: i32) -> f64 {
+            if row < 0 || glass < 0 || glass > row {
+                return 0.0;
+            }
+            let (r, g) = (row as usize, glass as usize);
+            if memo[r][g] != -1.0 {
+                return memo[r][g];
+            }
+            let left_parent = (rec(memo, row - 1, glass - 1) - 1.0).max(0.0);
+            let right_parent = (rec(memo, row - 1, glass) - 1.0).max(0.0);
+            memo[r][g] = (left_parent + right_parent) / 2.0;
+            memo[r][g]
+        }
+
+        rec(&mut memo, query_row, query_glass).min(1.0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -497,8 +547,8 @@ Instead of working backwards from the query position, we can simulate the pourin
 1. Create a 2D array where `dp[row][glass]` represents the total flow into that glass.
 2. Set `dp[0][0]` = poured.
 3. For each row from 0 to `query_row` - 1:
-   - For each glass in that row, if the flow exceeds 1, compute the excess.
-   - Add half the excess to each of the two glasses below.
+    - For each glass in that row, if the flow exceeds 1, compute the excess.
+    - Add half the excess to each of the two glasses below.
 4. Return min(1, `dp[query_row][query_glass]`).
 
 ::tabs-start
@@ -700,6 +750,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn champagne_tower(poured: i32, query_row: i32, query_glass: i32) -> f64 {
+        let qr = query_row as usize;
+        let mut dp: Vec<Vec<f64>> = (0..qr + 5)
+            .map(|i| vec![0.0; i + 1])
+            .collect();
+        dp[0][0] = poured as f64;
+
+        for row in 0..99.min(qr + 1) {
+            for glass in 0..=row {
+                let excess = (dp[row][glass] - 1.0) / 2.0;
+                if excess > 0.0 {
+                    dp[row + 1][glass] += excess;
+                    dp[row + 1][glass + 1] += excess;
+                }
+            }
+        }
+
+        dp[qr][query_glass as usize].min(1.0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -721,9 +795,9 @@ Since each row only depends on the row directly above it, we do not need to stor
 
 1. Initialize `prev_row` with the poured amount at index 0.
 2. For each row from 1 to `query_row`:
-   - Create a new `cur_row` array of appropriate size.
-   - For each glass in the previous row, if it overflows, distribute half the excess to `cur_row[i]` and `cur_row[i+1]`.
-   - Set `prev_row` = `cur_row` for the next iteration.
+    - Create a new `cur_row` array of appropriate size.
+    - For each glass in the previous row, if it overflows, distribute half the excess to `cur_row[i]` and `cur_row[i+1]`.
+    - Set `prev_row` = `cur_row` for the next iteration.
 3. Return min(1, `prev_row[query_glass]`).
 
 ::tabs-start
@@ -907,6 +981,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn champagne_tower(poured: i32, query_row: i32, query_glass: i32) -> f64 {
+        let qr = query_row as usize;
+        let mut prev_row = vec![poured as f64];
+
+        for row in 1..=qr {
+            let mut cur_row = vec![0.0; row + 1];
+            for i in 0..row {
+                let extra = prev_row[i] - 1.0;
+                if extra > 0.0 {
+                    cur_row[i] += 0.5 * extra;
+                    cur_row[i + 1] += 0.5 * extra;
+                }
+            }
+            prev_row = cur_row;
+        }
+
+        prev_row[query_glass as usize].min(1.0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -928,9 +1025,9 @@ We can further optimize by using a single 1D array, processing from right to lef
 
 1. Create a single array `dp` of size (`query_row` + 1), initialized with poured at index 0.
 2. For each row from 1 to `query_row`:
-   - Iterate from right to left (from index `row`-1 down to 0).
-   - If `dp[i]` > 1, set `dp[i]` = 0.5 * (`dp[i]` - 1) and add the same to `dp[i+1]`.
-   - If `dp[i]` <= 1, set `dp[i]` = 0 (it does not overflow).
+    - Iterate from right to left (from index `row`-1 down to 0).
+    - If `dp[i]` > 1, set `dp[i]` = 0.5 \* (`dp[i]` - 1) and add the same to `dp[i+1]`.
+    - If `dp[i]` <= 1, set `dp[i]` = 0 (it does not overflow).
 3. Return min(1, `dp[query_glass]`).
 
 ::tabs-start
@@ -1121,6 +1218,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn champagne_tower(poured: i32, query_row: i32, query_glass: i32) -> f64 {
+        let qr = query_row as usize;
+        let mut dp = vec![0.0f64; qr + 1];
+        dp[0] = poured as f64;
+
+        for row in 1..=qr {
+            for i in (0..row).rev() {
+                let extra = dp[i] - 1.0;
+                if extra > 0.0 {
+                    dp[i] = 0.5 * extra;
+                    dp[i + 1] += 0.5 * extra;
+                } else {
+                    dp[i] = 0.0;
+                }
+            }
+        }
+
+        dp[query_glass as usize].min(1.0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1135,7 +1256,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Clamp the Final Result to 1
+
 A glass can receive more champagne than it can hold, but the answer should only report how full it is (max 1.0). Returning the raw flow value without capping it at 1 gives incorrect results for glasses that overflow.
+
 ```python
 # Wrong: returns overflow amount
 return dp[query_row][query_glass]
@@ -1144,7 +1267,9 @@ return min(1, dp[query_row][query_glass])
 ```
 
 ### Distributing Total Flow Instead of Excess
+
 Each glass holds 1 unit before overflowing. A common mistake is distributing the total champagne received to children instead of only the excess (amount - 1). This incorrectly empties glasses that should remain full.
+
 ```python
 # Wrong: distributes everything
 dp[row + 1][glass] += dp[row][glass] / 2
@@ -1155,7 +1280,9 @@ if excess > 0:
 ```
 
 ### Incorrect Parent Glass Indices
+
 When computing flow from parent glasses, using wrong indices for left and right parents causes incorrect champagne distribution. The left parent is at (row-1, glass-1) and right parent is at (row-1, glass).
+
 ```python
 # Wrong: both parents at same index
 left_parent = rec(row - 1, glass)

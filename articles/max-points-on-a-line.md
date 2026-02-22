@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to group and count elements by key in O(1) average time
 - **Coordinate Geometry** - Understanding slopes and collinearity of points on a 2D plane
 - **Greatest Common Divisor (GCD)** - Reducing fractions to canonical form to avoid floating point precision issues
@@ -276,6 +278,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i32 {
+        let n = points.len();
+        if n <= 2 {
+            return n as i32;
+        }
+
+        let get_slope = |p1: &[i32], p2: &[i32]| -> f64 {
+            if p1[0] == p2[0] {
+                return f64::INFINITY;
+            }
+            (p2[1] - p1[1]) as f64 / (p2[0] - p1[0]) as f64
+        };
+
+        let mut res = 1;
+        for i in 0..n {
+            for j in (i + 1)..n {
+                let slope = get_slope(&points[i], &points[j]);
+                let mut cnt = 2;
+                for k in (j + 1)..n {
+                    if slope == get_slope(&points[i], &points[k]) {
+                        cnt += 1;
+                    }
+                }
+                res = res.max(cnt);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -485,6 +520,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i32 {
+        let mut res = 1i32;
+        for i in 0..points.len() {
+            let mut count = HashMap::new();
+            for j in (i + 1)..points.len() {
+                let mut slope = if points[j][0] == points[i][0] {
+                    f64::INFINITY
+                } else {
+                    (points[j][1] - points[i][1]) as f64
+                        / (points[j][0] - points[i][0]) as f64
+                };
+                if slope == -0.0 {
+                    slope = 0.0;
+                }
+                let bits = slope.to_bits();
+                let cnt = count.entry(bits).or_insert(0);
+                *cnt += 1;
+                res = res.max(*cnt + 1);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -505,9 +567,9 @@ Floating point slopes can introduce precision errors. To avoid this, we represen
 1. If there are `2` or fewer points, return the count directly.
 2. For each point `i`, create a hash map keyed by the normalized slope (using GCD reduction).
 3. For every other point `j`:
-   - Compute `dx = x_j - x_i` and `dy = y_j - y_i`.
-   - Divide both by their GCD to get the canonical slope representation.
-   - Increment the count for this slope in the map.
+    - Compute `dx = x_j - x_i` and `dy = y_j - y_i`.
+    - Divide both by their GCD to get the canonical slope representation.
+    - Increment the count for this slope in the map.
 4. Update `res` with the maximum count plus `1`.
 5. Return `res`.
 
@@ -758,6 +820,39 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i32 {
+        let n = points.len();
+        if n <= 2 {
+            return n as i32;
+        }
+
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        let mut res = 1;
+        for i in 0..n - 1 {
+            let mut count = HashMap::new();
+            for j in (i + 1)..n {
+                let mut dx = points[j][0] - points[i][0];
+                let mut dy = points[j][1] - points[i][1];
+                let g = gcd(dx, dy);
+                dx /= g;
+                dy /= g;
+                let cnt = count.entry((dx, dy)).or_insert(0);
+                *cnt += 1;
+            }
+            for &freq in count.values() {
+                res = res.max(freq + 1);
+            }
+        }
+        res
     }
 }
 ```

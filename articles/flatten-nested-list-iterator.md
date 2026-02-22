@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion / DFS** - Traversing nested structures of arbitrary depth
 - **Stacks** - Simulating recursion iteratively and managing traversal state
 - **Iterator Pattern** - Implementing next() and hasNext() methods for lazy evaluation
@@ -16,8 +18,8 @@ The nested list can contain integers or other nested lists at any depth. We can 
 
 1. **Constructor**: Initialize an empty array and a pointer at `0`. Call `dfs()` on the nested list to populate the array.
 2. **dfs(nestedArr)**: For each element in the nested array:
-   - If it's an integer, append it to the array.
-   - If it's a list, recursively call `dfs()` on that list.
+    - If it's an integer, append it to the array.
+    - If it's a list, recursively call `dfs()` on that list.
 3. **next()**: Return the element at the current pointer and increment the pointer.
 4. **hasNext()**: Return `true` if the pointer is less than the array length.
 
@@ -279,6 +281,41 @@ class NestedIterator {
 }
 ```
 
+```rust
+struct NestedIterator {
+    arr: Vec<i32>,
+    ptr: usize,
+}
+
+impl NestedIterator {
+    fn new(nested_list: Vec<NestedInteger>) -> Self {
+        let mut arr = Vec::new();
+        Self::dfs(&nested_list, &mut arr);
+        NestedIterator { arr, ptr: 0 }
+    }
+
+    fn dfs(nested_arr: &[NestedInteger], arr: &mut Vec<i32>) {
+        for num in nested_arr {
+            if num.is_integer() {
+                arr.push(num.get_integer());
+            } else {
+                Self::dfs(&num.get_list(), arr);
+            }
+        }
+    }
+
+    fn next(&mut self) -> i32 {
+        let val = self.arr[self.ptr];
+        self.ptr += 1;
+        val
+    }
+
+    fn has_next(&self) -> bool {
+        self.ptr < self.arr.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -300,9 +337,9 @@ This is a variation of the first approach where the recursive function returns a
 
 1. **Constructor**: Call `dfs()` on the nested list and store the returned array. Initialize pointer to `0`.
 2. **dfs(nestedArr)**: Create an empty result list. For each element:
-   - If it's an integer, append it to the result.
-   - If it's a list, recursively call `dfs()` and extend the result with the returned list.
-   - Return the result.
+    - If it's an integer, append it to the result.
+    - If it's a list, recursively call `dfs()` and extend the result with the returned list.
+    - Return the result.
 3. **next()**: Return the element at the current pointer and increment it.
 4. **hasNext()**: Return `true` if the pointer is less than the array length.
 
@@ -576,6 +613,42 @@ class NestedIterator {
 }
 ```
 
+```rust
+struct NestedIterator {
+    arr: Vec<i32>,
+    ptr: usize,
+}
+
+impl NestedIterator {
+    fn new(nested_list: Vec<NestedInteger>) -> Self {
+        let arr = Self::dfs(&nested_list);
+        NestedIterator { arr, ptr: 0 }
+    }
+
+    fn dfs(nested_arr: &[NestedInteger]) -> Vec<i32> {
+        let mut res = Vec::new();
+        for num in nested_arr {
+            if num.is_integer() {
+                res.push(num.get_integer());
+            } else {
+                res.extend(Self::dfs(&num.get_list()));
+            }
+        }
+        res
+    }
+
+    fn next(&mut self) -> i32 {
+        let val = self.arr[self.ptr];
+        self.ptr += 1;
+        val
+    }
+
+    fn has_next(&self) -> bool {
+        self.ptr < self.arr.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,8 +670,8 @@ We can use recursion to flatten the list and store the integers in a stack. By r
 
 1. **Constructor**: Initialize an empty stack. Call `dfs()` on the nested list, then reverse the stack.
 2. **dfs(nested)**: For each element:
-   - If it's an integer, push it onto the stack.
-   - If it's a list, recursively call `dfs()` on it.
+    - If it's an integer, push it onto the stack.
+    - If it's a list, recursively call `dfs()` on it.
 3. **next()**: Pop and return the top element from the stack.
 4. **hasNext()**: Return `true` if the stack is not empty.
 
@@ -864,6 +937,39 @@ class NestedIterator {
 }
 ```
 
+```rust
+struct NestedIterator {
+    stack: Vec<i32>,
+}
+
+impl NestedIterator {
+    fn new(nested_list: Vec<NestedInteger>) -> Self {
+        let mut stack = Vec::new();
+        Self::dfs(&nested_list, &mut stack);
+        stack.reverse();
+        NestedIterator { stack }
+    }
+
+    fn dfs(nested: &[NestedInteger], stack: &mut Vec<i32>) {
+        for num in nested {
+            if num.is_integer() {
+                stack.push(num.get_integer());
+            } else {
+                Self::dfs(&num.get_list(), stack);
+            }
+        }
+    }
+
+    fn next(&mut self) -> i32 {
+        self.stack.pop().unwrap()
+    }
+
+    fn has_next(&self) -> bool {
+        !self.stack.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -886,9 +992,9 @@ Instead of flattening everything upfront, we can flatten lazily using a stack. W
 1. **Constructor**: Copy the nested list to a stack in reverse order (so the first element is on top).
 2. **next()**: Pop the top element and return its integer value.
 3. **hasNext()**: While the stack is not empty:
-   - If the top element is an integer, return `true`.
-   - Otherwise, pop the nested list, reverse it, and push its elements back onto the stack.
-   - Return `false` if the stack becomes empty.
+    - If the top element is an integer, return `true`.
+    - Otherwise, pop the nested list, reverse it, and push its elements back onto the stack.
+    - Return `false` if the stack becomes empty.
 
 ::tabs-start
 
@@ -1133,6 +1239,37 @@ class NestedIterator {
             stack.append(contentsOf: nestedList.reversed())
         }
         return false
+    }
+}
+```
+
+```rust
+struct NestedIterator {
+    stack: Vec<NestedInteger>,
+}
+
+impl NestedIterator {
+    fn new(nested_list: Vec<NestedInteger>) -> Self {
+        let mut stack: Vec<NestedInteger> = nested_list;
+        stack.reverse();
+        NestedIterator { stack }
+    }
+
+    fn next(&mut self) -> i32 {
+        self.stack.pop().unwrap().get_integer()
+    }
+
+    fn has_next(&mut self) -> bool {
+        while let Some(top) = self.stack.last() {
+            if top.is_integer() {
+                return true;
+            }
+            let top = self.stack.pop().unwrap();
+            let mut nested_list = top.get_list();
+            nested_list.reverse();
+            self.stack.extend(nested_list);
+        }
+        false
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for optimization problems
 - **Hash Sets** - Efficient O(1) lookup for dictionary word matching
 - **String Manipulation** - Substring extraction and comparison
@@ -20,11 +22,11 @@ This recursive approach explores all possibilities. For each index, we take the 
 
 1. Convert the dictionary to a set for O(1) lookups.
 2. Define a recursive function `dfs(i)` that returns the minimum extra characters from index `i` to the end:
-   - If `i == len(s)`, return `0` (no characters left).
-   - Start with `res = 1 + dfs(i + 1)` (skip current character).
-   - For each ending index `j` from `i` to `len(s) - 1`:
-     - If `s[i:j+1]` is in the dictionary, update `res = min(res, dfs(j + 1))`.
-   - Return `res`.
+    - If `i == len(s)`, return `0` (no characters left).
+    - Start with `res = 1 + dfs(i + 1)` (skip current character).
+    - For each ending index `j` from `i` to `len(s) - 1`:
+        - If `s[i:j+1]` is in the dictionary, update `res = min(res, dfs(j + 1))`.
+    - Return `res`.
 3. Return `dfs(0)`.
 
 ::tabs-start
@@ -230,6 +232,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let words: HashSet<String> = dictionary.into_iter().collect();
+        let s = s.as_bytes();
+
+        fn dfs(i: usize, s: &[u8], words: &HashSet<String>) -> i32 {
+            if i == s.len() {
+                return 0;
+            }
+            let mut res = 1 + dfs(i + 1, s, words);
+            for j in i..s.len() {
+                let sub = std::str::from_utf8(&s[i..=j]).unwrap();
+                if words.contains(sub) {
+                    res = res.min(dfs(j + 1, s, words));
+                }
+            }
+            res
+        }
+
+        dfs(0, s, &words)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,10 +281,10 @@ Using a hash set for the dictionary allows efficient substring lookups. The memo
 1. Convert the dictionary to a set for O(1) lookups.
 2. Initialize `dp` with `dp[len(s)] = 0` as the base case.
 3. Define `dfs(i)`:
-   - If `i` is already in `dp`, return `dp[i]`.
-   - Start with `res = 1 + dfs(i + 1)`.
-   - For each `j` from `i` to `len(s) - 1`, if `s[i:j+1]` is in the set, update `res = min(res, dfs(j + 1))`.
-   - Store and return `dp[i] = res`.
+    - If `i` is already in `dp`, return `dp[i]`.
+    - Start with `res = 1 + dfs(i + 1)`.
+    - For each `j` from `i` to `len(s) - 1`, if `s[i:j+1]` is in the set, update `res = min(res, dfs(j + 1))`.
+    - Store and return `dp[i] = res`.
 4. Return `dfs(0)`.
 
 ::tabs-start
@@ -474,6 +501,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let words: HashSet<String> = dictionary.into_iter().collect();
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![-1i32; n + 1];
+        dp[n] = 0;
+
+        fn dfs(i: usize, s: &[u8], words: &HashSet<String>, dp: &mut Vec<i32>) -> i32 {
+            if dp[i] != -1 {
+                return dp[i];
+            }
+            let mut res = 1 + dfs(i + 1, s, words, dp);
+            for j in i..s.len() {
+                let sub = std::str::from_utf8(&s[i..=j]).unwrap();
+                if words.contains(sub) {
+                    res = res.min(dfs(j + 1, s, words, dp));
+                }
+            }
+            dp[i] = res;
+            res
+        }
+
+        dfs(0, s, &words, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,8 +552,8 @@ Instead of recursion with memoization, we can fill the DP table iteratively from
 1. Convert the dictionary to a set.
 2. Create an array `dp` of size `n + 1`, initialized to `0`.
 3. For `i` from `n - 1` down to `0`:
-   - Set `dp[i] = 1 + dp[i + 1]` (skip current character).
-   - For each `j` from `i` to `n - 1`, if `s[i:j+1]` is in the set, update `dp[i] = min(dp[i], dp[j + 1])`.
+    - Set `dp[i] = 1 + dp[i + 1]` (skip current character).
+    - For each `j` from `i` to `n - 1`, if `s[i:j+1]` is in the set, update `dp[i] = min(dp[i], dp[j + 1])`.
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -666,6 +722,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let words: HashSet<String> = dictionary.into_iter().collect();
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![0i32; n + 1];
+
+        for i in (0..n).rev() {
+            dp[i] = 1 + dp[i + 1];
+            for j in i..n {
+                let sub = std::str::from_utf8(&s[i..=j]).unwrap();
+                if words.contains(sub) {
+                    dp[i] = dp[i].min(dp[j + 1]);
+                }
+            }
+        }
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -687,11 +765,11 @@ Instead of checking all substrings against a hash set, we can iterate through di
 
 1. Initialize `dp` with `dp[len(s)] = 0`.
 2. Define `dfs(i)`:
-   - If `i` is in `dp`, return `dp[i]`.
-   - Start with `res = 1 + dfs(i + 1)`.
-   - For each `word` in the dictionary:
-     - If `i + len(word) <= len(s)` and `s[i:i+len(word)] == word`, update `res = min(res, dfs(i + len(word)))`.
-   - Store and return `dp[i] = res`.
+    - If `i` is in `dp`, return `dp[i]`.
+    - Start with `res = 1 + dfs(i + 1)`.
+    - For each `word` in the dictionary:
+        - If `i + len(word) <= len(s)` and `s[i:i+len(word)] == word`, update `res = min(res, dfs(i + len(word)))`.
+    - Store and return `dp[i] = res`.
 3. Return `dfs(0)`.
 
 ::tabs-start
@@ -973,6 +1051,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = HashMap::new();
+        dp.insert(n, 0i32);
+
+        fn dfs(
+            i: usize,
+            s: &[u8],
+            dictionary: &[String],
+            dp: &mut HashMap<usize, i32>,
+        ) -> i32 {
+            if let Some(&val) = dp.get(&i) {
+                return val;
+            }
+            let mut res = 1 + dfs(i + 1, s, dictionary, dp);
+            for word in dictionary {
+                let wb = word.as_bytes();
+                if i + wb.len() > s.len() {
+                    continue;
+                }
+                if s[i..i + wb.len()] == *wb {
+                    res = res.min(dfs(i + wb.len(), s, dictionary, dp));
+                }
+            }
+            dp.insert(i, res);
+            res
+        }
+
+        dfs(0, s, &dictionary, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -994,9 +1108,9 @@ This is the iterative version of the previous approach, iterating through dictio
 
 1. Create an array `dp` of size `n + 1`, initialized to `0`.
 2. For `i` from `n - 1` down to `0`:
-   - Set `dp[i] = 1 + dp[i + 1]`.
-   - For each `word` in the dictionary:
-     - If `i + len(word) <= n` and `s[i:i+len(word)] == word`, update `dp[i] = min(dp[i], dp[i + len(word)])`.
+    - Set `dp[i] = 1 + dp[i + 1]`.
+    - For each `word` in the dictionary:
+        - If `i + len(word) <= n` and `s[i:i+len(word)] == word`, update `dp[i] = min(dp[i], dp[i + len(word)])`.
 3. Return `dp[0]`.
 
 ::tabs-start
@@ -1165,6 +1279,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![0i32; n + 1];
+
+        for i in (0..n).rev() {
+            dp[i] = 1 + dp[i + 1];
+            for word in &dictionary {
+                let wb = word.as_bytes();
+                if i + wb.len() <= n && s[i..i + wb.len()] == *wb {
+                    dp[i] = dp[i].min(dp[i + wb.len()]);
+                }
+            }
+        }
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1187,14 +1322,14 @@ A Trie (prefix tree) allows efficient prefix matching. Instead of checking each 
 1. Build a Trie from all dictionary words.
 2. Initialize `dp` with `dp[len(s)] = 0`.
 3. Define `dfs(i)`:
-   - If `i` is in `dp`, return `dp[i]`.
-   - Start with `res = 1 + dfs(i + 1)`.
-   - Traverse the Trie starting from the `root`:
-     - For `j` from `i` to `len(s) - 1`:
-       - If `s[j]` is not a child of the current node, break.
-       - Move to the child node.
-       - If this node marks the end of a word, update `res = min(res, dfs(j + 1))`.
-   - Store and return `dp[i] = res`.
+    - If `i` is in `dp`, return `dp[i]`.
+    - Start with `res = 1 + dfs(i + 1)`.
+    - Traverse the Trie starting from the `root`:
+        - For `j` from `i` to `len(s) - 1`:
+            - If `s[j]` is not a child of the current node, break.
+            - Move to the child node.
+            - If this node marks the end of a word, update `res = min(res, dfs(j + 1))`.
+    - Store and return `dp[i] = res`.
 4. Return `dfs(0)`.
 
 ::tabs-start
@@ -1676,6 +1811,78 @@ class Solution {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: [Option<Box<TrieNode>>; 26],
+    is_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        TrieNode {
+            children: Default::default(),
+            is_word: false,
+        }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Trie { root: TrieNode::new() }
+    }
+
+    fn add_word(&mut self, word: &str) {
+        let mut curr = &mut self.root;
+        for &b in word.as_bytes() {
+            let idx = (b - b'a') as usize;
+            curr = curr.children[idx].get_or_insert_with(|| Box::new(TrieNode::new()));
+        }
+        curr.is_word = true;
+    }
+}
+
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let mut trie = Trie::new();
+        for word in &dictionary {
+            trie.add_word(word);
+        }
+
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![-1i32; n + 1];
+
+        fn dfs(i: usize, s: &[u8], trie: &Trie, dp: &mut Vec<i32>) -> i32 {
+            if i == s.len() { return 0; }
+            if dp[i] != -1 { return dp[i]; }
+
+            let mut res = 1 + dfs(i + 1, s, trie, dp);
+            let mut curr = &trie.root;
+
+            for j in i..s.len() {
+                let idx = (s[j] - b'a') as usize;
+                match &curr.children[idx] {
+                    Some(next) => curr = next,
+                    None => break,
+                }
+                if curr.is_word {
+                    res = res.min(dfs(j + 1, s, trie, dp));
+                }
+            }
+
+            dp[i] = res;
+            res
+        }
+
+        dfs(0, s, &trie, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1698,12 +1905,12 @@ This combines the bottom-up DP approach with Trie-based matching. We iterate fro
 1. Build a Trie from all dictionary words.
 2. Create an array `dp` of size `n + 1`, initialized to `0`.
 3. For `i` from `n - 1` down to `0`:
-   - Set `dp[i] = 1 + dp[i + 1]`.
-   - Start at the Trie `root` and traverse:
-     - For `j` from `i` to `n - 1`:
-       - If `s[j]` is not a child, break.
-       - Move to the child node.
-       - If this node marks a word end, update `dp[i] = min(dp[i], dp[j + 1])`.
+    - Set `dp[i] = 1 + dp[i + 1]`.
+    - Start at the Trie `root` and traverse:
+        - For `j` from `i` to `n - 1`:
+            - If `s[j]` is not a child, break.
+            - Move to the child node.
+            - If this node marks a word end, update `dp[i] = min(dp[i], dp[j + 1])`.
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -2129,6 +2336,72 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+struct TrieNode {
+    children: [Option<Box<TrieNode>>; 26],
+    is_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        TrieNode {
+            children: Default::default(),
+            is_word: false,
+        }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Trie { root: TrieNode::new() }
+    }
+
+    fn add_word(&mut self, word: &str) {
+        let mut curr = &mut self.root;
+        for &b in word.as_bytes() {
+            let idx = (b - b'a') as usize;
+            curr = curr.children[idx].get_or_insert_with(|| Box::new(TrieNode::new()));
+        }
+        curr.is_word = true;
+    }
+}
+
+impl Solution {
+    pub fn min_extra_char(s: String, dictionary: Vec<String>) -> i32 {
+        let mut trie = Trie::new();
+        for word in &dictionary {
+            trie.add_word(word);
+        }
+
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![0i32; n + 1];
+
+        for i in (0..n).rev() {
+            dp[i] = 1 + dp[i + 1];
+            let mut curr = &trie.root;
+
+            for j in i..n {
+                let idx = (s[j] - b'a') as usize;
+                match &curr.children[idx] {
+                    Some(next) => curr = next,
+                    None => break,
+                }
+                if curr.is_word {
+                    dp[i] = dp[i].min(dp[j + 1]);
+                }
+            }
+        }
+
+        dp[0]
     }
 }
 ```

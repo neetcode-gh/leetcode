@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Used to order players by score/age to simplify conflict detection
 - **Dynamic Programming (Memoization)** - Required for the top-down recursive approach with caching
 - **Dynamic Programming (Tabulation)** - Used in the bottom-up iterative approach
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 A conflict happens when a younger player has a higher score than an older player. To handle this cleanly, we sort players by score (and by age as a tiebreaker). After sorting, as we iterate through players in order, we only need to check if a new player's age is compatible with the last player we picked. If the current player has an equal or higher age than the last picked player, there is no conflict since the scores are already in non-decreasing order. We use recursion with memoization to explore all valid team combinations and find the maximum total score.
 
 ### Algorithm
+
 1. Create pairs of (score, age) for each player and sort them by score, then by age.
 2. Use a recursive function `dfs(i, j)` where `i` is the current player index and `j` is the index of the last picked player.
 3. At each step, we can either skip the current player or include them if their age is greater than or equal to the last picked player's age.
@@ -338,6 +342,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn best_team_score(scores: Vec<i32>, ages: Vec<i32>) -> i32 {
+        let n = scores.len();
+        let mut pairs: Vec<(i32, i32)> = scores.iter().zip(ages.iter())
+            .map(|(&s, &a)| (s, a)).collect();
+        pairs.sort();
+
+        let mut dp = vec![vec![-1; n + 1]; n];
+
+        fn dfs(i: usize, j: i32, pairs: &[(i32, i32)], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i == pairs.len() {
+                return 0;
+            }
+            if dp[i][(j + 1) as usize] != -1 {
+                return dp[i][(j + 1) as usize];
+            }
+
+            let (m_score, m_age) = if j >= 0 { pairs[j as usize] } else { (0, 0) };
+            let (score, age) = pairs[i];
+
+            let mut res = 0;
+            if !(score > m_score && age < m_age) {
+                res = dfs(i + 1, i as i32, pairs, dp) + score;
+            }
+            dp[i][(j + 1) as usize] = res.max(dfs(i + 1, j, pairs, dp));
+            dp[i][(j + 1) as usize]
+        }
+
+        dfs(0, -1, &pairs, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,9 +388,11 @@ class Solution {
 ## 2. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 Instead of recursion, we can build the solution iteratively. After sorting players by score, for each player we look at all previous players and check if we can extend their team. If the current player's age is greater than or equal to a previous player's age, we can add the current player to that team without causing a conflict. We track the maximum score ending at each player position.
 
 ### Algorithm
+
 1. Create pairs of (score, age) for each player and sort them by score, then by age.
 2. Initialize a `dp` array where `dp[i]` represents the maximum score of a valid team ending with player `i`.
 3. For each player `i`, iterate through all previous players `j`. If `age[i] >= age[j]`, update `dp[i] = max(dp[i], score[i] + dp[j])`.
@@ -599,6 +639,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn best_team_score(scores: Vec<i32>, ages: Vec<i32>) -> i32 {
+        let n = scores.len();
+        let mut pairs: Vec<(i32, i32)> = scores.iter().zip(ages.iter())
+            .map(|(&s, &a)| (s, a)).collect();
+        pairs.sort();
+
+        let mut dp: Vec<i32> = pairs.iter().map(|&(s, _)| s).collect();
+
+        for i in 0..n {
+            let (m_score, m_age) = pairs[i];
+            for j in 0..i {
+                let (_, age) = pairs[j];
+                if m_age >= age {
+                    dp[i] = dp[i].max(m_score + dp[j]);
+                }
+            }
+        }
+
+        *dp.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -611,9 +676,11 @@ class Solution {
 ## 3. Dynamic Programming (Segment Tree)
 
 ### Intuition
+
 The bottom-up approach has O(n^2) complexity because we check all previous players for each new player. We can optimize this using a segment tree. Since we only care about players with ages less than or equal to the current player's age, we can query the segment tree for the maximum `dp` value among all ages in the range `[0, current_age]`. After processing each player, we update the segment tree with the new `dp` value at that age index.
 
 ### Algorithm
+
 1. Create pairs of (score, age) for each player and sort them by score, then by age.
 2. Compress the ages to consecutive indices (coordinate compression) for efficient segment tree usage.
 3. Build a segment tree that supports range maximum queries and point updates.
@@ -1269,6 +1336,83 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegmentTree {
+    fn new(mut n: usize) -> Self {
+        while n & (n - 1) != 0 {
+            n += 1;
+        }
+        SegmentTree {
+            n,
+            tree: vec![0; 2 * n],
+        }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        let mut pos = self.n + i;
+        self.tree[pos] = self.tree[pos].max(val);
+        pos >>= 1;
+        while pos >= 1 {
+            self.tree[pos] = self.tree[pos << 1].max(self.tree[pos << 1 | 1]);
+            pos >>= 1;
+        }
+    }
+
+    fn query(&self, l: usize, r: usize) -> i32 {
+        let mut res = 0;
+        let mut l = l + self.n;
+        let mut r = r + self.n + 1;
+        while l < r {
+            if l & 1 == 1 {
+                res = res.max(self.tree[l]);
+                l += 1;
+            }
+            if r & 1 == 1 {
+                r -= 1;
+                res = res.max(self.tree[r]);
+            }
+            l >>= 1;
+            r >>= 1;
+        }
+        res
+    }
+}
+
+impl Solution {
+    pub fn best_team_score(scores: Vec<i32>, ages: Vec<i32>) -> i32 {
+        let n = scores.len();
+        let mut pairs: Vec<(i32, i32)> = scores.iter().zip(ages.iter())
+            .map(|(&s, &a)| (s, a)).collect();
+        pairs.sort();
+
+        let mut unique_ages: Vec<i32> = pairs.iter().map(|&(_, a)| a).collect();
+        unique_ages.sort();
+        unique_ages.dedup();
+        let age_id: HashMap<i32, usize> = unique_ages.iter().enumerate()
+            .map(|(i, &a)| (a, i)).collect();
+
+        let mut segtree = SegmentTree::new(unique_ages.len());
+        let mut res = 0;
+
+        for i in 0..n {
+            let (m_score, m_age) = pairs[i];
+            let idx = age_id[&m_age];
+            let j = segtree.query(0, idx);
+            let dp = j + m_score;
+            segtree.update(idx, dp);
+            res = res.max(dp);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1281,14 +1425,18 @@ class Solution {
 ## Common Pitfalls
 
 ### Sorting by Age Instead of Score
+
 The problem requires sorting by score (with age as a tiebreaker) so that we only need to check if ages are compatible. Sorting by age first leads to a more complex conflict check and often incorrect results.
+
 ```python
 # Wrong: pairs.sort(key=lambda x: x[1])  # sorting by age
 # Correct: pairs.sort()  # sort by score first, then age
 ```
 
 ### Misunderstanding the Conflict Condition
+
 A conflict occurs when a younger player has a strictly higher score than an older player. The condition is NOT simply "different ages with different scores." Players with the same age never conflict, regardless of scores.
 
 ### Forgetting to Include the Player's Own Score
+
 When computing the DP value for a player, you must add their own score to the best team score from compatible previous players. Forgetting to add the current player's score gives an answer that is always one player short.

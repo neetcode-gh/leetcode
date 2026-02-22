@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Manipulation** - In-place swapping and reversing elements
 - **Two Pointers Technique** - Using left and right pointers to reverse subarrays
 - **Lexicographic Ordering** - Understanding how sequences are compared and ordered
@@ -436,6 +438,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn next_permutation(nums: &mut Vec<i32>) {
+        let perms = Self::permute(nums.clone());
+        let mut perms = perms;
+        perms.sort();
+        for i in 0..perms.len() {
+            if perms[i] == *nums {
+                let next = &perms[(i + 1) % perms.len()];
+                nums.copy_from_slice(next);
+                return;
+            }
+        }
+    }
+
+    fn permute(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res = Vec::new();
+        let mut used = vec![false; nums.len()];
+        let mut path = Vec::new();
+
+        fn dfs(nums: &[i32], used: &mut Vec<bool>, path: &mut Vec<i32>, res: &mut Vec<Vec<i32>>) {
+            if path.len() == nums.len() {
+                res.push(path.clone());
+                return;
+            }
+            for i in 0..nums.len() {
+                if used[i] { continue; }
+                if i > 0 && nums[i] == nums[i - 1] && !used[i - 1] { continue; }
+                used[i] = true;
+                path.push(nums[i]);
+                dfs(nums, used, path, res);
+                path.pop();
+                used[i] = false;
+            }
+        }
+
+        dfs(&nums, &mut used, &mut path, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -461,8 +507,8 @@ If no such `pivot` exists (the array is fully descending), we are at the largest
 
 1. Scan from the second-to-last element leftward to find the first index `i` where `nums[i] < nums[i+1]`.
 2. If such an index exists:
-   - Scan from the right to find the first index `j` where `nums[j] > nums[i]`.
-   - Swap `nums[i]` and `nums[j]`.
+    - Scan from the right to find the first index `j` where `nums[j] > nums[i]`.
+    - Swap `nums[i]` and `nums[j]`.
 3. Reverse the subarray from `i+1` to the end.
 
 ::tabs-start
@@ -674,6 +720,26 @@ class Solution {
             l += 1
             r -= 1
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn next_permutation(nums: &mut Vec<i32>) {
+        let n = nums.len();
+        let mut i = n as i32 - 2;
+        while i >= 0 && nums[i as usize] >= nums[i as usize + 1] {
+            i -= 1;
+        }
+        if i >= 0 {
+            let mut j = n - 1;
+            while nums[j] <= nums[i as usize] {
+                j -= 1;
+            }
+            nums.swap(i as usize, j);
+        }
+        nums[(i as usize + 1)..].reverse();
     }
 }
 ```

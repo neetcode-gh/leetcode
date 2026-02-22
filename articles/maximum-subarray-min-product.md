@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - Essential for computing range sums in O(1) time after O(n) preprocessing
 - **Monotonic Stack** - Used to efficiently find the nearest smaller element on both sides for each index
 - **Divide and Conquer** - Alternative approach that recursively processes subarrays based on minimum elements
@@ -16,11 +18,11 @@ The min-product of a subarray is defined as the minimum element multiplied by th
 ### Algorithm
 
 1. For each starting index `i` from `0` to `n-1`:
-   - Initialize `total_sum = 0` and `mini = infinity`.
-   - Extend the subarray rightward from `i` to `n-1`.
-   - Update `mini` with each new element.
-   - Add each element to `total_sum`.
-   - Calculate `mini * total_sum` and update the result.
+    - Initialize `total_sum = 0` and `mini = infinity`.
+    - Extend the subarray rightward from `i` to `n-1`.
+    - Update `mini` with each new element.
+    - Add each element to `total_sum`.
+    - Calculate `mini * total_sum` and update the result.
 2. Return the maximum min-product modulo `10^9 + 7`.
 
 ::tabs-start
@@ -166,6 +168,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_min_product(nums: Vec<i32>) -> i32 {
+        let mut res: i64 = 0;
+        let modv: i64 = 1_000_000_007;
+        for i in 0..nums.len() {
+            let mut total_sum: i64 = 0;
+            let mut mini: i64 = i64::MAX;
+            for j in i..nums.len() {
+                mini = mini.min(nums[j] as i64);
+                total_sum += nums[j] as i64;
+                let cur = (mini * total_sum) % modv;
+                res = res.max(cur);
+            }
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,11 +206,11 @@ For any subarray, the minimum element defines the "bottleneck." If we know the m
 ### Algorithm
 
 1. Define a recursive function for range `[l, r]`:
-   - Base case: if `l > r`, return `0`.
-   - Find the index of the minimum element in `[l, r]` and compute the total sum.
-   - Calculate the current score as `sum * min_element`.
-   - Recursively solve for `[l, min_idx - 1]` and `[min_idx + 1, r]`.
-   - Return the maximum of the three values.
+    - Base case: if `l > r`, return `0`.
+    - Find the index of the minimum element in `[l, r]` and compute the total sum.
+    - Calculate the current score as `sum * min_element`.
+    - Recursively solve for `[l, min_idx - 1]` and `[min_idx + 1, r]`.
+    - Return the maximum of the three values.
 2. Call the recursive function on `[0, n-1]` and return the result modulo `10^9 + 7`.
 
 ::tabs-start
@@ -405,6 +427,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_min_product(nums: Vec<i32>) -> i32 {
+        let modv: i64 = 1_000_000_007;
+
+        fn rec(nums: &[i32], l: isize, r: isize) -> i64 {
+            if l > r { return 0; }
+            let (l, r) = (l as usize, r as usize);
+            let mut min_idx = l;
+            let mut total_sum: i64 = 0;
+            for i in l..=r {
+                total_sum += nums[i] as i64;
+                if nums[i] < nums[min_idx] {
+                    min_idx = i;
+                }
+            }
+            let cur = total_sum * nums[min_idx] as i64;
+            let left = rec(nums, l as isize, min_idx as isize - 1);
+            let right = rec(nums, min_idx as isize + 1, r as isize);
+            cur.max(left).max(right)
+        }
+
+        (rec(&nums, 0, nums.len() as isize - 1) % modv) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -425,10 +474,10 @@ The brute force divide and conquer spends O(n) time finding the minimum in each 
 1. Build a segment tree that stores the index of the minimum element for each range.
 2. Build a prefix sum array for O(1) range sum queries.
 3. Define a recursive function for range `[l, r]`:
-   - Base case: if `l > r`, return `0`.
-   - Query the segment tree to find the minimum element's index in `[l, r]`.
-   - Compute the range sum using prefix sums.
-   - Calculate the current score and recursively process left and right portions.
+    - Base case: if `l > r`, return `0`.
+    - Query the segment tree to find the minimum element's index in `[l, r]`.
+    - Compute the range sum using prefix sums.
+    - Calculate the current score and recursively process left and right portions.
 4. Return the maximum result modulo `10^9 + 7`.
 
 ::tabs-start
@@ -708,6 +757,69 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<(i32, i64)>,
+}
+
+impl SegmentTree {
+    fn new(n: usize, nums: &[i32]) -> Self {
+        let mut sz = n;
+        while sz & (sz - 1) != 0 { sz += 1; }
+        let mut tree = vec![(-1, i64::MAX); 2 * sz];
+        for i in 0..n {
+            tree[sz + i] = (i as i32, nums[i] as i64);
+        }
+        for i in (1..sz).rev() {
+            tree[i] = if tree[i << 1].1 <= tree[i << 1 | 1].1 {
+                tree[i << 1]
+            } else {
+                tree[i << 1 | 1]
+            };
+        }
+        SegmentTree { n: sz, tree }
+    }
+
+    fn query(&self, mut l: usize, mut r: usize) -> usize {
+        let mut res = (-1i32, i64::MAX);
+        l += self.n;
+        r += self.n + 1;
+        while l < r {
+            if l & 1 == 1 { if self.tree[l].1 < res.1 { res = self.tree[l]; } l += 1; }
+            if r & 1 == 1 { r -= 1; if self.tree[r].1 < res.1 { res = self.tree[r]; } }
+            l >>= 1; r >>= 1;
+        }
+        res.0 as usize
+    }
+}
+
+impl Solution {
+    pub fn max_sum_min_product(nums: Vec<i32>) -> i32 {
+        let modv: i64 = 1_000_000_007;
+        let n = nums.len();
+        let seg_tree = SegmentTree::new(n, &nums);
+        let mut prefix_sum = vec![0i64; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i] as i64;
+        }
+
+        fn rec(l: isize, r: isize, nums: &[i32], prefix_sum: &[i64], seg_tree: &SegmentTree) -> i64 {
+            if l > r { return 0; }
+            let (lu, ru) = (l as usize, r as usize);
+            let min_idx = seg_tree.query(lu, ru);
+            let total_sum = prefix_sum[ru + 1] - prefix_sum[lu];
+            let cur = total_sum * nums[min_idx] as i64;
+            let left = rec(l, min_idx as isize - 1, nums, prefix_sum, seg_tree);
+            let right = rec(min_idx as isize + 1, r, nums, prefix_sum, seg_tree);
+            cur.max(left).max(right)
+        }
+
+        (rec(0, n as isize - 1, &nums, &prefix_sum, &seg_tree) % modv) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -727,12 +839,12 @@ For each element, we want to find the maximum subarray where that element is the
 
 1. Build a prefix sum array.
 2. Use a monotonic stack (increasing values) to find, for each index:
-   - `prev_min[i]`: index of the nearest smaller element to the left (or `-1`).
-   - `nxt_min[i]`: index of the nearest smaller element to the right (or `n`).
+    - `prev_min[i]`: index of the nearest smaller element to the left (or `-1`).
+    - `nxt_min[i]`: index of the nearest smaller element to the right (or `n`).
 3. For each index `i`:
-   - The valid range is `[prev_min[i] + 1, nxt_min[i] - 1]`.
-   - Compute the range sum using prefix sums.
-   - Calculate `nums[i] * range_sum` and update the result.
+    - The valid range is `[prev_min[i] + 1, nxt_min[i] - 1]`.
+    - Compute the range sum using prefix sums.
+    - Calculate `nums[i] * range_sum` and update the result.
 4. Return the maximum modulo `10^9 + 7`.
 
 ::tabs-start
@@ -1074,6 +1186,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_min_product(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut prefix_sum = vec![0i64; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i] as i64;
+        }
+
+        let mut prev_min = vec![-1i32; n];
+        let mut nxt_min = vec![n as i32; n];
+        let mut stack: Vec<usize> = Vec::new();
+
+        for i in 0..n {
+            while let Some(&top) = stack.last() {
+                if nums[top] >= nums[i] { stack.pop(); } else { break; }
+            }
+            if let Some(&top) = stack.last() {
+                prev_min[i] = top as i32;
+            }
+            stack.push(i);
+        }
+
+        stack.clear();
+        for i in (0..n).rev() {
+            while let Some(&top) = stack.last() {
+                if nums[top] >= nums[i] { stack.pop(); } else { break; }
+            }
+            if let Some(&top) = stack.last() {
+                nxt_min[i] = top as i32;
+            }
+            stack.push(i);
+        }
+
+        let mut res: i64 = 0;
+        let modv: i64 = 1_000_000_007;
+        for i in 0..n {
+            let l = (prev_min[i] + 1) as usize;
+            let r = (nxt_min[i] - 1) as usize;
+            let total_sum = prefix_sum[r + 1] - prefix_sum[l];
+            let tmp = nums[i] as i64 * total_sum;
+            res = res.max(tmp);
+        }
+
+        (res % modv) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1093,9 +1254,9 @@ We can avoid storing separate boundary arrays by processing elements as they are
 
 1. Build a prefix sum array.
 2. Iterate through the array, maintaining a stack of (start_index, value) pairs:
-   - When a smaller element is encountered, pop elements from the stack.
-   - For each popped element, calculate its contribution using the range from its start index to the current index.
-   - Update the new element's start index to the earliest popped element's start.
+    - When a smaller element is encountered, pop elements from the stack.
+    - For each popped element, calculate its contribution using the range from its start index to the current index.
+    - Update the new element's start index to the earliest popped element's start.
 3. After iteration, process remaining stack elements (their range extends to the end).
 4. Return the maximum modulo `10^9 + 7`.
 
@@ -1355,6 +1516,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_min_product(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut prefix = vec![0i64; n + 1];
+        for i in 0..n {
+            prefix[i + 1] = prefix[i] + nums[i] as i64;
+        }
+
+        let mut res: i64 = 0;
+        let mut stack: Vec<(usize, i32)> = Vec::new();
+
+        for i in 0..n {
+            let mut new_start = i;
+            while let Some(&(start, val)) = stack.last() {
+                if val > nums[i] {
+                    stack.pop();
+                    let total = prefix[i] - prefix[start];
+                    res = res.max(val as i64 * total);
+                    new_start = start;
+                } else {
+                    break;
+                }
+            }
+            stack.push((new_start, nums[i]));
+        }
+
+        while let Some((start, val)) = stack.pop() {
+            let total = prefix[n] - prefix[start];
+            res = res.max(val as i64 * total);
+        }
+
+        (res % 1_000_000_007) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1374,12 +1572,12 @@ This variation uses an index-only stack and processes all elements in a single p
 
 1. Build a prefix sum array.
 2. Iterate from index `0` to `n` (inclusive, where `n` acts as sentinel):
-   - While the stack is non-empty and current element is smaller (or we reached the sentinel):
-     - Pop index `j` from the stack.
-     - Left boundary is stack top + 1 (or `0` if empty).
-     - Right boundary is current index - 1.
-     - Calculate `nums[j] * range_sum` and update the result.
-   - Push current index to stack.
+    - While the stack is non-empty and current element is smaller (or we reached the sentinel):
+        - Pop index `j` from the stack.
+        - Left boundary is stack top + 1 (or `0` if empty).
+        - Right boundary is current index - 1.
+        - Calculate `nums[j] * range_sum` and update the result.
+    - Push current index to stack.
 3. Return the maximum modulo `10^9 + 7`.
 
 ::tabs-start
@@ -1580,6 +1778,38 @@ class Solution {
         }
 
         return Int(res % MOD)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_sum_min_product(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut prefix_sum = vec![0i64; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i] as i64;
+        }
+
+        let mut res: i64 = 0;
+        let modv: i64 = 1_000_000_007;
+        let mut stack: Vec<usize> = Vec::new();
+
+        for i in 0..=n {
+            while let Some(&top) = stack.last() {
+                if i == n || nums[i] < nums[top] {
+                    stack.pop();
+                    let start = stack.last().map_or(0, |&s| s + 1);
+                    let total = prefix_sum[i] - prefix_sum[start];
+                    res = res.max(nums[top] as i64 * total);
+                } else {
+                    break;
+                }
+            }
+            stack.push(i);
+        }
+
+        (res % modv) as i32
     }
 }
 ```

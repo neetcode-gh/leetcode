@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Comparing characters and understanding prefix matching operations
 - **Trie (Prefix Tree)** - A tree-based data structure for efficient prefix storage and lookup
 - **Array/List Traversal** - Iterating through collections of strings
@@ -9,14 +11,16 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 To check if a word has a given prefix, we compare the first few characters of the word with the prefix string. If the word is shorter than the prefix, it cannot have that prefix. Otherwise, we check character by character until we either find a mismatch or confirm all prefix characters match.
 
 ### Algorithm
+
 1. Initialize a counter to `0`.
 2. For each word in the array:
-   - Skip if the word is shorter than the prefix length.
-   - Compare each character of the word with the corresponding character of the prefix.
-   - If all characters match, increment the counter.
+    - Skip if the word is shorter than the prefix length.
+    - Compare each character of the word with the corresponding character of the prefix.
+    - If all characters match, increment the counter.
 3. Return the final count.
 
 ::tabs-start
@@ -92,7 +96,8 @@ class Solution {
      * @return {number}
      */
     prefixCount(words, pref) {
-        let N = pref.length, res = 0;
+        let N = pref.length,
+            res = 0;
 
         for (let w of words) {
             if (w.length < N) continue;
@@ -204,12 +209,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn prefix_count(words: Vec<String>, pref: String) -> i32 {
+        let pref = pref.as_bytes();
+        let n = pref.len();
+        let mut res = 0;
+
+        for w in &words {
+            let w = w.as_bytes();
+            if w.len() < n { continue; }
+            let mut inc = 1;
+            for i in 0..n {
+                if w[i] != pref[i] {
+                    inc = 0;
+                    break;
+                }
+            }
+            res += inc;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of words and $n$ is the length of the string $pref$.
 
@@ -218,9 +248,11 @@ class Solution {
 ## 2. Built-In Method
 
 ### Intuition
+
 Most programming languages provide built-in methods to check if a string starts with a given prefix. These methods handle the character comparison internally and are optimized for the task, making the code cleaner and less error-prone.
 
 ### Algorithm
+
 1. Initialize a counter to `0`.
 2. For each word in the array, use the language's built-in prefix checking method (like `startsWith` or `hasPrefix`).
 3. If the word starts with the prefix, increment the counter.
@@ -339,12 +371,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn prefix_count(words: Vec<String>, pref: String) -> i32 {
+        let mut res = 0;
+        for w in &words {
+            if w.starts_with(&pref) {
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of words and $n$ is the length of the string $pref$.
 
@@ -353,13 +399,15 @@ class Solution {
 ## 3. Trie
 
 ### Intuition
+
 A Trie (prefix tree) is a tree structure where each node represents a character. By inserting only the first few characters of each word (up to the prefix length), we build a compact structure. Each node keeps a count of how many words pass through it. After inserting all words, we traverse the trie following the prefix characters and return the count at the final node.
 
 ### Algorithm
+
 1. Create a Trie data structure where each node has children and a count.
 2. For each word in the array:
-   - If the word is at least as long as the prefix, insert the first `prefix.length` characters into the trie.
-   - Increment the count at each node during insertion.
+    - If the word is at least as long as the prefix, insert the first `prefix.length` characters into the trie.
+    - Increment the count at each node during insertion.
 3. Traverse the trie following the prefix characters.
 4. If any character is missing, return `0`.
 5. Otherwise, return the count at the final node.
@@ -764,12 +812,75 @@ class Solution {
 }
 ```
 
+```rust
+struct PrefixNode {
+    children: [Option<Box<PrefixNode>>; 26],
+    count: i32,
+}
+
+impl PrefixNode {
+    fn new() -> Self {
+        PrefixNode {
+            children: Default::default(),
+            count: 0,
+        }
+    }
+}
+
+struct PrefixTree {
+    root: PrefixNode,
+}
+
+impl PrefixTree {
+    fn new() -> Self {
+        PrefixTree { root: PrefixNode::new() }
+    }
+
+    fn add(&mut self, w: &[u8], length: usize) {
+        let mut cur = &mut self.root;
+        for i in 0..length {
+            let idx = (w[i] - b'a') as usize;
+            cur = cur.children[idx].get_or_insert_with(|| Box::new(PrefixNode::new()));
+            cur.count += 1;
+        }
+    }
+
+    fn count(&self, pref: &[u8]) -> i32 {
+        let mut cur = &self.root;
+        for &c in pref {
+            let idx = (c - b'a') as usize;
+            match &cur.children[idx] {
+                Some(node) => cur = node,
+                None => return 0,
+            }
+        }
+        cur.count
+    }
+}
+
+impl Solution {
+    pub fn prefix_count(words: Vec<String>, pref: String) -> i32 {
+        let mut prefix_tree = PrefixTree::new();
+        let pref_bytes = pref.as_bytes();
+        let pref_len = pref_bytes.len();
+
+        for w in &words {
+            if w.len() >= pref_len {
+                prefix_tree.add(w.as_bytes(), pref_len);
+            }
+        }
+
+        prefix_tree.count(pref_bytes)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * l + n)$
-* Space complexity: $O(m * l)$
+- Time complexity: $O(m * l + n)$
+- Space complexity: $O(m * l)$
 
 > Where $m$ is the number of words, $n$ is the length of the string $pref$ and $l$ is the maximum length of a word.
 

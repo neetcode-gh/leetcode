@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge lists to represent directed graphs
 - **Topological Sort** - Ordering nodes in a directed acyclic graph such that all edges point forward
 - **Cycle Detection** - Identifying cycles in directed graphs using DFS path tracking or in-degree analysis
@@ -19,9 +21,9 @@ Each set of conditions forms a directed graph where an edge from A to B means A 
 
 1. Build two directed graphs from `rowConditions` and `colConditions`.
 2. Perform topological sort on `rowConditions` using DFS:
-   - Track visited nodes and nodes in the current path (to detect cycles).
-   - If a cycle is detected (node appears in current path), return empty.
-   - Add nodes to the order in reverse post-order, then reverse the result.
+    - Track visited nodes and nodes in the current path (to detect cycles).
+    - If a cycle is detected (node appears in current path), return empty.
+    - Add nodes to the order in reverse post-order, then reverse the result.
 3. Perform topological sort on `colConditions` similarly.
 4. Create mappings from each number to its row index (from row order) and column index (from column order).
 5. Place each number `1` to `k` at the position determined by these mappings.
@@ -568,6 +570,82 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_matrix(k: i32, row_conditions: Vec<Vec<i32>>, col_conditions: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let k = k as usize;
+
+        let row_order = match Self::topo_sort(k, &row_conditions) {
+            Some(o) => o,
+            None => return vec![],
+        };
+        let col_order = match Self::topo_sort(k, &col_conditions) {
+            Some(o) => o,
+            None => return vec![],
+        };
+
+        let mut val_to_row = vec![0usize; k + 1];
+        for (i, &num) in row_order.iter().enumerate() {
+            val_to_row[num] = i;
+        }
+        let mut val_to_col = vec![0usize; k + 1];
+        for (i, &num) in col_order.iter().enumerate() {
+            val_to_col[num] = i;
+        }
+
+        let mut res = vec![vec![0i32; k]; k];
+        for num in 1..=k {
+            let r = val_to_row[num];
+            let c = val_to_col[num];
+            res[r][c] = num as i32;
+        }
+        res
+    }
+
+    fn topo_sort(k: usize, edges: &[Vec<i32>]) -> Option<Vec<usize>> {
+        let mut adj = vec![vec![]; k + 1];
+        for edge in edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        let mut visit = vec![false; k + 1];
+        let mut path = vec![false; k + 1];
+        let mut order = Vec::new();
+
+        for i in 1..=k {
+            if !visit[i] {
+                if !Self::dfs(i, &adj, &mut visit, &mut path, &mut order) {
+                    return None;
+                }
+            }
+        }
+        order.reverse();
+        Some(order)
+    }
+
+    fn dfs(
+        src: usize,
+        adj: &[Vec<usize>],
+        visit: &mut Vec<bool>,
+        path: &mut Vec<bool>,
+        order: &mut Vec<usize>,
+    ) -> bool {
+        if path[src] { return false; }
+        if visit[src] { return true; }
+        visit[src] = true;
+        path[src] = true;
+        for &nei in &adj[src] {
+            if !Self::dfs(nei, adj, visit, path, order) {
+                return false;
+            }
+        }
+        path[src] = false;
+        order.push(src);
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -594,9 +672,9 @@ If we process fewer than `k` nodes, it means there's a cycle in the graph and no
 1. For each condition set (row and column), build an adjacency list and compute in-degrees for all nodes.
 2. Initialize a queue with all nodes that have zero in-degree.
 3. Process nodes from the queue:
-   - Add the current node to the order.
-   - Decrease the in-degree of all neighbors.
-   - Add neighbors with zero in-degree to the queue.
+    - Add the current node to the order.
+    - Decrease the in-degree of all neighbors.
+    - Add neighbors with zero in-degree to the queue.
 4. If the order contains fewer than `k` nodes, a cycle exists; return empty matrix.
 5. Create index mappings from the row and column orderings.
 6. Place each number at its determined (row, column) position in the matrix.
@@ -1057,6 +1135,62 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_matrix(k: i32, row_conditions: Vec<Vec<i32>>, col_conditions: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let k = k as usize;
+
+        let row_order = match Self::topo_sort(k, &row_conditions) {
+            Some(o) => o,
+            None => return vec![],
+        };
+        let col_order = match Self::topo_sort(k, &col_conditions) {
+            Some(o) => o,
+            None => return vec![],
+        };
+
+        let mut res = vec![vec![0i32; k]; k];
+        let mut col_index = vec![0usize; k + 1];
+        for i in 0..k {
+            col_index[col_order[i]] = i;
+        }
+        for i in 0..k {
+            res[i][col_index[row_order[i]]] = row_order[i] as i32;
+        }
+        res
+    }
+
+    fn topo_sort(k: usize, edges: &[Vec<i32>]) -> Option<Vec<usize>> {
+        let mut indegree = vec![0i32; k + 1];
+        let mut adj = vec![vec![]; k + 1];
+        for edge in edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+            indegree[edge[1] as usize] += 1;
+        }
+
+        let mut queue = VecDeque::new();
+        let mut order = Vec::new();
+        for i in 1..=k {
+            if indegree[i] == 0 {
+                queue.push_back(i);
+            }
+        }
+
+        while let Some(node) = queue.pop_front() {
+            order.push(node);
+            for &nei in &adj[node] {
+                indegree[nei] -= 1;
+                if indegree[nei] == 0 {
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        if order.len() == k { Some(order) } else { None }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1073,10 +1207,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Treating Row and Column Conditions as One Graph
+
 Row conditions and column conditions must be processed as two separate, independent graphs. Combining them into a single graph leads to incorrect cycle detection and wrong orderings since row ordering has no relation to column ordering.
 
 ### Not Detecting Cycles Properly in DFS
+
 When using DFS for topological sort, you need both a `visited` set (permanently processed nodes) and a `path` set (nodes in current recursion stack). Using only one set fails to detect back edges that indicate cycles.
+
 ```python
 # Wrong: single visited set misses cycles
 if src in visited:
@@ -1090,7 +1227,9 @@ if src in visited:
 ```
 
 ### Forgetting to Include Nodes Without Edges
+
 Numbers from 1 to k that don't appear in any condition still need positions in the matrix. The topological sort must iterate over all values 1 to k, not just those present in the edge list.
 
 ### Off-by-One Errors with 1-Indexed Values
+
 The values are 1 to k (1-indexed) but arrays are typically 0-indexed. When building adjacency lists or index mappings, mixing these up causes index out of bounds errors or incorrect placements.

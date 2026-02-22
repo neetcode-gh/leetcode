@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Basic Math (Mean and Sum)** - The solution requires calculating target sums from the given mean and distributing values across dice
 - **Greedy Distribution** - Assigning values to dice while respecting constraints (1-6 per die) uses greedy thinking to maximize or evenly distribute values
 - **Boundary Validation** - Checking whether a valid solution exists requires understanding the min/max possible sums for n dice
@@ -17,9 +19,9 @@ We know the target mean and the sum of the existing rolls. From this, we can cal
 1. Calculate the required sum for the `n` missing dice: `nTotal = mean * (n + m) - sum(rolls)`.
 2. If `nTotal < n` or `nTotal > 6 * n`, return an empty array (no valid solution).
 3. For each of the `n` missing dice:
-   - Assign the maximum possible value while leaving enough for the remaining dice to each have at least `1`.
-   - The value is `min(nTotal - (remaining dice) + 1, 6)`.
-   - Subtract this value from `nTotal` and decrement the remaining count.
+    - Assign the maximum possible value while leaving enough for the remaining dice to each have at least `1`.
+    - The value is `min(nTotal - (remaining dice) + 1, 6)`.
+    - Subtract this value from `nTotal` and decrement the remaining count.
 4. Return the constructed result array.
 
 ::tabs-start
@@ -204,6 +206,29 @@ class Solution {
             remaining -= 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn missing_rolls(rolls: Vec<i32>, mean: i32, n: i32) -> Vec<i32> {
+        let m = rolls.len() as i32;
+        let mut n_total = mean * (n + m) - rolls.iter().sum::<i32>();
+
+        if n_total < n || n_total > n * 6 {
+            return vec![];
+        }
+
+        let mut res = Vec::new();
+        let mut remaining = n;
+        while n_total > 0 {
+            let dice = (n_total - remaining + 1).min(6);
+            res.push(dice);
+            n_total -= dice;
+            remaining -= 1;
+        }
+        res
     }
 }
 ```
@@ -427,6 +452,26 @@ class Solution {
         res += [Int](repeating: avg + 1, count: rem)
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn missing_rolls(rolls: Vec<i32>, mean: i32, n: i32) -> Vec<i32> {
+        let m = rolls.len() as i32;
+        let n_total = mean * (n + m) - rolls.iter().sum::<i32>();
+
+        if n_total < n || n_total > n * 6 {
+            return vec![];
+        }
+
+        let n = n as usize;
+        let avg = n_total as usize / n;
+        let rem = n_total as usize - avg * n;
+        let mut res = vec![avg as i32; n - rem];
+        res.extend(vec![(avg + 1) as i32; rem]);
+        res
     }
 }
 ```

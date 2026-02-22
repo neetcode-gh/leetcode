@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Understanding O(1) average-case insert, delete, and lookup operations
 - **Dynamic Arrays** - Understanding how arrays support O(1) random access and O(1) amortized append/pop at the end
 - **Swap-and-Pop Technique** - Knowing how to achieve O(1) deletion from an unordered collection by swapping with the last element
@@ -302,6 +304,47 @@ class RandomizedSet {
     func getRandom() -> Int {
         let idx = Int.random(in: 0..<size)
         return Array(numMap.keys)[idx]
+    }
+}
+```
+
+```rust
+use rand::Rng;
+
+struct RandomizedSet {
+    num_map: HashMap<i32, i32>,
+    size: usize,
+}
+
+impl RandomizedSet {
+    fn new() -> Self {
+        RandomizedSet {
+            num_map: HashMap::new(),
+            size: 0,
+        }
+    }
+
+    fn insert(&mut self, val: i32) -> bool {
+        if self.num_map.contains_key(&val) {
+            return false;
+        }
+        self.num_map.insert(val, 1);
+        self.size += 1;
+        true
+    }
+
+    fn remove(&mut self, val: i32) -> bool {
+        if !self.num_map.contains_key(&val) {
+            return false;
+        }
+        self.num_map.remove(&val);
+        self.size -= 1;
+        true
+    }
+
+    fn get_random(&self) -> i32 {
+        let idx = rand::thread_rng().gen_range(0..self.size);
+        *self.num_map.keys().nth(idx).unwrap()
     }
 }
 ```
@@ -619,6 +662,51 @@ class RandomizedSet {
 
     func getRandom() -> Int {
         return nums[Int.random(in: 0..<nums.count)]
+    }
+}
+```
+
+```rust
+use rand::Rng;
+
+struct RandomizedSet {
+    num_map: HashMap<i32, usize>,
+    nums: Vec<i32>,
+}
+
+impl RandomizedSet {
+    fn new() -> Self {
+        RandomizedSet {
+            num_map: HashMap::new(),
+            nums: Vec::new(),
+        }
+    }
+
+    fn insert(&mut self, val: i32) -> bool {
+        if self.num_map.contains_key(&val) {
+            return false;
+        }
+        self.num_map.insert(val, self.nums.len());
+        self.nums.push(val);
+        true
+    }
+
+    fn remove(&mut self, val: i32) -> bool {
+        if let Some(&idx) = self.num_map.get(&val) {
+            let last = *self.nums.last().unwrap();
+            self.nums[idx] = last;
+            self.num_map.insert(last, idx);
+            self.nums.pop();
+            self.num_map.remove(&val);
+            true
+        } else {
+            false
+        }
+    }
+
+    fn get_random(&self) -> i32 {
+        let idx = rand::thread_rng().gen_range(0..self.nums.len());
+        self.nums[idx]
     }
 }
 ```

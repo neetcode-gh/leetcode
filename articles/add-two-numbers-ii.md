@@ -394,6 +394,52 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    fn reverse_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut prev = None;
+        let mut curr = head;
+        while let Some(mut node) = curr {
+            let next = node.next.take();
+            node.next = prev;
+            prev = Some(node);
+            curr = next;
+        }
+        prev
+    }
+
+    pub fn add_two_numbers(
+        l1: Option<Box<ListNode>>,
+        l2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut l1 = Self::reverse_list(l1);
+        let mut l2 = Self::reverse_list(l2);
+        let mut head: Option<Box<ListNode>> = None;
+        let mut carry = 0;
+
+        while l1.is_some() || l2.is_some() || carry > 0 {
+            let v1 = l1.as_ref().map_or(0, |n| n.val);
+            let v2 = l2.as_ref().map_or(0, |n| n.val);
+            let total = v1 + v2 + carry;
+            carry = total / 10;
+            let mut node = Box::new(ListNode::new(total % 10));
+            node.next = head;
+            head = Some(node);
+            l1 = l1.and_then(|n| n.next);
+            l2 = l2.and_then(|n| n.next);
+        }
+
+        head
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -776,6 +822,51 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn add_two_numbers(
+        l1: Option<Box<ListNode>>,
+        l2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut s1 = Vec::new();
+        let mut s2 = Vec::new();
+
+        let mut curr = &l1;
+        while let Some(node) = curr {
+            s1.push(node.val);
+            curr = &node.next;
+        }
+
+        let mut curr = &l2;
+        while let Some(node) = curr {
+            s2.push(node.val);
+            curr = &node.next;
+        }
+
+        let mut carry = 0;
+        let mut head: Option<Box<ListNode>> = None;
+
+        while !s1.is_empty() || !s2.is_empty() || carry > 0 {
+            let v1 = s1.pop().unwrap_or(0);
+            let v2 = s2.pop().unwrap_or(0);
+            let total = v1 + v2 + carry;
+            carry = total / 10;
+            let mut node = Box::new(ListNode::new(total % 10));
+            node.next = head;
+            head = Some(node);
+        }
+
+        head
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

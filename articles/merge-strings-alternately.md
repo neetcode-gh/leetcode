@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Strings** - Understanding string indexing and character access
 - **Two Pointers** - Using multiple indices to traverse data structures simultaneously
 - **StringBuilder / String Concatenation** - Efficiently building strings in loops to avoid O(n^2) complexity
@@ -16,8 +18,8 @@ We want to interleave characters from both strings, taking one from each in turn
 
 1. Initialize two pointers `i` and `j` at `0`, and an empty result list.
 2. While both `i < len(word1)` and `j < len(word2)`:
-   - Append `word1[i]` to the result, then increment `i`.
-   - Append `word2[j]` to the result, then increment `j`.
+    - Append `word1[i]` to the result, then increment `i`.
+    - Append `word2[j]` to the result, then increment `j`.
 3. Append any remaining characters from `word1` (from index `i` to end).
 4. Append any remaining characters from `word2` (from index `j` to end).
 5. Return the joined result string.
@@ -176,6 +178,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_alternately(word1: String, word2: String) -> String {
+        let (b1, b2) = (word1.as_bytes(), word2.as_bytes());
+        let mut res = String::new();
+        let (mut i, mut j) = (0, 0);
+
+        while i < b1.len() && j < b2.len() {
+            res.push(b1[i] as char);
+            res.push(b2[j] as char);
+            i += 1;
+            j += 1;
+        }
+
+        res.push_str(&word1[i..]);
+        res.push_str(&word2[j..]);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,8 +220,8 @@ Instead of handling the remaining characters separately after the main loop, we 
 
 1. Initialize two pointers `i` and `j` at `0`, and an empty result list.
 2. While `i < n` or `j < m` (where `n` and `m` are the lengths of the strings):
-   - If `i < n`, append `word1[i]` and increment `i`.
-   - If `j < m`, append `word2[j]` and increment `j`.
+    - If `i < n`, append `word1[i]` and increment `i`.
+    - If `j < m`, append `word2[j]` and increment `j`.
 3. Return the joined result string.
 
 ::tabs-start
@@ -360,6 +383,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_alternately(word1: String, word2: String) -> String {
+        let (b1, b2) = (word1.as_bytes(), word2.as_bytes());
+        let (n, m) = (b1.len(), b2.len());
+        let mut res = String::new();
+        let (mut i, mut j) = (0, 0);
+
+        while i < n || j < m {
+            if i < n {
+                res.push(b1[i] as char);
+                i += 1;
+            }
+            if j < m {
+                res.push(b2[j] as char);
+                j += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,8 +429,8 @@ Since we always process characters at the same index from both strings in each i
 1. Let `n` and `m` be the lengths of `word1` and `word2`.
 2. Initialize an empty result list.
 3. For each index `i` from `0` to `max(n, m) - 1`:
-   - If `i < n`, append `word1[i]` to the result.
-   - If `i < m`, append `word2[i]` to the result.
+    - If `i < n`, append `word1[i]` to the result.
+    - If `i < m`, append `word2[i]` to the result.
 4. Return the joined result string.
 
 ::tabs-start
@@ -540,6 +587,27 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge_alternately(word1: String, word2: String) -> String {
+        let (b1, b2) = (word1.as_bytes(), word2.as_bytes());
+        let (n, m) = (b1.len(), b2.len());
+        let mut res = String::new();
+
+        for i in 0..n.max(m) {
+            if i < n {
+                res.push(b1[i] as char);
+            }
+            if i < m {
+                res.push(b2[i] as char);
+            }
+        }
+
+        res
     }
 }
 ```

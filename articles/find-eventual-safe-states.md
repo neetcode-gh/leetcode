@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Understanding adjacency lists and how directed graphs are stored
 - **Depth-First Search (DFS)** - Traversing graphs and detecting cycles using visited states
 - **Memoization** - Caching results to avoid redundant computation during graph traversal
@@ -17,10 +19,10 @@ A node is safe if every path starting from it eventually leads to a terminal nod
 
 1. Create a hash map `safe` to track each node's safety status.
 2. For each node, run DFS:
-   - If the node's status is already known, return it.
-   - Mark the node as `false` (unsafe) initially to detect cycles.
-   - Recursively check all neighbors. If any neighbor is unsafe, return `false`.
-   - If all neighbors are safe, mark the current node as `true` (safe).
+    - If the node's status is already known, return it.
+    - Mark the node as `false` (unsafe) initially to detect cycles.
+    - Recursively check all neighbors. If any neighbor is unsafe, return `false`.
+    - If all neighbors are safe, mark the current node as `true` (safe).
 3. Collect all nodes where `dfs(node)` returns `true` and return them in order.
 
 ::tabs-start
@@ -244,6 +246,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn eventual_safe_nodes(graph: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = graph.len();
+        let mut safe: Vec<Option<bool>> = vec![None; n];
+        let mut res = Vec::new();
+
+        for node in 0..n {
+            if Self::dfs(node, &graph, &mut safe) {
+                res.push(node as i32);
+            }
+        }
+        res
+    }
+
+    fn dfs(node: usize, graph: &Vec<Vec<i32>>, safe: &mut Vec<Option<bool>>) -> bool {
+        if let Some(s) = safe[node] {
+            return s;
+        }
+        safe[node] = Some(false);
+        for &nei in &graph[node] {
+            if !Self::dfs(nei as usize, graph, safe) {
+                return false;
+            }
+        }
+        safe[node] = Some(true);
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -266,8 +299,8 @@ Think of safe nodes as those that can reach terminal nodes. If we reverse the ed
 1. Build a reverse adjacency list (`parents`) and track the out-degree of each node.
 2. Add all terminal nodes (out-degree = `0`) to a queue.
 3. Process nodes from the queue:
-   - For each parent of the current node, decrement its out-degree.
-   - If a parent's out-degree becomes `0`, add it to the queue.
+    - For each parent of the current node, decrement its out-degree.
+    - If a parent's out-degree becomes `0`, add it to the queue.
 4. After processing, all nodes with out-degree `0` are safe.
 5. Return the safe nodes in sorted order.
 
@@ -542,6 +575,44 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn eventual_safe_nodes(graph: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = graph.len();
+        let mut outdegree = vec![0i32; n];
+        let mut parents = vec![vec![]; n];
+        let mut queue = VecDeque::new();
+
+        for node in 0..n {
+            outdegree[node] = graph[node].len() as i32;
+            if outdegree[node] == 0 {
+                queue.push_back(node);
+            }
+            for &nei in &graph[node] {
+                parents[nei as usize].push(node);
+            }
+        }
+
+        while let Some(node) = queue.pop_front() {
+            for &parent in &parents[node] {
+                outdegree[parent] -= 1;
+                if outdegree[parent] == 0 {
+                    queue.push_back(parent);
+                }
+            }
+        }
+
+        let mut res = Vec::new();
+        for node in 0..n {
+            if outdegree[node] <= 0 {
+                res.push(node as i32);
+            }
+        }
+        res
     }
 }
 ```

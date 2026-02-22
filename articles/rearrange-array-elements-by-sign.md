@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding array indexing, traversal, and in-place modifications
 - **Two Pointers Technique** - Using multiple pointers to track different positions in an array simultaneously
 
@@ -14,10 +16,10 @@ We process the array position by position. At each index, we check if the curren
 ### Algorithm
 
 1. Iterate through each index `i`:
-   - If index is even and `nums[i] > 0`, or index is odd and `nums[i] < 0`, continue.
-   - Otherwise, find the next element with the opposite sign at position `j`.
-   - Save `nums[j]`, then shift all elements from `i` to `j-1` one position right.
-   - Place the saved element at position `i`.
+    - If index is even and `nums[i] > 0`, or index is odd and `nums[i] < 0`, continue.
+    - Otherwise, find the next element with the opposite sign at position `j`.
+    - Save `nums[j]`, then shift all elements from `i` to `j-1` one position right.
+    - Place the saved element at position `i`.
 2. Return the modified array.
 
 ::tabs-start
@@ -231,6 +233,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        for i in 0..n {
+            if (i % 2 == 0 && nums[i] > 0) || (i % 2 == 1 && nums[i] < 0) {
+                continue;
+            }
+
+            let mut j = i + 1;
+            while j < n && (nums[j] > 0) == (nums[i] > 0) {
+                j += 1;
+            }
+
+            let tmp = nums[j];
+            while j > i {
+                nums[j] = nums[j - 1];
+                j -= 1;
+            }
+            nums[i] = tmp;
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,8 +279,8 @@ Since we need to alternate positive and negative numbers while preserving their 
 1. Create two separate lists: `pos` for positive numbers and `neg` for negative numbers.
 2. Iterate through the input array and add each number to the appropriate list.
 3. Rebuild the array by interleaving:
-   - Place `pos[i]` at index `2 * i`.
-   - Place `neg[i]` at index `2 * i + 1`.
+    - Place `pos[i]` at index `2 * i`.
+    - Place `neg[i]` at index `2 * i + 1`.
 4. Return the result.
 
 ::tabs-start
@@ -443,6 +471,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut pos = Vec::new();
+        let mut neg = Vec::new();
+        for &num in &nums {
+            if num > 0 {
+                pos.push(num);
+            } else {
+                neg.push(num);
+            }
+        }
+
+        let mut i = 0;
+        while 2 * i < nums.len() {
+            nums[2 * i] = pos[i];
+            nums[2 * i + 1] = neg[i];
+            i += 1;
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -463,8 +515,8 @@ We can build the result in a single pass using two pointers. One pointer tracks 
 1. Initialize `i = 0` (for positive numbers at even indices) and `j = 1` (for negative numbers at odd indices).
 2. Create a result array of the same size.
 3. For each number in the input:
-   - If positive, place it at `res[i]` and increment `i` by 2.
-   - If negative, place it at `res[j]` and increment `j` by 2.
+    - If positive, place it at `res[i]` and increment `i` by 2.
+    - If negative, place it at `res[j]` and increment `j` by 2.
 4. Return `res`.
 
 ::tabs-start
@@ -620,6 +672,26 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rearrange_array(nums: Vec<i32>) -> Vec<i32> {
+        let mut i = 0usize;
+        let mut j = 1usize;
+        let mut res = vec![0i32; nums.len()];
+        for k in 0..nums.len() {
+            if nums[k] > 0 {
+                res[i] = nums[k];
+                i += 2;
+            } else {
+                res[j] = nums[k];
+                j += 2;
+            }
+        }
+        res
     }
 }
 ```

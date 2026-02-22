@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Understanding how to build solutions from subproblems, similar to House Robber pattern
 - **Hash Maps** - Grouping and summing values by key to precompute totals for each unique number
 - **Sorting** - Ordering elements to process consecutive values together
@@ -9,17 +11,19 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 When you pick a number `x`, you earn all points from every occurrence of `x`, but you must delete all instances of `x - 1` and `x + 1`. This creates a choice at each distinct value: either take it (and skip the next consecutive value) or skip it. Sorting helps group identical values together, making it easy to sum all occurrences. We recursively explore both choices at each group of identical numbers.
 
 ### Algorithm
+
 1. Sort the array to group identical numbers together.
 2. Define a recursive function `dfs(i)` starting at index `i`:
-   - If `i` is out of bounds, return `0`.
-   - Sum all occurrences of `nums[i]` and move `i` past this group.
-   - Compute the result of skipping this group: `dfs(new_i)`.
-   - Skip any numbers equal to `nums[i] + 1` (they would be deleted if we pick).
-   - Compute the result of picking this group: `pick + dfs(after_skipping)`.
-   - Return the maximum of picking vs skipping.
+    - If `i` is out of bounds, return `0`.
+    - Sum all occurrences of `nums[i]` and move `i` past this group.
+    - Compute the result of skipping this group: `dfs(new_i)`.
+    - Skip any numbers equal to `nums[i] + 1` (they would be deleted if we pick).
+    - Compute the result of picking this group: `pick + dfs(after_skipping)`.
+    - Return the maximum of picking vs skipping.
 3. Call `dfs(0)` and return the result.
 
 ::tabs-start
@@ -234,6 +238,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+
+        fn dfs(nums: &[i32], i: usize) -> i32 {
+            if i >= nums.len() {
+                return 0;
+            }
+
+            let cur = nums[i];
+            let mut pick = 0;
+            let mut j = i;
+            while j < nums.len() && nums[j] == cur {
+                pick += nums[j];
+                j += 1;
+            }
+
+            let mut res = dfs(nums, j);
+            let mut k = j;
+            while k < nums.len() && nums[k] == cur + 1 {
+                k += 1;
+            }
+
+            res = res.max(pick + dfs(nums, k));
+            res
+        }
+
+        dfs(&nums, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -246,18 +284,20 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 The recursive solution has overlapping subproblems since we may revisit the same index multiple times. By precomputing the total value for each unique number (sum of all occurrences) and using memoization, we avoid redundant calculations. The problem reduces to: for each unique number, decide whether to take it (earning its total value but skipping the next consecutive number) or skip it.
 
 ### Algorithm
+
 1. Build a map where each unique number maps to the sum of all its occurrences.
 2. Extract and sort the unique numbers.
 3. Create a memo array initialized to `-1`.
 4. Define `dfs(i)`:
-   - If `i` is out of bounds, return `0`.
-   - If `memo[i]` is set, return it.
-   - Compute the value of taking `nums[i]`: its total value plus `dfs(i + 2)` if the next number is consecutive, else `dfs(i + 1)`.
-   - The result is `max(take, dfs(i + 1))`.
-   - Store in memo and return.
+    - If `i` is out of bounds, return `0`.
+    - If `memo[i]` is set, return it.
+    - Compute the value of taking `nums[i]`: its total value plus `dfs(i + 2)` if the next number is consecutive, else `dfs(i + 1)`.
+    - The result is `max(take, dfs(i + 1))`.
+    - Store in memo and return.
 5. Return `dfs(0)`.
 
 ::tabs-start
@@ -522,6 +562,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
+        let mut val = HashMap::new();
+        for &num in &nums {
+            *val.entry(num).or_insert(0) += num;
+        }
+
+        let mut unique_nums: Vec<i32> = val.keys().copied().collect();
+        unique_nums.sort();
+        let mut memo = vec![-1i32; unique_nums.len()];
+
+        fn dfs(
+            nums: &[i32],
+            val: &HashMap<i32, i32>,
+            memo: &mut Vec<i32>,
+            i: usize,
+        ) -> i32 {
+            if i >= nums.len() {
+                return 0;
+            }
+            if memo[i] != -1 {
+                return memo[i];
+            }
+
+            let mut res = val[&nums[i]];
+            if i + 1 < nums.len() && nums[i] + 1 == nums[i + 1] {
+                res += dfs(nums, val, memo, i + 2);
+            } else {
+                res += dfs(nums, val, memo, i + 1);
+            }
+
+            res = res.max(dfs(nums, val, memo, i + 1));
+            memo[i] = res;
+            res
+        }
+
+        dfs(&unique_nums, &val, &mut memo, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -534,15 +616,17 @@ class Solution {
 ## 3. Dynamic Programming (Bottom-Up) - I
 
 ### Intuition
+
 We can convert the top-down solution to bottom-up by processing unique numbers from right to left. At each position, we compute the maximum points achievable from that position onward. If the current and next numbers are consecutive, taking the current means skipping the next; otherwise, we can take the current and continue from the next.
 
 ### Algorithm
+
 1. Build a map of each unique number to the sum of all its occurrences.
 2. Extract and sort the unique numbers.
 3. Create a DP array of size `n + 1` initialized to `0`.
 4. Iterate from the last unique number to the first:
-   - Compute `take` as the value of the current number plus `dp[i + 2]` if the next is consecutive, else `dp[i + 1]`.
-   - Set `dp[i] = max(dp[i + 1], take)`.
+    - Compute `take` as the value of the current number plus `dp[i + 2]` if the next is consecutive, else `dp[i + 1]`.
+    - Set `dp[i] = max(dp[i + 1], take)`.
 5. Return `dp[0]`.
 
 ::tabs-start
@@ -731,6 +815,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
+        let mut val = HashMap::new();
+        for &num in &nums {
+            *val.entry(num).or_insert(0) += num;
+        }
+        let mut sorted_nums: Vec<i32> = val.keys().copied().collect();
+        sorted_nums.sort();
+
+        let n = sorted_nums.len();
+        let mut dp = vec![0i32; n + 1];
+        for i in (0..n).rev() {
+            let mut take = val[&sorted_nums[i]];
+            if i + 1 < n && sorted_nums[i + 1] == sorted_nums[i] + 1 {
+                take += dp[i + 2];
+            } else {
+                take += dp[i + 1];
+            }
+            dp[i] = dp[i + 1].max(take);
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -743,14 +854,16 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up) - II
 
 ### Intuition
+
 Instead of working with unique sorted numbers, we can use an array indexed by the numbers themselves (`0` to max). Each index stores the total points for that number. This transforms the problem into the classic House Robber problem: you cannot take adjacent indices. We iterate backward, and at each position, choose the maximum of skipping it or taking it plus the result two positions ahead.
 
 ### Algorithm
+
 1. Find the maximum value `m` in the array.
 2. Create a DP array of size `m + 2` initialized to `0`.
 3. For each number in the input, add it to `dp[num]` (accumulating total points per number).
 4. Iterate from `m - 1` down to `1`:
-   - Set `dp[i] = max(dp[i + 1], dp[i + 2] + dp[i])`.
+    - Set `dp[i] = max(dp[i + 1], dp[i + 2] + dp[i])`.
 5. Return `dp[1]`.
 
 ::tabs-start
@@ -888,6 +1001,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
+        let m = *nums.iter().max().unwrap() as usize;
+        let mut dp = vec![0i32; m + 2];
+
+        for &num in &nums {
+            dp[num as usize] += num;
+        }
+
+        for i in (1..m).rev() {
+            dp[i] = dp[i + 1].max(dp[i + 2] + dp[i]);
+        }
+        dp[1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -902,16 +1033,18 @@ class Solution {
 ## 5. Dynamic Programming (Space Optimized)
 
 ### Intuition
+
 We only need to track the maximum earnings for the previous two positions, similar to the space-optimized House Robber solution. By iterating through sorted unique numbers and maintaining two variables, we can reduce space complexity. When consecutive numbers differ by more than `1`, there is no conflict, so we can add the current earnings directly.
 
 ### Algorithm
+
 1. Build a map of each unique number to the sum of all its occurrences.
 2. Sort the unique numbers.
 3. Initialize `earn1 = 0` and `earn2 = 0` to track the max earnings at the previous two positions.
 4. Iterate through the sorted unique numbers:
-   - If the current number is consecutive to the previous, we have a choice: `earn2 = max(curEarn + earn1, earn2)`.
-   - If not consecutive, we can freely take the current: `earn2 = curEarn + earn2`.
-   - Update `earn1` to the old `earn2` before modifying.
+    - If the current number is consecutive to the previous, we have a choice: `earn2 = max(curEarn + earn1, earn2)`.
+    - If not consecutive, we can freely take the current: `earn2 = curEarn + earn2`.
+    - Update `earn1` to the old `earn2` before modifying.
 5. Return `earn2`.
 
 ::tabs-start
@@ -1108,6 +1241,35 @@ class Solution {
             }
         }
         return earn2
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn delete_and_earn(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += num;
+        }
+        let mut unique_nums: Vec<i32> = count.keys().copied().collect();
+        unique_nums.sort();
+
+        let mut earn1 = 0i32;
+        let mut earn2 = 0i32;
+        for i in 0..unique_nums.len() {
+            let cur_earn = count[&unique_nums[i]];
+            if i > 0 && unique_nums[i] == unique_nums[i - 1] + 1 {
+                let temp = earn2;
+                earn2 = (cur_earn + earn1).max(earn2);
+                earn1 = temp;
+            } else {
+                let temp = earn2;
+                earn2 = cur_earn + earn2;
+                earn1 = temp;
+            }
+        }
+        earn2
     }
 }
 ```

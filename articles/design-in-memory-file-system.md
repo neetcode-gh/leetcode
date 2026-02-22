@@ -636,6 +636,85 @@ class FileSystem {
 }
 ```
 
+
+```rust
+struct Dir {
+    dirs: HashMap<String, Dir>,
+    files: HashMap<String, String>,
+}
+
+impl Dir {
+    fn new() -> Self {
+        Self {
+            dirs: HashMap::new(),
+            files: HashMap::new(),
+        }
+    }
+}
+
+struct FileSystem {
+    root: Dir,
+}
+
+impl FileSystem {
+    fn new() -> Self {
+        Self { root: Dir::new() }
+    }
+
+    fn ls(&self, path: String) -> Vec<String> {
+        let mut t = &self.root;
+        let mut result = Vec::new();
+
+        if path != "/" {
+            let parts: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+            for i in 0..parts.len() - 1 {
+                t = t.dirs.get(parts[i]).unwrap();
+            }
+            let last = parts[parts.len() - 1];
+            if t.files.contains_key(last) {
+                return vec![last.to_string()];
+            } else {
+                t = t.dirs.get(last).unwrap();
+            }
+        }
+
+        result.extend(t.dirs.keys().cloned());
+        result.extend(t.files.keys().cloned());
+        result.sort();
+        result
+    }
+
+    fn mkdir(&mut self, path: String) {
+        let mut t = &mut self.root;
+        let parts: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+        for part in parts {
+            t = t.dirs.entry(part.to_string()).or_insert_with(Dir::new);
+        }
+    }
+
+    fn add_content_to_file(&mut self, file_path: String, content: String) {
+        let mut t = &mut self.root;
+        let parts: Vec<&str> = file_path.split('/').filter(|s| !s.is_empty()).collect();
+        for i in 0..parts.len() - 1 {
+            t = t.dirs.get_mut(parts[i]).unwrap();
+        }
+        t.files
+            .entry(parts[parts.len() - 1].to_string())
+            .or_default()
+            .push_str(&content);
+    }
+
+    fn read_content_from_file(&self, file_path: String) -> String {
+        let mut t = &self.root;
+        let parts: Vec<&str> = file_path.split('/').filter(|s| !s.is_empty()).collect();
+        for i in 0..parts.len() - 1 {
+            t = t.dirs.get(parts[i]).unwrap();
+        }
+        t.files.get(parts[parts.len() - 1]).unwrap().clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time Complexity
@@ -1274,6 +1353,84 @@ class FileSystem {
             t = t.files[d[i]]!
         }
         return t.files[d[d.count - 1]]!.content
+    }
+}
+```
+
+
+```rust
+struct FileNode {
+    is_file: bool,
+    children: HashMap<String, FileNode>,
+    content: String,
+}
+
+impl FileNode {
+    fn new() -> Self {
+        Self {
+            is_file: false,
+            children: HashMap::new(),
+            content: String::new(),
+        }
+    }
+}
+
+struct FileSystem {
+    root: FileNode,
+}
+
+impl FileSystem {
+    fn new() -> Self {
+        Self { root: FileNode::new() }
+    }
+
+    fn ls(&self, path: String) -> Vec<String> {
+        let mut t = &self.root;
+        if path != "/" {
+            let parts: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+            for part in &parts {
+                t = t.children.get(*part).unwrap();
+            }
+            if t.is_file {
+                return vec![parts[parts.len() - 1].to_string()];
+            }
+        }
+        let mut result: Vec<String> = t.children.keys().cloned().collect();
+        result.sort();
+        result
+    }
+
+    fn mkdir(&mut self, path: String) {
+        let mut t = &mut self.root;
+        let parts: Vec<&str> = path.split('/').filter(|s| !s.is_empty()).collect();
+        for part in parts {
+            t = t.children.entry(part.to_string()).or_insert_with(FileNode::new);
+        }
+    }
+
+    fn add_content_to_file(&mut self, file_path: String, content: String) {
+        let mut t = &mut self.root;
+        let parts: Vec<&str> = file_path.split('/').filter(|s| !s.is_empty()).collect();
+        for i in 0..parts.len() - 1 {
+            t = t.children.get_mut(parts[i]).unwrap();
+        }
+        let last = parts[parts.len() - 1].to_string();
+        let node = t.children.entry(last).or_insert_with(FileNode::new);
+        node.is_file = true;
+        node.content.push_str(&content);
+    }
+
+    fn read_content_from_file(&self, file_path: String) -> String {
+        let mut t = &self.root;
+        let parts: Vec<&str> = file_path.split('/').filter(|s| !s.is_empty()).collect();
+        for i in 0..parts.len() - 1 {
+            t = t.children.get(parts[i]).unwrap();
+        }
+        t.children
+            .get(parts[parts.len() - 1])
+            .unwrap()
+            .content
+            .clone()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Fundamentals** - Understanding singly linked list structure and pointer manipulation
 - **Fast and Slow Pointers** - Using two pointers moving at different speeds to find the middle of a list
 - **Linked List Reversal** - Reversing a linked list in-place using iterative pointer swapping
@@ -23,12 +25,12 @@ By alternately linking nodes from the front (index `i`) and back (index `j`), we
 
 1. Traverse the linked list and push every node into an array called `nodes`.
 2. Initialize two pointers:
-   - `i = 0` (start)
-   - `j = len(nodes) - 1` (end)
+    - `i = 0` (start)
+    - `j = len(nodes) - 1` (end)
 3. While `i < j`:
-   - Link `nodes[i].next` to `nodes[j]`; increment `i`.
-   - If `i >= j`, break the loop.
-   - Link `nodes[j].next` to `nodes[i]`; decrement `j`.
+    - Link `nodes[i].next` to `nodes[j]`; increment `i`.
+    - If `i >= j`, break the loop.
+    - Link `nodes[j].next` to `nodes[i]`; decrement `j`.
 4. After the loop, set `nodes[i].next = None` to terminate the list.
 5. The reordered list is constructed in-place.
 
@@ -334,6 +336,50 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn reorder_list(head: &mut Option<Box<ListNode>>) {
+        let mut vals = Vec::new();
+        let mut cur = head.as_ref();
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = node.next.as_ref();
+        }
+
+        if vals.len() <= 1 {
+            return;
+        }
+
+        let mut reordered = Vec::new();
+        let mut i = 0;
+        let mut j = vals.len() - 1;
+        while i <= j {
+            reordered.push(vals[i]);
+            if i != j {
+                reordered.push(vals[j]);
+            }
+            i += 1;
+            if j == 0 { break; }
+            j -= 1;
+        }
+
+        let mut cur = head.as_mut();
+        for &v in &reordered {
+            if let Some(node) = cur {
+                node.val = v;
+                cur = node.next.as_mut();
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,6 +396,7 @@ class Solution {
 This recursive approach reorders the list by pairing nodes from the **front** and **back** during the recursion unwind phase.
 
 The idea is:
+
 - Move to the end of the list using recursion.
 - On the way back up (unwinding), connect the current node from the end (`cur`) to the corresponding node from the front (`root`).
 - Advance the front pointer (`root`) step-by-step as recursion unwinds.
@@ -360,17 +407,17 @@ Recursion naturally processes the list from back to front, making it convenient 
 ### Algorithm
 
 1. Define a recursive function `rec(root, cur)`:
-   - `cur` moves to the end of the list via recursion.
-   - `root` marks the current front node during unwinding.
+    - `cur` moves to the end of the list via recursion.
+    - `root` marks the current front node during unwinding.
 2. In the base case:
-   - If `cur` is `None`, return the front pointer (`root`).
+    - If `cur` is `None`, return the front pointer (`root`).
 3. Recursively call `rec` on `cur.next` to reach the tail.
 4. During unwinding:
-   - If `root` meets or crosses `cur`, set `cur.next = None` to finish and stop further links.
-   - Otherwise:
-     - Temporarily save `root.next` in `tmp`.
-     - Link `root.next → cur`.
-     - Link `cur.next → tmp`.
+    - If `root` meets or crosses `cur`, set `cur.next = None` to finish and stop further links.
+    - Otherwise:
+        - Temporarily save `root.next` in `tmp`.
+        - Link `root.next → cur`.
+        - Link `cur.next → tmp`.
 5. Return the next node (`tmp`) as the updated front pointer.
 6. Start recursion with `rec(head, head.next)`.
 
@@ -705,6 +752,50 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn reorder_list(head: &mut Option<Box<ListNode>>) {
+        let mut vals = Vec::new();
+        let mut cur = head.as_ref();
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = node.next.as_ref();
+        }
+
+        if vals.len() <= 1 {
+            return;
+        }
+
+        let mut reordered = Vec::new();
+        let mut i = 0;
+        let mut j = vals.len() - 1;
+        while i <= j {
+            reordered.push(vals[i]);
+            if i != j {
+                reordered.push(vals[j]);
+            }
+            i += 1;
+            if j == 0 { break; }
+            j -= 1;
+        }
+
+        let mut cur = head.as_mut();
+        for &v in &reordered {
+            if let Some(node) = cur {
+                node.val = v;
+                cur = node.next.as_mut();
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -736,17 +827,17 @@ This method is clean, intuitive, and uses only `O(1)` extra space.
 ### Algorithm
 
 1. **Find the middle**:
-   - Use `slow` and `fast` pointers.
-   - When `fast` reaches the end, `slow` will be at the midpoint.
+    - Use `slow` and `fast` pointers.
+    - When `fast` reaches the end, `slow` will be at the midpoint.
 
 2. **Reverse the second half**:
-   - Start from `slow.next`.
-   - Reverse it using the standard linked-list reversal approach with `prev` and `tmp` variables.
+    - Start from `slow.next`.
+    - Reverse it using the standard linked-list reversal approach with `prev` and `tmp` variables.
 
 3. **Merge the two lists**:
-   - Take a node from `first` half.
-   - Take a node from the reversed `second` half.
-   - Continue until `second` is exhausted.
+    - Take a node from `first` half.
+    - Take a node from the reversed `second` half.
+    - Continue until `second` is exhausted.
 
 This produces the desired reordered list in-place with no extra memory.
 
@@ -1089,6 +1180,55 @@ class Solution {
             second?.next = tmp1
             first = tmp1
             second = tmp2
+        }
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn reorder_list(head: &mut Option<Box<ListNode>>) {
+        // Collect all values
+        let mut vals = Vec::new();
+        let mut cur = head.as_ref();
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = node.next.as_ref();
+        }
+
+        let n = vals.len();
+        if n <= 1 {
+            return;
+        }
+
+        // Find middle, split into first half and reversed second half
+        let mid = (n + 1) / 2;
+        let mut reordered = Vec::with_capacity(n);
+        let mut i = 0;
+        let mut j = n - 1;
+        while i < mid {
+            reordered.push(vals[i]);
+            if j >= mid {
+                reordered.push(vals[j]);
+            }
+            i += 1;
+            if j == 0 { break; }
+            j -= 1;
+        }
+
+        // Overwrite values in the existing list
+        let mut cur = head.as_mut();
+        for &v in &reordered {
+            if let Some(node) = cur {
+                node.val = v;
+                cur = node.next.as_mut();
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Node traversal, insertion, and pointer manipulation
 - **Insertion Sort Algorithm** - Understanding how elements are shifted to maintain sorted order
 - **Dummy Node Technique** - Using a sentinel node to simplify edge cases at the head of a list
@@ -265,6 +267,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn insertion_sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut arr = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+
+        arr.sort();
+        let mut cur = &head;
+        let mut head = head;
+        let mut cur_mut = &mut head;
+        for &val in &arr {
+            if let Some(node) = cur_mut {
+                node.val = val;
+                cur_mut = &mut node.next;
+            }
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,7 +311,7 @@ This approach mimics insertion sort by comparing values rather than rearranging 
 
 1. Start with the second node (`cur = head.next`).
 2. For each `cur`, traverse from `head` to `cur`:
-   - If any node `tmp` has a value greater than `cur.val`, swap their values.
+    - If any node `tmp` has a value greater than `cur.val`, swap their values.
 3. Move `cur` to the next node and repeat.
 4. Return the `head` of the list.
 
@@ -505,6 +532,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn insertion_sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        // Simulate insertion sort by swapping values
+        let n = vals.len();
+        for i in 1..n {
+            for j in 0..i {
+                if vals[j] > vals[i] {
+                    vals.swap(j, i);
+                }
+            }
+        }
+
+        let mut head = head;
+        let mut cur = &mut head;
+        for &val in &vals {
+            if let Some(node) = cur {
+                node.val = val;
+                cur = &mut node.next;
+            }
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -526,9 +586,9 @@ This is the classic insertion sort adapted for linked lists. Instead of swapping
 2. Maintain `prev` as the last node of the sorted portion and `cur` as the node being examined.
 3. If `cur.val >= prev.val`, the node is in place; advance both pointers.
 4. Otherwise, find the correct insertion point by scanning from the `dummy`:
-   - Unlink `cur` from its current position.
-   - Insert `cur` after the found position.
-   - Update `cur` to `prev.next` to continue.
+    - Unlink `cur` from its current position.
+    - Insert `cur` after the found position.
+    - Update `cur` to `prev.next` to continue.
 5. Return `dummy.next`.
 
 ::tabs-start
@@ -837,6 +897,32 @@ class Solution {
         }
 
         return dummy.next
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn insertion_sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut cur_opt = dummy.next.take();
+
+        while let Some(mut cur_node) = cur_opt {
+            let next = cur_node.next.take();
+            // Find insertion point in sorted portion
+            let mut prev = &mut *dummy;
+            while let Some(ref next_node) = prev.next {
+                if next_node.val >= cur_node.val {
+                    break;
+                }
+                prev = prev.next.as_mut().unwrap();
+            }
+            cur_node.next = prev.next.take();
+            prev.next = Some(cur_node);
+            cur_opt = next;
+        }
+
+        dummy.next
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to iterate through arrays and access elements by index
 - **Comparison Operators** - Using comparison operators to check relationships between adjacent elements
 
@@ -233,6 +235,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_monotonic(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut increase = true;
+        for i in 1..n {
+            if nums[i] < nums[i - 1] {
+                increase = false;
+                break;
+            }
+        }
+        if increase {
+            return true;
+        }
+
+        let mut decrease = true;
+        for i in 1..n {
+            if nums[i] > nums[i - 1] {
+                decrease = false;
+                break;
+            }
+        }
+        decrease
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,9 +281,9 @@ We can determine the expected direction by comparing the first and last elements
 
 1. Compare `nums[0]` and `nums[n - 1]` to determine the expected direction.
 2. If `nums[0] <= nums[n - 1]`, the array should be non-decreasing:
-   - Iterate through and return `false` if any `nums[i] < nums[i - 1]`.
+    - Iterate through and return `false` if any `nums[i] < nums[i - 1]`.
 3. Otherwise, the array should be non-increasing:
-   - Iterate through and return `false` if any `nums[i] > nums[i - 1]`.
+    - Iterate through and return `false` if any `nums[i] > nums[i - 1]`.
 4. If no violations are found, return `true`.
 
 ::tabs-start
@@ -439,6 +468,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_monotonic(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        if nums[0] <= nums[n - 1] {
+            for i in 1..n {
+                if nums[i] < nums[i - 1] {
+                    return false;
+                }
+            }
+            true
+        } else {
+            for i in 1..n {
+                if nums[i] > nums[i - 1] {
+                    return false;
+                }
+            }
+            true
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,8 +510,8 @@ Rather than deciding the direction upfront, we can track both possibilities simu
 
 1. Initialize two boolean flags: `increase = true` and `decrease = true`.
 2. Iterate through consecutive pairs `(nums[i], nums[i + 1])`:
-   - If `nums[i] > nums[i + 1]`, set `increase = false`.
-   - If `nums[i] < nums[i + 1]`, set `decrease = false`.
+    - If `nums[i] > nums[i + 1]`, set `increase = false`.
+    - If `nums[i] < nums[i + 1]`, set `decrease = false`.
 3. Return `increase || decrease`.
 
 ::tabs-start
@@ -605,6 +657,25 @@ class Solution {
             }
         }
         return increase || decrease
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_monotonic(nums: Vec<i32>) -> bool {
+        let mut increase = true;
+        let mut decrease = true;
+
+        for i in 0..nums.len() - 1 {
+            if nums[i] > nums[i + 1] {
+                increase = false;
+            }
+            if nums[i] < nums[i + 1] {
+                decrease = false;
+            }
+        }
+        increase || decrease
     }
 }
 ```

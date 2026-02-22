@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion and Backtracking** - Used to explore all possible ways to partition characters into two subsequences
 - **Palindrome Checking** - Understanding how to verify if a string reads the same forwards and backwards using two pointers
 - **Bitmask/Bit Manipulation** - Representing subsets of characters as binary numbers for efficient enumeration
@@ -303,6 +305,46 @@ class Solution {
 
         rec(0, [], [])
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_product(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = 0;
+
+        fn is_pal(seq: &[u8]) -> bool {
+            let (mut i, mut j) = (0, seq.len() as i32 - 1);
+            while i < j {
+                if seq[i as usize] != seq[j as usize] {
+                    return false;
+                }
+                i += 1;
+                j -= 1;
+            }
+            true
+        }
+
+        fn rec(i: usize, s: &[u8], seq1: &mut Vec<u8>, seq2: &mut Vec<u8>, res: &mut i32) {
+            if i == s.len() {
+                if is_pal(seq1) && is_pal(seq2) {
+                    *res = (*res).max((seq1.len() * seq2.len()) as i32);
+                }
+                return;
+            }
+            rec(i + 1, s, seq1, seq2, res);
+            seq1.push(s[i]);
+            rec(i + 1, s, seq1, seq2, res);
+            seq1.pop();
+            seq2.push(s[i]);
+            rec(i + 1, s, seq1, seq2, res);
+            seq2.pop();
+        }
+
+        rec(0, s, &mut vec![], &mut vec![], &mut res);
+        res
     }
 }
 ```
@@ -677,6 +719,48 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_product(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut pali = HashMap::new();
+
+        fn is_pal(seq: &[u8]) -> bool {
+            let (mut i, mut j) = (0i32, seq.len() as i32 - 1);
+            while i < j {
+                if seq[i as usize] != seq[j as usize] {
+                    return false;
+                }
+                i += 1;
+                j -= 1;
+            }
+            true
+        }
+
+        for mask in 1..(1 << n) {
+            let subseq: Vec<u8> = (0..n)
+                .filter(|&i| mask & (1 << i) != 0)
+                .map(|i| s[i])
+                .collect();
+            if is_pal(&subseq) {
+                pali.insert(mask, subseq.len() as i32);
+            }
+        }
+
+        let mut res = 0;
+        for (&m1, &len1) in &pali {
+            for (&m2, &len2) in &pali {
+                if m1 & m2 == 0 {
+                    res = res.max(len1 * len2);
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -1177,6 +1261,66 @@ class Solution {
             j -= 1
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_product(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = 0;
+
+        for i in 1..(1 << n) {
+            let (mut seq1, mut seq2) = (vec![], vec![]);
+            for j in 0..n {
+                if i & (1 << j) != 0 {
+                    seq1.push(s[j]);
+                } else {
+                    seq2.push(s[j]);
+                }
+            }
+            if !Self::is_pal(&seq1) {
+                continue;
+            }
+            let lps = Self::longest_palindrome_subseq(&seq2);
+            res = res.max(seq1.len() as i32 * lps);
+        }
+        res
+    }
+
+    fn longest_palindrome_subseq(s: &[u8]) -> i32 {
+        let n = s.len();
+        if n == 0 {
+            return 0;
+        }
+        let mut dp = vec![1i32; n];
+        for i in (0..n).rev() {
+            let mut prev = 0;
+            for j in (i + 1)..n {
+                let tmp = dp[j];
+                if s[i] == s[j] {
+                    dp[j] = 2 + prev;
+                } else {
+                    dp[j] = dp[j].max(dp[j - 1]);
+                }
+                prev = tmp;
+            }
+        }
+        dp[n - 1]
+    }
+
+    fn is_pal(s: &[u8]) -> bool {
+        let (mut i, mut j) = (0i32, s.len() as i32 - 1);
+        while i < j {
+            if s[i as usize] != s[j as usize] {
+                return false;
+            }
+            i += 1;
+            j -= 1;
+        }
+        true
     }
 }
 ```
@@ -1714,6 +1858,70 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_product(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = 0i32;
+        let mut dp = vec![1i32; n];
+
+        for i in 1..(1 << n) {
+            let m1 = Self::palsize(s, i);
+            if m1 == 0 {
+                continue;
+            }
+            for j in 0..n {
+                dp[j] = if i & (1 << j) == 0 { 1 } else { 0 };
+            }
+            let m2 = Self::longest_palindrome_subseq(s, i, &mut dp);
+            res = res.max(m1 * m2);
+        }
+        res
+    }
+
+    fn longest_palindrome_subseq(s: &[u8], mask: usize, dp: &mut [i32]) -> i32 {
+        let n = s.len();
+        for i in (0..n).rev() {
+            if mask & (1 << i) != 0 {
+                continue;
+            }
+            let mut prev = 0;
+            for j in (i + 1)..n {
+                let tmp = dp[j];
+                if mask & (1 << j) == 0 && s[i] == s[j] {
+                    dp[j] = 2 + prev;
+                } else {
+                    dp[j] = dp[j].max(dp[j - 1]);
+                }
+                prev = tmp;
+            }
+        }
+        dp[n - 1]
+    }
+
+    fn palsize(s: &[u8], mask: usize) -> i32 {
+        let (mut i, mut j) = (0i32, s.len() as i32 - 1);
+        let mut res = 0;
+        while i <= j {
+            if mask & (1 << i) == 0 {
+                i += 1;
+            } else if mask & (1 << j as usize) == 0 {
+                j -= 1;
+            } else {
+                if s[i as usize] != s[j as usize] {
+                    return 0;
+                }
+                res += if i == j { 1 } else { 2 };
+                i += 1;
+                j -= 1;
+            }
+        }
+        res
     }
 }
 ```

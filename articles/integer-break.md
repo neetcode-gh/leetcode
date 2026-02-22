@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking problems into smaller subproblems and combining results
 - **Dynamic Programming** - Memoization (top-down) and tabulation (bottom-up) techniques
 - **Mathematical Reasoning** - Understanding why certain factors (like 3) maximize products
@@ -178,6 +180,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        fn dfs(num: i32, original: i32) -> i32 {
+            if num == 1 { return 1; }
+            let mut res = if num == original { 0 } else { num };
+            for i in 1..num {
+                let val = dfs(i, original) * dfs(num - i, original);
+                res = res.max(val);
+            }
+            res
+        }
+        dfs(n, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -199,8 +218,8 @@ Instead of trying all pairs of splits, we can think of this as a bounded knapsac
 2. Base case: if `num` or `i` is `0`, return `1`.
 3. If `i > num`, reduce `i` to `num`.
 4. Choose between:
-   - Using factor `i`: multiply `i * dfs(num - i, i)`.
-   - Skipping factor `i`: call `dfs(num, i - 1)`.
+    - Using factor `i`: multiply `i * dfs(num - i, i)`.
+    - Skipping factor `i`: call `dfs(num, i - 1)`.
 5. Return the maximum of these two choices.
 
 ::tabs-start
@@ -362,6 +381,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        fn dfs(num: i32, i: i32) -> i32 {
+            if num.min(i) == 0 { return 1; }
+            if i > num { return dfs(num, num); }
+            (i * dfs(num - i, i)).max(dfs(num, i - 1))
+        }
+        dfs(n, n - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,10 +413,10 @@ The brute force recursion recalculates the same subproblems many times. By stori
 
 1. Create a hash map `dp` with base case `dp[1] = 1`.
 2. Define `dfs(num)`:
-   - If `num` is already in `dp`, return the cached value.
-   - Initialize `dp[num]` to `0` if `num == n`, else to `num`.
-   - For each split point `i` from `1` to `num - 1`, update `dp[num]` with `max(dp[num], dfs(i) * dfs(num - i))`.
-   - Return `dp[num]`.
+    - If `num` is already in `dp`, return the cached value.
+    - Initialize `dp[num]` to `0` if `num == n`, else to `num`.
+    - For each split point `i` from `1` to `num - 1`, update `dp[num]` with `max(dp[num], dfs(i) * dfs(num - i))`.
+    - Return `dp[num]`.
 3. Call `dfs(n)` and return the result.
 
 ::tabs-start
@@ -591,6 +623,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        let mut dp = HashMap::new();
+        dp.insert(1, 1);
+
+        fn dfs(num: i32, n: i32, dp: &mut HashMap<i32, i32>) -> i32 {
+            if let Some(&val) = dp.get(&num) {
+                return val;
+            }
+            let mut res = if num == n { 0 } else { num };
+            for i in 1..num {
+                let val = dfs(i, n, dp) * dfs(num - i, n, dp);
+                res = res.max(val);
+            }
+            dp.insert(num, res);
+            res
+        }
+
+        dfs(n, n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -610,11 +666,11 @@ This memoizes the bounded knapsack formulation. We cache results based on both t
 
 1. Create a 2D memo table `dp[num][i]` initialized to `-1`.
 2. Define `dfs(num, i)`:
-   - If `min(num, i) == 0`, return `1`.
-   - If `dp[num][i]` is cached, return it.
-   - If `i > num`, set `dp[num][i] = dfs(num, num)`.
-   - Otherwise, set `dp[num][i] = max(i * dfs(num - i, i), dfs(num, i - 1))`.
-   - Return `dp[num][i]`.
+    - If `min(num, i) == 0`, return `1`.
+    - If `dp[num][i]` is cached, return it.
+    - If `i > num`, set `dp[num][i] = dfs(num, num)`.
+    - Otherwise, set `dp[num][i] = max(i * dfs(num - i, i), dfs(num, i - 1))`.
+    - Return `dp[num][i]`.
 3. Call `dfs(n, n - 1)` and return the result.
 
 ::tabs-start
@@ -836,6 +892,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        let n = n as usize;
+        let mut dp = vec![vec![-1i32; n]; n + 1];
+
+        fn dfs(num: usize, i: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if num.min(i) == 0 { return 1; }
+            if dp[num][i] != -1 { return dp[num][i]; }
+            if i > num {
+                dp[num][i] = dfs(num, num, dp);
+                return dp[num][i];
+            }
+            dp[num][i] = (i as i32 * dfs(num - i, i, dp)).max(dfs(num, i - 1, dp));
+            dp[num][i]
+        }
+
+        dfs(n, n - 1, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -855,8 +933,8 @@ We can solve this iteratively by building up solutions from smaller numbers. For
 
 1. Create an array `dp` of size `n + 1` with `dp[1] = 1`.
 2. For each `num` from `2` to `n`:
-   - Initialize `dp[num]` to `num` (or `0` if `num == n`).
-   - For each `i` from `1` to `num - 1`, update `dp[num] = max(dp[num], dp[i] * dp[num - i])`.
+    - Initialize `dp[num]` to `num` (or `0` if `num == n`).
+    - For each `i` from `1` to `num - 1`, update `dp[num] = max(dp[num], dp[i] * dp[num - i])`.
 3. Return `dp[n]`.
 
 ::tabs-start
@@ -1010,6 +1088,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        let n = n as usize;
+        let mut dp = vec![0; n + 1];
+        dp[1] = 1;
+
+        for num in 2..=n {
+            dp[num] = if num == n { 0 } else { num as i32 };
+            for i in 1..num {
+                dp[num] = dp[num].max(dp[i] * dp[num - i]);
+            }
+        }
+
+        dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1158,6 +1255,22 @@ class Solution {
             num -= 3
         }
         return res * num
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        if n <= 3 { return n - 1; }
+
+        let mut res = 1;
+        let mut n = n;
+        while n > 4 {
+            res *= 3;
+            n -= 3;
+        }
+        res * n
     }
 }
 ```
@@ -1328,6 +1441,25 @@ class Solution {
         }
 
         return res * max(1, n % 3)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn integer_break(n: i32) -> i32 {
+        if n <= 3 { return n - 1; }
+
+        let mut res = 1;
+        for _ in 0..(n / 3) {
+            res *= 3;
+        }
+
+        if n % 3 == 1 {
+            return (res / 3) * 4;
+        }
+
+        res * (n % 3).max(1)
     }
 }
 ```

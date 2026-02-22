@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how to break down problems into smaller subproblems
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches
 - **0/1 Knapsack Pattern** - This problem can be modeled as selecting items with costs and benefits
@@ -21,8 +23,8 @@ We use recursion to decide for each wall: either pay to paint it (and let the fr
 1. Define `dfs(i, remain)` where `i` is the current wall index and `remain` is the number of walls still needing to be painted.
 2. Base case: If `remain <= 0`, all walls are covered, return `0`. If `i == n`, we have run out of walls to assign without covering everything, return `infinity`.
 3. For each wall, we have two choices:
-   - Paint it with the paid painter: cost is `cost[i] + dfs(i + 1, remain - 1 - time[i])`.
-   - Skip it: cost is `dfs(i + 1, remain)`.
+    - Paint it with the paid painter: cost is `cost[i] + dfs(i + 1, remain - 1 - time[i])`.
+    - Skip it: cost is `dfs(i + 1, remain)`.
 4. Return the minimum of these two choices.
 5. Start with `dfs(0, n)` since all `n` walls need to be painted.
 
@@ -208,6 +210,26 @@ class Solution {
         }
 
         return dfs(0, cost.count)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn paint_walls(cost: Vec<i32>, time: Vec<i32>) -> i32 {
+        fn dfs(cost: &[i32], time: &[i32], i: usize, remain: i32) -> i32 {
+            if remain <= 0 {
+                return 0;
+            }
+            if i == cost.len() {
+                return i32::MAX;
+            }
+            let paint = dfs(cost, time, i + 1, remain - 1 - time[i]);
+            let paint = if paint != i32::MAX { paint + cost[i] } else { paint };
+            let skip = dfs(cost, time, i + 1, remain);
+            paint.min(skip)
+        }
+        dfs(&cost, &time, 0, cost.len() as i32)
     }
 }
 ```
@@ -486,6 +508,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn paint_walls(cost: Vec<i32>, time: Vec<i32>) -> i32 {
+        let n = cost.len();
+        let mut dp = vec![vec![-1i32; n + 1]; n];
+
+        fn dfs(cost: &[i32], time: &[i32], dp: &mut Vec<Vec<i32>>,
+               i: usize, remain: i32) -> i32 {
+            if remain <= 0 {
+                return 0;
+            }
+            if i == cost.len() {
+                return i32::MAX;
+            }
+            let r = remain as usize;
+            if dp[i][r] != -1 {
+                return dp[i][r];
+            }
+            let paint = dfs(cost, time, dp, i + 1, remain - 1 - time[i]);
+            let paint = if paint != i32::MAX { paint + cost[i] } else { paint };
+            let skip = dfs(cost, time, dp, i + 1, remain);
+            dp[i][r] = paint.min(skip);
+            dp[i][r]
+        }
+        dfs(&cost, &time, &mut dp, 0, n as i32)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -729,6 +780,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn paint_walls(cost: Vec<i32>, time: Vec<i32>) -> i32 {
+        let n = cost.len();
+        let mut dp = vec![vec![0i32; n + 2]; n + 1];
+        for remain in 1..=n {
+            dp[n][remain] = i32::MAX;
+        }
+
+        for i in (0..n).rev() {
+            for remain in 1..=n {
+                let idx = 0.max(remain as i32 - 1 - time[i]) as usize;
+                let paint = if dp[i + 1][idx] != i32::MAX {
+                    dp[i + 1][idx] + cost[i]
+                } else {
+                    i32::MAX
+                };
+                let skip = dp[i + 1][remain];
+                dp[i][remain] = paint.min(skip);
+            }
+        }
+
+        dp[0][n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -933,6 +1011,30 @@ class Solution {
         }
 
         return dp[n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn paint_walls(cost: Vec<i32>, time: Vec<i32>) -> i32 {
+        let n = cost.len();
+        let mut dp = vec![i32::MAX; n + 2];
+        dp[0] = 0;
+
+        for i in 0..n {
+            for remain in (1..=n).rev() {
+                let idx = 0.max(remain as i32 - 1 - time[i]) as usize;
+                let paint = if dp[idx] != i32::MAX {
+                    dp[idx] + cost[i]
+                } else {
+                    i32::MAX
+                };
+                dp[remain] = dp[remain].min(paint);
+            }
+        }
+
+        dp[n]
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Understanding both top-down (memoization) and bottom-up approaches
 - **Sliding Window Maximum** - Finding the maximum value within a fixed-size window efficiently
 - **Monotonic Deque** - Maintaining a deque with elements in monotonic order for O(1) max queries
@@ -11,9 +13,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 We want to find the maximum sum of a subsequence where consecutive elements are at most `k` indices apart. For each index, we can either start a new subsequence there or extend a previous subsequence. Using recursion with memoization, we explore starting from each position and try extending to any position within the next `k` indices, taking the maximum result.
 
 ### Algorithm
+
 1. Create a memoization array to store computed results for each starting index.
 2. Define a recursive function `dfs(i)` that returns the maximum subsequence sum starting from index `i`.
 3. For each index `i`, initialize the result as `nums[i]` (taking just this element).
@@ -282,6 +286,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn constrained_subset_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = nums.len();
+        let mut memo = vec![None; n];
+
+        fn dfs(i: usize, nums: &[i32], k: usize, memo: &mut Vec<Option<i32>>) -> i32 {
+            if let Some(val) = memo[i] {
+                return val;
+            }
+
+            let mut res = nums[i];
+            let mut j = i + 1;
+            while j < nums.len() && j - i <= k {
+                res = res.max(nums[i] + dfs(j, nums, k, memo));
+                j += 1;
+            }
+
+            memo[i] = Some(res);
+            res
+        }
+
+        let mut ans = i32::MIN;
+        for i in 0..n {
+            ans = ans.max(dfs(i, &nums, k, &mut memo));
+        }
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,9 +330,11 @@ class Solution {
 ## 2. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 Instead of recursion, we can solve this iteratively. We define `dp[i]` as the maximum sum of a constrained subsequence ending at index `i`. For each position, we look back at the previous `k` elements and take the best one to extend from (if it improves our sum).
 
 ### Algorithm
+
 1. Initialize a DP array where `dp[i] = nums[i]` (each element starts as its own subsequence).
 2. For each index `i` from `1` to `n-1`, iterate through all indices `j` in the range `[max(0, i-k), i-1]`.
 3. Update `dp[i] = max(dp[i], nums[i] + dp[j])` to potentially extend from a previous subsequence.
@@ -460,6 +498,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn constrained_subset_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = nums.len();
+        let mut dp = nums.clone();
+
+        for i in 1..n {
+            let start = if i >= k { i - k } else { 0 };
+            for j in start..i {
+                dp[i] = dp[i].max(nums[i] + dp[j]);
+            }
+        }
+
+        *dp.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,16 +529,18 @@ class Solution {
 ## 3. Dynamic Programming + Segment Tree
 
 ### Intuition
+
 The bottleneck in the previous approach is finding the maximum DP value in a sliding window of size `k`. A segment tree can answer range maximum queries in `O(log n)` time, allowing us to efficiently find the best previous subsequence to extend from.
 
 ### Algorithm
+
 1. Build a segment tree that supports point updates and range maximum queries.
 2. Initialize the tree with the first element's value.
 3. For each index `i` from `1` to `n-1`:
-   - Query the segment tree for the maximum value in the range `[max(0, i-k), i-1]`.
-   - Compute `current = nums[i] + max(0, queryResult)` (we add `0` if all previous values are negative, meaning we start fresh).
-   - Update the segment tree at index `i` with `current`.
-   - Track the overall maximum result.
+    - Query the segment tree for the maximum value in the range `[max(0, i-k), i-1]`.
+    - Compute `current = nums[i] + max(0, queryResult)` (we add `0` if all previous values are negative, meaning we start fresh).
+    - Update the segment tree at index `i` with `current`.
+    - Track the overall maximum result.
 4. Return the maximum result found.
 
 ::tabs-start
@@ -981,6 +1040,72 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegmentTree {
+    fn new(mut n: usize) -> Self {
+        while (n & (n - 1)) != 0 {
+            n += 1;
+        }
+        SegmentTree {
+            n,
+            tree: vec![i32::MIN; 2 * n],
+        }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        let mut idx = i + self.n;
+        self.tree[idx] = val;
+        while idx > 1 {
+            idx >>= 1;
+            self.tree[idx] = self.tree[idx << 1].max(self.tree[(idx << 1) | 1]);
+        }
+    }
+
+    fn query(&self, l: usize, r: usize) -> i32 {
+        let mut res = i32::MIN;
+        let mut left = l + self.n;
+        let mut right = r + self.n + 1;
+        while left < right {
+            if left & 1 == 1 {
+                res = res.max(self.tree[left]);
+                left += 1;
+            }
+            if right & 1 == 1 {
+                right -= 1;
+                res = res.max(self.tree[right]);
+            }
+            left >>= 1;
+            right >>= 1;
+        }
+        res.max(0)
+    }
+}
+
+impl Solution {
+    pub fn constrained_subset_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = nums.len();
+        let mut seg = SegmentTree::new(n);
+        seg.update(0, nums[0]);
+        let mut res = nums[0];
+
+        for i in 1..n {
+            let start = if i >= k { i - k } else { 0 };
+            let cur = nums[i] + seg.query(start, i - 1);
+            seg.update(i, cur);
+            res = res.max(cur);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -993,15 +1118,17 @@ class Solution {
 ## 4. Max-Heap
 
 ### Intuition
+
 We can use a max-heap to efficiently track the maximum DP value among the previous `k` elements. The heap stores pairs of (dp value, index). Before using the top of the heap, we remove any entries that are outside our window (more than `k` positions behind).
 
 ### Algorithm
+
 1. Initialize the result with `nums[0]` and push `(nums[0], 0)` onto a max-heap.
 2. For each index `i` from `1` to `n-1`:
-   - Pop elements from the heap while the top element's index is more than `k` positions behind `i`.
-   - Compute `current = max(nums[i], nums[i] + heap.top())` to either start fresh or extend.
-   - Update the result with `current`.
-   - Push `(current, i)` onto the heap.
+    - Pop elements from the heap while the top element's index is more than `k` positions behind `i`.
+    - Compute `current = max(nums[i], nums[i] + heap.top())` to either start fresh or extend.
+    - Update the result with `current`.
+    - Push `(current, i)` onto the heap.
 3. Return the maximum result.
 
 ::tabs-start
@@ -1273,6 +1400,31 @@ struct Heap<T> {
 }
 ```
 
+```rust
+use std::collections::BinaryHeap;
+
+impl Solution {
+    pub fn constrained_subset_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let mut res = nums[0];
+        let mut max_heap: BinaryHeap<(i32, usize)> = BinaryHeap::new();
+        max_heap.push((nums[0], 0));
+
+        for i in 1..nums.len() {
+            while i - max_heap.peek().unwrap().1 > k {
+                max_heap.pop();
+            }
+
+            let cur_max = nums[i].max(nums[i] + max_heap.peek().unwrap().0);
+            res = res.max(cur_max);
+            max_heap.push((cur_max, i));
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1285,16 +1437,18 @@ struct Heap<T> {
 ## 5. Monotonic Deque
 
 ### Intuition
+
 A monotonic decreasing deque provides `O(1)` access to the maximum value in a sliding window. We maintain a deque where values are in decreasing order. The front always holds the maximum DP value within our window, and we remove elements from the back that are smaller than the current value (since they will never be useful).
 
 ### Algorithm
+
 1. Initialize a deque with `(0, nums[0])` representing (index, dp value) and set result to `nums[0]`.
 2. For each index `i` from `1` to `n-1`:
-   - Remove the front element if its index is outside the window (less than `i - k`).
-   - Compute `current = max(0, deque.front().value) + nums[i]`.
-   - Remove elements from the back while they have values less than or equal to `current`.
-   - Add `(i, current)` to the back of the deque.
-   - Update the result with `current`.
+    - Remove the front element if its index is outside the window (less than `i - k`).
+    - Compute `current = max(0, deque.front().value) + nums[i]`.
+    - Remove elements from the back while they have values less than or equal to `current`.
+    - Add `(i, current)` to the back of the deque.
+    - Update the result with `current`.
 3. Return the maximum result.
 
 ::tabs-start
@@ -1516,6 +1670,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn constrained_subset_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = nums.len();
+        let mut dq: VecDeque<(usize, i32)> = VecDeque::new();
+        dq.push_back((0, nums[0]));
+        let mut res = nums[0];
+
+        for i in 1..n {
+            while !dq.is_empty() && dq.front().unwrap().0 + k < i {
+                dq.pop_front();
+            }
+
+            let cur = 0.max(dq.front().unwrap().1) + nums[i];
+            while !dq.is_empty() && cur > dq.back().unwrap().1 {
+                dq.pop_back();
+            }
+
+            dq.push_back((i, cur));
+            res = res.max(cur);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1528,6 +1710,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Forcing Extension When Starting Fresh is Better
+
 When all previous DP values in the window are negative, it's better to start a new subsequence at the current index rather than extending. Failing to take `max(0, previous_max)` leads to suboptimal sums.
 
 ```python
@@ -1539,6 +1722,7 @@ cur = nums[i] + max(0, dq[0][1])
 ```
 
 ### Not Maintaining Monotonic Decreasing Order in Deque
+
 The deque must store values in decreasing order so the front always has the maximum. Forgetting to pop smaller values from the back before inserting breaks this invariant.
 
 ```python
@@ -1552,10 +1736,13 @@ dq.append((i, cur))
 ```
 
 ### Incorrect Window Boundary Check
+
 The constraint allows elements at most `k` indices apart, meaning index `i` can extend from indices `i-k` through `i-1`. Using `< i - k` instead of `<= i - k - 1` (or equivalently `< i - k`) for removal is an off-by-one error.
 
 ### Using O(nk) Approach for Large Inputs
+
 The naive DP solution that checks all `k` previous elements for each position times out on large inputs. Using a segment tree, heap, or monotonic deque is necessary to achieve `O(n log n)` or `O(n)` time.
 
 ### Returning Maximum DP Value Instead of Tracking Running Maximum
+
 In some implementations, the maximum sum subsequence might not end at the last index. You must track the maximum across all DP values, not just return `dp[n-1]`.

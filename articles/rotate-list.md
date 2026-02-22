@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Fundamentals** - Understanding node structure, traversal, and how to find the length of a list
 - **Pointer Manipulation** - Reconnecting nodes by changing next pointers to restructure the list
 - **Modular Arithmetic** - Using modulo to normalize rotation count when it exceeds list length
@@ -19,8 +21,8 @@ The challenge with linked lists is that we cannot directly access elements by in
 2. Traverse the list and store all node values in an array.
 3. Compute `k = k % n` to handle rotations larger than the list length.
 4. Traverse the list again, assigning values from the rotated positions:
-   - First, assign the last `k` values from the array.
-   - Then, assign the remaining values.
+    - First, assign the last `k` values from the array.
+    - Then, assign the remaining values.
 5. Return the `head` of the modified list.
 
 ::tabs-start
@@ -333,6 +335,45 @@ class Solution {
         }
 
         return head
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn rotate_right(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        if head.is_none() {
+            return None;
+        }
+        let mut arr = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+        let n = arr.len();
+        let k = k as usize % n;
+        let mut cur = head;
+        let mut node = &mut cur;
+        for i in (n - k)..n {
+            if let Some(ref mut nd) = node {
+                nd.val = arr[i];
+                node = &mut nd.next;
+            }
+        }
+        for i in 0..(n - k) {
+            if let Some(ref mut nd) = node {
+                nd.val = arr[i];
+                node = &mut nd.next;
+            }
+        }
+        cur
     }
 }
 ```
@@ -693,6 +734,44 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn rotate_right(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        if head.is_none() {
+            return head;
+        }
+        let mut length = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            length += 1;
+            cur = &node.next;
+        }
+        let k = k as usize % length;
+        if k == 0 {
+            return head;
+        }
+        let mut head = head;
+        let mut cur = &mut head;
+        for _ in 0..(length - k - 1) {
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+        let mut new_head = cur.as_mut().unwrap().next.take();
+        let mut tail = &mut new_head;
+        while tail.as_ref().unwrap().next.is_some() {
+            tail = &mut tail.as_mut().unwrap().next;
+        }
+        tail.as_mut().unwrap().next = head;
+        new_head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1002,6 +1081,44 @@ class Solution {
         let newHead = cur?.next
         cur?.next = nil
         return newHead
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn rotate_right(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        if head.is_none() {
+            return head;
+        }
+        let mut n = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            n += 1;
+            cur = &node.next;
+        }
+        let k = k as usize % n;
+        if k == 0 {
+            return head;
+        }
+        let mut head = head;
+        let mut cur = &mut head;
+        for _ in 0..(n - k - 1) {
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+        let mut new_head = cur.as_mut().unwrap().next.take();
+        let mut tail = &mut new_head;
+        while tail.as_ref().unwrap().next.is_some() {
+            tail = &mut tail.as_mut().unwrap().next;
+        }
+        tail.as_mut().unwrap().next = head;
+        new_head
     }
 }
 ```

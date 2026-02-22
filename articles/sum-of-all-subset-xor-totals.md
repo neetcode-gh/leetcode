@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion/Backtracking** - Used to generate all possible subsets by making include/exclude decisions for each element
 - **XOR Operation** - Understanding that XOR is self-inverse (a ^ a = 0) and its bit-level behavior
 - **Bit Manipulation** - Bitmasks can represent subsets, and the optimal solution uses OR and bit shifting
@@ -16,11 +18,11 @@ We need to generate all possible subsets and compute the XOR total of each. The 
 
 1. Initialize `res = 0` to accumulate the sum of XOR totals.
 2. Define a backtracking function that takes the current `index` and the current `subset`:
-   - Compute the XOR of all elements in the `subset` and add it to `res`.
-   - For each remaining element starting from the current `index`:
-     - Add the element to the `subset`.
-     - Recursively call `backtrack` with the next `index`.
-     - Remove the element from the `subset`.
+    - Compute the XOR of all elements in the `subset` and add it to `res`.
+    - For each remaining element starting from the current `index`:
+        - Add the element to the `subset`.
+        - Recursively call `backtrack` with the next `index`.
+        - Remove the element from the `subset`.
 3. Call the backtracking function starting at `index` `0` with an empty `subset`.
 4. Return `res`.
 
@@ -222,6 +224,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subset_xor_sum(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let mut subset = Vec::new();
+        Self::backtrack(0, &mut subset, &nums, &mut res);
+        res
+    }
+
+    fn backtrack(i: usize, subset: &mut Vec<i32>, nums: &[i32], res: &mut i32) {
+        let mut xorr = 0;
+        for &num in subset.iter() {
+            xorr ^= num;
+        }
+        *res += xorr;
+
+        for j in i..nums.len() {
+            subset.push(nums[j]);
+            Self::backtrack(j + 1, subset, nums, res);
+            subset.pop();
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,10 +267,10 @@ A cleaner recursive approach avoids explicitly building subsets. For each elemen
 ### Algorithm
 
 1. Define a recursive function `dfs(i, total)` where `i` is the current `index` and `total` is the running XOR:
-   - Base case: If `i == len(nums)`, return `total`.
-   - Recursive case: Return `dfs(i + 1, total ^ nums[i]) + dfs(i + 1, total)`.
-     - The first call includes `nums[i]` in the XOR.
-     - The second call excludes `nums[i]`.
+    - Base case: If `i == len(nums)`, return `total`.
+    - Recursive case: Return `dfs(i + 1, total ^ nums[i]) + dfs(i + 1, total)`.
+        - The first call includes `nums[i]` in the XOR.
+        - The second call excludes `nums[i]`.
 2. Call `dfs(0, 0)` and return the `result`.
 
 ::tabs-start
@@ -369,6 +396,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subset_xor_sum(nums: Vec<i32>) -> i32 {
+        Self::dfs(&nums, 0, 0)
+    }
+
+    fn dfs(nums: &[i32], i: usize, total: i32) -> i32 {
+        if i == nums.len() {
+            return total;
+        }
+        Self::dfs(nums, i + 1, total ^ nums[i]) + Self::dfs(nums, i + 1, total)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,10 +430,10 @@ Every subset can be represented by a bitmask where bit `i` indicates whether ele
 
 1. Initialize `res = 0`.
 2. For each `mask` from `0` to `2^n - 1`:
-   - Initialize `xorr = 0`.
-   - For each bit position `i` from `0` to `n - 1`:
-     - If bit `i` is set in the `mask`, XOR `nums[i]` into `xorr`.
-   - Add `xorr` to `res`.
+    - Initialize `xorr = 0`.
+    - For each bit position `i` from `0` to `n - 1`:
+        - If bit `i` is set in the `mask`, XOR `nums[i]` into `xorr`.
+    - Add `xorr` to `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -562,6 +604,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subset_xor_sum(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for mask in 0..(1 << n) {
+            let mut xorr = 0;
+            for i in 0..n {
+                if mask & (1 << i) != 0 {
+                    xorr ^= nums[i];
+                }
+            }
+            res += xorr;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -677,6 +740,18 @@ class Solution {
             res |= num
         }
         return res << (nums.count - 1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn subset_xor_sum(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        for &num in &nums {
+            res |= num;
+        }
+        res << (nums.len() - 1)
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack** - Used to track indices of unmatched opening parentheses for later removal
 - **Parentheses Matching** - Understanding when parentheses are balanced and how to identify invalid ones
 - **Two-Pass String Processing** - First pass removes invalid closing parens, second pass removes unmatched opening parens
@@ -17,10 +19,10 @@ A string of parentheses is valid when every opening parenthesis has a matching c
 
 1. Initialize an empty result list and a counter `cnt` to track unmatched opening parentheses.
 2. First pass (left to right): For each character:
-   - If it's `(`, add it to result and increment `cnt`.
-   - If it's `)` and `cnt > 0`, add it and decrement `cnt` (it matches an open paren).
-   - If it's `)` and `cnt == 0`, skip it (no matching open paren).
-   - If it's any other character, add it to result.
+    - If it's `(`, add it to result and increment `cnt`.
+    - If it's `)` and `cnt > 0`, add it and decrement `cnt` (it matches an open paren).
+    - If it's `)` and `cnt == 0`, skip it (no matching open paren).
+    - If it's any other character, add it to result.
 3. Second pass (right to left): Traverse the result and skip the first `cnt` opening parentheses.
 4. Reverse and return the filtered result as a string.
 
@@ -285,6 +287,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_remove_to_make_valid(s: String) -> String {
+        let mut res: Vec<u8> = Vec::new();
+        let mut cnt = 0;
+
+        for &c in s.as_bytes() {
+            if c == b'(' {
+                res.push(c);
+                cnt += 1;
+            } else if c == b')' && cnt > 0 {
+                res.push(c);
+                cnt -= 1;
+            } else if c != b')' {
+                res.push(c);
+            }
+        }
+
+        let mut filtered: Vec<u8> = Vec::new();
+        for &c in res.iter().rev() {
+            if c == b'(' && cnt > 0 {
+                cnt -= 1;
+            } else {
+                filtered.push(c);
+            }
+        }
+
+        filtered.reverse();
+        String::from_utf8(filtered).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,9 +339,9 @@ This approach follows the same logic as the stack solution but modifies the stri
 
 1. Convert the string to a character array and initialize counter `cnt` for unmatched opening parentheses.
 2. First pass: Iterate through the array:
-   - If it's `(`, increment `cnt`.
-   - If it's `)` and `cnt > 0`, decrement `cnt`.
-   - If it's `)` and `cnt == 0`, mark this position as empty (invalid closing paren).
+    - If it's `(`, increment `cnt`.
+    - If it's `)` and `cnt > 0`, decrement `cnt`.
+    - If it's `)` and `cnt == 0`, mark this position as empty (invalid closing paren).
 3. Second pass (right to left): Skip the first `cnt` opening parentheses while building the result.
 4. Reverse and return the result string.
 
@@ -555,6 +590,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_remove_to_make_valid(s: String) -> String {
+        let mut arr: Vec<u8> = s.into_bytes();
+        let mut cnt = 0;
+
+        for i in 0..arr.len() {
+            if arr[i] == b'(' {
+                cnt += 1;
+            } else if arr[i] == b')' && cnt > 0 {
+                cnt -= 1;
+            } else if arr[i] == b')' {
+                arr[i] = 0;
+            }
+        }
+
+        let mut res: Vec<u8> = Vec::new();
+        for i in (0..arr.len()).rev() {
+            if arr[i] == b'(' && cnt > 0 {
+                cnt -= 1;
+            } else if arr[i] != 0 {
+                res.push(arr[i]);
+            }
+        }
+
+        res.reverse();
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -574,9 +640,9 @@ Instead of using a counter, we can use a stack to store the indices of unmatched
 
 1. Convert the string to a character array and initialize an empty `stack`.
 2. Iterate through the array:
-   - If it's `(`, push its index onto the `stack`.
-   - If it's `)` and `stack` is not empty, pop the `stack` (found a match).
-   - If it's `)` and `stack` is empty, mark this index as invalid.
+    - If it's `(`, push its index onto the `stack`.
+    - If it's `)` and `stack` is not empty, pop the `stack` (found a match).
+    - If it's `)` and `stack` is empty, mark this index as invalid.
 3. After iteration, mark all indices remaining in the `stack` as invalid (unmatched opening parens).
 4. Build the result by including only characters at valid positions.
 
@@ -818,6 +884,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_remove_to_make_valid(s: String) -> String {
+        let mut arr: Vec<u8> = s.into_bytes();
+        let mut stack: Vec<usize> = Vec::new();
+
+        for i in 0..arr.len() {
+            if arr[i] == b'(' {
+                stack.push(i);
+            } else if arr[i] == b')' {
+                if !stack.is_empty() {
+                    stack.pop();
+                } else {
+                    arr[i] = 0;
+                }
+            }
+        }
+
+        while let Some(idx) = stack.pop() {
+            arr[idx] = 0;
+        }
+
+        let res: Vec<u8> = arr.into_iter().filter(|&c| c != 0).collect();
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -838,9 +932,9 @@ We can solve this in a single pass by counting closing parentheses upfront. Know
 1. Count total closing parentheses in the string (`closeCnt`).
 2. Initialize `openCnt = 0` and an empty result list.
 3. Iterate through each character:
-   - If it's `(`: Skip it if `openCnt == closeCnt` (no room for more opens). Otherwise, increment `openCnt` and add it.
-   - If it's `)`: Decrement `closeCnt`. Skip if `openCnt == 0` (no matching open). Otherwise, decrement `openCnt` and add it.
-   - For other characters, add directly to result.
+    - If it's `(`: Skip it if `openCnt == closeCnt` (no room for more opens). Otherwise, increment `openCnt` and add it.
+    - If it's `)`: Decrement `closeCnt`. Skip if `openCnt == 0` (no matching open). Otherwise, decrement `openCnt` and add it.
+    - For other characters, add directly to result.
 4. Return the result as a string.
 
 ::tabs-start
@@ -1053,6 +1147,35 @@ class Solution {
         }
 
         return String(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_remove_to_make_valid(s: String) -> String {
+        let bytes = s.as_bytes();
+        let mut open_cnt = 0i32;
+        let mut close_cnt = bytes.iter().filter(|&&c| c == b')').count() as i32;
+
+        let mut res: Vec<u8> = Vec::new();
+        for &c in bytes {
+            if c == b'(' {
+                if open_cnt == close_cnt {
+                    continue;
+                }
+                open_cnt += 1;
+            } else if c == b')' {
+                close_cnt -= 1;
+                if open_cnt == 0 {
+                    continue;
+                }
+                open_cnt -= 1;
+            }
+            res.push(c);
+        }
+
+        String::from_utf8(res).unwrap()
     }
 }
 ```

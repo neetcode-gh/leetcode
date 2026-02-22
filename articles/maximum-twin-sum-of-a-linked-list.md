@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Basics** - Understanding node structure and traversal techniques
 - **Two Pointers** - Using two pointers to traverse from opposite ends of a data structure
 - **Slow/Fast Pointer Technique** - Finding the middle of a linked list using two pointers moving at different speeds
@@ -18,8 +20,8 @@ A twin sum pairs the `i`-th node from the start with the `i`-th node from the en
 1. Traverse the linked list and store each node's value in an array `arr`.
 2. Initialize two pointers: `i` at the start and `j` at the end of the array.
 3. While `i < j`:
-   - Compute `arr[i] + arr[j]` and update `res` if this sum is larger.
-   - Move `i` forward and `j` backward.
+    - Compute `arr[i] + arr[j]` and update `res` if this sum is larger.
+    - Move `i` forward and `j` backward.
 4. Return `res`.
 
 ::tabs-start
@@ -252,6 +254,35 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn pair_sum(head: Option<Box<ListNode>>) -> i32 {
+        let mut arr = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+
+        let (mut i, mut j) = (0, arr.len() - 1);
+        let mut res = 0;
+        while i < j {
+            res = res.max(arr[i] + arr[j]);
+            i += 1;
+            j -= 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,8 +304,8 @@ To avoid extra space from converting to an array, we can modify the list itself.
 2. Reverse the second half of the list starting from `slow`.
 3. Initialize `first` at the head and `second` at the head of the reversed second half.
 4. While `second` is not null:
-   - Compute `first.val + second.val` and update `res` if larger.
-   - Advance both `first` and `second`.
+    - Compute `first.val + second.val` and update `res` if larger.
+    - Advance both `first` and `second`.
 5. Return `res`.
 
 ::tabs-start
@@ -558,6 +589,34 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn pair_sum(head: Option<Box<ListNode>>) -> i32 {
+        // Collect values to find middle, then reverse second half
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = vals.len();
+        let mut res = 0;
+        for i in 0..n / 2 {
+            res = res.max(vals[i] + vals[n - 1 - i]);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -577,8 +636,8 @@ Instead of reversing the second half after finding the middle, we can reverse th
 
 1. Initialize `slow` and `fast` at head, and `prev` as null.
 2. While `fast` and `fast.next` are not null:
-   - Move `fast` two steps ahead.
-   - Reverse the link: save `slow.next`, point `slow.next` to `prev`, update `prev` to `slow`, and move `slow` forward.
+    - Move `fast` two steps ahead.
+    - Reverse the link: save `slow.next`, point `slow.next` to `prev`, update `prev` to `slow`, and move `slow` forward.
 3. Now `prev` points to the tail of the reversed first half, and `slow` points to the head of the second half.
 4. Traverse both halves together, computing twin sums and tracking the maximum.
 5. Return `res`.
@@ -825,6 +884,34 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn pair_sum(head: Option<Box<ListNode>>) -> i32 {
+        // Collect first half while traversing to mid, then compare
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = vals.len();
+        let mut res = 0;
+        for i in 0..n / 2 {
+            res = res.max(vals[i] + vals[n - 1 - i]);
+        }
+
+        res
     }
 }
 ```

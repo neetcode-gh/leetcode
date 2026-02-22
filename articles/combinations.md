@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how to break problems into smaller subproblems with base cases
 - **Backtracking** - Making choices (include/exclude), exploring paths, and undoing choices
 - **Bit Manipulation** - Using bitmasks to represent subsets (for the bit manipulation approach)
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Backtracking - I
 
 ### Intuition
+
 To generate all combinations of `k` numbers from `1` to `n`, we make a binary choice for each number: include it or exclude it. This forms a decision tree where each path represents a subset. We only keep subsets of exactly size `k`.
 
 ### Algorithm
+
 1. Start with an empty combination and index `i = 1`.
 2. At each step, we have two choices: include the current number `i` in the combination, or skip it.
 3. Recursively process both choices by incrementing `i`.
@@ -226,6 +230,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combine(n: i32, k: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+
+        fn backtrack(i: i32, n: i32, k: i32, comb: &mut Vec<i32>, res: &mut Vec<Vec<i32>>) {
+            if i > n {
+                if comb.len() == k as usize {
+                    res.push(comb.clone());
+                }
+                return;
+            }
+            comb.push(i);
+            backtrack(i + 1, n, k, comb, res);
+            comb.pop();
+            backtrack(i + 1, n, k, comb, res);
+        }
+
+        backtrack(1, n, k, &mut vec![], &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,9 +268,11 @@ class Solution {
 ## 2. Backtracking - II
 
 ### Intuition
+
 Instead of making include/exclude decisions, we iterate through available numbers and always include one. Starting from a given position ensures we never revisit smaller numbers, avoiding duplicates. We stop when the combination reaches size `k`.
 
 ### Algorithm
+
 1. Start with an empty combination and a starting index of `1`.
 2. If the combination size equals `k`, save a copy to the result and return.
 3. Iterate from the start index to `n`. For each number, add it to the combination.
@@ -449,6 +479,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combine(n: i32, k: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+
+        fn backtrack(start: i32, n: i32, k: i32, comb: &mut Vec<i32>, res: &mut Vec<Vec<i32>>) {
+            if comb.len() == k as usize {
+                res.push(comb.clone());
+                return;
+            }
+            for i in start..=n {
+                comb.push(i);
+                backtrack(i + 1, n, k, comb, res);
+                comb.pop();
+            }
+        }
+
+        backtrack(1, n, k, &mut vec![], &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -463,9 +516,11 @@ class Solution {
 ## 3. Iteration
 
 ### Intuition
+
 We can simulate backtracking iteratively using an array of size `k` to track our current combination. An index pointer moves forward when we find valid numbers and backward when we need to backtrack. This eliminates recursion overhead.
 
 ### Algorithm
+
 1. Initialize an array of size `k` with zeros and a pointer `i = 0`.
 2. Increment `comb[i]` to try the next value at position `i`.
 3. If `comb[i]` exceeds `n`, move the pointer back (`i -= 1`) to backtrack.
@@ -696,6 +751,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combine(n: i32, k: i32) -> Vec<Vec<i32>> {
+        let k = k as usize;
+        let mut res = Vec::new();
+        let mut comb = vec![0i32; k];
+        let mut i: i32 = 0;
+
+        while i >= 0 {
+            comb[i as usize] += 1;
+            if comb[i as usize] > n {
+                i -= 1;
+                continue;
+            }
+
+            if i as usize == k - 1 {
+                res.push(comb.clone());
+            } else {
+                let prev = comb[i as usize];
+                i += 1;
+                comb[i as usize] = prev;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,9 +794,11 @@ class Solution {
 ## 4. Bit Manipulation
 
 ### Intuition
+
 Each subset of numbers from `1` to `n` can be represented as an `n`-bit binary number, where bit `i` being set means number `(i+1)` is included. We iterate through all possible bitmasks and keep only those with exactly `k` bits set.
 
 ### Algorithm
+
 1. Iterate through all integers from `0` to `2^n - 1`. Each integer represents a possible subset.
 2. For each mask, extract the numbers corresponding to set bits (if bit `j` is set, include `j + 1`).
 3. If the resulting subset has exactly `k` elements, add it to the result.
@@ -883,6 +969,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combine(n: i32, k: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        for mask in 0..(1 << n) {
+            let mut comb = Vec::new();
+            for bit in 0..n {
+                if mask & (1 << bit) != 0 {
+                    comb.push(bit + 1);
+                }
+            }
+            if comb.len() == k as usize {
+                res.push(comb);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -897,6 +1003,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Copy the Combination Before Adding to Results
+
 When adding the current combination to the result list, you must create a copy. Otherwise, subsequent modifications during backtracking will alter the already-added result.
 
 ```python
@@ -908,6 +1015,7 @@ res.append(comb.copy())
 ```
 
 ### Missing the Backtrack Step
+
 After exploring a branch with an element included, you must remove it before exploring the next branch. Forgetting to pop leads to combinations with too many elements.
 
 ```python
@@ -917,4 +1025,5 @@ backtrack(i + 1, comb)
 ```
 
 ### Using Wrong Loop Bounds
+
 Starting the loop at `0` instead of `start` causes duplicate combinations like `[1,2]` and `[2,1]`. The loop must start from the current position to ensure each combination is generated only once in sorted order.

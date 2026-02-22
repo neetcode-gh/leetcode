@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays** - Creating and traversing matrices to represent game boards
 - **Diagonal Traversal** - Identifying main diagonal (row == col) and anti-diagonal (col == n - row - 1) patterns
 - **Counting Techniques** - Using running sums to track game state efficiently
@@ -9,16 +11,18 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Optimized Brute Force
 
 ### Intuition
+
 In Tic-Tac-Toe, a player wins by filling an entire row, column, or diagonal. After each move, we only need to check if that specific move creates a winning condition. Instead of checking the entire board, we focus on the row and column affected by the move, and check the diagonals only if the move is on one of them.
 
 ### Algorithm
+
 1. Initialize an `n x n` board with all cells set to `0`.
 2. When a player makes a move at position `(row, col)`, mark that cell with the player's number.
 3. Check if the player wins by:
-   - Checking if all cells in the current row belong to the player.
-   - Checking if all cells in the current column belong to the player.
-   - If the move is on the main diagonal (`row == col`), check if all diagonal cells belong to the player.
-   - If the move is on the anti-diagonal (`col == n - row - 1`), check if all anti-diagonal cells belong to the player.
+    - Checking if all cells in the current row belong to the player.
+    - Checking if all cells in the current column belong to the player.
+    - If the move is on the main diagonal (`row == col`), check if all diagonal cells belong to the player.
+    - If the move is on the anti-diagonal (`col == n - row - 1`), check if all anti-diagonal cells belong to the player.
 4. Return the player number if any winning condition is met, otherwise return `0`.
 
 ::tabs-start
@@ -28,38 +32,38 @@ class TicTacToe:
     def __init__(self, n: int):
         self.board = [[0] * n for _ in range(n)]
         self.n = n
-    
+
     def move(self, row: int, col: int, player: int) -> int:
         self.board[row][col] = player
-        
+
         # check if the player wins
         if ((self._check_row(row, player)) or
             (self._check_column(col, player)) or
             (row == col and self._check_diagonal(player)) or
             (col == self.n - row - 1 and self._check_anti_diagonal(player))):
             return player
-        
+
         # No one wins
         return 0
-    
+
     def _check_diagonal(self, player: int) -> bool:
         for row in range(self.n):
             if self.board[row][row] != player:
                 return False
         return True
-    
+
     def _check_anti_diagonal(self, player: int) -> bool:
         for row in range(self.n):
             if self.board[row][self.n - row - 1] != player:
                 return False
         return True
-    
+
     def _check_column(self, col: int, player: int) -> bool:
         for row in range(self.n):
             if self.board[row][col] != player:
                 return False
         return True
-    
+
     def _check_row(self, row: int, player: int) -> bool:
         for col in range(self.n):
             if self.board[row][col] != player:
@@ -188,7 +192,7 @@ class TicTacToe {
      * @param {number} n
      */
     constructor(n) {
-        this.board = Array.from({length: n}, () => Array(n).fill(0));
+        this.board = Array.from({ length: n }, () => Array(n).fill(0));
         this.n = n;
     }
 
@@ -202,10 +206,12 @@ class TicTacToe {
         this.board[row][col] = player;
 
         // check if the player wins
-        if ((this.checkRow(row, player)) ||
-            (this.checkColumn(col, player)) ||
+        if (
+            this.checkRow(row, player) ||
+            this.checkColumn(col, player) ||
             (row === col && this.checkDiagonal(player)) ||
-            (col === this.n - row - 1 && this.checkAntiDiagonal(player))) {
+            (col === this.n - row - 1 && this.checkAntiDiagonal(player))
+        ) {
             return player;
         }
 
@@ -461,6 +467,52 @@ class TicTacToe {
 }
 ```
 
+```rust
+struct TicTacToe {
+    board: Vec<Vec<i32>>,
+    n: usize,
+}
+
+impl TicTacToe {
+    fn new(n: i32) -> Self {
+        let n = n as usize;
+        TicTacToe {
+            board: vec![vec![0; n]; n],
+            n,
+        }
+    }
+
+    fn make_move(&mut self, row: i32, col: i32, player: i32) -> i32 {
+        let (r, c) = (row as usize, col as usize);
+        self.board[r][c] = player;
+        if self.check_row(r, player)
+            || self.check_column(c, player)
+            || (r == c && self.check_diagonal(player))
+            || (c == self.n - r - 1 && self.check_anti_diagonal(player))
+        {
+            return player;
+        }
+        0
+    }
+
+    fn check_diagonal(&self, player: i32) -> bool {
+        (0..self.n).all(|r| self.board[r][r] == player)
+    }
+
+    fn check_anti_diagonal(&self, player: i32) -> bool {
+        (0..self.n).all(|r| self.board[r][self.n - r - 1] == player)
+    }
+
+    fn check_column(&self, col: usize, player: i32) -> bool {
+        (0..self.n).all(|r| self.board[r][col] == player)
+    }
+
+    fn check_row(&self, row: usize, player: i32) -> bool {
+        (0..self.n).all(|c| self.board[row][c] == player)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -468,22 +520,24 @@ class TicTacToe {
 - Time complexity: $O(n)$
 - Space complexity: $O(n^2)$
 
->  Where $n$ is the size of the Tic-Tac-Toe board.
+> Where $n$ is the size of the Tic-Tac-Toe board.
 
 ---
 
 ## 2. Optimized Approach
 
 ### Intuition
+
 Rather than storing the entire board and checking all cells in a row, column, or diagonal after each move, we can maintain running counts. By using `+1` for player 1 and `-1` for player 2, we can track the cumulative sum for each row, column, and both diagonals. A player wins when any of these sums reaches `+n` or `-n`, indicating that all `n` cells in that line belong to the same player.
 
 ### Algorithm
+
 1. Initialize arrays to track the sum of moves for each row and column, plus two variables for the main diagonal and anti-diagonal.
 2. When a player makes a move at position `(row, col)`:
-   - Convert the player to `+1` (player 1) or `-1` (player 2).
-   - Add this value to the corresponding row and column counters.
-   - If the move is on the main diagonal (`row == col`), update the diagonal counter.
-   - If the move is on the anti-diagonal (`col == n - row - 1`), update the anti-diagonal counter.
+    - Convert the player to `+1` (player 1) or `-1` (player 2).
+    - Add this value to the corresponding row and column counters.
+    - If the move is on the main diagonal (`row == col`), update the diagonal counter.
+    - If the move is on the anti-diagonal (`col == n - row - 1`), update the anti-diagonal counter.
 3. Check if the absolute value of any counter equals `n`. If so, return the player number.
 4. Return `0` if no winner yet.
 
@@ -491,7 +545,7 @@ Rather than storing the entire board and checking all cells in a row, column, or
 
 ```python
 class TicTacToe:
-    
+
     def __init__(self, n: int):
         self.rows = [0] * n
         self.cols = [0] * n
@@ -500,35 +554,35 @@ class TicTacToe:
 
     def move(self, row: int, col: int, player: int) -> int:
         currentPlayer = 1 if player == 1 else -1
-        
+
         # update currentPlayer in rows and cols arrays
         self.rows[row] += currentPlayer
         self.cols[col] += currentPlayer
-        
+
         # update diagonal
         if row == col:
             self.diagonal += currentPlayer
-        
+
         # update anti diagonal
         if col == (len(self.cols) - row - 1):
             self.antiDiagonal += currentPlayer
-        
+
         n = len(self.rows)
-        
+
         # check if the current player wins
         if (abs(self.rows[row]) == n or
             abs(self.cols[col]) == n or
             abs(self.diagonal) == n or
             abs(self.antiDiagonal) == n):
             return player
-        
+
         # No one wins
         return 0
 ```
 
 ```java
 class TicTacToe {
-    
+
     int[] rows;
     int[] cols;
     int diagonal;
@@ -602,7 +656,7 @@ public:
         if (col == (cols.size() - row - 1)) {
             antiDiagonal += currentPlayer;
         }
-        
+
         int n = rows.size();
         // check if the current player wins
         if (abs(rows[row]) == n ||
@@ -620,7 +674,6 @@ public:
 
 ```javascript
 class TicTacToe {
-
     /**
      * @param {number} n
      */
@@ -638,7 +691,7 @@ class TicTacToe {
      * @return {number}
      */
     move(row, col, player) {
-        let currentPlayer = (player === 1) ? 1 : -1;
+        let currentPlayer = player === 1 ? 1 : -1;
 
         // update currentPlayer in rows and cols arrays
         this.rows[row] += currentPlayer;
@@ -650,17 +703,19 @@ class TicTacToe {
         }
 
         // update anti diagonal
-        if (col === (this.cols.length - row - 1)) {
+        if (col === this.cols.length - row - 1) {
             this.antiDiagonal += currentPlayer;
         }
 
         let n = this.rows.length;
 
         // check if the current player wins
-        if (Math.abs(this.rows[row]) === n ||
+        if (
+            Math.abs(this.rows[row]) === n ||
             Math.abs(this.cols[col]) === n ||
             Math.abs(this.diagonal) === n ||
-            Math.abs(this.antiDiagonal) === n) {
+            Math.abs(this.antiDiagonal) === n
+        ) {
             return player;
         }
 
@@ -835,6 +890,54 @@ class TicTacToe {
 }
 ```
 
+```rust
+struct TicTacToe {
+    rows: Vec<i32>,
+    cols: Vec<i32>,
+    diagonal: i32,
+    anti_diagonal: i32,
+}
+
+impl TicTacToe {
+    fn new(n: i32) -> Self {
+        let n = n as usize;
+        TicTacToe {
+            rows: vec![0; n],
+            cols: vec![0; n],
+            diagonal: 0,
+            anti_diagonal: 0,
+        }
+    }
+
+    fn make_move(&mut self, row: i32, col: i32, player: i32) -> i32 {
+        let current_player = if player == 1 { 1 } else { -1 };
+        let (r, c) = (row as usize, col as usize);
+
+        self.rows[r] += current_player;
+        self.cols[c] += current_player;
+
+        if r == c {
+            self.diagonal += current_player;
+        }
+
+        if c == self.cols.len() - r - 1 {
+            self.anti_diagonal += current_player;
+        }
+
+        let n = self.rows.len() as i32;
+        if self.rows[r].abs() == n
+            || self.cols[c].abs() == n
+            || self.diagonal.abs() == n
+            || self.anti_diagonal.abs() == n
+        {
+            return player;
+        }
+
+        0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -842,7 +945,7 @@ class TicTacToe {
 - Time complexity: $O(1)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the size of the Tic-Tac-Toe board.
+> Where $n$ is the size of the Tic-Tac-Toe board.
 
 ---
 

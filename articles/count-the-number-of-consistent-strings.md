@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Using sets for O(1) average-time membership checking
 - **Bit Manipulation** - Representing sets of characters as bitmasks for efficient lookups
 - **Character Encoding** - Converting characters to array indices using ASCII values
@@ -16,10 +18,10 @@ A string is consistent if every character in it appears in the `allowed` string.
 
 1. Initialize a counter `res` to `0`.
 2. For each word in `words`:
-   - Set a flag to `true` (assuming the word is consistent).
-   - For each character in the word, check if it exists in `allowed` by scanning through `allowed`.
-   - If any character is not found, set the flag to `false` and break out of the inner loop.
-   - If the flag is still `true` after checking all characters, increment `res`.
+    - Set a flag to `true` (assuming the word is consistent).
+    - For each character in the word, check if it exists in `allowed` by scanning through `allowed`.
+    - If any character is not found, set the flag to `false` and break out of the inner loop.
+    - If the flag is still `true` after checking all characters, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -193,6 +195,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_consistent_strings(allowed: String, words: Vec<String>) -> i32 {
+        let mut res = 0;
+
+        for w in &words {
+            let mut flag = true;
+            for c in w.chars() {
+                if !allowed.contains(c) {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                res += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -215,8 +240,8 @@ The brute force approach is slow because we scan through `allowed` for every cha
 1. Convert `allowed` into a hash set for O(1) character lookups.
 2. Initialize `res` to the total number of words.
 3. For each word in `words`:
-   - For each character in the word, check if it exists in the hash set.
-   - If any character is not found, decrement `res` and break out of the inner loop.
+    - For each character in the word, check if it exists in the hash set.
+    - If any character is not found, decrement `res` and break out of the inner loop.
 4. Return `res`.
 
 ::tabs-start
@@ -386,6 +411,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_consistent_strings(allowed: String, words: Vec<String>) -> i32 {
+        let allowed_set: HashSet<u8> = allowed.bytes().collect();
+
+        let mut res = words.len() as i32;
+        for w in &words {
+            for b in w.bytes() {
+                if !allowed_set.contains(&b) {
+                    res -= 1;
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -409,8 +454,8 @@ Since we are only dealing with lowercase English letters (26 characters), we can
 2. For each character in `allowed`, mark the corresponding index as `true`.
 3. Initialize `res` to the total number of words.
 4. For each word in `words`:
-   - For each character in the word, check if the corresponding index in the boolean array is `true`.
-   - If any character maps to `false`, decrement `res` and break out of the inner loop.
+    - For each character in the word, check if the corresponding index in the boolean array is `true`.
+    - If any character maps to `false`, decrement `res` and break out of the inner loop.
 5. Return `res`.
 
 ::tabs-start
@@ -597,6 +642,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_consistent_strings(allowed: String, words: Vec<String>) -> i32 {
+        let mut allowed_arr = [false; 26];
+        for b in allowed.bytes() {
+            allowed_arr[(b - b'a') as usize] = true;
+        }
+
+        let mut res = words.len() as i32;
+        for w in &words {
+            for b in w.bytes() {
+                if !allowed_arr[(b - b'a') as usize] {
+                    res -= 1;
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -620,8 +688,8 @@ We can compress the boolean array into a single 32-bit integer using bit manipul
 2. For each character in `allowed`, set the corresponding bit using OR operation: `bit_mask |= (1 << (char - 'a'))`.
 3. Initialize `res` to the total number of words.
 4. For each word in `words`:
-   - For each character in the word, compute its bit position and check if that bit is set in the bitmask using AND operation.
-   - If the result is `0` (bit not set), decrement `res` and break out of the inner loop.
+    - For each character in the word, compute its bit position and check if that bit is set in the bitmask using AND operation.
+    - If the result is `0` (bit not set), decrement `res` and break out of the inner loop.
 5. Return `res`.
 
 ::tabs-start
@@ -813,6 +881,30 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_consistent_strings(allowed: String, words: Vec<String>) -> i32 {
+        let mut bit_mask: u32 = 0;
+        for b in allowed.bytes() {
+            bit_mask |= 1 << (b - b'a');
+        }
+
+        let mut res = words.len() as i32;
+        for w in &words {
+            for b in w.bytes() {
+                let bit = 1 << (b - b'a');
+                if bit & bit_mask == 0 {
+                    res -= 1;
+                    break;
+                }
+            }
+        }
+
+        res
     }
 }
 ```

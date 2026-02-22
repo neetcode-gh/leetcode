@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - Used to efficiently maintain a window of k characters while tracking character uniqueness
 - **Hash Map / Frequency Array** - Used to track character counts within the current window
 - **String Manipulation** - Understanding how to iterate through substrings and track character frequencies
@@ -16,11 +18,11 @@ The most direct approach is to examine every substring of length `k` and check i
 
 1. If `k > 26`, return `0` immediately since there are only 26 lowercase letters.
 2. For each starting index `i` from `0` to `n - k`:
-   - Initialize a frequency array of size 26.
-   - Iterate through the next `k` characters.
-   - Increment the frequency of each character.
-   - If any frequency exceeds `1`, break out of the inner loop (duplicate found).
-   - If we complete the inner loop without duplicates, increment the answer.
+    - Initialize a frequency array of size 26.
+    - Iterate through the next `k` characters.
+    - Increment the frequency of each character.
+    - If any frequency exceeds `1`, break out of the inner loop (duplicate found).
+    - If we complete the inner loop without duplicates, increment the answer.
 3. Return the count of valid substrings.
 
 ::tabs-start
@@ -313,6 +315,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_k_len_substr_no_repeats(s: String, k: i32) -> i32 {
+        let k = k as usize;
+        if k > 26 { return 0; }
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+        let mut answer = 0;
+
+        for i in 0..=n - k {
+            let mut freq = [0; 26];
+            let mut is_unique = true;
+
+            for j in i..i + k {
+                let idx = (bytes[j] - b'a') as usize;
+                freq[idx] += 1;
+                if freq[idx] > 1 {
+                    is_unique = false;
+                    break;
+                }
+            }
+
+            if is_unique {
+                answer += 1;
+            }
+        }
+
+        answer
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,7 +354,7 @@ class Solution {
 - Time complexity: $O(n \cdot \min(m, k))$
 - Space complexity: $O(m)$
 
->  Where $n$ is the length of `s`, $k$ is the given substring length, and $m$ is the number of unique characters allowed in the string. In this case, $m=26$.
+> Where $n$ is the length of `s`, $k$ is the given substring length, and $m$ is the number of unique characters allowed in the string. In this case, $m=26$.
 
 ---
 
@@ -335,10 +369,10 @@ Instead of recomputing character frequencies for each substring from scratch, we
 1. If `k > 26`, return `0` (impossible to have `k` unique characters).
 2. Initialize two pointers `left = 0` and `right = 0`, and a frequency array.
 3. While `right < n`:
-   - Add `s[right]` to the frequency array.
-   - While the frequency of `s[right]` exceeds `1`, remove `s[left]` from the window and increment `left`.
-   - If the window size equals `k`, increment the answer, then shrink the window from the left by one to prepare for the next position.
-   - Move `right` forward.
+    - Add `s[right]` to the frequency array.
+    - While the frequency of `s[right]` exceeds `1`, remove `s[left]` from the window and increment `left`.
+    - If the window size equals `k`, increment the answer, then shrink the window from the left by one to prepare for the next position.
+    - Move `right` forward.
 4. Return the answer.
 
 ::tabs-start
@@ -501,7 +535,8 @@ class Solution {
         let answer = 0;
         const n = s.length;
         // Initializing the left and right pointers
-        let left = 0, right = 0;
+        let left = 0,
+            right = 0;
         // Initializing an empty frequency array
         const freq = new Array(26).fill(0);
 
@@ -723,6 +758,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_k_len_substr_no_repeats(s: String, k: i32) -> i32 {
+        let k = k as usize;
+        if k > 26 { return 0; }
+
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+        let mut answer = 0;
+        let mut left = 0;
+        let mut right = 0;
+        let mut freq = [0i32; 26];
+
+        while right < n {
+            let r_idx = (bytes[right] - b'a') as usize;
+            freq[r_idx] += 1;
+
+            while freq[r_idx] > 1 {
+                let l_idx = (bytes[left] - b'a') as usize;
+                freq[l_idx] -= 1;
+                left += 1;
+            }
+
+            if right - left + 1 == k {
+                answer += 1;
+                let l_idx = (bytes[left] - b'a') as usize;
+                freq[l_idx] -= 1;
+                left += 1;
+            }
+
+            right += 1;
+        }
+
+        answer
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -730,7 +803,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(m)$
 
->  Where $n$ is the length of `s` and $m$ is the number of unique characters allowed in the string. In this case, $m=26$.
+> Where $n$ is the length of `s` and $m$ is the number of unique characters allowed in the string. In this case, $m=26$.
 
 ---
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Frequency Counting** - Using arrays or hash maps to count character occurrences in a string
 - **Greedy Algorithms** - Making locally optimal choices (placing most frequent characters first) to achieve a global solution
 - **Heap / Priority Queue** - Efficiently retrieving the maximum frequency element for character placement
@@ -17,9 +19,9 @@ To avoid adjacent duplicates, we should always place the most frequent remaining
 1. Count the frequency of each character in `freq` array.
 2. If the max frequency exceeds `(n + 1) / 2`, return an empty string.
 3. While building the `res`:
-   - Find the character with the highest frequency at index `maxIdx` and append it.
-   - If that character's `freq[maxIdx]` still has remaining count, temporarily hide it and find the next highest frequency character.
-   - Append the second character and restore the first character's count.
+    - Find the character with the highest frequency at index `maxIdx` and append it.
+    - If that character's `freq[maxIdx]` still has remaining count, temporarily hide it and find the next highest frequency character.
+    - Append the second character and restore the first character's count.
 4. Return the `res` string.
 
 ::tabs-start
@@ -380,6 +382,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reorganize_string(s: String) -> String {
+        let s = s.as_bytes();
+        let mut freq = [0i32; 26];
+        for &c in s {
+            freq[(c - b'a') as usize] += 1;
+        }
+
+        let max_freq = *freq.iter().max().unwrap();
+        if max_freq > (s.len() as i32 + 1) / 2 {
+            return String::new();
+        }
+
+        let find_max_index = |freq: &[i32; 26]| -> usize {
+            let mut max_idx = 0;
+            for i in 1..26 {
+                if freq[i] > freq[max_idx] {
+                    max_idx = i;
+                }
+            }
+            max_idx
+        };
+
+        let mut res = Vec::new();
+        while res.len() < s.len() {
+            let max_idx = find_max_index(&freq);
+            res.push(b'a' + max_idx as u8);
+            freq[max_idx] -= 1;
+
+            if freq[max_idx] == 0 {
+                continue;
+            }
+
+            let tmp = freq[max_idx];
+            freq[max_idx] = i32::MIN;
+            let next_max_idx = find_max_index(&freq);
+            res.push(b'a' + next_max_idx as u8);
+            freq[max_idx] = tmp;
+            freq[next_max_idx] -= 1;
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,10 +451,10 @@ A `maxHeap` efficiently gives us the most frequent character at any time. We pop
 1. Count frequencies and build a `maxHeap` of `(count, character)` pairs.
 2. Track a `prev` element that was just used and cannot be immediately reused.
 3. While the `maxHeap` is not empty or `prev` exists:
-   - If `prev` exists but the `maxHeap` is empty, return an empty string.
-   - Pop the top element `cnt`, append its character, and decrement `cnt`.
-   - Push `prev` back to the `maxHeap` if it exists.
-   - Set `prev` to the current element if its count is still positive.
+    - If `prev` exists but the `maxHeap` is empty, return an empty string.
+    - Pop the top element `cnt`, append its character, and decrement `cnt`.
+    - Push `prev` back to the `maxHeap` if it exists.
+    - Set `prev` to the current element if its count is still positive.
 4. Return the `res` string.
 
 ::tabs-start
@@ -747,6 +796,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reorganize_string(s: String) -> String {
+        let s = s.as_bytes();
+        let mut freq = [0i32; 26];
+        for &c in s {
+            freq[(c - b'a') as usize] += 1;
+        }
+
+        let mut heap = BinaryHeap::new();
+        for i in 0..26 {
+            if freq[i] > 0 {
+                heap.push((freq[i], i as u8));
+            }
+        }
+
+        let mut res = Vec::new();
+        let mut prev: Option<(i32, u8)> = None;
+
+        while !heap.is_empty() || prev.is_some() {
+            if prev.is_some() && heap.is_empty() {
+                return String::new();
+            }
+
+            let (mut cnt, ch) = heap.pop().unwrap();
+            res.push(b'a' + ch);
+            cnt -= 1;
+
+            if let Some(p) = prev.take() {
+                heap.push(p);
+            }
+
+            if cnt > 0 {
+                prev = Some((cnt, ch));
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -770,8 +861,8 @@ Instead of building the string character by character, we can place characters a
 2. If the max frequency exceeds `(n + 1) / 2`, return an empty string.
 3. Place the most frequent character at indices 0, 2, 4, ... until exhausted.
 4. For all remaining characters `i`:
-   - Place them at the current `idx`, incrementing by 2 each time.
-   - When the `idx` exceeds `n`, wrap to `idx = 1` and continue with odd positions.
+    - Place them at the current `idx`, incrementing by 2 each time.
+    - When the `idx` exceeds `n`, wrap to `idx = 1` and continue with odd positions.
 5. Return the `res` string.
 
 ::tabs-start
@@ -1111,6 +1202,53 @@ class Solution {
         }
 
         return String(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reorganize_string(s: String) -> String {
+        let s = s.as_bytes();
+        let mut freq = [0i32; 26];
+        for &c in s {
+            freq[(c - b'a') as usize] += 1;
+        }
+
+        let mut max_idx = 0;
+        for i in 1..26 {
+            if freq[i] > freq[max_idx] {
+                max_idx = i;
+            }
+        }
+
+        let max_freq = freq[max_idx];
+        if max_freq > (s.len() as i32 + 1) / 2 {
+            return String::new();
+        }
+
+        let mut res = vec![0u8; s.len()];
+        let mut idx = 0;
+        let max_char = b'a' + max_idx as u8;
+
+        while freq[max_idx] > 0 {
+            res[idx] = max_char;
+            idx += 2;
+            freq[max_idx] -= 1;
+        }
+
+        for i in 0..26 {
+            while freq[i] > 0 {
+                if idx >= s.len() {
+                    idx = 1;
+                }
+                res[idx] = b'a' + i as u8;
+                idx += 2;
+                freq[i] -= 1;
+            }
+        }
+
+        String::from_utf8(res).unwrap()
     }
 }
 ```

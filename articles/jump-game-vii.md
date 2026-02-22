@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Caching recursive subproblem results to avoid recomputation
 - **Breadth First Search (BFS)** - Level-by-level traversal for reachability problems
 - **Sliding Window Technique** - Maintaining a window of valid elements as you iterate
@@ -17,10 +19,10 @@ From each position, we can jump to any position within the range `[i + minJump, 
 
 1. Create a memoization array initialized to `null`/unknown.
 2. Define a recursive function `dfs(i)`:
-   - If already computed, return the cached result.
-   - Mark the current position as unreachable initially.
-   - Try all positions `j` in range `[i + minJump, i + maxJump]`.
-   - If `s[j] == '0'` and `dfs(j)` returns `true`, mark current as reachable.
+    - If already computed, return the cached result.
+    - Mark the current position as unreachable initially.
+    - Try all positions `j` in range `[i + minJump, i + maxJump]`.
+    - If `s[j] == '0'` and `dfs(j)` returns `true`, mark current as reachable.
 3. Return the result for index `0`.
 
 ::tabs-start
@@ -285,6 +287,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_reach(s: String, min_jump: i32, max_jump: i32) -> bool {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp: Vec<Option<bool>> = vec![None; n];
+        dp[n - 1] = Some(true);
+
+        fn dfs(
+            s: &[u8], dp: &mut Vec<Option<bool>>,
+            i: usize, min_j: usize, max_j: usize, n: usize,
+        ) -> bool {
+            if let Some(val) = dp[i] {
+                return val;
+            }
+            dp[i] = Some(false);
+            let end = n.min(i + max_j + 1);
+            for j in (i + min_j)..end {
+                if s[j] == b'0' && dfs(s, dp, j, min_j, max_j, n) {
+                    dp[i] = Some(true);
+                    break;
+                }
+            }
+            dp[i].unwrap()
+        }
+
+        if s[n - 1] == b'1' {
+            return false;
+        }
+        dfs(s, &mut dp, 0, min_jump as usize, max_jump as usize, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -306,11 +342,11 @@ BFS naturally explores positions level by level, where each level represents pos
 
 1. Initialize a queue with position `0` and track `farthest = 0`.
 2. While the queue is not empty:
-   - Dequeue position `i`.
-   - Compute `start = max(i + minJump, farthest + 1)`.
-   - For each `j` from `start` to `min(i + maxJump, n - 1)`:
-     - If `s[j] == '0'`, enqueue `j`. If `j` is the last index, return `true`.
-   - Update `farthest = i + maxJump`.
+    - Dequeue position `i`.
+    - Compute `start = max(i + minJump, farthest + 1)`.
+    - For each `j` from `start` to `min(i + maxJump, n - 1)`:
+        - If `s[j] == '0'`, enqueue `j`. If `j` is the last index, return `true`.
+    - Update `farthest = i + maxJump`.
 3. Return `false` if the queue empties without reaching the end.
 
 ::tabs-start
@@ -539,6 +575,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_reach(s: String, min_jump: i32, max_jump: i32) -> bool {
+        let s = s.as_bytes();
+        let n = s.len();
+        let min_j = min_jump as usize;
+        let max_j = max_jump as usize;
+        let mut q = VecDeque::new();
+        q.push_back(0usize);
+        let mut farthest = 0usize;
+
+        while let Some(i) = q.pop_front() {
+            let start = (i + min_j).max(farthest + 1);
+            let end = (i + max_j + 1).min(n);
+            for j in start..end {
+                if s[j] == b'0' {
+                    if j == n - 1 {
+                        return true;
+                    }
+                    q.push_back(j);
+                }
+            }
+            farthest = i + max_j;
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -559,9 +625,9 @@ Position `i` is reachable if any position in `[i - maxJump, i - minJump]` is rea
 1. Create a DP array where `dp[i]` indicates if position `i` is reachable.
 2. Set `dp[0] = true` and initialize count `cnt = 0`.
 3. For each position `i` from `1` to `n - 1`:
-   - If `i >= minJump` and `dp[i - minJump]` is `true`, increment `cnt`.
-   - If `i > maxJump` and `dp[i - maxJump - 1]` is `true`, decrement `cnt`.
-   - If `cnt > 0` and `s[i] == '0'`, set `dp[i] = true`.
+    - If `i >= minJump` and `dp[i - minJump]` is `true`, increment `cnt`.
+    - If `i > maxJump` and `dp[i - maxJump - 1]` is `true`, decrement `cnt`.
+    - If `cnt > 0` and `s[i] == '0'`, set `dp[i] = true`.
 4. Return `dp[n - 1]`.
 
 ::tabs-start
@@ -796,6 +862,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_reach(s: String, min_jump: i32, max_jump: i32) -> bool {
+        let s = s.as_bytes();
+        let n = s.len();
+        let min_j = min_jump as usize;
+        let max_j = max_jump as usize;
+
+        if s[n - 1] == b'1' {
+            return false;
+        }
+
+        let mut dp = vec![false; n];
+        dp[0] = true;
+        let mut cnt = 0i32;
+
+        for i in 1..n {
+            if i >= min_j && dp[i - min_j] {
+                cnt += 1;
+            }
+            if i > max_j && dp[i - max_j - 1] {
+                cnt -= 1;
+            }
+            if cnt > 0 && s[i] == b'0' {
+                dp[i] = true;
+            }
+        }
+
+        dp[n - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -815,10 +914,10 @@ Instead of tracking a count, we use a pointer `j` to remember the farthest posit
 
 1. Create a DP array with `dp[0] = true`. Initialize pointer `j = 0`.
 2. For each position `i` from `0` to `n - 1`:
-   - If `dp[i]` is `false`, skip to the next iteration.
-   - Update `j = max(j, i + minJump)` to start from where we left off.
-   - Mark all positions from `j` to `min(i + maxJump, n - 1)` where `s[j] == '0'` as reachable.
-   - Increment `j` after processing each position.
+    - If `dp[i]` is `false`, skip to the next iteration.
+    - Update `j = max(j, i + minJump)` to start from where we left off.
+    - Mark all positions from `j` to `min(i + maxJump, n - 1)` where `s[j] == '0'` as reachable.
+    - Increment `j` after processing each position.
 3. Return `dp[n - 1]`.
 
 ::tabs-start
@@ -1067,6 +1166,40 @@ class Solution {
         }
 
         return dp[n - 1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_reach(s: String, min_jump: i32, max_jump: i32) -> bool {
+        let s = s.as_bytes();
+        let n = s.len();
+        let min_j = min_jump as usize;
+        let max_j = max_jump as usize;
+
+        if s[n - 1] == b'1' {
+            return false;
+        }
+
+        let mut dp = vec![false; n];
+        dp[0] = true;
+        let mut j = 0usize;
+
+        for i in 0..n {
+            if !dp[i] {
+                continue;
+            }
+            j = j.max(i + min_j);
+            while j < n && j <= i + max_j {
+                if s[j] == b'0' {
+                    dp[j] = true;
+                }
+                j += 1;
+            }
+        }
+
+        dp[n - 1]
     }
 }
 ```

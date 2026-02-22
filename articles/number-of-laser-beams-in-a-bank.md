@@ -1,8 +1,10 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Iteration** - Traversing rows of a 2D grid and processing each element
 - **String Counting** - Counting occurrences of a specific character in a string
-- **Basic Math (Multiplication)** - Understanding that pairs between two groups form a * b combinations
+- **Basic Math (Multiplication)** - Understanding that pairs between two groups form a \* b combinations
 
 ---
 
@@ -215,6 +217,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn number_of_beams(bank: Vec<String>) -> i32 {
+        let count_ones = |s: &str| -> i32 {
+            s.chars().filter(|&c| c == '1').count() as i32
+        };
+
+        let mut prev = count_ones(&bank[0]);
+        let mut res = 0;
+
+        for i in 1..bank.len() {
+            let curr = count_ones(&bank[i]);
+            if curr > 0 {
+                res += prev * curr;
+                prev = curr;
+            }
+        }
+
+        res
     }
 }
 ```

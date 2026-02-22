@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map** - Used to count the frequency of each element in a single pass
 - **Array Traversal** - Understanding how to iterate through arrays and track maximum values
 - **Frequency Counting** - Concept of counting occurrences and comparing counts to values
@@ -16,8 +18,8 @@ A lucky integer is one whose value equals its frequency in the array. The simple
 
 1. Initialize `res = -1` (no lucky integer found yet).
 2. For each number `num` in the array:
-   - Count how many times `num` appears by scanning the entire array.
-   - If the count equals `num`, update `res` to the maximum of `res` and `num`.
+    - Count how many times `num` appears by scanning the entire array.
+    - If the count equals `num`, update `res` to the maximum of `res` and `num`.
 3. Return `res`.
 
 ::tabs-start
@@ -197,12 +199,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_lucky(arr: Vec<i32>) -> i32 {
+        let mut res = -1;
+
+        for &num in &arr {
+            let mut cnt = 0;
+            for &a in &arr {
+                if num == a {
+                    cnt += 1;
+                }
+            }
+            if cnt == num {
+                res = res.max(num);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -217,9 +241,9 @@ After sorting, identical numbers are grouped together. By traversing from right 
 1. Sort the array.
 2. Traverse from right to left, counting consecutive equal elements (the streak).
 3. When the current element differs from the previous one (or we reach the start):
-   - Check if the streak count equals the element value.
-   - If so, return that element immediately (it's the largest lucky integer).
-   - Reset the streak counter.
+    - Check if the streak count equals the element value.
+    - If so, return that element immediately (it's the largest lucky integer).
+    - Reset the streak counter.
 4. If no lucky integer is found, return `-1`.
 
 ::tabs-start
@@ -381,12 +405,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_lucky(mut arr: Vec<i32>) -> i32 {
+        arr.sort();
+        let mut streak = 0;
+
+        for i in (0..arr.len()).rev() {
+            streak += 1;
+            if i == 0 || arr[i] != arr[i - 1] {
+                if arr[i] == streak {
+                    return arr[i];
+                }
+                streak = 0;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -401,7 +445,7 @@ We can count the frequency of each number in one pass using a hash map. Then we 
 1. Build a frequency map by iterating through the array once.
 2. Initialize `res = -1`.
 3. For each (number, frequency) pair in the map:
-   - If the number equals its frequency, update `res` to the maximum of `res` and `num`.
+    - If the number equals its frequency, update `res` to the maximum of `res` and `num`.
 4. Return `res`.
 
 ::tabs-start
@@ -415,7 +459,7 @@ class Solution:
         for num in cnt:
             if num == cnt[num]:
                 res = max(num, res)
-        
+
         return res
 ```
 
@@ -560,12 +604,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_lucky(arr: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        for &num in &arr {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut res = -1;
+        for (&num, &freq) in &count {
+            if num == freq {
+                res = res.max(num);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -578,9 +641,9 @@ If we can modify the input array, we can use it as a frequency counter without e
 ### Algorithm
 
 1. For each position `i`, follow the chain of values to increment counts:
-   - Get the current number `num`.
-   - If `num` is within bounds, decrement `arr[num - 1]` (making it negative if needed) to track frequency.
-   - Follow the chain until we loop back or go out of bounds.
+    - Get the current number `num`.
+    - If `num` is within bounds, decrement `arr[num - 1]` (making it negative if needed) to track frequency.
+    - Follow the chain until we loop back or go out of bounds.
 2. Traverse from the end of the array backward.
 3. For each index `i`, check if `-arr[i] == i + 1` (frequency equals the number).
 4. Return the first match found, or `-1` if none exists.
@@ -600,11 +663,11 @@ class Solution:
                     break
                 prev = num - 1
                 num = nxt
-        
+
         for i in range(n - 1, -1, -1):
             if -arr[i] == i + 1:
                 return i + 1
-        
+
         return -1
 ```
 
@@ -664,7 +727,8 @@ class Solution {
     findLucky(arr) {
         const n = arr.length;
         for (let i = 0; i < n; i++) {
-            let prev = i, num = arr[i];
+            let prev = i,
+                num = arr[i];
             while (0 < num && num <= n) {
                 let nxt = arr[num - 1];
                 arr[num - 1] = Math.min(0, arr[num - 1]) - 1;
@@ -783,12 +847,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_lucky(mut arr: Vec<i32>) -> i32 {
+        let n = arr.len() as i32;
+        for i in 0..arr.len() {
+            let mut prev = i as i32;
+            let mut num = arr[i];
+            while num > 0 && num <= n {
+                let nxt = arr[(num - 1) as usize];
+                arr[(num - 1) as usize] = arr[(num - 1) as usize].min(0) - 1;
+                if num - 1 <= i as i32 || num - 1 == prev { break; }
+                prev = num - 1;
+                num = nxt;
+            }
+        }
+
+        for i in (0..arr.len()).rev() {
+            if -arr[i] == (i as i32) + 1 {
+                return (i as i32) + 1;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -801,8 +891,8 @@ We can use bit manipulation to store both the original value and the frequency c
 ### Algorithm
 
 1. For each number in the array:
-   - Extract the original value using a bitmask (lower 10 bits).
-   - If the value is within the array bounds, increment the count at that index by adding `1 << 10`.
+    - Extract the original value using a bitmask (lower 10 bits).
+    - If the value is within the array bounds, increment the count at that index by adding `1 << 10`.
 2. Traverse the array from right to left.
 3. For each index `i`, extract the count by right-shifting by 10 bits.
 4. If the count equals `i + 1`, return `i + 1` (this is the largest lucky integer).
@@ -874,7 +964,7 @@ class Solution {
         for (let num of arr) {
             const idx = num & ((1 << 10) - 1);
             if (idx <= arr.length) {
-                arr[idx - 1] += (1 << 10);
+                arr[idx - 1] += 1 << 10;
             }
         }
 
@@ -964,12 +1054,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_lucky(mut arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        for i in 0..n {
+            let idx = (arr[i] & ((1 << 10) - 1)) as usize;
+            if idx >= 1 && idx <= n {
+                arr[idx - 1] += 1 << 10;
+            }
+        }
+
+        for i in (0..n).rev() {
+            let cnt = arr[i] >> 10;
+            if cnt == (i as i32) + 1 {
+                return (i as i32) + 1;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

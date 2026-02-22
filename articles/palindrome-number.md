@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Converting integers to strings and comparing characters
 - **Math Operations (Modulo/Division)** - Extracting and removing digits from integers
 - **Two Pointers** - Comparing elements from both ends of a sequence
@@ -103,6 +105,15 @@ class Solution {
     func isPalindrome(_ x: Int) -> Bool {
         let s = String(x)
         return s == String(s.reversed())
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_palindrome(x: i32) -> bool {
+        let s = x.to_string();
+        s == s.chars().rev().collect::<String>()
     }
 }
 ```
@@ -254,6 +265,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_palindrome(x: i32) -> bool {
+        let s = x.to_string().into_bytes();
+        let n = s.len();
+        for i in 0..n / 2 {
+            if s[i] != s[n - i - 1] {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,9 +304,9 @@ Negative numbers cannot be palindromes because of the negative sign. We build th
 1. If the number is negative, return `false` immediately.
 2. Initialize `rev = 0` and `num = x`.
 3. While `num > 0`:
-   - Extract the last digit using `num % 10`.
-   - Append it to `rev` by computing `rev = rev * 10 + digit`.
-   - Remove the last digit from `num` using integer division.
+    - Extract the last digit using `num % 10`.
+    - Append it to `rev` by computing `rev = rev * 10 + digit`.
+    - Remove the last digit from `num` using integer division.
 4. Compare `rev` with the original `x` and return `true` if equal.
 
 ::tabs-start
@@ -426,6 +452,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_palindrome(x: i32) -> bool {
+        if x < 0 {
+            return false;
+        }
+        let mut rev: i64 = 0;
+        let mut num = x as i64;
+        while num != 0 {
+            rev = rev * 10 + num % 10;
+            num /= 10;
+        }
+        rev == x as i64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -450,9 +493,9 @@ We use a divisor to extract the leftmost digit and modulo to extract the rightmo
 1. If the number is negative, return `false`.
 2. Find the divisor `div` such that `x / div` gives the first digit. This is the largest power of 10 less than or equal to `x`.
 3. While `x > 0`:
-   - Compare the first digit (`x / div`) with the last digit (`x % 10`). If they differ, return `false`.
-   - Remove both the first and last digits: `x = (x % div) / 10`.
-   - Update the divisor: `div /= 100` (since we removed two digits).
+    - Compare the first digit (`x / div`) with the last digit (`x % 10`). If they differ, return `false`.
+    - Remove both the first and last digits: `x = (x % div) / 10`.
+    - Update the divisor: `div /= 100` (since we removed two digits).
 4. Return `true` if all comparisons pass.
 
 ::tabs-start
@@ -652,6 +695,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_palindrome(x: i32) -> bool {
+        if x < 0 {
+            return false;
+        }
+        let mut num = x as i64;
+        let mut div: i64 = 1;
+        while num >= 10 * div {
+            div *= 10;
+        }
+        while num != 0 {
+            if num / div != num % 10 {
+                return false;
+            }
+            num = (num % div) / 10;
+            div /= 100;
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -676,8 +742,8 @@ We keep extracting digits from the end and building the reversed half until the 
 1. Handle edge cases: negative numbers and numbers ending in `0` (except `0` itself) are not palindromes.
 2. Initialize `rev = 0`.
 3. While `x > rev`:
-   - Extract the last digit of `x` and append it to `rev`.
-   - Remove the last digit from `x`.
+    - Extract the last digit of `x` and append it to `rev`.
+    - Remove the last digit from `x`.
 4. After the loop, compare `x == rev` (even length) or `x == rev / 10` (odd length, where the middle digit is in `rev`).
 5. Return `true` if either condition holds.
 
@@ -824,6 +890,23 @@ class Solution {
         }
 
         return num == rev || num == rev / 10
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_palindrome(x: i32) -> bool {
+        if x < 0 || (x != 0 && x % 10 == 0) {
+            return false;
+        }
+        let mut num = x;
+        let mut rev = 0;
+        while num > rev {
+            rev = rev * 10 + num % 10;
+            num /= 10;
+        }
+        num == rev || num == rev / 10
     }
 }
 ```

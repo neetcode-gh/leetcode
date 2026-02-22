@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down nested structures by calling a function within itself to handle inner patterns
 - **Stack Data Structure** - Using a stack to simulate recursion iteratively and manage nested bracket levels
 - **String Manipulation** - Building and repeating substrings based on parsed numeric multipliers
@@ -9,19 +11,21 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 The encoded string has a nested structure where patterns like `k[encoded_string]` can contain other encoded patterns inside. This naturally maps to recursion. When we encounter an opening bracket, we recursively decode the inner content, then repeat it `k` times. The recursion handles arbitrary nesting depth automatically.
 
 ### Algorithm
+
 1. Maintain a global index `i` to track the current position in the string.
 2. Define a recursive helper function:
-   - Initialize an empty result string and a multiplier `k = 0`.
-   - While `i` is within bounds:
-     - If the current character is a digit, update `k` by shifting left and adding the digit.
-     - If it's `[`, increment `i` and recursively decode the inner string. Multiply the result by `k` and append it. Reset `k` to `0`.
-     - If it's `]`, return the current result (end of this level).
-     - Otherwise, append the character to the result.
-     - Increment `i` after each iteration.
-   - Return the result.
+    - Initialize an empty result string and a multiplier `k = 0`.
+    - While `i` is within bounds:
+        - If the current character is a digit, update `k` by shifting left and adding the digit.
+        - If it's `[`, increment `i` and recursively decode the inner string. Multiply the result by `k` and append it. Reset `k` to `0`.
+        - If it's `]`, return the current result (end of this level).
+        - Otherwise, append the character to the result.
+        - Increment `i` after each iteration.
+    - Return the result.
 3. Call the helper function and return its result.
 
 ::tabs-start
@@ -318,6 +322,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn decode_string(s: String) -> String {
+        let bytes = s.as_bytes();
+        let mut i = 0;
+        Self::helper(bytes, &mut i)
+    }
+
+    fn helper(s: &[u8], i: &mut usize) -> String {
+        let mut res = String::new();
+        let mut k: usize = 0;
+
+        while *i < s.len() {
+            let c = s[*i];
+
+            if c.is_ascii_digit() {
+                k = k * 10 + (c - b'0') as usize;
+            } else if c == b'[' {
+                *i += 1;
+                let sub_res = Self::helper(s, i);
+                for _ in 0..k {
+                    res.push_str(&sub_res);
+                }
+                k = 0;
+            } else if c == b']' {
+                return res;
+            } else {
+                res.push(c as char);
+            }
+
+            *i += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,17 +374,19 @@ class Solution {
 ## 2. One Stack
 
 ### Intuition
+
 We can convert the recursive approach to an iterative one using a single stack. Push every character onto the stack until we hit a closing bracket `]`. At that point, pop characters to extract the substring inside the brackets, then pop the digits to get the repeat count `k`. Multiply the substring and push the result back onto the stack. This simulates the recursive call stack.
 
 ### Algorithm
+
 1. Initialize an empty stack.
 2. Iterate through each character in the string:
-   - If the character is not `]`, push it onto the stack.
-   - If it is `]`:
-     - Pop characters until `[` is found to build the substring.
-     - Pop `[` from the stack.
-     - Pop all consecutive digits to form the repeat count `k`.
-     - Repeat the substring `k` times and push the result back onto the stack.
+    - If the character is not `]`, push it onto the stack.
+    - If it is `]`:
+        - Pop characters until `[` is found to build the substring.
+        - Pop `[` from the stack.
+        - Pop all consecutive digits to form the repeat count `k`.
+        - Repeat the substring `k` times and push the result back onto the stack.
 3. After processing all characters, join the stack contents to form the final decoded string.
 
 ::tabs-start
@@ -606,6 +650,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn decode_string(s: String) -> String {
+        let mut stack: Vec<String> = Vec::new();
+
+        for c in s.chars() {
+            if c != ']' {
+                stack.push(c.to_string());
+            } else {
+                let mut substr = String::new();
+                while stack.last().unwrap() != "[" {
+                    substr = stack.pop().unwrap() + &substr;
+                }
+                stack.pop(); // remove '['
+
+                let mut k = String::new();
+                while !stack.is_empty()
+                    && stack.last().unwrap().chars().next().unwrap().is_ascii_digit()
+                {
+                    k = stack.pop().unwrap() + &k;
+                }
+                let count: usize = k.parse().unwrap();
+                stack.push(substr.repeat(count));
+            }
+        }
+
+        stack.join("")
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -620,16 +695,18 @@ class Solution {
 ## 3. Two Stacks
 
 ### Intuition
+
 Using two separate stacks provides cleaner logic: one stack for accumulated strings and another for repeat counts. When we see `[`, we save the current string and count, then start fresh. When we see `]`, we pop the previous string and count, repeat the current string, and concatenate. This approach avoids the overhead of extracting digits and substrings from a mixed stack.
 
 ### Algorithm
+
 1. Initialize two stacks: one for strings (`stringStack`) and one for counts (`countStack`).
 2. Maintain a current string `cur` and a current multiplier `k`.
 3. Iterate through each character:
-   - If it's a digit, update `k = k * 10 + digit`.
-   - If it's `[`, push `cur` and `k` onto their respective stacks, then reset `cur` to empty and `k` to `0`.
-   - If it's `]`, pop the previous string and count. Set `cur` to the popped string plus the current string repeated by the popped count.
-   - Otherwise, append the character to `cur`.
+    - If it's a digit, update `k = k * 10 + digit`.
+    - If it's `[`, push `cur` and `k` onto their respective stacks, then reset `cur` to empty and `k` to `0`.
+    - If it's `]`, pop the previous string and count. Set `cur` to the popped string plus the current string repeated by the popped count.
+    - Otherwise, append the character to `cur`.
 4. Return `cur` as the final decoded string.
 
 ::tabs-start
@@ -890,6 +967,39 @@ class Solution {
         }
 
         return cur
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn decode_string(s: String) -> String {
+        let mut string_stack: Vec<String> = Vec::new();
+        let mut count_stack: Vec<usize> = Vec::new();
+        let mut cur = String::new();
+        let mut k: usize = 0;
+
+        for c in s.chars() {
+            if c.is_ascii_digit() {
+                k = k * 10 + (c as usize - '0' as usize);
+            } else if c == '[' {
+                string_stack.push(cur.clone());
+                count_stack.push(k);
+                cur.clear();
+                k = 0;
+            } else if c == ']' {
+                let temp = cur;
+                cur = string_stack.pop().unwrap();
+                let count = count_stack.pop().unwrap();
+                for _ in 0..count {
+                    cur.push_str(&temp);
+                }
+            } else {
+                cur.push(c);
+            }
+        }
+
+        cur
     }
 }
 ```

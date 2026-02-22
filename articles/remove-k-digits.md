@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Using a stack for LIFO operations and building results incrementally
 - **Greedy Algorithms** - Making locally optimal choices to achieve a globally optimal result
 - **String Manipulation** - Converting between strings and character arrays, handling leading zeros
@@ -19,8 +21,8 @@ After `k` removals, we strip leading zeros and return the result.
 ### Algorithm
 
 1. Repeat the following `k` times:
-   - Scan from left to right to find the first digit that is greater than the next digit.
-   - Remove that digit from the string.
+    - Scan from left to right to find the first digit that is greater than the next digit.
+    - Remove that digit from the string.
 2. Strip any leading zeros from the result.
 3. Return the remaining string, or `"0"` if it becomes empty.
 
@@ -221,6 +223,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_kdigits(num: String, k: i32) -> String {
+        let mut num: Vec<u8> = num.into_bytes();
+        let mut k = k as usize;
+        while k > 0 {
+            let mut i = 1;
+            while i < num.len() && num[i] >= num[i - 1] {
+                i += 1;
+            }
+            num.remove(i - 1);
+            k -= 1;
+        }
+
+        let i = num.iter().position(|&c| c != b'0').unwrap_or(num.len());
+        let num = &num[i..];
+        if num.is_empty() {
+            "0".to_string()
+        } else {
+            String::from_utf8(num.to_vec()).unwrap()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,8 +270,8 @@ This greedily ensures that smaller digits bubble up to the front.
 
 1. Initialize an empty stack.
 2. For each character `c` in `num`:
-   - While `k > 0`, the stack is not empty, and the top of the stack is greater than `c`, pop from the stack and decrement `k`.
-   - Push `c` onto the stack.
+    - While `k > 0`, the stack is not empty, and the top of the stack is greater than `c`, pop from the stack and decrement `k`.
+    - Push `c` onto the stack.
 3. If `k` is still greater than `0`, remove `k` digits from the end of the stack.
 4. Strip leading zeros from the result.
 5. Return the final string, or `"0"` if empty.
@@ -479,6 +506,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_kdigits(num: String, k: i32) -> String {
+        let mut k = k as usize;
+        let mut stack = Vec::new();
+        for c in num.bytes() {
+            while k > 0 && !stack.is_empty() && *stack.last().unwrap() > c {
+                stack.pop();
+                k -= 1;
+            }
+            stack.push(c);
+        }
+
+        while k > 0 && !stack.is_empty() {
+            stack.pop();
+            k -= 1;
+        }
+
+        let i = stack.iter().position(|&c| c != b'0').unwrap_or(stack.len());
+        let res = &stack[i..];
+        if res.is_empty() {
+            "0".to_string()
+        } else {
+            String::from_utf8(res.to_vec()).unwrap()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,8 +557,8 @@ This achieves the same greedy logic with better space efficiency.
 
 1. Initialize `l = 0` as the write pointer.
 2. For each index `r` from `0` to the end of `num`:
-   - While `l > 0`, `k > 0`, and `num[l-1] > num[r]`, decrement both `l` and `k`.
-   - Write `num[r]` at position `l` and increment `l`.
+    - While `l > 0`, `k > 0`, and `num[l-1] > num[r]`, decrement both `l` and `k`.
+    - Write `num[r]` at position `l` and increment `l`.
 3. Subtract any remaining `k` from `l` to trim excess digits from the end.
 4. Skip leading zeros and return the substring from that point to `l`, or `"0"` if empty.
 
@@ -708,6 +764,33 @@ class Solution {
         }
         if i == l { return "0" }
         return String(numArr[i..<l])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_kdigits(num: String, k: i32) -> String {
+        let mut k = k as usize;
+        let mut num = num.into_bytes();
+        let mut l = 0;
+
+        for r in 0..num.len() {
+            while l > 0 && k > 0 && num[l - 1] > num[r] {
+                l -= 1;
+                k -= 1;
+            }
+            num[l] = num[r];
+            l += 1;
+        }
+
+        l -= k;
+        let i = num[..l].iter().position(|&c| c != b'0').unwrap_or(l);
+        if i == l {
+            "0".to_string()
+        } else {
+            String::from_utf8(num[i..l].to_vec()).unwrap()
+        }
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure and parent-child relationships
 - **Depth First Search (DFS)** - Recursive tree traversal to explore all nodes and combine subtree results
 - **Breadth First Search (BFS)** - Level-order traversal using a queue to build parent pointers
@@ -50,7 +52,7 @@ class Solution:
             if res[0] and res[1] and not lca:
                 lca = node
 
-            return res 
+            return res
 
         dfs(root)
         return lca
@@ -147,7 +149,7 @@ class Solution {
      */
     lowestCommonAncestor(root, p, q) {
         let lca = null;
-        const dfs = node => {
+        const dfs = (node) => {
             if (!node || lca) return [false, false];
             const left = dfs(node.left);
             const right = dfs(node.right);
@@ -303,12 +305,58 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn lowest_common_ancestor(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let p_val = p.as_ref().unwrap().borrow().val;
+        let q_val = q.as_ref().unwrap().borrow().val;
+        let mut lca = None;
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            p_val: i32,
+            q_val: i32,
+            lca: &mut Option<Rc<RefCell<TreeNode>>>,
+        ) -> (bool, bool) {
+            if node.is_none() || lca.is_some() {
+                return (false, false);
+            }
+            let node_ref = node.as_ref().unwrap();
+            let n = node_ref.borrow();
+            let left = dfs(&n.left, p_val, q_val, lca);
+            let right = dfs(&n.right, p_val, q_val, lca);
+            let found_p = left.0 || right.0 || n.val == p_val;
+            let found_q = left.1 || right.1 || n.val == q_val;
+            if found_p && found_q && lca.is_none() {
+                *lca = node.clone();
+            }
+            (found_p, found_q)
+        }
+
+        dfs(&root, p_val, q_val, &mut lca);
+        lca
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -426,7 +474,7 @@ class Solution {
         }
         const left = this.lowestCommonAncestor(root.left, p, q);
         const right = this.lowestCommonAncestor(root.right, p, q);
-        return left && right ? root : (left || right);
+        return left && right ? root : left || right;
     }
 }
 ```
@@ -533,12 +581,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn lowest_common_ancestor(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let p_val = p.as_ref().unwrap().borrow().val;
+        let q_val = q.as_ref().unwrap().borrow().val;
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            p: i32,
+            q: i32,
+        ) -> Option<Rc<RefCell<TreeNode>>> {
+            let node = match node {
+                Some(n) => n,
+                None => return None,
+            };
+            let val = node.borrow().val;
+            if val == p || val == q {
+                return Some(node.clone());
+            }
+            let left = dfs(&node.borrow().left, p, q);
+            let right = dfs(&node.borrow().right, p, q);
+            if left.is_some() && right.is_some() {
+                return Some(node.clone());
+            }
+            left.or(right)
+        }
+
+        dfs(&root, p_val, q_val)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -917,12 +1001,76 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn lowest_common_ancestor(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let root = match root {
+            Some(r) => r,
+            None => return None,
+        };
+        let p_val = p.as_ref().unwrap().borrow().val;
+        let q_val = q.as_ref().unwrap().borrow().val;
+
+        let mut parent: HashMap<i32, Option<Rc<RefCell<TreeNode>>>> = HashMap::new();
+        parent.insert(root.borrow().val, None);
+        let mut queue = VecDeque::new();
+        queue.push_back(root.clone());
+
+        while !parent.contains_key(&p_val) || !parent.contains_key(&q_val) {
+            let node = queue.pop_front().unwrap();
+            let n = node.borrow();
+            if let Some(ref left) = n.left {
+                parent.insert(left.borrow().val, Some(node.clone()));
+                queue.push_back(left.clone());
+            }
+            if let Some(ref right) = n.right {
+                parent.insert(right.borrow().val, Some(node.clone()));
+                queue.push_back(right.clone());
+            }
+        }
+
+        let mut ancestors = HashSet::new();
+        let mut cur = Some(p_val);
+        while let Some(val) = cur {
+            ancestors.insert(val);
+            cur = parent.get(&val).and_then(|p| p.as_ref().map(|n| n.borrow().val));
+        }
+        let mut cur_val = Some(q_val);
+        while let Some(val) = cur_val {
+            if ancestors.contains(&val) {
+                // Find the node with this val
+                let mut q2 = VecDeque::new();
+                q2.push_back(root.clone());
+                while let Some(n) = q2.pop_front() {
+                    if n.borrow().val == val {
+                        return Some(n);
+                    }
+                    let b = n.borrow();
+                    if let Some(ref l) = b.left {
+                        q2.push_back(l.clone());
+                    }
+                    if let Some(ref r) = b.right {
+                        q2.push_back(r.clone());
+                    }
+                }
+            }
+            cur_val = parent.get(&val).and_then(|p| p.as_ref().map(|n| n.borrow().val));
+        }
+        None
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 

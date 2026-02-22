@@ -296,6 +296,46 @@ class FoodRatings {
 }
 ```
 
+
+```rust
+struct FoodRatings {
+    food_to_rating: HashMap<String, i32>,
+    cuisine_to_food: HashMap<String, Vec<String>>,
+}
+
+impl FoodRatings {
+    fn new(foods: Vec<String>, cuisines: Vec<String>, ratings: Vec<i32>) -> Self {
+        let mut food_to_rating = HashMap::new();
+        let mut cuisine_to_food: HashMap<String, Vec<String>> = HashMap::new();
+        for i in 0..foods.len() {
+            food_to_rating.insert(foods[i].clone(), ratings[i]);
+            cuisine_to_food
+                .entry(cuisines[i].clone())
+                .or_default()
+                .push(foods[i].clone());
+        }
+        Self { food_to_rating, cuisine_to_food }
+    }
+
+    fn change_rating(&mut self, food: String, new_rating: i32) {
+        self.food_to_rating.insert(food, new_rating);
+    }
+
+    fn highest_rated(&self, cuisine: String) -> String {
+        let mut max_r = 0;
+        let mut res = String::new();
+        for food in self.cuisine_to_food.get(&cuisine).unwrap() {
+            let r = *self.food_to_rating.get(food).unwrap();
+            if r > max_r || (r == max_r && *food < res) {
+                res = food.clone();
+                max_r = r;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -700,6 +740,54 @@ class FoodRatings {
 }
 ```
 
+
+```rust
+struct FoodRatings {
+    food_to_rating: HashMap<String, i32>,
+    food_to_cuisine: HashMap<String, String>,
+    cuisine_to_heap: HashMap<String, BinaryHeap<(i32, Reverse<String>)>>,
+}
+
+impl FoodRatings {
+    fn new(foods: Vec<String>, cuisines: Vec<String>, ratings: Vec<i32>) -> Self {
+        let mut food_to_rating = HashMap::new();
+        let mut food_to_cuisine = HashMap::new();
+        let mut cuisine_to_heap: HashMap<String, BinaryHeap<(i32, Reverse<String>)>> =
+            HashMap::new();
+
+        for i in 0..foods.len() {
+            food_to_rating.insert(foods[i].clone(), ratings[i]);
+            food_to_cuisine.insert(foods[i].clone(), cuisines[i].clone());
+            cuisine_to_heap
+                .entry(cuisines[i].clone())
+                .or_default()
+                .push((ratings[i], Reverse(foods[i].clone())));
+        }
+        Self { food_to_rating, food_to_cuisine, cuisine_to_heap }
+    }
+
+    fn change_rating(&mut self, food: String, new_rating: i32) {
+        let cuisine = self.food_to_cuisine.get(&food).unwrap().clone();
+        self.food_to_rating.insert(food.clone(), new_rating);
+        self.cuisine_to_heap
+            .get_mut(&cuisine)
+            .unwrap()
+            .push((new_rating, Reverse(food)));
+    }
+
+    fn highest_rated(&mut self, cuisine: String) -> String {
+        let heap = self.cuisine_to_heap.get_mut(&cuisine).unwrap();
+        while let Some(&(rating, Reverse(ref food))) = heap.peek() {
+            if *self.food_to_rating.get(food).unwrap() == rating {
+                return food.clone();
+            }
+            heap.pop();
+        }
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1052,6 +1140,55 @@ class FoodRatings {
 
     func highestRated(_ cuisine: String) -> String {
         return cuisineToSet[cuisine]![0].1
+    }
+}
+```
+
+
+```rust
+struct FoodRatings {
+    food_to_rating: HashMap<String, i32>,
+    food_to_cuisine: HashMap<String, String>,
+    cuisine_to_set: HashMap<String, BTreeSet<(Reverse<i32>, String)>>,
+}
+
+impl FoodRatings {
+    fn new(foods: Vec<String>, cuisines: Vec<String>, ratings: Vec<i32>) -> Self {
+        let mut food_to_rating = HashMap::new();
+        let mut food_to_cuisine = HashMap::new();
+        let mut cuisine_to_set: HashMap<String, BTreeSet<(Reverse<i32>, String)>> =
+            HashMap::new();
+
+        for i in 0..foods.len() {
+            food_to_rating.insert(foods[i].clone(), ratings[i]);
+            food_to_cuisine.insert(foods[i].clone(), cuisines[i].clone());
+            cuisine_to_set
+                .entry(cuisines[i].clone())
+                .or_default()
+                .insert((Reverse(ratings[i]), foods[i].clone()));
+        }
+        Self { food_to_rating, food_to_cuisine, cuisine_to_set }
+    }
+
+    fn change_rating(&mut self, food: String, new_rating: i32) {
+        let cuisine = self.food_to_cuisine.get(&food).unwrap().clone();
+        let old_rating = *self.food_to_rating.get(&food).unwrap();
+        let set = self.cuisine_to_set.get_mut(&cuisine).unwrap();
+
+        set.remove(&(Reverse(old_rating), food.clone()));
+        self.food_to_rating.insert(food.clone(), new_rating);
+        set.insert((Reverse(new_rating), food));
+    }
+
+    fn highest_rated(&self, cuisine: String) -> String {
+        self.cuisine_to_set
+            .get(&cuisine)
+            .unwrap()
+            .iter()
+            .next()
+            .unwrap()
+            .1
+            .clone()
     }
 }
 ```

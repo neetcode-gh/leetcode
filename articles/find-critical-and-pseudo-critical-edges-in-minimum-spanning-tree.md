@@ -712,6 +712,94 @@ class Solution {
 }
 ```
 
+
+```rust
+struct UnionFind {
+    par: Vec<usize>,
+    rank: Vec<usize>,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        UnionFind {
+            par: (0..n).collect(),
+            rank: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, v: usize) -> usize {
+        if self.par[v] != v {
+            self.par[v] = self.find(self.par[v]);
+        }
+        self.par[v]
+    }
+
+    fn union(&mut self, v1: usize, v2: usize) -> bool {
+        let (mut p1, mut p2) = (self.find(v1), self.find(v2));
+        if p1 == p2 { return false; }
+        if self.rank[p1] < self.rank[p2] {
+            std::mem::swap(&mut p1, &mut p2);
+        }
+        self.rank[p1] += self.rank[p2];
+        self.par[p2] = p1;
+        true
+    }
+}
+
+impl Solution {
+    pub fn find_critical_and_pseudo_critical_edges(n: i32, edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        let mut edge_list: Vec<(usize, usize, i32, usize)> = edges
+            .iter()
+            .enumerate()
+            .map(|(i, e)| (e[0] as usize, e[1] as usize, e[2], i))
+            .collect();
+        edge_list.sort_by_key(|e| e.2);
+
+        let mut uf = UnionFind::new(n);
+        let mut mst_weight = 0;
+        for &(v1, v2, w, _) in &edge_list {
+            if uf.union(v1, v2) {
+                mst_weight += w;
+            }
+        }
+
+        let mut critical = vec![];
+        let mut pseudo = vec![];
+
+        for &(n1, n2, e_weight, idx) in &edge_list {
+            // Try without current edge
+            let mut uf_without = UnionFind::new(n);
+            let mut weight = 0;
+            for &(v1, v2, w, j) in &edge_list {
+                if idx != j && uf_without.union(v1, v2) {
+                    weight += w;
+                }
+            }
+            if *uf_without.rank.iter().max().unwrap() != n || weight > mst_weight {
+                critical.push(idx as i32);
+                continue;
+            }
+
+            // Try with current edge
+            let mut uf_with = UnionFind::new(n);
+            uf_with.union(n1, n2);
+            let mut weight = e_weight;
+            for &(v1, v2, w, _) in &edge_list {
+                if uf_with.union(v1, v2) {
+                    weight += w;
+                }
+            }
+            if weight == mst_weight {
+                pseudo.push(idx as i32);
+            }
+        }
+
+        vec![critical, pseudo]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1377,6 +1465,89 @@ class Solution {
 }
 ```
 
+
+```rust
+struct UnionFind {
+    n: usize,
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        UnionFind {
+            n,
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let (mut pu, mut pv) = (self.find(u), self.find(v));
+        if pu == pv { return false; }
+        self.n -= 1;
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+
+    fn is_connected(&self) -> bool {
+        self.n == 1
+    }
+}
+
+impl Solution {
+    pub fn find_critical_and_pseudo_critical_edges(n: i32, mut edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        for i in 0..edges.len() {
+            edges[i].push(i as i32);
+        }
+        edges.sort_by_key(|e| e[2]);
+
+        let find_mst = |index: i32, include: bool| -> i32 {
+            let mut uf = UnionFind::new(n);
+            let mut wgt = 0i32;
+            if include {
+                let idx = index as usize;
+                wgt += edges[idx][2];
+                uf.union(edges[idx][0] as usize, edges[idx][1] as usize);
+            }
+            for (i, e) in edges.iter().enumerate() {
+                if i as i32 == index { continue; }
+                if uf.union(e[0] as usize, e[1] as usize) {
+                    wgt += e[2];
+                }
+            }
+            if uf.is_connected() { wgt } else { i32::MAX }
+        };
+
+        let mst_wgt = find_mst(-1, false);
+        let mut critical = vec![];
+        let mut pseudo = vec![];
+
+        for i in 0..edges.len() {
+            if mst_wgt < find_mst(i as i32, false) {
+                critical.push(edges[i][3]);
+            } else if mst_wgt == find_mst(i as i32, true) {
+                pseudo.push(edges[i][3]);
+            }
+        }
+
+        vec![critical, pseudo]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1917,6 +2088,58 @@ struct Heap<T> {
             elements.swapAt(parent, candidate)
             parent = candidate
         }
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_critical_and_pseudo_critical_edges(n: i32, mut edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        for i in 0..edges.len() {
+            edges[i].push(i as i32);
+        }
+
+        let mut adj: Vec<Vec<(usize, i32, usize)>> = vec![vec![]; n];
+        for e in &edges {
+            adj[e[0] as usize].push((e[1] as usize, e[2], e[3] as usize));
+            adj[e[1] as usize].push((e[0] as usize, e[2], e[3] as usize));
+        }
+
+        let minimax = |src: usize, dst: usize, exclude_idx: i32| -> i32 {
+            let mut dist = vec![i32::MAX; n];
+            dist[src] = 0;
+            let mut pq = BinaryHeap::new();
+            pq.push(Reverse((0i32, src)));
+
+            while let Some(Reverse((max_w, u))) = pq.pop() {
+                if u == dst { return max_w; }
+                for &(v, weight, edge_idx) in &adj[u] {
+                    if edge_idx as i32 == exclude_idx { continue; }
+                    let new_w = max_w.max(weight);
+                    if new_w < dist[v] {
+                        dist[v] = new_w;
+                        pq.push(Reverse((new_w, v)));
+                    }
+                }
+            }
+            i32::MAX
+        };
+
+        let mut critical = vec![];
+        let mut pseudo = vec![];
+
+        for e in &edges {
+            let (u, v, w, idx) = (e[0] as usize, e[1] as usize, e[2], e[3]);
+            if w < minimax(u, v, idx as i32) {
+                critical.push(idx);
+            } else if w == minimax(u, v, -1) {
+                pseudo.push(idx);
+            }
+        }
+
+        vec![critical, pseudo]
     }
 }
 ```
@@ -2700,6 +2923,108 @@ class Solution {
             path.removeLast()
         }
         return false
+    }
+}
+```
+
+
+```rust
+struct UnionFind {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        UnionFind {
+            parent: (0..n).collect(),
+            size: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let (mut pu, mut pv) = (self.find(u), self.find(v));
+        if pu == pv { return false; }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+}
+
+impl Solution {
+    pub fn find_critical_and_pseudo_critical_edges(n: i32, edges: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = n as usize;
+        let mut mst_adj: Vec<Vec<(usize, usize)>> = vec![vec![]; n];
+        let mut mst_edges = HashSet::new();
+
+        let mut edge_list: Vec<(i32, usize, usize, usize)> = edges
+            .iter()
+            .enumerate()
+            .map(|(i, e)| (e[2], e[0] as usize, e[1] as usize, i))
+            .collect();
+        edge_list.sort();
+
+        let mut uf = UnionFind::new(n);
+        for &(_, u, v, idx) in &edge_list {
+            if uf.union(u, v) {
+                mst_adj[u].push((v, idx));
+                mst_adj[v].push((u, idx));
+                mst_edges.insert(idx);
+            }
+        }
+
+        fn dfs(
+            node: usize,
+            parent_edge: i32,
+            dst: usize,
+            mst_adj: &Vec<Vec<(usize, usize)>>,
+            path: &mut Vec<usize>,
+        ) -> bool {
+            if node == dst { return true; }
+            for &(next, edge_idx) in &mst_adj[node] {
+                if edge_idx as i32 == parent_edge { continue; }
+                path.push(edge_idx);
+                if dfs(next, edge_idx as i32, dst, mst_adj, path) {
+                    return true;
+                }
+                path.pop();
+            }
+            false
+        }
+
+        let mut pseudo_set = HashSet::new();
+        for ind in 0..edges.len() {
+            if mst_edges.contains(&ind) { continue; }
+            let mut path = vec![];
+            let dst = edges[ind][1] as usize;
+            if dfs(edges[ind][0] as usize, -1, dst, &mst_adj, &mut path) {
+                for &p in &path {
+                    if edges[p][2] == edges[ind][2] {
+                        pseudo_set.insert(p);
+                        pseudo_set.insert(ind);
+                    }
+                }
+            }
+        }
+
+        let critical: Vec<i32> = mst_edges
+            .iter()
+            .filter(|e| !pseudo_set.contains(e))
+            .map(|&e| e as i32)
+            .collect();
+        let pseudo: Vec<i32> = pseudo_set.iter().map(|&e| e as i32).collect();
+
+        vec![critical, pseudo]
     }
 }
 ```

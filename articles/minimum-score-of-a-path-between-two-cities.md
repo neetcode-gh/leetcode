@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency List)** - Building and traversing graphs using adjacency lists to store edges and neighbors
 - **Depth First Search (DFS)** - Recursively exploring all reachable nodes in a graph while tracking visited nodes
 - **Breadth First Search (BFS)** - Level-by-level graph traversal using a queue
@@ -18,9 +20,9 @@ The problem asks for the minimum edge weight on any path from city `1` to city `
 1. Build an adjacency list from the edges, storing both the neighbor and the edge distance.
 2. Initialize `res` to infinity and a visited set.
 3. Run DFS starting from node `1`:
-   - Mark the current node as visited.
-   - For each neighbor, update `res` with the minimum of `res` and the edge distance.
-   - Recursively visit unvisited neighbors.
+    - Mark the current node as visited.
+    - For each neighbor, update `res` with the minimum of `res` and the edge distance.
+    - Recursively visit unvisited neighbors.
 4. Return `res` after DFS completes.
 
 ::tabs-start
@@ -285,6 +287,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_score(n: i32, roads: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n + 1];
+        for road in &roads {
+            adj[road[0] as usize].push((road[1] as usize, road[2]));
+            adj[road[1] as usize].push((road[0] as usize, road[2]));
+        }
+        let mut res = i32::MAX;
+        let mut visit = vec![false; n + 1];
+        Self::dfs(1, &adj, &mut visit, &mut res);
+        res
+    }
+
+    fn dfs(node: usize, adj: &Vec<Vec<(usize, i32)>>, visit: &mut Vec<bool>, res: &mut i32) {
+        if visit[node] { return; }
+        visit[node] = true;
+        for &(nei, dist) in &adj[node] {
+            *res = (*res).min(dist);
+            Self::dfs(nei, adj, visit, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -307,9 +335,9 @@ BFS achieves the same goal as DFS by exploring all reachable nodes level by leve
 1. Build an adjacency list storing neighbors and distances.
 2. Initialize `res` to infinity, a visited array, and a queue starting with node `1`.
 3. While the queue is not empty:
-   - Dequeue a node.
-   - For each neighbor, update `res` with the minimum edge distance.
-   - If the neighbor hasn't been visited, mark it visited and enqueue it.
+    - Dequeue a node.
+    - For each neighbor, update `res` with the minimum edge distance.
+    - If the neighbor hasn't been visited, mark it visited and enqueue it.
 4. Return `res`.
 
 ::tabs-start
@@ -569,6 +597,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_score(n: i32, roads: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n + 1];
+        for road in &roads {
+            adj[road[0] as usize].push((road[1] as usize, road[2]));
+            adj[road[1] as usize].push((road[0] as usize, road[2]));
+        }
+
+        let mut res = i32::MAX;
+        let mut visit = vec![false; n + 1];
+        let mut q = VecDeque::new();
+        q.push_back(1usize);
+        visit[1] = true;
+
+        while let Some(node) = q.pop_front() {
+            for &(nei, dist) in &adj[node] {
+                res = res.min(dist);
+                if !visit[nei] {
+                    visit[nei] = true;
+                    q.push_back(nei);
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -591,9 +650,9 @@ This is the same approach as recursive DFS, but using an explicit stack instead 
 1. Build an adjacency list from the edges.
 2. Initialize `res` to infinity, a visited array, and a stack with node `1`.
 3. While the stack is not empty:
-   - Pop a node from the stack.
-   - For each neighbor, update `res` with the minimum edge distance.
-   - If the neighbor hasn't been visited, mark it visited and push it onto the stack.
+    - Pop a node from the stack.
+    - For each neighbor, update `res` with the minimum edge distance.
+    - If the neighbor hasn't been visited, mark it visited and push it onto the stack.
 4. Return `res`.
 
 ::tabs-start
@@ -853,6 +912,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_score(n: i32, roads: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n + 1];
+        for road in &roads {
+            adj[road[0] as usize].push((road[1] as usize, road[2]));
+            adj[road[1] as usize].push((road[0] as usize, road[2]));
+        }
+
+        let mut res = i32::MAX;
+        let mut visit = vec![false; n + 1];
+        let mut stack = vec![1usize];
+        visit[1] = true;
+
+        while let Some(node) = stack.pop() {
+            for &(nei, dist) in &adj[node] {
+                res = res.min(dist);
+                if !visit[nei] {
+                    visit[nei] = true;
+                    stack.push(nei);
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -876,7 +965,7 @@ Union-Find provides another way to identify which edges belong to the same conne
 2. For each edge, union the two endpoints.
 3. Find the root of node `1`.
 4. Iterate through all edges:
-   - If either endpoint has the same root as node `1`, update `res` with the minimum edge weight.
+    - If either endpoint has the same root as node `1`, update `res` with the minimum edge weight.
 5. Return `res`.
 
 ::tabs-start
@@ -1300,6 +1389,63 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv { return false; }
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn min_score(n: i32, roads: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut dsu = DSU::new(n);
+        for road in &roads {
+            dsu.union(road[0] as usize, road[1] as usize);
+        }
+
+        let mut res = i32::MAX;
+        let root = dsu.find(1);
+        for road in &roads {
+            if dsu.find(road[0] as usize) == root {
+                res = res.min(road[2]);
+            }
+        }
+
+        res
     }
 }
 ```

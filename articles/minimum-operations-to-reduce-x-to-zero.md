@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum** - Used to efficiently compute sums of subarrays without recalculating from scratch
 - **Sliding Window** - The optimal solution transforms the problem into finding the longest subarray with a target sum
 - **Hash Map** - Used to store prefix sums for O(1) lookup of complement values
@@ -301,6 +303,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>, x: i32) -> i32 {
+        let n = nums.len();
+        let mut res = n + 1;
+        let mut suffix_sum = 0;
+        let mut prefix_sum = 0;
+
+        for i in (0..n).rev() {
+            suffix_sum += nums[i];
+            if suffix_sum == x {
+                res = res.min(n - i);
+            }
+        }
+
+        for i in 0..n {
+            prefix_sum += nums[i];
+            suffix_sum = 0;
+            if prefix_sum == x {
+                res = res.min(i + 1);
+            }
+
+            for j in (i + 1..n).rev() {
+                suffix_sum += nums[j];
+                if prefix_sum + suffix_sum == x {
+                    res = res.min(i + 1 + n - j);
+                }
+            }
+        }
+
+        if res == n + 1 { -1 } else { res as i32 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,9 +359,9 @@ Instead of recalculating prefix sums repeatedly, we precompute them. For each `s
 2. If the total sum is less than `x`, return `-1` immediately.
 3. Use binary search to find if any prefix alone equals `x`.
 4. Iterate from the right, building `suffixSum`. For each `suffixSum`:
-   - If `suffixSum == x`, update `res`.
-   - If `suffixSum > x`, `break` early.
-   - Binary search in the prefix array for `x - suffixSum`, ensuring the prefix and suffix do not overlap.
+    - If `suffixSum == x`, update `res`.
+    - If `suffixSum > x`, `break` early.
+    - Binary search in the prefix array for `x - suffixSum`, ensuring the prefix and suffix do not overlap.
 5. Return `-1` if no valid combination exists, otherwise return `res`.
 
 ::tabs-start
@@ -716,6 +753,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>, x: i32) -> i32 {
+        let n = nums.len();
+        let mut prefix_sum = vec![0i32; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i];
+        }
+
+        if x > prefix_sum[n] {
+            return -1;
+        }
+
+        let binary_search = |target: i32, m: usize| -> usize {
+            let (mut l, mut r) = (1usize, m);
+            let mut index = n + 1;
+            while l <= r {
+                let mid = (l + r) / 2;
+                if prefix_sum[mid] >= target {
+                    if prefix_sum[mid] == target {
+                        index = mid;
+                    }
+                    r = mid - 1;
+                } else {
+                    l = mid + 1;
+                }
+            }
+            index
+        };
+
+        let mut res = binary_search(x, n);
+        let mut suffix_sum = 0;
+        for i in (1..n).rev() {
+            suffix_sum += nums[i];
+            if suffix_sum == x {
+                res = res.min(n - i);
+                break;
+            }
+            if suffix_sum > x {
+                break;
+            }
+            res = res.min(binary_search(x - suffix_sum, i) + n - i);
+        }
+
+        if res == n + 1 { -1 } else { res as i32 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -736,9 +822,9 @@ Here is a clever reframing: removing elements from both ends that sum to `x` is 
 1. Calculate `target = total - x`. If `target` is negative, return `-1`. If `target` is `0`, return the array length.
 2. Use a hash map to store each `prefixSum` and its `index`. Initialize with `{0: -1}` to handle subarrays starting at `index` `0`.
 3. Iterate through the array, maintaining a running `prefixSum`:
-   - Check if `prefixSum - target` exists in the map. If so, we found a subarray with sum `target`.
-   - Track the `max` length of such subarrays.
-   - Store the current `prefixSum` in the map.
+    - Check if `prefixSum - target` exists in the map. If so, we found a subarray with sum `target`.
+    - Track the `max` length of such subarrays.
+    - Store the current `prefixSum` in the map.
 4. Return `n - maxLength` if a valid subarray was found, otherwise `-1`.
 
 ::tabs-start
@@ -964,6 +1050,37 @@ class Solution {
         }
 
         return res == -1 ? -1 : nums.count - res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>, x: i32) -> i32 {
+        let total: i32 = nums.iter().sum();
+        if total == x {
+            return nums.len() as i32;
+        }
+
+        let target = total - x;
+        if target < 0 {
+            return -1;
+        }
+
+        let mut prefix_map = HashMap::new();
+        prefix_map.insert(0, -1i32);
+        let mut prefix_sum = 0;
+        let mut res = -1i32;
+
+        for i in 0..nums.len() {
+            prefix_sum += nums[i];
+            if let Some(&j) = prefix_map.get(&(prefix_sum - target)) {
+                res = res.max(i as i32 - j);
+            }
+            prefix_map.insert(prefix_sum, i as i32);
+        }
+
+        if res == -1 { -1 } else { nums.len() as i32 - res }
     }
 }
 ```
@@ -1204,6 +1321,32 @@ class Solution {
         }
 
         return maxWindow == -1 ? -1 : nums.count - maxWindow
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>, x: i32) -> i32 {
+        let target: i32 = nums.iter().sum::<i32>() - x;
+        let mut cur_sum = 0;
+        let mut max_window: i32 = -1;
+        let mut l = 0;
+
+        for r in 0..nums.len() {
+            cur_sum += nums[r];
+
+            while l <= r && cur_sum > target {
+                cur_sum -= nums[l];
+                l += 1;
+            }
+
+            if cur_sum == target {
+                max_window = max_window.max((r - l + 1) as i32);
+            }
+        }
+
+        if max_window == -1 { -1 } else { nums.len() as i32 - max_window }
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting element frequencies efficiently in O(1) per operation
 - **Hash Sets** - Tracking elements with odd occurrences using add/remove toggle logic
 - **Sorting** - Grouping identical elements together for run-length analysis
@@ -220,6 +222,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn divide_array(mut nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        nums.sort();
+
+        let mut i = 0;
+        while i < n {
+            let mut j = i;
+            while j < n && nums[i] == nums[j] {
+                j += 1;
+            }
+
+            if (j - i) % 2 != 0 {
+                return false;
+            }
+
+            i = j;
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -403,6 +430,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn divide_array(nums: Vec<i32>) -> bool {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        count.values().all(|&cnt| cnt % 2 == 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,6 +607,22 @@ class Solution {
         }
 
         return oddSet.isEmpty
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn divide_array(nums: Vec<i32>) -> bool {
+        let mut odd_set = HashSet::new();
+
+        for &num in &nums {
+            if !odd_set.remove(&num) {
+                odd_set.insert(num);
+            }
+        }
+
+        odd_set.is_empty()
     }
 }
 ```

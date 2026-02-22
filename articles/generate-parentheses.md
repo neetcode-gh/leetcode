@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Building solutions through recursive function calls
 - **Backtracking** - Exploring solution paths and undoing choices when they lead to invalid states
 - **Dynamic Programming** - Building larger solutions from smaller subproblems
@@ -10,6 +12,7 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 Generate **all** strings of length `2n` using only `'('` and `')'`.
 Most will be invalid, so for each completed string we **validate** it:
 
@@ -19,12 +22,13 @@ Most will be invalid, so for each completed string we **validate** it:
 - At the end, `balance` must be `0`, meaning all opens are closed.
 
 ### Algorithm
+
 1. Use DFS to build a string `s`.
 2. If `len(s) == 2n`, check if `s` is valid using the balance rule:
-   - If valid, add to result.
+    - If valid, add to result.
 3. Otherwise, branch:
-   - Try adding `'('`.
-   - Try adding `')'`.
+    - Try adding `'('`.
+    - Try adding `')'`.
 4. Return the collected results.
 
 ::tabs-start
@@ -284,6 +288,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate_parenthesis(n: i32) -> Vec<String> {
+        let mut res = vec![];
+
+        fn valid(s: &str) -> bool {
+            let mut open = 0i32;
+            for c in s.chars() {
+                open += if c == '(' { 1 } else { -1 };
+                if open < 0 {
+                    return false;
+                }
+            }
+            open == 0
+        }
+
+        fn dfs(s: String, n: i32, res: &mut Vec<String>) {
+            if s.len() == (n * 2) as usize {
+                if valid(&s) {
+                    res.push(s);
+                }
+                return;
+            }
+            dfs(s.clone() + "(", n, res);
+            dfs(s + ")", n, res);
+        }
+
+        dfs(String::new(), n, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,9 +333,11 @@ class Solution {
 ## 2. Backtracking
 
 ### Intuition
+
 Instead of generating **all** strings and then checking validity, we **build only valid strings**.
 
 Key rules for valid parentheses:
+
 - You can add `'('` **only if** you still have openings left (`open < n`).
 - You can add `')'` **only if** it won't break validity (`close < open`).
 - A string is complete and valid **only when** `open == close == n`.
@@ -306,10 +345,11 @@ Key rules for valid parentheses:
 So at every step, we make **safe choices only**, which avoids invalid paths early.
 
 ### Algorithm
+
 1. Start with an empty string.
 2. Track:
-   - `open` - number of `'('` used.
-   - `close` - number of `')'` used.
+    - `open` - number of `'('` used.
+    - `close` - number of `')'` used.
 3. If `open == close == n`, add the built string to the result.
 4. If `open < n`, add `'('` and recurse.
 5. If `close < open`, add `')'` and recurse.
@@ -553,6 +593,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate_parenthesis(n: i32) -> Vec<String> {
+        let mut res = vec![];
+        let mut stack = String::new();
+
+        fn backtrack(open_n: i32, closed_n: i32, n: i32, res: &mut Vec<String>, stack: &mut String) {
+            if open_n == n && closed_n == n {
+                res.push(stack.clone());
+                return;
+            }
+            if open_n < n {
+                stack.push('(');
+                backtrack(open_n + 1, closed_n, n, res, stack);
+                stack.pop();
+            }
+            if closed_n < open_n {
+                stack.push(')');
+                backtrack(open_n, closed_n + 1, n, res, stack);
+                stack.pop();
+            }
+        }
+
+        backtrack(0, 0, n, &mut res, &mut stack);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -581,13 +650,13 @@ So, every valid result for `k` pairs is formed by **combining smaller answers**.
 
 1. Let `dp[x]` store **all valid parentheses strings with `x` pairs**.
 2. Base case:
-   - `dp[0] = [""]` (empty string).
+    - `dp[0] = [""]` (empty string).
 3. For each `k` from `1` to `n`:
-   - Try all splits `i` from `0` to `k-1`.
-   - Combine:
-     ```
-     "(" + dp[i] + ")" + dp[k - i - 1]
-     ```
+    - Try all splits `i` from `0` to `k-1`.
+    - Combine:
+        ```
+        "(" + dp[i] + ")" + dp[k - i - 1]
+        ```
 4. Store all combinations in `dp[k]`.
 5. Return `dp[n]`.
 
@@ -761,6 +830,32 @@ class Solution {
         }
 
         return res[n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn generate_parenthesis(n: i32) -> Vec<String> {
+        let n = n as usize;
+        let mut res: Vec<Vec<String>> = vec![vec![]; n + 1];
+        res[0] = vec![String::new()];
+
+        for k in 1..=n {
+            let mut cur = vec![];
+            for i in 0..k {
+                let left = res[i].clone();
+                let right = res[k - i - 1].clone();
+                for l in &left {
+                    for r in &right {
+                        cur.push(format!("({}){}", l, r));
+                    }
+                }
+            }
+            res[k] = cur;
+        }
+
+        res[n].clone()
     }
 }
 ```

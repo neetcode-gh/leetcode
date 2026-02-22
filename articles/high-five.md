@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting with Custom Comparators** - Sorting by multiple criteria (ID ascending, score descending)
 - **Hash Maps** - Grouping data by keys to organize scores by student ID
 - **Heaps (Priority Queues)** - Using min heaps to maintain only the top K elements efficiently, or max heaps to extract the largest scores
@@ -241,6 +243,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn high_five(mut items: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let k = 5;
+        items.sort_by(|a, b| {
+            if a[0] != b[0] {
+                a[0].cmp(&b[0])
+            } else {
+                b[1].cmp(&a[1])
+            }
+        });
+
+        let mut solution = Vec::new();
+        let n = items.len();
+        let mut i = 0;
+        while i < n {
+            let id = items[i][0];
+            let mut sum = 0;
+            for j in i..(i + k) {
+                sum += items[j][1];
+            }
+            while i < n && items[i][0] == id {
+                i += 1;
+            }
+            solution.push(vec![id, sum / k as i32]);
+        }
+
+        solution
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,7 +282,7 @@ class Solution {
 - Time complexity: $O(N \log N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the total number of items.
+> Where $N$ is the total number of items.
 
 ---
 
@@ -511,6 +545,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn high_five(items: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let k = 5;
+        let mut all_scores: BTreeMap<i32, BinaryHeap<i32>> = BTreeMap::new();
+
+        for item in &items {
+            let id = item[0];
+            let score = item[1];
+            all_scores.entry(id).or_insert_with(BinaryHeap::new).push(score);
+        }
+
+        let mut solution = Vec::new();
+        for (&id, scores) in &mut all_scores {
+            let mut sum = 0;
+            for _ in 0..k {
+                sum += scores.pop().unwrap();
+            }
+            solution.push(vec![id, sum / k]);
+        }
+
+        solution
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -518,7 +578,7 @@ class Solution {
 - Time complexity: $O(N \log N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the total number of items.
+> Where $N$ is the total number of items.
 
 ---
 
@@ -801,6 +861,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn high_five(items: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let k = 5;
+        let mut all_scores: BTreeMap<i32, BinaryHeap<Reverse<i32>>> = BTreeMap::new();
+
+        for item in &items {
+            let id = item[0];
+            let score = item[1];
+            let heap = all_scores.entry(id).or_insert_with(BinaryHeap::new);
+            heap.push(Reverse(score));
+            if heap.len() > k {
+                heap.pop();
+            }
+        }
+
+        let mut solution = Vec::new();
+        for (&id, scores) in &all_scores {
+            let total: i32 = scores.iter().map(|&Reverse(s)| s).sum();
+            solution.push(vec![id, total / k as i32]);
+        }
+
+        solution
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -808,7 +895,7 @@ class Solution {
 - Time complexity: $O(N \log N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the total number of items.
+> Where $N$ is the total number of items.
 
 ---
 

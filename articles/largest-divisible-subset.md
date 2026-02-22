@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - The problem requires caching recursive results to avoid recomputation
 - **Sorting** - Elements must be sorted first to establish the divisibility chain property
 - **Divisibility and Modulo Operations** - Understanding when one number divides another evenly
@@ -18,8 +20,8 @@ A divisible subset has a special property: if we sort the numbers, then for any 
 1. Sort the array in ascending order.
 2. Define a recursive function `dfs(i, prevIndex)` that returns the largest divisible subset starting from index `i`, where `prevIndex` is the index of the last included element (or `-1` if none).
 3. At each index:
-   - Option 1: Skip the current number.
-   - Option 2: If no previous element exists or the current number is divisible by the previous one, include it and recurse.
+    - Option 1: Skip the current number.
+    - Option 2: If no previous element exists or the current number is divisible by the previous one, include it and recurse.
 4. Memoize results based on `(i, prevIndex)` to avoid recomputation.
 5. Return the larger of the two options.
 
@@ -263,6 +265,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_divisible_subset(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let n = nums.len();
+        let mut cache: Vec<Vec<Option<Vec<i32>>>> = vec![vec![None; n + 1]; n];
+
+        fn dfs(i: usize, prev_index: i32, nums: &[i32], cache: &mut Vec<Vec<Option<Vec<i32>>>>) -> Vec<i32> {
+            if i == nums.len() {
+                return vec![];
+            }
+            let pi = (prev_index + 1) as usize;
+            if let Some(ref cached) = cache[i][pi] {
+                return cached.clone();
+            }
+
+            let mut res = dfs(i + 1, prev_index, nums, cache);
+
+            if prev_index == -1 || nums[i] % nums[prev_index as usize] == 0 {
+                let mut tmp = vec![nums[i]];
+                tmp.extend(dfs(i + 1, i as i32, nums, cache));
+                if tmp.len() > res.len() {
+                    res = tmp;
+                }
+            }
+
+            cache[i][pi] = Some(res.clone());
+            res
+        }
+
+        dfs(0, -1, &nums, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,9 +320,9 @@ We can simplify the state by observing that we only need to track the starting i
 1. Sort the array in ascending order.
 2. Define `dfs(i)` that returns the largest divisible subset starting at index `i`.
 3. At each index `i`:
-   - Initialize the result with just `nums[i]`.
-   - For each later index `j` where `nums[j] % nums[i] == 0`, recursively get the subset starting at `j`.
-   - Prepend `nums[i]` to the best result and keep the longest.
+    - Initialize the result with just `nums[i]`.
+    - For each later index `j` where `nums[j] % nums[i] == 0`, recursively get the subset starting at `j`.
+    - Prepend `nums[i]` to the best result and keep the longest.
 4. Memoize results for each starting index.
 5. Try all starting positions and return the longest subset found.
 
@@ -590,6 +627,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_divisible_subset(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let n = nums.len();
+        let mut cache: Vec<Option<Vec<i32>>> = vec![None; n];
+
+        fn dfs(i: usize, nums: &[i32], cache: &mut Vec<Option<Vec<i32>>>) -> Vec<i32> {
+            if let Some(ref cached) = cache[i] {
+                return cached.clone();
+            }
+
+            let mut res = vec![nums[i]];
+            for j in (i + 1)..nums.len() {
+                if nums[j] % nums[i] == 0 {
+                    let mut tmp = vec![nums[i]];
+                    tmp.extend(dfs(j, nums, cache));
+                    if tmp.len() > res.len() {
+                        res = tmp;
+                    }
+                }
+            }
+
+            cache[i] = Some(res.clone());
+            res
+        }
+
+        let mut res = vec![];
+        for i in 0..n {
+            let tmp = dfs(i, &nums, &mut cache);
+            if tmp.len() > res.len() {
+                res = tmp;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -611,9 +687,9 @@ We can convert the top-down approach to bottom-up. Processing from right to left
 2. Create a DP array where `dp[i]` stores the longest divisible subset starting at index `i`.
 3. Initialize each `dp[i]` with just the element at that index.
 4. Iterate from right to left:
-   - For each later index `j`, if `nums[j] % nums[i] == 0`, check if prepending `nums[i]` to `dp[j]` gives a longer subset.
-   - Update `dp[i]` with the longest result.
-   - Track the overall longest subset found.
+    - For each later index `j`, if `nums[j] % nums[i] == 0`, check if prepending `nums[i]` to `dp[j]` gives a longer subset.
+    - Update `dp[i]` with the longest result.
+    - Track the overall longest subset found.
 5. Return the longest subset.
 
 ::tabs-start
@@ -837,6 +913,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_divisible_subset(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let n = nums.len();
+        let mut dp: Vec<Vec<i32>> = nums.iter().map(|&x| vec![x]).collect();
+        let mut res: Vec<i32> = vec![];
+
+        for i in (0..n).rev() {
+            for j in (i + 1)..n {
+                if nums[j] % nums[i] == 0 {
+                    let mut tmp = vec![nums[i]];
+                    tmp.extend_from_slice(&dp[j]);
+                    if tmp.len() > dp[i].len() {
+                        dp[i] = tmp;
+                    }
+                }
+            }
+            if dp[i].len() > res.len() {
+                res = dp[i].clone();
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -857,8 +961,8 @@ Instead of storing entire subsets in the DP table (which uses extra memory), we 
 1. Sort the array in ascending order.
 2. Create a DP array where `dp[i] = [maxLen, nextIndex]`.
 3. Define `dfs(i)` that returns the length of the longest subset starting at index `i`:
-   - For each later index `j` where `nums[j] % nums[i] == 0`, compute the length via `dfs(j) + 1`.
-   - Track which `j` gave the best length for tracing.
+    - For each later index `j` where `nums[j] % nums[i] == 0`, compute the length via `dfs(j) + 1`.
+    - Track which `j` gave the best length for tracing.
 4. Find the starting index with the maximum length.
 5. Reconstruct the subset by following the `nextIndex` pointers.
 
@@ -1228,6 +1332,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_divisible_subset(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let n = nums.len();
+        let mut dp = vec![[-1i32; 2]; n]; // dp[i] = [max_len, next_index]
+
+        fn dfs(i: usize, nums: &[i32], dp: &mut Vec<[i32; 2]>) -> i32 {
+            if dp[i][0] != -1 {
+                return dp[i][0];
+            }
+
+            dp[i][0] = 1;
+            for j in (i + 1)..nums.len() {
+                if nums[j] % nums[i] == 0 {
+                    let length = dfs(j, nums, dp) + 1;
+                    if length > dp[i][0] {
+                        dp[i][0] = length;
+                        dp[i][1] = j as i32;
+                    }
+                }
+            }
+            dp[i][0]
+        }
+
+        let mut max_len = 1;
+        let mut start_index: i32 = 0;
+        for i in 0..n {
+            if dfs(i, &nums, &mut dp) > max_len {
+                max_len = dp[i][0];
+                start_index = i as i32;
+            }
+        }
+
+        let mut subset = vec![];
+        let mut idx = start_index;
+        while idx != -1 {
+            subset.push(nums[idx as usize]);
+            idx = dp[idx as usize][1];
+        }
+
+        subset
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1248,8 +1398,8 @@ This is the iterative version of the tracing approach. We process indices from l
 1. Sort the array in ascending order.
 2. Create a DP array where `dp[i] = [maxLen, prevIndex]`, initialized with length `1` and no predecessor.
 3. For each index `i`, check all earlier indices `j`:
-   - If `nums[i] % nums[j] == 0` and extending from `j` gives a longer subset, update `dp[i]`.
-   - Track the index with the overall maximum length.
+    - If `nums[i] % nums[j] == 0` and extending from `j` gives a longer subset, update `dp[i]`.
+    - Track the index with the overall maximum length.
 4. Reconstruct the subset by following the `prevIndex` pointers backward from the best ending index.
 
 ::tabs-start
@@ -1526,6 +1676,42 @@ class Solution {
         }
 
         return subset
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_divisible_subset(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let n = nums.len();
+        let mut dp = vec![[1i32, -1i32]; n]; // dp[i] = [max_len, prev_idx]
+
+        let mut max_len = 1;
+        let mut start_index: i32 = 0;
+
+        for i in 0..n {
+            for j in 0..i {
+                if nums[i] % nums[j] == 0 && dp[j][0] + 1 > dp[i][0] {
+                    dp[i][0] = dp[j][0] + 1;
+                    dp[i][1] = j as i32;
+                }
+            }
+
+            if dp[i][0] > max_len {
+                max_len = dp[i][0];
+                start_index = i as i32;
+            }
+        }
+
+        let mut subset = vec![];
+        let mut idx = start_index;
+        while idx != -1 {
+            subset.push(nums[idx as usize]);
+            idx = dp[idx as usize][1];
+        }
+
+        subset
     }
 }
 ```

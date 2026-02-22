@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge lists for efficient traversal
 - **Depth First Search (DFS)** - Recursively exploring all reachable nodes from a starting point
 - **Breadth First Search (BFS)** - Level-by-level traversal using a queue to visit connected nodes
@@ -10,20 +12,23 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 A **connected component** is a group of nodes where every node is reachable from any other node in that group.
 
 Using **DFS**:
+
 - If we start DFS from an unvisited node, we will visit **all nodes in its connected component**
 - Every time we start DFS from a new unvisited node, we’ve found **one new component**
 
 ### Algorithm
+
 1. Build an **adjacency list** from the edges.
 2. Maintain a **visited array** to track visited nodes.
 3. Initialize `components = 0`.
 4. For each node from `0` to `n-1`:
-   - If the node is not visited:
-     - Run DFS from this node (mark all reachable nodes as visited)
-     - Increment `components` by `1`
+    - If the node is not visited:
+        - Run DFS from this node (mark all reachable nodes as visited)
+        - Increment `components` by `1`
 5. Return `components`.
 
 ::tabs-start
@@ -290,6 +295,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_components(n: i32, edges: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        let mut visit = vec![false; n];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        fn dfs(node: usize, adj: &Vec<Vec<usize>>, visit: &mut Vec<bool>) {
+            visit[node] = true;
+            for &nei in &adj[node] {
+                if !visit[nei] {
+                    dfs(nei, adj, visit);
+                }
+            }
+        }
+
+        let mut res = 0;
+        for node in 0..n {
+            if !visit[node] {
+                dfs(node, &adj, &mut visit);
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,21 +342,24 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
+
 A **connected component** is a set of nodes where each node can reach the others.
 
 Using **BFS**:
+
 - Starting BFS from an unvisited node will visit **all nodes in that component**
 - Each time we start BFS from a new unvisited node, we discover **one new connected component**
 
 ### Algorithm
+
 1. Build an **adjacency list** from the given edges.
 2. Create a **visited array** to mark nodes that are already seen.
 3. Initialize `components = 0`.
 4. For every node from `0` to `n-1`:
-   - If the node is not visited:
-     - Start **BFS** from this node
-     - Mark all reachable nodes as visited
-     - Increment `components` by `1`
+    - If the node is not visited:
+        - Start **BFS** from this node
+        - Mark all reachable nodes as visited
+        - Increment `components` by `1`
 5. Return `components`.
 
 ::tabs-start
@@ -623,6 +664,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_components(n: i32, edges: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        let mut visit = vec![false; n];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        let mut res = 0;
+        for node in 0..n {
+            if !visit[node] {
+                let mut q = VecDeque::new();
+                q.push_back(node);
+                visit[node] = true;
+                while let Some(cur) = q.pop_front() {
+                    for &nei in &adj[cur] {
+                        if !visit[nei] {
+                            visit[nei] = true;
+                            q.push_back(nei);
+                        }
+                    }
+                }
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -637,22 +712,24 @@ class Solution {
 ## 3. Disjoint Set Union (Rank | Size)
 
 ### Intuition
+
 Disjoint Set Union (DSU) groups nodes into **connected components** efficiently.
 
 - Start by assuming **each node is its own component**
 - When we process an edge `(u, v)`:
-  - If `u` and `v` are already in the same set, nothing changes
-  - If they are in different sets, we **merge** them and the number of components decreases by 1
+    - If `u` and `v` are already in the same set, nothing changes
+    - If they are in different sets, we **merge** them and the number of components decreases by 1
 - Using **union by rank/size + path compression** keeps operations fast
 
 At the end, the number of remaining sets is the number of connected components.
 
 ### Algorithm
+
 1. Initialize DSU with `n` nodes, each node as its own parent.
 2. Set `components = n`.
 3. For each edge `(u, v)`:
-   - If `union(u, v)` is successful (they were separate):
-     - Decrement `components` by `1`
+    - If `union(u, v)` is successful (they were separate):
+        - Decrement `components` by `1`
 4. Return `components`.
 
 ::tabs-start
@@ -1062,6 +1139,59 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    rank: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        DSU {
+            parent: (0..n).collect(),
+            rank: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        let mut cur = node;
+        while cur != self.parent[cur] {
+            self.parent[cur] = self.parent[self.parent[cur]];
+            cur = self.parent[cur];
+        }
+        cur
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        if self.rank[pv] > self.rank[pu] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.parent[pv] = pu;
+        self.rank[pu] += self.rank[pv];
+        true
+    }
+}
+
+impl Solution {
+    pub fn count_components(n: i32, edges: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut dsu = DSU::new(n);
+        let mut res = n as i32;
+        for edge in &edges {
+            if dsu.union(edge[0] as usize, edge[1] as usize) {
+                res -= 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1076,7 +1206,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting Isolated Nodes
+
 When there are no edges, each node is its own component. Solutions that only iterate through edges will miss nodes with no connections and return 0 instead of n.
+
 ```python
 # Wrong: misses isolated nodes
 for u, v in edges:
@@ -1084,7 +1216,9 @@ for u, v in edges:
 ```
 
 ### Building a Directed Graph Instead of Undirected
+
 Edges must be added in both directions. Adding only `adj[u].append(v)` without `adj[v].append(u)` causes incomplete traversals and overcounts components.
 
 ### Not Marking Nodes as Visited Before Exploring
+
 In BFS/DFS, marking a node as visited only after processing (instead of when first discovered) can cause nodes to be added to the queue multiple times, leading to incorrect counts or infinite loops.

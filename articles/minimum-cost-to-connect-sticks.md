@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap/Priority Queue** - A min-heap efficiently retrieves the two smallest elements for each combination step
 - **Greedy Algorithms** - Understanding why combining smallest sticks first minimizes total cost (similar to Huffman coding)
 
@@ -15,10 +17,10 @@ When combining two sticks, the cost equals the sum of their lengths, and that co
 
 1. Build a min-heap from all stick lengths.
 2. While more than one stick remains:
-   - Pop the two smallest sticks.
-   - Combine them (sum their lengths).
-   - Add the combination cost to the total.
-   - Push the new stick back into the heap.
+    - Pop the two smallest sticks.
+    - Combine them (sum their lengths).
+    - Add the combination cost to the total.
+    - Push the new stick back into the heap.
 3. Return the total cost.
 
 ::tabs-start
@@ -42,24 +44,24 @@ class Solution:
 class Solution {
     public int connectSticks(int[] sticks) {
         int totalCost = 0;
- 
+
         PriorityQueue<Integer> pq = new PriorityQueue<>();
- 
+
         for (int stick : sticks) {
             pq.add(stick);
         }
- 
+
         // combine two of the smallest sticks until we are left with just one.
         while (pq.size() > 1) {
             int stick1 = pq.remove();
             int stick2 = pq.remove();
-            
+
             int cost = stick1 + stick2;
             totalCost += cost;
-            
+
             pq.add(stick1 + stick2);
         }
- 
+
         return totalCost;
     }
 }
@@ -70,26 +72,26 @@ class Solution {
 public:
     int connectSticks(vector<int>& sticks) {
         int totalCost = 0;
-        
+
         priority_queue<int, vector<int>, greater<int>> pq;
-        
+
         for (int i = 0; i < sticks.size(); i++) {
             pq.push(sticks[i]);
         }
-        
+
         // combine two of the smallest sticks until we are left with just one.
         while (pq.size() > 1) {
-            int stick1 = pq.top(); 
+            int stick1 = pq.top();
             pq.pop();
-            int stick2 = pq.top(); 
+            int stick2 = pq.top();
             pq.pop();
-            
+
             int cost = stick1 + stick2;
             totalCost += cost;
-            
+
             pq.push(stick1+stick2);
         }
-        
+
         return totalCost;
     }
 };
@@ -289,6 +291,30 @@ struct Heap<T> {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn connect_sticks(sticks: Vec<i32>) -> i32 {
+        let mut heap = BinaryHeap::new();
+        for &s in &sticks {
+            heap.push(Reverse(s));
+        }
+
+        let mut total_cost = 0;
+
+        while heap.len() > 1 {
+            let Reverse(s1) = heap.pop().unwrap();
+            let Reverse(s2) = heap.pop().unwrap();
+
+            let cost = s1 + s2;
+            total_cost += cost;
+            heap.push(Reverse(cost));
+        }
+
+        total_cost
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,7 +322,7 @@ struct Heap<T> {
 - Time complexity: $O(N \log N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of the input array.
+> Where $N$ is the length of the input array.
 
 ---
 

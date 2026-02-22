@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap / Priority Queue** - A max-heap efficiently maintains the k smallest quality values while allowing removal of the largest
 - **Sorting** - Workers must be sorted by wage-to-quality ratio to process candidates in increasing rate order
 - **Greedy Algorithms** - The optimal solution greedily selects workers with the smallest qualities for a fixed rate
@@ -17,9 +19,9 @@ Every worker has a minimum wage expectation. If we pay workers proportionally to
 1. Create pairs of `(wage/quality ratio, quality)` for each worker and sort by ratio.
 2. Use a max-heap to track the `k` smallest qualities.
 3. Iterate through workers in order of increasing ratio:
-   - Add current worker's quality to heap and running total.
-   - If heap size exceeds `k`, remove the largest quality.
-   - When heap size equals `k`, compute `total_quality * current_ratio` and track minimum.
+    - Add current worker's quality to heap and running total.
+    - If heap size exceeds `k`, remove the largest quality.
+    - When heap size equals `k`, compute `total_quality * current_ratio` and track minimum.
 4. Return the minimum cost found.
 
 ::tabs-start
@@ -339,6 +341,38 @@ struct Heap<T> {
             elements.swapAt(parent, candidate)
             parent = candidate
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn mincost_to_hire_workers(quality: Vec<i32>, wage: Vec<i32>, k: i32) -> f64 {
+        let k = k as usize;
+        let n = quality.len();
+        let mut workers: Vec<(f64, i32)> = (0..n)
+            .map(|i| (wage[i] as f64 / quality[i] as f64, quality[i]))
+            .collect();
+        workers.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+
+        let mut max_heap = BinaryHeap::new();
+        let mut total_quality = 0f64;
+        let mut res = f64::MAX;
+
+        for (ratio, q) in &workers {
+            max_heap.push(*q);
+            total_quality += *q as f64;
+
+            if max_heap.len() > k {
+                total_quality -= max_heap.pop().unwrap() as f64;
+            }
+
+            if max_heap.len() == k {
+                res = res.min(total_quality * ratio);
+            }
+        }
+
+        res
     }
 }
 ```

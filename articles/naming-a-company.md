@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Using sets for O(1) lookups to check if swapped names already exist
 - **Hash Maps** - Grouping strings by their first character for efficient processing
 - **String Manipulation** - Extracting substrings and swapping characters
@@ -19,8 +21,8 @@ This works but is slow because we examine O(n^2) pairs, and string operations ad
 
 1. Store all ideas in a set for O(1) lookup.
 2. For each pair of ideas `(i, j)` where `i < j`:
-   - Swap the first letters to create two new names `A` and `B`.
-   - If neither `A` nor `B` exists in the original set, add both orderings to the `res` set.
+    - Swap the first letters to create two new names `A` and `B`.
+    - If neither `A` nor `B` exists in the original set, add both orderings to the `res` set.
 3. Return the size of the `res` set.
 
 ::tabs-start
@@ -218,6 +220,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distinct_names(ideas: Vec<String>) -> i64 {
+        let n = ideas.len();
+        let mut res = HashSet::new();
+        let ideas_set: HashSet<&str> = ideas.iter().map(|s| s.as_str()).collect();
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                let mut a = String::new();
+                a.push(ideas[j].as_bytes()[0] as char);
+                a.push_str(&ideas[i][1..]);
+
+                let mut b = String::new();
+                b.push(ideas[i].as_bytes()[0] as char);
+                b.push_str(&ideas[j][1..]);
+
+                if !ideas_set.contains(a.as_str()) && !ideas_set.contains(b.as_str()) {
+                    res.insert(format!("{} {}", a, b));
+                    res.insert(format!("{} {}", b, a));
+                }
+            }
+        }
+
+        res.len() as i64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,10 +274,10 @@ For groups A and B, count how many suffixes are shared (the intersection). The n
 
 1. Build a map where each key is a first letter and each value is a set of suffixes starting with that letter.
 2. For each pair of distinct first letters `(char1, char2)`:
-   - Count how many suffixes appear in both groups (`intersect`).
-   - Compute `distinct1` = size of group `char1` minus `intersect`.
-   - Compute `distinct2` = size of group `char2` minus `intersect`.
-   - Add `distinct1 * distinct2` to the result.
+    - Count how many suffixes appear in both groups (`intersect`).
+    - Compute `distinct1` = size of group `char1` minus `intersect`.
+    - Compute `distinct2` = size of group `char2` minus `intersect`.
+    - Add `distinct1 * distinct2` to the result.
 3. Return the total result.
 
 ::tabs-start
@@ -511,6 +542,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distinct_names(ideas: Vec<String>) -> i64 {
+        let mut word_map: HashMap<u8, HashSet<String>> = HashMap::new();
+        for word in &ideas {
+            let key = word.as_bytes()[0];
+            word_map.entry(key).or_default().insert(word[1..].to_string());
+        }
+
+        let mut res: i64 = 0;
+        let keys: Vec<u8> = word_map.keys().copied().collect();
+        for &c1 in &keys {
+            for &c2 in &keys {
+                if c1 == c2 { continue; }
+                let set1 = &word_map[&c1];
+                let set2 = &word_map[&c2];
+                let intersect = set1.iter().filter(|w| set2.contains(*w)).count() as i64;
+                let distinct1 = set1.len() as i64 - intersect;
+                let distinct2 = set2.len() as i64 - intersect;
+                res += distinct1 * distinct2;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -534,9 +593,9 @@ We also optimize by only iterating over pairs (i, j) where i < j, then multiplyi
 
 1. Create an array of 26 sets, one for each letter. Store suffixes in the set corresponding to each idea's first letter.
 2. For each pair of indices `(i, j)` where `i < j`:
-   - Count the `intersect` of suffixes between groups `i` and `j`.
-   - Compute the product of non-overlapping suffix counts.
-   - Add `2` times this product to the result (for both orderings).
+    - Count the `intersect` of suffixes between groups `i` and `j`.
+    - Compute the product of non-overlapping suffix counts.
+    - Add `2` times this product to the result (for both orderings).
 3. Return the total result.
 
 ::tabs-start
@@ -748,6 +807,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distinct_names(ideas: Vec<String>) -> i64 {
+        let mut suffixes: Vec<HashSet<String>> = (0..26).map(|_| HashSet::new()).collect();
+        for w in &ideas {
+            let idx = (w.as_bytes()[0] - b'a') as usize;
+            suffixes[idx].insert(w[1..].to_string());
+        }
+
+        let mut res: i64 = 0;
+        for i in 0..26 {
+            for j in (i + 1)..26 {
+                let intersect = suffixes[i].iter()
+                    .filter(|s| suffixes[j].contains(*s))
+                    .count() as i64;
+                res += 2 * (suffixes[i].len() as i64 - intersect)
+                         * (suffixes[j].len() as i64 - intersect);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -772,10 +855,10 @@ When we encounter a suffix that appears with letter i but not letter j, any prev
 1. Build a map from each suffix to a boolean array of size 26, indicating which first letters it appears with.
 2. Initialize a 26x26 `count` matrix to zero.
 3. For each suffix and its boolean array:
-   - For each letter `i` where the suffix appears:
-     - For each letter `j` where the suffix does not appear:
-       - Increment `count[i][j]`.
-       - Add `count[j][i]` to the result (these are valid pairings).
+    - For each letter `i` where the suffix appears:
+        - For each letter `j` where the suffix does not appear:
+            - Increment `count[i][j]`.
+            - Add `count[j][i]` to the result (these are valid pairings).
 4. Return `2` times the result (for both orderings).
 
 ::tabs-start
@@ -1026,6 +1109,36 @@ class Solution {
             }
         }
         return 2 * res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn distinct_names(ideas: Vec<String>) -> i64 {
+        let mut mp: HashMap<String, [bool; 26]> = HashMap::new();
+        let mut count = [[0i64; 26]; 26];
+        let mut res: i64 = 0;
+
+        for s in &ideas {
+            let first_char = (s.as_bytes()[0] - b'a') as usize;
+            let suffix = s[1..].to_string();
+            mp.entry(suffix).or_insert([false; 26])[first_char] = true;
+        }
+
+        for arr in mp.values() {
+            for i in 0..26 {
+                if arr[i] {
+                    for j in 0..26 {
+                        if !arr[j] {
+                            count[i][j] += 1;
+                            res += count[j][i];
+                        }
+                    }
+                }
+            }
+        }
+        2 * res
     }
 }
 ```

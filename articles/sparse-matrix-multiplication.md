@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Matrix Multiplication** - Understanding how to compute the dot product of rows and columns
 - **Sparse Matrix Concepts** - Recognizing that sparse matrices have mostly zero elements
 - **Two-Pointer Technique** - Merging or comparing two sorted sequences efficiently
@@ -26,17 +28,17 @@ Standard matrix multiplication computes each element of the result by taking the
 ```python
 class Solution:
     def multiply(self, mat1: List[List[int]], mat2: List[List[int]]) -> List[List[int]]:
-        
+
         # Product matrix.
         ans = [[0] * len(mat2[0]) for _ in range(len(mat1))]
-        
+
         for row_index, row_elements in enumerate(mat1):
             for element_index, row_element in enumerate(row_elements):
                 # If current element of mat1 is non-zero then iterate over all columns of mat2.
                 if row_element:
                     for col_index, col_element in enumerate(mat2[element_index]):
                         ans[row_index][col_index] += row_element * col_element
-        
+
         return ans
 ```
 
@@ -46,10 +48,10 @@ class Solution {
         int n = mat1.length;
         int k = mat1[0].length;
         int m = mat2[0].length;
-        
+
         // Product matrix will have 'n x m' size.
         int[][] ans = new int[n][m];
-        
+
         for (int rowIndex = 0; rowIndex < n; ++rowIndex) {
             for (int elementIndex = 0; elementIndex < k; ++elementIndex) {
                 // If current element of mat1 is non-zero then iterate over all columns of mat2.
@@ -60,7 +62,7 @@ class Solution {
                 }
             }
         }
-        
+
         return ans;
     }
 }
@@ -73,10 +75,10 @@ public:
         int n = mat1.size();
         int k = mat1[0].size();
         int m = mat2[0].size();
-        
+
         // Product matrix will have 'n x m' size.
         vector<vector<int>> ans (n, vector<int>(m, 0));
-        
+
         for (int rowIndex = 0; rowIndex < n; ++rowIndex) {
             for (int elementIndex = 0; elementIndex < k; ++elementIndex) {
                 // If current element of mat1 is non-zero then iterate over all columns of mat2.
@@ -87,7 +89,7 @@ public:
                 }
             }
         }
-        
+
         return ans;
     }
 };
@@ -102,7 +104,9 @@ class Solution {
      */
     multiply(mat1, mat2) {
         // Product matrix.
-        let ans = Array(mat1.length).fill(0).map(x => Array(mat2[0].length).fill(0))
+        let ans = Array(mat1.length)
+            .fill(0)
+            .map((x) => Array(mat2[0].length).fill(0));
 
         mat1.forEach((rowElements, rowIndex) => {
             rowElements.forEach((rowElement, elementIndex) => {
@@ -115,7 +119,7 @@ class Solution {
             });
         });
 
-        return ans
+        return ans;
     }
 }
 ```
@@ -228,6 +232,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn multiply(mat1: Vec<Vec<i32>>, mat2: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = mat1.len();
+        let k = mat1[0].len();
+        let m = mat2[0].len();
+
+        let mut ans = vec![vec![0; m]; n];
+
+        for row_index in 0..n {
+            for element_index in 0..k {
+                if mat1[row_index][element_index] != 0 {
+                    for col_index in 0..m {
+                        ans[row_index][col_index] +=
+                            mat1[row_index][element_index] * mat2[element_index][col_index];
+                    }
+                }
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,7 +264,7 @@ class Solution {
 - Time complexity: $O(m \cdot k \cdot n)$
 - Space complexity: $O(1)$
 
->  Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
+> Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
 
 ---
 
@@ -267,17 +296,17 @@ class Solution:
                     if matrix[row][col]:
                         compressed_matrix[row].append([matrix[row][col], col])
             return compressed_matrix
-        
+
         m = len(mat1)
         k = len(mat1[0])
         n = len(mat2[0])
-        
+
         # Store the non-zero values of each matrix.
         A = compress_matrix(mat1)
         B = compress_matrix(mat2)
-        
+
         ans = [[0] * n for _ in range(m)]
-        
+
         for mat1_row in range(m):
             # Iterate on all current 'row' non-zero elements of mat1.
             for element1, mat1_col in A[mat1_row]:
@@ -285,7 +314,7 @@ class Solution:
                 # where the row is equal to col of current element of mat1.
                 for element2, mat2_col in B[mat1_col]:
                     ans[mat1_row][mat2_col] += element1 * element2
-                    
+
         return ans
 ```
 
@@ -294,32 +323,32 @@ class Solution {
     public ArrayList<ArrayList<Pair<Integer, Integer>>> compressMatrix(int[][] matrix) {
         int rows = matrix.length;
         int cols = matrix[0].length;
-        
+
         ArrayList<ArrayList<Pair<Integer, Integer>>> compressedMatrix = new ArrayList<>();
-        
+
         for (int row = 0; row < rows; ++row) {
             ArrayList<Pair<Integer, Integer>> currRow = new ArrayList<>();
             for (int col = 0; col < cols; ++col) {
                 if (matrix[row][col] != 0) {
-                    currRow.add(new Pair(matrix[row][col], col)); 
+                    currRow.add(new Pair(matrix[row][col], col));
                 }
             }
             compressedMatrix.add(currRow);
         }
         return compressedMatrix;
     }
-    
+
     public int[][] multiply(int[][] mat1, int[][] mat2) {
         int m = mat1.length;
         int k = mat1[0].length;
         int n = mat2[0].length;
-        
+
         // Store the non-zero values of each matrix.
         ArrayList<ArrayList<Pair<Integer, Integer>>> A = compressMatrix(mat1);
         ArrayList<ArrayList<Pair<Integer, Integer>>> B = compressMatrix(mat2);
-        
+
         int[][] ans = new int[m][n];
-        
+
         for (int mat1Row = 0; mat1Row < m; ++mat1Row) {
             // Iterate on all current 'row' non-zero elements of mat1.
             for (Pair mat1Element : A.get(mat1Row)) {
@@ -330,12 +359,12 @@ class Solution {
                 // where the row is equal to col of current element of mat1.
                 for (Pair mat2Element : B.get(mat1Col)) {
                     int element2 = (int)mat2Element.getKey();
-                    int mat2Col = (int)mat2Element.getValue();                 
+                    int mat2Col = (int)mat2Element.getValue();
                     ans[mat1Row][mat2Col] += element1 * element2;
                 }
             }
         }
-        
+
         return ans;
     }
 }
@@ -348,28 +377,28 @@ public:
         int rows = matrix.size();
         int cols = matrix[0].size();
         vector<vector<pair<int, int>>> compressedMatrix(rows);
-        
+
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
                 if (matrix[row][col] != 0) {
-                    compressedMatrix[row].push_back({matrix[row][col], col}); 
+                    compressedMatrix[row].push_back({matrix[row][col], col});
                 }
             }
         }
         return compressedMatrix;
     }
-    
+
     vector<vector<int>> multiply(vector<vector<int>>& mat1, vector<vector<int>>& mat2) {
         int m = mat1.size();
         int k = mat1[0].size();
         int n = mat2[0].size();
-        
+
         // Store the non-zero values of each matrix.
         vector<vector<pair<int, int>>> A = compressMatrix(mat1);
         vector<vector<pair<int, int>>> B = compressMatrix(mat2);
-        
+
         vector<vector<int>> ans(m, vector<int>(n, 0));
-        
+
         for (int mat1Row = 0; mat1Row < m; ++mat1Row) {
             // Iterate on all current 'row' non-zero elements of mat1.
             for (auto [element1, mat1Col] : A[mat1Row]) {
@@ -381,7 +410,7 @@ public:
                 }
             }
         }
-        
+
         return ans;
     }
 };
@@ -409,7 +438,7 @@ class Solution {
                 compressedMatrix.push(currRow);
             });
             return compressedMatrix;
-        }
+        };
 
         let m = mat1.length;
         let k = mat1[0].length;
@@ -419,7 +448,9 @@ class Solution {
         let A = compressMatrix(mat1);
         let B = compressMatrix(mat2);
 
-        let ans = Array(m).fill(0).map(x => Array(n).fill(0));
+        let ans = Array(m)
+            .fill(0)
+            .map((x) => Array(n).fill(0));
 
         for (let mat1Row = 0; mat1Row < m; ++mat1Row) {
             // Iterate on all current 'row' non-zero elements of mat1.
@@ -627,6 +658,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn multiply(mat1: Vec<Vec<i32>>, mat2: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        fn compress_matrix(matrix: &[Vec<i32>]) -> Vec<Vec<(i32, usize)>> {
+            let rows = matrix.len();
+            let cols = matrix[0].len();
+            let mut compressed = Vec::with_capacity(rows);
+            for row in 0..rows {
+                let mut curr_row = vec![];
+                for col in 0..cols {
+                    if matrix[row][col] != 0 {
+                        curr_row.push((matrix[row][col], col));
+                    }
+                }
+                compressed.push(curr_row);
+            }
+            compressed
+        }
+
+        let m = mat1.len();
+        let n = mat2[0].len();
+
+        let a = compress_matrix(&mat1);
+        let b = compress_matrix(&mat2);
+
+        let mut ans = vec![vec![0; n]; m];
+
+        for mat1_row in 0..m {
+            for &(element1, mat1_col) in &a[mat1_row] {
+                for &(element2, mat2_col) in &b[mat1_col] {
+                    ans[mat1_row][mat2_col] += element1 * element2;
+                }
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,7 +705,7 @@ class Solution {
 - Time complexity: $O(m \cdot k \cdot n)$
 - Space complexity: $O(m \cdot k + k \cdot n)$
 
->  Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
+> Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
 
 ---
 
@@ -696,7 +767,7 @@ class Solution:
     def multiply(self, mat1: List[List[int]], mat2: List[List[int]]) -> List[List[int]]:
             A = SparseMatrix(mat1, False)
             B = SparseMatrix(mat2, True)
-            
+
             ans = [[0] * len(mat2[0]) for _ in range(len(mat1))]
 
             for row in range(len(ans)):
@@ -709,7 +780,7 @@ class Solution:
                     # Column element range indices
                     mat2_col_start = B.col_index[col]
                     mat2_col_end = B.col_index[col + 1]
-                    
+
                     # Iterate over both row and column.
                     while mat1_row_start < mat1_row_end and mat2_col_start < mat2_col_end:
                         if A.col_index[mat1_row_start] < B.row_index[mat2_col_start]:
@@ -721,7 +792,7 @@ class Solution:
                             ans[row][col] += A.values[mat1_row_start] * B.values[mat2_col_start]
                             mat1_row_start += 1
                             mat2_col_start += 1
-    
+
             return ans
 ```
 
@@ -729,14 +800,14 @@ class Solution:
 class Solution {
     class SparseMatrix {
         public int cols = 0, rows = 0;
-        public ArrayList<Integer> values = new ArrayList<>(); 
-        public ArrayList<Integer> colIndex = new ArrayList<>(); 
+        public ArrayList<Integer> values = new ArrayList<>();
+        public ArrayList<Integer> colIndex = new ArrayList<>();
         public ArrayList<Integer> rowIndex = new ArrayList<>();
 
         // Compressed Sparse Row
         public SparseMatrix(int[][] matrix) {
             rows = matrix.length;
-            cols = matrix[0].length; 
+            cols = matrix[0].length;
             rowIndex.add(0);
 
             for (int row = 0; row < rows; ++row) {
@@ -768,24 +839,24 @@ class Solution {
         }
     };
 
-    
+
     public int[][] multiply(int[][] mat1, int[][] mat2) {
-        SparseMatrix A = new SparseMatrix(mat1); 
+        SparseMatrix A = new SparseMatrix(mat1);
         SparseMatrix B = new SparseMatrix(mat2, true);
-        
+
         int[][] ans = new int[mat1.length][mat2[0].length];
-        
+
         for (int row = 0; row < ans.length; ++row) {
             for (int col = 0; col < ans[0].length; ++col) {
-                
+
                 // Row element range indices
                 int matrixOneRowStart = A.rowIndex.get(row);
                 int matrixOneRowEnd = A.rowIndex.get(row + 1);
-                
+
                 // Column element range indices
                 int matrixTwoColStart = B.colIndex.get(col);
                 int matrixTwoColEnd = B.colIndex.get(col + 1);
-                
+
                 // Iterate over both row and column.
                 while (matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd) {
                     if (A.colIndex.get(matrixOneRowStart) < B.rowIndex.get(matrixTwoColStart)) {
@@ -801,7 +872,7 @@ class Solution {
                 }
             }
         }
-        
+
         return ans;
     }
 }
@@ -816,9 +887,9 @@ public:
     // Compressed Sparse Row
     SparseMatrix(vector<vector<int>>& matrix) {
         rows = matrix.size();
-        cols = matrix[0].size(); 
+        cols = matrix[0].size();
         rowIndex.push_back(0);
-        
+
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
                 if (matrix[row][col]) {
@@ -835,7 +906,7 @@ public:
         rows = matrix.size();
         cols = matrix[0].size();
         colIndex.push_back(0);
-        
+
         for (int col = 0; col < cols; ++col) {
             for (int row = 0; row < rows; ++row) {
                 if (matrix[row][col]) {
@@ -851,22 +922,22 @@ public:
 class Solution {
 public:
     vector<vector<int>> multiply(vector<vector<int>>& mat1, vector<vector<int>>& mat2) {
-        SparseMatrix A (mat1); 
+        SparseMatrix A (mat1);
         SparseMatrix B (mat2, true);
-        
+
         vector<vector<int>> ans(mat1.size(), vector<int>(mat2[0].size(), 0));
-        
+
         for (int row = 0; row < ans.size(); ++row) {
             for (int col = 0; col < ans[0].size(); ++col) {
-                
+
                 // Row element range indices
                 int matrixOneRowStart = A.rowIndex[row];
                 int matrixOneRowEnd = A.rowIndex[row + 1];
-                
+
                 // Column element range indices
                 int matrixTwoColStart = B.colIndex[col];
                 int matrixTwoColEnd = B.colIndex[col + 1];
-                
+
                 // Iterate over both row and column.
                 while (matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd) {
                     if (A.colIndex[matrixOneRowStart] < B.rowIndex[matrixTwoColStart]) {
@@ -882,7 +953,7 @@ public:
                 }
             }
         }
-        
+
         return ans;
     }
 };
@@ -891,18 +962,23 @@ public:
 ```javascript
 class SparseMatrix {
     constructor(matrix, colWise) {
-        [this.values, this.rowIndex, this.colIndex] = this.compressMatrix(matrix, colWise);
+        [this.values, this.rowIndex, this.colIndex] = this.compressMatrix(
+            matrix,
+            colWise,
+        );
     }
 
     compressMatrix(matrix, colWise) {
-        return (colWise ? this.compressColWise(matrix) : this.compressRowWise(matrix));
+        return colWise
+            ? this.compressColWise(matrix)
+            : this.compressRowWise(matrix);
     }
 
     // Compressed Sparse Row
     compressRowWise(matrix) {
-        let values = []
-        let rowIndex = [0]
-        let colIndex = []
+        let values = [];
+        let rowIndex = [0];
+        let colIndex = [];
 
         for (let row = 0; row < matrix.length; ++row) {
             for (let col = 0; col < matrix[0].length; ++col) {
@@ -919,9 +995,9 @@ class SparseMatrix {
 
     // Compressed Sparse Col
     compressColWise(matrix) {
-        let values = []
-        let rowIndex = []
-        let colIndex = [0]
+        let values = [];
+        let rowIndex = [];
+        let colIndex = [0];
 
         for (let col = 0; col < matrix[0].length; ++col) {
             for (let row = 0; row < matrix.length; ++row) {
@@ -944,10 +1020,12 @@ class Solution {
      * @return {number[][]}
      */
     multiply(mat1, mat2) {
-        let A = new SparseMatrix(mat1, false)
-        let B = new SparseMatrix(mat2, true)
+        let A = new SparseMatrix(mat1, false);
+        let B = new SparseMatrix(mat2, true);
 
-        let ans = Array(mat1.length).fill(0).map(x => Array(mat2[0].length).fill(0));
+        let ans = Array(mat1.length)
+            .fill(0)
+            .map((x) => Array(mat2[0].length).fill(0));
 
         ans.forEach((_, row) => {
             ans[row].forEach((_, col) => {
@@ -958,14 +1036,25 @@ class Solution {
                 let matrixTwoColStart = B.colIndex[col];
                 let matrixTwoColEnd = B.colIndex[col + 1];
                 // Iterate over both row and column.
-                while (matrixOneRowStart < matrixOneRowEnd && matrixTwoColStart < matrixTwoColEnd) {
-                    if (A.colIndex[matrixOneRowStart] < B.rowIndex[matrixTwoColStart]) {
+                while (
+                    matrixOneRowStart < matrixOneRowEnd &&
+                    matrixTwoColStart < matrixTwoColEnd
+                ) {
+                    if (
+                        A.colIndex[matrixOneRowStart] <
+                        B.rowIndex[matrixTwoColStart]
+                    ) {
                         matrixOneRowStart++;
-                    } else if (A.colIndex[matrixOneRowStart] > B.rowIndex[matrixTwoColStart]) {
+                    } else if (
+                        A.colIndex[matrixOneRowStart] >
+                        B.rowIndex[matrixTwoColStart]
+                    ) {
                         matrixTwoColStart++;
                     } else {
                         // Row index and col index are same so we can multiply these elements.
-                        ans[row][col] += A.values[matrixOneRowStart] * B.values[matrixTwoColStart];
+                        ans[row][col] +=
+                            A.values[matrixOneRowStart] *
+                            B.values[matrixTwoColStart];
                         matrixOneRowStart++;
                         matrixTwoColStart++;
                     }
@@ -1309,6 +1398,97 @@ class Solution {
 }
 ```
 
+```rust
+struct SparseMatrixCSR {
+    values: Vec<i32>,
+    col_index: Vec<usize>,
+    row_index: Vec<usize>,
+}
+
+struct SparseMatrixCSC {
+    values: Vec<i32>,
+    row_index: Vec<usize>,
+    col_index: Vec<usize>,
+}
+
+impl SparseMatrixCSR {
+    fn new(matrix: &[Vec<i32>]) -> Self {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut values = vec![];
+        let mut col_index = vec![];
+        let mut row_index = vec![0];
+
+        for row in 0..rows {
+            for col in 0..cols {
+                if matrix[row][col] != 0 {
+                    values.push(matrix[row][col]);
+                    col_index.push(col);
+                }
+            }
+            row_index.push(values.len());
+        }
+
+        Self { values, col_index, row_index }
+    }
+}
+
+impl SparseMatrixCSC {
+    fn new(matrix: &[Vec<i32>]) -> Self {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut values = vec![];
+        let mut row_index = vec![];
+        let mut col_index = vec![0];
+
+        for col in 0..cols {
+            for row in 0..rows {
+                if matrix[row][col] != 0 {
+                    values.push(matrix[row][col]);
+                    row_index.push(row);
+                }
+            }
+            col_index.push(values.len());
+        }
+
+        Self { values, row_index, col_index }
+    }
+}
+
+impl Solution {
+    pub fn multiply(mat1: Vec<Vec<i32>>, mat2: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let a = SparseMatrixCSR::new(&mat1);
+        let b = SparseMatrixCSC::new(&mat2);
+
+        let mut ans = vec![vec![0; mat2[0].len()]; mat1.len()];
+
+        for row in 0..ans.len() {
+            for col in 0..ans[0].len() {
+                let mut r_start = a.row_index[row];
+                let r_end = a.row_index[row + 1];
+
+                let mut c_start = b.col_index[col];
+                let c_end = b.col_index[col + 1];
+
+                while r_start < r_end && c_start < c_end {
+                    if a.col_index[r_start] < b.row_index[c_start] {
+                        r_start += 1;
+                    } else if a.col_index[r_start] > b.row_index[c_start] {
+                        c_start += 1;
+                    } else {
+                        ans[row][col] += a.values[r_start] * b.values[c_start];
+                        r_start += 1;
+                        c_start += 1;
+                    }
+                }
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1316,7 +1496,7 @@ class Solution {
 - Time complexity: $O(m \cdot n \cdot k)$
 - Space complexity: $O(m \cdot k + k \cdot n)$
 
->  Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
+> Where $m$ and $k$ represent the number of rows and columns in `mat1`, respectively and $k$ and $n$ represent the number of rows and columns in `mat2`, respectively.
 
 ## Common Pitfalls
 

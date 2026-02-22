@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree Properties** - Understanding that left subtree values are less than root and right subtree values are greater
 - **Preorder Traversal** - Knowing the order of visiting nodes (root, left subtree, right subtree)
 - **Monotonic Stack** - Using a stack that maintains increasing or decreasing order to track ancestors
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Monotonic Stack
 
 ### Intuition
+
 In a BST preorder traversal, we visit root, then left subtree, then right subtree. When we move to a right subtree, all subsequent values must be greater than the ancestors we are leaving behind. The key insight is to use a decreasing stack to track ancestors. When we encounter a larger value, we pop smaller ancestors and update the minimum limit, as we are now in a right subtree.
 
 ### Algorithm
+
 1. Initialize a stack and set `min_limit` to negative infinity.
 2. Iterate through each number in the `preorder` sequence.
 3. While the stack is not empty and the stack top is less than the current number, pop from the stack and update `min_limit` to the popped value.
@@ -27,16 +31,16 @@ class Solution:
     def verifyPreorder(self, preorder: List[int]) -> bool:
         min_limit = float('-inf')
         stack = []
-        
+
         for num in preorder:
             while stack and stack[-1] < num:
                 min_limit = stack.pop()
-                
+
             if num <= min_limit:
                 return False
-            
+
             stack.append(num)
-        
+
         return True
 ```
 
@@ -45,19 +49,19 @@ class Solution {
     public boolean verifyPreorder(int[] preorder) {
         int minLimit = Integer.MIN_VALUE;
         Stack<Integer> stack = new Stack<>();
-        
+
         for (int num: preorder) {
             while (!stack.isEmpty() && stack.peek() < num) {
                 minLimit = stack.pop();
             }
-            
+
             if (num <= minLimit) {
                 return false;
             }
-            
+
             stack.push(num);
         }
-        
+
         return true;
     }
 }
@@ -156,6 +160,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn verify_preorder(preorder: Vec<i32>) -> bool {
+        let mut min_limit = i32::MIN;
+        let mut stack = Vec::new();
+
+        for &num in &preorder {
+            while let Some(&top) = stack.last() {
+                if top < num {
+                    min_limit = stack.pop().unwrap();
+                } else {
+                    break;
+                }
+            }
+
+            if num <= min_limit {
+                return false;
+            }
+
+            stack.push(num);
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -163,16 +194,18 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of `preorder`
+> Where $n$ is the length of `preorder`
 
 ---
 
 ## 2. Constant Auxiliary Space
 
 ### Intuition
+
 We can optimize the stack approach by reusing the input array itself as our stack. Since we process elements left to right and the stack never grows larger than the elements we have processed, we can use the prefix of the preorder array to simulate the stack.
 
 ### Algorithm
+
 1. Initialize `min_limit` to negative infinity and use index `i` as the stack pointer.
 2. Iterate through each number in the `preorder` sequence.
 3. While `i > 0` and `preorder[i-1]` is less than the current number, set `min_limit` to `preorder[i-1]` and decrement `i`.
@@ -185,20 +218,20 @@ We can optimize the stack approach by reusing the input array itself as our stac
 ```python
 class Solution:
     def verifyPreorder(self, preorder: List[int]) -> bool:
-        min_limit = float('-inf') 
+        min_limit = float('-inf')
         i = 0
-        
+
         for num in preorder:
             while i > 0 and preorder[i - 1] < num:
                 min_limit = preorder[i - 1]
                 i -= 1
-                
+
             if num <= min_limit:
                 return False
-            
+
             preorder[i] = num
             i += 1
-        
+
         return True
 ```
 
@@ -207,21 +240,21 @@ class Solution {
     public boolean verifyPreorder(int[] preorder) {
         int minLimit = Integer.MIN_VALUE;
         int i = 0;
-        
+
         for (int num: preorder) {
             while (i > 0 && preorder[i - 1] < num) {
                 minLimit = preorder[i - 1];
                 i--;
             }
-            
+
             if (num <= minLimit) {
                 return false;
             }
-            
+
             preorder[i] = num;
             i++;
         }
-        
+
         return true;
     }
 }
@@ -233,21 +266,21 @@ public:
     bool verifyPreorder(vector<int>& preorder) {
         int minLimit = INT_MIN;
         int i = 0;
-        
+
         for (int num: preorder) {
             while (i > 0 && preorder[i - 1] < num) {
                 minLimit = preorder[i - 1];
                 i--;
             }
-            
+
             if (num <= minLimit) {
                 return false;
             }
-            
+
             preorder[i] = num;
             i++;
         }
-        
+
         return true;
     }
 };
@@ -355,28 +388,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn verify_preorder(preorder: Vec<i32>) -> bool {
+        let mut preorder = preorder;
+        let mut min_limit = i32::MIN;
+        let mut i = 0usize;
+
+        for idx in 0..preorder.len() {
+            let num = preorder[idx];
+            while i > 0 && preorder[i - 1] < num {
+                min_limit = preorder[i - 1];
+                i -= 1;
+            }
+
+            if num <= min_limit {
+                return false;
+            }
+
+            preorder[i] = num;
+            i += 1;
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ auxiliary
-    
     - A common misconception is that modifying an input array for use in an algorithm leads to an $O(1)$ space complexity. In reality, you are still using $O(n)$ space, but $O(1)$ **auxiliary** space.
 
     - Because we are modifying the input to directly use in the algorithm, we must count it as part of the space complexity. However, we are not using any auxiliary space other than a few integers.
-    The exception to this is in-place algorithms where the input is also returned as the output. For example: sorting algorithms.
+      The exception to this is in-place algorithms where the input is also returned as the output. For example: sorting algorithms.
 
->  Where $n$ is the length of `preorder`
+> Where $n$ is the length of `preorder`
 
 ---
 
 ## 3. Recursion
 
 ### Intuition
+
 We can verify the preorder sequence by simulating the construction of the BST. Each recursive call attempts to build a subtree within given bounds. The key insight is that for a valid preorder sequence, we can greedily consume elements that fall within the current subtree's valid range, recursively processing left and right subtrees.
 
 ### Algorithm
+
 1. Maintain a global index to track the current position in the `preorder` array.
 2. Create a recursive helper function that takes `min_limit` and `max_limit` as boundaries.
 3. If the index reaches the end, return `true` as all elements have been processed.
@@ -392,7 +453,7 @@ class Solution:
         def helper(i, min_limit, max_limit):
             if i[0] == len(preorder):
                 return True
-            
+
             root = preorder[i[0]]
             if not min_limit < root < max_limit:
                 return False
@@ -401,7 +462,7 @@ class Solution:
             left = helper(i, min_limit, root)
             right = helper(i, root, max_limit)
             return left or right
-            
+
         return helper([0], float('-inf'), float('inf'))
 ```
 
@@ -411,17 +472,17 @@ class Solution {
         int[] i = {0};
         return helper(preorder, i, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
-    
+
     public boolean helper(int[] preorder, int[] i, int minLimit, int maxLimit) {
         if (i[0] == preorder.length) {
             return true;
         }
-        
+
         int root = preorder[i[0]];
         if (root <= minLimit || root >= maxLimit) {
             return false;
         }
-        
+
         i[0]++;
         boolean left = helper(preorder, i, minLimit, root);
         boolean right = helper(preorder, i, root, maxLimit);
@@ -529,6 +590,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn verify_preorder(preorder: Vec<i32>) -> bool {
+        fn helper(preorder: &[i32], i: &mut usize, min_limit: i32, max_limit: i32) -> bool {
+            if *i == preorder.len() {
+                return true;
+            }
+
+            let root = preorder[*i];
+            if root <= min_limit || root >= max_limit {
+                return false;
+            }
+
+            *i += 1;
+            let left = helper(preorder, i, min_limit, root);
+            let right = helper(preorder, i, root, max_limit);
+            left || right
+        }
+
+        let mut i = 0;
+        helper(&preorder, &mut i, i32::MIN, i32::MAX)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,7 +622,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of `preorder`
+> Where $n$ is the length of `preorder`
 
 ---
 

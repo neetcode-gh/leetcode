@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps/Dictionaries** - Counting character frequencies and performing lookups
 - **String Iteration** - Traversing characters in strings to build frequency counts
 - **Arrays as Fixed-Size Maps** - Using arrays of size 26 for lowercase letter counting as an optimization
@@ -16,9 +18,9 @@ A word can be formed from `chars` if every character in the word appears in `cha
 
 1. Build a frequency map `count` for all characters in `chars`.
 2. For each word:
-   - Build a frequency map `cur_word` for the word.
-   - Check if every character in `cur_word` has a count less than or equal to its count in `count`.
-   - If valid, add the word's length to `res`.
+    - Build a frequency map `cur_word` for the word.
+    - Check if every character in `cur_word` has a count less than or equal to its count in `count`.
+    - If valid, add the word's length to `res`.
 3. Return the total length.
 
 ::tabs-start
@@ -251,6 +253,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_characters(words: Vec<String>, chars: String) -> i32 {
+        let mut count = HashMap::new();
+        for c in chars.chars() {
+            *count.entry(c).or_insert(0) += 1;
+        }
+        let mut res = 0;
+        for w in &words {
+            let mut cur_word = HashMap::new();
+            for c in w.chars() {
+                *cur_word.entry(c).or_insert(0) += 1;
+            }
+            let mut good = true;
+            for (&c, &cnt) in &cur_word {
+                if cnt > *count.get(&c).unwrap_or(&0) {
+                    good = false;
+                    break;
+                }
+            }
+            if good {
+                res += w.len() as i32;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,11 +303,11 @@ Instead of building the complete frequency map for each word first, we can check
 
 1. Build a frequency map `count` for all characters in `chars`.
 2. For each word:
-   - Initialize an empty frequency map `cur_word`.
-   - For each character in the word:
-     - Increment its count in `cur_word`.
-     - If it exceeds the count in `count`, mark the word as invalid and break.
-   - If the word is valid, add its length to `res`.
+    - Initialize an empty frequency map `cur_word`.
+    - For each character in the word:
+        - Increment its count in `cur_word`.
+        - If it exceeds the count in `count`, mark the word as invalid and break.
+    - If the word is valid, add its length to `res`.
 3. Return the total length.
 
 ::tabs-start
@@ -496,6 +527,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_characters(words: Vec<String>, chars: String) -> i32 {
+        let mut count = HashMap::new();
+        for c in chars.chars() {
+            *count.entry(c).or_insert(0) += 1;
+        }
+        let mut res = 0;
+        for w in &words {
+            let mut cur_word = HashMap::new();
+            let mut good = true;
+            for c in w.chars() {
+                *cur_word.entry(c).or_insert(0) += 1;
+                if cur_word[&c] > *count.get(&c).unwrap_or(&0) {
+                    good = false;
+                    break;
+                }
+            }
+            if good {
+                res += w.len() as i32;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -518,10 +576,10 @@ Since we only have lowercase letters, we can use a fixed-size array of 26 elemen
 1. Create an array `count` of size 26 and populate it with frequencies from `chars`.
 2. Store a copy of `count` as `org` for resetting.
 3. For each word:
-   - For each character, decrement `count[c - 'a']`.
-   - If it goes negative, the word is invalid; break early.
-   - If valid, add the word's length to `res`.
-   - Reset `count` to `org` for the next word.
+    - For each character, decrement `count[c - 'a']`.
+    - If it goes negative, the word is invalid; break early.
+    - If valid, add the word's length to `res`.
+    - Reset `count` to `org` for the next word.
 4. Return the total length.
 
 ::tabs-start
@@ -786,6 +844,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_characters(words: Vec<String>, chars: String) -> i32 {
+        let mut count = [0i32; 26];
+        for c in chars.bytes() {
+            count[(c - b'a') as usize] += 1;
+        }
+
+        let org = count;
+        let mut res = 0;
+
+        for w in &words {
+            let mut good = true;
+            for c in w.bytes() {
+                let i = (c - b'a') as usize;
+                count[i] -= 1;
+                if count[i] < 0 {
+                    good = false;
+                    break;
+                }
+            }
+            if good {
+                res += w.len() as i32;
+            }
+            count = org;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -806,4 +895,3 @@ When checking each word, you must use a fresh copy of the character counts or re
 ### Checking Character Presence Without Frequency
 
 It is not enough to check if a character exists in `chars`; you must verify that the frequency of each character in the word does not exceed its frequency in `chars`. For example, "aab" cannot be formed from "ab" even though both 'a' and 'b' are present.
-

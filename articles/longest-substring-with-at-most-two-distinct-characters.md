@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Essential for efficiently finding the longest valid substring without rechecking overlapping portions
 - **Hash Map / Dictionary** - Used to track character frequencies within the current window and count distinct characters
 - **Two Pointers** - The sliding window is implemented using left and right pointers to define window boundaries
@@ -16,13 +18,13 @@ The most direct approach is to examine every possible substring and check if it 
 
 1. Initialize `res = 0` to store the maximum length.
 2. For each starting index `i` from `0` to `n-1`:
-   - Create a set `seen` to track distinct characters.
-   - Initialize `curLen = 0`.
-   - For each ending index `j` from `i` to `n-1`:
-     - Add `s[j]` to the set.
-     - If the set size exceeds `2`, break out of the inner loop.
-     - Otherwise, increment `curLen`.
-   - Update `res = max(res, curLen)`.
+    - Create a set `seen` to track distinct characters.
+    - Initialize `curLen = 0`.
+    - For each ending index `j` from `i` to `n-1`:
+        - Add `s[j]` to the set.
+        - If the set size exceeds `2`, break out of the inner loop.
+        - Otherwise, increment `curLen`.
+    - Update `res = max(res, curLen)`.
 3. Return `res`.
 
 ::tabs-start
@@ -97,7 +99,8 @@ class Solution {
      * @return {number}
      */
     lengthOfLongestSubstringTwoDistinct(s) {
-        let res = 0, n = s.length;
+        let res = 0,
+            n = s.length;
 
         for (let i = 0; i < n; i++) {
             let seen = new Set();
@@ -207,12 +210,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_longest_substring_two_distinct(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut seen = HashSet::new();
+            let mut cur_len = 0;
+            for j in i..n {
+                seen.insert(s[j]);
+                if seen.len() > 2 {
+                    break;
+                }
+                cur_len += 1;
+            }
+            res = res.max(cur_len);
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ since we have at most $52$ different characters.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ since we have at most $52$ different characters.
 
 ---
 
@@ -226,12 +253,12 @@ We maintain a window that always contains at most two distinct characters. As we
 
 1. Initialize `res = 0`, `j = 0` (left pointer), and a hash map `seen` for character counts.
 2. For each `i` (right pointer) from `0` to `n-1`:
-   - Increment the count of `s[i]` in the map.
-   - While the map contains more than `2` distinct characters:
-     - Decrement the count of `s[j]`.
-     - If the count reaches `0`, remove `s[j]` from the map.
-     - Increment `j`.
-   - Update `res = max(res, i - j + 1)`.
+    - Increment the count of `s[i]` in the map.
+    - While the map contains more than `2` distinct characters:
+        - Decrement the count of `s[j]`.
+        - If the count reaches `0`, remove `s[j]` from the map.
+        - Increment `j`.
+    - Update `res = max(res, i - j + 1)`.
 3. Return `res`.
 
 ::tabs-start
@@ -312,7 +339,8 @@ class Solution {
      * @return {number}
      */
     lengthOfLongestSubstringTwoDistinct(s) {
-        let res = 0, n = s.length;
+        let res = 0,
+            n = s.length;
         let seen = new Map();
         let j = 0;
 
@@ -440,12 +468,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_longest_substring_two_distinct(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = 0;
+        let mut seen = HashMap::new();
+        let mut j = 0;
+
+        for i in 0..n {
+            *seen.entry(s[i]).or_insert(0) += 1;
+
+            while seen.len() > 2 {
+                let c = s[j];
+                let cnt = seen.get_mut(&c).unwrap();
+                *cnt -= 1;
+                if *cnt == 0 {
+                    seen.remove(&c);
+                }
+                j += 1;
+            }
+            res = res.max(i - j + 1);
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $52$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $52$ different characters.
 
 ---
 
@@ -459,11 +515,11 @@ We can further optimize by observing that we only care about the maximum window 
 
 1. Initialize `j = 0` (left pointer) and a hash map `count` for character frequencies.
 2. For each `i` from `0` to `n-1`:
-   - Increment the count of `s[i]`.
-   - If more than `2` distinct characters:
-     - Decrement the count of `s[j]`.
-     - If count becomes `0`, remove from map.
-     - Increment `j`.
+    - Increment the count of `s[i]`.
+    - If more than `2` distinct characters:
+        - Decrement the count of `s[j]`.
+        - If count becomes `0`, remove from map.
+        - Increment `j`.
 3. Return `i - j + 1` (or `n - j` after the loop).
 
 ::tabs-start
@@ -534,7 +590,8 @@ class Solution {
     lengthOfLongestSubstringTwoDistinct(s) {
         let n = s.length;
         let count = new Map();
-        let j = 0, i = 0;
+        let j = 0,
+            i = 0;
         for (i = 0; i < n; i++) {
             count.set(s[i], (count.get(s[i]) || 0) + 1);
             if (count.size > 2) {
@@ -631,12 +688,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_longest_substring_two_distinct(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut count = HashMap::new();
+        let mut j = 0;
+
+        for i in 0..n {
+            *count.entry(s[i]).or_insert(0) += 1;
+            if count.len() > 2 {
+                let c = s[j];
+                let cnt = count.get_mut(&c).unwrap();
+                *cnt -= 1;
+                if *cnt == 0 {
+                    count.remove(&c);
+                }
+                j += 1;
+            }
+        }
+        (n - j) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $52$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $52$ different characters.
 
 ---
 
@@ -648,7 +730,7 @@ When shrinking the window from the left, you must remove characters from the has
 
 ### Confusing "At Most Two" with "Exactly Two"
 
-The problem asks for substrings with *at most* two distinct characters, not exactly two. This means substrings with zero or one distinct character are also valid. Ensure your solution counts these cases correctly and does not skip windows with fewer than two distinct characters.
+The problem asks for substrings with _at most_ two distinct characters, not exactly two. This means substrings with zero or one distinct character are also valid. Ensure your solution counts these cases correctly and does not skip windows with fewer than two distinct characters.
 
 ### Incorrect Window Boundary Updates
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation** - Understanding binary representation of numbers and bitwise operators (AND, OR, shifts) is essential for the optimal solutions
 - **Recursion** - The recursive approach divides the problem by 2 at each step until reaching the base case
 - **Two's Complement** - Understanding how negative numbers are represented helps explain why `n & (-n)` isolates the lowest set bit
@@ -140,6 +142,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_two(n: i32) -> bool {
+        if n <= 0 {
+            return false;
+        }
+        let mut x: i64 = 1;
+        while x < n as i64 {
+            x *= 2;
+        }
+        x == n as i64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,6 +289,20 @@ class Solution {
             return false
         }
         return isPowerOfTwo(n / 2)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_power_of_two(n: i32) -> bool {
+        if n == 1 {
+            return true;
+        }
+        if n <= 0 || n % 2 == 1 {
+            return false;
+        }
+        Self::is_power_of_two(n / 2)
     }
 }
 ```
@@ -411,6 +442,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_two(n: i32) -> bool {
+        if n <= 0 {
+            return false;
+        }
+        let mut n = n;
+        while n % 2 == 0 {
+            n >>= 1;
+        }
+        n == 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +541,14 @@ class Solution {
 class Solution {
     func isPowerOfTwo(_ n: Int) -> Bool {
         return n > 0 && (n & (-n)) == n
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_power_of_two(n: i32) -> bool {
+        n > 0 && (n & (-n)) == n
     }
 }
 ```
@@ -589,6 +643,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_two(n: i32) -> bool {
+        n > 0 && (n & (n - 1)) == 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -675,6 +737,14 @@ class Solution {
 class Solution {
     func isPowerOfTwo(_ n: Int) -> Bool {
         return n > 0 && ((1 << 30) % n) == 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_power_of_two(n: i32) -> bool {
+        n > 0 && (1 << 30) % n == 0
     }
 }
 ```

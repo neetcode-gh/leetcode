@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Traversal** - Need to traverse the list to count nodes and split at specific positions
 - **Linked List Manipulation** - Severing links by setting `next` pointers to `null` to create separate parts
 - **Division and Modulo Operations** - Used to calculate base part size (`n / k`) and distribute remainder (`n % k`)
@@ -17,10 +19,10 @@ To split the list into `k` parts as evenly as possible, we first need to know th
 1. Traverse the linked list and store all nodes in an array.
 2. Calculate `base_len = n / k` (minimum elements per part) and `remainder = n % k` (parts that get an extra element).
 3. For each of the `k` parts:
-   - If there are remaining elements, set the part's head to `arr[start]`.
-   - Compute the tail index: `start + base_len - 1`, plus 1 if this part gets an extra element.
-   - Sever the link by setting `arr[tail].next = null`.
-   - Update `start` for the next part.
+    - If there are remaining elements, set the part's head to `arr[start]`.
+    - Compute the tail index: `start + base_len - 1`, plus 1 if this part gets an extra element.
+    - Sever the link by setting `arr[tail].next = null`.
+    - Update `start` for the next part.
 4. Return the array of part heads.
 
 ::tabs-start
@@ -350,6 +352,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_list_to_parts(
+        head: Option<Box<ListNode>>, k: i32,
+    ) -> Vec<Option<Box<ListNode>>> {
+        let k = k as usize;
+        let mut nodes = Vec::new();
+        let mut cur = head;
+        while let Some(mut node) = cur {
+            cur = node.next.take();
+            nodes.push(node);
+        }
+
+        let n = nodes.len();
+        let base_len = n / k;
+        let mut remainder = n % k;
+        let mut res = Vec::with_capacity(k);
+        let mut iter = nodes.into_iter();
+
+        for _ in 0..k {
+            let size = base_len + if remainder > 0 { 1 } else { 0 };
+            if remainder > 0 {
+                remainder -= 1;
+            }
+            let mut head = None;
+            let mut parts: Vec<Box<ListNode>> =
+                iter.by_ref().take(size).collect();
+            while let Some(mut node) = parts.pop() {
+                node.next = head;
+                head = Some(node);
+            }
+            res.push(head);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,10 +411,10 @@ We can avoid the extra array by working directly with the linked list. First, co
 1. Count the total number of nodes in the list.
 2. Calculate `base_len = length / k` and `remainder = length % k`.
 3. Traverse the list to create `k` parts:
-   - Record the current node as the head of this part.
-   - Advance `base_len - 1 + (1 if remainder > 0 else 0)` steps to reach the tail.
-   - Save `curr.next`, set `curr.next = null` to sever, then continue from the saved node.
-   - Decrement `remainder` after each extra-length part.
+    - Record the current node as the head of this part.
+    - Advance `base_len - 1 + (1 if remainder > 0 else 0)` steps to reach the tail.
+    - Save `curr.next`, set `curr.next = null` to sever, then continue from the saved node.
+    - Decrement `remainder` after each extra-length part.
 4. Return the array of part heads.
 
 ::tabs-start
@@ -708,6 +749,46 @@ class Solution {
             remainder -= 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn split_list_to_parts(
+        head: Option<Box<ListNode>>, k: i32,
+    ) -> Vec<Option<Box<ListNode>>> {
+        let k = k as usize;
+        let mut length = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            length += 1;
+            cur = &node.next;
+        }
+
+        let base_len = length / k;
+        let mut remainder = length % k;
+        let mut res = Vec::with_capacity(k);
+        let mut cur = head;
+
+        for _ in 0..k {
+            let size = base_len + if remainder > 0 { 1 } else { 0 };
+            if remainder > 0 {
+                remainder -= 1;
+            }
+            let mut part_head = None;
+            let mut tail = &mut part_head;
+            for _ in 0..size {
+                if let Some(mut node) = cur {
+                    cur = node.next.take();
+                    *tail = Some(node);
+                    tail = &mut tail.as_mut().unwrap().next;
+                }
+            }
+            res.push(part_head);
+        }
+
+        res
     }
 }
 ```

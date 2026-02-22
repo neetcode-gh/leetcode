@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array Manipulation** - Working with grids, understanding row and column indexing
 - **Two Pointers Technique** - Using a pointer to track the next available position while iterating through elements
 - **Gravity Simulation** - Moving elements (stones) toward a direction until they hit an obstacle or boundary
@@ -19,8 +21,8 @@ When the `box` is rotated 90 degrees clockwise, gravity pulls stones downward in
 2. When a stone `#` is found, scan rightward to find the farthest empty cell `.` before hitting an obstacle `*` or boundary.
 3. Move the stone to that position.
 4. After processing all rows, create the rotated `grid`:
-   - The new `grid` has `COLS` rows and `ROWS` columns.
-   - For each column `c` in the original `grid`, the new row at index `c` contains elements from bottom to top of that column.
+    - The new `grid` has `COLS` rows and `ROWS` columns.
+    - For each column `c` in the original `grid`, the new row at index `c` contains elements from bottom to top of that column.
 5. Return the rotated `grid`.
 
 ::tabs-start
@@ -255,6 +257,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rotate_the_box(box_grid: Vec<Vec<char>>) -> Vec<Vec<char>> {
+        let rows = box_grid.len();
+        let cols = box_grid[0].len();
+        let mut box_grid = box_grid;
+        for r in (0..rows).rev() {
+            for c1 in (0..cols).rev() {
+                if box_grid[r][c1] == '#' {
+                    let mut c2 = c1 + 1;
+                    while c2 < cols && box_grid[r][c2] == '.' {
+                        c2 += 1;
+                    }
+                    box_grid[r][c1] = '.';
+                    box_grid[r][c2 - 1] = '#';
+                }
+            }
+        }
+        let mut res = vec![vec!['.'; rows]; cols];
+        for c in 0..cols {
+            for r in (0..rows).rev() {
+                res[c][rows - 1 - r] = box_grid[r][c];
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,8 +307,8 @@ Instead of scanning rightward for each stone, we can use a two-pointer technique
 
 1. For each row, initialize pointer `i` to `COLS - 1` (rightmost position).
 2. Iterate from right to left through the row:
-   - If the cell is a stone `#`, swap it with position `i`, then decrement `i`.
-   - If the cell is an obstacle `*`, reset `i` to `c - 1` (just before the obstacle).
+    - If the cell is a stone `#`, swap it with position `i`, then decrement `i`.
+    - If the cell is an obstacle `*`, reset `i` to `c - 1` (just before the obstacle).
 3. After processing all rows, construct the rotated `grid` by mapping each column of the original to a row in the result (reading bottom to top).
 4. Return the rotated `grid`.
 
@@ -513,6 +544,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rotate_the_box(box_grid: Vec<Vec<char>>) -> Vec<Vec<char>> {
+        let rows = box_grid.len();
+        let cols = box_grid[0].len();
+        let mut box_grid = box_grid;
+        for r in 0..rows {
+            let mut i = cols - 1;
+            for c in (0..cols).rev() {
+                if box_grid[r][c] == '#' {
+                    box_grid[r].swap(c, i);
+                    i = i.wrapping_sub(1);
+                } else if box_grid[r][c] == '*' {
+                    i = c.wrapping_sub(1);
+                }
+            }
+        }
+        let mut res = vec![vec!['.'; rows]; cols];
+        for c in 0..cols {
+            for r in (0..rows).rev() {
+                res[c][rows - 1 - r] = box_grid[r][c];
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -535,8 +594,8 @@ We can combine the gravity simulation and rotation into a single pass. Instead o
 1. Create a result `grid` of size `COLS x ROWS`, filled with empty cells `.`.
 2. For each row in the original `grid`, initialize pointer `i` to `COLS - 1`.
 3. Iterate from right to left:
-   - If the cell is a stone `#`, place it at the rotated position corresponding to `i`, then decrement `i`.
-   - If the cell is an obstacle `*`, place it at its rotated position and reset `i` to `c - 1`.
+    - If the cell is a stone `#`, place it at the rotated position corresponding to `i`, then decrement `i`.
+    - If the cell is an obstacle `*`, place it at its rotated position and reset `i` to `c - 1`.
 4. The rotated position for original `(r, c)` is `(c, ROWS - r - 1)` for obstacles, and `(i, ROWS - r - 1)` for stones.
 5. Return the result `grid`.
 
@@ -743,6 +802,29 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rotate_the_box(box_grid: Vec<Vec<char>>) -> Vec<Vec<char>> {
+        let rows = box_grid.len();
+        let cols = box_grid[0].len();
+        let mut res = vec![vec!['.'; rows]; cols];
+        for r in 0..rows {
+            let mut i = cols - 1;
+            for c in (0..cols).rev() {
+                if box_grid[r][c] == '#' {
+                    res[i][rows - r - 1] = '#';
+                    i = i.wrapping_sub(1);
+                } else if box_grid[r][c] == '*' {
+                    res[c][rows - r - 1] = '*';
+                    i = c.wrapping_sub(1);
+                }
+            }
+        }
+        res
     }
 }
 ```

@@ -302,6 +302,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_obstacle_course_at_each_position(obstacles: Vec<i32>) -> Vec<i32> {
+        let n = obstacles.len();
+        let mut dp = vec![vec![-1i32; n + 1]; n];
+
+        fn dfs(i: i32, prev: usize, obstacles: &[i32], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i < 0 { return 0; }
+            let ui = i as usize;
+            if dp[ui][prev] != -1 { return dp[ui][prev]; }
+
+            let mut res = dfs(i - 1, prev, obstacles, dp);
+            if prev == obstacles.len() || obstacles[prev] >= obstacles[ui] {
+                res = res.max(1 + dfs(i - 1, ui, obstacles, dp));
+            }
+            dp[ui][prev] = res;
+            res
+        }
+
+        dfs(n as i32 - 1, n, &obstacles, &mut dp);
+
+        let mut res = vec![1i32; n];
+        for i in 1..n {
+            res[i] = 1 + dp[i - 1][i];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -545,6 +575,24 @@ class Solution {
             }
         }
         return left
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_obstacle_course_at_each_position(obstacles: Vec<i32>) -> Vec<i32> {
+        let n = obstacles.len();
+        let mut res = vec![0i32; n];
+        let mut dp = vec![i32::MAX; n + 1];
+
+        for i in 0..n {
+            let index = dp.partition_point(|&x| x <= obstacles[i]);
+            res[i] = index as i32 + 1;
+            dp[index] = obstacles[i];
+        }
+
+        res
     }
 }
 ```
@@ -826,6 +874,29 @@ class Solution {
             }
         }
         return left
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_obstacle_course_at_each_position(obstacles: Vec<i32>) -> Vec<i32> {
+        let n = obstacles.len();
+        let mut res = vec![0i32; n];
+        let mut dp: Vec<i32> = Vec::new();
+
+        for i in 0..n {
+            let index = dp.partition_point(|&x| x <= obstacles[i]);
+            res[i] = index as i32 + 1;
+
+            if index == dp.len() {
+                dp.push(obstacles[i]);
+            } else {
+                dp[index] = obstacles[i];
+            }
+        }
+
+        res
     }
 }
 ```

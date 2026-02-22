@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Using sets for O(1) lookups and storing unique elements
 - **Hash Map** - Tracking element presence or counts with key-value pairs
 - **Two Pointers** - Using two indices to traverse sorted arrays efficiently
@@ -17,8 +19,8 @@ The simplest approach is to check every element in the first array against every
 
 1. Initialize an empty set `res` to store unique intersection elements.
 2. For each element `i` in `nums1`:
-   - For each element `j` in `nums2`:
-     - If `i == j`, add `i` to `res` and break the inner loop.
+    - For each element `j` in `nums2`:
+        - If `i == j`, add `i` to `res` and break the inner loop.
 3. Convert `res` to a list and return it.
 
 ::tabs-start
@@ -167,6 +169,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let mut res = HashSet::new();
+        for &i in &nums1 {
+            for &j in &nums2 {
+                if i == j {
+                    res.insert(i);
+                    break;
+                }
+            }
+        }
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -189,9 +208,9 @@ By sorting both arrays, we can use two pointers to efficiently find common eleme
 1. Sort both `nums1` and `nums2`.
 2. Initialize two pointers `i` and `j` at the start of each array.
 3. While both pointers are in bounds:
-   - Advance `j` while `nums2[j] < nums1[i]`.
-   - If `nums1[i] == nums2[j]`, add to result.
-   - Advance `i`, skipping any duplicates.
+    - Advance `j` while `nums2[j] < nums1[i]`.
+    - If `nums1[i] == nums2[j]`, add to result.
+    - Advance `i`, skipping any duplicates.
 4. Return the result list.
 
 ::tabs-start
@@ -432,6 +451,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn intersection(mut nums1: Vec<i32>, mut nums2: Vec<i32>) -> Vec<i32> {
+        nums1.sort();
+        nums2.sort();
+
+        let (n, m) = (nums1.len(), nums2.len());
+        let mut res = Vec::new();
+        let (mut i, mut j) = (0, 0);
+
+        while i < n && j < m {
+            while j < m && nums2[j] < nums1[i] {
+                j += 1;
+            }
+            if j < m {
+                if nums1[i] == nums2[j] {
+                    res.push(nums1[i]);
+                }
+                i += 1;
+                while i < n && nums1[i] == nums1[i - 1] {
+                    i += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -454,7 +503,7 @@ Converting both arrays to sets removes duplicates and enables O(1) lookup. We th
 1. Convert `nums1` to a set `set1`.
 2. Convert `nums2` to a set `set2`.
 3. Iterate through `set1`:
-   - If the element exists in `set2`, add it to the result.
+    - If the element exists in `set2`, add it to the result.
 4. Return the result list.
 
 ::tabs-start
@@ -611,6 +660,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let set1: HashSet<i32> = nums1.into_iter().collect();
+        let set2: HashSet<i32> = nums2.into_iter().collect();
+
+        let mut res = Vec::new();
+        for &num in &set1 {
+            if set2.contains(&num) {
+                res.push(num);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -633,7 +699,7 @@ We use a hash map to track which elements from `nums1` we have seen. We mark eac
 1. Create a hash map `seen` and mark all elements in `nums1` with value `1`.
 2. Initialize an empty result list.
 3. For each element in `nums2`:
-   - If `seen[num] == 1`, add `num` to result and set `seen[num] = 0`.
+    - If `seen[num] == 1`, add `num` to result and set `seen[num] = 0`.
 4. Return the result list.
 
 ::tabs-start
@@ -799,6 +865,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let mut seen = HashMap::new();
+        for &num in &nums1 {
+            seen.insert(num, 1);
+        }
+
+        let mut res = Vec::new();
+        for &num in &nums2 {
+            if seen.get(&num) == Some(&1) {
+                seen.insert(num, 0);
+                res.push(num);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -821,7 +907,7 @@ We can improve on the two-set approach by using only one set. Store all elements
 1. Create a set `seen` from all elements in `nums1`.
 2. Initialize an empty result list.
 3. For each element in `nums2`:
-   - If the element is in `seen`, add it to the result and remove it from `seen`.
+    - If the element is in `seen`, add it to the result and remove it from `seen`.
 4. Return the result list.
 
 ::tabs-start
@@ -970,6 +1056,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let mut seen: HashSet<i32> = nums1.into_iter().collect();
+        let mut res = Vec::new();
+
+        for num in nums2 {
+            if seen.remove(&num) {
+                res.push(num);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1105,6 +1207,16 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn intersection(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let set1: HashSet<i32> = nums1.into_iter().collect();
+        let set2: HashSet<i32> = nums2.into_iter().collect();
+        set1.intersection(&set2).copied().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1124,4 +1236,4 @@ The intersection should contain each common element only once, even if it appear
 
 ### Comparing Values Instead of Using Efficient Lookups
 
-A brute force approach comparing every pair of elements is O(n * m), which is inefficient for large arrays. The optimal approach uses a hash set for O(1) lookups, reducing time complexity to O(n + m). Always consider converting one array to a set before checking membership.
+A brute force approach comparing every pair of elements is O(n \* m), which is inefficient for large arrays. The optimal approach uses a hash set for O(1) lookups, reducing time complexity to O(n + m). Always consider converting one array to a set before checking membership.

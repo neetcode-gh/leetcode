@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - The brute force solution explores all paths using recursive calls
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up (tabulation) approaches are used
 - **2D Grid Traversal** - Understanding how to navigate a grid moving only right or down
@@ -169,6 +171,23 @@ class Solution {
             return grid[r][c] + min(dfs(r + 1, c), dfs(r, c + 1))
         }
         return dfs(0, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        fn dfs(r: usize, c: usize, grid: &Vec<Vec<i32>>) -> i32 {
+            if r == grid.len() - 1 && c == grid[0].len() - 1 {
+                return grid[r][c];
+            }
+            if r == grid.len() || c == grid[0].len() {
+                return i32::MAX;
+            }
+            grid[r][c] + dfs(r + 1, c, grid).min(dfs(r, c + 1, grid))
+        }
+        dfs(0, 0, &grid)
     }
 }
 ```
@@ -437,6 +456,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut dp = vec![vec![-1i32; n]; m];
+
+        fn dfs(r: usize, c: usize, grid: &Vec<Vec<i32>>, dp: &mut Vec<Vec<i32>>, m: usize, n: usize) -> i32 {
+            if r == m - 1 && c == n - 1 {
+                return grid[r][c];
+            }
+            if r == m || c == n {
+                return i32::MAX;
+            }
+            if dp[r][c] != -1 {
+                return dp[r][c];
+            }
+            dp[r][c] = grid[r][c] + dfs(r + 1, c, grid, dp, m, n).min(dfs(r, c + 1, grid, dp, m, n));
+            dp[r][c]
+        }
+
+        dfs(0, 0, &grid, &mut dp, m, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -636,6 +681,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut dp = vec![vec![i32::MAX; cols + 1]; rows + 1];
+        dp[rows - 1][cols] = 0;
+
+        for r in (0..rows).rev() {
+            for c in (0..cols).rev() {
+                dp[r][c] = grid[r][c] + dp[r + 1][c].min(dp[r][c + 1]);
+            }
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -658,7 +722,7 @@ When filling the DP table row by row (from bottom to top), we only need the curr
 1. Create a 1D array `dp` of size `COLS+1` initialized to infinity.
 2. Set `dp[COLS-1] = 0` as the base case.
 3. For each row from bottom to top:
-   - For each column from right to left: `dp[c] = grid[r][c] + min(dp[c], dp[c+1])`.
+    - For each column from right to left: `dp[c] = grid[r][c] + min(dp[c], dp[c+1])`.
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -820,6 +884,25 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut dp = vec![i32::MAX; cols + 1];
+        dp[cols - 1] = 0;
+
+        for r in (0..rows).rev() {
+            for c in (0..cols).rev() {
+                dp[c] = grid[r][c] + dp[c].min(dp[c + 1]);
+            }
+        }
+
+        dp[0]
     }
 }
 ```

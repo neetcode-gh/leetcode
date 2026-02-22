@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting frequency of elements efficiently in O(1) per operation
 - **Sorting** - Sorting arrays and iterating in sorted order to find elements with specific properties
 - **Frequency Counting** - Tracking how many times each element appears in an array
@@ -17,8 +19,8 @@ After sorting in descending order, we can scan from largest to smallest. A numbe
 1. Handle the edge case: if there is only one element, return it.
 2. Sort the array in descending order.
 3. Iterate through the sorted array:
-   - If the current element differs from the next (or is the last element), it is unique. Return it.
-   - Otherwise, skip all consecutive duplicates.
+    - If the current element differs from the next (or is the last element), it is unique. Return it.
+    - Otherwise, skip all consecutive duplicates.
 4. If no unique number is found, return `-1`.
 
 ::tabs-start
@@ -157,16 +159,16 @@ class Solution {
         while (currentIndex < n) {
             // If it's the first element or different from the next one, it's unique
             if (
-                currentIndex === n - 1
-                || nums[currentIndex] !== nums[currentIndex + 1]
+                currentIndex === n - 1 ||
+                nums[currentIndex] !== nums[currentIndex + 1]
             ) {
                 return nums[currentIndex];
             }
 
             // Skip duplicates
             while (
-                currentIndex < n - 1
-                && nums[currentIndex] === nums[currentIndex + 1]
+                currentIndex < n - 1 &&
+                nums[currentIndex] === nums[currentIndex + 1]
             ) {
                 currentIndex++;
             }
@@ -318,6 +320,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_unique_number(mut nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        if n == 1 {
+            return nums[0];
+        }
+
+        nums.sort_unstable();
+        let mut current_index = n as i32 - 1;
+
+        while current_index >= 0 {
+            let ci = current_index as usize;
+            if current_index == 0 || nums[ci] != nums[ci - 1] {
+                return nums[ci];
+            }
+            while current_index > 0 && nums[current_index as usize] == nums[current_index as usize - 1] {
+                current_index -= 1;
+            }
+            current_index -= 1;
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,7 +354,7 @@ class Solution {
 - Time complexity: $O(n \cdot \log n)$
 - Space complexity: $O(S)$ Depends on the language of implementation
 
->  Where $n$ is the length of the `nums` array and $S$ is the sorting algorthm
+> Where $n$ is the length of the `nums` array and $S$ is the sorting algorthm
 
 ---
 
@@ -435,7 +464,7 @@ class Solution {
 
         // Create a sorted OrderedDict
         const sortedMap = new Map(
-            Object.entries(frequencyMap).sort((a, b) => b[0] - a[0])
+            Object.entries(frequencyMap).sort((a, b) => b[0] - a[0]),
         );
 
         // Find the largest unique number
@@ -560,6 +589,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_unique_number(nums: Vec<i32>) -> i32 {
+        let mut frequency_map = BTreeMap::new();
+        for &num in &nums {
+            *frequency_map.entry(num).or_insert(0) += 1;
+        }
+
+        for (&num, &freq) in frequency_map.iter().rev() {
+            if freq == 1 {
+                return num;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,8 +615,7 @@ class Solution {
 - Time complexity: $O(n \cdot \log n)$
 - Space complexity: $O(n)$
 
-
->  Where $n$ is the length of the `nums` array.
+> Where $n$ is the length of the `nums` array.
 
 ---
 
@@ -583,7 +630,7 @@ Using a regular hash map, we count frequencies in linear time. Then we scan all 
 1. Build a frequency map counting occurrences of each number.
 2. Initialize the result to `-1`.
 3. Iterate through all entries in the map:
-   - If frequency equals `1` and the number is larger than the current result, update the result.
+    - If frequency equals `1` and the number is larger than the current result, update the result.
 4. Return the result.
 
 ::tabs-start
@@ -789,6 +836,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_unique_number(nums: Vec<i32>) -> i32 {
+        let mut frequency_map = HashMap::new();
+        for &num in &nums {
+            *frequency_map.entry(num).or_insert(0) += 1;
+        }
+
+        let mut largest_unique = -1;
+        for (&num, &freq) in &frequency_map {
+            if freq == 1 && num > largest_unique {
+                largest_unique = num;
+            }
+        }
+
+        largest_unique
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -796,7 +863,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the `nums` array.
+> Where $n$ is the length of the `nums` array.
 
 ---
 

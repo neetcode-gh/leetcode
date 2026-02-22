@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Intervals** - Understanding interval representation and overlap detection logic
 - **Two Pointers** - Using two indices to traverse two sorted lists simultaneously
 - **Line Sweep Algorithm** - Processing events at specific points to track active intervals
@@ -17,9 +19,9 @@ The simplest way to find intersections is to check every interval in the first l
 
 1. Initialize an empty result list.
 2. For each interval `[startA, endA]` in the first list:
-   - For each interval `[startB, endB]` in the second list:
-     - Check if they overlap by verifying that one interval's start falls within the other.
-     - If they overlap, compute the intersection as `[max(startA, startB), min(endA, endB)]` and add it to the result.
+    - For each interval `[startB, endB]` in the second list:
+        - Check if they overlap by verifying that one interval's start falls within the other.
+        - If they overlap, compute the intersection as `[max(startA, startB), min(endA, endB)]` and add it to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -87,7 +89,10 @@ class Solution {
             const [startA, endA] = firstList[i];
             for (let j = 0; j < secondList.length; j++) {
                 const [startB, endB] = secondList[j];
-                if ((startA <= startB && startB <= endA) || (startB <= startA && startA <= endB)) {
+                if (
+                    (startA <= startB && startB <= endA) ||
+                    (startB <= startA && startA <= endB)
+                ) {
                     res.push([Math.max(startA, startB), Math.min(endA, endB)]);
                 }
             }
@@ -181,14 +186,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn interval_intersection(
+        first_list: Vec<Vec<i32>>,
+        second_list: Vec<Vec<i32>>,
+    ) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        for i in 0..first_list.len() {
+            let (start_a, end_a) = (first_list[i][0], first_list[i][1]);
+            for j in 0..second_list.len() {
+                let (start_b, end_b) = (second_list[j][0], second_list[j][1]);
+                if (start_a <= start_b && start_b <= end_a)
+                    || (start_b <= start_a && start_a <= end_b)
+                {
+                    res.push(vec![start_a.max(start_b), end_a.min(end_b)]);
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(m + n)$ for the output list.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(m + n)$ for the output list.
 
 > Where $m$ and $n$ are the sizes of the arrays $firstList$ and $secondList$, respectively.
 
@@ -203,13 +231,13 @@ Line sweep treats intervals as events on a number line. At each interval's start
 ### Algorithm
 
 1. Create a map to store events. For each interval `[start, end]`:
-   - Add `+1` at position `start`.
-   - Add `-1` at position `end + 1`.
+    - Add `+1` at position `start`.
+    - Add `-1` at position `end + 1`.
 2. Sort all event positions.
 3. Traverse the events in order, maintaining an `active` counter:
-   - Before updating the counter, if `active == 2`, record the intersection from the previous position to the current position minus one.
-   - Update `active` by adding the event's value.
-   - Track the previous position for the next iteration.
+    - Before updating the counter, if `active == 2`, record the intersection from the previous position to the current position minus one.
+    - Update `active` by adding the event's value.
+    - Track the previous position for the next iteration.
 4. Return the collected intersections.
 
 ::tabs-start
@@ -312,7 +340,9 @@ class Solution {
         }
 
         let keys = Array.from(mp.keys()).sort((a, b) => a - b);
-        let res = [], active = 0, prev = 0;
+        let res = [],
+            active = 0,
+            prev = 0;
         for (let x of keys) {
             if (active === 2) {
                 res.push([prev, x - 1]);
@@ -452,12 +482,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn interval_intersection(
+        first_list: Vec<Vec<i32>>,
+        second_list: Vec<Vec<i32>>,
+    ) -> Vec<Vec<i32>> {
+        let mut mp = BTreeMap::new();
+        for f in &first_list {
+            *mp.entry(f[0]).or_insert(0) += 1;
+            *mp.entry(f[1] + 1).or_insert(0) -= 1;
+        }
+        for s in &second_list {
+            *mp.entry(s[0]).or_insert(0) += 1;
+            *mp.entry(s[1] + 1).or_insert(0) -= 1;
+        }
+
+        let mut res = Vec::new();
+        let mut active = 0;
+        let mut prev = 0;
+        for (&x, &v) in &mp {
+            if active == 2 {
+                res.push(vec![prev, x - 1]);
+            }
+            active += v;
+            prev = x;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m + n) \log (m + n))$
-* Space complexity: $O(m + n)$
+- Time complexity: $O((m + n) \log (m + n))$
+- Space complexity: $O(m + n)$
 
 > Where $m$ and $n$ are the sizes of the arrays $firstList$ and $secondList$, respectively.
 
@@ -473,10 +534,10 @@ Since both interval lists are sorted and disjoint within themselves, we can use 
 
 1. Initialize two pointers `i` and `j` to `0`, and an empty result list.
 2. While both pointers are within bounds:
-   - Get the current intervals: `[startA, endA]` from `firstList[i]` and `[startB, endB]` from `secondList[j]`.
-   - Compute the potential intersection: `start = max(startA, startB)` and `end = min(endA, endB)`.
-   - If `start <= end`, add `[start, end]` to the result.
-   - Advance the pointer for the interval that ends first (if `endA < endB`, increment `i`; otherwise, increment `j`).
+    - Get the current intervals: `[startA, endA]` from `firstList[i]` and `[startB, endB]` from `secondList[j]`.
+    - Compute the potential intersection: `start = max(startA, startB)` and `end = min(endA, endB)`.
+    - If `start <= end`, add `[start, end]` to the result.
+    - Advance the pointer for the interval that ends first (if `endA < endB`, increment `i`; otherwise, increment `j`).
 3. Return the result list.
 
 ::tabs-start
@@ -572,7 +633,8 @@ class Solution {
      */
     intervalIntersection(firstList, secondList) {
         const res = [];
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
 
         while (i < firstList.length && j < secondList.length) {
             const [startA, endA] = firstList[i];
@@ -726,14 +788,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn interval_intersection(
+        first_list: Vec<Vec<i32>>,
+        second_list: Vec<Vec<i32>>,
+    ) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let (mut i, mut j) = (0, 0);
+
+        while i < first_list.len() && j < second_list.len() {
+            let (start_a, end_a) = (first_list[i][0], first_list[i][1]);
+            let (start_b, end_b) = (second_list[j][0], second_list[j][1]);
+
+            let start = start_a.max(start_b);
+            let end = end_a.min(end_b);
+
+            if start <= end {
+                res.push(vec![start, end]);
+            }
+
+            if end_a < end_b {
+                i += 1;
+            } else {
+                j += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(m + n)$ for the output list.
+- Time complexity: $O(m + n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(m + n)$ for the output list.
 
 > Where $m$ and $n$ are the sizes of the arrays $firstList$ and $secondList$, respectively.
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Converting numbers to strings and extracting substrings for digit analysis
 - **Breadth-First Search (BFS)** - Using a queue to explore candidates level by level in increasing order
 - **Depth-First Search (DFS)** - Using recursion to build numbers by extending with consecutive digits
@@ -199,6 +201,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sequential_digits(low: i32, high: i32) -> Vec<i32> {
+        let mut res = Vec::new();
+        for num in low..=high {
+            let s = num.to_string();
+            let bytes = s.as_bytes();
+            let mut flag = true;
+            for i in 1..bytes.len() {
+                if bytes[i] - bytes[i - 1] != 1 {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                res.push(num);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -218,10 +243,10 @@ Instead of checking every number, we can generate only the valid sequential digi
 
 1. Determine the digit lengths to consider: from the number of digits in `low` to that of `high`.
 2. For each digit length `d`:
-   - For each starting digit `s` from 1 to 9:
-     - If `s + d > 10`, break (not enough consecutive digits available).
-     - Build the number by starting with `s` and appending `s+1`, `s+2`, etc.
-     - If the result is within `[low, high]`, add it to the result.
+    - For each starting digit `s` from 1 to 9:
+        - If `s + d > 10`, break (not enough consecutive digits available).
+        - Build the number by starting with `s` and appending `s+1`, `s+2`, etc.
+        - If the result is within `[low, high]`, add it to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -443,6 +468,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sequential_digits(low: i32, high: i32) -> Vec<i32> {
+        let mut res = Vec::new();
+        let low_digit = low.to_string().len();
+        let high_digit = high.to_string().len();
+
+        for digits in low_digit..=high_digit {
+            for start in 1..10 {
+                if start + digits > 10 {
+                    break;
+                }
+                let mut num = start as i32;
+                let mut prev = start as i32;
+                for _ in 1..digits {
+                    prev += 1;
+                    num = num * 10 + prev;
+                }
+                if num >= low && num <= high {
+                    res.push(num);
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,10 +517,10 @@ We can think of generating sequential digit numbers as a BFS traversal. Start wi
 
 1. Initialize a queue with digits 1 through 9.
 2. While the queue is not empty:
-   - Dequeue a number `n`.
-   - If `n > high`, skip it.
-   - If `n` is within `[low, high]`, add it to the result.
-   - Get the last digit of `n`. If it's less than 9, enqueue `n * 10 + (lastDigit + 1)`.
+    - Dequeue a number `n`.
+    - If `n > high`, skip it.
+    - If `n` is within `[low, high]`, add it to the result.
+    - Get the last digit of `n`. If it's less than 9, enqueue `n * 10 + (lastDigit + 1)`.
 3. Return the result list.
 
 ::tabs-start
@@ -701,6 +754,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sequential_digits(low: i32, high: i32) -> Vec<i32> {
+        let mut res = Vec::new();
+        let mut queue = VecDeque::new();
+
+        for i in 1..10 {
+            queue.push_back(i);
+        }
+
+        while let Some(n) = queue.pop_front() {
+            if n > high {
+                continue;
+            }
+            if n >= low && n <= high {
+                res.push(n);
+            }
+            let ones = n % 10;
+            if ones < 9 {
+                queue.push_back(n * 10 + (ones + 1));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -721,9 +802,9 @@ DFS provides another way to enumerate sequential digit numbers. Starting from ea
 ### Algorithm
 
 1. Define a DFS function that takes the current number:
-   - If the number exceeds `high`, return.
-   - If the number is within `[low, high]`, add it to the result.
-   - If the last digit is less than 9, recurse with `num * 10 + (lastDigit + 1)`.
+    - If the number exceeds `high`, return.
+    - If the number is within `[low, high]`, add it to the result.
+    - If the last digit is less than 9, recurse with `num * 10 + (lastDigit + 1)`.
 2. Call DFS starting from each digit 1 through 9.
 3. Sort the result list and return it.
 
@@ -946,6 +1027,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sequential_digits(low: i32, high: i32) -> Vec<i32> {
+        let mut res = Vec::new();
+
+        fn dfs(num: i32, low: i32, high: i32, res: &mut Vec<i32>) {
+            if num > high {
+                return;
+            }
+            if num >= low {
+                res.push(num);
+            }
+            let last_digit = num % 10;
+            if last_digit < 9 {
+                dfs(num * 10 + (last_digit + 1), low, high, res);
+            }
+        }
+
+        for i in 1..10 {
+            dfs(i, low, high, &mut res);
+        }
+
+        res.sort();
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -967,11 +1076,11 @@ All sequential digit numbers are substrings of "123456789". A 2-digit sequential
 
 1. Define the string `nums = "123456789"`.
 2. For each window size `d` from 2 to 9:
-   - Slide the window across `nums`:
-     - Extract the substring of length `d` starting at index `i`.
-     - Convert it to an integer.
-     - If it exceeds `high`, break the inner loop.
-     - If it is within `[low, high]`, add it to the result.
+    - Slide the window across `nums`:
+        - Extract the substring of length `d` starting at index `i`.
+        - Convert it to an integer.
+        - If it exceeds `high`, break the inner loop.
+        - If it is within `[low, high]`, add it to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -1152,6 +1261,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sequential_digits(low: i32, high: i32) -> Vec<i32> {
+        let nums = "123456789";
+        let mut res = Vec::new();
+
+        for d in 2..=9usize {
+            for i in 0..=9 - d {
+                let num: i32 = nums[i..i + d].parse().unwrap();
+                if num > high {
+                    break;
+                }
+                if num >= low && num <= high {
+                    res.push(num);
+                }
+            }
+        }
+
+        res
     }
 }
 ```

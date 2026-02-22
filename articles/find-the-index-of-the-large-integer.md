@@ -238,6 +238,34 @@ class Solution {
 }
 ```
 
+```rust
+/* The ArrayReader API is defined somewhere else.
+       fn length(&self) -> i32;
+       fn compare_sub(&self, l: i32, r: i32, u: i32, v: i32) -> i32; */
+
+impl Solution {
+    pub fn get_index(reader: &ArrayReader) -> i32 {
+        let mut left = 0;
+        let mut length = reader.length();
+
+        while length > 1 {
+            length /= 2;
+            let cmp = reader.compare_sub(
+                left, left + length - 1,
+                left + length, left + length + length - 1,
+            );
+            if cmp == 0 {
+                return left + length + length;
+            }
+            if cmp < 0 {
+                left += length;
+            }
+        }
+        left
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

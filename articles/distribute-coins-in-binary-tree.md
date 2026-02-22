@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding nodes, left/right children, and tree traversal basics
 - **Depth-First Search (DFS)** - Recursively exploring tree nodes and returning values from subtrees
 - **Post-order Traversal** - Processing children before the parent node to aggregate subtree information
@@ -331,6 +333,37 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        Self::dfs(&root, &mut res);
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, res: &mut i32) -> (i32, i32) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            let (l_size, l_coins) = Self::dfs(&n.left, res);
+            let (r_size, r_coins) = Self::dfs(&n.right, res);
+            let size = 1 + l_size + r_size;
+            let coins = n.val + l_coins + r_coins;
+            *res += (size - coins).abs();
+            (size, coins)
+        } else {
+            (0, 0)
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -610,21 +643,6 @@ class Solution {
 ```
 
 ```swift
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     public var val: Int
- *     public var left: TreeNode?
- *     public var right: TreeNode?
- *     public init() { self.val = 0; self.left = nil; self.right = nil; }
- *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
- *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
- *         self.val = val
- *         self.left = left
- *         self.right = right
- *     }
- * }
- */
 class Solution {
     private var res = 0
 
@@ -645,6 +663,29 @@ class Solution {
         let extraCoins = cur.val - 1 + lExtra + rExtra
         res += abs(extraCoins)
         return extraCoins
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        Self::dfs(&root, &mut res);
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, res: &mut i32) -> i32 {
+        if let Some(n) = node {
+            let n = n.borrow();
+            let l_extra = Self::dfs(&n.left, res);
+            let r_extra = Self::dfs(&n.right, res);
+            let extra_coins = n.val - 1 + l_extra + r_extra;
+            *res += extra_coins.abs();
+            extra_coins
+        } else {
+            0
+        }
     }
 }
 ```
@@ -1049,6 +1090,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        let mut queue = VecDeque::new();
+        let mut nodes = Vec::new();
+        let mut parent: HashMap<*const RefCell<TreeNode>, Rc<RefCell<TreeNode>>> = HashMap::new();
+
+        if let Some(ref r) = root {
+            queue.push_back(Rc::clone(r));
+        }
+
+        while let Some(node) = queue.pop_front() {
+            let n = node.borrow();
+            if let Some(ref left) = n.left {
+                parent.insert(Rc::as_ptr(left), Rc::clone(&node));
+                queue.push_back(Rc::clone(left));
+            }
+            if let Some(ref right) = n.right {
+                parent.insert(Rc::as_ptr(right), Rc::clone(&node));
+                queue.push_back(Rc::clone(right));
+            }
+            drop(n);
+            nodes.push(Rc::clone(&node));
+        }
+
+        for i in (0..nodes.len()).rev() {
+            let ptr = Rc::as_ptr(&nodes[i]);
+            if let Some(p) = parent.get(&ptr) {
+                let extra = nodes[i].borrow().val - 1;
+                p.borrow_mut().val += extra;
+                res += extra.abs();
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1068,8 +1149,8 @@ This approach simulates recursive DFS using an explicit stack. We use a `visit` 
 
 1. Initialize a stack with the root and an empty `visit` set.
 2. While the stack is not empty:
-   - Pop a node. If not visited, push it back, mark as visited, then push its children.
-   - If already visited, add the children's values to the current node, subtract `1`, and add `abs(node.val)` to the result.
+    - Pop a node. If not visited, push it back, mark as visited, then push its children.
+    - If already visited, add the children's values to the current node, subtract `1`, and add `abs(node.val)` to the result.
 3. Return the total move count.
 
 ::tabs-start
@@ -1470,6 +1551,48 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn distribute_coins(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut visit: HashSet<*const RefCell<TreeNode>> = HashSet::new();
+
+        if let Some(ref r) = root {
+            stack.push(Rc::clone(r));
+        }
+
+        while let Some(node) = stack.pop() {
+            let ptr = Rc::as_ptr(&node);
+            if !visit.contains(&ptr) {
+                stack.push(Rc::clone(&node));
+                visit.insert(ptr);
+
+                let n = node.borrow();
+                if let Some(ref right) = n.right {
+                    stack.push(Rc::clone(right));
+                }
+                if let Some(ref left) = n.left {
+                    stack.push(Rc::clone(left));
+                }
+            } else {
+                visit.remove(&ptr);
+                let n = node.borrow();
+                let left_val = n.left.as_ref().map_or(0, |l| l.borrow().val);
+                let right_val = n.right.as_ref().map_or(0, |r| r.borrow().val);
+                drop(n);
+                let mut n = node.borrow_mut();
+                n.val += left_val + right_val;
+                n.val -= 1;
+                res += n.val.abs();
+            }
+        }
+
+        res
     }
 }
 ```

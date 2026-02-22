@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Finding elements in sorted arrays with O(log n) time complexity
 - **Lower Bound / Upper Bound** - Modifying binary search to find the first or last occurrence of a target
 - **Sorted Array Properties** - Understanding that duplicates appear consecutively in sorted arrays
@@ -16,9 +18,9 @@ Since the array is sorted, all occurrences of the target will be consecutive. We
 
 1. Initialize result array `res = [-1, -1]`.
 2. Iterate through the array with index `i`:
-   - If `nums[i]` equals the target:
-     - If `res[0]` is still `-1`, set both `res[0]` and `res[1]` to `i`.
-     - Otherwise, update `res[1]` to `i`.
+    - If `nums[i]` equals the target:
+        - If `res[0]` is still `-1`, set both `res[0]` and `res[1]` to `i`.
+        - Otherwise, update `res[1]` to `i`.
 3. Return `res`.
 
 ::tabs-start
@@ -184,6 +186,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut res = vec![-1, -1];
+
+        for i in 0..nums.len() {
+            if nums[i] == target {
+                if res[0] == -1 {
+                    res[0] = i as i32;
+                    res[1] = i as i32;
+                } else {
+                    res[1] = i as i32;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -203,9 +226,9 @@ Binary search can find any occurrence of the target in O(log n) time, but we nee
 
 1. Implement a binary search helper that takes a `leftBias` parameter.
 2. When `nums[m] == target`:
-   - Record index `m` as a candidate.
-   - If `leftBias` is `true`, continue searching left (`r = m - 1`).
-   - Otherwise, continue searching right (`l = m + 1`).
+    - Record index `m` as a candidate.
+    - If `leftBias` is `true`, continue searching left (`r = m - 1`).
+    - Otherwise, continue searching right (`l = m + 1`).
 3. Call the helper twice: once with `leftBias = true` for the start position, and once with `leftBias = false` for the end position.
 4. Return `[left, right]`.
 
@@ -463,6 +486,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let left = Self::binary_search(&nums, target, true);
+        let right = Self::binary_search(&nums, target, false);
+        vec![left, right]
+    }
+
+    fn binary_search(nums: &[i32], target: i32, left_bias: bool) -> i32 {
+        let (mut l, mut r, mut i) = (0i32, nums.len() as i32 - 1, -1i32);
+        while l <= r {
+            let m = (l + r) / 2;
+            if target > nums[m as usize] {
+                l = m + 1;
+            } else if target < nums[m as usize] {
+                r = m - 1;
+            } else {
+                i = m;
+                if left_bias {
+                    r = m - 1;
+                } else {
+                    l = m + 1;
+                }
+            }
+        }
+        i
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -715,6 +768,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let n = nums.len();
+
+        let binary_search = |t: i32| -> usize {
+            let (mut l, mut r) = (0, n);
+            while l < r {
+                let m = l + (r - l) / 2;
+                if nums[m] >= t {
+                    r = m;
+                } else {
+                    l = m + 1;
+                }
+            }
+            l
+        };
+
+        let start = binary_search(target);
+        if start == n || nums[start] != target {
+            return vec![-1, -1];
+        }
+
+        vec![start as i32, (binary_search(target + 1) - 1) as i32]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -880,6 +961,19 @@ class Solution {
             return [-1, -1]
         }
         return [idx, lastIdx]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search_range(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let left = nums.partition_point(|&x| x < target);
+        if left >= nums.len() || nums[left] != target {
+            return vec![-1, -1];
+        }
+        let right = nums.partition_point(|&x| x <= target) - 1;
+        vec![left as i32, right as i32]
     }
 }
 ```

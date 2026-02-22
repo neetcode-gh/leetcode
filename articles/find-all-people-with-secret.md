@@ -355,6 +355,53 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_all_people(n: i32, meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
+        let mut secrets = HashSet::new();
+        secrets.insert(0);
+        secrets.insert(first_person);
+
+        let mut time_map: BTreeMap<i32, HashMap<i32, Vec<i32>>> = BTreeMap::new();
+        for meet in &meetings {
+            let (src, dst, t) = (meet[0], meet[1], meet[2]);
+            time_map.entry(t).or_default().entry(src).or_default().push(dst);
+            time_map.entry(t).or_default().entry(dst).or_default().push(src);
+        }
+
+        fn dfs(
+            src: i32,
+            adj: &HashMap<i32, Vec<i32>>,
+            visit: &mut HashSet<i32>,
+            secrets: &mut HashSet<i32>,
+        ) {
+            if !visit.insert(src) {
+                return;
+            }
+            secrets.insert(src);
+            if let Some(neighbors) = adj.get(&src) {
+                for &nei in neighbors {
+                    dfs(nei, adj, visit, secrets);
+                }
+            }
+        }
+
+        for (_t, adj) in &time_map {
+            let mut visit = HashSet::new();
+            let sources: Vec<i32> = adj.keys().cloned().collect();
+            for src in sources {
+                if secrets.contains(&src) {
+                    dfs(src, adj, &mut visit, &mut secrets);
+                }
+            }
+        }
+
+        secrets.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -729,6 +776,49 @@ class Solution {
         }
 
         return Array(secrets)
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_all_people(n: i32, meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
+        let mut secrets = HashSet::new();
+        secrets.insert(0);
+        secrets.insert(first_person);
+
+        let mut time_map: BTreeMap<i32, HashMap<i32, Vec<i32>>> = BTreeMap::new();
+        for meet in &meetings {
+            let (src, dst, t) = (meet[0], meet[1], meet[2]);
+            time_map.entry(t).or_default().entry(src).or_default().push(dst);
+            time_map.entry(t).or_default().entry(dst).or_default().push(src);
+        }
+
+        for (_t, adj) in &time_map {
+            let mut visit = HashSet::new();
+            let mut q = VecDeque::new();
+
+            for &src in adj.keys() {
+                if secrets.contains(&src) {
+                    q.push_back(src);
+                    visit.insert(src);
+                }
+            }
+
+            while let Some(node) = q.pop_front() {
+                secrets.insert(node);
+                if let Some(neighbors) = adj.get(&node) {
+                    for &nei in neighbors {
+                        if visit.insert(nei) {
+                            q.push_back(nei);
+                        }
+                    }
+                }
+            }
+        }
+
+        secrets.into_iter().collect()
     }
 }
 ```
@@ -1126,6 +1216,50 @@ class Solution {
         }
 
         return (0..<n).filter { secrets[$0] }
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_all_people(n: i32, mut meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
+        meetings.sort_by_key(|m| m[2]);
+        let n = n as usize;
+        let mut secrets = vec![false; n];
+        secrets[0] = true;
+        secrets[first_person as usize] = true;
+
+        let mut i = 0;
+        let m = meetings.len();
+        while i < m {
+            let time = meetings[i][2];
+            let mut adj: HashMap<i32, Vec<i32>> = HashMap::new();
+            let mut visited = HashSet::new();
+
+            while i < m && meetings[i][2] == time {
+                let (u, v) = (meetings[i][0], meetings[i][1]);
+                adj.entry(u).or_default().push(v);
+                adj.entry(v).or_default().push(u);
+                if secrets[u as usize] { visited.insert(u); }
+                if secrets[v as usize] { visited.insert(v); }
+                i += 1;
+            }
+
+            let mut stack: Vec<i32> = visited.iter().cloned().collect();
+            while let Some(node) = stack.pop() {
+                if let Some(neighbors) = adj.get(&node) {
+                    for &nei in neighbors {
+                        if visited.insert(nei) {
+                            stack.push(nei);
+                            secrets[nei as usize] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        (0..n as i32).filter(|&j| secrets[j as usize]).collect()
     }
 }
 ```
@@ -1701,6 +1835,81 @@ class Solution {
         }
 
         return (0..<n).filter { dsu.find($0) == dsu.find(0) }
+    }
+}
+```
+
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        DSU {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv { return; }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+    }
+
+    fn reset(&mut self, node: usize) {
+        self.parent[node] = node;
+        self.size[node] = 1;
+    }
+}
+
+impl Solution {
+    pub fn find_all_people(n: i32, mut meetings: Vec<Vec<i32>>, first_person: i32) -> Vec<i32> {
+        let n = n as usize;
+        meetings.sort_by_key(|m| m[2]);
+        let mut dsu = DSU::new(n);
+        dsu.union(0, first_person as usize);
+
+        let mut i = 0;
+        while i < meetings.len() {
+            let time = meetings[i][2];
+            let mut group = HashSet::new();
+
+            while i < meetings.len() && meetings[i][2] == time {
+                let (u, v) = (meetings[i][0] as usize, meetings[i][1] as usize);
+                dsu.union(u, v);
+                group.insert(u);
+                group.insert(v);
+                i += 1;
+            }
+
+            let root = dsu.find(0);
+            for node in group {
+                if dsu.find(node) != root {
+                    dsu.reset(node);
+                }
+            }
+        }
+
+        let root = dsu.find(0);
+        (0..n as i32)
+            .filter(|&j| dsu.find(j as usize) == root)
+            .collect()
     }
 }
 ```

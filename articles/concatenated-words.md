@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Using sets for O(1) lookups to check if a word exists in the dictionary
 - **Recursion** - Breaking down strings into prefix/suffix and recursively checking validity
 - **Dynamic Programming** - Using memoization to avoid recomputing results for the same substrings
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force (Backtracking)
 
 ### Intuition
+
 We can generate all possible concatenations of words and check if any concatenation exists in our word set. By building concatenations through backtracking and checking membership, we find words that are formed by joining two or more shorter words.
 
 ### Algorithm
+
 1. Build a hash set from all words and find the maximum word length.
 2. Use backtracking to generate all possible concatenations of words.
 3. When a concatenation has more than one word and exists in the word set, add it to results and remove it from the set to avoid duplicates.
@@ -318,6 +322,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_all_concatenated_words_in_a_dict(words: Vec<String>) -> Vec<String> {
+        let mut word_set: HashSet<String> = words.iter().cloned().collect();
+        let max_len = words.iter().map(|w| w.len()).max().unwrap_or(0);
+        let mut res = Vec::new();
+
+        fn dfs(
+            words: &[String], word_set: &mut HashSet<String>, max_len: usize,
+            concat_word: &mut Vec<String>, tot_len: usize, res: &mut Vec<String>,
+        ) {
+            if concat_word.len() > 1 {
+                let word: String = concat_word.concat();
+                if word_set.contains(&word) {
+                    res.push(word.clone());
+                    word_set.remove(&word);
+                }
+            }
+            for w in words {
+                if tot_len + w.len() > max_len { continue; }
+                concat_word.push(w.clone());
+                dfs(words, word_set, max_len, concat_word, tot_len + w.len(), res);
+                concat_word.pop();
+            }
+        }
+
+        dfs(&words, &mut word_set, max_len, &mut vec![], 0, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,9 +368,11 @@ class Solution {
 ## 2. Recursion
 
 ### Intuition
+
 For each word, we check if it can be split into parts where each part exists in the word set. We try every possible prefix; if a prefix is in the set, we recursively check if the remaining suffix can also be decomposed (or is itself in the set).
 
 ### Algorithm
+
 1. Build a hash set from all words for `O(1)` lookup.
 2. For each word, define a recursive function that tries to split it.
 3. At each position, check all possible prefixes. If a prefix exists in the set, check if the suffix also exists or can be recursively split.
@@ -574,6 +612,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_all_concatenated_words_in_a_dict(words: Vec<String>) -> Vec<String> {
+        let word_set: HashSet<&str> = words.iter().map(|s| s.as_str()).collect();
+
+        fn dfs(word: &str, word_set: &HashSet<&str>) -> bool {
+            for i in 1..word.len() {
+                let prefix = &word[..i];
+                let suffix = &word[i..];
+                if (word_set.contains(prefix) && word_set.contains(suffix))
+                    || (word_set.contains(prefix) && dfs(suffix, word_set))
+                {
+                    return true;
+                }
+            }
+            false
+        }
+
+        words.iter()
+            .filter(|w| dfs(w, &word_set))
+            .cloned()
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -588,9 +652,11 @@ class Solution {
 ## 3. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 The recursive approach has overlapping subproblems since the same suffix may be checked multiple times. By memoizing results for each suffix, we avoid recomputing whether a substring can be decomposed.
 
 ### Algorithm
+
 1. Build a hash set from all words and create a memoization dictionary.
 2. For each word, use a recursive function with memoization to check if it can be split.
 3. Before computing, check if the result for the current word exists in memo.
@@ -891,6 +957,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_all_concatenated_words_in_a_dict(words: Vec<String>) -> Vec<String> {
+        let word_set: HashSet<String> = words.iter().cloned().collect();
+        let mut dp = HashMap::new();
+
+        fn dfs(word: &str, word_set: &HashSet<String>, dp: &mut HashMap<String, bool>) -> bool {
+            if let Some(&val) = dp.get(word) {
+                return val;
+            }
+            for i in 1..word.len() {
+                let prefix = &word[..i];
+                let suffix = &word[i..];
+                if (word_set.contains(prefix) && word_set.contains(suffix))
+                    || (word_set.contains(prefix) && dfs(suffix, word_set, dp))
+                {
+                    dp.insert(word.to_string(), true);
+                    return true;
+                }
+            }
+            dp.insert(word.to_string(), false);
+            false
+        }
+
+        words.iter()
+            .filter(|w| dfs(w, &word_set, &mut dp))
+            .cloned()
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -905,9 +1003,11 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 For each word, we use a DP array where `dp[i]` indicates whether the substring from index `0` to `i` can be formed by concatenating words from the set. We build this array iteratively by checking all possible split points.
 
 ### Algorithm
+
 1. Build a hash set from all words.
 2. For each word, create a boolean DP array of size `m+1` with `dp[0] = true`.
 3. For each position `i` from `1` to `m`, check all previous positions `j`. If `dp[j]` is `true` and the substring from `j` to `i` exists in the set, set `dp[i] = true`.
@@ -1162,6 +1262,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_all_concatenated_words_in_a_dict(words: Vec<String>) -> Vec<String> {
+        let word_set: HashSet<&str> = words.iter().map(|s| s.as_str()).collect();
+        let mut res = Vec::new();
+
+        for word in &words {
+            let m = word.len();
+            let mut dp = vec![false; m + 1];
+            dp[0] = true;
+
+            for i in 1..=m {
+                for j in 0..i {
+                    if j == 0 && i == m { continue; }
+                    if dp[j] && word_set.contains(&word[j..i]) {
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            if dp[m] {
+                res.push(word.clone());
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1176,6 +1307,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Counting a Word as Its Own Concatenation
+
 A concatenated word must be formed by at least two other words. If you check whether the entire word exists in the set without excluding it, every word would trivially match itself.
 
 ```python
@@ -1189,9 +1321,11 @@ if j == 0 and i == m:
 ```
 
 ### Not Requiring Multiple Words
+
 The problem requires concatenation of two or more words. Checking only that the word can be split into valid parts without ensuring at least two parts will incorrectly include single words that exist in the dictionary.
 
 ### Missing Memoization Leading to TLE
+
 Without memoization, the same suffix may be checked exponentially many times. For long words with many valid prefixes, this causes timeout.
 
 ```python
@@ -1207,7 +1341,9 @@ if word in dp:
 ```
 
 ### Incorrect Substring Indices
+
 Off-by-one errors when splitting the word into prefix and suffix are common. The prefix should be `word[0:i]` and suffix should be `word[i:]`, where `i` ranges from `1` to `len(word)-1`.
 
 ### Forgetting Empty String Edge Case
+
 If the word list contains an empty string, it could match infinitely. Most solutions implicitly handle this since the loop starts at `i=1`, but explicitly filtering empty strings from the word set is safer.

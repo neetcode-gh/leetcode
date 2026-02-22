@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding how to traverse a singly linked list using the `getNext()` method
 - **Recursion** - The call stack naturally reverses order, printing nodes as the stack unwinds
 - **Stack Data Structure** - An iterative alternative that provides LIFO ordering to reverse the print sequence
@@ -109,6 +111,17 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+//         if let Some(next) = head.get_next() {
+//             Self::print_linked_list_in_reverse(next);
+//         }
+//         head.print_value();
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -116,7 +129,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the size of the linked list.
+> Where $n$ is the size of the linked list.
 
 ---
 
@@ -273,6 +286,22 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+//         let mut stack: Vec<&ImmutableListNode> = Vec::new();
+//         let mut curr = Some(head);
+//         while let Some(node) = curr {
+//             stack.push(node);
+//             curr = node.get_next();
+//         }
+//         while let Some(node) = stack.pop() {
+//             node.print_value();
+//         }
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -280,7 +309,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the size of the linked list.
+> Where $n$ is the size of the linked list.
 
 ---
 
@@ -611,6 +640,45 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     fn print_reverse_recursive(head: &ImmutableListNode, size: usize) {
+//         if size > 0 {
+//             if let Some(next) = head.get_next() {
+//                 Self::print_reverse_recursive(next, size - 1);
+//             }
+//             head.print_value();
+//         }
+//     }
+//
+//     fn get_size(head: &ImmutableListNode) -> usize {
+//         let mut size = 0;
+//         let mut curr = Some(head);
+//         while let Some(node) = curr {
+//             size += 1;
+//             curr = node.get_next();
+//         }
+//         size
+//     }
+//
+//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+//         let n = Self::get_size(head);
+//         let block_size = (n as f64).sqrt().ceil() as usize;
+//         let mut blocks: Vec<&ImmutableListNode> = Vec::new();
+//         let mut curr = Some(head);
+//         for i in 0..n {
+//             if i % block_size == 0 {
+//                 blocks.push(curr.unwrap());
+//             }
+//             curr = curr.unwrap().get_next();
+//         }
+//         while let Some(block) = blocks.pop() {
+//             Self::print_reverse_recursive(block, block_size);
+//         }
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -618,7 +686,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(\sqrt n)$
 
->  Where $n$ is the size of the linked list.
+> Where $n$ is the size of the linked list.
 
 ---
 
@@ -873,6 +941,36 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     fn helper(start: Option<&ImmutableListNode>, end: Option<&ImmutableListNode>) {
+//         let s = match start {
+//             Some(node) => node,
+//             None => return,
+//         };
+//         if start == end {
+//             return;
+//         }
+//         if s.get_next() == end {
+//             s.print_value();
+//             return;
+//         }
+//         let mut slow = start;
+//         let mut fast = start;
+//         while fast != end && fast.and_then(|f| f.get_next()) != end {
+//             slow = slow.and_then(|n| n.get_next());
+//             fast = fast.and_then(|n| n.get_next()).and_then(|n| n.get_next());
+//         }
+//         Self::helper(slow, end);
+//         Self::helper(start, slow);
+//     }
+//
+//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+//         Self::helper(Some(head), None);
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -880,7 +978,7 @@ class Solution {
 - Time complexity: $O(n \cdot \log n)$
 - Space complexity: $O(\log n)$
 
->  Where $n$ is the size of the linked list.
+> Where $n$ is the size of the linked list.
 
 ---
 
@@ -894,9 +992,9 @@ Without any extra data structures, we can print in reverse by repeatedly finding
 
 1. Initialize `end` to `null` (representing the position after the last node).
 2. While `head` is not equal to `end`:
-   - Start from `head` and traverse until finding the node whose `next` pointer equals `end`.
-   - Print that node's value.
-   - Update `end` to point to this node.
+    - Start from `head` and traverse until finding the node whose `next` pointer equals `end`.
+    - Print that node's value.
+    - Update `end` to point to this node.
 
 ::tabs-start
 
@@ -1041,6 +1139,25 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     pub fn print_linked_list_in_reverse(head: &ImmutableListNode) {
+//         let mut end: Option<&ImmutableListNode> = None;
+//         let mut h: Option<&ImmutableListNode> = Some(head);
+//         while h != end {
+//             let mut curr = h;
+//             while curr.and_then(|n| n.get_next()) != end {
+//                 curr = curr.and_then(|n| n.get_next());
+//             }
+//             if let Some(node) = curr {
+//                 node.print_value();
+//             }
+//             end = curr;
+//         }
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1048,7 +1165,7 @@ class Solution {
 - Time complexity: $O(n^2)$
 - Space complexity: $O(1)$
 
->  Where $n$ is the size of the linked list.
+> Where $n$ is the size of the linked list.
 
 ---
 

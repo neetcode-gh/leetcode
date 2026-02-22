@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map / Hash Set** - Used for O(1) lookups to track element indices or check for duplicates within a window
 - **Sliding Window Technique** - Maintaining a fixed-size window of elements as you iterate through the array
 
@@ -8,9 +10,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The simplest approach is to check every pair of elements. For each element, we look at all elements within distance `k` and check if any of them are equal. This guarantees finding a duplicate if one exists within the required distance.
 
 ### Algorithm
+
 1. Iterate through each index `L` from `0` to `n-1`.
 2. For each `L`, iterate through index `R` from `L+1` to `min(n-1, L+k)`.
 3. If `nums[L] == nums[R]`, return `true`.
@@ -144,6 +148,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn contains_nearby_duplicate(nums: Vec<i32>, k: i32) -> bool {
+        let k = k as usize;
+        for l in 0..nums.len() {
+            for r in (l + 1)..nums.len().min(l + k + 1) {
+                if nums[l] == nums[r] {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,9 +178,11 @@ class Solution {
 ## 2. Hash Map
 
 ### Intuition
+
 Instead of checking all pairs, we can store the most recent index of each value in a hash map. When we encounter a value, we check if it appeared before and if the distance to its last occurrence is within `k`. This gives us O(1) lookup time for duplicates.
 
 ### Algorithm
+
 1. Create a hash map to store each value's most recent index.
 2. Iterate through the array with index `i`.
 3. If `nums[i]` exists in the map and `i - map[nums[i]] <= k`, return `true`.
@@ -305,6 +327,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn contains_nearby_duplicate(nums: Vec<i32>, k: i32) -> bool {
+        let k = k as usize;
+        let mut mp: HashMap<i32, usize> = HashMap::new();
+
+        for (i, &num) in nums.iter().enumerate() {
+            if let Some(&j) = mp.get(&num) {
+                if i - j <= k {
+                    return true;
+                }
+            }
+            mp.insert(num, i);
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -319,9 +361,11 @@ class Solution {
 ## 3. Hash Set
 
 ### Intuition
+
 We only need to check for duplicates within a sliding window of size `k`. Using a hash set, we maintain exactly the elements in the current window. If a new element already exists in the set, we found a duplicate within distance `k`. We slide the window by removing the leftmost element when the window exceeds size `k`.
 
 ### Algorithm
+
 1. Create an empty hash set to represent the sliding window.
 2. Use two pointers `L` and `R`, with `R` iterating through the array.
 3. If the window size `R - L` exceeds `k`, remove `nums[L]` from the set and increment `L`.
@@ -503,6 +547,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn contains_nearby_duplicate(nums: Vec<i32>, k: i32) -> bool {
+        let k = k as usize;
+        let mut window: HashSet<i32> = HashSet::new();
+        let mut l = 0;
+
+        for r in 0..nums.len() {
+            if r - l > k {
+                window.remove(&nums[l]);
+                l += 1;
+            }
+            if window.contains(&nums[r]) {
+                return true;
+            }
+            window.insert(nums[r]);
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -517,7 +584,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Off-by-One Error in Distance Check
+
 The condition requires the distance to be "at most k", meaning `abs(i - j) <= k`, not `< k`. Using strict inequality will miss valid pairs that are exactly `k` positions apart.
+
 ```python
 # Wrong: Using strict inequality
 if nums[i] in mp and i - mp[nums[i]] < k:  # Misses distance == k
@@ -527,4 +596,5 @@ if nums[i] in mp and i - mp[nums[i]] <= k:
 ```
 
 ### Storing All Indices Instead of Most Recent
+
 The hash map only needs to store the most recent index for each value. Storing all indices wastes memory and complicates the logic. Since we iterate left to right, we only care about the closest previous occurrence.

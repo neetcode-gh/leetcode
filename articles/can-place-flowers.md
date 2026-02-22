@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Traversing arrays and checking adjacent elements
 - **Greedy Algorithms** - Making locally optimal choices (planting when possible) to achieve the best result
 - **Boundary Handling** - Managing edge cases at the start and end of arrays
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Iteration - I
 
 ### Intuition
+
 A flower can be planted at position `i` only if positions `i-1`, `i`, and `i+1` are all empty. To handle edge cases at the boundaries, we pad the flowerbed with zeros at both ends. This way, we can apply the same rule uniformly across all positions without special boundary checks.
 
 ### Algorithm
+
 1. Create a new array with a `0` prepended and appended to the original flowerbed.
 2. Iterate through the padded array from index `1` to `length-2` (the original positions).
 3. For each position, check if the current cell and both neighbors are empty (all zeros).
@@ -170,6 +174,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_place_flowers(flowerbed: Vec<i32>, n: i32) -> bool {
+        let mut n = n;
+        let mut f = vec![0];
+        f.extend_from_slice(&flowerbed);
+        f.push(0);
+
+        for i in 1..f.len() - 1 {
+            if f[i - 1] == 0 && f[i] == 0 && f[i + 1] == 0 {
+                f[i] = 1;
+                n -= 1;
+            }
+        }
+
+        n <= 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -182,9 +206,11 @@ class Solution {
 ## 2. Iteration - II
 
 ### Intuition
+
 Instead of checking each position individually, we can count consecutive empty plots between flowers. For a sequence of `k` empty plots between two flowers, we can plant `(k-1)/2` flowers. At the beginning and end of the flowerbed, the formula differs slightly since there is no blocking flower on one side: we can plant `k/2` flowers at the edges.
 
 ### Algorithm
+
 1. Initialize an empty plot counter. If the first cell is empty, start the counter at `1` (treating the left boundary as open).
 2. Iterate through each cell in the flowerbed.
 3. When encountering a flower (`1`), calculate how many new flowers can fit in the empty sequence before it using `(empty-1)/2`, then reset the counter.
@@ -359,6 +385,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_place_flowers(flowerbed: Vec<i32>, n: i32) -> bool {
+        let mut n = n;
+        let mut empty = if flowerbed[0] == 0 { 1 } else { 0 };
+
+        for &f in &flowerbed {
+            if f == 1 {
+                n -= (empty - 1) / 2;
+                empty = 0;
+            } else {
+                empty += 1;
+            }
+        }
+
+        n -= empty / 2;
+        n <= 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -371,6 +418,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Mark Planted Flowers
+
 After deciding to plant a flower at position `i`, you must update the flowerbed to reflect the new flower. Otherwise, you may count overlapping positions as valid.
 
 ```python
@@ -380,4 +428,5 @@ if f[i-1] == 0 and f[i] == 0 and f[i+1] == 0:
 ```
 
 ### Off-by-One Errors at Boundaries
+
 When not padding the array, forgetting to handle the first and last positions specially leads to index-out-of-bounds errors or incorrect neighbor checks.

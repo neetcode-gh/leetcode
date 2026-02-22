@@ -1,8 +1,10 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through arrays while tracking consecutive elements
-- **Counting Subarrays** - Understanding that a sequence of k consecutive elements contains k*(k+1)/2 subarrays
-- **Arithmetic Series** - Using the formula 1 + 2 + ... + k = k*(k+1)/2 to count subarrays efficiently
+- **Counting Subarrays** - Understanding that a sequence of k consecutive elements contains k\*(k+1)/2 subarrays
+- **Arithmetic Series** - Using the formula 1 + 2 + ... + k = k\*(k+1)/2 to count subarrays efficiently
 
 ---
 
@@ -16,9 +18,9 @@ The most straightforward approach is to check every possible subarray and count 
 
 1. Initialize a result counter `res = 0`.
 2. For each starting index `i` from `0` to `n-1`:
-   - For each ending index `j` from `i` to `n-1`:
-     - If `nums[j]` is not `0`, break out of the inner loop.
-     - Otherwise, increment `res` (we found another zero-filled subarray).
+    - For each ending index `j` from `i` to `n-1`:
+        - If `nums[j]` is not `0`, break out of the inner loop.
+        - Otherwise, increment `res` (we found another zero-filled subarray).
 3. Return `res`.
 
 ::tabs-start
@@ -145,6 +147,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zero_filled_subarray(nums: Vec<i32>) -> i64 {
+        let mut res: i64 = 0;
+        for i in 0..nums.len() {
+            for j in i..nums.len() {
+                if nums[j] != 0 { break; }
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -166,12 +183,12 @@ We can compute this incrementally: as we extend a run of zeros by one element, w
 
 1. Initialize `res = 0` and index `i = 0`.
 2. While `i < n`:
-   - Initialize `count = 0` for the current run of zeros.
-   - While `nums[i] == 0`:
-     - Increment `count`.
-     - Add `count` to `res` (this counts all subarrays ending at the current zero).
-     - Increment `i`.
-   - Increment `i` to skip the non-zero element.
+    - Initialize `count = 0` for the current run of zeros.
+    - While `nums[i] == 0`:
+        - Increment `count`.
+        - Add `count` to `res` (this counts all subarrays ending at the current zero).
+        - Increment `i`.
+    - Increment `i` to skip the non-zero element.
 3. Return `res`.
 
 ::tabs-start
@@ -326,6 +343,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zero_filled_subarray(nums: Vec<i32>) -> i64 {
+        let mut res: i64 = 0;
+        let mut i = 0;
+        while i < nums.len() {
+            let mut count: i64 = 0;
+            while i < nums.len() && nums[i] == 0 {
+                count += 1;
+                i += 1;
+                res += count;
+            }
+            i += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,9 +383,9 @@ The key insight remains the same: when we are at the `k`-th consecutive zero, th
 
 1. Initialize `res = 0` and `count = 0`.
 2. For each number in the array:
-   - If the number is `0`, increment `count`.
-   - Otherwise, reset `count = 0`.
-   - Add `count` to `res`.
+    - If the number is `0`, increment `count`.
+    - Otherwise, reset `count = 0`.
+    - Add `count` to `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -512,6 +548,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zero_filled_subarray(nums: Vec<i32>) -> i64 {
+        let mut res: i64 = 0;
+        let mut count: i64 = 0;
+
+        for &num in &nums {
+            if num == 0 {
+                count += 1;
+            } else {
+                count = 0;
+            }
+            res += count;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -533,10 +589,10 @@ We scan through the array, counting the length of each consecutive zero sequence
 
 1. Initialize `res = 0` and `count = 0`.
 2. For each number in the array:
-   - If the number is `0`, increment `count`.
-   - Otherwise:
-     - Add `count * (count + 1) / 2` to `res`.
-     - Reset `count = 0`.
+    - If the number is `0`, increment `count`.
+    - Otherwise:
+        - Add `count * (count + 1) / 2` to `res`.
+        - Reset `count = 0`.
 3. After the loop, add the final `count * (count + 1) / 2` to handle any trailing zeros.
 4. Return `res`.
 
@@ -684,6 +740,25 @@ class Solution {
         }
         res += count * (count + 1) / 2
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn zero_filled_subarray(nums: Vec<i32>) -> i64 {
+        let mut res: i64 = 0;
+        let mut count: i64 = 0;
+        for &num in &nums {
+            if num == 0 {
+                count += 1;
+            } else {
+                res += count * (count + 1) / 2;
+                count = 0;
+            }
+        }
+        res += count * (count + 1) / 2;
+        res
     }
 }
 ```

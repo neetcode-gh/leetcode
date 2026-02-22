@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Using sets for O(1) lookups to check membership efficiently
 - **String Manipulation** - Parsing and splitting strings, working with substrings and prefixes
 - **Sorting** - Understanding how lexicographic sorting groups related strings together
@@ -17,9 +19,9 @@ A folder is a subfolder if any of its ancestor paths exist in the input. We can 
 
 1. Store all folder paths in a hash set for `O(1)` lookups.
 2. For each folder path:
-   - Add it to the `res` list.
-   - Scan through the path and check every prefix that ends just before a `/`.
-   - If any prefix exists in the set, remove the folder from `res` and move on.
+    - Add it to the `res` list.
+    - Scan through the path and check every prefix that ends just before a `/`.
+    - If any prefix exists in the set, remove the folder from `res` and move on.
 3. Return the `res` list.
 
 ::tabs-start
@@ -194,12 +196,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_subfolders(folder: Vec<String>) -> Vec<String> {
+        let folder_set: HashSet<&str> = folder.iter().map(|s| s.as_str()).collect();
+        let mut res = Vec::new();
+
+        for f in &folder {
+            let mut is_sub = false;
+            for (i, c) in f.chars().enumerate() {
+                if c == '/' && folder_set.contains(&f[..i]) {
+                    is_sub = true;
+                    break;
+                }
+            }
+            if !is_sub {
+                res.push(f.clone());
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $folder$ and $m$ is the length of each string.
 
@@ -216,8 +241,8 @@ When folder paths are sorted lexicographically, parent folders always appear bef
 1. Sort the `folder` array lexicographically.
 2. Add the first folder to `res`.
 3. For each subsequent folder:
-   - Check if it starts with the last `res` folder plus `/`.
-   - If not, add it to `res`.
+    - Check if it starts with the last `res` folder plus `/`.
+    - If not, add it to `res`.
 4. Return the `res` list.
 
 ::tabs-start
@@ -283,7 +308,7 @@ class Solution {
         let res = [folder[0]];
 
         for (let i = 1; i < folder.length; i++) {
-            if (!folder[i].startsWith(res[res.length - 1] + "/")) {
+            if (!folder[i].startsWith(res[res.length - 1] + '/')) {
                 res.push(folder[i]);
             }
         }
@@ -363,12 +388,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_subfolders(mut folder: Vec<String>) -> Vec<String> {
+        folder.sort();
+        let mut res = vec![folder[0].clone()];
+
+        for i in 1..folder.len() {
+            let last = format!("{}/", res.last().unwrap());
+            if !folder[i].starts_with(&last) {
+                res.push(folder[i].clone());
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $folder$ and $m$ is the length of each string.
 
@@ -383,11 +425,11 @@ A trie naturally represents hierarchical folder structures. Each node correspond
 ### Algorithm
 
 1. Build a trie by inserting all folder paths:
-   - Split each path by `/` and traverse or create nodes for each segment.
-   - Mark the final node as `end_of_folder`.
+    - Split each path by `/` and traverse or create nodes for each segment.
+    - Mark the final node as `end_of_folder`.
 2. For each folder, search the trie:
-   - Traverse the path segment by segment using an index `i` from `0` to `len(folders) - 1`.
-   - If any node before the last is marked as `end_of_folder`, skip this folder.
+    - Traverse the path segment by segment using an index `i` from `0` to `len(folders) - 1`.
+    - If any node before the last is marked as `end_of_folder`, skip this folder.
 3. Add non-subfolder paths to `res`.
 4. Return the `res` list.
 
@@ -559,13 +601,15 @@ class Trie {
      */
     add(path) {
         let cur = this;
-        for (let f of path.split("/")) {
-            if (f === "") continue;
+        for (let f of path.split('/')) {
+            if (f === '') continue;
             for (let c of f) {
-                if (!cur.children[c.charCodeAt(0)]) cur.children[c.charCodeAt(0)] = new Trie();
+                if (!cur.children[c.charCodeAt(0)])
+                    cur.children[c.charCodeAt(0)] = new Trie();
                 cur = cur.children[c.charCodeAt(0)];
             }
-            if (!cur.children['/'.charCodeAt(0)]) cur.children['/'.charCodeAt(0)] = new Trie();
+            if (!cur.children['/'.charCodeAt(0)])
+                cur.children['/'.charCodeAt(0)] = new Trie();
             cur = cur.children['/'.charCodeAt(0)];
         }
         cur.end_of_folder = true;
@@ -577,9 +621,9 @@ class Trie {
      */
     prefixSearch(path) {
         let cur = this;
-        let folders = path.split("/");
+        let folders = path.split('/');
         for (let i = 0; i < folders.length - 1; i++) {
-            if (folders[i] === "") continue;
+            if (folders[i] === '') continue;
             for (let c of folders[i]) {
                 cur = cur.children[c.charCodeAt(0)];
             }
@@ -806,12 +850,71 @@ class Solution {
 }
 ```
 
+```rust
+struct Trie {
+    children: HashMap<String, Trie>,
+    end_of_folder: bool,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Trie {
+            children: HashMap::new(),
+            end_of_folder: false,
+        }
+    }
+
+    fn add(&mut self, path: &str) {
+        let mut cur = self;
+        for f in path.split('/') {
+            if f.is_empty() {
+                continue;
+            }
+            cur = cur.children.entry(f.to_string()).or_insert_with(Trie::new);
+        }
+        cur.end_of_folder = true;
+    }
+
+    fn prefix_search(&self, path: &str) -> bool {
+        let folders: Vec<&str> = path.split('/').collect();
+        let mut cur = self;
+        for i in 0..folders.len() - 1 {
+            if folders[i].is_empty() {
+                continue;
+            }
+            cur = cur.children.get(folders[i]).unwrap();
+            if cur.end_of_folder {
+                return true;
+            }
+        }
+        false
+    }
+}
+
+impl Solution {
+    pub fn remove_subfolders(folder: Vec<String>) -> Vec<String> {
+        let mut trie = Trie::new();
+        for f in &folder {
+            trie.add(f);
+        }
+
+        let mut res = Vec::new();
+        for f in &folder {
+            if !trie.prefix_search(f) {
+                res.push(f.clone());
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $folder$ and $m$ is the length of each string.
 
@@ -829,4 +932,4 @@ Every path starts with `/`, which creates an empty string when splitting by `/`.
 
 ### Incorrect Sorting Assumptions
 
-When using the sorting approach, you must compare against the *last added result* folder, not any arbitrary previous folder. Since sorted order ensures parents come before children, only the most recent result can be the parent of the current folder. Comparing against all previous results is both unnecessary and error-prone.
+When using the sorting approach, you must compare against the _last added result_ folder, not any arbitrary previous folder. Since sorted order ensures parents come before children, only the most recent result can be the parent of the current folder. Comparing against all previous results is both unnecessary and error-prone.

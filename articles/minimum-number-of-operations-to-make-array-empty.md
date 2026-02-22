@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Required to count occurrences of each element in the array
 - **Recursion** - The base approach explores all possible deletion choices recursively
 - **Dynamic Programming (Memoization)** - Used to optimize the recursive solution by caching subproblem results
@@ -19,8 +21,8 @@ For any `count`, we try both options: subtract 2 or subtract 3, and recursively 
 
 1. Count the frequency of each element in the array.
 2. For each unique element's `count`, use recursion to find the minimum operations:
-   - Base case: if `count` is `0`, return `0`. If `count` is negative, return infinity.
-   - Try both `dfs(count - 2)` and `dfs(count - 3)`, take the `min`, and add `1`.
+    - Base case: if `count` is `0`, return `0`. If `count` is negative, return infinity.
+    - Try both `dfs(count - 2)` and `dfs(count - 3)`, take the `min`, and add `1`.
 3. If any `count` returns infinity, return `-1` (impossible to empty).
 4. Sum up the minimum operations for all frequencies.
 
@@ -288,6 +290,38 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        fn dfs(cur: i32) -> i32 {
+            if cur < 0 {
+                return i32::MAX;
+            }
+            if cur == 0 {
+                return 0;
+            }
+            let ops = dfs(cur - 2).min(dfs(cur - 3));
+            if ops == i32::MAX { ops } else { 1 + ops }
+        }
+
+        let mut res = 0;
+        for &cnt in count.values() {
+            let op = dfs(cnt);
+            if op == i32::MAX {
+                return -1;
+            }
+            res += op;
+        }
+        res
     }
 }
 ```
@@ -631,6 +665,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut cache = HashMap::new();
+
+        fn dfs(cur: i32, cache: &mut HashMap<i32, i32>) -> i32 {
+            if cur < 0 {
+                return i32::MAX;
+            }
+            if cur == 2 || cur == 3 {
+                return 1;
+            }
+            if let Some(&v) = cache.get(&cur) {
+                return v;
+            }
+            let res = dfs(cur - 2, cache).min(dfs(cur - 3, cache));
+            let val = if res == i32::MAX { res } else { res + 1 };
+            cache.insert(cur, val);
+            val
+        }
+
+        let mut res = 0;
+        for &cnt in count.values() {
+            let op = dfs(cnt, &mut cache);
+            if op == i32::MAX {
+                return -1;
+            }
+            res += op;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -950,6 +1023,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0i32) += 1;
+        }
+
+        let maxf = *count.values().max().unwrap_or(&0) as usize;
+        let mut min_ops = vec![0i32; maxf + 1];
+        if maxf >= 1 {
+            min_ops[1] = i32::MAX;
+        }
+
+        for i in 2..=maxf {
+            min_ops[i] = min_ops[i - 2];
+            if i >= 3 {
+                min_ops[i] = min_ops[i].min(min_ops[i - 3]);
+            }
+            if min_ops[i] != i32::MAX {
+                min_ops[i] += 1;
+            }
+        }
+
+        let mut res = 0;
+        for &cnt in count.values() {
+            let op = min_ops[cnt as usize];
+            if op == i32::MAX {
+                return -1;
+            }
+            res += op;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -973,8 +1083,8 @@ The only impossible case is when `count` equals `1`, since we need at least `2` 
 
 1. Count the frequency of each element.
 2. For each frequency:
-   - If it equals `1`, return `-1` (impossible).
-   - Otherwise, add `ceil(count / 3)` to the `res`.
+    - If it equals `1`, return `-1` (impossible).
+    - Otherwise, add `ceil(count / 3)` to the `res`.
 3. Return the total operations.
 
 ::tabs-start
@@ -1137,6 +1247,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut res = 0;
+        for &cnt in count.values() {
+            if cnt == 1 {
+                return -1;
+            }
+            res += (cnt + 2) / 3;
+        }
+        res
     }
 }
 ```

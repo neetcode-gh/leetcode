@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Using memoization (top-down) or tabulation (bottom-up) to solve counting problems
 - **Recursion** - Breaking down the problem into smaller subproblems by exploring different choices
 - **Modular Arithmetic** - Applying modulo operations during intermediate calculations to prevent overflow
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 We can think of building a string as making a series of choices. At each step, we either append `zero` number of `'0'`s or `one` number of `'1'`s. The recursion naturally explores all possible combinations by branching at each decision point. A string is "good" when its length falls within the range `[low, high]`, so we count it whenever we reach a valid length.
 
 ### Algorithm
+
 1. Start with an empty string (length `0`).
 2. At each recursive call, if the current length exceeds `high`, stop and return `0`.
 3. If the current length is at least `low`, count this as one valid string.
@@ -173,6 +177,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_good_strings(low: i32, high: i32, zero: i32, one: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+
+        fn dfs(length: i32, low: i32, high: i32, zero: i32, one: i32) -> i64 {
+            if length > high { return 0; }
+            let mut res = if length >= low { 1i64 } else { 0 };
+            res = (res + dfs(length + zero, low, high, zero, one)) % 1_000_000_007;
+            res = (res + dfs(length + one, low, high, zero, one)) % 1_000_000_007;
+            res
+        }
+
+        dfs(0, low, high, zero, one) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -187,9 +209,11 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 The recursive solution has overlapping subproblems because we may reach the same string length through different paths. For example, adding `zero` then `one` might give the same length as adding `one` then `zero`. Memoization stores the result for each length we have already computed, avoiding redundant calculations.
 
 ### Algorithm
+
 1. Create a memoization structure (hash map or array) to store results for each length.
 2. Use the same recursive approach as before, but before computing, check if the result for the current length is already cached.
 3. If cached, return the stored value immediately.
@@ -385,6 +409,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_good_strings(low: i32, high: i32, zero: i32, one: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let high = high as usize;
+        let low = low as usize;
+        let zero = zero as usize;
+        let one = one as usize;
+        let mut dp = vec![-1i64; high + 1];
+
+        fn dfs(length: usize, low: usize, high: usize, zero: usize, one: usize, dp: &mut Vec<i64>) -> i64 {
+            if length > high { return 0; }
+            if dp[length] != -1 { return dp[length]; }
+            dp[length] = if length >= low { 1 } else { 0 };
+            dp[length] = (dp[length] + dfs(length + zero, low, high, zero, one, dp)) % 1_000_000_007;
+            dp[length] = (dp[length] + dfs(length + one, low, high, zero, one, dp)) % 1_000_000_007;
+            dp[length]
+        }
+
+        dfs(0, low, high, zero, one, &mut dp) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,9 +447,11 @@ class Solution {
 ## 3. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 Instead of starting from length `0` and recursing forward, we can build the solution iteratively. For each length `i`, the number of ways to reach it equals the ways to reach length `i - zero` (then add zeros) plus the ways to reach length `i - one` (then add ones). This is similar to the classic coin change problem where we count combinations.
 
 ### Algorithm
+
 1. Initialize a DP array where `dp[0] = 1` (one way to have an empty string).
 2. Iterate through lengths from `1` to `high`.
 3. For each length `i`, set `dp[i] = dp[i - zero] + dp[i - one]` (checking bounds).
@@ -553,6 +603,25 @@ class Solution {
             if i >= low { res = (res + dp[i]) % mod }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_good_strings(low: i32, high: i32, zero: i32, one: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (low, high, zero, one) = (low as usize, high as usize, zero as usize, one as usize);
+        let mut dp = vec![0i64; high + 1];
+        dp[0] = 1;
+        let mut res = 0i64;
+
+        for i in 1..=high {
+            if i >= zero { dp[i] = (dp[i] + dp[i - zero]) % MOD; }
+            if i >= one { dp[i] = (dp[i] + dp[i - one]) % MOD; }
+            if i >= low { res = (res + dp[i]) % MOD; }
+        }
+        res as i32
     }
 }
 ```

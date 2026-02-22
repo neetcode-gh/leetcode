@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, nodes, and recursive tree definitions
 - **Depth-First Search (DFS)** - Traversing trees using pre-order, in-order, or post-order traversal
 - **Tree Serialization** - Converting tree structures into string representations for comparison
@@ -17,9 +19,9 @@ The most straightforward way to find duplicate subtrees is to compare every subt
 
 1. Traverse the tree with DFS to collect all nodes into a list.
 2. For each pair of nodes `(i, j)` where `j > i`:
-   - Skip if either node has already been identified as a duplicate.
-   - Recursively check if the subtrees rooted at these nodes are identical (same structure and values).
-   - If they match, add one node to the result and mark both as seen.
+    - Skip if either node has already been identified as a duplicate.
+    - Recursively check if the subtrees rooted at these nodes are identical (same structure and values).
+    - If they match, add one node to the result and mark both as seen.
 3. Return the list of duplicate subtree roots.
 
 ::tabs-start
@@ -412,6 +414,73 @@ class Solution {
 }
 ```
 
+```rust
+// Note: This brute force approach relies on identity-based
+// comparison of tree node pointers, which doesn't directly
+// translate to Rust's Rc<RefCell<TreeNode>>. We use index-based
+// tracking instead.
+use std::rc::Rc;
+use std::cell::RefCell;
+
+impl Solution {
+    pub fn find_duplicate_subtrees(
+        root: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let mut sub_tree = Vec::new();
+        Self::dfs_collect(&root, &mut sub_tree);
+
+        let mut res = Vec::new();
+        let mut seen = HashSet::new();
+        let n = sub_tree.len();
+
+        for i in 0..n {
+            if seen.contains(&i) { continue; }
+            for j in (i + 1)..n {
+                if seen.contains(&j) { continue; }
+                if Self::same(&sub_tree[i], &sub_tree[j]) {
+                    if !seen.contains(&i) {
+                        res.push(sub_tree[i].clone());
+                        seen.insert(i);
+                    }
+                    seen.insert(j);
+                }
+            }
+        }
+
+        res
+    }
+
+    fn dfs_collect(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        sub_tree: &mut Vec<Option<Rc<RefCell<TreeNode>>>>,
+    ) {
+        if let Some(n) = node {
+            sub_tree.push(Some(n.clone()));
+            let n = n.borrow();
+            Self::dfs_collect(&n.left, sub_tree);
+            Self::dfs_collect(&n.right, sub_tree);
+        }
+    }
+
+    fn same(
+        a: &Option<Rc<RefCell<TreeNode>>>,
+        b: &Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        match (a, b) {
+            (None, None) => true,
+            (Some(a), Some(b)) => {
+                let a = a.borrow();
+                let b = b.borrow();
+                a.val == b.val
+                    && Self::same(&a.left, &b.left)
+                    && Self::same(&a.right, &b.right)
+            }
+            _ => false,
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -676,6 +745,47 @@ class Solution {
 
         dfs(root)
         return res
+    }
+}
+```
+
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+impl Solution {
+    pub fn find_duplicate_subtrees(
+        root: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let mut subtrees: HashMap<String, usize> = HashMap::new();
+        let mut res = Vec::new();
+        Self::dfs(&root, &mut subtrees, &mut res);
+        res
+    }
+
+    fn dfs(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        subtrees: &mut HashMap<String, usize>,
+        res: &mut Vec<Option<Rc<RefCell<TreeNode>>>>,
+    ) -> String {
+        match node {
+            None => "null".to_string(),
+            Some(n) => {
+                let n_ref = n.borrow();
+                let s = format!(
+                    "{},{},{}",
+                    n_ref.val,
+                    Self::dfs(&n_ref.left, subtrees, res),
+                    Self::dfs(&n_ref.right, subtrees, res)
+                );
+                let count = subtrees.entry(s.clone()).or_insert(0);
+                *count += 1;
+                if *count == 2 {
+                    res.push(node.clone());
+                }
+                s
+            }
+        }
     }
 }
 ```
@@ -975,6 +1085,48 @@ class Solution {
 
         dfs(root)
         return res
+    }
+}
+```
+
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+impl Solution {
+    pub fn find_duplicate_subtrees(
+        root: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let mut id_map: HashMap<String, usize> = HashMap::new();
+        let mut count: HashMap<usize, usize> = HashMap::new();
+        let mut res = Vec::new();
+        Self::dfs(&root, &mut id_map, &mut count, &mut res);
+        res
+    }
+
+    fn dfs(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        id_map: &mut HashMap<String, usize>,
+        count: &mut HashMap<usize, usize>,
+        res: &mut Vec<Option<Rc<RefCell<TreeNode>>>>,
+    ) -> i32 {
+        match node {
+            None => -1,
+            Some(n) => {
+                let n_ref = n.borrow();
+                let left_id = Self::dfs(&n_ref.left, id_map, count, res);
+                let right_id = Self::dfs(&n_ref.right, id_map, count, res);
+                let cur = format!("{},{},{}", left_id, n_ref.val, right_id);
+                let next_id = id_map.len() + 1;
+                let cur_id = *id_map.entry(cur).or_insert(next_id);
+                let cnt = count.entry(cur_id).or_insert(0);
+                *cnt += 1;
+                if *cnt == 2 {
+                    res.push(node.clone());
+                }
+                cur_id as i32
+            }
+        }
     }
 }
 ```

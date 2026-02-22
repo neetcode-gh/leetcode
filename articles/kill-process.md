@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree Data Structures** - Understanding parent-child relationships and tree traversal concepts
 - **Hash Maps** - Using dictionaries/maps for O(1) lookups to build adjacency lists
 - **Depth First Search (DFS)** - Recursively traversing tree structures to visit all descendants
@@ -167,6 +169,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kill_process(pid: Vec<i32>, ppid: Vec<i32>, kill: i32) -> Vec<i32> {
+        if kill == 0 {
+            return vec![];
+        }
+        let mut result = vec![kill];
+        for i in 0..ppid.len() {
+            if ppid[i] == kill {
+                result.extend(Self::kill_process(pid.clone(), ppid.clone(), pid[i]));
+            }
+        }
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -174,7 +193,7 @@ class Solution {
 - Time complexity: $O(n^2)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the `pid` and `ppid`.
+> Where $n$ is the length of the `pid` and `ppid`.
 
 ---
 
@@ -457,6 +476,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kill_process(pid: Vec<i32>, ppid: Vec<i32>, kill: i32) -> Vec<i32> {
+        let mut mp: HashMap<i32, Vec<usize>> = HashMap::new();
+        for (i, &id) in pid.iter().enumerate() {
+            mp.entry(id).or_default().push(i);
+        }
+
+        let mut children: HashMap<i32, Vec<i32>> = HashMap::new();
+        for i in 0..ppid.len() {
+            if ppid[i] > 0 {
+                children.entry(ppid[i]).or_default().push(pid[i]);
+            }
+        }
+
+        let mut result = vec![kill];
+        Self::get_all_children(&children, &mut result, kill);
+        result
+    }
+
+    fn get_all_children(children: &HashMap<i32, Vec<i32>>, result: &mut Vec<i32>, kill: i32) {
+        if let Some(kids) = children.get(&kill) {
+            for &child in kids {
+                result.push(child);
+                Self::get_all_children(children, result, child);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,7 +514,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the `pid` and `ppid`.
+> Where $n$ is the length of the `pid` and `ppid`.
 
 ---
 
@@ -492,11 +542,11 @@ class Solution:
                 if ppid[i] not in map_dict:
                     map_dict[ppid[i]] = []
                 map_dict[ppid[i]].append(pid[i])
-        
+
         result = [kill]
         self.getAllChildren(map_dict, result, kill)
         return result
-    
+
     def getAllChildren(self, map_dict, result, kill):
         if kill in map_dict:
             for child_id in map_dict[kill]:
@@ -543,13 +593,13 @@ public:
                 map[ppid[i]].push_back(pid[i]);
             }
         }
-        
+
         vector<int> result;
         result.push_back(kill);
         getAllChildren(map, result, kill);
         return result;
     }
-    
+
 private:
     void getAllChildren(unordered_map<int, vector<int>>& map, vector<int>& result, int kill) {
         if (map.find(kill) != map.end()) {
@@ -580,12 +630,12 @@ class Solution {
                 map.get(ppid[i]).push(pid[i]);
             }
         }
-        
+
         const result = [kill];
         this.getAllChildren(map, result, kill);
         return result;
     }
-    
+
     /**
      * @param {Map<number, number[]>} map
      * @param {number[]} result
@@ -707,6 +757,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kill_process(pid: Vec<i32>, ppid: Vec<i32>, kill: i32) -> Vec<i32> {
+        let mut map: HashMap<i32, Vec<i32>> = HashMap::new();
+        for i in 0..ppid.len() {
+            if ppid[i] > 0 {
+                map.entry(ppid[i]).or_default().push(pid[i]);
+            }
+        }
+
+        let mut result = vec![kill];
+        Self::get_all_children(&map, &mut result, kill);
+        result
+    }
+
+    fn get_all_children(map: &HashMap<i32, Vec<i32>>, result: &mut Vec<i32>, kill: i32) {
+        if let Some(children) = map.get(&kill) {
+            for &child_id in children {
+                result.push(child_id);
+                Self::get_all_children(map, result, child_id);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -714,7 +790,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the `pid` and `ppid`.
+> Where $n$ is the length of the `pid` and `ppid`.
 
 ---
 
@@ -729,8 +805,8 @@ BFS offers an alternative to DFS for traversing the process tree. Instead of goi
 1. Build a hash map mapping each parent process ID to its children.
 2. Initialize a queue with the `kill` process.
 3. While the queue is not empty:
-   - Dequeue a process and add it to the result.
-   - Enqueue all of its children.
+    - Dequeue a process and add it to the result.
+    - Enqueue all of its children.
 4. Return the result containing all killed processes.
 
 ::tabs-start
@@ -744,7 +820,7 @@ class Solution:
                 if ppid[i] not in map_dict:
                     map_dict[ppid[i]] = []
                 map_dict[ppid[i]].append(pid[i])
-        
+
         queue = deque([kill])
         result = []
         while queue:
@@ -753,7 +829,7 @@ class Solution:
             if r in map_dict:
                 for child_id in map_dict[r]:
                     queue.append(child_id)
-        
+
         return result
 ```
 
@@ -796,7 +872,7 @@ public:
                 map[ppid[i]].push_back(pid[i]);
             }
         }
-        
+
         queue<int> q;
         vector<int> result;
         q.push(kill);
@@ -810,7 +886,7 @@ public:
                 }
             }
         }
-        
+
         return result;
     }
 };
@@ -958,6 +1034,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kill_process(pid: Vec<i32>, ppid: Vec<i32>, kill: i32) -> Vec<i32> {
+        let mut map: HashMap<i32, Vec<i32>> = HashMap::new();
+        for i in 0..ppid.len() {
+            if ppid[i] > 0 {
+                map.entry(ppid[i]).or_default().push(pid[i]);
+            }
+        }
+
+        let mut queue = VecDeque::new();
+        queue.push_back(kill);
+        let mut result = Vec::new();
+        while let Some(r) = queue.pop_front() {
+            result.push(r);
+            if let Some(children) = map.get(&r) {
+                for &child_id in children {
+                    queue.push_back(child_id);
+                }
+            }
+        }
+
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -965,7 +1068,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the `pid` and `ppid`.
+> Where $n$ is the length of the `pid` and `ppid`.
 
 ---
 

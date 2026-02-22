@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches are used to build optimal chains
 - **Hash Map** - Storing words for O(1) lookup when checking if predecessors exist
 - **Sorting** - Words must be sorted by length to ensure proper processing order in DP
@@ -21,10 +23,10 @@ For each word, we try removing each character one at a time and check if that pr
 2. Build a hash map mapping each word to its index.
 3. Create a memoization array `dp` where `dp[i]` stores the longest chain starting from word `i`.
 4. Define `dfs(i)` that:
-   - Returns cached result if available.
-   - Tries removing each character from `words[i]` to form predecessors.
-   - For each predecessor that exists in the word list, recursively compute its chain length.
-   - Returns `1 + max(chain lengths of all valid predecessors)`.
+    - Returns cached result if available.
+    - Tries removing each character from `words[i]` to form predecessors.
+    - For each predecessor that exists in the word list, recursively compute its chain length.
+    - Returns `1 + max(chain lengths of all valid predecessors)`.
 5. Call `dfs` for all words and return the maximum result.
 
 ::tabs-start
@@ -338,6 +340,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_str_chain(words: Vec<String>) -> i32 {
+        let mut words = words;
+        words.sort_by(|a, b| b.len().cmp(&a.len()));
+        let word_index: HashMap<String, usize> = words
+            .iter()
+            .enumerate()
+            .map(|(i, w)| (w.clone(), i))
+            .collect();
+
+        let mut dp = vec![-1i32; words.len()];
+
+        fn dfs(
+            i: usize,
+            words: &[String],
+            word_index: &HashMap<String, usize>,
+            dp: &mut Vec<i32>,
+        ) -> i32 {
+            if dp[i] != -1 {
+                return dp[i];
+            }
+            let mut res = 1;
+            let w = &words[i];
+            for j in 0..w.len() {
+                let pred = format!("{}{}", &w[..j], &w[j + 1..]);
+                if let Some(&idx) = word_index.get(&pred) {
+                    res = res.max(1 + dfs(idx, words, word_index, dp));
+                }
+            }
+            dp[i] = res;
+            res
+        }
+
+        let mut max_chain = 1;
+        for i in 0..words.len() {
+            max_chain = max_chain.max(dfs(i, &words, &word_index, &mut dp));
+        }
+        max_chain
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -360,9 +405,9 @@ We can build chains from shorter words to longer words. By sorting words by leng
 1. Sort words by length in ascending order.
 2. Create a `dp` array where `dp[i]` represents the longest chain ending at word `i`.
 3. For each word at index `i`:
-   - Look back at all previous words `j` where `j < i`.
-   - If word `j` has length exactly one less than word `i`, check if `j` is a predecessor of `i` using the `isPred` helper.
-   - Update `dp[i] = max(dp[i], dp[j] + 1)`.
+    - Look back at all previous words `j` where `j < i`.
+    - If word `j` has length exactly one less than word `i`, check if `j` is a predecessor of `i` using the `isPred` helper.
+    - Update `dp[i] = max(dp[i], dp[j] + 1)`.
 4. Return the maximum value in the DP array.
 
 ::tabs-start
@@ -688,6 +733,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_str_chain(words: Vec<String>) -> i32 {
+        let mut words = words;
+        words.sort_by_key(|w| w.len());
+        let n = words.len();
+        let mut dp = vec![1i32; n];
+
+        fn is_pred(w1: &str, w2: &str) -> bool {
+            let w1 = w1.as_bytes();
+            let mut i = 0;
+            for &c in w2.as_bytes() {
+                if i == w1.len() {
+                    return true;
+                }
+                if w1[i] == c {
+                    i += 1;
+                }
+            }
+            i == w1.len()
+        }
+
+        for i in 1..n {
+            for j in (0..i).rev() {
+                if words[j].len() + 1 < words[i].len() {
+                    break;
+                }
+                if words[j].len() + 1 > words[i].len()
+                    || !is_pred(&words[j], &words[i])
+                {
+                    continue;
+                }
+                dp[i] = dp[i].max(1 + dp[j]);
+            }
+        }
+
+        *dp.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,10 +796,10 @@ Instead of comparing each word with all shorter words, we can generate all possi
 1. Sort words by length in ascending order.
 2. Create a hash map `dp` where `dp[word]` stores the longest chain ending at that word.
 3. For each word in sorted order:
-   - Initialize `dp[word] = 1`.
-   - Generate all possible predecessors by removing each character.
-   - For each predecessor that exists in `dp`, update `dp[word] = max(dp[word], dp[predecessor] + 1)`.
-   - Track the global maximum chain length.
+    - Initialize `dp[word] = 1`.
+    - Generate all possible predecessors by removing each character.
+    - For each predecessor that exists in `dp`, update `dp[word] = max(dp[word], dp[predecessor] + 1)`.
+    - Track the global maximum chain length.
 4. Return the maximum chain length found.
 
 ::tabs-start
@@ -911,6 +997,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_str_chain(words: Vec<String>) -> i32 {
+        let mut words = words;
+        words.sort_by_key(|w| w.len());
+        let mut dp: HashMap<String, i32> = HashMap::new();
+        let mut res = 0;
+
+        for word in &words {
+            let mut best = 1;
+            for i in 0..word.len() {
+                let pred = format!("{}{}", &word[..i], &word[i + 1..]);
+                if let Some(&val) = dp.get(&pred) {
+                    best = best.max(val + 1);
+                }
+            }
+            dp.insert(word.clone(), best);
+            res = res.max(best);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -930,7 +1041,7 @@ The most critical step is sorting words by length before processing. Without sor
 
 ### Incorrect Predecessor Check
 
-A common mistake is checking if two words differ by exactly one character without verifying the ordering. The predecessor must be formed by *removing* one character from the current word, not by *adding* or *replacing*. For example, "abc" is a predecessor of "abcd" only if you can form "abc" by deleting one character from "abcd" while maintaining the relative order of remaining characters.
+A common mistake is checking if two words differ by exactly one character without verifying the ordering. The predecessor must be formed by _removing_ one character from the current word, not by _adding_ or _replacing_. For example, "abc" is a predecessor of "abcd" only if you can form "abc" by deleting one character from "abcd" while maintaining the relative order of remaining characters.
 
 ### Not Handling Duplicate Words
 

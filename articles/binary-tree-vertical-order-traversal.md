@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure and traversal patterns
 - **Breadth First Search (BFS)** - Level-order traversal ensures correct top-to-bottom ordering within columns
 - **Hash Maps** - Used to group nodes by their column index for efficient lookup
@@ -10,15 +12,17 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Breadth First Search + Sorting
 
 ### Intuition
+
 We assign each node a column index where the root is at column `0`, left children are at `column - 1`, and right children are at `column + 1`. Using BFS ensures we visit nodes level by level, so nodes in the same column appear in top-to-bottom order. We group nodes by their column index and sort the columns to get the final result.
 
 ### Algorithm
+
 1. Use a hash map to group node values by their column index.
 2. Initialize a queue with the root node and its column index (`0`).
 3. While the queue is not empty:
-   - Dequeue a node and its column index.
-   - Add the node's value to the corresponding column list.
-   - Enqueue the left child with `column - 1` and right child with `column + 1`.
+    - Dequeue a node and its column index.
+    - Add the node's value to the corresponding column list.
+    - Enqueue the left child with `column - 1` and right child with `column + 1`.
 4. Sort the column keys and return the values in order.
 
 ::tabs-start
@@ -283,6 +287,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn vertical_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        if root.is_none() {
+            return vec![];
+        }
+
+        let mut cols: BTreeMap<i32, Vec<i32>> = BTreeMap::new();
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, i32)> = VecDeque::new();
+        queue.push_back((root.unwrap(), 0));
+
+        while let Some((node, pos)) = queue.pop_front() {
+            let node_ref = node.borrow();
+            cols.entry(pos).or_default().push(node_ref.val);
+
+            if let Some(ref left) = node_ref.left {
+                queue.push_back((left.clone(), pos - 1));
+            }
+            if let Some(ref right) = node_ref.right {
+                queue.push_back((right.clone(), pos + 1));
+            }
+        }
+
+        cols.into_values().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,9 +327,11 @@ class Solution {
 ## 2. Depth First Search + Sorting
 
 ### Intuition
+
 DFS can also solve this problem, but we need to track each node's row to maintain the correct vertical order within columns. Since DFS doesn't naturally visit nodes in level order, we store both the row and value for each node. After traversal, we sort each column by row index to ensure nodes appear in top-to-bottom order.
 
 ### Algorithm
+
 1. Use a hash map to store pairs of `(row, value)` for each column.
 2. Define a `dfs` function that takes the current `node`, `row`, and `column`.
 3. If the `node` is `null`, return.
@@ -584,6 +618,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn vertical_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        if root.is_none() {
+            return vec![];
+        }
+
+        let mut cols: BTreeMap<i32, Vec<(i32, i32)>> = BTreeMap::new();
+        Self::dfs(&root, 0, 0, &mut cols);
+
+        cols.into_values()
+            .map(|mut vec| {
+                vec.sort_by_key(|&(row, _)| row);
+                vec.into_iter().map(|(_, val)| val).collect()
+            })
+            .collect()
+    }
+
+    fn dfs(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        row: i32,
+        col: i32,
+        cols: &mut BTreeMap<i32, Vec<(i32, i32)>>,
+    ) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            cols.entry(col).or_default().push((row, n.val));
+            Self::dfs(&n.left, row + 1, col - 1, cols);
+            Self::dfs(&n.right, row + 1, col + 1, cols);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -596,16 +664,18 @@ class Solution {
 ## 3. Breadth First Search (Optimal)
 
 ### Intuition
+
 Instead of sorting all column keys at the end, we can track the minimum and maximum column indices during traversal. This allows us to iterate from the leftmost to rightmost column directly without sorting, reducing the time complexity.
 
 ### Algorithm
+
 1. Use a hash map to group node values by column index.
 2. Track the minimum and maximum column indices during traversal.
 3. Initialize a queue with the root and column `0`.
 4. While the queue is not empty:
-   - Dequeue a node and its column.
-   - Add the value to the column's list and update `minCol`/`maxCol`.
-   - Enqueue children with their respective column indices.
+    - Dequeue a node and its column.
+    - Add the value to the column's list and update `minCol`/`maxCol`.
+    - Enqueue children with their respective column indices.
 5. Iterate from `minCol` to `maxCol` and collect each column's values in order.
 
 ::tabs-start
@@ -914,6 +984,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn vertical_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        if root.is_none() {
+            return vec![];
+        }
+
+        let mut cols: HashMap<i32, Vec<i32>> = HashMap::new();
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, i32)> = VecDeque::new();
+        queue.push_back((root.unwrap(), 0));
+        let mut min_col = 0i32;
+        let mut max_col = 0i32;
+
+        while let Some((node, col)) = queue.pop_front() {
+            let node_ref = node.borrow();
+            cols.entry(col).or_default().push(node_ref.val);
+            min_col = min_col.min(col);
+            max_col = max_col.max(col);
+
+            if let Some(ref left) = node_ref.left {
+                queue.push_back((left.clone(), col - 1));
+            }
+            if let Some(ref right) = node_ref.right {
+                queue.push_back((right.clone(), col + 1));
+            }
+        }
+
+        (min_col..=max_col)
+            .map(|c| cols.remove(&c).unwrap())
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -926,9 +1030,11 @@ class Solution {
 ## 4. Depth First Search (Optimal)
 
 ### Intuition
+
 Similar to the optimal BFS approach, we track min and max column indices during DFS to avoid sorting columns. However, we still need to store row information and sort within each column since DFS doesn't visit nodes in level order. This approach reduces the complexity of iterating over columns while still requiring per-column sorting.
 
 ### Algorithm
+
 1. Use a hash map to store `(row, value)` pairs for each column.
 2. Track `minCol` and `maxCol` column indices during traversal.
 3. Define a `dfs` function that updates `minCol`/`maxCol` and adds `(row, value)` to the column list.
@@ -1158,6 +1264,49 @@ public class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn vertical_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        if root.is_none() {
+            return vec![];
+        }
+
+        let mut cols: HashMap<i32, Vec<(i32, i32)>> = HashMap::new();
+        let mut min_col = 0i32;
+        let mut max_col = 0i32;
+
+        Self::dfs(&root, 0, 0, &mut cols, &mut min_col, &mut max_col);
+
+        let mut res = Vec::new();
+        for c in min_col..=max_col {
+            if let Some(mut vec) = cols.remove(&c) {
+                vec.sort_by_key(|&(row, _)| row);
+                res.push(vec.into_iter().map(|(_, val)| val).collect());
+            }
+        }
+        res
+    }
+
+    fn dfs(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        row: i32,
+        col: i32,
+        cols: &mut HashMap<i32, Vec<(i32, i32)>>,
+        min_col: &mut i32,
+        max_col: &mut i32,
+    ) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            cols.entry(col).or_default().push((row, n.val));
+            *min_col = (*min_col).min(col);
+            *max_col = (*max_col).max(col);
+            Self::dfs(&n.left, row + 1, col - 1, cols, min_col, max_col);
+            Self::dfs(&n.right, row + 1, col + 1, cols, min_col, max_col);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1172,14 +1321,18 @@ public class Solution {
 ## Common Pitfalls
 
 ### Using DFS Without Tracking Row Index
+
 DFS does not visit nodes level by level, so nodes in the same column may be visited out of order. Without storing the row index alongside each value, nodes at the same column will appear in traversal order rather than top-to-bottom order, violating the problem's requirement.
 
 ### Forgetting to Handle the Left-Before-Right Ordering
+
 When two nodes share the same row and column (which can happen with certain tree structures), the node that appears first from left to right in the tree should come first in the result. BFS naturally handles this, but DFS with unstable sorting can break this ordering.
+
 ```python
 # Wrong: using regular sort instead of stable sort
 cols[col].sort(key=lambda x: x[0])  # May reorder same-row nodes
 ```
 
 ### Sorting Columns Instead of Tracking Min/Max
+
 Sorting all column keys at the end works but is less efficient. A common mistake is not realizing that column indices are consecutive integers from `minCol` to `maxCol`, allowing direct iteration without sorting.

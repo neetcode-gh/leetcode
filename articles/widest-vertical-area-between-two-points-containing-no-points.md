@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting points by x-coordinate allows finding the maximum gap between consecutive points efficiently
 - **Array Iteration** - Scanning through sorted points to compute differences between adjacent x-coordinates
 
@@ -8,9 +10,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The most straightforward approach is to check every pair of points and determine if the vertical area between them contains any other points. For each pair, we compute the horizontal distance and verify that no other point lies strictly between them in the x-coordinate. This gives us the correct answer but is inefficient for large inputs.
 
 ### Algorithm
+
 1. Iterate through all pairs of points using two nested loops.
 2. For each pair of points with x-coordinates `x1` and `x2`, check if any other point has an x-coordinate strictly between `min(x1, x2)` and `max(x1, x2)`.
 3. If no point exists between them, calculate the width as the absolute difference of their x-coordinates.
@@ -284,6 +288,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_width_of_vertical_area(points: Vec<Vec<i32>>) -> i32 {
+        let n = points.len();
+        let mut res = 0;
+
+        for i in 1..n {
+            let x1 = points[i][0];
+            for j in 0..i {
+                let x2 = points[j][0];
+                let mut has_points = false;
+
+                for k in 0..n {
+                    if k == i || k == j {
+                        continue;
+                    }
+                    let x3 = points[k][0];
+                    if x3 > x1.min(x2) && x3 < x1.max(x2) {
+                        has_points = true;
+                        break;
+                    }
+                }
+
+                if !has_points {
+                    res = res.max((x1 - x2).abs());
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,9 +334,11 @@ class Solution {
 ## 2. Sorting
 
 ### Intuition
+
 The key insight is that a vertical area containing no points must exist between two consecutive points when sorted by x-coordinate. If we sort all points by their x-values, the widest gap between adjacent points gives us the answer directly. This works because any non-adjacent pair would have at least one point between them, making that area invalid.
 
 ### Algorithm
+
 1. Sort the `points` array by x-coordinate.
 2. Iterate through consecutive pairs of sorted points.
 3. For each consecutive pair, calculate the difference in their x-coordinates.
@@ -428,6 +468,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_width_of_vertical_area(mut points: Vec<Vec<i32>>) -> i32 {
+        points.sort_unstable_by_key(|p| p[0]);
+        let mut res = 0;
+        for i in 0..points.len() - 1 {
+            res = res.max(points[i + 1][0] - points[i][0]);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -440,7 +493,8 @@ class Solution {
 ## Common Pitfalls
 
 ### Using Y-Coordinates Instead of X-Coordinates
-The problem asks for the widest *vertical* area, which means we need to find gaps along the x-axis. A common mistake is to consider y-coordinates or try to compute 2D distances between points.
+
+The problem asks for the widest _vertical_ area, which means we need to find gaps along the x-axis. A common mistake is to consider y-coordinates or try to compute 2D distances between points.
 
 ```python
 # Wrong: using y-coordinate
@@ -451,6 +505,7 @@ width = abs(points[i][0] - points[j][0])
 ```
 
 ### Checking Non-Adjacent Points After Sorting
+
 After sorting by x-coordinate, the maximum gap must occur between consecutive points. Some attempt to check all pairs even after sorting, which is unnecessary and leads to O(n^2) complexity.
 
 ```python
@@ -465,6 +520,7 @@ for i in range(n - 1):
 ```
 
 ### Forgetting to Sort by X-Coordinate Only
+
 When sorting 2D points, the default sort may use both x and y coordinates for tie-breaking. While this still works, some mistakenly sort by y-coordinate or use a complex comparator when only x matters.
 
 ```python

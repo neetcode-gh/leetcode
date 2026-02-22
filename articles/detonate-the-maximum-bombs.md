@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Understanding how to build an adjacency list from problem constraints
 - **Depth-First Search (DFS)** - Used to traverse the directed graph and count reachable bombs
 - **Breadth-First Search (BFS)** - Alternative traversal method for exploring the chain reaction level by level
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 When a bomb detonates, it triggers other bombs within its blast radius. This creates a chain reaction that can be modeled as a directed graph. Bomb A has an edge to bomb B if B is within A's blast radius. Note that this relationship is not symmetric since bombs have different radii. To find the maximum detonation, we try detonating each bomb and use DFS to count how many bombs explode in the chain reaction.
 
 ### Algorithm
+
 1. Build an adjacency list representing which bombs can trigger which other bombs. For each pair of bombs, check if the distance between them is within the first bomb's radius (bomb A triggers B if distance squared <= radius of A squared).
 2. For each bomb as a starting point, run a `dfs` to count all reachable bombs.
 3. In the `dfs`, use a visited set to track which bombs have already detonated and recursively visit all bombs that can be triggered.
@@ -324,6 +328,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_detonation(bombs: Vec<Vec<i32>>) -> i32 {
+        let n = bombs.len();
+        let mut adj = vec![vec![]; n];
+
+        for i in 0..n {
+            let (x1, y1, r1) = (bombs[i][0] as i64, bombs[i][1] as i64, bombs[i][2] as i64);
+            for j in (i + 1)..n {
+                let (x2, y2, r2) = (bombs[j][0] as i64, bombs[j][1] as i64, bombs[j][2] as i64);
+                let d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+
+                if d <= r1 * r1 { adj[i].push(j); }
+                if d <= r2 * r2 { adj[j].push(i); }
+            }
+        }
+
+        fn dfs(i: usize, visit: &mut HashSet<usize>, adj: &Vec<Vec<usize>>) -> i32 {
+            if !visit.insert(i) { return 0; }
+            for &nei in &adj[i] {
+                dfs(nei, visit, adj);
+            }
+            visit.len() as i32
+        }
+
+        let mut res = 0;
+        for i in 0..n {
+            let mut visit = HashSet::new();
+            res = res.max(dfs(i, &mut visit, &adj));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,9 +375,11 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
+
 The chain reaction of bomb detonations can also be explored level by level using BFS. Starting from an initial bomb, we explore all bombs it directly triggers, then all bombs those trigger, and so on. This approach naturally models the wave-like spread of explosions.
 
 ### Algorithm
+
 1. Build the same adjacency list as in the `dfs` approach, where an edge from A to B means bomb A can trigger bomb B.
 2. For each bomb as a starting point, initialize a queue with that bomb and a `visit` array.
 3. Process bombs from the queue: for each bomb, add all unvisited bombs it can trigger to the queue and mark them visited.
@@ -692,6 +733,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_detonation(bombs: Vec<Vec<i32>>) -> i32 {
+        let n = bombs.len();
+        let mut adj = vec![vec![]; n];
+
+        for i in 0..n {
+            let (x1, y1, r1) = (bombs[i][0] as i64, bombs[i][1] as i64, bombs[i][2] as i64);
+            for j in (i + 1)..n {
+                let (x2, y2, r2) = (bombs[j][0] as i64, bombs[j][1] as i64, bombs[j][2] as i64);
+                let d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+
+                if d <= r1 * r1 { adj[i].push(j); }
+                if d <= r2 * r2 { adj[j].push(i); }
+            }
+        }
+
+        let mut res = 0;
+        for i in 0..n {
+            let mut q = VecDeque::new();
+            let mut visit = vec![false; n];
+            q.push_back(i);
+            visit[i] = true;
+            let mut count = 1;
+
+            while let Some(node) = q.pop_front() {
+                for &nei in &adj[node] {
+                    if !visit[nei] {
+                        visit[nei] = true;
+                        count += 1;
+                        q.push_back(nei);
+                    }
+                }
+            }
+            res = res.max(count);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -704,9 +786,11 @@ class Solution {
 ## 3. Iterative DFS
 
 ### Intuition
+
 This is the same approach as recursive DFS but uses an explicit stack instead of the call stack. This avoids potential stack overflow issues for very large inputs and can be more efficient in some languages due to reduced function call overhead.
 
 ### Algorithm
+
 1. Build the adjacency list the same way as before.
 2. For each bomb as a starting point, initialize a stack with that bomb and a `visit` array.
 3. Pop bombs from the stack: for each bomb, push all unvisited neighbors onto the stack and mark them visited.
@@ -1055,6 +1139,46 @@ class Solution {
             res = max(res, count)
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_detonation(bombs: Vec<Vec<i32>>) -> i32 {
+        let n = bombs.len();
+        let mut adj = vec![vec![]; n];
+
+        for i in 0..n {
+            let (x1, y1, r1) = (bombs[i][0] as i64, bombs[i][1] as i64, bombs[i][2] as i64);
+            for j in (i + 1)..n {
+                let (x2, y2, r2) = (bombs[j][0] as i64, bombs[j][1] as i64, bombs[j][2] as i64);
+                let d = (x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2);
+
+                if d <= r1 * r1 { adj[i].push(j); }
+                if d <= r2 * r2 { adj[j].push(i); }
+            }
+        }
+
+        let mut res = 0;
+        for i in 0..n {
+            let mut stack = vec![i];
+            let mut visit = vec![false; n];
+            visit[i] = true;
+            let mut count = 1;
+
+            while let Some(node) = stack.pop() {
+                for &nei in &adj[node] {
+                    if !visit[nei] {
+                        visit[nei] = true;
+                        count += 1;
+                        stack.push(nei);
+                    }
+                }
+            }
+            res = res.max(count);
+        }
+        res
     }
 }
 ```

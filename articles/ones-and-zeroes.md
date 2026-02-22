@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how to break problems into smaller subproblems and define base cases
 - **Dynamic Programming (0/1 Knapsack)** - This problem is a variant of the classic knapsack with two constraints instead of one
 - **Memoization** - Caching results of subproblems to avoid redundant computations
@@ -21,8 +23,8 @@ We can try all possible combinations by exploring two branches at each string: i
 2. Define a recursive function `dfs(i, m, n)` that returns the maximum strings we can select starting from index `i` with `m` zeros and `n` ones remaining.
 3. Base case: If `i` reaches the end of the array, return `0`.
 4. At each index, we have two choices:
-   - Skip the current string: `dfs(i + 1, m, n)`.
-   - Include the current string (if affordable): `1 + dfs(i + 1, m - zeros, n - ones)`.
+    - Skip the current string: `dfs(i + 1, m, n)`.
+    - Include the current string (if affordable): `1 + dfs(i + 1, m - zeros, n - ones)`.
 5. Return the maximum of both choices.
 
 ::tabs-start
@@ -236,6 +238,31 @@ class Solution {
         }
 
         return dfs(0, m, n)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_max_form(strs: Vec<String>, m: i32, n: i32) -> i32 {
+        let arr: Vec<[i32; 2]> = strs.iter().map(|s| {
+            let zeros = s.chars().filter(|&c| c == '0').count() as i32;
+            let ones = s.len() as i32 - zeros;
+            [zeros, ones]
+        }).collect();
+
+        fn dfs(i: usize, m: i32, n: i32, arr: &[[i32; 2]]) -> i32 {
+            if i == arr.len() {
+                return 0;
+            }
+            let mut res = dfs(i + 1, m, n, arr);
+            if m >= arr[i][0] && n >= arr[i][1] {
+                res = res.max(1 + dfs(i + 1, m - arr[i][0], n - arr[i][1], arr));
+            }
+            res
+        }
+
+        dfs(0, m, n, &arr)
     }
 }
 ```
@@ -572,6 +599,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_form(strs: Vec<String>, m: i32, n: i32) -> i32 {
+        let arr: Vec<[i32; 2]> = strs.iter().map(|s| {
+            let zeros = s.chars().filter(|&c| c == '0').count() as i32;
+            let ones = s.len() as i32 - zeros;
+            [zeros, ones]
+        }).collect();
+
+        let (m, n) = (m as usize, n as usize);
+        let mut dp = vec![vec![vec![-1i32; n + 1]; m + 1]; arr.len()];
+
+        fn dfs(i: usize, m: usize, n: usize, arr: &[[i32; 2]], dp: &mut Vec<Vec<Vec<i32>>>) -> i32 {
+            if i == arr.len() {
+                return 0;
+            }
+            if m == 0 && n == 0 {
+                return 0;
+            }
+            if dp[i][m][n] != -1 {
+                return dp[i][m][n];
+            }
+            let mut res = dfs(i + 1, m, n, arr, dp);
+            let (zeros, ones) = (arr[i][0] as usize, arr[i][1] as usize);
+            if m >= zeros && n >= ones {
+                res = res.max(1 + dfs(i + 1, m - zeros, n - ones, arr, dp));
+            }
+            dp[i][m][n] = res;
+            res
+        }
+
+        dfs(0, m, n, &arr, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -596,11 +659,11 @@ The DP table `dp[i][j][k]` represents the maximum strings from the first `i` str
 1. Preprocess each string to count its zeros and ones.
 2. Create a 3D DP table of size `(len(strs) + 1) x (m + 1) x (n + 1)`, initialized to `0`.
 3. For each string `i` from `1` to `len(strs)`:
-   - For each zeros budget `j` from `0` to `m`:
-     - For each ones budget `k` from `0` to `n`:
-       - Copy the value from the previous string: `dp[i][j][k] = dp[i-1][j][k]`.
-       - If we can afford the current string (`j >= zeros` and `k >= ones`):
-         - Update: `dp[i][j][k] = max(dp[i][j][k], 1 + dp[i-1][j-zeros][k-ones])`.
+    - For each zeros budget `j` from `0` to `m`:
+        - For each ones budget `k` from `0` to `n`:
+            - Copy the value from the previous string: `dp[i][j][k] = dp[i-1][j][k]`.
+            - If we can afford the current string (`j >= zeros` and `k >= ones`):
+                - Update: `dp[i][j][k] = max(dp[i][j][k], 1 + dp[i-1][j-zeros][k-ones])`.
 4. Return `dp[len(strs)][m][n]`.
 
 ::tabs-start
@@ -838,6 +901,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_form(strs: Vec<String>, m: i32, n: i32) -> i32 {
+        let arr: Vec<[usize; 2]> = strs.iter().map(|s| {
+            let zeros = s.chars().filter(|&c| c == '0').count();
+            let ones = s.len() - zeros;
+            [zeros, ones]
+        }).collect();
+
+        let (m, n) = (m as usize, n as usize);
+        let len = arr.len();
+        let mut dp = vec![vec![vec![0i32; n + 1]; m + 1]; len + 1];
+
+        for i in 1..=len {
+            for j in 0..=m {
+                for k in 0..=n {
+                    dp[i][j][k] = dp[i - 1][j][k];
+                    if j >= arr[i - 1][0] && k >= arr[i - 1][1] {
+                        dp[i][j][k] = dp[i][j][k].max(
+                            1 + dp[i - 1][j - arr[i - 1][0]][k - arr[i - 1][1]],
+                        );
+                    }
+                }
+            }
+        }
+
+        dp[len][m][n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -862,9 +956,9 @@ The key trick is to iterate the budgets in reverse order. When we update `dp[j][
 1. Preprocess each string to count its zeros and ones.
 2. Create a 2D DP table of size `(m + 1) x (n + 1)`, initialized to `0`.
 3. For each string with `zeros` zeros and `ones` ones:
-   - For `j` from `m` down to `zeros`:
-     - For `k` from `n` down to `ones`:
-       - Update: `dp[j][k] = max(dp[j][k], 1 + dp[j-zeros][k-ones])`.
+    - For `j` from `m` down to `zeros`:
+        - For `k` from `n` down to `ones`:
+            - Update: `dp[j][k] = max(dp[j][k], 1 + dp[j-zeros][k-ones])`.
 4. Return `dp[m][n]`.
 
 ::tabs-start
@@ -1076,6 +1170,32 @@ class Solution {
         }
 
         return dp[m][n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_max_form(strs: Vec<String>, m: i32, n: i32) -> i32 {
+        let arr: Vec<[usize; 2]> = strs.iter().map(|s| {
+            let zeros = s.chars().filter(|&c| c == '0').count();
+            let ones = s.len() - zeros;
+            [zeros, ones]
+        }).collect();
+
+        let (m, n) = (m as usize, n as usize);
+        let mut dp = vec![vec![0i32; n + 1]; m + 1];
+
+        for pair in &arr {
+            let (zeros, ones) = (pair[0], pair[1]);
+            for j in (zeros..=m).rev() {
+                for k in (ones..=n).rev() {
+                    dp[j][k] = dp[j][k].max(1 + dp[j - zeros][k - ones]);
+                }
+            }
+        }
+
+        dp[m][n]
     }
 }
 ```

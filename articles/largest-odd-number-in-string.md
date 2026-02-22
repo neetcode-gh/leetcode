@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Traversal** - Iterating through characters in a string from left to right or right to left
 - **Substrings** - Extracting portions of a string using indices
 - **Odd/Even Number Properties** - A number is odd if and only if its last digit is odd (1, 3, 5, 7, or 9)
@@ -20,8 +22,8 @@ The brute force approach generates all substrings ending with an odd digit and t
 2. For each start, iterate through all possible ending indices `j`.
 3. Check if the character at position `j` is an odd digit.
 4. If so, extract the substring and compare it with the current result:
-   - A longer substring is larger.
-   - For equal lengths, compare lexicographically.
+    - A longer substring is larger.
+    - For equal lengths, compare lexicographically.
 5. Return the largest odd substring found, or an empty string if none exists.
 
 ::tabs-start
@@ -206,6 +208,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_odd_number(num: String) -> String {
+        let bytes = num.as_bytes();
+        let n = bytes.len();
+        let mut res = String::new();
+
+        for i in 0..n {
+            for j in i..n {
+                let ones_digit = (bytes[j] - b'0') as i32;
+                if ones_digit & 1 == 1 {
+                    let cur = &num[i..=j];
+                    if res.len() < cur.len() || (res.len() == cur.len() && res < *cur) {
+                        res = cur.to_string();
+                    }
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,6 +358,20 @@ class Solution {
             }
         }
         return ""
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_odd_number(num: String) -> String {
+        let bytes = num.as_bytes();
+        for i in (0..bytes.len()).rev() {
+            if (bytes[i] - b'0') % 2 == 1 {
+                return num[..=i].to_string();
+            }
+        }
+        String::new()
     }
 }
 ```

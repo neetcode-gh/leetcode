@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Queue Data Structure** - Understanding FIFO operations (enqueue, dequeue) is essential for simulating the card reveal process
 - **Deque (Double-ended Queue)** - Some solutions use deque for efficient insertion/removal at both ends
 - **Sorting** - The solution requires sorting the deck to process cards in order
@@ -18,8 +20,8 @@ The reveal process takes the top card, then moves the next card to the bottom. T
 1. Sort the deck in ascending order.
 2. Create a result array `res` and a queue `q` containing indices `0` through `n-1`.
 3. For each card value `num` in the sorted deck:
-   - Dequeue the front index `i` and place the current value there.
-   - If the queue is not empty, move the new front index to the back (simulating the card rotation).
+    - Dequeue the front index `i` and place the current value there.
+    - If the queue is not empty, move the new front index to the back (simulating the card rotation).
 4. Return the result array.
 
 ::tabs-start
@@ -218,6 +220,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn deck_revealed_increasing(mut deck: Vec<i32>) -> Vec<i32> {
+        deck.sort();
+        let n = deck.len();
+        let mut res = vec![0; n];
+        let mut q: VecDeque<usize> = (0..n).collect();
+
+        for &num in &deck {
+            let i = q.pop_front().unwrap();
+            res[i] = num;
+            if !q.is_empty() {
+                let front = q.pop_front().unwrap();
+                q.push_back(front);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -238,8 +262,8 @@ Another approach processes the sorted deck from largest to smallest. We build th
 1. Sort the deck in ascending order.
 2. Initialize an empty queue `q`.
 3. Traverse the sorted deck from largest to smallest (using index `i`):
-   - If the queue is not empty, move the front element to the back (reverse rotation).
-   - Add the current card value to the queue.
+    - If the queue is not empty, move the front element to the back (reverse rotation).
+    - Add the current card value to the queue.
 4. Extract elements from the queue in reverse order to form the result.
 5. Return the result array.
 
@@ -414,6 +438,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn deck_revealed_increasing(mut deck: Vec<i32>) -> Vec<i32> {
+        deck.sort();
+        let n = deck.len();
+        let mut q: VecDeque<i32> = VecDeque::new();
+
+        for i in (0..n).rev() {
+            if !q.is_empty() {
+                let front = q.pop_front().unwrap();
+                q.push_back(front);
+            }
+            q.push_back(deck[i]);
+        }
+
+        let mut res = vec![0; n];
+        for i in (0..n).rev() {
+            res[i] = q.pop_front().unwrap();
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,8 +482,8 @@ A deque supports efficient operations at both ends, making it ideal for simulati
 1. Sort the deck in ascending order.
 2. Initialize a deque `dq` and add the largest card (last in sorted order).
 3. Traverse the remaining cards from second largest to smallest (using index `i`):
-   - Move the back element to the front of the deque.
-   - Insert the current card at the front.
+    - Move the back element to the front of the deque.
+    - Insert the current card at the front.
 4. Return the deque as the result array.
 
 ::tabs-start
@@ -581,6 +629,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn deck_revealed_increasing(mut deck: Vec<i32>) -> Vec<i32> {
+        let n = deck.len();
+        deck.sort();
+        let mut dq: VecDeque<i32> = VecDeque::new();
+        dq.push_back(deck[n - 1]);
+
+        for i in (0..n - 1).rev() {
+            let back = dq.pop_back().unwrap();
+            dq.push_front(back);
+            dq.push_front(deck[i]);
+        }
+
+        dq.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -602,10 +669,10 @@ Instead of using a queue or deque, we can simulate the assignment directly on th
 2. Create a result array `res` filled with zeros (to mark empty positions).
 3. Initialize a deck index `deckIndex` pointing to the smallest card, a position pointer `i` at 0, and a skip flag `skip` set to `false`.
 4. While cards remain to be placed:
-   - If the current position is empty (value is 0):
-     - If not skipping, place the current card and advance the deck index.
-     - Toggle the skip flag.
-   - Move to the next position (wrapping around with modulo).
+    - If the current position is empty (value is 0):
+        - If not skipping, place the current card and advance the deck index.
+        - Toggle the skip flag.
+    - Move to the next position (wrapping around with modulo).
 5. Return the result array.
 
 ::tabs-start
@@ -808,6 +875,32 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn deck_revealed_increasing(mut deck: Vec<i32>) -> Vec<i32> {
+        deck.sort();
+        let n = deck.len();
+        let mut res = vec![0; n];
+        let mut skip = false;
+        let mut deck_index = 0;
+        let mut i = 0;
+
+        while deck_index < n {
+            if res[i] == 0 {
+                if !skip {
+                    res[i] = deck[deck_index];
+                    deck_index += 1;
+                }
+                skip = !skip;
+            }
+            i = (i + 1) % n;
+        }
+
+        res
     }
 }
 ```

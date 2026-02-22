@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary tree structure** - Understanding nodes with left/right children and null references
 - **Tree traversal (DFS)** - Recursively visiting nodes in a binary tree
 - **Recursion** - Using recursive function calls to process tree structures
@@ -10,11 +12,14 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 Two binary trees are the same if:
+
 1. Their structure is identical.
 2. Their corresponding nodes have the same values.
 
 So at every position:
+
 - If both nodes are `null` → they match.
 - If one is `null` but the other isn't → mismatch.
 - If both exist but values differ → mismatch.
@@ -23,12 +28,13 @@ So at every position:
 This is a direct structural + value-based DFS comparison.
 
 ### Algorithm
+
 1. If both `p` and `q` are `null`, return `true`.
 2. If only one is `null`, return `false`.
 3. If their values differ, return `false`.
 4. Recursively compare:
-   - `p.left` with `q.left`
-   - `p.right` with `q.right`
+    - `p.left` with `q.left`
+    - `p.right` with `q.right`
 5. Return `true` only if both subtree comparisons are `true`.
 
 ::tabs-start
@@ -247,6 +253,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_same_tree(
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        match (p, q) {
+            (None, None) => true,
+            (Some(a), Some(b)) => {
+                let a = a.borrow();
+                let b = b.borrow();
+                a.val == b.val
+                    && Self::is_same_tree(a.left.clone(), b.left.clone())
+                    && Self::is_same_tree(a.right.clone(), b.right.clone())
+            }
+            _ => false,
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,28 +290,31 @@ class Solution {
 ## 2. Iterative DFS
 
 ### Intuition
+
 Instead of using recursion, we can use an explicit stack to compare the two trees.
 Each stack entry contains a pair of nodes—one from each tree—that should match.
 
 For every pair:
+
 - If both are `null`, they match → continue.
 - If only one is `null`, or their values differ → trees are not the same.
 - If they match, push their children in the same order:
-  - Left child pair
-  - Right child pair
+    - Left child pair
+    - Right child pair
 
 If we finish processing all pairs with no mismatch, the trees are identical.
 
 ### Algorithm
+
 1. Initialize a stack with the pair `(p, q)`.
 2. While the stack is not empty:
-   - Pop a pair `(node1, node2)`.
-   - If both are `null`, continue.
-   - If exactly one is `null`, return `false`.
-   - If `node1.val != node2.val`, return `false`.
-   - Push:
-     - `(node1.left, node2.left)`
-     - `(node1.right, node2.right)`
+    - Pop a pair `(node1, node2)`.
+    - If both are `null`, continue.
+    - If exactly one is `null`, return `false`.
+    - If `node1.val != node2.val`, return `false`.
+    - Push:
+        - `(node1.left, node2.left)`
+        - `(node1.right, node2.right)`
 3. After the loop finishes, return `true` (all nodes matched).
 
 ::tabs-start
@@ -569,6 +599,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_same_tree(
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        let mut stack = vec![(p, q)];
+
+        while let Some((n1, n2)) = stack.pop() {
+            match (n1, n2) {
+                (None, None) => continue,
+                (Some(a), Some(b)) => {
+                    let a = a.borrow();
+                    let b = b.borrow();
+                    if a.val != b.val {
+                        return false;
+                    }
+                    stack.push((a.right.clone(), b.right.clone()));
+                    stack.push((a.left.clone(), b.left.clone()));
+                }
+                _ => return false,
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -581,6 +640,7 @@ class Solution {
 ## 3. Breadth First Search
 
 ### Intuition
+
 BFS (level-order traversal) lets us compare the two trees **level by level**.
 We maintain two queues—one for each tree. At every step, we remove a pair of nodes
 that should match:
@@ -591,17 +651,18 @@ that should match:
   **in the same order**: left child first, then right child.
 
 ### Algorithm
+
 1. Initialize two queues:
-   - `q1` containing the root of the first tree.
-   - `q2` containing the root of the second tree.
+    - `q1` containing the root of the first tree.
+    - `q2` containing the root of the second tree.
 2. While both queues are non-empty:
-   - Pop one node from each queue: `nodeP`, `nodeQ`.
-   - If both are `null`, continue.
-   - If only one is `null`, return `false`.
-   - If their values differ, return `false`.
-   - Enqueue their children:
-     - Left children of both trees.
-     - Right children of both trees.
+    - Pop one node from each queue: `nodeP`, `nodeQ`.
+    - If both are `null`, continue.
+    - If only one is `null`, return `false`.
+    - If their values differ, return `false`.
+    - Enqueue their children:
+        - Left children of both trees.
+        - Right children of both trees.
 3. After BFS completes with no mismatch, return `true`.
 
 ::tabs-start
@@ -936,6 +997,40 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_same_tree(
+        p: Option<Rc<RefCell<TreeNode>>>,
+        q: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        let mut q1 = VecDeque::new();
+        let mut q2 = VecDeque::new();
+        q1.push_back(p);
+        q2.push_back(q);
+
+        while let (Some(node_p), Some(node_q)) = (q1.pop_front(), q2.pop_front()) {
+            match (node_p, node_q) {
+                (None, None) => continue,
+                (Some(a), Some(b)) => {
+                    let a = a.borrow();
+                    let b = b.borrow();
+                    if a.val != b.val {
+                        return false;
+                    }
+                    q1.push_back(a.left.clone());
+                    q1.push_back(a.right.clone());
+                    q2.push_back(b.left.clone());
+                    q2.push_back(b.right.clone());
+                }
+                _ => return false,
+            }
+        }
+
+        true
     }
 }
 ```

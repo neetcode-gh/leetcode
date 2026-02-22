@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Required to arrange potions in order so that successful pairs form a contiguous range
 - **Binary Search** - Used to efficiently find the threshold index where potions become successful
 - **Two Pointers** - Alternative approach processes sorted spells and potions simultaneously
@@ -16,10 +18,10 @@ For each spell, we need to count how many potions form a successful pair. A pair
 
 1. Create a `result` array `res` to store the count for each spell.
 2. For each spell `s` in `spells`:
-   - Initialize a counter `cnt = 0`.
-   - For each potion `p` in `potions`:
-     - If `s * p >= success`, increment `cnt`.
-   - Append `cnt` to `res`.
+    - Initialize a counter `cnt = 0`.
+    - For each potion `p` in `potions`:
+        - If `s * p >= success`, increment `cnt`.
+    - Append `cnt` to `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -184,6 +186,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn successful_pairs(spells: Vec<i32>, potions: Vec<i32>, success: i64) -> Vec<i32> {
+        let mut res = Vec::with_capacity(spells.len());
+
+        for &s in &spells {
+            let mut cnt = 0;
+            for &p in &potions {
+                if s as i64 * p as i64 >= success {
+                    cnt += 1;
+                }
+            }
+            res.push(cnt);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -205,9 +227,9 @@ If we sort the potions array, all successful potions for a given spell will be c
 
 1. Sort the `potions` array in ascending order.
 2. For each spell `s` in `spells`:
-   - Use binary search to find the smallest index `idx` where `s * potions[idx] >= success`.
-   - The count of successful pairs is `len(potions) - idx`.
-   - Store this count in the `result`.
+    - Use binary search to find the smallest index `idx` where `s * potions[idx] >= success`.
+    - The count of successful pairs is `len(potions) - idx`.
+    - Store this count in the `result`.
 3. Return the `result` array.
 
 ::tabs-start
@@ -435,6 +457,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn successful_pairs(spells: Vec<i32>, mut potions: Vec<i32>, success: i64) -> Vec<i32> {
+        potions.sort();
+        let m = potions.len();
+        let mut res = Vec::with_capacity(spells.len());
+
+        for &s in &spells {
+            let mut l = 0i32;
+            let mut r = m as i32 - 1;
+            let mut idx = m;
+
+            while l <= r {
+                let mid = ((l + r) / 2) as usize;
+                if s as i64 * potions[mid] as i64 >= success {
+                    r = mid as i32 - 1;
+                    idx = mid;
+                } else {
+                    l = mid as i32 + 1;
+                }
+            }
+
+            res.push((m - idx) as i32);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,8 +511,8 @@ If we sort both arrays, we can use the two pointer technique. A weaker spell nee
 1. Save the original `spells` array and sort both `spells` and `potions`.
 2. Use a pointer `j` starting at the end of sorted `potions`.
 3. For each spell in sorted order:
-   - Move `j` left while `spell * potions[j] >= success`.
-   - Store the count `m - j - 1` in a map keyed by spell strength.
+    - Move `j` left while `spell * potions[j] >= success`.
+    - Store the count `m - j - 1` in a map keyed by spell strength.
 4. Build the `result` by looking up each original spell's count in the map.
 5. Return the `result`.
 
@@ -670,6 +722,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn successful_pairs(spells: Vec<i32>, potions: Vec<i32>, success: i64) -> Vec<i32> {
+        let n = spells.len();
+        let m = potions.len();
+        let original = spells.clone();
+        let mut sorted_spells = spells;
+        let mut sorted_potions = potions;
+        sorted_spells.sort();
+        sorted_potions.sort();
+
+        let mut count = HashMap::new();
+        let mut j = m as i32 - 1;
+
+        for i in 0..n {
+            while j >= 0
+                && sorted_spells[i] as i64 * sorted_potions[j as usize] as i64 >= success
+            {
+                j -= 1;
+            }
+            count.insert(sorted_spells[i], (m as i32 - j - 1));
+        }
+
+        original.iter().map(|s| *count.get(s).unwrap()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -695,8 +775,8 @@ The previous approach uses extra space to map spell values to their counts. We c
 2. Sort the `potions` array.
 3. Initialize pointer `j` at the end of `potions` and `result` array `res`.
 4. For each `index` `i` in sorted order:
-   - Move `j` left while `spells[sIdx[i]] * potions[j] >= success`.
-   - Set `res[sIdx[i]] = m - j - 1`.
+    - Move `j` left while `spells[sIdx[i]] * potions[j] >= success`.
+    - Set `res[sIdx[i]] = m - j - 1`.
 5. Return `res`.
 
 ::tabs-start
@@ -895,6 +975,32 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn successful_pairs(spells: Vec<i32>, mut potions: Vec<i32>, success: i64) -> Vec<i32> {
+        let n = spells.len();
+        let m = potions.len();
+        let mut s_idx: Vec<usize> = (0..n).collect();
+        s_idx.sort_by_key(|&i| spells[i]);
+        potions.sort();
+
+        let mut j = m as i32 - 1;
+        let mut res = vec![0i32; n];
+
+        for i in 0..n {
+            while j >= 0
+                && spells[s_idx[i]] as i64 * potions[j as usize] as i64 >= success
+            {
+                j -= 1;
+            }
+            res[s_idx[i]] = m as i32 - j - 1;
+        }
+
+        res
     }
 }
 ```

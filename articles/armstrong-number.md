@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Digit Extraction** - Using modulo and division to extract individual digits from a number
 - **Exponentiation** - Raising numbers to a power
 - **Basic Math** - Understanding number properties and digit counting techniques
@@ -34,9 +36,9 @@ class Solution:
                 num //= 10
 
             return result
-        
+
         length = len(str(n))
-        
+
         return getSumOfKthPowerOfDigits(n, length) == n
 ```
 
@@ -187,6 +189,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_armstrong(n: i32) -> bool {
+        fn get_sum_of_kth_power_of_digits(mut num: i32, k: u32) -> i32 {
+            let mut result = 0;
+            while num != 0 {
+                result += (num % 10).pow(k);
+                num /= 10;
+            }
+            result
+        }
+
+        let length = n.to_string().len() as u32;
+        get_sum_of_kth_power_of_digits(n, length) == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -195,7 +215,7 @@ class Solution {
 
 - Space complexity: $O(1)$ constant space
 
->  Where $M$ is the number of digits in the input integer `n`.
+> Where $M$ is the number of digits in the input integer `n`.
 
 ---
 
@@ -227,9 +247,9 @@ class Solution:
                 num //= 10
 
             return result
-        
+
         length = int(math.log10(n)) + 1
-        
+
         return getSumOfKthPowerOfDigits(n, length) == n
 ```
 
@@ -382,6 +402,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_armstrong(n: i32) -> bool {
+        fn get_sum_of_kth_power_of_digits(mut num: i32, k: u32) -> i32 {
+            let mut result = 0;
+            while num != 0 {
+                result += (num % 10).pow(k);
+                num /= 10;
+            }
+            result
+        }
+
+        let length = (n as f64).log10() as u32 + 1;
+        get_sum_of_kth_power_of_digits(n, length) == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,7 +428,7 @@ class Solution {
 
 - Space complexity: $O(1)$ constant space
 
->  Where $M$ is the number of digits in the input integer `n`.
+> Where $M$ is the number of digits in the input integer `n`.
 
 ---
 
@@ -418,7 +456,7 @@ class Solution:
             while num != 0:
                 result += (num % 10) ** k
                 num //= 10
-                
+
             return result
 
         length = 0
@@ -427,7 +465,7 @@ class Solution:
         while temp_n != 0:
             length += 1
             temp_n //= 10
-        
+
         return getSumOfKthPowerOfDigits(n, length) == n
 ```
 
@@ -618,6 +656,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_armstrong(n: i32) -> bool {
+        fn get_sum_of_kth_power_of_digits(mut num: i32, k: u32) -> i32 {
+            let mut result = 0;
+            while num != 0 {
+                result += (num % 10).pow(k);
+                num /= 10;
+            }
+            result
+        }
+
+        let mut length = 0u32;
+        let mut temp_n = n;
+        while temp_n != 0 {
+            length += 1;
+            temp_n /= 10;
+        }
+        get_sum_of_kth_power_of_digits(n, length) == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -626,21 +687,25 @@ class Solution {
 
 - Space complexity: $O(1)$ constant space
 
->  Where $M$ is the number of digits in the input integer `n`.
+> Where $M$ is the number of digits in the input integer `n`.
 
 ---
 
 ## Common Pitfalls
 
 ### Using a Fixed Power Instead of the Digit Count
+
 A common mistake is hardcoding the exponent (e.g., always using 3) instead of dynamically calculating the number of digits. Armstrong numbers are defined with respect to their digit count, so 153 uses power 3, but 1634 uses power 4.
+
 ```python
 # Wrong: always using power 3
 result += digit ** 3
 ```
 
 ### Modifying the Original Number Without Saving It
+
 When extracting digits by repeatedly dividing by 10, the original number gets destroyed. Forgetting to save the original value before the loop means you have nothing to compare the sum against.
+
 ```python
 # Wrong: n is modified and can't be compared later
 while n != 0:

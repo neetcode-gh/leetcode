@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Finding elements in sorted arrays with O(log n) time complexity
 - **Peak Finding** - Using binary search to locate the maximum element in a bitonic/mountain array
 - **Modified Binary Search** - Adapting binary search for both ascending and descending sorted sequences
@@ -226,6 +228,22 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_in_mountain_array(target: i32, mountain_arr: &MountainArray) -> i32 {
+        let n = mountain_arr.length();
+
+        for i in 0..n {
+            if mountain_arr.get(i) == target {
+                return i;
+            }
+        }
+
+        -1
     }
 }
 ```
@@ -783,6 +801,64 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_in_mountain_array(target: i32, mountain_arr: &MountainArray) -> i32 {
+        let length = mountain_arr.length();
+
+        // Find Peak
+        let (mut l, mut r) = (1, length - 2);
+        let mut peak = 0;
+        while l <= r {
+            let m = (l + r) / 2;
+            let left = mountain_arr.get(m - 1);
+            let mid = mountain_arr.get(m);
+            let right = mountain_arr.get(m + 1);
+            if left < mid && mid < right {
+                l = m + 1;
+            } else if left > mid && mid > right {
+                r = m - 1;
+            } else {
+                peak = m;
+                break;
+            }
+        }
+
+        // Search left portion
+        l = 0;
+        r = peak - 1;
+        while l <= r {
+            let m = (l + r) / 2;
+            let val = mountain_arr.get(m);
+            if val < target {
+                l = m + 1;
+            } else if val > target {
+                r = m - 1;
+            } else {
+                return m as i32;
+            }
+        }
+
+        // Search right portion
+        l = peak;
+        r = length - 1;
+        while l <= r {
+            let m = (l + r) / 2;
+            let val = mountain_arr.get(m);
+            if val > target {
+                l = m + 1;
+            } else if val < target {
+                r = m - 1;
+            } else {
+                return m as i32;
+            }
+        }
+
+        -1
     }
 }
 ```
@@ -1349,6 +1425,73 @@ class Solution {
 
         // Search right portion
         return binarySearch(peak, length - 1, false)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_in_mountain_array(target: i32, mountain_arr: &MountainArray) -> i32 {
+        let mut cache = HashMap::new();
+        let length = mountain_arr.length() as i32;
+
+        let mut get = |i: i32| -> i32 {
+            if let Some(&v) = cache.get(&i) {
+                return v;
+            }
+            let v = mountain_arr.get(i);
+            cache.insert(i, v);
+            v
+        };
+
+        // Find Peak
+        let (mut l, mut r) = (1i32, length - 2);
+        let mut peak = 0i32;
+        while l <= r {
+            let m = (l + r) >> 1;
+            let left = get(m - 1);
+            let mid = get(m);
+            let right = get(m + 1);
+            if left < mid && mid < right {
+                l = m + 1;
+            } else if left > mid && mid > right {
+                r = m - 1;
+            } else {
+                peak = m;
+                break;
+            }
+        }
+
+        // Binary search helper
+        let binary_search = |lo: i32, hi: i32, ascending: bool, cache: &mut HashMap<i32, i32>| -> i32 {
+            let (mut l, mut r) = (lo, hi);
+            while l <= r {
+                let m = (l + r) >> 1;
+                let val = if let Some(&v) = cache.get(&m) { v } else {
+                    let v = mountain_arr.get(m);
+                    cache.insert(m, v);
+                    v
+                };
+                if val == target {
+                    return m;
+                }
+                if ascending == (val < target) {
+                    l = m + 1;
+                } else {
+                    r = m - 1;
+                }
+            }
+            -1
+        };
+
+        // Search left portion
+        let res = binary_search(0, peak, true, &mut cache);
+        if res != -1 {
+            return res;
+        }
+
+        // Search right portion
+        binary_search(peak, length - 1, false, &mut cache)
     }
 }
 ```

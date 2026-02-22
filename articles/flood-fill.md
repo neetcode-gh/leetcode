@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays/Matrices** - Understanding how to traverse and modify elements in a grid
 - **Depth First Search (DFS)** - Recursive exploration of connected components
 - **Breadth First Search (BFS)** - Level-by-level traversal using a queue
@@ -104,9 +106,11 @@ class Solution {
     floodFill(image, sr, sc, color) {
         const orig = image[sr][sc];
         if (orig === color) return image;
-        const m = image.length, n = image[0].length;
+        const m = image.length,
+            n = image[0].length;
         const dfs = (r, c) => {
-            if (r < 0 || r >= m || c < 0 || c >= n || image[r][c] !== orig) return;
+            if (r < 0 || r >= m || c < 0 || c >= n || image[r][c] !== orig)
+                return;
             image[r][c] = color;
             dfs(r + 1, c);
             dfs(r - 1, c);
@@ -210,12 +214,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn flood_fill(image: &mut Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> {
+        let orig = image[sr as usize][sc as usize];
+        if orig == color {
+            return image.clone();
+        }
+        let m = image.len();
+        let n = image[0].len();
+        Self::dfs(image, sr as usize, sc as usize, orig, color, m, n);
+        image.clone()
+    }
+
+    fn dfs(image: &mut Vec<Vec<i32>>, r: usize, c: usize, orig: i32, color: i32, m: usize, n: usize) {
+        if image[r][c] != orig {
+            return;
+        }
+        image[r][c] = color;
+        if r + 1 < m { Self::dfs(image, r + 1, c, orig, color, m, n); }
+        if r > 0 { Self::dfs(image, r - 1, c, orig, color, m, n); }
+        if c + 1 < n { Self::dfs(image, r, c + 1, orig, color, m, n); }
+        if c > 0 { Self::dfs(image, r, c - 1, orig, color, m, n); }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the image.
 
@@ -235,8 +265,8 @@ The key is to color pixels when adding them to the queue, not when processing th
 2. Initialize a queue with the starting pixel coordinates.
 3. Immediately change the starting pixel to the new color.
 4. While the queue is not empty:
-   - Dequeue a pixel.
-   - For each of the four neighbors, if it is within bounds and has the original color, change it to the new color and enqueue it.
+    - Dequeue a pixel.
+    - For each of the four neighbors, if it is within bounds and has the original color, change it to the new color and enqueue it.
 5. Return the modified `image`.
 
 ::tabs-start
@@ -330,16 +360,29 @@ class Solution {
     floodFill(image, sr, sc, color) {
         const orig = image[sr][sc];
         if (orig === color) return image;
-        const m = image.length, n = image[0].length;
+        const m = image.length,
+            n = image[0].length;
         const q = new Queue([[sr, sc]]);
         image[sr][sc] = color;
-        const dirs = [[1,0],[-1,0],[0,1],[0,-1]];
+        const dirs = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
 
         while (!q.isEmpty()) {
             const [r, c] = q.pop();
             for (const [dr, dc] of dirs) {
-                const nr = r + dr, nc = c + dc;
-                if (nr >= 0 && nr < m && nc >= 0 && nc < n && image[nr][nc] === orig) {
+                const nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nr < m &&
+                    nc >= 0 &&
+                    nc < n &&
+                    image[nr][nc] === orig
+                ) {
                     image[nr][nc] = color;
                     q.push([nr, nc]);
                 }
@@ -456,12 +499,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn flood_fill(image: &mut Vec<Vec<i32>>, sr: i32, sc: i32, color: i32) -> Vec<Vec<i32>> {
+        let orig = image[sr as usize][sc as usize];
+        if orig == color {
+            return image.clone();
+        }
+        let m = image.len();
+        let n = image[0].len();
+        let mut q = VecDeque::new();
+        q.push_back((sr as usize, sc as usize));
+        image[sr as usize][sc as usize] = color;
+        let dirs = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+
+        while let Some((r, c)) = q.pop_front() {
+            for &(dr, dc) in &dirs {
+                let nr = r as i32 + dr;
+                let nc = c as i32 + dc;
+                if nr >= 0 && nr < m as i32 && nc >= 0 && nc < n as i32 {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if image[nr][nc] == orig {
+                        image[nr][nc] = color;
+                        q.push_back((nr, nc));
+                    }
+                }
+            }
+        }
+        image.clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the image.
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Using sets for O(1) lookup to check if a string exists
 - **Backtracking/Recursion** - Building solutions character by character and exploring possibilities
 - **Binary String Manipulation** - Converting between integers and binary representations
@@ -18,9 +20,9 @@ We need to find any binary string of length `n` that is not in the given array. 
 1. Store all input strings in a hash set for O(1) lookup.
 2. Use backtracking starting with a string of all zeros.
 3. At position `i`:
-   - If `i == n`, check if the current string is in the set. If not, return it.
-   - Try keeping position `i` as `'0'` and recurse.
-   - If that fails, change position `i` to `'1'` and recurse.
+    - If `i == n`, check if the current string is in the set. If not, return it.
+    - Try keeping position `i` as `'0'` and recurse.
+    - If that fails, change position `i` to `'1'` and recurse.
 4. Return the first string not found in the set.
 
 ::tabs-start
@@ -232,6 +234,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_different_binary_string(nums: Vec<String>) -> String {
+        let str_set: HashSet<String> = nums.iter().cloned().collect();
+        let n = nums.len();
+        let mut cur = vec![b'0'; n];
+
+        fn backtrack(i: usize, cur: &mut Vec<u8>, str_set: &HashSet<String>, n: usize) -> Option<String> {
+            if i == n {
+                let res = String::from_utf8(cur.clone()).unwrap();
+                return if str_set.contains(&res) { None } else { Some(res) };
+            }
+
+            cur[i] = b'0';
+            if let Some(res) = backtrack(i + 1, cur, str_set, n) {
+                return Some(res);
+            }
+
+            cur[i] = b'1';
+            backtrack(i + 1, cur, str_set, n)
+        }
+
+        backtrack(0, &mut cur, &str_set, n).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,8 +280,8 @@ Instead of recursive backtracking, we can iterate through all possible binary st
 
 1. Store all input strings in a hash set.
 2. Iterate `num` from `0` to `n`:
-   - Convert `num` to a binary string and pad with leading zeros to length `n`.
-   - If this string is not in the set, return it.
+    - Convert `num` to a binary string and pad with leading zeros to length `n`.
+    - If this string is not in the set, return it.
 3. Return empty string (though we are guaranteed to find one within `n+1` attempts).
 
 ::tabs-start
@@ -419,6 +448,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_different_binary_string(nums: Vec<String>) -> String {
+        let str_set: HashSet<String> = nums.iter().cloned().collect();
+        let n = nums.len();
+
+        for num in 0..=n {
+            let res = format!("{:0>width$b}", num, width = n);
+            if !str_set.contains(&res) {
+                return res;
+            }
+        }
+
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -438,8 +485,8 @@ Cantor's diagonal argument provides an elegant O(n) solution. For each string `n
 
 1. Create an empty result string.
 2. For each index `i` from `0` to `n-1`:
-   - Look at character `nums[i][i]` (the diagonal).
-   - Append the opposite character: if it is `'0'`, append `'1'`; if `'1'`, append `'0'`.
+    - Look at character `nums[i][i]` (the diagonal).
+    - Append the opposite character: if it is `'0'`, append `'1'`; if `'1'`, append `'0'`.
 3. Return the result string.
 
 ::tabs-start
@@ -548,6 +595,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_different_binary_string(nums: Vec<String>) -> String {
+        let mut res = String::new();
+        for i in 0..nums.len() {
+            let c = nums[i].as_bytes()[i];
+            res.push(if c == b'0' { '1' } else { '0' });
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,8 +629,8 @@ Since there are `2^n` possible strings but only `n` are in the input, randomly g
 
 1. Store all input strings in a hash set.
 2. Loop indefinitely:
-   - Generate a random binary string of length `n` by randomly choosing `'0'` or `'1'` for each position.
-   - If the string is not in the set, return it.
+    - Generate a random binary string of length `n` by randomly choosing `'0'` or `'1'` for each position.
+    - If the string is not in the set, return it.
 3. The expected number of attempts is very small due to the sparsity of input strings.
 
 ::tabs-start
@@ -740,6 +800,27 @@ class Solution {
 }
 ```
 
+```rust
+use rand::Rng;
+
+impl Solution {
+    pub fn find_different_binary_string(nums: Vec<String>) -> String {
+        let str_set: HashSet<String> = nums.iter().cloned().collect();
+        let n = nums.len();
+        let mut rng = rand::thread_rng();
+
+        loop {
+            let res: String = (0..n)
+                .map(|_| if rng.gen_bool(0.5) { '1' } else { '0' })
+                .collect();
+            if !str_set.contains(&res) {
+                return res;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -759,10 +840,10 @@ A Trie (prefix tree) stores all input strings and allows us to find a missing st
 
 1. Build a Trie by inserting all input strings.
 2. Traverse the Trie from the root:
-   - At each node, check if the `'0'` or `'1'` child is missing.
-   - If `'0'` is missing, append `'0'` and return (fill remaining with any character).
-   - If `'1'` is missing, append `'1'` and return.
-   - If both exist, prefer `'1'` and continue deeper.
+    - At each node, check if the `'0'` or `'1'` child is missing.
+    - If `'0'` is missing, append `'0'` and return (fill remaining with any character).
+    - If `'1'` is missing, append `'1'` and return.
+    - If both exist, prefer `'1'` and continue deeper.
 3. Pad the result with `'1'`s to reach length `n` if needed.
 4. Return the constructed string.
 
@@ -1344,6 +1425,72 @@ class Solution {
         }
 
         return String(res)
+    }
+}
+```
+
+```rust
+struct TrieNode {
+    children: [Option<Box<TrieNode>>; 2],
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        TrieNode { children: [None, None] }
+    }
+
+    fn contains_bit(&self, bit: usize) -> bool {
+        self.children[bit].is_some()
+    }
+
+    fn put(&mut self, bit: usize) {
+        self.children[bit] = Some(Box::new(TrieNode::new()));
+    }
+
+    fn get(&self, bit: usize) -> &TrieNode {
+        self.children[bit].as_ref().unwrap()
+    }
+}
+
+impl Solution {
+    pub fn find_different_binary_string(nums: Vec<String>) -> String {
+        let n = nums.len();
+        let mut root = TrieNode::new();
+
+        for s in &nums {
+            let mut curr = &mut root;
+            for c in s.bytes() {
+                let bit = (c - b'0') as usize;
+                if !curr.contains_bit(bit) {
+                    curr.put(bit);
+                }
+                curr = curr.children[bit].as_mut().unwrap();
+            }
+        }
+
+        let mut res = Vec::new();
+        let mut curr = &root;
+        loop {
+            if !curr.contains_bit(0) && !curr.contains_bit(1) {
+                break;
+            }
+            if !curr.contains_bit(0) {
+                res.push(b'0');
+                break;
+            }
+            if !curr.contains_bit(1) {
+                res.push(b'1');
+                break;
+            }
+            res.push(b'1');
+            curr = curr.get(1);
+        }
+
+        while res.len() < n {
+            res.push(b'1');
+        }
+
+        String::from_utf8(res).unwrap()
     }
 }
 ```

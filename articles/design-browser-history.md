@@ -294,6 +294,48 @@ class BrowserHistory {
 }
 ```
 
+
+```rust
+struct BrowserHistory {
+    back_history: Vec<String>,
+    front_history: Vec<String>,
+}
+
+impl BrowserHistory {
+    fn new(homepage: String) -> Self {
+        Self {
+            back_history: vec![homepage],
+            front_history: Vec::new(),
+        }
+    }
+
+    fn visit(&mut self, url: String) {
+        self.back_history.push(url);
+        self.front_history.clear();
+    }
+
+    fn back(&mut self, steps: i32) -> String {
+        let mut steps = steps;
+        while steps > 0 && self.back_history.len() > 1 {
+            let page = self.back_history.pop().unwrap();
+            self.front_history.push(page);
+            steps -= 1;
+        }
+        self.back_history.last().unwrap().clone()
+    }
+
+    fn forward(&mut self, steps: i32) -> String {
+        let mut steps = steps;
+        while steps > 0 && !self.front_history.is_empty() {
+            let page = self.front_history.pop().unwrap();
+            self.back_history.push(page);
+            steps -= 1;
+        }
+        self.back_history.last().unwrap().clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,6 +603,39 @@ class BrowserHistory {
     func forward(_ steps: Int) -> String {
         cur = min(history.count - 1, cur + steps)
         return history[cur]
+    }
+}
+```
+
+
+```rust
+struct BrowserHistory {
+    history: Vec<String>,
+    cur: usize,
+}
+
+impl BrowserHistory {
+    fn new(homepage: String) -> Self {
+        Self {
+            history: vec![homepage],
+            cur: 0,
+        }
+    }
+
+    fn visit(&mut self, url: String) {
+        self.cur += 1;
+        self.history.truncate(self.cur);
+        self.history.push(url);
+    }
+
+    fn back(&mut self, steps: i32) -> String {
+        self.cur = self.cur.saturating_sub(steps as usize);
+        self.history[self.cur].clone()
+    }
+
+    fn forward(&mut self, steps: i32) -> String {
+        self.cur = (self.cur + steps as usize).min(self.history.len() - 1);
+        self.history[self.cur].clone()
     }
 }
 ```
@@ -883,6 +958,46 @@ class BrowserHistory {
     func forward(_ steps: Int) -> String {
         cur = min(n - 1, cur + steps)
         return history[cur]
+    }
+}
+```
+
+
+```rust
+struct BrowserHistory {
+    history: Vec<String>,
+    cur: usize,
+    n: usize,
+}
+
+impl BrowserHistory {
+    fn new(homepage: String) -> Self {
+        Self {
+            history: vec![homepage],
+            cur: 0,
+            n: 1,
+        }
+    }
+
+    fn visit(&mut self, url: String) {
+        self.cur += 1;
+        if self.cur == self.history.len() {
+            self.history.push(url);
+            self.n += 1;
+        } else {
+            self.history[self.cur] = url;
+            self.n = self.cur + 1;
+        }
+    }
+
+    fn back(&mut self, steps: i32) -> String {
+        self.cur = self.cur.saturating_sub(steps as usize);
+        self.history[self.cur].clone()
+    }
+
+    fn forward(&mut self, steps: i32) -> String {
+        self.cur = (self.cur + steps as usize).min(self.n - 1);
+        self.history[self.cur].clone()
     }
 }
 ```
@@ -1241,6 +1356,54 @@ class BrowserHistory {
             steps -= 1
         }
         return cur.val
+    }
+}
+```
+
+
+```rust
+struct BrowserHistory {
+    history: Vec<String>,
+    prev: Vec<Option<usize>>,
+    next: Vec<Option<usize>>,
+    cur: usize,
+}
+
+impl BrowserHistory {
+    fn new(homepage: String) -> Self {
+        Self {
+            history: vec![homepage],
+            prev: vec![None],
+            next: vec![None],
+            cur: 0,
+        }
+    }
+
+    fn visit(&mut self, url: String) {
+        let new_idx = self.history.len();
+        self.history.push(url);
+        self.prev.push(Some(self.cur));
+        self.next.push(None);
+        self.next[self.cur] = Some(new_idx);
+        self.cur = new_idx;
+    }
+
+    fn back(&mut self, steps: i32) -> String {
+        let mut steps = steps;
+        while steps > 0 && self.prev[self.cur].is_some() {
+            self.cur = self.prev[self.cur].unwrap();
+            steps -= 1;
+        }
+        self.history[self.cur].clone()
+    }
+
+    fn forward(&mut self, steps: i32) -> String {
+        let mut steps = steps;
+        while steps > 0 && self.next[self.cur].is_some() {
+            self.cur = self.next[self.cur].unwrap();
+            steps -= 1;
+        }
+        self.history[self.cur].clone()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - The divide-and-conquer search algorithm that eliminates half the search space at each step
 - **Rotated Sorted Arrays** - Understanding how rotation affects a sorted array and identifying which half remains sorted
 - **Handling Duplicates** - Recognizing when duplicates prevent determining the sorted half and falling back to linear elimination
@@ -106,6 +108,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> bool {
+        nums.contains(&target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -125,15 +135,15 @@ A rotated sorted array with duplicates still has a useful property: at least one
 
 1. Initialize two pointers `l = 0` and `r = n - 1`.
 2. While `l <= r`:
-   - Compute `m = l + (r - l) / 2`.
-   - If `nums[m]` equals the target, return `true`.
-   - If `nums[l] < nums[m]`, the left half is sorted:
-     - If the target lies in `[nums[l], nums[m])`, search left by setting `r = m - 1`.
-     - Otherwise, search right by setting `l = m + 1`.
-   - Else if `nums[l] > nums[m]`, the right half is sorted:
-     - If the target lies in `(nums[m], nums[r]]`, search right by setting `l = m + 1`.
-     - Otherwise, search left by setting `r = m - 1`.
-   - Else (`nums[l] == nums[m]`), increment `l` to skip the duplicate.
+    - Compute `m = l + (r - l) / 2`.
+    - If `nums[m]` equals the target, return `true`.
+    - If `nums[l] < nums[m]`, the left half is sorted:
+        - If the target lies in `[nums[l], nums[m])`, search left by setting `r = m - 1`.
+        - Otherwise, search right by setting `l = m + 1`.
+    - Else if `nums[l] > nums[m]`, the right half is sorted:
+        - If the target lies in `(nums[m], nums[r]]`, search right by setting `l = m + 1`.
+        - Otherwise, search left by setting `r = m - 1`.
+    - Else (`nums[l] == nums[m]`), increment `l` to skip the duplicate.
 3. Return `false` if the loop ends without finding the target.
 
 ::tabs-start
@@ -396,6 +406,39 @@ class Solution {
             }
         }
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search(nums: Vec<i32>, target: i32) -> bool {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+
+            if nums[m as usize] == target {
+                return true;
+            }
+
+            if nums[l as usize] < nums[m as usize] {
+                if nums[l as usize] <= target && target < nums[m as usize] {
+                    r = m - 1;
+                } else {
+                    l = m + 1;
+                }
+            } else if nums[l as usize] > nums[m as usize] {
+                if nums[m as usize] < target && target <= nums[r as usize] {
+                    l = m + 1;
+                } else {
+                    r = m - 1;
+                }
+            } else {
+                l += 1;
+            }
+        }
+        false
     }
 }
 ```

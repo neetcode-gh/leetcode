@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting Algorithms** - Understanding how sorting works and its O(n log n) time complexity
 - **Heap Data Structure** - Using min-heaps to efficiently track the k largest elements
 - **QuickSelect Algorithm** - Partitioning arrays around a pivot to find the k-th element in average O(n) time
@@ -10,6 +12,7 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Sorting
 
 ### Intuition
+
 If you sort the entire array, all elements will be arranged from smallest to largest.  
 Once sorted:
 
@@ -18,11 +21,12 @@ Once sorted:
 - The **k-th largest** is simply at index `n - k`.
 
 So the problem becomes:  
-→ *Sort the array and pick the element that is k steps from the end.*
+→ _Sort the array and pick the element that is k steps from the end._
 
 This is simple but not the most efficient, because sorting takes `O(n log n)`.
 
 ### Algorithm
+
 1. Sort the array in non-decreasing order.
 2. Compute the index of the k-th largest element: `index = n - k`.
 3. Return the element at that position.
@@ -103,6 +107,15 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_kth_largest(mut nums: Vec<i32>, k: i32) -> i32 {
+        nums.sort();
+        nums[nums.len() - k as usize]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -115,16 +128,18 @@ class Solution {
 ## 2. Min-Heap
 
 ### Intuition
+
 Instead of sorting the whole array, we only need to keep track of the **k largest elements** seen so far.
 
 A **min-heap** is perfect for this:
 
-- A min-heap always keeps the *smallest* element at the top.
+- A min-heap always keeps the _smallest_ element at the top.
 - If we maintain a heap of size `k`, then:
-  - the heap will always contain the `k` largest elements seen so far.
-  - the root of the heap (the smallest among these `k`) will be the **k-th largest** element.
+    - the heap will always contain the `k` largest elements seen so far.
+    - the root of the heap (the smallest among these `k`) will be the **k-th largest** element.
 
 Process:
+
 - Add elements into the heap.
 - If the heap grows larger than `k`, remove the smallest element.
 - At the end, the root of the heap is exactly the k-th largest element.
@@ -132,10 +147,11 @@ Process:
 This avoids sorting the entire array and keeps memory small.
 
 ### Algorithm
+
 1. Create an empty min-heap.
 2. Iterate through each number:
-   - Push the number into the min-heap.
-   - If the heap size exceeds `k`, pop the smallest element.
+    - Push the number into the min-heap.
+    - If the heap size exceeds `k`, pop the smallest element.
 3. After processing all numbers, the top of the heap is the **k-th largest element**.
 4. Return that value.
 
@@ -262,6 +278,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_kth_largest(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let mut min_heap = BinaryHeap::new();
+        for &num in &nums {
+            min_heap.push(Reverse(num));
+            if min_heap.len() > k {
+                min_heap.pop();
+            }
+        }
+        min_heap.peek().unwrap().0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,31 +308,35 @@ class Solution {
 ## 3. Quick Select
 
 ### Intuition
+
 Quick Select is a selection algorithm that works like QuickSort but only explores the side of the array that contains the answer.
 
 Key idea:
+
 - Pick a pivot.
 - Rearrange elements so that:
-  - all numbers **smaller than or equal to** the pivot go to the left,
-  - all numbers **greater** go to the right.
+    - all numbers **smaller than or equal to** the pivot go to the left,
+    - all numbers **greater** go to the right.
 - After partitioning, the pivot ends up in its correct sorted position.
 - Instead of sorting the whole array, we check:
-  - If the pivot’s final position is the index we want → answer found.
-  - Otherwise, recurse only into the side where the target index lies.
+    - If the pivot’s final position is the index we want → answer found.
+    - Otherwise, recurse only into the side where the target index lies.
 
 Because we eliminate half the array each time, this approach is much faster on average than full sorting.
 
 For the k-th largest:
+
 - Convert it to the corresponding index in sorted order:
-  - index = n − k  
+    - index = n − k
 - Then use Quick Select to find the value that would appear at that index.
 
 ### Algorithm
+
 1. Convert k-th largest to its zero-based sorted index: `target = n - k`.
 2. Use Quick Select between indices `l` and `r`:
-   - Choose a pivot (commonly the rightmost element).
-   - Partition the array around the pivot.
-   - Let the pivot's final index be `p`.
+    - Choose a pivot (commonly the rightmost element).
+    - Partition the array around the pivot.
+    - Let the pivot's final index be `p`.
 3. If `p == target`, return the pivot value.
 4. If `p > target`, repeat Quick Select on the **left** half.
 5. If `p < target`, repeat on the **right** half.
@@ -558,6 +594,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_kth_largest(mut nums: Vec<i32>, k: i32) -> i32 {
+        let k = nums.len() - k as usize;
+
+        fn quick_select(nums: &mut Vec<i32>, l: usize, r: usize, k: usize) -> i32 {
+            let pivot = nums[r];
+            let mut p = l;
+            for i in l..r {
+                if nums[i] <= pivot {
+                    nums.swap(p, i);
+                    p += 1;
+                }
+            }
+            nums.swap(p, r);
+
+            if p > k {
+                quick_select(nums, l, p - 1, k)
+            } else if p < k {
+                quick_select(nums, p + 1, r, k)
+            } else {
+                nums[p]
+            }
+        }
+
+        let r = nums.len() - 1;
+        quick_select(&mut nums, 0, r, k)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -570,14 +637,17 @@ class Solution {
 ## 4. Quick Select (Optimal)
 
 ### Intuition
+
 Quick Select finds the k-th largest (or smallest) element without sorting the whole array.
 
 This **optimal version** improves the classic Quick Select by:
+
 - choosing a pivot more intelligently (using a 3-element median-like technique),
 - reducing worst-case behavior,
 - partitioning the array efficiently so that large elements move left and small elements move right.
 
 The key idea is still the same:
+
 - After partitioning, the pivot ends up exactly where it belongs in sorted order.
 - If the pivot’s final index is the one we need, we’re done.
 - Otherwise, we only search the half of the array where the answer lies.
@@ -585,19 +655,20 @@ The key idea is still the same:
 This drastically reduces unnecessary work and leads to **O(n)** average time.
 
 ### Algorithm
+
 1. Convert k-th largest to zero-based index:
-   - `targetIndex = k - 1` (because array is arranged in descending order in this variant).
+    - `targetIndex = k - 1` (because array is arranged in descending order in this variant).
 2. Maintain two pointers: `left = 0` and `right = n - 1`.
 3. While searching:
-   - Choose a pivot using a more stable technique (swapping elements from `left`, `left+1`, `right`, `mid`).
-   - Partition the array so:
-     - All **elements > pivot** move to the left.
-     - All **elements < pivot** move to the right.
-   - The pivot ends at index `j`.
+    - Choose a pivot using a more stable technique (swapping elements from `left`, `left+1`, `right`, `mid`).
+    - Partition the array so:
+        - All **elements > pivot** move to the left.
+        - All **elements < pivot** move to the right.
+    - The pivot ends at index `j`.
 4. Compare:
-   - If `j == targetIndex`: return the pivot value.
-   - If `j > targetIndex`: search only in the **left** part (`right = j - 1`).
-   - If `j < targetIndex`: search only in the **right** part (`left = j + 1`).
+    - If `j == targetIndex`: return the pivot value.
+    - If `j > targetIndex`: search only in the **left** part (`right = j - 1`).
+    - If `j < targetIndex`: search only in the **right** part (`left = j + 1`).
 5. Continue until the correct index is isolated.
 
 ::tabs-start
@@ -1054,6 +1125,61 @@ class Solution {
     func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
         var nums = nums
         return quickSelect(&nums, k - 1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_kth_largest(mut nums: Vec<i32>, k: i32) -> i32 {
+        let k = (k - 1) as usize;
+
+        fn partition(nums: &mut Vec<i32>, left: usize, right: usize) -> usize {
+            let mid = (left + right) >> 1;
+            nums.swap(mid, left + 1);
+
+            if nums[left] < nums[right] {
+                nums.swap(left, right);
+            }
+            if nums[left + 1] < nums[right] {
+                nums.swap(left + 1, right);
+            }
+            if nums[left] < nums[left + 1] {
+                nums.swap(left, left + 1);
+            }
+
+            let pivot = nums[left + 1];
+            let mut i = left + 1;
+            let mut j = right;
+
+            loop {
+                loop { i += 1; if nums[i] <= pivot { break; } }
+                loop { j -= 1; if nums[j] >= pivot { break; } }
+                if i > j { break; }
+                nums.swap(i, j);
+            }
+
+            nums[left + 1] = nums[j];
+            nums[j] = pivot;
+            j
+        }
+
+        let mut left = 0usize;
+        let mut right = nums.len() - 1;
+
+        loop {
+            if right <= left + 1 {
+                if right == left + 1 && nums[right] > nums[left] {
+                    nums.swap(left, right);
+                }
+                return nums[k];
+            }
+
+            let j = partition(&mut nums, left, right);
+
+            if j >= k { right = j.wrapping_sub(1); }
+            if j <= k { left = j + 1; }
+        }
     }
 }
 ```

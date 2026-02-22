@@ -633,6 +633,64 @@ struct Heap<T> {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_safeness_factor(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let directions: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+
+        let mut min_dist = vec![vec![-1i32; n]; n];
+        let mut queue = VecDeque::new();
+
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    queue.push_back((r, c, 0));
+                    min_dist[r][c] = 0;
+                }
+            }
+        }
+
+        while let Some((r, c, dist)) = queue.pop_front() {
+            for &(dr, dc) in &directions {
+                let (r2, c2) = (r as i32 + dr, c as i32 + dc);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    if min_dist[ur2][uc2] == -1 {
+                        min_dist[ur2][uc2] = dist + 1;
+                        queue.push_back((ur2, uc2, dist + 1));
+                    }
+                }
+            }
+        }
+
+        let mut max_heap = BinaryHeap::new();
+        let mut visit = vec![vec![false; n]; n];
+
+        max_heap.push((min_dist[0][0], 0usize, 0usize));
+        visit[0][0] = true;
+
+        while let Some((dist, r, c)) = max_heap.pop() {
+            if r == n - 1 && c == n - 1 {
+                return dist;
+            }
+            for &(dr, dc) in &directions {
+                let (r2, c2) = (r as i32 + dr, c as i32 + dc);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    if !visit[ur2][uc2] {
+                        visit[ur2][uc2] = true;
+                        let dist2 = dist.min(min_dist[ur2][uc2]);
+                        max_heap.push((dist2, ur2, uc2));
+                    }
+                }
+            }
+        }
+        0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1248,6 +1306,68 @@ struct Heap<T> {
             elements.swapAt(parent, candidate)
             parent = candidate
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_safeness_factor(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let directions = [0i32, 1, 0, -1, 0];
+        let mut min_dist = vec![vec![-1i32; n]; n];
+
+        let mut q = VecDeque::new();
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    q.push_back(r * n + c);
+                    min_dist[r][c] = 0;
+                }
+            }
+        }
+
+        while let Some(node) = q.pop_front() {
+            let (r, c) = (node / n, node % n);
+            for i in 0..4 {
+                let (r2, c2) = (r as i32 + directions[i], c as i32 + directions[i + 1]);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    if min_dist[ur2][uc2] == -1 {
+                        min_dist[ur2][uc2] = min_dist[r][c] + 1;
+                        q.push_back(ur2 * n + uc2);
+                    }
+                }
+            }
+        }
+
+        let mut max_heap = BinaryHeap::new();
+        let mut safe_factor = vec![0i32; n * n];
+        safe_factor[0] = min_dist[0][0];
+        max_heap.push((safe_factor[0], 0usize));
+
+        while let Some((dist, node)) = max_heap.pop() {
+            let (r, c) = (node / n, node % n);
+            if r == n - 1 && c == n - 1 {
+                return dist;
+            }
+            if safe_factor[node] > dist {
+                continue;
+            }
+            for i in 0..4 {
+                let (r2, c2) = (r as i32 + directions[i], c as i32 + directions[i + 1]);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    let node2 = ur2 * n + uc2;
+                    let dist2 = dist.min(min_dist[ur2][uc2]);
+                    if dist2 > safe_factor[node2] {
+                        safe_factor[node2] = dist2;
+                        max_heap.push((dist2, node2));
+                    }
+                }
+            }
+        }
+        0
     }
 }
 ```
@@ -1872,6 +1992,77 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_safeness_factor(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let directions = [0i32, 1, 0, -1, 0];
+        let mut min_dist = vec![vec![-1i32; n]; n];
+
+        let mut q = VecDeque::new();
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    q.push_back(r * n + c);
+                    min_dist[r][c] = 0;
+                }
+            }
+        }
+
+        while let Some(node) = q.pop_front() {
+            let (r, c) = (node / n, node % n);
+            for i in 0..4 {
+                let (r2, c2) = (r as i32 + directions[i], c as i32 + directions[i + 1]);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    if min_dist[ur2][uc2] == -1 {
+                        min_dist[ur2][uc2] = min_dist[r][c] + 1;
+                        q.push_back(ur2 * n + uc2);
+                    }
+                }
+            }
+        }
+
+        let can_reach = |threshold: i32| -> bool {
+            let mut q = VecDeque::new();
+            let mut visited = vec![false; n * n];
+            q.push_back(0);
+            visited[0] = true;
+
+            while let Some(node) = q.pop_front() {
+                let (r, c) = (node / n, node % n);
+                if r == n - 1 && c == n - 1 {
+                    return true;
+                }
+                for i in 0..4 {
+                    let (r2, c2) = (r as i32 + directions[i], c as i32 + directions[i + 1]);
+                    if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                        let (ur2, uc2) = (r2 as usize, c2 as usize);
+                        let node2 = ur2 * n + uc2;
+                        if !visited[node2] && min_dist[ur2][uc2] >= threshold {
+                            visited[node2] = true;
+                            q.push_back(node2);
+                        }
+                    }
+                }
+            }
+            false
+        };
+
+        let (mut l, mut r) = (0, min_dist[0][0].min(min_dist[n - 1][n - 1]));
+        while l <= r {
+            let mid = (l + r) / 2;
+            if can_reach(mid) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+        l - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2448,6 +2639,71 @@ struct Deque<T> {
 
     mutating func removeFirst() -> T {
         return array.removeFirst()
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_safeness_factor(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let directions = [0i32, 1, 0, -1, 0];
+        let mut min_dist = vec![vec![-1i32; n]; n];
+
+        let mut q = VecDeque::new();
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    q.push_back(r * n + c);
+                    min_dist[r][c] = 0;
+                }
+            }
+        }
+
+        while let Some(node) = q.pop_front() {
+            let (r, c) = (node / n, node % n);
+            for i in 0..4 {
+                let (r2, c2) = (r as i32 + directions[i], c as i32 + directions[i + 1]);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    if min_dist[ur2][uc2] == -1 {
+                        min_dist[ur2][uc2] = min_dist[r][c] + 1;
+                        q.push_back(ur2 * n + uc2);
+                    }
+                }
+            }
+        }
+
+        let mut safe_factor = vec![-1i32; n * n];
+        let mut res = min_dist[n - 1][n - 1].min(min_dist[0][0]);
+        safe_factor[0] = res;
+        let mut deque = VecDeque::new();
+        deque.push_back(0usize);
+
+        while let Some(node) = deque.pop_front() {
+            let (r, c) = (node / n, node % n);
+            res = res.min(safe_factor[node]);
+            if r == n - 1 && c == n - 1 {
+                break;
+            }
+            for i in 0..4 {
+                let (r2, c2) = (r as i32 + directions[i], c as i32 + directions[i + 1]);
+                if r2 >= 0 && c2 >= 0 && (r2 as usize) < n && (c2 as usize) < n {
+                    let (ur2, uc2) = (r2 as usize, c2 as usize);
+                    let node2 = ur2 * n + uc2;
+                    if safe_factor[node2] == -1 {
+                        safe_factor[node2] = safe_factor[node].min(min_dist[ur2][uc2]);
+                        if safe_factor[node2] < res {
+                            deque.push_back(node2);
+                        } else {
+                            deque.push_front(node2);
+                        }
+                    }
+                }
+            }
+        }
+
+        res
     }
 }
 ```

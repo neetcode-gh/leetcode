@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - The key insight is that picking k cards from ends leaves a contiguous window of n-k cards
 - **Prefix and Suffix Sums** - Used to compute sums of left and right segments in constant time
 - **Two Pointers** - The optimal solution slides a virtual window that wraps around the array ends
@@ -15,9 +17,9 @@ Since we can only take cards from the beginning or end, any valid selection form
 ### Algorithm
 
 1. For each split `left` from `0` to `k`:
-   - Compute the sum of the first `left` cards.
-   - Compute the sum of the last `k - left` cards.
-   - Track the maximum total.
+    - Compute the sum of the first `left` cards.
+    - Compute the sum of the last `k - left` cards.
+    - Track the maximum total.
 2. Return the maximum sum found.
 
 ::tabs-start
@@ -217,6 +219,24 @@ public class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(card_points: Vec<i32>, k: i32) -> i32 {
+        let n = card_points.len();
+        let k = k as usize;
+        let mut res = 0;
+
+        for left in 0..=k {
+            let left_sum: i32 = card_points[..left].iter().sum();
+            let right_sum: i32 = card_points[n - (k - left)..].iter().sum();
+            res = res.max(left_sum + right_sum);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -239,8 +259,8 @@ Instead of recomputing sums for each split, we precompute prefix sums (sums from
 1. Build a prefix sum array where `prefix[i]` is the sum of the first `i` cards.
 2. Build a suffix sum array where `suffix[i]` is the sum of cards from index `i` to the end.
 3. For each split taking `left` cards from the front and `k - left` from the back:
-   - Total = `prefix[left] + suffix[n - (k - left)]`.
-   - Track the maximum.
+    - Total = `prefix[left] + suffix[n - (k - left)]`.
+    - Track the maximum.
 4. Return the maximum sum.
 
 ::tabs-start
@@ -450,6 +470,33 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score(card_points: Vec<i32>, k: i32) -> i32 {
+        let n = card_points.len();
+        let k = k as usize;
+
+        let mut prefix = vec![0; n + 1];
+        for i in 0..n {
+            prefix[i + 1] = prefix[i] + card_points[i];
+        }
+
+        let mut suffix = vec![0; n + 1];
+        for i in (0..n).rev() {
+            suffix[i] = suffix[i + 1] + card_points[i];
+        }
+
+        let mut res = 0;
+        for left in 0..=k {
+            let right = k - left;
+            res = res.max(prefix[left] + suffix[n - right]);
+        }
+
+        res
     }
 }
 ```
@@ -712,6 +759,34 @@ public class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(card_points: Vec<i32>, k: i32) -> i32 {
+        let n = card_points.len();
+        let window_size = n - k as usize;
+
+        if window_size == 0 {
+            return card_points.iter().sum();
+        }
+
+        let mut total = 0;
+        let mut min_window_sum = i32::MAX;
+        let mut cur_sum = 0;
+
+        for i in 0..n {
+            total += card_points[i];
+            cur_sum += card_points[i];
+            if i >= window_size - 1 {
+                min_window_sum = min_window_sum.min(cur_sum);
+                cur_sum -= card_points[i - window_size + 1];
+            }
+        }
+
+        total - min_window_sum
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -732,9 +807,9 @@ We can directly maintain a sliding window of size `k` that wraps around the arra
 1. Initialize the sum by taking the last `k` cards (all from the right).
 2. Use two pointers: `l` starting at `0`, `r` starting at `n - k`.
 3. Slide the window `k` times:
-   - Add `cardPoints[l]` and subtract `cardPoints[r]`.
-   - Update the maximum sum.
-   - Move both pointers forward.
+    - Add `cardPoints[l]` and subtract `cardPoints[r]`.
+    - Update the maximum sum.
+    - Move both pointers forward.
 4. Return the maximum sum found.
 
 ::tabs-start
@@ -926,6 +1001,27 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score(card_points: Vec<i32>, k: i32) -> i32 {
+        let n = card_points.len();
+        let k = k as usize;
+        let (mut l, mut r) = (0, n - k);
+        let mut total: i32 = card_points[r..].iter().sum();
+        let mut res = total;
+
+        while r < n {
+            total += card_points[l] - card_points[r];
+            res = res.max(total);
+            l += 1;
+            r += 1;
+        }
+
+        res
     }
 }
 ```

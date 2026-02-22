@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting with Custom Comparators** - Sorting elements based on a computed value (distance) rather than the elements themselves
 - **Euclidean Distance** - Understanding that distance from origin is sqrt(x^2 + y^2), and that squared distance preserves ordering
 - **Heap Data Structure** - Using min-heaps and max-heaps to efficiently track smallest/largest elements
@@ -112,6 +114,16 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn k_closest(mut points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        points.sort_by_key(|p| p[0] * p[0] + p[1] * p[1]);
+        points.truncate(k as usize);
+        points
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -139,11 +151,11 @@ This works because the heap always keeps the smallest distances at the front.
 
 1. Create an empty min-heap.
 2. For each point `(x, y)`:
-   - Compute squared distance `x^2 + y^2`.
-   - Push `(distance, x, y)` into the heap.
+    - Compute squared distance `x^2 + y^2`.
+    - Push `(distance, x, y)` into the heap.
 3. Repeat `k` times:
-   - Remove the smallest element from the heap.
-   - Add its `(x, y)` coordinates to the result.
+    - Remove the smallest element from the heap.
+    - Add its `(x, y)` coordinates to the result.
 4. Return the result list of `k` closest points.
 
 ::tabs-start
@@ -335,6 +347,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn k_closest(points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let mut heap = BinaryHeap::new();
+        for p in &points {
+            let dist = p[0] * p[0] + p[1] * p[1];
+            heap.push(Reverse((dist, p[0], p[1])));
+        }
+        let mut res = Vec::new();
+        for _ in 0..k {
+            if let Some(Reverse((_, x, y))) = heap.pop() {
+                res.push(vec![x, y]);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +380,7 @@ class Solution {
 ## 3. Max Heap
 
 ### Intuition
+
 We want the **`k` closest points**, not all points sorted.
 
 Use a **max-heap of size `k`**:
@@ -360,14 +392,15 @@ Use a **max-heap of size `k`**:
 This way, the heap never grows beyond size `k`, and it always contains the `k` best candidates.
 
 ### Algorithm
+
 1. Create an empty max-heap.
 2. For each point:
-   - Compute its squared distance from origin: `d = x^2 + y^2`.
-   - Insert `(d, point)` into the heap.
-   - If heap size exceeds `k`:
-     - Remove the element with the **maximum** distance.
+    - Compute its squared distance from origin: `d = x^2 + y^2`.
+    - Insert `(d, point)` into the heap.
+    - If heap size exceeds `k`:
+        - Remove the element with the **maximum** distance.
 3. After processing all points:
-   - The heap contains exactly the **`k` closest points**.
+    - The heap contains exactly the **`k` closest points**.
 4. Return all points stored in the heap.
 
 ::tabs-start
@@ -581,6 +614,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn k_closest(points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let k = k as usize;
+        let mut heap = BinaryHeap::new();
+        for p in &points {
+            let dist = p[0] * p[0] + p[1] * p[1];
+            heap.push((dist, p[0], p[1]));
+            if heap.len() > k {
+                heap.pop();
+            }
+        }
+        heap.into_iter().map(|(_, x, y)| vec![x, y]).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -595,33 +645,35 @@ class Solution {
 ## 4. Quick Select
 
 ### Intuition
+
 We want the **`k` closest points**, but we do NOT need them sorted.
 
 This is a perfect use-case for **QuickSelect**, the same idea used in QuickSort's partition step:
 
 - Pick a **pivot point**.
 - Partition all points into:
-  - points **closer** than the pivot
-  - points **farther** than the pivot
+    - points **closer** than the pivot
+    - points **farther** than the pivot
 - After partitioning, the pivot ends at its **correct position** in the final sorted order.
 - If the pivot ends up at index `p`:
-  - If `p == k`, then the left side already contains the `k` closest points.
-  - If `p < k`, search the **right half**.
-  - If `p > k`, search the **left half**.
+    - If `p == k`, then the left side already contains the `k` closest points.
+    - If `p < k`, search the **right half**.
+    - If `p > k`, search the **left half**.
 
 This avoids fully sorting the array and runs in **average O(N)** time.
 
 ### Algorithm
+
 1. Define a function to compute squared distance: `dist = x^2 + y^2`.
 2. Use a partition function:
-   - Choose a pivot distance.
-   - Rearrange points so all smaller distances go left, larger go right.
-   - Return the pivot's final index.
+    - Choose a pivot distance.
+    - Rearrange points so all smaller distances go left, larger go right.
+    - Return the pivot's final index.
 3. Maintain two pointers: `L = 0`, `R = n - 1`.
 4. Repeatedly partition:
-   - If pivot index `p == k`, stop.
-   - If `p < k`, move `L = p + 1`.
-   - If `p > k`, move `R = p - 1`.
+    - If pivot index `p == k`, stop.
+    - If `p < k`, move `L = p + 1`.
+    - If `p > k`, move `R = p - 1`.
 5. After partitioning ends, the first `k` points in the array are the `k` closest.
 6. Return those `k` points.
 
@@ -941,6 +993,42 @@ class Solution {
         }
 
         return Array(points[..<k])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn k_closest(mut points: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let k = k as usize;
+        let mut l = 0usize;
+        let mut r = points.len() - 1;
+        let mut pivot = points.len();
+
+        while pivot != k {
+            pivot = Self::partition(&mut points, l, r);
+            if pivot < k {
+                l = pivot + 1;
+            } else {
+                r = pivot - 1;
+            }
+        }
+        points.truncate(k);
+        points
+    }
+
+    fn partition(points: &mut Vec<Vec<i32>>, l: usize, r: usize) -> usize {
+        let pivot_dist = points[r][0] * points[r][0] + points[r][1] * points[r][1];
+        let mut i = l;
+        for j in l..r {
+            let d = points[j][0] * points[j][0] + points[j][1] * points[j][1];
+            if d <= pivot_dist {
+                points.swap(i, j);
+                i += 1;
+            }
+        }
+        points.swap(i, r);
+        i
     }
 }
 ```

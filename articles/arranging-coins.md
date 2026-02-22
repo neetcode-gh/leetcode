@@ -1,7 +1,9 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Searching for the optimal value in a sorted search space
-- **Arithmetic Series** - The formula for sum of first k integers: k * (k + 1) / 2
+- **Arithmetic Series** - The formula for sum of first k integers: k \* (k + 1) / 2
 - **Basic Math** - Solving quadratic inequalities and using the quadratic formula
 
 ---
@@ -18,8 +20,8 @@ The simplest approach is to simulate the process. Keep adding rows one by one, s
 
 1. Initialize `row = 0`.
 2. While we have enough coins for the next row (`n > row`):
-   - Increment `row`.
-   - Subtract `row` coins from `n`.
+    - Increment `row`.
+    - Subtract `row` coins from `n`.
 3. Return `row` as the number of complete rows.
 
 ::tabs-start
@@ -130,6 +132,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn arrange_coins(n: i32) -> i32 {
+        let mut n = n;
+        let mut row = 0;
+        while n - row > 0 {
+            row += 1;
+            n -= row;
+        }
+        row
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -151,9 +167,9 @@ This creates a monotonic condition perfect for binary search. We search for the 
 
 1. Set search bounds: `l = 1` and `r = n`.
 2. While `l <= r`:
-   - Compute `mid` and calculate coins needed for `mid` rows.
-   - If coins needed exceeds `n`, search the left half.
-   - Otherwise, update the result and search the right half.
+    - Compute `mid` and calculate coins needed for `mid` rows.
+    - If coins needed exceeds `n`, search the left half.
+    - Otherwise, update the result and search the right half.
 3. Return the maximum valid `k`.
 
 ::tabs-start
@@ -333,6 +349,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn arrange_coins(n: i32) -> i32 {
+        let mut l: i64 = 1;
+        let mut r: i64 = n as i64;
+        let mut res: i64 = 0;
+
+        while l <= r {
+            let mid = l + (r - l) / 2;
+            let coins = mid * (mid + 1) / 2;
+            if coins > n as i64 {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+                res = res.max(mid);
+            }
+        }
+
+        res as i32
     }
 }
 ```
@@ -551,6 +590,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn arrange_coins(n: i32) -> i32 {
+        if n <= 3 {
+            return if n == 1 { 1 } else { n - 1 };
+        }
+
+        let mut l: i64 = 1;
+        let mut r: i64 = n as i64 / 2 + 1;
+        while l < r {
+            let mid = (l + r) / 2;
+            let coins = mid * (mid + 1) / 2;
+            if coins <= n as i64 {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        (l - 1) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,10 +635,10 @@ Since `n` fits in 32 bits and `k` is roughly `sqrt(n)`, we only need about 16 bi
 
 1. Start with a `mask` at the highest relevant bit (bit 15).
 2. For each bit from high to low:
-   - Set the bit in `rows`.
-   - Calculate coins needed for `rows` rows.
-   - If it exceeds `n`, clear the bit.
-   - Shift `mask` right.
+    - Set the bit in `rows`.
+    - Calculate coins needed for `rows` rows.
+    - If it exceeds `n`, clear the bit.
+    - Shift `mask` right.
 3. Return `rows`.
 
 ::tabs-start
@@ -725,6 +788,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn arrange_coins(n: i32) -> i32 {
+        let mut mask: i64 = 1 << 15;
+        let mut rows: i64 = 0;
+        while mask > 0 {
+            rows |= mask;
+            let coins = rows * (rows + 1) / 2;
+            if coins > n as i64 {
+                rows ^= mask;
+            }
+            mask >>= 1;
+        }
+        rows as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -814,6 +895,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn arrange_coins(n: i32) -> i32 {
+        ((2.0 * n as f64 + 0.25).sqrt() - 0.5) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -825,8 +914,10 @@ class Solution {
 
 ## Common Pitfalls
 
-### Integer Overflow When Computing mid * (mid + 1)
+### Integer Overflow When Computing mid \* (mid + 1)
+
 When using binary search, computing `mid * (mid + 1)` can overflow for large values of `mid` if using 32-bit integers. Always cast to a larger type before multiplication.
+
 ```java
 // Wrong: overflow when mid is large
 int coins = mid * (mid + 1) / 2;
@@ -836,7 +927,9 @@ long coins = (long) mid * (mid + 1) / 2;
 ```
 
 ### Off-by-One Error in the Result
+
 The formula `k * (k + 1) / 2` gives the total coins needed for `k` complete rows. A common mistake is returning the wrong value when the sum exactly equals `n` or when determining whether to include the current row.
+
 ```python
 # Wrong: returning l instead of l - 1 after binary search
 while l < r:

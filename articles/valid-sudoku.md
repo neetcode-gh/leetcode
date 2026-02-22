@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Used to track seen digits in rows, columns, and boxes for duplicate detection
 - **2D Array Traversal** - Understanding how to iterate through a 9x9 grid and compute box indices
 - **Bit Manipulation** - The optimized solution uses bitmasks to represent seen digits compactly
@@ -23,32 +25,32 @@ If we ever find a duplicate in any of these three checks, the board is invalid.
 ### Algorithm
 
 1. **Check all rows**:
-   - For each row index `row` from `0` to `8`:
-     - Create an empty set `seen`.
-     - For each column index `i` from `0` to `8`:
-       - Skip if the cell is `"."`.
-       - If the value is already in `seen`, return `false`.
-       - Otherwise, add it to `seen`.
+    - For each row index `row` from `0` to `8`:
+        - Create an empty set `seen`.
+        - For each column index `i` from `0` to `8`:
+            - Skip if the cell is `"."`.
+            - If the value is already in `seen`, return `false`.
+            - Otherwise, add it to `seen`.
 
 2. **Check all columns**:
-   - For each column index `col` from `0` to `8`:
-     - Create an empty set `seen`.
-     - For each row index `i` from `0` to `8`:
-       - Skip if the cell is `"."`.
-       - If the value is already in `seen`, return `false`.
-       - Otherwise, add it to `seen`.
+    - For each column index `col` from `0` to `8`:
+        - Create an empty set `seen`.
+        - For each row index `i` from `0` to `8`:
+            - Skip if the cell is `"."`.
+            - If the value is already in `seen`, return `false`.
+            - Otherwise, add it to `seen`.
 
 3. **Check all 3×3 boxes**:
-   - Number the 3×3 boxes from `0` to `8`.
-   - For each `square`:
-     - Create an empty set `seen`.
-     - For `i` in `0..2` and `j` in `0..2`:
-       - Compute:
-         - `row = (square // 3) * 3 + i`
-         - `col = (square % 3) * 3 + j`
-       - Skip if the cell is `"."`.
-       - If the value is already in `seen`, return `false`.
-       - Otherwise, add it to `seen`.
+    - Number the 3×3 boxes from `0` to `8`.
+    - For each `square`:
+        - Create an empty set `seen`.
+        - For `i` in `0..2` and `j` in `0..2`:
+            - Compute:
+                - `row = (square // 3) * 3 + i`
+                - `col = (square % 3) * 3 + j`
+            - Skip if the cell is `"."`.
+            - If the value is already in `seen`, return `false`.
+            - Otherwise, add it to `seen`.
 
 4. If all rows, columns, and 3×3 boxes pass these checks without duplicates, return `true`.
 
@@ -59,27 +61,27 @@ If we ever find a duplicate in any of these three checks, the board is invalid.
 Input Sudoku Board:
 
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-1 ║ 6 │ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-2 ║ . │ 9 │ 8 ║ . │ . │ . ║ . │ 6 │ . ║
-  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
-3 ║ 8 │ . │ . ║ . │ 6 │ . ║ . │ . │ 3 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-4 ║ 4 │ . │ . ║ 8 │ . │ 3 ║ . │ . │ 1 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-5 ║ 7 │ . │ . ║ . │ 2 │ . ║ . │ . │ 6 ║
-  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
-6 ║ . │ 6 │ . ║ . │ . │ . ║ 2 │ 8 │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-7 ║ . │ . │ . ║ 4 │ 1 │ 9 ║ . │ . │ 5 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-8 ║ . │ . │ . ║ . │ 8 │ . ║ . │ 7 │ 9 ║
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
-```
 
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+1 ║ 6 │ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+2 ║ . │ 9 │ 8 ║ . │ . │ . ║ . │ 6 │ . ║
+╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+3 ║ 8 │ . │ . ║ . │ 6 │ . ║ . │ . │ 3 ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+4 ║ 4 │ . │ . ║ 8 │ . │ 3 ║ . │ . │ 1 ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+5 ║ 7 │ . │ . ║ . │ 2 │ . ║ . │ . │ 6 ║
+╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+6 ║ . │ 6 │ . ║ . │ . │ . ║ 2 │ 8 │ . ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+7 ║ . │ . │ . ║ 4 │ 1 │ 9 ║ . │ . │ 5 ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+8 ║ . │ . │ . ║ . │ 8 │ . ║ . │ 7 │ 9 ║
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+```
 
 **PHASE 1: Check Rows**
 
@@ -87,47 +89,45 @@ Input Sudoku Board:
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Checking this row
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
-       ↑
-   Current cell
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║ ← Checking this row
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+↑
+Current cell
 ```
 
 **Step 1:** Check cell (0, 0) = '5'
-```markdown
-  seen = { }
-  '5' not in seen → add it
-  seen = { 5 }
-```
 
+```markdown
+seen = { }
+'5' not in seen → add it
+seen = { 5 }
+```
 
 **Step 2:** Check cell (0, 1) = '3'
-```markdown
-  seen = { 5 }
-  '3' not in seen → add it
-  seen = { 5, 3 }
-```
 
+```markdown
+seen = { 5 }
+'3' not in seen → add it
+seen = { 5, 3 }
+```
 
 **Step 3:** Check cell (0, 2) = '.' → skip (empty cell)
 
-
 **Step 4:** Check cell (0, 3) = '.' → skip (empty cell)
 
-
 **Step 5:** Check cell (0, 4) = '7'
-```markdown
-  seen = { 5, 3 }
-  '7' not in seen → add it
-  seen = { 5, 3, 7 }
-```
 
+```markdown
+seen = { 5, 3 }
+'7' not in seen → add it
+seen = { 5, 3, 7 }
+```
 
 ... continue for remaining cells in row 0
 
 **Result:** Row 0 is valid (no duplicates found)
-
 
 **PHASE 2: Check Columns**
 
@@ -135,58 +135,57 @@ Input Sudoku Board:
 
 ```markdown
     0
-  ╔═══╗
+
+╔═══╗
 0 ║[5]║ ← Current cell
-  ╟───╢
+╟───╢
 1 ║ 6 ║
-  ╟───╢
+╟───╢
 2 ║ . ║
-  ╠═══╣
+╠═══╣
 3 ║ 8 ║
-  ╟───╢
+╟───╢
 4 ║ 4 ║
-  ╟───╢
+╟───╢
 5 ║ 7 ║
-  ╠═══╣
+╠═══╣
 6 ║ . ║
-  ╟───╢
+╟───╢
 7 ║ . ║
-  ╟───╢
+╟───╢
 8 ║ . ║
-  ╚═══╝
+╚═══╝
 ```
 
 **Step 1:** Check cell (0, 0) = '5'
-```markdown
-  seen = { }
-  '5' not in seen → add it
-  seen = { 5 }
-```
 
+```markdown
+seen = { }
+'5' not in seen → add it
+seen = { 5 }
+```
 
 **Step 2:** Check cell (1, 0) = '6'
-```markdown
-  seen = { 5 }
-  '6' not in seen → add it
-  seen = { 5, 6 }
-```
 
+```markdown
+seen = { 5 }
+'6' not in seen → add it
+seen = { 5, 6 }
+```
 
 **Step 3:** Check cell (2, 0) = '.' → skip (empty cell)
 
-
 **Step 4:** Check cell (3, 0) = '8'
-```markdown
-  seen = { 5, 6 }
-  '8' not in seen → add it
-  seen = { 5, 6, 8 }
-```
 
+```markdown
+seen = { 5, 6 }
+'8' not in seen → add it
+seen = { 5, 6, 8 }
+```
 
 ... continue for remaining cells in column 0
 
 **Result:** Column 0 is valid (no duplicates found)
-
 
 **PHASE 3: Check 3x3 Boxes**
 
@@ -194,72 +193,67 @@ Input Sudoku Board:
 
 ```markdown
     0   1   2
-  ╔═══╤═══╤═══╗
-0 ║[5]│ 3 │ . ║  ← Start here
-  ╟───┼───┼───╢
+
+╔═══╤═══╤═══╗
+0 ║[5]│ 3 │ . ║ ← Start here
+╟───┼───┼───╢
 1 ║ 6 │ . │ . ║
-  ╟───┼───┼───╢
+╟───┼───┼───╢
 2 ║ . │ 9 │ 8 ║
-  ╚═══╧═══╧═══╝
+╚═══╧═══╧═══╝
 
 Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,0) → (2,1) → (2,2)
 ```
 
 **Step 1:** Check cell (0, 0) = '5'
-```markdown
-  seen = { }
-  '5' not in seen → add it
-  seen = { 5 }
-```
 
+```markdown
+seen = { }
+'5' not in seen → add it
+seen = { 5 }
+```
 
 **Step 2:** Check cell (0, 1) = '3'
-```markdown
-  seen = { 5 }
-  '3' not in seen → add it
-  seen = { 5, 3 }
-```
 
+```markdown
+seen = { 5 }
+'3' not in seen → add it
+seen = { 5, 3 }
+```
 
 **Step 3:** Check cell (0, 2) = '.' → skip
 
-
 **Step 4:** Check cell (1, 0) = '6'
-```markdown
-  seen = { 5, 3 }
-  '6' not in seen → add it
-  seen = { 5, 3, 6 }
-```
 
+```markdown
+seen = { 5, 3 }
+'6' not in seen → add it
+seen = { 5, 3, 6 }
+```
 
 **Step 5:** Check cell (1, 1) = '.' → skip
 
-
 **Step 6:** Check cell (1, 2) = '.' → skip
-
 
 **Step 7:** Check cell (2, 0) = '.' → skip
 
-
 **Step 8:** Check cell (2, 1) = '9'
-```markdown
-  seen = { 5, 3, 6 }
-  '9' not in seen → add it
-  seen = { 5, 3, 6, 9 }
-```
 
+```markdown
+seen = { 5, 3, 6 }
+'9' not in seen → add it
+seen = { 5, 3, 6, 9 }
+```
 
 **Step 9:** Check cell (2, 2) = '8'
+
 ```markdown
-  seen = { 5, 3, 6, 9 }
-  '8' not in seen → add it
-  seen = { 5, 3, 6, 9, 8 }
+seen = { 5, 3, 6, 9 }
+'8' not in seen → add it
+seen = { 5, 3, 6, 9, 8 }
 ```
 
-
 **Result:** Box 0 is valid (no duplicates found)
-
-
 
 After checking all 9 rows, 9 columns, and 9 boxes with no duplicates found, return `True`.
 
@@ -590,6 +584,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
+        for row in 0..9 {
+            let mut seen = HashSet::new();
+            for i in 0..9 {
+                if board[row][i] == '.' { continue; }
+                if !seen.insert(board[row][i]) { return false; }
+            }
+        }
+
+        for col in 0..9 {
+            let mut seen = HashSet::new();
+            for i in 0..9 {
+                if board[i][col] == '.' { continue; }
+                if !seen.insert(board[i][col]) { return false; }
+            }
+        }
+
+        for square in 0..9 {
+            let mut seen = HashSet::new();
+            for i in 0..3 {
+                for j in 0..3 {
+                    let row = (square / 3) * 3 + i;
+                    let col = (square % 3) * 3 + j;
+                    if board[row][col] == '.' { continue; }
+                    if !seen.insert(board[row][col]) { return false; }
+                }
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -606,11 +636,12 @@ class Solution {
 Instead of checking rows, columns, and 3×3 boxes separately, we can validate the entire Sudoku board in **one single pass**.  
 For each cell, we check whether the digit has already appeared in:
 
-1. the same **row**  
-2. the same **column**  
+1. the same **row**
+2. the same **column**
 3. the same **3×3 box**
 
 We track these using three hash sets:
+
 - `rows[r]` keeps digits seen in row `r`
 - `cols[c]` keeps digits seen in column `c`
 - `squares[(r // 3, c // 3)]` keeps digits in the 3×3 box
@@ -620,23 +651,23 @@ If a digit appears again in any of these places, the board is invalid.
 ### Algorithm
 
 1. Create three hash maps of sets:
-   - `rows` to track digits in each row
-   - `cols` to track digits in each column
-   - `squares` to track digits in each 3×3 sub-box, keyed by `(r // 3, c // 3)`
+    - `rows` to track digits in each row
+    - `cols` to track digits in each column
+    - `squares` to track digits in each 3×3 sub-box, keyed by `(r // 3, c // 3)`
 
 2. Loop through every cell in the board:
-   - Skip the cell if it contains `"."`.
-   - Let `val` be the digit in the cell.
-   - If `val` is already in:
-     - `rows[r]` → duplicate in the row
-     - `cols[c]` → duplicate in the column
-     - `squares[(r // 3, c // 3)]` → duplicate in the 3×3 box
-     Then return `false`.
+    - Skip the cell if it contains `"."`.
+    - Let `val` be the digit in the cell.
+    - If `val` is already in:
+        - `rows[r]` → duplicate in the row
+        - `cols[c]` → duplicate in the column
+        - `squares[(r // 3, c // 3)]` → duplicate in the 3×3 box
+          Then return `false`.
 
 3. Otherwise, add the digit to all three sets:
-   - `rows[r]`
-   - `cols[c]`
-   - `squares[(r // 3, c // 3)]`
+    - `rows[r]`
+    - `cols[c]`
+    - `squares[(r // 3, c // 3)]`
 
 4. If the whole board is scanned without detecting duplicates, return `true`.
 
@@ -647,43 +678,44 @@ If a digit appears again in any of these places, the board is invalid.
 Input Sudoku Board:
 
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
 1 ║ 6 │ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
 2 ║ . │ 9 │ 8 ║ . │ . │ . ║ . │ 6 │ . ║
-  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
 3 ║ 8 │ . │ . ║ . │ 6 │ . ║ . │ . │ 3 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
 4 ║ 4 │ . │ . ║ 8 │ . │ 3 ║ . │ . │ 1 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
 5 ║ 7 │ . │ . ║ . │ 2 │ . ║ . │ . │ 6 ║
-  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
 6 ║ . │ 6 │ . ║ . │ . │ . ║ 2 │ 8 │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
 7 ║ . │ . │ . ║ 4 │ 1 │ 9 ║ . │ . │ 5 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
 8 ║ . │ . │ . ║ . │ 8 │ . ║ . │ 7 │ 9 ║
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 
 Box Index Map (for reference):
-  ╔═══════════╦═══════════╦═══════════╗
-  ║  Box 0    ║  Box 1    ║  Box 2    ║
-  ║ (0//3,    ║ (0//3,    ║ (0//3,    ║
-  ║  0//3)    ║  1//3)    ║  2//3)    ║
-  ╠═══════════╬═══════════╬═══════════╣
-  ║  Box 3    ║  Box 4    ║  Box 5    ║
-  ╠═══════════╬═══════════╬═══════════╣
-  ║  Box 6    ║  Box 7    ║  Box 8    ║
-  ╚═══════════╩═══════════╩═══════════╝
+╔═══════════╦═══════════╦═══════════╗
+║ Box 0 ║ Box 1 ║ Box 2 ║
+║ (0//3, ║ (0//3, ║ (0//3, ║
+║ 0//3) ║ 1//3) ║ 2//3) ║
+╠═══════════╬═══════════╬═══════════╣
+║ Box 3 ║ Box 4 ║ Box 5 ║
+╠═══════════╬═══════════╬═══════════╣
+║ Box 6 ║ Box 7 ║ Box 8 ║
+╚═══════════╩═══════════╩═══════════╝
 ```
 
 **Data Structures:**
+
 - `rows[r]` = set of digits seen in row r
 - `cols[c]` = set of digits seen in column c
 - `squares[(r//3, c//3)]` = set of digits seen in that 3x3 box
-
 
 **ONE-PASS WALKTHROUGH**
 
@@ -691,137 +723,132 @@ Box Index Map (for reference):
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  Box index: (0//3, 0//3) = (0, 0)
+Box index: (0//3, 0//3) = (0, 0)
 
-  Check for duplicates:
-    '5' in rows[0]?         No (empty)
-    '5' in cols[0]?         No (empty)
-    '5' in squares[(0,0)]?  No (empty)
+Check for duplicates:
+'5' in rows[0]? No (empty)
+'5' in cols[0]? No (empty)
+'5' in squares[(0,0)]? No (empty)
 
-  Update all three sets:
-    rows[0]         = { 5 }
-    cols[0]         = { 5 }
-    squares[(0,0)]  = { 5 }
+Update all three sets:
+rows[0] = { 5 }
+cols[0] = { 5 }
+squares[(0,0)] = { 5 }
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
-
 
 **Step 2:** Process cell (0, 1) = '3'
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │[3]│ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │[3]│ . ║ . │ 7 │ . ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  Box index: (0//3, 1//3) = (0, 0)
+Box index: (0//3, 1//3) = (0, 0)
 
-  Check for duplicates:
-    '3' in rows[0]?         No (rows[0] = {5})
-    '3' in cols[1]?         No (empty)
-    '3' in squares[(0,0)]?  No (squares[(0,0)] = {5})
+Check for duplicates:
+'3' in rows[0]? No (rows[0] = {5})
+'3' in cols[1]? No (empty)
+'3' in squares[(0,0)]? No (squares[(0,0)] = {5})
 
-  Update all three sets:
-    rows[0]         = { 5, 3 }
-    cols[1]         = { 3 }
-    squares[(0,0)]  = { 5, 3 }
+Update all three sets:
+rows[0] = { 5, 3 }
+cols[1] = { 3 }
+squares[(0,0)] = { 5, 3 }
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
-
 
 **Step 3:** Process cell (0, 2) = '.' → skip (empty cell)
 
-
 **Step 4:** Process cell (0, 3) = '.' → skip (empty cell)
-
 
 **Step 5:** Process cell (0, 4) = '7'
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │ 3 │ . ║ . │[7]│ . ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │ 3 │ . ║ . │[7]│ . ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  Box index: (0//3, 4//3) = (0, 1)  ← Different box!
+Box index: (0//3, 4//3) = (0, 1) ← Different box!
 
-  Check for duplicates:
-    '7' in rows[0]?         No (rows[0] = {5, 3})
-    '7' in cols[4]?         No (empty)
-    '7' in squares[(0,1)]?  No (empty)
+Check for duplicates:
+'7' in rows[0]? No (rows[0] = {5, 3})
+'7' in cols[4]? No (empty)
+'7' in squares[(0,1)]? No (empty)
 
-  Update all three sets:
-    rows[0]         = { 5, 3, 7 }
-    cols[4]         = { 7 }
-    squares[(0,1)]  = { 7 }
+Update all three sets:
+rows[0] = { 5, 3, 7 }
+cols[4] = { 7 }
+squares[(0,1)] = { 7 }
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
 
-
 ... (continue scanning row 0, then move to row 1)
-
 
 **Step 10:** Process cell (1, 0) = '6'
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-1 ║[6]│ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+1 ║[6]│ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  Box index: (1//3, 0//3) = (0, 0)  ← Same box as cell (0,0)
+Box index: (1//3, 0//3) = (0, 0) ← Same box as cell (0,0)
 
-  Check for duplicates:
-    '6' in rows[1]?         No (empty)
-    '6' in cols[0]?         No (cols[0] = {5})
-    '6' in squares[(0,0)]?  No (squares[(0,0)] = {5, 3})
+Check for duplicates:
+'6' in rows[1]? No (empty)
+'6' in cols[0]? No (cols[0] = {5})
+'6' in squares[(0,0)]? No (squares[(0,0)] = {5, 3})
 
-  Update all three sets:
-    rows[1]         = { 6 }
-    cols[0]         = { 5, 6 }
-    squares[(0,0)]  = { 5, 3, 6 }
+Update all three sets:
+rows[1] = { 6 }
+cols[0] = { 5, 6 }
+squares[(0,0)] = { 5, 3, 6 }
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
-
 
 **STATE AFTER PROCESSING FIRST TWO ROWS**
 
 ```markdown
 Row Sets:
-  rows[0] = { 5, 3, 7 }
-  rows[1] = { 6, 1, 9, 5 }
+rows[0] = { 5, 3, 7 }
+rows[1] = { 6, 1, 9, 5 }
 
 Column Sets:
-  cols[0] = { 5, 6 }
-  cols[1] = { 3 }
-  cols[3] = { 1 }
-  cols[4] = { 7, 9 }
-  cols[5] = { 5 }
+cols[0] = { 5, 6 }
+cols[1] = { 3 }
+cols[3] = { 1 }
+cols[4] = { 7, 9 }
+cols[5] = { 5 }
 
 Box Sets:
-  squares[(0,0)] = { 5, 3, 6 }      (top-left box)
-  squares[(0,1)] = { 7, 1, 9, 5 }   (top-middle box)
+squares[(0,0)] = { 5, 3, 6 } (top-left box)
+squares[(0,1)] = { 7, 1, 9, 5 } (top-middle box)
 ```
-
-
 
 Continue processing all cells. If no duplicate is found in any row, column, or box, return `True`.
 
@@ -1077,6 +1104,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
+        let mut rows: Vec<HashSet<char>> = vec![HashSet::new(); 9];
+        let mut cols: Vec<HashSet<char>> = vec![HashSet::new(); 9];
+        let mut squares: Vec<HashSet<char>> = vec![HashSet::new(); 9];
+
+        for r in 0..9 {
+            for c in 0..9 {
+                if board[r][c] == '.' { continue; }
+                let val = board[r][c];
+                let square_idx = (r / 3) * 3 + c / 3;
+
+                if !rows[r].insert(val)
+                    || !cols[c].insert(val)
+                    || !squares[square_idx].insert(val)
+                {
+                    return false;
+                }
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1095,9 +1149,10 @@ For example, digit `1` uses bit `0`, digit `2` uses bit `1`, …, digit `9` uses
 This means we can track which digits have appeared in a row, column, or 3×3 box using just **one integer per row/column/box** instead of a hash set.
 
 When we encounter a digit, we compute its bit position and check:
-- if that bit is already set in the row → duplicate in row  
-- if that bit is already set in the column → duplicate in column  
-- if that bit is already set in the box → duplicate in box  
+
+- if that bit is already set in the row → duplicate in row
+- if that bit is already set in the column → duplicate in column
+- if that bit is already set in the box → duplicate in box
 
 If none of these checks fail, we “turn on” that bit to mark the digit as seen.  
 This approach is both memory efficient and fast.
@@ -1105,24 +1160,24 @@ This approach is both memory efficient and fast.
 ### Algorithm
 
 1. Create three arrays of size 9:
-   - `rows[i]` stores bits for digits seen in row `i`
-   - `cols[i]` stores bits for digits seen in column `i`
-   - `squares[i]` stores bits for digits seen in 3×3 box `i`
+    - `rows[i]` stores bits for digits seen in row `i`
+    - `cols[i]` stores bits for digits seen in column `i`
+    - `squares[i]` stores bits for digits seen in 3×3 box `i`
 
 2. Loop through each cell `(r, c)` of the board:
-   - Skip if the cell contains `"."`.
-   - Convert the digit to a bit index: `val = int(board[r][c]) - 1`.
-   - Compute the mask: `mask = 1 << val`.
+    - Skip if the cell contains `"."`.
+    - Convert the digit to a bit index: `val = int(board[r][c]) - 1`.
+    - Compute the mask: `mask = 1 << val`.
 
 3. Check for duplicates:
-   - If `mask` is already set in `rows[r]`, return `false`.
-   - If `mask` is already set in `cols[c]`, return `false`.
-   - If `mask` is already set in `squares[(r // 3) * 3 + (c // 3)]`, return `false`.
+    - If `mask` is already set in `rows[r]`, return `false`.
+    - If `mask` is already set in `cols[c]`, return `false`.
+    - If `mask` is already set in `squares[(r // 3) * 3 + (c // 3)]`, return `false`.
 
 4. Mark the digit as seen:
-   - `rows[r] |= mask`
-   - `cols[c] |= mask`
-   - `squares[(r // 3) * 3 + (c // 3)] |= mask`
+    - `rows[r] |= mask`
+    - `cols[c] |= mask`
+    - `squares[(r // 3) * 3 + (c // 3)] |= mask`
 
 5. If all cells are processed without conflicts, return `true`.
 
@@ -1133,51 +1188,51 @@ This approach is both memory efficient and fast.
 Input Sudoku Board:
 
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-1 ║ 6 │ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-2 ║ . │ 9 │ 8 ║ . │ . │ . ║ . │ 6 │ . ║
-  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
-3 ║ 8 │ . │ . ║ . │ 6 │ . ║ . │ . │ 3 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-4 ║ 4 │ . │ . ║ 8 │ . │ 3 ║ . │ . │ 1 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-5 ║ 7 │ . │ . ║ . │ 2 │ . ║ . │ . │ 6 ║
-  ╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
-6 ║ . │ 6 │ . ║ . │ . │ . ║ 2 │ 8 │ . ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-7 ║ . │ . │ . ║ 4 │ 1 │ 9 ║ . │ . │ 5 ║
-  ╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
-8 ║ . │ . │ . ║ . │ 8 │ . ║ . │ 7 │ 9 ║
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
-```
 
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+1 ║ 6 │ . │ . ║ 1 │ 9 │ 5 ║ . │ . │ . ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+2 ║ . │ 9 │ 8 ║ . │ . │ . ║ . │ 6 │ . ║
+╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+3 ║ 8 │ . │ . ║ . │ 6 │ . ║ . │ . │ 3 ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+4 ║ 4 │ . │ . ║ 8 │ . │ 3 ║ . │ . │ 1 ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+5 ║ 7 │ . │ . ║ . │ 2 │ . ║ . │ . │ 6 ║
+╠═══╪═══╪═══╬═══╪═══╪═══╬═══╪═══╪═══╣
+6 ║ . │ 6 │ . ║ . │ . │ . ║ 2 │ 8 │ . ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+7 ║ . │ . │ . ║ 4 │ 1 │ 9 ║ . │ . │ 5 ║
+╟───┼───┼───╫───┼───┼───╫───┼───┼───╢
+8 ║ . │ . │ . ║ . │ 8 │ . ║ . │ 7 │ 9 ║
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+```
 
 **BIT REPRESENTATION**
 
 ```markdown
 Each digit is represented by a single bit:
 
-  Digit │ Bit Position │ Mask (binary)     │ Mask (decimal)
-  ──────┼──────────────┼───────────────────┼────────────────
-    1   │     0        │ 0b000000001       │      1
-    2   │     1        │ 0b000000010       │      2
-    3   │     2        │ 0b000000100       │      4
-    4   │     3        │ 0b000001000       │      8
-    5   │     4        │ 0b000010000       │     16
-    6   │     5        │ 0b000100000       │     32
-    7   │     6        │ 0b001000000       │     64
-    8   │     7        │ 0b010000000       │    128
-    9   │     8        │ 0b100000000       │    256
+Digit │ Bit Position │ Mask (binary) │ Mask (decimal)
+──────┼──────────────┼───────────────────┼────────────────
+1 │ 0 │ 0b000000001 │ 1
+2 │ 1 │ 0b000000010 │ 2
+3 │ 2 │ 0b000000100 │ 4
+4 │ 3 │ 0b000001000 │ 8
+5 │ 4 │ 0b000010000 │ 16
+6 │ 5 │ 0b000100000 │ 32
+7 │ 6 │ 0b001000000 │ 64
+8 │ 7 │ 0b010000000 │ 128
+9 │ 8 │ 0b100000000 │ 256
 ```
 
 **Data Structures (all initialized to 0):**
+
 - `rows[9]` = integers tracking seen digits per row (one int per row)
 - `cols[9]` = integers tracking seen digits per column (one int per column)
 - `squares[9]` = integers tracking seen digits per 3x3 box (one int per box)
-
 
 **WALKTHROUGH**
 
@@ -1185,108 +1240,105 @@ Each digit is represented by a single bit:
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  val  = 5 - 1 = 4
-  mask = 1 << 4 = 0b000010000 (decimal: 16)
-  Box index: (0/3)*3 + 0/3 = 0
+val = 5 - 1 = 4
+mask = 1 << 4 = 0b000010000 (decimal: 16)
+Box index: (0/3)\*3 + 0/3 = 0
 
-  Check duplicates (bitwise AND):
-    rows[0] & mask    = 0 & 16 = 0  → bit not set → not seen
-    cols[0] & mask    = 0 & 16 = 0  → bit not set → not seen
-    squares[0] & mask = 0 & 16 = 0  → bit not set → not seen
+Check duplicates (bitwise AND):
+rows[0] & mask = 0 & 16 = 0 → bit not set → not seen
+cols[0] & mask = 0 & 16 = 0 → bit not set → not seen
+squares[0] & mask = 0 & 16 = 0 → bit not set → not seen
 
-  Update (bitwise OR):
-    rows[0]    |= 16  →  rows[0]    = 0b000010000 (16)
-    cols[0]    |= 16  →  cols[0]    = 0b000010000 (16)
-    squares[0] |= 16  →  squares[0] = 0b000010000 (16)
+Update (bitwise OR):
+rows[0] |= 16 → rows[0] = 0b000010000 (16)
+cols[0] |= 16 → cols[0] = 0b000010000 (16)
+squares[0] |= 16 → squares[0] = 0b000010000 (16)
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
-
 
 **Step 2:** Process cell (0, 1) = '3'
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │[3]│ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │[3]│ . ║ . │ 7 │ . ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  val  = 3 - 1 = 2
-  mask = 1 << 2 = 0b000000100 (decimal: 4)
-  Box index: (0/3)*3 + 1/3 = 0
+val = 3 - 1 = 2
+mask = 1 << 2 = 0b000000100 (decimal: 4)
+Box index: (0/3)\*3 + 1/3 = 0
 
-  Check duplicates (bitwise AND):
-    rows[0] & mask    = 16 & 4 = 0  → bit not set → not seen
-    cols[1] & mask    = 0 & 4  = 0  → bit not set → not seen
-    squares[0] & mask = 16 & 4 = 0  → bit not set → not seen
+Check duplicates (bitwise AND):
+rows[0] & mask = 16 & 4 = 0 → bit not set → not seen
+cols[1] & mask = 0 & 4 = 0 → bit not set → not seen
+squares[0] & mask = 16 & 4 = 0 → bit not set → not seen
 
-  Update (bitwise OR):
-    rows[0]    |= 4  →  rows[0]    = 0b000010100 (20)
-    cols[1]    |= 4  →  cols[1]    = 0b000000100 (4)
-    squares[0] |= 4  →  squares[0] = 0b000010100 (20)
+Update (bitwise OR):
+rows[0] |= 4 → rows[0] = 0b000010100 (20)
+cols[1] |= 4 → cols[1] = 0b000000100 (4)
+squares[0] |= 4 → squares[0] = 0b000010100 (20)
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
-
 
 **Step 3:** Process cell (0, 2) = '.' → skip (empty cell)
 
-
 **Step 4:** Process cell (0, 3) = '.' → skip (empty cell)
-
 
 **Step 5:** Process cell (0, 4) = '7'
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │ 3 │ . ║ . │[7]│ . ║ . │ . │ . ║  ← Current cell highlighted
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │ 3 │ . ║ . │[7]│ . ║ . │ . │ . ║ ← Current cell highlighted
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  val  = 7 - 1 = 6
-  mask = 1 << 6 = 0b001000000 (decimal: 64)
-  Box index: (0/3)*3 + 4/3 = 1  ← Different box!
+val = 7 - 1 = 6
+mask = 1 << 6 = 0b001000000 (decimal: 64)
+Box index: (0/3)\*3 + 4/3 = 1 ← Different box!
 
-  Check duplicates (bitwise AND):
-    rows[0] & mask    = 20 & 64 = 0  → bit not set → not seen
-    cols[4] & mask    = 0 & 64  = 0  → bit not set → not seen
-    squares[1] & mask = 0 & 64  = 0  → bit not set → not seen
+Check duplicates (bitwise AND):
+rows[0] & mask = 20 & 64 = 0 → bit not set → not seen
+cols[4] & mask = 0 & 64 = 0 → bit not set → not seen
+squares[1] & mask = 0 & 64 = 0 → bit not set → not seen
 
-  Update (bitwise OR):
-    rows[0]    |= 64  →  rows[0]    = 0b001010100 (84)
-    cols[4]    |= 64  →  cols[4]    = 0b001000000 (64)
-    squares[1] |= 64  →  squares[1] = 0b001000000 (64)
+Update (bitwise OR):
+rows[0] |= 64 → rows[0] = 0b001010100 (84)
+cols[4] |= 64 → cols[4] = 0b001000000 (64)
+squares[1] |= 64 → squares[1] = 0b001000000 (64)
 
-  No duplicates found → Continue
+No duplicates found → Continue
 ```
-
 
 **STATE AFTER PROCESSING ROW 0**
 
 ```markdown
-rows[0] = 0b001010100 = 84  (digits 3, 5, 7 seen)
-               ↑ ↑ ↑
-          bit: 6 4 2
-        digit: 7 5 3
+rows[0] = 0b001010100 = 84 (digits 3, 5, 7 seen)
+↑ ↑ ↑
+bit: 6 4 2
+digit: 7 5 3
 
-cols[0] = 0b000010000 = 16  (digit 5)
-cols[1] = 0b000000100 = 4   (digit 3)
-cols[4] = 0b001000000 = 64  (digit 7)
+cols[0] = 0b000010000 = 16 (digit 5)
+cols[1] = 0b000000100 = 4 (digit 3)
+cols[4] = 0b001000000 = 64 (digit 7)
 
-squares[0] = 0b000010100 = 20  (digits 3, 5)
-squares[1] = 0b001000000 = 64  (digit 7)
+squares[0] = 0b000010100 = 20 (digits 3, 5)
+squares[1] = 0b001000000 = 64 (digit 7)
 ```
-
 
 **DETECTING A DUPLICATE (Example)**
 
@@ -1294,27 +1346,26 @@ If we later encounter another '5' in row 0:
 
 ```markdown
     0   1   2   3   4   5   6   7   8
-  ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
-0 ║ 5 │ 3 │ . ║ . │ 7 │[5]║ . │ . │ . ║  ← Duplicate '5' found!
-  ╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
+
+╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
+0 ║ 5 │ 3 │ . ║ . │ 7 │[5]║ . │ . │ . ║ ← Duplicate '5' found!
+╚═══╧═══╧═══╩═══╧═══╧═══╩═══╧═══╧═══╝
 ```
 
 ```markdown
-  val  = 5 - 1 = 4
-  mask = 1 << 4 = 16
+val = 5 - 1 = 4
+mask = 1 << 4 = 16
 
-  Check duplicates (bitwise AND):
-    rows[0] & mask = 84 & 16 = 16  ← NON-ZERO!
+Check duplicates (bitwise AND):
+rows[0] & mask = 84 & 16 = 16 ← NON-ZERO!
 
       84 = 0b001010100
       16 = 0b000010000
       ─────────────────
       AND= 0b000010000 = 16  (bit 4 is already set!)
 
-  DUPLICATE FOUND! Return False immediately.
+DUPLICATE FOUND! Return False immediately.
 ```
-
-
 
 Continue processing all cells. If no duplicate is detected (all AND operations return 0), return `True`.
 
@@ -1559,6 +1610,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_valid_sudoku(board: Vec<Vec<char>>) -> bool {
+        let mut rows = [0i32; 9];
+        let mut cols = [0i32; 9];
+        let mut squares = [0i32; 9];
+
+        for r in 0..9 {
+            for c in 0..9 {
+                if board[r][c] == '.' { continue; }
+
+                let val = board[r][c] as i32 - '1' as i32;
+                let bit = 1 << val;
+                let square_idx = (r / 3) * 3 + c / 3;
+
+                if (rows[r] & bit) != 0
+                    || (cols[c] & bit) != 0
+                    || (squares[square_idx] & bit) != 0
+                {
+                    return false;
+                }
+
+                rows[r] |= bit;
+                cols[c] |= bit;
+                squares[square_idx] |= bit;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1571,7 +1655,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Wrong Box Index Calculation
+
 The 3x3 box index formula `(r // 3) * 3 + (c // 3)` is easy to get wrong. A common mistake is using `(r // 3, c // 3)` as a tuple key but forgetting integer division, or computing `r // 3 + c // 3` which doesn't uniquely identify boxes.
+
 ```python
 # Wrong: doesn't uniquely identify boxes
 box_idx = r // 3 + c // 3  # Box (0,1) and (1,0) both give 1
@@ -1580,10 +1666,13 @@ box_idx = (r // 3) * 3 + c // 3
 ```
 
 ### Not Skipping Empty Cells
+
 Empty cells are represented by `"."` and should be skipped entirely. Forgetting to check for empty cells before processing will cause errors or incorrect duplicate detection.
 
 ### Checking Validity vs Solvability
+
 This problem only checks if the current board state is valid, not whether the puzzle is solvable. A board with no duplicates is valid even if it's impossible to complete.
 
 ### Processing the Same Cell Multiple Times
+
 When iterating through the board, make sure each cell is only processed once. Some implementations accidentally check the same digit multiple times when validating rows, columns, and boxes separately.

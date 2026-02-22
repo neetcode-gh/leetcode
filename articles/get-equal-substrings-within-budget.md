@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - Maintaining a dynamic window over an array to find optimal subarrays
 - **Two Pointers** - Using left and right pointers to efficiently traverse and adjust window boundaries
 - **ASCII Character Operations** - Computing differences between character codes
@@ -206,6 +208,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn equal_substring(s: String, t: String, max_cost: i32) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let n = s.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut cur_cost = 0;
+            for j in i..n {
+                cur_cost += (t[j] as i32 - s[j] as i32).abs();
+                if cur_cost > max_cost {
+                    break;
+                }
+                res = res.max(j - i + 1);
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -404,6 +430,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn equal_substring(s: String, t: String, max_cost: i32) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let mut cur_cost = 0;
+        let mut l = 0;
+        let mut res = 0;
+
+        for r in 0..s.len() {
+            cur_cost += (s[r] as i32 - t[r] as i32).abs();
+            while cur_cost > max_cost {
+                cur_cost -= (s[l] as i32 - t[l] as i32).abs();
+                l += 1;
+            }
+            res = res.max(r - l + 1);
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,6 +616,26 @@ class Solution {
             }
         }
         return sArr.count - l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn equal_substring(s: String, t: String, max_cost: i32) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let mut cost = max_cost;
+        let mut l = 0;
+
+        for r in 0..s.len() {
+            cost -= (s[r] as i32 - t[r] as i32).abs();
+            if cost < 0 {
+                cost += (s[l] as i32 - t[l] as i32).abs();
+                l += 1;
+            }
+        }
+        (s.len() - l) as i32
     }
 }
 ```

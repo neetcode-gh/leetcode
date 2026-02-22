@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries or hash maps to count frequencies of elements
 - **String Manipulation** - Splitting strings into words and iterating through them
 
@@ -196,6 +198,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn uncommon_from_sentences(s1: String, s2: String) -> Vec<String> {
+        let mut count = HashMap::new();
+        for w in s1.split(' ').chain(s2.split(' ')) {
+            *count.entry(w).or_insert(0) += 1;
+        }
+
+        count.into_iter()
+            .filter(|&(_, c)| c == 1)
+            .map(|(w, _)| w.to_string())
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +373,22 @@ class Solution {
         }
 
         return count.filter { $0.value == 1 }.map { $0.key }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn uncommon_from_sentences(s1: String, s2: String) -> Vec<String> {
+        let mut count = HashMap::new();
+        for w in s1.split(' ').chain(s2.split(' ')) {
+            *count.entry(w).or_insert(0) += 1;
+        }
+
+        count.into_iter()
+            .filter(|&(_, c)| c == 1)
+            .map(|(w, _)| w.to_string())
+            .collect()
     }
 }
 ```

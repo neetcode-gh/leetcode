@@ -232,6 +232,25 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn clone_tree(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let root = root?;
+        let node = root.borrow();
+        let node_copy = Rc::new(RefCell::new(Node::new(node.val)));
+
+        for child in &node.children {
+            if let Some(cloned) = Self::clone_tree(child.clone()) {
+                node_copy.borrow_mut().children.push(Some(cloned));
+            }
+        }
+
+        Some(node_copy)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,6 +520,30 @@ class Solution {
         }
 
         return newRoot
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn clone_tree(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let root = root?;
+        let new_root = Rc::new(RefCell::new(Node::new(root.borrow().val)));
+        let mut stack: Vec<(Rc<RefCell<Node>>, Rc<RefCell<Node>>)> = vec![(root.clone(), new_root.clone())];
+
+        while let Some((old_node, new_node)) = stack.pop() {
+            let old_borrowed = old_node.borrow();
+            for child in &old_borrowed.children {
+                if let Some(child_rc) = child {
+                    let new_child = Rc::new(RefCell::new(Node::new(child_rc.borrow().val)));
+                    new_node.borrow_mut().children.push(Some(new_child.clone()));
+                    stack.push((child_rc.clone(), new_child));
+                }
+            }
+        }
+
+        Some(new_root)
     }
 }
 ```
@@ -780,6 +823,31 @@ class Solution {
         }
 
         return newRoot
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn clone_tree(root: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let root = root?;
+        let new_root = Rc::new(RefCell::new(Node::new(root.borrow().val)));
+        let mut queue: VecDeque<(Rc<RefCell<Node>>, Rc<RefCell<Node>>)> = VecDeque::new();
+        queue.push_back((root.clone(), new_root.clone()));
+
+        while let Some((old_node, new_node)) = queue.pop_front() {
+            let old_borrowed = old_node.borrow();
+            for child in &old_borrowed.children {
+                if let Some(child_rc) = child {
+                    let new_child = Rc::new(RefCell::new(Node::new(child_rc.borrow().val)));
+                    new_node.borrow_mut().children.push(Some(new_child.clone()));
+                    queue.push_back((child_rc.clone(), new_child.clone()));
+                }
+            }
+        }
+
+        Some(new_root)
     }
 }
 ```

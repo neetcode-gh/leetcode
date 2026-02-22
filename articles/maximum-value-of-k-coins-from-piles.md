@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking problems into smaller subproblems and understanding base cases
 - **Dynamic Programming Fundamentals** - Recognizing overlapping subproblems and optimal substructure
 - **Memoization** - Caching results to avoid redundant computation in recursive solutions
@@ -19,8 +21,8 @@ We need to pick exactly `k` coins from the tops of various piles to maximize tot
 2. Base case: if `i` == `n`, return `0` (no more piles).
 3. First, consider skipping the current pile entirely: `res` = `dfs(i + 1, coins)`.
 4. Then, for each `j` from `0` to `min(coins, len(piles[i]))` - `1`:
-   - Accumulate the sum of the top `j` + `1` coins from pile `i`.
-   - Update `res` with `curPile` + `dfs(i + 1, coins - (j + 1))`.
+    - Accumulate the sum of the top `j` + `1` coins from pile `i`.
+    - Update `res` with `curPile` + `dfs(i + 1, coins - (j + 1))`.
 5. Return `res`.
 6. Call `dfs(0, k)` as the final answer.
 
@@ -197,6 +199,31 @@ class Solution {
         }
 
         return dfs(0, k)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_value_of_coins(piles: Vec<Vec<i32>>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = piles.len();
+
+        fn dfs(i: usize, coins: usize, piles: &[Vec<i32>]) -> i32 {
+            if i == piles.len() {
+                return 0;
+            }
+
+            let mut res = dfs(i + 1, coins, piles); // skip current pile
+            let mut cur_pile = 0;
+            for j in 0..coins.min(piles[i].len()) {
+                cur_pile += piles[i][j];
+                res = res.max(cur_pile + dfs(i + 1, coins - (j + 1), piles));
+            }
+            res
+        }
+
+        dfs(0, k, &piles)
     }
 }
 ```
@@ -448,6 +475,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_value_of_coins(piles: Vec<Vec<i32>>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = piles.len();
+        let mut dp = vec![vec![-1i32; k + 1]; n];
+
+        fn dfs(
+            i: usize, coins: usize,
+            piles: &[Vec<i32>], dp: &mut Vec<Vec<i32>>,
+        ) -> i32 {
+            if i == piles.len() {
+                return 0;
+            }
+            if dp[i][coins] != -1 {
+                return dp[i][coins];
+            }
+
+            dp[i][coins] = dfs(i + 1, coins, piles, dp); // skip
+            let mut cur_pile = 0;
+            for j in 0..coins.min(piles[i].len()) {
+                cur_pile += piles[i][j];
+                dp[i][coins] = dp[i][coins]
+                    .max(cur_pile + dfs(i + 1, coins - (j + 1), piles, dp));
+            }
+            dp[i][coins]
+        }
+
+        dfs(0, k, &piles, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,11 +529,11 @@ Instead of recursion with memoization, we can fill the DP table iteratively. We 
 
 1. Create a 2D array `dp` of size `(n + 1)` x `(k + 1)`, initialized to `0`.
 2. Iterate `i` from `n` - `1` down to `0`:
-   - For each `coins` from `0` to `k`:
-     - Start with `dp[i][coins]` = `dp[i + 1][coins]` (skip pile `i`).
-     - For each `j` from `0` to `min(coins, len(piles[i]))` - `1`:
-       - Accumulate the top `j` + `1` coins' value.
-       - Update `dp[i][coins]` with `curPile` + `dp[i + 1][coins - (j + 1)]` if larger.
+    - For each `coins` from `0` to `k`:
+        - Start with `dp[i][coins]` = `dp[i + 1][coins]` (skip pile `i`).
+        - For each `j` from `0` to `min(coins, len(piles[i]))` - `1`:
+            - Accumulate the top `j` + `1` coins' value.
+            - Update `dp[i][coins]` with `curPile` + `dp[i + 1][coins - (j + 1)]` if larger.
 3. Return `dp[0][k]`.
 
 ::tabs-start
@@ -667,6 +727,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_value_of_coins(piles: Vec<Vec<i32>>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = piles.len();
+        let mut dp = vec![vec![0i32; k + 1]; n + 1];
+
+        for i in (0..n).rev() {
+            for coins in 0..=k {
+                dp[i][coins] = dp[i + 1][coins];
+
+                let mut cur_pile = 0;
+                for j in 0..coins.min(piles[i].len()) {
+                    cur_pile += piles[i][j];
+                    dp[i][coins] = dp[i][coins]
+                        .max(cur_pile + dp[i + 1][coins - (j + 1)]);
+                }
+            }
+        }
+
+        dp[0][k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -688,10 +773,10 @@ In the bottom-up approach, each pile only depends on the results from the next p
 
 1. Create a 1D array `dp` of size `k + 1`, initialized to `0`.
 2. For each pile in `piles`:
-   - Iterate `coins` from `k` down to `1`:
-     - For each `j` from `0` to `min(coins, len(pile)) - 1`:
-       - Accumulate the top `j + 1` coins' value.
-       - Update `dp[coins]` with `dp[coins - (j + 1)] + curPile` if larger.
+    - Iterate `coins` from `k` down to `1`:
+        - For each `j` from `0` to `min(coins, len(pile)) - 1`:
+            - Accumulate the top `j + 1` coins' value.
+            - Update `dp[coins]` with `dp[coins - (j + 1)] + curPile` if larger.
 3. Return `dp[k]`.
 
 ::tabs-start
@@ -848,6 +933,27 @@ class Solution {
         }
 
         return dp[k]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_value_of_coins(piles: Vec<Vec<i32>>, k: i32) -> i32 {
+        let k = k as usize;
+        let mut dp = vec![0i32; k + 1];
+
+        for pile in &piles {
+            for coins in (1..=k).rev() {
+                let mut cur_pile = 0;
+                for j in 0..coins.min(pile.len()) {
+                    cur_pile += pile[j];
+                    dp[coins] = dp[coins].max(dp[coins - (j + 1)] + cur_pile);
+                }
+            }
+        }
+
+        dp[k]
     }
 }
 ```

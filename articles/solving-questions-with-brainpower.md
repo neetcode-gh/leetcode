@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking problems into smaller subproblems with base cases
 - **Dynamic Programming** - Optimizing recursive solutions by storing computed results
 - **Memoization** - Caching function results to avoid redundant calculations
@@ -18,8 +20,8 @@ At each question, we have two choices: solve it and skip the next few questions 
 1. Define a recursive function starting at index `0`.
 2. Base case: if the index exceeds the array length, return `0`.
 3. At each index, compute two options:
-   - Skip: recursively call for `index + 1`.
-   - Solve: add the current question's points and recursively call for `index + 1 + brainpower`.
+    - Skip: recursively call for `index + 1`.
+    - Solve: add the current question's points and recursively call for `index + 1 + brainpower`.
 4. Return the maximum of the two options.
 5. The answer is the result of calling the function from index `0`.
 
@@ -133,6 +135,23 @@ class Solution {
             return max(dfs(i + 1), questions[i][0] + dfs(i + 1 + questions[i][1]))
         }
         return dfs(0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn most_points(questions: Vec<Vec<i32>>) -> i64 {
+        fn dfs(i: usize, questions: &[Vec<i32>]) -> i64 {
+            if i >= questions.len() {
+                return 0;
+            }
+            let skip = dfs(i + 1, questions);
+            let take = questions[i][0] as i64
+                + dfs(i + 1 + questions[i][1] as usize, questions);
+            skip.max(take)
+        }
+        dfs(0, &questions)
     }
 }
 ```
@@ -316,6 +335,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn most_points(questions: Vec<Vec<i32>>) -> i64 {
+        let n = questions.len();
+        let mut dp = vec![-1i64; n];
+
+        fn dfs(i: usize, questions: &[Vec<i32>], dp: &mut [i64]) -> i64 {
+            if i >= questions.len() {
+                return 0;
+            }
+            if dp[i] != -1 {
+                return dp[i];
+            }
+            let skip = dfs(i + 1, questions, dp);
+            let take = questions[i][0] as i64
+                + dfs(i + 1 + questions[i][1] as usize, questions, dp);
+            dp[i] = skip.max(take);
+            dp[i]
+        }
+
+        dfs(0, &questions, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,9 +380,9 @@ Instead of recursion, we can fill a DP table iteratively from right to left. For
 1. Create a `dp` array of size `n + 1`, initialized to `0`.
 2. Iterate from the last question to the first (right to left).
 3. For each question at index `i`:
-   - Calculate the points if we solve it: `points[i] + dp[i + 1 + brainpower[i]]` (or `0` if out of bounds).
-   - Calculate the points if we skip it: `dp[i + 1]`.
-   - Set `dp[i]` to the maximum of these two values.
+    - Calculate the points if we solve it: `points[i] + dp[i + 1 + brainpower[i]]` (or `0` if out of bounds).
+    - Calculate the points if we skip it: `dp[i + 1]`.
+    - Set `dp[i]` to the maximum of these two values.
 4. Return `dp[0]`, which contains the maximum points starting from the first question.
 
 ::tabs-start
@@ -482,6 +526,23 @@ class Solution {
             dp[i] = max(questions[i][0] + next, dp[i + 1])
         }
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn most_points(questions: Vec<Vec<i32>>) -> i64 {
+        let n = questions.len();
+        let mut dp = vec![0i64; n + 1];
+
+        for i in (0..n).rev() {
+            let jump = i + 1 + questions[i][1] as usize;
+            let next = if jump < n { dp[jump] } else { 0 };
+            dp[i] = (questions[i][0] as i64 + next).max(dp[i + 1]);
+        }
+
+        dp[0]
     }
 }
 ```

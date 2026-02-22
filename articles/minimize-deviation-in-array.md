@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap / Priority Queue** - Using min-heap or max-heap to efficiently track extreme values
 - **Sliding Window** - Maintaining a valid window while tracking which elements are represented
 - **Sorting** - Sorting pairs of values and using sorted order to find optimal ranges
@@ -18,14 +20,14 @@ This transforms the problem into finding the smallest window in a sorted list of
 ### Algorithm
 
 1. For each number in the input array, generate all possible values it can take:
-   - If odd: it can be itself or doubled (only once).
-   - If even: it can be halved repeatedly down to an odd number, plus all intermediate values.
+    - If odd: it can be itself or doubled (only once).
+    - If even: it can be halved repeatedly down to an odd number, plus all intermediate values.
 2. Store each value paired with its original index.
 3. Sort all these pairs by value.
 4. Use a sliding window with two pointers `i` and `j`:
-   - Expand `j` to include more values and track how many original elements are covered.
-   - When all `n` elements are covered, shrink from `i` to minimize the window range.
-   - Update the result with the minimum difference between the largest and smallest values in valid windows.
+    - Expand `j` to include more values and track how many original elements are covered.
+    - When all `n` elements are covered, shrink from `i` to minimize the window range.
+    - Update the result with the minimum difference between the largest and smallest values in valid windows.
 5. Return the minimum deviation found.
 
 ::tabs-start
@@ -389,6 +391,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_deviation(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut arr: Vec<(i32, usize)> = Vec::new();
+
+        for i in 0..n {
+            let mut num = nums[i];
+            if num % 2 == 1 {
+                arr.push((num, i));
+                arr.push((num * 2, i));
+            } else {
+                while num % 2 == 0 {
+                    arr.push((num, i));
+                    num /= 2;
+                }
+                arr.push((num, i));
+            }
+        }
+
+        arr.sort_unstable();
+        let mut res = i32::MAX;
+
+        let mut seen = vec![0i32; n];
+        let mut count = 0;
+        let mut i = 0;
+
+        for j in 0..arr.len() {
+            seen[arr[j].1] += 1;
+            if seen[arr[j].1] == 1 {
+                count += 1;
+                while count == n {
+                    res = res.min(arr[j].0 - arr[i].0);
+                    seen[arr[i].1] -= 1;
+                    if seen[arr[i].1] == 0 {
+                        count -= 1;
+                    }
+                    i += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -413,10 +461,10 @@ The min-heap lets us efficiently access the smallest current value. We track the
 1. Reduce each number to its minimum form by dividing even numbers by 2 until odd. Track the maximum allowed value each element can reach.
 2. Push each (current value, max allowed value) pair into a min-heap. Track the current maximum across all heap elements.
 3. While the heap contains all elements:
-   - Pop the minimum value and compute the current deviation (max minus min).
-   - If this minimum can still increase (less than its max allowed), double it and push back.
-   - Update the tracked maximum if needed.
-   - If the minimum cannot increase, stop (we cannot reduce deviation further).
+    - Pop the minimum value and compute the current deviation (max minus min).
+    - If this minimum can still increase (less than its max allowed), double it and push back.
+    - Update the tracked maximum if needed.
+    - If the minimum cannot increase, stop (we cannot reduce deviation further).
 4. Return the minimum deviation found.
 
 ::tabs-start
@@ -755,6 +803,41 @@ struct Heap<T> {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_deviation(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut min_heap = BinaryHeap::new();
+        let mut heap_max = 0;
+
+        for &num in &nums {
+            let mut val = num;
+            let tmp = num;
+            while val % 2 == 0 {
+                val /= 2;
+            }
+            let n_max = tmp.max(2 * val);
+            min_heap.push(Reverse((val, n_max)));
+            heap_max = heap_max.max(val);
+        }
+
+        let mut res = i32::MAX;
+
+        while min_heap.len() == n {
+            let Reverse((val, n_max)) = min_heap.pop().unwrap();
+            res = res.min(heap_max - val);
+
+            if val < n_max {
+                min_heap.push(Reverse((val * 2, n_max)));
+                heap_max = heap_max.max(val * 2);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -778,10 +861,10 @@ Using a max-heap, we always have quick access to the current largest value. We t
 
 1. For each number, if it is odd, double it. Push all values into a max-heap. Track the current minimum value.
 2. While the heap is not empty:
-   - Pop the maximum value and compute the current deviation (max minus min).
-   - Update the result if this deviation is smaller.
-   - If the maximum is odd, stop (cannot reduce it further).
-   - Otherwise, halve the maximum, push it back, and update the minimum if needed.
+    - Pop the maximum value and compute the current deviation (max minus min).
+    - Update the result if this deviation is smaller.
+    - If the maximum is odd, stop (cannot reduce it further).
+    - Otherwise, halve the maximum, push it back, and update the minimum if needed.
 3. Return the minimum deviation found.
 
 ::tabs-start
@@ -1100,6 +1183,37 @@ struct Heap<T> {
             elements.swapAt(parent, candidate)
             parent = candidate
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_deviation(nums: Vec<i32>) -> i32 {
+        let mut max_heap = BinaryHeap::new();
+        let mut min_val = i32::MAX;
+
+        for &num in &nums {
+            let n = if num % 2 == 1 { num * 2 } else { num };
+            max_heap.push(n);
+            min_val = min_val.min(n);
+        }
+
+        let mut res = i32::MAX;
+
+        while let Some(max_val) = max_heap.pop() {
+            res = res.min(max_val - min_val);
+
+            if max_val % 2 == 1 {
+                break;
+            }
+
+            let next_val = max_val / 2;
+            max_heap.push(next_val);
+            min_val = min_val.min(next_val);
+        }
+
+        res
     }
 }
 ```

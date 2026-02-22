@@ -175,6 +175,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_the_difference(s: String, t: String) -> char {
+        let mut count_s = [0i32; 26];
+        let mut count_t = [0i32; 26];
+
+        for c in s.bytes() { count_s[(c - b'a') as usize] += 1; }
+        for c in t.bytes() { count_t[(c - b'a') as usize] += 1; }
+
+        for i in 0..26 {
+            if count_t[i] > count_s[i] {
+                return (b'a' + i as u8) as char;
+            }
+        }
+        ' '
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +368,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_the_difference(s: String, t: String) -> char {
+        let mut count = [0i32; 26];
+
+        for c in t.bytes() { count[(c - b'a') as usize] += 1; }
+        for c in s.bytes() { count[(c - b'a') as usize] -= 1; }
+
+        for i in 0..26 {
+            if count[i] == 1 {
+                return (b'a' + i as u8) as char;
+            }
+        }
+        ' '
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -504,6 +541,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_the_difference(s: String, t: String) -> char {
+        let mut s_arr: Vec<u8> = s.into_bytes();
+        let mut t_arr: Vec<u8> = t.into_bytes();
+        s_arr.sort();
+        t_arr.sort();
+
+        for i in 0..s_arr.len() {
+            if s_arr[i] != t_arr[i] {
+                return t_arr[i] as char;
+            }
+        }
+        *t_arr.last().unwrap() as char
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,6 +701,16 @@ class Solution {
             sumT += Int(c.asciiValue!)
         }
         return Character(UnicodeScalar(sumT - sumS)!)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_the_difference(s: String, t: String) -> char {
+        let sum_s: i32 = s.bytes().map(|b| b as i32).sum();
+        let sum_t: i32 = t.bytes().map(|b| b as i32).sum();
+        (sum_t - sum_s) as u8 as char
     }
 }
 ```
@@ -794,6 +859,17 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_the_difference(s: String, t: String) -> char {
+        let mut res: i32 = 0;
+        for b in s.bytes() { res -= b as i32; }
+        for b in t.bytes() { res += b as i32; }
+        res as u8 as char
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -934,6 +1010,17 @@ class Solution {
             res ^= Int(c.asciiValue!)
         }
         return Character(UnicodeScalar(res)!)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_the_difference(s: String, t: String) -> char {
+        let mut res: u8 = 0;
+        for b in s.bytes() { res ^= b; }
+        for b in t.bytes() { res ^= b; }
+        res as char
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arithmetic Progression** - Understanding how to calculate the common difference and expected values at each position in a sequence
 - **Binary Search** - The optimal solution uses binary search to locate the missing element by comparing actual vs expected values
 
@@ -16,8 +18,8 @@ An arithmetic progression has a constant difference between consecutive elements
 1. Calculate the common difference: `difference = (arr[n - 1] - arr[0]) / n`.
 2. Initialize `expected = arr[0]`.
 3. Iterate through each element in the array:
-   - If the current element does not equal `expected`, return `expected` as the missing number.
-   - Otherwise, increment `expected` by `difference`.
+    - If the current element does not equal `expected`, return `expected` as the missing number.
+    - Otherwise, increment `expected` by `difference`.
 4. If no mismatch is found during iteration, return the final `expected` value as the missing number.
 
 ::tabs-start
@@ -212,6 +214,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_number(arr: Vec<i32>) -> i32 {
+        let n = arr.len() as i32;
+
+        // Get the difference `difference`.
+        let difference = (arr[arr.len() - 1] - arr[0]) / n;
+
+        // The expected element equals the starting element.
+        let mut expected = arr[0];
+
+        for &val in &arr {
+            // Return the expected value that doesn't match val.
+            if val != expected {
+                return expected;
+            }
+
+            // Next element will be expected element + `difference`.
+            expected += difference;
+        }
+        expected
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -219,7 +246,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the length of array `arr`.
+> Where $n$ is the length of array `arr`.
 
 ---
 
@@ -234,9 +261,9 @@ Since the array is sorted and follows an arithmetic progression, we can use bina
 1. Calculate the common difference: `difference = (arr[n - 1] - arr[0]) / n`.
 2. Initialize `lo = 0` and `hi = n - 1`.
 3. While `lo < hi`:
-   - Compute `mid = (lo + hi) / 2`.
-   - If `arr[mid]` equals the expected value `arr[0] + mid * difference`, the missing element is after `mid`, so set `lo = mid + 1`.
-   - Otherwise, the missing element is at or before `mid`, so set `hi = mid`.
+    - Compute `mid = (lo + hi) / 2`.
+    - If `arr[mid]` equals the expected value `arr[0] + mid * difference`, the missing element is after `mid`, so set `lo = mid + 1`.
+    - Otherwise, the missing element is at or before `mid`, so set `hi = mid`.
 4. Return `arr[0] + difference * lo` as the missing number that should be at index `lo`.
 
 ::tabs-start
@@ -314,7 +341,7 @@ public:
 
         // Basic binary search template.
         while (lo < hi) {
-            
+
             int mid = (lo + hi) / 2; // Note: int mid = lo + (hi - lo) / 2; is recommended to avoid potential overflow
             // All numbers upto `mid` have no missing number, so search on the right side.
             if (arr[mid] == arr.front() + mid * difference) {
@@ -362,7 +389,6 @@ class Solution {
             else {
                 hi = mid;
             }
-
         }
 
         // Index `lo` will be the position with the first incorrect number.
@@ -493,6 +519,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_number(arr: Vec<i32>) -> i32 {
+        let n = arr.len() as i32;
+
+        // Get the difference `difference`.
+        let difference = (arr[arr.len() - 1] - arr[0]) / n;
+        let mut lo: usize = 0;
+        let mut hi: usize = arr.len() - 1;
+
+        // Basic binary search template.
+        while lo < hi {
+            let mid = (lo + hi) / 2;
+
+            // All numbers up to `mid` have no missing number, so search on the right side.
+            if arr[mid] == arr[0] + mid as i32 * difference {
+                lo = mid + 1;
+            }
+            // A number is missing before `mid` inclusive of `mid` itself.
+            else {
+                hi = mid;
+            }
+        }
+
+        // Index `lo` will be the position with the first incorrect number.
+        // Return the value that was supposed to be at this index.
+        arr[0] + difference * lo as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -500,7 +557,7 @@ class Solution {
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the length of array `arr`.
+> Where $n$ is the length of array `arr`.
 
 ---
 

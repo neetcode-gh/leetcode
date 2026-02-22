@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Arranging elements to efficiently identify the largest side and compare sums
 - **Prefix Sum** - Maintaining running totals to quickly compute the sum of smaller sides
 - **Polygon Inequality** - Understanding that the longest side must be strictly less than the sum of all other sides
@@ -226,6 +228,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_perimeter(nums: Vec<i32>) -> i64 {
+        let n = nums.len();
+        let mut res: i64 = -1;
+
+        for i in 0..n {
+            let large = nums[i] as i64;
+            let mut cur: i64 = 0;
+
+            for j in 0..n {
+                if i != j && nums[j] as i64 <= large {
+                    cur += nums[j] as i64;
+                }
+            }
+
+            if cur > large {
+                res = res.max(cur + large);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -246,8 +274,8 @@ If we sort the array, we can efficiently check the polygon condition. After sort
 1. Sort the array in ascending order.
 2. Initialize `res = -1` and `total = 0` for the running sum.
 3. Iterate through each number:
-   - If `total > num`, we have a valid polygon. Update `res = total + num`.
-   - Add `num` to `total`.
+    - If `total > num`, we have a valid polygon. Update `res = total + num`.
+    - Add `num` to `total`.
 4. Return `res`.
 
 ::tabs-start
@@ -401,6 +429,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_perimeter(mut nums: Vec<i32>) -> i64 {
+        nums.sort();
+        let mut res: i64 = -1;
+        let mut total: i64 = 0;
+
+        for &num in &nums {
+            if total > num as i64 {
+                res = total + num as i64;
+            }
+            total += num as i64;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -420,9 +467,9 @@ Instead of sorting, we can use a max heap to process elements from largest to sm
 
 1. Build a max heap from all elements and compute the total sum.
 2. While the heap has more than `2` elements:
-   - Extract the largest element.
-   - Subtract it from the total.
-   - If `largest < total`, return `total + largest` as the perimeter.
+    - Extract the largest element.
+    - Subtract it from the total.
+    - If `largest < total`, return `total + largest` as the perimeter.
 3. If no valid polygon is found, return `-1`.
 
 ::tabs-start
@@ -666,6 +713,32 @@ struct Heap<T> {
             elements.swapAt(parent, candidate)
             parent = candidate
         }
+    }
+}
+```
+
+```rust
+use std::cmp::Reverse;
+
+impl Solution {
+    pub fn largest_perimeter(nums: Vec<i32>) -> i64 {
+        let mut max_heap = BinaryHeap::new();
+        let mut total: i64 = 0;
+
+        for &num in &nums {
+            max_heap.push(num);
+            total += num as i64;
+        }
+
+        while max_heap.len() > 2 {
+            let largest = max_heap.pop().unwrap() as i64;
+            total -= largest;
+            if largest < total {
+                return total + largest;
+            }
+        }
+
+        -1
     }
 }
 ```

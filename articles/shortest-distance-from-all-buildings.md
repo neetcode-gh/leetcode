@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Breadth First Search (BFS)** - The core algorithm for finding shortest distances from each source to all reachable cells
 - **Multi-source BFS** - Understanding how to run BFS from multiple starting points and accumulate distances
 - **Graph Traversal on Grids** - 4-directional movement, boundary checking, and handling obstacles in 2D matrices
@@ -19,10 +21,10 @@ This approach works well when there are many houses but few empty cells.
 
 1. Count the total number of houses in the grid.
 2. For each empty cell (value `0`):
-   - Run `BFS` to find distances to all reachable houses.
-   - Sum up the distances and count houses reached.
-   - If not all houses are reachable, mark all visited empty cells as obstacles (value `2`) to prune future searches.
-   - Otherwise, track the minimum total distance.
+    - Run `BFS` to find distances to all reachable houses.
+    - Sum up the distances and count houses reached.
+    - If not all houses are reachable, mark all visited empty cells as obstacles (value `2`) to prune future searches.
+    - Otherwise, track the minimum total distance.
 3. Return the minimum distance found, or `-1` if no valid cell exists.
 
 ::tabs-start
@@ -89,16 +91,16 @@ class Solution {
     private int bfs(int[][] grid, int row, int col, int totalHouses) {
         // Next four directions.
         int dirs[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+
         int rows = grid.length;
         int cols = grid[0].length;
         int distanceSum = 0;
         int housesReached = 0;
-        
+
         // Queue to do a bfs, starting from (row, col) cell.
         Queue<int[]> q = new LinkedList<>();
         q.offer(new int[]{ row, col });
-        
+
         // Keep track of visited cells.
         boolean[][] vis = new boolean[rows][cols];
         vis[row][col] = true;
@@ -109,7 +111,7 @@ class Solution {
                 int[] curr = q.poll();
                 row = curr[0];
                 col = curr[1];
-                
+
                 // If this cell is a house, then add the distance from source to this cell
                 // and we go past from this cell.
                 if (grid[row][col] == 1) {
@@ -117,10 +119,10 @@ class Solution {
                     housesReached++;
                     continue;
                 }
-                
+
                 // This cell was empty cell, hence traverse the next cells which is not a blockage.
                 for (int[] dir : dirs) {
-                    int nextRow = row + dir[0]; 
+                    int nextRow = row + dir[0];
                     int nextCol = col + dir[1];
                     if (nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols) {
                         if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] != 2) {
@@ -130,7 +132,7 @@ class Solution {
                     }
                 }
             }
-            
+
             // After traversing one level of cells, increment the steps by 1 to reach to next level.
             steps++;
         }
@@ -147,17 +149,17 @@ class Solution {
             }
             return Integer.MAX_VALUE;
         }
-        
+
         // If we have reached all houses then return the total distance calculated.
         return distanceSum;
     }
-    
+
     public int shortestDistance(int[][] grid) {
         int minDistance = Integer.MAX_VALUE;
-        int rows = grid.length; 
+        int rows = grid.length;
         int cols = grid[0].length;
         int totalHouses = 0;
-        
+
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
                 if (grid[row][col] == 1) {
@@ -165,7 +167,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Find the min distance sum for each empty cell.
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
@@ -174,12 +176,12 @@ class Solution {
                 }
             }
         }
-        
+
         // If it is impossible to reach all houses from any empty cell, then return -1.
         if (minDistance == Integer.MAX_VALUE) {
             return -1;
         }
-        
+
         return minDistance;
     }
 };
@@ -191,7 +193,7 @@ private:
     int bfs(vector<vector<int>>& grid, int row, int col, int totalHouses) {
         // Next four directions.
         int dirs[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+
         int rows = grid.size();
         int cols = grid[0].size();
         int distanceSum = 0;
@@ -236,7 +238,7 @@ private:
                     }
                 }
             }
-            
+
             // After traversing one level cells, increment the steps by 1 to reach to next level.
             steps++;
         }
@@ -266,7 +268,7 @@ public:
 
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
-                if (grid[row][col] == 1) { 
+                if (grid[row][col] == 1) {
                     totalHouses++;
                 }
             }
@@ -314,7 +316,10 @@ class Solution {
         for (let row = 0; row < rows; ++row) {
             for (let col = 0; col < cols; ++col) {
                 if (grid[row][col] == 0) {
-                    minDistance = Math.min(minDistance, this.bfs(grid, row, col, totalHouses));
+                    minDistance = Math.min(
+                        minDistance,
+                        this.bfs(grid, row, col, totalHouses),
+                    );
                 }
             }
         }
@@ -328,7 +333,12 @@ class Solution {
 
     bfs(grid, row, col, totalHouses) {
         // Next four directions.
-        const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const dirs = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
         let rows = grid.length;
         let cols = grid[0].length;
         let distanceSum = 0;
@@ -339,7 +349,9 @@ class Solution {
         let queue = new Queue([[row, col]]);
 
         // Keep track of visited cells.
-        let vis = new Array(rows).fill(false).map(() => new Array(cols).fill(false));
+        let vis = new Array(rows)
+            .fill(false)
+            .map(() => new Array(cols).fill(false));
         vis[row][col] = true;
 
         let steps = 0;
@@ -366,8 +378,16 @@ class Solution {
                 dirs.forEach((dir) => {
                     let nextRow = currRow + dir[0];
                     let nextCol = currCol + dir[1];
-                    if (nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols) {
-                        if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] != 2) {
+                    if (
+                        nextRow >= 0 &&
+                        nextCol >= 0 &&
+                        nextRow < rows &&
+                        nextCol < cols
+                    ) {
+                        if (
+                            !vis[nextRow][nextCol] &&
+                            grid[nextRow][nextCol] != 2
+                        ) {
                             vis[nextRow][nextCol] = true;
                             next_queue.enqueue([nextRow, nextCol]);
                         }
@@ -738,6 +758,78 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(mut grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let dirs = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+
+        let mut total_houses = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 { total_houses += 1; }
+            }
+        }
+
+        let bfs = |grid: &mut Vec<Vec<i32>>, start_row: usize, start_col: usize| -> i32 {
+            let mut distance_sum = 0i32;
+            let mut houses_reached = 0;
+            let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+            q.push_back((start_row, start_col));
+            let mut vis = vec![vec![false; cols]; rows];
+            vis[start_row][start_col] = true;
+            let mut steps = 0i32;
+
+            while !q.is_empty() && houses_reached != total_houses {
+                for _ in 0..q.len() {
+                    let (row, col) = q.pop_front().unwrap();
+                    if grid[row][col] == 1 {
+                        distance_sum += steps;
+                        houses_reached += 1;
+                        continue;
+                    }
+                    for &(dr, dc) in &dirs {
+                        let (nr, nc) = (row as i32 + dr, col as i32 + dc);
+                        if nr >= 0 && nc >= 0 && nr < rows as i32 && nc < cols as i32 {
+                            let (nr, nc) = (nr as usize, nc as usize);
+                            if !vis[nr][nc] && grid[nr][nc] != 2 {
+                                vis[nr][nc] = true;
+                                q.push_back((nr, nc));
+                            }
+                        }
+                    }
+                }
+                steps += 1;
+            }
+
+            if houses_reached != total_houses {
+                for r in 0..rows {
+                    for c in 0..cols {
+                        if grid[r][c] == 0 && vis[r][c] {
+                            grid[r][c] = 2;
+                        }
+                    }
+                }
+                return i32::MAX;
+            }
+            distance_sum
+        };
+
+        let mut min_distance = i32::MAX;
+        for row in 0..rows {
+            for col in 0..cols {
+                if grid[row][col] == 0 {
+                    min_distance = min_distance.min(bfs(&mut grid, row, col));
+                }
+            }
+        }
+
+        if min_distance == i32::MAX { -1 } else { min_distance }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -745,7 +837,7 @@ class Solution {
 - Time complexity: $O(N^2 \cdot M^2)$
 - Space complexity: $O(N \cdot M)$
 
->  Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
+> Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
 
 ---
 
@@ -761,11 +853,11 @@ For each empty cell, we also track how many houses can reach it. Only cells reac
 
 1. Create a `distances` matrix where each cell stores `[total_distance, house_count]`.
 2. For each house (value `1`):
-   - Run `BFS` to all reachable empty cells.
-   - For each visited empty cell, add the distance to its total and increment its house count.
+    - Run `BFS` to all reachable empty cells.
+    - For each visited empty cell, add the distance to its total and increment its house count.
 3. After processing all houses:
-   - Scan the grid for empty cells where `house_count == total_houses`.
-   - Return the minimum total distance among valid cells.
+    - Scan the grid for empty cells where `house_count == total_houses`.
+    - Return the minimum total distance among valid cells.
 4. Return `-1` if no valid cell exists.
 
 ::tabs-start
@@ -820,7 +912,7 @@ class Solution:
 class Solution {
     private void bfs(int[][] grid, int[][][] distances, int row, int col) {
         int dirs[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+
         int rows = grid.length;
         int cols = grid[0].length;
 
@@ -908,33 +1000,33 @@ class Solution {
 private:
     void bfs(vector<vector<int>>& grid, vector<vector<vector<int>>>& distances, int row, int col) {
         int dirs[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+
         int rows = grid.size(), cols = grid[0].size();
-        
+
         // Queue to do a bfs, starting from each cell located at (r,c).
         queue<pair<int, int>> q;
         q.push({ row, col });
-        
+
         // Keep track of visited cells.
         vector<vector<bool>> vis (rows, vector<bool>(cols, false));
         vis[row][col] = true;
-        
+
         int steps = 0;
-        
+
         while (!q.empty()) {
             for (int i = q.size(); i > 0; --i) {
                 auto curr = q.front();
                 q.pop();
                 row = curr.first;
                 col = curr.second;
-                
+
                 // If we reached an empty cell, then add the distance
                 // and increment the count of houses reached at this cell.
                 if (grid[row][col] == 0) {
                     distances[row][col][0] += steps;
                     distances[row][col][1] += 1;
                 }
-                
+
                 // Traverse the next cells which is not a blockage.
                 for (auto& dir : dirs) {
                     int nextRow = row + dir[0];
@@ -947,22 +1039,22 @@ private:
                     }
                 }
             }
-            
+
             // After traversing one level cells, increment the steps by 1.
             steps++;
         }
     }
-    
+
 public:
     int shortestDistance(vector<vector<int>>& grid) {
         int minDistance = INT_MAX;
         int rows = grid.size();
         int cols = grid[0].size();
         int totalHouses = 0;
-        
+
         // Store { total_dist, houses_count } for each cell.
         vector<vector<vector<int>>> distances (rows, vector<vector<int>> (cols, {0, 0}));
-        
+
         // Count houses and start bfs from each house.
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
@@ -972,7 +1064,7 @@ public:
                 }
             }
         }
-        
+
         // Check all empty lands with houses count equal to total houses and find the min ans.
         for (int row = 0; row < rows; ++row) {
             for (int col = 0; col < cols; ++col) {
@@ -981,7 +1073,7 @@ public:
                 }
             }
         }
-        
+
         // If we haven't found a valid cell return -1.
         if (minDistance == INT_MAX) {
             return -1;
@@ -1003,7 +1095,9 @@ class Solution {
         let cols = grid[0].length;
         let totalHouses = 0;
         // Store { total_dist, houses_count } for each cell.
-        let distances = new Array(rows).fill(0).map(() => new Array(cols).fill(0).map(() => new Array(2).fill(0)));
+        let distances = new Array(rows)
+            .fill(0)
+            .map(() => new Array(cols).fill(0).map(() => new Array(2).fill(0)));
 
         // Count houses and start BFS from each house.
         for (let row = 0; row < rows; ++row) {
@@ -1033,7 +1127,12 @@ class Solution {
 
     bfs(grid, distances, row, col) {
         // Next four directions.
-        const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const dirs = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
         let rows = grid.length;
         let cols = grid[0].length;
 
@@ -1042,7 +1141,9 @@ class Solution {
         let queue = new Queue([[row, col]]);
 
         // Keep track of visited cells
-        let vis = new Array(rows).fill(false).map(() => new Array(cols).fill(false));
+        let vis = new Array(rows)
+            .fill(false)
+            .map(() => new Array(cols).fill(false));
         vis[row][col] = true;
         let steps = 0;
 
@@ -1067,8 +1168,16 @@ class Solution {
                 dirs.forEach((dir) => {
                     let nextRow = currRow + dir[0];
                     let nextCol = currCol + dir[1];
-                    if (nextRow >= 0 && nextCol >= 0 && nextRow < rows && nextCol < cols) {
-                        if (!vis[nextRow][nextCol] && grid[nextRow][nextCol] == 0) {
+                    if (
+                        nextRow >= 0 &&
+                        nextCol >= 0 &&
+                        nextRow < rows &&
+                        nextCol < cols
+                    ) {
+                        if (
+                            !vis[nextRow][nextCol] &&
+                            grid[nextRow][nextCol] == 0
+                        ) {
                             vis[nextRow][nextCol] = true;
                             next_queue.enqueue([nextRow, nextCol]);
                         }
@@ -1380,6 +1489,67 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let dirs = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+        let mut total_houses = 0;
+        let mut distances = vec![vec![[0i32, 0i32]; cols]; rows];
+
+        let mut bfs = |start_row: usize, start_col: usize| {
+            let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+            q.push_back((start_row, start_col));
+            let mut vis = vec![vec![false; cols]; rows];
+            vis[start_row][start_col] = true;
+            let mut steps = 0i32;
+
+            while !q.is_empty() {
+                for _ in 0..q.len() {
+                    let (row, col) = q.pop_front().unwrap();
+                    if grid[row][col] == 0 {
+                        distances[row][col][0] += steps;
+                        distances[row][col][1] += 1;
+                    }
+                    for &(dr, dc) in &dirs {
+                        let (nr, nc) = (row as i32 + dr, col as i32 + dc);
+                        if nr >= 0 && nc >= 0 && nr < rows as i32 && nc < cols as i32 {
+                            let (nr, nc) = (nr as usize, nc as usize);
+                            if !vis[nr][nc] && grid[nr][nc] == 0 {
+                                vis[nr][nc] = true;
+                                q.push_back((nr, nc));
+                            }
+                        }
+                    }
+                }
+                steps += 1;
+            }
+        };
+
+        for row in 0..rows {
+            for col in 0..cols {
+                if grid[row][col] == 1 {
+                    total_houses += 1;
+                    bfs(row, col);
+                }
+            }
+        }
+
+        let mut min_distance = i32::MAX;
+        for row in 0..rows {
+            for col in 0..cols {
+                if distances[row][col][1] == total_houses {
+                    min_distance = min_distance.min(distances[row][col][0]);
+                }
+            }
+        }
+
+        if min_distance == i32::MAX { -1 } else { min_distance }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1387,7 +1557,7 @@ class Solution {
 - Time complexity: $O(N^2 \cdot M^2)$
 - Space complexity: $O(N \cdot M)$
 
->  Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
+> Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
 
 ---
 
@@ -1404,10 +1574,10 @@ Initially, empty cells have value 0. After the first house's BFS, all reachable 
 1. Create a `total` matrix to accumulate distances.
 2. Initialize `emptyLandValue = 0`.
 3. For each house:
-   - Run `BFS`, only visiting cells with value equal to `emptyLandValue`.
-   - For each visited cell, add the distance to `total` and decrement the cell value.
-   - Track the minimum total distance among cells visited in this `BFS`.
-   - Decrement `emptyLandValue` for the next iteration.
+    - Run `BFS`, only visiting cells with value equal to `emptyLandValue`.
+    - For each visited cell, add the distance to `total` and decrement the cell value.
+    - Track the minimum total distance among cells visited in this `BFS`.
+    - Decrement `emptyLandValue` for the next iteration.
 4. Return the minimum distance found, or `-1` if no valid cell exists.
 
 ::tabs-start
@@ -1419,47 +1589,47 @@ class Solution:
         dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]]
         rows = len(grid)
         cols = len(grid[0])
-        
+
         # Total Matrix to store total distance sum for each empty cell.
         total = [[0] * cols for _ in range(rows)]
         empty_land_value = 0
         min_dist = float('inf')
-        
+
         for row in range(rows):
             for col in range(cols):
                 # Start a BFS from each house.
                 if grid[row][col] == 1:
                     min_dist = float('inf')
-                    
+
                     # Use a queue to perform a BFS, starting from the cell at (row, col).
                     q = deque([(row, col)])
                     steps = 0
-                    
+
                     while q:
                         steps += 1
                         level_size = len(q)
-                        
+
                         for level in range(level_size):
                             curr = q.popleft()
-                            
+
                             for dir in dirs:
                                 next_row = curr[0] + dir[0]
                                 next_col = curr[1] + dir[1]
-                                
+
                                 # For each cell with the value equal to empty land value
                                 # add distance and decrement the cell value by 1.
                                 if (0 <= next_row < rows and
                                     0 <= next_col < cols and
                                     grid[next_row][next_col] == empty_land_value):
-                                    
+
                                     grid[next_row][next_col] -= 1
                                     total[next_row][next_col] += steps
                                     q.append((next_row, next_col))
                                     min_dist = min(min_dist, total[next_row][next_col])
-                        
+
                     # Decrement empty land value to be searched in next iteration.
                     empty_land_value -= 1
-        
+
         return -1 if min_dist == float('inf') else min_dist
 ```
 
@@ -1468,10 +1638,10 @@ class Solution {
     public int shortestDistance(int[][] grid) {
         // Next four directions.
         int dirs[][] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+
         int rows = grid.length;
         int cols = grid[0].length;
-        
+
         // Total Matrix to store total distance sum for each empty cell.
         int[][] total = new int[rows][cols];
 
@@ -1533,10 +1703,10 @@ public:
     int shortestDistance(vector<vector<int>>& grid) {
         // Next four directions.
         int dirs[4][2] = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
-        
+
         int rows = grid.size();
         int cols = grid[0].size();
-        
+
         // Total Matrix to store total distance sum for each empty cell.
         vector<vector<int>> total(rows, vector<int> (cols, 0));
 
@@ -1553,7 +1723,7 @@ public:
                     // Use a queue to perform a BFS, starting from the cell located at (row, col).
                     queue<pair<int, int>> q;
                     q.push({ row, col });
-                    
+
                     int steps = 0;
 
                     while (!q.empty()) {
@@ -1595,7 +1765,12 @@ public:
 
 ```javascript
 // Next four directions.
-const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const dirs = [
+    [1, 0],
+    [-1, 0],
+    [0, 1],
+    [0, -1],
+];
 
 class Solution {
     /**
@@ -1607,7 +1782,9 @@ class Solution {
         const cols = grid[0].length;
 
         // Total Matrix to store total distance sum for each empty cell.
-        const total = new Array(rows).fill(0).map(() => new Array(cols).fill(0));
+        const total = new Array(rows)
+            .fill(0)
+            .map(() => new Array(cols).fill(0));
         let emptyLandValue = 0;
         let minDist = Number.MAX_VALUE;
 
@@ -1619,7 +1796,7 @@ class Solution {
 
                     // Use a queue to perform a BFS, starting from the cell located at (row, col).
                     // Using @datastructures-js/queue implementation
-                    const q = new Queue([{row, col}]);
+                    const q = new Queue([{ row, col }]);
                     let steps = 0;
 
                     while (!q.isEmpty()) {
@@ -1635,13 +1812,20 @@ class Solution {
 
                                 // For each cell with the value equal to empty land value
                                 // add distance and decrement the cell value by 1.
-                                if (nextRow >= 0 && nextRow < rows &&
-                                    nextCol >= 0 && nextCol < cols &&
-                                    grid[nextRow][nextCol] === emptyLandValue) {
+                                if (
+                                    nextRow >= 0 &&
+                                    nextRow < rows &&
+                                    nextCol >= 0 &&
+                                    nextCol < cols &&
+                                    grid[nextRow][nextCol] === emptyLandValue
+                                ) {
                                     grid[nextRow][nextCol]--;
                                     total[nextRow][nextCol] += steps;
-                                    q.enqueue({row: nextRow, col: nextCol});
-                                    minDist = Math.min(minDist, total[nextRow][nextCol]);
+                                    q.enqueue({ row: nextRow, col: nextCol });
+                                    minDist = Math.min(
+                                        minDist,
+                                        total[nextRow][nextCol],
+                                    );
                                 }
                             });
                         }
@@ -1885,6 +2069,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(mut grid: Vec<Vec<i32>>) -> i32 {
+        let dirs = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+        let rows = grid.len();
+        let cols = grid[0].len();
+
+        let mut total = vec![vec![0i32; cols]; rows];
+        let mut empty_land_value = 0i32;
+        let mut min_dist = i32::MAX;
+
+        for row in 0..rows {
+            for col in 0..cols {
+                if grid[row][col] == 1 {
+                    min_dist = i32::MAX;
+                    let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+                    q.push_back((row, col));
+                    let mut steps = 0i32;
+
+                    while !q.is_empty() {
+                        steps += 1;
+                        for _ in 0..q.len() {
+                            let (cr, cc) = q.pop_front().unwrap();
+                            for &(dr, dc) in &dirs {
+                                let (nr, nc) = (cr as i32 + dr, cc as i32 + dc);
+                                if nr >= 0 && nr < rows as i32
+                                    && nc >= 0 && nc < cols as i32
+                                {
+                                    let (nr, nc) = (nr as usize, nc as usize);
+                                    if grid[nr][nc] == empty_land_value {
+                                        grid[nr][nc] -= 1;
+                                        total[nr][nc] += steps;
+                                        q.push_back((nr, nc));
+                                        min_dist = min_dist.min(total[nr][nc]);
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    empty_land_value -= 1;
+                }
+            }
+        }
+
+        if min_dist == i32::MAX { -1 } else { min_dist }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1892,7 +2126,7 @@ class Solution {
 - Time complexity: $O(N^2 \cdot M^2)$
 - Space complexity: $O(N \cdot M)$
 
->  Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
+> Where $N$ and $M$ are the number of rows and columns in `grid` respectively.
 
 ---
 

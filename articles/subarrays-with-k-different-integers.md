@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - The optimal solutions use sliding window technique with variable window sizes to track subarrays
 - **Hash Maps** - Used to track frequency counts of elements within the current window
 - **Two Pointers** - Advanced solutions use multiple left pointers to track ranges of valid starting positions
@@ -16,11 +18,11 @@ The most straightforward approach is to check every possible subarray and count 
 
 1. Initialize a result counter `res` to store the count of valid subarrays.
 2. For each starting index `i`:
-   - Create an empty set to track distinct values.
-   - Expand the subarray by moving index `j` from `i` to the end.
-   - Add each new element to the set.
-   - If the set size exceeds `k`, break out of the inner loop.
-   - If the set size equals `k`, increment `res`.
+    - Create an empty set to track distinct values.
+    - Expand the subarray by moving index `j` from `i` to the end.
+    - Add each new element to the set.
+    - If the set size exceeds `k`, break out of the inner loop.
+    - If the set size equals `k`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -212,6 +214,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut seen = HashSet::new();
+            for j in i..n {
+                seen.insert(nums[j]);
+                if seen.len() > k {
+                    break;
+                }
+                if seen.len() == k {
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -230,11 +257,11 @@ Counting subarrays with exactly `k` distinct values is tricky because adding an 
 ### Algorithm
 
 1. Define a helper function `atMostK(k)` that counts subarrays with at most `k` distinct values:
-   - Use two pointers `l` and `r` to define the window.
-   - Maintain a frequency map to track counts of elements in the window.
-   - Expand `r` and add each element to the map.
-   - When distinct count exceeds `k`, shrink from `l` until we have at most `k` distinct.
-   - For each position of `r`, add `(r - l + 1)` to the result, representing all valid subarrays ending at `r`.
+    - Use two pointers `l` and `r` to define the window.
+    - Maintain a frequency map to track counts of elements in the window.
+    - Expand `r` and add each element to the map.
+    - When distinct count exceeds `k`, shrink from `l` until we have at most `k` distinct.
+    - For each position of `r`, add `(r - l + 1)` to the result, representing all valid subarrays ending at `r`.
 2. Return `atMostK(k) - atMostK(k - 1)`.
 
 ::tabs-start
@@ -506,6 +533,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
+        fn at_most_k(nums: &[i32], mut k: i32) -> i32 {
+            let mut count = HashMap::new();
+            let mut res = 0;
+            let mut l = 0;
+
+            for r in 0..nums.len() {
+                let e = count.entry(nums[r]).or_insert(0);
+                *e += 1;
+                if *e == 1 {
+                    k -= 1;
+                }
+
+                while k < 0 {
+                    let e = count.get_mut(&nums[l]).unwrap();
+                    *e -= 1;
+                    if *e == 0 {
+                        count.remove(&nums[l]);
+                        k += 1;
+                    }
+                    l += 1;
+                }
+
+                res += (r - l + 1) as i32;
+            }
+
+            res
+        }
+
+        at_most_k(&nums, k) - at_most_k(&nums, k - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,10 +588,10 @@ Instead of computing "at most k" twice, we can count exactly `k` in a single pas
 
 1. Initialize `l_far` and `l_near` to `0`, and a frequency map `count`.
 2. For each right pointer `r`:
-   - Add `nums[r]` to the frequency map.
-   - If distinct count exceeds `k`, shrink by moving `l_near` right and removing elements until we have `k` distinct. Set `l_far = l_near`.
-   - While the leftmost element has count greater than `1`, decrement its count and move `l_near` right.
-   - If we have exactly `k` distinct values, add `l_near - l_far + 1` to the result.
+    - Add `nums[r]` to the frequency map.
+    - If distinct count exceeds `k`, shrink by moving `l_near` right and removing elements until we have `k` distinct. Set `l_far = l_near`.
+    - While the leftmost element has count greater than `1`, decrement its count and move `l_near` right.
+    - If we have exactly `k` distinct values, add `l_near - l_far + 1` to the result.
 3. Return the result.
 
 ::tabs-start
@@ -804,6 +867,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let mut count = HashMap::new();
+        let mut res = 0;
+        let mut l_far = 0usize;
+        let mut l_near = 0usize;
+
+        for r in 0..nums.len() {
+            *count.entry(nums[r]).or_insert(0) += 1;
+
+            while count.len() > k {
+                let e = count.get_mut(&nums[l_near]).unwrap();
+                *e -= 1;
+                if *e == 0 {
+                    count.remove(&nums[l_near]);
+                }
+                l_near += 1;
+                l_far = l_near;
+            }
+
+            while *count.get(&nums[l_near]).unwrap() > 1 {
+                *count.get_mut(&nums[l_near]).unwrap() -= 1;
+                l_near += 1;
+            }
+
+            if count.len() == k {
+                res += (l_near - l_far + 1) as i32;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -824,10 +924,10 @@ This approach simplifies the previous one by using a single left pointer and a c
 1. Create an array `count` of size `n + 1` for frequency tracking (since values are in range `[1, n]`).
 2. Initialize `l`, `cnt`, and `res` to `0`.
 3. For each right pointer `r`:
-   - Increment `count[nums[r]]`. If this is a new distinct value, decrement `k`.
-   - If `k < 0` (more than k distinct), decrement `count[nums[l]]`, increment `l`, increment `k`, and reset `cnt = 0`.
-   - If `k == 0` (exactly k distinct), shrink from the left while `count[nums[l]] > 1`, incrementing `cnt` each time.
-   - Add `cnt + 1` to `res`.
+    - Increment `count[nums[r]]`. If this is a new distinct value, decrement `k`.
+    - If `k < 0` (more than k distinct), decrement `count[nums[l]]`, increment `l`, increment `k`, and reset `cnt = 0`.
+    - If `k == 0` (exactly k distinct), shrink from the left while `count[nums[l]] > 1`, incrementing `cnt` each time.
+    - Add `cnt + 1` to `res`.
 4. Return `res`.
 
 ::tabs-start
@@ -1117,6 +1217,44 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn subarrays_with_k_distinct(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut count = vec![0i32; n + 1];
+        let mut res = 0;
+        let mut l = 0usize;
+        let mut cnt = 0;
+        let mut k = k;
+
+        for r in 0..n {
+            count[nums[r] as usize] += 1;
+            if count[nums[r] as usize] == 1 {
+                k -= 1;
+            }
+
+            if k < 0 {
+                count[nums[l] as usize] -= 1;
+                l += 1;
+                k += 1;
+                cnt = 0;
+            }
+
+            if k == 0 {
+                while count[nums[l] as usize] > 1 {
+                    count[nums[l] as usize] -= 1;
+                    l += 1;
+                    cnt += 1;
+                }
+                res += cnt + 1;
+            }
+        }
+
+        res
     }
 }
 ```

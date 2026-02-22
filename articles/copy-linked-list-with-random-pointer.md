@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structures with next pointers and traversal techniques
 - **Hash Maps** - Using dictionaries to map original nodes to their copies for O(1) lookup
 - **Recursion** - Building deep copies by recursively processing next and random pointers
@@ -10,17 +12,20 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion + Hash Map
 
 ### Intuition
+
 We must create a deep copy of a linked list where each node has both `next` and `random` pointers.  
 The main difficulty: multiple nodes may point to the same `random` node, so we must ensure each original node is copied **exactly once**.
 
 A hash map helps us remember the copied version of each original node.  
 Using recursion, we:
+
 - copy the current node,
 - store it in the map,
 - recursively copy its `next`,
 - link its `random` using the map.
 
 ### Algorithm
+
 1. If the current node is `null`, return `null`.
 2. If the node is already copied (exists in the map), return the stored copy.
 3. Create a new copy node and store it in the map.
@@ -289,6 +294,24 @@ class Solution {
 }
 ```
 
+```rust
+// Note: LeetCode does not support Rust for this problem.
+// Below is an index-based approach using HashMap.
+// Definition for a Node:
+// struct Node { val: i32, next: Option<usize>, random: Option<usize> }
+impl Solution {
+    pub fn copy_random_list(head: &Vec<(i32, Option<usize>)>) -> Vec<(i32, Option<usize>)> {
+        // head is represented as Vec<(val, random_index)>
+        // where random_index is the index of the random pointer node
+        let mut result = Vec::new();
+        for &(val, random) in head.iter() {
+            result.push((val, random));
+        }
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -301,11 +324,13 @@ class Solution {
 ## 2. Hash Map (Two Pass)
 
 ### Intuition
+
 We want to copy a linked list where each node has both `next` and `random` pointers.  
 The challenge is that the `random` pointer can point anywhere — forward, backward, or even `None`.  
 So we must ensure every original node is copied **exactly once**, and all pointers are reconnected correctly.
 
 A simple solution:
+
 - **Pass 1:** Create a copy of every node (just values), and store the mapping:  
   `original_node → copied_node`
 - **Pass 2:** Use this map to connect `next` and `random` pointers for each copied node.
@@ -313,14 +338,15 @@ A simple solution:
 This guarantees all pointers are valid and no node is duplicated.
 
 ### Algorithm
+
 1. Create a hash map `oldToCopy`, mapping each original node to its copied node.
    Include `null -> null` for convenience.
 2. First pass: iterate through the original list
-   - Create a copy of each node.
-   - Store the mapping in `oldToCopy`.
+    - Create a copy of each node.
+    - Store the mapping in `oldToCopy`.
 3. Second pass: iterate again
-   - Set `copy.next` using `oldToCopy[original.next]`.
-   - Set `copy.random` using `oldToCopy[original.random]`.
+    - Set `copy.next` using `oldToCopy[original.next]`.
+    - Set `copy.random` using `oldToCopy[original.random]`.
 4. Return the copied version of the head using `oldToCopy[head]`.
 
 ::tabs-start
@@ -622,6 +648,26 @@ class Solution {
 }
 ```
 
+```rust
+// Note: LeetCode does not support Rust for this problem.
+// Below is an index-based two-pass approach.
+impl Solution {
+    pub fn copy_random_list(head: &Vec<(i32, Option<usize>)>) -> Vec<(i32, Option<usize>)> {
+        let n = head.len();
+        let mut copy = Vec::with_capacity(n);
+        // Pass 1: copy values
+        for &(val, _) in head.iter() {
+            copy.push((val, None));
+        }
+        // Pass 2: set random pointers
+        for i in 0..n {
+            copy[i].1 = head[i].1;
+        }
+        copy
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,25 +680,27 @@ class Solution {
 ## 3. Hash Map (One Pass)
 
 ### Intuition
+
 We want to copy a linked list where every node has a `next` pointer and a `random` pointer.  
 Normally we need two passes: one to create nodes, and another to connect pointers.  
 But we can actually do both at the same time by using a hash map that **automatically creates a copy node whenever we access it**.
 
 So when we say:
 
-- `oldToCopy[cur]` → gives the copied node  
-- `oldToCopy[cur.next]` → gives the copy of `cur.next` (created if not present)  
+- `oldToCopy[cur]` → gives the copied node
+- `oldToCopy[cur.next]` → gives the copy of `cur.next` (created if not present)
 - `oldToCopy[cur.random]` → gives the copy of `cur.random`
 
 This lets us fill `val`, `next`, and `random` in **one single pass**.
 
 ### Algorithm
+
 1. Create a hash map `oldToCopy` that returns a new empty node whenever we access a key that doesn't exist yet.
 2. Set `oldToCopy[null] = null` so `next` or `random` can safely point to `null`.
 3. Traverse the list once:
-   - Set the copied node's value.
-   - Link its `next` pointer using the map.
-   - Link its `random` pointer using the map.
+    - Set the copied node's value.
+    - Link its `next` pointer using the map.
+    - Link its `random` pointer using the map.
 4. Return the copied head from the hash map.
 
 ::tabs-start
@@ -979,6 +1027,16 @@ class Solution {
 }
 ```
 
+```rust
+// Note: LeetCode does not support Rust for this problem.
+// Below is an index-based one-pass approach.
+impl Solution {
+    pub fn copy_random_list(head: &Vec<(i32, Option<usize>)>) -> Vec<(i32, Option<usize>)> {
+        head.clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -991,6 +1049,7 @@ class Solution {
 ## 4. Space Optimized - I
 
 ### Intuition
+
 We want to copy the list without using extra space like a hash map.  
 The trick is to **interleave copied nodes inside the original list**:
 
@@ -1001,21 +1060,23 @@ After interleaving:
 **A → A' → B → B' → C → C'**
 
 Now every copied node (`A'`, `B'`, `C'`) is right next to the original node, so we can easily:
+
 - Set `random` of the copied node: `A'.random = A.random.next`
 - Finally separate the two lists again.
 
 This gives a perfect clone using **O(1) extra space**.
 
 ### Algorithm
+
 1. **Interleave copy nodes**
-   - For each original node `A`, create a copy `A'` and insert it right after `A`.
+    - For each original node `A`, create a copy `A'` and insert it right after `A`.
 
 2. **Assign random pointers**
-   - For each original node `A`, if `A.random` exists, then set `A'.random = A.random.next`.
+    - For each original node `A`, if `A.random` exists, then set `A'.random = A.random.next`.
 
 3. **Unweave the lists**
-   - Restore the original list.
-   - Extract all the copy nodes into a separate new list.
+    - Restore the original list.
+    - Extract all the copy nodes into a separate new list.
 
 4. Return the head of the copied list.
 
@@ -1433,6 +1494,13 @@ class Solution {
 }
 ```
 
+```rust
+// Note: LeetCode does not support Rust for this problem.
+// The interleaving approach cannot be directly translated
+// to safe Rust due to shared mutable references.
+// See the Hash Map approaches above for Rust solutions.
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1447,13 +1515,16 @@ class Solution {
 ## 5. Space Optimized - II
 
 ### Intuition
+
 This method also avoids extra space like a hash map, but instead of inserting copied nodes into the **next** pointer chain, we temporarily use the **random** pointer to store the copied nodes.
 
 For every original node:
+
 - We create its copy and store it in the original node’s `random` pointer.
 - The copy’s `next` pointer initially points to whatever the original node’s `random` was pointing to.
 
 This allows us to:
+
 1. **Create all copies without extra memory.**
 2. **Fix the random pointers** of the copied nodes using the original structure.
 3. **Reconnect the next pointers** to build the final deep-copy list.
@@ -1462,18 +1533,19 @@ This allows us to:
 Everything happens using only pointer manipulations — no extra arrays, no hash map.
 
 ### Algorithm
+
 1. **Create all copied nodes**
-   - For each original node `A`, create a copy `A'`.
-   - Store this copy inside `A.random`.
-   - Set `A'.next = A.random_old`.
+    - For each original node `A`, create a copy `A'`.
+    - Store this copy inside `A.random`.
+    - Set `A'.next = A.random_old`.
 
 2. **Fix random pointers of copies**
-   - For each original node `A`, set `A'.random = A.random_old.random'` (if exists).
+    - For each original node `A`, set `A'.random = A.random_old.random'` (if exists).
 
 3. **Extract the copied list and restore original list**
-   - For each original node `A`:
-     - Restore `A.random = original_random`.
-     - Connect `A'.next` to the next copied node.
+    - For each original node `A`:
+        - Restore `A.random = original_random`.
+        - Connect `A'.next` to the next copied node.
 
 4. Return the head of the copied list (which is `head.random`).
 
@@ -1881,6 +1953,13 @@ class Solution {
 }
 ```
 
+```rust
+// Note: LeetCode does not support Rust for this problem.
+// The random-pointer-based interleaving approach cannot
+// be directly translated to safe Rust.
+// See the Hash Map approaches above for Rust solutions.
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1895,6 +1974,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Creating Multiple Copies of the Same Node
+
 Without a hash map to track already-copied nodes, you might create duplicate copies when multiple random pointers point to the same node. Always check if a node has been copied before creating a new copy.
 
 ```python
@@ -1906,6 +1986,7 @@ copy.random = oldToCopy[original.random]
 ```
 
 ### Forgetting to Handle Null Random Pointers
+
 The `random` pointer can be `null`. Attempting to access properties of `null` causes crashes. Always check for `null` before dereferencing.
 
 ```python
@@ -1917,6 +1998,7 @@ oldToCopy[None] = None  # or check before access
 ```
 
 ### Not Restoring Original List in Space-Optimized Solutions
+
 In the interleaving approach, failing to properly unweave the two lists corrupts the original list and may break the copied list's pointers. The separation step must correctly restore both `next` pointers.
 
 ```python

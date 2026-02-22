@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge pairs to represent directed graphs
 - **Depth-First Search (DFS)** - Recursive graph traversal for exploring all paths and detecting cycles
 - **Topological Sort** - Ordering nodes in a directed acyclic graph (DAG) so dependencies come first
@@ -10,23 +12,26 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Cycle Detection (DFS)
 
 ### Intuition
+
 Each course is a **node**, and each prerequisite is a **directed edge**.  
 We want an order of courses such that all prerequisites of a course are taken **before** it.
 
 Using **DFS**, we:
+
 - Detect cycles (which make it impossible to finish all courses)
 - Add a course to the result **after** all its prerequisites are processed  
   (this naturally gives a valid topological order)
 
 ### Algorithm
+
 1. Build a graph where each course points to its prerequisites.
 2. Use two sets:
-   - `cycle` - tracks the current DFS path (for cycle detection)
-   - `visit` - tracks fully processed courses
+    - `cycle` - tracks the current DFS path (for cycle detection)
+    - `visit` - tracks fully processed courses
 3. For each course, run DFS:
-   - If the course is already in `cycle`, a cycle exists - return empty list
-   - DFS all prerequisites first
-   - After processing prerequisites, add the course to the result
+    - If the course is already in `cycle`, a cycle exists - return empty list
+    - DFS all prerequisites first
+    - After processing prerequisites, add the course to the result
 4. If all DFS calls succeed, return the result list (valid course order)
 
 ::tabs-start
@@ -403,6 +408,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = num_courses as usize;
+        let mut prereq = vec![vec![]; n];
+        for pair in &prerequisites {
+            prereq[pair[0] as usize].push(pair[1] as usize);
+        }
+
+        let mut output = Vec::new();
+        let mut visit = vec![false; n];
+        let mut cycle = vec![false; n];
+
+        fn dfs(
+            crs: usize, prereq: &Vec<Vec<usize>>,
+            visit: &mut Vec<bool>, cycle: &mut Vec<bool>,
+            output: &mut Vec<i32>,
+        ) -> bool {
+            if cycle[crs] { return false; }
+            if visit[crs] { return true; }
+
+            cycle[crs] = true;
+            for &pre in &prereq[crs] {
+                if !dfs(pre, prereq, visit, cycle, output) {
+                    return false;
+                }
+            }
+            cycle[crs] = false;
+            visit[crs] = true;
+            output.push(crs as i32);
+            true
+        }
+
+        for c in 0..n {
+            if !dfs(c, &prereq, &mut visit, &mut cycle, &mut output) {
+                return vec![];
+            }
+        }
+        output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -417,10 +465,12 @@ class Solution {
 ## 2. Topological Sort (Kahn's Algorithm)
 
 ### Intuition
+
 Treat each course as a **node** and each prerequisite as a **directed edge**.
 A course can be taken only when **all its prerequisites are completed**.
 
 Kahn's Algorithm works by:
+
 - Always taking courses with **no remaining prerequisites** (`indegree = 0`)
 - Removing them from the graph
 - Gradually unlocking other courses
@@ -428,13 +478,14 @@ Kahn's Algorithm works by:
 If at the end some courses are still locked, it means a **cycle exists**, so no valid order is possible.
 
 ### Algorithm
+
 1. Build a graph and compute `indegree` for each course
    (`indegree` = number of prerequisites).
 2. Add all courses with `indegree = 0` to a queue.
 3. While the queue is not empty:
-   - Remove a course and add it to the result.
-   - Reduce the `indegree` of its dependent courses.
-   - If any dependent course reaches `indegree = 0`, add it to the queue.
+    - Remove a course and add it to the result.
+    - Reduce the `indegree` of its dependent courses.
+    - If any dependent course reaches `indegree = 0`, add it to the queue.
 4. If all courses are processed, return the result (reverse if edges were stored as course - prerequisite).
 5. Otherwise, return an empty list (cycle detected).
 
@@ -759,6 +810,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = num_courses as usize;
+        let mut indegree = vec![0i32; n];
+        let mut adj = vec![vec![]; n];
+
+        for pre in &prerequisites {
+            let (src, dst) = (pre[0] as usize, pre[1] as usize);
+            indegree[dst] += 1;
+            adj[src].push(dst);
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 0..n {
+            if indegree[i] == 0 {
+                queue.push_back(i);
+            }
+        }
+
+        let mut finish = 0;
+        let mut output = vec![0i32; n];
+        while let Some(node) = queue.pop_front() {
+            output[n - finish - 1] = node as i32;
+            finish += 1;
+            for &nei in &adj[node] {
+                indegree[nei] -= 1;
+                if indegree[nei] == 0 {
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        if finish != n { vec![] } else { output }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -773,10 +862,12 @@ class Solution {
 ## 3. Topological Sort (DFS)
 
 ### Intuition
+
 We want an order of courses such that **every course appears after its prerequisites**.
 This approach mixes **Topological Sorting** with **DFS-style traversal**.
 
 The idea is:
+
 - Start from courses that have **no prerequisites** (`indegree = 0`)
 - Once we take a course, we "remove" it by decreasing the `indegree` of courses that depend on it
 - When a dependent course's `indegree` becomes `0`, it is now safe to take, so we continue DFS from it
@@ -785,15 +876,16 @@ If we can visit all courses this way, a valid order exists.
 If not, a **cycle** is present, making it impossible.
 
 ### Algorithm
+
 1. Build a directed graph from prerequisites and compute `indegree` for each course.
 2. For every course with `indegree = 0`, start a DFS.
 3. In DFS:
-   - Add the current course to the result.
-   - Decrease `indegree` of its neighbors.
-   - If any neighbor's `indegree` becomes `0`, recursively DFS on it.
+    - Add the current course to the result.
+    - Decrease `indegree` of its neighbors.
+    - If any neighbor's `indegree` becomes `0`, recursively DFS on it.
 4. After traversal:
-   - If result contains all courses, return it.
-   - Otherwise, return an empty list (cycle detected).
+    - If result contains all courses, return it.
+    - Otherwise, return an empty list (cycle detected).
 
 ::tabs-start
 
@@ -1089,6 +1181,44 @@ class Solution {
         }
 
         return output.count == numCourses ? output : []
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_order(num_courses: i32, prerequisites: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = num_courses as usize;
+        let mut adj = vec![vec![]; n];
+        let mut indegree = vec![0i32; n];
+
+        for pair in &prerequisites {
+            let (nxt, pre) = (pair[0] as usize, pair[1] as usize);
+            indegree[nxt] += 1;
+            adj[pre].push(nxt);
+        }
+
+        let mut output = Vec::new();
+
+        fn dfs(node: usize, adj: &Vec<Vec<usize>>, indegree: &mut Vec<i32>, output: &mut Vec<i32>) {
+            output.push(node as i32);
+            indegree[node] -= 1;
+            for i in 0..adj[node].len() {
+                let nei = adj[node][i];
+                indegree[nei] -= 1;
+                if indegree[nei] == 0 {
+                    dfs(nei, adj, indegree, output);
+                }
+            }
+        }
+
+        for i in 0..n {
+            if indegree[i] == 0 {
+                dfs(i, &adj, &mut indegree, &mut output);
+            }
+        }
+
+        if output.len() == n { output } else { vec![] }
     }
 }
 ```

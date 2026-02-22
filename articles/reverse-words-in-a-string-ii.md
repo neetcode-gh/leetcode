@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Using left and right pointers to swap elements in place
 - **In-place Array Manipulation** - Modifying arrays without using extra space
 - **String Reversal** - Reversing a sequence of characters using two pointers
@@ -41,14 +43,14 @@ class Solution:
             # move to the next word
             start = end + 1
             end += 1
-            
+
     def reverseWords(self, s: List[str]) -> None:
         """
         Do not return anything, modify s in-place instead.
         """
         # reverse the whole string
         self.reverse(s, 0, len(s) - 1)
-        
+
         # reverse each word
         self.reverse_each_word(s)
 ```
@@ -140,7 +142,8 @@ class Solution {
 
     reverseEachWord(s) {
         const n = s.length;
-        let start = 0, end = 0;
+        let start = 0,
+            end = 0;
 
         while (start < n) {
             // go to the end of the word
@@ -301,6 +304,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_words(s: &mut Vec<char>) {
+        // reverse the whole string
+        s.reverse();
+        // reverse each word
+        let n = s.len();
+        let mut start = 0;
+        while start < n {
+            let mut end = start;
+            while end < n && s[end] != ' ' {
+                end += 1;
+            }
+            s[start..end].reverse();
+            start = end + 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,7 +331,7 @@ class Solution {
 - Time complexity: $O(N)$, it's two passes along the string.
 - Space complexity: $O(1)$ constant space used
 
->  where $N$ is the length of the input `s`
+> where $N$ is the length of the input `s`
 
 ---
 

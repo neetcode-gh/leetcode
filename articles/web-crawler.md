@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Traversal (DFS/BFS)** - Web pages form a graph where URLs are nodes and links are edges; traversal explores all reachable pages
 - **Hash Sets** - Used to track visited URLs and prevent infinite loops from cycles
 - **String Parsing** - Extracting hostnames from URLs to filter which pages to crawl
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth-first search
 
 ### Intuition
+
 Web crawling naturally fits a graph traversal problem where URLs are nodes and links between them are edges. The key insight is that we need to explore all reachable URLs from the starting URL while staying within the same hostname. `dfs` allows us to follow links deeply before backtracking, using a `visited` set to avoid infinite loops from cycles.
 
 ### Algorithm
+
 1. Create a helper function to extract the hostname from a URL by splitting on slashes and taking the third element.
 2. Extract the starting hostname and initialize an empty `visited` set.
 3. Define a recursive `dfs` function that marks the current URL as visited.
@@ -113,7 +117,7 @@ class Solution {
      * @param {string} startUrl
      * @param {HtmlParser} htmlParser
      * @return {string[]}
-    */
+     */
     crawl(startUrl, htmlParser) {
         function getHostname(url) {
             // split url by slashes
@@ -130,7 +134,10 @@ class Solution {
             visited.add(url);
 
             for (const nextUrl of htmlParser.getUrls(url)) {
-                if (getHostname(nextUrl) === startHostname && !visited.has(nextUrl)) {
+                if (
+                    getHostname(nextUrl) === startHostname &&
+                    !visited.has(nextUrl)
+                ) {
                     dfs(nextUrl);
                 }
             }
@@ -258,6 +265,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn crawl(start_url: String, html_parser: HtmlParser) -> Vec<String> {
+        fn get_hostname(url: &str) -> &str {
+            url.split('/').nth(2).unwrap()
+        }
+
+        let start_hostname = get_hostname(&start_url).to_string();
+        let mut visited = HashSet::new();
+
+        fn dfs(url: String, start_hostname: &str, html_parser: &HtmlParser, visited: &mut HashSet<String>) {
+            visited.insert(url.clone());
+            for next_url in html_parser.get_urls(&url) {
+                if get_hostname(&next_url) == start_hostname && !visited.contains(&next_url) {
+                    dfs(next_url, start_hostname, html_parser, visited);
+                }
+            }
+        }
+
+        dfs(start_url, &start_hostname, &html_parser, &mut visited);
+        visited.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,16 +297,18 @@ class Solution {
 - Time complexity: $O(m \cdot l)$
 - Space complexity: $O(m \cdot l)$
 
->  Where $m$ is the number of edges in the graph, and $l$ is the maximum length of a URL (`urls[i].length`).
+> Where $m$ is the number of edges in the graph, and $l$ is the maximum length of a URL (`urls[i].length`).
 
 ---
 
 ## 2. Breadth-first search
 
 ### Intuition
+
 `bfs` provides an alternative traversal that explores URLs level by level, visiting all URLs at distance 1 before distance 2, and so on. This approach uses a queue instead of recursion and naturally discovers URLs in order of their distance from the starting URL.
 
 ### Algorithm
+
 1. Create a helper function to extract the hostname from a URL.
 2. Extract the starting hostname, initialize a queue with the start URL, and create a `visited` set containing the start URL.
 3. While the queue is not empty, dequeue a URL.
@@ -373,7 +407,7 @@ class Solution {
      * @param {string} startUrl
      * @param {HtmlParser} htmlParser
      * @return {string[]}
-    */
+     */
     crawl(startUrl, htmlParser) {
         function getHostname(url) {
             // split url by slashes
@@ -390,7 +424,10 @@ class Solution {
         while (queue.length > 0) {
             const url = queue.shift();
             for (const nextUrl of htmlParser.getUrls(url)) {
-                if (getHostname(nextUrl) === startHostname && !visited.has(nextUrl)) {
+                if (
+                    getHostname(nextUrl) === startHostname &&
+                    !visited.has(nextUrl)
+                ) {
                     queue.push(nextUrl);
                     visited.add(nextUrl);
                 }
@@ -560,6 +597,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn crawl(start_url: String, html_parser: HtmlParser) -> Vec<String> {
+        fn get_hostname(url: &str) -> &str {
+            url.split('/').nth(2).unwrap()
+        }
+
+        let start_hostname = get_hostname(&start_url).to_string();
+        let mut visited = HashSet::new();
+        visited.insert(start_url.clone());
+        let mut queue = VecDeque::new();
+        queue.push_back(start_url);
+
+        while let Some(url) = queue.pop_front() {
+            for next_url in html_parser.get_urls(&url) {
+                if get_hostname(&next_url) == start_hostname && !visited.contains(&next_url) {
+                    visited.insert(next_url.clone());
+                    queue.push_back(next_url);
+                }
+            }
+        }
+
+        visited.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,7 +631,7 @@ class Solution {
 - Time complexity: $O(m \cdot l)$
 - Space complexity: $O(n \cdot l)$
 
->  Where $m$ is the number of edges in the graph, $l$ is the maximum length of a URL (`urls[i].length`), and $n$ is the total number of URLs (`urls.length`).
+> Where $m$ is the number of edges in the graph, $l$ is the maximum length of a URL (`urls[i].length`), and $n$ is the total number of URLs (`urls.length`).
 
 ---
 

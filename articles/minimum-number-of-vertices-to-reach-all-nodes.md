@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation (Adjacency List)** - Required to store and traverse the directed graph
 - **Depth First Search (DFS)** - One approach uses DFS to identify reachable nodes
 - **Indegree Concept** - The optimal solution identifies nodes with zero incoming edges
@@ -19,8 +21,8 @@ Using `dfs`, we traverse from each unvisited `node` and mark all reachable nodes
 1. Build an adjacency list from the edges.
 2. Initialize a set containing all vertices as potential starting points.
 3. For each unvisited vertex, run `dfs`:
-   - Mark the vertex as visited.
-   - For each neighbor, recursively visit it and remove it from the `res` set.
+    - Mark the vertex as visited.
+    - For each neighbor, recursively visit it and remove it from the `res` set.
 4. Return the remaining vertices in the set.
 
 ::tabs-start
@@ -269,6 +271,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_smallest_set_of_vertices(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        let mut res: HashSet<usize> = (0..n).collect();
+        let mut visited = vec![false; n];
+
+        fn dfs(node: usize, adj: &Vec<Vec<usize>>, visited: &mut Vec<bool>, res: &mut HashSet<usize>) {
+            visited[node] = true;
+            for &nei in &adj[node] {
+                if !visited[nei] {
+                    dfs(nei, adj, visited, res);
+                }
+                res.remove(&nei);
+            }
+        }
+
+        for i in 0..n {
+            if !visited[i] {
+                dfs(i, &adj, &mut visited, &mut res);
+            }
+        }
+        res.into_iter().map(|x| x as i32).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,9 +325,9 @@ This is the same approach as recursive `dfs` but uses an explicit `stack` to avo
 1. Build an adjacency list from the edges.
 2. Initialize a boolean array where all vertices are potential `res`.
 3. Use a `stack` for iterative `dfs`:
-   - Pop a `node` from the `stack`.
-   - Skip if already visited; otherwise mark as visited.
-   - For each neighbor, add to `stack` if unvisited and mark as not a `res`.
+    - Pop a `node` from the `stack`.
+    - Skip if already visited; otherwise mark as visited.
+    - For each neighbor, add to `stack` if unvisited and mark as not a `res`.
 4. Collect all vertices still marked as `res`.
 
 ::tabs-start
@@ -598,6 +632,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_smallest_set_of_vertices(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        let mut res = vec![true; n];
+        let mut visited = vec![false; n];
+        let mut stack = Vec::new();
+
+        for i in 0..n {
+            if !visited[i] {
+                stack.push(i);
+                while let Some(node) = stack.pop() {
+                    if visited[node] {
+                        continue;
+                    }
+                    visited[node] = true;
+                    for &nei in &adj[node] {
+                        if !visited[nei] {
+                            stack.push(nei);
+                        }
+                        res[nei] = false;
+                    }
+                }
+            }
+        }
+
+        (0..n).filter(|&i| res[i]).map(|i| i as i32).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -785,6 +855,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_smallest_set_of_vertices(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut incoming = vec![vec![]; n];
+        for edge in &edges {
+            incoming[edge[1] as usize].push(edge[0]);
+        }
+
+        (0..n)
+            .filter(|&i| incoming[i].is_empty())
+            .map(|i| i as i32)
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -951,6 +1038,23 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_smallest_set_of_vertices(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut indegree = vec![false; n];
+        for edge in &edges {
+            indegree[edge[1] as usize] = true;
+        }
+
+        (0..n)
+            .filter(|&i| !indegree[i])
+            .map(|i| i as i32)
+            .collect()
     }
 }
 ```

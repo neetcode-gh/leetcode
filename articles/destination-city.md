@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Used for O(1) lookup to check if a city is a starting point
 - **Hash Map** - Used to model the path chain from starting city to destination city
 
@@ -8,9 +10,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The destination city is a city that appears as an endpoint but never as a starting point in any path. For each destination in the paths, we can check whether it ever appears as a starting city. The city that never starts a path is our answer.
 
 ### Algorithm
+
 1. Iterate through each path and consider its destination city.
 2. For each destination, iterate through all paths again to check if this city appears as a starting point.
 3. If the destination never appears as a starting point in any path, return it as the answer.
@@ -175,6 +179,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn dest_city(paths: Vec<Vec<String>>) -> String {
+        for i in 0..paths.len() {
+            let mut flag = true;
+            for j in 0..paths.len() {
+                if paths[i][1] == paths[j][0] {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                return paths[i][1].clone();
+            }
+        }
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -187,9 +211,11 @@ class Solution {
 ## 2. Hash Set
 
 ### Intuition
+
 Instead of checking each destination against all starting points in O(n) time, we can store all starting cities in a hash set for O(1) lookup. Any destination city that is not in the set of starting cities must be the final destination.
 
 ### Algorithm
+
 1. Create a hash set and add all starting cities (the first element of each path) to it.
 2. Iterate through all paths and check each destination city (the second element).
 3. If a destination city is not found in the hash set, return it as the answer.
@@ -338,6 +364,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn dest_city(paths: Vec<Vec<String>>) -> String {
+        let s: HashSet<&str> = paths.iter().map(|p| p[0].as_str()).collect();
+
+        for p in &paths {
+            if !s.contains(p[1].as_str()) {
+                return p[1].clone();
+            }
+        }
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,9 +391,11 @@ class Solution {
 ## 3. Hash Map
 
 ### Intuition
+
 We can model the paths as a linked chain where each city points to its next destination. By building this chain in a hash map and following the links from any starting city, we will eventually reach the final destination, which has no outgoing path.
 
 ### Algorithm
+
 1. Build a hash map where each key is a starting city and its value is the destination city.
 2. Start with the first city from the first path.
 3. Keep following the chain: while the current city exists as a key in the map, move to its destination.
@@ -493,6 +536,23 @@ class Solution {
             start = next
         }
         return start
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn dest_city(paths: Vec<Vec<String>>) -> String {
+        let mp: HashMap<&str, &str> = paths
+            .iter()
+            .map(|p| (p[0].as_str(), p[1].as_str()))
+            .collect();
+
+        let mut start = paths[0][0].as_str();
+        while let Some(&next) = mp.get(start) {
+            start = next;
+        }
+        start.to_string()
     }
 }
 ```

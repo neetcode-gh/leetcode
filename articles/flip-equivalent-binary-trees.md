@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure with left and right children
 - **Tree Traversal (DFS/BFS)** - Visiting nodes recursively or iteratively using stacks/queues
 - **Recursion** - Comparing subtrees and handling base cases with null nodes
@@ -17,8 +19,8 @@ Two trees are flip equivalent if we can make them identical by swapping the left
 1. Base case: If either node is `null`, return `true` only if both are `null`.
 2. If the values of the two nodes differ, return `false`.
 3. Recursively check two scenarios:
-   - No flip: left subtrees match AND right subtrees match.
-   - Flip: left of tree1 matches right of tree2 AND right of tree1 matches left of tree2.
+    - No flip: left subtrees match AND right subtrees match.
+    - Flip: left of tree1 matches right of tree2 AND right of tree1 matches left of tree2.
 4. Return `true` if either scenario succeeds.
 
 ::tabs-start
@@ -247,6 +249,39 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn flip_equiv(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        match (&root1, &root2) {
+            (None, None) => true,
+            (Some(_), None) | (None, Some(_)) => false,
+            (Some(n1), Some(n2)) => {
+                let n1 = n1.borrow();
+                let n2 = n2.borrow();
+                if n1.val != n2.val {
+                    return false;
+                }
+                (Self::flip_equiv(n1.left.clone(), n2.left.clone())
+                    && Self::flip_equiv(n1.right.clone(), n2.right.clone()))
+                    || (Self::flip_equiv(n1.left.clone(), n2.right.clone())
+                        && Self::flip_equiv(n1.right.clone(), n2.left.clone()))
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -266,11 +301,11 @@ We can solve this iteratively using a queue to process node pairs level by level
 
 1. Initialize a queue with the pair `(root1, root2)`.
 2. While the queue is not empty:
-   - Dequeue a pair of nodes.
-   - If either is `null`, check that both are `null`. If not, return `false`.
-   - If their values differ, return `false`.
-   - Determine child pairing: if both left children exist and have equal values, or both are `null`, pair children directly. Otherwise, pair them in flipped order.
-   - Enqueue the appropriate child pairs.
+    - Dequeue a pair of nodes.
+    - If either is `null`, check that both are `null`. If not, return `false`.
+    - If their values differ, return `false`.
+    - Determine child pairing: if both left children exist and have equal values, or both are `null`, pair children directly. Otherwise, pair them in flipped order.
+    - Enqueue the appropriate child pairs.
 3. Return `true` if all pairs are processed successfully.
 
 ::tabs-start
@@ -633,6 +668,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn flip_equiv(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        let mut q = VecDeque::new();
+        q.push_back((root1, root2));
+
+        while let Some((n1, n2)) = q.pop_front() {
+            match (&n1, &n2) {
+                (None, None) => continue,
+                (Some(_), None) | (None, Some(_)) => return false,
+                (Some(a), Some(b)) => {
+                    let a = a.borrow();
+                    let b = b.borrow();
+                    if a.val != b.val {
+                        return false;
+                    }
+
+                    let a_left_val = a.left.as_ref().map(|n| n.borrow().val);
+                    let b_left_val = b.left.as_ref().map(|n| n.borrow().val);
+
+                    if a_left_val == b_left_val {
+                        q.push_back((a.left.clone(), b.left.clone()));
+                        q.push_back((a.right.clone(), b.right.clone()));
+                    } else {
+                        q.push_back((a.left.clone(), b.right.clone()));
+                        q.push_back((a.right.clone(), b.left.clone()));
+                    }
+                }
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -652,10 +726,10 @@ This is the iterative version of the recursive DFS approach, using an explicit s
 
 1. Initialize a stack with the pair `(root1, root2)`.
 2. While the stack is not empty:
-   - Pop a pair of nodes.
-   - If either is `null`, verify both are `null`. If not, return `false`.
-   - If their values differ, return `false`.
-   - Determine child pairing: if left children match (both `null` or same value), push direct pairs. Otherwise, push flipped pairs.
+    - Pop a pair of nodes.
+    - If either is `null`, verify both are `null`. If not, return `false`.
+    - If their values differ, return `false`.
+    - Determine child pairing: if left children match (both `null` or same value), push direct pairs. Otherwise, push flipped pairs.
 3. Return `true` if all pairs are processed successfully.
 
 ::tabs-start
@@ -1014,6 +1088,44 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn flip_equiv(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> bool {
+        let mut stack = vec![(root1, root2)];
+
+        while let Some((n1, n2)) = stack.pop() {
+            match (&n1, &n2) {
+                (None, None) => continue,
+                (Some(_), None) | (None, Some(_)) => return false,
+                (Some(a), Some(b)) => {
+                    let a = a.borrow();
+                    let b = b.borrow();
+                    if a.val != b.val {
+                        return false;
+                    }
+
+                    let a_left_val = a.left.as_ref().map(|n| n.borrow().val);
+                    let b_left_val = b.left.as_ref().map(|n| n.borrow().val);
+
+                    if a_left_val == b_left_val {
+                        stack.push((a.left.clone(), b.left.clone()));
+                        stack.push((a.right.clone(), b.right.clone()));
+                    } else {
+                        stack.push((a.left.clone(), b.right.clone()));
+                        stack.push((a.right.clone(), b.left.clone()));
+                    }
+                }
+            }
+        }
+
+        true
     }
 }
 ```

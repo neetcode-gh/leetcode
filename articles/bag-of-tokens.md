@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - The greedy approach requires sorting tokens to access smallest and largest values efficiently
 - **Two Pointers** - Used to track the smallest (left) and largest (right) tokens simultaneously
 - **Greedy Algorithms** - Understanding when local optimal choices lead to global optimal solutions
@@ -17,9 +19,9 @@ To maximize our score, we should be strategic about which tokens we play face-up
 1. Sort the tokens in ascending order.
 2. Use two pointers: `l` starts at the beginning, `r` at the end.
 3. While `l <= r`:
-   - If we have enough power to play `tokens[l]` face-up, do it (gain `1` score, lose that power). Update the maximum score seen.
-   - Else if we have at least `1` score, play `tokens[r]` face-down (lose `1` score, gain that power).
-   - Otherwise, we can't make any more moves, so break.
+    - If we have enough power to play `tokens[l]` face-up, do it (gain `1` score, lose that power). Update the maximum score seen.
+    - Else if we have at least `1` score, play `tokens[r]` face-down (lose `1` score, gain that power).
+    - Otherwise, we can't make any more moves, so break.
 4. Return the maximum score achieved.
 
 ::tabs-start
@@ -231,6 +233,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn bag_of_tokens_score(tokens: Vec<i32>, power: i32) -> i32 {
+        let mut tokens = tokens;
+        tokens.sort();
+        let mut res = 0;
+        let mut score = 0;
+        let mut l: i32 = 0;
+        let mut r: i32 = tokens.len() as i32 - 1;
+        let mut power = power;
+
+        while l <= r {
+            if power >= tokens[l as usize] {
+                power -= tokens[l as usize];
+                l += 1;
+                score += 1;
+                res = res.max(score);
+            } else if score > 0 {
+                power += tokens[r as usize];
+                r -= 1;
+                score -= 1;
+            } else {
+                break;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,7 +276,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Sort the Tokens
+
 The greedy approach only works on sorted tokens. Without sorting, you cannot guarantee playing the smallest token face-up and largest face-down.
+
 ```python
 # Wrong: using unsorted tokens
 l, r = 0, len(tokens) - 1
@@ -253,7 +288,9 @@ l, r = 0, len(tokens) - 1
 ```
 
 ### Playing Face-Down with Zero Score
+
 You cannot play a token face-down to gain power unless you have at least 1 score to spend. Attempting this leads to incorrect results.
+
 ```python
 # Wrong: no score check before face-down play
 else:
@@ -268,7 +305,9 @@ elif score > 0:
 ```
 
 ### Returning Current Score Instead of Maximum
+
 The score fluctuates as you play tokens face-down. You must track the maximum score achieved, not just the final score.
+
 ```python
 # Wrong: returning final score
 return score

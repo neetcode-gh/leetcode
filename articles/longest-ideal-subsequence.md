@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (1D)** - The core approach involves building optimal subsequences by tracking states for each character position
 - **Recursion with Memoization** - Understanding how to convert brute-force recursion into efficient top-down DP
 - **ASCII Character Manipulation** - Working with character codes to calculate alphabetical distances between letters
@@ -194,6 +196,26 @@ class Solution {
         }
 
         return dfs(0, -1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_ideal_string(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        fn dfs(s: &[u8], i: usize, prev: i32, k: i32) -> i32 {
+            if i == s.len() {
+                return 0;
+            }
+            let skip = dfs(s, i + 1, prev, k);
+            let mut include = 0;
+            if prev == -1 || (s[i] as i32 - prev).abs() <= k {
+                include = 1 + dfs(s, i + 1, s[i] as i32, k);
+            }
+            skip.max(include)
+        }
+        dfs(s, 0, -1, k)
     }
 }
 ```
@@ -476,6 +498,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_ideal_string(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![vec![-1i32; 27]; n];
+
+        fn dfs(s: &[u8], dp: &mut Vec<Vec<i32>>, i: usize, prev: i32, k: i32) -> i32 {
+            if i == s.len() {
+                return 0;
+            }
+            if dp[i][(prev + 1) as usize] != -1 {
+                return dp[i][(prev + 1) as usize];
+            }
+            let skip = dfs(s, dp, i + 1, prev, k);
+            let mut include = 0;
+            let c = (s[i] - b'a') as i32;
+            if prev == -1 || (c - prev).abs() <= k {
+                include = 1 + dfs(s, dp, i + 1, c, k);
+            }
+            dp[i][(prev + 1) as usize] = skip.max(include);
+            dp[i][(prev + 1) as usize]
+        }
+
+        dfs(s, &mut dp, 0, -1, k)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,10 +546,10 @@ We can fill a table iteratively instead of recursively. For each position `i` an
 
 1. Create a 2D array `dp[i][prev]` of size `(n+1)` x `26`.
 2. For each index `i` from `1` to `n`:
-   - Get the current character as an index `curr`.
-   - For each `prev` from `0` to `25`:
-     - Carry forward `dp[i-1][prev]` to `dp[i][prev]`.
-     - If `|curr - prev|` <= `k`, update `dp[i][curr]` = `max(dp[i][curr], 1 + dp[i-1][prev])`.
+    - Get the current character as an index `curr`.
+    - For each `prev` from `0` to `25`:
+        - Carry forward `dp[i-1][prev]` to `dp[i][prev]`.
+        - If `|curr - prev|` <= `k`, update `dp[i][curr]` = `max(dp[i][curr], 1 + dp[i-1][prev])`.
 3. Return the maximum value in `dp[n]`.
 
 ::tabs-start
@@ -697,6 +748,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_ideal_string(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![vec![0i32; 26]; n + 1];
+
+        for i in 1..=n {
+            let curr = (s[i - 1] - b'a') as usize;
+            for prev in 0..26 {
+                dp[i][prev] = dp[i][prev].max(dp[i - 1][prev]);
+                if (curr as i32 - prev as i32).abs() <= k {
+                    dp[i][curr] = dp[i][curr].max(1 + dp[i - 1][prev]);
+                }
+            }
+        }
+
+        *dp[n].iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -716,9 +789,9 @@ Since we only need to know the longest subsequence ending at each character, we 
 
 1. Initialize an array `dp` of size 26 with zeros.
 2. For each character `c` in the string:
-   - Convert `c` to index `curr`.
-   - Find the maximum value in `dp[prev]` for all `prev` where `|curr - prev| <= k`.
-   - Set `dp[curr] = max(dp[curr], 1 + maxFound)`.
+    - Convert `c` to index `curr`.
+    - Find the maximum value in `dp[prev]` for all `prev` where `|curr - prev| <= k`.
+    - Set `dp[curr] = max(dp[curr], 1 + maxFound)`.
 3. Return the maximum value in `dp`.
 
 ::tabs-start
@@ -911,6 +984,27 @@ class Solution {
         }
 
         return dp.max() ?? 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_ideal_string(s: String, k: i32) -> i32 {
+        let mut dp = [0i32; 26];
+
+        for &c in s.as_bytes() {
+            let curr = (c - b'a') as i32;
+            let mut longest = 1;
+            for prev in 0..26i32 {
+                if (curr - prev).abs() <= k {
+                    longest = longest.max(1 + dp[prev as usize]);
+                }
+            }
+            dp[curr as usize] = dp[curr as usize].max(longest);
+        }
+
+        *dp.iter().max().unwrap()
     }
 }
 ```

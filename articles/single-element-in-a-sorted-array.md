@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - The optimal solution uses binary search on a sorted array to achieve O(log n) time complexity
 - **Bit Manipulation (XOR)** - Understanding that a ^ a = 0 and a ^ 0 = a enables an elegant O(n) solution
 - **Array Index Parity** - Recognizing how pairs align at even/odd indices helps determine which half contains the single element
@@ -149,6 +151,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_non_duplicate(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        for i in 0..n {
+            if (i > 0 && nums[i] == nums[i - 1])
+                || (i < n - 1 && nums[i] == nums[i + 1])
+            {
+                continue;
+            }
+            return nums[i];
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -268,6 +287,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_non_duplicate(nums: Vec<i32>) -> i32 {
+        let mut xorr = 0;
+        for num in &nums {
+            xorr ^= num;
+        }
+        xorr
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -287,11 +318,11 @@ Since the array is sorted and every element except one appears twice, we can use
 
 1. Initialize two pointers `l` and `r` at the start and end of the array.
 2. While `l <= r`:
-   - Compute the middle index `m`.
-   - If `nums[m]` differs from both neighbors, return `nums[m]`.
-   - Calculate the size of the left portion (excluding the pair containing `m`).
-   - If the left size is odd, the single element is on the left; move `r` to `m - 1`.
-   - Otherwise, the single element is on the right; move `l` to `m + 1`.
+    - Compute the middle index `m`.
+    - If `nums[m]` differs from both neighbors, return `nums[m]`.
+    - Calculate the size of the left portion (excluding the pair containing `m`).
+    - If the left size is odd, the single element is on the left; move `r` to `m - 1`.
+    - Otherwise, the single element is on the right; move `l` to `m + 1`.
 3. Return the found element.
 
 ::tabs-start
@@ -502,6 +533,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_non_duplicate(nums: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+            if (m - 1 < 0 || nums[(m - 1) as usize] != nums[m as usize])
+                && (m + 1 == nums.len() as i32 || nums[m as usize] != nums[(m + 1) as usize])
+            {
+                return nums[m as usize];
+            }
+
+            let left_size = if m - 1 >= 0 && nums[(m - 1) as usize] == nums[m as usize] {
+                m - 1
+            } else {
+                m
+            };
+            if left_size % 2 == 1 {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -521,9 +582,9 @@ We can simplify binary search by only considering even indices. In a valid array
 
 1. Initialize `l = 0` and `r = n - 1`.
 2. While `l < r`:
-   - Compute the middle index `m`. If `m` is odd, decrement it to make it even.
-   - If `nums[m] != nums[m + 1]`, the single element is at or before `m`; set `r = m`.
-   - Otherwise, the single element is after `m`; set `l = m + 2`.
+    - Compute the middle index `m`. If `m` is odd, decrement it to make it even.
+    - If `nums[m] != nums[m + 1]`, the single element is at or before `m`; set `r = m`.
+    - Otherwise, the single element is after `m`; set `l = m + 2`.
 3. Return `nums[l]`.
 
 ::tabs-start
@@ -704,6 +765,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_non_duplicate(nums: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len() - 1);
+
+        while l < r {
+            let mut m = l + (r - l) / 2;
+            if m & 1 == 1 {
+                m -= 1;
+            }
+            if nums[m] != nums[m + 1] {
+                r = m;
+            } else {
+                l = m + 2;
+            }
+        }
+
+        nums[l]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -723,9 +806,9 @@ We can use XOR with `1` to elegantly find the pair index. For even indices, `m ^
 
 1. Initialize `l = 0` and `r = n - 1`.
 2. While `l < r`:
-   - Compute the middle index `m`.
-   - If `nums[m] != nums[m ^ 1]`, the single element is at or before `m`; set `r = m`.
-   - Otherwise, the single element is after `m`; set `l = m + 1`.
+    - Compute the middle index `m`.
+    - If `nums[m] != nums[m ^ 1]`, the single element is at or before `m`; set `r = m`.
+    - Otherwise, the single element is after `m`; set `l = m + 1`.
 3. Return `nums[l]`.
 
 ::tabs-start
@@ -879,6 +962,25 @@ class Solution {
         }
 
         return nums[l]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn single_non_duplicate(nums: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len() - 1);
+
+        while l < r {
+            let m = (l + r) >> 1;
+            if nums[m] != nums[m ^ 1] {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        nums[l]
     }
 }
 ```

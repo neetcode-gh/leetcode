@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Building permutations by exploring choices and undoing them
 - **Recursion** - The recursive nature of generating all permutations
 - **Hash Set / Hash Map** - Tracking duplicates or counting element frequencies
@@ -20,11 +22,11 @@ We mark elements as "used" by temporarily replacing them with a sentinel value, 
 
 1. Initialize an empty set to store unique permutations.
 2. Use backtracking to build permutations:
-   - If the current permutation has the same length as `nums`, add it to the set.
-   - Otherwise, iterate through `nums` and for each unused element:
-     - Mark it as used (replace with sentinel value).
-     - Add it to the current permutation and recurse.
-     - Restore the original value and remove it from the permutation.
+    - If the current permutation has the same length as `nums`, add it to the set.
+    - Otherwise, iterate through `nums` and for each unused element:
+        - Mark it as used (replace with sentinel value).
+        - Add it to the current permutation and recurse.
+        - Restore the original value and remove it from the permutation.
 3. Return all unique permutations from the set.
 
 ::tabs-start
@@ -277,6 +279,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn permute_unique(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res = HashSet::new();
+        let mut nums = nums;
+        let n = nums.len();
+        let mut perm = Vec::new();
+        fn backtrack(nums: &mut Vec<i32>, perm: &mut Vec<i32>, n: usize, res: &mut HashSet<Vec<i32>>) {
+            if perm.len() == n {
+                res.insert(perm.clone());
+                return;
+            }
+            for i in 0..n {
+                if nums[i] != i32::MIN {
+                    let temp = nums[i];
+                    perm.push(nums[i]);
+                    nums[i] = i32::MIN;
+                    backtrack(nums, perm, n, res);
+                    nums[i] = temp;
+                    perm.pop();
+                }
+            }
+        }
+        backtrack(&mut nums, &mut perm, n, &mut res);
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -298,11 +329,11 @@ When we decrement a count to zero, that number is no longer available for deeper
 
 1. Build a frequency map counting occurrences of each number in `nums`.
 2. Use backtracking to build permutations:
-   - If the current permutation has the same length as `nums`, add a copy to the result.
-   - Otherwise, iterate through each unique number in the frequency map:
-     - If its count is greater than `0`, add it to the permutation and decrement the count.
-     - Recurse to fill the next position.
-     - Increment the count back and remove the number from the permutation.
+    - If the current permutation has the same length as `nums`, add a copy to the result.
+    - Otherwise, iterate through each unique number in the frequency map:
+        - If its count is greater than `0`, add it to the permutation and decrement the count.
+        - Recurse to fill the next position.
+        - Increment the count back and remove the number from the permutation.
 3. Return all permutations.
 
 ::tabs-start
@@ -582,6 +613,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn permute_unique(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+        let keys: Vec<i32> = count.keys().copied().collect();
+        let n = nums.len();
+        let mut perm = Vec::new();
+        fn dfs(keys: &[i32], count: &mut HashMap<i32, i32>, perm: &mut Vec<i32>, n: usize, res: &mut Vec<Vec<i32>>) {
+            if perm.len() == n {
+                res.push(perm.clone());
+                return;
+            }
+            for &num in keys {
+                if *count.get(&num).unwrap() > 0 {
+                    perm.push(num);
+                    *count.get_mut(&num).unwrap() -= 1;
+                    dfs(keys, count, perm, n, res);
+                    *count.get_mut(&num).unwrap() += 1;
+                    perm.pop();
+                }
+            }
+        }
+        dfs(&keys, &mut count, &mut perm, n, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,12 +667,12 @@ A boolean array tracks which indices are currently in use during backtracking.
 1. Sort `nums` so duplicates are adjacent.
 2. Create a boolean array `visit` to track used indices.
 3. Use backtracking to build permutations:
-   - If the current permutation has the same length as `nums`, add a copy to the result.
-   - Otherwise, iterate through each index:
-     - Skip if already visited.
-     - Skip if this element equals the previous one and the previous one is not visited (to avoid duplicates).
-     - Mark the index as visited, add the element to the permutation, and recurse.
-     - Unmark the index and remove the element from the permutation.
+    - If the current permutation has the same length as `nums`, add a copy to the result.
+    - Otherwise, iterate through each index:
+        - Skip if already visited.
+        - Skip if this element equals the previous one and the previous one is not visited (to avoid duplicates).
+        - Mark the index as visited, add the element to the permutation, and recurse.
+        - Unmark the index and remove the element from the permutation.
 4. Return all permutations.
 
 ::tabs-start
@@ -890,6 +953,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn permute_unique(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        nums.sort();
+        let n = nums.len();
+        let mut res = Vec::new();
+        let mut visit = vec![false; n];
+        let mut perm = Vec::new();
+        fn dfs(nums: &[i32], visit: &mut Vec<bool>, perm: &mut Vec<i32>, n: usize, res: &mut Vec<Vec<i32>>) {
+            if perm.len() == n {
+                res.push(perm.clone());
+                return;
+            }
+            for i in 0..n {
+                if visit[i] {
+                    continue;
+                }
+                if i > 0 && nums[i] == nums[i - 1] && !visit[i - 1] {
+                    continue;
+                }
+                visit[i] = true;
+                perm.push(nums[i]);
+                dfs(nums, visit, perm, n, res);
+                visit[i] = false;
+                perm.pop();
+            }
+        }
+        dfs(&nums, &mut visit, &mut perm, n, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -911,11 +1007,11 @@ After each recursive call, we restore the array to its sorted state for position
 
 1. Sort `nums` so duplicates are adjacent.
 2. Use backtracking starting at index `0`:
-   - If index `i` equals the length of `nums`, add a copy of `nums` to the result.
-   - Otherwise, for each index `j` from `i` to the end:
-     - Skip if `j > i` and `nums[j]` equals `nums[i]` (duplicate at this position).
-     - Swap `nums[i]` and `nums[j]`, then recurse with `i + 1`.
-   - After the loop, restore the array by reverse-swapping elements back from the end to `i + 1`.
+    - If index `i` equals the length of `nums`, add a copy of `nums` to the result.
+    - Otherwise, for each index `j` from `i` to the end:
+        - Skip if `j > i` and `nums[j]` equals `nums[i]` (duplicate at this position).
+        - Swap `nums[i]` and `nums[j]`, then recurse with `i + 1`.
+    - After the loop, restore the array by reverse-swapping elements back from the end to `i + 1`.
 3. Return all permutations.
 
 ::tabs-start
@@ -1173,6 +1269,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn permute_unique(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        nums.sort();
+        let mut res = Vec::new();
+        let n = nums.len();
+        fn dfs(i: usize, nums: &mut Vec<i32>, n: usize, res: &mut Vec<Vec<i32>>) {
+            if i == n {
+                res.push(nums.clone());
+                return;
+            }
+            for j in i..n {
+                if j > i && nums[j] == nums[i] {
+                    continue;
+                }
+                nums.swap(i, j);
+                dfs(i + 1, nums, n, res);
+            }
+            for j in (i + 1..n).rev() {
+                nums.swap(i, j);
+            }
+        }
+        dfs(0, &mut nums, n, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1195,11 +1319,11 @@ Since we generate permutations in strict order, duplicates in the input naturall
 1. Sort `nums` to get the lexicographically smallest permutation.
 2. Add a copy of `nums` to the result.
 3. Repeat until we return to the starting permutation:
-   - Find the largest index `i` such that `nums[i] < nums[i + 1]`. If no such index exists, we have the last permutation.
-   - Find the largest index `j` such that `nums[j] > nums[i]`.
-   - Swap `nums[i]` and `nums[j]`.
-   - Reverse the subarray from `i + 1` to the end.
-   - Add a copy of `nums` to the result.
+    - Find the largest index `i` such that `nums[i] < nums[i + 1]`. If no such index exists, we have the last permutation.
+    - Find the largest index `j` such that `nums[j] > nums[i]`.
+    - Swap `nums[i]` and `nums[j]`.
+    - Reverse the subarray from `i + 1` to the end.
+    - Add a copy of `nums` to the result.
 4. Return all permutations.
 
 ::tabs-start
@@ -1502,6 +1626,34 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn permute_unique(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        nums.sort();
+        let n = nums.len();
+        let mut res = vec![nums.clone()];
+        loop {
+            let mut i = n as i32 - 2;
+            while i >= 0 && nums[i as usize] >= nums[i as usize + 1] {
+                i -= 1;
+            }
+            if i < 0 {
+                break;
+            }
+            let i = i as usize;
+            let mut j = n - 1;
+            while nums[j] <= nums[i] {
+                j -= 1;
+            }
+            nums.swap(i, j);
+            nums[i + 1..].reverse();
+            res.push(nums.clone());
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Using boolean arrays to track state and linear scanning for finding elements
 - **Heap / Priority Queue** - Understanding min-heap operations for efficient retrieval of the smallest element
 - **Ordered Set** - Using balanced binary search trees (TreeSet, SortedSet) for maintaining sorted elements with efficient min retrieval
@@ -16,11 +18,11 @@ The simplest way to manage seat reservations is to track each seat's status with
 
 1. Initialize a boolean array `seats` of size `n`, where `false` means unreserved.
 2. For `reserve()`:
-   - Scan through the array from index `0`.
-   - Find the first seat that is `false` (unreserved).
-   - Mark it as `true` (reserved) and return the seat number (index + 1).
+    - Scan through the array from index `0`.
+    - Find the first seat that is `false` (unreserved).
+    - Mark it as `true` (reserved) and return the seat number (index + 1).
 3. For `unreserve(seatNumber)`:
-   - Mark `seats[seatNumber - 1]` as `false`.
+    - Mark `seats[seatNumber - 1]` as `false`.
 
 ::tabs-start
 
@@ -211,6 +213,34 @@ class SeatManager {
 }
 ```
 
+```rust
+struct SeatManager {
+    seats: Vec<bool>,
+}
+
+impl SeatManager {
+    fn new(n: i32) -> Self {
+        SeatManager {
+            seats: vec![false; n as usize],
+        }
+    }
+
+    fn reserve(&mut self) -> i32 {
+        for i in 0..self.seats.len() {
+            if !self.seats[i] {
+                self.seats[i] = true;
+                return i as i32 + 1;
+            }
+        }
+        -1
+    }
+
+    fn unreserve(&mut self, seat_number: i32) {
+        self.seats[seat_number as usize - 1] = false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -233,9 +263,9 @@ To efficiently retrieve the smallest available seat, we can use a min-heap. By i
 
 1. Initialize a min-heap with all seat numbers from 1 to `n`.
 2. For `reserve()`:
-   - Pop and return the minimum element from the heap.
+    - Pop and return the minimum element from the heap.
 3. For `unreserve(seatNumber)`:
-   - Push `seatNumber` back into the heap.
+    - Push `seatNumber` back into the heap.
 
 ::tabs-start
 
@@ -429,6 +459,30 @@ class SeatManager {
 }
 ```
 
+```rust
+struct SeatManager {
+    unres: BinaryHeap<Reverse<i32>>,
+}
+
+impl SeatManager {
+    fn new(n: i32) -> Self {
+        let mut unres = BinaryHeap::new();
+        for i in 1..=n {
+            unres.push(Reverse(i));
+        }
+        SeatManager { unres }
+    }
+
+    fn reserve(&mut self) -> i32 {
+        self.unres.pop().unwrap().0
+    }
+
+    fn unreserve(&mut self, seat_number: i32) {
+        self.unres.push(Reverse(seat_number));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,10 +505,10 @@ Rather than pre-populating the heap with all `n` seats, we can lazily assign sea
 
 1. Initialize an empty min-heap and set `nextSeat = 1`.
 2. For `reserve()`:
-   - If the heap is not empty, pop and return the minimum.
-   - Otherwise, return `nextSeat` and increment it.
+    - If the heap is not empty, pop and return the minimum.
+    - Otherwise, return `nextSeat` and increment it.
 3. For `unreserve(seatNumber)`:
-   - Push `seatNumber` into the heap.
+    - Push `seatNumber` into the heap.
 
 ::tabs-start
 
@@ -666,6 +720,35 @@ class SeatManager {
 }
 ```
 
+```rust
+struct SeatManager {
+    min_heap: BinaryHeap<Reverse<i32>>,
+    next_seat: i32,
+}
+
+impl SeatManager {
+    fn new(_n: i32) -> Self {
+        SeatManager {
+            min_heap: BinaryHeap::new(),
+            next_seat: 1,
+        }
+    }
+
+    fn reserve(&mut self) -> i32 {
+        if let Some(Reverse(seat)) = self.min_heap.pop() {
+            return seat;
+        }
+        let seat = self.next_seat;
+        self.next_seat += 1;
+        seat
+    }
+
+    fn unreserve(&mut self, seat_number: i32) {
+        self.min_heap.push(Reverse(seat_number));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -688,10 +771,10 @@ An ordered set (like TreeSet or SortedSet) keeps elements sorted and allows effi
 
 1. Initialize an empty ordered set `available` and set `nextSeat = 1`.
 2. For `reserve()`:
-   - If the set is not empty, remove and return the smallest element.
-   - Otherwise, return `nextSeat` and increment it.
+    - If the set is not empty, remove and return the smallest element.
+    - Otherwise, return `nextSeat` and increment it.
 3. For `unreserve(seatNumber)`:
-   - Add `seatNumber` to the set.
+    - Add `seatNumber` to the set.
 
 ::tabs-start
 
@@ -863,6 +946,36 @@ class SeatManager {
 
     func unreserve(_ seatNumber: Int) {
         available.insert(seatNumber)
+    }
+}
+```
+
+```rust
+struct SeatManager {
+    available: BTreeSet<i32>,
+    next_seat: i32,
+}
+
+impl SeatManager {
+    fn new(_n: i32) -> Self {
+        SeatManager {
+            available: BTreeSet::new(),
+            next_seat: 1,
+        }
+    }
+
+    fn reserve(&mut self) -> i32 {
+        if let Some(&seat) = self.available.iter().next() {
+            self.available.remove(&seat);
+            return seat;
+        }
+        let seat = self.next_seat;
+        self.next_seat += 1;
+        seat
+    }
+
+    fn unreserve(&mut self, seat_number: i32) {
+        self.available.insert(seat_number);
     }
 }
 ```

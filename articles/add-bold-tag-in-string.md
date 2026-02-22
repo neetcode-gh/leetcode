@@ -321,6 +321,41 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn add_bold_tag(s: String, words: Vec<String>) -> String {
+        let n = s.len();
+        let mut bold = vec![false; n];
+
+        for word in &words {
+            let mut start = 0;
+            while let Some(pos) = s[start..].find(word.as_str()) {
+                let idx = start + pos;
+                for i in idx..idx + word.len() {
+                    bold[i] = true;
+                }
+                start = idx + 1;
+            }
+        }
+
+        let s = s.as_bytes();
+        let mut ans = String::new();
+
+        for i in 0..n {
+            if bold[i] && (i == 0 || !bold[i - 1]) {
+                ans.push_str("<b>");
+            }
+            ans.push(s[i] as char);
+            if bold[i] && (i == n - 1 || !bold[i + 1]) {
+                ans.push_str("</b>");
+            }
+        }
+
+        ans
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

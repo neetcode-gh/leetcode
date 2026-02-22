@@ -228,6 +228,33 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let n = nums.len();
+        let mut nums = nums;
+        nums.sort();
+        let mut res = std::collections::HashSet::new();
+
+        for a in 0..n {
+            for b in (a + 1)..n {
+                for c in (b + 1)..n {
+                    for d in (c + 1)..n {
+                        let sum = nums[a] as i64 + nums[b] as i64
+                            + nums[c] as i64 + nums[d] as i64;
+                        if sum == target as i64 {
+                            res.insert(vec![nums[a], nums[b], nums[c], nums[d]]);
+                        }
+                    }
+                }
+            }
+        }
+
+        res.into_iter().collect()
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -620,6 +647,54 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut count = std::collections::HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+        let mut res = Vec::new();
+
+        for i in 0..nums.len() {
+            *count.get_mut(&nums[i]).unwrap() -= 1;
+            if i > 0 && nums[i] == nums[i - 1] { continue; }
+
+            for j in (i + 1)..nums.len() {
+                *count.get_mut(&nums[j]).unwrap() -= 1;
+                if j > i + 1 && nums[j] == nums[j - 1] { continue; }
+
+                for k in (j + 1)..nums.len() {
+                    *count.get_mut(&nums[k]).unwrap() -= 1;
+                    if k > j + 1 && nums[k] == nums[k - 1] { continue; }
+
+                    let fourth = target as i64 - nums[i] as i64
+                        - nums[j] as i64 - nums[k] as i64;
+                    if fourth >= i32::MIN as i64 && fourth <= i32::MAX as i64 {
+                        let fourth = fourth as i32;
+                        if *count.get(&fourth).unwrap_or(&0) > 0 {
+                            res.push(vec![nums[i], nums[j], nums[k], fourth]);
+                        }
+                    }
+                }
+
+                for k in (j + 1)..nums.len() {
+                    *count.get_mut(&nums[k]).unwrap() += 1;
+                }
+            }
+
+            for j in (i + 1)..nums.len() {
+                *count.get_mut(&nums[j]).unwrap() += 1;
+            }
+        }
+
+        res
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -952,6 +1027,50 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res = Vec::new();
+        let n = nums.len();
+
+        for i in 0..n {
+            if i > 0 && nums[i] == nums[i - 1] { continue; }
+
+            for j in (i + 1)..n {
+                if j > i + 1 && nums[j] == nums[j - 1] { continue; }
+
+                let mut left = j + 1;
+                let mut right = n as i32 - 1;
+                while (left as i32) < right {
+                    let r = right as usize;
+                    let sum = nums[i] as i64 + nums[j] as i64
+                        + nums[left] as i64 + nums[r] as i64;
+                    if sum == target as i64 {
+                        res.push(vec![nums[i], nums[j], nums[left], nums[r]]);
+                        left += 1;
+                        right -= 1;
+                        while (left as i32) < right && nums[left] == nums[left - 1] {
+                            left += 1;
+                        }
+                        while (left as i32) < right && nums[right as usize] == nums[right as usize + 1] {
+                            right -= 1;
+                        }
+                    } else if sum < target as i64 {
+                        left += 1;
+                    } else {
+                        right -= 1;
+                    }
+                }
+            }
+        }
+
+        res
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1339,6 +1458,55 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn four_sum(nums: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res = Vec::new();
+        let mut quad = Vec::new();
+        Self::k_sum(&nums, 4, 0, target as i64, &mut quad, &mut res);
+        res
+    }
+
+    fn k_sum(
+        nums: &[i32], k: usize, start: usize, target: i64,
+        quad: &mut Vec<i32>, res: &mut Vec<Vec<i32>>,
+    ) {
+        if k == 2 {
+            let mut l = start;
+            let mut r = nums.len() as i64 - 1;
+            while (l as i64) < r {
+                let ru = r as usize;
+                let sum = nums[l] as i64 + nums[ru] as i64;
+                if sum < target {
+                    l += 1;
+                } else if sum > target {
+                    r -= 1;
+                } else {
+                    let mut q = quad.clone();
+                    q.push(nums[l]);
+                    q.push(nums[ru]);
+                    res.push(q);
+                    l += 1;
+                    r -= 1;
+                    while (l as i64) < r && nums[l] == nums[l - 1] { l += 1; }
+                    while (l as i64) < r && nums[r as usize] == nums[r as usize + 1] { r -= 1; }
+                }
+            }
+            return;
+        }
+
+        for i in start..=(nums.len().saturating_sub(k)) {
+            if i > start && nums[i] == nums[i - 1] { continue; }
+            quad.push(nums[i]);
+            Self::k_sum(nums, k - 1, i + 1, target - nums[i] as i64, quad, res);
+            quad.pop();
+        }
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

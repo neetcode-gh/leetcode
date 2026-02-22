@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - O(1) key-value lookups for storing cache entries
 - **Doubly Linked Lists** - O(1) insertion and deletion for maintaining element order
 - **LRU Cache Concept** - Understanding eviction based on recency (this problem extends it with frequency)
@@ -490,6 +492,69 @@ class LFUCache {
         }
 
         cache[key] = Node(value, 1, timestamp)
+    }
+}
+```
+
+```rust
+use std::collections::HashMap;
+
+struct LFUCache {
+    capacity: usize,
+    timestamp: i32,
+    cache: HashMap<i32, (i32, i32, i32)>, // key -> (value, freq, timestamp)
+}
+
+impl LFUCache {
+    fn new(capacity: i32) -> Self {
+        LFUCache {
+            capacity: capacity as usize,
+            timestamp: 0,
+            cache: HashMap::new(),
+        }
+    }
+
+    fn get(&mut self, key: i32) -> i32 {
+        if let Some(entry) = self.cache.get_mut(&key) {
+            entry.1 += 1;
+            self.timestamp += 1;
+            entry.2 = self.timestamp;
+            entry.0
+        } else {
+            -1
+        }
+    }
+
+    fn put(&mut self, key: i32, value: i32) {
+        if self.capacity == 0 {
+            return;
+        }
+
+        self.timestamp += 1;
+        if let Some(entry) = self.cache.get_mut(&key) {
+            entry.0 = value;
+            entry.1 += 1;
+            entry.2 = self.timestamp;
+            return;
+        }
+
+        if self.cache.len() >= self.capacity {
+            let mut min_freq = i32::MAX;
+            let mut min_ts = i32::MAX;
+            let mut lfu_key = -1;
+
+            for (&k, &(_, freq, ts)) in &self.cache {
+                if freq < min_freq || (freq == min_freq && ts < min_ts) {
+                    min_freq = freq;
+                    min_ts = ts;
+                    lfu_key = k;
+                }
+            }
+
+            self.cache.remove(&lfu_key);
+        }
+
+        self.cache.insert(key, (value, 1, self.timestamp));
     }
 }
 ```
@@ -1433,6 +1498,130 @@ class LFUCache {
             lfuCount = 0
         }
         counter(key)
+    }
+}
+```
+
+```rust
+use std::collections::HashMap;
+
+struct DLNode {
+    val: i32,
+    prev: usize,
+    next: usize,
+}
+
+struct DoublyLinkedList {
+    nodes: Vec<DLNode>,
+    left: usize,
+    right: usize,
+    map: HashMap<i32, usize>,
+}
+
+impl DoublyLinkedList {
+    fn new() -> Self {
+        let nodes = vec![
+            DLNode { val: 0, prev: 0, next: 1 }, // sentinel left (index 0)
+            DLNode { val: 0, prev: 0, next: 1 }, // sentinel right (index 1)
+        ];
+        DoublyLinkedList {
+            nodes,
+            left: 0,
+            right: 1,
+            map: HashMap::new(),
+        }
+    }
+
+    fn length(&self) -> usize {
+        self.map.len()
+    }
+
+    fn push_right(&mut self, val: i32) {
+        let prev = self.nodes[self.right].prev;
+        let idx = self.nodes.len();
+        self.nodes.push(DLNode { val, prev, next: self.right });
+        self.map.insert(val, idx);
+        self.nodes[prev].next = idx;
+        self.nodes[self.right].prev = idx;
+    }
+
+    fn pop(&mut self, val: i32) {
+        if let Some(&idx) = self.map.get(&val) {
+            let prev = self.nodes[idx].prev;
+            let next = self.nodes[idx].next;
+            self.nodes[prev].next = next;
+            self.nodes[next].prev = prev;
+            self.map.remove(&val);
+        }
+    }
+
+    fn pop_left(&mut self) -> i32 {
+        let left_next = self.nodes[self.left].next;
+        let res = self.nodes[left_next].val;
+        self.pop(res);
+        res
+    }
+}
+
+struct LFUCache {
+    capacity: usize,
+    lfu_count: i32,
+    val_map: HashMap<i32, i32>,
+    count_map: HashMap<i32, i32>,
+    list_map: HashMap<i32, DoublyLinkedList>,
+}
+
+impl LFUCache {
+    fn new(capacity: i32) -> Self {
+        let mut list_map = HashMap::new();
+        list_map.insert(0, DoublyLinkedList::new());
+        LFUCache {
+            capacity: capacity as usize,
+            lfu_count: 0,
+            val_map: HashMap::new(),
+            count_map: HashMap::new(),
+            list_map,
+        }
+    }
+
+    fn counter(&mut self, key: i32) {
+        let count = *self.count_map.get(&key).unwrap();
+        self.count_map.insert(key, count + 1);
+
+        self.list_map.entry(count).or_insert_with(DoublyLinkedList::new).pop(key);
+        self.list_map.entry(count + 1).or_insert_with(DoublyLinkedList::new).push_right(key);
+
+        if count == self.lfu_count && self.list_map.get(&count).unwrap().length() == 0 {
+            self.lfu_count += 1;
+        }
+    }
+
+    fn get(&mut self, key: i32) -> i32 {
+        if !self.val_map.contains_key(&key) {
+            return -1;
+        }
+        self.counter(key);
+        *self.val_map.get(&key).unwrap()
+    }
+
+    fn put(&mut self, key: i32, value: i32) {
+        if self.capacity == 0 {
+            return;
+        }
+
+        if !self.val_map.contains_key(&key) && self.val_map.len() == self.capacity {
+            let to_remove = self.list_map.get_mut(&self.lfu_count).unwrap().pop_left();
+            self.val_map.remove(&to_remove);
+            self.count_map.remove(&to_remove);
+        }
+
+        self.val_map.insert(key, value);
+        if !self.count_map.contains_key(&key) {
+            self.count_map.insert(key, 0);
+            self.list_map.entry(0).or_insert_with(DoublyLinkedList::new).push_right(key);
+            self.lfu_count = 0;
+        }
+        self.counter(key);
     }
 }
 ```

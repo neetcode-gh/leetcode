@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Required to process intervals in order by start time for efficient merging
 - **Intervals** - Understanding how to represent, compare, and merge overlapping ranges
 - **Sweep Line Algorithm** - Alternative approach that tracks active intervals using events on a timeline
@@ -14,10 +16,12 @@ We are given a list of intervals, and some of them may **overlap**.
 The goal is to merge all overlapping intervals so that the final list contains only **non-overlapping intervals**, covering the same ranges.
 
 A natural way to approach this is:
+
 - if intervals are processed in **sorted order by start time**, then
 - any overlap can only happen with the **most recently added interval**
 
 So after sorting:
+
 - we keep track of the last merged interval
 - if the current interval overlaps with it, we merge them
 - otherwise, we start a new interval
@@ -29,10 +33,10 @@ So after sorting:
 3. Iterate through each interval `(start, end)` in the sorted list:
 4. Let `lastEnd` be the end of the last interval in `output`.
 5. If the current interval overlaps with the last one (`start <= lastEnd`):
-   - Merge them by updating the end:
-     - `output[-1][1] = max(lastEnd, end)`
+    - Merge them by updating the end:
+        - `output[-1][1] = max(lastEnd, end)`
 6. Otherwise (no overlap):
-   - Append the current interval to `output` as a new interval
+    - Append the current interval to `output` as a new interval
 7. After processing all intervals, return `output`
 
 ::tabs-start
@@ -221,6 +225,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut intervals = intervals;
+        intervals.sort_by_key(|v| v[0]);
+        let mut output: Vec<Vec<i32>> = vec![intervals[0].clone()];
+
+        for interval in &intervals {
+            let start = interval[0];
+            let end = interval[1];
+            let last_end = output.last().unwrap()[1];
+
+            if start <= last_end {
+                output.last_mut().unwrap()[1] = last_end.max(end);
+            } else {
+                output.push(vec![start, end]);
+            }
+        }
+        output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,12 +264,14 @@ class Solution {
 ### Intuition
 
 This approach treats each interval as a pair of **events** on a number line:
+
 - an interval **starts** at `start`
 - an interval **ends** at `end`
 
 Instead of merging intervals directly, we track **how many intervals are currently active** as we move from left to right along the number line.
 
 The key idea:
+
 - when the number of active intervals goes from `0 → positive`, a merged interval **starts**
 - when it goes from `positive → 0`, a merged interval **ends**
 
@@ -251,24 +280,24 @@ By recording how the count changes at each boundary and sweeping through them in
 ### Algorithm
 
 1. Create a map `mp` to store boundary changes:
-   - for each interval `[start, end]`:
-     - increment `mp[start]` (interval starts)
-     - decrement `mp[end]` (interval ends)
+    - for each interval `[start, end]`:
+        - increment `mp[start]` (interval starts)
+        - decrement `mp[end]` (interval ends)
 2. Initialize:
-   - `have = 0` to track how many intervals are currently active
-   - `interval = []` to build the current merged interval
-   - `res = []` to store the final merged intervals
+    - `have = 0` to track how many intervals are currently active
+    - `interval = []` to build the current merged interval
+    - `res = []` to store the final merged intervals
 3. Iterate through all keys in `mp` in **sorted order**:
 4. For each position `i`:
-   - If `interval` is empty, this position may mark the start of a new merged interval:
-     - set `interval = [i]`
-   - Update the active count:
-     - `have += mp[i]`
-   - If `have == 0`:
-     - all intervals have closed at this point
-     - append `i` as the end of the current merged interval
-     - add `interval` to `res`
-     - reset `interval` to empty
+    - If `interval` is empty, this position may mark the start of a new merged interval:
+        - set `interval = [i]`
+    - Update the active count:
+        - `have += mp[i]`
+    - If `have == 0`:
+        - all intervals have closed at this point
+        - append `i` as the end of the current merged interval
+        - add `interval` to `res`
+        - reset `interval` to empty
 5. After processing all events, return `res`
 
 ::tabs-start
@@ -509,6 +538,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut mp = BTreeMap::new();
+        for interval in &intervals {
+            *mp.entry(interval[0]).or_insert(0) += 1;
+            *mp.entry(interval[1]).or_insert(0) -= 1;
+        }
+
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        let mut interval: Vec<i32> = Vec::new();
+        let mut have = 0;
+
+        for (&key, &val) in &mp {
+            if interval.is_empty() {
+                interval.push(key);
+            }
+            have += val;
+            if have == 0 {
+                interval.push(key);
+                res.push(interval.clone());
+                interval.clear();
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,14 +583,17 @@ class Solution {
 We want to merge all overlapping intervals so the result contains only **non-overlapping ranges**.
 
 This solution uses a greedy idea with an auxiliary array:
+
 - For every possible start point `start`, we record the **farthest end** of any interval that begins at `start`
 - Then we scan from left to right, maintaining the farthest point we must still cover (`have`)
 
 While scanning:
+
 - if we see an interval starting at position `i`, we may need to extend our current merged interval’s end to include it
 - once our scan index reaches the farthest required end, we can safely close the current merged interval
 
 So the scan behaves like:
+
 - “start a merged interval when we first see coverage”
 - “keep extending its end while overlaps exist”
 - “close it when we finish the coverage”
@@ -541,20 +602,20 @@ So the scan behaves like:
 
 1. Find the maximum start value among all intervals (`max_val`).
 2. Create an array `mp` of size `max_val + 1`:
-   - `mp[start]` will store the farthest `(end + 1)` among intervals that start at `start`
+    - `mp[start]` will store the farthest `(end + 1)` among intervals that start at `start`
 3. For each interval `[start, end]`:
-   - update `mp[start] = max(mp[start], end + 1)`
+    - update `mp[start] = max(mp[start], end + 1)`
 4. Initialize:
-   - `res` as an empty list for merged intervals
-   - `interval_start = -1` to mark the start of the current merged interval
-   - `have = -1` to track the farthest end of the current merged interval
+    - `res` as an empty list for merged intervals
+    - `interval_start = -1` to mark the start of the current merged interval
+    - `have = -1` to track the farthest end of the current merged interval
 5. Scan `i` from `0` to `len(mp) - 1`:
-   - If `mp[i] != 0`, it means some interval starts at `i`:
-     - if we are not already in a merged interval, set `interval_start = i`
-     - update `have = max(have, mp[i] - 1)` (convert back to real end)
-   - If `have == i`, it means we reached the end of the current merged interval:
-     - append `[interval_start, have]` to `res`
-     - reset `interval_start` and `have`
+    - If `mp[i] != 0`, it means some interval starts at `i`:
+        - if we are not already in a merged interval, set `interval_start = i`
+        - update `have = max(have, mp[i] - 1)` (convert back to real end)
+    - If `have == i`, it means we reached the end of the current merged interval:
+        - append `[interval_start, have]` to `res`
+        - reset `interval_start` and `have`
 6. After the scan, if a merged interval is still open, append it to `res`.
 7. Return `res`.
 
@@ -876,6 +937,45 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge(intervals: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let max_val = intervals.iter().map(|v| v[0]).max().unwrap() as usize;
+
+        let mut mp = vec![0i32; max_val + 1];
+        for interval in &intervals {
+            let start = interval[0] as usize;
+            let end = interval[1];
+            mp[start] = mp[start].max(end + 1);
+        }
+
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        let mut have: i32 = -1;
+        let mut interval_start: i32 = -1;
+
+        for i in 0..mp.len() {
+            if mp[i] != 0 {
+                if interval_start == -1 {
+                    interval_start = i as i32;
+                }
+                have = have.max(mp[i] - 1);
+            }
+            if have == i as i32 {
+                res.push(vec![interval_start, have]);
+                have = -1;
+                interval_start = -1;
+            }
+        }
+
+        if interval_start != -1 {
+            res.push(vec![interval_start, have]);
+        }
+
+        res
     }
 }
 ```

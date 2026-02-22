@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, nodes, levels, and parent-child relationships
 - **Breadth First Search (BFS)** - Level-order traversal using a queue to process nodes level by level
 - **Depth First Search (DFS)** - Recursive and iterative tree traversal techniques
@@ -19,13 +21,13 @@ As we process each level, we track whether it is even or odd and verify that eve
 
 1. Initialize a queue with the `root` and a boolean `even = true` to track the current level type.
 2. For each level:
-   - Set `prev` to negative infinity (for even levels) or positive infinity (for odd levels).
-   - Process all nodes at this level:
-     - Check if the node's value has the correct parity for the level.
-     - Check if the value maintains the required ordering relative to `prev`.
-     - If either check fails, return `false`.
-     - Add the node's children to the queue and update `prev`.
-   - Toggle the `even` flag for the next level.
+    - Set `prev` to negative infinity (for even levels) or positive infinity (for odd levels).
+    - Process all nodes at this level:
+        - Check if the node's value has the correct parity for the level.
+        - Check if the value maintains the required ordering relative to `prev`.
+        - If either check fails, return `false`.
+        - Add the node's children to the queue and update `prev`.
+    - Toggle the `even` flag for the next level.
 3. If all levels pass, return `true`.
 
 ::tabs-start
@@ -367,6 +369,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_even_odd_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut even = true;
+        let mut q: VecDeque<Rc<RefCell<TreeNode>>> = VecDeque::new();
+        if let Some(r) = root {
+            q.push_back(r);
+        }
+
+        while !q.is_empty() {
+            let mut prev = if even { i32::MIN } else { i32::MAX };
+            let size = q.len();
+            for _ in 0..size {
+                let node_rc = q.pop_front().unwrap();
+                let node = node_rc.borrow();
+
+                if even && (node.val % 2 == 0 || node.val <= prev) {
+                    return false;
+                }
+                if !even && (node.val % 2 == 1 || node.val >= prev) {
+                    return false;
+                }
+
+                if let Some(ref left) = node.left {
+                    q.push_back(left.clone());
+                }
+                if let Some(ref right) = node.right {
+                    q.push_back(right.clone());
+                }
+                prev = node.val;
+            }
+            even = !even;
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,11 +428,11 @@ We maintain an array where `levels[i]` stores the most recently seen value at le
 
 1. Create a `levels` array to track the last value seen at each depth.
 2. Define a recursive DFS function that takes a node and its level:
-   - If the node is `null`, return `true`.
-   - Check if the node's value has the correct parity for the level. Return `false` if not.
-   - If this is the first node at this level, record its value.
-   - Otherwise, check the ordering constraint against `levels[level]`. Return `false` if violated, then update `levels[level]`.
-   - Recursively check the left and right children at `level + 1`.
+    - If the node is `null`, return `true`.
+    - Check if the node's value has the correct parity for the level. Return `false` if not.
+    - If this is the first node at this level, record its value.
+    - Otherwise, check the ordering constraint against `levels[level]`. Return `false` if violated, then update `levels[level]`.
+    - Recursively check the left and right children at `level + 1`.
 3. Return the result of calling DFS on the `root` at level `0`.
 
 ::tabs-start
@@ -745,6 +785,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_even_odd_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut levels: Vec<i32> = Vec::new();
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            level: usize,
+            levels: &mut Vec<i32>,
+        ) -> bool {
+            let node = match node {
+                Some(n) => n.borrow(),
+                None => return true,
+            };
+            let even = level % 2 == 0;
+            if (even && node.val % 2 == 0) || (!even && node.val % 2 == 1) {
+                return false;
+            }
+            if levels.len() == level {
+                levels.push(node.val);
+            } else {
+                if (even && node.val <= levels[level])
+                    || (!even && node.val >= levels[level])
+                {
+                    return false;
+                }
+                levels[level] = node.val;
+            }
+            dfs(&node.left, level + 1, levels)
+                && dfs(&node.right, level + 1, levels)
+        }
+
+        dfs(&root, 0, &mut levels)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -766,11 +843,11 @@ The same `levels` array tracks the last seen value at each depth. By pushing the
 
 1. Initialize a stack with `(root, 0)` and a `levels` array.
 2. While the stack is not empty:
-   - Pop a `(node, level)` pair.
-   - Check the parity constraint for the node's value. Return `false` if violated.
-   - If this is the first node at this level, append the value to `levels`.
-   - Otherwise, check the ordering constraint and update `levels[level]`. Return `false` if violated.
-   - Push the `right` child (if exists) then the `left` child (if exists) with `level + 1`.
+    - Pop a `(node, level)` pair.
+    - Check the parity constraint for the node's value. Return `false` if violated.
+    - If this is the first node at this level, append the value to `levels`.
+    - Otherwise, check the ordering constraint and update `levels[level]`. Return `false` if violated.
+    - Push the `right` child (if exists) then the `left` child (if exists) with `level + 1`.
 3. If processing completes without violations, return `true`.
 
 ::tabs-start
@@ -1145,6 +1222,48 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_even_odd_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut stack: Vec<(Rc<RefCell<TreeNode>>, usize)> = Vec::new();
+        let mut levels: Vec<i32> = Vec::new();
+
+        if let Some(r) = root {
+            stack.push((r, 0));
+        }
+
+        while let Some((node_rc, level)) = stack.pop() {
+            let node = node_rc.borrow();
+            let even = level % 2 == 0;
+
+            if (even && node.val % 2 == 0) || (!even && node.val % 2 == 1) {
+                return false;
+            }
+
+            if levels.len() == level {
+                levels.push(node.val);
+            } else {
+                if (even && node.val <= levels[level])
+                    || (!even && node.val >= levels[level])
+                {
+                    return false;
+                }
+                levels[level] = node.val;
+            }
+
+            if let Some(ref right) = node.right {
+                stack.push((right.clone(), level + 1));
+            }
+            if let Some(ref left) = node.left {
+                stack.push((left.clone(), level + 1));
+            }
+        }
+
+        true
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stacks** - Understanding LIFO behavior to reverse sequences of elements
 - **Greedy Algorithms** - Making locally optimal choices to achieve the lexicographically smallest result
 - **Array Manipulation** - In-place reversal of subarrays and two-pointer techniques
@@ -16,8 +18,8 @@ To produce the lexicographically smallest permutation, we want to place smaller 
 
 1. Initialize an empty result array and a stack.
 2. Iterate through positions `1` to `n`:
-   - If the character at position `i-1` is 'I', push `i` onto the stack, then pop all elements from the stack into the result.
-   - If the character is 'D', just push `i` onto the stack.
+    - If the character at position `i-1` is 'I', push `i` onto the stack, then pop all elements from the stack into the result.
+    - If the character is 'D', just push `i` onto the stack.
 3. After the loop, push `n+1` onto the stack and pop all remaining elements into the result.
 4. Return the result array.
 
@@ -259,6 +261,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_permutation(s: String) -> Vec<i32> {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = vec![0i32; n + 1];
+        let mut stack = Vec::new();
+        let mut j = 0;
+
+        for i in 1..=n {
+            if s[i - 1] == b'I' {
+                stack.push(i as i32);
+                while let Some(val) = stack.pop() {
+                    res[j] = val;
+                    j += 1;
+                }
+            } else {
+                stack.push(i as i32);
+            }
+        }
+
+        stack.push((n + 1) as i32);
+        while let Some(val) = stack.pop() {
+            res[j] = val;
+            j += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -266,7 +300,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of elements in the resultant arrangement
+> Where $n$ is the number of elements in the resultant arrangement
 
 ---
 
@@ -280,9 +314,9 @@ Start with the identity permutation `[1, 2, ..., n+1]`, which is already the sma
 
 1. Initialize the result array as `[1, 2, 3, ..., n+1]`.
 2. Iterate through the string:
-   - When a 'D' is encountered, find the end of the consecutive 'D' sequence.
-   - Reverse the subarray from the position before the first 'D' to the position after the last 'D'.
-   - Continue from after the reversed segment.
+    - When a 'D' is encountered, find the end of the consecutive 'D' sequence.
+    - Reverse the subarray from the position before the first 'D' to the position after the last 'D'.
+    - Continue from after the reversed segment.
 3. Return the modified result array.
 
 ::tabs-start
@@ -563,6 +597,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_permutation(s: String) -> Vec<i32> {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res: Vec<i32> = (1..=(n + 1) as i32).collect();
+
+        let mut i = 1;
+        while i <= n {
+            let j = i;
+            while i <= n && s[i - 1] == b'D' {
+                i += 1;
+            }
+            res[j - 1..i].reverse();
+            i += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -570,7 +626,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
 
->  Where $n$ is the size of the resultant array
+> Where $n$ is the size of the resultant array
 
 ---
 
@@ -584,9 +640,9 @@ We can build the result directly without explicitly reversing subarrays. For 'I'
 
 1. Initialize `result[0] = 1` and iterate through the string.
 2. For each position:
-   - If the character is 'I', set the default value for the current position.
-   - If the character is 'D', find the entire consecutive 'D' sequence.
-   - Fill the positions covered by this 'D' sequence with decreasing values.
+    - If the character is 'I', set the default value for the current position.
+    - If the character is 'D', find the entire consecutive 'D' sequence.
+    - Fill the positions covered by this 'D' sequence with decreasing values.
 3. Return the result array.
 
 ::tabs-start
@@ -839,6 +895,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_permutation(s: String) -> Vec<i32> {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = vec![0i32; n + 1];
+        res[0] = 1;
+        let mut i = 1;
+
+        while i <= n {
+            res[i] = (i + 1) as i32;
+            let j = i;
+
+            if s[i - 1] == b'D' {
+                while i <= n && s[i - 1] == b'D' {
+                    i += 1;
+                }
+                let mut k = j - 1;
+                let mut c = i as i32;
+                while k <= i - 1 {
+                    res[k] = c;
+                    k += 1;
+                    c -= 1;
+                }
+            } else {
+                i += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,7 +936,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$
 
->  Where $n$ is the size of the resultant array
+> Where $n$ is the size of the resultant array
 
 ## Common Pitfalls
 

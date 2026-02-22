@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Traversing and modifying arrays in both directions
 - **Greedy Algorithms** - Making locally optimal choices to achieve a global optimum
 - **Two-Pass Technique** - Processing data in multiple passes to satisfy multiple constraints
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 We process children left to right, adjusting candies to satisfy the constraint that higher-rated children get more candy than their neighbors. When we increase a child's candy count, we may violate the constraint with a previous child, so we propagate updates backward as needed. This approach ensures correctness but may revisit the same positions multiple times.
 
 ### Algorithm
+
 1. Initialize an array where each child starts with 1 candy.
 2. Iterate through adjacent pairs from left to right.
 3. If the current child has a higher rating than the previous one, give them one more candy than the previous child.
@@ -284,6 +288,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn candy(ratings: Vec<i32>) -> i32 {
+        let n = ratings.len();
+        let mut arr = vec![1; n];
+
+        for i in 0..n - 1 {
+            if ratings[i] == ratings[i + 1] {
+                continue;
+            }
+            if ratings[i + 1] > ratings[i] {
+                arr[i + 1] = arr[i] + 1;
+            } else if arr[i] == arr[i + 1] {
+                arr[i + 1] = arr[i];
+                arr[i] += 1;
+                for j in (0..i).rev() {
+                    if ratings[j] > ratings[j + 1] {
+                        if arr[j + 1] < arr[j] {
+                            break;
+                        }
+                        arr[j] += 1;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        arr.iter().sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,9 +333,11 @@ class Solution {
 ## 2. Greedy (Two Pass)
 
 ### Intuition
+
 We can handle left and right neighbors separately. First, scan left to right to ensure each child with a higher rating than their left neighbor gets more candy. Then, scan right to left to handle the right neighbor constraint. When adjusting for right neighbors, we take the maximum of the current value and what the right constraint requires, preserving the left constraint satisfaction.
 
 ### Algorithm
+
 1. Initialize an array where each child starts with 1 candy.
 2. First pass (left to right): if a child's rating is higher than their left neighbor's, set their candy count to one more than the left neighbor.
 3. Second pass (right to left): if a child's rating is higher than their right neighbor's, set their candy count to the maximum of its current value and one more than the right neighbor.
@@ -506,6 +545,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn candy(ratings: Vec<i32>) -> i32 {
+        let n = ratings.len();
+        let mut arr = vec![1; n];
+
+        for i in 1..n {
+            if ratings[i - 1] < ratings[i] {
+                arr[i] = arr[i - 1] + 1;
+            }
+        }
+
+        for i in (0..n - 1).rev() {
+            if ratings[i] > ratings[i + 1] {
+                arr[i] = arr[i].max(arr[i + 1] + 1);
+            }
+        }
+
+        arr.iter().sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -518,9 +580,11 @@ class Solution {
 ## 3. Greedy (One Pass)
 
 ### Intuition
+
 We can compute the result without storing candy counts for each child. The key insight is that ratings form a sequence of increasing and decreasing runs. For an increasing run of length `k`, we need 1+2+...+k extra candies above the base. For a decreasing run of length `k`, we also need 1+2+...+k extra candies. The peak between an increasing and decreasing run should belong to whichever run is longer.
 
 ### Algorithm
+
 1. Start with `n` candies (one per child as the base).
 2. Iterate through the ratings, skipping equal adjacent ratings.
 3. Count the length of each increasing run (consecutive ratings going up) and add the triangular number sum (1+2+...+`inc`) to the result.
@@ -811,6 +875,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn candy(ratings: Vec<i32>) -> i32 {
+        let n = ratings.len();
+        let mut res = n as i32;
+
+        let mut i = 1;
+        while i < n {
+            if ratings[i] == ratings[i - 1] {
+                i += 1;
+                continue;
+            }
+
+            let mut inc = 0;
+            while i < n && ratings[i] > ratings[i - 1] {
+                inc += 1;
+                res += inc;
+                i += 1;
+            }
+
+            let mut dec = 0;
+            while i < n && ratings[i] < ratings[i - 1] {
+                dec += 1;
+                res += dec;
+                i += 1;
+            }
+
+            res -= inc.min(dec);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -823,6 +922,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Giving Extra Candy for Equal Ratings
+
 Children with equal ratings do not need to have the same or related candy counts. Only strictly higher ratings require more candy than neighbors.
 
 ```python
@@ -832,9 +932,11 @@ if ratings[i] >= ratings[i - 1]:
 ```
 
 ### Only Considering One Direction
+
 A single left-to-right pass handles the left neighbor constraint but ignores the right neighbor. The two-pass approach ensures both constraints are satisfied.
 
 ### Not Taking Maximum in Second Pass
+
 In the right-to-left pass, simply setting `arr[i] = arr[i + 1] + 1` may violate the left neighbor constraint already established. You must take the maximum of the current value and the right constraint.
 
 ```python
@@ -845,4 +947,5 @@ arr[i] = max(arr[i], arr[i + 1] + 1)
 ```
 
 ### Off-by-One in Peak Handling (One-Pass Solution)
+
 When counting increasing and decreasing sequences, the peak element gets counted in both. Forgetting to subtract `min(inc, dec)` results in overcounting candies.

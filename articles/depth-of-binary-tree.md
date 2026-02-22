@@ -228,6 +228,32 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        match root {
+            None => 0,
+            Some(node) => {
+                let node = node.borrow();
+                1 + std::cmp::max(
+                    Self::max_depth(node.left.clone()),
+                    Self::max_depth(node.right.clone()),
+                )
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -558,6 +584,34 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut stack: Vec<(Option<Rc<RefCell<TreeNode>>>, i32)> = vec![(root, 1)];
+        let mut res = 0;
+
+        while let Some((node, depth)) = stack.pop() {
+            if let Some(n) = node {
+                let n = n.borrow();
+                res = res.max(depth);
+                stack.push((n.left.clone(), depth + 1));
+                stack.push((n.right.clone(), depth + 1));
+            }
+        }
+        res
     }
 }
 ```
@@ -916,6 +970,43 @@ class Solution {
             level += 1
         }
         return level
+    }
+}
+```
+
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+impl Solution {
+    pub fn max_depth(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut queue = VecDeque::new();
+        if let Some(r) = root {
+            queue.push_back(r);
+        }
+
+        let mut level = 0;
+        while !queue.is_empty() {
+            let size = queue.len();
+            for _ in 0..size {
+                let node = queue.pop_front().unwrap();
+                let node = node.borrow();
+                if let Some(ref left) = node.left {
+                    queue.push_back(left.clone());
+                }
+                if let Some(ref right) = node.right {
+                    queue.push_back(right.clone());
+                }
+            }
+            level += 1;
+        }
+        level
     }
 }
 ```

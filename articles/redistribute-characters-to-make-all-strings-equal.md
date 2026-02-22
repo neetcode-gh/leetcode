@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps (Dictionaries)** - Used to count character frequencies across all strings
 - **Modular Arithmetic** - Understanding divisibility to check if characters can be evenly distributed
 
@@ -190,6 +192,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn make_equal(words: Vec<String>) -> bool {
+        let mut char_cnt = HashMap::new();
+
+        for w in &words {
+            for c in w.chars() {
+                *char_cnt.entry(c).or_insert(0) += 1;
+            }
+        }
+
+        let n = words.len();
+        char_cnt.values().all(|&count| count % n == 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,9 +232,9 @@ When a character's frequency becomes divisible by `n`, it means that character c
 
 1. Create a frequency array of size 26 (for lowercase letters) and initialize a flag counter to 0.
 2. For each character encountered:
-   - If its current frequency is non-zero, increment it. If the new count is divisible by `n`, increment the flag.
-   - If its current frequency is zero, increment it to 1. If 1 is not divisible by `n`, decrement the flag.
-   - Take the frequency modulo `n` to keep values small.
+    - If its current frequency is non-zero, increment it. If the new count is divisible by `n`, increment the flag.
+    - If its current frequency is zero, increment it to 1. If 1 is not divisible by `n`, decrement the flag.
+    - Take the frequency modulo `n` to keep values small.
 3. Return `true` if the flag equals 0, meaning all characters have counts divisible by `n`.
 
 ::tabs-start
@@ -453,6 +472,36 @@ class Solution {
         }
 
         return flag == 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn make_equal(words: Vec<String>) -> bool {
+        let mut freq = [0i32; 26];
+        let mut flag = 0i32;
+        let n = words.len() as i32;
+
+        for w in &words {
+            for c in w.bytes() {
+                let i = (c - b'a') as usize;
+                if freq[i] != 0 {
+                    freq[i] += 1;
+                    if freq[i] % n == 0 {
+                        flag += 1;
+                    }
+                } else {
+                    freq[i] += 1;
+                    if freq[i] % n != 0 {
+                        flag -= 1;
+                    }
+                }
+                freq[i] %= n;
+            }
+        }
+
+        flag == 0
     }
 }
 ```

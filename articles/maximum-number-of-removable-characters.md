@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Efficiently searching a sorted or monotonic search space by halving the range
 - **Subsequence Checking (Two Pointers)** - Verifying if one string is a subsequence of another using two pointers
 - **Hash Set** - Tracking removed indices for O(1) lookup during subsequence validation
@@ -18,10 +20,10 @@ The simplest approach is to remove characters one at a time. After each removal,
 
 1. Maintain a set `marked` of indices that have been removed.
 2. Iterate through `removable`:
-   - Add the current index to `marked`.
-   - Check if `p` is a subsequence of `s` (skipping marked indices).
-   - If `p` is still a subsequence, increment the result counter.
-   - If not, break out of the loop.
+    - Add the current index to `marked`.
+    - Check if `p` is a subsequence of `s` (skipping marked indices).
+    - If `p` is still a subsequence, increment the result counter.
+    - If not, break out of the loop.
 3. Return the count of successful removals.
 
 ::tabs-start
@@ -225,6 +227,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_removals(s: String, p: String, removable: Vec<i32>) -> i32 {
+        let s = s.as_bytes();
+        let p = p.as_bytes();
+        let n = s.len();
+        let m = p.len();
+        let mut marked = HashSet::new();
+        let mut res = 0;
+
+        for &remove_idx in &removable {
+            marked.insert(remove_idx as usize);
+
+            let (mut s_idx, mut p_idx) = (0, 0);
+            while p_idx < m && s_idx < n {
+                if !marked.contains(&s_idx) && s[s_idx] == p[p_idx] {
+                    p_idx += 1;
+                }
+                s_idx += 1;
+            }
+
+            if p_idx != m {
+                break;
+            }
+            res += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,10 +282,10 @@ This monotonic property makes binary search applicable. We search for the larges
 
 1. Binary search over the number of removals `k` (range: `0` to length of `removable - 1`).
 2. For each midpoint `m`:
-   - Create a set of removed indices from `removable[0..m]`.
-   - Check if `p` is a subsequence of `s` (skipping removed indices).
-   - If yes, search the right half (try more removals).
-   - If no, search the left half (try fewer removals).
+    - Create a set of removed indices from `removable[0..m]`.
+    - Check if `p` is a subsequence of `s` (skipping removed indices).
+    - If yes, search the right half (try more removals).
+    - If no, search the left half (try fewer removals).
 3. Track the maximum valid `k` found.
 4. Return the result.
 
@@ -525,6 +559,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_removals(s: String, p: String, removable: Vec<i32>) -> i32 {
+        let s = s.as_bytes();
+        let p = p.as_bytes();
+        let n = s.len();
+        let m = p.len();
+
+        let is_subseq = |removed: &HashSet<usize>| -> bool {
+            let (mut i1, mut i2) = (0, 0);
+            while i1 < n && i2 < m {
+                if removed.contains(&i1) || s[i1] != p[i2] {
+                    i1 += 1;
+                    continue;
+                }
+                i1 += 1;
+                i2 += 1;
+            }
+            i2 == m
+        };
+
+        let mut res = 0;
+        let (mut l, mut r) = (0i32, removable.len() as i32 - 1);
+        while l <= r {
+            let mid = (l + r) / 2;
+            let removed: HashSet<usize> = removable[..=mid as usize]
+                .iter()
+                .map(|&x| x as usize)
+                .collect();
+
+            if is_subseq(&removed) {
+                res = res.max(mid + 1);
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,11 +625,11 @@ The binary search logic remains the same, but the subsequence check becomes simp
 
 1. Binary search over the number of removals with `l = 0` and `r = length of removable`.
 2. For each midpoint `mid`:
-   - Create a copy of `s` as a character array.
-   - Mark positions `removable[0..mid]` as `'#'`.
-   - Check if `p` is a subsequence (characters equal to `'#'` will never match).
-   - If yes, move `l = mid + 1`.
-   - If no, move `r = mid`.
+    - Create a copy of `s` as a character array.
+    - Mark positions `removable[0..mid]` as `'#'`.
+    - Check if `p` is a subsequence (characters equal to `'#'` will never match).
+    - If yes, move `l = mid + 1`.
+    - If no, move `r = mid`.
 3. Return `l` as the maximum number of removals.
 
 ::tabs-start
@@ -823,6 +900,46 @@ class Solution {
         }
 
         return l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_removals(s: String, p: String, removable: Vec<i32>) -> i32 {
+        let s = s.into_bytes();
+        let p = p.as_bytes();
+        let n = s.len();
+        let m = p.len();
+
+        let is_subseq = |tmp_s: &[u8]| -> bool {
+            let (mut i1, mut i2) = (0, 0);
+            while i1 < n && i2 < m {
+                if tmp_s[i1] == p[i2] {
+                    i2 += 1;
+                }
+                i1 += 1;
+            }
+            i2 == m
+        };
+
+        let (mut l, mut r) = (0, removable.len());
+        while l < r {
+            let mid = l + (r - l) / 2;
+            let mut tmp_s = s.clone();
+
+            for i in 0..=mid {
+                tmp_s[removable[i] as usize] = b'#';
+            }
+
+            if is_subseq(&tmp_s) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        l as i32
     }
 }
 ```

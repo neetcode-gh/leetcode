@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Top-down recursion with caching to avoid redundant calculations
 - **Dynamic Programming (Tabulation)** - Bottom-up iterative approach for building solutions
 - **Probability Basics** - Understanding how probabilities combine and average
@@ -263,6 +265,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn new21_game(n: i32, k: i32, max_pts: i32) -> f64 {
+        if k == 0 {
+            return 1.0;
+        }
+        let mut dp = vec![-1.0; k as usize];
+
+        fn dfs(score: i32, n: i32, k: i32, max_pts: i32, dp: &mut Vec<f64>) -> f64 {
+            if score >= k {
+                return if score <= n { 1.0 } else { 0.0 };
+            }
+            if dp[score as usize] != -1.0 {
+                return dp[score as usize];
+            }
+            let mut prob = 0.0;
+            for i in 1..=max_pts {
+                prob += dfs(score + i, n, k, max_pts, dp);
+            }
+            dp[score as usize] = prob / max_pts as f64;
+            dp[score as usize]
+        }
+
+        dfs(0, n, k, max_pts, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,7 +308,7 @@ class Solution {
 
 ### Intuition
 
-The basic top-down approach sums over `maxPts` values at each state, leading to O(k * maxPts) time. We can optimize by noticing that consecutive states have overlapping sums.
+The basic top-down approach sums over `maxPts` values at each state, leading to O(k \* maxPts) time. We can optimize by noticing that consecutive states have overlapping sums.
 
 The probability at score `s` equals the sum of probabilities from `s+1` to `s+maxPts` divided by `maxPts`. The probability at `s` can be expressed in terms of `s+1`'s probability using a sliding window technique: `dp[s] = dp[s+1]` minus the difference caused by the window shifting.
 
@@ -549,6 +579,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn new21_game(n: i32, k: i32, max_pts: i32) -> f64 {
+        if k == 0 {
+            return 1.0;
+        }
+        let mut dp = vec![-1.0; (k + max_pts) as usize];
+
+        fn dfs(score: i32, n: i32, k: i32, max_pts: i32, dp: &mut Vec<f64>) -> f64 {
+            if score == k - 1 {
+                return (n - k + 1).min(max_pts) as f64 / max_pts as f64;
+            }
+            if score > n {
+                return 0.0;
+            }
+            if score >= k {
+                return 1.0;
+            }
+            if dp[score as usize] != -1.0 {
+                return dp[score as usize];
+            }
+            dp[score as usize] = dfs(score + 1, n, k, max_pts, dp);
+            dp[score as usize] -= (dfs(score + 1 + max_pts, n, k, max_pts, dp)
+                - dfs(score + 1, n, k, max_pts, dp))
+                / max_pts as f64;
+            dp[score as usize]
+        }
+
+        dfs(0, n, k, max_pts, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -574,8 +637,8 @@ The answer is the sum of `dp[score]` for all scores from `k` to `n` (valid endin
 
 1. Create `dp` array of size `n+1`, set `dp[0] = 1`.
 2. For each score from `1` to `n`:
-   - For each `draw` value from `1` to `maxPts`:
-     - If `score - draw` is in range `[0, k-1]`, add `dp[score - draw] / maxPts` to `dp[score]`.
+    - For each `draw` value from `1` to `maxPts`:
+        - If `score - draw` is in range `[0, k-1]`, add `dp[score - draw] / maxPts` to `dp[score]`.
 3. Sum `dp[k]` through `dp[n]` and return the result.
 
 ::tabs-start
@@ -767,6 +830,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn new21_game(n: i32, k: i32, max_pts: i32) -> f64 {
+        let n = n as usize;
+        let k = k as usize;
+        let max_pts = max_pts as usize;
+        let mut dp = vec![0.0; n + 1];
+        dp[0] = 1.0;
+
+        for score in 1..=n {
+            for draw in 1..=max_pts {
+                if score >= draw && score - draw < k {
+                    dp[score] += dp[score - draw] / max_pts as f64;
+                }
+            }
+        }
+
+        dp[k..=n].iter().sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,8 +876,8 @@ Working backwards from `k-1` to `0`, we compute `dp[i]` as `windowSum / maxPts`.
 1. If `k` is `0`, return `1.0` (already done, score `0` is valid).
 2. Initialize `windowSum` as the count of scores from `k` to `k+maxPts-1` that are <= `n`.
 3. Iterate from `k-1` down to `0`:
-   - Set `dp[i] = windowSum / maxPts`.
-   - Update `windowSum`: add `dp[i]` and subtract the value sliding out of the window (if it exists and is <= `n`).
+    - Set `dp[i] = windowSum / maxPts`.
+    - Update `windowSum`: add `dp[i]` and subtract the value sliding out of the window (if it exists and is <= `n`).
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -992,6 +1077,30 @@ class Solution {
             windowSum += dp[i]! - remove
         }
         return dp[0]!
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn new21_game(n: i32, k: i32, max_pts: i32) -> f64 {
+        if k == 0 {
+            return 1.0;
+        }
+        let mut window_sum = 0.0;
+        for i in k..k + max_pts {
+            window_sum += if i <= n { 1.0 } else { 0.0 };
+        }
+        let mut dp = HashMap::new();
+        for i in (0..k).rev() {
+            dp.insert(i, window_sum / max_pts as f64);
+            let mut remove = 0.0;
+            if i + max_pts <= n {
+                remove = *dp.get(&(i + max_pts)).unwrap_or(&1.0);
+            }
+            window_sum += dp[&i] - remove;
+        }
+        dp[&0]
     }
 }
 ```

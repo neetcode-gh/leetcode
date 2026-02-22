@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Building each row using values from the previous row
 - **2D Arrays** - Storing and accessing the triangle structure
 - **Combinatorics** - Understanding that each element is a binomial coefficient C(n, k) and can be computed incrementally
@@ -16,12 +18,12 @@ Each element in Pascal's Triangle corresponds to a binomial coefficient. The val
 
 1. Initialize an empty result list.
 2. For each row `n` from `0` to `numRows - 1`:
-   - Start the row with `[1]`.
-   - Set `val = 1`.
-   - For each position `k` from `1` to `n`:
-     - Compute `val = val * (n - k + 1) / k`.
-     - Append `val` to the `row`.
-   - Add the completed `row` to the result.
+    - Start the row with `[1]`.
+    - Set `val = 1`.
+    - For each position `k` from `1` to `n`:
+        - Compute `val = val * (n - k + 1) / k`.
+        - Append `val` to the `row`.
+    - Add the completed `row` to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -172,6 +174,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate(num_rows: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        for n in 0..num_rows as i64 {
+            let mut row = vec![1i32];
+            let mut val: i64 = 1;
+            for k in 1..=n {
+                val = val * (n - k + 1) / k;
+                row.push(val as i32);
+            }
+            res.push(row);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -191,9 +211,9 @@ Each element in Pascal's Triangle (except the edges) is the sum of the two eleme
 
 1. Start with the first row `[[1]]`.
 2. For each subsequent row:
-   - Take the last row and pad it with zeros: `[0] + row + [0]`.
-   - Create a new row by summing adjacent elements: `temp[j] + temp[j + 1]`.
-   - Append the new `row` to the result.
+    - Take the last row and pad it with zeros: `[0] + row + [0]`.
+    - Create a new row by summing adjacent elements: `temp[j] + temp[j + 1]`.
+    - Append the new `row` to the result.
 3. Return the result after generating `numRows` rows.
 
 ::tabs-start
@@ -358,6 +378,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate(num_rows: i32) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = vec![vec![1]];
+
+        for _ in 0..num_rows - 1 {
+            let last = res.last().unwrap();
+            let mut temp = vec![0];
+            temp.extend(last);
+            temp.push(0);
+            let mut row = Vec::new();
+            for j in 0..last.len() + 1 {
+                row.push(temp[j] + temp[j + 1]);
+            }
+            res.push(row);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,8 +418,8 @@ We directly apply the defining property of Pascal's Triangle: each interior elem
 
 1. Initialize a 2D list where row `i` has `i + 1` elements, all set to `1`.
 2. For each row from index 2 onward:
-   - For each interior position `j` (not the first or last):
-     - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
+    - For each interior position `j` (not the first or last):
+        - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
 3. Return the completed triangle.
 
 ::tabs-start
@@ -515,6 +556,23 @@ class Solution {
             res.append(row)
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn generate(num_rows: i32) -> Vec<Vec<i32>> {
+        let num_rows = num_rows as usize;
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        for i in 0..num_rows {
+            let mut row = vec![1; i + 1];
+            for j in 1..i {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j];
+            }
+            res.push(row);
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Building justified lines requires precise string concatenation and padding
 - **Greedy Algorithms** - Words are greedily packed into each line until no more fit
 - **Modular Arithmetic** - Space distribution uses division and remainder to spread spaces evenly among gaps
@@ -18,12 +20,12 @@ The key is to greedily fit as many words as possible on each line, then calculat
 
 1. Initialize an empty `result` list and track the current `line`'s words and total character `length`.
 2. For each word, check if it fits on the current `line` (considering at least one space between words):
-   - If it fits, add it to the current `line`.
-   - If not, justify the current `line`:
-     - Calculate total extra spaces needed (`maxWidth - length`).
-     - Divide spaces evenly among gaps. Distribute remaining spaces one extra each to leftmost gaps.
-     - For single-word `lines`, add all spaces after the word.
-     - Join words and add to `result`. Start a new `line`.
+    - If it fits, add it to the current `line`.
+    - If not, justify the current `line`:
+        - Calculate total extra spaces needed (`maxWidth - length`).
+        - Divide spaces evenly among gaps. Distribute remaining spaces one extra each to leftmost gaps.
+        - For single-word `lines`, add all spaces after the word.
+        - Join words and add to `result`. Start a new `line`.
 3. Handle the last `line` separately: left-justify (single space between words) and pad with trailing spaces.
 4. Return the `result`.
 
@@ -371,6 +373,51 @@ class Solution {
         res.append(lastLine + String(repeating: " ", count: trailSpace))
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn full_justify(words: Vec<String>, max_width: i32) -> Vec<String> {
+        let max_width = max_width as usize;
+        let mut res: Vec<String> = Vec::new();
+        let mut line: Vec<String> = Vec::new();
+        let mut length = 0usize;
+        let mut i = 0;
+
+        while i < words.len() {
+            if length + words[i].len() + line.len() <= max_width {
+                line.push(words[i].clone());
+                length += words[i].len();
+                i += 1;
+            } else {
+                // Line complete
+                let extra_space = max_width - length;
+                let gaps = 1.max(line.len() - 1);
+                let mut remainder = extra_space % gaps;
+                let space = extra_space / gaps;
+
+                for j in 0..1.max(line.len() - 1) {
+                    line[j].push_str(&" ".repeat(space));
+                    if remainder > 0 {
+                        line[j].push(' ');
+                        remainder -= 1;
+                    }
+                }
+
+                res.push(line.concat());
+                line.clear();
+                length = 0;
+            }
+        }
+
+        // Handling last line
+        let last_line = line.join(" ");
+        let trail_space = max_width - last_line.len();
+        res.push(format!("{}{}", last_line, " ".repeat(trail_space)));
+
+        res
     }
 }
 ```

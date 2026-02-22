@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how recursive functions call themselves with smaller subproblems
 - **Dynamic Programming Basics** - Recognizing overlapping subproblems and optimal substructure
 - **Memoization** - Caching computed results to avoid redundant calculations in recursive solutions
@@ -110,6 +112,17 @@ class Solution {
         if n == 0 { return 0 }
         if n <= 2 { return 1 }
         return tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn tribonacci(n: i32) -> i32 {
+        if n <= 2 {
+            return if n == 0 { 0 } else { 1 };
+        }
+        Self::tribonacci(n - 1) + Self::tribonacci(n - 2) + Self::tribonacci(n - 3)
     }
 }
 ```
@@ -286,6 +299,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn tribonacci(n: i32) -> i32 {
+        let mut dp = HashMap::new();
+        Self::helper(n, &mut dp)
+    }
+
+    fn helper(n: i32, dp: &mut HashMap<i32, i32>) -> i32 {
+        if n <= 2 {
+            return if n == 0 { 0 } else { 1 };
+        }
+        if let Some(&val) = dp.get(&n) {
+            return val;
+        }
+        let val = Self::helper(n - 1, dp)
+            + Self::helper(n - 2, dp)
+            + Self::helper(n - 3, dp);
+        dp.insert(n, val);
+        val
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -450,6 +486,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn tribonacci(n: i32) -> i32 {
+        if n <= 2 {
+            return if n == 0 { 0 } else { 1 };
+        }
+        let n = n as usize;
+        let mut dp = vec![0; n + 1];
+        dp[1] = 1;
+        dp[2] = 1;
+        for i in 3..=n {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+        dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -589,6 +643,21 @@ class Solution {
             t[i % 3] = t[0] + t[1] + t[2]
         }
         return t[n % 3]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn tribonacci(n: i32) -> i32 {
+        let mut t = [0, 1, 1];
+        if n < 3 {
+            return t[n as usize];
+        }
+        for i in 3..=n as usize {
+            t[i % 3] = t[0] + t[1] + t[2];
+        }
+        t[n as usize % 3]
     }
 }
 ```

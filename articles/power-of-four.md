@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation** - Understanding binary representation, bitwise AND, and how powers of two appear in binary
 - **Logarithms** - Using logarithms to determine exponents and checking for integer results
 - **Power of Two Detection** - The trick that n & (n-1) == 0 identifies powers of two
@@ -133,6 +135,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_four(n: i32) -> bool {
+        if n == 1 {
+            return true;
+        }
+        if n <= 0 || n % 4 != 0 {
+            return false;
+        }
+        Self::is_power_of_four(n / 4)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -152,8 +168,8 @@ The same logic as recursion applies here, but we use a loop instead. We keep div
 
 1. If `n` is negative, return `false`.
 2. While `n` is greater than `1`:
-   - If `n` is not divisible by `4`, return `false`.
-   - Divide `n` by `4`.
+    - If `n` is not divisible by `4`, return `false`.
+    - Divide `n` by `4`.
 3. Return `true` if `n` equals `1`, `false` otherwise.
 
 ::tabs-start
@@ -290,6 +306,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_four(n: i32) -> bool {
+        if n < 0 {
+            return false;
+        }
+        let mut num = n;
+        while num > 1 {
+            if num % 4 != 0 {
+                return false;
+            }
+            num /= 4;
+        }
+        num == 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +418,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_four(n: i32) -> bool {
+        n > 0 && (n as f64).ln() / 4.0_f64.ln() % 1.0 == 0.0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -405,7 +447,7 @@ We can check all even bit positions (`0`, `2`, `4`, ..., `30`) and see if `n` eq
 
 1. If `n` is negative, return `false`.
 2. Iterate through even bit positions from `0` to `30` (step by `2`):
-   - If `n` equals `1 << i` (which is `4^(i/2)`), return `true`.
+    - If `n` equals `1 << i` (which is `4^(i/2)`), return `true`.
 3. If no match is found, return `false`.
 
 ::tabs-start
@@ -542,6 +584,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_four(n: i32) -> bool {
+        if n < 0 {
+            return false;
+        }
+        for i in (0..32).step_by(2) {
+            if n == (1 << i) {
+                return true;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -633,6 +691,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_power_of_four(n: i32) -> bool {
+        n > 0 && (n & (n - 1)) == 0 && (n & 0x55555555) == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -720,6 +786,14 @@ class Solution {
 class Solution {
     func isPowerOfFour(_ n: Int) -> Bool {
         return n > 0 && (n & (n - 1)) == 0 && n % 3 == 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_power_of_four(n: i32) -> bool {
+        n > 0 && (n & (n - 1)) == 0 && n % 3 == 1
     }
 }
 ```

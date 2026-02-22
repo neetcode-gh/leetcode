@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Used to track unmatched opening brackets during traversal
 - **Bracket Matching** - Understanding how to pair opening and closing brackets in sequence
 - **Greedy Algorithms** - The optimal solutions use greedy reasoning to count minimum swaps needed
@@ -18,8 +20,8 @@ After processing, the `stack` contains only unmatched `[` brackets. Since the st
 
 1. Initialize an empty `stack`.
 2. Iterate through the string:
-   - If the character is `[`, push it onto the `stack`.
-   - If the character is `]` and the `stack` is not empty, pop the `stack`.
+    - If the character is `[`, push it onto the `stack`.
+    - If the character is `]` and the `stack` is not empty, pop the `stack`.
 3. The remaining `stack` size represents unmatched `[` brackets.
 4. Return `(stack_size + 1) / 2`.
 
@@ -152,6 +154,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_swaps(s: String) -> i32 {
+        let mut stack = Vec::new();
+        for c in s.bytes() {
+            if c == b'[' {
+                stack.push(c);
+            } else if !stack.is_empty() {
+                stack.pop();
+            }
+        }
+        (stack.len() as i32 + 1) / 2
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,9 +191,9 @@ Since each swap can fix at most `2` unmatched brackets, the number of swaps need
 
 1. Initialize `close = 0` and `maxClose = 0`.
 2. Iterate through the string:
-   - If the character is `[`, decrement `close`.
-   - If the character is `]`, increment `close`.
-   - Update `maxClose = max(maxClose, close)`.
+    - If the character is `[`, decrement `close`.
+    - If the character is `]`, increment `close`.
+    - Update `maxClose = max(maxClose, close)`.
 3. Return `(maxClose + 1) / 2`.
 
 ::tabs-start
@@ -307,6 +325,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_swaps(s: String) -> i32 {
+        let mut close = 0i32;
+        let mut max_close = 0i32;
+        for c in s.bytes() {
+            if c == b'[' {
+                close -= 1;
+            } else {
+                close += 1;
+            }
+            max_close = max_close.max(close);
+        }
+        (max_close + 1) / 2
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,8 +364,8 @@ This is equivalent to the `stack` approach but uses `O(1)` space since we only t
 
 1. Initialize `stackSize = 0`.
 2. Iterate through the string:
-   - If the character is `[`, increment `stackSize`.
-   - If the character is `]` and `stackSize > 0`, decrement `stackSize`.
+    - If the character is `[`, increment `stackSize`.
+    - If the character is `]` and `stackSize > 0`, decrement `stackSize`.
 3. Return `(stackSize + 1) / 2`.
 
 ::tabs-start
@@ -442,6 +478,22 @@ class Solution {
             }
         }
         return (stackSize + 1) / 2
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_swaps(s: String) -> i32 {
+        let mut stack_size = 0;
+        for c in s.bytes() {
+            if c == b'[' {
+                stack_size += 1;
+            } else if stack_size > 0 {
+                stack_size -= 1;
+            }
+        }
+        (stack_size + 1) / 2
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - The solution uses prefix sums to efficiently compute subarray sums
 - **Modular Arithmetic** - Understanding how remainders work, especially that two numbers with the same remainder mod k have a difference divisible by k
 - **Hash Maps** - Used to count occurrences of each remainder for efficient lookup
@@ -16,10 +18,10 @@ The simplest approach checks every possible subarray. For each starting index, w
 
 1. Initialize `res = 0`.
 2. For each starting index `i`:
-   - Set `curSum = 0`.
-   - For each ending index `j` from `i` to `n - 1`:
-     - Add `nums[j]` to `curSum`.
-     - If `curSum % k == 0`, increment `res`.
+    - Set `curSum = 0`.
+    - For each ending index `j` from `i` to `n - 1`:
+        - Add `nums[j]` to `curSum`.
+        - If `curSum % k == 0`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -186,6 +188,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subarrays_div_by_k(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut cur_sum = 0;
+            for j in i..n {
+                cur_sum += nums[j];
+                if cur_sum % k == 0 {
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -205,10 +228,10 @@ If two prefix sums have the same remainder when divided by `k`, their difference
 
 1. Initialize `prefixSum = 0`, `res = 0`, and a hash map `prefixCnt` with `{0: 1}`.
 2. For each number in the array:
-   - Add it to `prefixSum`.
-   - Compute `remain = prefixSum % k`. Handle negative remainders by adding `k` if needed.
-   - Add `prefixCnt[remain]` to `res`.
-   - Increment `prefixCnt[remain]` by `1`.
+    - Add it to `prefixSum`.
+    - Compute `remain = prefixSum % k`. Handle negative remainders by adding `k` if needed.
+    - Add `prefixCnt[remain]` to `res`.
+    - Increment `prefixCnt[remain]` by `1`.
 3. Return `res`.
 
 ::tabs-start
@@ -390,6 +413,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subarrays_div_by_k(nums: Vec<i32>, k: i32) -> i32 {
+        let mut prefix_sum = 0;
+        let mut res = 0;
+        let mut prefix_cnt = HashMap::new();
+        prefix_cnt.insert(0, 1);
+
+        for &n in &nums {
+            prefix_sum += n;
+            let mut remain = prefix_sum % k;
+            if remain < 0 {
+                remain += k;
+            }
+
+            res += prefix_cnt.get(&remain).unwrap_or(&0);
+            *prefix_cnt.entry(remain).or_insert(0) += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -410,9 +457,9 @@ Since remainders when dividing by `k` are always in the range `[0, k-1]`, we can
 1. Create an array `count` of size `k`, initialized to zeros, with `count[0] = 1`.
 2. Initialize `prefix = 0` and `res = 0`.
 3. For each number in the array:
-   - Update `prefix = (prefix + num % k + k) % k` to handle negatives.
-   - Add `count[prefix]` to `res`.
-   - Increment `count[prefix]`.
+    - Update `prefix = (prefix + num % k + k) % k` to handle negatives.
+    - Add `count[prefix]` to `res`.
+    - Increment `count[prefix]`.
 4. Return `res`.
 
 ::tabs-start
@@ -561,6 +608,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn subarrays_div_by_k(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let mut count = vec![0i32; k];
+        count[0] = 1;
+        let mut prefix = 0i32;
+        let mut res = 0;
+
+        for &num in &nums {
+            prefix = ((prefix + num % k as i32) + k as i32) % k as i32;
+            res += count[prefix as usize];
+            count[prefix as usize] += 1;
+        }
+
+        res
     }
 }
 ```

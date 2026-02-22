@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Used to track and remove adjacent "bad" character pairs efficiently
 - **ASCII Values** - Understanding character codes to detect case differences (uppercase and lowercase differ by 32)
 - **String Manipulation** - Basic operations like character comparison and building result strings
@@ -175,6 +177,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn make_good(s: String) -> String {
+        let mut s = s.into_bytes();
+        let mut n = s.len();
+        let mut i: isize = 0;
+        while (i as usize) < n {
+            let idx = i as usize;
+            if idx > 0
+                && s[idx] != s[idx - 1]
+                && s[idx].to_ascii_lowercase() == s[idx - 1].to_ascii_lowercase()
+            {
+                s.remove(idx);
+                s.remove(idx - 1);
+                n -= 2;
+                i -= 2;
+            }
+            i += 1;
+        }
+        String::from_utf8(s).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +371,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn make_good(s: String) -> String {
+        let mut stack = Vec::new();
+        for c in s.bytes() {
+            if !stack.is_empty()
+                && *stack.last().unwrap() != c
+                && stack.last().unwrap().to_ascii_lowercase() == c.to_ascii_lowercase()
+            {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        String::from_utf8(stack).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -364,8 +409,8 @@ We can simplify the bad pair check using ASCII values. In ASCII, the difference 
 
 1. Initialize an empty stack.
 2. For each character in the string:
-   - If the stack is non-empty and the absolute ASCII difference between the current character and the stack top is `32`, pop the stack.
-   - Otherwise, push the current character.
+    - If the stack is non-empty and the absolute ASCII difference between the current character and the stack top is `32`, pop the stack.
+    - Otherwise, push the current character.
 3. Return the stack contents as a string.
 
 ::tabs-start
@@ -513,6 +558,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn make_good(s: String) -> String {
+        let mut stack = Vec::new();
+        for b in s.bytes() {
+            if !stack.is_empty()
+                && (*stack.last().unwrap() as i32 - b as i32).abs() == 32
+            {
+                stack.pop();
+            } else {
+                stack.push(b);
+            }
+        }
+        String::from_utf8(stack).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,8 +595,8 @@ Instead of using extra space for a stack, we can simulate it in-place using two 
 
 1. Convert the string to a mutable array and initialize `l = 0`.
 2. For each position `r` from `0` to the end:
-   - If `l > 0` and the character at `r` forms a bad pair with the character at `l - 1` (ASCII difference of `32`), decrement `l` to "pop" the pair.
-   - Otherwise, copy the character at `r` to position `l` and increment `l`.
+    - If `l > 0` and the character at `r` forms a bad pair with the character at `l - 1` (ASCII difference of `32`), decrement `l` to "pop" the pair.
+    - Otherwise, copy the character at `r` to position `l` and increment `l`.
 3. Return the substring from index `0` to `l`.
 
 ::tabs-start
@@ -681,6 +744,25 @@ class Solution {
             }
         }
         return String(arr[0..<l])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn make_good(s: String) -> String {
+        let mut arr = s.into_bytes();
+        let mut l = 0usize;
+        for r in 0..arr.len() {
+            if l > 0 && (arr[r] as i32 - arr[l - 1] as i32).abs() == 32 {
+                l -= 1;
+            } else {
+                arr[l] = arr[r];
+                l += 1;
+            }
+        }
+        arr.truncate(l);
+        String::from_utf8(arr).unwrap()
     }
 }
 ```

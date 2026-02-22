@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array/Matrix Traversal** - Iterating through rows and columns of a matrix
 - **Boundary Checking** - Handling edge cases when accessing neighbors near matrix boundaries
 - **Sliding Window (2D)** - Processing fixed-size windows centered at each cell
@@ -207,6 +209,32 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn image_smoother(img: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = img.len();
+        let cols = img[0].len();
+        let mut res = vec![vec![0; cols]; rows];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                let mut total = 0;
+                let mut count = 0;
+                for i in r.saturating_sub(1)..=(r + 1).min(rows - 1) {
+                    for j in c.saturating_sub(1)..=(c + 1).min(cols - 1) {
+                        total += img[i][j];
+                        count += 1;
+                    }
+                }
+                res[r][c] = total / count;
+            }
+        }
+
+        res
     }
 }
 ```
@@ -504,6 +532,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn image_smoother(mut img: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = img.len();
+        let cols = img[0].len();
+        let mut prev_row = img[0].clone();
+
+        for r in 0..rows {
+            let curr_row = img[r].clone();
+
+            for c in 0..cols {
+                let mut total = 0;
+                let mut count = 0;
+                for i in (r.saturating_sub(1))..rows.min(r + 2) {
+                    for j in (c.saturating_sub(1))..cols.min(c + 2) {
+                        if i == r {
+                            total += curr_row[j];
+                        } else if i == r.wrapping_sub(1) && r > 0 {
+                            total += prev_row[j];
+                        } else {
+                            total += img[i][j];
+                        }
+                        count += 1;
+                    }
+                }
+                img[r][c] = total / count;
+            }
+
+            prev_row = curr_row;
+        }
+
+        img
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -766,6 +830,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn image_smoother(mut img: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = img.len();
+        let cols = img[0].len();
+        let limit = 256;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                let mut total = 0;
+                let mut count = 0;
+                for i in r.saturating_sub(1)..rows.min(r + 2) {
+                    for j in c.saturating_sub(1)..cols.min(c + 2) {
+                        total += img[i][j] % limit;
+                        count += 1;
+                    }
+                }
+                img[r][c] += (total / count) * limit;
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                img[r][c] /= limit;
+            }
+        }
+
+        img
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1008,6 +1104,36 @@ class Solution {
             }
         }
         return img
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn image_smoother(mut img: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = img.len();
+        let cols = img[0].len();
+
+        for r in 0..rows {
+            for c in 0..cols {
+                let mut total = 0;
+                let mut cnt = 0;
+                for i in r.saturating_sub(1)..=(r + 1).min(rows - 1) {
+                    for j in c.saturating_sub(1)..=(c + 1).min(cols - 1) {
+                        total += img[i][j] % 256;
+                        cnt += 1;
+                    }
+                }
+                img[r][c] ^= (total / cnt) << 8;
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                img[r][c] >>= 8;
+            }
+        }
+        img
     }
 }
 ```

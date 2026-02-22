@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum** - Computing cumulative sums to determine subarray sums in constant time
 - **Parity (Odd/Even) Properties** - Understanding that odd minus even equals odd, and even minus odd equals odd
 - **Dynamic Programming** - Breaking down problems into overlapping subproblems with memoization or tabulation
@@ -188,6 +190,28 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0i64;
+        let mod_val = 1_000_000_007i64;
+
+        for i in 0..n {
+            let mut cur_sum = 0;
+            for j in i..n {
+                cur_sum += arr[j];
+                if cur_sum % 2 != 0 {
+                    res = (res + 1) % mod_val;
+                }
+            }
+        }
+
+        res as i32
     }
 }
 ```
@@ -451,6 +475,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>) -> i32 {
+        let mod_val = 1_000_000_007i64;
+        let n = arr.len();
+        let mut memo = vec![[-1i64; 2]; n];
+
+        fn dp(i: usize, parity: usize, arr: &[i32], memo: &mut Vec<[i64; 2]>, mod_val: i64) -> i64 {
+            if i == arr.len() {
+                return 0;
+            }
+            if memo[i][parity] != -1 {
+                return memo[i][parity];
+            }
+            let new_parity = (parity + arr[i] as usize % 2) % 2;
+            let res = new_parity as i64 + dp(i + 1, new_parity, arr, memo, mod_val);
+            memo[i][parity] = res % mod_val;
+            memo[i][parity]
+        }
+
+        let mut res = 0i64;
+        for i in 0..n {
+            res = (res + dp(i, 0, &arr, &mut memo, mod_val)) % mod_val;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,6 +716,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mod_val = 1_000_000_007i64;
+        let mut dp = vec![[0i64; 2]; n + 1];
+
+        for i in (0..n).rev() {
+            for parity in 0..=1 {
+                let new_parity = (parity + arr[i] as usize % 2) % 2;
+                dp[i][parity] = (new_parity as i64 + dp[i + 1][new_parity]) % mod_val;
+            }
+        }
+
+        let mut res = 0i64;
+        for i in 0..n {
+            res = (res + dp[i][0]) % mod_val;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -869,6 +945,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>) -> i32 {
+        let mut cur_sum = 0i64;
+        let mut odd_cnt = 0i64;
+        let mut even_cnt = 0i64;
+        let mut res = 0i64;
+        let mod_val = 1_000_000_007i64;
+
+        for &n in &arr {
+            cur_sum += n as i64;
+            if cur_sum % 2 != 0 {
+                res = (res + 1 + even_cnt) % mod_val;
+                odd_cnt += 1;
+            } else {
+                res = (res + odd_cnt) % mod_val;
+                even_cnt += 1;
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1037,6 +1138,25 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>) -> i32 {
+        let mut count = [1i64, 0i64];
+        let mut prefix = 0usize;
+        let mut res = 0i64;
+        let mod_val = 1_000_000_007i64;
+
+        for &num in &arr {
+            prefix = (prefix + num as usize) % 2;
+            res = (res + count[1 - prefix]) % mod_val;
+            count[prefix] += 1;
+        }
+
+        res as i32
     }
 }
 ```

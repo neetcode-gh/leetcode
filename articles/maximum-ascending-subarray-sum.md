@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through arrays and comparing adjacent elements
 - **Subarray Concepts** - Understanding contiguous sequences within an array
 - **Running Sum** - Maintaining a cumulative sum while iterating through elements
@@ -18,10 +20,10 @@ The brute force approach considers every possible starting position. From each s
 
 1. Initialize `res = 0` to store the maximum sum found.
 2. For each starting index `i`:
-   - Initialize `curSum = nums[i]`.
-   - Extend from `j = i + 1` while `nums[j] > nums[j-1]`:
-     - Add `nums[j]` to `curSum`.
-   - Update `res = max(res, curSum)`.
+    - Initialize `curSum = nums[i]`.
+    - Extend from `j = i + 1` while `nums[j] > nums[j-1]`:
+        - Add `nums[j]` to `curSum`.
+    - Update `res = max(res, curSum)`.
 3. Return `res`.
 
 ::tabs-start
@@ -176,6 +178,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_ascending_sum(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        for i in 0..nums.len() {
+            let mut cur_sum = nums[i];
+            for j in (i + 1)..nums.len() {
+                if nums[j] <= nums[j - 1] {
+                    break;
+                }
+                cur_sum += nums[j];
+            }
+            res = res.max(cur_sum);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,9 +218,9 @@ This works because ascending subarrays are naturally separated by positions wher
 
 1. Initialize `res = nums[0]` and `curSum = nums[0]`.
 2. For each index `i` from `1` to `n-1`:
-   - If `nums[i] <= nums[i-1]`, reset `curSum = 0`.
-   - Add `nums[i]` to `curSum`.
-   - Update `res = max(res, curSum)`.
+    - If `nums[i] <= nums[i-1]`, reset `curSum = 0`.
+    - Add `nums[i]` to `curSum`.
+    - Update `res = max(res, curSum)`.
 3. Return `res`.
 
 ::tabs-start
@@ -347,6 +368,25 @@ class Solution {
             res = max(res, curSum)
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_ascending_sum(nums: Vec<i32>) -> i32 {
+        let mut res = nums[0];
+        let mut cur_sum = nums[0];
+
+        for i in 1..nums.len() {
+            if nums[i] <= nums[i - 1] {
+                cur_sum = 0;
+            }
+            cur_sum += nums[i];
+            res = res.max(cur_sum);
+        }
+
+        res
     }
 }
 ```

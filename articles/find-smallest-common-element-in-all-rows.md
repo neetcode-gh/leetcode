@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Efficiently searching sorted arrays to check element existence in O(log n) time
 - **Counting/Hashing** - Using frequency arrays or hash maps to count element occurrences
 - **Matrix Traversal** - Iterating through 2D arrays in row-major or column-major order
@@ -26,15 +28,15 @@ class Solution:
     def smallestCommonElement(self, mat: List[List[int]]) -> int:
         count = [0] * 10001
         n, m = len(mat), len(mat[0])
-        
+
         for i in range(n):
             for j in range(m):
                 count[mat[i][j]] += 1
-        
+
         for k in range(1, 10001):
             if count[k] == n:
                 return k
-        
+
         return -1
 ```
 
@@ -52,7 +54,7 @@ class Solution {
             if (count[k] == n) {
                 return k;
             }
-        } 
+        }
         return -1;
     }
 }
@@ -87,7 +89,8 @@ class Solution {
      */
     smallestCommonElement(mat) {
         const count = new Array(10001).fill(0);
-        const n = mat.length, m = mat[0].length;
+        const n = mat.length,
+            m = mat[0].length;
 
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < m; j++) {
@@ -197,6 +200,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn smallest_common_element(mat: Vec<Vec<i32>>) -> i32 {
+        let mut count = vec![0; 10001];
+        let n = mat.len();
+
+        for row in &mat {
+            for &val in row {
+                count[val as usize] += 1;
+            }
+        }
+
+        for k in 1..=10000 {
+            if count[k] == n {
+                return k as i32;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ## 1. Count Elements (Improved)
@@ -220,13 +246,13 @@ class Solution:
     def smallestCommonElement(self, mat: List[List[int]]) -> int:
         count = [0] * 10001
         n, m = len(mat), len(mat[0])
-        
+
         for j in range(m):
             for i in range(n):
                 count[mat[i][j]] += 1
                 if count[mat[i][j]] == n:
                     return mat[i][j]
-        
+
         return -1
 ```
 
@@ -273,7 +299,8 @@ class Solution {
      */
     smallestCommonElement(mat) {
         const count = new Array(10001).fill(0);
-        const n = mat.length, m = mat[0].length;
+        const n = mat.length,
+            m = mat[0].length;
 
         for (let j = 0; j < m; j++) {
             for (let i = 0; i < n; i++) {
@@ -368,6 +395,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn smallest_common_element(mat: Vec<Vec<i32>>) -> i32 {
+        let mut count = vec![0; 10001];
+        let n = mat.len();
+        let m = mat[0].len();
+
+        for j in 0..m {
+            for i in 0..n {
+                count[mat[i][j] as usize] += 1;
+                if count[mat[i][j] as usize] == n {
+                    return mat[i][j];
+                }
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ## Handling Duplicates
@@ -379,12 +427,13 @@ If elements are in non-decreasing order, we'll need to modify these solutions to
 It's easy to modify these solutions to handle duplicates. Since elements in a row are sorted, we can skip the current element if it's equal to the previous one.
 
 ### Time & Space Complexity
+
 - Time complexity: $O(nm)$
 - Space complexity:
     - Constrained problem: $O(10000) = O(1)$ constant space.
     - Unconstrained problem: $O(k)$, where $k$ is the number of unique elements.
 
->  where $m$ is the number of rows and $n$ is the number of columns
+> where $m$ is the number of rows and $n$ is the number of columns
 
 ---
 
@@ -407,19 +456,19 @@ Since each row is sorted, we can use binary search to check if an element exists
 class Solution:
     def smallestCommonElement(self, mat: List[List[int]]) -> int:
         n, m = len(mat), len(mat[0])
-        
+
         for j in range(m):
             found = True
             i = 1
             while i < n and found:
                 found = self.binarySearch(mat[i], mat[0][j]) >= 0
                 i += 1
-            
+
             if found:
                 return mat[0][j]
-        
+
         return -1
-    
+
 
     def binarySearch(self, arr, target):
         left, right = 0, len(arr) - 1
@@ -431,7 +480,7 @@ class Solution:
                 left = mid + 1
             else:
                 right = mid - 1
-        return -1 
+        return -1
 ```
 
 ```java
@@ -477,7 +526,8 @@ class Solution {
      * @return {number}
      */
     smallestCommonElement(mat) {
-        const n = mat.length, m = mat[0].length;
+        const n = mat.length,
+            m = mat[0].length;
 
         for (let j = 0; j < m; j++) {
             let found = true;
@@ -498,7 +548,8 @@ class Solution {
      * @return {number}
      */
     binarySearch(arr, target) {
-        let left = 0, right = arr.length - 1;
+        let left = 0,
+            right = arr.length - 1;
         while (left <= right) {
             const mid = Math.floor((left + right) / 2);
             if (arr[mid] === target) {
@@ -627,6 +678,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn smallest_common_element(mat: Vec<Vec<i32>>) -> i32 {
+        let n = mat.len();
+        let m = mat[0].len();
+
+        for j in 0..m {
+            let mut found = true;
+            let mut i = 1;
+            while i < n && found {
+                found = mat[i].binary_search(&mat[0][j]).is_ok();
+                i += 1;
+            }
+            if found {
+                return mat[0][j];
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ## 2. Binary Search (Improved)
@@ -639,9 +713,9 @@ In the solution above, we always search the entire row. We can improve the avera
 
 1. Maintain a `pos` array to track search starting points for each row.
 2. For each element in the first row:
-   - Binary search in each other row, starting from the stored position.
-   - If not found, update the position to where it would be inserted.
-   - If the position exceeds row length, return `-1` (no common element possible).
+    - Binary search in each other row, starting from the stored position.
+    - If not found, update the position to where it would be inserted.
+    - If the position exceeds row length, return `-1` (no common element possible).
 3. If an element is found in all rows, return it.
 4. If no common element is found, return `-1`.
 
@@ -652,7 +726,7 @@ class Solution:
     def smallestCommonElement(self, mat: List[List[int]]) -> int:
         n, m = len(mat), len(mat[0])
         pos = [0] * n
-        
+
         for j in range(m):
             found = True
             i = 1
@@ -664,12 +738,12 @@ class Solution:
                     if pos[i] >= m:
                         return -1
                 i += 1
-            
+
             if found:
                 return mat[0][j]
-        
+
         return -1
-    
+
 
     def binarySearch(self, arr, fromIndex, toIndex, target):
         left, right = fromIndex, toIndex - 1
@@ -681,7 +755,7 @@ class Solution:
                 left = mid + 1
             else:
                 right = mid - 1
-        return -(left + 1)  
+        return -(left + 1)
 ```
 
 ```java
@@ -740,7 +814,8 @@ class Solution {
      * @return {number}
      */
     smallestCommonElement(mat) {
-        const n = mat.length, m = mat[0].length;
+        const n = mat.length,
+            m = mat[0].length;
         const pos = new Array(n).fill(0);
 
         for (let j = 0; j < m; j++) {
@@ -771,7 +846,8 @@ class Solution {
      * @return {number}
      */
     binarySearch(arr, fromIndex, toIndex, target) {
-        let left = fromIndex, right = toIndex - 1;
+        let left = fromIndex,
+            right = toIndex - 1;
         while (left <= right) {
             const mid = Math.floor((left + right) / 2);
             if (arr[mid] === target) {
@@ -948,6 +1024,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn smallest_common_element(mat: Vec<Vec<i32>>) -> i32 {
+        let n = mat.len();
+        let m = mat[0].len();
+        let mut pos = vec![0usize; n];
+
+        for j in 0..m {
+            let mut found = true;
+            let mut i = 1;
+            while i < n && found {
+                match mat[i][pos[i]..].binary_search(&mat[0][j]) {
+                    Ok(idx) => {
+                        pos[i] += idx;
+                    }
+                    Err(idx) => {
+                        found = false;
+                        pos[i] += idx;
+                        if pos[i] >= m {
+                            return -1;
+                        }
+                    }
+                }
+                i += 1;
+            }
+            if found {
+                return mat[0][j];
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ## Handling Duplicates
@@ -961,7 +1072,7 @@ Since we search for an element in each row, this approach works correctly if the
     - Original Solution: $O(1)$ constant space.
     - Improved Solution: $O(n)$
 
->  where $m$ is the number of rows and $n$ is the number of columns
+> where $m$ is the number of rows and $n$ is the number of columns
 
 ---
 
@@ -975,10 +1086,10 @@ We can use a two-pointer style approach across all rows. We maintain a `pos` poi
 
 1. Initialize a `pos` array with zeros and set `curMax = 0` and `cnt = 0`.
 2. Loop through each row:
-   - Advance the position while the current element is less than `curMax`.
-   - If position exceeds row bounds, return `-1`.
-   - If the element differs from `curMax`, reset `cnt = 1` and update `curMax`.
-   - Otherwise, increment `cnt`. If `cnt == n`, return `curMax`.
+    - Advance the position while the current element is less than `curMax`.
+    - If position exceeds row bounds, return `-1`.
+    - If the element differs from `curMax`, reset `cnt = 1` and update `curMax`.
+    - Otherwise, increment `cnt`. If `cnt == n`, return `curMax`.
 3. Repeat until a common element is found or determined impossible.
 
 ::tabs-start
@@ -1065,9 +1176,11 @@ class Solution {
      * @return {number}
      */
     smallestCommonElement(mat) {
-        const n = mat.length, m = mat[0].length;
+        const n = mat.length,
+            m = mat[0].length;
         const pos = new Array(n).fill(0);
-        let cur_max = 0, cnt = 0;
+        let cur_max = 0,
+            cnt = 0;
 
         while (true) {
             for (let i = 0; i < n; i++) {
@@ -1209,6 +1322,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn smallest_common_element(mat: Vec<Vec<i32>>) -> i32 {
+        let n = mat.len();
+        let m = mat[0].len();
+        let mut pos = vec![0usize; n];
+        let mut cur_max = 0;
+        let mut cnt = 0;
+
+        loop {
+            for i in 0..n {
+                while pos[i] < m && mat[i][pos[i]] < cur_max {
+                    pos[i] += 1;
+                }
+                if pos[i] >= m {
+                    return -1;
+                }
+                if mat[i][pos[i]] != cur_max {
+                    cnt = 1;
+                    cur_max = mat[i][pos[i]];
+                } else {
+                    cnt += 1;
+                    if cnt == n as i32 {
+                        return cur_max;
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ## Handling Duplicates
@@ -1220,7 +1365,7 @@ Since we take one element from each row, this approach works correctly if there 
 - Time complexity: $O(nm)$
 - Space complexity: $O(n)$
 
->  where $m$ is the number of rows and $n$ is the number of columns
+> where $m$ is the number of rows and $n$ is the number of columns
 
 ---
 

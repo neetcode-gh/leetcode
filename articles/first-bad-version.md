@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Efficiently searching in a sorted/monotonic space by repeatedly halving the search range
 - **Avoiding Integer Overflow** - Using `l + (r - l) / 2` instead of `(l + r) / 2` to compute midpoints safely
 - **Lower Bound Concept** - Finding the first element that satisfies a condition in a monotonic sequence
@@ -151,6 +153,22 @@ class Solution : VersionControl {
             }
         }
         return n
+    }
+}
+```
+
+```rust
+// The API isBadVersion is defined for you.
+// isBadVersion(version: i32) -> bool;
+
+impl Solution {
+    pub fn first_bad_version(&self, n: i32) -> i32 {
+        for i in 1..n {
+            if self.isBadVersion(i) {
+                return i;
+            }
+        }
+        n
     }
 }
 ```
@@ -370,6 +388,28 @@ class Solution : VersionControl {
 }
 ```
 
+```rust
+// The API isBadVersion is defined for you.
+// isBadVersion(version: i32) -> bool;
+
+impl Solution {
+    pub fn first_bad_version(&self, n: i32) -> i32 {
+        fn helper(sol: &Solution, l: i32, r: i32) -> i32 {
+            if l > r {
+                return l;
+            }
+            let m = l + (r - l) / 2;
+            if sol.isBadVersion(m) {
+                helper(sol, l, m - 1)
+            } else {
+                helper(sol, m + 1, r)
+            }
+        }
+        helper(self, 1, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,9 +429,9 @@ This is the iterative version of binary search. We maintain left and right point
 
 1. Initialize `l = 1`, `r = n`, and `res = -1` to store the result.
 2. While `l <= r`:
-   - Calculate middle `m = l + (r - l) / 2`.
-   - If `isBadVersion(m)` is `true`, store `m` in `res` and search left by setting `r = m - 1`.
-   - Otherwise, search right by setting `l = m + 1`.
+    - Calculate middle `m = l + (r - l) / 2`.
+    - If `isBadVersion(m)` is `true`, store `m` in `res` and search left by setting `r = m - 1`.
+    - Otherwise, search right by setting `l = m + 1`.
 3. Return `res` as the first bad version.
 
 ::tabs-start
@@ -577,6 +617,27 @@ class Solution : VersionControl {
 }
 ```
 
+```rust
+// The API isBadVersion is defined for you.
+// isBadVersion(version: i32) -> bool;
+
+impl Solution {
+    pub fn first_bad_version(&self, n: i32) -> i32 {
+        let (mut l, mut r, mut res) = (1, n, -1);
+        while l <= r {
+            let m = l + (r - l) / 2;
+            if self.isBadVersion(m) {
+                res = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -596,9 +657,9 @@ This is a cleaner binary search variant that finds the lower bound. Instead of t
 
 1. Initialize `l = 1` and `r = n`.
 2. While `l < r`:
-   - Calculate middle `m = l + (r - l) / 2`.
-   - If `isBadVersion(m)` is `true`, the first bad version is at `m` or earlier, so set `r = m`.
-   - Otherwise, the first bad version is after `m`, so set `l = m + 1`.
+    - Calculate middle `m = l + (r - l) / 2`.
+    - If `isBadVersion(m)` is `true`, the first bad version is at `m` or earlier, so set `r = m`.
+    - Otherwise, the first bad version is after `m`, so set `l = m + 1`.
 3. When the loop ends, `l` equals `r` and points to the first bad version.
 
 ::tabs-start
@@ -768,6 +829,26 @@ class Solution : VersionControl {
             }
         }
         return r
+    }
+}
+```
+
+```rust
+// The API isBadVersion is defined for you.
+// isBadVersion(version: i32) -> bool;
+
+impl Solution {
+    pub fn first_bad_version(&self, n: i32) -> i32 {
+        let (mut l, mut r) = (1, n);
+        while l < r {
+            let m = l + (r - l) / 2;
+            if self.isBadVersion(m) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        r
     }
 }
 ```

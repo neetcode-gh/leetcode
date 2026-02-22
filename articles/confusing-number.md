@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Dictionaries** - Used to map digits to their rotated counterparts for O(1) lookup
 - **String Manipulation** - Converting integers to strings and reversing strings
 - **Modular Arithmetic** - Extracting digits using modulo and integer division operations
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Invert and Reverse
 
 ### Intuition
+
 A confusing number looks different when rotated 180 degrees. Only digits `0`, `1`, `6`, `8`, and `9` remain valid after rotation (`6` becomes `9` and vice versa). We invert each digit, reverse the result, and check if it differs from the original.
 
 ### Algorithm
+
 1. Create a mapping of valid digits to their rotated counterparts: `0->0`, `1->1`, `6->9`, `8->8`, `9->6`.
 2. Iterate through each digit of `n` as a string.
 3. If any digit is not in the map (`2`, `3`, `4`, `5`, `7`), return `false` immediately.
@@ -26,15 +30,15 @@ class Solution:
         # Use 'invertMap' to invert each valid digit.
         invert_map = {"0":"0", "1":"1", "8":"8", "6":"9", "9":"6"}
         rotated_number = []
-        
+
         # Iterate over each digit of 'n'.
         for ch in str(n):
             if ch not in invert_map:
                 return False
 
-            # Append the inverted digit of 'ch' to the end of 'rotated_number'. 
+            # Append the inverted digit of 'ch' to the end of 'rotated_number'.
             rotated_number.append(invert_map[ch])
-        
+
         rotated_number = "".join(rotated_number)
 
         # Check if the reversed 'rotated_number' equals 'n'.
@@ -60,7 +64,7 @@ class Solution {
                 return false;
             }
 
-            // Append the inverted digit of 'ch' to the end of 'rotatedNumber'. 
+            // Append the inverted digit of 'ch' to the end of 'rotatedNumber'.
             sb.append(invertMap.get(ch));
         }
 
@@ -85,10 +89,10 @@ public:
                 return false;
             }
 
-            // Append the inverted digit of 'ch' to the end of 'rotatedNumber'. 
+            // Append the inverted digit of 'ch' to the end of 'rotatedNumber'.
             rotatedNumber += invertMap[ch];
         }
-        
+
         // Check if the reversed 'rotatedNumber' equals 'n'.
         reverse(begin(rotatedNumber), end(rotatedNumber));
         return stoi(rotatedNumber) != n;
@@ -105,11 +109,11 @@ class Solution {
     confusingNumber(n) {
         // Use 'invertMap' to invert each valid digit.
         const invertMap = {
-            '0': '0',
-            '1': '1',
-            '6': '9',
-            '8': '8',
-            '9': '6'
+            0: '0',
+            1: '1',
+            6: '9',
+            8: '8',
+            9: '6',
         };
 
         let rotatedNumber = '';
@@ -230,6 +234,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn confusing_number(n: i32) -> bool {
+        // Use 'invert_map' to invert each valid digit.
+        let invert_map: HashMap<char, char> = [
+            ('0', '0'), ('1', '1'), ('6', '9'), ('8', '8'), ('9', '6'),
+        ].iter().cloned().collect();
+        let mut rotated_number = String::new();
+
+        // Iterate over each digit of 'n'.
+        for ch in n.to_string().chars() {
+            match invert_map.get(&ch) {
+                Some(&inverted) => rotated_number.push(inverted),
+                None => return false,
+            }
+        }
+
+        // Check if the reversed 'rotatedNumber' equals 'n'.
+        let reversed: String = rotated_number.chars().rev().collect();
+        reversed.parse::<i32>().unwrap() != n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,16 +265,18 @@ class Solution {
 - Time complexity: $O(L)$
 - Space complexity: $O(L)$ extra space used
 
->  Where $L$ is the maximum number of digits $n$ can have ($L = \log_{10} n$).
+> Where $L$ is the maximum number of digits $n$ can have ($L = \log_{10} n$).
 
 ---
 
 ## 2. Use the remainder
 
 ### Intuition
+
 Instead of converting to a string, we can extract digits using modular arithmetic. Processing digits from right to left while building the rotated number from left to right naturally produces the reversed rotated version.
 
 ### Algorithm
+
 1. Create a mapping of valid digits (`0`, `1`, `6`, `8`, `9`) to their rotated values.
 2. Make a copy of `n` and initialize the rotated number to `0`.
 3. Extract digits using modulo `10`. If a digit is invalid, return `false`.
@@ -263,17 +293,17 @@ class Solution:
         invert_map = {0:0, 1:1, 8:8, 6:9, 9:6}
         invert_number = 0
         n_copy = n
-        
+
         # Get every digit of 'n_copy' by taking the remainder of it to 10.
         while n_copy:
             res = n_copy % 10
             if res not in invert_map:
                 return False
-            
-            # Append the inverted digit of 'res' to the end of 'rotated_number'. 
+
+            # Append the inverted digit of 'res' to the end of 'rotated_number'.
             invert_number = invert_number * 10 + invert_map[res]
             n_copy //= 10
-        
+
         # Check if 'rotated_number' equals 'n'.
         return  invert_number != n
 ```
@@ -291,7 +321,7 @@ class Solution {
             put(9, 6);
         }};
         int nCopy = n, rotatedNumber = 0;
-        
+
         // Get every digit of 'nCopy' by taking the remainder of it to 10.
         while (nCopy > 0) {
             int res = nCopy % 10;
@@ -299,7 +329,7 @@ class Solution {
                 return false;
             }
 
-            // Append the inverted digit of 'res' to the end of 'rotatedNumber'. 
+            // Append the inverted digit of 'res' to the end of 'rotatedNumber'.
             rotatedNumber = rotatedNumber * 10 + invertMap.get(res);
             nCopy /= 10;
         }
@@ -315,7 +345,7 @@ class Solution {
 public:
     bool confusingNumber(int n) {
         // Use 'invertMap' to invert each valid digit. Since we don't want to modify
-        // 'n', we create a copy of it as 'nCopy'. 
+        // 'n', we create a copy of it as 'nCopy'.
         map<int, int> invertMap = {{0, 0}, {1, 1}, {6, 9}, {8, 8}, {9, 6}};
         int rotatedNumber = 0, nCopy = n;
 
@@ -326,13 +356,13 @@ public:
                 return false;
             }
 
-            // Append the inverted digit of 'res' to the end of 'rotatedNumber'. 
+            // Append the inverted digit of 'res' to the end of 'rotatedNumber'.
             rotatedNumber = rotatedNumber * 10 + invertMap[res];
             nCopy /= 10;
         }
-        
+
         // Check if 'rotatedNumber' equals 'n'.
-        return rotatedNumber != n; 
+        return rotatedNumber != n;
     }
 };
 ```
@@ -351,7 +381,7 @@ class Solution {
             1: 1,
             6: 9,
             8: 8,
-            9: 6
+            9: 6,
         };
         let nCopy = n;
         let rotatedNumber = 0;
@@ -475,6 +505,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn confusing_number(n: i32) -> bool {
+        // Use 'invert_map' to invert each valid digit. Since we don't want to modify
+        // 'n', we create a copy of it as 'n_copy'.
+        let invert_map: HashMap<i32, i32> = [
+            (0, 0), (1, 1), (6, 9), (8, 8), (9, 6),
+        ].iter().cloned().collect();
+        let mut n_copy = n;
+        let mut rotated_number = 0;
+
+        // Get every digit of 'n_copy' by taking the remainder of it to 10.
+        while n_copy > 0 {
+            let res = n_copy % 10;
+            match invert_map.get(&res) {
+                Some(&inverted) => {
+                    // Append the inverted digit of 'res' to the end of 'rotated_number'.
+                    rotated_number = rotated_number * 10 + inverted;
+                }
+                None => return false,
+            }
+            n_copy /= 10;
+        }
+
+        // Check if 'rotated_number' equals 'n'.
+        rotated_number != n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -482,13 +542,14 @@ class Solution {
 - Time complexity: $O(L)$
 - Space complexity: $O(L)$ extra space used
 
->  Where $L$ is the maximum number of digits $n$ can have.
+> Where $L$ is the maximum number of digits $n$ can have.
 
 ---
 
 ## Common Pitfalls
 
 ### Confusing "Different" with "Invalid"
+
 A confusing number must be valid (all digits can be rotated) AND look different after rotation. Returning `true` for invalid digits like `2, 3, 4, 5, 7` instead of returning `false` is incorrect.
 
 ```python
@@ -502,4 +563,5 @@ if ch not in invert_map:
 ```
 
 ### Forgetting to Reverse After Inversion
+
 Rotating 180 degrees means both inverting each digit AND reversing their order. Only inverting without reversing (or vice versa) gives the wrong result. For example, `69` inverts to `96` but must then reverse to `69`, so `69` is NOT confusing.

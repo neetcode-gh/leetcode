@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Used to count ways to form the target by choosing characters from word columns
 - **Memoization** - Caching results for (target index, column index) pairs to avoid recomputation
 - **Character Frequency Preprocessing** - Precomputing character counts at each column position optimizes the solution
@@ -17,8 +19,8 @@ We build the target string character by character. For each target character, we
 
 1. Define a recursive function `dfs(i, k)` where `i` is the current target index and `k` is the current column index in the words.
 2. Base cases:
-   - If `i == n` (target length), we formed the entire target, return `1`.
-   - If `k == m` (word length), we ran out of columns, return `0`.
+    - If `i == n` (target length), we formed the entire target, return `1`.
+    - If `k == m` (word length), we ran out of columns, return `0`.
 3. Count the ways by skipping column `k` (call `dfs(i, k + 1)`).
 4. For each word where `word[k]` matches `target[i]`, add `dfs(i + 1, k + 1)` to `res`.
 5. Return the total count modulo `10^9 + 7`.
@@ -232,6 +234,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(words: Vec<String>, target: String) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let words: Vec<&[u8]> = words.iter().map(|w| w.as_bytes()).collect();
+        let target = target.as_bytes();
+        let n = target.len();
+        let m = words[0].len();
+
+        fn dfs(words: &[&[u8]], target: &[u8], i: usize, k: usize, n: usize, m: usize) -> i64 {
+            if i == n { return 1; }
+            if k == m { return 0; }
+            let mut res = dfs(words, target, i, k + 1, n, m);
+            for w in words {
+                if w[k] != target[i] { continue; }
+                res = (res + dfs(words, target, i + 1, k + 1, n, m)) % 1_000_000_007;
+            }
+            res
+        }
+
+        dfs(&words, target, 0, 0, n, m) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,9 +280,9 @@ The naive recursion is slow because we check every word at each step. We can pre
 
 1. Precompute a frequency table `cnt[k][c]` storing how many words have character `c` at column `k`.
 2. Define `dfs(i, k)` with memoization:
-   - Base cases same as before.
-   - Skip column `k` by adding `dfs(i, k + 1)`.
-   - Use column `k` by multiplying `cnt[k][target[i]]` with `dfs(i + 1, k + 1)`.
+    - Base cases same as before.
+    - Skip column `k` by adding `dfs(i, k + 1)`.
+    - Use column `k` by multiplying `cnt[k][target[i]]` with `dfs(i + 1, k + 1)`.
 3. Return `dfs(0, 0)` modulo `10^9 + 7`.
 
 ::tabs-start
@@ -550,6 +577,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(words: Vec<String>, target: String) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let target = target.as_bytes();
+        let n = target.len();
+        let m = words[0].len();
+
+        let mut cnt = vec![vec![0i64; 26]; m];
+        for word in &words {
+            for (i, &b) in word.as_bytes().iter().enumerate() {
+                cnt[i][(b - b'a') as usize] += 1;
+            }
+        }
+
+        let mut dp = vec![vec![-1i64; m + 1]; n + 1];
+
+        fn dfs(cnt: &[Vec<i64>], target: &[u8], dp: &mut Vec<Vec<i64>>,
+               i: usize, k: usize, n: usize, m: usize) -> i64 {
+            if i == n { return 1; }
+            if k == m { return 0; }
+            if dp[i][k] != -1 { return dp[i][k]; }
+
+            let c = (target[i] - b'a') as usize;
+            let skip = dfs(cnt, target, dp, i, k + 1, n, m);
+            let take = cnt[k][c] * dfs(cnt, target, dp, i + 1, k + 1, n, m) % 1_000_000_007;
+            dp[i][k] = (skip + take) % 1_000_000_007;
+            dp[i][k]
+        }
+
+        dfs(&cnt, target, &mut dp, 0, 0, n, m) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -573,8 +635,8 @@ We can convert the memoized solution to a bottom-up DP. We fill a 2D table where
 2. Create a DP table of size `(n+1) x (m+1)` initialized to `0`.
 3. Set `dp[n][m] = 1` (base case: empty target from the end is valid).
 4. Iterate backward through positions:
-   - For each `(i, k)`, set `dp[i][k] = dp[i][k+1]` (skip column).
-   - If `i < n`, add `cnt[k][target[i]] * dp[i+1][k+1]` (use column).
+    - For each `(i, k)`, set `dp[i][k] = dp[i][k+1]` (skip column).
+    - If `i < n`, add `cnt[k][target[i]] * dp[i+1][k+1]` (use column).
 5. Return `dp[0][0]` modulo `10^9 + 7`.
 
 ::tabs-start
@@ -835,6 +897,39 @@ class Solution {
         }
 
         return dp[0][0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_ways(words: Vec<String>, target: String) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let target = target.as_bytes();
+        let n = target.len();
+        let m = words[0].len();
+
+        let mut cnt = vec![vec![0i64; 26]; m];
+        for word in &words {
+            for (i, &b) in word.as_bytes().iter().enumerate() {
+                cnt[i][(b - b'a') as usize] += 1;
+            }
+        }
+
+        let mut dp = vec![vec![0i64; m + 1]; n + 1];
+        dp[n][m] = 1;
+
+        for i in (0..=n).rev() {
+            for k in (0..m).rev() {
+                dp[i][k] = dp[i][k + 1];
+                if i < n {
+                    let c = (target[i] - b'a') as usize;
+                    dp[i][k] = (dp[i][k] + cnt[k][c] * dp[i + 1][k + 1]) % MOD;
+                }
+            }
+        }
+
+        dp[0][0] as i32
     }
 }
 ```
@@ -1154,6 +1249,43 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_ways(words: Vec<String>, target: String) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let target = target.as_bytes();
+        let n = target.len();
+        let m = words[0].len();
+
+        let mut cnt = vec![vec![0i64; 26]; m];
+        for word in &words {
+            for (i, &b) in word.as_bytes().iter().enumerate() {
+                cnt[i][(b - b'a') as usize] += 1;
+            }
+        }
+
+        let mut dp = vec![0i64; m + 1];
+        dp[m] = 1;
+
+        for i in (0..=n).rev() {
+            let mut nxt: i64 = if i == n - 1 { 1 } else { 0 };
+            for k in (0..m).rev() {
+                let cur = dp[k];
+                dp[k] = dp[k + 1];
+                if i < n {
+                    let c = (target[i] - b'a') as usize;
+                    dp[k] = (dp[k] + cnt[k][c] * nxt) % MOD;
+                }
+                nxt = cur;
+            }
+            dp[m] = 0;
+        }
+
+        dp[0] as i32
     }
 }
 ```

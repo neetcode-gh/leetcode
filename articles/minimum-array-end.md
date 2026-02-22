@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation** - Understanding AND, OR, and bit shifting operations is essential for constructing valid sequences
 - **Binary Representation** - The optimal solution embeds bits of n-1 into zero-bit positions of x
 - **Number Theory Basics** - Understanding how bitwise AND constrains array elements helps identify the solution pattern
@@ -18,7 +20,7 @@ To find the next valid number after `res`, we add 1 and then OR with `x`. Adding
 
 1. Initialize `res = x`.
 2. Repeat `n - 1` times:
-   - Set `res = (res + 1) | x`.
+    - Set `res = (res + 1) | x`.
 3. Return `res`.
 
 ::tabs-start
@@ -120,6 +122,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_end(n: i32, x: i32) -> i64 {
+        let mut res = x as i64;
+        for _ in 0..n - 1 {
+            res = (res + 1) | x as i64;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -141,8 +155,8 @@ Think of it as embedding the binary representation of `n - 1` into the zero-bit 
 
 1. Convert `x` and `n - 1` to binary arrays.
 2. Iterate through bit positions of `x`:
-   - Skip positions where `x` has a `1`.
-   - For positions where `x` has a `0`, fill in the next bit from `n - 1`.
+    - Skip positions where `x` has a `1`.
+    - For positions where `x` has a `0`, fill in the next bit from `n - 1`.
 3. Convert the resulting binary array back to an integer.
 4. Return the result.
 
@@ -433,6 +447,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_end(n: i32, x: i32) -> i64 {
+        let mut res: i64 = 0;
+        let n_val = n - 1;
+
+        let mut x_bin = [0i32; 64];
+        let mut n_bin = [0i32; 64];
+
+        for i in 0..32 {
+            x_bin[i] = (x >> i) & 1;
+            n_bin[i] = (n_val >> i) & 1;
+        }
+
+        let mut i_x = 0usize;
+        let mut i_n = 0usize;
+        while i_x < 63 {
+            while i_x < 63 && x_bin[i_x] != 0 {
+                i_x += 1;
+            }
+            x_bin[i_x] = n_bin[i_n];
+            i_x += 1;
+            i_n += 1;
+        }
+
+        for i in 0..64 {
+            if x_bin[i] == 1 {
+                res += 1i64 << i;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,10 +505,10 @@ We use two pointers: one for positions in the result (`i_x`) and one for bits of
 1. Initialize `res = x`.
 2. Use two bit masks: `i_x` iterates through bit positions of the result, `i_n` iterates through bits of `n - 1`.
 3. While `i_n <= n - 1`:
-   - If bit position `i_x` in `x` is `0`:
-     - If the current bit of `n - 1` (checked via `i_n & (n-1)`) is set, set this bit in `res`.
-     - Shift `i_n` left (move to next bit of `n - 1`).
-   - Shift `i_x` left (move to next bit position).
+    - If bit position `i_x` in `x` is `0`:
+        - If the current bit of `n - 1` (checked via `i_n & (n-1)`) is set, set this bit in `res`.
+        - Shift `i_n` left (move to next bit of `n - 1`).
+    - Shift `i_x` left (move to next bit position).
 4. Return `res`.
 
 ::tabs-start
@@ -639,6 +689,29 @@ class Solution {
         }
 
         return Int(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_end(n: i32, x: i32) -> i64 {
+        let mut res = x as i64;
+        let mut i_x: i64 = 1;
+        let mut i_n: i64 = 1;
+        let n_minus_1 = (n - 1) as i64;
+
+        while i_n <= n_minus_1 {
+            if i_x & (x as i64) == 0 {
+                if i_n & n_minus_1 != 0 {
+                    res |= i_x;
+                }
+                i_n <<= 1;
+            }
+            i_x <<= 1;
+        }
+
+        res
     }
 }
 ```

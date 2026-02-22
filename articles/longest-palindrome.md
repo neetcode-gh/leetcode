@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Hash Sets** - Counting character frequencies or tracking characters with odd counts
 - **Palindrome Properties** - Understanding that palindromes require character pairs (even counts) with at most one odd-count character in the middle
 - **Bit Manipulation (Optional)** - Using bitmasks to track odd/even character counts for a space-optimized solution
@@ -222,6 +224,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> i32 {
+        let mut count = HashMap::new();
+        let mut res = 0;
+
+        for c in s.chars() {
+            let e = count.entry(c).or_insert(0);
+            *e += 1;
+            if *e % 2 == 0 {
+                res += 2;
+            }
+        }
+
+        for &cnt in count.values() {
+            if cnt % 2 == 1 {
+                res += 1;
+                break;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -396,6 +424,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> i32 {
+        let mut count = HashMap::new();
+        let mut res = 0i32;
+
+        for c in s.chars() {
+            let e = count.entry(c).or_insert(0);
+            *e += 1;
+            if *e % 2 == 0 {
+                res += 2;
+            }
+        }
+
+        if res < s.len() as i32 { res + 1 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -417,8 +464,8 @@ Instead of counting exact frequencies, we only need to know if a character has b
 
 1. Initialize an empty set and `result` to `0`.
 2. For each character:
-   - If it's in the set, remove it and add `2` to `result` (pair completed).
-   - Otherwise, add it to the set.
+    - If it's in the set, remove it and add `2` to `result` (pair completed).
+    - Otherwise, add it to the set.
 3. If the set is non-empty after processing, add `1` to `result`.
 4. Return the result.
 
@@ -586,6 +633,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> i32 {
+        let mut seen = HashSet::new();
+        let mut res = 0;
+
+        for c in s.chars() {
+            if seen.contains(&c) {
+                seen.remove(&c);
+                res += 2;
+            } else {
+                seen.insert(c);
+            }
+        }
+
+        if seen.is_empty() { res } else { res + 1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -607,9 +674,9 @@ Since we're only dealing with lowercase and uppercase English letters (52 total)
 
 1. Use two bitmasks: one for lowercase (`a-z`), one for uppercase (`A-Z`).
 2. For each character:
-   - Compute the bit position based on its ASCII value.
-   - If the bit is set (odd count), add `2` to result (pair formed).
-   - Toggle the bit with XOR.
+    - Compute the bit position based on its ASCII value.
+    - If the bit is set (odd count), add `2` to result (pair formed).
+    - Toggle the bit with XOR.
 3. If either mask is non-zero at the end, add `1` for the middle.
 4. Return the result.
 
@@ -836,6 +903,34 @@ class Solution {
         }
 
         return (mask1 != 0 || mask2 != 0) ? res + 1 : res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> i32 {
+        let mut mask1: u32 = 0; // [a - z]
+        let mut mask2: u32 = 0; // [A - Z]
+        let mut res = 0;
+
+        for c in s.bytes() {
+            if c >= b'a' && c <= b'z' {
+                let bit = 1u32 << (c - b'a');
+                if mask1 & bit != 0 {
+                    res += 2;
+                }
+                mask1 ^= bit;
+            } else {
+                let bit = 1u32 << (c - b'A');
+                if mask2 & bit != 0 {
+                    res += 2;
+                }
+                mask2 ^= bit;
+            }
+        }
+
+        if mask1 != 0 || mask2 != 0 { res + 1 } else { res }
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy Algorithms** - Making locally optimal choices (using the most frequent valid character) to build a global solution
 - **Heaps (Priority Queues)** - Using a max-heap to efficiently retrieve the character with the highest remaining count
 - **Recursion** - Breaking down the problem into smaller subproblems with reduced character counts
@@ -347,6 +349,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_diverse_string(a: i32, b: i32, c: i32) -> String {
+        let mut count = [a, b, c];
+        let mut res = Vec::new();
+
+        let get_max = |count: &[i32; 3], repeated: i32| -> i32 {
+            let mut idx = -1i32;
+            let mut max_cnt = 0;
+            for i in 0..3 {
+                if i as i32 == repeated || count[i] == 0 {
+                    continue;
+                }
+                if max_cnt < count[i] {
+                    max_cnt = count[i];
+                    idx = i as i32;
+                }
+            }
+            idx
+        };
+
+        let mut repeated = -1i32;
+        loop {
+            let max_char = get_max(&count, repeated);
+            if max_char == -1 {
+                break;
+            }
+            res.push((max_char as u8 + b'a') as char);
+            count[max_char as usize] -= 1;
+            let n = res.len();
+            if n > 1 && res[n - 1] == res[n - 2] {
+                repeated = max_char;
+            } else {
+                repeated = -1;
+            }
+        }
+
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,10 +412,10 @@ Using a max-heap streamlines finding the character with the highest count. We po
 
 1. Push all characters with non-zero counts into a max-heap as `(count, char)` pairs.
 2. While the heap is not empty:
-   - Pop the character with the highest count.
-   - If the last two characters in the result match this character, try using the second-highest instead.
-   - If no second option exists, stop.
-   - Append the chosen character, decrement its count, and push it back if count remains positive.
+    - Pop the character with the highest count.
+    - If the last two characters in the result match this character, try using the second-highest instead.
+    - If no second option exists, stop.
+    - Append the chosen character, decrement its count, and push it back if count remains positive.
 3. Return the constructed string.
 
 ::tabs-start
@@ -730,6 +774,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_diverse_string(a: i32, b: i32, c: i32) -> String {
+        let mut res = Vec::new();
+        let mut max_heap = BinaryHeap::new();
+
+        if a > 0 { max_heap.push((a, b'a')); }
+        if b > 0 { max_heap.push((b, b'b')); }
+        if c > 0 { max_heap.push((c, b'c')); }
+
+        while let Some((count, ch)) = max_heap.pop() {
+            let n = res.len();
+            if n > 1 && res[n - 1] == ch && res[n - 2] == ch {
+                if let Some((count2, ch2)) = max_heap.pop() {
+                    res.push(ch2);
+                    if count2 - 1 > 0 {
+                        max_heap.push((count2 - 1, ch2));
+                    }
+                    max_heap.push((count, ch));
+                } else {
+                    break;
+                }
+            } else {
+                res.push(ch);
+                if count - 1 > 0 {
+                    max_heap.push((count - 1, ch));
+                }
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1014,6 +1093,34 @@ class Solution {
         }
 
         return String(rec(a, b, c, "a", "b", "c"))
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_diverse_string(a: i32, b: i32, c: i32) -> String {
+        fn rec(max1: i32, max2: i32, max3: i32,
+               char1: u8, char2: u8, char3: u8) -> Vec<u8> {
+            if max1 < max2 {
+                return rec(max2, max1, max3, char2, char1, char3);
+            }
+            if max2 < max3 {
+                return rec(max1, max3, max2, char1, char3, char2);
+            }
+            if max2 == 0 {
+                return vec![char1; max1.min(2) as usize];
+            }
+            let use1 = max1.min(2);
+            let use2 = if max1 - use1 >= max2 { 1 } else { 0 };
+            let mut res = vec![char1; use1 as usize];
+            res.extend(vec![char2; use2 as usize]);
+            res.extend(rec(max1 - use1, max2 - use2, max3,
+                           char1, char2, char3));
+            res
+        }
+
+        String::from_utf8(rec(a, b, c, b'a', b'b', b'c')).unwrap()
     }
 }
 ```

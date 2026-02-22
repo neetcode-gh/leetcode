@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree (BST) properties** - Understanding that left subtree values are smaller and right subtree values are larger than the root
 - **Tree traversal techniques** - Specifically inorder traversal which produces sorted values in a BST
 - **Binary search** - Using BST structure to efficiently narrow down the search space
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursive Inorder + Linear search, O(N) time
 
 ### Intuition
+
 An inorder traversal of a BST produces values in sorted order. By collecting all values first, we can then find the one closest to the target using a simple linear search. While not the most efficient approach, it clearly demonstrates the relationship between inorder traversal and sorted order.
 
 ### Algorithm
+
 1. Perform an inorder traversal of the BST, collecting all node values into a list.
 2. The inorder traversal visits left subtree, then current node, then right subtree.
 3. After collecting all values, iterate through the list to find the value with minimum absolute difference from the target.
@@ -25,7 +29,7 @@ class Solution:
     def closestValue(self, root: TreeNode, target: float) -> int:
         def inorder(r: TreeNode):
             return inorder(r.left) + [r.val] + inorder(r.right) if r else []
-        
+
         return min(inorder(root), key = lambda x: abs(target - x))
 ```
 
@@ -82,7 +86,7 @@ class Solution {
         const nums = [];
         this.inorder(root, nums);
         return nums.reduce((closest, val) =>
-            Math.abs(val - target) < Math.abs(closest - target) ? val : closest
+            Math.abs(val - target) < Math.abs(closest - target) ? val : closest,
         );
     }
 
@@ -172,6 +176,33 @@ class Solution {
 }
 ```
 
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+
+impl Solution {
+    pub fn closest_value(root: Option<Rc<RefCell<TreeNode>>>, target: f64) -> i32 {
+        let mut nums = Vec::new();
+
+        fn inorder(node: &Option<Rc<RefCell<TreeNode>>>, nums: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                inorder(&n.left, nums);
+                nums.push(n.val);
+                inorder(&n.right, nums);
+            }
+        }
+
+        inorder(&root, &mut nums);
+        *nums.iter().min_by(|&&a, &&b| {
+            let da = (a as f64 - target).abs();
+            let db = (b as f64 - target).abs();
+            da.partial_cmp(&db).unwrap()
+        }).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -179,16 +210,18 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the total number of nodes in the binary tree
+> Where $N$ is the total number of nodes in the binary tree
 
 ---
 
 ## 2. Iterative Inorder, O(k) time
 
 ### Intuition
+
 Since inorder traversal gives sorted values, we can stop early once we find the first value greater than or equal to the target. At that point, the answer is either the current value or the previous value we visited (the predecessor). This avoids traversing the entire tree when the target is small.
 
 ### Algorithm
+
 1. Use an iterative inorder traversal with an explicit stack.
 2. Keep track of the predecessor value (the last visited node smaller than or equal to target).
 3. Go left as far as possible, pushing nodes onto the stack.
@@ -203,16 +236,16 @@ Since inorder traversal gives sorted values, we can stop early once we find the 
 class Solution:
     def closestValue(self, root: TreeNode, target: float) -> int:
         stack, pred = [], float('-inf')
-        
+
         while stack or root:
             while root:
                 stack.append(root)
                 root = root.left
             root = stack.pop()
-            
+
             if pred <= target and target < root.val:
                 return min(pred, root.val, key = lambda x: abs(target - x))
-                
+
             pred = root.val
             root = root.right
 
@@ -289,7 +322,9 @@ class Solution {
             root = stack.pop();
 
             if (pred <= target && target < root.val) {
-                return Math.abs(pred - target) <= Math.abs(root.val - target) ? pred : root.val;
+                return Math.abs(pred - target) <= Math.abs(root.val - target)
+                    ? pred
+                    : root.val;
             }
 
             pred = root.val;
@@ -404,6 +439,40 @@ class Solution {
 }
 ```
 
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+
+impl Solution {
+    pub fn closest_value(root: Option<Rc<RefCell<TreeNode>>>, target: f64) -> i32 {
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut pred: i64 = i64::MIN;
+        let mut curr = root;
+
+        while !stack.is_empty() || curr.is_some() {
+            while let Some(node) = curr {
+                curr = node.borrow().left.clone();
+                stack.push(node);
+            }
+            let node = stack.pop().unwrap();
+            let val = node.borrow().val;
+
+            if (pred as f64) <= target && target < val as f64 {
+                return if (pred as f64 - target).abs() <= (val as f64 - target).abs() {
+                    pred as i32
+                } else {
+                    val
+                };
+            }
+
+            pred = val as i64;
+            curr = node.borrow().right.clone();
+        }
+        pred as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -411,21 +480,23 @@ class Solution {
 - Time complexity: $O(k)$ in the average case and $O(H+k)$ in the worst case,
 - Space complexity: $O(H)$
 
->  Where $k$ is an index of the closest element and $H$ is the height of the tree.
+> Where $k$ is an index of the closest element and $H$ is the height of the tree.
 
 ---
 
 ## 3. Binary Search, O(H) time
 
 ### Intuition
+
 The BST property allows us to use binary search. At each node, we compare the target with the current value to decide whether to go left or right. We track the closest value seen so far. If the target is smaller, we go left (there might be a closer smaller value). If the target is larger, we go right (there might be a closer larger value). This approach only visits nodes along a single path from root to leaf.
 
 ### Algorithm
+
 1. Initialize the closest value to the root's value.
 2. While the current node is not null:
-   - If the current value is closer to target than the current closest (or equally close but smaller), update closest.
-   - If target < current value, move to the left child.
-   - Otherwise, move to the right child.
+    - If the current value is closer to target than the current closest (or equally close but smaller), update closest.
+    - If target < current value, move to the left child.
+    - Otherwise, move to the right child.
 3. Return the closest value found.
 
 ::tabs-start
@@ -449,11 +520,11 @@ class Solution {
 
         while (root != null) {
             val = root.val;
-            closest = Math.abs(val - target) < Math.abs(closest - target) 
+            closest = Math.abs(val - target) < Math.abs(closest - target)
                     || (Math.abs(val - target) == Math.abs(closest - target) && val < closest) ? val : closest;
             root = target < root.val ? root.left : root.right;
         }
-        
+
         return closest;
     }
 }
@@ -467,11 +538,11 @@ public:
 
         while (root != nullptr) {
             val = root->val;
-            closest = abs(val - target) < abs(closest - target) 
+            closest = abs(val - target) < abs(closest - target)
                 || (abs(val - target) == abs(closest - target) && val < closest) ? val : closest;
             root = target < root->val ? root->left : root->right;
         }
-        
+
         return closest;
     }
 };
@@ -485,12 +556,17 @@ class Solution {
      * @return {number}
      */
     closestValue(root, target) {
-        let val, closest = root.val;
+        let val,
+            closest = root.val;
 
         while (root !== null) {
             val = root.val;
-            closest = Math.abs(val - target) < Math.abs(closest - target)
-                || (Math.abs(val - target) === Math.abs(closest - target) && val < closest) ? val : closest;
+            closest =
+                Math.abs(val - target) < Math.abs(closest - target) ||
+                (Math.abs(val - target) === Math.abs(closest - target) &&
+                    val < closest)
+                    ? val
+                    : closest;
             root = target < root.val ? root.left : root.right;
         }
 
@@ -579,6 +655,34 @@ class Solution {
 }
 ```
 
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+
+impl Solution {
+    pub fn closest_value(root: Option<Rc<RefCell<TreeNode>>>, target: f64) -> i32 {
+        let mut curr = root;
+        let mut closest = curr.as_ref().unwrap().borrow().val;
+
+        while let Some(node) = curr {
+            let val = node.borrow().val;
+            let diff_val = (val as f64 - target).abs();
+            let diff_closest = (closest as f64 - target).abs();
+            if diff_val < diff_closest || (diff_val == diff_closest && val < closest) {
+                closest = val;
+            }
+            curr = if target < val as f64 {
+                node.borrow().left.clone()
+            } else {
+                node.borrow().right.clone()
+            };
+        }
+
+        closest
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -586,13 +690,14 @@ class Solution {
 - Time complexity: $O(H)$
 - Space complexity: $O(1)$
 
->  Where $H$ is the height of the tree.
+> Where $H$ is the height of the tree.
 
 ---
 
 ## Common Pitfalls
 
 ### Not Handling Tie-Breaking Correctly
+
 When two values have the same distance to the target, the problem requires returning the smaller value. Using `<` instead of `<=` in the comparison can return the wrong answer.
 
 ```python
@@ -607,5 +712,5 @@ if abs(val - target) < abs(closest - target) or \
 ```
 
 ### Going the Wrong Direction in BST
-Choosing the wrong child based on comparison with target defeats the purpose of binary search. If target is smaller than current value, you must go left (not right) to find potentially closer smaller values.
 
+Choosing the wrong child based on comparison with target defeats the purpose of binary search. If target is smaller than current value, you must go left (not right) to find potentially closer smaller values.

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Tracing values back through parent-child relationships in a recursive structure
 - **Binary Tree Concepts** - Understanding how positions in a row relate to parent positions in the previous row
 - **Bit Manipulation** - Using XOR for flipping values and bit counting to determine parity
@@ -17,7 +19,7 @@ The problem generates rows where each row is built from the previous one: `0` be
 
 1. Start with the first row containing just `0`.
 2. For each subsequent row up to `n`:
-   - Create a new row by replacing each `0` with `01` and each `1` with `10`.
+    - Create a new row by replacing each `0` with `01` and each `1` with `10`.
 3. Return the character at index `k - 1` from the final row.
 
 ::tabs-start
@@ -196,6 +198,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_grammar(n: i32, k: i32) -> i32 {
+        let mut prev = vec![0u8];
+        for _ in 2..=n {
+            let mut cur = Vec::new();
+            for &c in &prev {
+                if c == 0 {
+                    cur.push(0);
+                    cur.push(1);
+                } else {
+                    cur.push(1);
+                    cur.push(0);
+                }
+            }
+            prev = cur;
+        }
+        prev[k as usize - 1] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -217,7 +241,7 @@ We can visualize the grammar as a binary tree where each node generates two chil
 2. Base case: if `n == 1`, return the current `root` value.
 3. Calculate `total = 2^(n-1)`, the size of row `n`.
 4. If `k > total / 2`, we're in the right half:
-   - Recurse with `n - 1`, adjust `k` by subtracting half, and flip `root` using XOR.
+    - Recurse with `n - 1`, adjust `k` by subtracting half, and flip `root` using XOR.
 5. Otherwise, recurse with the same `root` value.
 6. Start with `dfs(n, k, 0)` since row 1 starts with `0`.
 
@@ -380,6 +404,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_grammar(n: i32, k: i32) -> i32 {
+        fn dfs(n: i32, k: i32, root: i32) -> i32 {
+            if n == 1 {
+                return root;
+            }
+            let total = 1 << (n - 1);
+            if k > total / 2 {
+                dfs(n - 1, k - total / 2, root ^ 1)
+            } else {
+                dfs(n - 1, k, root)
+            }
+        }
+        dfs(n, k, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,9 +442,9 @@ This is the iterative version of the binary tree approach. Instead of recursion,
 
 1. Initialize `cur = 0` (the root value) and set `left = 1`, `right = 2^(n-1)`.
 2. Loop `n - 1` times:
-   - Calculate `mid = (left + right) / 2`.
-   - If `k <= mid`, narrow to the left half by setting `right = mid`.
-   - Otherwise, narrow to the right half, set `left = mid + 1`, and flip `cur`.
+    - Calculate `mid = (left + right) / 2`.
+    - If `k <= mid`, narrow to the left half by setting `right = mid`.
+    - Otherwise, narrow to the right half, set `left = mid + 1`, and flip `cur`.
 3. Return `cur` as the final answer.
 
 ::tabs-start
@@ -581,6 +624,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_grammar(n: i32, k: i32) -> i32 {
+        let mut cur = 0;
+        let mut left = 1;
+        let mut right = 1 << (n - 1);
+        for _ in 0..n - 1 {
+            let mid = (left + right) / 2;
+            if k <= mid {
+                right = mid;
+            } else {
+                left = mid + 1;
+                cur = if cur == 0 { 1 } else { 0 };
+            }
+        }
+        cur
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,6 +773,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_grammar(n: i32, k: i32) -> i32 {
+        if n == 1 {
+            return 0;
+        }
+        if k & 1 == 1 {
+            Self::kth_grammar(n - 1, (k + 1) / 2)
+        } else {
+            Self::kth_grammar(n - 1, k / 2) ^ 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -795,6 +873,14 @@ class Solution {
 class Solution {
     func kthGrammar(_ n: Int, _ k: Int) -> Int {
         return (k - 1).nonzeroBitCount & 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn kth_grammar(_n: i32, k: i32) -> i32 {
+        (k - 1).count_ones() as i32 & 1
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Storing optimal results for each position to avoid recomputation
 - **Game Theory / Minimax** - Modeling optimal play where both players make the best possible moves
 - **Score Difference Tracking** - Using relative advantage (current player's score minus opponent's score) to simplify two-player game logic
@@ -318,6 +320,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game_iii(stone_value: Vec<i32>) -> String {
+        let n = stone_value.len();
+        let mut dp = vec![[None; 2]; n];
+
+        fn dfs(i: usize, alice: usize, sv: &[i32], dp: &mut Vec<[Option<i32>; 2]>) -> i32 {
+            if i >= sv.len() {
+                return 0;
+            }
+            if let Some(cached) = dp[i][alice] {
+                return cached;
+            }
+            let mut res = if alice == 1 { i32::MIN } else { i32::MAX };
+            let mut score = 0;
+            for j in i..sv.len().min(i + 3) {
+                if alice == 1 {
+                    score += sv[j];
+                    res = res.max(score + dfs(j + 1, 0, sv, dp));
+                } else {
+                    score -= sv[j];
+                    res = res.min(score + dfs(j + 1, 1, sv, dp));
+                }
+            }
+            dp[i][alice] = Some(res);
+            res
+        }
+
+        let result = dfs(0, 1, &stone_value, &mut dp);
+        if result == 0 {
+            "Tie".to_string()
+        } else if result > 0 {
+            "Alice".to_string()
+        } else {
+            "Bob".to_string()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -586,6 +628,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game_iii(stone_value: Vec<i32>) -> String {
+        let n = stone_value.len();
+        let mut dp = vec![i32::MIN; n];
+
+        fn dfs(i: usize, sv: &[i32], dp: &mut Vec<i32>) -> i32 {
+            if i >= sv.len() {
+                return 0;
+            }
+            if dp[i] != i32::MIN {
+                return dp[i];
+            }
+            let mut res = i32::MIN;
+            let mut total = 0;
+            for j in i..sv.len().min(i + 3) {
+                total += sv[j];
+                res = res.max(total - dfs(j + 1, sv, dp));
+            }
+            dp[i] = res;
+            res
+        }
+
+        let result = dfs(0, &stone_value, &mut dp);
+        if result == 0 {
+            "Tie".to_string()
+        } else if result > 0 {
+            "Alice".to_string()
+        } else {
+            "Bob".to_string()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -804,6 +881,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game_iii(stone_value: Vec<i32>) -> String {
+        let n = stone_value.len();
+        let mut dp = vec![i32::MIN; n + 1];
+        dp[n] = 0;
+
+        for i in (0..n).rev() {
+            let mut total = 0;
+            dp[i] = i32::MIN;
+            for j in i..n.min(i + 3) {
+                total += stone_value[j];
+                dp[i] = dp[i].max(total - dp[j + 1]);
+            }
+        }
+
+        let result = dp[0];
+        if result == 0 {
+            "Tie".to_string()
+        } else if result > 0 {
+            "Alice".to_string()
+        } else {
+            "Bob".to_string()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1001,6 +1106,32 @@ class Solution {
 
         if dp[0] == 0 { return "Tie" }
         return dp[0] > 0 ? "Alice" : "Bob"
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn stone_game_iii(stone_value: Vec<i32>) -> String {
+        let n = stone_value.len();
+        let mut dp = [0i32; 4];
+
+        for i in (0..n).rev() {
+            let mut total = 0;
+            dp[i % 4] = i32::MIN;
+            for j in i..n.min(i + 3) {
+                total += stone_value[j];
+                dp[i % 4] = dp[i % 4].max(total - dp[(j + 1) % 4]);
+            }
+        }
+
+        if dp[0] == 0 {
+            "Tie".to_string()
+        } else if dp[0] > 0 {
+            "Alice".to_string()
+        } else {
+            "Bob".to_string()
+        }
     }
 }
 ```

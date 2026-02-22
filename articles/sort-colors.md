@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays and In-Place Manipulation** - Modifying arrays without using extra space
 - **Two/Three Pointers Technique** - The Dutch National Flag algorithm uses three pointers to partition the array in one pass
 - **Counting Sort** - Leveraging the limited value range (only 0, 1, 2) for linear time sorting
@@ -87,6 +89,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_colors(nums: &mut Vec<i32>) {
+        nums.sort();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -106,9 +116,9 @@ Since there are only three possible values (0, 1, 2), we can count how many time
 
 1. Count the occurrences of `0`, `1`, and `2` in the array.
 2. Overwrite the array:
-   - Fill the first `count[0]` positions with `0`.
-   - Fill the next `count[1]` positions with `1`.
-   - Fill the remaining `count[2]` positions with `2`.
+    - Fill the first `count[0]` positions with `0`.
+    - Fill the next `count[1]` positions with `1`.
+    - Fill the remaining `count[2]` positions with `2`.
 
 ::tabs-start
 
@@ -263,6 +273,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_colors(nums: &mut Vec<i32>) {
+        let mut count = [0; 3];
+        for &num in nums.iter() {
+            count[num as usize] += 1;
+        }
+
+        let mut index = 0;
+        for i in 0..3 {
+            while count[i] > 0 {
+                count[i] -= 1;
+                nums[index] = i as i32;
+                index += 1;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -282,9 +312,9 @@ The Dutch National Flag algorithm partitions the array into three sections in a 
 
 1. Initialize three pointers: `l` (boundary for `0`s), `i` (current element), and `r` (boundary for `2`s).
 2. While `i <= r`:
-   - If `nums[i]` is `0`, swap with `nums[l]`, increment both `l` and `i`.
-   - If `nums[i]` is `2`, swap with `nums[r]`, decrement `r` (do not increment `i` since the swapped element needs to be checked).
-   - If `nums[i]` is `1`, just increment `i`.
+    - If `nums[i]` is `0`, swap with `nums[l]`, increment both `l` and `i`.
+    - If `nums[i]` is `2`, swap with `nums[r]`, decrement `r` (do not increment `i` since the swapped element needs to be checked).
+    - If `nums[i]` is `1`, just increment `i`.
 
 ::tabs-start
 
@@ -466,6 +496,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_colors(nums: &mut Vec<i32>) {
+        let mut i: i32 = 0;
+        let mut l: i32 = 0;
+        let mut r: i32 = nums.len() as i32 - 1;
+        while i <= r {
+            if nums[i as usize] == 0 {
+                nums.swap(l as usize, i as usize);
+                l += 1;
+            } else if nums[i as usize] == 2 {
+                nums.swap(i as usize, r as usize);
+                r -= 1;
+                i -= 1;
+            }
+            i += 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -485,9 +536,9 @@ This approach uses insertion boundaries for each color. We track where the next 
 
 1. Initialize three pointers `zero`, `one`, and `two`, all starting at `0`.
 2. For each element in the array:
-   - If it is `0`: write `2` at `two`, write `1` at `one`, write `0` at `zero`, then increment all three pointers.
-   - If it is `1`: write `2` at `two`, write `1` at `one`, then increment `two` and `one`.
-   - If it is `2`: write `2` at `two`, then increment `two`.
+    - If it is `0`: write `2` at `two`, write `1` at `one`, write `0` at `zero`, then increment all three pointers.
+    - If it is `1`: write `2` at `two`, write `1` at `one`, then increment `two` and `one`.
+    - If it is `2`: write `2` at `two`, then increment `two`.
 
 ::tabs-start
 
@@ -676,6 +727,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_colors(nums: &mut Vec<i32>) {
+        let (mut zero, mut one, mut two) = (0, 0, 0);
+        for i in 0..nums.len() {
+            if nums[i] == 0 {
+                nums[two] = 2;
+                two += 1;
+                nums[one] = 1;
+                one += 1;
+                nums[zero] = 0;
+                zero += 1;
+            } else if nums[i] == 1 {
+                nums[two] = 2;
+                two += 1;
+                nums[one] = 1;
+                one += 1;
+            } else {
+                nums[two] = 2;
+                two += 1;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -695,9 +772,9 @@ This is a streamlined version of the previous approach. We iterate with pointer 
 
 1. Initialize pointers `zero` and `one` at `0`.
 2. Iterate through the array with pointer `two`:
-   - Save the current value, then set `nums[two] = 2`.
-   - If the saved value was less than `2`, set `nums[one] = 1` and increment `one`.
-   - If the saved value was less than `1`, set `nums[zero] = 0` and increment `zero`.
+    - Save the current value, then set `nums[two] = 2`.
+    - If the saved value was less than `2`, set `nums[one] = 1` and increment `one`.
+    - If the saved value was less than `1`, set `nums[zero] = 0` and increment `zero`.
 
 ::tabs-start
 
@@ -850,6 +927,26 @@ class Solution {
             if tmp < 1 {
                 nums[zero] = 0
                 zero += 1
+            }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_colors(nums: &mut Vec<i32>) {
+        let (mut zero, mut one) = (0, 0);
+        for two in 0..nums.len() {
+            let tmp = nums[two];
+            nums[two] = 2;
+            if tmp < 2 {
+                nums[one] = 1;
+                one += 1;
+            }
+            if tmp < 1 {
+                nums[zero] = 0;
+                zero += 1;
             }
         }
     }

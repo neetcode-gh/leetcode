@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Number Representation** - Understanding that odd numbers must end with bit 1, and higher-order bits contribute more to value
 - **String Manipulation** - Converting between strings and character arrays, swapping elements
 - **Greedy Algorithms** - The optimal structure can be determined without exhaustive search
@@ -181,6 +183,24 @@ public class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_odd_binary_number(s: String) -> String {
+        let mut arr: Vec<u8> = s.into_bytes();
+        arr.sort_unstable_by(|a, b| b.cmp(a));
+
+        let n = arr.len();
+        let mut i = n - 1;
+        while i > 0 && arr[i] == b'0' {
+            i -= 1;
+        }
+
+        arr.swap(i, n - 1);
+        String::from_utf8(arr).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,6 +342,15 @@ public class Solution {
             }
         }
         return new string('1', count - 1) + new string('0', s.Length - count) + "1";
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_odd_binary_number(s: String) -> String {
+        let count = s.chars().filter(|&c| c == '1').count();
+        "1".repeat(count - 1) + &"0".repeat(s.len() - count) + "1"
     }
 }
 ```
@@ -517,6 +546,26 @@ public class Solution {
         arr[arr.Length - 1] = t;
 
         return new string(arr);
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_odd_binary_number(s: String) -> String {
+        let mut arr: Vec<u8> = s.into_bytes();
+        let mut left = 0;
+
+        for i in 0..arr.len() {
+            if arr[i] == b'1' {
+                arr.swap(left, i);
+                left += 1;
+            }
+        }
+
+        let n = arr.len();
+        arr.swap(left - 1, n - 1);
+        String::from_utf8(arr).unwrap()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Queue data structure** - Simulating the ticket line with FIFO behavior
 - **Array iteration** - Processing elements in circular order using modulo arithmetic
 - **Mathematical reasoning** - The optimal solution calculates contributions directly without simulation
@@ -222,6 +224,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn time_required_to_buy(mut tickets: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = tickets.len();
+        let mut queue: VecDeque<usize> = (0..n).collect();
+
+        let mut time = 0;
+        while let Some(cur) = queue.pop_front() {
+            time += 1;
+            tickets[cur] -= 1;
+            if tickets[cur] == 0 {
+                if cur == k {
+                    return time;
+                }
+            } else {
+                queue.push_back(cur);
+            }
+        }
+        time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -424,6 +450,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn time_required_to_buy(mut tickets: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let n = tickets.len();
+        let mut idx = 0;
+        let mut time = 0;
+
+        loop {
+            time += 1;
+            tickets[idx] -= 1;
+            if tickets[idx] == 0 && idx == k {
+                return time;
+            }
+            idx = (idx + 1) % n;
+            while tickets[idx] == 0 {
+                idx = (idx + 1) % n;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -582,6 +631,23 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn time_required_to_buy(tickets: Vec<i32>, k: i32) -> i32 {
+        let k = k as usize;
+        let mut res = 0;
+        for i in 0..tickets.len() {
+            if i <= k {
+                res += tickets[i].min(tickets[k]);
+            } else {
+                res += tickets[i].min(tickets[k] - 1);
+            }
+        }
+        res
     }
 }
 ```

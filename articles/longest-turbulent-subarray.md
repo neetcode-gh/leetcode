@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays and Iteration** - Understanding how to traverse arrays and compare adjacent elements
 - **Dynamic Programming Basics** - The DP approach tracks state transitions based on comparison direction (increasing vs decreasing)
 - **Sliding Window Technique** - One solution maintains a valid turbulent window that extends or resets based on alternation patterns
@@ -16,10 +18,10 @@ A turbulent subarray alternates between increasing and decreasing comparisons. F
 
 1. Initialize `res = 1` to store the maximum turbulent subarray length.
 2. For each starting index `i`:
-   - Skip if the next element equals the current one (no valid turbulent pair).
-   - Determine the initial comparison sign (greater or less).
-   - Extend `j` forward while the sign alternates and elements are not equal.
-   - Update `res` with the length `j - i + 1`.
+    - Skip if the next element equals the current one (no valid turbulent pair).
+    - Determine the initial comparison sign (greater or less).
+    - Extend `j` forward while the sign alternates and elements are not equal.
+    - Update `res` with the length `j - i + 1`.
 3. Return `res`.
 
 ::tabs-start
@@ -273,6 +275,39 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_turbulence_size(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 1i32;
+
+        for i in 0..n - 1 {
+            if arr[i] == arr[i + 1] {
+                continue;
+            }
+
+            let mut sign = if arr[i] > arr[i + 1] { 1 } else { 0 };
+            let mut j = i + 1;
+
+            while j < n - 1 {
+                if arr[j] == arr[j + 1] {
+                    break;
+                }
+                let cur_sign = if arr[j] > arr[j + 1] { 1 } else { 0 };
+                if sign == cur_sign {
+                    break;
+                }
+                sign = cur_sign;
+                j += 1;
+            }
+
+            res = res.max((j - i + 1) as i32);
+        }
+        res
     }
 }
 ```
@@ -596,6 +631,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_turbulence_size(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut memo = vec![[-1i32; 2]; n];
+
+        fn dfs(arr: &[i32], i: usize, sign: usize, memo: &mut Vec<[i32; 2]>) -> i32 {
+            if i == arr.len() - 1 {
+                return 1;
+            }
+            if memo[i][sign] != -1 {
+                return memo[i][sign];
+            }
+
+            let mut res = 1;
+            if (sign == 1 && arr[i] > arr[i + 1])
+                || (sign == 0 && arr[i] < arr[i + 1])
+            {
+                res = 1 + dfs(arr, i + 1, 1 - sign, memo);
+            }
+
+            memo[i][sign] = res;
+            res
+        }
+
+        let mut max_len = 1;
+        for i in 0..n {
+            max_len = max_len.max(dfs(&arr, i, 1, &mut memo));
+            max_len = max_len.max(dfs(&arr, i, 0, &mut memo));
+        }
+        max_len
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,8 +686,8 @@ Instead of recursion, we build the solution iteratively. At each position, we tr
 1. Create a 2D DP array where `dp[i][0]` stores the turbulent length ending at `i` with a decrease, and `dp[i][1]` stores the length ending with an increase.
 2. Initialize all values to `1`.
 3. For each index `i` from `1` to `n - 1`:
-   - If `arr[i] > arr[i-1]` (increase), set `dp[i][1] = dp[i-1][0] + 1`.
-   - If `arr[i] < arr[i-1]` (decrease), set `dp[i][0] = dp[i-1][1] + 1`.
+    - If `arr[i] > arr[i-1]` (increase), set `dp[i][1] = dp[i-1][0] + 1`.
+    - If `arr[i] < arr[i-1]` (decrease), set `dp[i][0] = dp[i-1][1] + 1`.
 4. Track the maximum value across all `dp` entries.
 5. Return the maximum.
 
@@ -830,6 +900,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_turbulence_size(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        if n == 1 {
+            return 1;
+        }
+
+        let mut dp = vec![[1i32; 2]; n];
+        let mut max_len = 1;
+
+        for i in 1..n {
+            if arr[i] > arr[i - 1] {
+                dp[i][1] = dp[i - 1][0] + 1;
+            } else if arr[i] < arr[i - 1] {
+                dp[i][0] = dp[i - 1][1] + 1;
+            }
+            max_len = max_len.max(dp[i][0].max(dp[i][1]));
+        }
+        max_len
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,9 +943,9 @@ We maintain a window that represents a valid turbulent subarray. As we move the 
 
 1. Initialize two pointers `l = 0` and `r = 1`, result `res = 1`, and a variable `prev` to track the previous comparison direction.
 2. While `r < n`:
-   - If `arr[r-1] > arr[r]` and `prev != ">"`, extend the window, update result, increment `r`, and set `prev = ">"`.
-   - Else if `arr[r-1] < arr[r]` and `prev != "<"`, extend the window, update result, increment `r`, and set `prev = "<"`.
-   - Otherwise, reset: move `l` to `r - 1` (or `r` if elements are equal), clear `prev`.
+    - If `arr[r-1] > arr[r]` and `prev != ">"`, extend the window, update result, increment `r`, and set `prev = ">"`.
+    - Else if `arr[r-1] < arr[r]` and `prev != "<"`, extend the window, update result, increment `r`, and set `prev = "<"`.
+    - Otherwise, reset: move `l` to `r - 1` (or `r` if elements are equal), clear `prev`.
 3. Return `res`.
 
 ::tabs-start
@@ -1082,6 +1176,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_turbulence_size(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut l = 0usize;
+        let mut r = 1usize;
+        let mut res = 1i32;
+        let mut prev = ' ';
+
+        while r < n {
+            if arr[r - 1] > arr[r] && prev != '>' {
+                res = res.max((r - l + 1) as i32);
+                r += 1;
+                prev = '>';
+            } else if arr[r - 1] < arr[r] && prev != '<' {
+                res = res.max((r - l + 1) as i32);
+                r += 1;
+                prev = '<';
+            } else {
+                if arr[r] == arr[r - 1] {
+                    r += 1;
+                }
+                l = r - 1;
+                prev = ' ';
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1101,10 +1226,10 @@ We can simplify the sliding window approach by just counting consecutive valid c
 
 1. Initialize `res = 0`, `cnt = 0`, and `sign = -1` (no previous comparison).
 2. For each adjacent pair from index `0` to `n - 2`:
-   - If `arr[i] > arr[i+1]`: if the previous `sign` was `0` (increase), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 1`.
-   - If `arr[i] < arr[i+1]`: if the previous `sign` was `1` (decrease), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 0`.
-   - If equal: reset `cnt = 0` and `sign = -1`.
-   - Update `res = max(res, cnt)`.
+    - If `arr[i] > arr[i+1]`: if the previous `sign` was `0` (increase), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 1`.
+    - If `arr[i] < arr[i+1]`: if the previous `sign` was `1` (decrease), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 0`.
+    - If equal: reset `cnt = 0` and `sign = -1`.
+    - Update `res = max(res, cnt)`.
 3. Return `res + 1` (to account for the element count, not comparison count).
 
 ::tabs-start
@@ -1329,6 +1454,32 @@ class Solution {
         }
 
         return res + 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_turbulence_size(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0i32;
+        let mut cnt = 0i32;
+        let mut sign = -1i32;
+
+        for i in 0..n - 1 {
+            if arr[i] > arr[i + 1] {
+                cnt = if sign == 0 { cnt + 1 } else { 1 };
+                sign = 1;
+            } else if arr[i] < arr[i + 1] {
+                cnt = if sign == 1 { cnt + 1 } else { 1 };
+                sign = 0;
+            } else {
+                cnt = 0;
+                sign = -1;
+            }
+            res = res.max(cnt);
+        }
+        res + 1
     }
 }
 ```

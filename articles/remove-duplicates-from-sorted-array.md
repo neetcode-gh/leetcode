@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Using a read pointer and write pointer to modify arrays in-place
 - **In-Place Array Modification** - Overwriting elements without using extra space
 - **Sorted Array Properties** - Understanding that duplicates are always adjacent in sorted arrays
@@ -122,6 +124,20 @@ class Solution {
             nums[i] = unique[i]
         }
         return unique.count
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let unique: BTreeSet<i32> = nums.iter().cloned().collect();
+        let mut i = 0;
+        for &num in &unique {
+            nums[i] = num;
+            i += 1;
+        }
+        unique.len() as i32
     }
 }
 ```
@@ -288,6 +304,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut l = 0;
+        let mut r = 0;
+        while r < n {
+            nums[l] = nums[r];
+            while r < n && nums[r] == nums[l] {
+                r += 1;
+            }
+            l += 1;
+        }
+        l as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -425,6 +459,21 @@ class Solution {
             }
         }
         return l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut l = 1;
+        for r in 1..nums.len() {
+            if nums[r] != nums[r - 1] {
+                nums[l] = nums[r];
+                l += 1;
+            }
+        }
+        l as i32
     }
 }
 ```

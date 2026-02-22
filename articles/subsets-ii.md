@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - The core technique for exploring all possible subsets through recursive inclusion/exclusion decisions
 - **Sorting** - Required to group duplicate elements together so they can be properly skipped
 - **Recursion** - Understanding how to build solutions incrementally and backtrack when needed
@@ -11,7 +13,8 @@ Before attempting this problem, you should be comfortable with:
 ### Intuition
 
 This brute-force method generates **every possible subset** by making a binary choice at each index:
-- **Include** the current number, or  
+
+- **Include** the current number, or
 - **Skip** the current number.
 
 Since duplicates exist, many generated subsets may look identical.  
@@ -19,8 +22,8 @@ To avoid returning duplicates, we:
 
 1. **Sort the array first**, so duplicates are next to each other.
 2. **Store each subset as a tuple inside a set**, because:
-   - Sets automatically remove duplicates.
-   - Tuples are hashable (lists are not).
+    - Sets automatically remove duplicates.
+    - Tuples are hashable (lists are not).
 
 In the end, we convert the set of tuples back to a list of lists.
 
@@ -28,10 +31,10 @@ In the end, we convert the set of tuples back to a list of lists.
 
 1. Sort the input list.
 2. Use a recursive function:
-   - If we processed all numbers → add the subset (as a tuple) to a set.
-   - Otherwise:
-     - Include the current number → recurse.
-     - Exclude the current number → recurse.
+    - If we processed all numbers → add the subset (as a tuple) to a set.
+    - Otherwise:
+        - Include the current number → recurse.
+        - Exclude the current number → recurse.
 3. After exploring all possibilities, convert the set of tuples into lists.
 4. Return the final list of unique subsets.
 
@@ -253,6 +256,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subsets_with_dup(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res: HashSet<Vec<i32>> = HashSet::new();
+
+        fn backtrack(nums: &[i32], i: usize, subset: &mut Vec<i32>, res: &mut HashSet<Vec<i32>>) {
+            if i == nums.len() {
+                res.insert(subset.clone());
+                return;
+            }
+
+            subset.push(nums[i]);
+            backtrack(nums, i + 1, subset, res);
+            subset.pop();
+            backtrack(nums, i + 1, subset, res);
+        }
+
+        backtrack(&nums, 0, &mut vec![], &mut res);
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,8 +301,8 @@ So we must **avoid picking the same value in the same decision level** more than
 Key idea:
 
 - At each index `i`, we make two choices:
-  1. **Include** `nums[i]`
-  2. **Exclude** `nums[i]`
+    1. **Include** `nums[i]`
+    2. **Exclude** `nums[i]`
 
 But when excluding, if the next number is the same (`nums[i] == nums[i+1]`), then skipping it now and skipping it later produce the same subset.
 So after exploring the "exclude" branch, we **skip over all duplicate values** to avoid generating duplicate subsets.
@@ -285,12 +313,12 @@ We also **sort the array first**, so duplicates become consecutive and easy to s
 
 1. Sort the input list.
 2. Use a recursive `backtrack(i, subset)`:
-   - If `i` reaches the end → add a copy of `subset` to the result.
-   - Otherwise:
-     - **Include** `nums[i]` → recurse on `i+1`.
-     - **Exclude** `nums[i]`:
-       - Move `i` forward while the next value is the same (skip duplicates).
-       - Recurse on the next unique index.
+    - If `i` reaches the end → add a copy of `subset` to the result.
+    - Otherwise:
+        - **Include** `nums[i]` → recurse on `i+1`.
+        - **Exclude** `nums[i]`:
+            - Move `i` forward while the next value is the same (skip duplicates).
+            - Recurse on the next unique index.
 3. Return the result list.
 
 ::tabs-start
@@ -524,6 +552,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subsets_with_dup(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res = Vec::new();
+
+        fn backtrack(nums: &[i32], i: usize, subset: &mut Vec<i32>, res: &mut Vec<Vec<i32>>) {
+            if i == nums.len() {
+                res.push(subset.clone());
+                return;
+            }
+
+            subset.push(nums[i]);
+            backtrack(nums, i + 1, subset, res);
+            subset.pop();
+
+            let mut j = i;
+            while j + 1 < nums.len() && nums[j] == nums[j + 1] {
+                j += 1;
+            }
+            backtrack(nums, j + 1, subset, res);
+        }
+
+        backtrack(&nums, 0, &mut vec![], &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +609,7 @@ Key idea:
 - Every time we enter `backtrack`, we push the current subset into `res`.
 
 This ensures:
+
 - Each subset is generated exactly once.
 - All valid subsets are included.
 - No need for sets or extra data structures.
@@ -559,12 +618,12 @@ This ensures:
 
 1. Sort the input list to group duplicates.
 2. Use a recursive function `backtrack(i, subset)`:
-   - Add the current subset to the result.
-   - For each index `j` from `i` to the end:
-     - If `j > i` and `nums[j] == nums[j-1]`: skip duplicate choices.
-     - Include `nums[j]` into the subset.
-     - Recursively call `backtrack(j + 1, subset)`.
-     - Remove the element to backtrack.
+    - Add the current subset to the result.
+    - For each index `j` from `i` to the end:
+        - If `j > i` and `nums[j] == nums[j-1]`: skip duplicate choices.
+        - Include `nums[j]` into the subset.
+        - Recursively call `backtrack(j + 1, subset)`.
+        - Remove the element to backtrack.
 3. Start with `backtrack(0, [])`.
 4. Return the result.
 
@@ -773,6 +832,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subsets_with_dup(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res = Vec::new();
+
+        fn backtrack(nums: &[i32], i: usize, subset: &mut Vec<i32>, res: &mut Vec<Vec<i32>>) {
+            res.push(subset.clone());
+
+            for j in i..nums.len() {
+                if j > i && nums[j] == nums[j - 1] {
+                    continue;
+                }
+                subset.push(nums[j]);
+                backtrack(nums, j + 1, subset, res);
+                subset.pop();
+            }
+        }
+
+        backtrack(&nums, 0, &mut vec![], &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -796,14 +881,15 @@ Key idea:
 
 - Sort the array so duplicates are next to each other.
 - Maintain two indices:
-  - `idx`: start point for generating new subsets.
-  - `prev_idx`: end point (previous size of result list before adding this number).
+    - `idx`: start point for generating new subsets.
+    - `prev_idx`: end point (previous size of result list before adding this number).
 - If the current number is **not a duplicate**, we start from the beginning (`idx = 0`).
 - If it **is a duplicate**, we only combine it with subsets created in the **last round**.
   This prevents duplicate subsets from being generated.
 
 Example:
 For input `[1,2,2]`
+
 - First `2` extends all subsets.
 - Second `2` extends only the subsets added when first `2` was processed → no duplicates.
 
@@ -812,12 +898,12 @@ For input `[1,2,2]`
 1. Sort `nums` so duplicates are adjacent.
 2. Initialize `res = [[]]`.
 3. For each index `i`:
-   - If `nums[i]` is the same as `nums[i-1]` → set `idx` to the previous end (`prev_idx`).
-   - Otherwise → set `idx = 0`.
-   - Set `prev_idx = len(res)` (the boundary of old subsets).
-   - For every subset `res[j]` where `j` ranges from `idx` to `prev_idx - 1`:
-     - Create a new subset by appending `nums[i]`.
-     - Add it to `res`.
+    - If `nums[i]` is the same as `nums[i-1]` → set `idx` to the previous end (`prev_idx`).
+    - Otherwise → set `idx = 0`.
+    - Set `prev_idx = len(res)` (the boundary of old subsets).
+    - For every subset `res[j]` where `j` ranges from `idx` to `prev_idx - 1`:
+        - Create a new subset by appending `nums[i]`.
+        - Add it to `res`.
 4. Return `res`.
 
 ::tabs-start
@@ -1005,6 +1091,33 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn subsets_with_dup(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res: Vec<Vec<i32>> = vec![vec![]];
+        let mut prev_idx = 0usize;
+
+        for i in 0..nums.len() {
+            let idx = if i >= 1 && nums[i] == nums[i - 1] {
+                prev_idx
+            } else {
+                0
+            };
+            prev_idx = res.len();
+            for j in idx..prev_idx {
+                let mut tmp = res[j].clone();
+                tmp.push(nums[i]);
+                res.push(tmp);
+            }
+        }
+
+        res
     }
 }
 ```

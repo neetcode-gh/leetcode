@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - The solution requires sorting the array to process elements in order
 - **Greedy Algorithms** - Understanding when local optimal choices lead to global optimal solutions
 - **Counting Sort** - The optimized solution uses counting sort to achieve linear time complexity
@@ -19,8 +21,8 @@ After sorting, we process elements left to right. Each element can be at most `p
 1. Sort the array in ascending order.
 2. Initialize `prev = 0` (representing the value before the first element).
 3. For each number in the sorted array:
-   - Set the current value to `min(prev + 1, num)`.
-   - Update `prev` to this value.
+    - Set the current value to `min(prev + 1, num)`.
+    - Update `prev` to this value.
 4. Return `prev` as the maximum element.
 
 ::tabs-start
@@ -133,6 +135,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_element_after_decrementing_and_rearranging(mut arr: Vec<i32>) -> i32 {
+        arr.sort();
+        let mut prev = 0;
+        for num in arr {
+            prev = (prev + 1).min(num);
+        }
+        prev
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -156,7 +171,7 @@ This works because having more elements at value `v` means more flexibility to f
 2. For each number in the array, increment `count[min(num, n)]`.
 3. Initialize `prev = 1` (the first position must be `1`).
 4. For each value from `2` to `n`:
-   - Update `prev = min(prev + count[value], value)`.
+    - Update `prev = min(prev + count[value], value)`.
 5. Return `prev`.
 
 ::tabs-start
@@ -324,6 +339,26 @@ class Solution {
         }
 
         return prev
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_element_after_decrementing_and_rearranging(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut count = vec![0i32; n + 1];
+
+        for &num in &arr {
+            count[(num as usize).min(n)] += 1;
+        }
+
+        let mut prev = 1i32;
+        for num in 2..=n as i32 {
+            prev = (prev + count[num as usize]).min(num);
+        }
+
+        prev
     }
 }
 ```

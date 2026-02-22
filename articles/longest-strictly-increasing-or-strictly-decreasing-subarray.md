@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through arrays and comparing adjacent elements
 - **Basic Iteration Patterns** - Tracking running counters and updating maximum values during a single pass
 - **Monotonic Sequences** - Understanding strictly increasing and strictly decreasing patterns and how they break
@@ -16,10 +18,10 @@ The straightforward approach is to check every possible starting position and se
 
 1. Initialize `res = 1` to track the maximum length found.
 2. For each starting index `i` from `0` to `n-2`:
-   - Start with `curLen = 1`.
-   - Determine if the subarray starting at `i` is increasing or decreasing.
-   - Extend `j` from `i+1` while the pattern continues (strictly increasing or strictly decreasing).
-   - Update `res` with the maximum of `res` and `curLen`.
+    - Start with `curLen = 1`.
+    - Determine if the subarray starting at `i` is increasing or decreasing.
+    - Extend `j` from `i+1` while the pattern continues (strictly increasing or strictly decreasing).
+    - Update `res` with the maximum of `res` and `curLen`.
 3. Return `res`.
 
 ::tabs-start
@@ -204,6 +206,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_monotonic_subarray(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 1;
+
+        for i in 0..n - 1 {
+            let mut cur_len = 1;
+            for j in i + 1..n {
+                if nums[j] == nums[j - 1]
+                    || (nums[i] < nums[i + 1]) != (nums[j - 1] < nums[j])
+                {
+                    break;
+                }
+                cur_len += 1;
+            }
+            res = res.max(cur_len);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,14 +249,14 @@ We can solve this in a single pass by tracking the current monotonic subarray's 
 
 1. Initialize `cur = 1` (current subarray length), `res = 1` (result), and `increasing = 0` (direction flag).
 2. For each index `i` from `1` to `n-1`:
-   - If `nums[i-1] < nums[i]` (increasing):
-     - If already in increasing mode, increment `cur`.
-     - Otherwise, reset `cur = 2` and set `increasing = 1`.
-   - Else if `nums[i-1] > nums[i]` (decreasing):
-     - If already in decreasing mode, increment `cur`.
-     - Otherwise, reset `cur = 2` and set `increasing = -1`.
-   - Else (equal elements): reset `cur = 1` and `increasing = 0`.
-   - Update `res = max(res, cur)`.
+    - If `nums[i-1] < nums[i]` (increasing):
+        - If already in increasing mode, increment `cur`.
+        - Otherwise, reset `cur = 2` and set `increasing = 1`.
+    - Else if `nums[i-1] > nums[i]` (decreasing):
+        - If already in decreasing mode, increment `cur`.
+        - Otherwise, reset `cur = 2` and set `increasing = -1`.
+    - Else (equal elements): reset `cur = 1` and `increasing = 0`.
+    - Update `res = max(res, cur)`.
 3. Return `res`.
 
 ::tabs-start
@@ -506,6 +532,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_monotonic_subarray(nums: Vec<i32>) -> i32 {
+        let mut cur = 1;
+        let mut res = 1;
+        let mut increasing = 0; // 1 = increasing, -1 = decreasing, 0 = none
+
+        for i in 1..nums.len() {
+            if nums[i - 1] < nums[i] {
+                if increasing > 0 {
+                    cur += 1;
+                } else {
+                    cur = 2;
+                    increasing = 1;
+                }
+            } else if nums[i - 1] > nums[i] {
+                if increasing < 0 {
+                    cur += 1;
+                } else {
+                    cur = 2;
+                    increasing = -1;
+                }
+            } else {
+                cur = 1;
+                increasing = 0;
+            }
+            res = res.max(cur);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,10 +585,10 @@ A cleaner approach is to maintain two separate counters: one for the current str
 
 1. Initialize `inc = 1`, `dec = 1` (current lengths), and `res = 1` (result).
 2. For each index `i` from `1` to `n-1`:
-   - If `nums[i] == nums[i-1]`: reset both `inc = 1` and `dec = 1`.
-   - Else if `nums[i] > nums[i-1]`: increment `inc`, reset `dec = 1`.
-   - Else: increment `dec`, reset `inc = 1`.
-   - Update `res = max(res, inc, dec)`.
+    - If `nums[i] == nums[i-1]`: reset both `inc = 1` and `dec = 1`.
+    - Else if `nums[i] > nums[i-1]`: increment `inc`, reset `dec = 1`.
+    - Else: increment `dec`, reset `inc = 1`.
+    - Update `res = max(res, inc, dec)`.
 3. Return `res`.
 
 ::tabs-start
@@ -729,6 +789,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_monotonic_subarray(nums: Vec<i32>) -> i32 {
+        let (mut inc, mut dec, mut res) = (1, 1, 1);
+
+        for i in 1..nums.len() {
+            if nums[i] == nums[i - 1] {
+                inc = 1;
+                dec = 1;
+            } else if nums[i] > nums[i - 1] {
+                inc += 1;
+                dec = 1;
+            } else {
+                inc = 1;
+                dec += 1;
+            }
+            res = res.max(inc.max(dec));
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -748,10 +832,10 @@ Another variation uses a single counter and checks if the current direction matc
 
 1. Initialize `curLen = 1` and `res = 1`.
 2. For each index `i` from `1` to `n-1`:
-   - If elements are equal, or if the direction at position `i-curLen` differs from the direction at position `i-1`:
-     - Reset `curLen` to `1` (if equal) or `2` (if different direction).
-     - Continue to the next iteration.
-   - Otherwise, increment `curLen` and update `res = max(res, curLen)`.
+    - If elements are equal, or if the direction at position `i-curLen` differs from the direction at position `i-1`:
+        - Reset `curLen` to `1` (if equal) or `2` (if different direction).
+        - Continue to the next iteration.
+    - Otherwise, increment `curLen` and update `res = max(res, curLen)`.
 3. Return `res`.
 
 ::tabs-start
@@ -932,6 +1016,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_monotonic_subarray(nums: Vec<i32>) -> i32 {
+        let mut cur_len: usize = 1;
+        let mut res: i32 = 1;
+
+        for i in 1..nums.len() {
+            if nums[i] == nums[i - 1]
+                || (nums[i - cur_len] < nums[i - cur_len + 1])
+                    != (nums[i - 1] < nums[i])
+            {
+                cur_len = if nums[i] == nums[i - 1] { 1 } else { 2 };
+                continue;
+            }
+            cur_len += 1;
+            res = res.max(cur_len as i32);
+        }
+
+        res
     }
 }
 ```

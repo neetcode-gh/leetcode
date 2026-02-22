@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Indexing** - Accessing and modifying elements by index, especially iterating from the end of an array
 - **Recursion Basics** - Breaking problems into smaller subproblems and handling base cases
 - **Carry Propagation** - Understanding how arithmetic addition handles overflow when a digit exceeds 9
@@ -13,10 +15,12 @@ Before attempting this problem, you should be comfortable with:
 We are given a number represented as an array of digits, and we need to **add one** to this number.
 
 The challenge comes from handling the **carry**:
+
 - If the last digit is less than `9`, we can simply increment it.
 - If the last digit is `9`, it becomes `0` and we need to carry `+1` to the remaining digits.
 
 This recursive solution mirrors how addition works by hand:
+
 - handle the **last digit**
 - if there is a carry, recursively solve the smaller subproblem (all digits except the last)
 - build the final result while returning from recursion
@@ -24,15 +28,15 @@ This recursive solution mirrors how addition works by hand:
 ### Algorithm
 
 1. If the digit list is empty:
-   - it means we had a carry beyond the most significant digit
-   - return `[1]`
+    - it means we had a carry beyond the most significant digit
+    - return `[1]`
 2. If the last digit is less than `9`:
-   - increment the last digit by `1`
-   - return the updated list
+    - increment the last digit by `1`
+    - return the updated list
 3. Otherwise (last digit is `9`):
-   - the last digit becomes `0`
-   - recursively call `plusOne` on all digits except the last
-   - append `0` to the result
+    - the last digit becomes `0`
+    - recursively call `plusOne` on all digits except the last
+    - append `0` to the result
 4. Return the final list of digits
 
 ::tabs-start
@@ -183,6 +187,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn plus_one(digits: Vec<i32>) -> Vec<i32> {
+        if digits.is_empty() {
+            return vec![1];
+        }
+
+        let mut digits = digits;
+        let n = digits.len();
+        if digits[n - 1] < 9 {
+            digits[n - 1] += 1;
+            return digits;
+        } else {
+            let mut result = Self::plus_one(digits[..n - 1].to_vec());
+            result.push(0);
+            return result;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,6 +225,7 @@ We are given a number as an array of digits and need to **add one** to it.
 
 The main idea is to simulate manual addition starting from the **least significant digit** (the last digit).
 Since addition naturally moves from right to left, this solution:
+
 - reverses the array so we can process digits from left to right
 - keeps a variable `one` to represent the **carry** (initially `1`)
 - continues updating digits until the carry becomes `0`
@@ -209,20 +235,20 @@ This avoids recursion and handles all carry cases, including when the number con
 ### Algorithm
 
 1. Initialize:
-   - `one = 1` (this represents the `+1` we want to add)
-   - `i = 0` (index to traverse digits)
+    - `one = 1` (this represents the `+1` we want to add)
+    - `i = 0` (index to traverse digits)
 2. Reverse the `digits` array so the least significant digit comes first.
 3. While there is still a carry (`one == 1`):
-   - If `i` is within the array:
-     - If `digits[i] == 9`:
-       - set `digits[i] = 0` (carry continues)
-     - Else:
-       - increment `digits[i]` by `1`
-       - set `one = 0` (carry resolved)
-   - Else (we ran out of digits):
-     - append `1` to the array
-     - set `one = 0`
-   - increment `i`
+    - If `i` is within the array:
+        - If `digits[i] == 9`:
+            - set `digits[i] = 0` (carry continues)
+        - Else:
+            - increment `digits[i]` by `1`
+            - set `one = 0` (carry resolved)
+    - Else (we ran out of digits):
+        - append `1` to the array
+        - set `one = 0`
+    - increment `i`
 4. Reverse the array back to its original order.
 5. Return the updated `digits`.
 
@@ -455,6 +481,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn plus_one(digits: Vec<i32>) -> Vec<i32> {
+        let mut digits = digits;
+        let mut carry = true;
+
+        for j in (0..digits.len()).rev() {
+            if carry {
+                if digits[j] == 9 {
+                    digits[j] = 0;
+                } else {
+                    digits[j] += 1;
+                    carry = false;
+                }
+            }
+        }
+        if carry {
+            let mut result = vec![1];
+            result.extend_from_slice(&digits);
+            return result;
+        }
+        digits
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -471,6 +523,7 @@ class Solution {
 We are given a number represented as an array of digits and need to **add one** to it.
 
 The simplest way to do this is to simulate how addition works from **right to left**:
+
 - start from the least significant digit
 - if the digit is less than `9`, we can increment it and stop
 - if the digit is `9`, it becomes `0` and we carry `+1` to the next digit on the left
@@ -482,13 +535,13 @@ If we finish processing all digits and still have a carry, it means the number w
 1. Let `n` be the number of digits.
 2. Traverse the digits from right to left:
 3. For each index `i`:
-   - If `digits[i] < 9`:
-     - increment `digits[i]` by `1`
-     - return the updated list immediately (no further carry)
-   - Otherwise (`digits[i] == 9`):
-     - set `digits[i] = 0` and continue to the next digit on the left
+    - If `digits[i] < 9`:
+        - increment `digits[i]` by `1`
+        - return the updated list immediately (no further carry)
+    - Otherwise (`digits[i] == 9`):
+        - set `digits[i] = 0` and continue to the next digit on the left
 4. If the loop ends, it means all digits were `9`:
-   - return `[1] + digits`
+    - return `[1] + digits`
 5. The returned list is the result of adding one.
 
 ::tabs-start
@@ -630,6 +683,25 @@ class Solution {
         }
 
         return [1] + digits
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn plus_one(digits: Vec<i32>) -> Vec<i32> {
+        let mut digits = digits;
+        let n = digits.len();
+        for i in (0..n).rev() {
+            if digits[i] < 9 {
+                digits[i] += 1;
+                return digits;
+            }
+            digits[i] = 0;
+        }
+        let mut result = vec![1];
+        result.append(&mut digits);
+        result
     }
 }
 ```

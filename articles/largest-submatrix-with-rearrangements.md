@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Matrix Traversal** - Understanding how to iterate through rows and columns of a matrix
 - **Greedy Algorithms** - Making locally optimal choices to find a global optimum
 - **Sorting** - Sorting arrays and understanding how sorted order enables efficient computations
@@ -17,9 +19,9 @@ We can rearrange columns in any order, so the key is to find which columns can f
 
 1. For each starting row, initialize a set containing all column indices.
 2. Iterate through each subsequent row:
-   - Remove columns that have a `0` in the current row.
-   - Calculate the area as `(remaining columns) * (current height)`.
-   - Update the maximum area found.
+    - Remove columns that have a `0` in the current row.
+    - Calculate the area as `(remaining columns) * (current height)`.
+    - Update the maximum area found.
 3. Return the maximum area.
 
 ::tabs-start
@@ -267,6 +269,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_submatrix(matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = 0;
+
+        for start_row in 0..rows {
+            let mut ones: VecDeque<usize> = (0..cols).collect();
+
+            for r in start_row..rows {
+                if ones.is_empty() {
+                    break;
+                }
+                let size = ones.len();
+                for _ in 0..size {
+                    let c = ones.pop_front().unwrap();
+                    if matrix[r][c] == 1 {
+                        ones.push_back(c);
+                    }
+                }
+                res = res.max(ones.len() * (r - start_row + 1));
+            }
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,9 +319,9 @@ Think of each cell as the height of a bar extending upward through consecutive `
 
 1. Maintain a `heights` array tracking consecutive `1`s above each cell.
 2. For each row:
-   - Update heights: if the cell is `1`, add the previous height; otherwise reset to `0`.
-   - Sort heights in descending order.
-   - For each position `i`, compute area as `(i + 1) * heights[i]` and track the maximum.
+    - Update heights: if the cell is `1`, add the previous height; otherwise reset to `0`.
+    - Sort heights in descending order.
+    - For each position `i`, compute area as `(i + 1) * heights[i]` and track the maximum.
 3. Return the maximum area found.
 
 ::tabs-start
@@ -536,6 +567,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_submatrix(matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = 0;
+        let mut prev_heights = vec![0; cols];
+
+        for r in 0..rows {
+            let mut heights = matrix[r].clone();
+            let mut sorted_hgts = matrix[r].clone();
+
+            for c in 0..cols {
+                if heights[c] > 0 {
+                    heights[c] += prev_heights[c];
+                    sorted_hgts[c] = heights[c];
+                }
+            }
+
+            sorted_hgts.sort_unstable();
+            for i in (0..cols).rev() {
+                res = res.max((cols - i) as i32 * sorted_hgts[i]);
+            }
+
+            prev_heights = heights;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -556,10 +618,10 @@ This is the same approach as above but optimizes space by modifying the input ma
 ### Algorithm
 
 1. For each row starting from the second:
-   - If a cell is `1`, add the value from the cell directly above it.
+    - If a cell is `1`, add the value from the cell directly above it.
 2. For each row:
-   - Sort the row in descending order.
-   - Compute the maximum area using the greedy formula.
+    - Sort the row in descending order.
+    - Compute the maximum area using the greedy formula.
 3. Return the maximum area.
 
 ::tabs-start
@@ -773,6 +835,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_submatrix(mut matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = 0;
+
+        for r in 1..rows {
+            for c in 0..cols {
+                if matrix[r][c] > 0 {
+                    matrix[r][c] += matrix[r - 1][c];
+                }
+            }
+        }
+
+        for r in 0..rows {
+            let mut row = matrix[r].clone();
+            row.sort_unstable();
+            for i in 0..cols {
+                res = res.max((cols - i) as i32 * row[i]);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -794,9 +883,9 @@ We can avoid sorting entirely by maintaining a sorted order implicitly. Track th
 
 1. Maintain a list of column indices from the previous row that had continuous `1`s.
 2. For each row:
-   - Create a new list starting with columns from the previous list that still have a `1` (incrementing their height in the matrix).
-   - Append columns where the current cell is `1` but was `0` before (new columns starting at height `1`).
-   - Compute the maximum area: position `i` gives area `(i + 1) * matrix[r][heights[i]]`.
+    - Create a new list starting with columns from the previous list that still have a `1` (incrementing their height in the matrix).
+    - Append columns where the current cell is `1` but was `0` before (new columns starting at height `1`).
+    - Compute the maximum area: position `i` gives area `(i + 1) * matrix[r][heights[i]]`.
 3. Return the maximum area.
 
 ::tabs-start
@@ -1071,6 +1160,41 @@ class Solution {
             prevHeights = heights
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_submatrix(mut matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = 0;
+        let mut prev_heights: Vec<usize> = Vec::new();
+
+        for r in 0..rows {
+            let mut heights: Vec<usize> = Vec::new();
+
+            for &c in &prev_heights {
+                if matrix[r][c] == 1 {
+                    matrix[r][c] += matrix[r - 1][c];
+                    heights.push(c);
+                }
+            }
+
+            for c in 0..cols {
+                if matrix[r][c] == 1 {
+                    heights.push(c);
+                }
+            }
+
+            for (i, &c) in heights.iter().enumerate() {
+                res = res.max((i as i32 + 1) * matrix[r][c]);
+            }
+
+            prev_heights = heights;
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure with left and right children
 - **Tree Traversal (DFS)** - Preorder traversal visits root, then left subtree, then right subtree
 - **Tree Traversal (BFS)** - Level-order traversal processes nodes level by level using a queue
@@ -22,6 +24,7 @@ Example:
 `1,2,N,N,3,N,N` uniquely represents a tree.
 
 During **deserialization**, we read the list in order:
+
 - `"N"` → return `None`
 - Otherwise → create node, then build left, then right.
 
@@ -30,6 +33,7 @@ This works because preorder always visits nodes in the exact structure order.
 ### Algorithm
 
 #### **Serialize**
+
 1. Use `dfs` preorder.
 2. If node is `null` → append `"N"`.
 3. Else append node value.
@@ -37,6 +41,7 @@ This works because preorder always visits nodes in the exact structure order.
 5. Join list with commas → return string.
 
 #### **Deserialize**
+
 1. Split string into list `vals`.
 2. Use an index to process values in order.
 3. If current value is `"N"` → return `None`.
@@ -501,6 +506,63 @@ class Codec {
 }
 ```
 
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    fn serialize(&self, root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        let mut res = Vec::new();
+        Self::dfs_serialize(&root, &mut res);
+        res.join(",")
+    }
+
+    fn dfs_serialize(node: &Option<Rc<RefCell<TreeNode>>>, res: &mut Vec<String>) {
+        match node {
+            None => res.push("N".to_string()),
+            Some(n) => {
+                let n = n.borrow();
+                res.push(n.val.to_string());
+                Self::dfs_serialize(&n.left, res);
+                Self::dfs_serialize(&n.right, res);
+            }
+        }
+    }
+
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
+        let vals: Vec<&str> = data.split(',').collect();
+        let mut i = 0;
+        Self::dfs_deserialize(&vals, &mut i)
+    }
+
+    fn dfs_deserialize(vals: &[&str], i: &mut usize) -> Option<Rc<RefCell<TreeNode>>> {
+        if vals[*i] == "N" {
+            *i += 1;
+            return None;
+        }
+        let val = vals[*i].parse::<i32>().unwrap();
+        *i += 1;
+        let left = Self::dfs_deserialize(vals, i);
+        let right = Self::dfs_deserialize(vals, i);
+        Some(Rc::new(RefCell::new(TreeNode { val, left, right })))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -523,6 +585,7 @@ BFS visits nodes level by level, so we simply record values in that order:
 This ensures the structure is preserved, because BFS processes nodes exactly how they appear in the tree layout.
 
 During **deserialization**, we again use BFS:
+
 - The first value is the root.
 - Then for each node in the queue, assign its left and right children from the next values in the list.
 
@@ -531,23 +594,25 @@ This keeps the tree reconstruction aligned with the serialized order.
 ### Algorithm
 
 #### **Serialize**
+
 1. If root is `None` → return `"N"`.
 2. Initialize a queue with `root`.
 3. While queue is not empty:
-   - Pop a node.
-   - If node exists → append its value, push left & right children.
-   - If node is missing → append `"N"`.
+    - Pop a node.
+    - If node exists → append its value, push left & right children.
+    - If node is missing → append `"N"`.
 4. Join the list with commas and return.
 
 #### **Deserialize**
+
 1. Split string into list `vals`.
 2. If first value is `"N"` → return `None`.
 3. Create root from first value and push it into a queue.
 4. Use an `index` to read the next values:
-   - For each node popped from queue:
-     - If `vals[index]` is not `"N"` → create left child & push.
-     - Move `index`.
-     - Repeat for right child.
+    - For each node popped from queue:
+        - If `vals[index]` is not `"N"` → create left child & push.
+        - Move `index`.
+        - Repeat for right child.
 5. Return the root of the rebuilt tree.
 
 ::tabs-start
@@ -1067,6 +1132,89 @@ class Codec {
         }
 
         return root
+    }
+}
+```
+
+```rust
+use std::cell::RefCell;
+use std::collections::VecDeque;
+use std::rc::Rc;
+
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    fn serialize(&self, root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        if root.is_none() {
+            return "N".to_string();
+        }
+        let mut res = Vec::new();
+        let mut queue: VecDeque<Option<Rc<RefCell<TreeNode>>>> = VecDeque::new();
+        queue.push_back(root);
+
+        while let Some(node_opt) = queue.pop_front() {
+            match node_opt {
+                None => res.push("N".to_string()),
+                Some(node) => {
+                    let n = node.borrow();
+                    res.push(n.val.to_string());
+                    queue.push_back(n.left.clone());
+                    queue.push_back(n.right.clone());
+                }
+            }
+        }
+        res.join(",")
+    }
+
+    fn deserialize(&self, data: String) -> Option<Rc<RefCell<TreeNode>>> {
+        let vals: Vec<&str> = data.split(',').collect();
+        if vals[0] == "N" {
+            return None;
+        }
+        let root = Rc::new(RefCell::new(TreeNode {
+            val: vals[0].parse().unwrap(),
+            left: None,
+            right: None,
+        }));
+        let mut queue: VecDeque<Rc<RefCell<TreeNode>>> = VecDeque::new();
+        queue.push_back(root.clone());
+        let mut index = 1;
+
+        while let Some(node) = queue.pop_front() {
+            if vals[index] != "N" {
+                let left = Rc::new(RefCell::new(TreeNode {
+                    val: vals[index].parse().unwrap(),
+                    left: None,
+                    right: None,
+                }));
+                node.borrow_mut().left = Some(left.clone());
+                queue.push_back(left);
+            }
+            index += 1;
+            if vals[index] != "N" {
+                let right = Rc::new(RefCell::new(TreeNode {
+                    val: vals[index].parse().unwrap(),
+                    left: None,
+                    right: None,
+                }));
+                node.borrow_mut().right = Some(right.clone());
+                queue.push_back(right);
+            }
+            index += 1;
+        }
+        Some(root)
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding tree structure and how to navigate parent-child relationships
 - **Depth First Search (DFS)** - Recursively exploring all paths from root to leaves
 - **String Manipulation** - Building and comparing strings, particularly prepending characters
@@ -288,21 +290,6 @@ class Solution {
 ```
 
 ```swift
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     public var val: Int
- *     public var left: TreeNode?
- *     public var right: TreeNode?
- *     public init() { self.val = 0; self.left = nil; self.right = nil; }
- *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
- *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
- *         self.val = val
- *         self.left = left
- *         self.right = right
- *     }
- * }
- */
 class Solution {
     func smallestFromLeaf(_ root: TreeNode?) -> String {
         return dfs(root, "")
@@ -321,6 +308,34 @@ class Solution {
         if root.right != nil { return dfs(root.right, newCur) }
         if root.left != nil { return dfs(root.left, newCur) }
         return newCur
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn smallest_from_leaf(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, cur: String) -> Option<String> {
+            let node = node.as_ref()?;
+            let node = node.borrow();
+            let mut cur = format!("{}{}", (b'a' + node.val as u8) as char, cur);
+
+            match (&node.left, &node.right) {
+                (Some(_), Some(_)) => {
+                    let left = dfs(&node.left, cur.clone());
+                    let right = dfs(&node.right, cur);
+                    match (left, right) {
+                        (Some(l), Some(r)) => Some(l.min(r)),
+                        (Some(l), None) => Some(l),
+                        (None, r) => r,
+                    }
+                }
+                (Some(_), None) => dfs(&node.left, cur),
+                (None, Some(_)) => dfs(&node.right, cur),
+                (None, None) => Some(cur),
+            }
+        }
+        dfs(&root, String::new()).unwrap()
     }
 }
 ```
@@ -344,10 +359,10 @@ Instead of recursion, we can use a queue to traverse the tree level by level. Ea
 
 1. Initialize a queue with the root node and an empty string.
 2. While the queue is not empty:
-   - Dequeue a node and its associated string.
-   - Prepend the current node's character to the string.
-   - If the node is a leaf, update the result if this string is smaller.
-   - Enqueue left and right children (if they exist) with the updated string.
+    - Dequeue a node and its associated string.
+    - Prepend the current node's character to the string.
+    - If the node is a leaf, update the result if this string is smaller.
+    - Enqueue left and right children (if they exist) with the updated string.
 3. Return the smallest string found.
 
 ::tabs-start
@@ -496,6 +511,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn smallest_from_leaf(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        let mut q = VecDeque::new();
+        q.push_back((root.unwrap(), String::new()));
+        let mut res: Option<String> = None;
+
+        while let Some((node, cur)) = q.pop_front() {
+            let node = node.borrow();
+            let new_cur = format!("{}{}", (b'a' + node.val as u8) as char, cur);
+
+            if node.left.is_none() && node.right.is_none() {
+                res = Some(match res {
+                    Some(r) => r.min(new_cur.clone()),
+                    None => new_cur.clone(),
+                });
+            }
+
+            if let Some(ref left) = node.left {
+                q.push_back((Rc::clone(left), new_cur.clone()));
+            }
+            if let Some(ref right) = node.right {
+                q.push_back((Rc::clone(right), new_cur));
+            }
+        }
+
+        res.unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -515,10 +561,10 @@ This approach mirrors the recursive DFS but uses an explicit stack instead of th
 
 1. Initialize a stack with the root node and an empty string.
 2. While the stack is not empty:
-   - Pop a node and its associated string.
-   - Prepend the current node's character to the string.
-   - If the node is a leaf, update the result if this string is smaller.
-   - Push right child first, then left child (so left is processed first due to LIFO).
+    - Pop a node and its associated string.
+    - Prepend the current node's character to the string.
+    - If the node is a leaf, update the result if this string is smaller.
+    - Push right child first, then left child (so left is processed first due to LIFO).
 3. Return the smallest string found.
 
 ::tabs-start
@@ -661,6 +707,36 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn smallest_from_leaf(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        let mut stack = vec![(root.unwrap(), String::new())];
+        let mut res: Option<String> = None;
+
+        while let Some((node, cur)) = stack.pop() {
+            let node = node.borrow();
+            let new_cur = format!("{}{}", (b'a' + node.val as u8) as char, cur);
+
+            if node.left.is_none() && node.right.is_none() {
+                res = Some(match res {
+                    Some(r) => r.min(new_cur.clone()),
+                    None => new_cur.clone(),
+                });
+            }
+
+            if let Some(ref right) = node.right {
+                stack.push((Rc::clone(right), new_cur.clone()));
+            }
+            if let Some(ref left) = node.left {
+                stack.push((Rc::clone(left), new_cur));
+            }
+        }
+
+        res.unwrap()
     }
 }
 ```

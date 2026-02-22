@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Traversal** - Iterating through nodes and manipulating pointers
 - **Merge Sort Algorithm** - Understanding divide-and-conquer sorting with O(n log n) complexity
 - **Two Pointers (Slow/Fast)** - Finding the middle of a linked list using the tortoise and hare technique
@@ -252,6 +254,34 @@ class Solution {
         }
 
         return head
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut arr = vec![];
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+        arr.sort();
+        let mut cur = head;
+        let mut dummy = Box::new(ListNode::new(0));
+        let mut tail = &mut dummy;
+        for val in arr {
+            tail.next = Some(Box::new(ListNode::new(val)));
+            tail = tail.next.as_mut().unwrap();
+        }
+        dummy.next
     }
 }
 ```
@@ -790,6 +820,61 @@ class Solution {
         }
 
         return dummy.next
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn sort_list(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        if head.is_none() || head.as_ref().unwrap().next.is_none() {
+            return head;
+        }
+        let (left, right) = Self::split(head);
+        let left = Self::sort_list(left);
+        let right = Self::sort_list(right);
+        Self::merge(left, right)
+    }
+
+    fn split(mut head: Option<Box<ListNode>>) -> (Option<Box<ListNode>>, Option<Box<ListNode>>) {
+        let mut len = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            len += 1;
+            cur = &node.next;
+        }
+        let mid = len / 2;
+        let mut cur = &mut head;
+        for _ in 0..mid - 1 {
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+        let right = cur.as_mut().unwrap().next.take();
+        (head, right)
+    }
+
+    fn merge(mut l1: Option<Box<ListNode>>, mut l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode::new(0));
+        let mut tail = &mut dummy;
+        while l1.is_some() && l2.is_some() {
+            if l1.as_ref().unwrap().val < l2.as_ref().unwrap().val {
+                let next = l1.as_mut().unwrap().next.take();
+                tail.next = l1;
+                l1 = next;
+            } else {
+                let next = l2.as_mut().unwrap().next.take();
+                tail.next = l2;
+                l2 = next;
+            }
+            tail = tail.next.as_mut().unwrap();
+        }
+        tail.next = if l1.is_some() { l1 } else { l2 };
+        dummy.next
     }
 }
 ```
@@ -1441,6 +1526,79 @@ class Solution {
 
         tail?.next = l1 ?? l2
         return dummy.next
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn sort_list(mut head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut length = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            length += 1;
+            cur = &node.next;
+        }
+        if length <= 1 {
+            return head;
+        }
+
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut step = 1;
+
+        while step < length {
+            let mut curr = dummy.next.take();
+            let mut tail = &mut *dummy;
+
+            while curr.is_some() {
+                let (left, rest) = Self::split_at(curr, step);
+                let (right, remaining) = Self::split_at(rest, step);
+                curr = remaining;
+                tail.next = Self::merge(left, right);
+                while tail.next.is_some() {
+                    tail = tail.next.as_mut().unwrap();
+                }
+            }
+            step *= 2;
+        }
+        dummy.next
+    }
+
+    fn split_at(mut head: Option<Box<ListNode>>, step: usize) -> (Option<Box<ListNode>>, Option<Box<ListNode>>) {
+        let mut cur = &mut head;
+        for _ in 0..step - 1 {
+            if cur.is_none() || cur.as_ref().unwrap().next.is_none() {
+                break;
+            }
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+        let rest = cur.as_mut().and_then(|node| node.next.take());
+        (head, rest)
+    }
+
+    fn merge(mut l1: Option<Box<ListNode>>, mut l2: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode::new(0));
+        let mut tail = &mut dummy;
+        while l1.is_some() && l2.is_some() {
+            if l1.as_ref().unwrap().val < l2.as_ref().unwrap().val {
+                let next = l1.as_mut().unwrap().next.take();
+                tail.next = l1;
+                l1 = next;
+            } else {
+                let next = l2.as_mut().unwrap().next.take();
+                tail.next = l2;
+                l2 = next;
+            }
+            tail = tail.next.as_mut().unwrap();
+        }
+        tail.next = if l1.is_some() { l1 } else { l2 };
+        dummy.next
     }
 }
 ```

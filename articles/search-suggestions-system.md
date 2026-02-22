@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Understanding how to sort strings lexicographically to enable efficient prefix matching
 - **Binary Search** - Using binary search to find the first element matching a prefix in a sorted array
 - **String Manipulation** - Working with prefixes and comparing strings character by character
@@ -17,11 +19,11 @@ For each prefix of the search word, we need to find up to three products that ma
 
 1. Sort the products array lexicographically.
 2. For each prefix length `i` from 1 to `m` (length of `searchWord`):
-   - Create an empty list for current suggestions.
-   - Iterate through all products and check if the first `i` characters match the current prefix.
-   - Add matching products to the list until we have 3.
-   - If no matches are found, fill remaining positions with empty lists and break early.
-   - Append the current suggestions to the result.
+    - Create an empty list for current suggestions.
+    - Iterate through all products and check if the first `i` characters match the current prefix.
+    - Add matching products to the list until we have 3.
+    - If no matches are found, fill remaining positions with empty lists and break early.
+    - Append the current suggestions to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -369,6 +371,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn suggested_products(products: Vec<String>, search_word: String) -> Vec<Vec<String>> {
+        let mut res = Vec::new();
+        let m = search_word.len();
+        let search_bytes = search_word.as_bytes();
+        let mut products = products;
+        products.sort();
+
+        let mut i = 0;
+        while i < m {
+            let mut cur = Vec::new();
+            for w in &products {
+                let wb = w.as_bytes();
+                if wb.len() <= i {
+                    continue;
+                }
+                let mut flag = true;
+                for j in 0..=i {
+                    if wb[j] != search_bytes[j] {
+                        flag = false;
+                        break;
+                    }
+                }
+                if flag {
+                    cur.push(w.clone());
+                    if cur.len() == 3 {
+                        break;
+                    }
+                }
+            }
+            if cur.is_empty() {
+                while i < m {
+                    res.push(vec![]);
+                    i += 1;
+                }
+                break;
+            }
+            res.push(cur);
+            i += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,11 +442,11 @@ Once products are sorted, all products sharing a prefix form a contiguous block.
 1. Sort the products array lexicographically.
 2. Initialize `prefix` as an empty string and `start = 0`.
 3. For each character in `searchWord`:
-   - Append the character to `prefix`.
-   - Use binary search to find the first product >= `prefix`, starting from `start`.
-   - Update `start` to this position.
-   - Collect up to 3 products starting from `start` that have `prefix` as their prefix.
-   - Append the collected products to the result.
+    - Append the character to `prefix`.
+    - Use binary search to find the first product >= `prefix`, starting from `start`.
+    - Update `start` to this position.
+    - Collect up to 3 products starting from `start` that have `prefix` as their prefix.
+    - Append the collected products to the result.
 4. Return the result list.
 
 ::tabs-start
@@ -773,6 +822,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn suggested_products(products: Vec<String>, search_word: String) -> Vec<Vec<String>> {
+        let mut products = products;
+        products.sort();
+        let mut res = Vec::new();
+        let m = search_word.len();
+        let mut prefix = String::new();
+        let mut start = 0;
+
+        let search_bytes = search_word.as_bytes();
+        for i in 0..m {
+            prefix.push(search_bytes[i] as char);
+            let mut l = start;
+            let mut r = products.len();
+            while l < r {
+                let mid = l + (r - l) / 2;
+                if products[mid].as_str() >= prefix.as_str() {
+                    r = mid;
+                } else {
+                    l = mid + 1;
+                }
+            }
+            start = l;
+
+            let mut cur = Vec::new();
+            for j in start..products.len().min(start + 3) {
+                if products[j].starts_with(&prefix) {
+                    cur.push(products[j].clone());
+                } else {
+                    break;
+                }
+            }
+            res.push(cur);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -797,10 +887,10 @@ This approach is identical to the previous one, but uses built-in binary search 
 1. Sort the products array lexicographically.
 2. Initialize `prefix` as an empty string and `start = 0`.
 3. For each character in `searchWord`:
-   - Append the character to `prefix`.
-   - Use the built-in lower bound function to find the first product >= `prefix`.
-   - Collect up to 3 products from that position that have `prefix` as their prefix.
-   - Append the collected products to the result.
+    - Append the character to `prefix`.
+    - Use the built-in lower bound function to find the first product >= `prefix`.
+    - Collect up to 3 products from that position that have `prefix` as their prefix.
+    - Append the collected products to the result.
 4. Return the result list.
 
 ::tabs-start
@@ -902,6 +992,35 @@ func min(a, b int) int {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn suggested_products(products: Vec<String>, search_word: String) -> Vec<Vec<String>> {
+        let mut products = products;
+        products.sort();
+        let mut res = Vec::new();
+        let mut prefix = String::new();
+        let mut start = 0;
+
+        for ch in search_word.chars() {
+            prefix.push(ch);
+            start += products[start..].partition_point(|p| p.as_str() < prefix.as_str());
+
+            let mut cur = Vec::new();
+            for j in start..products.len().min(start + 3) {
+                if products[j].starts_with(&prefix) {
+                    cur.push(products[j].clone());
+                } else {
+                    break;
+                }
+            }
+            res.push(cur);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -926,10 +1045,10 @@ Instead of binary searching for each prefix, we maintain a window `[l, r]` of va
 1. Sort the products array lexicographically.
 2. Initialize two pointers `l = 0` and `r = n - 1`.
 3. For each index `i` from 0 to `m - 1` (each character in `searchWord`):
-   - Move `l` forward while `products[l]` is too short or has the wrong character at position `i`.
-   - Move `r` backward while `products[r]` is too short or has the wrong character at position `i`.
-   - Collect up to 3 products from the range `[l, r]`.
-   - Append the collected products to the result.
+    - Move `l` forward while `products[l]` is too short or has the wrong character at position `i`.
+    - Move `r` backward while `products[r]` is too short or has the wrong character at position `i`.
+    - Collect up to 3 products from the range `[l, r]`.
+    - Append the collected products to the result.
 4. Return the result list.
 
 ::tabs-start
@@ -1203,6 +1322,45 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn suggested_products(products: Vec<String>, search_word: String) -> Vec<Vec<String>> {
+        let mut products = products;
+        products.sort();
+        let mut res = Vec::new();
+        let search_bytes = search_word.as_bytes();
+
+        let mut l: i32 = 0;
+        let mut r: i32 = products.len() as i32 - 1;
+        for i in 0..search_bytes.len() {
+            let c = search_bytes[i];
+
+            while l <= r
+                && (products[l as usize].len() <= i
+                    || products[l as usize].as_bytes()[i] != c)
+            {
+                l += 1;
+            }
+            while l <= r
+                && (products[r as usize].len() <= i
+                    || products[r as usize].as_bytes()[i] != c)
+            {
+                r -= 1;
+            }
+
+            let mut cur = Vec::new();
+            let remain = r - l + 1;
+            for j in 0..3.min(remain) {
+                cur.push(products[(l + j) as usize].clone());
+            }
+            res.push(cur);
+        }
+
+        res
     }
 }
 ```

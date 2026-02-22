@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Working with character arrays and building result strings
 - **Two Pointers / Linear Scan** - Tracking forces from both directions simultaneously
 - **BFS / Queue Simulation** - Simulating propagation of forces over time
@@ -18,9 +20,9 @@ For each standing domino (represented by `'.'`), we need to determine which forc
 1. Iterate through each position in the string.
 2. For each `'.'`, search left to find the nearest non-`'.'` character and search right to find the nearest non-`'.'` character.
 3. Determine the final state based on which forces apply:
-   - If `'R'` is on the left and `'L'` is on the right, compare distances. The closer force wins, or they cancel if equidistant.
-   - If only `'R'` is on the left, the domino falls right.
-   - If only `'L'` is on the right, the domino falls left.
+    - If `'R'` is on the left and `'L'` is on the right, compare distances. The closer force wins, or they cancel if equidistant.
+    - If only `'R'` is on the left, the domino falls right.
+    - If only `'L'` is on the right, the domino falls left.
 4. Return the resulting string.
 
 ::tabs-start
@@ -304,6 +306,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn push_dominoes(dominoes: String) -> String {
+        let bytes = dominoes.as_bytes();
+        let n = bytes.len();
+        let mut res = bytes.to_vec();
+
+        for i in 0..n {
+            if bytes[i] != b'.' { continue; }
+
+            let mut l = i as i32 - 1;
+            let mut r = i + 1;
+
+            while l >= 0 && bytes[l as usize] == b'.' { l -= 1; }
+            while r < n && bytes[r] == b'.' { r += 1; }
+
+            let left_force = if l >= 0 { bytes[l as usize] } else { b' ' };
+            let right_force = if r < n { bytes[r] } else { b' ' };
+
+            if left_force == b'R' && right_force == b'L' {
+                let dl = i as i32 - l;
+                let dr = r as i32 - i as i32;
+                if dl < dr { res[i] = b'R'; }
+                else if dr < dl { res[i] = b'L'; }
+            } else if left_force == b'R' {
+                res[i] = b'R';
+            } else if right_force == b'L' {
+                res[i] = b'L';
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,9 +363,9 @@ Instead of checking neighbors for each domino individually, we can precompute ho
 2. Left-to-right pass: track the distance from the most recent 'R'. Reset when hitting 'L'.
 3. Right-to-left pass: track the distance from the most recent 'L'. Reset when hitting 'R'.
 4. For each position, compare `left[i]` and `right[i]`:
-   - If `left[i] < right[i]`, the domino falls left.
-   - If `right[i] < left[i]`, the domino falls right.
-   - If equal, forces cancel and it stays upright.
+    - If `left[i] < right[i]`, the domino falls left.
+    - If `right[i] < left[i]`, the domino falls right.
+    - If equal, forces cancel and it stays upright.
 5. Return the result string.
 
 ::tabs-start
@@ -696,6 +734,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn push_dominoes(dominoes: String) -> String {
+        let bytes = dominoes.as_bytes();
+        let n = bytes.len();
+        let mut left = vec![i32::MAX; n];
+        let mut right = vec![i32::MAX; n];
+        let mut res = bytes.to_vec();
+
+        let mut force = i32::MAX;
+        for i in 0..n {
+            match bytes[i] {
+                b'R' => force = 0,
+                b'L' => force = i32::MAX,
+                _ => if force != i32::MAX { force += 1; },
+            }
+            right[i] = force;
+        }
+
+        force = i32::MAX;
+        for i in (0..n).rev() {
+            match bytes[i] {
+                b'L' => force = 0,
+                b'R' => force = i32::MAX,
+                _ => if force != i32::MAX { force += 1; },
+            }
+            left[i] = force;
+        }
+
+        for i in 0..n {
+            if left[i] < right[i] {
+                res[i] = b'L';
+            } else if right[i] < left[i] {
+                res[i] = b'R';
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -715,8 +795,8 @@ We can simulate the dominoes falling in real time using a queue. Initially, all 
 
 1. Initialize a queue with all positions that have 'R' or 'L'.
 2. Process each element from the queue:
-   - For 'L': if the position to the left is '.', mark it as 'L' and add to queue.
-   - For 'R': if the position to the right is '.', check if a collision with 'L' is about to happen. If so, skip both. Otherwise, mark it as 'R' and add to queue.
+    - For 'L': if the position to the left is '.', mark it as 'L' and add to queue.
+    - For 'R': if the position to the right is '.', check if a collision with 'L' is about to happen. If so, skip both. Otherwise, mark it as 'R' and add to queue.
 3. The collision check looks two positions ahead to see if an 'L' is coming.
 4. Return the modified string.
 
@@ -1006,6 +1086,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn push_dominoes(dominoes: String) -> String {
+        let mut dom: Vec<u8> = dominoes.into_bytes();
+        let mut q: VecDeque<(usize, u8)> = VecDeque::new();
+
+        for i in 0..dom.len() {
+            if dom[i] != b'.' {
+                q.push_back((i, dom[i]));
+            }
+        }
+
+        while let Some((i, d)) = q.pop_front() {
+            if d == b'L' && i > 0 && dom[i - 1] == b'.' {
+                q.push_back((i - 1, b'L'));
+                dom[i - 1] = b'L';
+            } else if d == b'R' {
+                if i + 1 < dom.len() && dom[i + 1] == b'.' {
+                    if i + 2 < dom.len() && dom[i + 2] == b'L' {
+                        q.pop_front();
+                    } else {
+                        q.push_back((i + 1, b'R'));
+                        dom[i + 1] = b'R';
+                    }
+                }
+            }
+        }
+
+        String::from_utf8(dom).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1025,12 +1138,12 @@ We can process the string in one pass by tracking whether we've seen an 'R' that
 
 1. Track the count of consecutive dots and whether we've seen an unresolved 'R'.
 2. When encountering 'R':
-   - If a previous 'R' exists, all dots since then fall right.
-   - Otherwise, keep the dots as is.
-   - Mark that we now have an active 'R'.
+    - If a previous 'R' exists, all dots since then fall right.
+    - Otherwise, keep the dots as is.
+    - Mark that we now have an active 'R'.
 3. When encountering 'L':
-   - If a previous 'R' exists, split the dots: half fall right, half fall left, with a possible middle dot staying upright if the count is odd.
-   - Otherwise, all dots and the current 'L' fall left.
+    - If a previous 'R' exists, split the dots: half fall right, half fall left, with a possible middle dot staying upright if the count is odd.
+    - Otherwise, all dots and the current 'L' fall left.
 4. Handle trailing dots at the end based on whether an 'R' is active.
 5. Return the constructed result.
 
@@ -1476,6 +1589,58 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn push_dominoes(dominoes: String) -> String {
+        let mut res = String::new();
+        let mut dots = 0usize;
+        let mut r = false;
+
+        for d in dominoes.bytes() {
+            match d {
+                b'.' => dots += 1,
+                b'R' => {
+                    if r {
+                        res.extend(std::iter::repeat('R').take(dots + 1));
+                    } else if dots > 0 {
+                        res.extend(std::iter::repeat('.').take(dots));
+                    }
+                    dots = 0;
+                    r = true;
+                }
+                _ => {
+                    // 'L'
+                    if r {
+                        res.push('R');
+                        if dots > 0 {
+                            res.extend(std::iter::repeat('R').take(dots / 2));
+                            if dots % 2 != 0 {
+                                res.push('.');
+                            }
+                            res.extend(std::iter::repeat('L').take(dots / 2));
+                        }
+                        res.push('L');
+                        r = false;
+                        dots = 0;
+                    } else {
+                        res.extend(std::iter::repeat('L').take(dots + 1));
+                        dots = 0;
+                    }
+                }
+            }
+        }
+
+        if r {
+            res.extend(std::iter::repeat('R').take(dots + 1));
+        } else {
+            res.extend(std::iter::repeat('.').take(dots));
+        }
+
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Used to maintain a dynamic window of characters while tracking constraints
 - **Hash Map / Dictionary** - Required to count character frequencies and track distinct characters in the current window
 - **Binary Search (optional)** - One approach uses binary search on the answer length combined with fixed-size windows
@@ -17,9 +19,9 @@ The answer has a monotonic property: if we can find a valid substring of length 
 1. If `k >= n`, return `n` (entire string is valid).
 2. Binary search on the answer with `left = k` and `right = n`.
 3. For each midpoint `mid`, check if a valid window of size `mid` exists:
-   - Use a hash map to count characters in the initial window.
-   - Slide the window across the string, adding the new character and removing the old one.
-   - If at any point the distinct count is at most `k`, return `true`.
+    - Use a hash map to count characters in the initial window.
+    - Slide the window across the string, adding the new character and removing the old one.
+    - If at any point the distinct count is at most `k`, return `true`.
 4. Based on the result, narrow the search range.
 5. Return `left` as the final answer.
 
@@ -32,7 +34,7 @@ class Solution:
         if k >= n:
             return n
         left, right = k, n
-        
+
         def isValid(size):
             counter = collections.Counter(s[:size])
             if len(counter) <= k:
@@ -45,15 +47,15 @@ class Solution:
                 if len(counter) <= k:
                     return True
             return False
-        
+
         while left < right:
             mid = (left + right + 1) // 2
-            
+
             if isValid(mid):
                 left = mid
             else:
                 right = mid - 1
-        
+
         return left
 ```
 
@@ -64,34 +66,34 @@ class Solution {
         if (k >= n) {
             return n;
         }
-        
+
         int left = k, right = n;
         while (left < right) {
             int mid = (left + right + 1) / 2;
-            
+
             if (isValid(s, mid, k)) {
                 left = mid;
             } else {
                 right = mid - 1;
             }
         }
-        
+
         return left;
     }
-    
+
     private boolean isValid(String s, int size, int k) {
         int n = s.length();
         Map<Character, Integer> counter = new HashMap<>();
-        
+
         for (int i = 0; i < size; i++) {
             char c = s.charAt(i);
             counter.put(c, counter.getOrDefault(c, 0) + 1);
         }
-        
+
         if (counter.size() <= k) {
             return true;
         }
-        
+
         for (int i = size; i < n; i++) {
             char c1 = s.charAt(i);
             counter.put(c1, counter.getOrDefault(c1, 0) + 1);
@@ -104,7 +106,7 @@ class Solution {
                 return true;
             }
         }
-        
+
         return false;
     }
 }
@@ -118,35 +120,35 @@ public:
         if (k >= n) {
             return n;
         }
-        
+
         int left = k, right = n;
         while (left < right) {
             int mid = (left + right + 1) / 2;
-            
+
             if (isValid(s, mid, k)) {
                 left = mid;
             } else {
                 right = mid - 1;
             }
         }
-        
+
         return left;
     }
-    
+
 private:
     bool isValid(string s, int size, int k) {
         int n = s.length();
         unordered_map<char, int> counter;
-        
+
         for (int i = 0; i < size; i++) {
             char c = s[i];
             counter[c]++;
         }
-        
+
         if (counter.size() <= k) {
             return true;
         }
-        
+
         for (int i = size; i < n; i++) {
             char c1 = s[i];
             counter[c1]++;
@@ -159,7 +161,7 @@ private:
                 return true;
             }
         }
-        
+
         return false;
     }
 };
@@ -178,7 +180,8 @@ class Solution {
             return n;
         }
 
-        let left = k, right = n;
+        let left = k,
+            right = n;
         while (left < right) {
             let mid = Math.floor((left + right + 1) / 2);
 
@@ -438,6 +441,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_longest_substring_k_distinct(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let k = k as usize;
+        if k >= n {
+            return n as i32;
+        }
+
+        let (mut left, mut right) = (k, n);
+        while left < right {
+            let mid = (left + right + 1) / 2;
+            if Self::is_valid(s, mid, k) {
+                left = mid;
+            } else {
+                right = mid - 1;
+            }
+        }
+        left as i32
+    }
+
+    fn is_valid(s: &[u8], size: usize, k: usize) -> bool {
+        let n = s.len();
+        let mut counter = HashMap::new();
+
+        for i in 0..size {
+            *counter.entry(s[i]).or_insert(0) += 1;
+        }
+        if counter.len() <= k {
+            return true;
+        }
+
+        for i in size..n {
+            *counter.entry(s[i]).or_insert(0) += 1;
+            let cnt = counter.get_mut(&s[i - size]).unwrap();
+            *cnt -= 1;
+            if *cnt == 0 {
+                counter.remove(&s[i - size]);
+            }
+            if counter.len() <= k {
+                return true;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -445,7 +497,7 @@ class Solution {
 - Time complexity: $O(n \cdot \log n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
+> Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
 
 ---
 
@@ -459,12 +511,12 @@ A variable-size sliding window is the natural fit for this problem. We expand th
 
 1. Initialize `left = 0`, `maxSize = 0`, and a hash map `counter` to track character frequencies.
 2. For each `right` from `0` to `n-1`:
-   - Add `s[right]` to the counter.
-   - While the number of distinct characters exceeds `k`:
-     - Decrement the count of `s[left]`.
-     - If the count becomes `0`, remove it from the map.
-     - Increment `left`.
-   - Update `maxSize = max(maxSize, right - left + 1)`.
+    - Add `s[right]` to the counter.
+    - While the number of distinct characters exceeds `k`:
+        - Decrement the count of `s[left]`.
+        - If the count becomes `0`, remove it from the map.
+        - Increment `left`.
+    - Update `maxSize = max(maxSize, right - left + 1)`.
 3. Return `maxSize`.
 
 ::tabs-start
@@ -475,19 +527,19 @@ class Solution:
         n = len(s)
         max_size = 0
         counter = collections.Counter()
-        
+
         left = 0
         for right in range(n):
             counter[s[right]] += 1
-            
-            while len(counter) > k: 
+
+            while len(counter) > k:
                 counter[s[left]] -= 1
                 if counter[s[left]] == 0:
                     del counter[s[left]]
                 left += 1
-            
+
             max_size = max(max_size, right - left + 1)
-                    
+
         return max_size
 ```
 
@@ -497,11 +549,11 @@ class Solution {
         int n = s.length();
         int maxSize = 0;
         Map<Character, Integer> counter = new HashMap<>();
-        
+
         int left = 0;
         for (int right = 0; right < n; right++) {
             counter.put(s.charAt(right), counter.getOrDefault(s.charAt(right), 0) + 1);
-            
+
             while (counter.size() > k) {
                 counter.put(s.charAt(left), counter.get(s.charAt(left)) - 1);
                 if (counter.get(s.charAt(left)) == 0) {
@@ -509,11 +561,11 @@ class Solution {
                 }
                 left++;
             }
-            
+
             maxSize = Math.max(maxSize, right - left + 1);
         }
-                    
-        return maxSize;  
+
+        return maxSize;
     }
 }
 ```
@@ -525,11 +577,11 @@ public:
         int n = s.length();
         int maxSize = 0;
         unordered_map<char, int> counter;
-        
+
         int left = 0;
         for (int right = 0; right < n; right++) {
             counter[s[right]]++;
-            
+
             while (counter.size() > k) {
                 counter[s[left]]--;
                 if (counter[s[left]] == 0) {
@@ -537,11 +589,11 @@ public:
                 }
                 left++;
             }
-            
+
             maxSize = max(maxSize, right - left + 1);
         }
-                    
-        return maxSize;  
+
+        return maxSize;
     }
 };
 ```
@@ -560,7 +612,10 @@ class Solution {
 
         let left = 0;
         for (let right = 0; right < n; right++) {
-            counter.set(s.charAt(right), (counter.get(s.charAt(right)) || 0) + 1);
+            counter.set(
+                s.charAt(right),
+                (counter.get(s.charAt(right)) || 0) + 1,
+            );
 
             while (counter.size > k) {
                 counter.set(s.charAt(left), counter.get(s.charAt(left)) - 1);
@@ -688,6 +743,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_longest_substring_k_distinct(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let k = k as usize;
+        let mut max_size = 0;
+        let mut counter = HashMap::new();
+
+        let mut left = 0;
+        for right in 0..n {
+            *counter.entry(s[right]).or_insert(0) += 1;
+
+            while counter.len() > k {
+                let cnt = counter.get_mut(&s[left]).unwrap();
+                *cnt -= 1;
+                if *cnt == 0 {
+                    counter.remove(&s[left]);
+                }
+                left += 1;
+            }
+
+            max_size = max_size.max(right - left + 1);
+        }
+        max_size as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -695,7 +779,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(k)$
 
->  Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
+> Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
 
 ---
 
@@ -709,11 +793,11 @@ An optimization on the standard sliding window: instead of shrinking the window 
 
 1. Initialize `maxSize = 0` and a hash map `counter`.
 2. For each `right` from `0` to `n-1`:
-   - Add `s[right]` to the counter.
-   - If distinct characters exceed `k`:
-     - Decrement count of `s[right - maxSize]` (the leftmost character of current max window).
-     - Remove from map if count is `0`.
-   - Otherwise, increment `maxSize`.
+    - Add `s[right]` to the counter.
+    - If distinct characters exceed `k`:
+        - Decrement count of `s[right - maxSize]` (the leftmost character of current max window).
+        - Remove from map if count is `0`.
+    - Otherwise, increment `maxSize`.
 3. Return `maxSize`.
 
 ::tabs-start
@@ -723,10 +807,10 @@ class Solution:
     def lengthOfLongestSubstringKDistinct(self, s: str, k: int) -> int:
         max_size = 0
         counter = collections.Counter()
-        
+
         for right in range(len(s)):
             counter[s[right]] += 1
-            
+
             if len(counter) <= k:
                 max_size += 1
             else:
@@ -743,10 +827,10 @@ class Solution {
         int n = s.length();
         int maxSize = 0;
         Map<Character, Integer> counter = new HashMap<>();
-        
+
         for (int right = 0; right < n; right++) {
             counter.put(s.charAt(right), counter.getOrDefault(s.charAt(right), 0) + 1);
-            
+
             if (counter.size() <= k) {
                 maxSize++;
             } else {
@@ -757,7 +841,7 @@ class Solution {
             }
         }
 
-        return maxSize; 
+        return maxSize;
     }
 }
 ```
@@ -769,10 +853,10 @@ public:
         int n = s.length();
         int maxSize = 0;
         unordered_map<char, int> counter;
-        
+
         for (int right = 0; right < n; right++) {
             counter[s[right]]++;
-            
+
             if (counter.size() <= k) {
                 maxSize++;
             } else {
@@ -782,7 +866,7 @@ public:
                 }
             }
         }
-        return maxSize; 
+        return maxSize;
     }
 };
 ```
@@ -800,12 +884,18 @@ class Solution {
         let counter = new Map();
 
         for (let right = 0; right < n; right++) {
-            counter.set(s.charAt(right), (counter.get(s.charAt(right)) || 0) + 1);
+            counter.set(
+                s.charAt(right),
+                (counter.get(s.charAt(right)) || 0) + 1,
+            );
 
             if (counter.size <= k) {
                 maxSize++;
             } else {
-                counter.set(s.charAt(right - maxSize), counter.get(s.charAt(right - maxSize)) - 1);
+                counter.set(
+                    s.charAt(right - maxSize),
+                    counter.get(s.charAt(right - maxSize)) - 1,
+                );
                 if (counter.get(s.charAt(right - maxSize)) === 0) {
                     counter.delete(s.charAt(right - maxSize));
                 }
@@ -912,6 +1002,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_longest_substring_k_distinct(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let k = k as usize;
+        let mut max_size = 0usize;
+        let mut counter = HashMap::new();
+
+        for right in 0..n {
+            *counter.entry(s[right]).or_insert(0) += 1;
+
+            if counter.len() <= k {
+                max_size += 1;
+            } else {
+                let c = s[right - max_size];
+                let cnt = counter.get_mut(&c).unwrap();
+                *cnt -= 1;
+                if *cnt == 0 {
+                    counter.remove(&c);
+                }
+            }
+        }
+        max_size as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -919,7 +1037,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
+> Where $n$ is the length of the input string `s` and $k$ is the maximum number of distinct characters.
 
 ---
 

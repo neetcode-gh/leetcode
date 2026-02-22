@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **GCD (Greatest Common Divisor)** - Computing GCD using Euclidean algorithm and understanding its properties
 - **Backtracking** - Exploring all possible pairings through recursive enumeration with state restoration
 - **Bitmask Dynamic Programming** - Using bitmasks to represent subsets of elements and memoizing states efficiently
@@ -20,10 +22,10 @@ The backtracking approach explores every possible pairing. At each step, we pick
 2. Define a recursive `dfs(n)` function where `n` is the current operation number (starting from `1`).
 3. Base case: if `n > N/2`, all operations are done, return `0`.
 4. For each pair of unvisited indices `(i, j)`:
-   - Mark both as visited.
-   - Compute `n * gcd(nums[i], nums[j])` plus the recursive result for the next operation.
-   - Track the maximum score.
-   - Backtrack by unmarking both indices.
+    - Mark both as visited.
+    - Compute `n * gcd(nums[i], nums[j])` plus the recursive result for the next operation.
+    - Track the maximum score.
+    - Backtrack by unmarking both indices.
 5. Return the maximum score found.
 
 ::tabs-start
@@ -324,6 +326,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(nums: Vec<i32>) -> i32 {
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        fn dfs(n: i32, nums: &[i32], visit: &mut Vec<bool>, total: i32) -> i32 {
+            if n > (nums.len() as i32) / 2 {
+                return 0;
+            }
+            let mut res = 0;
+            for i in 0..nums.len() {
+                if visit[i] { continue; }
+                visit[i] = true;
+                for j in (i + 1)..nums.len() {
+                    if visit[j] { continue; }
+                    visit[j] = true;
+                    let g = gcd(nums[i], nums[j]);
+                    res = res.max(n * g + dfs(n + 1, nums, visit, total));
+                    visit[j] = false;
+                }
+                visit[i] = false;
+            }
+            res
+        }
+
+        let n = nums.len();
+        let mut visit = vec![false; n];
+        dfs(1, &nums, &mut visit, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,9 +385,9 @@ A bitmask elegantly represents which elements are taken. Each bit position corre
 2. Define `dfs(mask, op)` where `mask` tracks used elements and `op` is the current operation number.
 3. If `mask` is already cached, return the stored value.
 4. For each pair of indices `(i, j)` where neither bit is set:
-   - Create `newMask` by setting bits `i` and `j`.
-   - Compute `op * gcd(nums[i], nums[j])` plus recursive result.
-   - Update the maximum score for this `mask`.
+    - Create `newMask` by setting bits `i` and `j`.
+    - Compute `op * gcd(nums[i], nums[j])` plus recursive result.
+    - Update the maximum score for this `mask`.
 5. Cache and return the result.
 
 ::tabs-start
@@ -633,6 +669,38 @@ class Solution {
 
     private func gcd(_ a: Int, _ b: Int) -> Int {
         return b == 0 ? a : gcd(b, a % b)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score(nums: Vec<i32>) -> i32 {
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        fn dfs(mask: usize, op: i32, nums: &[i32], cache: &mut HashMap<usize, i32>) -> i32 {
+            if let Some(&val) = cache.get(&mask) {
+                return val;
+            }
+            let mut max_score = 0;
+            let n = nums.len();
+            for i in 0..n {
+                if (mask & (1 << i)) != 0 { continue; }
+                for j in (i + 1)..n {
+                    if (mask & (1 << j)) != 0 { continue; }
+                    let new_mask = mask | (1 << i) | (1 << j);
+                    let score = op * gcd(nums[i], nums[j]) + dfs(new_mask, op + 1, nums, cache);
+                    max_score = max_score.max(score);
+                }
+            }
+            cache.insert(mask, max_score);
+            max_score
+        }
+
+        let mut cache = HashMap::new();
+        dfs(0, 1, &nums, &mut cache)
     }
 }
 ```
@@ -1012,6 +1080,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(nums: Vec<i32>) -> i32 {
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        let n = nums.len();
+        let mut g = vec![vec![0i32; n]; n];
+        for i in 0..n {
+            for j in (i + 1)..n {
+                g[i][j] = gcd(nums[i], nums[j]);
+            }
+        }
+
+        let mut dp = vec![-1i32; 1 << n];
+
+        fn dfs(mask: usize, op: i32, n: usize, g: &[Vec<i32>], dp: &mut Vec<i32>) -> i32 {
+            if dp[mask] != -1 {
+                return dp[mask];
+            }
+            let mut max_score = 0;
+            for i in 0..n {
+                if (mask & (1 << i)) != 0 { continue; }
+                for j in (i + 1)..n {
+                    if (mask & (1 << j)) != 0 { continue; }
+                    let new_mask = mask | (1 << i) | (1 << j);
+                    max_score = max_score.max(
+                        op * g[i][j] + dfs(new_mask, op + 1, n, g, dp),
+                    );
+                }
+            }
+            dp[mask] = max_score;
+            max_score
+        }
+
+        dfs(0, 1, n, &g, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1036,11 +1145,11 @@ The operation number for a given mask is determined by counting how many bits ar
 1. Precompute the `GCD[i][j]` table for all pairs.
 2. Create a `dp` array of size `2^n` initialized to `0`.
 3. Iterate `mask` from `2^n - 1` down to `0`:
-   - Count the number of set bits. Skip if it is odd (invalid state).
-   - Calculate `op = bits / 2 + 1` (the next operation number).
-   - For each pair `(i, j)` not in the current mask:
-     - Compute `new_mask = mask | (1 << i) | (1 << j)`.
-     - Update `dp[mask] = max(dp[mask], op * GCD[i][j] + dp[new_mask])`.
+    - Count the number of set bits. Skip if it is odd (invalid state).
+    - Calculate `op = bits / 2 + 1` (the next operation number).
+    - For each pair `(i, j)` not in the current mask:
+        - Compute `new_mask = mask | (1 << i) | (1 << j)`.
+        - Update `dp[mask] = max(dp[mask], op * GCD[i][j] + dp[new_mask])`.
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -1358,6 +1467,44 @@ class Solution {
             }
         }
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score(nums: Vec<i32>) -> i32 {
+        fn gcd(a: i32, b: i32) -> i32 {
+            if b == 0 { a } else { gcd(b, a % b) }
+        }
+
+        let n = nums.len();
+        let big_n = 1 << n;
+        let mut g = vec![vec![0i32; n]; n];
+        for i in 0..n {
+            for j in (i + 1)..n {
+                g[i][j] = gcd(nums[i], nums[j]);
+            }
+        }
+
+        let mut dp = vec![0i32; big_n];
+        for mask in (0..big_n).rev() {
+            let bits = (mask as u32).count_ones() as i32;
+            if bits % 2 == 1 {
+                continue;
+            }
+            let op = bits / 2 + 1;
+
+            for i in 0..n {
+                if (mask & (1 << i)) != 0 { continue; }
+                for j in (i + 1)..n {
+                    if (mask & (1 << j)) != 0 { continue; }
+                    let new_mask = mask | (1 << i) | (1 << j);
+                    dp[mask] = dp[mask].max(op * g[i][j] + dp[new_mask]);
+                }
+            }
+        }
+        dp[0]
     }
 }
 ```

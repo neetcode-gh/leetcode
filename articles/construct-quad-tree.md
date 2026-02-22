@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion / Divide and Conquer** - Recursively dividing a grid into four equal quadrants
 - **2D Arrays / Matrices** - Working with grid coordinates and subregion boundaries
 - **Tree Data Structures** - Understanding quad trees where each node has exactly four children
@@ -9,17 +11,19 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 A quad tree recursively divides a 2D grid into four quadrants. If all values in a region are the same, that region becomes a leaf node. Otherwise, we split it into four equal parts and recursively build the tree. For each region, we first check if all cells have the same value; if so, we create a leaf node.
 
 ### Algorithm
+
 1. Define `dfs(n, r, c)` where `n` is the size of the current region and `(r, c)` is its top-left corner.
 2. Check if all cells in the `n x n` region starting at `(r, c)` have the same value.
 3. If all values are the same, return a leaf node with that value.
 4. Otherwise, divide `n` by 2 and recursively build four children:
-   - topLeft: `dfs(n/2, r, c)`
-   - topRight: `dfs(n/2, r, c + n/2)`
-   - bottomLeft: `dfs(n/2, r + n/2, c)`
-   - bottomRight: `dfs(n/2, r + n/2, c + n/2)`
+    - topLeft: `dfs(n/2, r, c)`
+    - topRight: `dfs(n/2, r, c + n/2)`
+    - bottomLeft: `dfs(n/2, r + n/2, c)`
+    - bottomRight: `dfs(n/2, r + n/2, c + n/2)`
 5. Return a non-leaf node with these four children.
 
 ::tabs-start
@@ -489,6 +493,42 @@ class Solution {
 }
 ```
 
+```rust
+// LeetCode provides the Node definition for Quad Tree problems.
+// This solution assumes the Node type is available.
+// impl Solution {
+//     pub fn construct(grid: Vec<Vec<i32>>) -> Option<Box<Node>> {
+//         fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Box<Node>> {
+//             let mut all_same = true;
+//             'outer: for i in 0..n {
+//                 for j in 0..n {
+//                     if grid[r][c] != grid[r + i][c + j] {
+//                         all_same = false;
+//                         break 'outer;
+//                     }
+//                 }
+//             }
+//
+//             if all_same {
+//                 return Some(Box::new(Node::new(grid[r][c] == 1, true,
+//                     None, None, None, None)));
+//             }
+//
+//             let mid = n / 2;
+//             let top_left = dfs(grid, mid, r, c);
+//             let top_right = dfs(grid, mid, r, c + mid);
+//             let bottom_left = dfs(grid, mid, r + mid, c);
+//             let bottom_right = dfs(grid, mid, r + mid, c + mid);
+//
+//             Some(Box::new(Node::new(false, false,
+//                 top_left, top_right, bottom_left, bottom_right)))
+//         }
+//
+//         dfs(&grid, grid.len(), 0, 0)
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,9 +541,11 @@ class Solution {
 ## 2. Recursion (Optimal)
 
 ### Intuition
+
 Instead of checking uniformity before recursing, we can recurse first and check uniformity after. If we reach a single cell, it is always a leaf. For larger regions, we build all four children first, then check if they are all leaves with the same value. If so, we can merge them into a single leaf node, avoiding the O(n^2) check at each level.
 
 ### Algorithm
+
 1. Define `dfs(n, r, c)` where `n` is the region size and `(r, c)` is its top-left corner.
 2. Base case: if `n == 1`, return a leaf node with `grid[r][c]`.
 3. Recursively build the four quadrants with size `n / 2`.
@@ -964,6 +1006,43 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     pub fn construct(grid: Vec<Vec<i32>>) -> Option<Box<Node>> {
+//         fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Box<Node>> {
+//             if n == 1 {
+//                 return Some(Box::new(Node::new(grid[r][c] == 1, true,
+//                     None, None, None, None)));
+//             }
+//
+//             let mid = n / 2;
+//             let tl = dfs(grid, mid, r, c);
+//             let tr = dfs(grid, mid, r, c + mid);
+//             let bl = dfs(grid, mid, r + mid, c);
+//             let br = dfs(grid, mid, r + mid, c + mid);
+//
+//             if let (Some(tl_n), Some(tr_n), Some(bl_n), Some(br_n)) =
+//                 (&tl, &tr, &bl, &br)
+//             {
+//                 if tl_n.is_leaf && tr_n.is_leaf &&
+//                    bl_n.is_leaf && br_n.is_leaf &&
+//                    tl_n.val == tr_n.val &&
+//                    tl_n.val == bl_n.val &&
+//                    tl_n.val == br_n.val
+//                 {
+//                     return Some(Box::new(Node::new(tl_n.val, true,
+//                         None, None, None, None)));
+//                 }
+//             }
+//
+//             Some(Box::new(Node::new(false, false, tl, tr, bl, br)))
+//         }
+//
+//         dfs(&grid, grid.len(), 0, 0)
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -976,9 +1055,11 @@ class Solution {
 ## 3. Recursion (Space Optimized)
 
 ### Intuition
+
 We can optimize memory by reusing leaf nodes. Since all leaves with value `true` are identical and all leaves with value `false` are identical, we can create just two singleton leaf nodes and reuse them throughout the tree instead of creating new leaf nodes each time.
 
 ### Algorithm
+
 1. Create two shared leaf nodes: one for `false` and one for `true`.
 2. Define `dfs(n, r, c)` as before.
 3. Base case: if `n == 1`, return the appropriate shared leaf node based on `grid[r][c]`.
@@ -1469,6 +1550,43 @@ class Solution {
 }
 ```
 
+```rust
+// impl Solution {
+//     pub fn construct(grid: Vec<Vec<i32>>) -> Option<Box<Node>> {
+//         fn dfs(grid: &Vec<Vec<i32>>, n: usize, r: usize, c: usize) -> Option<Box<Node>> {
+//             if n == 1 {
+//                 return Some(Box::new(Node::new(grid[r][c] == 1, true,
+//                     None, None, None, None)));
+//             }
+//
+//             let half = n / 2;
+//             let tl = dfs(grid, half, r, c);
+//             let tr = dfs(grid, half, r, c + half);
+//             let bl = dfs(grid, half, r + half, c);
+//             let br = dfs(grid, half, r + half, c + half);
+//
+//             if let (Some(tl_n), Some(tr_n), Some(bl_n), Some(br_n)) =
+//                 (&tl, &tr, &bl, &br)
+//             {
+//                 if tl_n.is_leaf && tr_n.is_leaf &&
+//                    bl_n.is_leaf && br_n.is_leaf &&
+//                    tl_n.val == tr_n.val &&
+//                    tl_n.val == bl_n.val &&
+//                    tl_n.val == br_n.val
+//                 {
+//                     return Some(Box::new(Node::new(tl_n.val, true,
+//                         None, None, None, None)));
+//                 }
+//             }
+//
+//             Some(Box::new(Node::new(false, false, tl, tr, bl, br)))
+//         }
+//
+//         dfs(&grid, grid.len(), 0, 0)
+//     }
+// }
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1481,7 +1599,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Confusing Row and Column Offsets When Dividing Quadrants
+
 When dividing the grid into four quadrants, the top-left stays at `(r, c)`, but the other three quadrants need correct offsets. A common mistake is swapping row and column increments.
+
 ```python
 # Wrong: Incorrect quadrant positions
 topRight = dfs(n//2, r + n//2, c)  # Should be (r, c + n//2)
@@ -1489,7 +1609,9 @@ bottomLeft = dfs(n//2, r, c + n//2)  # Should be (r + n//2, c)
 ```
 
 ### Forgetting to Check All Four Children Are Leaves Before Merging
+
 When merging four children into a single leaf node, you must verify that all four children are leaves AND have the same value. Checking only the values without confirming they are leaves will incorrectly merge non-leaf nodes.
+
 ```python
 # Wrong: Only checking values
 if topLeft.val == topRight.val == bottomLeft.val == bottomRight.val:
@@ -1503,4 +1625,5 @@ if (topLeft.isLeaf and topRight.isLeaf and
 ```
 
 ### Using Wrong Grid Size for Recursion
+
 When dividing the grid, the new size should be `n // 2`, not `n - 1` or any other calculation. Each level of recursion should exactly halve the region size since the grid dimension is always a power of 2.

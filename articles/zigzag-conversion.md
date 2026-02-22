@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Building strings from characters and concatenating multiple strings
 - **Pattern Recognition** - Identifying mathematical formulas to calculate character positions in repeating patterns
 - **Array/List Operations** - Using multiple lists to collect characters row by row
@@ -9,14 +11,16 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Iteration - I
 
 ### Intuition
+
 When writing characters in a zigzag pattern, each row follows a predictable spacing pattern. The key insight is that the distance between characters in the same row follows a cycle of length `2 * (numRows - 1)`. For the first and last rows, characters appear at regular intervals of this cycle length. For middle rows, there are two characters per cycle: one at the regular position and one at a calculated offset within the `cycle`.
 
 ### Algorithm
+
 1. Handle the edge case where `numRows` is 1 by returning the original string.
 2. Calculate the base `increment` as `2 * (numRows - 1)`, which represents one full zigzag cycle.
 3. For each row `r` from `0` to `numRows - 1`:
-   - Start at index `r` and jump by the `increment` to collect characters at regular cycle positions.
-   - For middle rows (not first or last), also collect the "diagonal" character at position `i + increment - 2 * r` if it exists.
+    - Start at index `r` and jump by the `increment` to collect characters at regular cycle positions.
+    - For middle rows (not first or last), also collect the "diagonal" character at position `i + increment - 2 * r` if it exists.
 4. Concatenate all collected characters and return the result.
 
 ::tabs-start
@@ -221,6 +225,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn convert(s: String, num_rows: i32) -> String {
+        let num_rows = num_rows as usize;
+        if num_rows == 1 {
+            return s;
+        }
+
+        let bytes = s.as_bytes();
+        let len = bytes.len();
+        let mut res = Vec::with_capacity(len);
+        let increment = 2 * (num_rows - 1);
+
+        for r in 0..num_rows {
+            let mut i = r;
+            while i < len {
+                res.push(bytes[i]);
+                if r > 0 && r < num_rows - 1 && i + increment - 2 * r < len {
+                    res.push(bytes[i + increment - 2 * r]);
+                }
+                i += increment;
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -233,16 +266,18 @@ class Solution {
 ## 2. Iteration - II
 
 ### Intuition
+
 Instead of calculating positions mathematically, we can simulate the actual zigzag writing process. We maintain a current `row` and a `direction`. As we traverse the string, we place each character in its corresponding row. When we hit the top or bottom row, we reverse `direction`. This approach directly models how characters would be written in the zigzag pattern.
 
 ### Algorithm
+
 1. Handle edge cases where `numRows` is 1 or greater than or equal to the string length by returning the original string.
 2. Create an array of lists (or strings), one for each `row`.
 3. Initialize the current `row` to `0` and `direction` to `1` (moving down).
 4. For each character in the string:
-   - Append the character to the current row's list.
-   - Move to the next row by adding the `direction`.
-   - If we reach the first or last row, reverse the `direction` by multiplying by `-1`.
+    - Append the character to the current row's list.
+    - Move to the next row by adding the `direction`.
+    - If we reach the first or last row, reverse the `direction` by multiplying by `-1`.
 5. Concatenate all rows in order and return the result.
 
 ::tabs-start
@@ -460,6 +495,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn convert(s: String, num_rows: i32) -> String {
+        let num_rows = num_rows as usize;
+        if num_rows == 1 || num_rows >= s.len() {
+            return s;
+        }
+
+        let mut rows: Vec<String> = vec![String::new(); num_rows];
+        let mut row: usize = 0;
+        let mut dir: i32 = 1;
+
+        for c in s.chars() {
+            rows[row].push(c);
+            row = (row as i32 + dir) as usize;
+            if row == 0 || row == num_rows - 1 {
+                dir *= -1;
+            }
+        }
+
+        rows.concat()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,6 +532,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Handling the Single Row Edge Case
+
 When `numRows == 1`, the zigzag pattern is just the original string. Without this check, the increment becomes `2 * (1 - 1) = 0`, causing an infinite loop or division issues.
 
 ```python
@@ -481,6 +542,7 @@ for i in range(r, len(s), increment):  # Infinite loop!
 ```
 
 ### Incorrect Direction Toggle Logic
+
 When simulating the zigzag traversal, the direction should only flip when reaching the first or last row. A common mistake is toggling direction after every step, or only checking one boundary.
 
 ```python
@@ -491,6 +553,7 @@ if row == numRows - 1:  # Misses the top boundary!
 ```
 
 ### Wrong Index Calculation for Middle Row Diagonal Characters
+
 In the mathematical approach, middle rows have two characters per cycle. The diagonal character position `i + increment - 2 * r` is often miscalculated, leading to missing characters or index out of bounds errors.
 
 ```python

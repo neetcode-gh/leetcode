@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map / Dictionary** - Storing and retrieving key-value pairs for frequency counting
 - **Character Frequency Counting** - Counting occurrences of each character in a string
 - **Finding Minimum Across Values** - Determining the limiting factor from multiple constraints
@@ -175,6 +177,27 @@ class Solution {
             res = min(res, (countText[c] ?? 0) / need)
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_number_of_balloons(text: String) -> i32 {
+        let mut count_text = HashMap::new();
+        for c in text.chars() {
+            *count_text.entry(c).or_insert(0) += 1;
+        }
+
+        let balloon = HashMap::from([
+            ('b', 1), ('a', 1), ('l', 2), ('o', 2), ('n', 1),
+        ]);
+
+        let mut res = text.len() as i32;
+        for (&c, &need) in &balloon {
+            res = res.min(*count_text.get(&c).unwrap_or(&0) / need);
+        }
+        res
     }
 }
 ```
@@ -373,6 +396,27 @@ class Solution {
         mp["l"]! /= 2
         mp["o"]! /= 2
         return mp.values.min()!
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_number_of_balloons(text: String) -> i32 {
+        let mut mp = HashMap::new();
+        for c in text.chars() {
+            if "balon".contains(c) {
+                *mp.entry(c).or_insert(0) += 1;
+            }
+        }
+
+        if mp.len() < 5 {
+            return 0;
+        }
+
+        *mp.get_mut(&'l').unwrap() /= 2;
+        *mp.get_mut(&'o').unwrap() /= 2;
+        *mp.values().min().unwrap()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding singly linked list structure and node traversal
 - **Pointer Manipulation** - Rewiring node connections by modifying next pointers
 - **Two Pointers** - Tracking multiple positions in a linked list simultaneously
@@ -246,6 +248,50 @@ class Solution {
 
         cur?.next = arr[b + 1]
         return list1
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn merge_in_between(
+        list1: Option<Box<ListNode>>,
+        a: i32,
+        b: i32,
+        list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut arr: Vec<i32> = Vec::new();
+        let mut cur = &list1;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+
+        let mut vals2: Vec<i32> = Vec::new();
+        let mut cur2 = &list2;
+        while let Some(node) = cur2 {
+            vals2.push(node.val);
+            cur2 = &node.next;
+        }
+
+        let mut result_vals: Vec<i32> = Vec::new();
+        result_vals.extend_from_slice(&arr[..a as usize]);
+        result_vals.extend_from_slice(&vals2);
+        result_vals.extend_from_slice(&arr[(b + 1) as usize..]);
+
+        let mut head = None;
+        for &val in result_vals.iter().rev() {
+            let mut node = ListNode::new(val);
+            node.next = head;
+            head = Some(Box::new(node));
+        }
+        head
     }
 }
 ```
@@ -540,6 +586,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_in_between(
+        list1: Option<Box<ListNode>>,
+        a: i32,
+        b: i32,
+        list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Some(Box::new(ListNode { val: 0, next: list1 }));
+        let mut cur = &mut dummy;
+        for _ in 0..a {
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+
+        let mut tail = cur.as_mut().unwrap().next.take();
+        for _ in 0..=(b - a) {
+            tail = tail.unwrap().next;
+        }
+
+        cur.as_mut().unwrap().next = list2;
+
+        let mut cur = cur;
+        while cur.as_ref().unwrap().next.is_some() {
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+        cur.as_mut().unwrap().next = tail;
+
+        dummy.unwrap().next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -560,14 +638,14 @@ We can solve this problem recursively by reducing the indices `a` and `b` as we 
 ### Algorithm
 
 1. If `a` == `1`, we are at the insertion point:
-   - Save `list1.next` as `nxt`.
-   - Set `list1.next` = `list2`.
-   - Traverse to the end of `list2` to find its tail.
-   - Recursively call the function with `nxt`, `a` = `0`, `b` - `1`, and the tail of `list2`.
-   - Return `list1`.
+    - Save `list1.next` as `nxt`.
+    - Set `list1.next` = `list2`.
+    - Traverse to the end of `list2` to find its tail.
+    - Recursively call the function with `nxt`, `a` = `0`, `b` - `1`, and the tail of `list2`.
+    - Return `list1`.
 2. If `b` == `0`, we have skipped all nodes to remove:
-   - Set `list2.next` = `list1.next` to connect the tail of `list2` to the rest of `list1`.
-   - Return `list1`.
+    - Set `list2.next` = `list1.next` to connect the tail of `list2` to the rest of `list1`.
+    - Return `list1`.
 3. Otherwise, recurse on `list1.next` with `a` - `1` and `b` - `1`.
 4. Return `list1`.
 
@@ -806,6 +884,64 @@ class Solution {
 
         _ = mergeInBetween(list1?.next, a - 1, b - 1, list2)
         return list1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge_in_between(
+        list1: Option<Box<ListNode>>,
+        a: i32,
+        b: i32,
+        list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        fn helper(
+            list1: Option<Box<ListNode>>,
+            a: i32,
+            b: i32,
+            list2: Option<Box<ListNode>>,
+        ) -> Option<Box<ListNode>> {
+            let mut node = list1.unwrap();
+            if a == 1 {
+                let nxt = node.next.take();
+                let mut tail = list2;
+                let mut result_vals = vec![node.val];
+
+                let mut cur = &tail;
+                let mut l2_vals = Vec::new();
+                while let Some(n) = cur {
+                    l2_vals.push(n.val);
+                    cur = &n.next;
+                }
+
+                let mut remaining = nxt;
+                for _ in 0..b {
+                    remaining = remaining.unwrap().next;
+                }
+
+                let mut vals = result_vals;
+                vals.extend(l2_vals);
+
+                let mut cur = &remaining;
+                while let Some(n) = cur {
+                    vals.push(n.val);
+                    cur = &n.next;
+                }
+
+                let mut head = None;
+                for &val in vals.iter().rev() {
+                    let mut n = ListNode::new(val);
+                    n.next = head;
+                    head = Some(Box::new(n));
+                }
+                return head;
+            }
+
+            node.next = helper(node.next, a - 1, b - 1, list2);
+            Some(node)
+        }
+        helper(list1, a, b, list2)
     }
 }
 ```

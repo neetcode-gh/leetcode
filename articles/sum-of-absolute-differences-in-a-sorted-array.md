@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - Used to compute the sum of elements to the left of each index in O(1) time
 - **Suffix Sums** - Used to compute the sum of elements to the right of each index efficiently
 - **Sorted Array Properties** - Understanding that in a sorted array, left elements are smaller and right elements are larger eliminates the need for absolute values
@@ -16,10 +18,10 @@ For each element, we need to compute the sum of absolute differences with all ot
 
 1. Create a result array `res` of the same size as `nums`.
 2. For each index `i`:
-   - Initialize `sum = 0`.
-   - For each index `j`:
-     - Add `|nums[i] - nums[j]|` to `sum`.
-   - Store `sum` in `res[i]`.
+    - Initialize `sum = 0`.
+    - For each index `j`:
+        - Add `|nums[i] - nums[j]|` to `sum`.
+    - Store `sum` in `res[i]`.
 3. Return `res`.
 
 ::tabs-start
@@ -178,6 +180,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_sum_absolute_differences(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![0; n];
+
+        for i in 0..n {
+            let mut sum = 0;
+            for j in 0..n {
+                sum += (nums[i] - nums[j]).abs();
+            }
+            res[i] = sum;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -198,9 +219,9 @@ Since the array is sorted, we can remove the absolute value operation. For eleme
 1. Build a prefix sum array where `prefix_sum[i]` is the sum of elements from index `0` to `i`.
 2. Build a suffix sum array where `suffix_sum[i]` is the sum of elements from index `i` to `n-1`.
 3. For each index `i`:
-   - Left contribution: `i * nums[i] - prefix_sum[i-1]` (there are `i` elements to the left).
-   - Right contribution: `suffix_sum[i+1] - (n - i - 1) * nums[i]` (there are `n - i - 1` elements to the right).
-   - Store the sum in `res[i]`.
+    - Left contribution: `i * nums[i] - prefix_sum[i-1]` (there are `i` elements to the left).
+    - Right contribution: `suffix_sum[i+1] - (n - i - 1) * nums[i]` (there are `n - i - 1` elements to the right).
+    - Store the sum in `res[i]`.
 4. Return `res`.
 
 ::tabs-start
@@ -440,6 +461,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_sum_absolute_differences(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut prefix_sum = vec![0; n];
+        let mut suffix_sum = vec![0; n];
+        let mut res = vec![0; n];
+
+        prefix_sum[0] = nums[0];
+        for i in 1..n {
+            prefix_sum[i] = prefix_sum[i - 1] + nums[i];
+        }
+
+        suffix_sum[n - 1] = nums[n - 1];
+        for i in (0..n - 1).rev() {
+            suffix_sum[i] = suffix_sum[i + 1] + nums[i];
+        }
+
+        for i in 0..n {
+            let left_sum = if i > 0 {
+                i as i32 * nums[i] - prefix_sum[i - 1]
+            } else {
+                0
+            };
+            let right_sum = if i < n - 1 {
+                suffix_sum[i + 1] - (n - i - 1) as i32 * nums[i]
+            } else {
+                0
+            };
+            res[i] = left_sum + right_sum;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,10 +517,10 @@ We can reduce space by reusing the result array to store suffix sums initially, 
 
 1. Initialize the result array with suffix sums by iterating from right to left.
 2. Iterate from left to right, maintaining a running prefix sum:
-   - Compute left contribution using the running prefix sum.
-   - Compute right contribution using the precomputed suffix sum at `i + 1`.
-   - Store the sum in `res[i]`.
-   - Update the prefix sum with `nums[i]`.
+    - Compute left contribution using the running prefix sum.
+    - Compute right contribution using the precomputed suffix sum at `i + 1`.
+    - Store the sum in `res[i]`.
+    - Update the prefix sum with `nums[i]`.
 3. Return `res`.
 
 ::tabs-start
@@ -661,6 +719,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_sum_absolute_differences(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![0; n];
+
+        res[n - 1] = nums[n - 1];
+        for i in (0..n - 1).rev() {
+            res[i] = res[i + 1] + nums[i];
+        }
+
+        let mut prefix_sum = 0;
+        for i in 0..n {
+            let left_sum = i as i32 * nums[i] - prefix_sum;
+            let right_sum = if i < n - 1 {
+                res[i + 1] - (n - i - 1) as i32 * nums[i]
+            } else {
+                0
+            };
+            res[i] = left_sum + right_sum;
+            prefix_sum += nums[i];
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,11 +767,11 @@ Instead of precomputing a suffix sum array, we can compute both prefix and suffi
 1. Compute `total_sum` of all elements.
 2. Initialize `prefix_sum = 0`.
 3. For each index `i`:
-   - Subtract `nums[i]` from `total_sum` to get the suffix sum of elements after index `i`.
-   - Compute left contribution: `i * nums[i] - prefix_sum`.
-   - Compute right contribution: `total_sum - (n - i - 1) * nums[i]`.
-   - Store the sum in `res[i]`.
-   - Add `nums[i]` to `prefix_sum`.
+    - Subtract `nums[i]` from `total_sum` to get the suffix sum of elements after index `i`.
+    - Compute left contribution: `i * nums[i] - prefix_sum`.
+    - Compute right contribution: `total_sum - (n - i - 1) * nums[i]`.
+    - Store the sum in `res[i]`.
+    - Add `nums[i]` to `prefix_sum`.
 4. Return `res`.
 
 ::tabs-start
@@ -871,6 +957,28 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_sum_absolute_differences(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![0; n];
+
+        let mut total_sum: i32 = nums.iter().sum();
+        let mut prefix_sum = 0;
+
+        for i in 0..n {
+            total_sum -= nums[i];
+            let left_sum = i as i32 * nums[i] - prefix_sum;
+            let right_sum = total_sum - (n - i - 1) as i32 * nums[i];
+            res[i] = left_sum + right_sum;
+            prefix_sum += nums[i];
+        }
+
+        res
     }
 }
 ```

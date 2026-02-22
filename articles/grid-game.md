@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - Computing range sums efficiently in O(1) time after O(n) preprocessing
 - **Game Theory / Minimax** - Understanding how to minimize the opponent's maximum gain rather than maximizing your own score
 - **2D Grid Traversal** - Reasoning about constrained movement paths in a grid (only right and down moves)
@@ -15,9 +17,9 @@ Robot 1 must go right along row `0`, drop down to row `1` at some column, then c
 ### Algorithm
 
 1. For each column `i` where Robot 1 drops down:
-   - Calculate the points Robot 1 collects along the top row until column `i`, then the bottom row from column `i` onward.
-   - Simulate Robot 2's optimal path through the remaining grid (top row after `i`, bottom row before `i`).
-   - Track Robot 2's maximum score for this configuration.
+    - Calculate the points Robot 1 collects along the top row until column `i`, then the bottom row from column `i` onward.
+    - Simulate Robot 2's optimal path through the remaining grid (top row after `i`, bottom row before `i`).
+    - Track Robot 2's maximum score for this configuration.
 2. Return the minimum of Robot 2's maximum scores across all choices of `i`.
 
 ::tabs-start
@@ -306,6 +308,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn grid_game(grid: Vec<Vec<i32>>) -> i64 {
+        let cols = grid[0].len();
+        let mut res = i64::MAX;
+
+        let mut top1: i64 = 0;
+        for i in 0..cols {
+            top1 += grid[0][i] as i64;
+            let mut bottom1: i64 = 0;
+            for j in i..cols {
+                bottom1 += grid[1][j] as i64;
+            }
+
+            let mut top2: i64 = 0;
+            let mut robot2: i64 = 0;
+            for j in 0..cols {
+                if j > i {
+                    top2 += grid[0][j] as i64;
+                }
+
+                let mut bottom2: i64 = 0;
+                for k in j..i {
+                    bottom2 += grid[1][k] as i64;
+                }
+                robot2 = robot2.max(top2 + bottom2);
+            }
+
+            res = res.min(robot2);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,9 +363,9 @@ After Robot 1 drops at column `i`, Robot 2 can only collect from two disjoint re
 
 1. Build prefix sums for both rows.
 2. For each column `i` where Robot 1 drops:
-   - `top = preRow1[N-1] - preRow1[i]` (sum of top row after column `i`).
-   - `bottom = preRow2[i-1]` if `i > 0`, else `0` (sum of bottom row before column `i`).
-   - Robot 2's score is `max(top, bottom)`.
+    - `top = preRow1[N-1] - preRow1[i]` (sum of top row after column `i`).
+    - `bottom = preRow2[i-1]` if `i > 0`, else `0` (sum of bottom row before column `i`).
+    - Robot 2's score is `max(top, bottom)`.
 3. Return the minimum of these scores across all `i`.
 
 ::tabs-start
@@ -545,6 +583,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn grid_game(grid: Vec<Vec<i32>>) -> i64 {
+        let n = grid[0].len();
+        let mut pre_row1: Vec<i64> = grid[0].iter().map(|&x| x as i64).collect();
+        let mut pre_row2: Vec<i64> = grid[1].iter().map(|&x| x as i64).collect();
+
+        for i in 1..n {
+            pre_row1[i] += pre_row1[i - 1];
+            pre_row2[i] += pre_row2[i - 1];
+        }
+
+        let mut res = i64::MAX;
+        for i in 0..n {
+            let top = pre_row1[n - 1] - pre_row1[i];
+            let bottom = if i > 0 { pre_row2[i - 1] } else { 0 };
+            let second_robot = top.max(bottom);
+            res = res.min(second_robot);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -564,10 +626,10 @@ We can avoid storing prefix arrays by maintaining running sums. Start with `topS
 
 1. Initialize `topSum` as the sum of the entire top row, and `bottomSum` as `0`.
 2. For each column `i`:
-   - Subtract `grid[0][i]` from `topSum` (Robot 1 takes this cell).
-   - Compute Robot 2's best score as `max(topSum, bottomSum)`.
-   - Update the result with the minimum seen so far.
-   - Add `grid[1][i]` to `bottomSum` (this cell is now unavailable to Robot 2).
+    - Subtract `grid[0][i]` from `topSum` (Robot 1 takes this cell).
+    - Compute Robot 2's best score as `max(topSum, bottomSum)`.
+    - Update the result with the minimum seen so far.
+    - Add `grid[1][i]` to `bottomSum` (this cell is now unavailable to Robot 2).
 3. Return the minimum result.
 
 ::tabs-start
@@ -649,6 +711,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn grid_game(grid: Vec<Vec<i32>>) -> i64 {
+        let mut res = i64::MAX;
+        let mut top_sum: i64 = grid[0].iter().map(|&x| x as i64).sum();
+        let mut bottom_sum: i64 = 0;
+
+        for i in 0..grid[0].len() {
+            top_sum -= grid[0][i] as i64;
+            res = res.min(top_sum.max(bottom_sum));
+            bottom_sum += grid[1][i] as i64;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -670,4 +750,4 @@ After Robot 1 drops at column `i`, Robot 2 can only collect from either the top 
 
 ### Integer Overflow with Large Grid Values
 
-The grid values can be up to 10^5 and the grid can have up to 5 * 10^4 columns. The sum of all values can exceed the 32-bit integer limit. Use `long` or 64-bit integers for the prefix sums and running totals to avoid overflow errors that produce incorrect results.
+The grid values can be up to 10^5 and the grid can have up to 5 \* 10^4 columns. The sum of all values can exceed the 32-bit integer limit. Use `long` or 64-bit integers for the prefix sums and running totals to avoid overflow errors that produce incorrect results.

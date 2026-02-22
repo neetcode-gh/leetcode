@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversals** - Understanding preorder traversal (root-left-right) for string construction
 - **Recursion / DFS** - Traversing trees recursively to build the string representation
 - **String Building** - Efficiently concatenating strings using StringBuilder or list accumulation
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 We need to create a string representation using preorder traversal with parentheses. The key observation is handling empty subtrees: we must include empty parentheses `()` for a missing left child only when a right child exists (to preserve the tree structure), but we can omit parentheses for a missing right child entirely.
 
 ### Algorithm
+
 1. If the node is `null`, return an empty string.
 2. Recursively get string representations of left and right subtrees.
 3. If both children exist, return `"val(left)(right)"`.
@@ -286,21 +290,6 @@ class Solution {
 ```
 
 ```swift
-/**
- * Definition for a binary tree node.
- * public class TreeNode {
- *     public var val: Int
- *     public var left: TreeNode?
- *     public var right: TreeNode?
- *     public init() { self.val = 0; self.left = nil; self.right = nil; }
- *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
- *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
- *         self.val = val
- *         self.left = left
- *         self.right = right
- *     }
- * }
- */
 class Solution {
     func tree2str(_ root: TreeNode?) -> String {
         guard let root = root else {
@@ -328,6 +317,34 @@ class Solution {
 }
 ```
 
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+impl Solution {
+    pub fn tree2str(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        match root {
+            None => String::new(),
+            Some(node) => {
+                let node = node.borrow();
+                let cur = node.val.to_string();
+                let left = Self::tree2str(node.left.clone());
+                let right = Self::tree2str(node.right.clone());
+
+                if !left.is_empty() && !right.is_empty() {
+                    format!("{}({})({})", cur, left, right)
+                } else if !right.is_empty() {
+                    format!("{}()({})", cur, right)
+                } else if !left.is_empty() {
+                    format!("{}({})", cur, left)
+                } else {
+                    cur
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -340,16 +357,18 @@ class Solution {
 ## 2. Depth First Search (Optimal)
 
 ### Intuition
+
 The previous approach creates many intermediate strings during concatenation, which is inefficient. Instead, we can use a StringBuilder (or list) to accumulate characters. We always add an opening parenthesis before processing a node and a closing parenthesis after, then trim the outermost parentheses at the end.
 
 ### Algorithm
+
 1. Create a result list or StringBuilder.
 2. Define a preorder function that:
-   - Returns immediately if the node is `null`.
-   - Appends `"("` followed by the node's value.
-   - If `left` is `null` but `right` exists, appends `"()"`.
-   - Recursively processes `left`, then `right`.
-   - Appends `")"`.
+    - Returns immediately if the node is `null`.
+    - Appends `"("` followed by the node's value.
+    - If `left` is `null` but `right` exists, appends `"()"`.
+    - Recursively processes `left`, then `right`.
+    - Appends `")"`.
 3. Call preorder on the root.
 4. Join the result and remove the first and last characters (the extra outer parentheses).
 
@@ -585,6 +604,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn tree2str(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        let mut res = String::new();
+
+        fn preorder(node: &Option<Rc<RefCell<TreeNode>>>, res: &mut String) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                res.push('(');
+                res.push_str(&n.val.to_string());
+                if n.left.is_none() && n.right.is_some() {
+                    res.push_str("()");
+                }
+                preorder(&n.left, res);
+                preorder(&n.right, res);
+                res.push(')');
+            }
+        }
+
+        preorder(&root, &mut res);
+        // Remove outer parentheses
+        res[1..res.len() - 1].to_string()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,15 +642,17 @@ class Solution {
 ## 3. Iterative DFS
 
 ### Intuition
+
 We can convert the recursive approach to iterative using an explicit stack. The challenge is knowing when we have finished processing a node's subtrees so we can add the closing parenthesis. We track the last visited node to determine whether we are returning from the right subtree.
 
 ### Algorithm
+
 1. Use a stack for traversal and track the last visited node.
 2. While current node exists or stack is not empty:
-   - If current exists, append `"(val"`, handle missing left child if right exists, push to stack, move to left child.
-   - Otherwise, peek at the stack top:
-     - If right child exists and was not last visited, move to right child.
-     - Otherwise, pop the node, append `")"`, mark it as last visited.
+    - If current exists, append `"(val"`, handle missing left child if right exists, push to stack, move to left child.
+    - Otherwise, peek at the stack top:
+        - If right child exists and was not last visited, move to right child.
+        - Otherwise, pop the node, append `")"`, mark it as last visited.
 3. Remove the outer parentheses from the result and return.
 
 ::tabs-start
@@ -955,6 +1002,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn tree2str(root: Option<Rc<RefCell<TreeNode>>>) -> String {
+        if root.is_none() {
+            return String::new();
+        }
+
+        let mut res = String::new();
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut last_visited: Option<*const RefCell<TreeNode>> = None;
+        let mut cur = root;
+
+        while cur.is_some() || !stack.is_empty() {
+            if let Some(node) = cur {
+                let n = node.borrow();
+                res.push('(');
+                res.push_str(&n.val.to_string());
+                if n.left.is_none() && n.right.is_some() {
+                    res.push_str("()");
+                }
+
+                let left = n.left.clone();
+                drop(n);
+                stack.push(node);
+                cur = left;
+            } else {
+                let top = stack.last().unwrap().clone();
+                let top_ref = top.borrow();
+                let right = top_ref.right.clone();
+                let right_ptr = right.as_ref().map(|r| Rc::as_ptr(r));
+                let should_go_right = right.is_some()
+                    && last_visited != right_ptr;
+
+                if should_go_right {
+                    drop(top_ref);
+                    cur = right;
+                } else {
+                    drop(top_ref);
+                    stack.pop();
+                    res.push(')');
+                    last_visited = Some(Rc::as_ptr(&top));
+                    cur = None;
+                }
+            }
+        }
+
+        res[1..res.len() - 1].to_string()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -967,7 +1065,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Omitting Empty Parentheses for Missing Left Child
+
 When only the right child exists, you must include empty parentheses `()` for the missing left child to preserve tree structure. Without this, the right child would be incorrectly interpreted as the left child during reconstruction.
+
 ```python
 # Wrong: Missing empty parentheses
 if right:
@@ -979,4 +1079,5 @@ if right:
 ```
 
 ### Adding Unnecessary Parentheses for Missing Right Child
+
 When only the left child exists, you should NOT add empty parentheses for the missing right child. The problem specifically states that empty parentheses for missing right children should be omitted since they don't affect tree reconstruction.

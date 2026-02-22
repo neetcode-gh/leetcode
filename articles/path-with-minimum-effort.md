@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dijkstra's Algorithm** - Finding shortest paths using a priority queue with modified cost function
 - **Binary Search** - Searching for the minimum feasible effort value
 - **Depth First Search (DFS)** - Checking path reachability under a given constraint
@@ -397,6 +399,45 @@ class Solution {
         }
 
         return 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_effort_path(heights: Vec<Vec<i32>>) -> i32 {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let mut dist = vec![vec![i32::MAX; cols]; rows];
+        dist[0][0] = 0;
+
+        let directions = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut min_heap = BinaryHeap::new();
+        min_heap.push(Reverse((0, 0, 0))); // (diff, row, col)
+
+        while let Some(Reverse((diff, r, c))) = min_heap.pop() {
+            if r == rows - 1 && c == cols - 1 {
+                return diff;
+            }
+            if dist[r][c] < diff {
+                continue;
+            }
+            for &(dr, dc) in &directions {
+                let nr = r as i32 + dr;
+                let nc = c as i32 + dc;
+                if nr < 0 || nc < 0 || nr >= rows as i32 || nc >= cols as i32 {
+                    continue;
+                }
+                let (nr, nc) = (nr as usize, nc as usize);
+                let new_diff = diff.max((heights[r][c] - heights[nr][nc]).abs());
+                if new_diff < dist[nr][nc] {
+                    dist[nr][nc] = new_diff;
+                    min_heap.push(Reverse((new_diff, nr, nc)));
+                }
+            }
+        }
+
+        0
     }
 }
 ```
@@ -838,6 +879,61 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_effort_path(heights: Vec<Vec<i32>>) -> i32 {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let directions = [(0i32, 1i32), (0, -1), (1, 0), (-1, 0)];
+
+        fn dfs(
+            heights: &[Vec<i32>], r: i32, c: i32, limit: i32,
+            visited: &mut Vec<Vec<bool>>, directions: &[(i32, i32)],
+            rows: i32, cols: i32,
+        ) -> bool {
+            if r == rows - 1 && c == cols - 1 {
+                return true;
+            }
+            visited[r as usize][c as usize] = true;
+            for &(dr, dc) in directions {
+                let (nr, nc) = (r + dr, c + dc);
+                if nr < 0 || nc < 0 || nr >= rows || nc >= cols
+                    || visited[nr as usize][nc as usize]
+                {
+                    continue;
+                }
+                if (heights[nr as usize][nc as usize] - heights[r as usize][c as usize]).abs()
+                    > limit
+                {
+                    continue;
+                }
+                if dfs(heights, nr, nc, limit, visited, directions, rows, cols) {
+                    return true;
+                }
+            }
+            false
+        }
+
+        let (mut lo, mut hi) = (0i32, 1_000_000i32);
+        let mut res = hi;
+        while lo <= hi {
+            let mid = lo + (hi - lo) / 2;
+            let mut visited = vec![vec![false; cols]; rows];
+            if dfs(
+                &heights, 0, 0, mid, &mut visited,
+                &directions, rows as i32, cols as i32,
+            ) {
+                res = mid;
+                hi = mid - 1;
+            } else {
+                lo = mid + 1;
+            }
+        }
+        res
     }
 }
 ```
@@ -1404,6 +1500,75 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let (mut pu, mut pv) = (self.find(u), self.find(v));
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+}
+
+impl Solution {
+    pub fn minimum_effort_path(heights: Vec<Vec<i32>>) -> i32 {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let mut edges = Vec::new();
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if r + 1 < rows {
+                    let diff = (heights[r][c] - heights[r + 1][c]).abs();
+                    edges.push((diff, r * cols + c, (r + 1) * cols + c));
+                }
+                if c + 1 < cols {
+                    let diff = (heights[r][c] - heights[r][c + 1]).abs();
+                    edges.push((diff, r * cols + c, r * cols + c + 1));
+                }
+            }
+        }
+
+        edges.sort_unstable();
+        let mut dsu = DSU::new(rows * cols);
+
+        for (weight, u, v) in edges {
+            dsu.union(u, v);
+            if dsu.find(0) == dsu.find(rows * cols - 1) {
+                return weight;
+            }
+        }
+
+        0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1798,6 +1963,48 @@ class Solution {
         }
 
         return dist[rows * cols - 1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_effort_path(heights: Vec<Vec<i32>>) -> i32 {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let mut dist = vec![i32::MAX; rows * cols];
+        dist[0] = 0;
+
+        let mut in_queue = vec![false; rows * cols];
+        let mut queue = VecDeque::new();
+        queue.push_back(0usize);
+        in_queue[0] = true;
+
+        let directions = [(0i32, 1i32), (0, -1), (1, 0), (-1, 0)];
+
+        while let Some(u) = queue.pop_front() {
+            in_queue[u] = false;
+            let (r, c) = (u / cols, u % cols);
+
+            for &(dr, dc) in &directions {
+                let (nr, nc) = (r as i32 + dr, c as i32 + dc);
+                if nr >= 0 && nc >= 0 && nr < rows as i32 && nc < cols as i32 {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    let v = nr * cols + nc;
+                    let weight = (heights[r][c] - heights[nr][nc]).abs();
+                    let new_dist = dist[u].max(weight);
+                    if new_dist < dist[v] {
+                        dist[v] = new_dist;
+                        if !in_queue[v] {
+                            queue.push_back(v);
+                            in_queue[v] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        dist[rows * cols - 1]
     }
 }
 ```

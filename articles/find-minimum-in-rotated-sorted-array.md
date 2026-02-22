@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - The optimal solution adapts binary search to work on a rotated array by determining which half contains the minimum
 - **Array Rotation Concept** - Understanding how rotation shifts elements helps identify the sorted and unsorted portions of the array
 
@@ -92,6 +94,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_min(nums: Vec<i32>) -> i32 {
+        *nums.iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -109,6 +119,7 @@ A rotated sorted array has one special property:
 **one part is always sorted, and the other part contains the rotation (and the minimum element).**
 
 We can use binary search to identify which side is sorted:
+
 - If the left half is sorted, then the minimum cannot be there, so we search the right half.
 - If the right half is sorted, then the minimum must be in the left half (or at the midpoint).
 
@@ -118,13 +129,13 @@ This lets us eliminate half of the array each time and quickly narrow down to th
 
 1. Initialize `left = 0`, `right = n - 1`, and store the first element as the current answer.
 2. While `left <= right`:
-   - If the current window is already sorted, update the answer with `nums[left]` and stop.
-   - Compute `mid`.
-   - Update the answer with `nums[mid]`.
-   - If the left half is sorted:
-     - Move search to the right half.
-   - Otherwise:
-     - Search in the left half.
+    - If the current window is already sorted, update the answer with `nums[left]` and stop.
+    - Compute `mid`.
+    - Update the answer with `nums[mid]`.
+    - If the left half is sorted:
+        - Move search to the right half.
+    - Otherwise:
+        - Search in the left half.
 3. Return the smallest value found.
 
 ::tabs-start
@@ -338,6 +349,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_min(nums: Vec<i32>) -> i32 {
+        let mut res = nums[0];
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l <= r {
+            if nums[l as usize] < nums[r as usize] {
+                res = res.min(nums[l as usize]);
+                break;
+            }
+
+            let m = l + (r - l) / 2;
+            res = res.min(nums[m as usize]);
+            if nums[m as usize] >= nums[l as usize] {
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,9 +399,9 @@ This behaves exactly like finding a **lower bound**, gradually shrinking the sea
 
 1. Set `left = 0` and `right = n - 1`.
 2. While `left < right`:
-   - Compute `mid`.
-   - If `nums[mid]` is less than `nums[right]`, move `right` to `mid` (minimum is on the left).
-   - Otherwise, move `left` to `mid + 1` (minimum is on the right).
+    - Compute `mid`.
+    - If `nums[mid]` is less than `nums[right]`, move `right` to `mid` (minimum is on the left).
+    - Otherwise, move `left` to `mid + 1` (minimum is on the right).
 3. When the loop ends, `left` points to the smallest element.
 4. Return `nums[left]`.
 
@@ -507,6 +543,23 @@ class Solution {
             }
         }
         return nums[l]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_min(nums: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len() - 1);
+        while l < r {
+            let m = l + (r - l) / 2;
+            if nums[m] < nums[r] {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        nums[l]
     }
 }
 ```

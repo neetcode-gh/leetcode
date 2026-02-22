@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Understanding DP transitions for subsequence problems where each element depends on previous valid elements
 - **Segment Trees** - Implementing range maximum queries and point updates efficiently in O(log n) time
 - **Coordinate Compression** - Mapping large value ranges to smaller indices when the actual values are sparse
@@ -9,6 +11,7 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force (Recursion)
 
 ### Intuition
+
 We want the **longest increasing subsequence**, but with an extra rule:
 
 - It must be strictly increasing (`nums[j] > nums[i]`)
@@ -17,6 +20,7 @@ We want the **longest increasing subsequence**, but with an extra rule:
 The brute-force recursion tries **every possible "next pick"** after position `i`.
 
 Think of it like:
+
 - Start at index `i`
 - From there, try all later indices `j > i` that are valid "next steps"
 - Take the best (longest) option among them
@@ -24,17 +28,18 @@ Think of it like:
 Because we don't store results (no `memo`), the same subproblems get recomputed many times → slow, but simple.
 
 ### Algorithm
+
 1. Define a recursive function `dfs(i)`:
-   - It returns the length of the best valid subsequence starting at index `i`.
+    - It returns the length of the best valid subsequence starting at index `i`.
 2. Inside `dfs(i)`:
-   - Start with `res = 1` (at minimum, the subsequence is just `nums[i]`).
-   - Loop through all `j` from `i+1` to end:
-     - Skip if `nums[j] <= nums[i]` (not increasing).
-     - Skip if `nums[j] - nums[i] > k` (jump too large).
-     - Otherwise, try taking `j` next: `res = max(res, 1 + dfs(j))`
-   - Return `res`.
+    - Start with `res = 1` (at minimum, the subsequence is just `nums[i]`).
+    - Loop through all `j` from `i+1` to end:
+        - Skip if `nums[j] <= nums[i]` (not increasing).
+        - Skip if `nums[j] - nums[i] > k` (jump too large).
+        - Otherwise, try taking `j` next: `res = max(res, 1 + dfs(j))`
+    - Return `res`.
 3. Try starting from every index `i`:
-   - Answer is `max(dfs(i))` over all `i`.
+    - Answer is `max(dfs(i))` over all `i`.
 
 ::tabs-start
 
@@ -250,6 +255,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>, k: i32) -> i32 {
+        fn dfs(nums: &[i32], k: i32, i: usize) -> i32 {
+            let mut res = 1;
+            for j in (i + 1)..nums.len() {
+                if nums[j] <= nums[i] { continue; }
+                if nums[j] - nums[i] <= k {
+                    res = res.max(1 + dfs(nums, k, j));
+                }
+            }
+            res
+        }
+
+        let mut res = 0;
+        for i in 0..nums.len() {
+            res = res.max(dfs(&nums, k, i));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,30 +290,33 @@ class Solution {
 ## 2. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 This is the optimized version of the brute-force recursion.
 
 Instead of recomputing the LIS starting at every index again and again, we **build the answer bottom-up**.
 
 Key idea:
+
 - Let `dp[i]` = length of the longest valid increasing subsequence **ending at index `i`**.
 - To extend a subsequence ending at `j` to `i`, three things must hold:
-  1. `j < i` (comes before)
-  2. `nums[j] < nums[i]` (strictly increasing)
-  3. `nums[i] - nums[j] <= k` (difference constraint)
+    1. `j < i` (comes before)
+    2. `nums[j] < nums[i]` (strictly increasing)
+    3. `nums[i] - nums[j] <= k` (difference constraint)
 
 For each position `i`, we look back at all previous `j` and choose the best valid one.
 
 ### Algorithm
+
 1. Initialize:
-   - `dp[i] = 1` for all `i` (each number alone is a subsequence).
-   - `res = 0` to track the global maximum.
+    - `dp[i] = 1` for all `i` (each number alone is a subsequence).
+    - `res = 0` to track the global maximum.
 2. For each index `i` from `0` to `n-1`:
-   - For each index `j` from `0` to `i-1`:
-     - Skip if `nums[j] >= nums[i]`.
-     - Skip if `nums[i] - nums[j] > k`.
-     - Otherwise:
-       - Update `dp[i] = max(dp[i], 1 + dp[j])`.
-   - Update `res = max(res, dp[i])`.
+    - For each index `j` from `0` to `i-1`:
+        - Skip if `nums[j] >= nums[i]`.
+        - Skip if `nums[i] - nums[j] > k`.
+        - Otherwise:
+            - Update `dp[i] = max(dp[i], 1 + dp[j])`.
+    - Update `res = max(res, dp[i])`.
 3. Return `res`.
 
 ::tabs-start
@@ -471,6 +502,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+        let mut dp = vec![1; n];
+
+        for i in 0..n {
+            for j in 0..i {
+                if nums[j] >= nums[i] { continue; }
+                if nums[i] - nums[j] <= k {
+                    dp[i] = dp[i].max(1 + dp[j]);
+                }
+            }
+            res = res.max(dp[i]);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -483,51 +536,57 @@ class Solution {
 ## 3. Dynamic Programming + Segment Tree (Coordinate Compression)
 
 ### Intuition
+
 The `O(n^2)` `dp` checks every previous index `j` for each `i`.
 We can speed this up by thinking in terms of **values**, not indices:
 
 Let `best[x]` = the best LIS length of a valid subsequence **ending with value `x`** (or at some value ≤ x).
 
 For a number `num`, the previous value we can come from must be in:
-- `(num - k) ... (num - 1)`  (strictly smaller, and difference ≤ k)
+
+- `(num - k) ... (num - 1)` (strictly smaller, and difference ≤ k)
 
 So we want:
+
 - `curr = 1 + max(best[v])` for all `v ∈ [num-k, num-1]`
 
 This is a classic **range maximum query + point update** problem:
+
 - Query max on a value range: `[num-k, num-1]`
 - Update at value `num` with the new `curr`
 
 A **Segment Tree** supports:
+
 - `query(l, r)` in `O(log M)`
 - `update(pos, val)` in `O(log M)`
 
 But values can be large, so we use **coordinate compression** to map only the needed values to `[0..M-1]`.
 
 ### Algorithm
+
 1. **Coordinate Compression**
-   - Collect all values that might be needed in queries/updates:
-     - `num` (update position)
-     - `num - 1` (right boundary of query)
-     - `num - k` (left boundary of query)
-   - Sort them and map each to a compressed index.
+    - Collect all values that might be needed in queries/updates:
+        - `num` (update position)
+        - `num - 1` (right boundary of query)
+        - `num - k` (left boundary of query)
+    - Sort them and map each to a compressed index.
 
 2. **Segment Tree Setup**
-   - Build a segment tree of size `M` (number of compressed values).
-   - Initially all zeros (meaning no subsequence yet).
+    - Build a segment tree of size `M` (number of compressed values).
+    - Initially all zeros (meaning no subsequence yet).
 
 3. **Process numbers left to right**
    For each `num`:
-   - Find compressed indices:
-     - `l = index(num - k)`
-     - `r = index(num - 1)`
-   - Query:
-     - `bestPrev = max value in segment tree over [l, r]`
-   - Compute:
-     - `curr = bestPrev + 1`
-   - Update:
-     - set `tree[index(num)] = max(tree[index(num)], curr)`
-   - Track global answer `res`.
+    - Find compressed indices:
+        - `l = index(num - k)`
+        - `r = index(num - 1)`
+    - Query:
+        - `bestPrev = max value in segment tree over [l, r]`
+    - Compute:
+        - `curr = bestPrev + 1`
+    - Update:
+        - set `tree[index(num)] = max(tree[index(num)], curr)`
+    - Track global answer `res`.
 
 4. Return `res`.
 
@@ -1101,6 +1160,70 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegmentTree {
+    fn new(mut n: usize) -> Self {
+        while n & (n - 1) != 0 { n += 1; }
+        Self { n, tree: vec![0; 2 * n] }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        if val <= self.tree[self.n + i] { return; }
+        self.tree[self.n + i] = val;
+        let mut j = (self.n + i) >> 1;
+        while j >= 1 {
+            self.tree[j] = self.tree[j << 1].max(self.tree[j << 1 | 1]);
+            j >>= 1;
+        }
+    }
+
+    fn query(&self, ql: usize, qh: usize) -> i32 {
+        let mut l = ql + self.n;
+        let mut r = qh + self.n + 1;
+        let mut res = 0;
+        while l < r {
+            if l & 1 == 1 { res = res.max(self.tree[l]); l += 1; }
+            if r & 1 == 1 { r -= 1; res = res.max(self.tree[r]); }
+            l >>= 1; r >>= 1;
+        }
+        res
+    }
+}
+
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>, k: i32) -> i32 {
+        let mut tmp = BTreeSet::new();
+        tmp.insert(0);
+        for &num in &nums {
+            if num - k > 0 { tmp.insert(num - k); }
+            if num - 1 > 0 { tmp.insert(num - 1); }
+            tmp.insert(num);
+        }
+
+        let mut mp = HashMap::new();
+        for (i, &val) in tmp.iter().enumerate() {
+            mp.insert(val, i);
+        }
+
+        let mut st = SegmentTree::new(mp.len());
+        let mut res = 0;
+        for &num in &nums {
+            let l = *mp.get(&(num - k)).unwrap_or(&0);
+            let r = *mp.get(&(num - 1)).unwrap_or(&0);
+            let curr = st.query(l, r) + 1;
+            res = res.max(curr);
+            st.update(*mp.get(&num).unwrap(), curr);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1113,40 +1236,47 @@ class Solution {
 ## 4. Dynamic Programming + Segment Tree
 
 ### Intuition
+
 We want the longest increasing subsequence where consecutive values differ by at most `k`.
 
 Instead of DP over indices (`dp[i]`), think DP over **values**:
+
 - Let `best[x]` = the best LIS length of any valid subsequence that ends with value `x`.
 
 When we process a value `num`, the previous value must be:
+
 - strictly smaller than `num`
 - and within distance `k`
 
 So the previous value must lie in the range:
+
 - `[num - k, num - 1]`
 
 That means:
+
 - `dpEndingAtNum = 1 + max(best[v])` for `v ∈ [num-k, num-1]`
 
 We need a data structure that supports:
+
 - **Range maximum query** over `[num-k, num-1]`
 - **Point update** at index `num` with the new best value
 
 A **segment tree** supports both in `O(log M)` where `M` is the maximum value we index.
 
 ### Algorithm
+
 1. Let `M = max(nums)` and build a segment tree over indices `[0 .. M]`,
    where each index `x` stores `best[x]` (initially all zeros).
 2. Initialize `res = 0`.
 3. For each `num` in `nums` (left to right):
-   - Compute query bounds:
-     - `l = max(0, num - k)`
-     - `r = num - 1`
-   - If `r < l`, then there is no valid smaller value → `bestPrev = 0`
-     else `bestPrev = segmentTree.query(l, r)`
-   - `curr = bestPrev + 1`
-   - Update: `segmentTree.update(num, curr)` (keep the maximum at `num`)
-   - `res = max(res, curr)`
+    - Compute query bounds:
+        - `l = max(0, num - k)`
+        - `r = num - 1`
+    - If `r < l`, then there is no valid smaller value → `bestPrev = 0`
+      else `bestPrev = segmentTree.query(l, r)`
+    - `curr = bestPrev + 1`
+    - Update: `segmentTree.update(num, curr)` (keep the maximum at `num`)
+    - `res = max(res, curr)`
 4. Return `res`.
 
 ::tabs-start
@@ -1628,6 +1758,57 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegmentTree {
+    fn new(mut n: usize) -> Self {
+        while n & (n - 1) != 0 { n += 1; }
+        Self { n, tree: vec![0; 2 * n] }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        if val <= self.tree[self.n + i] { return; }
+        self.tree[self.n + i] = val;
+        let mut j = (self.n + i) >> 1;
+        while j >= 1 {
+            self.tree[j] = self.tree[j << 1].max(self.tree[j << 1 | 1]);
+            j >>= 1;
+        }
+    }
+
+    fn query(&self, l: usize, r: usize) -> i32 {
+        let (mut l, mut r) = (l + self.n, r + self.n + 1);
+        let mut res = 0;
+        while l < r {
+            if l & 1 == 1 { res = res.max(self.tree[l]); l += 1; }
+            if r & 1 == 1 { r -= 1; res = res.max(self.tree[r]); }
+            l >>= 1; r >>= 1;
+        }
+        res
+    }
+}
+
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>, k: i32) -> i32 {
+        let max_val = *nums.iter().max().unwrap() as usize;
+        let mut st = SegmentTree::new(max_val + 1);
+        let mut res = 0;
+        for &num in &nums {
+            let l = 0.max(num - k) as usize;
+            let r = 0.max(num - 1) as usize;
+            let curr = st.query(l, r) + 1;
+            res = res.max(curr);
+            st.update(num as usize, curr);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1647,7 +1828,7 @@ When the current number minus `k` is less than or equal to zero, or when `num - 
 
 ### Using the Wrong Data Structure
 
-This problem requires efficient range maximum queries and point updates. Using a simple DP array results in O(n*k) time complexity per element, which is too slow. A segment tree or similar data structure is necessary to achieve the O(log m) per-operation complexity needed for this problem.
+This problem requires efficient range maximum queries and point updates. Using a simple DP array results in O(n\*k) time complexity per element, which is too slow. A segment tree or similar data structure is necessary to achieve the O(log m) per-operation complexity needed for this problem.
 
 ### Off-by-One in Range Boundaries
 

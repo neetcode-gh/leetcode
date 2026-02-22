@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - One approach sorts the array first, then swaps adjacent pairs to create the wiggle pattern
 - **Heap / Priority Queue** - Max-heap can extract elements in descending order to fill odd indices first
 - **Greedy Algorithms** - The optimal O(n) solution uses a single-pass greedy approach, swapping neighbors when the wiggle property is violated
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Max-Heap
 
 ### Intuition
+
 For a wiggle sorted array, odd indices should hold larger values and even indices should hold smaller values relative to their neighbors. Using a max-heap, we can extract elements in descending order and strategically place the largest values at odd indices first, then fill even indices with the remaining values. This ensures the wiggle property is maintained.
 
 ### Algorithm
+
 1. Push all elements from the array into a max-heap.
 2. First pass: iterate through odd indices (`1`, `3`, `5`, ...) and pop from the heap to assign values. These positions get the larger elements.
 3. Second pass: iterate through even indices (`0`, `2`, `4`, ...) and pop remaining elements from the heap.
@@ -189,6 +193,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn wiggle_sort(nums: &mut Vec<i32>) {
+        let mut heap = BinaryHeap::from(nums.clone());
+
+        let n = nums.len();
+        let mut i = 1;
+        while i < n {
+            nums[i] = heap.pop().unwrap();
+            i += 2;
+        }
+        let mut i = 0;
+        while i < n {
+            nums[i] = heap.pop().unwrap();
+            i += 2;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -201,9 +225,11 @@ class Solution {
 ## 2. Sorting
 
 ### Intuition
+
 After sorting the array, we can create the wiggle pattern by swapping adjacent pairs starting from index 1. When we swap elements at positions 1 and 2, then 3 and 4, and so on, we create local peaks at odd indices. This works because after sorting, swapping pushes the slightly larger element to the odd index position.
 
 ### Algorithm
+
 1. Sort the array in ascending order.
 2. Iterate through the array starting at index `1`, incrementing by `2` each time.
 3. At each step, swap the current element with the next element.
@@ -313,6 +339,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn wiggle_sort(nums: &mut Vec<i32>) {
+        nums.sort_unstable();
+        let mut i = 1;
+        while i < nums.len() - 1 {
+            nums.swap(i, i + 1);
+            i += 2;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,9 +364,11 @@ class Solution {
 ## 3. Greedy - I
 
 ### Intuition
+
 We can achieve wiggle sort in a single pass by observing the required relationship at each index. At odd indices, the element should be greater than or equal to its predecessor. At even indices, the element should be less than or equal to its predecessor. If these conditions are violated, we simply swap with the previous element to fix the relationship locally without affecting previously processed elements.
 
 ### Algorithm
+
 1. Iterate through the array starting from index `1`.
 2. For odd indices: if the current element is less than the previous element, swap them.
 3. For even indices: if the current element is greater than the previous element, swap them.
@@ -451,6 +492,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn wiggle_sort(nums: &mut Vec<i32>) {
+        for i in 1..nums.len() {
+            if (i % 2 == 1 && nums[i] < nums[i - 1])
+                || (i % 2 == 0 && nums[i] > nums[i - 1])
+            {
+                nums.swap(i, i - 1);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -463,9 +518,11 @@ class Solution {
 ## 4. Greedy - II
 
 ### Intuition
+
 This is an optimized version of the greedy approach using XOR for condition checking. The key observation is that we need to swap when the parity of the index does not match whether the current element is greater than the previous. Using XOR on these two boolean conditions elegantly captures when a swap is needed.
 
 ### Algorithm
+
 1. Iterate through the array starting from index `1`.
 2. For each position, compute two values: whether the index is odd (`i % 2`) and whether the current element is greater than the previous (`nums[i] > nums[i-1]`).
 3. If the XOR of these two values is `true` (they differ), swap the current element with the previous one.
@@ -520,7 +577,7 @@ class Solution {
      */
     wiggleSort(nums) {
         for (var i = 1; i < nums.length; i++) {
-            if (i % 2 ^ (nums[i] > nums[i - 1])) {
+            if ((i % 2) ^ (nums[i] > nums[i - 1])) {
                 [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
             }
         }
@@ -584,6 +641,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn wiggle_sort(nums: &mut Vec<i32>) {
+        for i in 1..nums.len() {
+            let cmp = if nums[i] > nums[i - 1] { 1 } else { 0 };
+            if (i % 2) ^ cmp != 0 {
+                nums.swap(i, i - 1);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -596,6 +666,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Confusing Wiggle Sort with Wiggle Sort II
+
 Wiggle Sort requires `nums[0] <= nums[1] >= nums[2] <= nums[3]...` (non-strict inequalities), while Wiggle Sort II requires strict inequalities. Using the wrong condition will fail test cases with duplicate elements.
 
 ```python
@@ -608,6 +679,7 @@ Wiggle Sort requires `nums[0] <= nums[1] >= nums[2] <= nums[3]...` (non-strict i
 ```
 
 ### Swapping with Wrong Neighbor
+
 The greedy approach compares each element with its previous element (i-1), not the next element (i+1). Swapping with the wrong neighbor breaks the already-established wiggle pattern.
 
 ```python
@@ -621,6 +693,7 @@ if i % 2 == 1 and nums[i] < nums[i - 1]:
 ```
 
 ### Starting Loop at Index 0 Instead of 1
+
 The greedy approach needs to compare each element with its predecessor, so the loop must start at index 1. Starting at 0 causes an index-out-of-bounds error when accessing `nums[i - 1]`.
 
 ```python

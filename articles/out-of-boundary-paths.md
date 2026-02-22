@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - The base solutions use recursive depth-first exploration of grid cells
 - **Dynamic Programming (Memoization)** - Caching overlapping subproblems with state (row, col, moves) is essential for efficiency
 - **2D Grid/Matrix Traversal** - Moving in four directions and handling boundary conditions
@@ -196,6 +198,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_paths(m: i32, n: i32, max_move: i32, start_row: i32, start_column: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+
+        fn dfs(r: i32, c: i32, moves: i32, m: i32, n: i32) -> i64 {
+            if r < 0 || r >= m || c < 0 || c >= n {
+                return 1;
+            }
+            if moves == 0 {
+                return 0;
+            }
+            ((dfs(r + 1, c, moves - 1, m, n) + dfs(r - 1, c, moves - 1, m, n)) % MOD
+                + (dfs(r, c + 1, moves - 1, m, n) + dfs(r, c - 1, moves - 1, m, n)) % MOD)
+                % MOD
+        }
+
+        dfs(start_row, start_column, max_move, m, n) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,16 +237,16 @@ class Solution {
 
 The recursive solution has many overlapping subproblems since the same (row, col, moves) state can be reached through different paths. We can use memoization to cache results and avoid redundant computation.
 
-Each state is defined by three parameters: current position (r, c) and remaining moves. Since there are m * n * maxMove possible states, memoization reduces the time complexity dramatically.
+Each state is defined by three parameters: current position (r, c) and remaining moves. Since there are m _ n _ maxMove possible states, memoization reduces the time complexity dramatically.
 
 ### Algorithm
 
 1. Create a 3D cache indexed by `(row, col, moves)`.
 2. Define `dfs(r, c, moves)`:
-   - If out of bounds, return `1`.
-   - If `moves` is `0`, return `0`.
-   - If already computed, return the cached value.
-   - Otherwise, compute the sum of all four directions and cache it.
+    - If out of bounds, return `1`.
+    - If `moves` is `0`, return `0`.
+    - If already computed, return the cached value.
+    - Otherwise, compute the sum of all four directions and cache it.
 3. Return `dfs(startRow, startColumn, maxMove)`.
 
 ::tabs-start
@@ -451,6 +475,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_paths(m: i32, n: i32, max_move: i32, start_row: i32, start_column: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (m, n, max_move) = (m as usize, n as usize, max_move as usize);
+        let mut dp = vec![vec![vec![-1i64; max_move + 1]; n]; m];
+
+        fn dfs(r: i32, c: i32, moves: usize, m: usize, n: usize, dp: &mut Vec<Vec<Vec<i64>>>) -> i64 {
+            if r < 0 || r >= m as i32 || c < 0 || c >= n as i32 {
+                return 1;
+            }
+            if moves == 0 {
+                return 0;
+            }
+            let (ru, cu) = (r as usize, c as usize);
+            if dp[ru][cu][moves] != -1 {
+                return dp[ru][cu][moves];
+            }
+            dp[ru][cu][moves] =
+                ((dfs(r + 1, c, moves - 1, m, n, dp) + dfs(r - 1, c, moves - 1, m, n, dp)) % MOD
+                    + (dfs(r, c + 1, moves - 1, m, n, dp) + dfs(r, c - 1, moves - 1, m, n, dp)) % MOD)
+                    % MOD;
+            dp[ru][cu][moves]
+        }
+
+        dfs(start_row, start_column, max_move, m, n, &mut dp) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -474,9 +528,9 @@ For each cell, we look at its four neighbors. If a neighbor is out of bounds, th
 
 1. Create a 3D DP array `dp[r][c][moves]` representing paths from `(r, c)` with the given moves.
 2. Iterate `moves` from `1` to `maxMove`:
-   - For each cell `(r, c)`, check all four neighbors.
-   - If a neighbor is out of bounds, add `1` to `dp[r][c][moves]`.
-   - Otherwise, add `dp[neighbor][moves - 1]`.
+    - For each cell `(r, c)`, check all four neighbors.
+    - If a neighbor is out of bounds, add `1` to `dp[r][c][moves]`.
+    - Otherwise, add `dp[neighbor][moves - 1]`.
 3. Return `dp[startRow][startColumn][maxMove]`.
 
 ::tabs-start
@@ -691,6 +745,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_paths(m: i32, n: i32, max_move: i32, start_row: i32, start_column: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (m, n, max_move) = (m as usize, n as usize, max_move as usize);
+        let mut dp = vec![vec![vec![0i64; max_move + 1]; n]; m];
+
+        for moves in 1..=max_move {
+            for r in 0..m {
+                for c in 0..n {
+                    let up = if r > 0 { dp[r - 1][c][moves - 1] } else { 1 };
+                    let down = if r < m - 1 { dp[r + 1][c][moves - 1] } else { 1 };
+                    let left = if c > 0 { dp[r][c - 1][moves - 1] } else { 1 };
+                    let right = if c < n - 1 { dp[r][c + 1][moves - 1] } else { 1 };
+                    dp[r][c][moves] = (up + down + left + right) % MOD;
+                }
+            }
+        }
+
+        dp[start_row as usize][start_column as usize][max_move] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -708,15 +786,15 @@ class Solution {
 
 Since each move layer only depends on the previous move layer, we do not need the full 3D array. We can use two 2D arrays: one for the current move count and one for the previous. After processing each move, we swap them.
 
-This reduces space from O(m * n * maxMove) to O(m * n).
+This reduces space from O(m _ n _ maxMove) to O(m \* n).
 
 ### Algorithm
 
 1. Create two 2D arrays: `dp` for the previous move count and `tmp` for the current.
 2. For each move from `1` to `maxMove`:
-   - Reset `tmp` to zeros.
-   - For each cell, add `1` for each out-of-bound neighbor, or add `dp[neighbor]` for valid neighbors.
-   - Swap `dp` and `tmp`.
+    - Reset `tmp` to zeros.
+    - For each cell, add `1` for each out-of-bound neighbor, or add `dp[neighbor]` for valid neighbors.
+    - Swap `dp` and `tmp`.
 3. Return `dp[startRow][startColumn]`.
 
 ::tabs-start
@@ -1041,6 +1119,31 @@ class Solution {
         }
 
         return dp[startRow][startColumn]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_paths(m: i32, n: i32, max_move: i32, start_row: i32, start_column: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (m, n) = (m as usize, n as usize);
+        let mut dp = vec![vec![0i64; n]; m];
+
+        for _ in 1..=max_move {
+            let mut tmp = vec![vec![0i64; n]; m];
+            for r in 0..m {
+                for c in 0..n {
+                    tmp[r][c] = if r + 1 == m { (tmp[r][c] + 1) % MOD } else { (tmp[r][c] + dp[r + 1][c]) % MOD };
+                    tmp[r][c] = if r == 0 { (tmp[r][c] + 1) % MOD } else { (tmp[r][c] + dp[r - 1][c]) % MOD };
+                    tmp[r][c] = if c + 1 == n { (tmp[r][c] + 1) % MOD } else { (tmp[r][c] + dp[r][c + 1]) % MOD };
+                    tmp[r][c] = if c == 0 { (tmp[r][c] + 1) % MOD } else { (tmp[r][c] + dp[r][c - 1]) % MOD };
+                }
+            }
+            dp = tmp;
+        }
+
+        dp[start_row as usize][start_column as usize] as i32
     }
 }
 ```

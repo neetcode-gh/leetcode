@@ -256,6 +256,31 @@ class Solution {
 }
 ```
 
+
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+impl Solution {
+    pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut q = VecDeque::new();
+        q.push_back(root.clone().unwrap());
+        let mut val = 0;
+
+        while let Some(node_rc) = q.pop_front() {
+            let node = node_rc.borrow();
+            val = node.val;
+            if let Some(ref right) = node.right {
+                q.push_back(right.clone());
+            }
+            if let Some(ref left) = node.left {
+                q.push_back(left.clone());
+            }
+        }
+        val
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +582,38 @@ class Solution {
 
         dfs(node.left, depth + 1)
         dfs(node.right, depth + 1)
+    }
+}
+```
+
+
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+impl Solution {
+    pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut max_depth = -1;
+        let mut res = root.as_ref().unwrap().borrow().val;
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            depth: i32,
+            max_depth: &mut i32,
+            res: &mut i32,
+        ) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                if depth > *max_depth {
+                    *max_depth = depth;
+                    *res = n.val;
+                }
+                dfs(&n.left, depth + 1, max_depth, res);
+                dfs(&n.right, depth + 1, max_depth, res);
+            }
+        }
+
+        dfs(&root, 0, &mut max_depth, &mut res);
+        res
     }
 }
 ```
@@ -890,6 +947,35 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+impl Solution {
+    pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = root.as_ref().unwrap().borrow().val;
+        let mut max_depth = -1;
+        let mut stack = vec![(root.unwrap(), 0i32)];
+
+        while let Some((node_rc, depth)) = stack.pop() {
+            let node = node_rc.borrow();
+            if depth > max_depth {
+                max_depth = depth;
+                res = node.val;
+            }
+            if let Some(ref right) = node.right {
+                stack.push((right.clone(), depth + 1));
+            }
+            if let Some(ref left) = node.left {
+                stack.push((left.clone(), depth + 1));
+            }
+        }
+
+        res
     }
 }
 ```
@@ -1316,6 +1402,62 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+
+```rust
+use std::cell::RefCell;
+use std::rc::Rc;
+impl Solution {
+    pub fn find_bottom_left_value(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = root.as_ref().unwrap().borrow().val;
+        let mut max_depth: i32 = -1;
+        let mut cur_depth: i32 = 0;
+        let mut cur = root;
+
+        while let Some(cur_rc) = cur.clone() {
+            let cur_node = cur_rc.borrow();
+            if cur_node.left.is_none() {
+                if cur_depth > max_depth {
+                    max_depth = cur_depth;
+                    res = cur_node.val;
+                }
+                cur = cur_node.right.clone();
+                cur_depth += 1;
+            } else {
+                let mut prev = cur_node.left.clone().unwrap();
+                let mut steps = 1;
+                loop {
+                    let next = {
+                        let p = prev.borrow();
+                        if p.right.is_none() || Rc::ptr_eq(p.right.as_ref().unwrap(), &cur_rc) {
+                            break;
+                        }
+                        p.right.clone().unwrap()
+                    };
+                    prev = next;
+                    steps += 1;
+                }
+
+                let prev_right_is_cur = {
+                    let p = prev.borrow();
+                    p.right.is_some() && Rc::ptr_eq(p.right.as_ref().unwrap(), &cur_rc)
+                };
+
+                if !prev_right_is_cur {
+                    prev.borrow_mut().right = Some(cur_rc.clone());
+                    cur = cur_node.left.clone();
+                    cur_depth += 1;
+                } else {
+                    prev.borrow_mut().right = None;
+                    cur_depth -= steps;
+                    cur = cur_node.right.clone();
+                }
+            }
+        }
+        res
     }
 }
 ```

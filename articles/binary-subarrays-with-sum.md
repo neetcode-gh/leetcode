@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum** - Enables O(1) subarray sum queries after O(n) preprocessing
 - **Hash Map** - Used to count occurrences of prefix sums for efficient lookup
 - **Sliding Window / Two Pointers** - Alternative approach using "at most K" technique
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The most straightforward approach is to check every possible subarray. For each starting index, we extend the subarray one element at a time, keeping track of the running sum. Whenever the sum equals the goal, we count it. Since the array contains only 0s and 1s, the sum can only increase as we extend the subarray.
 
 ### Algorithm
+
 1. Initialize a result counter to 0.
 2. For each starting index `i` from `0` to `n-1`, initialize a running sum to `0`.
 3. For each ending index `j` from `i` to `n-1`, add `nums[j]` to the running sum.
@@ -182,6 +186,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subarrays_with_sum(nums: Vec<i32>, goal: i32) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut cur_sum = 0;
+            for j in i..n {
+                cur_sum += nums[j];
+                if cur_sum == goal {
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -194,9 +219,11 @@ class Solution {
 ## 2. Prefix Sum + Hash Map
 
 ### Intuition
+
 For a subarray from index `i+1` to `j` to have sum equal to `goal`, we need `prefixSum[j] - prefixSum[i] = goal`, which means `prefixSum[i] = prefixSum[j] - goal`. As we iterate through the array computing prefix sums, we can use a hash map to count how many times each prefix sum has occurred. For each position, we check how many previous positions had a prefix sum that would give us our target subarray sum.
 
 ### Algorithm
+
 1. Initialize a hash map with `{0: 1}` to handle subarrays starting from index `0`.
 2. Initialize prefix sum and result counter to `0`.
 3. For each element, add it to the prefix sum.
@@ -356,6 +383,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subarrays_with_sum(nums: Vec<i32>, goal: i32) -> i32 {
+        let mut prefix_sum = 0;
+        let mut res = 0;
+        let mut count = HashMap::new();
+        count.insert(0, 1);
+
+        for &num in &nums {
+            prefix_sum += num;
+            res += count.get(&(prefix_sum - goal)).unwrap_or(&0);
+            *count.entry(prefix_sum).or_insert(0) += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,9 +414,11 @@ class Solution {
 ## 3. Prefix Sum + Array
 
 ### Intuition
+
 Since the array contains only `0`s and `1`s, the prefix sum at any position is at most `n` (the array length). This allows us to use an array instead of a hash map for counting prefix sums. Array access is faster than hash map operations, making this approach more efficient in practice. The logic remains the same as the hash map approach.
 
 ### Algorithm
+
 1. Create an array of size `n+1` to count prefix sums, initialized to `0`.
 2. Set `count[0] = 1` to handle subarrays starting from index `0`.
 3. Initialize prefix sum and result counter to `0`.
@@ -549,6 +597,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subarrays_with_sum(nums: Vec<i32>, goal: i32) -> i32 {
+        let n = nums.len();
+        let mut count = vec![0i32; n + 1];
+        count[0] = 1;
+        let mut prefix_sum = 0usize;
+        let mut res = 0;
+
+        for &num in &nums {
+            prefix_sum += num as usize;
+            if prefix_sum >= goal as usize {
+                res += count[prefix_sum - goal as usize];
+            }
+            count[prefix_sum] += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,9 +631,11 @@ class Solution {
 ## 4. Sliding Window
 
 ### Intuition
+
 Counting subarrays with exactly `goal` sum is tricky with a sliding window because shrinking the window might skip valid subarrays. However, counting subarrays with sum at most `goal` is straightforward. We can use the identity: `count(exactly goal) = count(at most goal) - count(at most goal-1)`. For each right endpoint, we shrink the left side until the sum is at most the target, and all subarrays ending at `right` with starting points from `left` to `right` are valid.
 
 ### Algorithm
+
 1. Define a helper function that counts subarrays with sum at most `x`.
 2. In the helper, use two pointers (`left` and `right`) with a running sum.
 3. For each `right`, add `nums[right]` to the sum. While `sum > x`, shrink from the left.
@@ -755,6 +827,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subarrays_with_sum(nums: Vec<i32>, goal: i32) -> i32 {
+        fn helper(nums: &[i32], x: i32) -> i32 {
+            if x < 0 {
+                return 0;
+            }
+            let mut res = 0;
+            let mut l = 0;
+            let mut cur = 0;
+            for r in 0..nums.len() {
+                cur += nums[r];
+                while cur > x {
+                    cur -= nums[l];
+                    l += 1;
+                }
+                res += (r - l + 1) as i32;
+            }
+            res
+        }
+
+        helper(&nums, goal) - helper(&nums, goal - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -767,18 +865,23 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Initialize Prefix Sum Count with Zero
+
 The hash map must start with `{0: 1}` to count subarrays that start from index 0. Without this, subarrays where the prefix sum exactly equals the goal are missed.
+
 ```python
 # Wrong: count = {}
 # Correct: count = {0: 1}
 ```
 
 ### Not Handling goal = 0 in Sliding Window
+
 When using the sliding window approach, `helper(goal - 1)` becomes `helper(-1)`. Without the early return for negative values, the window logic breaks and may produce incorrect results or infinite loops.
+
 ```python
 # Wrong: missing the x < 0 check
 # Correct: if x < 0: return 0
 ```
 
 ### Breaking Early When Sum Exceeds Goal
+
 In the brute force approach, some incorrectly add a `break` when `curSum > goal`. This is wrong because the array contains only 0s and 1s, and adding more 0s keeps the sum unchanged, potentially finding more valid subarrays.

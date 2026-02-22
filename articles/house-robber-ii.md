@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (1D)** - The core technique for solving the linear house robber subproblems
 - **House Robber I** - This problem extends the original by adding a circular constraint
 - **Recursion with Memoization** - Understanding how to cache subproblem results for top-down DP
@@ -9,14 +11,17 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 This is **House Robber II**, where houses are in a **circle**.  
 So the **first and last house cannot both be robbed**.
 
 To handle the circular constraint, we split the problem into **two linear cases**:
+
 1. **Rob from house `0` to `n-2`** (exclude last house)
 2. **Rob from house `1` to `n-1`** (exclude first house)
 
 The recursive function explores:
+
 - **Skip the current house**
 - **Rob the current house** and jump two steps ahead
 
@@ -25,16 +30,17 @@ A flag is used to ensure that **if the first house is robbed, the last house is 
 Finally, we take the **maximum result from the two cases**.
 
 ### Algorithm
+
 1. If there is only one house, return its value.
 2. Define a recursive function that:
-   - Stops when index goes out of bounds
-   - Prevents robbing the last house if the first was robbed
-   - Chooses the max of:
-     - skipping the current house
-     - robbing the current house and moving two steps ahead
+    - Stops when index goes out of bounds
+    - Prevents robbing the last house if the first was robbed
+    - Chooses the max of:
+        - skipping the current house
+        - robbing the current house and moving two steps ahead
 3. Run recursion in two scenarios:
-   - Start from index `0` (first house considered)
-   - Start from index `1` (first house skipped)
+    - Start from index `0` (first house considered)
+    - Start from index `1` (first house skipped)
 4. Return the maximum of both results.
 
 ::tabs-start
@@ -188,6 +194,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rob(nums: Vec<i32>) -> i32 {
+        if nums.len() == 1 {
+            return nums[0];
+        }
+        fn dfs(nums: &[i32], i: usize, flag: bool) -> i32 {
+            if i >= nums.len() || (flag && i == nums.len() - 1) {
+                return 0;
+            }
+            dfs(nums, i + 1, flag)
+                .max(nums[i] + dfs(nums, i + 2, flag || i == 0))
+        }
+        dfs(&nums, 0, true).max(dfs(&nums, 1, false))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,31 +224,34 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 This is **House Robber II (circular houses)** with **Top-Down DP**.
 
 Because houses form a **circle**, the **first and last houses cannot both be robbed**.  
 We handle this by tracking a **flag** that tells us whether the **first house was robbed**.
 
 At each house, we have two choices:
+
 - **Skip the house**
 - **Rob the house** (then skip the next one)
 
 Memoization is used so each state `(index, flag)` is solved only once.
 
 ### Algorithm
+
 1. If there is only one house, return its value.
 2. Use a DP table `memo[index][flag]`:
-   - `index` -> current house
-   - `flag` -> whether the first house was robbed
+    - `index` -> current house
+    - `flag` -> whether the first house was robbed
 3. Define a recursive function:
-   - Stop if index is out of bounds
-   - Stop if trying to rob the last house while the first was already robbed
+    - Stop if index is out of bounds
+    - Stop if trying to rob the last house while the first was already robbed
 4. At each step, compute:
-   - Max of skipping the house
-   - Robbing the house and jumping two steps
+    - Max of skipping the house
+    - Robbing the house and jumping two steps
 5. Run two cases:
-   - Start from house `0` (first house included)
-   - Start from house `1` (first house excluded)
+    - Start from house `0` (first house included)
+    - Start from house `1` (first house excluded)
 6. Return the maximum of both cases.
 
 ::tabs-start
@@ -448,6 +475,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rob(nums: Vec<i32>) -> i32 {
+        if nums.len() == 1 {
+            return nums[0];
+        }
+        let mut memo = vec![[-1i32; 2]; nums.len()];
+        fn dfs(nums: &[i32], i: usize, flag: usize, memo: &mut Vec<[i32; 2]>) -> i32 {
+            if i >= nums.len() || (flag == 1 && i == nums.len() - 1) {
+                return 0;
+            }
+            if memo[i][flag] != -1 {
+                return memo[i][flag];
+            }
+            memo[i][flag] = dfs(nums, i + 1, flag, memo)
+                .max(nums[i] + dfs(nums, i + 2, flag | if i == 0 { 1 } else { 0 }, memo));
+            memo[i][flag]
+        }
+        dfs(&nums, 0, 1, &mut memo).max(dfs(&nums, 1, 0, &mut memo))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -460,26 +510,29 @@ class Solution {
 ## 3. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 This is **House Robber II (circular houses)** solved using **Bottom-Up Dynamic Programming**.
 
 Because houses are in a **circle**, you **cannot rob both the first and last house**.  
 So we split the problem into **two linear cases**:
+
 - Rob houses from **index 1 to n-1** (exclude first house)
 - Rob houses from **index 0 to n-2** (exclude last house)
 
 Each case becomes the normal **House Robber I** problem.
 
 ### Algorithm
+
 1. If there is only one house, return its value.
 2. Solve two cases:
-   - Case 1: Rob houses `nums[1:]`
-   - Case 2: Rob houses `nums[:-1]`
+    - Case 1: Rob houses `nums[1:]`
+    - Case 2: Rob houses `nums[:-1]`
 3. For each case, use bottom-up DP:
-   - `dp[i]` = maximum money up to house `i`
-   - Transition:
-     ```
-     dp[i] = max(dp[i-1], nums[i] + dp[i-2])
-     ```
+    - `dp[i]` = maximum money up to house `i`
+    - Transition:
+        ```
+        dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+        ```
 4. Return the **maximum** of both cases.
 
 ::tabs-start
@@ -720,6 +773,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rob(nums: Vec<i32>) -> i32 {
+        if nums.len() == 1 {
+            return nums[0];
+        }
+        Self::helper(&nums[1..]).max(Self::helper(&nums[..nums.len() - 1]))
+    }
+
+    fn helper(nums: &[i32]) -> i32 {
+        if nums.is_empty() {
+            return 0;
+        }
+        if nums.len() == 1 {
+            return nums[0];
+        }
+        let n = nums.len();
+        let mut dp = vec![0; n];
+        dp[0] = nums[0];
+        dp[1] = nums[0].max(nums[1]);
+        for i in 2..n {
+            dp[i] = dp[i - 1].max(nums[i] + dp[i - 2]);
+        }
+        dp[n - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -732,30 +813,33 @@ class Solution {
 ## 4. Dynamic Programming (Space Optimized)
 
 ### Intuition
+
 This is **House Robber II**, where houses are arranged in a **circle**.  
 Because of the circular setup, **you cannot rob both the first and last house**.
 
 To handle this, split the problem into **two linear subproblems**:
+
 1. Rob houses **excluding the first house**.
 2. Rob houses **excluding the last house**.
 
 Each subproblem becomes the classic **House Robber I**, which can be solved using **two variables** instead of a full DP array.
 
 ### Algorithm
+
 1. If there is only one house, return its value.
 2. Compute the maximum money for:
-   - Houses `nums[1:]` (skip first)
-   - Houses `nums[:-1]` (skip last)
+    - Houses `nums[1:]` (skip first)
+    - Houses `nums[:-1]` (skip last)
 3. For each linear list:
-   - Maintain two variables:
-     - `rob1` -> best up to house `i-2`
-     - `rob2` -> best up to house `i-1`
-   - For each house:
-     ```
-     newRob = max(rob1 + current_house, rob2)
-     rob1 = rob2
-     rob2 = newRob
-     ```
+    - Maintain two variables:
+        - `rob1` -> best up to house `i-2`
+        - `rob2` -> best up to house `i-1`
+    - For each house:
+        ```
+        newRob = max(rob1 + current_house, rob2)
+        rob1 = rob2
+        rob2 = newRob
+        ```
 4. Return the maximum of the two cases.
 
 ::tabs-start
@@ -956,6 +1040,26 @@ class Solution {
         }
 
         return rob2
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rob(nums: Vec<i32>) -> i32 {
+        nums[0]
+            .max(Self::helper(&nums[1..]))
+            .max(Self::helper(&nums[..nums.len() - 1]))
+    }
+
+    fn helper(nums: &[i32]) -> i32 {
+        let (mut rob1, mut rob2) = (0, 0);
+        for &num in nums {
+            let new_rob = (rob1 + num).max(rob2);
+            rob1 = rob2;
+            rob2 = new_rob;
+        }
+        rob2
     }
 }
 ```

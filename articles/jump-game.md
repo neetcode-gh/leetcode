@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how to break down problems into smaller subproblems by exploring all possible paths
 - **Dynamic Programming (Memoization)** - Caching results of subproblems to avoid redundant computation
 - **Greedy Algorithms** - Recognizing when a locally optimal choice leads to a globally optimal solution
@@ -26,16 +28,16 @@ If we ever reach the last index, we know the answer is `true`.
 ### Algorithm
 
 1. Define a recursive function `dfs(i)`:
-   - `i` is the current index
+    - `i` is the current index
 2. If `i` is already at the last index:
-   - Return `true`
+    - Return `true`
 3. Compute the farthest index we can jump to from `i`:
-   - `end = min(last_index, i + nums[i])`
+    - `end = min(last_index, i + nums[i])`
 4. Try all possible next positions from `i + 1` to `end`:
-   - Recursively call `dfs(j)`
-   - If any call returns `true`, return `true`
+    - Recursively call `dfs(j)`
+    - If any call returns `true`, return `true`
 5. If none of the jumps lead to the end:
-   - Return `false`
+    - Return `false`
 6. Start the recursion from index `0`
 7. Return the final result
 
@@ -219,6 +221,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_jump(nums: Vec<i32>) -> bool {
+        fn dfs(nums: &[i32], i: usize) -> bool {
+            if i == nums.len() - 1 {
+                return true;
+            }
+            let end = (nums.len() - 1).min(i + nums[i] as usize);
+            for j in (i + 1)..=end {
+                if dfs(nums, j) {
+                    return true;
+                }
+            }
+            false
+        }
+        dfs(&nums, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -247,20 +269,20 @@ Once we know the answer for an index, we store it so we never recompute it.
 ### Algorithm
 
 1. Create a memo map `memo`:
-   - `memo[i]` stores whether the last index is reachable from index `i`
+    - `memo[i]` stores whether the last index is reachable from index `i`
 2. Define a recursive function `dfs(i)`:
-   - `i` is the current index
+    - `i` is the current index
 3. If `i` is already in `memo`:
-   - Return the stored result
+    - Return the stored result
 4. If `i` is the last index:
-   - Return `true`
+    - Return `true`
 5. If `nums[i] == 0`:
-   - No jumps are possible, so return `false`
+    - No jumps are possible, so return `false`
 6. Compute the farthest index we can jump to from `i`
 7. Try all next indices within the jump range:
-   - If any recursive call returns `true`, store `true` in `memo[i]` and return it
+    - If any recursive call returns `true`, store `true` in `memo[i]` and return it
 8. If none of the jumps work:
-   - Store `false` in `memo[i]` and return it
+    - Store `false` in `memo[i]` and return it
 9. Start the recursion from index `0`
 10. Return the final result
 
@@ -526,6 +548,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_jump(nums: Vec<i32>) -> bool {
+        let mut memo = HashMap::new();
+        fn dfs(nums: &[i32], i: usize, memo: &mut HashMap<usize, bool>) -> bool {
+            if let Some(&v) = memo.get(&i) {
+                return v;
+            }
+            if i == nums.len() - 1 {
+                return true;
+            }
+            if nums[i] == 0 {
+                return false;
+            }
+            let end = nums.len().min(i + nums[i] as usize + 1);
+            for j in (i + 1)..end {
+                if dfs(nums, j, memo) {
+                    memo.insert(i, true);
+                    return true;
+                }
+            }
+            memo.insert(i, false);
+            false
+        }
+        dfs(&nums, 0, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -544,6 +595,7 @@ We want to know if we can reach the **last index** starting from index `0`.
 Instead of using recursion, we can solve this using **bottom-up dynamic programming** by working backwards from the end of the array.
 
 The idea is simple:
+
 - mark positions that can reach the end
 - then check earlier positions to see if they can jump to any of those “good” positions
 
@@ -553,14 +605,14 @@ If index `i` can jump to **any index `j` that is already reachable**, then `i` i
 
 1. Let `n` be the length of the array.
 2. Create a boolean array `dp` of size `n`:
-   - `dp[i] = true` means the last index is reachable from index `i`
+    - `dp[i] = true` means the last index is reachable from index `i`
 3. Set the base case:
-   - `dp[n - 1] = true` since the last index can trivially reach itself
+    - `dp[n - 1] = true` since the last index can trivially reach itself
 4. Iterate `i` from `n - 2` down to `0`:
 5. For each index `i`:
-   - Compute the farthest index we can jump to: `end = min(n, i + nums[i] + 1)`
-   - Check all reachable positions from `i`:
-     - if any `dp[j]` is `true`, then set `dp[i] = true`
+    - Compute the farthest index we can jump to: `end = min(n, i + nums[i] + 1)`
+    - Check all reachable positions from `i`:
+        - if any `dp[j]` is `true`, then set `dp[i] = true`
 6. After filling the array, return `dp[0]`
 
 ::tabs-start
@@ -738,6 +790,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_jump(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut dp = vec![false; n];
+        dp[n - 1] = true;
+        for i in (0..n - 1).rev() {
+            let end = n.min(i + nums[i] as usize + 1);
+            for j in (i + 1)..end {
+                if dp[j] {
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -754,14 +826,17 @@ class Solution {
 We want to check if we can reach the **last index** starting from index `0`.
 
 Instead of trying all possible jumps, we can think about the problem **in reverse**:
+
 - ask which positions can eventually reach the end
 - then move backward to see if earlier positions can reach those positions
 
 We keep a variable called `goal`:
+
 - it represents the **leftmost index** that we must be able to reach
 - initially, the goal is the last index itself
 
 As we move backward through the array:
+
 - if from index `i` we can jump to the current `goal` (or beyond), then index `i` becomes the new goal
 
 At the end, if index `0` becomes the goal, it means we can reach the last index.
@@ -771,11 +846,11 @@ At the end, if index `0` becomes the goal, it means we can reach the last index.
 1. Initialize `goal` as the last index of the array.
 2. Iterate from the second last index down to index `0`.
 3. For each index `i`:
-   - Check if `i + nums[i] >= goal`
-   - If yes, update `goal = i` because index `i` can reach the previous goal
+    - Check if `i + nums[i] >= goal`
+    - If yes, update `goal = i` because index `i` can reach the previous goal
 4. After the loop finishes:
-   - If `goal == 0`, return `true`
-   - Otherwise, return `false`
+    - If `goal == 0`, return `true`
+    - Otherwise, return `false`
 
 ::tabs-start
 
@@ -899,6 +974,20 @@ class Solution {
         }
 
         return goal == 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_jump(nums: Vec<i32>) -> bool {
+        let mut goal = nums.len() as i32 - 1;
+        for i in (0..nums.len() as i32 - 1).rev() {
+            if i + nums[i as usize] >= goal {
+                goal = i;
+            }
+        }
+        goal == 0
     }
 }
 ```

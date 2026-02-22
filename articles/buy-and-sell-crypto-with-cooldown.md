@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Making decisions at each step and exploring all possibilities
 - **Dynamic Programming** - Memoization to cache results and avoid redundant calculations
 - **State Machine Thinking** - Tracking multiple states (buying vs. selling) throughout the problem
@@ -14,11 +16,13 @@ Before attempting this problem, you should be comfortable with:
 This problem is about deciding the best days to buy and sell a stock to maximize profit, with one important rule: **after selling a stock, you must wait one day before buying again (cooldown)**.
 
 At every day, we have two possible states:
+
 - we are **allowed to buy** (we are not holding a stock)
 - we are **allowed to sell** (we are currently holding a stock)
 
 Using recursion, we try **all possible decisions** starting from day `0` and choose the one that gives the maximum profit.
 At each step, we either:
+
 - take an action (buy or sell), or
 - skip the day (cooldown)
 
@@ -28,20 +32,20 @@ The recursive function represents:
 ### Algorithm
 
 1. Define a recursive function `dfs(i, buying)`:
-   - `i` represents the current day
-   - `buying` indicates whether we are allowed to buy (`true`) or must sell (`false`)
+    - `i` represents the current day
+    - `buying` indicates whether we are allowed to buy (`true`) or must sell (`false`)
 2. If `i` goes beyond the last day:
-   - Return `0` because no more profit can be made
+    - Return `0` because no more profit can be made
 3. Always compute the option to **skip the current day** (cooldown):
-   - Move to the next day without changing state
+    - Move to the next day without changing state
 4. If we are allowed to buy:
-   - Option 1: Buy the stock today (subtract price and move to selling state)
-   - Option 2: Skip the day
-   - Take the maximum of these two options
+    - Option 1: Buy the stock today (subtract price and move to selling state)
+    - Option 2: Skip the day
+    - Take the maximum of these two options
 5. If we are holding a stock:
-   - Option 1: Sell the stock today (add price and skip the next day due to cooldown)
-   - Option 2: Skip the day
-   - Take the maximum of these two options
+    - Option 1: Sell the stock today (add price and skip the next day due to cooldown)
+    - Option 2: Skip the day
+    - Take the maximum of these two options
 6. Start the recursion from day `0` with `buying = true`
 7. Return the result of this initial call
 
@@ -240,6 +244,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        fn dfs(i: usize, buying: bool, prices: &[i32]) -> i32 {
+            if i >= prices.len() {
+                return 0;
+            }
+
+            let cooldown = dfs(i + 1, buying, prices);
+            if buying {
+                let buy = dfs(i + 1, false, prices) - prices[i];
+                buy.max(cooldown)
+            } else {
+                let sell = dfs(i + 2, true, prices) + prices[i];
+                sell.max(cooldown)
+            }
+        }
+
+        dfs(0, true, &prices)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -258,6 +285,7 @@ This problem asks for the maximum profit from buying and selling stocks, with th
 The recursive solution tries all possible choices, but it repeats the same calculations many times. To make it efficient, we use **Dynamic Programming (Top-Down)** with memoization.
 
 We define a state using:
+
 - the current day `i`
 - whether we are allowed to buy (`buying = true`) or must sell (`buying = false`)
 
@@ -266,25 +294,25 @@ For each state, we store the best profit we can achieve so that we never compute
 ### Algorithm
 
 1. Create a memoization table `dp` where:
-   - the key is `(i, buying)`
-   - the value is the maximum profit from day `i` with the given state
+    - the key is `(i, buying)`
+    - the value is the maximum profit from day `i` with the given state
 2. Define a recursive function `dfs(i, buying)`:
-   - `i` is the current day
-   - `buying` indicates whether we can buy or must sell
+    - `i` is the current day
+    - `buying` indicates whether we can buy or must sell
 3. If `i` is beyond the last day:
-   - Return `0` since no more profit can be made
+    - Return `0` since no more profit can be made
 4. If the state `(i, buying)` is already in `dp`:
-   - Return the stored result to avoid recomputation
+    - Return the stored result to avoid recomputation
 5. Always consider the option to **skip the current day** (cooldown):
-   - Move to the next day without changing the state
+    - Move to the next day without changing the state
 6. If we are allowed to buy:
-   - Option 1: Buy the stock today (subtract price and move to selling state)
-   - Option 2: Skip the day
-   - Store the maximum of these two options in `dp`
+    - Option 1: Buy the stock today (subtract price and move to selling state)
+    - Option 2: Skip the day
+    - Store the maximum of these two options in `dp`
 7. If we are holding a stock:
-   - Option 1: Sell the stock today (add price and skip the next day due to cooldown)
-   - Option 2: Skip the day
-   - Store the maximum of these two options in `dp`
+    - Option 1: Sell the stock today (add price and skip the next day due to cooldown)
+    - Option 2: Skip the day
+    - Store the maximum of these two options in `dp`
 8. Start the recursion from day `0` with `buying = true`
 9. Return the result from this initial call
 
@@ -548,6 +576,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        let n = prices.len();
+        let mut dp = vec![vec![-1i32; 2]; n];
+
+        fn dfs(i: usize, buying: usize, prices: &[i32], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i >= prices.len() {
+                return 0;
+            }
+            if dp[i][buying] != -1 {
+                return dp[i][buying];
+            }
+
+            let cooldown = dfs(i + 1, buying, prices, dp);
+            dp[i][buying] = if buying == 1 {
+                let buy = dfs(i + 1, 0, prices, dp) - prices[i];
+                buy.max(cooldown)
+            } else {
+                let sell = dfs(i + 2, 1, prices, dp) + prices[i];
+                sell.max(cooldown)
+            };
+            dp[i][buying]
+        }
+
+        dfs(0, 1, &prices, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,6 +625,7 @@ after selling a stock, you must wait **one full day** before buying again.
 Instead of using recursion, we solve this using **bottom-up dynamic programming**, where we build the solution starting from the **last day** and move backward to day `0`.
 
 At every day, we only care about two possible states:
+
 - **buying = true** → we do not own a stock and are allowed to buy
 - **buying = false** → we currently own a stock and are allowed to sell
 
@@ -577,21 +636,21 @@ This way, future decisions are already known when we process earlier days.
 
 1. Let `n` be the number of days.
 2. Create a 2D DP table `dp` of size `(n + 1) x 2`:
-   - `dp[i][1]` → maximum profit starting at day `i` when we are allowed to buy
-   - `dp[i][0]` → maximum profit starting at day `i` when we are holding a stock
+    - `dp[i][1]` → maximum profit starting at day `i` when we are allowed to buy
+    - `dp[i][0]` → maximum profit starting at day `i` when we are holding a stock
 3. Initialize the DP table with `0` since no profit can be made after the last day.
 4. Traverse days from `n - 1` down to `0`.
 5. For each day `i`, evaluate both states:
-   - **If buying is allowed**:
-     - Option 1: Buy today (subtract price and move to selling state on next day)
-     - Option 2: Skip today (cooldown, stay in buying state)
-     - Store the maximum of these two choices in `dp[i][1]`
-   - **If holding a stock**:
-     - Option 1: Sell today (add price and skip one day due to cooldown)
-     - Option 2: Skip today (cooldown, stay in selling state)
-     - Store the maximum of these two choices in `dp[i][0]`
+    - **If buying is allowed**:
+        - Option 1: Buy today (subtract price and move to selling state on next day)
+        - Option 2: Skip today (cooldown, stay in buying state)
+        - Store the maximum of these two choices in `dp[i][1]`
+    - **If holding a stock**:
+        - Option 1: Sell today (add price and skip one day due to cooldown)
+        - Option 2: Skip today (cooldown, stay in selling state)
+        - Store the maximum of these two choices in `dp[i][0]`
 6. After filling the table, the answer is stored in `dp[0][1]`, meaning:
-   - starting from day `0` with permission to buy
+    - starting from day `0` with permission to buy
 7. Return `dp[0][1]`
 
 ::tabs-start
@@ -807,6 +866,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        let n = prices.len();
+        let mut dp = vec![[0i32; 2]; n + 1];
+
+        for i in (0..n).rev() {
+            for buying in (0..=1).rev() {
+                if buying == 1 {
+                    let buy = dp[i + 1][0] - prices[i];
+                    let cooldown = dp[i + 1][1];
+                    dp[i][1] = buy.max(cooldown);
+                } else {
+                    let sell = if i + 2 < n {
+                        dp[i + 2][1] + prices[i]
+                    } else {
+                        prices[i]
+                    };
+                    let cooldown = dp[i + 1][0];
+                    dp[i][0] = sell.max(cooldown);
+                }
+            }
+        }
+
+        dp[0][1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -826,6 +914,7 @@ we want to maximize profit while respecting the **cooldown rule** (after selling
 In the bottom-up DP approach, we only ever use values from the **next day** and the **day after next**. That means we do not need a full DP table — we can **compress the state** into a few variables.
 
 Instead of storing results for every day, we keep track of:
+
 - the best profit if we are allowed to buy on the next day
 - the best profit if we are allowed to sell on the next day
 - the best profit if we are allowed to buy two days ahead (needed for cooldown)
@@ -835,20 +924,20 @@ By updating these values while iterating backward, we achieve the same result us
 ### Algorithm
 
 1. Initialize variables to represent future DP states:
-   - `dp1_buy`: profit if we can buy on the next day
-   - `dp1_sell`: profit if we can sell on the next day
-   - `dp2_buy`: profit if we can buy two days ahead (used after selling)
+    - `dp1_buy`: profit if we can buy on the next day
+    - `dp1_sell`: profit if we can sell on the next day
+    - `dp2_buy`: profit if we can buy two days ahead (used after selling)
 2. Traverse the prices array from the last day to the first day.
 3. For each day:
-   - Compute the best profit if we are allowed to buy:
-     - either buy today (use next day’s sell profit minus price)
-     - or skip today (keep next day’s buy profit)
-   - Compute the best profit if we are allowed to sell:
-     - either sell today (use profit from two days ahead plus price)
-     - or skip today (keep next day’s sell profit)
+    - Compute the best profit if we are allowed to buy:
+        - either buy today (use next day’s sell profit minus price)
+        - or skip today (keep next day’s buy profit)
+    - Compute the best profit if we are allowed to sell:
+        - either sell today (use profit from two days ahead plus price)
+        - or skip today (keep next day’s sell profit)
 4. Shift the state variables forward to represent the next iteration:
-   - update `dp2_buy`
-   - update `dp1_buy` and `dp1_sell`
+    - update `dp2_buy`
+    - update `dp1_buy` and `dp1_sell`
 5. After processing all days, `dp1_buy` represents the maximum profit starting from day `0` with permission to buy
 6. Return `dp1_buy`
 
@@ -1020,6 +1109,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        let n = prices.len();
+        let (mut dp1_buy, mut dp1_sell) = (0, 0);
+        let mut dp2_buy = 0;
+
+        for i in (0..n).rev() {
+            let dp_buy = (dp1_sell - prices[i]).max(dp1_buy);
+            let dp_sell = (dp2_buy + prices[i]).max(dp1_sell);
+            dp2_buy = dp1_buy;
+            dp1_buy = dp_buy;
+            dp1_sell = dp_sell;
+        }
+
+        dp1_buy
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1032,14 +1141,18 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting the Cooldown Day After Selling
+
 After selling, you must skip one day before buying again. A common mistake is transitioning directly to the buying state on the next day instead of skipping to `i + 2`.
+
 ```python
 # Wrong: no cooldown after selling
 sell = dfs(i + 1, True) + prices[i]  # Should be i + 2
 ```
 
 ### Confusing the Buying and Selling States
+
 Mixing up which state allows buying versus selling leads to subtracting when you should add (or vice versa). When `buying=True`, you subtract the price; when `buying=False`, you add it.
 
 ### Off-by-One Errors in Bottom-Up DP Bounds
+
 When iterating backward and accessing `dp[i + 2]`, forgetting to check bounds causes index out of range errors. The DP table needs size `n + 2` or proper boundary checks.

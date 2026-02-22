@@ -136,6 +136,21 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_duplicate(mut nums: Vec<i32>) -> i32 {
+        nums.sort();
+        for i in 0..nums.len() - 1 {
+            if nums[i] == nums[i + 1] {
+                return nums[i];
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +301,22 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_duplicate(nums: Vec<i32>) -> i32 {
+        let mut seen = HashSet::new();
+        for num in nums {
+            if seen.contains(&num) {
+                return num;
+            }
+            seen.insert(num);
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -432,6 +463,22 @@ class Solution {
             seen[num - 1] = 1
         }
         return -1
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicate(nums: Vec<i32>) -> i32 {
+        let mut seen = vec![0; nums.len()];
+        for num in nums {
+            if seen[(num - 1) as usize] == 1 {
+                return num;
+            }
+            seen[(num - 1) as usize] = 1;
+        }
+        -1
     }
 }
 ```
@@ -592,6 +639,22 @@ class Solution {
             nums[idx] *= -1
         }
         return -1
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicate(mut nums: Vec<i32>) -> i32 {
+        for i in 0..nums.len() {
+            let idx = (nums[i].abs() - 1) as usize;
+            if nums[idx] < 0 {
+                return nums[i].abs();
+            }
+            nums[idx] *= -1;
+        }
+        -1
     }
 }
 ```
@@ -837,6 +900,26 @@ class Solution {
             }
         }
         return low
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicate(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let (mut low, mut high) = (1i32, (n - 1) as i32);
+        while low < high {
+            let mid = low + (high - low) / 2;
+            let less_or_equal = nums.iter().filter(|&&x| x <= mid).count();
+            if less_or_equal as i32 <= mid {
+                low = mid + 1;
+            } else {
+                high = mid;
+            }
+        }
+        low
     }
 }
 ```
@@ -1106,6 +1189,35 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_duplicate(nums: Vec<i32>) -> i32 {
+        let n = nums.len() as i32;
+        let mut res = 0;
+        for b in 0..32 {
+            let mask = 1 << b;
+            let mut x = 0;
+            let mut y = 0;
+            for &num in &nums {
+                if num & mask != 0 {
+                    x += 1;
+                }
+            }
+            for num in 1..n {
+                if num & mask != 0 {
+                    y += 1;
+                }
+            }
+            if x > y {
+                res |= mask;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1341,6 +1453,32 @@ class Solution {
             slow2 = nums[slow2]
             if slow == slow2 {
                 return slow
+            }
+        }
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicate(nums: Vec<i32>) -> i32 {
+        let mut slow = 0usize;
+        let mut fast = 0usize;
+        loop {
+            slow = nums[slow] as usize;
+            fast = nums[nums[fast] as usize] as usize;
+            if slow == fast {
+                break;
+            }
+        }
+
+        let mut slow2 = 0usize;
+        loop {
+            slow = nums[slow] as usize;
+            slow2 = nums[slow2] as usize;
+            if slow == slow2 {
+                return slow as i32;
             }
         }
     }

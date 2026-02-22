@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree (BST) properties** - Understanding that inorder traversal yields sorted values and how to search in O(log n) time
 - **Tree traversal (DFS)** - Recursively visiting all nodes to collect values or search for complements
 - **Hash Sets** - Storing values for O(1) lookup when checking if a complement exists
@@ -31,11 +33,11 @@ class Solution:
             node_list.append(curr_node.val)
             dfs(curr_node.left, node_list)
             dfs(curr_node.right, node_list)
-        
+
         node_list1, node_list2 = [], []
         dfs(root1, node_list1)
         dfs(root2, node_list2)
-        
+
         for a in node_list1:
             for b in node_list2:
                 if a + b == target:
@@ -119,7 +121,8 @@ class Solution {
             dfs(currNode.right, nodeList);
         };
 
-        const nodeList1 = [], nodeList2 = [];
+        const nodeList1 = [],
+            nodeList2 = [];
         dfs(root1, nodeList1);
         dfs(root2, nodeList2);
 
@@ -248,6 +251,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum_bs_ts(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> bool {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, list: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                list.push(n.val);
+                dfs(&n.left, list);
+                dfs(&n.right, list);
+            }
+        }
+
+        let (mut list1, mut list2) = (vec![], vec![]);
+        dfs(&root1, &mut list1);
+        dfs(&root2, &mut list2);
+
+        for &a in &list1 {
+            for &b in &list2 {
+                if a + b == target {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -255,7 +290,7 @@ class Solution {
 - Time complexity: $O(m \cdot n)$
 - Space complexity: $O(m+n)$
 
->  Where $m$ and $n$ are the number of nodes in the two trees.
+> Where $m$ and $n$ are the number of nodes in the two trees.
 
 ---
 
@@ -270,9 +305,9 @@ Since the second tree is a BST, we can leverage its sorted structure. For each n
 1. Traverse the first BST using `dfs`.
 2. For each node with value `v`, compute `complement = target - v`.
 3. Perform binary search in the second BST to find the complement:
-   - If current value equals `complement`, return `true`.
-   - If current value is greater, search left.
-   - Otherwise, search right.
+    - If current value equals `complement`, return `true`.
+    - If current value is greater, search left.
+    - Otherwise, search right.
 4. If no pair is found after checking all nodes, return `false`.
 
 ::tabs-start
@@ -522,6 +557,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum_bs_ts(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> bool {
+        fn binary_search(node: &Option<Rc<RefCell<TreeNode>>>, target: i32) -> bool {
+            match node {
+                None => false,
+                Some(n) => {
+                    let n = n.borrow();
+                    if n.val == target {
+                        true
+                    } else if n.val > target {
+                        binary_search(&n.left, target)
+                    } else {
+                        binary_search(&n.right, target)
+                    }
+                }
+            }
+        }
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            root2: &Option<Rc<RefCell<TreeNode>>>,
+            target: i32,
+        ) -> bool {
+            match node {
+                None => false,
+                Some(n) => {
+                    let n = n.borrow();
+                    if binary_search(root2, target - n.val) {
+                        return true;
+                    }
+                    dfs(&n.left, root2, target) || dfs(&n.right, root2, target)
+                }
+            }
+        }
+
+        dfs(&root1, &root2, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -529,7 +609,7 @@ class Solution {
 - Time complexity: $O(m \cdot \log n)$
 - Space complexity: $O(\log m + \log n)$
 
->  Where $m$ and $n$ are the number of nodes in the two trees.
+> Where $m$ and $n$ are the number of nodes in the two trees.
 
 ---
 
@@ -557,11 +637,11 @@ class Solution:
             dfs(curr_node.left, node_set)
             node_set.add(curr_node.val)
             dfs(curr_node.right, node_set)
-        
+
         node_set1, node_set2 = set(), set()
         dfs(root1, node_set1)
         dfs(root2, node_set2)
-        
+
         for value1 in node_set1:
             if target - value1 in node_set2:
                 return True
@@ -642,7 +722,8 @@ class Solution {
             dfs(currNode.right, nodeSet);
         };
 
-        const nodeSet1 = new Set(), nodeSet2 = new Set();
+        const nodeSet1 = new Set(),
+            nodeSet2 = new Set();
         dfs(root1, nodeSet1);
         dfs(root2, nodeSet2);
 
@@ -767,6 +848,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum_bs_ts(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> bool {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, set: &mut HashSet<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                dfs(&n.left, set);
+                set.insert(n.val);
+                dfs(&n.right, set);
+            }
+        }
+
+        let (mut set1, mut set2) = (HashSet::new(), HashSet::new());
+        dfs(&root1, &mut set1);
+        dfs(&root2, &mut set2);
+
+        set1.iter().any(|&v| set2.contains(&(target - v)))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -774,7 +880,7 @@ class Solution {
 - Time complexity: $O(m + n)$
 - Space complexity: $O(m + n)$
 
->  Where $m$ and $n$ are the number of nodes in the two trees.
+> Where $m$ and $n$ are the number of nodes in the two trees.
 
 ---
 
@@ -789,9 +895,9 @@ An inorder traversal of a BST produces a sorted list. If we have sorted lists fr
 1. Perform inorder traversal on both trees to get two sorted lists.
 2. Initialize `pointer1 = 0` (start of first list) and `pointer2 = len(list2) - 1` (end of second list).
 3. While both pointers are valid:
-   - If sum equals `target`, return `true`.
-   - If sum is less than `target`, increment `pointer1`.
-   - If sum is greater than `target`, decrement `pointer2`.
+    - If sum equals `target`, return `true`.
+    - If sum is less than `target`, increment `pointer1`.
+    - If sum is greater than `target`, decrement `pointer2`.
 4. Return `false` if no pair is found.
 
 ::tabs-start
@@ -805,11 +911,11 @@ class Solution:
             dfs(curr_node.left, node_list)
             node_list.append(curr_node.val)
             dfs(curr_node.right, node_list)
-        
+
         node_list1, node_list2 = [], []
         dfs(root1, node_list1)
         dfs(root2, node_list2)
-        
+
         pointer1 = 0
         pointer2 = len(node_list2) - 1
         while pointer1 < len(node_list1) and pointer2 >= 0:
@@ -906,11 +1012,13 @@ class Solution {
             dfs(currNode.right, nodeList);
         };
 
-        const nodeList1 = [], nodeList2 = [];
+        const nodeList1 = [],
+            nodeList2 = [];
         dfs(root1, nodeList1);
         dfs(root2, nodeList2);
 
-        let pointer1 = 0, pointer2 = nodeList2.length - 1;
+        let pointer1 = 0,
+            pointer2 = nodeList2.length - 1;
         while (pointer1 < nodeList1.length && pointer2 >= 0) {
             if (nodeList1[pointer1] + nodeList2[pointer2] === target) {
                 return true;
@@ -1054,6 +1162,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum_bs_ts(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> bool {
+        fn inorder(node: &Option<Rc<RefCell<TreeNode>>>, list: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                inorder(&n.left, list);
+                list.push(n.val);
+                inorder(&n.right, list);
+            }
+        }
+
+        let (mut list1, mut list2) = (vec![], vec![]);
+        inorder(&root1, &mut list1);
+        inorder(&root2, &mut list2);
+
+        let (mut p1, mut p2) = (0usize, list2.len().wrapping_sub(1));
+        while p1 < list1.len() && p2 < list2.len() {
+            let sum = list1[p1] + list2[p2];
+            if sum == target {
+                return true;
+            } else if sum < target {
+                p1 += 1;
+            } else {
+                p2 = p2.wrapping_sub(1);
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1061,7 +1205,7 @@ class Solution {
 - Time complexity: $O(m + n)$
 - Space complexity: $O(m + n)$
 
->  Where $m$ and $n$ are the number of nodes in the two trees.
+> Where $m$ and $n$ are the number of nodes in the two trees.
 
 ---
 
@@ -1077,9 +1221,9 @@ The two-pointer approach requires O(m + n) space to store the sorted lists. Morr
 2. Create a reverse Morris iterator for the second tree (yields values in descending order).
 3. Get the first value from each iterator.
 4. While both values are valid:
-   - If sum equals `target`, return `true`.
-   - If sum is less than `target`, advance the forward iterator.
-   - If sum is greater than `target`, advance the reverse iterator.
+    - If sum equals `target`, return `true`.
+    - If sum is less than `target`, advance the forward iterator.
+    - If sum is greater than `target`, advance the reverse iterator.
 5. Return `false` if no pair is found.
 
 ::tabs-start
@@ -1122,7 +1266,7 @@ class Solution:
                         pre.left = None
                         yield current.val
                         current = current.left
-                        
+
         iterater1 = morris_traversal(root1)
         iterater2 = reversed_morris_traversal(root2)
         value1 = next(iterater1, None)
@@ -1223,9 +1367,9 @@ class Solution {
     public boolean twoSumBSTs(TreeNode root1, TreeNode root2, int target) {
         MorrisIterator iterator1 = new MorrisIterator(root1);
         ReversedMorrisIterator iterator2 = new ReversedMorrisIterator(root2);
-        
+
         int value1 = iterator1.next(), value2 = iterator2.next();
-        
+
         while (value1 != Integer.MIN_VALUE && value2 != Integer.MIN_VALUE) {
             if (value1 + value2 == target) {
                 return true;
@@ -1243,7 +1387,7 @@ class Solution {
                 }
             }
         }
-        
+
         return false;
     }
 }
@@ -1254,14 +1398,14 @@ class MorrisIterator {
 private:
     TreeNode* current;
     TreeNode* pre;
-    
+
 public:
     MorrisIterator(TreeNode* root) : current(root), pre(nullptr) {}
-    
+
     bool hasNext() {
         return current != nullptr;
     }
-    
+
     int next() {
         int val = INT_MIN;
         while (current != nullptr) {
@@ -1293,14 +1437,14 @@ class ReversedMorrisIterator {
 private:
     TreeNode* current;
     TreeNode* pre;
-    
+
 public:
     ReversedMorrisIterator(TreeNode* root) : current(root), pre(nullptr) {}
-    
+
     bool hasNext() {
         return current != nullptr;
     }
-    
+
     int next() {
         int val = INT_MIN;
         while (current != nullptr) {
@@ -1333,10 +1477,10 @@ public:
     bool twoSumBSTs(TreeNode* root1, TreeNode* root2, int target) {
         MorrisIterator iterator1(root1);
         ReversedMorrisIterator iterator2(root2);
-        
+
         int value1 = iterator1.next();
         int value2 = iterator2.next();
-        
+
         while (value1 != INT_MIN && value2 != INT_MIN) {
             if (value1 + value2 == target) {
                 return true;
@@ -1354,7 +1498,7 @@ public:
                 }
             }
         }
-        
+
         return false;
     }
 };
@@ -1828,6 +1972,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum_bs_ts(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+        target: i32,
+    ) -> bool {
+        // Collect inorder (ascending) from tree1
+        fn inorder(node: &Option<Rc<RefCell<TreeNode>>>, out: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                inorder(&n.left, out);
+                out.push(n.val);
+                inorder(&n.right, out);
+            }
+        }
+        // Collect reverse inorder (descending) from tree2
+        fn rev_inorder(node: &Option<Rc<RefCell<TreeNode>>>, out: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                rev_inorder(&n.right, out);
+                out.push(n.val);
+                rev_inorder(&n.left, out);
+            }
+        }
+
+        let mut asc = vec![];
+        let mut desc = vec![];
+        inorder(&root1, &mut asc);
+        rev_inorder(&root2, &mut desc);
+
+        let (mut i, mut j) = (0, 0);
+        while i < asc.len() && j < desc.len() {
+            let s = asc[i] + desc[j];
+            if s == target {
+                return true;
+            } else if s < target {
+                i += 1;
+            } else {
+                j += 1;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1835,7 +2026,7 @@ class Solution {
 - Time complexity: $O(m + n)$
 - Space complexity: $O(1)$
 
->  Where $m$ and $n$ are the number of nodes in the two trees.
+> Where $m$ and $n$ are the number of nodes in the two trees.
 
 ---
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Reverse Linked List (Basic)** - This problem builds on the standard linked list reversal technique
 - **Dummy Node Technique** - Using a dummy node to simplify edge cases when the head might change
 - **Linked List Traversal** - Navigating to specific positions in a linked list by counting nodes
@@ -414,6 +416,45 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn reverse_between(
+        head: Option<Box<ListNode>>, left: i32, right: i32,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut prev = &mut dummy;
+        for _ in 0..left - 1 {
+            prev = prev.next.as_mut().unwrap();
+        }
+
+        let mut curr = prev.next.take();
+        let mut reversed: Option<Box<ListNode>> = None;
+        for _ in 0..right - left + 1 {
+            let mut node = curr.unwrap();
+            curr = node.next.take();
+            node.next = reversed;
+            reversed = Some(node);
+        }
+
+        // Connect tail of reversed portion to remainder
+        let mut tail = &mut reversed;
+        while tail.as_ref().unwrap().next.is_some() {
+            tail = &mut tail.as_mut().unwrap().next;
+        }
+        tail.as_mut().unwrap().next = curr;
+        prev.next = reversed;
+
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,9 +475,9 @@ This approach uses recursion to navigate to the start of the reversal range. Onc
 1. If `left` is 1, call the helper function `reverseList` to reverse the first `right` nodes.
 2. Otherwise, recurse with `head.next` and decremented `left` and `right` values, then attach the result to `head.next`.
 3. The helper function `reverseList` reverses `n` nodes starting from the given node:
-   - Base case: when `n` is 1, save the `successor` (next node) and return current node.
-   - Recurse on the next node with `n - 1`.
-   - After recursion, make the next node point back to current and set current's next to the saved `successor`.
+    - Base case: when `n` is 1, save the `successor` (next node) and return current node.
+    - Recurse on the next node with `n - 1`.
+    - After recursion, make the next node point back to current and set current's next to the saved `successor`.
 4. Return the new head of the reversed portion.
 
 ::tabs-start
@@ -704,6 +745,44 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn reverse_between(
+        head: Option<Box<ListNode>>, left: i32, right: i32,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut prev = &mut dummy;
+        for _ in 0..left - 1 {
+            prev = prev.next.as_mut().unwrap();
+        }
+
+        let mut curr = prev.next.take();
+        let mut reversed: Option<Box<ListNode>> = None;
+        for _ in 0..right - left + 1 {
+            let mut node = curr.unwrap();
+            curr = node.next.take();
+            node.next = reversed;
+            reversed = Some(node);
+        }
+
+        let mut tail = &mut reversed;
+        while tail.as_ref().unwrap().next.is_some() {
+            tail = &mut tail.as_mut().unwrap().next;
+        }
+        tail.as_mut().unwrap().next = curr;
+        prev.next = reversed;
+
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -726,7 +805,7 @@ The iterative approach follows the same structure as the first recursive solutio
 3. Identify the sublist head `sublist_head` and traverse `right - left` more steps to find the sublist tail `sublist_tail`.
 4. Save the node after the sublist `nextNode` and disconnect by setting `sublist_tail.next` to `null`.
 5. Reverse the sublist iteratively using `prev` and `curr` pointers:
-   - For each node, save next, point `curr` to `prev`, advance both pointers.
+    - For each node, save next, point `curr` to `prev`, advance both pointers.
 6. Connect `prev.next` to the new head (final `prev` after reversal) and connect the original head (now tail) to the saved successor.
 7. Return `dummy.next`.
 
@@ -1119,6 +1198,44 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn reverse_between(
+        head: Option<Box<ListNode>>, left: i32, right: i32,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut prev = &mut dummy;
+        for _ in 0..left - 1 {
+            prev = prev.next.as_mut().unwrap();
+        }
+
+        let mut curr = prev.next.take();
+        let mut reversed: Option<Box<ListNode>> = None;
+        for _ in 0..right - left + 1 {
+            let mut node = curr.unwrap();
+            curr = node.next.take();
+            node.next = reversed;
+            reversed = Some(node);
+        }
+
+        let mut tail = &mut reversed;
+        while tail.as_ref().unwrap().next.is_some() {
+            tail = &mut tail.as_mut().unwrap().next;
+        }
+        tail.as_mut().unwrap().next = curr;
+        prev.next = reversed;
+
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1139,9 +1256,9 @@ This approach reverses in a single pass without explicitly detaching the sublist
 1. Create a dummy node pointing to the head.
 2. Traverse `left - 1` steps to position `leftPrev` (node before reversal) and `cur` (first node to reverse).
 3. Reverse `right - left + 1` nodes in place:
-   - Save `cur.next` as `tmpNext`.
-   - Point `cur.next` to `prev`.
-   - Advance `prev` to `cur` and `cur` to `tmpNext`.
+    - Save `cur.next` as `tmpNext`.
+    - Point `cur.next` to `prev`.
+    - Advance `prev` to `cur` and `cur` to `tmpNext`.
 4. After the loop, `prev` points to the new head of the reversed section and `cur` points to the node after it.
 5. Connect `leftPrev.next.next` (original first node, now last) to `cur`.
 6. Connect `leftPrev.next` to `prev` (the new head).
@@ -1439,6 +1556,44 @@ class Solution {
         leftPrev?.next = prev
 
         return dummy.next
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn reverse_between(
+        head: Option<Box<ListNode>>, left: i32, right: i32,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut prev = &mut dummy;
+        for _ in 0..left - 1 {
+            prev = prev.next.as_mut().unwrap();
+        }
+
+        let mut curr = prev.next.take();
+        let mut reversed: Option<Box<ListNode>> = None;
+        for _ in 0..right - left + 1 {
+            let mut node = curr.unwrap();
+            curr = node.next.take();
+            node.next = reversed;
+            reversed = Some(node);
+        }
+
+        let mut tail = &mut reversed;
+        while tail.as_ref().unwrap().next.is_some() {
+            tail = &mut tail.as_mut().unwrap().next;
+        }
+        tail.as_mut().unwrap().next = curr;
+        prev.next = reversed;
+
+        dummy.next
     }
 }
 ```

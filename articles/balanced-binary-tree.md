@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, nodes, left/right children, and null nodes
 - **Recursion** - Both solutions rely on recursive tree traversal patterns
 - **Tree Height Calculation** - Computing the height of a subtree recursively
@@ -10,26 +12,30 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 A tree is balanced if **every node’s left and right subtree heights differ by at most 1**.
 
 The brute-force approach directly follows the definition:
+
 - For every node, compute the height of its left subtree.
 - Compute the height of its right subtree.
 - Check if their difference is ≤ 1.
 - Recursively repeat this check for all nodes.
 
 ### Algorithm
+
 1. If the current node is `null`, the subtree is balanced.
 2. Compute:
-   - `leftHeight = height(left subtree)`
-   - `rightHeight = height(right subtree)`
+    - `leftHeight = height(left subtree)`
+    - `rightHeight = height(right subtree)`
 3. If `abs(leftHeight - rightHeight) > 1`, return `false`.
 4. Recursively check if:
-   - left subtree is balanced
-   - right subtree is balanced
+    - left subtree is balanced
+    - right subtree is balanced
 5. If all checks pass, return `true`.
 
 Height function:
+
 - If node is `null` → return `0`
 - Otherwise → `1 + max(height(left), height(right))`
 
@@ -322,6 +328,41 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn height(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            match root {
+                None => 0,
+                Some(node) => {
+                    let node = node.borrow();
+                    1 + height(&node.left).max(height(&node.right))
+                }
+            }
+        }
+
+        match root {
+            None => true,
+            Some(ref node) => {
+                let node_ref = node.borrow();
+                let left = height(&node_ref.left);
+                let right = height(&node_ref.right);
+                (left - right).abs() <= 1
+                    && Self::is_balanced(node_ref.left.clone())
+                    && Self::is_balanced(node_ref.right.clone())
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +375,7 @@ class Solution {
 ## 2. Depth First Search
 
 ### Intuition
+
 The brute-force solution wastes time by repeatedly recomputing subtree heights.  
 We fix this by doing **one DFS that returns two things at once** for every node:
 
@@ -344,14 +386,15 @@ This way, each subtree is processed only once.
 If at any node the height difference > 1, we mark it as unbalanced and stop worrying about deeper levels.
 
 ### Algorithm
+
 1. Write a DFS function that:
-   - Returns `[isBalanced, height]`.
+    - Returns `[isBalanced, height]`.
 2. For each node:
-   - Recursively get results from left and right children.
-   - A node is balanced if:
-     - Left subtree is balanced
-     - Right subtree is balanced
-     - Height difference ≤ `1`
+    - Recursively get results from left and right children.
+    - A node is balanced if:
+        - Left subtree is balanced
+        - Right subtree is balanced
+        - Height difference ≤ `1`
 3. Height of the current node = `1 + max(leftHeight, rightHeight)`
 4. Run DFS on the root and return the `isBalanced` value.
 
@@ -644,6 +687,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn dfs(root: &Option<Rc<RefCell<TreeNode>>>) -> (bool, i32) {
+            match root {
+                None => (true, 0),
+                Some(node) => {
+                    let node = node.borrow();
+                    let left = dfs(&node.left);
+                    let right = dfs(&node.right);
+                    let balanced =
+                        left.0 && right.0 && (left.1 - right.1).abs() <= 1;
+                    (balanced, 1 + left.1.max(right.1))
+                }
+            }
+        }
+        dfs(&root).0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -660,28 +724,31 @@ class Solution {
 ## 3. Iterative DFS
 
 ### Intuition
+
 The recursive DFS solution computes height and balance in one postorder traversal.  
 This iterative version does **the same thing**, but simulates recursion using a stack.
 
 The idea:
+
 - We must visit each node **after** its children (postorder).
 - Once both children of a node are processed, we already know their heights.
 - Then we:
-  1. Check if the height difference ≤ `1`
-  2. Save the node's height (`1 + max(left, right)`)
+    1. Check if the height difference ≤ `1`
+    2. Save the node's height (`1 + max(left, right)`)
 
 If any node is unbalanced, return `false` immediately.
 
 ### Algorithm
+
 1. Use a stack to simulate postorder traversal.
 2. Use a dictionary/map (`depths`) to store the height of each visited node.
 3. For each node:
-   - Traverse left until possible.
-   - When left is done, try right.
-   - When both children are done:
-     - Get their heights from `depths`.
-     - If the difference > `1` → tree is unbalanced → return `false`.
-     - Compute current node height and store it.
+    - Traverse left until possible.
+    - When left is done, try right.
+    - When both children are done:
+        - Get their heights from `depths`.
+        - If the difference > `1` → tree is unbalanced → return `false`.
+        - Compute current node height and store it.
 4. If the traversal completes without violations → return `true`.
 
 ::tabs-start
@@ -1067,6 +1134,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_balanced(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut node = root.clone();
+        let mut last: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut depths: HashMap<*const RefCell<TreeNode>, i32> = HashMap::new();
+
+        while !stack.is_empty() || node.is_some() {
+            if let Some(n) = node {
+                stack.push(n.clone());
+                node = n.borrow().left.clone();
+            } else {
+                let current = stack.last().unwrap().clone();
+                let current_ref = current.borrow();
+                let right_matches = match (&current_ref.right, &last) {
+                    (None, _) => true,
+                    (Some(r), Some(l)) => Rc::ptr_eq(r, l),
+                    _ => false,
+                };
+                if right_matches {
+                    drop(current_ref);
+                    stack.pop();
+                    let current_ref = current.borrow();
+                    let left_depth = current_ref.left.as_ref()
+                        .map_or(0, |l| *depths.get(&Rc::as_ptr(l)).unwrap_or(&0));
+                    let right_depth = current_ref.right.as_ref()
+                        .map_or(0, |r| *depths.get(&Rc::as_ptr(r)).unwrap_or(&0));
+                    if (left_depth - right_depth).abs() > 1 {
+                        return false;
+                    }
+                    depths.insert(Rc::as_ptr(&current), 1 + left_depth.max(right_depth));
+                    drop(current_ref);
+                    last = Some(current);
+                    node = None;
+                } else {
+                    node = current_ref.right.clone();
+                }
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1079,7 +1192,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Only Checking the Root Node
+
 A tree is balanced only if every node (not just the root) has subtrees with heights differing by at most 1. Checking only the root misses imbalanced subtrees deeper in the tree.
+
 ```python
 # Wrong: only checking root's children
 return abs(height(root.left) - height(root.right)) <= 1
@@ -1088,7 +1203,9 @@ return abs(left - right) <= 1 and isBalanced(root.left) and isBalanced(root.righ
 ```
 
 ### Returning Height of 0 for Leaf Nodes
+
 A leaf node has height 1, not 0. Returning 0 for leaves causes off-by-one errors in height calculations. The base case should return 0 only for null nodes.
+
 ```python
 # Wrong: returning 0 for leaves
 if not root.left and not root.right:

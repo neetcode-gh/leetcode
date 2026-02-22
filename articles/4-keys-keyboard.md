@@ -174,6 +174,23 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn max_a(n: i32) -> i32 {
+        let n = n as usize;
+        let mut dp: Vec<i32> = (0..=n as i32).collect();
+
+        for i in 0..=n.saturating_sub(3) {
+            for j in (i + 3)..=n.min(i + 6) {
+                dp[j] = dp[j].max((j as i32 - i as i32 - 1) * dp[i]);
+            }
+        }
+
+        dp[n]
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

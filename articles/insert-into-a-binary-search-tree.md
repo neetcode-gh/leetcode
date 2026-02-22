@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Trees** - Understanding the BST property where left subtree values are smaller and right subtree values are larger
 - **Tree Traversal** - Navigating through a tree by comparing values to decide left or right direction
 - **Recursion** - Using recursive calls to traverse down the tree and link new nodes back to parents
@@ -255,6 +257,39 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn insert_into_bst(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        val: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        match root {
+            None => Some(Rc::new(RefCell::new(TreeNode::new(val)))),
+            Some(node) => {
+                let node_val = node.borrow().val;
+                if val > node_val {
+                    let right = node.borrow_mut().right.take();
+                    let new_right = Self::insert_into_bst(right, val);
+                    node.borrow_mut().right = new_right;
+                } else {
+                    let left = node.borrow_mut().left.take();
+                    let new_left = Self::insert_into_bst(left, val);
+                    node.borrow_mut().left = new_left;
+                }
+                Some(node)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -279,8 +314,8 @@ This approach uses O(1) extra space since we don't need the recursion stack, mak
 1. If `root` is `null`, return a new node with the given value.
 2. Start with `cur` pointing to the root.
 3. Loop indefinitely:
-   - If `val` is greater than `cur.val`, check if `cur.right` is `null`. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.right`.
-   - If `val` is less than or equal to `cur.val`, check if `cur.left` is `null`. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.left`.
+    - If `val` is greater than `cur.val`, check if `cur.right` is `null`. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.right`.
+    - If `val` is less than or equal to `cur.val`, check if `cur.left` is `null`. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.left`.
 
 ::tabs-start
 
@@ -579,6 +614,51 @@ class Solution {
                     return root
                 }
                 cur = cur!.left
+            }
+        }
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn insert_into_bst(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        val: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        if root.is_none() {
+            return Some(Rc::new(RefCell::new(TreeNode::new(val))));
+        }
+
+        let root = root.unwrap();
+        let mut cur = Rc::clone(&root);
+        loop {
+            let cur_val = cur.borrow().val;
+            if val > cur_val {
+                let right = cur.borrow().right.clone();
+                if right.is_none() {
+                    cur.borrow_mut().right =
+                        Some(Rc::new(RefCell::new(TreeNode::new(val))));
+                    return Some(root);
+                }
+                let next = right.unwrap();
+                cur = next;
+            } else {
+                let left = cur.borrow().left.clone();
+                if left.is_none() {
+                    cur.borrow_mut().left =
+                        Some(Rc::new(RefCell::new(TreeNode::new(val))));
+                    return Some(root);
+                }
+                let next = left.unwrap();
+                cur = next;
             }
         }
     }

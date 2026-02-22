@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Understanding push and pop operations and LIFO (Last-In-First-Out) behavior
 - **Simulation** - Mimicking a process step-by-step to verify if a sequence of operations is valid
 - **Two Pointers** - Using indices to track positions in multiple arrays simultaneously
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Stack
 
 ### Intuition
+
 We can simulate the actual push and pop operations on a stack to verify if the sequences are valid. The key insight is that whenever we push an element, we should immediately try to pop as many elements as possible that match the expected pop sequence. If the simulation completes with an empty stack, the sequences are valid.
 
 ### Algorithm
+
 1. Initialize an empty stack and a pointer `i` to track position in the `popped` array.
 2. Iterate through each element in the `pushed` array and push it onto the stack.
 3. After each push, check if the stack top matches the current element in `popped` (at index `i`).
@@ -161,6 +165,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn validate_stack_sequences(pushed: Vec<i32>, popped: Vec<i32>) -> bool {
+        let mut stack = Vec::new();
+        let mut i = 0;
+        for &n in &pushed {
+            stack.push(n);
+            while i < popped.len() && !stack.is_empty() && popped[i] == *stack.last().unwrap() {
+                stack.pop();
+                i += 1;
+            }
+        }
+        stack.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,9 +194,11 @@ class Solution {
 ## 2. Two Pointers
 
 ### Intuition
+
 Instead of using a separate stack, we can reuse the `pushed` array itself as the stack. The left portion of the array acts as our stack, eliminating the need for extra space. This works because as we process elements, we overwrite positions that are no longer needed.
 
 ### Algorithm
+
 1. Use two pointers: `l` represents the top of our simulated stack within `pushed`, and `r` tracks position in `popped`.
 2. Iterate through each element in `pushed` and write it to position `l`, then increment `l`.
 3. After each write, check if the element at position `l-1` matches `popped[r]`.
@@ -316,6 +339,26 @@ class Solution {
             }
         }
         return l == 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn validate_stack_sequences(pushed: Vec<i32>, popped: Vec<i32>) -> bool {
+        let mut pushed = pushed;
+        let mut l = 0usize;
+        let mut r = 0usize;
+        let n = pushed.len();
+        for idx in 0..n {
+            pushed[l] = pushed[idx];
+            l += 1;
+            while l > 0 && pushed[l - 1] == popped[r] {
+                r += 1;
+                l -= 1;
+            }
+        }
+        l == 0
     }
 }
 ```

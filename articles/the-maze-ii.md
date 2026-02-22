@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Traversal (DFS/BFS)** - The ball's movement through the maze is modeled as graph exploration
 - **Dijkstra's Algorithm** - The optimal solution uses Dijkstra's to find the shortest weighted path
 - **Priority Queue / Min-Heap** - Required for efficient implementation of Dijkstra's algorithm
@@ -19,10 +21,10 @@ We can use DFS with distance tracking: maintain a distance matrix where each cel
 
 1. Initialize a distance matrix with infinity, set the starting position's distance to `0`.
 2. Define a recursive `dfs` function:
-   - For each of the four directions:
-     - Roll the ball and count the cells traversed until hitting a wall.
-     - Calculate the total distance to the stopping position.
-     - If this distance is shorter than the previously recorded distance, update it and recursively explore from the new position.
+    - For each of the four directions:
+        - Roll the ball and count the cells traversed until hitting a wall.
+        - Calculate the total distance to the stopping position.
+        - If this distance is shorter than the previously recorded distance, update it and recursively explore from the new position.
 3. Start `dfs` from the initial position.
 4. Return the distance at the destination, or `-1` if it remains infinity.
 
@@ -162,6 +164,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(maze: Vec<Vec<i32>>, start: Vec<i32>, destination: Vec<i32>) -> i32 {
+        let m = maze.len();
+        let n = maze[0].len();
+        let mut distance = vec![vec![i32::MAX; n]; m];
+        let (sr, sc) = (start[0] as usize, start[1] as usize);
+        distance[sr][sc] = 0;
+
+        fn dfs(maze: &[Vec<i32>], s: (usize, usize), distance: &mut Vec<Vec<i32>>) {
+            let (m, n) = (maze.len(), maze[0].len());
+            let dirs: [(i32, i32); 4] = [(0, 1), (0, -1), (-1, 0), (1, 0)];
+            for &(dr, dc) in &dirs {
+                let (mut x, mut y) = (s.0 as i32 + dr, s.1 as i32 + dc);
+                let mut count = 0;
+                while x >= 0 && y >= 0 && (x as usize) < m && (y as usize) < n
+                    && maze[x as usize][y as usize] == 0
+                {
+                    x += dr;
+                    y += dc;
+                    count += 1;
+                }
+                let (nx, ny) = ((x - dr) as usize, (y - dc) as usize);
+                if distance[s.0][s.1] + count < distance[nx][ny] {
+                    distance[nx][ny] = distance[s.0][s.1] + count;
+                    dfs(maze, (nx, ny), distance);
+                }
+            }
+        }
+
+        dfs(&maze, (sr, sc), &mut distance);
+        let (dr, dc) = (destination[0] as usize, destination[1] as usize);
+        if distance[dr][dc] == i32::MAX { -1 } else { distance[dr][dc] }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -169,7 +208,7 @@ class Solution {
 - Time complexity: $O(m \cdot n \cdot max(m,n))$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m$ and $n$ are the number of rows and columns in `maze`.
+> Where $m$ and $n$ are the number of rows and columns in `maze`.
 
 ---
 
@@ -186,9 +225,9 @@ Instead, we use BFS with distance relaxation: whenever we find a shorter path to
 1. Initialize a distance matrix with infinity and set the start position's distance to `0`.
 2. Add the start position to a queue.
 3. While the queue is not empty:
-   - Dequeue the current position.
-   - For each direction, roll the ball and count the distance.
-   - If the new total distance is shorter than the recorded distance at the stopping position, update it and enqueue that position.
+    - Dequeue the current position.
+    - For each direction, roll the ball and count the distance.
+    - If the new total distance is shorter than the recorded distance at the stopping position, update it and enqueue that position.
 4. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
@@ -337,6 +376,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(maze: Vec<Vec<i32>>, start: Vec<i32>, destination: Vec<i32>) -> i32 {
+        let m = maze.len();
+        let n = maze[0].len();
+        let mut distance = vec![vec![i32::MAX; n]; m];
+        let (sr, sc) = (start[0] as usize, start[1] as usize);
+        distance[sr][sc] = 0;
+
+        let dirs: [(i32, i32); 4] = [(0, 1), (0, -1), (-1, 0), (1, 0)];
+        let mut queue = VecDeque::new();
+        queue.push_back((sr, sc));
+
+        while let Some((sr, sc)) = queue.pop_front() {
+            for &(dr, dc) in &dirs {
+                let (mut x, mut y) = (sr as i32 + dr, sc as i32 + dc);
+                let mut count = 0;
+                while x >= 0 && y >= 0 && (x as usize) < m && (y as usize) < n
+                    && maze[x as usize][y as usize] == 0
+                {
+                    x += dr;
+                    y += dc;
+                    count += 1;
+                }
+                let (nx, ny) = ((x - dr) as usize, (y - dc) as usize);
+                if distance[sr][sc] + count < distance[nx][ny] {
+                    distance[nx][ny] = distance[sr][sc] + count;
+                    queue.push_back((nx, ny));
+                }
+            }
+        }
+
+        let (dr, dc) = (destination[0] as usize, destination[1] as usize);
+        if distance[dr][dc] == i32::MAX { -1 } else { distance[dr][dc] }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -344,7 +421,7 @@ class Solution {
 - Time complexity: $O(m \cdot n \cdot (m + n))$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m$ and $n$ are the number of rows and columns in `maze`.
+> Where $m$ and $n$ are the number of rows and columns in `maze`.
 
 ---
 
@@ -360,10 +437,10 @@ This version uses a simple implementation where we scan the entire distance matr
 
 1. Initialize a distance matrix with infinity and a visited matrix with `false`. Set start distance to `0`.
 2. Repeat until no unvisited positions remain:
-   - Find the unvisited position with minimum distance.
-   - Mark it as visited.
-   - For each direction, roll the ball and count the distance.
-   - If the new distance is shorter, update the distance matrix.
+    - Find the unvisited position with minimum distance.
+    - Mark it as visited.
+    - For each direction, roll the ball and count the distance.
+    - If the new distance is shorter, update the distance matrix.
 3. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
@@ -576,6 +653,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(maze: Vec<Vec<i32>>, start: Vec<i32>, destination: Vec<i32>) -> i32 {
+        let m = maze.len();
+        let n = maze[0].len();
+        let mut distance = vec![vec![i32::MAX; n]; m];
+        let mut visited = vec![vec![false; n]; m];
+        distance[start[0] as usize][start[1] as usize] = 0;
+
+        let dirs: [(i32, i32); 4] = [(0, 1), (0, -1), (-1, 0), (1, 0)];
+        loop {
+            // Find unvisited position with minimum distance
+            let mut min_pos = (usize::MAX, usize::MAX);
+            let mut min_val = i32::MAX;
+            for i in 0..m {
+                for j in 0..n {
+                    if !visited[i][j] && distance[i][j] < min_val {
+                        min_pos = (i, j);
+                        min_val = distance[i][j];
+                    }
+                }
+            }
+            if min_pos.0 == usize::MAX {
+                break;
+            }
+            let (si, sj) = min_pos;
+            visited[si][sj] = true;
+            for &(dr, dc) in &dirs {
+                let (mut x, mut y) = (si as i32 + dr, sj as i32 + dc);
+                let mut count = 0;
+                while x >= 0 && y >= 0 && (x as usize) < m && (y as usize) < n
+                    && maze[x as usize][y as usize] == 0
+                {
+                    x += dr;
+                    y += dc;
+                    count += 1;
+                }
+                let (nx, ny) = ((x - dr) as usize, (y - dc) as usize);
+                if distance[si][sj] + count < distance[nx][ny] {
+                    distance[nx][ny] = distance[si][sj] + count;
+                }
+            }
+        }
+
+        let (dr, dc) = (destination[0] as usize, destination[1] as usize);
+        if distance[dr][dc] == i32::MAX { -1 } else { distance[dr][dc] }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -583,7 +710,7 @@ class Solution {
 - Time complexity: $O((mn)^2)$
 - Space complexity: $O(mn)$
 
->  Where $m$ and $n$ are the number of rows and columns in `maze`.
+> Where $m$ and $n$ are the number of rows and columns in `maze`.
 
 ---
 
@@ -600,10 +727,10 @@ When we pop a position from the heap, if its distance is already worse than what
 1. Initialize a distance matrix with infinity. Set start distance to `0`.
 2. Add the start position to a min-heap, ordered by distance.
 3. While the heap is not empty:
-   - Pop the position with minimum distance.
-   - If its distance exceeds the recorded distance, skip it.
-   - For each direction, roll the ball and count the distance.
-   - If the new distance is shorter, update the distance matrix and push the new position to the heap.
+    - Pop the position with minimum distance.
+    - If its distance exceeds the recorded distance, skip it.
+    - For each direction, roll the ball and count the distance.
+    - If the new distance is shorter, update the distance matrix and push the new position to the heap.
 4. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
@@ -615,27 +742,27 @@ class Solution:
         distance[start[0]][start[1]] = 0
         self.dijkstra(maze, start, distance)
         return -1 if distance[destination[0]][destination[1]] == float('inf') else distance[destination[0]][destination[1]]
-    
+
     def dijkstra(self, maze: List[List[int]], start: List[int], distance: List[List[int]]) -> None:
         dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]]
         queue = []
         heapq.heappush(queue, (0, start[0], start[1]))  # (distance, x, y)
-        
+
         while queue:
             dist, sx, sy = heapq.heappop(queue)
-            
+
             if distance[sx][sy] < dist:
                 continue
-            
+
             for dx, dy in dirs:
                 x, y = sx + dx, sy + dy
                 count = 0
-                
+
                 while 0 <= x < len(maze) and 0 <= y < len(maze[0]) and maze[x][y] == 0:
                     x += dx
                     y += dy
                     count += 1
-                
+
                 if distance[sx][sy] + count < distance[x - dx][y - dy]:
                     distance[x - dx][y - dy] = distance[sx][sy] + count
                     heapq.heappush(queue, (distance[x - dx][y - dy], x - dx, y - dy))
@@ -673,7 +800,7 @@ class Solution {
                     y += dir[1];
                     count++;
                 }
-                
+
                 if (distance[s[0]][s[1]] + count < distance[x - dir[0]][y - dir[1]]) {
                     distance[x - dir[0]][y - dir[1]] = distance[s[0]][s[1]] + count;
                     queue.offer(new int[]{x - dir[0], y - dir[1], distance[x - dir[0]][y - dir[1]]});
@@ -695,36 +822,36 @@ public:
         dijkstra(maze, start, distance);
         return distance[destination[0]][destination[1]] == INT_MAX ? -1 : distance[destination[0]][destination[1]];
     }
-    
+
 private:
     void dijkstra(vector<vector<int>>& maze, vector<int>& start, vector<vector<int>>& distance) {
         int m = maze.size();
         int n = maze[0].size();
         vector<vector<int>> dirs = {{0, 1}, {0, -1}, {-1, 0}, {1, 0}};
-        
+
         // Min-heap: {distance, x, y}
         priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
         pq.push({0, start[0], start[1]});
-        
+
         while (!pq.empty()) {
             vector<int> s = pq.top();
             pq.pop();
             int dist = s[0], sx = s[1], sy = s[2];
-            
+
             if (distance[sx][sy] < dist)
                 continue;
-            
+
             for (auto& dir : dirs) {
                 int x = sx + dir[0];
                 int y = sy + dir[1];
                 int count = 0;
-                
+
                 while (x >= 0 && y >= 0 && x < m && y < n && maze[x][y] == 0) {
                     x += dir[0];
                     y += dir[1];
                     count++;
                 }
-                
+
                 if (distance[sx][sy] + count < distance[x - dir[0]][y - dir[1]]) {
                     distance[x - dir[0]][y - dir[1]] = distance[sx][sy] + count;
                     pq.push({distance[x - dir[0]][y - dir[1]], x - dir[0], y - dir[1]});
@@ -746,10 +873,14 @@ class Solution {
     shortestDistance(maze, start, destination) {
         const m = maze.length;
         const n = maze[0].length;
-        const distance = Array.from({ length: m }, () => Array(n).fill(Infinity));
+        const distance = Array.from({ length: m }, () =>
+            Array(n).fill(Infinity),
+        );
         distance[start[0]][start[1]] = 0;
         this.dijkstra(maze, start, distance);
-        return distance[destination[0]][destination[1]] === Infinity ? -1 : distance[destination[0]][destination[1]];
+        return distance[destination[0]][destination[1]] === Infinity
+            ? -1
+            : distance[destination[0]][destination[1]];
     }
 
     /**
@@ -761,7 +892,12 @@ class Solution {
     dijkstra(maze, start, distance) {
         const m = maze.length;
         const n = maze[0].length;
-        const dirs = [[0, 1], [0, -1], [-1, 0], [1, 0]];
+        const dirs = [
+            [0, 1],
+            [0, -1],
+            [-1, 0],
+            [1, 0],
+        ];
 
         // @datastructures-js/priority-queue MinPriorityQueue implementation
         const pq = new MinPriorityQueue((element) => element.dist);
@@ -770,8 +906,7 @@ class Solution {
         while (!pq.isEmpty()) {
             const { dist, x: sx, y: sy } = pq.dequeue();
 
-            if (distance[sx][sy] < dist)
-                continue;
+            if (distance[sx][sy] < dist) continue;
 
             for (const [dx, dy] of dirs) {
                 let x = sx + dx;
@@ -786,7 +921,11 @@ class Solution {
 
                 if (distance[sx][sy] + count < distance[x - dx][y - dy]) {
                     distance[x - dx][y - dy] = distance[sx][sy] + count;
-                    pq.enqueue({ dist: distance[x - dx][y - dy], x: x - dx, y: y - dy });
+                    pq.enqueue({
+                        dist: distance[x - dx][y - dy],
+                        x: x - dx,
+                        y: y - dy,
+                    });
                 }
             }
         }
@@ -976,6 +1115,47 @@ struct Heap<T> {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_distance(maze: Vec<Vec<i32>>, start: Vec<i32>, destination: Vec<i32>) -> i32 {
+        let m = maze.len();
+        let n = maze[0].len();
+        let mut distance = vec![vec![i32::MAX; n]; m];
+        let (sr, sc) = (start[0] as usize, start[1] as usize);
+        distance[sr][sc] = 0;
+
+        let dirs: [(i32, i32); 4] = [(0, 1), (0, -1), (-1, 0), (1, 0)];
+        let mut heap = BinaryHeap::new();
+        heap.push(Reverse((0i32, sr, sc)));
+
+        while let Some(Reverse((dist, sx, sy))) = heap.pop() {
+            if distance[sx][sy] < dist {
+                continue;
+            }
+            for &(dr, dc) in &dirs {
+                let (mut x, mut y) = (sx as i32 + dr, sy as i32 + dc);
+                let mut count = 0;
+                while x >= 0 && y >= 0 && (x as usize) < m && (y as usize) < n
+                    && maze[x as usize][y as usize] == 0
+                {
+                    x += dr;
+                    y += dc;
+                    count += 1;
+                }
+                let (nx, ny) = ((x - dr) as usize, (y - dc) as usize);
+                if distance[sx][sy] + count < distance[nx][ny] {
+                    distance[nx][ny] = distance[sx][sy] + count;
+                    heap.push(Reverse((distance[nx][ny], nx, ny)));
+                }
+            }
+        }
+
+        let (dr, dc) = (destination[0] as usize, destination[1] as usize);
+        if distance[dr][dc] == i32::MAX { -1 } else { distance[dr][dc] }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -983,7 +1163,7 @@ struct Heap<T> {
 - Time complexity: $O(mn \cdot \log(mn))$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m$ and $n$ are the number of rows and columns in `maze`.
+> Where $m$ and $n$ are the number of rows and columns in `maze`.
 
 ---
 
