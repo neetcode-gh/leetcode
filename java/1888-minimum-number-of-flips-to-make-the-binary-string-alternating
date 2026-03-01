@@ -1,0 +1,51 @@
+class Solution {
+    public int minFlips(String s) {
+        int[] tar1 = new int[2*s.length()];
+        int[] tar2 = new int[2*s.length()];
+        for(int i=0;i<tar1.length;i++){
+            if(i%2==0){
+                tar1[i]=1;
+                tar2[i]=0;
+            }else{
+                tar1[i]=0;
+                tar2[i]=1;
+            }
+        }
+        int[] t = new int[2*s.length()];
+        for(int i=0;i<s.length();i++){
+            if(s.charAt(i)=='0'){
+                t[i]=0;
+                t[i+s.length()]=0;
+            }else{
+                t[i]=1;
+                t[i+s.length()]=1;
+            }
+        }
+        int t1 = 0;
+        int t2 = 0;
+        int r = 0;
+        for(int i=0;i<s.length();i++){
+            if(t[i]==tar1[i]){
+                t2++;
+            }else{
+                t1++;
+            }
+        }
+        r = Math.min(t1,t2);
+        for(int i=s.length();i<tar1.length;i++){
+            if(t[i]==tar1[i]){
+                t2++;
+            }else{
+                t1++;
+            }
+            if(t[i-s.length()]==tar1[i-s.length()]){
+                t2--;
+            }else{
+                t1--;
+            }
+            int j = Math.min(t1,t2);
+            r = Math.min(r, j);
+        }
+        return r;
+    }
+}
