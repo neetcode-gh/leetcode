@@ -587,6 +587,8 @@ impl Solution {
 ---
 
 
+
+
 ## Another intuitive Dynamic Programming Method :- 
 > Keeping track of two variables : index and a boolean canBuy
 >  canBuy ensures if the stock can be bought or not -> if the stock can be bought it basically implies that the stock has not been sold. But if stock cannot be bought means that it has to be sold. So, we create two cases using the canBuy variable.
