@@ -591,11 +591,21 @@ impl Solution {
 
 ## Another intuitive Dynamic Programming Method :- 
 > Keeping track of two variables : index and a boolean canBuy
->  canBuy ensures if the stock can be bought or not -> if the stock can be bought it basically implies that the stock has not been sold. But if stock cannot be bought means that it has to be sold. So, we create two cases using the canBuy variable.
+
+>  canBuy ensures if the stock can be bought or not -> if the stock can be bought it basically implies that the stock has not been sold. But if stock cannot be
+
+>  bought means that it has to be sold. So, we create two cases using the canBuy variable.
+
 > For case 1 where we can buy a stock we check for the current indexed element if it is better to buy or not buy just recursing using two variables namely : 'take' for if we want to take the current stock and 'skip' for if we do not want to take the current stock.
+
 >  Else we either sell the stock or hold it. > This process will only be done once as per the question.
+
 >  But due do recursion we are actually exploring all possibilites, that gives exponential time. In order to bring down the time complexity we cache(Dynamic Programming) our results in a dp table so that we do not repeat any subproblems(standard procedure of Dynamic Programming to take care of overlapping subproblems)
+
 >  two states for DP as we are updating both index and canBuy variables Code in CPP :-
+
+
+
 
 ##Recursion + Memoization :- 
 ```
@@ -631,10 +641,9 @@ public:
 
 
         n = prices.size();
-        dp.assign(n+1, vector<int>(2, -1)); canBuy can have only two states, either yes or no
+        dp.assign(n+1, vector<int>(2, -1)); //canBuy can have only two states, either yes or no
 
         return f(0, 1, prices);
-        return dp[0][1]; 
         
     }
 };
