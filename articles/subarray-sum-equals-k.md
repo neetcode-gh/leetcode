@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - The optimal solution relies on the property that subarray sums can be computed as differences of prefix sums
 - **Hash Maps** - Used to store prefix sum frequencies for O(1) lookups when searching for complement values
 
@@ -15,10 +17,10 @@ The simplest approach is to consider every possible subarray and check if its su
 
 1. Initialize `res = 0`.
 2. For each starting index `i`:
-   - Set `sum = 0`.
-   - For each ending index `j` from `i` to `n - 1`:
-     - Add `nums[j]` to `sum`.
-     - If `sum == k`, increment `res`.
+    - Set `sum = 0`.
+    - For each ending index `j` from `i` to `n - 1`:
+        - Add `nums[j]` to `sum`.
+        - If `sum == k`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -158,6 +160,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let mut res = 0;
+        for i in 0..nums.len() {
+            let mut sum = 0;
+            for j in i..nums.len() {
+                sum += nums[j];
+                if sum == k {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -177,10 +197,10 @@ The key insight is that if `prefixSum[j] - prefixSum[i] = k`, then the subarray 
 
 1. Initialize `res = 0`, `curSum = 0`, and a hash map `prefixSums` with `{0: 1}` (representing the empty prefix).
 2. For each number in the array:
-   - Add it to `curSum`.
-   - Compute `diff = curSum - k`.
-   - Add `prefixSums[diff]` to `res` (counts subarrays ending here with sum `k`).
-   - Increment `prefixSums[curSum]` by `1`.
+    - Add it to `curSum`.
+    - Compute `diff = curSum - k`.
+    - Add `prefixSums[diff]` to `res` (counts subarrays ending here with sum `k`).
+    - Increment `prefixSums[curSum]` by `1`.
 3. Return `res`.
 
 ::tabs-start
@@ -341,6 +361,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn subarray_sum(nums: Vec<i32>, k: i32) -> i32 {
+        let mut res = 0;
+        let mut cur_sum = 0;
+        let mut prefix_sums = HashMap::new();
+        prefix_sums.insert(0, 1);
+
+        for &num in &nums {
+            cur_sum += num;
+            let diff = cur_sum - k;
+            res += prefix_sums.get(&diff).unwrap_or(&0);
+            *prefix_sums.entry(cur_sum).or_insert(0) += 1;
+        }
+
+        res
     }
 }
 ```

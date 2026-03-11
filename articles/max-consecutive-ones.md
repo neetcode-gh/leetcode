@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to traverse and access array elements sequentially
 - **Basic Iteration** - Using loops to scan through elements and track state with counters
 
@@ -15,10 +17,10 @@ For each position in the array, we count how many consecutive `1`s start from th
 
 1. Initialize `res` to `0` to track the maximum consecutive ones.
 2. For each starting index `i`:
-   - Initialize a counter `cnt` to `0`.
-   - Scan forward from `i` while the current element is `1`, incrementing the counter.
-   - Stop when encountering a `0` or reaching the end.
-   - Update `res` with the maximum of `res` and `cnt`.
+    - Initialize a counter `cnt` to `0`.
+    - Scan forward from `i` while the current element is `1`, incrementing the counter.
+    - Stop when encountering a `0` or reaching the end.
+    - Update `res` with the maximum of `res` and `cnt`.
 3. Return `res`.
 
 ::tabs-start
@@ -34,7 +36,7 @@ class Solution:
                 if nums[j] == 0: break
                 cnt += 1
             res = max(res, cnt)
-        
+
         return res
 ```
 
@@ -168,12 +170,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_consecutive_ones(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+        for i in 0..n {
+            let mut cnt = 0;
+            for j in i..n {
+                if nums[j] == 0 {
+                    break;
+                }
+                cnt += 1;
+            }
+            res = res.max(cnt);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -187,8 +209,8 @@ We only need one pass through the array. Maintain a running count of consecutive
 
 1. Initialize `res` and `cnt` to `0`.
 2. Iterate through each element in the array:
-   - If the element is `0`, update `res` with the maximum of `res` and `cnt`, then reset `cnt` to `0`.
-   - If the element is `1`, increment `cnt`.
+    - If the element is `0`, update `res` with the maximum of `res` and `cnt`, then reset `cnt` to `0`.
+    - If the element is `1`, increment `cnt`.
 3. Return the maximum of `res` and `cnt` (to handle sequences ending at the array's end).
 
 ::tabs-start
@@ -249,7 +271,8 @@ class Solution {
      * @return {number}
      */
     findMaxConsecutiveOnes(nums) {
-        let res = 0, cnt = 0;
+        let res = 0,
+            cnt = 0;
         for (const num of nums) {
             if (num === 0) {
                 res = Math.max(res, cnt);
@@ -336,12 +359,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_consecutive_ones(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let mut cnt = 0;
+        for &num in &nums {
+            if num == 0 {
+                res = res.max(cnt);
+                cnt = 0;
+            } else {
+                cnt += 1;
+            }
+        }
+        res.max(cnt)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -355,9 +396,9 @@ We can simplify the logic by updating the maximum inside the loop at every step.
 
 1. Initialize `res` and `cnt` to `0`.
 2. For each element in the array:
-   - If the element is `1`, increment `cnt`.
-   - Otherwise, set `cnt` to `0`.
-   - Update `res` to be the maximum of `res` and `cnt`.
+    - If the element is `1`, increment `cnt`.
+    - Otherwise, set `cnt` to `0`.
+    - Update `res` to be the maximum of `res` and `cnt`.
 3. Return `res`.
 
 ::tabs-start
@@ -406,7 +447,8 @@ class Solution {
      * @return {number}
      */
     findMaxConsecutiveOnes(nums) {
-        let res = 0, cnt = 0;
+        let res = 0,
+            cnt = 0;
         for (const num of nums) {
             cnt = num === 1 ? cnt + 1 : 0;
             res = Math.max(res, cnt);
@@ -474,12 +516,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_consecutive_ones(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let mut cnt = 0;
+        for &num in &nums {
+            cnt = if num == 1 { cnt + 1 } else { 0 };
+            res = res.max(cnt);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

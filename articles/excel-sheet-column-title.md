@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Number Base Conversion** - Converting numbers between different bases (especially base-26)
 - **Modular Arithmetic** - Using modulo and integer division to extract digits
 - **Recursion** - Breaking down problems into smaller subproblems with base cases
@@ -126,6 +128,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn convert_to_title(column_number: i32) -> String {
+        if column_number == 0 {
+            return String::new();
+        }
+        let n = column_number - 1;
+        let ch = (b'A' + (n % 26) as u8) as char;
+        Self::convert_to_title(n / 26) + &ch.to_string()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -149,10 +164,10 @@ This avoids recursion overhead and makes the process explicit: subtract 1, find 
 
 1. Initialize an empty list `res` to collect characters.
 2. While `columnNumber > 0`:
-   - Decrement `columnNumber` by `1`.
-   - Compute the offset as `columnNumber % 26`.
-   - Append the character `chr('A' + offset)` to `res`.
-   - Divide `columnNumber` by `26`.
+    - Decrement `columnNumber` by `1`.
+    - Compute the offset as `columnNumber % 26`.
+    - Append the character `chr('A' + offset)` to `res`.
+    - Divide `columnNumber` by `26`.
 3. Reverse `res` and join to form the final string.
 
 ::tabs-start
@@ -281,6 +296,22 @@ class Solution {
             num /= 26
         }
         return String(res.reversed())
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn convert_to_title(column_number: i32) -> String {
+        let mut num = column_number;
+        let mut res = Vec::new();
+        while num > 0 {
+            num -= 1;
+            let offset = (num % 26) as u8;
+            res.push((b'A' + offset) as char);
+            num /= 26;
+        }
+        res.iter().rev().collect()
     }
 }
 ```

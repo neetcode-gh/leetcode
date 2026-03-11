@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting with custom comparators** - Sorting by multiple criteria (width ascending, height descending for equal widths)
 - **Longest Increasing Subsequence (LIS)** - The classic DP problem that this reduces to after sorting
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for optimization problems
@@ -18,8 +20,8 @@ This problem is essentially finding the longest chain of envelopes where each en
 1. Sort envelopes by width ascending. For equal widths, sort by height descending.
 2. Extract the heights into an array.
 3. Use memoized recursion to compute `LIS` on the heights:
-   - For each index `i`, recursively find the longest subsequence starting from `i`.
-   - Check all indices `j > i` where `heights[j] > heights[i]`, taking the maximum.
+    - For each index `i`, recursively find the longest subsequence starting from `i`.
+    - Check all indices `j > i` where `heights[j] > heights[i]`, taking the maximum.
 4. Return the maximum `LIS` value across all starting positions.
 
 ::tabs-start
@@ -308,6 +310,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_envelopes(mut envelopes: Vec<Vec<i32>>) -> i32 {
+        let n = envelopes.len();
+        if n == 0 {
+            return 0;
+        }
+        envelopes.sort_by(|a, b| {
+            if a[0] != b[0] { a[0].cmp(&b[0]) } else { b[1].cmp(&a[1]) }
+        });
+
+        let heights: Vec<i32> = envelopes.iter().map(|e| e[1]).collect();
+        let mut memo = vec![-1i32; n];
+
+        fn dfs(nums: &[i32], i: usize, memo: &mut Vec<i32>) -> i32 {
+            if memo[i] != -1 {
+                return memo[i];
+            }
+            let mut lis = 1;
+            for j in i + 1..nums.len() {
+                if nums[i] < nums[j] {
+                    lis = lis.max(1 + dfs(nums, j, memo));
+                }
+            }
+            memo[i] = lis;
+            lis
+        }
+
+        let mut result = 0;
+        for i in 0..n {
+            result = result.max(dfs(&heights, i, &mut memo));
+        }
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,8 +368,8 @@ Instead of using recursion, we can build the solution iteratively from right to 
 2. Extract heights into an array.
 3. Create a `DP` array where `LIS[i]` represents the longest increasing subsequence starting at index `i`.
 4. Iterate from right to left:
-   - For each index `i`, check all `j > i` where `heights[j] > heights[i]`.
-   - Update `LIS[i] = max(LIS[i], 1 + LIS[j])`.
+    - For each index `i`, check all `j > i` where `heights[j] > heights[i]`.
+    - Update `LIS[i] = max(LIS[i], 1 + LIS[j])`.
 5. Return the maximum value in the `LIS` array.
 
 ::tabs-start
@@ -538,6 +577,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_envelopes(mut envelopes: Vec<Vec<i32>>) -> i32 {
+        let n = envelopes.len();
+        envelopes.sort_by(|a, b| {
+            if a[0] != b[0] { a[0].cmp(&b[0]) } else { b[1].cmp(&a[1]) }
+        });
+
+        let heights: Vec<i32> = envelopes.iter().map(|e| e[1]).collect();
+        let mut lis = vec![1i32; n];
+        let mut ans = 0;
+        for i in (0..n).rev() {
+            for j in i + 1..n {
+                if heights[i] < heights[j] {
+                    lis[i] = lis[i].max(1 + lis[j]);
+                }
+            }
+            ans = ans.max(lis[i]);
+        }
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -559,8 +622,8 @@ The standard `LIS` problem can be solved in O(n log n) using binary search. We m
 2. Extract heights into an array.
 3. Initialize an empty list `dp` that will store the smallest tail values for subsequences of each length.
 4. For each height:
-   - If it's larger than the last element in `dp`, append it (extends the longest subsequence).
-   - Otherwise, use binary search to find the first element in `dp` that is greater than or equal to the current height, and replace it.
+    - If it's larger than the last element in `dp`, append it (extends the longest subsequence).
+    - Otherwise, use binary search to find the first element in `dp` that is greater than or equal to the current height, and replace it.
 5. The length of `dp` is the answer.
 
 ::tabs-start
@@ -825,6 +888,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_envelopes(mut envelopes: Vec<Vec<i32>>) -> i32 {
+        let n = envelopes.len();
+        envelopes.sort_by(|a, b| {
+            if a[0] != b[0] { a[0].cmp(&b[0]) } else { b[1].cmp(&a[1]) }
+        });
+
+        let nums: Vec<i32> = envelopes.iter().map(|e| e[1]).collect();
+        let mut dp = vec![nums[0]];
+        let mut lis = 1i32;
+
+        for i in 1..n {
+            if *dp.last().unwrap() < nums[i] {
+                dp.push(nums[i]);
+                lis += 1;
+                continue;
+            }
+            let idx = dp.partition_point(|&x| x < nums[i]);
+            dp[idx] = nums[i];
+        }
+
+        lis
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -846,9 +936,9 @@ A segment tree can efficiently answer range maximum queries, which helps compute
 2. Extract and compress heights to consecutive integers starting from 0.
 3. Build a segment tree that supports range maximum queries and point updates.
 4. For each compressed height `h`:
-   - Query the maximum `LIS` value in the range `[0, h - 1]`.
-   - The current `LIS` ending at `h` is `query result + 1`.
-   - Update the segment tree at position `h` with this value.
+    - Query the maximum `LIS` value in the range `[0, h - 1]`.
+    - The current `LIS` ending at `h` is `query result + 1`.
+    - Update the segment tree at position `h` with this value.
 5. Return the maximum `LIS` value found.
 
 ::tabs-start
@@ -1462,6 +1552,73 @@ class Solution {
             LIS = max(LIS, curLIS)
         }
         return LIS
+    }
+}
+```
+
+```rust
+struct SegTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegTree {
+    fn new(n: usize) -> Self {
+        let mut sz = n;
+        while sz & (sz - 1) != 0 {
+            sz += 1;
+        }
+        Self { n: sz, tree: vec![0; 2 * sz] }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        self.tree[self.n + i] = val;
+        let mut j = (self.n + i) >> 1;
+        while j >= 1 {
+            self.tree[j] = self.tree[j << 1].max(self.tree[j << 1 | 1]);
+            j >>= 1;
+        }
+    }
+
+    fn query(&self, l: usize, r: usize) -> i32 {
+        if l > r { return 0; }
+        let mut res = i32::MIN;
+        let mut lo = l + self.n;
+        let mut hi = r + self.n + 1;
+        while lo < hi {
+            if lo & 1 == 1 { res = res.max(self.tree[lo]); lo += 1; }
+            if hi & 1 == 1 { hi -= 1; res = res.max(self.tree[hi]); }
+            lo >>= 1;
+            hi >>= 1;
+        }
+        res
+    }
+}
+
+impl Solution {
+    pub fn max_envelopes(mut envelopes: Vec<Vec<i32>>) -> i32 {
+        let n = envelopes.len();
+        envelopes.sort_by(|a, b| {
+            if a[0] != b[0] { a[0].cmp(&b[0]) } else { b[1].cmp(&a[1]) }
+        });
+
+        let heights: Vec<i32> = envelopes.iter().map(|e| e[1]).collect();
+        let mut sorted_arr: Vec<i32> = heights.iter().copied().collect::<BTreeSet<_>>().into_iter().collect();
+
+        let index_map: HashMap<i32, usize> = sorted_arr.iter()
+            .enumerate()
+            .map(|(i, &v)| (v, i))
+            .collect();
+
+        let mut seg_tree = SegTree::new(sorted_arr.len());
+        let mut lis = 0;
+        for &h in &heights {
+            let idx = index_map[&h];
+            let cur_lis = if idx == 0 { 1 } else { seg_tree.query(0, idx - 1) + 1 };
+            seg_tree.update(idx, cur_lis);
+            lis = lis.max(cur_lis);
+        }
+        lis
     }
 }
 ```

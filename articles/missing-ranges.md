@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through a sorted array while comparing consecutive elements to detect gaps
 - **Interval Representation** - Understanding how to construct and return ranges as pairs of start and end values
 - **Edge Case Handling** - Managing boundary conditions such as empty arrays, gaps before the first element, and gaps after the last element
@@ -17,7 +19,7 @@ We need to identify all gaps in the range `[lower, upper]` that are not covered 
 1. If the array is empty, the entire range `[lower, upper]` is missing. Return it as a single range.
 2. Check if there is a gap between `lower` and `nums[0]`. If `lower < nums[0]`, add `[lower, nums[0] - 1]` to the result.
 3. Iterate through consecutive pairs in the array. For each pair `(nums[i], nums[i + 1])`:
-   - If the difference is greater than `1`, there is a gap. Add `[nums[i] + 1, nums[i + 1] - 1]` to the result.
+    - If the difference is greater than `1`, there is a gap. Add `[nums[i] + 1, nums[i + 1] - 1]` to the result.
 4. Check if there is a gap between `nums[n - 1]` and `upper`. If `upper > nums[n - 1]`, add `[nums[n - 1] + 1, upper]` to the result.
 5. Return the list of missing ranges.
 
@@ -297,6 +299,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_missing_ranges(nums: Vec<i32>, lower: i32, upper: i32) -> Vec<Vec<i32>> {
+        let n = nums.len();
+        let mut missing_ranges: Vec<Vec<i32>> = Vec::new();
+
+        if n == 0 {
+            missing_ranges.push(vec![lower, upper]);
+            return missing_ranges;
+        }
+
+        // Check for any missing numbers between the lower bound and nums[0].
+        if lower < nums[0] {
+            missing_ranges.push(vec![lower, nums[0] - 1]);
+        }
+
+        // Check for any missing numbers between successive elements of nums.
+        for i in 0..n - 1 {
+            if nums[i + 1] - nums[i] <= 1 {
+                continue;
+            }
+            missing_ranges.push(vec![nums[i] + 1, nums[i + 1] - 1]);
+        }
+
+        // Check for any missing numbers between the last element of nums and the upper bound.
+        if upper > nums[n - 1] {
+            missing_ranges.push(vec![nums[n - 1] + 1, upper]);
+        }
+
+        missing_ranges
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,7 +340,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the number of elements in `nums`.
+> Where $n$ is the number of elements in `nums`.
 
 ## Common Pitfalls
 

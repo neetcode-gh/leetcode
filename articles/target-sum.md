@@ -172,6 +172,23 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+        fn backtrack(nums: &[i32], i: usize, total: i32, target: i32) -> i32 {
+            if i == nums.len() {
+                return if total == target { 1 } else { 0 };
+            }
+            backtrack(nums, i + 1, total + nums[i], target)
+                + backtrack(nums, i + 1, total - nums[i], target)
+        }
+
+        backtrack(&nums, 0, 0, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,6 +460,33 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+        let mut memo = HashMap::new();
+
+        fn backtrack(
+            nums: &[i32], i: usize, total: i32, target: i32,
+            memo: &mut HashMap<(usize, i32), i32>,
+        ) -> i32 {
+            if i == nums.len() {
+                return if total == target { 1 } else { 0 };
+            }
+            if let Some(&val) = memo.get(&(i, total)) {
+                return val;
+            }
+            let res = backtrack(nums, i + 1, total + nums[i], target, memo)
+                + backtrack(nums, i + 1, total - nums[i], target, memo);
+            memo.insert((i, total), res);
+            res
+        }
+
+        backtrack(&nums, 0, 0, target, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -660,6 +704,28 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+        let n = nums.len();
+        let mut dp: Vec<HashMap<i32, i32>> =
+            vec![HashMap::new(); n + 1];
+        dp[0].insert(0, 1);
+
+        for i in 0..n {
+            let cur = dp[i].clone();
+            for (&total, &count) in &cur {
+                *dp[i + 1].entry(total + nums[i]).or_insert(0) += count;
+                *dp[i + 1].entry(total - nums[i]).or_insert(0) += count;
+            }
+        }
+
+        *dp[n].get(&target).unwrap_or(&0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -864,6 +930,27 @@ class Solution {
             dp = nextDp
         }
         return dp[target, default: 0]
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_target_sum_ways(nums: Vec<i32>, target: i32) -> i32 {
+        let mut dp: HashMap<i32, i32> = HashMap::new();
+        dp.insert(0, 1);
+
+        for &num in &nums {
+            let mut next_dp: HashMap<i32, i32> = HashMap::new();
+            for (&total, &count) in &dp {
+                *next_dp.entry(total + num).or_insert(0) += count;
+                *next_dp.entry(total - num).or_insert(0) += count;
+            }
+            dp = next_dp;
+        }
+
+        *dp.get(&target).unwrap_or(&0)
     }
 }
 ```

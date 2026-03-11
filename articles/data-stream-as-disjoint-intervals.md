@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting a collection of numbers to process them in order for interval construction
 - **Hash Sets** - Using sets to store unique values and eliminate duplicates efficiently
 - **Ordered Sets / Maps (TreeMap, SortedDict)** - Maintaining elements in sorted order for efficient insertion and traversal
@@ -10,17 +12,19 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force (Sorting)
 
 ### Intuition
+
 The simplest approach is to store all incoming numbers in a list and compute the intervals on demand. When `getIntervals()` is called, we sort the list and scan through it to identify consecutive sequences. Two numbers belong to the same interval if they differ by exactly `1`.
 
 ### Algorithm
+
 1. Initialize an empty list to store all added numbers.
 2. For `addNum(value)`, append the value to the list.
 3. For `getIntervals()`:
-   - If the list is empty, return an empty result.
-   - Sort the list.
-   - Initialize `start` with the first element.
-   - Iterate through the sorted list. When the current number differs from the previous by more than `1`, close the current interval and start a new one.
-   - After the loop, add the final interval.
+    - If the list is empty, return an empty result.
+    - Sort the list.
+    - Initialize `start` with the first element.
+    - Iterate through the sorted list. When the current number differs from the previous by more than `1`, close the current interval and start a new one.
+    - After the loop, add the final interval.
 4. Return the list of intervals.
 
 ::tabs-start
@@ -269,6 +273,42 @@ class SummaryRanges {
 }
 ```
 
+```rust
+struct SummaryRanges {
+    arr: Vec<i32>,
+}
+
+impl SummaryRanges {
+    fn new() -> Self {
+        SummaryRanges { arr: Vec::new() }
+    }
+
+    fn add_num(&mut self, value: i32) {
+        self.arr.push(value);
+    }
+
+    fn get_intervals(&mut self) -> Vec<Vec<i32>> {
+        if self.arr.is_empty() {
+            return vec![];
+        }
+
+        self.arr.sort();
+        let n = self.arr.len();
+        let mut start = self.arr[0];
+        let mut res = Vec::new();
+
+        for i in 1..n {
+            if self.arr[i] - self.arr[i - 1] > 1 {
+                res.push(vec![start, self.arr[i - 1]]);
+                start = self.arr[i];
+            }
+        }
+        res.push(vec![start, self.arr[n - 1]]);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,17 +324,19 @@ class SummaryRanges {
 ## 2. Hash Set + Sorting
 
 ### Intuition
+
 The brute force approach stores duplicates, which wastes space and processing time during sorting. By using a hash set instead of a list, we automatically eliminate duplicates. This makes the interval computation cleaner since we only deal with unique values.
 
 ### Algorithm
+
 1. Initialize a hash set to store unique numbers.
 2. For `addNum(value)`, add the value to the set (duplicates are ignored).
 3. For `getIntervals()`:
-   - If the set is empty, return an empty result.
-   - Convert the set to a sorted list.
-   - Initialize `start` with the first element.
-   - Iterate through the sorted list. When consecutive elements differ by more than `1`, close the current interval and start a new one.
-   - Add the final interval after the loop.
+    - If the set is empty, return an empty result.
+    - Convert the set to a sorted list.
+    - Initialize `start` with the first element.
+    - Iterate through the sorted list. When consecutive elements differ by more than `1`, close the current interval and start a new one.
+    - Add the final interval after the loop.
 4. Return the list of intervals.
 
 ::tabs-start
@@ -549,6 +591,43 @@ class SummaryRanges {
 }
 ```
 
+```rust
+struct SummaryRanges {
+    arr: HashSet<i32>,
+}
+
+impl SummaryRanges {
+    fn new() -> Self {
+        SummaryRanges { arr: HashSet::new() }
+    }
+
+    fn add_num(&mut self, value: i32) {
+        self.arr.insert(value);
+    }
+
+    fn get_intervals(&self) -> Vec<Vec<i32>> {
+        if self.arr.is_empty() {
+            return vec![];
+        }
+
+        let mut lst: Vec<i32> = self.arr.iter().copied().collect();
+        lst.sort();
+        let n = lst.len();
+        let mut start = lst[0];
+        let mut res = Vec::new();
+
+        for i in 1..n {
+            if lst[i] - lst[i - 1] > 1 {
+                res.push(vec![start, lst[i - 1]]);
+                start = lst[i];
+            }
+        }
+        res.push(vec![start, lst[n - 1]]);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -564,16 +643,18 @@ class SummaryRanges {
 ## 3. Ordered Map
 
 ### Intuition
+
 Using an ordered map (like TreeMap or SortedDict), we can maintain elements in sorted order as they are inserted. This eliminates the need to sort during `getIntervals()`. We simply iterate through the keys in order and merge consecutive numbers into intervals on the fly.
 
 ### Algorithm
+
 1. Initialize an ordered map (TreeMap/SortedDict).
 2. For `addNum(value)`, insert the value into the map.
 3. For `getIntervals()`:
-   - Initialize an empty result list.
-   - Iterate through the keys of the ordered map in sorted order.
-   - If the result is non-empty and the current number is exactly one more than the end of the last interval, extend that interval.
-   - Otherwise, start a new interval `[n, n]`.
+    - Initialize an empty result list.
+    - Iterate through the keys of the ordered map in sorted order.
+    - If the result is non-empty and the current number is exactly one more than the end of the last interval, extend that interval.
+    - Otherwise, start a new interval `[n, n]`.
 4. Return the list of intervals.
 
 ::tabs-start
@@ -787,6 +868,38 @@ class SummaryRanges {
 }
 ```
 
+```rust
+struct SummaryRanges {
+    tree_map: BTreeMap<i32, bool>,
+}
+
+impl SummaryRanges {
+    fn new() -> Self {
+        SummaryRanges {
+            tree_map: BTreeMap::new(),
+        }
+    }
+
+    fn add_num(&mut self, value: i32) {
+        self.tree_map.insert(value, true);
+    }
+
+    fn get_intervals(&self) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        for &n in self.tree_map.keys() {
+            if let Some(last) = res.last_mut() {
+                if last[1] + 1 == n {
+                    last[1] = n;
+                    continue;
+                }
+            }
+            res.push(vec![n, n]);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -802,16 +915,18 @@ class SummaryRanges {
 ## 4. Ordered Set
 
 ### Intuition
+
 An ordered set provides the same benefits as an ordered map but with simpler semantics when we only need to track the presence of numbers. Elements are kept sorted automatically, and duplicates are ignored. The interval construction logic remains the same: iterate in order and merge consecutive numbers.
 
 ### Algorithm
+
 1. Initialize an ordered set (TreeSet/SortedSet).
 2. For `addNum(value)`, insert the value into the set.
 3. For `getIntervals()`:
-   - Initialize an empty result list.
-   - Iterate through the set in sorted order.
-   - If the result is non-empty and the current number equals the last interval's end plus one, extend that interval.
-   - Otherwise, create a new interval `[n, n]`.
+    - Initialize an empty result list.
+    - Iterate through the set in sorted order.
+    - If the result is non-empty and the current number equals the last interval's end plus one, extend that interval.
+    - Otherwise, create a new interval `[n, n]`.
 4. Return the list of intervals.
 
 ::tabs-start
@@ -1021,6 +1136,38 @@ class SummaryRanges {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+struct SummaryRanges {
+    ordered_set: BTreeSet<i32>,
+}
+
+impl SummaryRanges {
+    fn new() -> Self {
+        SummaryRanges {
+            ordered_set: BTreeSet::new(),
+        }
+    }
+
+    fn add_num(&mut self, value: i32) {
+        self.ordered_set.insert(value);
+    }
+
+    fn get_intervals(&self) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        for &n in &self.ordered_set {
+            if let Some(last) = res.last_mut() {
+                if last[1] + 1 == n {
+                    last[1] = n;
+                    continue;
+                }
+            }
+            res.push(vec![n, n]);
+        }
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays (Matrices)** - Understanding how to traverse and access elements in a matrix using row and column indices
 - **Binary Search** - The divide-and-conquer search algorithm for sorted data with O(log n) time complexity
 - **Matrix Index Conversion** - Converting between 1D indices and 2D (row, col) coordinates using division and modulo operations
@@ -141,6 +143,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_matrix(matrix: Vec<Vec<i32>>, target: i32) -> bool {
+        for r in 0..matrix.len() {
+            for c in 0..matrix[r].len() {
+                if matrix[r][c] == target {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -170,9 +187,9 @@ We keep moving until we either find the target or move out of bounds.
 
 1. Let `r = 0` (first row) and `c = n - 1` (last column).
 2. While `r` is within bounds and `c` is within bounds:
-   - If `matrix[r][c] == target`, return `true`.
-   - If the value is **greater** than the target, move **left** (`c -= 1`).
-   - If the value is **smaller**, move **down** (`r += 1`).
+    - If `matrix[r][c] == target`, return `true`.
+    - If the value is **greater** than the target, move **left** (`c -= 1`).
+    - If the value is **smaller**, move **down** (`r += 1`).
 3. If we exit the matrix, the target is not found → return `false`.
 
 ::tabs-start
@@ -342,6 +359,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_matrix(matrix: Vec<Vec<i32>>, target: i32) -> bool {
+        let m = matrix.len();
+        let n = matrix[0].len();
+        let (mut r, mut c) = (0, n as i32 - 1);
+
+        while r < m as i32 && c >= 0 {
+            if matrix[r as usize][c as usize] > target {
+                c -= 1;
+            } else if matrix[r as usize][c as usize] < target {
+                r += 1;
+            } else {
+                return true;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -360,7 +398,7 @@ class Solution {
 Because each row of the matrix is sorted, and the rows themselves are sorted by their first and last elements, we can apply **binary search twice**:
 
 1. **First search over the rows**
-   We find the single row where the target *could* exist by comparing the target with the row's first and last elements.
+   We find the single row where the target _could_ exist by comparing the target with the row's first and last elements.
    Binary search helps us quickly narrow down to that one row.
 
 2. **Then search inside that row**
@@ -372,13 +410,13 @@ This eliminates large portions of the matrix at each step and uses the sorted st
 
 1. Set `top = 0` and `bot = ROWS - 1`.
 2. Binary search over the rows:
-   - Let `row = (top + bot) // 2`.
-   - If the target is greater than the last element of this row → move down (`top = row + 1`).
-   - If the target is smaller than the first element → move up (`bot = row - 1`).
-   - Otherwise → the target must be in this row; stop.
+    - Let `row = (top + bot) // 2`.
+    - If the target is greater than the last element of this row → move down (`top = row + 1`).
+    - If the target is smaller than the first element → move up (`bot = row - 1`).
+    - Otherwise → the target must be in this row; stop.
 3. If no valid row is found, return `false`.
 4. Now binary search within the identified row:
-   - Use standard binary search to look for the target.
+    - Use standard binary search to look for the target.
 5. Return `true` if found, otherwise `false`.
 
 ::tabs-start
@@ -689,6 +727,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_matrix(matrix: Vec<Vec<i32>>, target: i32) -> bool {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+
+        let (mut top, mut bot) = (0i32, rows as i32 - 1);
+        while top <= bot {
+            let row = (top + bot) / 2;
+            if target > matrix[row as usize][cols - 1] {
+                top = row + 1;
+            } else if target < matrix[row as usize][0] {
+                bot = row - 1;
+            } else {
+                break;
+            }
+        }
+
+        if top > bot {
+            return false;
+        }
+        let row = ((top + bot) / 2) as usize;
+        let (mut l, mut r) = (0i32, cols as i32 - 1);
+        while l <= r {
+            let m = (l + r) / 2;
+            if target > matrix[row][m as usize] {
+                l = m + 1;
+            } else if target < matrix[row][m as usize] {
+                r = m - 1;
+            } else {
+                return true;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -720,14 +796,14 @@ This lets us access the correct matrix element without actually flattening the m
 1. Treat the matrix as a single sorted array of size `ROWS * COLS`.
 2. Set `l = 0` and `r = ROWS * COLS - 1`.
 3. While `l <= r`:
-   - Compute the middle index `m = (l + r) // 2`.
-   - Convert `m` back to matrix coordinates:
-     - `row = m // COLS`
-     - `col = m % COLS`
-   - Compare `matrix[row][col]` with the target:
-     - If equal → return `true`.
-     - If the value is smaller → search the right half (`l = m + 1`).
-     - If larger → search the left half (`r = m - 1`).
+    - Compute the middle index `m = (l + r) // 2`.
+    - Convert `m` back to matrix coordinates:
+        - `row = m // COLS`
+        - `col = m % COLS`
+    - Compare `matrix[row][col]` with the target:
+        - If equal → return `true`.
+        - If the value is smaller → search the right half (`l = m + 1`).
+        - If larger → search the left half (`r = m - 1`).
 4. If the loop ends with no match, return `false`.
 
 ::tabs-start
@@ -913,6 +989,30 @@ class Solution {
             }
         }
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search_matrix(matrix: Vec<Vec<i32>>, target: i32) -> bool {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+
+        let (mut l, mut r) = (0i32, (rows * cols) as i32 - 1);
+        while l <= r {
+            let m = l + (r - l) / 2;
+            let row = m as usize / cols;
+            let col = m as usize % cols;
+            if target > matrix[row][col] {
+                l = m + 1;
+            } else if target < matrix[row][col] {
+                r = m - 1;
+            } else {
+                return true;
+            }
+        }
+        false
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Reversing strings and comparing characters
 - **Two Pointers** - Using left and right pointers to check palindrome properties efficiently
 - **Array Iteration** - Iterating through arrays and returning early when a condition is met
@@ -137,6 +139,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_palindrome(words: Vec<String>) -> String {
+        for w in &words {
+            let rev: String = w.chars().rev().collect();
+            if *w == rev {
+                return w.clone();
+            }
+        }
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -159,8 +175,8 @@ Instead of creating a reversed copy (which uses extra space), we can check if a 
 1. Iterate through each word in the array.
 2. For each word, use two pointers: `l` at the start and `r` at the end.
 3. While the characters at `l` and `r` are equal:
-   - If `l >= r`, the word is a palindrome; return it.
-   - Move `l` forward and `r` backward.
+    - If `l >= r`, the word is a palindrome; return it.
+    - Move `l` forward and `r` backward.
 4. If the characters differ, move to the next word.
 5. If no palindrome is found, return an empty string.
 
@@ -297,6 +313,26 @@ class Solution {
             }
         }
         return ""
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn first_palindrome(words: Vec<String>) -> String {
+        for w in &words {
+            let bytes = w.as_bytes();
+            let mut l = 0;
+            let mut r = bytes.len() - 1;
+            while bytes[l] == bytes[r] {
+                if l >= r {
+                    return w.clone();
+                }
+                l += 1;
+                r -= 1;
+            }
+        }
+        String::new()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree/Graph Representation** - Understanding how to represent trees using adjacency lists
 - **Depth First Search (DFS)** - Ability to traverse trees recursively while computing subtree properties like height
 - **Breadth First Search (BFS) / Topological Sort** - Understanding level-by-level processing and leaf removal techniques
@@ -318,6 +320,43 @@ class Solution {
             }
         }
         return result
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+            adj[edge[1] as usize].push(edge[0] as usize);
+        }
+
+        fn dfs(node: usize, parent: i32, adj: &Vec<Vec<usize>>) -> i32 {
+            let mut hgt = 0;
+            for &nei in &adj[node] {
+                if nei as i32 == parent {
+                    continue;
+                }
+                hgt = hgt.max(1 + dfs(nei, node as i32, adj));
+            }
+            hgt
+        }
+
+        let mut min_hgt = n as i32;
+        let mut result = vec![];
+        for i in 0..n {
+            let cur_hgt = dfs(i, -1, &adj);
+            if cur_hgt == min_hgt {
+                result.push(i as i32);
+            } else if cur_hgt < min_hgt {
+                result = vec![i as i32];
+                min_hgt = cur_hgt;
+            }
+        }
+        result
     }
 }
 ```
@@ -845,6 +884,73 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+            adj[edge[1] as usize].push(edge[0] as usize);
+        }
+
+        let mut dp = vec![[0i32; 2]; n];
+
+        fn dfs(node: usize, parent: i32, adj: &Vec<Vec<usize>>, dp: &mut Vec<[i32; 2]>) {
+            for &nei in &adj[node] {
+                if nei as i32 == parent {
+                    continue;
+                }
+                dfs(nei, node as i32, adj, dp);
+                let cur_hgt = 1 + dp[nei][0];
+                if cur_hgt > dp[node][0] {
+                    dp[node][1] = dp[node][0];
+                    dp[node][0] = cur_hgt;
+                } else if cur_hgt > dp[node][1] {
+                    dp[node][1] = cur_hgt;
+                }
+            }
+        }
+
+        fn dfs1(
+            node: usize,
+            parent: i32,
+            top_hgt: i32,
+            adj: &Vec<Vec<usize>>,
+            dp: &mut Vec<[i32; 2]>,
+        ) {
+            if top_hgt > dp[node][0] {
+                dp[node][1] = dp[node][0];
+                dp[node][0] = top_hgt;
+            } else if top_hgt > dp[node][1] {
+                dp[node][1] = top_hgt;
+            }
+            for i in 0..adj[node].len() {
+                let nei = adj[node][i];
+                if nei as i32 == parent {
+                    continue;
+                }
+                let to_child = 1 + if dp[node][0] == 1 + dp[nei][0] {
+                    dp[node][1]
+                } else {
+                    dp[node][0]
+                };
+                dfs1(nei, node as i32, to_child, adj, dp);
+            }
+        }
+
+        dfs(0, -1, &adj, &mut dp);
+        dfs1(0, -1, 0, &adj, &mut dp);
+
+        let min_hgt = dp.iter().map(|d| d[0]).min().unwrap();
+        (0..n)
+            .filter(|&i| dp[i][0] == min_hgt)
+            .map(|i| i as i32)
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1358,6 +1464,73 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = n as usize;
+        if n == 1 {
+            return vec![0];
+        }
+
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+            adj[edge[1] as usize].push(edge[0] as usize);
+        }
+
+        fn dfs(node: usize, parent: i32, adj: &Vec<Vec<usize>>) -> (usize, i32) {
+            let mut farthest = node;
+            let mut max_dist = 0;
+            for &nei in &adj[node] {
+                if nei as i32 != parent {
+                    let (nei_node, nei_dist) = dfs(nei, node as i32, adj);
+                    if nei_dist + 1 > max_dist {
+                        max_dist = nei_dist + 1;
+                        farthest = nei_node;
+                    }
+                }
+            }
+            (farthest, max_dist)
+        }
+
+        fn find_centroids(
+            node: usize,
+            parent: i32,
+            target: usize,
+            adj: &Vec<Vec<usize>>,
+            path: &mut Vec<usize>,
+        ) -> bool {
+            if node == target {
+                path.push(node);
+                return true;
+            }
+            for &nei in &adj[node] {
+                if nei as i32 != parent {
+                    if find_centroids(nei, node as i32, target, adj, path) {
+                        path.push(node);
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+
+        let (node_a, _) = dfs(0, -1, &adj);
+        let (node_b, diameter) = dfs(node_a, -1, &adj);
+
+        let mut centroids = vec![];
+        find_centroids(node_a, -1, node_b, &adj, &mut centroids);
+
+        let l = centroids.len();
+        if diameter % 2 == 0 {
+            vec![centroids[l / 2] as i32]
+        } else {
+            vec![centroids[l / 2 - 1] as i32, centroids[l / 2] as i32]
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1382,9 +1555,9 @@ Each round of removal brings us one step closer to the center. Since a tree can 
 1. Build an adjacency list and track each node's edge count (degree).
 2. Initialize a queue with all leaf nodes (degree = `1`), excluding the special case where `n = 1`.
 3. While more than `2` nodes remain:
-   - Remove all current leaves from the queue.
-   - For each removed leaf, decrement its neighbor's degree.
-   - If a neighbor becomes a leaf, add it to the queue.
+    - Remove all current leaves from the queue.
+    - For each removed leaf, decrement its neighbor's degree.
+    - If a neighbor becomes a leaf, add it to the queue.
 4. The remaining nodes in the queue are the minimum height tree roots.
 
 ::tabs-start
@@ -1723,6 +1896,51 @@ class Solution {
         }
 
         return []
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_min_height_trees(n: i32, edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let mut n = n as usize;
+        if n == 1 {
+            return vec![0];
+        }
+
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+            adj[edge[1] as usize].push(edge[0] as usize);
+        }
+
+        let mut edge_cnt = vec![0usize; n];
+        let mut leaves = VecDeque::new();
+        for i in 0..n {
+            edge_cnt[i] = adj[i].len();
+            if adj[i].len() == 1 {
+                leaves.push_back(i);
+            }
+        }
+
+        while !leaves.is_empty() {
+            if n <= 2 {
+                return leaves.iter().map(|&x| x as i32).collect();
+            }
+            let size = leaves.len();
+            for _ in 0..size {
+                let node = leaves.pop_front().unwrap();
+                n -= 1;
+                for &nei in &adj[node].clone() {
+                    edge_cnt[nei] -= 1;
+                    if edge_cnt[nei] == 1 {
+                        leaves.push_back(nei);
+                    }
+                }
+            }
+        }
+
+        vec![]
     }
 }
 ```

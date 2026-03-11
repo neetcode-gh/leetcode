@@ -359,6 +359,40 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn clone_graph(node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let mut old_to_new: HashMap<i32, Rc<RefCell<Node>>> = HashMap::new();
+
+        fn dfs(
+            node: Option<Rc<RefCell<Node>>>,
+            old_to_new: &mut HashMap<i32, Rc<RefCell<Node>>>,
+        ) -> Option<Rc<RefCell<Node>>> {
+            let node = node?;
+            let val = node.borrow().val;
+
+            if let Some(existing) = old_to_new.get(&val) {
+                return Some(existing.clone());
+            }
+
+            let copy = Rc::new(RefCell::new(Node::new(val)));
+            old_to_new.insert(val, copy.clone());
+
+            for nei in &node.borrow().neighbors {
+                if let Some(cloned_nei) = dfs(nei.clone(), old_to_new) {
+                    copy.borrow_mut().neighbors.push(Some(cloned_nei));
+                }
+            }
+
+            Some(copy)
+        }
+
+        dfs(node, &mut old_to_new)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,6 +743,37 @@ class Solution {
         }
 
         return oldToNew[node!]
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn clone_graph(node: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let node = node?;
+        let mut old_to_new: HashMap<i32, Rc<RefCell<Node>>> = HashMap::new();
+        let val = node.borrow().val;
+        old_to_new.insert(val, Rc::new(RefCell::new(Node::new(val))));
+        let mut queue = VecDeque::new();
+        queue.push_back(node.clone());
+
+        while let Some(cur) = queue.pop_front() {
+            let cur_val = cur.borrow().val;
+            for nei in &cur.borrow().neighbors {
+                if let Some(nei_rc) = nei {
+                    let nei_val = nei_rc.borrow().val;
+                    if !old_to_new.contains_key(&nei_val) {
+                        old_to_new.insert(nei_val, Rc::new(RefCell::new(Node::new(nei_val))));
+                        queue.push_back(nei_rc.clone());
+                    }
+                    let cloned_nei = old_to_new.get(&nei_val).unwrap().clone();
+                    old_to_new.get(&cur_val).unwrap().borrow_mut().neighbors.push(Some(cloned_nei));
+                }
+            }
+        }
+
+        old_to_new.get(&val).cloned()
     }
 }
 ```

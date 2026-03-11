@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays / Matrices** - Understanding row and column indexing and how to traverse a matrix
 - **String Manipulation** - Building strings character by character and comparing strings
 - **Matrix Symmetry** - Understanding how to check if position (i, j) relates to position (j, i)
@@ -28,7 +30,7 @@ class Solution:
         cols = 0
         rows = len(words)
         new_words = []
-        
+
         for word in words:
             cols = max(cols, len(word))
 
@@ -58,7 +60,7 @@ class Solution {
         int cols = 0;
         int rows = words.size();
         List<String> newWords = new ArrayList<String>();
-        
+
         for (String word : words) {
             cols = Math.max(cols, word.length());
         }
@@ -101,7 +103,7 @@ public:
         int cols = 0;
         int rows = words.size();
         vector<string> newWords;
-        
+
         for (auto& word : words) {
             cols = max(cols, (int)word.size());
         }
@@ -154,7 +156,7 @@ class Solution {
         }
 
         for (let col = 0; col < cols; ++col) {
-            let newWord = "";
+            let newWord = '';
             // Iterate on each character of column 'col'.
             for (let row = 0; row < rows; ++row) {
                 // If the current row's word's size is less than the column number it means this column is empty,
@@ -332,6 +334,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn valid_word_square(words: Vec<String>) -> bool {
+        let words: Vec<Vec<u8>> = words.iter().map(|w| w.bytes().collect()).collect();
+        let rows = words.len();
+        let mut cols = 0usize;
+
+        for word in &words {
+            cols = cols.max(word.len());
+        }
+
+        if cols != words[0].len() || rows != cols {
+            return false;
+        }
+
+        let mut new_words: Vec<Vec<u8>> = Vec::new();
+        for col in 0..cols {
+            let mut new_word = Vec::new();
+            for row in 0..rows {
+                if col < words[row].len() {
+                    new_word.push(words[row][col]);
+                }
+            }
+            new_words.push(new_word);
+        }
+
+        words == new_words
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -339,7 +372,7 @@ class Solution {
 - Time complexity: $O(n \cdot m)$
 - Space complexity: $O(n \cdot m)$
 
->  Where $n$ is the number of strings in the `words` array and $m$ is the maximum length of a string
+> Where $n$ is the number of strings in the `words` array and $m$ is the maximum length of a string
 
 ---
 
@@ -352,10 +385,10 @@ Instead of building new words and comparing lists, we can directly verify the wo
 ### Algorithm
 
 1. For each word at index `wordNum`:
-   - For each character position `charPos` in that word:
-     - Check if position `(charPos, wordNum)` is valid (`charPos < number of words`, `wordNum < length of words[charPos]`).
-     - If invalid, return `false`.
-     - If `words[wordNum][charPos] != words[charPos][wordNum]`, return `false`.
+    - For each character position `charPos` in that word:
+        - Check if position `(charPos, wordNum)` is valid (`charPos < number of words`, `wordNum < length of words[charPos]`).
+        - If invalid, return `false`.
+        - If `words[wordNum][charPos] != words[charPos][wordNum]`, return `false`.
 2. If all checks pass, return `true`.
 
 ::tabs-start
@@ -366,7 +399,7 @@ class Solution:
         for word_num in range(len(words)):
             for char_pos in range(len(words[word_num])):
                 # char_pos (curr 'row' word) is bigger than column word, or
-                # word_num (curr 'column' word) is bigger than row word, or 
+                # word_num (curr 'column' word) is bigger than row word, or
                 # characters at index (word_num,char_pos) and (char_pos,word_num) are not equal.
                 if char_pos >= len(words) or \
                     word_num >= len(words[char_pos]) or \
@@ -381,10 +414,10 @@ class Solution {
         for (int wordNum = 0; wordNum < words.size(); ++wordNum) {
             for (int charPos = 0; charPos < words.get(wordNum).length(); ++charPos) {
                 // charPos (curr 'row' word) is bigger than column word, or
-                // wordNum (curr 'column' word) is bigger than row word, or 
+                // wordNum (curr 'column' word) is bigger than row word, or
                 // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
-                if (charPos >= words.size() || 
-                    wordNum >= words.get(charPos).length() || 
+                if (charPos >= words.size() ||
+                    wordNum >= words.get(charPos).length() ||
                     words.get(wordNum).charAt(charPos) != words.get(charPos).charAt(wordNum)){
                     return false;
                 }
@@ -402,10 +435,10 @@ public:
         for (int wordNum = 0; wordNum < words.size(); ++wordNum) {
             for (int charPos = 0; charPos < words[wordNum].size(); ++charPos) {
                 // charPos (curr 'row' word) is bigger than column word, or
-                // wordNum (curr 'column' word) is bigger than row word, or 
+                // wordNum (curr 'column' word) is bigger than row word, or
                 // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
-                if (charPos >= words.size() || 
-                    wordNum >= words[charPos].size() || 
+                if (charPos >= words.size() ||
+                    wordNum >= words[charPos].size() ||
                     words[wordNum][charPos] != words[charPos][wordNum]){
                     return false;
                 }
@@ -428,9 +461,11 @@ class Solution {
                 // charPos (curr 'row' word) is bigger than column word, or
                 // wordNum (curr 'column' word) is bigger than row word, or
                 // characters at index (wordNum,charPos) and (charPos,wordNum) are not equal.
-                if (charPos >= words.length ||
+                if (
+                    charPos >= words.length ||
                     wordNum >= words[charPos].length ||
-                    words[wordNum][charPos] != words[charPos][wordNum]){
+                    words[wordNum][charPos] != words[charPos][wordNum]
+                ) {
                     return false;
                 }
             }
@@ -519,6 +554,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn valid_word_square(words: Vec<String>) -> bool {
+        let words: Vec<&[u8]> = words.iter().map(|w| w.as_bytes()).collect();
+        for word_num in 0..words.len() {
+            for char_pos in 0..words[word_num].len() {
+                if char_pos >= words.len()
+                    || word_num >= words[char_pos].len()
+                    || words[word_num][char_pos] != words[char_pos][word_num]
+                {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -526,7 +580,7 @@ class Solution {
 - Time complexity: $O(n \cdot m)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the number of strings in the `words` array and $m$ is the maximum length of a string
+> Where $n$ is the number of strings in the `words` array and $m$ is the maximum length of a string
 
 ---
 

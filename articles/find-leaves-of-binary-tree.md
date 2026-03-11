@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding how to navigate through tree nodes recursively
 - **Depth-First Search (DFS)** - Used to compute the height of each node from the bottom up
 - **Tree Height Calculation** - Understanding the concept of node height (distance to farthest leaf descendant)
@@ -26,34 +28,34 @@ Leaves are nodes with no children, and they have height `0`. Their parents have 
 class Solution:
     def findLeaves(self, root: Optional[TreeNode]) -> List[List[int]]:
         self.pairs = []
-        
+
         def getHeight(node):
             if node is None:
                 return -1
-            
+
             # first calculate the height of the left and right children
             leftHeight = getHeight(node.left)
             rightHeight = getHeight(node.right)
-            
+
             # based on the height of the left and right children, obtain the height of the current (parent) node
             currHeight = max(leftHeight, rightHeight) + 1
-            
+
             # collect the pair -> (height, val)
             self.pairs.append((currHeight, node.val))
-            
+
             # return the height of the current node
             return currHeight
-        
+
         getHeight(root)
-        
+
         # sort all the (height, val) pairs
         self.pairs.sort(key=lambda p: p[0])
-        
+
         n = len(self.pairs)
         height = 0
         i = 0
         solution = []
-        
+
         while i < n:
             nums = []
             while i < n and self.pairs[i][0] == height:
@@ -61,21 +63,21 @@ class Solution:
                 i += 1
             solution.append(nums)
             height += 1
-        
+
         return solution
 ```
 
 ```java
 class Solution {
     private List<Pair<Integer, Integer>> pairs;
-    
+
     private int getHeight(TreeNode root) {
         if (root == null) return -1;
-        
+
         // first calculate the height of the left and right children
         int leftHeight = getHeight(root.left);
         int rightHeight = getHeight(root.right);
-        
+
         // based on the height of the left and right children, obtain the height of the current (parent) node
         int currHeight = Math.max(leftHeight, rightHeight) + 1;
 
@@ -85,19 +87,19 @@ class Solution {
         // return the height of the current node
         return currHeight;
     }
-    
+
     public List<List<Integer>> findLeaves(TreeNode root) {
         this.pairs = new ArrayList<>();
-        
+
         getHeight(root);
-        
+
         // sort all the (height, val) pairs
         Collections.sort(this.pairs, Comparator.comparing(p -> p.getKey()));
-        
+
         int n = this.pairs.size(), height = 0, i = 0;
 
         List<List<Integer>> solution = new ArrayList<>();
-        
+
         while (i < n) {
             List<Integer> nums = new ArrayList<>();
             while (i < n && this.pairs.get(i).getKey() == height) {
@@ -115,36 +117,36 @@ class Solution {
 ```cpp
 class Solution {
 public:
-    
+
     vector<pair<int, int>> pairs;
-    
+
     int getHeight(TreeNode *root) {
-        
+
         // return -1 for null nodes
         if (!root) return -1;
-        
+
         // first calculate the height of the left and right children
         int leftHeight = getHeight(root->left);
         int rightHeight = getHeight(root->right);
-        
+
         // based on the height of the left and right children, obtain the height of the current (parent) node
         int currHeight = max(leftHeight, rightHeight) + 1;
-        
+
         // collect the pair -> (height, val)
         this->pairs.push_back({currHeight, root->val});
-        
+
         // return the height of the current node
         return currHeight;
     }
-    
+
     vector<vector<int>> findLeaves(TreeNode* root) {
         this->pairs.clear();
-        
+
         getHeight(root);
-        
+
         // sort all the (height, val) pairs
         sort(this->pairs.begin(), this->pairs.end());
-        
+
         int n = this->pairs.size(), height = 0, i = 0;
         vector<vector<int>> solution;
         while (i < n) {
@@ -432,6 +434,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let mut pairs: Vec<(i32, i32)> = Vec::new();
+        Self::get_height(&root, &mut pairs);
+
+        pairs.sort_by_key(|p| p.0);
+
+        let n = pairs.len();
+        let mut height = 0;
+        let mut i = 0;
+        let mut solution = Vec::new();
+
+        while i < n {
+            let mut nums = Vec::new();
+            while i < n && pairs[i].0 == height {
+                nums.push(pairs[i].1);
+                i += 1;
+            }
+            solution.push(nums);
+            height += 1;
+        }
+
+        solution
+    }
+
+    fn get_height(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        pairs: &mut Vec<(i32, i32)>,
+    ) -> i32 {
+        match node {
+            None => -1,
+            Some(n) => {
+                let n = n.borrow();
+                let left_height = Self::get_height(&n.left, pairs);
+                let right_height = Self::get_height(&n.right, pairs);
+                let curr_height = left_height.max(right_height) + 1;
+                pairs.push((curr_height, n.val));
+                curr_height
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,7 +486,7 @@ class Solution {
 - Time complexity: $O(N \log N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the total number of nodes in the binary tree
+> Where $N$ is the total number of nodes in the binary tree
 
 ---
 
@@ -453,12 +500,12 @@ Instead of collecting pairs and sorting, we can directly place each node into th
 
 1. Initialize an empty result list.
 2. Perform a DFS to compute the height of each node:
-   - If the node is `null`, return `-1`.
-   - Recursively get the heights of left and right children.
-   - Compute current height as `max(leftHeight, rightHeight) + 1`.
-   - If the result list size equals the current height, append a new empty sublist.
-   - Add the node's value to `result[currentHeight]`.
-   - Return the current height.
+    - If the node is `null`, return `-1`.
+    - Recursively get the heights of left and right children.
+    - Compute current height as `max(leftHeight, rightHeight) + 1`.
+    - If the result list size equals the current height, append a new empty sublist.
+    - Add the node's value to `result[currentHeight]`.
+    - Return the current height.
 3. Call DFS on the root and return the result.
 
 ::tabs-start
@@ -467,30 +514,30 @@ Instead of collecting pairs and sorting, we can directly place each node into th
 class Solution:
     def findLeaves(self, root: Optional[TreeNode]) -> List[List[int]]:
         self.solution = []
-        
+
         def getHeight(node):
             if node is None:
                 return -1
-            
+
             leftHeight = getHeight(node.left)
             rightHeight = getHeight(node.right)
             currHeight = max(leftHeight, rightHeight) + 1
-            
+
             if len(self.solution) == currHeight:
                 self.solution.append([])
-            
+
             self.solution[currHeight].append(node.val)
             return currHeight
-        
+
         getHeight(root)
         return self.solution
 ```
 
 ```java
 class Solution {
-    
+
     private List<List<Integer>> solution;
-    
+
     private int getHeight(TreeNode root) {
         if (root == null) {
             return -1;
@@ -498,23 +545,23 @@ class Solution {
 
         int leftHeight = getHeight(root.left);
         int rightHeight = getHeight(root.right);
-        
+
         int currHeight = Math.max(leftHeight, rightHeight) + 1;
-        
+
         if (this.solution.size() == currHeight) {
             this.solution.add(new ArrayList<>());
         }
-        
+
         this.solution.get(currHeight).add(root.val);
-        
+
         return currHeight;
     }
-    
+
     public List<List<Integer>> findLeaves(TreeNode root) {
         this.solution = new ArrayList<>();
-        
+
         getHeight(root);
-        
+
         return this.solution;
     }
 }
@@ -527,9 +574,9 @@ private:
     vector<vector<int>> solution;
 
 public:
-    
+
     int getHeight(TreeNode *root) {
-        
+
         if (!root) {
             return -1;
         }
@@ -538,21 +585,21 @@ public:
         int rightHeight = getHeight(root->right);
 
         int currHeight = max(leftHeight, rightHeight) + 1;
-        
+
         if (this->solution.size() == currHeight) {
             this->solution.push_back({});
         }
 
         this->solution[currHeight].push_back(root->val);
-        
+
         return currHeight;
     }
-    
+
     vector<vector<int>> findLeaves(TreeNode* root) {
         this->solution.clear();
-        
+
         getHeight(root);
-        
+
         return this->solution;
     }
 };
@@ -742,6 +789,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_leaves(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let mut solution: Vec<Vec<i32>> = Vec::new();
+        Self::get_height(&root, &mut solution);
+        solution
+    }
+
+    fn get_height(
+        node: &Option<Rc<RefCell<TreeNode>>>,
+        solution: &mut Vec<Vec<i32>>,
+    ) -> i32 {
+        match node {
+            None => -1,
+            Some(n) => {
+                let n = n.borrow();
+                let left_height = Self::get_height(&n.left, solution);
+                let right_height = Self::get_height(&n.right, solution);
+                let curr_height = left_height.max(right_height) + 1;
+
+                if solution.len() == curr_height as usize {
+                    solution.push(Vec::new());
+                }
+                solution[curr_height as usize].push(n.val);
+                curr_height
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -749,7 +827,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the total number of nodes in the binary tree
+> Where $N$ is the total number of nodes in the binary tree
 
 ---
 

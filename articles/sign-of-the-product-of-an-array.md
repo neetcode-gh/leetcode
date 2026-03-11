@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Basic Array Iteration** - Traversing an array and examining each element
 - **Sign Rules for Multiplication** - Understanding how negative and zero values affect product signs
 - **Early Termination** - Returning immediately when a zero is encountered to avoid unnecessary computation
@@ -16,8 +18,8 @@ The sign of a product depends on two things: whether any factor is zero, and whe
 
 1. Initialize a counter `neg = 0` for negative numbers.
 2. Iterate through each number in the array:
-   - If the number is `0`, return `0` immediately.
-   - If the number is negative, increment `neg`.
+    - If the number is `0`, return `0` immediately.
+    - If the number is negative, increment `neg`.
 3. After the loop, if `neg` is even, return `1`; otherwise, return `-1`.
 
 ::tabs-start
@@ -158,6 +160,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn array_sign(nums: Vec<i32>) -> i32 {
+        let mut neg = 0;
+        for &num in &nums {
+            if num == 0 {
+                return 0;
+            }
+            if num < 0 {
+                neg += 1;
+            }
+        }
+        if neg % 2 == 0 { 1 } else { -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -177,8 +196,8 @@ Instead of counting negatives and checking parity at the end, we can track the r
 
 1. Initialize `sign = 1`.
 2. Iterate through each number in the array:
-   - If the number is `0`, return `0` immediately.
-   - If the number is negative, flip the sign: `sign *= -1`.
+    - If the number is `0`, return `0` immediately.
+    - If the number is negative, flip the sign: `sign *= -1`.
 3. Return `sign`.
 
 ::tabs-start
@@ -313,6 +332,23 @@ class Solution {
             }
         }
         return sign
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn array_sign(nums: Vec<i32>) -> i32 {
+        let mut sign = 1;
+        for &num in &nums {
+            if num == 0 {
+                return 0;
+            }
+            if num < 0 {
+                sign *= -1;
+            }
+        }
+        sign
     }
 }
 ```

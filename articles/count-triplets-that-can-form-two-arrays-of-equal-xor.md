@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bitwise XOR** - Understanding XOR properties like a XOR a = 0 and a XOR 0 = a
 - **Prefix Sums/XOR** - Using cumulative operations to compute subarray results efficiently
 - **Hash Maps** - Tracking counts and index sums for O(1) lookups in the optimal solution
@@ -246,6 +248,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_triplets(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0;
+
+        for i in 0..n - 1 {
+            for j in i + 1..n {
+                for k in j..n {
+                    let mut a = 0;
+                    let mut b = 0;
+                    for idx in i..j {
+                        a ^= arr[idx];
+                    }
+                    for idx in j..=k {
+                        b ^= arr[idx];
+                    }
+                    if a == b {
+                        res += 1;
+                    }
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -267,11 +298,11 @@ Instead of recomputing the XOR values from scratch for each triplet, we can buil
 2. Iterate through all possible values of `i` from `0` to `N-2`.
 3. Initialize `a` to `0`.
 4. For each `j` from `i+1` to `N-1`:
-   - Update `a` by XORing it with `arr[j-1]`.
-   - Initialize `b` to `0`.
-   - For each `k` from `j` to `N-1`:
-     - Update `b` by XORing it with `arr[k]`.
-     - If `a == b`, increment `res`.
+    - Update `a` by XORing it with `arr[j-1]`.
+    - Initialize `b` to `0`.
+    - For each `k` from `j` to `N-1`:
+        - Update `b` by XORing it with `arr[k]`.
+        - If `a == b`, increment `res`.
 5. Return `res`.
 
 ::tabs-start
@@ -473,6 +504,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_triplets(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0;
+
+        for i in 0..n - 1 {
+            let mut a = 0;
+            for j in i + 1..n {
+                a ^= arr[j - 1];
+                let mut b = 0;
+                for k in j..n {
+                    b ^= arr[k];
+                    if a == b {
+                        res += 1;
+                    }
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -494,8 +550,8 @@ The key insight is that if `a == b`, then `a XOR b == 0`, which means `arr[i] XO
 2. Iterate through all possible starting indices `i` from `0` to `N-2`.
 3. Initialize `cur_xor` to `arr[i]`.
 4. For each ending index `k` from `i+1` to `N-1`:
-   - Update `cur_xor` by XORing it with `arr[k]`.
-   - If `cur_xor == 0`, add `k - i` to `res` (representing all valid positions for `j`).
+    - Update `cur_xor` by XORing it with `arr[k]`.
+    - If `cur_xor == 0`, add `k - i` to `res` (representing all valid positions for `j`).
 5. Return `res`.
 
 ::tabs-start
@@ -666,6 +722,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_triplets(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0;
+
+        for i in 0..n - 1 {
+            let mut cur_xor = arr[i];
+            for k in i + 1..n {
+                cur_xor ^= arr[k];
+                if cur_xor == 0 {
+                    res += (k - i) as i32;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -687,10 +764,10 @@ We can use prefix XOR to find subarrays with XOR equal to `0` in linear time. If
 2. Create two hash maps: `count` to store frequency of each prefix value, and `index_sum` to store sum of indices for each prefix value.
 3. Initialize `count[0] = 1` to handle subarrays starting from index `0`.
 4. For each index `i` from `0` to `N-1`:
-   - Update `prefix` by XORing it with `arr[i]`.
-   - If this prefix value has been seen before, add `i * count[prefix] - index_sum[prefix]` to `res`.
-   - Increment `count[prefix]` by `1`.
-   - Add `i + 1` to `index_sum[prefix]`.
+    - Update `prefix` by XORing it with `arr[i]`.
+    - If this prefix value has been seen before, add `i * count[prefix] - index_sum[prefix]` to `res`.
+    - Increment `count[prefix]` by `1`.
+    - Add `i + 1` to `index_sum[prefix]`.
 5. Return `res`.
 
 ::tabs-start
@@ -871,6 +948,30 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_triplets(arr: Vec<i32>) -> i32 {
+        let n = arr.len();
+        let mut res = 0;
+        let mut prefix = 0;
+        let mut count: HashMap<i32, i32> = HashMap::new();
+        let mut index_sum: HashMap<i32, i32> = HashMap::new();
+        count.insert(0, 1);
+
+        for i in 0..n {
+            prefix ^= arr[i];
+            if let Some(&c) = count.get(&prefix) {
+                res += i as i32 * c - index_sum.get(&prefix).unwrap_or(&0);
+            }
+            *count.entry(prefix).or_insert(0) += 1;
+            *index_sum.entry(prefix).or_insert(0) += i as i32 + 1;
+        }
+
+        res
     }
 }
 ```

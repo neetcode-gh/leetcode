@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Essential for storing operands and applying operators in LIFO order
 - **String Parsing** - Converting string tokens to integers and identifying operators
 - **Basic Arithmetic Operations** - Handling addition, subtraction, multiplication, and integer division with truncation toward zero
@@ -20,12 +22,12 @@ This approach works but is slow because we repeatedly rebuild and rescan the lis
 ### Algorithm
 
 1. While more than one token exists:
-   - Scan the list from left to right.
-   - When an operator is found:
-     - Take the two numbers immediately before it.
-     - Apply the operator to compute a result.
-     - Replace the pattern `[number, number, operator]` with the computed value.
-     - Restart scanning.
+    - Scan the list from left to right.
+    - When an operator is found:
+        - Take the two numbers immediately before it.
+        - Apply the operator to compute a result.
+        - Replace the pattern `[number, number, operator]` with the computed value.
+        - Restart scanning.
 2. When only one token is left, return it as the final result.
 
 ::tabs-start
@@ -277,6 +279,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn eval_rpn(tokens: Vec<String>) -> i32 {
+        let mut tokens = tokens;
+        while tokens.len() > 1 {
+            let mut found = false;
+            for i in 0..tokens.len() {
+                if matches!(tokens[i].as_str(), "+" | "-" | "*" | "/") {
+                    let a: i32 = tokens[i - 2].parse().unwrap();
+                    let b: i32 = tokens[i - 1].parse().unwrap();
+                    let result = match tokens[i].as_str() {
+                        "+" => a + b,
+                        "-" => a - b,
+                        "*" => a * b,
+                        "/" => a / b,
+                        _ => 0,
+                    };
+                    tokens.splice(i - 2..=i, std::iter::once(result.to_string()));
+                    found = true;
+                    break;
+                }
+            }
+            if !found { break; }
+        }
+        tokens[0].parse().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,11 +325,12 @@ In Reverse Polish Notation, every operator works on the two most recent numbers 
 A doubly linked list lets us move **both left and right** easily, so when we find an operator, we can quickly reach the two numbers before it.
 
 The idea is:
+
 - Build a doubly linked list of all tokens (numbers and operators).
 - Walk through the list:
-  - When we see an operator, we look at the previous two nodes (the two operands),
-    compute the result, and **replace those three nodes** (`left`, `right`, `operator`)
-    with a single node containing the result.
+    - When we see an operator, we look at the previous two nodes (the two operands),
+      compute the result, and **replace those three nodes** (`left`, `right`, `operator`)
+      with a single node containing the result.
 - We keep doing this until we've processed all operators and are left with just one value.
 
 This behaves like the usual RPN evaluation but uses linked list navigation instead of a stack.
@@ -308,13 +340,13 @@ This behaves like the usual RPN evaluation but uses linked list navigation inste
 1. Create a doubly linked list from the tokens in order.
 2. Set a pointer `curr` to the head of the list.
 3. While the list still needs evaluation:
-   - If `curr` is an operator:
-     - Let the two nodes before `curr` be the `left` and `right` operands.
-     - Compute the result of `left (op) right`.
-     - Replace the three nodes (`left`, `right`, `operator`) with a single node holding the result:
-       - Relink the `prev` and `next` pointers around them.
-       - Set `curr` to this result node.
-   - Move `curr` to the next node and continue.
+    - If `curr` is an operator:
+        - Let the two nodes before `curr` be the `left` and `right` operands.
+        - Compute the result of `left (op) right`.
+        - Replace the three nodes (`left`, `right`, `operator`) with a single node holding the result:
+            - Relink the `prev` and `next` pointers around them.
+            - Set `curr` to this result node.
+    - Move `curr` to the next node and continue.
 4. When only one node with a number remains, return its value as the final result.
 
 ::tabs-start
@@ -738,6 +770,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn eval_rpn(tokens: Vec<String>) -> i32 {
+        let mut vals: Vec<(String, Option<usize>, Option<usize>)> = Vec::new();
+        // Build doubly linked list using indices
+        for (i, t) in tokens.iter().enumerate() {
+            let prev = if i > 0 { Some(i - 1) } else { None };
+            let next = None;
+            vals.push((t.clone(), prev, next));
+            if i > 0 {
+                vals[i - 1].2 = Some(i);
+            }
+        }
+
+        let mut head = Some(0usize);
+        let mut ans = 0;
+        while let Some(h) = head {
+            let val = vals[h].0.clone();
+            if matches!(val.as_str(), "+" | "-" | "*" | "/") {
+                let prev1 = vals[h].1.unwrap();
+                let prev2 = vals[prev1].1.unwrap();
+                let l: i32 = vals[prev2].0.parse().unwrap();
+                let r: i32 = vals[prev1].0.parse().unwrap();
+                let res = match val.as_str() {
+                    "+" => l + r,
+                    "-" => l - r,
+                    "*" => l * r,
+                    "/" => l / r,
+                    _ => 0,
+                };
+                vals[h].0 = res.to_string();
+                vals[h].1 = vals[prev2].1;
+                if let Some(pp) = vals[prev2].1 {
+                    vals[pp].2 = Some(h);
+                }
+            }
+            ans = vals[h].0.parse().unwrap();
+            head = vals[h].2;
+        }
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -754,10 +830,11 @@ class Solution {
 Reverse Polish Notation works naturally with recursion because every operator applies to the **two most recent values** that come before it.  
 If we process the expression from the end, every time we see:
 
-- a **number** → it is simply returned as a value  
-- an **operator** → we recursively evaluate the two values that belong to it  
+- a **number** → it is simply returned as a value
+- an **operator** → we recursively evaluate the two values that belong to it
 
 This creates a natural evaluation tree:
+
 - Each operator becomes a recursive call,
 - Each number becomes a base case,
 - And the final return value is the fully evaluated expression.
@@ -768,13 +845,13 @@ This approach is clean, elegant, and mirrors the structure of RPN itself.
 
 1. Start from the end of the token list.
 2. Recursively:
-   - Pop a token.
-   - If it is a number, return it.
-   - If it is an operator:
-     - Recursively compute the `right` operand.
-     - Recursively compute the `left` operand.
-     - Apply the operator to both results.
-     - Return the computed value.
+    - Pop a token.
+    - If it is a number, return it.
+    - If it is an operator:
+        - Recursively compute the `right` operand.
+        - Recursively compute the `left` operand.
+        - Apply the operator to both results.
+        - Return the computed value.
 3. The first completed call returns the final answer.
 
 ::tabs-start
@@ -1027,6 +1104,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn eval_rpn(tokens: Vec<String>) -> i32 {
+        let mut idx = tokens.len() as i32 - 1;
+
+        fn dfs(tokens: &[String], idx: &mut i32) -> i32 {
+            let token = &tokens[*idx as usize];
+            *idx -= 1;
+            if !matches!(token.as_str(), "+" | "-" | "*" | "/") {
+                return token.parse().unwrap();
+            }
+            let right = dfs(tokens, idx);
+            let left = dfs(tokens, idx);
+            match token.as_str() {
+                "+" => left + right,
+                "-" => left - right,
+                "*" => left * right,
+                "/" => left / right,
+                _ => 0,
+            }
+        }
+
+        dfs(&tokens, &mut idx)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1053,11 +1157,11 @@ It is clean, efficient, and directly follows how RPN is meant to be evaluated.
 
 1. Create an empty stack.
 2. For each token:
-   - If it is a **number**, convert it to an integer and push it onto the stack.
-   - If it is an **operator**:
-     - Pop the top two numbers.
-     - Apply the operator in the correct order.
-     - Push the result back onto the stack.
+    - If it is a **number**, convert it to an integer and push it onto the stack.
+    - If it is an **operator**:
+        - Pop the top two numbers.
+        - Apply the operator in the correct order.
+        - Push the result back onto the stack.
 3. After processing all tokens, the stack contains exactly one value — return it.
 
 ::tabs-start
@@ -1291,6 +1395,42 @@ class Solution {
             }
         }
         return stack[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn eval_rpn(tokens: Vec<String>) -> i32 {
+        let mut stack = Vec::new();
+        for c in &tokens {
+            match c.as_str() {
+                "+" => {
+                    let a = stack.pop().unwrap();
+                    let b = stack.pop().unwrap();
+                    stack.push(b + a);
+                }
+                "-" => {
+                    let a: i32 = stack.pop().unwrap();
+                    let b: i32 = stack.pop().unwrap();
+                    stack.push(b - a);
+                }
+                "*" => {
+                    let a = stack.pop().unwrap();
+                    let b = stack.pop().unwrap();
+                    stack.push(b * a);
+                }
+                "/" => {
+                    let a: i32 = stack.pop().unwrap();
+                    let b: i32 = stack.pop().unwrap();
+                    stack.push(b / a);
+                }
+                _ => {
+                    stack.push(c.parse::<i32>().unwrap());
+                }
+            }
+        }
+        stack[0]
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using key-value stores for O(1) lookups to associate data
 - **Sorting Algorithms** - Understanding how to sort arrays using built-in methods
 - **Custom Comparators** - Sorting based on criteria other than default ordering
@@ -165,6 +167,25 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_people(names: Vec<String>, heights: Vec<i32>) -> Vec<String> {
+        let mut map = HashMap::new();
+        for i in 0..heights.len() {
+            map.insert(heights[i], &names[i]);
+        }
+
+        let mut sorted_heights = heights.clone();
+        sorted_heights.sort();
+        let mut res = Vec::new();
+        for i in (0..sorted_heights.len()).rev() {
+            res.push(map[&sorted_heights[i]].clone());
+        }
+        res
     }
 }
 ```
@@ -337,6 +358,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_people(names: Vec<String>, heights: Vec<i32>) -> Vec<String> {
+        let mut arr: Vec<(i32, &String)> = heights.iter().copied()
+            .zip(names.iter())
+            .collect();
+        arr.sort_by(|a, b| b.0.cmp(&a.0));
+        arr.into_iter().map(|(_, name)| name.clone()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,6 +514,16 @@ class Solution {
     func sortPeople(_ names: [String], _ heights: [Int]) -> [String] {
         let indices = names.indices.sorted { heights[$0] > heights[$1] }
         return indices.map { names[$0] }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_people(names: Vec<String>, heights: Vec<i32>) -> Vec<String> {
+        let mut indices: Vec<usize> = (0..names.len()).collect();
+        indices.sort_by(|&a, &b| heights[b].cmp(&heights[a]));
+        indices.into_iter().map(|i| names[i].clone()).collect()
     }
 }
 ```

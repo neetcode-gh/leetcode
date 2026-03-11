@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to efficiently track and count elements with the same transformed value
 - **Algebraic Manipulation** - Rearranging the bad pair condition to group elements efficiently
 - **Counting Pairs** - Understanding how to count total pairs and use complementary counting (total pairs minus good pairs)
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 A bad pair is defined as `i < j` where `j - i != nums[j] - nums[i]`. We can check every possible pair of indices and count how many satisfy this condition.
 
 ### Algorithm
+
 1. Initialize a counter for bad pairs.
 2. Use two nested loops: the outer loop picks index `i`, the inner loop picks index `j` where `j > i`.
 3. For each pair, check if `j - i != nums[j] - nums[i]`.
@@ -153,6 +157,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_bad_pairs(nums: Vec<i32>) -> i64 {
+        let n = nums.len();
+        let mut res: i64 = 0;
+        for i in 0..n - 1 {
+            for j in i + 1..n {
+                if (j as i32 - i as i32) != (nums[j] - nums[i]) {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -165,9 +186,11 @@ class Solution {
 ## 2. Hash Map
 
 ### Intuition
+
 Rearranging the bad pair condition `j - i != nums[j] - nums[i]` gives us `nums[j] - j != nums[i] - i`. This means a pair is "good" when both elements have the same value of `nums[k] - k`. Instead of counting bad pairs directly, we count the total pairs and subtract the good pairs. Elements with the same transformed value form good pairs among themselves.
 
 ### Algorithm
+
 1. Use a hash map to track the frequency of each `nums[i] - i` value.
 2. Keep a running total of pairs seen so far (which equals `i` at index `i`).
 3. For each index, add the count of previously seen elements with the same transformed value to the good pairs count.
@@ -313,6 +336,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_bad_pairs(nums: Vec<i32>) -> i64 {
+        let mut count: HashMap<i32, i64> = HashMap::new();
+        let mut total: i64 = 0;
+        let mut good: i64 = 0;
+        for i in 0..nums.len() {
+            let key = nums[i] - i as i32;
+            good += *count.get(&key).unwrap_or(&0);
+            *count.entry(key).or_insert(0) += 1;
+            total += i as i64;
+        }
+        total - good
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,10 +365,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Counting Bad Pairs Directly
+
 Trying to count bad pairs directly with a hash map is error-prone. The cleaner approach is to count good pairs (where `nums[i] - i == nums[j] - j`) and subtract from total pairs.
 
 ### Integer Overflow with Large Arrays
-With n up to 10^5, the total number of pairs is n*(n-1)/2 which can exceed 32-bit integer limits. Use `long` or 64-bit integers for the result.
+
+With n up to 10^5, the total number of pairs is n\*(n-1)/2 which can exceed 32-bit integer limits. Use `long` or 64-bit integers for the result.
+
 ```java
 // Wrong: overflow for large n
 int res = 0;
@@ -338,4 +381,5 @@ long res = 0;
 ```
 
 ### Forgetting the Algebraic Transformation
+
 The key insight is rewriting `j - i != nums[j] - nums[i]` as `nums[i] - i != nums[j] - j`. Without this transformation, you cannot efficiently group elements using a hash map.

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Manipulation** - Understanding how to modify arrays in-place by swapping and shifting elements
 - **Modular Arithmetic** - Using the modulo operator to handle rotation amounts larger than array length
 - **Array Reversal** - The technique of reversing a subarray in-place using two pointers
@@ -17,9 +19,9 @@ The simplest way to rotate an array by `k` positions is to perform `k` single ro
 
 1. Compute `k = k % n` to handle cases where `k` is larger than the array length.
 2. Repeat `k` times:
-   - Store the last element in a temporary variable.
-   - Shift all elements one position to the right.
-   - Place the saved element at index `0`.
+    - Store the last element in a temporary variable.
+    - Shift all elements one position to the right.
+    - Place the saved element at index `0`.
 
 ::tabs-start
 
@@ -158,6 +160,23 @@ class Solution {
             }
             nums[0] = tmp
             rotations -= 1
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+        let n = nums.len();
+        let mut k = k as usize % n;
+        while k > 0 {
+            let tmp = nums[n - 1];
+            for i in (1..n).rev() {
+                nums[i] = nums[i - 1];
+            }
+            nums[0] = tmp;
+            k -= 1;
         }
     }
 }
@@ -311,6 +330,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+        let n = nums.len();
+        let k = k as usize % n;
+        let mut tmp = vec![0; n];
+        for i in 0..n {
+            tmp[(i + k) % n] = nums[i];
+        }
+        nums.copy_from_slice(&tmp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -330,9 +363,9 @@ We can rotate in-place by following cycles. Starting from any position, we move 
 
 1. Compute `k = k % n` and initialize a counter for how many elements have been placed.
 2. Start from index `0`. For each starting index:
-   - Save the element at the current position.
-   - Move to the next position `(current + k) % n`, swap the saved element with the element there, and repeat.
-   - Stop when we return to the starting index.
+    - Save the element at the current position.
+    - Move to the next position `(current + k) % n`, swap the saved element with the element there, and repeat.
+    - Stop when we return to the starting index.
 3. If not all elements are placed, increment the starting index and repeat.
 4. Continue until all `n` elements have been moved.
 
@@ -530,6 +563,33 @@ class Solution {
                 count += 1
             } while start != current
             start += 1
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+        let n = nums.len();
+        let k = k as usize % n;
+        let mut count = 0;
+        let mut start = 0;
+        while count < n {
+            let mut current = start;
+            let mut prev = nums[start];
+            loop {
+                let next_idx = (current + k) % n;
+                let temp = nums[next_idx];
+                nums[next_idx] = prev;
+                prev = temp;
+                current = next_idx;
+                count += 1;
+                if start == current {
+                    break;
+                }
+            }
+            start += 1;
         }
     }
 }
@@ -741,6 +801,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+        let n = nums.len();
+        let k = k as usize % n;
+        fn reverse(nums: &mut Vec<i32>, mut l: usize, mut r: usize) {
+            while l < r {
+                nums.swap(l, r);
+                l += 1;
+                r -= 1;
+            }
+        }
+        reverse(nums, 0, n - 1);
+        reverse(nums, 0, k - 1);
+        reverse(nums, k, n - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,6 +928,17 @@ class Solution {
         let n = nums.count
         let kMod = k % n
         nums = Array(nums.suffix(kMod)) + Array(nums.prefix(n - kMod))
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rotate(nums: &mut Vec<i32>, k: i32) {
+        let n = nums.len();
+        let k = k as usize % n;
+        let rotated = [&nums[n - k..], &nums[..n - k]].concat();
+        nums.copy_from_slice(&rotated);
     }
 }
 ```

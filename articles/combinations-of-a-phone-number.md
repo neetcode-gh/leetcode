@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding recursive calls and building results through multiple levels
 - **Backtracking** - Exploring all branches of a decision tree and building combinations step by step
 - **Hash Maps/Dictionaries** - Mapping keys (digits) to values (corresponding letters)
@@ -10,31 +12,35 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Backtracking
 
 ### Intuition
+
 Each digit maps to a set of characters (like on a phone keypad).  
 The task is to **choose one character per digit**, in order, and generate **all possible combinations**.
 
 Think of it as building a string **step by step**:
+
 - At index `i`, pick **one character** from the mapping of `digits[i]`
 - Move to the next digit
 - When the length of the built string equals the number of digits, we have formed **one valid combination**
 
 This is a classic **decision tree** problem:
+
 - Each level - one digit
 - Each branch - one possible character for that digit
 
 Backtracking lets us explore all branches efficiently.
 
 ### Algorithm
+
 1. If the input string is empty, return an empty list.
 2. Create a mapping from digits (`2-9`) to their corresponding letters.
 3. Use a recursive function `backtrack(index, currentString)`:
-   - If `currentString` length equals the number of digits:
-     - Add it to the result.
-     - Return.
-   - Otherwise:
-     - For each character mapped from `digits[index]`:
-       - Append the character to `currentString`
-       - Recurse to the next index.
+    - If `currentString` length equals the number of digits:
+        - Add it to the result.
+        - Return.
+    - Otherwise:
+        - For each character mapped from `digits[index]`:
+            - Append the character to `currentString`
+            - Recurse to the next index.
 4. Start backtracking from index `0` with an empty string.
 5. Return all collected combinations.
 
@@ -281,6 +287,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn letter_combinations(digits: String) -> Vec<String> {
+        if digits.is_empty() { return vec![]; }
+
+        let digit_to_char: [&str; 10] = [
+            "", "", "abc", "def", "ghi", "jkl",
+            "mno", "pqrs", "tuv", "wxyz",
+        ];
+        let digits: Vec<usize> = digits.bytes().map(|b| (b - b'0') as usize).collect();
+        let mut res = Vec::new();
+
+        fn backtrack(
+            digits: &[usize], digit_to_char: &[&str; 10],
+            i: usize, cur: &mut String, res: &mut Vec<String>,
+        ) {
+            if cur.len() == digits.len() {
+                res.push(cur.clone());
+                return;
+            }
+            for c in digit_to_char[digits[i]].chars() {
+                cur.push(c);
+                backtrack(digits, digit_to_char, i + 1, cur, res);
+                cur.pop();
+            }
+        }
+
+        backtrack(&digits, &digit_to_char, 0, &mut String::new(), &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,28 +334,32 @@ class Solution {
 ## 2. Iteration
 
 ### Intuition
+
 Instead of using recursion, we **build combinations level by level**.
 
 Start with an empty string.
 For each digit:
+
 - Take all combinations built so far
 - Append every possible character mapped to the current digit
 - This creates a new list of combinations
 
 This is similar to **BFS / level-wise expansion**:
+
 - Each digit adds a new "layer" of characters
 - Combinations grow step by step until all digits are processed
 
 ### Algorithm
+
 1. If the input string is empty, return an empty list.
 2. Initialize the result list with one empty string: `[""]`.
 3. Create a digit-to-characters mapping (phone keypad).
 4. For each digit in the input:
-   - Create a temporary list.
-   - For every existing string in the result:
-     - Append each possible character of the current digit.
-     - Store the new strings in the temporary list.
-   - Replace the result list with the temporary list.
+    - Create a temporary list.
+    - For every existing string in the result:
+        - Append each possible character of the current digit.
+        - Store the new strings in the temporary list.
+    - Replace the result list with the temporary list.
 5. After processing all digits, return the result list.
 
 ::tabs-start
@@ -553,6 +596,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn letter_combinations(digits: String) -> Vec<String> {
+        if digits.is_empty() { return vec![]; }
+
+        let digit_to_char: [&str; 10] = [
+            "", "", "abc", "def", "ghi", "jkl",
+            "mno", "pqrs", "tuv", "wxyz",
+        ];
+
+        let mut res = vec![String::new()];
+
+        for b in digits.bytes() {
+            let letters = digit_to_char[(b - b'0') as usize];
+            let mut tmp = Vec::new();
+            for cur_str in &res {
+                for c in letters.chars() {
+                    let mut s = cur_str.clone();
+                    s.push(c);
+                    tmp.push(s);
+                }
+            }
+            res = tmp;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,7 +640,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Handling Empty Input
+
 When `digits` is empty, returning `[""]` (list with empty string) is wrong. The correct answer is `[]` (empty list) since there are no combinations to form.
+
 ```python
 # Wrong: returns list with empty string
 if not digits:
@@ -578,10 +653,13 @@ if not digits:
 ```
 
 ### Incorrect Digit-to-Letter Mapping
+
 Digit `7` maps to `"pqrs"` (4 letters) and digit `9` maps to `"wxyz"` (4 letters), not 3 letters each. Using `"qprs"` instead of `"pqrs"` for digit 7 produces wrong orderings.
 
 ### Off-by-One in Digit Indexing
+
 When using an array for digit mapping, digits `0` and `1` have no letters. Forgetting this offset or incorrectly computing `digit - '0'` leads to index errors or wrong character mappings.
+
 ```java
 // digitToChar[0] and digitToChar[1] should be empty
 String[] digitToChar = {"", "", "abc", "def", ...};

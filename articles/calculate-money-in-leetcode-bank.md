@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Basic Loops** - Iterating through sequences and tracking state across iterations
 - **Arithmetic Series** - Understanding how to sum sequences like 1+2+3+...+n
 - **Math Formulas** - Using closed-form expressions to compute sums efficiently
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Simulation
 
 ### Intuition
+
 The deposit pattern follows a simple rule: each day we deposit one more dollar than the previous day, but every Monday we reset to deposit one more dollar than we did on the previous Monday. We can simulate this process day by day, tracking when each week ends to reset the starting deposit for the new week.
 
 ### Algorithm
+
 1. Initialize variables to track the current day, the current deposit amount (starting at `1`), and the total result.
 2. Loop through each day from `0` to `n-1`.
 3. Add the current deposit to the result, then increment the deposit for the next day.
@@ -184,6 +188,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_money(n: i32) -> i32 {
+        let (mut day, mut deposit, mut res) = (0, 1, 0);
+
+        while day < n {
+            res += deposit;
+            deposit += 1;
+            day += 1;
+
+            if day % 7 == 0 {
+                deposit = 1 + day / 7;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,9 +220,11 @@ class Solution {
 ## 2. Math
 
 ### Intuition
+
 Instead of simulating each day, we can use arithmetic series formulas. Each complete week deposits a fixed sum: week 1 deposits 1+2+3+4+5+6+7=28, week 2 deposits 2+3+4+5+6+7+8=35, and so on. The weekly sums form an arithmetic sequence with common difference 7. For the remaining days after complete weeks, we just add the deposits for those partial days.
 
 ### Algorithm
+
 1. Calculate the number of complete weeks as `n/7`.
 2. The first week contributes `28`, and each subsequent week adds `7` more. Use the arithmetic series sum formula: `weeks * (low + high) / 2`, where `low = 28` and `high = 28 + 7 * (weeks - 1)`.
 3. For the remaining days (`n % 7`), the Monday deposit is `weeks + 1`. Add the deposits for each remaining day (`monday`, `monday+1`, `monday+2`, ...).
@@ -350,6 +376,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_money(n: i32) -> i32 {
+        let weeks = n / 7;
+        let low = 28;
+        let high = 28 + 7 * (weeks - 1);
+        let mut res = weeks * (low + high) / 2;
+
+        let monday = weeks + 1;
+        for i in 0..(n % 7) {
+            res += i + monday;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,9 +406,11 @@ class Solution {
 ## 3. Math (Optimal)
 
 ### Intuition
+
 We can derive a closed-form formula using the sum of first `k` natural numbers: `SUM(k) = k*(k+1)/2`. Each week's extra contribution above the base week follows a pattern, and the remaining days also follow an arithmetic progression. This eliminates the loop needed for remaining days in the previous approach.
 
 ### Algorithm
+
 1. Define a helper function `SUM(x) = x*(x+1)/2` which gives the sum of first `x` natural numbers.
 2. Calculate the number of complete weeks.
 3. The contribution from complete weeks is: `SUM(weeks-1) * 7 + weeks * SUM(7)`. This accounts for the increasing weekly base and the standard week pattern.
@@ -485,6 +531,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_money(n: i32) -> i32 {
+        let sum = |x: i32| -> i32 { (x * (x + 1)) / 2 };
+
+        let weeks = n / 7;
+        let mut res = sum(weeks - 1) * 7 + weeks * sum(7);
+        res += sum(n % 7) + weeks * (n % 7);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -497,7 +556,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Using Wrong Starting Deposit for Each Week
+
 Each Monday starts with `week_number` dollars (week 1 starts with 1, week 2 starts with 2, etc.), not always 1. Forgetting to increment the Monday deposit each week gives incorrect totals.
+
 ```python
 # Wrong: always starting at 1
 if day % 7 == 0:
@@ -505,4 +566,5 @@ if day % 7 == 0:
 ```
 
 ### Off-by-One in Week Calculation
+
 When computing complete weeks, using `(n + 6) // 7` instead of `n // 7` overcounts partial weeks as complete, leading to incorrect sums in the math-based approach.

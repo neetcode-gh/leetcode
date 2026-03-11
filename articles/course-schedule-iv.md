@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge pairs to represent directed graphs
 - **Depth-First Search (DFS)** - Recursive graph traversal for path finding and reachability queries
 - **Topological Sort (Kahn's Algorithm)** - BFS-based approach using indegree to process nodes in dependency order
@@ -11,9 +13,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force (DFS)
 
 ### Intuition
+
 To check if course A is a prerequisite of course B, we need to determine if there is a path from A to B in the prerequisite graph. A depth-first search starting from A can explore all courses reachable from A. If we reach B during this traversal, then A is indeed a prerequisite of B.
 
 ### Algorithm
+
 1. Build an adjacency list from the prerequisites, where each course points to its direct successors.
 2. For each query `(u, v)`, run a DFS starting from `u`.
 3. In the DFS, if we reach `v`, return `true`.
@@ -235,6 +239,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_if_prerequisite(num_courses: i32, prerequisites: Vec<Vec<i32>>, queries: Vec<Vec<i32>>) -> Vec<bool> {
+        let n = num_courses as usize;
+        let mut adj = vec![vec![]; n];
+        for pre in &prerequisites {
+            adj[pre[0] as usize].push(pre[1] as usize);
+        }
+
+        fn dfs(node: usize, target: usize, adj: &Vec<Vec<usize>>) -> bool {
+            if node == target { return true; }
+            for &nei in &adj[node] {
+                if dfs(nei, target, adj) { return true; }
+            }
+            false
+        }
+
+        queries.iter().map(|q| dfs(q[0] as usize, q[1] as usize, &adj)).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -249,9 +275,11 @@ class Solution {
 ## 2. Depth First Search (Hash Set)
 
 ### Intuition
+
 Instead of running DFS for every query, we can precompute all prerequisites for each course. For each course, we use DFS to find all courses that are prerequisites (directly or indirectly) and store them in a set. Then answering any query becomes a simple set lookup.
 
 ### Algorithm
+
 1. Build an adjacency list where each course points to its direct prerequisites.
 2. For each course, run DFS to collect all reachable prerequisites into a set.
 3. Cache these sets to avoid recomputation.
@@ -540,6 +568,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_if_prerequisite(num_courses: i32, prerequisites: Vec<Vec<i32>>, queries: Vec<Vec<i32>>) -> Vec<bool> {
+        let n = num_courses as usize;
+        let mut adj = vec![vec![]; n];
+        for pre in &prerequisites {
+            adj[pre[1] as usize].push(pre[0] as usize);
+        }
+
+        let mut prereq_map: Vec<Option<HashSet<usize>>> = vec![None; n];
+
+        fn dfs(crs: usize, adj: &Vec<Vec<usize>>, prereq_map: &mut Vec<Option<HashSet<usize>>>) -> HashSet<usize> {
+            if let Some(ref set) = prereq_map[crs] {
+                return set.clone();
+            }
+            let mut prereqs = HashSet::new();
+            for i in 0..adj[crs].len() {
+                let pre = adj[crs][i];
+                let sub = dfs(pre, adj, prereq_map);
+                prereqs.extend(sub);
+            }
+            prereqs.insert(crs);
+            prereq_map[crs] = Some(prereqs.clone());
+            prereqs
+        }
+
+        for crs in 0..n {
+            dfs(crs, &adj, &mut prereq_map);
+        }
+
+        queries.iter().map(|q| {
+            prereq_map[q[1] as usize].as_ref().map_or(false, |s| s.contains(&(q[0] as usize)))
+        }).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -554,9 +619,11 @@ class Solution {
 ## 3. Depth First Search (Memoization)
 
 ### Intuition
+
 We can optimize by memoizing the result for each pair of courses. When checking if course `A` is a prerequisite of course `B`, we store the result so that future queries for the same pair can be answered instantly. This avoids redundant graph traversals for repeated or similar queries.
 
 ### Algorithm
+
 1. Build an adjacency list where each course points to its direct prerequisites.
 2. Create a 2D memoization array initialized to `-1` (unknown).
 3. For each query `(u, v)`, run DFS to check if `u` is a prerequisite of `v`.
@@ -868,6 +935,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_if_prerequisite(num_courses: i32, prerequisites: Vec<Vec<i32>>, queries: Vec<Vec<i32>>) -> Vec<bool> {
+        let n = num_courses as usize;
+        let mut adj = vec![vec![]; n];
+        let mut is_prereq = vec![vec![-1i8; n]; n];
+
+        for pre in &prerequisites {
+            let (prereq, crs) = (pre[0] as usize, pre[1] as usize);
+            adj[crs].push(prereq);
+            is_prereq[crs][prereq] = 1;
+        }
+
+        fn dfs(crs: usize, prereq: usize, adj: &Vec<Vec<usize>>, is_prereq: &mut Vec<Vec<i8>>) -> bool {
+            if is_prereq[crs][prereq] != -1 {
+                return is_prereq[crs][prereq] == 1;
+            }
+            for i in 0..adj[crs].len() {
+                let pre = adj[crs][i];
+                if pre == prereq || dfs(pre, prereq, adj, is_prereq) {
+                    is_prereq[crs][prereq] = 1;
+                    return true;
+                }
+            }
+            is_prereq[crs][prereq] = 0;
+            false
+        }
+
+        queries.iter().map(|q| dfs(q[1] as usize, q[0] as usize, &adj, &mut is_prereq)).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -882,14 +982,16 @@ class Solution {
 ## 4. Topological Sort (Kahn's Algorithm)
 
 ### Intuition
+
 Using topological sort, we process courses in an order where all prerequisites of a course are processed before the course itself. When we process a course, we propagate all its prerequisites to its successors. This way, each course accumulates the complete set of all courses that must be taken before it.
 
 ### Algorithm
+
 1. Build an adjacency list and compute the `indegree` for each course.
 2. Initialize a queue with all courses having `indegree` `0`.
 3. For each course processed:
-   - For each successor, add the current course and all its prerequisites to the successor's prerequisite set.
-   - Decrement the successor's `indegree` and add to queue if it becomes `0`.
+    - For each successor, add the current course and all its prerequisites to the successor's prerequisite set.
+    - Decrement the successor's `indegree` and add to queue if it becomes `0`.
 4. After processing all courses, each course has a complete set of its prerequisites.
 5. For each query `(u, v)`, check if `u` is in the prerequisite set of `v`.
 
@@ -1202,6 +1304,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_if_prerequisite(num_courses: i32, prerequisites: Vec<Vec<i32>>, queries: Vec<Vec<i32>>) -> Vec<bool> {
+        let n = num_courses as usize;
+        let mut adj = vec![vec![]; n];
+        let mut is_prereq: Vec<HashSet<usize>> = vec![HashSet::new(); n];
+        let mut indegree = vec![0usize; n];
+
+        for pre in &prerequisites {
+            let (p, c) = (pre[0] as usize, pre[1] as usize);
+            adj[p].push(c);
+            indegree[c] += 1;
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 0..n {
+            if indegree[i] == 0 {
+                queue.push_back(i);
+            }
+        }
+
+        while let Some(node) = queue.pop_front() {
+            for i in 0..adj[node].len() {
+                let neighbor = adj[node][i];
+                is_prereq[neighbor].insert(node);
+                let parent_set: HashSet<usize> = is_prereq[node].clone();
+                is_prereq[neighbor].extend(parent_set);
+                indegree[neighbor] -= 1;
+                if indegree[neighbor] == 0 {
+                    queue.push_back(neighbor);
+                }
+            }
+        }
+
+        queries.iter().map(|q| is_prereq[q[1] as usize].contains(&(q[0] as usize))).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1216,9 +1357,11 @@ class Solution {
 ## 5. Floyd Warshall Algorithm
 
 ### Intuition
+
 The Floyd-Warshall algorithm finds all-pairs reachability in a graph. We can adapt it to find transitive closure: if there is a path from `A` to `B` through any intermediate course `K`, then `A` is a prerequisite of `B`. After running the algorithm, we have direct `O(1)` lookup for any pair.
 
 ### Algorithm
+
 1. Create a 2D boolean matrix initialized to `false`.
 2. Mark direct prerequisites as `true` in the matrix.
 3. For each intermediate course `k`, iterate through all pairs `(i, j)`.
@@ -1433,6 +1576,29 @@ class Solution {
         }
 
         return queries.map { adj[$0[0]][$0[1]] }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn check_if_prerequisite(num_courses: i32, prerequisites: Vec<Vec<i32>>, queries: Vec<Vec<i32>>) -> Vec<bool> {
+        let n = num_courses as usize;
+        let mut adj = vec![vec![false; n]; n];
+
+        for pre in &prerequisites {
+            adj[pre[0] as usize][pre[1] as usize] = true;
+        }
+
+        for k in 0..n {
+            for i in 0..n {
+                for j in 0..n {
+                    adj[i][j] = adj[i][j] || (adj[i][k] && adj[k][j]);
+                }
+            }
+        }
+
+        queries.iter().map(|q| adj[q[0] as usize][q[1] as usize]).collect()
     }
 }
 ```

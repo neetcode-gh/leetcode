@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to store values and their indices for O(1) lookup of complements
 - **Two Pointers technique** - Understanding how sorting enables the two-pointer approach for finding pairs
 - **Array traversal** - Iterating through arrays while tracking indices and values
@@ -26,21 +28,20 @@ We can check every pair of different elements in the array and return the first 
 
 ```markdown
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
-   0     1     2     3    ← indices
+0 1 2 3 ← indices
 ```
 
 We check every pair of elements using two nested loops.
 
-
 **Step 1:** `i = 0`, `j = 1`
 
 ```markdown
-   i     j
-   ↓     ↓
+i j
+↓ ↓
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
 
 Check: nums[0] + nums[1] = 2 + 7 = 9 == target ✓
@@ -48,25 +49,22 @@ Check: nums[0] + nums[1] = 2 + 7 = 9 == target ✓
 
 **Match found!** Return `[0, 1]`
 
-
 ---
-
 
 **Visualization of all pairs (if no early match):**
 
 ```markdown
 ┌──────────┬─────────────┬────────────┐
-│   Pair   │ Calculation │   Result   │
+│ Pair │ Calculation │ Result │
 ├──────────┼─────────────┼────────────┤
-│  (0, 1)  │   2 +  7    │   9  ✓     │ ← Found!
-│  (0, 2)  │   2 + 11    │  13        │
-│  (0, 3)  │   2 + 15    │  17        │
-│  (1, 2)  │   7 + 11    │  18        │
-│  (1, 3)  │   7 + 15    │  22        │
-│  (2, 3)  │  11 + 15    │  26        │
+│ (0, 1) │ 2 + 7 │ 9 ✓ │ ← Found!
+│ (0, 2) │ 2 + 11 │ 13 │
+│ (0, 3) │ 2 + 15 │ 17 │
+│ (1, 2) │ 7 + 11 │ 18 │
+│ (1, 3) │ 7 + 15 │ 22 │
+│ (2, 3) │ 11 + 15 │ 26 │
 └──────────┴─────────────┴────────────┘
 ```
-
 
 **Result:** `[0, 1]`
 
@@ -195,6 +193,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        for i in 0..nums.len() {
+            for j in (i + 1)..nums.len() {
+                if nums[i] + nums[j] == target {
+                    return vec![i as i32, j as i32];
+                }
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -227,11 +240,10 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 
 ```markdown
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
-   0     1     2     3    ← indices
+0 1 2 3 ← indices
 ```
-
 
 **Initial State:** Create array with (value, original_index) pairs
 
@@ -239,61 +251,60 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 A = [(2, 0), (7, 1), (11, 2), (15, 3)]
 ```
 
-
 **After Sorting:** (already sorted in this case)
 
 ```markdown
         i                       j
         ↓                       ↓
-┌───────────┬───────────┬───────────┬───────────┐
-│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
-└───────────┴───────────┴───────────┴───────────┘
-   val=2       val=7      val=11      val=15
-```
 
+┌───────────┬───────────┬───────────┬───────────┐
+│ (2, 0) │ (7, 1) │ (11, 2) │ (15, 3) │
+└───────────┴───────────┴───────────┴───────────┘
+val=2 val=7 val=11 val=15
+```
 
 **Step 1:** `i = 0`, `j = 3`
 
 ```markdown
         i                       j
         ↓                       ↓
+
 ┌───────────┬───────────┬───────────┬───────────┐
-│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+│ (2, 0) │ (7, 1) │ (11, 2) │ (15, 3) │
 └───────────┴───────────┴───────────┴───────────┘
 
 Sum = 2 + 15 = 17 > 9 (target)
 Action: Move j left (decrease sum) ←
 ```
 
-
 **Step 2:** `i = 0`, `j = 2`
 
 ```markdown
         i               j
         ↓               ↓
+
 ┌───────────┬───────────┬───────────┬───────────┐
-│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+│ (2, 0) │ (7, 1) │ (11, 2) │ (15, 3) │
 └───────────┴───────────┴───────────┴───────────┘
 
 Sum = 2 + 11 = 13 > 9 (target)
 Action: Move j left (decrease sum) ←
 ```
 
-
 **Step 3:** `i = 0`, `j = 1`
 
 ```markdown
         i       j
         ↓       ↓
+
 ┌───────────┬───────────┬───────────┬───────────┐
-│  (2, 0)   │  (7, 1)   │ (11, 2)   │ (15, 3)   │
+│ (2, 0) │ (7, 1) │ (11, 2) │ (15, 3) │
 └───────────┴───────────┴───────────┴───────────┘
 
 Sum = 2 + 7 = 9 == target ✓
 ```
 
 **Match found!** Original indices are 0 and 1.
-
 
 **Result:** `[0, 1]`
 
@@ -525,6 +536,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut a: Vec<(i32, usize)> = nums.iter().copied()
+            .enumerate()
+            .map(|(i, num)| (num, i))
+            .collect();
+
+        a.sort();
+
+        let mut i = 0;
+        let mut j = nums.len() - 1;
+        while i < j {
+            let cur = a[i].0 + a[j].0;
+            if cur == target {
+                return vec![
+                    a[i].1.min(a[j].1) as i32,
+                    a[i].1.max(a[j].1) as i32,
+                ];
+            } else if cur < target {
+                i += 1;
+            } else {
+                j -= 1;
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,17 +598,16 @@ By using a hashmap, we can achieve a time complexity of `O(n)` because the inser
 
 ```markdown
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
-   0     1     2     3    ← indices
+0 1 2 3 ← indices
 ```
-
 
 **Pass 1: Build the HashMap**
 
 ```markdown
-Iteration 0: indices[2]  = 0
-Iteration 1: indices[7]  = 1
+Iteration 0: indices[2] = 0
+Iteration 1: indices[7] = 1
 Iteration 2: indices[11] = 2
 Iteration 3: indices[15] = 3
 ```
@@ -578,34 +618,31 @@ HashMap after Pass 1:
 ┌───────┬───────┐
 │ Value │ Index │
 ├───────┼───────┤
-│   2   │   0   │
-│   7   │   1   │
-│  11   │   2   │
-│  15   │   3   │
+│ 2 │ 0 │
+│ 7 │ 1 │
+│ 11 │ 2 │
+│ 15 │ 3 │
 └───────┴───────┘
 ```
 
-
 **Pass 2: Find the complement**
-
 
 **Step 1:** `i = 0`, `nums[0] = 2`
 
 ```markdown
-   i
-   ↓
+i
+↓
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
 
 diff = target - nums[0] = 9 - 2 = 7
 
-Check: Is 7 in HashMap?      → YES, at index 1
+Check: Is 7 in HashMap? → YES, at index 1
 Check: Is index 1 != index 0? → YES ✓
 ```
 
 **Match found!** Return `[0, 1]`
-
 
 **Result:** `[0, 1]`
 
@@ -780,6 +817,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut indices = HashMap::new(); // val -> index
+
+        for (i, &n) in nums.iter().enumerate() {
+            indices.insert(n, i);
+        }
+
+        for (i, &n) in nums.iter().enumerate() {
+            let diff = target - n;
+            if let Some(&j) = indices.get(&diff) {
+                if j != i {
+                    return vec![i as i32, j as i32];
+                }
+            }
+        }
+
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -812,30 +872,29 @@ If it does, we return the indices of the current element and its complement. If 
 
 ```markdown
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
-   0     1     2     3    ← indices
+0 1 2 3 ← indices
 ```
 
 We iterate through the array once, checking for complement and building the HashMap simultaneously.
 
-
 **Step 1:** `i = 0`, `nums[0] = 2`
 
 ```markdown
-   i
-   ↓
+i
+↓
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
 
 diff = target - nums[0] = 9 - 2 = 7
 
 HashMap (before):
 ┌───────┬───────┐
-│  Key  │ Value │
+│ Key │ Value │
 ├───────┼───────┤
-│   -   │   -   │
+│ - │ - │
 └───────┴───────┘
 
 Check: Is 7 in HashMap? → NO
@@ -843,29 +902,29 @@ Action: Add 2 → 0 to HashMap
 
 HashMap (after):
 ┌───────┬───────┐
-│  Key  │ Value │
+│ Key │ Value │
 ├───────┼───────┤
-│   2   │   0   │
+│ 2 │ 0 │
 └───────┴───────┘
 ```
-
 
 **Step 2:** `i = 1`, `nums[1] = 7`
 
 ```markdown
          i
          ↓
+
 ┌─────┬─────┬─────┬─────┐
-│  2  │  7  │ 11  │ 15  │
+│ 2 │ 7 │ 11 │ 15 │
 └─────┴─────┴─────┴─────┘
 
 diff = target - nums[1] = 9 - 7 = 2
 
 HashMap:
 ┌───────┬───────┐
-│  Key  │ Value │
+│ Key │ Value │
 ├───────┼───────┤
-│   2   │   0   │
+│ 2 │ 0 │
 └───────┴───────┘
 
 Check: Is 2 in HashMap? → YES, at index 0 ✓
@@ -873,21 +932,18 @@ Check: Is 2 in HashMap? → YES, at index 0 ✓
 
 **Match found!** Return `[0, 1]`
 
-
 ---
-
 
 **Visual Summary:**
 
 ```markdown
 ┌──────┬─────────┬──────┬─────────────────┬──────────────────┐
-│ Step │ nums[i] │ diff │ HashMap Before  │ Action           │
+│ Step │ nums[i] │ diff │ HashMap Before │ Action │
 ├──────┼─────────┼──────┼─────────────────┼──────────────────┤
-│  0   │    2    │   7  │ {}              │ Add {2: 0}       │
-│  1   │    7    │   2  │ {2: 0}          │ Found! Return ✓  │
+│ 0 │ 2 │ 7 │ {} │ Add {2: 0} │
+│ 1 │ 7 │ 2 │ {2: 0} │ Found! Return ✓ │
 └──────┴─────────┴──────┴─────────────────┴──────────────────┘
 ```
-
 
 **Result:** `[0, 1]`
 
@@ -1040,6 +1096,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(nums: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut prev_map = HashMap::new(); // val -> index
+
+        for (i, &n) in nums.iter().enumerate() {
+            let diff = target - n;
+            if let Some(&index) = prev_map.get(&diff) {
+                return vec![index as i32, i as i32];
+            }
+            prev_map.insert(n, i);
+        }
+
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1052,7 +1126,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Using the Same Element Twice
+
 You cannot use the same element twice to form a pair. When using a hash map, ensure you check that the found index differs from the current index, or use one-pass where you only look at previously seen elements.
+
 ```python
 # Wrong: might return [i, i] when nums[i] * 2 == target
 if diff in indices:
@@ -1063,10 +1139,13 @@ if diff in indices and indices[diff] != i:
 ```
 
 ### Returning Values Instead of Indices
+
 The problem asks for indices, not the values themselves. A common mistake is returning the two numbers that sum to the target rather than their positions in the array.
 
 ### Handling Duplicate Values
+
 When building a hash map with values as keys, duplicate values overwrite earlier indices. In the two-pass approach, this still works because you check `indices[diff] != i`. In the one-pass approach, you check for the complement before inserting the current element.
 
 ### Wrong Complement Calculation
+
 The complement should be `target - nums[i]`, not `nums[i] - target`. Getting this backwards will search for the wrong value.

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Number Representation** - Understanding how integers are stored as sequences of bits (0s and 1s)
 - **Bitwise AND Operator** - Using `&` to check if specific bits are set
 - **Bit Shifting** - Using left shift (`<<`) and right shift (`>>`) to move bits or create masks
@@ -15,12 +17,14 @@ We are asked to count how many **`1` bits** are present in the binary representa
 This value is also known as the **Hamming Weight** or **population count**.
 
 A straightforward way to do this is to:
+
 - check each bit position one by one
 - see whether that bit is set (`1`) or not (`0`)
 
 Since integers are typically represented using **32 bits**, we can safely check all 32 bit positions.
 
 At each position:
+
 - create a mask with a single `1` at that position using `1 << i`
 - use bitwise AND (`&`) to test whether that bit is set in `n`
 
@@ -29,9 +33,9 @@ At each position:
 1. Initialize a counter `res = 0`.
 2. For each bit position `i` from `0` to `31`:
 3. Create a mask with only the `i`-th bit set:
-   - `mask = 1 << i`
+    - `mask = 1 << i`
 4. Check if this bit is set in `n`:
-   - If `(mask & n) != 0`, increment `res`
+    - If `(mask & n) != 0`, increment `res`
 5. After checking all 32 bits, return `res`.
 
 ::tabs-start
@@ -147,6 +151,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn hamming_weight(n: i32) -> i32 {
+        let mut res = 0;
+        for i in 0..32 {
+            if (1 << i) & n != 0 {
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -163,10 +181,12 @@ class Solution {
 We want to count the number of `1` bits in the binary representation of an integer `n`.
 
 Instead of checking every bit position explicitly, we can:
+
 - look at the **least significant bit** of `n`
 - then **shift the number right** to bring the next bit into that position
 
 At each step:
+
 - `n & 1` tells us whether the current least significant bit is `1`
 - shifting `n` right by one (`n >>= 1`) moves us to the next bit
 
@@ -176,9 +196,9 @@ We repeat this until `n` becomes `0`.
 
 1. Initialize a counter `res = 0`.
 2. While `n > 0`:
-   - If the least significant bit is `1` (`n & 1`):
-     - increment `res`
-   - Shift `n` one bit to the right (`n >>= 1`)
+    - If the least significant bit is `1` (`n & 1`):
+        - increment `res`
+    - Shift `n` one bit to the right (`n >>= 1`)
 3. When `n` becomes `0`, all bits have been processed.
 4. Return `res`.
 
@@ -294,6 +314,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn hamming_weight(n: i32) -> i32 {
+        let mut n = n;
+        let mut res = 0;
+        while n != 0 {
+            res += n & 1;
+            n >>= 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -318,6 +352,7 @@ So every time we do:
 `n = n & (n - 1)` we eliminate exactly **one `1` bit**.
 
 This means:
+
 - the number of iterations equals the number of `1` bits
 - we don’t waste time checking bits that are `0`
 
@@ -327,8 +362,8 @@ That’s why this approach is considered optimal.
 
 1. Initialize a counter `res = 0`.
 2. While `n` is not zero:
-   - Update `n = n & (n - 1)` to remove the rightmost `1` bit
-   - Increment `res` by `1`
+    - Update `n = n & (n - 1)` to remove the rightmost `1` bit
+    - Increment `res` by `1`
 3. When `n` becomes `0`, all `1` bits have been removed.
 4. Return `res`.
 
@@ -440,6 +475,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn hamming_weight(n: i32) -> i32 {
+        let mut n = n;
+        let mut res = 0;
+        while n != 0 {
+            n &= n - 1;
+            res += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -456,6 +505,7 @@ class Solution {
 We want to find the **Hamming Weight** of a number, which means counting how many `1` bits are present in its binary representation.
 
 Most programming languages provide:
+
 - a way to convert a number into **binary form**, or
 - a built-in utility to **count set bits**
 
@@ -533,6 +583,14 @@ class Solution {
 class Solution {
     func hammingWeight(_ n: Int) -> Int {
         return n.nonzeroBitCount
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn hamming_weight(n: i32) -> i32 {
+        n.count_ones() as i32
     }
 }
 ```

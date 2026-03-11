@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - The optimal solution uses binary search on an unsorted array by comparing neighbors to determine which half contains a peak
 - **Array Neighbor Comparison** - Understanding how to safely compare elements with their neighbors while handling boundary conditions
 
@@ -123,6 +125,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_peak_element(nums: Vec<i32>) -> i32 {
+        for i in 0..nums.len() - 1 {
+            if nums[i] > nums[i + 1] {
+                return i as i32;
+            }
+        }
+        (nums.len() - 1) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -142,10 +157,10 @@ Binary search works here because a peak must exist in any subarray. At each midp
 
 1. Initialize two pointers `l = 0` and `r = n - 1`.
 2. While `l <= r`:
-   - Compute the midpoint `m`.
-   - If `m > 0` and `nums[m] < nums[m - 1]`, move the right pointer to `m - 1`.
-   - Else if `m < n - 1` and `nums[m] < nums[m + 1]`, move the left pointer to `m + 1`.
-   - Otherwise, `m` is a peak; return `m`.
+    - Compute the midpoint `m`.
+    - If `m > 0` and `nums[m] < nums[m - 1]`, move the right pointer to `m - 1`.
+    - Else if `m < n - 1` and `nums[m] < nums[m + 1]`, move the left pointer to `m + 1`.
+    - Otherwise, `m` is a peak; return `m`.
 3. Return the result.
 
 ::tabs-start
@@ -312,6 +327,27 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_peak_element(nums: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+            if m > 0 && nums[m as usize] < nums[(m - 1) as usize] {
+                r = m - 1;
+            } else if m < nums.len() as i32 - 1 && nums[m as usize] < nums[(m + 1) as usize] {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+
+        -1
     }
 }
 ```
@@ -496,6 +532,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_peak_element(nums: Vec<i32>) -> i32 {
+        fn binary_search(nums: &[i32], l: usize, r: usize) -> i32 {
+            if l == r {
+                return l as i32;
+            }
+            let m = l + (r - l) / 2;
+            if nums[m] > nums[m + 1] {
+                binary_search(nums, l, m)
+            } else {
+                binary_search(nums, m + 1, r)
+            }
+        }
+
+        binary_search(&nums, 0, nums.len() - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -515,9 +571,9 @@ We can simplify the binary search by using `l < r` as the loop condition instead
 
 1. Initialize `l = 0` and `r = n - 1`.
 2. While `l < r`:
-   - Compute `m = (l + r) / 2`.
-   - If `nums[m] > nums[m + 1]`, the peak is at `m` or to the left, so set `r = m`.
-   - Otherwise, the peak is to the right, so set `l = m + 1`.
+    - Compute `m = (l + r) / 2`.
+    - If `nums[m] > nums[m + 1]`, the peak is at `m` or to the left, so set `r = m`.
+    - Otherwise, the peak is to the right, so set `l = m + 1`.
 3. When the loop exits, `l` points to a peak. Return `l`.
 
 ::tabs-start
@@ -670,6 +726,25 @@ class Solution {
         }
 
         return l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_peak_element(nums: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len() - 1);
+
+        while l < r {
+            let m = (l + r) >> 1;
+            if nums[m] > nums[m + 1] {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        l as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting element frequencies in a single pass for O(n) time solutions
 - **Boyer-Moore Voting Algorithm** - Understanding how candidate elimination works to find majority elements in O(1) space
 - **Mathematical Reasoning** - Recognizing that at most 2 elements can appear more than n/3 times, which constrains the solution space
@@ -15,8 +17,8 @@ Elements appearing more than `n/3` times are rare. There can be at most two such
 ### Algorithm
 
 1. For each element `num` in the array:
-   - Count how many times `num` appears.
-   - If the count exceeds `n / 3`, add it to the result set.
+    - Count how many times `num` appears.
+    - If the count exceeds `n / 3`, add it to the result set.
 2. Convert the set to a list and return.
 
 ::tabs-start
@@ -174,6 +176,22 @@ class Solution {
         }
 
         return Array(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = HashSet::new();
+        for &num in &nums {
+            let count = nums.iter().filter(|&&x| x == num).count();
+            if count > n / 3 {
+                res.insert(num);
+            }
+        }
+        res.into_iter().collect()
     }
 }
 ```
@@ -392,6 +410,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len();
+        let mut res = Vec::new();
+        let mut i = 0;
+        while i < n {
+            let mut j = i + 1;
+            while j < n && nums[i] == nums[j] {
+                j += 1;
+            }
+            if j - i > n / 3 {
+                res.push(nums[i]);
+            }
+            i = j;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -577,6 +618,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+        let n = nums.len();
+        count.into_iter()
+            .filter(|&(_, v)| v > n / 3)
+            .map(|(k, _)| k)
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -596,11 +653,11 @@ The Boyer-Moore algorithm extends to finding up to two majority elements. We mai
 
 1. Initialize two candidates `num1`, `num2` and their counts `cnt1`, `cnt2` to `0`.
 2. For each element:
-   - If it matches `num1`, increment `cnt1`.
-   - Else if it matches `num2`, increment `cnt2`.
-   - Else if `cnt1 == 0`, set `num1 = num` and `cnt1 = 1`.
-   - Else if `cnt2 == 0`, set `num2 = num` and `cnt2 = 1`.
-   - Else decrement both counts.
+    - If it matches `num1`, increment `cnt1`.
+    - Else if it matches `num2`, increment `cnt2`.
+    - Else if `cnt1 == 0`, set `num1 = num` and `cnt1 = 1`.
+    - Else if `cnt2 == 0`, set `num2 = num` and `cnt2 = 1`.
+    - Else decrement both counts.
 3. Count actual occurrences of both candidates.
 4. Add candidates with count greater than `n / 3` to the result.
 5. Return the result.
@@ -928,6 +985,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let (mut num1, mut num2) = (0, 0);
+        let (mut cnt1, mut cnt2) = (0, 0);
+
+        for &num in &nums {
+            if num == num1 {
+                cnt1 += 1;
+            } else if num == num2 {
+                cnt2 += 1;
+            } else if cnt1 == 0 {
+                num1 = num;
+                cnt1 = 1;
+            } else if cnt2 == 0 {
+                num2 = num;
+                cnt2 = 1;
+            } else {
+                cnt1 -= 1;
+                cnt2 -= 1;
+            }
+        }
+
+        cnt1 = 0;
+        cnt2 = 0;
+        for &num in &nums {
+            if num == num1 {
+                cnt1 += 1;
+            } else if num == num2 {
+                cnt2 += 1;
+            }
+        }
+
+        let mut res = Vec::new();
+        if cnt1 > n / 3 { res.push(num1); }
+        if cnt2 > n / 3 { res.push(num2); }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -948,8 +1047,8 @@ This variation uses a hash map to track candidates instead of fixed variables. W
 1. Create a hash map to store candidate counts.
 2. For each element, increment its count in the map.
 3. If the map has more than 2 entries:
-   - Decrement all counts by 1.
-   - Remove entries with count `0`.
+    - Decrement all counts by 1.
+    - Remove entries with count `0`.
 4. After processing, verify each remaining candidate by counting its actual occurrences.
 5. Return candidates with count greater than `n / 3`.
 
@@ -1126,6 +1225,33 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> Vec<i32> {
+        let mut count: HashMap<i32, usize> = HashMap::new();
+
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+
+            if count.len() > 2 {
+                let new_count: HashMap<i32, usize> = count
+                    .iter()
+                    .filter(|&(_, &v)| v > 1)
+                    .map(|(&k, &v)| (k, v - 1))
+                    .collect();
+                count = new_count;
+            }
+        }
+
+        let n = nums.len();
+        count.keys()
+            .filter(|&&k| nums.iter().filter(|&&x| x == k).count() > n / 3)
+            .copied()
+            .collect()
     }
 }
 ```

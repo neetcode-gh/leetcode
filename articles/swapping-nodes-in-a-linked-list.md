@@ -310,6 +310,42 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn swap_nodes(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut arr = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = arr.len();
+        arr.swap(k as usize - 1, n - k as usize);
+
+        let mut cur = head;
+        let mut i = 0;
+        let mut head = cur;
+        {
+            let mut node_ref = &mut head;
+            while let Some(node) = node_ref {
+                node.val = arr[i];
+                i += 1;
+                node_ref = &mut node.next;
+            }
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -679,6 +715,41 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn swap_nodes(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut vals: Vec<i32> = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = vals.len();
+        let left = k as usize - 1;
+        let right = n - k as usize;
+        vals.swap(left, right);
+
+        let mut head = head;
+        let mut i = 0;
+        let mut cur = &mut head;
+        while let Some(node) = cur {
+            node.val = vals[i];
+            i += 1;
+            cur = &mut node.next;
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1014,6 +1085,39 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn swap_nodes(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut vals: Vec<i32> = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = vals.len();
+        vals.swap(k as usize - 1, n - k as usize);
+
+        let mut head = head;
+        let mut i = 0;
+        let mut cur = &mut head;
+        while let Some(node) = cur {
+            node.val = vals[i];
+            i += 1;
+            cur = &mut node.next;
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1295,6 +1399,39 @@ class Solution {
         right!.val = temp
 
         return head
+    }
+}
+```
+
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn swap_nodes(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut vals: Vec<i32> = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = vals.len();
+        vals.swap(k as usize - 1, n - k as usize);
+
+        let mut head = head;
+        let mut i = 0;
+        let mut cur = &mut head;
+        while let Some(node) = cur {
+            node.val = vals[i];
+            i += 1;
+            cur = &mut node.next;
+        }
+        head
     }
 }
 ```
@@ -1599,6 +1736,39 @@ class Solution {
         right!.val = temp
 
         return head
+    }
+}
+```
+
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn swap_nodes(head: Option<Box<ListNode>>, k: i32) -> Option<Box<ListNode>> {
+        let mut vals: Vec<i32> = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let n = vals.len();
+        vals.swap(k as usize - 1, n - k as usize);
+
+        let mut head = head;
+        let mut i = 0;
+        let mut cur = &mut head;
+        while let Some(node) = cur {
+            node.val = vals[i];
+            i += 1;
+            cur = &mut node.next;
+        }
+        head
     }
 }
 ```

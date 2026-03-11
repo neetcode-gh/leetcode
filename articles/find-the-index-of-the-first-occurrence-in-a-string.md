@@ -191,6 +191,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        let h = haystack.as_bytes();
+        let n = needle.as_bytes();
+        let (hlen, nlen) = (h.len(), n.len());
+        if nlen > hlen { return -1; }
+
+        for i in 0..=hlen - nlen {
+            let mut j = 0;
+            while j < nlen {
+                if h[i + j] != n[j] { break; }
+                j += 1;
+            }
+            if j == nlen { return i as i32; }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -593,6 +614,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        if needle.is_empty() { return 0; }
+
+        let h = haystack.as_bytes();
+        let n = needle.as_bytes();
+        let m = n.len();
+        let mut lps = vec![0usize; m];
+        let (mut prev_lps, mut i) = (0usize, 1usize);
+
+        while i < m {
+            if n[i] == n[prev_lps] {
+                lps[i] = prev_lps + 1;
+                prev_lps += 1;
+                i += 1;
+            } else if prev_lps == 0 {
+                lps[i] = 0;
+                i += 1;
+            } else {
+                prev_lps = lps[prev_lps - 1];
+            }
+        }
+
+        let (mut i, mut j) = (0usize, 0usize);
+        while i < h.len() {
+            if h[i] == n[j] {
+                i += 1;
+                j += 1;
+            } else if j == 0 {
+                i += 1;
+            } else {
+                j = lps[j - 1];
+            }
+
+            if j == m {
+                return (i - m) as i32;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -902,6 +968,41 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        if needle.is_empty() { return 0; }
+
+        let s: Vec<u8> = [needle.as_bytes(), b"$", haystack.as_bytes()].concat();
+        let n = s.len();
+        let mut z = vec![0usize; n];
+        let (mut l, mut r) = (0usize, 0usize);
+
+        for i in 1..n {
+            if i <= r {
+                z[i] = z[i - l].min(r - i + 1);
+            }
+            while i + z[i] < n && s[z[i]] == s[i + z[i]] {
+                z[i] += 1;
+            }
+            if i + z[i] > 0 && i + z[i] - 1 > r {
+                l = i;
+                r = i + z[i] - 1;
+            }
+        }
+
+        let m = needle.len();
+        for i in (m + 1)..n {
+            if z[i] == m {
+                return (i - m - 1) as i32;
+            }
+        }
+
+        -1
     }
 }
 ```
@@ -1341,6 +1442,53 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn str_str(haystack: String, needle: String) -> i32 {
+        if needle.is_empty() { return 0; }
+
+        let (base1, mod1): (i64, i64) = (31, 768258391);
+        let (base2, mod2): (i64, i64) = (37, 685683731);
+
+        let h = haystack.as_bytes();
+        let n = needle.as_bytes();
+        let (hlen, nlen) = (h.len(), n.len());
+        if nlen > hlen { return -1; }
+
+        let (mut power1, mut power2): (i64, i64) = (1, 1);
+        for _ in 0..nlen {
+            power1 = (power1 * base1) % mod1;
+            power2 = (power2 * base2) % mod2;
+        }
+
+        let (mut nh1, mut nh2): (i64, i64) = (0, 0);
+        let (mut hh1, mut hh2): (i64, i64) = (0, 0);
+
+        for i in 0..nlen {
+            nh1 = (nh1 * base1 + n[i] as i64) % mod1;
+            nh2 = (nh2 * base2 + n[i] as i64) % mod2;
+            hh1 = (hh1 * base1 + h[i] as i64) % mod1;
+            hh2 = (hh2 * base2 + h[i] as i64) % mod2;
+        }
+
+        for i in 0..=hlen - nlen {
+            if hh1 == nh1 && hh2 == nh2 {
+                return i as i32;
+            }
+
+            if i + nlen < hlen {
+                hh1 = (hh1 * base1 - h[i] as i64 * power1 + h[i + nlen] as i64) % mod1;
+                hh2 = (hh2 * base2 - h[i] as i64 * power2 + h[i + nlen] as i64) % mod2;
+                if hh1 < 0 { hh1 += mod1; }
+                if hh2 < 0 { hh2 += mod2; }
+            }
+        }
+
+        -1
     }
 }
 ```

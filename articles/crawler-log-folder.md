@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Understanding push/pop operations and how stacks model nested or hierarchical state
 - **String Comparison** - Comparing strings for equality to distinguish between different folder operations
 
@@ -8,14 +10,16 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Stack
 
 ### Intuition
+
 A file system path can be naturally modeled using a stack. Moving into a folder pushes onto the stack, while moving to the parent folder pops from the stack. The operation `"./"` does nothing (stay in current folder). At the end, the stack's size represents how deep we are from the main folder, which equals the minimum operations needed to return.
 
 ### Algorithm
+
 1. Initialize an empty stack.
 2. For each log operation:
-   - If it is `"../"`, pop from the stack if it is not empty (move to parent).
-   - If it is `"./"`, do nothing (stay in current folder).
-   - Otherwise, push the folder name onto the stack (move into child folder).
+    - If it is `"../"`, pop from the stack if it is not empty (move to parent).
+    - If it is `"./"`, do nothing (stay in current folder).
+    - Otherwise, push the folder name onto the stack (move into child folder).
 3. Return the size of the stack, representing the depth from the main folder.
 
 ::tabs-start
@@ -79,11 +83,11 @@ class Solution {
     minOperations(logs) {
         let stack = [];
         for (let log of logs) {
-            if (log === "../") {
+            if (log === '../') {
                 if (stack.length > 0) {
                     stack.pop();
                 }
-            } else if (log !== "./") {
+            } else if (log !== './') {
                 stack.push(log);
             }
         }
@@ -162,26 +166,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(logs: Vec<String>) -> i32 {
+        let mut stack = Vec::new();
+        for log in &logs {
+            if log == "../" {
+                if !stack.is_empty() {
+                    stack.pop();
+                }
+            } else if log != "./" {
+                stack.push(log);
+            }
+        }
+        stack.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
 ## 2. Iteration
 
 ### Intuition
+
 We do not actually need to store the folder names since we only care about the depth. A simple counter can track how many levels deep we are. Moving into a folder increments the counter, moving to parent decrements it (but never below `0` since we cannot go above the main folder), and `"./"` leaves it unchanged.
 
 ### Algorithm
+
 1. Initialize a depth counter to `0`.
 2. For each log operation:
-   - If it is `"./"`, skip (no change in depth).
-   - If it is `"../"`, decrement the counter but ensure it does not go below `0`.
-   - Otherwise, increment the counter (moving into a child folder).
+    - If it is `"./"`, skip (no change in depth).
+    - If it is `"../"`, decrement the counter but ensure it does not go below `0`.
+    - Otherwise, increment the counter (moving into a child folder).
 3. Return the counter value as the minimum operations to return to main folder.
 
 ::tabs-start
@@ -248,10 +272,10 @@ class Solution {
     minOperations(logs) {
         let res = 0;
         for (let log of logs) {
-            if (log === "./") {
+            if (log === './') {
                 continue;
             }
-            if (log === "../") {
+            if (log === '../') {
                 res = Math.max(0, res - 1);
             } else {
                 res++;
@@ -338,12 +362,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(logs: Vec<String>) -> i32 {
+        let mut res = 0;
+        for log in &logs {
+            if log == "./" {
+                continue;
+            }
+            if log == "../" {
+                res = 0i32.max(res - 1);
+            } else {
+                res += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash maps/dictionaries** - Storing key-value pairs with efficient lookup
 - **Binary search** - Finding the largest timestamp less than or equal to the query in O(log n)
 - **Sorted data structures** - Maintaining timestamps in sorted order for efficient searching
@@ -20,12 +22,12 @@ It's easy to implement, but slow because we scan all timestamps every time we ca
 
 1. Use a dictionary to map each key to another dictionary of timestamps → list of values.
 2. When setting a value:
-   - Insert the value under the corresponding timestamp.
+    - Insert the value under the corresponding timestamp.
 3. When getting a value:
-   - If the key does not exist, return an empty string.
-   - Otherwise, loop through all timestamps for that key.
-   - Track the **largest timestamp ≤ given timestamp**.
-   - Return the value stored at that timestamp.
+    - If the key does not exist, return an empty string.
+    - Otherwise, loop through all timestamps for that key.
+    - Track the **largest timestamp ≤ given timestamp**.
+    - Return the value stored at that timestamp.
 4. If no such timestamp exists, return an empty string.
 
 ::tabs-start
@@ -306,6 +308,46 @@ class TimeMap {
 }
 ```
 
+```rust
+struct TimeMap {
+    key_store: HashMap<String, HashMap<i32, Vec<String>>>,
+}
+
+impl TimeMap {
+    fn new() -> Self {
+        TimeMap {
+            key_store: HashMap::new(),
+        }
+    }
+
+    fn set(&mut self, key: String, value: String, timestamp: i32) {
+        self.key_store
+            .entry(key)
+            .or_default()
+            .entry(timestamp)
+            .or_default()
+            .push(value);
+    }
+
+    fn get(&self, key: String, timestamp: i32) -> String {
+        let Some(time_map) = self.key_store.get(&key) else {
+            return String::new();
+        };
+        let mut seen = 0;
+        for &time in time_map.keys() {
+            if time <= timestamp && time > seen {
+                seen = time;
+            }
+        }
+        if seen == 0 {
+            String::new()
+        } else {
+            time_map[&seen].last().unwrap().clone()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -321,17 +363,19 @@ class TimeMap {
 
 ### Intuition
 
-For each key, we store all its `(timestamp, value)` pairs in **sorted order by timestamp**.  
+For each key, we store all its `(timestamp, value)` pairs in **sorted order by timestamp**.
 
 When we call `get(key, timestamp)`, we don’t want to scan everything.  
 Instead, we want to quickly find the **largest timestamp ≤ given timestamp** for that key.
 
 Because the timestamps are sorted, we can use **binary search** to find this position in `O(log n)` time:
+
 - If we find an exact match, return its value.
 - Otherwise, return the value at the closest smaller timestamp.
 - If there is no smaller or equal timestamp, return `""`.
 
 So the idea is:
+
 - Per key → keep timestamps sorted.
 - On get → binary search over those timestamps.
 
@@ -340,16 +384,16 @@ So the idea is:
 1. Maintain a map:  
    `key -> sorted list of (timestamp, value)` (or two parallel arrays: one for timestamps, one for values).
 2. `set(key, value, timestamp)`:
-   - Insert `(timestamp, value)` into the list for that key, keeping timestamps in sorted order.
-   - (If timestamps are always added in increasing order, you can just append.)
+    - Insert `(timestamp, value)` into the list for that key, keeping timestamps in sorted order.
+    - (If timestamps are always added in increasing order, you can just append.)
 3. `get(key, timestamp)`:
-   - If `key` does not exist, return `""`.
-   - Let `times` be the sorted list of timestamps for this key.
-   - Use **binary search** on `times` to find the **rightmost index** `i` such that `times[i] ≤ timestamp`.
-   - If such an index exists:
-     - Return the value associated with `times[i]`.
-   - Otherwise:
-     - Return `""` (no value was set at or before that time).
+    - If `key` does not exist, return `""`.
+    - Let `times` be the sorted list of timestamps for this key.
+    - Use **binary search** on `times` to find the **rightmost index** `i` such that `times[i] ≤ timestamp`.
+    - If such an index exists:
+        - Return the value associated with `times[i]`.
+    - Otherwise:
+        - Return `""` (no value was set at or before that time).
 
 ::tabs-start
 
@@ -590,6 +634,34 @@ class TimeMap {
 }
 ```
 
+```rust
+struct TimeMap {
+    m: HashMap<String, Vec<(i32, String)>>,
+}
+
+impl TimeMap {
+    fn new() -> Self {
+        TimeMap { m: HashMap::new() }
+    }
+
+    fn set(&mut self, key: String, value: String, timestamp: i32) {
+        self.m.entry(key).or_default().push((timestamp, value));
+    }
+
+    fn get(&self, key: String, timestamp: i32) -> String {
+        let Some(pairs) = self.m.get(&key) else {
+            return String::new();
+        };
+        let idx = pairs.partition_point(|p| p.0 <= timestamp);
+        if idx == 0 {
+            String::new()
+        } else {
+            pairs[idx - 1].1.clone()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -617,16 +689,16 @@ store values in arrays, then binary-search timestamps when retrieving.
 ### Algorithm
 
 1. Use a dictionary:
-   - `key → list of [value, timestamp]`
-   - Timestamps for each key are stored in sorted order (because they arrive in increasing order).
+    - `key → list of [value, timestamp]`
+    - Timestamps for each key are stored in sorted order (because they arrive in increasing order).
 2. `set(key, value, timestamp)`:
-   - Append `[value, timestamp]` to the key’s list.
+    - Append `[value, timestamp]` to the key’s list.
 3. `get(key, timestamp)`:
-   - If the key does not exist, return `""`.
-   - Let `arr` be the list of `[value, timestamp]` pairs.
-   - Perform binary search on timestamps to find the **rightmost** timestamp `t ≤ timestamp`.
-   - If found, return the corresponding value.
-   - If not found, return `""`.
+    - If the key does not exist, return `""`.
+    - Let `arr` be the list of `[value, timestamp]` pairs.
+    - Perform binary search on timestamps to find the **rightmost** timestamp `t ≤ timestamp`.
+    - If found, return the corresponding value.
+    - If not found, return `""`.
 
 ::tabs-start
 
@@ -930,6 +1002,42 @@ class TimeMap {
         }
 
         return res
+    }
+}
+```
+
+```rust
+struct TimeMap {
+    key_store: HashMap<String, Vec<(String, i32)>>,
+}
+
+impl TimeMap {
+    fn new() -> Self {
+        TimeMap {
+            key_store: HashMap::new(),
+        }
+    }
+
+    fn set(&mut self, key: String, value: String, timestamp: i32) {
+        self.key_store.entry(key).or_default().push((value, timestamp));
+    }
+
+    fn get(&self, key: String, timestamp: i32) -> String {
+        let Some(values) = self.key_store.get(&key) else {
+            return String::new();
+        };
+        let mut res = String::new();
+        let (mut l, mut r) = (0i32, values.len() as i32 - 1);
+        while l <= r {
+            let m = (l + r) / 2;
+            if values[m as usize].1 <= timestamp {
+                res = values[m as usize].0.clone();
+                l = m + 1;
+            } else {
+                r = m - 1;
+            }
+        }
+        res
     }
 }
 ```

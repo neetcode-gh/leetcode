@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Traversal** - Navigating through nodes using next pointers
 - **Pointer Manipulation** - Updating next pointers to skip or remove nodes from the list
 - **In-Place Modification** - Modifying a data structure without using extra space for a new copy
@@ -16,9 +18,9 @@ The problem asks us to keep the first `m` nodes, then delete the next `n` nodes,
 
 1. Initialize two pointers: `currentNode` starting at the head, and `lastMNode` to track the last node we want to keep.
 2. While `currentNode` is not `null`:
-   - Traverse `m` nodes while updating `lastMNode` to point to each node. After this loop, `lastMNode` points to the `m`-th node.
-   - Traverse `n` more nodes. These are the nodes to be deleted.
-   - Link `lastMNode.next` to `currentNode`, effectively removing the `n` nodes from the list.
+    - Traverse `m` nodes while updating `lastMNode` to point to each node. After this loop, `lastMNode` points to the `m`-th node.
+    - Traverse `n` more nodes. These are the nodes to be deleted.
+    - Link `lastMNode.next` to `currentNode`, effectively removing the `n` nodes from the list.
 3. Return the head of the modified list.
 
 ::tabs-start
@@ -28,25 +30,25 @@ class Solution:
     def deleteNodes(self, head: Optional[ListNode], m: int, n: int) -> Optional[ListNode]:
         current_node = head
         last_m_node = head
-        
+
         while current_node is not None:
             # initialize m_count to m and n_count to n
             m_count, n_count = m, n
-            
+
             # traverse m nodes
             while current_node is not None and m_count != 0:
                 last_m_node = current_node
                 current_node = current_node.next
                 m_count -= 1
-            
+
             # traverse n nodes
             while current_node is not None and n_count != 0:
                 current_node = current_node.next
                 n_count -= 1
-            
+
             # delete n nodes
             last_m_node.next = current_node
-        
+
         return head
 ```
 
@@ -110,7 +112,7 @@ public:
             lastMNode->next = currentNode;
         }
 
-        return head;    
+        return head;
     }
 };
 ```
@@ -129,7 +131,8 @@ class Solution {
 
         while (currentNode !== null) {
             // initialize mCount to m and nCount to n
-            let mCount = m, nCount = n;
+            let mCount = m,
+                nCount = n;
 
             // traverse m nodes
             while (currentNode !== null && mCount !== 0) {
@@ -291,6 +294,54 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn delete_nodes(
+        head: Option<Box<ListNode>>,
+        m: i32,
+        n: i32,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Some(Box::new(ListNode { val: 0, next: head }));
+        let mut cur = dummy.as_mut().unwrap().next.as_mut();
+
+        'outer: loop {
+            // Keep m nodes
+            for _ in 1..m {
+                match cur {
+                    Some(node) => cur = node.next.as_mut(),
+                    None => break 'outer,
+                }
+            }
+
+            let last_m = match cur {
+                Some(node) => node,
+                None => break,
+            };
+
+            // Skip n nodes
+            let mut skip = last_m.next.take();
+            for _ in 0..n {
+                match skip {
+                    Some(node) => skip = node.next,
+                    None => break,
+                }
+            }
+
+            last_m.next = skip;
+            cur = last_m.next.as_mut();
+        }
+
+        dummy.unwrap().next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -298,7 +349,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$
 
->  Where $N$ is the length of the linked list pointed by `head`.
+> Where $N$ is the length of the linked list pointed by `head`.
 
 ## Common Pitfalls
 

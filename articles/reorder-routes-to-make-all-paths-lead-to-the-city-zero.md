@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge lists to represent graph connections
 - **Depth First Search (DFS)** - Recursively traversing all nodes in a graph while tracking visited nodes
 - **Breadth First Search (BFS)** - Level-by-level graph traversal using a queue
@@ -19,9 +21,9 @@ We need all cities to reach city 0, so we traverse outward from city 0 and check
 2. Build an adjacency list called `neighbors` treating edges as undirected.
 3. Start `dfs` from city 0, marking visited cities in `visit` set.
 4. For each `neighbor`:
-   - If not visited, check if `(neighbor, city)` exists in the `edges` set.
-   - If not, the edge points away from 0 and needs reversal; increment `changes`.
-   - Recursively visit the `neighbor`.
+    - If not visited, check if `(neighbor, city)` exists in the `edges` set.
+    - If not, the edge points away from 0 and needs reversal; increment `changes`.
+    - Recursively visit the `neighbor`.
 5. Return the total count of edges to reverse.
 
 ::tabs-start
@@ -289,6 +291,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_reorder(n: i32, connections: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut edges = HashSet::new();
+        let mut neighbors = vec![vec![]; n];
+        let mut visit = vec![false; n];
+        let mut changes = 0;
+
+        for conn in &connections {
+            let (a, b) = (conn[0] as usize, conn[1] as usize);
+            edges.insert((a, b));
+            neighbors[a].push(b);
+            neighbors[b].push(a);
+        }
+
+        fn dfs(
+            city: usize,
+            visit: &mut Vec<bool>,
+            neighbors: &Vec<Vec<usize>>,
+            edges: &HashSet<(usize, usize)>,
+            changes: &mut i32,
+        ) {
+            visit[city] = true;
+            for &neighbor in &neighbors[city] {
+                if visit[neighbor] {
+                    continue;
+                }
+                if !edges.contains(&(neighbor, city)) {
+                    *changes += 1;
+                }
+                dfs(neighbor, visit, neighbors, edges, changes);
+            }
+        }
+
+        dfs(0, &mut visit, &neighbors, &edges, &mut changes);
+        changes
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -309,9 +352,9 @@ Instead of using a separate set to track edge directions, we can encode directio
 1. Build an adjacency list called `adj` where each edge `(u, v)` adds `v` to `adj[u]` and `-u` to `adj[v]`.
 2. Start `dfs` from city 0 with `parent = -1`.
 3. For each `nei` (neighbor):
-   - Skip if `abs(nei)` equals the `parent` (to avoid going back).
-   - Add 1 to the count if `nei > 0` (edge needs reversal).
-   - Recursively process `abs(nei)` as the next `node`.
+    - Skip if `abs(nei)` equals the `parent` (to avoid going back).
+    - Add 1 to the count if `nei > 0` (edge needs reversal).
+    - Recursively process `abs(nei)` as the next `node`.
 4. Return the total count.
 
 ::tabs-start
@@ -524,6 +567,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_reorder(n: i32, connections: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+
+        for conn in &connections {
+            adj[conn[0] as usize].push(conn[1]);
+            adj[conn[1] as usize].push(-conn[0]);
+        }
+
+        fn dfs(node: usize, parent: i32, adj: &Vec<Vec<i32>>) -> i32 {
+            let mut changes = 0;
+            for &nei in &adj[node] {
+                if nei.abs() == parent {
+                    continue;
+                }
+                changes += dfs(nei.unsigned_abs() as usize, node as i32, adj)
+                    + if nei > 0 { 1 } else { 0 };
+            }
+            changes
+        }
+
+        dfs(0, -1, &adj)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -544,8 +615,8 @@ class Solution {
 1. Build an adjacency list called `adj` where each edge `(u, v)` stores `(v, 1)` in `adj[u]` and `(u, 0)` in `adj[v]`.
 2. Initialize a `queue` with city 0 and mark it visited in `visit` array.
 3. While the `queue` is not empty:
-   - Dequeue a `node`.
-   - For each unvisited `neighbor`, mark it visited, add `isForward` to the count, and enqueue it.
+    - Dequeue a `node`.
+    - For each unvisited `neighbor`, mark it visited, add `isForward` to the count, and enqueue it.
 4. Return the total count.
 
 ::tabs-start
@@ -798,6 +869,37 @@ class Solution {
             }
         }
         return changes
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_reorder(n: i32, connections: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+
+        for conn in &connections {
+            adj[conn[0] as usize].push((conn[1] as usize, 1));
+            adj[conn[1] as usize].push((conn[0] as usize, 0));
+        }
+
+        let mut visited = vec![false; n];
+        let mut queue = VecDeque::new();
+        queue.push_back(0);
+        visited[0] = true;
+        let mut changes = 0;
+
+        while let Some(node) = queue.pop_front() {
+            for &(neighbor, is_forward) in &adj[node] {
+                if !visited[neighbor] {
+                    visited[neighbor] = true;
+                    changes += is_forward;
+                    queue.push_back(neighbor);
+                }
+            }
+        }
+        changes
     }
 }
 ```

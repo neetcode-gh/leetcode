@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Breaking problems into overlapping subproblems with optimal substructure
 - **Memoization** - Caching recursive results to avoid redundant computation
 - **Prefix/Suffix Arrays** - Precomputing cumulative counts for efficient range queries
@@ -258,6 +260,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_flips_mono_incr(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![[-1i32; 2]; n];
+
+        fn dfs(i: usize, mono: usize, s: &[u8], dp: &mut Vec<[i32; 2]>) -> i32 {
+            if i == s.len() { return 0; }
+            if dp[i][mono] != -1 { return dp[i][mono]; }
+
+            dp[i][mono] = if mono == 1 && s[i] == b'0' {
+                (1 + dfs(i + 1, 0, s, dp)).min(dfs(i + 1, mono, s, dp))
+            } else if mono == 1 && s[i] == b'1' {
+                (1 + dfs(i + 1, mono, s, dp)).min(dfs(i + 1, 0, s, dp))
+            } else if mono == 0 && s[i] == b'1' {
+                dfs(i + 1, mono, s, dp)
+            } else {
+                1 + dfs(i + 1, mono, s, dp)
+            };
+            dp[i][mono]
+        }
+
+        dfs(0, 1, s, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -281,11 +311,11 @@ Processing from right to left lets us use already-computed results for positions
 2. Initialize the base case: `dp[n][0] = dp[n][1] = 0` (no characters left means no flips).
 3. Iterate from index `n-1` down to `0`.
 4. For each position, if the character is `'0'`:
-   - In flexible mode: either keep it or flip to `1` and switch modes.
-   - In ones-only mode: must flip to `1`.
+    - In flexible mode: either keep it or flip to `1` and switch modes.
+    - In ones-only mode: must flip to `1`.
 5. If the character is `'1'`:
-   - In flexible mode: either flip to `0` or keep it and switch to ones-only.
-   - In ones-only mode: keep it as is.
+    - In flexible mode: either flip to `0` or keep it and switch to ones-only.
+    - In ones-only mode: keep it as is.
 6. Return `dp[0][1]` as the answer.
 
 ::tabs-start
@@ -458,6 +488,28 @@ class Solution {
         }
 
         return dp[0][1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_flips_mono_incr(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![[0i32; 2]; n + 1];
+
+        for i in (0..n).rev() {
+            if s[i] == b'0' {
+                dp[i][1] = (1 + dp[i + 1][0]).min(dp[i + 1][1]);
+                dp[i][0] = 1 + dp[i + 1][0];
+            } else {
+                dp[i][1] = (1 + dp[i + 1][1]).min(dp[i + 1][0]);
+                dp[i][0] = dp[i + 1][0];
+            }
+        }
+
+        dp[0][1]
     }
 }
 ```
@@ -682,6 +734,30 @@ class Solution {
         }
 
         return dp[1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_flips_mono_incr(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut dp = [0i32; 2];
+
+        for i in (0..s.len()).rev() {
+            let (new_dp1, new_dp0);
+            if s[i] == b'0' {
+                new_dp1 = (1 + dp[0]).min(dp[1]);
+                new_dp0 = dp[0] + 1;
+            } else {
+                new_dp1 = (1 + dp[1]).min(dp[0]);
+                new_dp0 = dp[0];
+            }
+            dp[1] = new_dp1;
+            dp[0] = new_dp0;
+        }
+
+        dp[1]
     }
 }
 ```
@@ -916,6 +992,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_flips_mono_incr(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut left_ones = vec![0i32; n + 1];
+        let mut right_zeros = vec![0i32; n + 1];
+
+        for i in 0..n {
+            left_ones[i + 1] = left_ones[i] + if s[i] == b'1' { 1 } else { 0 };
+        }
+
+        for i in (0..n).rev() {
+            right_zeros[i] = right_zeros[i + 1] + if s[i] == b'0' { 1 } else { 0 };
+        }
+
+        let mut res = i32::MAX;
+        for i in 0..=n {
+            res = res.min(left_ones[i] + right_zeros[i]);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -939,8 +1041,8 @@ The key insight is that the minimum flips at any position equals the minimum of:
 2. Iterate through each character in the string.
 3. If the character is `'1'`, increment `cntOne`.
 4. If the character is `'0'`, update `res = min(res + 1, cntOne)`:
-   - `res + 1` means flip this `0` to `1`.
-   - `cntOne` means flip all previous `1`s to `0`s instead.
+    - `res + 1` means flip this `0` to `1`.
+    - `cntOne` means flip all previous `1`s to `0`s instead.
 5. Return `res`.
 
 ::tabs-start
@@ -1071,6 +1173,23 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_flips_mono_incr(s: String) -> i32 {
+        let mut res = 0;
+        let mut cnt_one = 0;
+        for c in s.bytes() {
+            if c == b'1' {
+                cnt_one += 1;
+            } else {
+                res = (res + 1).min(cnt_one);
+            }
+        }
+        res
     }
 }
 ```

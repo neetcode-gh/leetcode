@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Counting character occurrences in a string
 - **Custom Comparators** - Sorting based on frequency rather than natural ordering
 - **Bucket Sort** - Grouping elements by frequency for linear time complexity
@@ -16,8 +18,8 @@ To sort characters by frequency, we first need to know how often each character 
 
 1. Count the frequency of each character in the string.
 2. Sort all characters using a custom comparator:
-   - Higher frequency comes first.
-   - If frequencies are equal, sort by character value for consistency.
+    - Higher frequency comes first.
+    - If frequencies are equal, sort by character value for consistency.
 3. Join the sorted characters into a string and return it.
 
 ::tabs-start
@@ -179,6 +181,28 @@ class Solution {
         }
 
         return String(sortedChars)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn frequency_sort(s: String) -> String {
+        let mut count = [0i32; 123];
+        for b in s.bytes() {
+            count[b as usize] += 1;
+        }
+
+        let mut chars: Vec<u8> = s.into_bytes();
+        chars.sort_by(|&a, &b| {
+            if count[b as usize] == count[a as usize] {
+                a.cmp(&b)
+            } else {
+                count[b as usize].cmp(&count[a as usize])
+            }
+        });
+
+        String::from_utf8(chars).unwrap()
     }
 }
 ```
@@ -451,6 +475,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn frequency_sort(s: String) -> String {
+        let mut count = [0i32; 123];
+        for b in s.bytes() {
+            count[b as usize] += 1;
+        }
+
+        let mut freq: Vec<(u8, i32)> = (0u8..123)
+            .filter(|&i| count[i as usize] > 0)
+            .map(|i| (i, count[i as usize]))
+            .collect();
+
+        freq.sort_by(|a, b| {
+            if a.1 == b.1 {
+                a.0.cmp(&b.0)
+            } else {
+                b.1.cmp(&a.1)
+            }
+        });
+
+        let mut res = String::new();
+        for &(ch, cnt) in &freq {
+            for _ in 0..cnt {
+                res.push(ch as char);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -685,6 +742,34 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn frequency_sort(s: String) -> String {
+        let mut count = HashMap::new();
+        for b in s.bytes() {
+            *count.entry(b).or_insert(0) += 1;
+        }
+
+        let n = s.len();
+        let mut buckets = vec![vec![]; n + 1];
+        for (&ch, &freq) in &count {
+            buckets[freq as usize].push(ch);
+        }
+
+        let mut res = String::new();
+        for i in (1..=n).rev() {
+            for &c in &buckets[i] {
+                for _ in 0..i {
+                    res.push(c as char);
+                }
+            }
+        }
+
+        res
     }
 }
 ```

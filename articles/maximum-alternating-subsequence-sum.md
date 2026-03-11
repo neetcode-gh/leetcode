@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down problems into smaller subproblems with base cases and recursive cases
 - **Dynamic Programming** - Recognizing overlapping subproblems and using memoization to avoid redundant computation
 - **State Machine DP** - Tracking multiple states (even/odd position) and transitioning between them optimally
@@ -19,11 +21,11 @@ The recursive approach explores both choices at every index and tracks whether t
 1. Define `dfs(i, even)` where `i` is the current index and `even` indicates if the next picked element contributes positively.
 2. Base case: if `i == n`, return `0`.
 3. If `even` is `true`, we can either:
-   - Pick `nums[i]` (adding it) and recurse with `even = false`.
-   - Skip and recurse with `even = true`.
+    - Pick `nums[i]` (adding it) and recurse with `even = false`.
+    - Skip and recurse with `even = true`.
 4. If `even` is `false`, we can either:
-   - Pick `nums[i]` (subtracting it) and recurse with `even = true`.
-   - Skip and recurse with `even = false`.
+    - Pick `nums[i]` (subtracting it) and recurse with `even = true`.
+    - Skip and recurse with `even = false`.
 5. Return the maximum of including or skipping.
 6. Start with `dfs(0, true)`.
 
@@ -144,6 +146,21 @@ class Solution {
             return max(total + dfs(i + 1, !even), dfs(i + 1, even))
         }
         return dfs(0, true)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_alternating_sum(nums: Vec<i32>) -> i64 {
+        fn dfs(i: usize, even: bool, nums: &[i32]) -> i64 {
+            if i == nums.len() {
+                return 0;
+            }
+            let total = if even { nums[i] as i64 } else { -(nums[i] as i64) };
+            (total + dfs(i + 1, !even, nums)).max(dfs(i + 1, even, nums))
+        }
+        dfs(0, true, &nums)
     }
 }
 ```
@@ -352,6 +369,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_alternating_sum(nums: Vec<i32>) -> i64 {
+        let n = nums.len();
+        let mut dp = vec![[-1i64; 2]; n];
+
+        fn dfs(i: usize, even: usize, nums: &[i32], dp: &mut Vec<[i64; 2]>) -> i64 {
+            if i == nums.len() {
+                return 0;
+            }
+            if dp[i][even] != -1 {
+                return dp[i][even];
+            }
+            let total = if even == 1 { nums[i] as i64 } else { -(nums[i] as i64) };
+            dp[i][even] = (total + dfs(i + 1, 1 - even, nums, dp))
+                .max(dfs(i + 1, even, nums, dp));
+            dp[i][even]
+        }
+
+        dfs(0, 1, &nums, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -373,8 +414,8 @@ Working backwards from the end of the array, we compute these values based on th
 
 1. Create a 2D array `dp[n+1][2]` initialized to `0`.
 2. Iterate from `i = n-1` down to `0`:
-   - `dp[i][1]` (even) = max of picking `nums[i]` plus `dp[i+1][0]`, or skipping with `dp[i+1][1]`.
-   - `dp[i][0]` (odd) = max of picking `-nums[i]` plus `dp[i+1][1]`, or skipping with `dp[i+1][0]`.
+    - `dp[i][1]` (even) = max of picking `nums[i]` plus `dp[i+1][0]`, or skipping with `dp[i+1][1]`.
+    - `dp[i][0]` (odd) = max of picking `-nums[i]` plus `dp[i+1][1]`, or skipping with `dp[i+1][0]`.
 3. Return `dp[0][1]` since we start expecting an even-positioned pick.
 
 ::tabs-start
@@ -498,6 +539,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_alternating_sum(nums: Vec<i32>) -> i64 {
+        let n = nums.len();
+        let mut dp = vec![[0i64; 2]; n + 1]; // dp[i][0] -> odd, dp[i][1] -> even
+
+        for i in (0..n).rev() {
+            dp[i][1] = (nums[i] as i64 + dp[i + 1][0]).max(dp[i + 1][1]); // even
+            dp[i][0] = (-(nums[i] as i64) + dp[i + 1][1]).max(dp[i + 1][0]); // odd
+        }
+
+        dp[0][1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,9 +576,9 @@ This reduces space from O(n) to O(1) while maintaining the same logic.
 
 1. Initialize `sumEven = 0` and `sumOdd = 0`.
 2. Iterate from `i = n-1` down to `0`:
-   - `tmpEven = max(nums[i] + sumOdd, sumEven)` represents the best sum if next pick is even.
-   - `tmpOdd = max(-nums[i] + sumEven, sumOdd)` represents the best sum if next pick is odd.
-   - Update `sumEven = tmpEven` and `sumOdd = tmpOdd`.
+    - `tmpEven = max(nums[i] + sumOdd, sumEven)` represents the best sum if next pick is even.
+    - `tmpOdd = max(-nums[i] + sumEven, sumOdd)` represents the best sum if next pick is odd.
+    - Update `sumEven = tmpEven` and `sumOdd = tmpOdd`.
 3. Return `sumEven`.
 
 ::tabs-start
@@ -646,6 +703,24 @@ class Solution {
             sumOdd = tmpOdd
         }
         return sumEven
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_alternating_sum(nums: Vec<i32>) -> i64 {
+        let mut sum_even: i64 = 0;
+        let mut sum_odd: i64 = 0;
+
+        for i in (0..nums.len()).rev() {
+            let tmp_even = (nums[i] as i64 + sum_odd).max(sum_even);
+            let tmp_odd = (-(nums[i] as i64) + sum_even).max(sum_odd);
+            sum_even = tmp_even;
+            sum_odd = tmp_odd;
+        }
+
+        sum_even
     }
 }
 ```

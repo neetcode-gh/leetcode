@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Building solutions from overlapping subproblems with optimal substructure
 - **Memoization** - Caching recursive results to avoid redundant computation
 - **Prefix/Suffix Maximum Arrays** - Precomputing running maximums from left-to-right and right-to-left
@@ -107,13 +109,17 @@ class Solution {
      * @return {number}
      */
     maxPoints(points) {
-        let m = points.length, n = points[0].length;
+        let m = points.length,
+            n = points[0].length;
 
         function dfs(r, c) {
             if (r === m - 1) return 0;
             let res = 0;
             for (let col = 0; col < n; col++) {
-                res = Math.max(res, points[r + 1][col] - Math.abs(col - c) + dfs(r + 1, col));
+                res = Math.max(
+                    res,
+                    points[r + 1][col] - Math.abs(col - c) + dfs(r + 1, col),
+                );
             }
             return res;
         }
@@ -244,12 +250,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i64 {
+        let m = points.len();
+        let n = points[0].len();
+
+        fn dfs(points: &[Vec<i32>], r: usize, c: usize, m: usize, n: usize) -> i64 {
+            if r == m - 1 {
+                return 0;
+            }
+            let mut res: i64 = 0;
+            for col in 0..n {
+                res = res.max(
+                    points[r + 1][col] as i64
+                        - (col as i64 - c as i64).abs()
+                        + dfs(points, r + 1, col, m, n),
+                );
+            }
+            res
+        }
+
+        let mut ans: i64 = 0;
+        for c in 0..n {
+            ans = ans.max(points[0][c] as i64 + dfs(&points, 0, c, m, n));
+        }
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ m)$
-* Space complexity: $O(m)$ for recursion stack.
+- Time complexity: $O(n ^ m)$
+- Space complexity: $O(m)$ for recursion stack.
 
 > Where $m$ is the number of rows, and $n$ is the number of columns.
 
@@ -368,19 +404,23 @@ class Solution {
      * @return {number}
      */
     maxPoints(points) {
-        let m = points.length, n = points[0].length;
+        let m = points.length,
+            n = points[0].length;
         let memo = {};
 
         function dfs(r, c) {
-            let key = r + "," + c;
+            let key = r + ',' + c;
             if (key in memo) return memo[key];
             if (r === m - 1) return 0;
 
             let res = 0;
             for (let col = 0; col < n; col++) {
-                res = Math.max(res, points[r + 1][col] - Math.abs(col - c) + dfs(r + 1, col));
+                res = Math.max(
+                    res,
+                    points[r + 1][col] - Math.abs(col - c) + dfs(r + 1, col),
+                );
             }
-            return memo[key] = res;
+            return (memo[key] = res);
         }
 
         let ans = 0;
@@ -538,12 +578,54 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i64 {
+        let m = points.len();
+        let n = points[0].len();
+        let mut memo = vec![vec![-1i64; n]; m];
+
+        fn dfs(
+            points: &[Vec<i32>],
+            memo: &mut Vec<Vec<i64>>,
+            r: usize,
+            c: usize,
+            m: usize,
+            n: usize,
+        ) -> i64 {
+            if memo[r][c] != -1 {
+                return memo[r][c];
+            }
+            if r == m - 1 {
+                return 0;
+            }
+            let mut res: i64 = 0;
+            for col in 0..n {
+                res = res.max(
+                    points[r + 1][col] as i64
+                        - (col as i64 - c as i64).abs()
+                        + dfs(points, memo, r + 1, col, m, n),
+                );
+            }
+            memo[r][c] = res;
+            res
+        }
+
+        let mut ans: i64 = 0;
+        for c in 0..n {
+            ans = ans.max(points[0][c] as i64 + dfs(&points, &mut memo, 0, c, m, n));
+        }
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n ^ 2)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows, and $n$ is the number of columns.
 
@@ -556,6 +638,7 @@ class Solution {
 Computing `max(dp[c'] - |c - c'|)` for each column `c` normally takes `O(n)` time per cell, making the total `O(m * n^2)`. We can optimize this using prefix maximums.
 
 The penalty `|c - c'|` splits into two cases:
+
 - If `c' <= c`: the penalty is `c - c'`, so we want `max(dp[c'] + c')` for all `c' <= c`.
 - If `c' > c`: the penalty is `c' - c`, so we want `max(dp[c'] - c')` for all `c' > c`.
 
@@ -565,9 +648,9 @@ By precomputing a `left` array (max of `dp[c'] + c'` from the left) and a `right
 
 1. Initialize `dp` with the first row's values.
 2. For each subsequent row:
-   - Build `left[c]` = max over all `c' <= c` of `dp[c']`. Propagate left-to-right, subtracting `1` at each step.
-   - Build `right[c]` = max over all `c' >= c` of `dp[c']`. Propagate right-to-left, subtracting `1` at each step.
-   - For each column `c`, set `nextDp[c] = points[r][c] + max(left[c], right[c])`.
+    - Build `left[c]` = max over all `c' <= c` of `dp[c']`. Propagate left-to-right, subtracting `1` at each step.
+    - Build `right[c]` = max over all `c' >= c` of `dp[c']`. Propagate right-to-left, subtracting `1` at each step.
+    - For each column `c`, set `nextDp[c] = points[r][c] + max(left[c], right[c])`.
 3. After processing all rows, return the maximum value in `dp`.
 
 ::tabs-start
@@ -666,7 +749,8 @@ class Solution {
      * @return {number}
      */
     maxPoints(points) {
-        let ROWS = points.length, COLS = points[0].length;
+        let ROWS = points.length,
+            COLS = points[0].length;
         let dp = [...points[0]];
 
         for (let r = 1; r < ROWS; r++) {
@@ -833,12 +917,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i64 {
+        let rows = points.len();
+        let cols = points[0].len();
+        let mut dp: Vec<i64> = points[0].iter().map(|&v| v as i64).collect();
+
+        for r in 1..rows {
+            let mut left = vec![0i64; cols];
+            left[0] = dp[0];
+            for c in 1..cols {
+                left[c] = dp[c].max(left[c - 1] - 1);
+            }
+
+            let mut right = vec![0i64; cols];
+            right[cols - 1] = dp[cols - 1];
+            for c in (0..cols - 1).rev() {
+                right[c] = dp[c].max(right[c + 1] - 1);
+            }
+
+            let mut next_dp = vec![0i64; cols];
+            for c in 0..cols {
+                next_dp[c] = points[r][c] as i64 + left[c].max(right[c]);
+            }
+            dp = next_dp;
+        }
+
+        *dp.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows, and $n$ is the number of columns.
 
@@ -856,10 +972,10 @@ This avoids allocating a separate `right` array, reducing the constant factor in
 
 1. Initialize `prev` with the first row's values.
 2. For each subsequent row:
-   - Create a `cur` array and build left maximums by iterating left-to-right: `cur[c] = max(prev[c], cur[c-1] - 1)`.
-   - Iterate right-to-left, tracking `rightMax`. For each column, update `cur[c] = max(cur[c], rightMax) + points[r][c]`, then update `rightMax = max(prev[c], rightMax - 1)`.
-   - Handle the last column separately since it was not processed in the right-to-left loop.
-   - Set `prev = cur` for the next iteration.
+    - Create a `cur` array and build left maximums by iterating left-to-right: `cur[c] = max(prev[c], cur[c-1] - 1)`.
+    - Iterate right-to-left, tracking `rightMax`. For each column, update `cur[c] = max(cur[c], rightMax) + points[r][c]`, then update `rightMax = max(prev[c], rightMax - 1)`.
+    - Handle the last column separately since it was not processed in the right-to-left loop.
+    - Set `prev = cur` for the next iteration.
 3. Return the maximum value in `prev`.
 
 ::tabs-start
@@ -950,8 +1066,9 @@ class Solution {
      * @return {number}
      */
     maxPoints(points) {
-        let rows = points.length, cols = points[0].length;
-        let prev = points[0].map(v => v);
+        let rows = points.length,
+            cols = points[0].length;
+        let prev = points[0].map((v) => v);
 
         for (let r = 1; r < rows; r++) {
             let cur = Array(cols).fill(0);
@@ -1097,12 +1214,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_points(points: Vec<Vec<i32>>) -> i64 {
+        let rows = points.len();
+        let cols = points[0].len();
+        let mut prev: Vec<i64> = points[0].iter().map(|&v| v as i64).collect();
+
+        for r in 1..rows {
+            let mut cur = vec![0i64; cols];
+            cur[0] = prev[0];
+            for c in 1..cols {
+                cur[c] = prev[c].max(cur[c - 1] - 1);
+            }
+
+            let mut right_max = prev[cols - 1];
+            for c in (0..cols - 1).rev() {
+                right_max = prev[c].max(right_max - 1);
+                cur[c] = cur[c].max(right_max) + points[r][c] as i64;
+            }
+            cur[cols - 1] += points[r][cols - 1] as i64;
+            prev = cur;
+        }
+
+        *prev.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows, and $n$ is the number of columns.
 

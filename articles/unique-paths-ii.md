@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Understanding memoization (top-down) and tabulation (bottom-up) approaches
 - **2D Grid Traversal** - Navigating through rows and columns of a matrix
 - **Recursion** - Building solutions by breaking problems into smaller subproblems
@@ -16,8 +18,8 @@ We want to count all possible paths from the top-left corner to the bottom-right
 
 1. Define a recursive function `dfs(r, c)` that returns the number of paths from cell `(r, c)` to the destination.
 2. Base cases:
-   - If `r` or `c` is out of bounds, or the cell contains an obstacle, return `0`.
-   - If we reach the destination `(M-1, N-1)`, return `1`.
+    - If `r` or `c` is out of bounds, or the cell contains an obstacle, return `0`.
+    - If we reach the destination `(M-1, N-1)`, return `1`.
 3. If the result for `(r, c)` is already in `dp`, return the cached value.
 4. Otherwise, compute `dfs(r+1, c) + dfs(r, c+1)` and store it in `dp`.
 5. Call `dfs(0, 0)` to get the total number of unique paths.
@@ -31,82 +33,76 @@ Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
-1 │ 0 │ █ │ 0 │  ← obstacle at (1,1)
-  ├───┼───┼───┤
+├───┼───┼───┤
+1 │ 0 │ █ │ 0 │ ← obstacle at (1,1)
+├───┼───┼───┤
 2 │ 0 │ 0 │ 0 │
-  └───┴───┴───┘
+└───┴───┴───┘
 
 Legend: █ = obstacle (value 1), 0 = empty cell
 ```
-
-
 
 **Top-Down DFS with Memoization**
 
 The algorithm starts from `(0,0)` and recursively explores paths to `(2,2)`.
 We can only move **right** or **down**. Each DFS call returns the number of paths from the current cell to the destination.
 
-
-
 **Call Tree (simplified):**
 
 ```markdown
 dfs(0,0)
-├── dfs(1,0)                → go DOWN
-│   ├── dfs(2,0)            → go DOWN
-│   │   └── dfs(2,1)        → go RIGHT
-│   │       └── dfs(2,2)    → DESTINATION! return 1
-│   │   └── returns 1
-│   ├── dfs(1,1) = 0        → OBSTACLE! return 0
-│   └── returns 1 + 0 = 1
+├── dfs(1,0) → go DOWN
+│ ├── dfs(2,0) → go DOWN
+│ │ └── dfs(2,1) → go RIGHT
+│ │ └── dfs(2,2) → DESTINATION! return 1
+│ │ └── returns 1
+│ ├── dfs(1,1) = 0 → OBSTACLE! return 0
+│ └── returns 1 + 0 = 1
 │
-├── dfs(0,1)                → go RIGHT
-│   ├── dfs(1,1) = 0        → OBSTACLE! return 0 (cached)
-│   ├── dfs(0,2)            → go RIGHT
-│   │   └── dfs(1,2)        → go DOWN
-│   │       └── dfs(2,2)    → DESTINATION! return 1 (cached)
-│   │   └── returns 1
-│   └── returns 0 + 1 = 1
+├── dfs(0,1) → go RIGHT
+│ ├── dfs(1,1) = 0 → OBSTACLE! return 0 (cached)
+│ ├── dfs(0,2) → go RIGHT
+│ │ └── dfs(1,2) → go DOWN
+│ │ └── dfs(2,2) → DESTINATION! return 1 (cached)
+│ │ └── returns 1
+│ └── returns 0 + 1 = 1
 │
 └── returns 1 + 1 = 2
 ```
-
-
 
 **Memoization Table (dp) after all calls:**
 
 ```markdown
     0   1   2
-  ┌───┬───┬───┐
-0 │ 2 │ 1 │ 1 │  ← dp[0][0] = 2 (answer)
-  ├───┼───┼───┤
-1 │ 1 │ 0 │ 1 │  ← dp[1][1] = 0 (obstacle blocks all paths through it)
-  ├───┼───┼───┤
-2 │ 1 │ 1 │ 1 │  ← dp[2][2] = 1 (destination)
-  └───┴───┴───┘
+
+┌───┬───┬───┐
+0 │ 2 │ 1 │ 1 │ ← dp[0][0] = 2 (answer)
+├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │ ← dp[1][1] = 0 (obstacle blocks all paths through it)
+├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ ← dp[2][2] = 1 (destination)
+└───┴───┴───┘
 
 Each cell shows: number of paths from that cell to destination (2,2)
 ```
 
-
-
 **The Two Valid Paths:**
 
 ```markdown
-Path 1:                          Path 2:
-    0   1   2                        0   1   2
-  ┌───┬───┬───┐                    ┌───┬───┬───┐
-0 │ ● │   │   │                  0 │ ● │ → │ ● │
-  ├───┼───┼───┤                    ├───┼───┼───┤
-1 │ ↓ │ █ │   │                  1 │   │ █ │ ↓ │
-  ├───┼───┼───┤                    ├───┼───┼───┤
-2 │ ● │ → │ ● │                  2 │   │   │ ● │
-  └───┴───┴───┘                    └───┴───┴───┘
+Path 1: Path 2:
+0 1 2 0 1 2
+┌───┬───┬───┐ ┌───┬───┬───┐
+0 │ ● │ │ │ 0 │ ● │ → │ ● │
+├───┼───┼───┤ ├───┼───┼───┤
+1 │ ↓ │ █ │ │ 1 │ │ █ │ ↓ │
+├───┼───┼───┤ ├───┼───┼───┤
+2 │ ● │ → │ ● │ 2 │ │ │ ● │
+└───┴───┴───┘ └───┴───┴───┘
 
-(0,0)→(1,0)→(2,0)→(2,1)→(2,2)    (0,0)→(0,1)→(0,2)→(1,2)→(2,2)
+(0,0)→(1,0)→(2,0)→(2,1)→(2,2) (0,0)→(0,1)→(0,2)→(1,2)→(2,2)
 ```
 
 **Result:** `dp[0][0] = 2` unique paths from start to end
@@ -336,6 +332,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn unique_paths_with_obstacles(obstacle_grid: Vec<Vec<i32>>) -> i32 {
+        let m = obstacle_grid.len();
+        let n = obstacle_grid[0].len();
+        let mut dp = vec![vec![-1; n]; m];
+
+        fn dfs(r: usize, c: usize, grid: &[Vec<i32>], dp: &mut Vec<Vec<i32>>,
+               m: usize, n: usize) -> i32 {
+            if r == m || c == n || grid[r][c] == 1 {
+                return 0;
+            }
+            if r == m - 1 && c == n - 1 {
+                return 1;
+            }
+            if dp[r][c] != -1 {
+                return dp[r][c];
+            }
+            dp[r][c] = dfs(r + 1, c, grid, dp, m, n)
+                      + dfs(r, c + 1, grid, dp, m, n);
+            dp[r][c]
+        }
+
+        dfs(0, 0, &obstacle_grid, &mut dp, m, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -359,8 +383,8 @@ Instead of solving recursively from the start, we can build the solution iterati
 2. Create a 2D `dp` table with an extra row and column (initialized to `0`) for boundary handling.
 3. Set `dp[M-1][N-1] = 1` since there is exactly one way to reach the destination from itself.
 4. Iterate from the bottom-right to the top-left:
-   - If the current cell has an obstacle, set `dp[r][c] = 0`.
-   - Otherwise, set `dp[r][c] = dp[r+1][c] + dp[r][c+1]`.
+    - If the current cell has an obstacle, set `dp[r][c] = 0`.
+    - Otherwise, set `dp[r][c] = dp[r+1][c] + dp[r][c+1]`.
 5. Return `dp[0][0]` as the answer.
 
 <details>
@@ -372,18 +396,17 @@ Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
-1 │ 0 │ █ │ 0 │  ← obstacle at (1,1)
-  ├───┼───┼───┤
+├───┼───┼───┤
+1 │ 0 │ █ │ 0 │ ← obstacle at (1,1)
+├───┼───┼───┤
 2 │ 0 │ 0 │ 0 │
-  └───┴───┴───┘
+└───┴───┴───┘
 
 Legend: █ = obstacle (value 1), 0 = empty cell
 ```
-
-
 
 **Bottom-Up DP Table Construction**
 
@@ -391,26 +414,23 @@ The algorithm fills the DP table from destination `(2,2)` back to start `(0,0)`.
 Each cell stores the number of paths from that cell to the destination.
 Formula: `dp[r][c] = dp[r+1][c] + dp[r][c+1]` (paths from below + paths from right)
 
-
-
 **Step 0: Initialize DP table with boundary**
 
 ```markdown
 DP Table (4x4, extra row/col for boundary handling):
 
     0   1   2   3
-  ┌───┬───┬───┬───┐
+
+┌───┬───┬───┬───┐
 0 │ ? │ ? │ ? │ 0 │
-  ├───┼───┼───┼───┤
-1 │ ? │ ? │ ? │ 0 │  ← boundary column (col 3)
-  ├───┼───┼───┼───┤
-2 │ ? │ ? │ 1 │ 0 │  ← dp[2][2] = 1 (destination initialized)
-  ├───┼───┼───┼───┤
-3 │ 0 │ 0 │ 0 │ 0 │  ← boundary row
-  └───┴───┴───┴───┘
+├───┼───┼───┼───┤
+1 │ ? │ ? │ ? │ 0 │ ← boundary column (col 3)
+├───┼───┼───┼───┤
+2 │ ? │ ? │ 1 │ 0 │ ← dp[2][2] = 1 (destination initialized)
+├───┼───┼───┼───┤
+3 │ 0 │ 0 │ 0 │ 0 │ ← boundary row
+└───┴───┴───┴───┘
 ```
-
-
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
@@ -420,18 +440,17 @@ c=1: dp[2][1] = dp[3][1] + dp[2][2] = 0 + 1 = 1
 c=0: dp[2][0] = dp[3][0] + dp[2][1] = 0 + 1 = 1
 
     0   1   2   3
-  ┌───┬───┬───┬───┐
+
+┌───┬───┬───┬───┐
 0 │ ? │ ? │ ? │ 0 │
-  ├───┼───┼───┼───┤
+├───┼───┼───┼───┤
 1 │ ? │ ? │ ? │ 0 │
-  ├───┼───┼───┼───┤
-2 │ 1 │ 1 │ 1 │ 0 │  ← row 2 complete: only one way to reach end from each cell
-  ├───┼───┼───┼───┤
+├───┼───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ 0 │ ← row 2 complete: only one way to reach end from each cell
+├───┼───┼───┼───┤
 3 │ 0 │ 0 │ 0 │ 0 │
-  └───┴───┴───┴───┘
+└───┴───┴───┴───┘
 ```
-
-
 
 **Step 2: Process row 1 (middle row, right to left)**
 
@@ -441,51 +460,50 @@ c=1: grid[1][1] = OBSTACLE! → dp[1][1] = 0 (no paths through obstacle)
 c=0: dp[1][0] = dp[2][0] + dp[1][1] = 1 + 0 = 1
 
     0   1   2   3
-  ┌───┬───┬───┬───┐
+
+┌───┬───┬───┬───┐
 0 │ ? │ ? │ ? │ 0 │
-  ├───┼───┼───┼───┤
-1 │ 1 │ 0 │ 1 │ 0 │  ← dp[1][1] = 0 because █ blocks all paths
-  ├───┼───┼───┼───┤
+├───┼───┼───┼───┤
+1 │ 1 │ 0 │ 1 │ 0 │ ← dp[1][1] = 0 because █ blocks all paths
+├───┼───┼───┼───┤
 2 │ 1 │ 1 │ 1 │ 0 │
-  ├───┼───┼───┼───┤
+├───┼───┼───┼───┤
 3 │ 0 │ 0 │ 0 │ 0 │
-  └───┴───┴───┴───┘
+└───┴───┴───┴───┘
 ```
-
-
 
 **Step 3: Process row 0 (top row, right to left)**
 
 ```markdown
 c=2: dp[0][2] = dp[1][2] + dp[0][3] = 1 + 0 = 1
 c=1: dp[0][1] = dp[1][1] + dp[0][2] = 0 + 1 = 1
-c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2  ← ANSWER!
+c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2 ← ANSWER!
 
     0   1   2   3
-  ┌───┬───┬───┬───┐
-0 │ 2 │ 1 │ 1 │ 0 │  ← dp[0][0] = 2 paths to destination
-  ├───┼───┼───┼───┤
+
+┌───┬───┬───┬───┐
+0 │ 2 │ 1 │ 1 │ 0 │ ← dp[0][0] = 2 paths to destination
+├───┼───┼───┼───┤
 1 │ 1 │ 0 │ 1 │ 0 │
-  ├───┼───┼───┼───┤
+├───┼───┼───┼───┤
 2 │ 1 │ 1 │ 1 │ 0 │
-  ├───┼───┼───┼───┤
+├───┼───┼───┼───┤
 3 │ 0 │ 0 │ 0 │ 0 │
-  └───┴───┴───┴───┘
+└───┴───┴───┴───┘
 ```
-
-
 
 **Final DP Table (without boundary):**
 
 ```markdown
     0   1   2
-  ┌───┬───┬───┐
-0 │ 2 │ 1 │ 1 │  ← 2 paths from start
-  ├───┼───┼───┤
-1 │ 1 │ 0 │ 1 │  ← obstacle = 0 paths
-  ├───┼───┼───┤
-2 │ 1 │ 1 │ 1 │  ← destination
-  └───┴───┴───┘
+
+┌───┬───┬───┐
+0 │ 2 │ 1 │ 1 │ ← 2 paths from start
+├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │ ← obstacle = 0 paths
+├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ ← destination
+└───┴───┴───┘
 
 Result: dp[0][0] = 2 unique paths
 ```
@@ -715,6 +733,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn unique_paths_with_obstacles(obstacle_grid: Vec<Vec<i32>>) -> i32 {
+        let m = obstacle_grid.len();
+        let n = obstacle_grid[0].len();
+        if obstacle_grid[0][0] == 1 || obstacle_grid[m - 1][n - 1] == 1 {
+            return 0;
+        }
+
+        let mut dp = vec![vec![0; n + 1]; m + 1];
+        dp[m - 1][n - 1] = 1;
+
+        for r in (0..m).rev() {
+            for c in (0..n).rev() {
+                if obstacle_grid[r][c] == 1 {
+                    dp[r][c] = 0;
+                } else {
+                    dp[r][c] += dp[r + 1][c];
+                    dp[r][c] += dp[r][c + 1];
+                }
+            }
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -737,9 +783,9 @@ Looking at the bottom-up approach, we notice that each cell only depends on the 
 1. Create a 1D array `dp` of size `N+1`, initialized to `0`.
 2. Set `dp[N-1] = 1` to represent the destination.
 3. Iterate through each row from bottom to top:
-   - For each column `c` from right to left:
-     - If the cell has an obstacle, set `dp[c] = 0`.
-     - Otherwise, add `dp[c+1]` to `dp[c]` (accumulating paths from below and right).
+    - For each column `c` from right to left:
+        - If the cell has an obstacle, set `dp[c] = 0`.
+        - Otherwise, add `dp[c+1]` to `dp[c]` (accumulating paths from below and right).
 4. Return `dp[0]` as the final answer.
 
 <details>
@@ -751,142 +797,133 @@ Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
-1 │ 0 │ █ │ 0 │  ← obstacle at (1,1)
-  ├───┼───┼───┤
+├───┼───┼───┤
+1 │ 0 │ █ │ 0 │ ← obstacle at (1,1)
+├───┼───┼───┤
 2 │ 0 │ 0 │ 0 │
-  └───┴───┴───┘
+└───┴───┴───┘
 
 Legend: █ = obstacle (value 1), 0 = empty cell
 ```
-
-
 
 **Space Optimization: 1D Array Instead of 2D Table**
 
 Instead of a 2D DP table, we use a 1D array of size `N+1 = 4`.
 
 Key insight:
+
 - `dp[c]` (before update) = paths from the cell below (previous row)
 - `dp[c+1]` (after update) = paths from the cell to the right (current row)
 - Formula: `dp[c] += dp[c+1]`
 
-
-
 **Step 0: Initialize 1D DP array**
 
 ```markdown
-dp = [ 0 ,  0 ,  1 ,  0 ]
-       ↑    ↑    ↑    ↑
-      c=0  c=1  c=2  c=3 (boundary)
+dp = [ 0 , 0 , 1 , 0 ]
+↑ ↑ ↑ ↑
+c=0 c=1 c=2 c=3 (boundary)
 
        ?    ?   dst  boundary
 ```
-
-
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
 ```markdown
 c=2: grid[2][2] = 0 (empty)
-     dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
+dp[2] += dp[3] → dp[2] = 1 + 0 = 1
 
 c=1: grid[2][1] = 0 (empty)
-     dp[1] += dp[2]  →  dp[1] = 0 + 1 = 1
+dp[1] += dp[2] → dp[1] = 0 + 1 = 1
 
 c=0: grid[2][0] = 0 (empty)
-     dp[0] += dp[1]  →  dp[0] = 0 + 1 = 1
+dp[0] += dp[1] → dp[0] = 0 + 1 = 1
 
-dp = [ 1 ,  1 ,  1 ,  0 ]
-       ↑    ↑    ↑
-      c=0  c=1  c=2
+dp = [ 1 , 1 , 1 , 0 ]
+↑ ↑ ↑
+c=0 c=1 c=2
 
 Represents row 2 of the 2D table:
 ┌───┬───┬───┐
-│ 1 │ 1 │ 1 │  ← row 2
+│ 1 │ 1 │ 1 │ ← row 2
 └───┴───┴───┘
 ```
-
-
 
 **Step 2: Process row 1 (middle row, right to left)**
 
 ```markdown
 c=2: grid[1][2] = 0 (empty)
-     dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
+dp[2] += dp[3] → dp[2] = 1 + 0 = 1
 
 c=1: grid[1][1] = 1 (OBSTACLE!)
-     dp[1] = 0  →  RESET to 0 (no paths through obstacle)
+dp[1] = 0 → RESET to 0 (no paths through obstacle)
 
 c=0: grid[1][0] = 0 (empty)
-     dp[0] += dp[1]  →  dp[0] = 1 + 0 = 1
+dp[0] += dp[1] → dp[0] = 1 + 0 = 1
 
-dp = [ 1 ,  0 ,  1 ,  0 ]
-            ↑
-           █ obstacle blocks paths
+dp = [ 1 , 0 , 1 , 0 ]
+↑
+█ obstacle blocks paths
 
 Represents row 1 of the 2D table:
 ┌───┬───┬───┐
-│ 1 │ 0 │ 1 │  ← row 1 (obstacle at c=1)
+│ 1 │ 0 │ 1 │ ← row 1 (obstacle at c=1)
 └───┴───┴───┘
 ```
-
-
 
 **Step 3: Process row 0 (top row, right to left)**
 
 ```markdown
 c=2: grid[0][2] = 0 (empty)
-     dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
+dp[2] += dp[3] → dp[2] = 1 + 0 = 1
 
 c=1: grid[0][1] = 0 (empty)
-     dp[1] += dp[2]  →  dp[1] = 0 + 1 = 1
+dp[1] += dp[2] → dp[1] = 0 + 1 = 1
 
 c=0: grid[0][0] = 0 (empty)
-     dp[0] += dp[1]  →  dp[0] = 1 + 1 = 2  ← ANSWER!
+dp[0] += dp[1] → dp[0] = 1 + 1 = 2 ← ANSWER!
 
-dp = [ 2 ,  1 ,  1 ,  0 ]
-       ↑
-      answer
+dp = [ 2 , 1 , 1 , 0 ]
+↑
+answer
 
 Represents row 0 of the 2D table:
 ┌───┬───┬───┐
-│ 2 │ 1 │ 1 │  ← row 0
+│ 2 │ 1 │ 1 │ ← row 0
 └───┴───┴───┘
 ```
-
-
 
 **Evolution of the 1D DP Array:**
 
 ```markdown
                   c=0  c=1  c=2  c=3
                 ┌────┬────┬────┬────┐
-Initialize:     │  0 │  0 │  1 │  0 │
-                └────┴────┴────┴────┘
-                           ↑
-                          dst
-                           │
-                           ▼
-                ┌────┬────┬────┬────┐
-After row 2:    │  1 │  1 │  1 │  0 │
-                └────┴────┴────┴────┘
-                           │
-                           ▼
-                ┌────┬────┬────┬────┐
-After row 1:    │  1 │  0 │  1 │  0 │  ← obstacle at c=1 resets to 0
-                └────┴────┴────┴────┘
-                      ↑
-                      █
-                           │
-                           ▼
-                ┌────┬────┬────┬────┐
-After row 0:    │  2 │  1 │  1 │  0 │  ← dp[0] = 2
-                └────┴────┴────┴────┘
-                  ↑
-                answer
+
+Initialize: │ 0 │ 0 │ 1 │ 0 │
+└────┴────┴────┴────┘
+↑
+dst
+│
+▼
+┌────┬────┬────┬────┐
+After row 2: │ 1 │ 1 │ 1 │ 0 │
+└────┴────┴────┴────┘
+│
+▼
+┌────┬────┬────┬────┐
+After row 1: │ 1 │ 0 │ 1 │ 0 │ ← obstacle at c=1 resets to 0
+└────┴────┴────┴────┘
+↑
+█
+│
+▼
+┌────┬────┬────┬────┐
+After row 0: │ 2 │ 1 │ 1 │ 0 │ ← dp[0] = 2
+└────┴────┴────┴────┘
+↑
+answer
 
 Result: dp[0] = 2 unique paths
 ```
@@ -1073,6 +1110,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn unique_paths_with_obstacles(obstacle_grid: Vec<Vec<i32>>) -> i32 {
+        let m = obstacle_grid.len();
+        let n = obstacle_grid[0].len();
+        let mut dp = vec![0; n + 1];
+        dp[n - 1] = 1;
+
+        for r in (0..m).rev() {
+            for c in (0..n).rev() {
+                if obstacle_grid[r][c] == 1 {
+                    dp[c] = 0;
+                } else {
+                    dp[c] += dp[c + 1];
+                }
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1095,8 +1155,8 @@ We can avoid using any extra space by reusing the input grid itself to store the
 1. If the start or destination has an obstacle, return `0`.
 2. Set `grid[M-1][N-1] = 1` to mark the destination.
 3. Iterate from the bottom-right to the top-left (skipping the destination cell):
-   - If the cell is an obstacle, set it to `0`.
-   - Otherwise, compute `down + right` where `down` is the cell below and `right` is the cell to the right.
+    - If the cell is an obstacle, set it to `0`.
+    - Otherwise, compute `down + right` where `down` is the cell below and `right` is the cell to the right.
 4. Return `grid[0][0]` as the answer.
 
 <details>
@@ -1108,27 +1168,25 @@ Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
 Input: obstacleGrid (0 = empty, 1 = obstacle)
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
-1 │ 0 │ █ │ 0 │  ← obstacle at (1,1), value = 1
-  ├───┼───┼───┤
+├───┼───┼───┤
+1 │ 0 │ █ │ 0 │ ← obstacle at (1,1), value = 1
+├───┼───┼───┤
 2 │ 0 │ 0 │ 0 │
-  └───┴───┴───┘
+└───┴───┴───┘
 
 Legend: █ = obstacle (value 1), 0 = empty cell
 ```
 
-
-
 **In-Place Modification: Reuse Input Grid**
 
 This approach modifies the input grid directly to store path counts.
+
 - Empty cells (0) become path counts
 - Obstacles (1) become 0 (no paths through them)
 - Formula: `grid[r][c] = grid[r+1][c] + grid[r][c+1]`
-
-
 
 **Step 0: Initialize destination**
 
@@ -1136,105 +1194,102 @@ This approach modifies the input grid directly to store path counts.
 grid[2][2] = 1 (1 way to reach destination from itself)
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
-1 │ 0 │ █ │ 0 │  ← obstacle still has value 1
-  ├───┼───┼───┤
-2 │ 0 │ 0 │ 1 │  ← destination initialized
-  └───┴───┴───┘
+├───┼───┼───┤
+1 │ 0 │ █ │ 0 │ ← obstacle still has value 1
+├───┼───┼───┤
+2 │ 0 │ 0 │ 1 │ ← destination initialized
+└───┴───┴───┘
 ```
-
-
 
 **Step 1: Process row 2 (bottom row, right to left)**
 
 ```markdown
 (2,2): SKIP - destination already set to 1
 (2,1): grid[2][1] = 0 (empty), compute paths:
-       down = 0 (out of bounds), right = grid[2][2] = 1
-       grid[2][1] = 0 + 1 = 1
+down = 0 (out of bounds), right = grid[2][2] = 1
+grid[2][1] = 0 + 1 = 1
 (2,0): grid[2][0] = 0 (empty), compute paths:
-       down = 0 (out of bounds), right = grid[2][1] = 1
-       grid[2][0] = 0 + 1 = 1
+down = 0 (out of bounds), right = grid[2][1] = 1
+grid[2][0] = 0 + 1 = 1
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
+├───┼───┼───┤
 1 │ 0 │ █ │ 0 │
-  ├───┼───┼───┤
-2 │ 1 │ 1 │ 1 │  ← bottom row: only one way to reach end
-  └───┴───┴───┘
+├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ ← bottom row: only one way to reach end
+└───┴───┴───┘
 ```
-
-
 
 **Step 2: Process row 1 (middle row, right to left)**
 
 ```markdown
 (1,2): grid[1][2] = 0 (empty), compute paths:
-       down = grid[2][2] = 1, right = 0 (out of bounds)
-       grid[1][2] = 1 + 0 = 1
+down = grid[2][2] = 1, right = 0 (out of bounds)
+grid[1][2] = 1 + 0 = 1
 (1,1): grid[1][1] = 1 (OBSTACLE!)
-       grid[1][1] = 0  ← convert obstacle to 0 (no paths through)
+grid[1][1] = 0 ← convert obstacle to 0 (no paths through)
 (1,0): grid[1][0] = 0 (empty), compute paths:
-       down = grid[2][0] = 1, right = grid[1][1] = 0
-       grid[1][0] = 1 + 0 = 1
+down = grid[2][0] = 1, right = grid[1][1] = 0
+grid[1][0] = 1 + 0 = 1
 
     0   1   2
-  ┌───┬───┬───┐
+
+┌───┬───┬───┐
 0 │ 0 │ 0 │ 0 │
-  ├───┼───┼───┤
-1 │ 1 │ 0 │ 1 │  ← obstacle converted: █ (1) → 0
-  ├───┼───┼───┤
+├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │ ← obstacle converted: █ (1) → 0
+├───┼───┼───┤
 2 │ 1 │ 1 │ 1 │
-  └───┴───┴───┘
+└───┴───┴───┘
 ```
-
-
 
 **Step 3: Process row 0 (top row, right to left)**
 
 ```markdown
 (0,2): grid[0][2] = 0 (empty), compute paths:
-       down = grid[1][2] = 1, right = 0 (out of bounds)
-       grid[0][2] = 1 + 0 = 1
+down = grid[1][2] = 1, right = 0 (out of bounds)
+grid[0][2] = 1 + 0 = 1
 (0,1): grid[0][1] = 0 (empty), compute paths:
-       down = grid[1][1] = 0, right = grid[0][2] = 1
-       grid[0][1] = 0 + 1 = 1
+down = grid[1][1] = 0, right = grid[0][2] = 1
+grid[0][1] = 0 + 1 = 1
 (0,0): grid[0][0] = 0 (empty), compute paths:
-       down = grid[1][0] = 1, right = grid[0][1] = 1
-       grid[0][0] = 1 + 1 = 2  ← ANSWER!
+down = grid[1][0] = 1, right = grid[0][1] = 1
+grid[0][0] = 1 + 1 = 2 ← ANSWER!
 
     0   1   2
-  ┌───┬───┬───┐
-0 │ 2 │ 1 │ 1 │  ← grid[0][0] = 2 paths to destination
-  ├───┼───┼───┤
+
+┌───┬───┬───┐
+0 │ 2 │ 1 │ 1 │ ← grid[0][0] = 2 paths to destination
+├───┼───┼───┤
 1 │ 1 │ 0 │ 1 │
-  ├───┼───┼───┤
+├───┼───┼───┤
 2 │ 1 │ 1 │ 1 │
-  └───┴───┴───┘
+└───┴───┴───┘
 ```
-
-
 
 **Before and After Transformation:**
 
 ```markdown
-BEFORE (Input):                    AFTER (In-Place Modified):
+BEFORE (Input): AFTER (In-Place Modified):
 
     0   1   2                          0   1   2
-  ┌───┬───┬───┐                      ┌───┬───┬───┐
-0 │ 0 │ 0 │ 0 │                    0 │ 2 │ 1 │ 1 │  ← answer
-  ├───┼───┼───┤                      ├───┼───┼───┤
-1 │ 0 │ █ │ 0 │       ═══════►     1 │ 1 │ 0 │ 1 │  ← █ became 0
-  ├───┼───┼───┤                      ├───┼───┼───┤
-2 │ 0 │ 0 │ 0 │                    2 │ 1 │ 1 │ 1 │
-  └───┴───┴───┘                      └───┴───┴───┘
 
-  0 = empty cell                     Each cell = # of paths to (2,2)
-  █ = obstacle (1)                   Obstacle → 0 (no paths through it)
+┌───┬───┬───┐ ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │ 0 │ 2 │ 1 │ 1 │ ← answer
+├───┼───┼───┤ ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │ ═══════► 1 │ 1 │ 0 │ 1 │ ← █ became 0
+├───┼───┼───┤ ├───┼───┼───┤
+2 │ 0 │ 0 │ 0 │ 2 │ 1 │ 1 │ 1 │
+└───┴───┴───┘ └───┴───┴───┘
+
+0 = empty cell Each cell = # of paths to (2,2)
+█ = obstacle (1) Obstacle → 0 (no paths through it)
 
 Result: grid[0][0] = 2 unique paths
 ```
@@ -1498,6 +1553,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn unique_paths_with_obstacles(mut obstacle_grid: Vec<Vec<i32>>) -> i32 {
+        let m = obstacle_grid.len();
+        let n = obstacle_grid[0].len();
+        if obstacle_grid[0][0] == 1 || obstacle_grid[m - 1][n - 1] == 1 {
+            return 0;
+        }
+
+        obstacle_grid[m - 1][n - 1] = 1;
+
+        for r in (0..m).rev() {
+            for c in (0..n).rev() {
+                if r == m - 1 && c == n - 1 {
+                    continue;
+                }
+
+                if obstacle_grid[r][c] == 1 {
+                    obstacle_grid[r][c] = 0;
+                } else {
+                    let down = if r + 1 < m { obstacle_grid[r + 1][c] } else { 0 };
+                    let right = if c + 1 < n { obstacle_grid[r][c + 1] } else { 0 };
+                    obstacle_grid[r][c] = down + right;
+                }
+            }
+        }
+
+        obstacle_grid[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1512,10 +1599,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Checking Start or End for Obstacles
+
 If either the starting cell `grid[0][0]` or the destination cell `grid[M-1][N-1]` contains an obstacle, there are zero paths. Forgetting this check leads to incorrect results.
 
 ### Incorrect Base Case Initialization
+
 When filling the first row or first column, all cells after an obstacle should have zero paths. A common mistake is initializing the entire edge with `1`s without considering that obstacles block all subsequent cells.
+
 ```python
 # Wrong: doesn't account for obstacles blocking the path
 for c in range(N):
@@ -1528,7 +1618,9 @@ for c in range(N):
 ```
 
 ### Confusing Obstacle Value with Path Count
+
 In the in-place approach, obstacles are marked as `1` in the input but need to become `0` in the DP array. Confusing these values causes obstacles to be counted as having one path.
 
 ### Off-by-One Errors in Grid Iteration
+
 When iterating bottom-up or right-to-left, ensure loop bounds are correct. Starting at `M-1` and going to `0` requires `range(M-1, -1, -1)` in Python, not `range(M-1, 0, -1)` which skips the first row.

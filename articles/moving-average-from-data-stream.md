@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Queues/Deques** - Understanding FIFO data structures for maintaining a sliding window of elements
 - **Sliding Window** - Tracking a fixed-size window of recent elements as new data arrives
 - **Circular Arrays** - Using modular arithmetic to implement efficient fixed-size buffers
@@ -200,6 +202,33 @@ class MovingAverage {
 }
 ```
 
+```rust
+struct MovingAverage {
+    size: usize,
+    queue: Vec<i32>,
+}
+
+impl MovingAverage {
+    fn new(size: i32) -> Self {
+        Self {
+            size: size as usize,
+            queue: Vec::new(),
+        }
+    }
+
+    fn next(&mut self, val: i32) -> f64 {
+        self.queue.push(val);
+        let start = if self.queue.len() > self.size {
+            self.queue.len() - self.size
+        } else {
+            0
+        };
+        let window_sum: i32 = self.queue[start..].iter().sum();
+        window_sum as f64 / self.queue.len().min(self.size) as f64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,7 +236,7 @@ class MovingAverage {
 - Time complexity: $O(N \cdot M)$
 - Space complexity: $O(M)$
 
->  Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
+> Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
 
 ---
 
@@ -221,9 +250,9 @@ Instead of recalculating the sum each time, we can maintain a running sum and a 
 
 1. Initialize a deque (double-ended queue), a running sum `window_sum`, and a `count` of elements seen.
 2. When `next(val)` is called:
-   - Increment the `count` and add the new value to the queue.
-   - If the `count` exceeds the window `size`, remove the front element from the queue and subtract it from the running sum.
-   - Add the new value to the running sum.
+    - Increment the `count` and add the new value to the queue.
+    - If the `count` exceeds the window `size`, remove the front element from the queue and subtract it from the running sum.
+    - Add the new value to the running sum.
 3. Return the running sum divided by the current window size (minimum of `count` and `size`).
 
 ::tabs-start
@@ -402,6 +431,39 @@ class MovingAverage {
 }
 ```
 
+```rust
+struct MovingAverage {
+    size: usize,
+    queue: VecDeque<i32>,
+    window_sum: i32,
+    count: usize,
+}
+
+impl MovingAverage {
+    fn new(size: i32) -> Self {
+        Self {
+            size: size as usize,
+            queue: VecDeque::new(),
+            window_sum: 0,
+            count: 0,
+        }
+    }
+
+    fn next(&mut self, val: i32) -> f64 {
+        self.count += 1;
+        self.queue.push_back(val);
+        let tail = if self.count > self.size {
+            self.queue.pop_front().unwrap_or(0)
+        } else {
+            0
+        };
+
+        self.window_sum = self.window_sum - tail + val;
+        self.window_sum as f64 / self.size.min(self.count) as f64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -410,7 +472,7 @@ class MovingAverage {
     - Time complexity per `next()` call is $O(1)$. Therefore, the total time complexity for $M$ calls is $O(M)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
+> Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
 
 ---
 
@@ -424,11 +486,11 @@ A circular queue (ring buffer) avoids the overhead of shifting elements when rem
 
 1. Initialize a fixed-size array of length `size`, a head pointer, a running sum, and a count of elements seen.
 2. When `next(val)` is called:
-   - Increment the count.
-   - Calculate the tail position as `(head + 1) % size`, which points to the oldest element that will be replaced.
-   - Subtract the value at the tail position from the running sum and add the new value.
-   - Move the head pointer forward: `head = (head + 1) % size`.
-   - Store the new value at the head position.
+    - Increment the count.
+    - Calculate the tail position as `(head + 1) % size`, which points to the oldest element that will be replaced.
+    - Subtract the value at the tail position from the running sum and add the new value.
+    - Move the head pointer forward: `head = (head + 1) % size`.
+    - Store the new value at the head position.
 3. Return the running sum divided by the current window size (minimum of count and size).
 
 ::tabs-start
@@ -469,7 +531,7 @@ class MovingAverage {
 
     public double next(int val) {
         ++count;
-        
+
         // calculate the new sum by shifting the window
         int tail = (head + 1) % size;
         windowSum = windowSum - queue[tail] + val;
@@ -645,6 +707,42 @@ class MovingAverage {
 }
 ```
 
+```rust
+struct MovingAverage {
+    size: usize,
+    queue: Vec<i32>,
+    head: usize,
+    window_sum: i32,
+    count: usize,
+}
+
+impl MovingAverage {
+    fn new(size: i32) -> Self {
+        let size = size as usize;
+        Self {
+            size,
+            queue: vec![0; size],
+            head: 0,
+            window_sum: 0,
+            count: 0,
+        }
+    }
+
+    fn next(&mut self, val: i32) -> f64 {
+        self.count += 1;
+
+        // calculate the new sum by shifting the window
+        let tail = (self.head + 1) % self.size;
+        self.window_sum = self.window_sum - self.queue[tail] + val;
+
+        // move on to the next head
+        self.head = (self.head + 1) % self.size;
+        self.queue[self.head] = val;
+        self.window_sum as f64 / self.size.min(self.count) as f64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -653,7 +751,7 @@ class MovingAverage {
     - Time complexity per `next()` call is $O(1)$. Therefore, the total time complexity for $M$ calls is $O(M)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
+> Where $N$ is the size of the moving window and $M$ is the number of calls made to `next`.
 
 ## Common Pitfalls
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Understanding LIFO (Last-In-First-Out) operations for push and pop
 - **Hash Maps** - Using dictionaries to map closing brackets to their corresponding opening brackets
 - **String Traversal** - Iterating through characters in a string one by one
@@ -19,10 +21,10 @@ Otherwise, some unmatched characters remain, meaning the string is invalid.
 ### Algorithm
 
 1. While the string still contains `"()"`, `"{}"`, or `"[]"`:
-   - Remove all occurrences of those pairs.
+    - Remove all occurrences of those pairs.
 2. After no more pairs can be removed:
-   - If the string is empty, return `true`.
-   - Otherwise, return `false`.
+    - If the string is empty, return `true`.
+    - Otherwise, return `false`.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -36,16 +38,16 @@ Initial String:
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
-  0   1   2   3   4   5
-
+0 1 2 3 4 5
 
 Iteration 1:
-    Remove "()" → not found at adjacent positions
-    Remove "{}" → not found at adjacent positions
-    Remove "[]" → found at positions 2-3!
+Remove "()" → not found at adjacent positions
+Remove "{}" → not found at adjacent positions
+Remove "[]" → found at positions 2-3!
 
              Found pair
                ↓↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
@@ -56,10 +58,9 @@ Iteration 1:
     └───┴───┴───┴───┘
       0   1   2   3
 
-
 Iteration 2:
-    Remove "()" → not found at adjacent positions
-    Remove "{}" → found at positions 1-2!
+Remove "()" → not found at adjacent positions
+Remove "{}" → found at positions 1-2!
 
          Found pair
            ↓↓
@@ -73,9 +74,8 @@ Iteration 2:
     └───┴───┘
       0   1
 
-
 Iteration 3:
-    Remove "()" → found at positions 0-1!
+Remove "()" → found at positions 0-1!
 
      Found pair
        ↓↓
@@ -88,9 +88,8 @@ Iteration 3:
     │   │  ← Empty string!
     └───┘
 
-
 Final Result:
-    String is empty → return True
+String is empty → return True
 ```
 
 </details>
@@ -216,6 +215,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_valid(s: String) -> bool {
+        let mut s = s;
+        loop {
+            let prev = s.len();
+            s = s.replace("()", "");
+            s = s.replace("{}", "");
+            s = s.replace("[]", "");
+            if s.len() == prev {
+                break;
+            }
+        }
+        s.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,14 +257,14 @@ A valid string ends with an empty stack.
 
 1. Create a `stack` to store opening brackets.
 2. For each character `c` in the string:
-   - If it is an opening bracket, push it onto the `stack`.
-   - If it is a closing bracket:
-     - Check if the `stack` is not empty **and** its top matches the corresponding opening bracket.
-     - If yes, pop the `stack`.
-     - Otherwise, return `false`.
+    - If it is an opening bracket, push it onto the `stack`.
+    - If it is a closing bracket:
+        - Check if the `stack` is not empty **and** its top matches the corresponding opening bracket.
+        - If yes, pop the `stack`.
+        - Otherwise, return `false`.
 3. After processing all characters:
-   - If the `stack` is empty, return `true`.
-   - Otherwise, return `false`.
+    - If the `stack` is empty, return `true`.
+    - Otherwise, return `false`.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -261,13 +278,13 @@ String (processing left to right):
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
-  0   1   2   3   4   5
-
+0 1 2 3 4 5
 
 Step 1: char = '('
 
     Current char
          ↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
@@ -279,11 +296,11 @@ Stack:
 │ ( │ ← top
 └───┘
 
-
 Step 2: char = '{'
 
         Current char
              ↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
@@ -297,11 +314,11 @@ Stack:
 │ ( │
 └───┘
 
-
 Step 3: char = '['
 
             Current char
                  ↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
@@ -317,17 +334,17 @@ Stack:
 │ ( │
 └───┘
 
-
 Step 4: char = ']'
 
                 Current char
                      ↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
 
 Action: ']' is a closing bracket
-        Top of stack is '[' which matches! → Pop from stack
+Top of stack is '[' which matches! → Pop from stack
 
 Stack:
 ┌───┐
@@ -336,44 +353,43 @@ Stack:
 │ ( │
 └───┘
 
-
 Step 5: char = '}'
 
                     Current char
                          ↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
 
 Action: '}' is a closing bracket
-        Top of stack is '{' which matches! → Pop from stack
+Top of stack is '{' which matches! → Pop from stack
 
 Stack:
 ┌───┐
 │ ( │ ← top
 └───┘
 
-
 Step 6: char = ')'
 
                         Current char
                              ↓
+
 ┌───┬───┬───┬───┬───┬───┐
 │ ( │ { │ [ │ ] │ } │ ) │
 └───┴───┴───┴───┴───┴───┘
 
 Action: ')' is a closing bracket
-        Top of stack is '(' which matches! → Pop from stack
+Top of stack is '(' which matches! → Pop from stack
 
 Stack:
 ┌───┐
-│   │ ← empty
+│ │ ← empty
 └───┘
 
-
 Final Result:
-    Stack is empty → All brackets matched correctly!
-    Return: True
+Stack is empty → All brackets matched correctly!
+Return: True
 ```
 
 </details>
@@ -581,6 +597,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_valid(s: String) -> bool {
+        let mut stack = Vec::new();
+        let close_to_open: HashMap<char, char> =
+            [(')', '('), (']', '['), ('}', '{')].into();
+
+        for c in s.chars() {
+            if let Some(&open) = close_to_open.get(&c) {
+                if !stack.is_empty() && *stack.last().unwrap() == open {
+                    stack.pop();
+                } else {
+                    return false;
+                }
+            } else {
+                stack.push(c);
+            }
+        }
+        stack.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -593,7 +632,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Checking Stack Empty Before Popping
+
 When encountering a closing bracket, you must verify the stack is not empty before checking the top element. Attempting to pop from an empty stack causes an error.
+
 ```python
 # Wrong: crashes on empty stack
 if stack[-1] == closeToOpen[c]:
@@ -602,14 +643,18 @@ if stack and stack[-1] == closeToOpen[c]:
 ```
 
 ### Forgetting to Check if Stack is Empty at the End
+
 After processing all characters, some opening brackets might remain unmatched. The string `"(()"` processes without errors but leaves `"("` on the stack, making it invalid.
 
 ### Mixing Up Opening and Closing Brackets
+
 When building the bracket mapping, ensure closing brackets map to their corresponding opening brackets, not the other way around. The lookup should happen when you encounter a closing bracket.
+
 ```python
 # Correct mapping: closing -> opening
 closeToOpen = {")": "(", "]": "[", "}": "{"}
 ```
 
 ### Using Wrong Data Structure
+
 Using a queue instead of a stack fails because parentheses follow LIFO (last-in, first-out) order. The most recent opening bracket must be closed first, which requires stack behavior.

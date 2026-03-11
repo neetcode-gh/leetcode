@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree (BST) properties** - Understanding that left subtree values are less than root and right subtree values are greater, which enables pruning decisions
 - **Recursion and DFS** - Traversing trees recursively and understanding how to rebuild tree structure during traversal
 - **Tree node manipulation** - Modifying parent-child relationships by reassigning left/right pointers
@@ -228,6 +230,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn trim_bst(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        low: i32,
+        high: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let node = root?;
+        let val = node.borrow().val;
+
+        if val > high {
+            return Self::trim_bst(node.borrow().left.clone(), low, high);
+        }
+        if val < low {
+            return Self::trim_bst(node.borrow().right.clone(), low, high);
+        }
+
+        let left = Self::trim_bst(node.borrow().left.clone(), low, high);
+        let right = Self::trim_bst(node.borrow().right.clone(), low, high);
+        node.borrow_mut().left = left;
+        node.borrow_mut().right = right;
+        Some(node)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,11 +276,11 @@ We can avoid recursion by using a stack. The idea remains the same: nodes outsid
 1. Find the new root by moving to the right child if the current root is too small, or to the left child if too large, until the root is within `[low, high]`.
 2. Initialize a stack with the valid root.
 3. While the stack is not empty:
-   - Pop a `node`.
-   - If the left child exists and its value is less than `low`, replace it with its right child.
-   - If the right child exists and its value is greater than `high`, replace it with its left child.
-   - If any replacement was made, push the `node` back for reprocessing.
-   - Otherwise, push both children (if they exist) onto the stack.
+    - Pop a `node`.
+    - If the left child exists and its value is less than `low`, replace it with its right child.
+    - If the right child exists and its value is greater than `high`, replace it with its left child.
+    - If any replacement was made, push the `node` back for reprocessing.
+    - Otherwise, push both children (if they exist) onto the stack.
 4. Return the valid root.
 
 ::tabs-start
@@ -575,6 +603,79 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn trim_bst(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        low: i32,
+        high: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut root = root;
+        while let Some(ref node) = root {
+            let val = node.borrow().val;
+            if val < low {
+                let right = node.borrow().right.clone();
+                root = right;
+            } else if val > high {
+                let left = node.borrow().left.clone();
+                root = left;
+            } else {
+                break;
+            }
+        }
+
+        let mut stack: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![root.clone()];
+
+        while let Some(opt) = stack.pop() {
+            let node = match opt {
+                Some(n) => n,
+                None => continue,
+            };
+
+            let mut left_out = false;
+            let mut right_out = false;
+
+            if let Some(ref left) = node.borrow().left {
+                if left.borrow().val < low {
+                    left_out = true;
+                }
+            }
+            if let Some(ref right) = node.borrow().right {
+                if right.borrow().val > high {
+                    right_out = true;
+                }
+            }
+
+            if left_out {
+                let new_left = node.borrow().left.as_ref()
+                    .and_then(|l| l.borrow().right.clone());
+                node.borrow_mut().left = new_left;
+            }
+            if right_out {
+                let new_right = node.borrow().right.as_ref()
+                    .and_then(|r| r.borrow().left.clone());
+                node.borrow_mut().right = new_right;
+            }
+
+            if left_out || right_out {
+                stack.push(Some(node));
+            } else {
+                let left = node.borrow().left.clone();
+                let right = node.borrow().right.clone();
+                if left.is_some() {
+                    stack.push(left);
+                }
+                if right.is_some() {
+                    stack.push(right);
+                }
+            }
+        }
+
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -868,6 +969,65 @@ class Solution {
         }
 
         return tmpRoot
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn trim_bst(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        low: i32,
+        high: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut root = root;
+        while let Some(ref node) = root {
+            let val = node.borrow().val;
+            if val < low {
+                let right = node.borrow().right.clone();
+                root = right;
+            } else if val > high {
+                let left = node.borrow().left.clone();
+                root = left;
+            } else {
+                break;
+            }
+        }
+
+        let tmp_root = root.clone();
+        let mut cur = root;
+        while let Some(ref node) = cur {
+            loop {
+                let left = node.borrow().left.clone();
+                match left {
+                    Some(ref l) if l.borrow().val < low => {
+                        let new_left = l.borrow().right.clone();
+                        node.borrow_mut().left = new_left;
+                    }
+                    _ => break,
+                }
+            }
+            let next = node.borrow().left.clone();
+            cur = next;
+        }
+
+        cur = tmp_root.clone();
+        while let Some(ref node) = cur {
+            loop {
+                let right = node.borrow().right.clone();
+                match right {
+                    Some(ref r) if r.borrow().val > high => {
+                        let new_right = r.borrow().left.clone();
+                        node.borrow_mut().right = new_right;
+                    }
+                    _ => break,
+                }
+            }
+            let next = node.borrow().right.clone();
+            cur = next;
+        }
+
+        tmp_root
     }
 }
 ```

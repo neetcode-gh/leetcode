@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to access and modify elements by index
 - **Two Pointers** - Traversing arrays from different directions simultaneously
 - **In-place Algorithms** - Modifying data structures without using extra space
@@ -108,6 +110,19 @@ class Solution {
             nums1[i + m] = nums2[i]
         }
         nums1.sort()
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
+        let m = m as usize;
+        let n = n as usize;
+        for i in 0..n {
+            nums1[i + m] = nums2[i];
+        }
+        nums1.sort();
     }
 }
 ```
@@ -298,6 +313,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
+        let m = m as usize;
+        let n = n as usize;
+        let nums1_copy = nums1[..m].to_vec();
+        let (mut idx, mut i, mut j) = (0, 0, 0);
+
+        while idx < m + n {
+            if j >= n || (i < m && nums1_copy[i] <= nums2[j]) {
+                nums1[idx] = nums1_copy[i];
+                i += 1;
+            } else {
+                nums1[idx] = nums2[j];
+                j += 1;
+            }
+            idx += 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -319,9 +356,9 @@ The key insight is that `nums1` has empty space at the end. If we fill from the 
 
 1. Initialize `last` to `m + n - 1` (the last index of `nums1`).
 2. While both `m > 0` and `n > 0`:
-   - Compare `nums1[m - 1]` and `nums2[n - 1]`.
-   - Place the larger value at `nums1[last]` and decrement the corresponding pointer.
-   - Decrement `last`.
+    - Compare `nums1[m - 1]` and `nums2[n - 1]`.
+    - Place the larger value at `nums1[last]` and decrement the corresponding pointer.
+    - Decrement `last`.
 3. If any elements remain in `nums2`, copy them to `nums1`.
 
 ::tabs-start
@@ -545,6 +582,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
+        let (mut m, mut n) = (m as usize, n as usize);
+        let mut last = m + n;
+
+        // Merge in reverse order
+        while m > 0 && n > 0 {
+            last -= 1;
+            if nums1[m - 1] > nums2[n - 1] {
+                nums1[last] = nums1[m - 1];
+                m -= 1;
+            } else {
+                nums1[last] = nums2[n - 1];
+                n -= 1;
+            }
+        }
+
+        // Fill nums1 with leftover nums2 elements
+        while n > 0 {
+            last -= 1;
+            nums1[last] = nums2[n - 1];
+            n -= 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,9 +631,9 @@ This is a cleaner version of the previous approach. We observe that once all ele
 
 1. Initialize pointers `i = m - 1`, `j = n - 1`, and `last = m + n - 1`.
 2. While `j >= 0`:
-   - If `i >= 0` and `nums1[i] > nums2[j]`, place `nums1[i]` at `nums1[last]` and decrement `i`.
-   - Otherwise, place `nums2[j]` at `nums1[last]` and decrement `j`.
-   - Decrement `last`.
+    - If `i >= 0` and `nums1[i] > nums2[j]`, place `nums1[i]` at `nums1[last]` and decrement `i`.
+    - Otherwise, place `nums2[j]` at `nums1[last]` and decrement `j`.
+    - Decrement `last`.
 
 ::tabs-start
 
@@ -721,6 +786,26 @@ class Solution {
                 j -= 1
             }
             last -= 1
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge(nums1: &mut Vec<i32>, m: i32, nums2: &mut Vec<i32>, n: i32) {
+        let mut last = (m + n) as usize;
+        let (mut i, mut j) = (m, n);
+
+        while j > 0 {
+            last -= 1;
+            if i > 0 && nums1[(i - 1) as usize] > nums2[(j - 1) as usize] {
+                nums1[last] = nums1[(i - 1) as usize];
+                i -= 1;
+            } else {
+                nums1[last] = nums2[(j - 1) as usize];
+                j -= 1;
+            }
         }
     }
 }

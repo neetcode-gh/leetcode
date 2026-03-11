@@ -185,6 +185,32 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
+        let n = s.len();
+        let m = p.len();
+        if m > n {
+            return vec![];
+        }
+        let s = s.as_bytes();
+        let mut p_arr: Vec<u8> = p.into_bytes();
+        p_arr.sort();
+        let mut res = vec![];
+
+        for i in 0..=(n - m) {
+            let mut sub: Vec<u8> = s[i..i + m].to_vec();
+            sub.sort();
+            if sub == p_arr {
+                res.push(i as i32);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -523,6 +549,51 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
+        let n = s.len();
+        let m = p.len();
+        if m > n {
+            return vec![];
+        }
+        let s = s.as_bytes();
+        let p = p.as_bytes();
+
+        let mut p_count = [0i32; 26];
+        for &c in p {
+            p_count[(c - b'a') as usize] += 1;
+        }
+
+        let mut prefix = vec![[0i32; 26]; n + 1];
+        for i in 1..=n {
+            prefix[i] = prefix[i - 1];
+            prefix[i][(s[i - 1] - b'a') as usize] += 1;
+        }
+
+        let mut res = vec![];
+        let (mut i, mut j) = (0, m - 1);
+        while j < n {
+            let mut is_valid = true;
+            for c in 0..26 {
+                if prefix[j + 1][c] - prefix[i][c] != p_count[c] {
+                    is_valid = false;
+                    break;
+                }
+            }
+            if is_valid {
+                res.push(i as i32);
+            }
+            i += 1;
+            j += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -820,6 +891,46 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
+        if p.len() > s.len() {
+            return vec![];
+        }
+        let s = s.as_bytes();
+        let p = p.as_bytes();
+
+        let mut p_count = [0i32; 26];
+        let mut s_count = [0i32; 26];
+
+        for &c in p.iter() {
+            p_count[(c - b'a') as usize] += 1;
+        }
+        for i in 0..p.len() {
+            s_count[(s[i] - b'a') as usize] += 1;
+        }
+
+        let mut res = vec![];
+        if p_count == s_count {
+            res.push(0);
+        }
+
+        let mut l = 0;
+        for r in p.len()..s.len() {
+            s_count[(s[r] - b'a') as usize] += 1;
+            s_count[(s[l] - b'a') as usize] -= 1;
+            l += 1;
+            if p_count == s_count {
+                res.push(l as i32);
+            }
+        }
+
+        res
     }
 }
 ```
@@ -1208,6 +1319,60 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
+        let n = s.len();
+        let m = p.len();
+        if m > n {
+            return vec![];
+        }
+        let s = s.as_bytes();
+        let p = p.as_bytes();
+
+        let mut p_count = [0i32; 26];
+        let mut s_count = [0i32; 26];
+        for i in 0..m {
+            p_count[(p[i] - b'a') as usize] += 1;
+            s_count[(s[i] - b'a') as usize] += 1;
+        }
+
+        let mut matches = 0;
+        for i in 0..26 {
+            if p_count[i] == s_count[i] {
+                matches += 1;
+            }
+        }
+
+        let mut res = vec![];
+        if matches == 26 {
+            res.push(0);
+        }
+
+        let mut l = 0;
+        for r in m..n {
+            let c = (s[l] - b'a') as usize;
+            if s_count[c] == p_count[c] { matches -= 1; }
+            s_count[c] -= 1;
+            l += 1;
+            if s_count[c] == p_count[c] { matches += 1; }
+
+            let c = (s[r] - b'a') as usize;
+            if s_count[c] == p_count[c] { matches -= 1; }
+            s_count[c] += 1;
+            if s_count[c] == p_count[c] { matches += 1; }
+
+            if matches == 26 {
+                res.push(l as i32);
+            }
+        }
+
+        res
     }
 }
 ```

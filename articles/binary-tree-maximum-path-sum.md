@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding nodes, left/right children, and tree traversal
 - **Depth-First Search (DFS)** - Recursively visiting all nodes in a tree
 - **Recursion with Return Values** - Functions that both compute results and return values to parent calls
@@ -11,6 +13,7 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 For each node, consider it as the **highest point** of a potential path.
 A path can pass through a node as:
 
@@ -25,6 +28,7 @@ A downward path ends at that child and goes only downward (no turning back up).
 This is computed using `getMax()`.
 
 Then we compute the best full path through this node:
+
 ```
 node.val + leftDown + rightDown
 ```
@@ -32,15 +36,16 @@ node.val + leftDown + rightDown
 We try this for **every node** using `DFS` and update the global answer.
 
 ### Algorithm
+
 1. Use `DFS` to visit each node.
 2. At each node:
-   - Compute the max downward path from the left subtree.
-   - Compute the max downward path from the right subtree.
-   - Update the result with
-     `node.val + leftDown + rightDown`
+    - Compute the max downward path from the left subtree.
+    - Compute the max downward path from the right subtree.
+    - Update the result with
+      `node.val + leftDown + rightDown`
 3. The helper `getMax(node)` returns the best downward path:
-   - Compute `node.val + max(leftDown, rightDown)`
-   - Return `0` if it is negative (since negative paths should be ignored).
+    - Compute `node.val + max(leftDown, rightDown)`
+    - Return `0` if it is negative (since negative paths should be ignored).
 4. Return the global maximum path sum.
 
 ::tabs-start
@@ -376,6 +381,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_path_sum(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = i32::MIN;
+        Self::dfs_brute(&root, &mut res);
+        res
+    }
+
+    fn get_max(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        match root {
+            None => 0,
+            Some(node) => {
+                let node = node.borrow();
+                let left = Self::get_max(&node.left);
+                let right = Self::get_max(&node.right);
+                let path = node.val + left.max(right);
+                0.max(path)
+            }
+        }
+    }
+
+    fn dfs_brute(root: &Option<Rc<RefCell<TreeNode>>>, res: &mut i32) {
+        if let Some(node) = root {
+            let node = node.borrow();
+            let left = Self::get_max(&node.left);
+            let right = Self::get_max(&node.right);
+            *res = (*res).max(node.val + left + right);
+            Self::dfs_brute(&node.left, res);
+            Self::dfs_brute(&node.right, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,55 +427,57 @@ class Solution {
 ## 2. Depth First Search (Optimal)
 
 ### Intuition
-In the maximum path sum problem, a *path* can start and end anywhere in the tree, but it must go **downward** at each step (parent → child).
+
+In the maximum path sum problem, a _path_ can start and end anywhere in the tree, but it must go **downward** at each step (parent → child).
 
 For every node, two values matter:
 
 1. **Max Downward Path** starting at this node
-   - This path can only go to *one* side (left or right).
-   - Used by the parent to extend the path upward.
-   - Computed as:
-     ```
-     node.val + max(leftDown, rightDown)
-     ```
+    - This path can only go to _one_ side (left or right).
+    - Used by the parent to extend the path upward.
+    - Computed as:
+        ```
+        node.val + max(leftDown, rightDown)
+        ```
 
 2. **Max Path Through This Node**
-   - This can include **both** left and right downward paths:
-     ```
-     node.val + leftDown + rightDown
-     ```
-   - This may form the global maximum path.
+    - This can include **both** left and right downward paths:
+        ```
+        node.val + leftDown + rightDown
+        ```
+    - This may form the global maximum path.
 
 While computing `DFS`:
+
 - If a downward path sum is negative, we drop it (take `0`), because adding negative values only makes the path worse.
 - At each node, update the global maximum using the "path through this node".
 - Return the best downward path to the parent.
 
 This ensures each node is visited once — **O(n)** optimal time.
 
-
 ### Algorithm
+
 1. Maintain a global result `res`, initialized with the root’s value.
 2. Define `dfs(node)`:
-   - If node is `None`, return `0`.
-   - Recursively compute:
-     ```
-     leftMax = dfs(node.left)
-     rightMax = dfs(node.right)
-     ```
-   - Ignore negative downward paths:
-     ```
-     leftMax = max(leftMax, 0)
-     rightMax = max(rightMax, 0)
-     ```
-   - Update global result with the best path *through* node:
-     ```
-     res = max(res, node.val + leftMax + rightMax)
-     ```
-   - Return the best "extendable" downward path:
-     ```
-     node.val + max(leftMax, rightMax)
-     ```
+    - If node is `None`, return `0`.
+    - Recursively compute:
+        ```
+        leftMax = dfs(node.left)
+        rightMax = dfs(node.right)
+        ```
+    - Ignore negative downward paths:
+        ```
+        leftMax = max(leftMax, 0)
+        rightMax = max(rightMax, 0)
+        ```
+    - Update global result with the best path _through_ node:
+        ```
+        res = max(res, node.val + leftMax + rightMax)
+        ```
+    - Return the best "extendable" downward path:
+        ```
+        node.val + max(leftMax, rightMax)
+        ```
 3. Call `dfs(root)` and return `res`.
 
 ::tabs-start
@@ -734,6 +775,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_path_sum(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = root.as_ref().unwrap().borrow().val;
+        Self::dfs(&root, &mut res);
+        res
+    }
+
+    fn dfs(root: &Option<Rc<RefCell<TreeNode>>>, res: &mut i32) -> i32 {
+        match root {
+            None => 0,
+            Some(node) => {
+                let node = node.borrow();
+                let left_max = Self::dfs(&node.left, res).max(0);
+                let right_max = Self::dfs(&node.right, res).max(0);
+                *res = (*res).max(node.val + left_max + right_max);
+                node.val + left_max.max(right_max)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -746,21 +810,27 @@ class Solution {
 ## Common Pitfalls
 
 ### Initializing Result to Zero Instead of Negative Infinity
+
 When all node values are negative, the maximum path sum is still negative. Initializing the result to 0 causes incorrect answers for trees with all negative values.
+
 ```python
 # Wrong: fails for trees like [-3]
 res = 0  # should be: res = float('-inf') or root.val
 ```
 
 ### Forgetting to Clamp Negative Subtree Contributions to Zero
+
 A subtree with negative sum should not be included in the path. Failing to take `max(0, subtree_sum)` adds negative values that reduce the total.
+
 ```python
 # Wrong: includes negative contributions
 leftMax = dfs(root.left)  # should be: max(dfs(root.left), 0)
 ```
 
 ### Returning the Full Path Sum Instead of Single-Branch Sum
+
 The recursive function must return only one branch (left OR right) to the parent, not both. Returning `node.val + leftMax + rightMax` allows invalid paths that fork at multiple nodes.
+
 ```python
 # Wrong: returns both branches (creates invalid forking path)
 return node.val + leftMax + rightMax
@@ -768,7 +838,9 @@ return node.val + leftMax + rightMax
 ```
 
 ### Not Considering Single-Node Paths
+
 A valid path can be just one node. The algorithm must consider `node.val` alone as a potential maximum, especially when both subtrees contribute negative values.
 
 ### Confusing Path Sum With Downward Path
+
 The maximum path can go through any node as the "turning point" (left subtree -> node -> right subtree). This is different from paths that only go downward from root to leaf.

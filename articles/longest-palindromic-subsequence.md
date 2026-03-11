@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (2D)** - The solution requires a 2D DP table to track palindrome lengths for substrings defined by two indices
 - **Recursion with Memoization** - Top-down approaches use recursive calls with caching to avoid recomputation
 - **Longest Common Subsequence (LCS)** - One approach reduces this problem to finding the LCS between the string and its reverse
@@ -19,10 +21,10 @@ If the characters match, we include both in our subsequence and continue expandi
 
 1. Create a 2D memoization table `dp` where `dp[i][j]` stores the longest palindromic subsequence that can be formed starting at index `i` and ending at index `j`.
 2. Define a recursive function `dfs(i, j)` that:
-   - Returns `0` if indices are out of bounds.
-   - Returns the cached result if already computed.
-   - If characters at `i` and `j` match, adds `1` (if same index) or `2` (different indices) plus the result of expanding outward.
-   - Otherwise, takes the maximum of skipping either the left or right character.
+    - Returns `0` if indices are out of bounds.
+    - Returns the cached result if already computed.
+    - If characters at `i` and `j` match, adds `1` (if same index) or `2` (different indices) plus the result of expanding outward.
+    - Otherwise, takes the maximum of skipping either the left or right character.
 3. Call `dfs` for all possible centers (both odd and even length palindromes).
 4. Return the maximum value found in the DP table.
 
@@ -385,6 +387,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome_subseq(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![vec![-1i32; n]; n];
+
+        fn dfs(i: isize, j: usize, s: &[u8], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i < 0 || j == s.len() {
+                return 0;
+            }
+            let ui = i as usize;
+            if dp[ui][j] != -1 {
+                return dp[ui][j];
+            }
+            if s[ui] == s[j] {
+                let length = if ui == j { 1 } else { 2 };
+                dp[ui][j] = length + dfs(i - 1, j + 1, s, dp);
+            } else {
+                dp[ui][j] = dfs(i - 1, j, s, dp).max(dfs(i, j + 1, s, dp));
+            }
+            dp[ui][j]
+        }
+
+        for i in 0..n {
+            dfs(i as isize, i, s, &mut dp);       // Odd length
+            dfs(i as isize, i + 1, s, &mut dp);   // Even length
+        }
+
+        dp.iter()
+            .flat_map(|row| row.iter())
+            .copied()
+            .max()
+            .unwrap_or(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -406,11 +446,11 @@ When the first and last characters match, they can both be part of our palindrom
 
 1. Create a memoization cache (hash map or 2D array) to store computed results.
 2. Define a recursive function `dfs(i, j)` that:
-   - Returns `0` if `i > j` (empty substring).
-   - Returns `1` if `i == j` (single character is a palindrome of length `1`).
-   - Returns the cached result if already computed.
-   - If `s[i] == s[j]`, returns `2 + dfs(i+1, j-1)`.
-   - Otherwise, returns `max(dfs(i+1, j), dfs(i, j-1))`.
+    - Returns `0` if `i > j` (empty substring).
+    - Returns `1` if `i == j` (single character is a palindrome of length `1`).
+    - Returns the cached result if already computed.
+    - If `s[i] == s[j]`, returns `2 + dfs(i+1, j-1)`.
+    - Otherwise, returns `max(dfs(i+1, j), dfs(i, j-1))`.
 3. Call `dfs(0, n-1)` to get the answer for the entire string.
 
 ::tabs-start
@@ -691,6 +731,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome_subseq(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![vec![-1i32; n]; n];
+
+        fn dfs(i: usize, j: usize, s: &[u8], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i > j {
+                return 0;
+            }
+            if i == j {
+                return 1;
+            }
+            if dp[i][j] != -1 {
+                return dp[i][j];
+            }
+            if s[i] == s[j] {
+                dp[i][j] = dfs(i + 1, j - 1, s, dp) + 2;
+            } else {
+                dp[i][j] = dfs(i + 1, j, s, dp).max(dfs(i, j - 1, s, dp));
+            }
+            dp[i][j]
+        }
+
+        dfs(0, n - 1, s, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -712,9 +782,9 @@ This transforms our problem into the classic LCS problem, which has a well-known
 
 1. Create the reverse of the input string.
 2. Use the standard LCS algorithm:
-   - Create a 2D DP table where `dp[i][j]` represents the LCS length of the first `i` characters of the original string and the first `j` characters of the reversed string.
-   - If characters match, `dp[i+1][j+1] = dp[i][j] + 1`.
-   - Otherwise, `dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])`.
+    - Create a 2D DP table where `dp[i][j]` represents the LCS length of the first `i` characters of the original string and the first `j` characters of the reversed string.
+    - If characters match, `dp[i+1][j+1] = dp[i][j] + 1`.
+    - Otherwise, `dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])`.
 3. Return `dp[n][n]` as the final answer.
 
 ::tabs-start
@@ -949,6 +1019,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome_subseq(s: String) -> i32 {
+        let s1: Vec<u8> = s.bytes().collect();
+        let s2: Vec<u8> = s.bytes().rev().collect();
+        let n = s1.len();
+        let m = s2.len();
+        let mut dp = vec![vec![0i32; m + 1]; n + 1];
+
+        for i in 0..n {
+            for j in 0..m {
+                if s1[i] == s2[j] {
+                    dp[i + 1][j + 1] = 1 + dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = dp[i + 1][j].max(dp[i][j + 1]);
+                }
+            }
+        }
+
+        dp[n][m]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -968,13 +1062,13 @@ The bottom-up DP approach can be optimized for space. When filling the DP table,
 
 1. Create a 1D DP array of size `n`.
 2. Iterate `i` from `n-1` down to `0`:
-   - Set `dp[i] = 1` (single character palindrome).
-   - Track `prev` to store the previous diagonal value.
-   - For each `j` from `i+1` to `n-1`:
-     - Save current `dp[j]` before updating.
-     - If `s[i] == s[j]`, set `dp[j] = prev + 2`.
-     - Otherwise, set `dp[j] = max(dp[j], dp[j-1])`.
-     - Update `prev` with the saved value.
+    - Set `dp[i] = 1` (single character palindrome).
+    - Track `prev` to store the previous diagonal value.
+    - For each `j` from `i+1` to `n-1`:
+        - Save current `dp[j]` before updating.
+        - If `s[i] == s[j]`, set `dp[j] = prev + 2`.
+        - Otherwise, set `dp[j] = max(dp[j], dp[j-1])`.
+        - Update `prev` with the saved value.
 3. Return `dp[n-1]`.
 
 ::tabs-start
@@ -1191,6 +1285,32 @@ class Solution {
         }
 
         return dp[n - 1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_palindrome_subseq(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut dp = vec![0i32; n];
+
+        for i in (0..n).rev() {
+            dp[i] = 1;
+            let mut prev = 0;
+            for j in i + 1..n {
+                let temp = dp[j];
+                if s[i] == s[j] {
+                    dp[j] = prev + 2;
+                } else {
+                    dp[j] = dp[j].max(dp[j - 1]);
+                }
+                prev = temp;
+            }
+        }
+
+        dp[n - 1]
     }
 }
 ```

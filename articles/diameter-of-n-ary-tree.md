@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **N-ary Trees** - Understanding tree structures where each node can have multiple children
 - **Recursion** - The solution uses recursive tree traversal to compute heights/depths
 - **Tree Height vs Depth** - Height is distance down to leaves; depth is distance from root
@@ -11,9 +13,11 @@ Before attempting this problem, you should be comfortable with:
 The **height** of a node is defined as the length of the longest downward path to a leaf node from that node.
 
 ### Intuition
+
 The diameter of a tree is the longest path between any two nodes. This path must pass through some node as the highest point (closest to root). At that node, the path goes down through two different children. So the longest path through any node equals the sum of the two largest heights among its children. By computing heights recursively and tracking the maximum path length, we find the diameter.
 
 ### Algorithm
+
 1. Define a recursive function that returns the height of a node (longest path to a leaf descendant).
 2. For a leaf node (no children), return height `0`.
 3. For each node, track the two largest heights among its children.
@@ -134,10 +138,10 @@ class Solution {
         let diameter = 0;
 
         const height = (node) => {
-            if (node.children.length === 0)
-                return 0;
+            if (node.children.length === 0) return 0;
 
-            let maxHeight1 = 0, maxHeight2 = 0;
+            let maxHeight1 = 0,
+                maxHeight2 = 0;
             for (const child of node.children) {
                 const parentHeight = height(child) + 1;
                 if (parentHeight > maxHeight1) {
@@ -284,6 +288,40 @@ class Solution {
 }
 ```
 
+```rust
+// Definition: struct Node { val: i32, children: Vec<Node> }
+struct Solution;
+
+impl Solution {
+    pub fn diameter(root: &Node) -> i32 {
+        let mut diameter = 0;
+
+        fn height(node: &Node, diameter: &mut i32) -> i32 {
+            if node.children.is_empty() {
+                return 0;
+            }
+
+            let (mut max_height1, mut max_height2) = (0, 0);
+            for child in &node.children {
+                let parent_height = height(child, diameter) + 1;
+                if parent_height > max_height1 {
+                    max_height2 = max_height1;
+                    max_height1 = parent_height;
+                } else if parent_height > max_height2 {
+                    max_height2 = parent_height;
+                }
+                let distance = max_height1 + max_height2;
+                *diameter = (*diameter).max(distance);
+            }
+            max_height1
+        }
+
+        height(root, &mut diameter);
+        diameter
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,7 +329,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the number of nodes in the tree.
+> Where $N$ is the number of nodes in the tree.
 
 ---
 
@@ -300,9 +338,11 @@ class Solution {
 The **depth** of a node is the length of the path to the **root** node.
 
 ### Intuition
+
 Instead of tracking heights (distance down to leaves), we can track depths (distance from root). The diameter through a node equals the sum of the two deepest leaf paths minus twice the current node's depth. This accounts for the path going down to one leaf, back up to the current node, and down to another leaf.
 
 ### Algorithm
+
 1. Define a recursive function that takes a node and its current depth, returning the maximum depth of any leaf in its subtree.
 2. For a leaf node, return the current depth.
 3. For each node, track the two largest depths found among descendants of its children.
@@ -327,7 +367,7 @@ class Solution:
 
             if len(node.children) == 0:
                 return curr_depth
-            
+
             # select the top 2 depths from its children
             max_depth_1, max_depth_2 = curr_depth, 0
             for child in node.children:
@@ -388,14 +428,14 @@ class Solution {
 class Solution {
 protected:
     int diameter = 0;
-    
+
     /**
      * return the maximum depth of leaves nodes descending from the given node
      */
     int maxDepth(Node* node, int currDepth) {
         if (node->children.size() == 0)
             return currDepth;
-        
+
         // select the top two largest depths
         int maxDepth1 = currDepth, maxDepth2 = 0;
         for (Node* child : node->children) {
@@ -412,7 +452,7 @@ protected:
         }
         return maxDepth1;
     }
-    
+
 public:
     int diameter(Node* root) {
         this->diameter = 0;
@@ -440,7 +480,8 @@ class Solution {
             }
 
             // select the top 2 depths from its children
-            let max_depth_1 = curr_depth, max_depth_2 = 0;
+            let max_depth_1 = curr_depth,
+                max_depth_2 = 0;
             for (const child of node.children) {
                 const depth = maxDepth(child, curr_depth + 1);
                 if (depth > max_depth_1) {
@@ -590,6 +631,40 @@ class Solution {
 }
 ```
 
+```rust
+// Definition: struct Node { val: i32, children: Vec<Node> }
+struct Solution;
+
+impl Solution {
+    pub fn diameter(root: &Node) -> i32 {
+        let mut diameter = 0;
+
+        fn max_depth(node: &Node, curr_depth: i32, diameter: &mut i32) -> i32 {
+            if node.children.is_empty() {
+                return curr_depth;
+            }
+
+            let (mut max_depth1, mut max_depth2) = (curr_depth, 0);
+            for child in &node.children {
+                let depth = max_depth(child, curr_depth + 1, diameter);
+                if depth > max_depth1 {
+                    max_depth2 = max_depth1;
+                    max_depth1 = depth;
+                } else if depth > max_depth2 {
+                    max_depth2 = depth;
+                }
+                let distance = max_depth1 + max_depth2 - 2 * curr_depth;
+                *diameter = (*diameter).max(distance);
+            }
+            max_depth1
+        }
+
+        max_depth(root, 0, &mut diameter);
+        diameter
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,7 +672,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the number of nodes in the tree.
+> Where $N$ is the number of nodes in the tree.
 
 ---
 

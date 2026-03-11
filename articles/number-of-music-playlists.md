@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up tabulation approaches
 - **Combinatorics** - Understanding how to count arrangements with constraints (permutations with restrictions)
 - **Modular Arithmetic** - Performing operations under modulo to handle large numbers without overflow
@@ -17,11 +19,11 @@ We need to count valid playlists of exactly `goal` songs using exactly `n` diffe
 
 1. Define a recursive function `count(cur_goal, old_songs)` where `cur_goal` is the remaining playlist slots and `old_songs` is the number of distinct songs used so far.
 2. Base cases:
-   - If `cur_goal == 0` and `old_songs == n`, we have a valid playlist, return `1`.
-   - If `cur_goal == 0` or `old_songs > n`, this path is invalid, return `0`.
+    - If `cur_goal == 0` and `old_songs == n`, we have a valid playlist, return `1`.
+    - If `cur_goal == 0` or `old_songs > n`, this path is invalid, return `0`.
 3. Recursive transitions:
-   - Add a new song: there are `(n - old_songs)` new songs available, and this leads to `count(cur_goal - 1, old_songs + 1)`.
-   - Replay an old song: if `old_songs > k`, there are `(old_songs - k)` songs eligible for replay, leading to `count(cur_goal - 1, old_songs)`.
+    - Add a new song: there are `(n - old_songs)` new songs available, and this leads to `count(cur_goal - 1, old_songs + 1)`.
+    - Replay an old song: if `old_songs > k`, there are `(old_songs - k)` songs eligible for replay, leading to `count(cur_goal - 1, old_songs)`.
 4. Memoize results to avoid recomputation.
 5. Return `count(goal, 0)` as the final answer, modulo `10^9 + 7`.
 
@@ -256,6 +258,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_music_playlists(n: i32, goal: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, goal, k) = (n as usize, goal as usize, k as usize);
+        let mut dp = vec![vec![-1i64; n + 1]; goal + 1];
+
+        fn count(
+            cur_goal: usize, old_songs: usize, n: usize, k: usize,
+            dp: &mut Vec<Vec<i64>>,
+        ) -> i64 {
+            if cur_goal == 0 && old_songs == n { return 1; }
+            if cur_goal == 0 || old_songs > n { return 0; }
+            if dp[cur_goal][old_songs] != -1 { return dp[cur_goal][old_songs]; }
+
+            let mut res = (n - old_songs) as i64
+                * count(cur_goal - 1, old_songs + 1, n, k, dp) % MOD;
+            if old_songs > k {
+                res = (res + (old_songs - k) as i64
+                    * count(cur_goal - 1, old_songs, n, k, dp)) % MOD;
+            }
+            dp[cur_goal][old_songs] = res;
+            res
+        }
+
+        count(goal, 0, n, k, &mut dp) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,10 +309,10 @@ The top-down solution can be converted to a bottom-up approach by iterating thro
 
 1. Create a 2D array `dp[goal+1][n+1]` initialized to `0`, with `dp[0][0] = 1` as the base case (empty playlist with no songs used).
 2. For each playlist length `cur_goal` from `1` to `goal`:
-   - For each count of distinct songs `old_songs` from `1` to `n`:
-     - Add a new song: multiply `dp[cur_goal - 1][old_songs - 1]` by `(n - old_songs + 1)`.
-     - Replay an old song (if `old_songs > k`): add `dp[cur_goal - 1][old_songs] * (old_songs - k)`.
-     - Store the sum in `dp[cur_goal][old_songs]`, taking modulo `10^9 + 7`.
+    - For each count of distinct songs `old_songs` from `1` to `n`:
+        - Add a new song: multiply `dp[cur_goal - 1][old_songs - 1]` by `(n - old_songs + 1)`.
+        - Replay an old song (if `old_songs > k`): add `dp[cur_goal - 1][old_songs] * (old_songs - k)`.
+        - Store the sum in `dp[cur_goal][old_songs]`, taking modulo `10^9 + 7`.
 3. Return `dp[goal][n]`.
 
 ::tabs-start
@@ -471,6 +503,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_music_playlists(n: i32, goal: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, goal, k) = (n as usize, goal as usize, k as usize);
+        let mut dp = vec![vec![0i64; n + 1]; goal + 1];
+        dp[0][0] = 1;
+
+        for cur_goal in 1..=goal {
+            for old_songs in 1..=n {
+                let mut res = dp[cur_goal - 1][old_songs - 1]
+                    * (n - old_songs + 1) as i64 % MOD;
+                if old_songs > k {
+                    res = (res + dp[cur_goal - 1][old_songs]
+                        * (old_songs - k) as i64) % MOD;
+                }
+                dp[cur_goal][old_songs] = res;
+            }
+        }
+
+        dp[goal][n] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -492,12 +549,12 @@ Looking at the bottom-up recurrence, each row only depends on the previous row. 
 
 1. Create a 1D array `dp[n+1]` initialized to `0`.
 2. For each playlist length `cur_goal` from `1` to `goal`:
-   - Track `prev` to store the value from the previous row that we need before overwriting.
-   - Initialize `prev = 1` when `cur_goal == 1` (base case for adding the first song), otherwise `prev = 0`.
-   - For each count of distinct songs `old_songs` from `1` to `n`:
-     - Compute the new value using `prev` (for adding a new song) and `dp[old_songs]` (for replaying an old song).
-     - Update `prev` to the old value of `dp[old_songs]` before overwriting.
-     - Store the result in `dp[old_songs]`.
+    - Track `prev` to store the value from the previous row that we need before overwriting.
+    - Initialize `prev = 1` when `cur_goal == 1` (base case for adding the first song), otherwise `prev = 0`.
+    - For each count of distinct songs `old_songs` from `1` to `n`:
+        - Compute the new value using `prev` (for adding a new song) and `dp[old_songs]` (for replaying an old song).
+        - Update `prev` to the old value of `dp[old_songs]` before overwriting.
+        - Store the result in `dp[old_songs]`.
 3. Return `dp[n]`.
 
 ::tabs-start
@@ -689,6 +746,31 @@ class Solution {
         }
 
         return dp[n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_music_playlists(n: i32, goal: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, goal, k) = (n as usize, goal as usize, k as usize);
+        let mut dp = vec![0i64; n + 1];
+
+        for cur_goal in 1..=goal {
+            let mut prev: i64 = if cur_goal == 1 { 1 } else { 0 };
+            for old_songs in 1..=n {
+                let mut res = prev * (n - old_songs + 1) as i64 % MOD;
+                if old_songs > k {
+                    res = (res + dp[old_songs]
+                        * (old_songs - k) as i64) % MOD;
+                }
+                prev = dp[old_songs];
+                dp[old_songs] = res;
+            }
+        }
+
+        dp[n] as i32
     }
 }
 ```

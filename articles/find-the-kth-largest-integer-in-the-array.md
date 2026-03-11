@@ -121,6 +121,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_largest_number(mut nums: Vec<String>, k: i32) -> String {
+        nums.sort_by(|a, b| {
+            if a.len() != b.len() {
+                b.len().cmp(&a.len())
+            } else {
+                b.cmp(a)
+            }
+        });
+        nums[(k - 1) as usize].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +360,22 @@ class Solution {
         }
 
         return result
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn kth_largest_number(nums: Vec<String>, k: i32) -> String {
+        let mut heap = BinaryHeap::from_iter(nums.into_iter().map(|s| {
+            (s.len(), s)
+        }));
+
+        for _ in 0..(k - 1) {
+            heap.pop();
+        }
+
+        heap.pop().unwrap().1
     }
 }
 ```
@@ -600,6 +631,25 @@ class Solution {
         }
 
         return minHeap[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn kth_largest_number(nums: Vec<String>, k: i32) -> String {
+        let k = k as usize;
+        let mut heap: BinaryHeap<Reverse<(usize, String)>> = BinaryHeap::new();
+
+        for num in nums {
+            let len = num.len();
+            heap.push(Reverse((len, num)));
+            if heap.len() > k {
+                heap.pop();
+            }
+        }
+
+        heap.pop().unwrap().0 .1
     }
 }
 ```
@@ -1166,6 +1216,66 @@ class Solution {
             let j = partition(&nums, left, right)
             if j >= k { right = j - 1 }
             if j <= k { left = j + 1 }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn kth_largest_number(mut nums: Vec<String>, k: i32) -> String {
+        let k = (k - 1) as usize;
+        Self::quick_select(&mut nums, k)
+    }
+
+    fn greater(x: &str, y: &str) -> bool {
+        if x.len() != y.len() { return x.len() > y.len(); }
+        x > y
+    }
+
+    fn less(x: &str, y: &str) -> bool {
+        if x.len() != y.len() { return x.len() < y.len(); }
+        x < y
+    }
+
+    fn partition(nums: &mut Vec<String>, left: usize, right: usize) -> usize {
+        let mid = (left + right) >> 1;
+        nums.swap(mid, left + 1);
+
+        if Self::less(&nums[left], &nums[right]) { nums.swap(left, right); }
+        if Self::less(&nums[left + 1], &nums[right]) { nums.swap(left + 1, right); }
+        if Self::less(&nums[left], &nums[left + 1]) { nums.swap(left, left + 1); }
+
+        let pivot = nums[left + 1].clone();
+        let mut i = left + 1;
+        let mut j = right;
+
+        loop {
+            loop { i += 1; if !Self::greater(&nums[i], &pivot) { break; } }
+            loop { j -= 1; if !Self::less(&nums[j], &pivot) { break; } }
+            if i > j { break; }
+            nums.swap(i, j);
+        }
+
+        nums.swap(left + 1, j);
+        j
+    }
+
+    fn quick_select(nums: &mut Vec<String>, k: usize) -> String {
+        let mut left = 0;
+        let mut right = nums.len() - 1;
+
+        loop {
+            if right <= left + 1 {
+                if right == left + 1 && Self::greater(&nums[right], &nums[left]) {
+                    nums.swap(left, right);
+                }
+                return nums[k].clone();
+            }
+
+            let j = Self::partition(nums, left, right);
+            if j >= k { right = j - 1; }
+            if j <= k { left = j + 1; }
         }
     }
 }

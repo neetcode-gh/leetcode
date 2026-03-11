@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Understanding memoization and tabulation techniques for optimization
 - **Longest Common Subsequence (LCS)** - Recognizing this classic DP pattern since uncrossed lines is equivalent to LCS
 - **Recursion** - Writing recursive functions with base cases and recursive transitions
@@ -165,6 +167,23 @@ class Solution {
             return max(dfs(i, j + 1), dfs(i + 1, j))
         }
         return dfs(0, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_uncrossed_lines(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        fn dfs(nums1: &[i32], nums2: &[i32], i: usize, j: usize) -> i32 {
+            if i == nums1.len() || j == nums2.len() {
+                return 0;
+            }
+            if nums1[i] == nums2[j] {
+                return 1 + dfs(nums1, nums2, i + 1, j + 1);
+            }
+            dfs(nums1, nums2, i, j + 1).max(dfs(nums1, nums2, i + 1, j))
+        }
+        dfs(&nums1, &nums2, 0, 0)
     }
 }
 ```
@@ -428,6 +447,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_uncrossed_lines(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        let n = nums1.len();
+        let m = nums2.len();
+        let mut dp = vec![vec![-1; m]; n];
+
+        fn dfs(nums1: &[i32], nums2: &[i32], i: usize, j: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i == nums1.len() || j == nums2.len() {
+                return 0;
+            }
+            if dp[i][j] != -1 {
+                return dp[i][j];
+            }
+            dp[i][j] = if nums1[i] == nums2[j] {
+                1 + dfs(nums1, nums2, i + 1, j + 1, dp)
+            } else {
+                dfs(nums1, nums2, i, j + 1, dp).max(dfs(nums1, nums2, i + 1, j, dp))
+            };
+            dp[i][j]
+        }
+        dfs(&nums1, &nums2, 0, 0, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,6 +679,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_uncrossed_lines(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        let n = nums1.len();
+        let m = nums2.len();
+        let mut dp = vec![vec![0; m + 1]; n + 1];
+
+        for i in 0..n {
+            for j in 0..m {
+                if nums1[i] == nums2[j] {
+                    dp[i + 1][j + 1] = 1 + dp[i][j];
+                } else {
+                    dp[i + 1][j + 1] = dp[i][j + 1].max(dp[i + 1][j]);
+                }
+            }
+        }
+
+        dp[n][m]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -656,8 +723,8 @@ Notice that each row of the `dp` table only depends on the previous row. We can 
 1. Initialize a 1D array `prev` of size `m+1` with zeros.
 2. For each element in `nums1`, create a new array `dp` for the current row.
 3. For each element in `nums2`:
-   - If elements match, `dp[j+1] = 1 + prev[j]`.
-   - Otherwise, `dp[j+1] = max(dp[j], prev[j+1])`.
+    - If elements match, `dp[j+1] = 1 + prev[j]`.
+    - Otherwise, `dp[j+1] = max(dp[j], prev[j+1])`.
 4. After processing each row, set `prev = dp`.
 5. Return `prev[m]`.
 
@@ -845,6 +912,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_uncrossed_lines(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        let mut prev = vec![0; nums2.len() + 1];
+
+        for i in 0..nums1.len() {
+            let mut dp = vec![0; nums2.len() + 1];
+            for j in 0..nums2.len() {
+                if nums1[i] == nums2[j] {
+                    dp[j + 1] = 1 + prev[j];
+                } else {
+                    dp[j + 1] = dp[j].max(prev[j + 1]);
+                }
+            }
+            prev = dp;
+        }
+
+        prev[nums2.len()]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -867,12 +956,12 @@ We can further optimize by using a single array and a variable to track the diag
 1. If `nums2` is longer than `nums1`, swap them so we iterate over the longer array in the outer loop. This minimizes space usage.
 2. Initialize a 1D array `dp` of size `m+1` with zeros.
 3. For each element in `nums1`:
-   - Track `prev` to store the diagonal value before it gets overwritten.
-   - For each element `j` in `nums2`:
-     - Save `dp[j+1]` as `temp` before updating.
-     - If elements match, `dp[j+1] = 1 + prev`.
-     - Otherwise, `dp[j+1] = max(dp[j+1], dp[j])`.
-     - Update `prev = temp` for the next iteration.
+    - Track `prev` to store the diagonal value before it gets overwritten.
+    - For each element `j` in `nums2`:
+        - Save `dp[j+1]` as `temp` before updating.
+        - If elements match, `dp[j+1] = 1 + prev`.
+        - Otherwise, `dp[j+1] = max(dp[j+1], dp[j])`.
+        - Update `prev = temp` for the next iteration.
 4. Return `dp[m]`.
 
 ::tabs-start
@@ -1123,6 +1212,35 @@ class Solution {
         }
 
         return dp[m]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_uncrossed_lines(nums1: Vec<i32>, nums2: Vec<i32>) -> i32 {
+        let (arr1, arr2) = if nums2.len() > nums1.len() {
+            (&nums2, &nums1)
+        } else {
+            (&nums1, &nums2)
+        };
+        let (n, m) = (arr1.len(), arr2.len());
+        let mut dp = vec![0; m + 1];
+
+        for i in 0..n {
+            let mut prev = 0;
+            for j in 0..m {
+                let temp = dp[j + 1];
+                if arr1[i] == arr2[j] {
+                    dp[j + 1] = 1 + prev;
+                } else {
+                    dp[j + 1] = dp[j + 1].max(dp[j]);
+                }
+                prev = temp;
+            }
+        }
+
+        dp[m]
     }
 }
 ```

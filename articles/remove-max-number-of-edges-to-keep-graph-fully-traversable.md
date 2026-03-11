@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Union-Find (Disjoint Set Union)** - Implementing DSU with path compression and union by rank for efficient component tracking
 - **Graph Connectivity** - Understanding when a graph is fully connected (single component)
 - **Greedy Algorithms** - Processing edges in optimal order to maximize removable edges
@@ -564,6 +566,81 @@ class Solution {
             return edges.count - cnt
         }
         return -1
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+    n: usize,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+            n,
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> i32 {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv {
+            return 0;
+        }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        self.n -= 1;
+        1
+    }
+
+    fn is_connected(&self) -> bool {
+        self.n == 1
+    }
+}
+
+impl Solution {
+    pub fn max_num_edges_to_remove(n: i32, edges: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut alice = DSU::new(n);
+        let mut bob = DSU::new(n);
+        let mut cnt = 0;
+
+        for edge in &edges {
+            if edge[0] == 3 {
+                let a = alice.union(edge[1] as usize, edge[2] as usize);
+                let b = bob.union(edge[1] as usize, edge[2] as usize);
+                cnt += a | b;
+            }
+        }
+
+        for edge in &edges {
+            if edge[0] == 1 {
+                cnt += alice.union(edge[1] as usize, edge[2] as usize);
+            } else if edge[0] == 2 {
+                cnt += bob.union(edge[1] as usize, edge[2] as usize);
+            }
+        }
+
+        if alice.is_connected() && bob.is_connected() {
+            edges.len() as i32 - cnt
+        } else {
+            -1
+        }
     }
 }
 ```

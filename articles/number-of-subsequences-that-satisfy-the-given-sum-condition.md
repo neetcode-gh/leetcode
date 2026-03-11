@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting allows us to efficiently find valid ranges where min + max satisfies the condition
 - **Two Pointers** - Used to find valid subsequence ranges from both ends of the sorted array
 - **Binary Search** - Alternative approach to find the rightmost valid index for each starting element
@@ -221,6 +223,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subseq(nums: Vec<i32>, target: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+
+        fn dfs(nums: &[i32], maxi: i32, mini: i32, i: usize, target: i32) -> i64 {
+            if i == nums.len() {
+                if mini != i32::MAX && (maxi + mini) <= target {
+                    return 1;
+                }
+                return 0;
+            }
+            let skip = dfs(nums, maxi, mini, i + 1, target);
+            let include = dfs(nums, maxi.max(nums[i]), mini.min(nums[i]), i + 1, target);
+            (skip + include) % MOD
+        }
+
+        dfs(&nums, i32::MIN, i32::MAX, 0, target) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,8 +264,8 @@ After sorting, for each element as the minimum, we use binary search to find the
 
 1. Sort the array.
 2. For each index `i` where `nums[i] * 2 <= target` (it can be both min and max):
-   - Binary search for the largest index `r` where `nums[i] + nums[r] <= target`.
-   - The elements between `i` and `r` can each be included or not, giving `2^(r-i)` subsequences.
+    - Binary search for the largest index `r` where `nums[i] + nums[r] <= target`.
+    - The elements between `i` and `r` can each be included or not, giving `2^(r-i)` subsequences.
 3. Sum all counts modulo `10^9 + 7`.
 
 ::tabs-start
@@ -553,6 +577,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subseq(mut nums: Vec<i32>, target: i32) -> i32 {
+        nums.sort();
+        const MOD: i64 = 1_000_000_007;
+        let mut res: i64 = 0;
+
+        fn pow_mod(mut base: i64, mut exp: i32, modulo: i64) -> i64 {
+            let mut result: i64 = 1;
+            base %= modulo;
+            while exp > 0 {
+                if exp & 1 == 1 {
+                    result = result * base % modulo;
+                }
+                base = base * base % modulo;
+                exp >>= 1;
+            }
+            result
+        }
+
+        for i in 0..nums.len() {
+            if nums[i] * 2 > target { break; }
+
+            let (mut l, mut r) = (i, nums.len() - 1);
+            while l <= r {
+                let mid = l + (r - l) / 2;
+                if nums[i] + nums[mid] <= target {
+                    l = mid + 1;
+                } else {
+                    if mid == 0 { break; }
+                    r = mid - 1;
+                }
+            }
+
+            let count = pow_mod(2, (r - i) as i32, MOD);
+            res = (res + count) % MOD;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,9 +638,9 @@ After sorting, we use two pointers. The left pointer represents the minimum elem
 
 1. Sort the array and initialize left pointer at `0`, right pointer at the last index.
 2. For each left pointer position:
-   - Shrink the right pointer until `nums[left] + nums[right] <= target`.
-   - If valid `(left <= right)`, add `2^(right - left)` subsequences.
-   - Move left forward.
+    - Shrink the right pointer until `nums[left] + nums[right] <= target`.
+    - If valid `(left <= right)`, add `2^(right - left)` subsequences.
+    - Move left forward.
 3. Return the total count modulo `10^9 + 7`.
 
 ::tabs-start
@@ -829,6 +895,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_subseq(mut nums: Vec<i32>, target: i32) -> i32 {
+        nums.sort();
+        const MOD: i64 = 1_000_000_007;
+        let mut res: i64 = 0;
+        let mut r = nums.len() as i32 - 1;
+
+        fn power(mut base: i64, mut exp: i32, modulo: i64) -> i64 {
+            let mut result: i64 = 1;
+            base %= modulo;
+            while exp > 0 {
+                if exp & 1 == 1 {
+                    result = result * base % modulo;
+                }
+                base = base * base % modulo;
+                exp >>= 1;
+            }
+            result
+        }
+
+        for i in 0..nums.len() {
+            while (i as i32) <= r && nums[i] + nums[r as usize] > target {
+                r -= 1;
+            }
+            if (i as i32) <= r {
+                res = (res + power(2, r - i as i32, MOD)) % MOD;
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,8 +950,8 @@ We precompute all powers of `2` up to `n` to avoid repeated exponentiation. The 
 1. Sort the array and precompute `power[i] = 2^i mod (10^9 + 7)` for `i` from `0` to `n-1`.
 2. Use two pointers starting at both ends.
 3. While `left <= right`:
-   - If `nums[left] + nums[right] <= target`, add `power[right - left]` to `res` and increment `left`.
-   - Otherwise, decrement `right`.
+    - If `nums[left] + nums[right] <= target`, add `power[right - left]` to `res` and increment `left`.
+    - Otherwise, decrement `right`.
 4. Return the total count.
 
 ::tabs-start
@@ -1074,6 +1175,35 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_subseq(mut nums: Vec<i32>, target: i32) -> i32 {
+        nums.sort();
+        const MOD: i64 = 1_000_000_007;
+        let n = nums.len();
+        let mut res: i64 = 0;
+        let mut l: i32 = 0;
+        let mut r: i32 = n as i32 - 1;
+
+        let mut power = vec![1i64; n];
+        for i in 1..n {
+            power[i] = (power[i - 1] * 2) % MOD;
+        }
+
+        while l <= r {
+            if nums[l as usize] + nums[r as usize] <= target {
+                res = (res + power[(r - l) as usize]) % MOD;
+                l += 1;
+            } else {
+                r -= 1;
+            }
+        }
+
+        res as i32
     }
 }
 ```

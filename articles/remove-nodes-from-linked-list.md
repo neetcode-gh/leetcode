@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Fundamentals** - Understanding singly linked list structure, traversal, and pointer manipulation
 - **Monotonic Stack** - Using a stack that maintains elements in strictly increasing or decreasing order
 - **Linked List Reversal** - Reversing a linked list in-place using iterative pointer swapping
@@ -17,8 +19,8 @@ A node should be removed if there exists a larger value somewhere to its right. 
 1. Create an array with a dummy node at the start, followed by all nodes from the linked list.
 2. Initialize `rightMaxi` to track the maximum node seen from the right.
 3. Traverse the array from right to left:
-   - If the current node's value is less than `rightMaxi.val`, update the previous node's `next` pointer to skip it.
-   - Otherwise, update `rightMaxi` to the current node.
+    - If the current node's value is less than `rightMaxi.val`, update the previous node's `next` pointer to skip it.
+    - Otherwise, update `rightMaxi` to the current node.
 4. Return `arr[0].next` as the new head.
 
 ::tabs-start
@@ -295,6 +297,44 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nodes(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        let mut right_max = 0;
+        let mut keep = vec![false; vals.len()];
+        for i in (0..vals.len()).rev() {
+            if vals[i] >= right_max {
+                keep[i] = true;
+                right_max = vals[i];
+            }
+        }
+
+        let mut dummy = Box::new(ListNode { val: 0, next: None });
+        let mut tail = &mut dummy;
+        for i in 0..vals.len() {
+            if keep[i] {
+                tail.next = Some(Box::new(ListNode { val: vals[i], next: None }));
+                tail = tail.next.as_mut().unwrap();
+            }
+        }
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -314,8 +354,8 @@ We need to keep only nodes that have no larger value to their right. A monotonic
 
 1. Initialize an empty stack to store node values.
 2. Traverse the linked list:
-   - While the stack is not empty and the current value is greater than the top of the stack, pop from the stack.
-   - Push the current value onto the stack.
+    - While the stack is not empty and the current value is greater than the top of the stack, pop from the stack.
+    - Push the current value onto the stack.
 3. Build a new linked list from the stack values in order.
 4. Return the head of the new list.
 
@@ -606,6 +646,41 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nodes(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut stack: Vec<i32> = Vec::new();
+        let mut cur = &head;
+
+        while let Some(node) = cur {
+            while let Some(&top) = stack.last() {
+                if node.val > top {
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+            stack.push(node.val);
+            cur = &node.next;
+        }
+
+        let mut dummy = Box::new(ListNode { val: 0, next: None });
+        let mut tail = &mut dummy;
+        for num in stack {
+            tail.next = Some(Box::new(ListNode { val: num, next: None }));
+            tail = tail.next.as_mut().unwrap();
+        }
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -816,6 +891,30 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nodes(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        if head.is_none() {
+            return None;
+        }
+        let mut node = head.unwrap();
+        node.next = Self::remove_nodes(node.next);
+        if let Some(ref next) = node.next {
+            if node.val < next.val {
+                return node.next;
+            }
+        }
+        Some(node)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -835,8 +934,8 @@ Finding the maximum to the right is hard when traversing left to right, but find
 
 1. Reverse the linked list.
 2. Traverse the reversed list, tracking the maximum value seen so far (`cur_max`):
-   - If `cur.next.val < cur_max`, skip it by setting `cur.next = cur.next.next`.
-   - Otherwise, update `cur_max` and move to the next node.
+    - If `cur.next.val < cur_max`, skip it by setting `cur.next = cur.next.next`.
+    - Otherwise, update `cur_max` and move to the next node.
 3. Reverse the list again to restore original order.
 4. Return the new head.
 
@@ -1163,6 +1262,49 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nodes(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        fn reverse(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+            let mut prev: Option<Box<ListNode>> = None;
+            let mut cur = head;
+            while let Some(mut node) = cur {
+                cur = node.next.take();
+                node.next = prev;
+                prev = Some(node);
+            }
+            prev
+        }
+
+        let mut head = reverse(head);
+        let cur_max;
+        {
+            let h = head.as_ref().unwrap();
+            cur_max = h.val;
+        }
+        let mut cur_max = cur_max;
+        let mut cur = &mut head;
+        while cur.is_some() && cur.as_ref().unwrap().next.is_some() {
+            let next_val = cur.as_ref().unwrap().next.as_ref().unwrap().val;
+            if next_val < cur_max {
+                let next_next = cur.as_mut().unwrap().next.as_mut().unwrap().next.take();
+                cur.as_mut().unwrap().next = next_next;
+            } else {
+                cur_max = next_val;
+                cur = &mut cur.as_mut().unwrap().next;
+            }
+        }
+        reverse(head)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1176,7 +1318,7 @@ class Solution {
 
 ### Comparing with Immediate Neighbor Instead of Maximum
 
-The problem requires removing nodes that have *any* larger value to their right, not just an immediately adjacent larger value. A node should be kept only if it is greater than or equal to all nodes to its right. Using the wrong comparison leads to incorrect removals.
+The problem requires removing nodes that have _any_ larger value to their right, not just an immediately adjacent larger value. A node should be kept only if it is greater than or equal to all nodes to its right. Using the wrong comparison leads to incorrect removals.
 
 ### Incorrect Stack Maintenance
 

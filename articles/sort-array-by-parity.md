@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Basic array traversal and in-place modification
 - **Two Pointers Technique** - Used for optimal O(n) in-place partitioning solutions
 - **Bit Manipulation Basics** - Using bitwise AND (`num & 1`) or modulo to check parity (even/odd)
@@ -91,6 +93,15 @@ class Solution {
 class Solution {
     func sortArrayByParity(_ nums: [Int]) -> [Int] {
         return nums.sorted { ($0 & 1) < ($1 & 1) }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_array_by_parity(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort_by_key(|&x| x & 1);
+        nums
     }
 }
 ```
@@ -328,6 +339,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_array_by_parity(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut even = Vec::new();
+        let mut odd = Vec::new();
+
+        for &num in &nums {
+            if num & 1 == 1 {
+                odd.push(num);
+            } else {
+                even.push(num);
+            }
+        }
+
+        let mut idx = 0;
+        for &e in &even {
+            nums[idx] = e;
+            idx += 1;
+        }
+        for &o in &odd {
+            nums[idx] = o;
+            idx += 1;
+        }
+
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,8 +387,8 @@ We can partition the array in-place using two pointers at opposite ends. The lef
 
 1. Initialize two pointers: `i` at the start, `j` at the end.
 2. While `i < j`:
-   - If `nums[i]` is odd, swap it with `nums[j]` and decrement `j`.
-   - Otherwise, increment `i` (the element is even and already in place).
+    - If `nums[i]` is odd, swap it with `nums[j]` and decrement `j`.
+    - Otherwise, increment `i` (the element is even and already in place).
 3. Return the modified array.
 
 ::tabs-start
@@ -494,6 +534,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sort_array_by_parity(mut nums: Vec<i32>) -> Vec<i32> {
+        let (mut i, mut j) = (0, nums.len() as i32 - 1);
+        while i < j {
+            if nums[i as usize] & 1 == 1 {
+                nums.swap(i as usize, j as usize);
+                j -= 1;
+            } else {
+                i += 1;
+            }
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -513,7 +570,7 @@ This approach uses a slow and fast pointer moving in the same direction. The slo
 
 1. Initialize a slow pointer `l` at `0`.
 2. Iterate through the array with a fast pointer `r`:
-   - If `nums[r]` is even, swap `nums[l]` with `nums[r]` and increment `l`.
+    - If `nums[r]` is even, swap `nums[l]` with `nums[r]` and increment `l`.
 3. Return the modified array.
 
 ::tabs-start
@@ -635,6 +692,21 @@ class Solution {
             }
         }
         return nums
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sort_array_by_parity(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut l = 0;
+        for r in 0..nums.len() {
+            if nums[r] % 2 == 0 {
+                nums.swap(l, r);
+                l += 1;
+            }
+        }
+        nums
     }
 }
 ```

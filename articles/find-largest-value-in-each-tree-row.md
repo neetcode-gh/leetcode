@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding how to navigate through tree nodes using their left and right children
 - **Breadth-First Search (BFS)** - Used to process nodes level by level using a queue
 - **Depth-First Search (DFS)** - Alternative approach that tracks depth while recursively visiting nodes
@@ -17,10 +19,10 @@ To find the largest value in each row, we need to visit all nodes level by level
 1. If the root is `null`, return an empty list.
 2. Initialize a queue with the root node and an empty result list.
 3. While the queue is not empty:
-   - Record the number of nodes at the current level.
-   - Initialize `rowMax` with the first node's value.
-   - Process all nodes at this level: dequeue each node, update `rowMax` if needed, and enqueue its children.
-   - Append `rowMax` to the result list.
+    - Record the number of nodes at the current level.
+    - Initialize `rowMax` with the first node's value.
+    - Process all nodes at this level: dequeue each node, update `rowMax` if needed, and enqueue its children.
+    - Append `rowMax` to the result list.
 4. Return the result list.
 
 ::tabs-start
@@ -326,6 +328,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_values(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        if root.is_none() { return res; }
+
+        let mut q = VecDeque::new();
+        q.push_back(root.unwrap());
+
+        while !q.is_empty() {
+            let size = q.len();
+            let mut row_max = i32::MIN;
+            for _ in 0..size {
+                let node = q.pop_front().unwrap();
+                let node = node.borrow();
+                row_max = row_max.max(node.val);
+                if let Some(ref left) = node.left {
+                    q.push_back(left.clone());
+                }
+                if let Some(ref right) = node.right {
+                    q.push_back(right.clone());
+                }
+            }
+            res.push(row_max);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,10 +378,10 @@ We can also solve this with DFS by tracking the current depth as we traverse. Wh
 
 1. Initialize an empty result list.
 2. Define a recursive DFS function that takes a node and its level:
-   - If the node is `null`, return.
-   - If `level` equals the size of the result list, append the node's value (first node at this depth).
-   - Otherwise, update `res[level]` to be the maximum of its current value and the node's value.
-   - Recursively call DFS on the left and right children with `level + 1`.
+    - If the node is `null`, return.
+    - If `level` equals the size of the result list, append the node's value (first node at this depth).
+    - Otherwise, update `res[level]` to be the maximum of its current value and the node's value.
+    - Recursively call DFS on the left and right children with `level + 1`.
 3. Call DFS starting from the root at level `0`.
 4. Return the result list.
 
@@ -626,6 +659,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_values(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        Self::dfs(&root, 0, &mut res);
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, level: usize, res: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            if level == res.len() {
+                res.push(n.val);
+            } else {
+                res[level] = res[level].max(n.val);
+            }
+            Self::dfs(&n.left, level + 1, res);
+            Self::dfs(&n.right, level + 1, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,10 +702,10 @@ The recursive DFS can be converted to an iterative approach using a stack. Each 
 1. If the root is `null`, return an empty list.
 2. Initialize a stack with `(root, 0)` and an empty result list.
 3. While the stack is not empty:
-   - Pop `(node, level)` from the stack.
-   - If `level` equals the result list size, append the node's value.
-   - Otherwise, update `res[level]` to the maximum of its current value and the node's value.
-   - Push the right child first (if exists), then the left child, both with `level + 1`.
+    - Pop `(node, level)` from the stack.
+    - If `level` equals the result list size, append the node's value.
+    - Otherwise, update `res[level]` to the maximum of its current value and the node's value.
+    - Push the right child first (if exists), then the left child, both with `level + 1`.
 4. Return the result list.
 
 ::tabs-start
@@ -959,6 +1015,35 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_values(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        if root.is_none() { return vec![]; }
+
+        let mut res = Vec::new();
+        let mut stack: Vec<(Rc<RefCell<TreeNode>>, usize)> = vec![(root.unwrap(), 0)];
+
+        while let Some((node, level)) = stack.pop() {
+            let node = node.borrow();
+            if level == res.len() {
+                res.push(node.val);
+            } else {
+                res[level] = res[level].max(node.val);
+            }
+
+            if let Some(ref right) = node.right {
+                stack.push((right.clone(), level + 1));
+            }
+            if let Some(ref left) = node.left {
+                stack.push((left.clone(), level + 1));
+            }
+        }
+
+        res
     }
 }
 ```

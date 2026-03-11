@@ -272,6 +272,44 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn dfs(
+            left: &Option<Rc<RefCell<TreeNode>>>,
+            right: &Option<Rc<RefCell<TreeNode>>>,
+        ) -> bool {
+            match (left, right) {
+                (None, None) => true,
+                (Some(l), Some(r)) => {
+                    let l = l.borrow();
+                    let r = r.borrow();
+                    l.val == r.val
+                        && dfs(&l.left, &r.right)
+                        && dfs(&l.right, &r.left)
+                }
+                _ => false,
+            }
+        }
+
+        if let Some(root) = root {
+            let root = root.borrow();
+            dfs(&root.left, &root.right)
+        } else {
+            true
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -585,6 +623,47 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let root = match root {
+            Some(r) => r,
+            None => return true,
+        };
+
+        let root = root.borrow();
+        let mut stack: Vec<(Option<Rc<RefCell<TreeNode>>>, Option<Rc<RefCell<TreeNode>>>)> =
+            vec![(root.left.clone(), root.right.clone())];
+
+        while let Some((left, right)) = stack.pop() {
+            match (left, right) {
+                (None, None) => continue,
+                (Some(l), Some(r)) => {
+                    let l = l.borrow();
+                    let r = r.borrow();
+                    if l.val != r.val {
+                        return false;
+                    }
+                    stack.push((l.left.clone(), r.right.clone()));
+                    stack.push((l.right.clone(), r.left.clone()));
+                }
+                _ => return false,
+            }
+        }
+
+        true
     }
 }
 ```
@@ -915,6 +994,48 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn is_symmetric(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let root = match root {
+            Some(r) => r,
+            None => return true,
+        };
+
+        let root = root.borrow();
+        let mut queue: VecDeque<(Option<Rc<RefCell<TreeNode>>>, Option<Rc<RefCell<TreeNode>>>)> =
+            VecDeque::new();
+        queue.push_back((root.left.clone(), root.right.clone()));
+
+        while let Some((left, right)) = queue.pop_front() {
+            match (left, right) {
+                (None, None) => continue,
+                (Some(l), Some(r)) => {
+                    let l = l.borrow();
+                    let r = r.borrow();
+                    if l.val != r.val {
+                        return false;
+                    }
+                    queue.push_back((l.left.clone(), r.right.clone()));
+                    queue.push_back((l.right.clone(), r.left.clone()));
+                }
+                _ => return false,
+            }
+        }
+
+        true
     }
 }
 ```

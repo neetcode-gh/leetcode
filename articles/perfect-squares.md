@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - The foundation for building the brute-force and memoized solutions
 - **Dynamic Programming** - Understanding both top-down (memoization) and bottom-up approaches for optimization
 - **Breadth-First Search (BFS)** - Used to model the problem as a shortest path search
@@ -187,6 +189,26 @@ class Solution {
         }
 
         return dfs(n)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_squares(n: i32) -> i32 {
+        fn dfs(target: i32) -> i32 {
+            if target == 0 {
+                return 0;
+            }
+            let mut res = target;
+            let mut i = 1;
+            while i * i <= target {
+                res = res.min(1 + dfs(target - i * i));
+                i += 1;
+            }
+            res
+        }
+        dfs(n)
     }
 }
 ```
@@ -424,6 +446,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_squares(n: i32) -> i32 {
+        fn dfs(target: i32, memo: &mut HashMap<i32, i32>) -> i32 {
+            if target == 0 {
+                return 0;
+            }
+            if let Some(&v) = memo.get(&target) {
+                return v;
+            }
+            let mut res = target;
+            let mut i = 1;
+            while i * i <= target {
+                res = res.min(1 + dfs(target - i * i, memo));
+                i += 1;
+            }
+            memo.insert(target, res);
+            res
+        }
+        let mut memo = HashMap::new();
+        dfs(n, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -599,6 +646,24 @@ class Solution {
         }
 
         return dp[n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_squares(n: i32) -> i32 {
+        let n = n as usize;
+        let mut dp = vec![n as i32; n + 1];
+        dp[0] = 0;
+        for target in 1..=n {
+            let mut s = 1;
+            while s * s <= target {
+                dp[target] = dp[target].min(1 + dp[target - s * s]);
+                s += 1;
+            }
+        }
+        dp[n]
     }
 }
 ```
@@ -863,6 +928,35 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_squares(n: i32) -> i32 {
+        let mut queue = VecDeque::new();
+        let mut seen = HashSet::new();
+        let mut res = 0;
+        queue.push_back(0);
+        while !queue.is_empty() {
+            res += 1;
+            for _ in 0..queue.len() {
+                let cur = queue.pop_front().unwrap();
+                let mut s = 1;
+                while s * s + cur <= n {
+                    let next = cur + s * s;
+                    if next == n {
+                        return res;
+                    }
+                    if seen.insert(next) {
+                        queue.push_back(next);
+                    }
+                    s += 1;
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -1140,6 +1234,34 @@ class Solution {
         }
 
         return 3
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_squares(mut n: i32) -> i32 {
+        let is_square = |x: i32| -> bool {
+            let s = (x as f64).sqrt() as i32;
+            s * s == x
+        };
+        while n % 4 == 0 {
+            n /= 4;
+        }
+        if n % 8 == 7 {
+            return 4;
+        }
+        if is_square(n) {
+            return 1;
+        }
+        let mut i = 1;
+        while i * i <= n {
+            if is_square(n - i * i) {
+                return 2;
+            }
+            i += 1;
+        }
+        3
     }
 }
 ```

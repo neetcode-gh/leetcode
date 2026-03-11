@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Segment Trees** - Divide-and-conquer data structure enabling O(log n) range queries and point updates
 - **Binary Indexed Tree (Fenwick Tree)** - Space-efficient tree using bit manipulation for prefix sum queries and updates
 - **Square Root Decomposition** - Dividing arrays into blocks for balanced query and update performance
@@ -18,9 +20,9 @@ The simplest approach stores the array directly. Updates are instant since we ju
 1. Store the input array.
 2. For `update(index, val)`: Set `nums[index] = val`.
 3. For `sumRange(left, right)`:
-   - Initialize `res = 0`.
-   - Loop from `left` to `right`, adding each element to `res`.
-   - Return `res`.
+    - Initialize `res = 0`.
+    - Loop from `left` to `right`, adding each element to `res`.
+    - Return `res`.
 
 ::tabs-start
 
@@ -202,6 +204,30 @@ class NumArray {
 }
 ```
 
+```rust
+struct NumArray {
+    nums: Vec<i32>,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray { nums }
+    }
+
+    fn update(&mut self, index: i32, val: i32) {
+        self.nums[index as usize] = val;
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        let mut res = 0;
+        for i in left as usize..=right as usize {
+            res += self.nums[i];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -224,16 +250,16 @@ A segment tree divides the array into segments, with each node storing the sum o
 
 1. Pad the array size to the next power of two for balanced tree structure.
 2. Build the tree recursively:
-   - Leaves store array elements.
-   - Internal nodes store the sum of their children.
+    - Leaves store array elements.
+    - Internal nodes store the sum of their children.
 3. For `update(index, val)`:
-   - Recursively navigate to the leaf at `index`.
-   - Update the leaf and propagate changes up to the root.
+    - Recursively navigate to the leaf at `index`.
+    - Update the leaf and propagate changes up to the root.
 4. For `sumRange(left, right)`:
-   - Recursively query the tree.
-   - If the current segment is outside the range, return `0`.
-   - If the current segment is fully inside, return the node value.
-   - Otherwise, query both children and sum the results.
+    - Recursively query the tree.
+    - If the current segment is outside the range, return `0`.
+    - If the current segment is fully inside, return the node value.
+    - Otherwise, query both children and sum the results.
 
 ::tabs-start
 
@@ -891,6 +917,96 @@ class NumArray {
 }
 ```
 
+```rust
+struct SegmentTree {
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl SegmentTree {
+    fn new(n: usize, a: &[i32]) -> Self {
+        let mut size = n;
+        while size & (size - 1) != 0 {
+            size += 1;
+        }
+        let mut st = SegmentTree {
+            tree: vec![0; 2 * size],
+            n: size,
+        };
+        st.build(0, 0, size - 1, a);
+        st
+    }
+
+    fn build(&mut self, node: usize, start: usize, end: usize, a: &[i32]) {
+        if start == end {
+            self.tree[node] = if start < a.len() { a[start] } else { 0 };
+        } else {
+            let mid = (start + end) / 2;
+            self.build(2 * node + 1, start, mid, a);
+            self.build(2 * node + 2, mid + 1, end, a);
+            self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2];
+        }
+    }
+
+    fn update_helper(&mut self, node: usize, start: usize, end: usize, idx: usize, val: i32) {
+        if start == end {
+            self.tree[node] = val;
+        } else {
+            let mid = (start + end) / 2;
+            if idx <= mid {
+                self.update_helper(2 * node + 1, start, mid, idx, val);
+            } else {
+                self.update_helper(2 * node + 2, mid + 1, end, idx, val);
+            }
+            self.tree[node] = self.tree[2 * node + 1] + self.tree[2 * node + 2];
+        }
+    }
+
+    fn query_helper(&self, node: usize, start: usize, end: usize, l: usize, r: usize) -> i32 {
+        if r < start || end < l {
+            return 0;
+        }
+        if l <= start && end <= r {
+            return self.tree[node];
+        }
+        let mid = (start + end) / 2;
+        let left_sum = self.query_helper(2 * node + 1, start, mid, l, r);
+        let right_sum = self.query_helper(2 * node + 2, mid + 1, end, l, r);
+        left_sum + right_sum
+    }
+
+    fn update(&mut self, idx: usize, val: i32) {
+        let n = self.n;
+        self.update_helper(0, 0, n - 1, idx, val);
+    }
+
+    fn query(&self, l: usize, r: usize) -> i32 {
+        let n = self.n;
+        self.query_helper(0, 0, n - 1, l, r)
+    }
+}
+
+struct NumArray {
+    seg_tree: SegmentTree,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            seg_tree: SegmentTree::new(nums.len(), &nums),
+        }
+    }
+
+    fn update(&mut self, index: i32, val: i32) {
+        self.seg_tree.update(index as usize, val);
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.seg_tree.query(left as usize, right as usize)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -912,18 +1028,18 @@ This iterative version of the segment tree eliminates recursion overhead. Leaves
 ### Algorithm
 
 1. Build the tree:
-   - Place array elements at leaf positions `n + i`.
-   - Compute internal nodes bottom-up: `tree[i] = tree[2i] + tree[2i+1]`.
+    - Place array elements at leaf positions `n + i`.
+    - Compute internal nodes bottom-up: `tree[i] = tree[2i] + tree[2i+1]`.
 2. For `update(index, val)`:
-   - Update the leaf at `n + index`.
-   - Walk up to the root, updating each parent node.
+    - Update the leaf at `n + index`.
+    - Walk up to the root, updating each parent node.
 3. For `sumRange(left, right)`:
-   - Initialize `res = 0`, shift `left` and `right` to leaf positions.
-   - While `left < right`:
-     - If `left` is odd, add `tree[left]` and move right.
-     - If `right` is odd, move left and add `tree[right]`.
-     - Move both pointers to their parents.
-   - Return `res`.
+    - Initialize `res = 0`, shift `left` and `right` to leaf positions.
+    - While `left < right`:
+        - If `left` is odd, add `tree[left]` and move right.
+        - If `right` is odd, move left and add `tree[right]`.
+        - Move both pointers to their parents.
+    - Return `res`.
 
 ::tabs-start
 
@@ -1441,6 +1557,84 @@ class NumArray {
 }
 ```
 
+```rust
+struct SegmentTree {
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl SegmentTree {
+    fn new(n: usize, a: &[i32]) -> Self {
+        let mut size = n;
+        while size & (size - 1) != 0 {
+            size += 1;
+        }
+        let mut st = SegmentTree {
+            tree: vec![0; 2 * size],
+            n: size,
+        };
+        st.build(n, a);
+        st
+    }
+
+    fn build(&mut self, len: usize, a: &[i32]) {
+        for i in 0..len {
+            self.tree[self.n + i] = a[i];
+        }
+        for i in (1..self.n).rev() {
+            self.tree[i] = self.tree[i << 1] + self.tree[(i << 1) | 1];
+        }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        self.tree[self.n + i] = val;
+        let mut j = (self.n + i) >> 1;
+        while j >= 1 {
+            self.tree[j] = self.tree[j << 1] + self.tree[(j << 1) | 1];
+            j >>= 1;
+        }
+    }
+
+    fn query(&self, l: usize, r: usize) -> i32 {
+        let (mut left, mut right) = (l + self.n, r + self.n + 1);
+        let mut res = 0;
+        while left < right {
+            if left & 1 == 1 {
+                res += self.tree[left];
+                left += 1;
+            }
+            if right & 1 == 1 {
+                right -= 1;
+                res += self.tree[right];
+            }
+            left >>= 1;
+            right >>= 1;
+        }
+        res
+    }
+}
+
+struct NumArray {
+    seg_tree: SegmentTree,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            seg_tree: SegmentTree::new(nums.len(), &nums),
+        }
+    }
+
+    fn update(&mut self, index: i32, val: i32) {
+        self.seg_tree.update(index as usize, val);
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.seg_tree.query(left as usize, right as usize)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1464,14 +1658,14 @@ We divide the array into blocks of size approximately square root of n. Each blo
 1. Divide the array into blocks of size `sqrt(n)`.
 2. Precompute the sum of each block.
 3. For `update(index, val)`:
-   - Find the block containing `index`.
-   - Update the block sum by adding the difference `val - nums[index]`.
-   - Update `nums[index] = val`.
+    - Find the block containing `index`.
+    - Update the block sum by adding the difference `val - nums[index]`.
+    - Update `nums[index] = val`.
 4. For `sumRange(left, right)`:
-   - Sum individual elements until reaching a block boundary.
-   - Sum complete blocks.
-   - Sum remaining individual elements.
-   - Return the total.
+    - Sum individual elements until reaching a block boundary.
+    - Sum complete blocks.
+    - Sum remaining individual elements.
+    - Return the total.
 
 ::tabs-start
 
@@ -1950,6 +2144,74 @@ class NumArray {
 }
 ```
 
+```rust
+struct SqrtDecomposition {
+    nums: Vec<i32>,
+    blocks: Vec<i32>,
+    block_size: usize,
+}
+
+impl SqrtDecomposition {
+    fn new(nums: &[i32]) -> Self {
+        let n = nums.len();
+        let block_size = (n as f64).sqrt() as usize + 1;
+        let mut blocks = vec![0i32; block_size];
+        for i in 0..n {
+            blocks[i / block_size] += nums[i];
+        }
+        SqrtDecomposition {
+            nums: nums.to_vec(),
+            blocks,
+            block_size,
+        }
+    }
+
+    fn query(&self, left: usize, right: usize) -> i32 {
+        let mut l = left;
+        let mut total_sum = 0;
+        while l <= right && l % self.block_size != 0 {
+            total_sum += self.nums[l];
+            l += 1;
+        }
+        while l + self.block_size - 1 <= right {
+            total_sum += self.blocks[l / self.block_size];
+            l += self.block_size;
+        }
+        while l <= right {
+            total_sum += self.nums[l];
+            l += 1;
+        }
+        total_sum
+    }
+
+    fn update(&mut self, index: usize, val: i32) {
+        let block_index = index / self.block_size;
+        self.blocks[block_index] += val - self.nums[index];
+        self.nums[index] = val;
+    }
+}
+
+struct NumArray {
+    sq: SqrtDecomposition,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            sq: SqrtDecomposition::new(&nums),
+        }
+    }
+
+    fn update(&mut self, index: i32, val: i32) {
+        self.sq.update(index as usize, val);
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.sq.query(left as usize, right as usize)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1973,14 +2235,14 @@ This variant maintains prefix sums within each block instead of block sums. Quer
 1. Divide the array into blocks of size `sqrt(n)`.
 2. Build prefix sums within each block.
 3. For `update(index, val)`:
-   - Compute the difference `val - nums[index]`.
-   - Update `nums[index] = val`.
-   - Update all prefix sums from `index` to the end of its block.
+    - Compute the difference `val - nums[index]`.
+    - Update `nums[index] = val`.
+    - Update all prefix sums from `index` to the end of its block.
 4. For `sumRange(left, right)`:
-   - If `left` is not at a block start, subtract the prefix sum before `left`.
-   - Add complete block prefix sums.
-   - Add the prefix sum at `right`.
-   - Return the total.
+    - If `left` is not at a block start, subtract the prefix sum before `left`.
+    - Add complete block prefix sums.
+    - Add the prefix sum at `right`.
+    - Return the total.
 
 ::tabs-start
 
@@ -2494,6 +2756,86 @@ class NumArray {
 }
 ```
 
+```rust
+struct SqrtDecomposition {
+    nums: Vec<i32>,
+    prefix_sums: Vec<i32>,
+    block_size: usize,
+    n: usize,
+}
+
+impl SqrtDecomposition {
+    fn new(nums: &[i32]) -> Self {
+        let n = nums.len();
+        let block_size = (n as f64).sqrt() as usize + 1;
+        let mut prefix_sums = nums.to_vec();
+
+        for i in 1..n {
+            if i % block_size != 0 {
+                prefix_sums[i] += prefix_sums[i - 1];
+            }
+        }
+
+        SqrtDecomposition {
+            nums: nums.to_vec(),
+            prefix_sums,
+            block_size,
+            n,
+        }
+    }
+
+    fn query(&self, left: usize, right: usize) -> i32 {
+        let mut l = left;
+        let mut total_sum = if l % self.block_size != 0 {
+            -self.prefix_sums[l - 1]
+        } else {
+            0
+        };
+
+        while l / self.block_size < right / self.block_size {
+            let block_end = (self.n - 1)
+                .min((l / self.block_size) * self.block_size + self.block_size - 1);
+            total_sum += self.prefix_sums[block_end];
+            l = block_end + 1;
+        }
+
+        total_sum += self.prefix_sums[right];
+        total_sum
+    }
+
+    fn update(&mut self, index: usize, val: i32) {
+        let diff = val - self.nums[index];
+        self.nums[index] = val;
+
+        let block_end = (self.n - 1)
+            .min((index / self.block_size) * self.block_size + self.block_size - 1);
+        for i in index..=block_end {
+            self.prefix_sums[i] += diff;
+        }
+    }
+}
+
+struct NumArray {
+    sq: SqrtDecomposition,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            sq: SqrtDecomposition::new(&nums),
+        }
+    }
+
+    fn update(&mut self, index: i32, val: i32) {
+        self.sq.update(index as usize, val);
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.sq.query(left as usize, right as usize)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2517,13 +2859,13 @@ A Binary Indexed Tree (or Fenwick Tree) uses a clever encoding where each index 
 1. Initialize the BIT with size `n + 1` (1-indexed).
 2. Build by calling `update` for each element.
 3. For `update(index, val)`:
-   - Compute `diff = val - nums[index]`.
-   - Update `nums[index] = val`.
-   - Walk up the tree, adding `diff` to each relevant position using `index += index & -index`.
+    - Compute `diff = val - nums[index]`.
+    - Update `nums[index] = val`.
+    - Walk up the tree, adding `diff` to each relevant position using `index += index & -index`.
 4. For `prefixSum(index)`:
-   - Accumulate sums while walking down using `index -= index & -index`.
+    - Accumulate sums while walking down using `index -= index & -index`.
 5. For `sumRange(left, right)`:
-   - Return `prefixSum(right + 1) - prefixSum(left)`.
+    - Return `prefixSum(right + 1) - prefixSum(left)`.
 
 ::tabs-start
 
@@ -2978,6 +3320,72 @@ class NumArray {
 
     func sumRange(_ left: Int, _ right: Int) -> Int {
         return bit.query(left, right)
+    }
+}
+```
+
+```rust
+struct BIT {
+    nums: Vec<i32>,
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl BIT {
+    fn new(nums: &[i32]) -> Self {
+        let n = nums.len() + 1;
+        let mut bit = BIT {
+            nums: vec![0; n],
+            tree: vec![0; n],
+            n,
+        };
+        for i in 0..nums.len() {
+            bit.update(i, nums[i]);
+        }
+        bit
+    }
+
+    fn update(&mut self, index: usize, val: i32) {
+        let mut idx = index + 1;
+        let diff = val - self.nums[idx];
+        self.nums[idx] = val;
+        while idx < self.n {
+            self.tree[idx] += diff;
+            idx += idx & idx.wrapping_neg();
+        }
+    }
+
+    fn prefix_sum(&self, mut index: usize) -> i32 {
+        let mut total_sum = 0;
+        while index > 0 {
+            total_sum += self.tree[index];
+            index -= index & index.wrapping_neg();
+        }
+        total_sum
+    }
+
+    fn query(&self, left: usize, right: usize) -> i32 {
+        self.prefix_sum(right + 1) - self.prefix_sum(left)
+    }
+}
+
+struct NumArray {
+    bit: BIT,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            bit: BIT::new(&nums),
+        }
+    }
+
+    fn update(&mut self, index: i32, val: i32) {
+        self.bit.update(index as usize, val);
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.bit.query(left as usize, right as usize)
     }
 }
 ```

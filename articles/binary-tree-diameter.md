@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Basics** - Understanding tree structure, nodes, and parent-child relationships
 - **Depth-First Search (DFS)** - Recursive and iterative traversal techniques
 - **Tree Height Calculation** - Computing the height of a subtree recursively
@@ -9,26 +11,28 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 For any node in a tree, the longest path that goes **through** it is:
+
 - height of left subtree + height of right subtree
 
 So to find the tree’s diameter, we check this value **for every node**.  
 We also compare it with the best diameter found in the left and right subtrees.
 
 ### Algorithm
+
 1. If the tree is empty, return `0`.
 2. For each node:
-   - Compute height of its left subtree.
-   - Compute height of its right subtree.
-   - Compute diameter through that node = `leftHeight + rightHeight`.
+    - Compute height of its left subtree.
+    - Compute height of its right subtree.
+    - Compute diameter through that node = `leftHeight + rightHeight`.
 3. Recursively find diameter of left subtree.
 4. Recursively find diameter of right subtree.
 5. The final diameter for this node is the maximum of:
-   - diameter through this node
-   - diameter in left subtree
-   - diameter in right subtree
+    - diameter through this node
+    - diameter in left subtree
+    - diameter in right subtree
 6. Return that maximum.
-
 
 ::tabs-start
 
@@ -328,6 +332,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn diameter_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn max_height(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            match root {
+                None => 0,
+                Some(node) => {
+                    let node = node.borrow();
+                    1 + max_height(&node.left).max(max_height(&node.right))
+                }
+            }
+        }
+
+        match root {
+            None => 0,
+            Some(ref node) => {
+                let n = node.borrow();
+                let left_height = max_height(&n.left);
+                let right_height = max_height(&n.right);
+                let diameter = left_height + right_height;
+                let sub = Self::diameter_of_binary_tree(n.left.clone())
+                    .max(Self::diameter_of_binary_tree(n.right.clone()));
+                diameter.max(sub)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -340,8 +373,10 @@ class Solution {
 ## 2. Depth First Search
 
 ### Intuition
+
 The diameter of a binary tree is the **longest path between any two nodes**.  
-This path *must go through some node*, and at that node the path length is:
+This path _must go through some node_, and at that node the path length is:
+
 - (left subtree height) + (right subtree height)
 
 So while doing a DFS to compute heights, we can simultaneously track the
@@ -349,12 +384,13 @@ maximum `left + right` seen so far.
 This gives the diameter in one pass without recomputing heights.
 
 ### Algorithm
+
 1. Use DFS to compute the height of every subtree.
 2. For each node during DFS:
-   - Recursively get `left` height.
-   - Recursively get `right` height.
-   - Diameter through this node = `left + right`.
-   - Update the global answer with this diameter.
+    - Recursively get `left` height.
+    - Recursively get `right` height.
+    - Diameter through this node = `left + right`.
+    - Update the global answer with this diameter.
 3. Height returned to parent = `1 + max(left, right)`.
 4. After DFS finishes, the global answer contains the diameter.
 
@@ -639,6 +675,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn diameter_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        Self::dfs(&root, &mut res);
+        res
+    }
+
+    fn dfs(root: &Option<Rc<RefCell<TreeNode>>>, res: &mut i32) -> i32 {
+        match root {
+            None => 0,
+            Some(node) => {
+                let node = node.borrow();
+                let left = Self::dfs(&node.left, res);
+                let right = Self::dfs(&node.right, res);
+                *res = (*res).max(left + right);
+                1 + left.max(right)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -655,33 +714,38 @@ class Solution {
 ## 3. Iterative DFS
 
 ### Intuition
+
 Recursive DFS is the easiest way to compute diameter, but it uses the call stack.
 We can simulate the same behavior **iteratively** using our own stack.
 
 We perform a **post-order traversal**:
+
 - Visit left subtree
 - Visit right subtree
 - Then process the current node
 
 For each node, we store in a map:
+
 - its **height**
 - its **best diameter**
 
 After both children are processed, we can compute:
+
 - `height = 1 + max(leftHeight, rightHeight)`
 - `diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)`
 
 This means every node is processed exactly once.
 
 ### Algorithm
+
 1. Use a stack to simulate DFS.
 2. Maintain a map storing `(height, diameter)` for each visited node.
 3. For each node:
-   - First push its children until you reach the bottom (post-order).
-   - When both children are processed, pop the node:
-     - Retrieve left and right heights/diameters.
-     - Compute `height = 1 + max(leftHeight, rightHeight)` and `diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)`.
-     - Save these results in the map.
+    - First push its children until you reach the bottom (post-order).
+    - When both children are processed, pop the node:
+        - Retrieve left and right heights/diameters.
+        - Compute `height = 1 + max(leftHeight, rightHeight)` and `diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)`.
+        - Save these results in the map.
 4. The final diameter is the second value stored for the root.
 
 ::tabs-start
@@ -1075,6 +1139,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn diameter_of_binary_tree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let root = match root {
+            Some(r) => r,
+            None => return 0,
+        };
+
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = vec![root.clone()];
+        let mut mp: HashMap<usize, (i32, i32)> = HashMap::new();
+
+        while let Some(node_rc) = stack.last().cloned() {
+            let node = node_rc.borrow();
+            let left_ptr = node.left.as_ref().map(|n| Rc::as_ptr(n) as usize);
+            let right_ptr = node.right.as_ref().map(|n| Rc::as_ptr(n) as usize);
+
+            if let Some(lp) = left_ptr {
+                if !mp.contains_key(&lp) {
+                    stack.push(node.left.clone().unwrap());
+                    continue;
+                }
+            }
+            if let Some(rp) = right_ptr {
+                if !mp.contains_key(&rp) {
+                    stack.push(node.right.clone().unwrap());
+                    continue;
+                }
+            }
+            drop(node);
+            stack.pop();
+
+            let n = node_rc.borrow();
+            let (lh, ld) = n.left.as_ref()
+                .map(|l| *mp.get(&(Rc::as_ptr(l) as usize)).unwrap())
+                .unwrap_or((0, 0));
+            let (rh, rd) = n.right.as_ref()
+                .map(|r| *mp.get(&(Rc::as_ptr(r) as usize)).unwrap())
+                .unwrap_or((0, 0));
+
+            let height = 1 + lh.max(rh);
+            let diameter = (lh + rh).max(ld).max(rd);
+            mp.insert(Rc::as_ptr(&node_rc) as usize, (height, diameter));
+        }
+
+        mp.get(&(Rc::as_ptr(&root) as usize)).unwrap().1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1087,11 +1200,14 @@ class Solution {
 ## Common Pitfalls
 
 ### Returning Diameter Instead of Height from DFS
+
 The DFS function must return height (for the parent to use), but update the global diameter. A common mistake is returning the diameter, which breaks the height calculation for ancestors.
+
 ```python
 # Wrong: return left + right (diameter)
 # Correct: return 1 + max(left, right) (height)
 ```
 
 ### Assuming the Longest Path Goes Through the Root
+
 The diameter may pass through any node, not just the root. A solution that only calculates `leftHeight + rightHeight` at the root will fail on trees where the longest path is entirely within a subtree.

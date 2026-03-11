@@ -174,6 +174,25 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn pick_gifts(gifts: Vec<i32>, k: i32) -> i64 {
+        let mut gifts = gifts;
+        for _ in 0..k {
+            let max_idx = gifts
+                .iter()
+                .enumerate()
+                .max_by_key(|&(_, &v)| v)
+                .unwrap()
+                .0;
+            gifts[max_idx] = (gifts[max_idx] as f64).sqrt().floor() as i32;
+        }
+        gifts.iter().map(|&g| g as i64).sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +449,22 @@ struct Heap<T> {
             elements.swapAt(parent, candidate)
             parent = candidate
         }
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn pick_gifts(gifts: Vec<i32>, k: i32) -> i64 {
+        let mut heap = BinaryHeap::from(gifts);
+
+        for _ in 0..k {
+            let n = heap.pop().unwrap();
+            heap.push((n as f64).sqrt().floor() as i32);
+        }
+
+        heap.into_iter().map(|g| g as i64).sum()
     }
 }
 ```

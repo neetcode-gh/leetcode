@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Trees (BST)** - Understanding BST properties where left subtree values are less than root and right subtree values are greater
 - **Recursion** - Building solutions by breaking problems into smaller subproblems
 - **Divide and Conquer** - Splitting an array at the middle element to create balanced subtrees
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 To create a height-balanced BST from a sorted array, we need to ensure that for every node, the left and right subtrees have roughly equal heights. Since the array is sorted, the middle element should become the root. All elements before the middle go to the left subtree, and all elements after go to the right subtree. Applying this recursively builds a balanced tree.
 
 ### Algorithm
+
 1. Base case: If the array is empty, return `null`.
 2. Find the middle index of the current array segment.
 3. Create a new tree node with the middle element as its value.
@@ -236,6 +240,28 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn sorted_array_to_bst(nums: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        if nums.is_empty() {
+            return None;
+        }
+        let mid = nums.len() / 2;
+        let mut root = TreeNode::new(nums[mid]);
+        root.left = Self::sorted_array_to_bst(nums[..mid].to_vec());
+        root.right = Self::sorted_array_to_bst(nums[mid + 1..].to_vec());
+        Some(Rc::new(RefCell::new(root)))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,9 +274,11 @@ class Solution {
 ## 2. Depth First Search (Optimal)
 
 ### Intuition
+
 The previous approach creates new array copies for each recursive call, which is inefficient. Instead, we can pass indices (left and right boundaries) to indicate the current segment of the array. This avoids array slicing and reduces both time and space overhead while maintaining the same logic of choosing the middle element as root.
 
 ### Algorithm
+
 1. Define a helper function that takes `left` and `right` boundary indices.
 2. Base case: If `left > right`, return `null` (empty segment).
 3. Calculate the middle index as `(left + right) / 2`.
@@ -499,6 +527,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sorted_array_to_bst(nums: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        fn helper(nums: &[i32], l: i32, r: i32) -> Option<Rc<RefCell<TreeNode>>> {
+            if l > r {
+                return None;
+            }
+            let m = (l + r) / 2;
+            let mut root = TreeNode::new(nums[m as usize]);
+            root.left = helper(nums, l, m - 1);
+            root.right = helper(nums, m + 1, r);
+            Some(Rc::new(RefCell::new(root)))
+        }
+        helper(&nums, 0, nums.len() as i32 - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -513,17 +559,19 @@ class Solution {
 ## 3. Iterative DFS
 
 ### Intuition
+
 The recursive approach can be converted to an iterative one using an explicit stack. We store pending work items on the stack, where each item contains a node to be filled and the array bounds it should use. This simulates the recursive call stack and processes each subtree systematically without recursion.
 
 ### Algorithm
+
 1. If the array is empty, return `null`.
 2. Create a root node with a placeholder value.
 3. Push the root node along with its bounds `(0, n-1)` onto a stack.
 4. While the stack is not empty:
-   - Pop an item containing the node and its bounds `(l, r)`.
-   - Calculate the middle index and set the node's value to `nums[mid]`.
-   - If there are elements to the left (`l <= mid - 1`), create a left child and push it with bounds `(l, mid - 1)`.
-   - If there are elements to the right (`mid + 1 <= r`), create a right child and push it with bounds `(mid + 1, r)`.
+    - Pop an item containing the node and its bounds `(l, r)`.
+    - Calculate the middle index and set the node's value to `nums[mid]`.
+    - If there are elements to the left (`l <= mid - 1`), create a left child and push it with bounds `(l, mid - 1)`.
+    - If there are elements to the right (`mid + 1 <= r`), create a right child and push it with bounds `(mid + 1, r)`.
 5. Return the root.
 
 ::tabs-start
@@ -864,6 +912,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sorted_array_to_bst(nums: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        if nums.is_empty() {
+            return None;
+        }
+        let root = Rc::new(RefCell::new(TreeNode::new(0)));
+        let mut stack: Vec<(Rc<RefCell<TreeNode>>, usize, usize)> =
+            vec![(Rc::clone(&root), 0, nums.len() - 1)];
+
+        while let Some((node, l, r)) = stack.pop() {
+            let m = (l + r) / 2;
+            node.borrow_mut().val = nums[m];
+
+            if l < m {
+                let left = Rc::new(RefCell::new(TreeNode::new(0)));
+                node.borrow_mut().left = Some(Rc::clone(&left));
+                stack.push((left, l, m - 1));
+            }
+            if m + 1 <= r {
+                let right = Rc::new(RefCell::new(TreeNode::new(0)));
+                node.borrow_mut().right = Some(Rc::clone(&right));
+                stack.push((right, m + 1, r));
+            }
+        }
+
+        Some(root)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -878,6 +957,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Off-by-One Errors in Subarray Bounds
+
 When recursively building subtrees, a common mistake is including the middle element in one of the subarrays, leading to infinite recursion or duplicate nodes.
 
 ```python
@@ -890,4 +970,5 @@ root.right = helper(m + 1, r)
 ```
 
 ### Choosing Wrong Middle Element in Even-Length Arrays
+
 For arrays with even length, the middle can be either `(l + r) // 2` or `(l + r + 1) // 2`. While both produce valid height-balanced BSTs, inconsistency can cause confusion. The problem accepts either choice, but stick with one consistently.

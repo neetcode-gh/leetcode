@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Breadth-First Search (BFS)** - The core algorithm for level-by-level traversal, essential for tracking time units
 - **Multi-source BFS** - Starting BFS from multiple sources simultaneously rather than a single source
 - **Queue data structure** - Used to process cells in FIFO order during BFS traversal
@@ -10,6 +12,7 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Breadth First Search
 
 ### Intuition
+
 This is a **multi-source BFS** problem.
 
 All **rotten oranges (2)** start spreading rot **at the same time** to their neighboring fresh oranges (1).
@@ -17,23 +20,25 @@ Each BFS level represents **1 minute**.
 If a fresh orange is reached, it becomes rotten in the next minute.
 
 Key ideas:
+
 - Start BFS from **all rotten oranges together**
 - Count how many **fresh oranges** exist
 - Each BFS layer = one unit of time
 - If any fresh orange is left at the end → answer is `-1`
 
 ### Algorithm
+
 1. Initialize a queue with positions of all **rotten oranges**.
 2. Count total number of **fresh oranges**.
 3. While the queue is not empty **and** fresh oranges exist:
-   - Process all nodes in the queue (one BFS level).
-   - For each rotten orange:
-     - Check its 4 neighbors.
-     - If a neighbor is fresh:
-       - Make it rotten.
-       - Decrease `fresh` count.
-       - Add it to the queue.
-   - Increment `time` by 1.
+    - Process all nodes in the queue (one BFS level).
+    - For each rotten orange:
+        - Check its 4 neighbors.
+        - If a neighbor is fresh:
+            - Make it rotten.
+            - Decrease `fresh` count.
+            - Add it to the queue.
+    - Increment `time` by 1.
 4. If `fresh` count becomes `0`, return `time`.
 5. Otherwise, return `-1` (some oranges never rot).
 
@@ -423,6 +428,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn oranges_rotting(mut grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut queue = VecDeque::new();
+        let mut fresh = 0;
+        let mut time = 0;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 {
+                    fresh += 1;
+                }
+                if grid[r][c] == 2 {
+                    queue.push_back((r as i32, c as i32));
+                }
+            }
+        }
+
+        let directions = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        while fresh > 0 && !queue.is_empty() {
+            let length = queue.len();
+            for _ in 0..length {
+                let (r, c) = queue.pop_front().unwrap();
+                for &(dr, dc) in &directions {
+                    let row = r + dr;
+                    let col = c + dc;
+                    if row >= 0
+                        && row < rows as i32
+                        && col >= 0
+                        && col < cols as i32
+                        && grid[row as usize][col as usize] == 1
+                    {
+                        grid[row as usize][col as usize] = 2;
+                        queue.push_back((row, col));
+                        fresh -= 1;
+                    }
+                }
+            }
+            time += 1;
+        }
+        if fresh == 0 { time } else { -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -437,28 +489,32 @@ class Solution {
 ## 2. Breadth First Search (No Queue)
 
 ### Intuition
+
 This is still **BFS by levels**, but instead of using a queue, we simulate "minutes" with **grid marking**.
 
 Think of each loop iteration as **1 minute**:
-- Cells with value **2** are the oranges that are rotten *at the start of this minute*.
+
+- Cells with value **2** are the oranges that are rotten _at the start of this minute_.
 - Any fresh neighbor they rot during this minute is temporarily marked as **3** (meaning "will become rotten next minute").
 - After scanning the whole grid, we convert all **3 → 2** to prepare for the next minute.
 
 Why use `3`?
+
 - To prevent a newly rotted orange from spreading in the **same minute** (which would incorrectly speed up time).
 
 If during a minute **no fresh orange becomes 3**, but `fresh` still exists, then rot can't spread anymore → return `-1`.
 
 ### Algorithm
+
 1. Count `fresh` oranges (value `1`).
 2. Repeat while `fresh > 0`:
-   - Set `flag = false` (did we rot anything this minute?).
-   - Scan every cell:
-     - If cell is `2`, check 4 neighbors.
-     - For each neighbor that is `1`, mark it `3`, decrement `fresh`, set `flag = true`.
-   - If `flag` is `false` → no progress → return `-1`.
-   - Scan again and convert all `3` to `2` (commit the next BFS layer).
-   - Increment `time`.
+    - Set `flag = false` (did we rot anything this minute?).
+    - Scan every cell:
+        - If cell is `2`, check 4 neighbors.
+        - For each neighbor that is `1`, mark it `3`, decrement `fresh`, set `flag = true`.
+    - If `flag` is `false` → no progress → return `-1`.
+    - Scan again and convert all `3` to `2` (commit the next BFS layer).
+    - Increment `time`.
 3. When `fresh == 0`, return `time`.
 
 ::tabs-start
@@ -884,6 +940,66 @@ class Solution {
         }
 
         return time
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn oranges_rotting(mut grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut fresh = 0i32;
+        let mut time = 0;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 {
+                    fresh += 1;
+                }
+            }
+        }
+
+        let directions: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+
+        while fresh > 0 {
+            let mut flag = false;
+            for r in 0..rows {
+                for c in 0..cols {
+                    if grid[r][c] == 2 {
+                        for &(dr, dc) in &directions {
+                            let row = r as i32 + dr;
+                            let col = c as i32 + dc;
+                            if row >= 0
+                                && row < rows as i32
+                                && col >= 0
+                                && col < cols as i32
+                                && grid[row as usize][col as usize] == 1
+                            {
+                                grid[row as usize][col as usize] = 3;
+                                fresh -= 1;
+                                flag = true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if !flag {
+                return -1;
+            }
+
+            for r in 0..rows {
+                for c in 0..cols {
+                    if grid[r][c] == 3 {
+                        grid[r][c] = 2;
+                    }
+                }
+            }
+            time += 1;
+        }
+
+        time
     }
 }
 ```

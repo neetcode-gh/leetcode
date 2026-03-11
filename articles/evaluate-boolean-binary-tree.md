@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding how to navigate tree structures using left and right children
 - **Recursion** - Using recursive calls to evaluate subtrees before combining results at parent nodes
 - **Post-order Traversal** - Evaluating children before the parent, which is essential for expression tree evaluation
@@ -272,6 +274,33 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn evaluate_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let node = root.as_ref().unwrap().borrow();
+        if node.left.is_none() {
+            return node.val == 1;
+        }
+        if node.val == 2 {
+            return Self::evaluate_tree(node.left.clone())
+                || Self::evaluate_tree(node.right.clone());
+        }
+        if node.val == 3 {
+            return Self::evaluate_tree(node.left.clone())
+                && Self::evaluate_tree(node.right.clone());
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,10 +320,10 @@ We can avoid recursion by using an explicit stack and a hash map to store comput
 
 1. Initialize a stack with the `root` and a hash map `value` to store results.
 2. While the stack is non-empty:
-   - Pop a node.
-   - If it's a leaf, store its boolean value in `value`.
-   - If both children are already in `value`, compute and store the result.
-   - Otherwise, push the node back, then push both children (so they get processed first).
+    - Pop a node.
+    - If it's a leaf, store its boolean value in `value`.
+    - If both children are already in `value`, compute and store the result.
+    - Otherwise, push the node back, then push both children (so they get processed first).
 3. Return `value[root]`.
 
 ::tabs-start
@@ -642,6 +671,44 @@ class Solution {
         }
 
         return value[ObjectIdentifier(root)] ?? false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn evaluate_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut stack: Vec<Option<Rc<RefCell<TreeNode>>>> = vec![root.clone()];
+        let mut value: HashMap<*const RefCell<TreeNode>, bool> = HashMap::new();
+
+        while let Some(node_opt) = stack.pop() {
+            let node_rc = node_opt.as_ref().unwrap().clone();
+            let node = node_rc.borrow();
+            let key = Rc::as_ptr(&node_opt.as_ref().unwrap());
+
+            if node.left.is_none() {
+                value.insert(key, node.val == 1);
+            } else {
+                let left_key = Rc::as_ptr(node.left.as_ref().unwrap());
+                if value.contains_key(&left_key) {
+                    let left_val = value[&left_key];
+                    let right_key = Rc::as_ptr(node.right.as_ref().unwrap());
+                    let right_val = value[&right_key];
+                    if node.val == 2 {
+                        value.insert(key, left_val || right_val);
+                    } else if node.val == 3 {
+                        value.insert(key, left_val && right_val);
+                    }
+                } else {
+                    stack.push(node_opt.clone());
+                    stack.push(node.right.clone());
+                    stack.push(node.left.clone());
+                }
+            }
+        }
+
+        let root_key = Rc::as_ptr(root.as_ref().unwrap());
+        value[&root_key]
     }
 }
 ```

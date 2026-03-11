@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries or hash tables to count character frequencies
 - **Sorting** - Sorting strings or arrays to compare elements in a consistent order
 - **Arrays** - Using fixed-size arrays as an efficient alternative to hash maps for limited character sets
@@ -12,15 +14,15 @@ Before attempting this problem, you should be comfortable with:
 
 If two strings are anagrams, they must contain exactly the same characters with the same frequencies.  
 By sorting both strings, all characters will be arranged in a consistent order.  
-If the two sorted strings are identical, then every character and its count match, which means the strings are anagrams.  
+If the two sorted strings are identical, then every character and its count match, which means the strings are anagrams.
 
 ### Algorithm
 
 1. If the lengths of the two strings differ, return `false` immediately because they cannot be anagrams.
 2. Sort both strings.
 3. Compare the sorted versions of the strings:
-   - If they are equal, return `true`.
-   - Otherwise, return `false`.
+    - If they are equal, return `true`.
+    - Otherwise, return `false`.
 
 ::tabs-start
 
@@ -142,6 +144,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_anagram(s: String, t: String) -> bool {
+        if s.len() != t.len() {
+            return false;
+        }
+        let mut s_sort: Vec<u8> = s.into_bytes();
+        let mut t_sort: Vec<u8> = t.into_bytes();
+        s_sort.sort_unstable();
+        t_sort.sort_unstable();
+        s_sort == t_sort
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -167,11 +184,11 @@ If both frequency maps match exactly, then the strings contain the same characte
 1. If the two strings have different lengths, return `false` immediately.
 2. Create two hash maps to store character frequencies for each string.
 3. Iterate through both strings at the same time:
-   - Increase the character count for `s[i]` in the first map.
-   - Increase the character count for `t[i]` in the second map.
+    - Increase the character count for `s[i]` in the first map.
+    - Increase the character count for `t[i]` in the second map.
 4. After building both maps, compare them:
-   - If the maps are equal, return `true`.
-   - Otherwise, return `false`.
+    - If the maps are equal, return `true`.
+    - Otherwise, return `false`.
 
 ::tabs-start
 
@@ -337,6 +354,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_anagram(s: String, t: String) -> bool {
+        if s.len() != t.len() {
+            return false;
+        }
+        let mut count_s: HashMap<u8, i32> = HashMap::new();
+        let mut count_t: HashMap<u8, i32> = HashMap::new();
+        for (a, b) in s.bytes().zip(t.bytes()) {
+            *count_s.entry(a).or_insert(0) += 1;
+            *count_t.entry(b).or_insert(0) += 1;
+        }
+        count_s == count_t
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,10 +396,10 @@ This approach is efficient because it avoids hashing and uses constant space.
 1. If the lengths of the strings differ, return `false` immediately.
 2. Create a frequency array `count` of size `26` initialized to `0`.
 3. Iterate through both strings:
-   - Increment the count at the index corresponding to `s[i]`.
-   - Decrement the count at the index corresponding to `t[i]`.
+    - Increment the count at the index corresponding to `s[i]`.
+    - Decrement the count at the index corresponding to `t[i]`.
 4. After processing both strings, scan through the `count` array:
-   - If any value is not `0`, return `false` because the frequencies differ.
+    - If any value is not `0`, return `false` because the frequencies differ.
 5. If all values are `0`, return `true` since the strings are anagrams.
 
 ::tabs-start
@@ -545,6 +579,22 @@ class Solution {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_anagram(s: String, t: String) -> bool {
+        if s.len() != t.len() {
+            return false;
+        }
+        let mut count = [0i32; 26];
+        for (a, b) in s.bytes().zip(t.bytes()) {
+            count[(a - b'a') as usize] += 1;
+            count[(b - b'a') as usize] -= 1;
+        }
+        count.iter().all(|&v| v == 0)
     }
 }
 ```

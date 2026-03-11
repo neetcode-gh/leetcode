@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Used for O(1) lookup to efficiently check if an element's successor exists
 - **Array Traversal** - Iterating through arrays and understanding linear search complexity
 - **Sorting** - Understanding how sorting brings related elements together for optimized approaches
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Search with Array
 
 ### Intuition
+
 For each element `x` in the array, we need to check whether `x + 1` also exists in the array. The straightforward approach is to scan through the entire array for each element to verify if its successor is present. While this works correctly, it requires a linear search for every element.
 
 ### Algorithm
+
 1. Initialize a counter to `0`.
 2. For each element `x` in the array, iterate through the array to check if `x + 1` exists.
 3. If `x + 1` is found, increment the counter.
@@ -175,6 +179,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_elements(arr: Vec<i32>) -> i32 {
+        let mut count = 0;
+        for &x in &arr {
+            if arr.contains(&(x + 1)) {
+                count += 1;
+            }
+        }
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -182,16 +200,18 @@ class Solution {
 - Time complexity: $O(N^2)$
 - Space complexity: $O(1)$ constant space
 
->  Where $N$ is the length of the input array `arr`.
+> Where $N$ is the length of the input array `arr`.
 
 ---
 
 ## 2. Search with HashSet
 
 ### Intuition
+
 The brute force approach is slow because checking if `x + 1` exists requires scanning the entire array. A hash set provides `O(1)` lookup time, so we can first store all elements in a set, then check for each element's successor in constant time.
 
 ### Algorithm
+
 1. Insert all elements from the array into a hash set.
 2. Initialize a counter to `0`.
 3. For each element `x` in the array, check if `x + 1` exists in the hash set.
@@ -325,6 +345,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_elements(arr: Vec<i32>) -> i32 {
+        let hash_set: HashSet<i32> = arr.iter().copied().collect();
+        let mut count = 0;
+        for &x in &arr {
+            if hash_set.contains(&(x + 1)) {
+                count += 1;
+            }
+        }
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,22 +367,24 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of the input array `arr`.
+> Where $N$ is the length of the input array `arr`.
 
 ---
 
 ## 3. Search with Sorted Array
 
 ### Intuition
+
 Sorting brings equal elements together and places consecutive values next to each other. After sorting, we can traverse the array once and track "runs" of identical values. When we encounter a new value that is exactly one more than the previous value, all elements in the previous run satisfy the condition.
 
 ### Algorithm
+
 1. Sort the array.
 2. Initialize a counter and a run length tracker (starting at `1`).
 3. Iterate through the sorted array starting from index `1`.
 4. If the current element differs from the previous one:
-   - If the current element equals the previous element plus `1`, add the run length to the counter.
-   - Reset the run length to `0`.
+    - If the current element equals the previous element plus `1`, add the run length to the counter.
+    - Reset the run length to `0`.
 5. Increment the run length for each element processed.
 6. Return the final count.
 
@@ -511,6 +548,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_elements(mut arr: Vec<i32>) -> i32 {
+        arr.sort();
+        let mut count = 0;
+        let mut run_length = 1;
+        for i in 1..arr.len() {
+            if arr[i - 1] != arr[i] {
+                if arr[i - 1] + 1 == arr[i] {
+                    count += run_length;
+                }
+                run_length = 0;
+            }
+            run_length += 1;
+        }
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,7 +576,7 @@ class Solution {
 - Space complexity: varies from $O(N)$ to $O(1)$
     - The overall space complexity is dependent on the space complexity of the sorting algorithm you're using. The space complexity of sorting algorithms built into programming languages are generally anywhere from $O(N)$ to $O(1)$.
 
->  Where $N$ is the length of the input array `arr`.
+> Where $N$ is the length of the input array `arr`.
 
 ---
 

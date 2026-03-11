@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting occurrences of elements with O(1) average lookup and insertion
 - **Hash Sets** - Tracking unique elements and checking membership efficiently
 - **Array Traversal** - Iterating through arrays while maintaining order
@@ -232,6 +234,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_distinct(arr: Vec<String>, k: i32) -> String {
+        let mut k = k;
+        for i in 0..arr.len() {
+            let mut flag = true;
+            for j in 0..arr.len() {
+                if i == j { continue; }
+                if arr[i] == arr[j] {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                k -= 1;
+                if k == 0 {
+                    return arr[i].clone();
+                }
+            }
+        }
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -449,6 +476,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_distinct(arr: Vec<String>, k: i32) -> String {
+        let mut count: HashMap<&str, i32> = HashMap::new();
+        for s in &arr {
+            *count.entry(s.as_str()).or_insert(0) += 1;
+        }
+        let mut k = k;
+        for s in &arr {
+            if count[s.as_str()] == 1 {
+                k -= 1;
+                if k == 0 {
+                    return s.clone();
+                }
+            }
+        }
+        String::new()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -468,8 +516,8 @@ We can use two sets instead of a counting map. One set tracks strings that are c
 
 1. Create two sets: `distinct` for unique strings and `seen` for duplicates.
 2. For each string in the array:
-   - If it's in `distinct`, move it to `seen` (it's now a duplicate).
-   - If it's not in `seen`, add it to `distinct`.
+    - If it's in `distinct`, move it to `seen` (it's now a duplicate).
+    - If it's not in `seen`, add it to `distinct`.
 3. Iterate through the array again in order.
 4. For strings in the `distinct` set, decrement `k`.
 5. Return the string when `k` reaches `0`.
@@ -701,6 +749,37 @@ class Solution {
         }
 
         return ""
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn kth_distinct(arr: Vec<String>, k: i32) -> String {
+        let mut distinct: HashSet<&str> = HashSet::new();
+        let mut seen: HashSet<&str> = HashSet::new();
+
+        for s in &arr {
+            let key = s.as_str();
+            if distinct.contains(key) {
+                distinct.remove(key);
+                seen.insert(key);
+            } else if !seen.contains(key) {
+                distinct.insert(key);
+            }
+        }
+
+        let mut k = k;
+        for s in &arr {
+            if distinct.contains(s.as_str()) {
+                k -= 1;
+                if k == 0 {
+                    return s.clone();
+                }
+            }
+        }
+
+        String::new()
     }
 }
 ```

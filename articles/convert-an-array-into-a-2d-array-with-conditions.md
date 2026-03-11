@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map (Frequency Counting)** - Tracking how many times each element has been placed to determine which row it belongs to
 - **2D Arrays** - Dynamically building and managing a list of lists to store the result
 
@@ -8,15 +10,17 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 We need to distribute numbers into rows such that each row contains only distinct elements. For each number, we find the first row where it doesn't already exist and place it there. If no such row exists, we create a new row. This greedy placement ensures we use the minimum number of rows needed.
 
 ### Algorithm
+
 1. Initialize an empty result list to hold the 2D array.
 2. For each number in the input array:
-   - Start from row `0` and search for a row that doesn't contain this number.
-   - Check each existing row sequentially until we find one where the number is absent.
-   - If all existing rows already contain this number, create a new empty row.
-   - Add the number to the found or newly created row.
+    - Start from row `0` and search for a row that doesn't contain this number.
+    - Check each existing row sequentially until we find one where the number is absent.
+    - If all existing rows already contain this number, create a new empty row.
+    - Add the number to the found or newly created row.
 3. Return the result containing all rows.
 
 ::tabs-start
@@ -217,6 +221,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_matrix(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = Vec::new();
+
+        for &num in &nums {
+            let mut r = 0;
+            while r < res.len() {
+                if !res[r].contains(&num) {
+                    break;
+                }
+                r += 1;
+            }
+            if r == res.len() {
+                res.push(Vec::new());
+            }
+            res[r].push(num);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,15 +259,17 @@ class Solution {
 ## 2. Sorting
 
 ### Intuition
+
 By sorting the array first, all identical numbers become adjacent. This allows us to process each group of duplicates together. The number of rows needed equals the maximum frequency of any element, and by distributing each group of identical elements across consecutive rows starting from row `0`, we ensure each row has distinct values.
 
 ### Algorithm
+
 1. Sort the input array.
 2. Initialize an empty result list for the 2D array.
 3. Iterate through the sorted array:
-   - For each group of identical consecutive numbers, distribute them one per row starting from row `0`.
-   - Create new rows as needed when we encounter more duplicates than existing rows.
-   - Use two pointers: one to track the start of a group, another to iterate through duplicates.
+    - For each group of identical consecutive numbers, distribute them one per row starting from row `0`.
+    - Create new rows as needed when we encounter more duplicates than existing rows.
+    - Use two pointers: one to track the start of a group, another to iterate through duplicates.
 4. Move to the next distinct number and repeat.
 5. Return the result.
 
@@ -450,6 +480,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_matrix(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut nums = nums;
+        nums.sort();
+        let mut res: Vec<Vec<i32>> = Vec::new();
+
+        let mut i = 0;
+        while i < nums.len() {
+            let mut j = i;
+            let mut r = 0;
+            while j < nums.len() && nums[i] == nums[j] {
+                if r == res.len() {
+                    res.push(Vec::new());
+                }
+                res[r].push(nums[i]);
+                r += 1;
+                j += 1;
+            }
+            i = j;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -462,16 +519,18 @@ class Solution {
 ## 3. Frequency Count
 
 ### Intuition
+
 The frequency of each number tells us exactly which row it should go into. The first occurrence goes to row `0`, the second occurrence to row `1`, and so on. By tracking how many times we've seen each number, we can directly place it in the correct row without searching. This eliminates the need for both sorting and linear searching.
 
 ### Algorithm
+
 1. Create a hash map to count how many times each number has been placed (initially `0` for all).
 2. Initialize an empty result list.
 3. For each number in the array:
-   - Look up its current count in the hash map. This count indicates which row it belongs to.
-   - If this row doesn't exist yet, create a new empty row.
-   - Add the number to the row indicated by its count.
-   - Increment the count for this number in the hash map.
+    - Look up its current count in the hash map. This count indicates which row it belongs to.
+    - If this row doesn't exist yet, create a new empty row.
+    - Add the number to the row indicated by its count.
+    - Increment the count for this number in the hash map.
 4. Return the result.
 
 ::tabs-start
@@ -635,6 +694,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_matrix(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut count: HashMap<i32, usize> = HashMap::new();
+        let mut res: Vec<Vec<i32>> = Vec::new();
+
+        for &num in &nums {
+            let row = *count.get(&num).unwrap_or(&0);
+            if res.len() == row {
+                res.push(Vec::new());
+            }
+            res[row].push(num);
+            count.insert(num, row + 1);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -647,6 +726,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Confusing Row Index with Frequency Count
+
 A common mistake is using the frequency count incorrectly as the row index. The row where an element should go is determined by how many times it has been placed so far, not its total frequency in the array.
 
 ```python
@@ -658,6 +738,7 @@ row = count[num]  # then increment count[num] after placing
 ```
 
 ### Creating Rows Only When Empty
+
 Forgetting to create a new row when needed leads to index out of bounds errors. Before placing an element in a row, check if that row exists.
 
 ```python
@@ -671,4 +752,5 @@ res[row].append(num)
 ```
 
 ### Using Linear Search for Duplicate Check in Brute Force
-In the brute force approach, checking if a number exists in a row using linear search on every insert leads to O(n * m) complexity. While acceptable for the brute force solution, be aware that the frequency count approach achieves O(n) by avoiding these repeated searches entirely.
+
+In the brute force approach, checking if a number exists in a row using linear search on every insert leads to O(n \* m) complexity. While acceptable for the brute force solution, be aware that the frequency count approach achieves O(n) by avoiding these repeated searches entirely.

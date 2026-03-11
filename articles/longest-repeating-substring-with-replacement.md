@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - The optimal solution uses a variable-size window that expands and contracts based on validity conditions
 - **Hash Map / Frequency Counting** - Tracking character frequencies within the current window to determine the most frequent character
 - **Two Pointers** - Managing left and right pointers to define and adjust the window boundaries
@@ -21,12 +23,12 @@ This works but is slow because it checks many overlapping substrings.
 
 1. Initialize `res = 0` to store the longest valid window.
 2. For each starting index `i`:
-   - Create an empty frequency map and set `maxf = 0`.
-   - Extend the substring by increasing `j` from `i` to the end:
-     - Update the frequency of `s[j]`.
-     - Update `maxf` (most frequent character in the current window).
-     - If the window size minus `maxf` is `<= k`, it is valid.
-       - Update `res` with the window size.
+    - Create an empty frequency map and set `maxf = 0`.
+    - Extend the substring by increasing `j` from `i` to the end:
+        - Update the frequency of `s[j]`.
+        - Update `maxf` (most frequent character in the current window).
+        - If the window size minus `maxf` is `<= k`, it is valid.
+            - Update `res` with the window size.
 3. Return `res` after testing all starting positions.
 
 ::tabs-start
@@ -204,6 +206,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn character_replacement(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let k = k as usize;
+        let mut res = 0;
+
+        for i in 0..s.len() {
+            let mut count = HashMap::new();
+            let mut maxf = 0;
+            for j in i..s.len() {
+                let e = count.entry(s[j]).or_insert(0);
+                *e += 1;
+                maxf = maxf.max(*e);
+                if (j - i + 1) - maxf <= k {
+                    res = res.max(j - i + 1);
+                }
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -228,6 +255,7 @@ If the number of characters that **don't** match `c` is more than `k`, the windo
 By doing this for every possible character, we find the longest valid window.
 
 This idea is simple and beginner-friendly because we only track:
+
 - how many characters match `c`
 - how many replacements are needed
 
@@ -235,11 +263,11 @@ This idea is simple and beginner-friendly because we only track:
 
 1. Put all unique characters of the string into a set `charSet`.
 2. For each character `c` in `charSet`:
-   - Set `l = 0` and `count = 0` (count of `c` inside the window).
-   - Slide the right pointer `r` across the string:
-     - Increase `count` when `s[r] == c`.
-     - If the window needs more than `k` replacements, move `l` forward and adjust `count`.
-     - Update `res` with the current valid window size.
+    - Set `l = 0` and `count = 0` (count of `c` inside the window).
+    - Slide the right pointer `r` across the string:
+        - Increase `count` when `s[r] == c`.
+        - If the window needs more than `k` replacements, move `l` forward and adjust `count`.
+        - Update `res` with the current valid window size.
 3. Return the maximum window size found.
 
 ::tabs-start
@@ -485,6 +513,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn character_replacement(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let k = k as usize;
+        let mut res = 0;
+        let char_set: HashSet<u8> = s.iter().copied().collect();
+
+        for &c in &char_set {
+            let (mut count, mut l) = (0, 0);
+            for r in 0..s.len() {
+                if s[r] == c {
+                    count += 1;
+                }
+                while (r - l + 1) - count > k {
+                    if s[l] == c {
+                        count -= 1;
+                    }
+                    l += 1;
+                }
+                res = res.max(r - l + 1);
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,9 +563,10 @@ The key insight is that the window is valid as long as:
 **window size – count of the most frequent character ≤ k**
 
 Why?
-Because the characters that *aren't* the most frequent are the ones we would need to replace.
+Because the characters that _aren't_ the most frequent are the ones we would need to replace.
 
 So while expanding the window, we track:
+
 - the frequency of each character,
 - the most frequent character inside the window (`maxf`).
 
@@ -519,10 +577,10 @@ This gives us one clean sliding window pass.
 
 1. Create a frequency map `count` and initialize `l = 0`, `maxf = 0`, and `res = 0`.
 2. Move the right pointer `r` across the string:
-   - Update the frequency of `s[r]`.
-   - Update `maxf` with the highest frequency seen so far.
+    - Update the frequency of `s[r]`.
+    - Update `maxf` with the highest frequency seen so far.
 3. If the window is invalid (`window size - maxf > k`):
-   - Shrink the window from the left and adjust counts.
+    - Shrink the window from the left and adjust counts.
 4. Update the result with the valid window size.
 5. Return `res` at the end.
 
@@ -721,6 +779,34 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn character_replacement(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let k = k as usize;
+        let mut count = HashMap::new();
+        let mut res = 0;
+        let mut l = 0;
+        let mut maxf = 0;
+
+        for r in 0..s.len() {
+            let e = count.entry(s[r]).or_insert(0usize);
+            *e += 1;
+            maxf = maxf.max(*e);
+
+            while (r - l + 1) - maxf > k {
+                let e = count.get_mut(&s[l]).unwrap();
+                *e -= 1;
+                l += 1;
+            }
+            res = res.max(r - l + 1);
+        }
+
+        res as i32
     }
 }
 ```

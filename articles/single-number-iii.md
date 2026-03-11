@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation (XOR)** - Understanding XOR properties (a ^ a = 0, a ^ 0 = a) and how to isolate the rightmost set bit using x & (-x)
 - **Hash Map / Hash Set** - Used for counting occurrences or tracking seen elements in O(n) space solutions
 - **Sorting** - Alternative approach where duplicates become adjacent, allowing linear scan to find unique elements
@@ -233,6 +235,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = Vec::new();
+
+        for i in 0..n {
+            let mut flag = true;
+            for j in 0..n {
+                if i != j && nums[i] == nums[j] {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                res.push(nums[i]);
+                if res.len() == 2 {
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -414,6 +443,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        count.into_iter()
+            .filter(|&(_, v)| v == 1)
+            .map(|(k, _)| k)
+            .collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,8 +478,8 @@ A hash set can track numbers we have seen. When we encounter a number for the fi
 
 1. Initialize an empty hash set.
 2. For each number in the array:
-   - If the number is already in the set, remove it.
-   - Otherwise, add it to the set.
+    - If the number is already in the set, remove it.
+    - Otherwise, add it to the set.
 3. Convert the set to a list and return it.
 
 ::tabs-start
@@ -586,6 +631,20 @@ class Solution {
         }
 
         return Array(seen)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
+        let mut seen = HashSet::new();
+        for &num in &nums {
+            if !seen.remove(&num) {
+                seen.insert(num);
+            }
+        }
+        seen.into_iter().collect()
     }
 }
 ```
@@ -770,6 +829,28 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
+        let mut nums = nums;
+        nums.sort_unstable();
+        let n = nums.len();
+        let mut res = Vec::new();
+
+        for i in 0..n {
+            if (i > 0 && nums[i] == nums[i - 1])
+                || (i + 1 < n && nums[i] == nums[i + 1])
+            {
+                continue;
+            }
+            res.push(nums[i]);
+        }
+
+        res
     }
 }
 ```
@@ -1010,6 +1091,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
+        let mut xor = 0;
+        for &num in &nums {
+            xor ^= num;
+        }
+
+        let mut diff_bit = 1;
+        while xor & diff_bit == 0 {
+            diff_bit <<= 1;
+        }
+
+        let (mut a, mut b) = (0, 0);
+        for &num in &nums {
+            if num & diff_bit != 0 {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+        vec![a, b]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1219,6 +1326,29 @@ class Solution {
         }
 
         return [a, b]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn single_number(nums: Vec<i32>) -> Vec<i32> {
+        let mut xor = 0i32;
+        for &num in &nums {
+            xor ^= num;
+        }
+
+        let diff_bit = xor & xor.wrapping_neg();
+
+        let (mut a, mut b) = (0, 0);
+        for &num in &nums {
+            if num & diff_bit != 0 {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+        vec![a, b]
     }
 }
 ```

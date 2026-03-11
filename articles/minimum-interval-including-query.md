@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting intervals and queries to process them in order
 - **Min Heap / Priority Queue** - Efficiently retrieving the smallest interval covering a query
 - **Sweep Line Algorithm** - Processing events (interval starts, ends, queries) in sorted order
@@ -16,6 +18,7 @@ For each query value `q`, we want to find the **smallest interval length** among
 If no interval contains `q`, we return `-1`.
 
 The brute force idea is very direct:
+
 - handle queries one by one
 - for a query, scan through every interval
 - whenever an interval covers the query, compute its length `r - l + 1`
@@ -25,13 +28,13 @@ The brute force idea is very direct:
 
 1. Initialize an empty list `res`.
 2. For each query `q` in `queries`:
-   - set `cur = -1` to represent "no covering interval found yet"
+    - set `cur = -1` to represent "no covering interval found yet"
 3. Iterate through every interval `[l, r]`:
-   - if `l <= q <= r`, then the interval covers `q`
-   - compute its length `len = r - l + 1`
-   - update `cur` if:
-     - `cur == -1` (first valid interval), or
-     - `len < cur` (found a smaller covering interval)
+    - if `l <= q <= r`, then the interval covers `q`
+    - compute its length `len = r - l + 1`
+    - update `cur` if:
+        - `cur == -1` (first valid interval), or
+        - `len < cur` (found a smaller covering interval)
 4. Append `cur` to `res` for this query.
 5. After all queries are processed, return `res`.
 
@@ -209,6 +212,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_interval(intervals: Vec<Vec<i32>>, queries: Vec<i32>) -> Vec<i32> {
+        let mut res = Vec::new();
+        for q in &queries {
+            let mut cur = -1;
+            for interval in &intervals {
+                let (l, r) = (interval[0], interval[1]);
+                if l <= *q && *q <= r {
+                    let len = r - l + 1;
+                    if cur == -1 || len < cur {
+                        cur = len;
+                    }
+                }
+            }
+            res.push(cur);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,31 +260,32 @@ For a query time `q`, the answer is simply the **smallest interval length among 
 To get that smallest length quickly, we use a **min-heap** ordered by interval size.
 
 Because intervals can end later, we also need a way to remove expired intervals:
+
 - when an interval ends, we mark it as inactive
 - when answering a query, we pop inactive intervals from the heap until the top is active
 
 ### Algorithm
 
 1. Build a list of events:
-   - For each interval `[start, end]`:
-     - Add a **start event** at `start` containing its length and index
-     - Add an **end event** at `end` containing its index
-   - For each query `q`:
-     - Add a **query event** at `q` containing the query's original position
+    - For each interval `[start, end]`:
+        - Add a **start event** at `start` containing its length and index
+        - Add an **end event** at `end` containing its index
+    - For each query `q`:
+        - Add a **query event** at `q` containing the query's original position
 2. Sort all events by `(time, type)` so they are processed in time order.
 3. Use:
-   - a min-heap `sizes` storing `(interval_length, interval_index)` for active intervals
-   - an array `inactive` to mark intervals that have ended
-   - an output array `ans` initialized with `-1`
+    - a min-heap `sizes` storing `(interval_length, interval_index)` for active intervals
+    - an array `inactive` to mark intervals that have ended
+    - an output array `ans` initialized with `-1`
 4. Sweep through events in sorted order:
-   - If it is an interval start:
-     - push `(length, idx)` into the heap
-   - If it is an interval end:
-     - mark that interval index as inactive
-   - If it is a query:
-     - pop from the heap while the top interval is inactive
-     - if heap is not empty, the top length is the smallest covering interval store it in `ans`
-     - otherwise leave `-1`
+    - If it is an interval start:
+        - push `(length, idx)` into the heap
+    - If it is an interval end:
+        - mark that interval index as inactive
+    - If it is a query:
+        - pop from the heap while the top interval is inactive
+        - if heap is not empty, the top length is the smallest covering interval store it in `ans`
+        - otherwise leave `-1`
 5. Return `ans` in the original query order.
 
 ::tabs-start
@@ -683,6 +709,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_interval(intervals: Vec<Vec<i32>>, queries: Vec<i32>) -> Vec<i32> {
+        // Events: (time, type, val1, val2)
+        // type 0 = interval start, 1 = query, 2 = interval end
+        let mut events: Vec<(i32, i32, i32, i32)> = Vec::new();
+
+        for (i, interval) in intervals.iter().enumerate() {
+            let size = interval[1] - interval[0] + 1;
+            events.push((interval[0], 0, size, i as i32));
+            events.push((interval[1], 2, size, i as i32));
+        }
+
+        for (i, &q) in queries.iter().enumerate() {
+            events.push((q, 1, i as i32, -1));
+        }
+
+        events.sort();
+
+        let mut ans = vec![-1i32; queries.len()];
+        let mut heap = BinaryHeap::new(); // stores Reverse((size, idx))
+        let mut inactive = vec![false; intervals.len()];
+
+        for &(_, typ, v1, v2) in &events {
+            if typ == 0 {
+                heap.push(Reverse((v1, v2)));
+            } else if typ == 2 {
+                inactive[v2 as usize] = true;
+            } else {
+                while let Some(&Reverse((_, idx))) = heap.peek() {
+                    if inactive[idx as usize] {
+                        heap.pop();
+                    } else {
+                        break;
+                    }
+                }
+                if let Some(&Reverse((size, _))) = heap.peek() {
+                    ans[v1 as usize] = size;
+                }
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -702,6 +775,7 @@ For each query `q`, we want the **length of the smallest interval** `[l, r]` suc
 `l ≤ q ≤ r`. If no interval covers `q`, the answer is `-1`.
 
 A very efficient way to do this is:
+
 - process queries in **sorted order**
 - as queries increase, we **add intervals whose start ≤ q**
 - among those active intervals, remove any that end before `q`
@@ -714,20 +788,20 @@ The heap is ordered by **interval length**, so the smallest covering interval is
 1. Sort `intervals` by their start value.
 2. Sort the `queries`, but keep their original order for the final answer.
 3. Initialize:
-   - a min heap `minHeap` storing `(interval_length, interval_end)`
-   - an index `i = 0` to iterate through intervals
-   - a map `res` to store answers for each query
+    - a min heap `minHeap` storing `(interval_length, interval_end)`
+    - an index `i = 0` to iterate through intervals
+    - a map `res` to store answers for each query
 4. For each query `q` in sorted order:
-   - While there are intervals whose start `≤ q`:
-     - push `(r - l + 1, r)` into the heap
-     - move `i` forward
-   - While the heap is not empty and the top interval ends before `q`:
-     - pop it from the heap
-   - If the heap is not empty:
-     - the top element's length is the answer for `q`
-   - Otherwise:
-     - the answer for `q` is `-1`
-   - Store the result for `q`
+    - While there are intervals whose start `≤ q`:
+        - push `(r - l + 1, r)` into the heap
+        - move `i` forward
+    - While the heap is not empty and the top interval ends before `q`:
+        - pop it from the heap
+    - If the heap is not empty:
+        - the top element's length is the answer for `q`
+    - Otherwise:
+        - the answer for `q` is `-1`
+    - Store the result for `q`
 5. Return the answers in the original query order.
 
 ::tabs-start
@@ -1026,6 +1100,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_interval(intervals: Vec<Vec<i32>>, queries: Vec<i32>) -> Vec<i32> {
+        let mut intervals = intervals;
+        intervals.sort();
+        let mut min_heap = BinaryHeap::new(); // Reverse((size, end))
+        let mut res = HashMap::new();
+        let mut i = 0;
+
+        let mut sorted_queries: Vec<i32> = queries.clone();
+        sorted_queries.sort();
+
+        for q in sorted_queries {
+            while i < intervals.len() && intervals[i][0] <= q {
+                let (l, r) = (intervals[i][0], intervals[i][1]);
+                min_heap.push(Reverse((r - l + 1, r)));
+                i += 1;
+            }
+
+            while let Some(&Reverse((_, end))) = min_heap.peek() {
+                if end < q {
+                    min_heap.pop();
+                } else {
+                    break;
+                }
+            }
+
+            res.insert(
+                q,
+                min_heap
+                    .peek()
+                    .map_or(-1, |&Reverse((size, _))| size),
+            );
+        }
+
+        queries.iter().map(|q| *res.get(q).unwrap()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1053,31 +1167,32 @@ Then it uses a **segment tree** that supports:
 Since many intervals update large ranges, we use **lazy propagation** to apply updates efficiently without touching every point in the range.
 
 Because coordinates can be large, we first do **coordinate compression**:
+
 - map every unique coordinate to a compact index `0..M-1`
 - this allows the segment tree to work on a small index range
 
 ### Algorithm
 
 1. **Collect all important points**
-   - Add every interval start and end
-   - Add every query value
+    - Add every interval start and end
+    - Add every query value
 2. **Coordinate compress**
-   - Sort and deduplicate points
-   - Create a map `compress[value] -> index`
+    - Sort and deduplicate points
+    - Create a map `compress[value] -> index`
 3. **Build a min segment tree with lazy propagation**
-   - Each node stores the minimum interval length applied to that segment
-   - Lazy values store “pending minimum updates” that still need to be pushed down
+    - Each node stores the minimum interval length applied to that segment
+    - Lazy values store “pending minimum updates” that still need to be pushed down
 4. **Apply each interval as a range update**
-   - For interval `[l, r]`:
-     - convert to compressed indices `[L, R]`
-     - compute its length `len = r - l + 1`
-     - update the segment tree on range `[L, R]` with `len` using:
-       - `tree[node] = min(tree[node], len)`
-     - lazy propagation ensures this is efficient
+    - For interval `[l, r]`:
+        - convert to compressed indices `[L, R]`
+        - compute its length `len = r - l + 1`
+        - update the segment tree on range `[L, R]` with `len` using:
+            - `tree[node] = min(tree[node], len)`
+        - lazy propagation ensures this is efficient
 5. **Answer each query with a point query**
-   - Convert query `q` to compressed index `idx`
-   - Query the segment tree at `idx` to get the minimum covering length
-   - If the value is still infinity, return `-1` (no interval covers it)
+    - Convert query `q` to compressed index `idx`
+    - Query the segment tree at `idx` to get the minimum covering length
+    - If the value is still infinity, return `-1` (no interval covers it)
 6. Return answers in the original query order.
 
 ::tabs-start
@@ -1874,6 +1989,111 @@ class Solution {
             ans.append(res == segTree.INF ? -1 : res)
         }
         return ans
+    }
+}
+```
+
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<i32>,
+    lazy: Vec<i32>,
+}
+
+impl SegmentTree {
+    fn new(n: usize) -> Self {
+        Self {
+            n,
+            tree: vec![i32::MAX; 4 * n],
+            lazy: vec![i32::MAX; 4 * n],
+        }
+    }
+
+    fn propagate(&mut self, ti: usize, lo: usize, hi: usize) {
+        if self.lazy[ti] != i32::MAX {
+            self.tree[ti] = self.tree[ti].min(self.lazy[ti]);
+            if lo != hi {
+                self.lazy[2 * ti + 1] = self.lazy[2 * ti + 1].min(self.lazy[ti]);
+                self.lazy[2 * ti + 2] = self.lazy[2 * ti + 2].min(self.lazy[ti]);
+            }
+            self.lazy[ti] = i32::MAX;
+        }
+    }
+
+    fn update_inner(
+        &mut self, ti: usize, lo: usize, hi: usize,
+        left: usize, right: usize, val: i32,
+    ) {
+        self.propagate(ti, lo, hi);
+        if lo > right || hi < left { return; }
+        if lo >= left && hi <= right {
+            self.lazy[ti] = self.lazy[ti].min(val);
+            self.propagate(ti, lo, hi);
+            return;
+        }
+        let mid = (lo + hi) / 2;
+        self.update_inner(2 * ti + 1, lo, mid, left, right, val);
+        self.update_inner(2 * ti + 2, mid + 1, hi, left, right, val);
+        self.tree[ti] = self.tree[2 * ti + 1].min(self.tree[2 * ti + 2]);
+    }
+
+    fn query_inner(&mut self, ti: usize, lo: usize, hi: usize, idx: usize) -> i32 {
+        self.propagate(ti, lo, hi);
+        if lo == hi { return self.tree[ti]; }
+        let mid = (lo + hi) / 2;
+        if idx <= mid {
+            self.query_inner(2 * ti + 1, lo, mid, idx)
+        } else {
+            self.query_inner(2 * ti + 2, mid + 1, hi, idx)
+        }
+    }
+
+    fn update(&mut self, left: usize, right: usize, val: i32) {
+        let n = self.n;
+        self.update_inner(0, 0, n - 1, left, right, val);
+    }
+
+    fn query(&mut self, idx: usize) -> i32 {
+        let n = self.n;
+        self.query_inner(0, 0, n - 1, idx)
+    }
+}
+
+impl Solution {
+    pub fn min_interval(intervals: Vec<Vec<i32>>, queries: Vec<i32>) -> Vec<i32> {
+        let mut points = BTreeSet::new();
+        for interval in &intervals {
+            points.insert(interval[0]);
+            points.insert(interval[1]);
+        }
+        for &q in &queries {
+            points.insert(q);
+        }
+
+        let points: Vec<i32> = points.into_iter().collect();
+        let compress: HashMap<i32, usize> = points
+            .iter()
+            .enumerate()
+            .map(|(i, &v)| (v, i))
+            .collect();
+
+        let mut seg_tree = SegmentTree::new(points.len());
+
+        for interval in &intervals {
+            let start = compress[&interval[0]];
+            let end = compress[&interval[1]];
+            let length = interval[1] - interval[0] + 1;
+            seg_tree.update(start, end, length);
+        }
+
+        queries
+            .iter()
+            .map(|q| {
+                let idx = compress[q];
+                let res = seg_tree.query(idx);
+                if res == i32::MAX { -1 } else { res }
+            })
+            .collect()
     }
 }
 ```

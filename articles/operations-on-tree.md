@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree Data Structure** - Understanding parent-child relationships and tree traversal patterns
 - **Depth-First Search (DFS)** - Recursive and iterative traversal of tree nodes to visit all descendants
 - **Breadth-First Search (BFS)** - Level-by-level tree traversal using a queue
@@ -21,9 +23,9 @@ For the ancestor check, we traverse up the parent chain. For the descendant chec
 2. **lock(num, user)**: If the node is unlocked (`locked[num] == 0`), set `locked[num] = user` and return `true`. Otherwise return `false`.
 3. **unlock(num, user)**: If `locked[num]` equals `user`, set it to `0` and return `true`. Otherwise return `false`.
 4. **upgrade(num, user)**:
-   - Walk up the parent chain from `num`. If any ancestor is locked, return `false`.
-   - Run `dfs` on the subtree rooted at `num`: count locked descendants and unlock them.
-   - If at least one descendant was locked, lock `num` with `user` and return `true`. Otherwise return `false`.
+    - Walk up the parent chain from `num`. If any ancestor is locked, return `false`.
+    - Run `dfs` on the subtree rooted at `num`: count locked descendants and unlock them.
+    - If at least one descendant was locked, lock `num` with `user` and return `true`. Otherwise return `false`.
 
 ::tabs-start
 
@@ -537,6 +539,76 @@ class LockingTree {
 }
 ```
 
+```rust
+struct LockingTree {
+    parent: Vec<i32>,
+    child: Vec<Vec<usize>>,
+    locked: Vec<i32>,
+}
+
+impl LockingTree {
+    fn new(parent: Vec<i32>) -> Self {
+        let n = parent.len();
+        let mut child = vec![vec![]; n];
+        for node in 1..n {
+            child[parent[node] as usize].push(node);
+        }
+        LockingTree {
+            parent,
+            child,
+            locked: vec![0; n],
+        }
+    }
+
+    fn lock(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        if self.locked[num] != 0 {
+            return false;
+        }
+        self.locked[num] = user;
+        true
+    }
+
+    fn unlock(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        if self.locked[num] != user {
+            return false;
+        }
+        self.locked[num] = 0;
+        true
+    }
+
+    fn upgrade(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        let mut node = num as i32;
+        while node != -1 {
+            if self.locked[node as usize] != 0 {
+                return false;
+            }
+            node = self.parent[node as usize];
+        }
+
+        fn dfs(node: usize, child: &Vec<Vec<usize>>, locked: &mut Vec<i32>) -> i32 {
+            let mut locked_count = 0;
+            if locked[node] != 0 {
+                locked_count += 1;
+                locked[node] = 0;
+            }
+            for &nei in &child[node] {
+                locked_count += dfs(nei, child, locked);
+            }
+            locked_count
+        }
+
+        if dfs(num, &self.child, &mut self.locked) > 0 {
+            self.locked[num] = user;
+            return true;
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -562,9 +634,9 @@ BFS processes nodes level by level, which can be more cache-friendly in some cas
 1. **Initialization**: Same as `dfs`, build child lists and initialize the locked array.
 2. **lock** and **unlock**: Same O(1) checks and updates.
 3. **upgrade(num, user)**:
-   - Check ancestors by walking up the parent chain.
-   - Use a queue to traverse all descendants, counting and unlocking any locked nodes.
-   - If `lockedCount > 0`, lock `num` for `user` and return `true`.
+    - Check ancestors by walking up the parent chain.
+    - Use a queue to traverse all descendants, counting and unlocking any locked nodes.
+    - If `lockedCount > 0`, lock `num` for `user` and return `true`.
 
 ::tabs-start
 
@@ -1081,6 +1153,78 @@ class LockingTree {
 }
 ```
 
+```rust
+struct LockingTree {
+    parent: Vec<i32>,
+    child: Vec<Vec<usize>>,
+    locked: Vec<i32>,
+}
+
+impl LockingTree {
+    fn new(parent: Vec<i32>) -> Self {
+        let n = parent.len();
+        let mut child = vec![vec![]; n];
+        for node in 1..n {
+            child[parent[node] as usize].push(node);
+        }
+        LockingTree {
+            parent,
+            child,
+            locked: vec![0; n],
+        }
+    }
+
+    fn lock(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        if self.locked[num] != 0 {
+            return false;
+        }
+        self.locked[num] = user;
+        true
+    }
+
+    fn unlock(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        if self.locked[num] != user {
+            return false;
+        }
+        self.locked[num] = 0;
+        true
+    }
+
+    fn upgrade(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        let mut node = num as i32;
+        while node != -1 {
+            if self.locked[node as usize] != 0 {
+                return false;
+            }
+            node = self.parent[node as usize];
+        }
+
+        let mut locked_count = 0;
+        let mut queue = VecDeque::new();
+        queue.push_back(num);
+
+        while let Some(nd) = queue.pop_front() {
+            if self.locked[nd] != 0 {
+                self.locked[nd] = 0;
+                locked_count += 1;
+            }
+            for &nei in &self.child[nd] {
+                queue.push_back(nei);
+            }
+        }
+
+        if locked_count > 0 {
+            self.locked[num] = user;
+            return true;
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1106,10 +1250,10 @@ The core logic for all three operations remains unchanged from the recursive `df
 1. **Initialization**: Build child adjacency lists and initialize the locked array.
 2. **lock** and **unlock**: Same O(1) checks.
 3. **upgrade(num, user)**:
-   - Traverse ancestors to ensure none are locked.
-   - Use a stack to perform iterative `dfs` on descendants.
-   - Pop nodes, check if locked, unlock if so, and push children.
-   - If any descendants were locked, lock `num` and return `true`.
+    - Traverse ancestors to ensure none are locked.
+    - Use a stack to perform iterative `dfs` on descendants.
+    - Pop nodes, check if locked, unlock if so, and push children.
+    - If any descendants were locked, lock `num` and return `true`.
 
 ::tabs-start
 
@@ -1622,6 +1766,77 @@ class LockingTree {
             return true
         }
         return false
+    }
+}
+```
+
+```rust
+struct LockingTree {
+    parent: Vec<i32>,
+    child: Vec<Vec<usize>>,
+    locked: Vec<i32>,
+}
+
+impl LockingTree {
+    fn new(parent: Vec<i32>) -> Self {
+        let n = parent.len();
+        let mut child = vec![vec![]; n];
+        for node in 1..n {
+            child[parent[node] as usize].push(node);
+        }
+        LockingTree {
+            parent,
+            child,
+            locked: vec![0; n],
+        }
+    }
+
+    fn lock(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        if self.locked[num] != 0 {
+            return false;
+        }
+        self.locked[num] = user;
+        true
+    }
+
+    fn unlock(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        if self.locked[num] != user {
+            return false;
+        }
+        self.locked[num] = 0;
+        true
+    }
+
+    fn upgrade(&mut self, num: i32, user: i32) -> bool {
+        let num = num as usize;
+        let mut node = num as i32;
+        while node != -1 {
+            if self.locked[node as usize] != 0 {
+                return false;
+            }
+            node = self.parent[node as usize];
+        }
+
+        let mut locked_count = 0;
+        let mut stack = vec![num];
+
+        while let Some(nd) = stack.pop() {
+            if self.locked[nd] != 0 {
+                self.locked[nd] = 0;
+                locked_count += 1;
+            }
+            for &nei in &self.child[nd] {
+                stack.push(nei);
+            }
+        }
+
+        if locked_count > 0 {
+            self.locked[num] = user;
+            return true;
+        }
+        false
     }
 }
 ```

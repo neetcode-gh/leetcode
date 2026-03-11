@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Monotonic Stack** - Using a stack that maintains elements in increasing or decreasing order to efficiently find the next greater element
 - **Array Traversal** - Iterating through arrays both forward and backward to compute results
 - **Dynamic Programming (Basic)** - Reusing previously computed results to skip unnecessary comparisons
@@ -20,9 +22,9 @@ This method is easy to understand but slow because every day may scan many days 
 
 1. Let `res` store the number of days until a warmer temperature.
 2. For each index `i`:
-   - Start checking from the next day `j = i + 1` and count how many steps it takes to find a warmer day.
-   - If a warmer day is found, store the count.
-   - Otherwise, store `0`.
+    - Start checking from the next day `j = i + 1` and count how many steps it takes to find a warmer day.
+    - If a warmer day is found, store the count.
+    - Otherwise, store `0`.
 3. Return the result array.
 
 ::tabs-start
@@ -226,6 +228,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
+        let n = temperatures.len();
+        let mut res = vec![0; n];
+
+        for i in 0..n {
+            let mut count = 1;
+            let mut j = i + 1;
+            while j < n {
+                if temperatures[j] > temperatures[i] {
+                    break;
+                }
+                j += 1;
+                count += 1;
+            }
+            res[i] = if j == n { 0 } else { count };
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,10 +277,10 @@ This way, each day is pushed and popped at most once, making the process efficie
 1. Create a result list filled with zeros.
 2. Use a stack to store pairs of (temperature, index) for days that haven't found a warmer day yet.
 3. Iterate through the temperature list:
-   - While the stack is not empty **and** the current temperature is warmer than the top of the stack:
-     - Pop the top element.
-     - Compute how many days passed and update the result.
-   - Push the current day onto the stack.
+    - While the stack is not empty **and** the current temperature is warmer than the top of the stack:
+        - Pop the top element.
+        - Compute how many days passed and update the result.
+    - Push the current day onto the stack.
 4. Return the filled result list.
 
 ::tabs-start
@@ -411,6 +436,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![0i32; temperatures.len()];
+        let mut stack: Vec<(i32, usize)> = Vec::new();
+
+        for (i, &t) in temperatures.iter().enumerate() {
+            while let Some(&(top_t, top_i)) = stack.last() {
+                if t > top_t {
+                    stack.pop();
+                    res[top_i] = (i - top_i) as i32;
+                } else {
+                    break;
+                }
+            }
+            stack.push((t, i));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,11 +481,11 @@ By working backward and using these jumps, we efficiently find the next warmer d
 1. Create a result list filled with zeros.
 2. Traverse the temperature list from right to left.
 3. For each day `i`:
-   - Start with the next day `j = i + 1`.
-   - While `j` is within bounds and not warmer:
-     - If `res[j]` is `0`, there is no warmer day ahead → stop.
-     - Otherwise, **jump forward** by `res[j]` days.
-   - If `j` is within bounds and warmer, set `res[i]` to `j - i`.
+    - Start with the next day `j = i + 1`.
+    - While `j` is within bounds and not warmer:
+        - If `res[j]` is `0`, there is no warmer day ahead → stop.
+        - Otherwise, **jump forward** by `res[j]` days.
+    - If `j` is within bounds and warmer, set `res[i]` to `j - i`.
 4. Return `res`.
 
 ::tabs-start
@@ -636,6 +683,31 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn daily_temperatures(temperatures: Vec<i32>) -> Vec<i32> {
+        let n = temperatures.len();
+        let mut res = vec![0i32; n];
+
+        for i in (0..n.saturating_sub(1)).rev() {
+            let mut j = i + 1;
+            while j < n && temperatures[j] <= temperatures[i] {
+                if res[j] == 0 {
+                    j = n;
+                    break;
+                }
+                j += res[j] as usize;
+            }
+
+            if j < n {
+                res[i] = (j - i) as i32;
+            }
+        }
+        res
     }
 }
 ```

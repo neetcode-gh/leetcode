@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structure, traversal, and pointer manipulation
 - **Two Pointers** - Building and maintaining separate lists for partitioning
 - **Dummy Nodes** - Using sentinel nodes to simplify edge case handling when building linked lists
@@ -365,6 +367,42 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn partition(head: Option<Box<ListNode>>, x: i32) -> Option<Box<ListNode>> {
+        let mut less = Vec::new();
+        let mut greater = Vec::new();
+        let mut cur = &head;
+
+        while let Some(node) = cur {
+            if node.val < x {
+                less.push(node.val);
+            } else {
+                greater.push(node.val);
+            }
+            cur = &node.next;
+        }
+
+        let mut cur = head;
+        let mut ptr = &mut cur;
+        for val in less.iter().chain(greater.iter()) {
+            if let Some(node) = ptr {
+                node.val = *val;
+                ptr = &mut node.next;
+            }
+        }
+
+        cur
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -387,8 +425,8 @@ At the end, we connect the tail of the "less" list to the head of the "greater" 
 1. Create two dummy nodes as heads for the "left" (less than `x`) and "right" (greater or equal) lists.
 2. Maintain tail pointers for both lists.
 3. Traverse the original list:
-   - If the current node's value is less than `x`, append it to the left list.
-   - Otherwise, append it to the right list.
+    - If the current node's value is less than `x`, append it to the left list.
+    - Otherwise, append it to the right list.
 4. Connect the left list's tail to the right list's first real node (skip dummy).
 5. Set the right list's tail's `next` to `null` to terminate the list.
 6. Return the first real node of the left list.
@@ -663,6 +701,38 @@ class Solution {
         ltail.next = right.next
         rtail.next = nil
         return left.next
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn partition(head: Option<Box<ListNode>>, x: i32) -> Option<Box<ListNode>> {
+        let mut left_dummy = Box::new(ListNode::new(0));
+        let mut right_dummy = Box::new(ListNode::new(0));
+        let mut left_tail = &mut left_dummy;
+        let mut right_tail = &mut right_dummy;
+        let mut cur = head;
+
+        while let Some(mut node) = cur {
+            cur = node.next.take();
+            if node.val < x {
+                left_tail.next = Some(node);
+                left_tail = left_tail.next.as_mut().unwrap();
+            } else {
+                right_tail.next = Some(node);
+                right_tail = right_tail.next.as_mut().unwrap();
+            }
+        }
+
+        left_tail.next = right_dummy.next;
+        left_dummy.next
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum/Product** - Understanding how to build cumulative products from left-to-right and right-to-left to avoid recomputation
 - **Array Traversal** - Making multiple passes through an array to build intermediate results efficiently
 
@@ -18,10 +20,10 @@ Although simple, this method is inefficient because it repeats a full pass throu
 
 1. Let `n` be the length of the input array and create a result array `res` of size `n`.
 2. For each index `i` from `0` to `n - 1`:
-   - Initialize a running product `prod = 1`.
-   - Loop through all indices `j` from `0` to `n - 1`:
-     - If `j` is not equal to `i`, multiply `prod` by `nums[j]`.
-   - Store `prod` in `res[i]`.
+    - Initialize a running product `prod = 1`.
+    - Loop through all indices `j` from `0` to `n - 1`:
+        - If `j` is not equal to `i`, multiply `prod` by `nums[j]`.
+    - Store `prod` in `res[i]`.
 3. After all indices are processed, return `res`.
 
 ::tabs-start
@@ -188,6 +190,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![0; n];
+
+        for i in 0..n {
+            let mut prod = 1;
+            for j in 0..n {
+                if i != j {
+                    prod *= nums[j];
+                }
+            }
+            res[i] = prod;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +229,7 @@ This approach works by using a simple idea:
 If we know the **product of all non-zero numbers**, we can easily compute the answer for each position using division — as long as there are no division-by-zero issues.
 
 So we first check how many zeros the array has:
+
 - If there are **two or more zeros**, then every product will include at least one zero → the entire `res` is all zeros.
 - If there is **exactly one zero**, then only the position containing that zero will get the product of all non-zero numbers. All other positions become `0`.
 - If there are **no zeros**, we can safely do:
@@ -215,17 +238,17 @@ So we first check how many zeros the array has:
 ### Algorithm
 
 1. Traverse the array once:
-   - Multiply all **non-zero** numbers to get the `prod`.
-   - Count how many zeros appear.
+    - Multiply all **non-zero** numbers to get the `prod`.
+    - Count how many zeros appear.
 2. If the `zero_cnt` is greater than `1`:
-   - Return an array of all zeros.
+    - Return an array of all zeros.
 3. Create a result array of size `n`.
 4. Loop through the numbers again:
-   - If there is one zero:
-     - The index with zero gets the `prod` of all non-zero numbers.
-     - All other positions get `0`.
-   - If there are no zeros:
-     - Set each result value to `prod // nums[i]`.
+    - If there is one zero:
+        - The index with zero gets the `prod` of all non-zero numbers.
+        - All other positions get `0`.
+    - If there are no zeros:
+        - Set each result value to `prod // nums[i]`.
 5. Return the result array.
 
 ::tabs-start
@@ -464,6 +487,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
+        let mut prod = 1;
+        let mut zero_count = 0;
+
+        for &num in &nums {
+            if num != 0 {
+                prod *= num;
+            } else {
+                zero_count += 1;
+            }
+        }
+
+        if zero_count > 1 {
+            return vec![0; nums.len()];
+        }
+
+        let mut res = vec![0; nums.len()];
+        for (i, &num) in nums.iter().enumerate() {
+            if zero_count > 0 {
+                res[i] = if num == 0 { prod } else { 0 };
+            } else {
+                res[i] = prod / num;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -490,6 +544,7 @@ Then, the final answer for each index is simply:
 **result[i] = pref[i] × suff[i]**
 
 This works because:
+
 - The `pref` handles everything before the index
 - The `suff` handles everything after the index
 
@@ -499,25 +554,25 @@ Both pieces together form the product of all numbers except the one at that posi
 
 1. Let `n` be the length of the array.
    Create three arrays of size `n`:
-   - `pref` for prefix products
-   - `suff` for suffix products
-   - `res` for the final result
+    - `pref` for prefix products
+    - `suff` for suffix products
+    - `res` for the final result
 
 2. Set:
-   - `pref[0] = 1` (nothing to the left of index `0`)
-   - `suff[n - 1] = 1` (nothing to the right of last index)
+    - `pref[0] = 1` (nothing to the left of index `0`)
+    - `suff[n - 1] = 1` (nothing to the right of last index)
 
 3. Build the prefix product array:
-   - For each `i` from `1` to `n - 1`:
-     - `pref[i] = nums[i - 1] × pref[i - 1]`
+    - For each `i` from `1` to `n - 1`:
+        - `pref[i] = nums[i - 1] × pref[i - 1]`
 
 4. Build the suffix product array:
-   - For each `i` from `n - 2` down to `0`:
-     - `suff[i] = nums[i + 1] × suff[i + 1]`
+    - For each `i` from `n - 2` down to `0`:
+        - `suff[i] = nums[i + 1] × suff[i + 1]`
 
 5. Build the result:
-   - For each index `i`, compute:
-     - `res[i] = pref[i] × suff[i]`
+    - For each index `i`, compute:
+        - `res[i] = pref[i] × suff[i]`
 
 6. Return the result array.
 
@@ -715,6 +770,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![0; n];
+        let mut pref = vec![0; n];
+        let mut suff = vec![0; n];
+
+        pref[0] = 1;
+        suff[n - 1] = 1;
+        for i in 1..n {
+            pref[i] = nums[i - 1] * pref[i - 1];
+        }
+        for i in (0..n - 1).rev() {
+            suff[i] = nums[i + 1] * suff[i + 1];
+        }
+        for i in 0..n {
+            res[i] = pref[i] * suff[i];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -742,14 +821,14 @@ This gives us the same logic as the previous method, but with **O(1) extra space
 1. Initialize the result array `res` with all values set to `1`.
 2. Create a variable `prefix = 1`.
 3. First pass (left to right):
-   - For each index `i`:
-     - Set `res[i] = prefix` (product of all elements to the left).
-     - Update `prefix *= nums[i]`.
+    - For each index `i`:
+        - Set `res[i] = prefix` (product of all elements to the left).
+        - Update `prefix *= nums[i]`.
 4. Create a variable `postfix = 1`.
 5. Second pass (right to left):
-   - For each index `i`:
-     - Multiply `res[i]` by `postfix` (product of all elements to the right).
-     - Update `postfix *= nums[i]`.
+    - For each index `i`:
+        - Multiply `res[i]` by `postfix` (product of all elements to the right).
+        - Update `postfix *= nums[i]`.
 6. Return the result array `res`.
 
 ::tabs-start
@@ -920,6 +999,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn product_except_self(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![1; n];
+
+        let mut prefix = 1;
+        for i in 0..n {
+            res[i] = prefix;
+            prefix *= nums[i];
+        }
+
+        let mut postfix = 1;
+        for i in (0..n).rev() {
+            res[i] *= postfix;
+            postfix *= nums[i];
+        }
+
+        res
     }
 }
 ```

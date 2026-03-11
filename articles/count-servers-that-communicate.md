@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Matrix Traversal** - Iterating through rows and columns of a grid using nested loops
 - **Counting with Arrays** - Using auxiliary arrays to track counts per row and column
 - **In-place Marking** - Modifying grid values to mark visited or processed cells (for space-optimized solution)
@@ -16,9 +18,9 @@ A server can communicate if there is at least one other server in the same row o
 
 1. Iterate through each cell in the grid.
 2. For each cell containing a server (value `1`):
-   - Check all other cells in the same row for another server.
-   - If not found in the row, check all other cells in the same column.
-   - If another server is found in either the row or column, increment the result.
+    - Check all other cells in the same row for another server.
+    - If not found in the row, check all other cells in the same column.
+    - If another server is found in either the row or column, increment the result.
 3. Return the total count of servers that can communicate.
 
 ::tabs-start
@@ -132,7 +134,8 @@ class Solution {
      * @return {number}
      */
     countServers(grid) {
-        let m = grid.length, n = grid[0].length;
+        let m = grid.length,
+            n = grid[0].length;
         let res = 0;
 
         for (let r = 0; r < m; r++) {
@@ -312,12 +315,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_servers(grid: Vec<Vec<i32>>) -> i32 {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut res = 0;
+
+        for r in 0..m {
+            for c in 0..n {
+                if grid[r][c] == 0 {
+                    continue;
+                }
+                let mut found = false;
+                for col in 0..n {
+                    if col != c && grid[r][col] == 1 {
+                        found = true;
+                        break;
+                    }
+                }
+                if !found {
+                    for row in 0..m {
+                        if row != r && grid[row][c] == 1 {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                if found {
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n ^ 2)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix $grid$.
 
@@ -334,7 +375,7 @@ Instead of checking each server's row and column individually, we can precompute
 1. Create two arrays: `row_cnt` to store server counts per row and `col_cnt` for columns.
 2. First pass: Count the number of servers in each row and column.
 3. Second pass: For each server, check if its row count or column count is greater than `1`.
-   - If yes, this server can communicate with at least one other server.
+    - If yes, this server can communicate with at least one other server.
 4. Return the total count of communicating servers.
 
 ::tabs-start
@@ -428,7 +469,8 @@ class Solution {
      * @return {number}
      */
     countServers(grid) {
-        let ROWS = grid.length, COLS = grid[0].length;
+        let ROWS = grid.length,
+            COLS = grid[0].length;
         let row_cnt = new Array(ROWS).fill(0);
         let col_cnt = new Array(COLS).fill(0);
 
@@ -581,12 +623,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_servers(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut row_cnt = vec![0; rows];
+        let mut col_cnt = vec![0; cols];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 {
+                    row_cnt[r] += 1;
+                    col_cnt[c] += 1;
+                }
+            }
+        }
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 1 && row_cnt[r].max(col_cnt[c]) > 1 {
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix $grid$.
 
@@ -601,12 +674,12 @@ We can avoid using extra arrays by processing rows and columns separately and us
 ### Algorithm
 
 1. Process rows first:
-   - For each row with more than one server, add all servers in that row to the result.
-   - Mark these servers by setting their value to `-1`.
+    - For each row with more than one server, add all servers in that row to the result.
+    - Mark these servers by setting their value to `-1`.
 2. Process columns:
-   - For each column, count total servers (using absolute values) and unmarked servers.
-   - If the column has two or more servers, add the count of unmarked servers to the result.
-   - Restore marked servers by setting `-1` back to `1`.
+    - For each column, count total servers (using absolute values) and unmarked servers.
+    - If the column has two or more servers, add the count of unmarked servers to the result.
+    - Restore marked servers by setting `-1` back to `1`.
 3. Return the total count.
 
 ::tabs-start
@@ -718,7 +791,8 @@ class Solution {
      */
     countServers(grid) {
         let res = 0;
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
 
         // Rows
         for (let r = 0; r < ROWS; r++) {
@@ -732,7 +806,8 @@ class Solution {
 
         // Cols
         for (let c = 0; c < COLS; c++) {
-            let colSum = 0, unmarked = 0;
+            let colSum = 0,
+                unmarked = 0;
             for (let r = 0; r < ROWS; r++) {
                 colSum += Math.abs(grid[r][c]);
                 if (grid[r][c] > 0) unmarked++;
@@ -894,12 +969,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_servers(mut grid: Vec<Vec<i32>>) -> i32 {
+        let mut res = 0;
+        let rows = grid.len();
+        let cols = grid[0].len();
+
+        // Rows
+        for r in 0..rows {
+            let row_sum: i32 = grid[r].iter().sum();
+            if row_sum <= 1 {
+                continue;
+            }
+            res += row_sum;
+            for c in 0..cols {
+                if grid[r][c] == 1 {
+                    grid[r][c] = -1; // Mark
+                }
+            }
+        }
+
+        // Cols
+        for c in 0..cols {
+            let mut col_sum = 0;
+            let mut unmarked = 0;
+            for r in 0..rows {
+                col_sum += grid[r][c].abs();
+                if grid[r][c] > 0 {
+                    unmarked += 1;
+                } else if grid[r][c] < 0 {
+                    grid[r][c] = 1; // Unmark
+                }
+            }
+            if col_sum >= 2 {
+                res += unmarked;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix $grid$.
 
@@ -908,10 +1026,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Counting Total Servers Instead of Communicating Servers
+
 A server only counts if it can communicate with at least one other server. Counting all servers (all cells with value 1) ignores the communication requirement.
 
 ### Using OR Instead of Checking Both Row and Column Counts
+
 A server communicates if its row has 2+ servers OR its column has 2+ servers. Using AND would incorrectly require both conditions.
+
 ```python
 # Wrong: requires both row AND column to have multiple servers
 if row_cnt[r] > 1 and col_cnt[c] > 1:
@@ -920,4 +1041,5 @@ if row_cnt[r] > 1 or col_cnt[c] > 1:
 ```
 
 ### Double Counting Servers
+
 When processing rows and columns separately (in the space-optimized solution), servers that are in both a communicating row and a communicating column can be counted twice. Mark processed servers to avoid this.

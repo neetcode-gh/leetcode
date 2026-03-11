@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Fundamentals** - Understanding how singly linked lists work, including node structure and traversal
 - **Two Pointers Technique** - Using multiple pointers to track different positions in a data structure simultaneously
 - **Dummy Node Pattern** - Creating a sentinel node to simplify edge cases like removing the head node
@@ -9,10 +11,12 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 We store all nodes in an array so we can directly access the node that is `n` positions from the end.  
 Once we know which node to delete, we simply adjust the `next` pointer of the previous node.
 
 ### Algorithm
+
 1. Traverse the linked list and push every node into an array.
 2. Compute the index of the node to remove: `len(nodes) - n`.
 3. If this index is `0`, it means the head must be removed → return `head.next`.
@@ -267,6 +271,35 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+        let mut nodes: Vec<i32> = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            nodes.push(node.val);
+            cur = &node.next;
+        }
+
+        let remove_index = nodes.len() - n as usize;
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut cur = &mut dummy;
+        for _ in 0..remove_index {
+            cur = cur.next.as_mut().unwrap();
+        }
+        let next = cur.next.as_mut().unwrap().next.take();
+        cur.next = next;
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -279,11 +312,13 @@ class Solution {
 ## 2. Iteration (Two Pass)
 
 ### Intuition
+
 We first count how many nodes are in the list.  
 Once we know the total length, the node to delete is at position `N - n` from the start.  
 We run a second pass to reach the node just before it and skip it.
 
 ### Algorithm
+
 1. Traverse the list once to compute total nodes `N`.
 2. Compute `removeIndex = N - n`.
 3. If `removeIndex == 0`, delete the head → return `head.next`.
@@ -592,6 +627,39 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+        let mut count = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            count += 1;
+            cur = &node.next;
+        }
+
+        let remove_index = count - n as usize;
+        if remove_index == 0 {
+            return head.unwrap().next;
+        }
+
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut cur = &mut dummy;
+        for _ in 0..remove_index {
+            cur = cur.next.as_mut().unwrap();
+        }
+        let next = cur.next.as_mut().unwrap().next.take();
+        cur.next = next;
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,11 +672,13 @@ class Solution {
 ## 3. Recursion
 
 ### Intuition
+
 Recursion naturally processes the list from the end toward the start.
 When the recursive calls unwind, we count backwards.
 When the count reaches the nth node from the end, we skip it by returning `head.next` instead of the current node.
 
 ### Algorithm
+
 1. Recursively go to the end of the list.
 2. As recursion unwinds, decrement `n` each time you return.
 3. When `n` becomes `0`, this is the node to delete → return its `next` node.
@@ -869,6 +939,33 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+        fn rec(head: Option<Box<ListNode>>, n: &mut i32) -> Option<Box<ListNode>> {
+            if let Some(mut node) = head {
+                node.next = rec(node.next, n);
+                *n -= 1;
+                if *n == 0 {
+                    return node.next;
+                }
+                Some(node)
+            } else {
+                None
+            }
+        }
+        let mut n = n;
+        rec(head, &mut n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -881,6 +978,7 @@ class Solution {
 ## 4. Two Pointers
 
 ### Intuition
+
 Use two pointers so that the gap between them is exactly `n`.
 Move the right pointer `n` steps ahead first.
 Then move both pointers together.
@@ -888,10 +986,11 @@ When the right pointer reaches the end, the left pointer will be just before the
 This avoids counting the entire list and removes the target in one pass.
 
 ### Algorithm
+
 1. Create a dummy node pointing to the head (helps handle deletion of the first node).
 2. Set two pointers:
-   - `left` at dummy
-   - `right` at head
+    - `left` at dummy
+    - `right` at head
 3. Move `right` forward `n` steps.
 4. Move both pointers until `right` reaches the end.
 5. Now `left.next` is the node to delete → skip it by doing `left.next = left.next.next`.
@@ -1161,6 +1260,36 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_nth_from_end(head: Option<Box<ListNode>>, n: i32) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut len = 0;
+        {
+            let mut cur = &dummy.next;
+            while let Some(node) = cur {
+                len += 1;
+                cur = &node.next;
+            }
+        }
+        let target = len - n as usize;
+        let mut cur = &mut dummy;
+        for _ in 0..target {
+            cur = cur.next.as_mut().unwrap();
+        }
+        let next = cur.next.as_mut().unwrap().next.take();
+        cur.next = next;
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1178,7 +1307,7 @@ When `n` equals the length of the list, the head node itself must be removed. Wi
 
 ### Off-by-One Errors in Pointer Positioning
 
-The two-pointer technique requires the `left` pointer to stop at the node *before* the one to delete. A common mistake is advancing `right` by `n-1` instead of `n` steps, causing the wrong node to be removed. Carefully trace through a small example to confirm your gap is correct.
+The two-pointer technique requires the `left` pointer to stop at the node _before_ the one to delete. A common mistake is advancing `right` by `n-1` instead of `n` steps, causing the wrong node to be removed. Carefully trace through a small example to confirm your gap is correct.
 
 ### Not Returning the Updated Head
 

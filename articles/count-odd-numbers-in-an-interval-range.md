@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation Basics** - Using bitwise AND to check if a number is odd
 - **Integer Division** - Understanding how floor division affects counting calculations
 - **Range Counting** - Computing counts in a range by subtracting prefix counts
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The simplest approach is to iterate through every number in the range and check if it is odd. We count all numbers where the least significant bit is 1.
 
 ### Algorithm
+
 1. Initialize a counter for odd numbers.
 2. Loop through every integer from `low` to `high` (inclusive).
 3. For each number, check if it is odd using bitwise AND with `1`.
@@ -132,6 +136,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_odds(low: i32, high: i32) -> i32 {
+        let mut odd = 0;
+        for num in low..=high {
+            if num & 1 == 1 {
+                odd += 1;
+            }
+        }
+        odd
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -146,9 +164,11 @@ class Solution {
 ## 2. Math
 
 ### Intuition
+
 In any range of consecutive integers, odd and even numbers alternate. In a range of length `n`, there are `n/2` odd numbers if `n` is even. If `n` is odd, the count depends on whether the range starts with an odd number. Starting with odd gives one extra odd number.
 
 ### Algorithm
+
 1. Calculate the length of the range: `high - low + 1`.
 2. The base count of odd numbers is `length / 2`.
 3. If the length is odd and the starting number (`low`) is odd, add `1` to include the extra odd.
@@ -261,6 +281,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_odds(low: i32, high: i32) -> i32 {
+        let length = high - low + 1;
+        let mut count = length / 2;
+        if length % 2 == 1 && low % 2 == 1 {
+            count += 1;
+        }
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,9 +306,11 @@ class Solution {
 ## 3. Math (One Liner)
 
 ### Intuition
+
 The count of odd numbers from `1` to `n` is `(n + 1) / 2` (or equivalently `(n + 1) >> 1`). To find odd numbers in range `[low, high]`, we take the count up to `high` and subtract the count below `low`. The count below `low` equals the count up to `(low - 1)`, which is `low / 2` or `low >> 1`.
 
 ### Algorithm
+
 1. Compute the number of odd integers from `1` to `high`: `(high + 1) >> 1`.
 2. Compute the number of odd integers from `1` to `(low - 1)`: `low >> 1`.
 3. Subtract the second from the first to get odds in `[low, high]`.
@@ -349,6 +384,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_odds(low: i32, high: i32) -> i32 {
+        ((high + 1) >> 1) - (low >> 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,7 +404,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Off-by-One with Range Boundaries
+
 When the range length is odd, whether you get an extra odd number depends on whether `low` (or `high`) is odd. Forgetting to check this boundary condition leads to undercounting by 1.
 
 ### Using Division Without Considering Endpoints
+
 Simply computing `(high - low) / 2` ignores whether the range starts or ends on an odd number. The formula must account for the parity of the boundaries, not just the length.

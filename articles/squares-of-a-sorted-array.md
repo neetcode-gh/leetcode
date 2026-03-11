@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers Technique** - Used to compare elements from both ends of the sorted array simultaneously
 - **Sorting Algorithms** - Understanding time complexity trade-offs between sorting vs. linear approaches
 - **Absolute Values** - Recognizing that negative numbers become positive when squared, affecting order
@@ -117,6 +119,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sorted_squares(mut nums: Vec<i32>) -> Vec<i32> {
+        for x in nums.iter_mut() {
+            *x *= *x;
+        }
+        nums.sort();
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -137,8 +151,8 @@ Since the input array is sorted, the largest squares will be at either end (the 
 1. Initialize two pointers: `l` at the start and `r` at the end of the array.
 2. Create an empty `result` list.
 3. While `l <= r`:
-   - Compare the squares of `nums[l]` and `nums[r]`.
-   - Append the larger square to the `result` and move the corresponding pointer inward.
+    - Compare the squares of `nums[l]` and `nums[r]`.
+    - Append the larger square to the `result` and move the corresponding pointer inward.
 4. Reverse the `result` array (since we collected largest to smallest).
 5. Return the reversed `result`.
 
@@ -322,6 +336,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
+        let (mut l, mut r) = (0usize, nums.len() - 1);
+        let mut res = Vec::new();
+
+        while l <= r {
+            if nums[l] * nums[l] > nums[r] * nums[r] {
+                res.push(nums[l] * nums[l]);
+                l += 1;
+            } else {
+                res.push(nums[r] * nums[r]);
+                if r == 0 {
+                    break;
+                }
+                r -= 1;
+            }
+        }
+
+        res.reverse();
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -342,9 +381,9 @@ This is an optimization of the previous approach that avoids the final reversal 
 1. Create a `result` array of the same size as the input.
 2. Initialize `l = 0`, `r = n - 1`, and `resIndex = n - 1` (pointing to the last position).
 3. While `l <= r`:
-   - Compare the absolute values of `nums[l]` and `nums[r]`.
-   - Place the larger square at `res[resIndex]` and move the corresponding pointer.
-   - Decrement `resIndex`.
+    - Compare the absolute values of `nums[l]` and `nums[r]`.
+    - Place the larger square at `res[resIndex]` and move the corresponding pointer.
+    - Decrement `resIndex`.
 4. Return the `result` array (no reversal needed).
 
 ::tabs-start
@@ -543,6 +582,33 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sorted_squares(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![0; n];
+        let (mut l, mut r) = (0usize, n - 1);
+        let mut idx = n;
+
+        while l <= r {
+            idx -= 1;
+            if nums[l].abs() > nums[r].abs() {
+                res[idx] = nums[l] * nums[l];
+                l += 1;
+            } else {
+                res[idx] = nums[r] * nums[r];
+                if r == 0 {
+                    break;
+                }
+                r -= 1;
+            }
+        }
+
+        res
     }
 }
 ```

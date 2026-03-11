@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to group and track maximum values by key
 - **Sorting** - Sorting values to find the top k elements efficiently
 - **Heaps/Priority Queues** - Maintaining the k largest elements using a min-heap of fixed size
@@ -31,7 +33,7 @@ class Solution:
         for i in range(len(x)):
             if x[i] not in mp:
                 mp[x[i]] = y[i]
-            
+
             mp[x[i]] = max(mp[x[i]], y[i])
 
         return -1 if len(mp) < 3 else sum(sorted(list(mp.values()))[-3:])
@@ -84,13 +86,14 @@ class Solution {
     maxSumDistinctTriplet(x, y) {
         const mp = new Map();
         for (let i = 0; i < x.length; i++) {
-            const key = x[i], val = y[i];
+            const key = x[i],
+                val = y[i];
             mp.set(key, Math.max(mp.get(key) || 0, val));
         }
         if (mp.size < 3) return -1;
         const vals = Array.from(mp.values()).sort((a, b) => a - b);
         const n = vals.length;
-        return vals[n-1] + vals[n-2] + vals[n-3];
+        return vals[n - 1] + vals[n - 2] + vals[n - 3];
     }
 }
 ```
@@ -174,12 +177,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_distinct_triplet(x: Vec<i32>, y: Vec<i32>) -> i32 {
+        let mut mp: HashMap<i32, i32> = HashMap::new();
+        for i in 0..x.len() {
+            let entry = mp.entry(x[i]).or_insert(0);
+            *entry = (*entry).max(y[i]);
+        }
+        if mp.len() < 3 {
+            return -1;
+        }
+        let mut vals: Vec<i32> = mp.values().copied().collect();
+        vals.sort();
+        let n = vals.len();
+        vals[n - 1] + vals[n - 2] + vals[n - 3]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -196,8 +218,8 @@ Whenever the heap exceeds size `3`, we remove the smallest element. After proces
 1. Build a hash map mapping each x-value to its maximum y-value.
 2. Initialize an empty min-heap.
 3. For each y-value in the map:
-   - Push it onto the heap.
-   - If heap size exceeds `3`, pop the minimum.
+    - Push it onto the heap.
+    - If heap size exceeds `3`, pop the minimum.
 4. If the heap has fewer than `3` elements, return `-1`.
 5. Return the sum of all elements in the heap.
 
@@ -283,7 +305,7 @@ class Solution {
     maxSumDistinctTriplet(x, y) {
         const mp = new Map();
         for (let i = 0; i < x.length; i++) {
-            mp.set(x[i], Math.max(mp.get(x[i])||0, y[i]));
+            mp.set(x[i], Math.max(mp.get(x[i]) || 0, y[i]));
         }
         const heap = new MinPriorityQueue();
         for (const val of mp.values()) {
@@ -426,12 +448,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_distinct_triplet(x: Vec<i32>, y: Vec<i32>) -> i32 {
+        let mut mp: HashMap<i32, i32> = HashMap::new();
+        for i in 0..x.len() {
+            let entry = mp.entry(x[i]).or_insert(0);
+            *entry = (*entry).max(y[i]);
+        }
+
+        let mut heap = BinaryHeap::new();
+        for &val in mp.values() {
+            heap.push(Reverse(val));
+            if heap.len() > 3 {
+                heap.pop();
+            }
+        }
+
+        if heap.len() < 3 {
+            return -1;
+        }
+        heap.into_iter().map(|Reverse(v)| v).sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -447,8 +494,8 @@ The key insight is that we only ever need to compare against at most `3` entries
 
 1. Maintain an array `best` of `3` pairs `(x, y)`, initialized with sentinel values (like negative infinity for y).
 2. For each `(xi, yi)` in the input:
-   - If `xi` matches any x in `best`, update that entry's y-value if `yi` is larger, then re-sort.
-   - Otherwise, insert `(xi, yi)` into the appropriate position if `yi` is larger than any of the current top `3` values.
+    - If `xi` matches any x in `best`, update that entry's y-value if `yi` is larger, then re-sort.
+    - Otherwise, insert `(xi, yi)` into the appropriate position if `yi` is larger than any of the current top `3` values.
 3. If the smallest y-value in `best` is still a sentinel, return `-1`.
 4. Return the sum of all three y-values.
 
@@ -563,10 +610,11 @@ class Solution {
         let best = [
             [null, -Infinity],
             [null, -Infinity],
-            [null, -Infinity]
+            [null, -Infinity],
         ];
         for (let i = 0; i < x.length; i++) {
-            const xi = x[i], yi = y[i];
+            const xi = x[i],
+                yi = y[i];
             let updated = false;
             for (let j = 0; j < 3; j++) {
                 if (best[j][0] === xi) {
@@ -742,12 +790,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sum_distinct_triplet(x: Vec<i32>, y: Vec<i32>) -> i32 {
+        let mut best: [(i32, i32); 3] = [
+            (i32::MIN, i32::MIN),
+            (i32::MIN, i32::MIN),
+            (i32::MIN, i32::MIN),
+        ];
+
+        for i in 0..x.len() {
+            let xi = x[i];
+            let yi = y[i];
+            let mut updated = false;
+            for j in 0..3 {
+                if best[j].0 == xi {
+                    if yi > best[j].1 {
+                        best[j].1 = yi;
+                        best.sort_by(|a, b| b.1.cmp(&a.1));
+                    }
+                    updated = true;
+                    break;
+                }
+            }
+            if updated {
+                continue;
+            }
+            if yi > best[0].1 {
+                best = [(xi, yi), best[0], best[1]];
+            } else if yi > best[1].1 {
+                best = [best[0], (xi, yi), best[1]];
+            } else if yi > best[2].1 {
+                best[2] = (xi, yi);
+            }
+        }
+
+        if best[2].1 == i32::MIN {
+            -1
+        } else {
+            best[0].1 + best[1].1 + best[2].1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Using recursion with caching to avoid recomputing overlapping subproblems
 - **Sorting** - Sorting jobs by start time to enable efficient forward traversal
 - **Binary Search** - Finding the next non-overlapping job in O(log n) time instead of linear scan
@@ -306,6 +308,39 @@ class Solution {
         }
 
         return dfs(0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn job_scheduling(start_time: Vec<i32>, end_time: Vec<i32>, profit: Vec<i32>) -> i32 {
+        let n = start_time.len();
+        let mut intervals: Vec<(i32, i32, i32)> = (0..n)
+            .map(|i| (start_time[i], end_time[i], profit[i]))
+            .collect();
+        intervals.sort();
+
+        let mut cache = vec![-1; n];
+
+        fn dfs(i: usize, intervals: &[(i32, i32, i32)], cache: &mut Vec<i32>) -> i32 {
+            if i == intervals.len() {
+                return 0;
+            }
+            if cache[i] != -1 {
+                return cache[i];
+            }
+            let mut res = dfs(i + 1, intervals, cache);
+            let mut j = i + 1;
+            while j < intervals.len() && intervals[i].1 > intervals[j].0 {
+                j += 1;
+            }
+            res = res.max(intervals[i].2 + dfs(j, intervals, cache));
+            cache[i] = res;
+            res
+        }
+
+        dfs(0, &intervals, &mut cache)
     }
 }
 ```
@@ -653,6 +688,50 @@ class Solution {
         }
 
         return dfs(0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn job_scheduling(start_time: Vec<i32>, end_time: Vec<i32>, profit: Vec<i32>) -> i32 {
+        let n = start_time.len();
+        let mut intervals: Vec<(i32, i32, i32)> = (0..n)
+            .map(|i| (start_time[i], end_time[i], profit[i]))
+            .collect();
+        intervals.sort();
+
+        let mut cache = vec![-1; n];
+
+        fn dfs(i: usize, intervals: &[(i32, i32, i32)], cache: &mut Vec<i32>) -> i32 {
+            let n = intervals.len();
+            if i == n {
+                return 0;
+            }
+            if cache[i] != -1 {
+                return cache[i];
+            }
+            let mut res = dfs(i + 1, intervals, cache);
+
+            let mut left = i + 1;
+            let mut right = n;
+            let mut j = n;
+            while left < right {
+                let mid = left + (right - left) / 2;
+                if intervals[mid].0 >= intervals[i].1 {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+
+            res = res.max(intervals[i].2 + dfs(j, intervals, cache));
+            cache[i] = res;
+            res
+        }
+
+        dfs(0, &intervals, &mut cache)
     }
 }
 ```
@@ -1020,6 +1099,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn job_scheduling(start_time: Vec<i32>, end_time: Vec<i32>, profit: Vec<i32>) -> i32 {
+        let n = start_time.len();
+        let mut index: Vec<usize> = (0..n).collect();
+        index.sort_by_key(|&i| start_time[i]);
+
+        let mut cache = vec![-1i32; n];
+
+        fn dfs(
+            i: usize, index: &[usize],
+            start_time: &[i32], end_time: &[i32], profit: &[i32],
+            cache: &mut Vec<i32>,
+        ) -> i32 {
+            let n = index.len();
+            if i == n {
+                return 0;
+            }
+            if cache[i] != -1 {
+                return cache[i];
+            }
+            let mut res = dfs(i + 1, index, start_time, end_time, profit, cache);
+
+            let mut left = i + 1;
+            let mut right = n;
+            let mut j = n;
+            while left < right {
+                let mid = left + (right - left) / 2;
+                if start_time[index[mid]] >= end_time[index[i]] {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+
+            res = res.max(profit[index[i]] + dfs(j, index, start_time, end_time, profit, cache));
+            cache[i] = res;
+            res
+        }
+
+        dfs(0, &index, &start_time, &end_time, &profit, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1279,6 +1404,36 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn job_scheduling(start_time: Vec<i32>, end_time: Vec<i32>, profit: Vec<i32>) -> i32 {
+        let n = start_time.len();
+        let mut index: Vec<usize> = (0..n).collect();
+        index.sort_by_key(|&i| start_time[i]);
+
+        let mut dp = vec![0i32; n + 1];
+
+        for i in (0..n).rev() {
+            let mut left = i + 1;
+            let mut right = n;
+            let mut j = n;
+            while left < right {
+                let mid = left + (right - left) / 2;
+                if start_time[index[mid]] >= end_time[index[i]] {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            dp[i] = dp[i + 1].max(profit[index[i]] + dp[j]);
+        }
+
+        dp[0]
     }
 }
 ```

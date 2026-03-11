@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Caching optimal results for each game state to avoid redundant computation
 - **Game Theory / Minimax** - Understanding two-player optimal play where one player maximizes and the other minimizes
 - **Suffix Sum** - Precomputing cumulative sums from right to left to efficiently calculate remaining stones
@@ -322,6 +324,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game_ii(piles: Vec<i32>) -> i32 {
+        let n = piles.len();
+        let mut dp = vec![vec![vec![-1i32; n + 1]; n]; 2];
+
+        fn dfs(alice: usize, i: usize, m: usize, piles: &[i32], dp: &mut Vec<Vec<Vec<i32>>>) -> i32 {
+            if i == piles.len() {
+                return 0;
+            }
+            if dp[alice][i][m] != -1 {
+                return dp[alice][i][m];
+            }
+            let mut res = if alice == 1 { 0 } else { i32::MAX };
+            let mut total = 0;
+            for x in 1..=2 * m {
+                if i + x > piles.len() {
+                    break;
+                }
+                total += piles[i + x - 1];
+                if alice == 1 {
+                    res = res.max(total + dfs(0, i + x, m.max(x), piles, dp));
+                } else {
+                    res = res.min(dfs(1, i + x, m.max(x), piles, dp));
+                }
+            }
+            dp[alice][i][m] = res;
+            res
+        }
+
+        dfs(1, 0, 1, &piles, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -631,6 +668,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game_ii(piles: Vec<i32>) -> i32 {
+        let n = piles.len();
+        let mut dp = vec![vec![-1i32; n + 1]; n];
+        let mut suffix_sum = vec![0i32; n];
+        suffix_sum[n - 1] = piles[n - 1];
+        for i in (0..n - 1).rev() {
+            suffix_sum[i] = piles[i] + suffix_sum[i + 1];
+        }
+
+        fn dfs(i: usize, m: usize, suffix_sum: &[i32], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i == suffix_sum.len() {
+                return 0;
+            }
+            if dp[i][m] != -1 {
+                return dp[i][m];
+            }
+            let mut res = 0;
+            for x in 1..=2 * m {
+                if i + x > suffix_sum.len() {
+                    break;
+                }
+                res = res.max(suffix_sum[i] - dfs(i + x, m.max(x), suffix_sum, dp));
+            }
+            dp[i][m] = res;
+            res
+        }
+
+        dfs(0, 1, &suffix_sum, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -885,6 +956,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game_ii(piles: Vec<i32>) -> i32 {
+        let n = piles.len();
+        let mut dp = vec![vec![vec![0i32; n + 1]; n + 1]; 2];
+
+        for i in (0..n).rev() {
+            for m in 1..=n {
+                let mut total = 0;
+                dp[1][i][m] = 0;
+                dp[0][i][m] = i32::MAX;
+                for x in 1..=2 * m {
+                    if i + x > n {
+                        break;
+                    }
+                    total += piles[i + x - 1];
+                    dp[1][i][m] = dp[1][i][m].max(total + dp[0][i + x][m.max(x)]);
+                    dp[0][i][m] = dp[0][i][m].min(dp[1][i + x][m.max(x)]);
+                }
+            }
+        }
+
+        dp[1][0][1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1127,6 +1225,34 @@ class Solution {
         }
 
         return dp[0][1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn stone_game_ii(piles: Vec<i32>) -> i32 {
+        let n = piles.len();
+        let mut suffix_sum = vec![0i32; n];
+        suffix_sum[n - 1] = piles[n - 1];
+        for i in (0..n - 1).rev() {
+            suffix_sum[i] = piles[i] + suffix_sum[i + 1];
+        }
+
+        let mut dp = vec![vec![0i32; n + 1]; n + 1];
+
+        for i in (0..n).rev() {
+            for m in 1..=n {
+                for x in 1..=2 * m {
+                    if i + x > n {
+                        break;
+                    }
+                    dp[i][m] = dp[i][m].max(suffix_sum[i] - dp[i + x][m.max(x)]);
+                }
+            }
+        }
+
+        dp[0][1]
     }
 }
 ```

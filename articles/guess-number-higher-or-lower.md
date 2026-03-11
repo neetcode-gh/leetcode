@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Efficiently searching a sorted range by repeatedly halving the search space based on comparison feedback
 
 ---
@@ -181,6 +183,22 @@ class Solution : GuessGame {
 }
 ```
 
+```rust
+// Forward declaration of guess API.
+// unsafe fn guess(num: i32) -> i32;
+
+impl Solution {
+    unsafe fn guessNumber(n: i32) -> i32 {
+        for num in 1..=n {
+            if guess(num) == 0 {
+                return num;
+            }
+        }
+        n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -201,9 +219,9 @@ Since the numbers from `1` to `n` are sorted, we can use binary search to find t
 1. Initialize two pointers: `l = 1` and `r = n`.
 2. Calculate the middle value `m = (l + r) / 2`.
 3. Call `guess(m)`:
-   - If it returns `0`, we found the number; return `m`.
-   - If it returns `1` (number is higher), set `l = m + 1`.
-   - If it returns `-1` (number is lower), set `r = m - 1`.
+    - If it returns `0`, we found the number; return `m`.
+    - If it returns `1` (number is higher), set `l = m + 1`.
+    - If it returns `-1` (number is lower), set `r = m - 1`.
 4. Repeat until the number is found.
 
 ::tabs-start
@@ -434,6 +452,28 @@ class Solution : GuessGame {
 }
 ```
 
+```rust
+// Forward declaration of guess API.
+// unsafe fn guess(num: i32) -> i32;
+
+impl Solution {
+    unsafe fn guessNumber(n: i32) -> i32 {
+        let (mut l, mut r) = (1, n);
+        loop {
+            let m = l + (r - l) / 2;
+            let res = guess(m);
+            if res > 0 {
+                l = m + 1;
+            } else if res < 0 {
+                r = m - 1;
+            } else {
+                return m;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -454,10 +494,10 @@ Ternary search divides the search space into three parts instead of two. We pick
 1. Initialize two pointers: `l = 1` and `r = n`.
 2. Calculate two midpoints: `m1 = l + (r - l) / 3` and `m2 = r - (r - l) / 3`.
 3. Check `guess(m1)` and `guess(m2)`:
-   - If either returns `0`, return that midpoint.
-   - If both results sum to `0` (one is `1`, other is `-1`), the answer lies between `m1` and `m2`; update both bounds.
-   - If `guess(m1)` is `-1`, the answer is below `m1`; set `r = m1 - 1`.
-   - Otherwise, the answer is above `m2`; set `l = m2 + 1`.
+    - If either returns `0`, return that midpoint.
+    - If both results sum to `0` (one is `1`, other is `-1`), the answer lies between `m1` and `m2`; update both bounds.
+    - If `guess(m1)` is `-1`, the answer is below `m1`; set `r = m1 - 1`.
+    - Otherwise, the answer is above `m2`; set `l = m2 + 1`.
 4. Repeat until the number is found.
 
 ::tabs-start
@@ -714,6 +754,31 @@ class Solution : GuessGame {
                 r = m1 - 1
             } else {
                 l = m2 + 1
+            }
+        }
+    }
+}
+```
+
+```rust
+// Forward declaration of guess API.
+// unsafe fn guess(num: i32) -> i32;
+
+impl Solution {
+    unsafe fn guessNumber(n: i32) -> i32 {
+        let (mut l, mut r) = (1, n);
+        loop {
+            let m1 = l + (r - l) / 3;
+            let m2 = r - (r - l) / 3;
+            if guess(m1) == 0 { return m1; }
+            if guess(m2) == 0 { return m2; }
+            if guess(m1) + guess(m2) == 0 {
+                l = m1 + 1;
+                r = m2 - 1;
+            } else if guess(m1) == -1 {
+                r = m1 - 1;
+            } else {
+                l = m2 + 1;
             }
         }
     }

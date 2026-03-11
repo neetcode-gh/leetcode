@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to traverse and manipulate array elements
 - **Sliding Window Technique** - Maintaining a dynamic window over a contiguous subarray while tracking specific conditions
 - **Two Pointers** - Using left and right pointers to efficiently process subarrays without nested iteration
@@ -18,9 +20,9 @@ The most straightforward approach is to check every possible starting position a
 
 1. Initialize `res` to store the maximum length found.
 2. For each starting index `l`, set a zero counter `cnt` to `0` and expand with pointer `r`:
-   - If the current element is `0` and `cnt` already equals `k`, stop expanding.
-   - Otherwise, if the element is `0`, increment `cnt`.
-   - Move `r` forward.
+    - If the current element is `0` and `cnt` already equals `k`, stop expanding.
+    - Otherwise, if the element is `0`, increment `cnt`.
+    - Move `r` forward.
 3. After the inner loop, update `res` with `r - l`.
 4. Return `res` after checking all starting positions.
 
@@ -93,7 +95,8 @@ class Solution {
     longestOnes(nums, k) {
         let res = 0;
         for (let l = 0; l < nums.length; l++) {
-            let cnt = 0, r = l;
+            let cnt = 0,
+                r = l;
             while (r < nums.length) {
                 if (nums[r] === 0) {
                     if (cnt === k) break;
@@ -192,12 +195,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_ones(nums: Vec<i32>, k: i32) -> i32 {
+        let mut res = 0;
+        for l in 0..nums.len() {
+            let mut cnt = 0;
+            let mut r = l;
+            while r < nums.len() {
+                if nums[r] == 0 {
+                    if cnt == k {
+                        break;
+                    }
+                    cnt += 1;
+                }
+                r += 1;
+            }
+            res = res.max(r - l);
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -222,7 +248,7 @@ class Solution:
         prefix = [0]
         for num in nums:
             prefix.append(prefix[-1] + (1 if num == 0 else 0))
-        
+
         res = 0
         for l in range(len(nums)):
             low, high = l, len(nums)
@@ -304,7 +330,8 @@ class Solution {
 
         let res = 0;
         for (let l = 0; l < nums.length; l++) {
-            let low = l, high = nums.length;
+            let low = l,
+                high = nums.length;
             while (low < high) {
                 let mid = Math.floor((low + high) / 2);
                 if (prefix[mid + 1] - prefix[l] <= k) {
@@ -430,12 +457,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_ones(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut prefix = vec![0i32; n + 1];
+        for i in 0..n {
+            prefix[i + 1] = prefix[i] + if nums[i] == 0 { 1 } else { 0 };
+        }
+
+        let mut res = 0;
+        for l in 0..n {
+            let (mut low, mut high) = (l, n);
+            while low < high {
+                let mid = (low + high) / 2;
+                if prefix[mid + 1] - prefix[l] <= k {
+                    low = mid + 1;
+                } else {
+                    high = mid;
+                }
+            }
+            res = res.max(low - l);
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -449,11 +503,11 @@ A sliding window provides the optimal approach. We maintain a window that can co
 
 1. Initialize `l` (left pointer) and `res` (result) to `0`.
 2. Iterate through the array with `r` (right pointer):
-   - If `nums[r]` is `0`, decrement `k`.
-   - While `k < 0` (window is invalid):
-     - If `nums[l]` is `0`, increment `k` (restore the flip allowance).
-     - Move `l` forward.
-   - Update `res` with `r - l + 1`.
+    - If `nums[r]` is `0`, decrement `k`.
+    - While `k < 0` (window is invalid):
+        - If `nums[l]` is `0`, increment `k` (restore the flip allowance).
+        - Move `l` forward.
+    - Update `res` with `r - l + 1`.
 3. Return `res`.
 
 ::tabs-start
@@ -514,11 +568,12 @@ class Solution {
      * @return {number}
      */
     longestOnes(nums, k) {
-        let l = 0, res = 0;
+        let l = 0,
+            res = 0;
         for (let r = 0; r < nums.length; r++) {
-            k -= (nums[r] === 0 ? 1 : 0);
+            k -= nums[r] === 0 ? 1 : 0;
             while (k < 0) {
-                k += (nums[l] === 0 ? 1 : 0);
+                k += nums[l] === 0 ? 1 : 0;
                 l++;
             }
             res = Math.max(res, r - l + 1);
@@ -604,12 +659,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_ones(nums: Vec<i32>, k: i32) -> i32 {
+        let mut k = k;
+        let mut l = 0;
+        let mut res = 0;
+        for r in 0..nums.len() {
+            k -= if nums[r] == 0 { 1 } else { 0 };
+            while k < 0 {
+                k += if nums[l] == 0 { 1 } else { 0 };
+                l += 1;
+            }
+            res = res.max(r - l + 1);
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

@@ -205,6 +205,32 @@ class Solution : Relation {
 }
 ```
 
+```rust
+/* The knows API is defined somewhere else.
+       fn knows(a: i32, b: i32) -> bool; */
+
+impl Solution {
+    pub fn find_celebrity(n: i32) -> i32 {
+        for i in 0..n {
+            if Self::is_celebrity(i, n) {
+                return i;
+            }
+        }
+        -1
+    }
+
+    fn is_celebrity(i: i32, n: i32) -> bool {
+        for j in 0..n {
+            if i == j { continue; }
+            if knows(i, j) || !knows(j, i) {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -475,6 +501,36 @@ class Solution : Relation {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+/* The knows API is defined somewhere else.
+       fn knows(a: i32, b: i32) -> bool; */
+
+impl Solution {
+    pub fn find_celebrity(n: i32) -> i32 {
+        let mut celebrity_candidate = 0;
+        for i in 0..n {
+            if knows(celebrity_candidate, i) {
+                celebrity_candidate = i;
+            }
+        }
+        if Self::is_celebrity(celebrity_candidate, n) {
+            return celebrity_candidate;
+        }
+        -1
+    }
+
+    fn is_celebrity(i: i32, n: i32) -> bool {
+        for j in 0..n {
+            if i == j { continue; }
+            if knows(i, j) || !knows(j, i) {
+                return false;
+            }
+        }
+        true
     }
 }
 ```
@@ -779,6 +835,44 @@ class Solution : Relation {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+/* The knows API is defined somewhere else.
+       fn knows(a: i32, b: i32) -> bool; */
+
+impl Solution {
+    pub fn find_celebrity(n: i32) -> i32 {
+        let mut cache: HashMap<(i32, i32), bool> = HashMap::new();
+
+        let mut cached_knows = |a: i32, b: i32| -> bool {
+            if let Some(&val) = cache.get(&(a, b)) {
+                return val;
+            }
+            let result = knows(a, b);
+            cache.insert((a, b), result);
+            result
+        };
+
+        let mut celebrity_candidate = 0;
+        for i in 0..n {
+            if cached_knows(celebrity_candidate, i) {
+                celebrity_candidate = i;
+            }
+        }
+
+        let mut is_celeb = true;
+        for j in 0..n {
+            if celebrity_candidate == j { continue; }
+            if cached_knows(celebrity_candidate, j) || !cached_knows(j, celebrity_candidate) {
+                is_celeb = false;
+                break;
+            }
+        }
+
+        if is_celeb { celebrity_candidate } else { -1 }
     }
 }
 ```

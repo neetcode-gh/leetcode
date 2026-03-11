@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Subsequence Concept** - Understanding what makes one string a subsequence of another
 - **Two Pointers Technique** - Using pointers to traverse and compare strings efficiently
 - **Binary Search** - Finding elements in sorted arrays for optimized character lookups
@@ -19,8 +21,8 @@ The most straightforward approach is to literally concatenate copies of `source`
 2. For each character in `target`, check if it exists in `source`. If any character is missing, return `-1`.
 3. Start with `concatenatedSource = source` and `count = 1`.
 4. While `target` is not a subsequence of `concatenatedSource`:
-   - Append `source` to `concatenatedSource`.
-   - Increment `count`.
+    - Append `source` to `concatenatedSource`.
+    - Increment `count`.
 5. Return `count`.
 
 ::tabs-start
@@ -159,7 +161,6 @@ class Solution {
      * @return {number}
      */
     shortestWay(source, target) {
-
         // Boolean array to mark all characters of source
         let sourceChars = new Array(26).fill(false);
         for (let c of source) {
@@ -188,7 +189,8 @@ class Solution {
 
     // To check if toCheck is a subsequence of inString
     isSubsequence(toCheck, inString) {
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < toCheck.length && j < inString.length) {
             if (toCheck[i] == inString[j]) {
                 i++;
@@ -374,6 +376,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_way(source: String, target: String) -> i32 {
+        // Boolean array to mark all characters of source
+        let mut source_chars = [false; 26];
+        for c in source.bytes() {
+            source_chars[(c - b'a') as usize] = true;
+        }
+
+        // Check if all characters of target are present in source
+        for c in target.bytes() {
+            if !source_chars[(c - b'a') as usize] {
+                return -1;
+            }
+        }
+
+        // To check if to_check is a subsequence of in_string
+        fn is_subsequence(to_check: &str, in_string: &str) -> bool {
+            let tc = to_check.as_bytes();
+            let is_ = in_string.as_bytes();
+            let (mut i, mut j) = (0, 0);
+            while i < tc.len() && j < is_.len() {
+                if tc[i] == is_[j] {
+                    i += 1;
+                }
+                j += 1;
+            }
+            i == tc.len()
+        }
+
+        // Concatenate source until target is a subsequence of concatenated string
+        let mut concatenated_source = source.clone();
+        let mut count = 1;
+        while !is_subsequence(&target, &concatenated_source) {
+            concatenated_source.push_str(&source);
+            count += 1;
+        }
+
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,7 +426,7 @@ class Solution {
 - Time complexity: $O(T^2 \cdot S)$
 - Space complexity: $O(TS)$
 
->  where $S$ is the length of `source` and $T$ is the length of `target`
+> where $S$ is the length of `source` and $T$ is the length of `target`
 
 ---
 
@@ -396,11 +441,11 @@ Instead of building a huge concatenated string, we can simulate the process more
 1. Create a set of characters in `source`. Return `-1` if any character in `target` is missing.
 2. Initialize `sourceIterator = 0` and `count = 0`.
 3. For each character in `target`:
-   - If `sourceIterator == 0`, we are starting a new pass through `source`, so increment `count`.
-   - While `source[sourceIterator]` does not match the current character:
-     - Move `sourceIterator` forward using modulo.
-     - If `sourceIterator` wraps to `0`, increment `count`.
-   - After finding the match, advance `sourceIterator` by one (with modulo).
+    - If `sourceIterator == 0`, we are starting a new pass through `source`, so increment `count`.
+    - While `source[sourceIterator]` does not match the current character:
+        - Move `sourceIterator` forward using modulo.
+        - If `sourceIterator` wraps to `0`, increment `count`.
+    - After finding the match, advance `sourceIterator` by one (with modulo).
 4. Return `count`.
 
 ::tabs-start
@@ -524,7 +569,7 @@ class Solution {
 class Solution {
 public:
     int shortestWay(string source, string target) {
-        
+
         // Boolean array to mark all characters of source
         bool sourceChars[26] = {false};
         for (char c : source) {
@@ -580,7 +625,7 @@ public:
 
         // Return count
         return count;
-    }  
+    }
 };
 ```
 
@@ -619,7 +664,6 @@ class Solution {
 
         // Find all characters of target in source
         for (let c of target) {
-
             // If while finding, iterator reaches start of source again,
             // increment count
             if (sourceIterator == 0) {
@@ -628,7 +672,6 @@ class Solution {
 
             // Find the first occurrence of c in source
             while (source[sourceIterator] != c) {
-
                 // Formula for incrementing while looping back to start.
                 sourceIterator = (sourceIterator + 1) % m;
 
@@ -844,6 +887,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_way(source: String, target: String) -> i32 {
+        let src = source.as_bytes();
+        let tgt = target.as_bytes();
+
+        // Boolean array to mark all characters of source
+        let mut source_chars = [false; 26];
+        for &c in src {
+            source_chars[(c - b'a') as usize] = true;
+        }
+
+        // Check if all characters of target are present in source
+        for &c in tgt {
+            if !source_chars[(c - b'a') as usize] {
+                return -1;
+            }
+        }
+
+        let m = src.len();
+        let mut source_iterator = 0;
+        let mut count = 0;
+
+        for &c in tgt {
+            if source_iterator == 0 {
+                count += 1;
+            }
+
+            while src[source_iterator] != c {
+                source_iterator = (source_iterator + 1) % m;
+                if source_iterator == 0 {
+                    count += 1;
+                }
+            }
+
+            source_iterator = (source_iterator + 1) % m;
+        }
+
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -851,7 +937,7 @@ class Solution {
 - Time complexity: $O(S \cdot T)$
 - Space complexity: $O(1)$ constant space used
 
->  where $S$ is the length of `source` and $T$ is the length of `target`
+> where $S$ is the length of `source` and $T$ is the length of `target`
 
 ---
 
@@ -866,10 +952,10 @@ The two-pointer approach scans through `source` linearly for each character in `
 1. Build an inverted index: for each character, store a sorted list of its positions in `source`.
 2. Initialize `sourceIterator = 0` and `count = 1`.
 3. For each character in `target`:
-   - If the character does not exist in `source`, return `-1`.
-   - Binary search for the smallest index in the character's position list that is `>= sourceIterator`.
-   - If no such index exists (we have passed all occurrences), increment `count` and use the first occurrence.
-   - Update `sourceIterator` to be one past the found index.
+    - If the character does not exist in `source`, return `-1`.
+    - Binary search for the smallest index in the character's position list that is `>= sourceIterator`.
+    - If no such index exists (we have passed all occurrences), increment `count` and use the first occurrence.
+    - Update `sourceIterator` to be one past the found index.
 4. Return `count`.
 
 ::tabs-start
@@ -935,7 +1021,7 @@ class Solution {
 
 ```cpp
 class Solution {
-public: 
+public:
     int shortestWay(string source, string target) {
 
         // Array to store the vector of charToIndices of each character in source
@@ -1282,6 +1368,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_way(source: String, target: String) -> i32 {
+        let src = source.as_bytes();
+        let tgt = target.as_bytes();
+
+        // List of indices for all characters in source
+        let mut char_to_indices: Vec<Vec<usize>> = vec![vec![]; 26];
+        for (i, &c) in src.iter().enumerate() {
+            char_to_indices[(c - b'a') as usize].push(i);
+        }
+
+        let mut source_iterator = 0usize;
+        let mut count = 1;
+
+        for &c in tgt {
+            let idx = (c - b'a') as usize;
+            // If the character is not in the source, return -1
+            if char_to_indices[idx].is_empty() {
+                return -1;
+            }
+
+            let indices = &char_to_indices[idx];
+            // Binary search for the first index >= source_iterator
+            let index = indices.partition_point(|&x| x < source_iterator);
+
+            if index == indices.len() {
+                count += 1;
+                source_iterator = indices[0] + 1;
+            } else {
+                source_iterator = indices[index] + 1;
+            }
+        }
+
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1289,7 +1414,7 @@ class Solution {
 - Time complexity: $O(S + T \log(S))$
 - Space complexity: $O(S)$
 
->  where $S$ is the length of `source` and $T$ is the length of `target`
+> where $S$ is the length of `source` and $T$ is the length of `target`
 
 ---
 
@@ -1304,13 +1429,13 @@ We can achieve constant-time lookups by precomputing a 2D array where `nextOccur
 1. Create a 2D array `nextOccurrence` of size `source.length x 26`.
 2. Initialize the last row: set all entries to `-1`, then set the entry for the last character of `source` to `source.length - 1`.
 3. Fill the array from right to left:
-   - Copy values from `nextOccurrence[i+1]` to `nextOccurrence[i]`.
-   - Update `nextOccurrence[i][source[i]]` to `i`.
+    - Copy values from `nextOccurrence[i+1]` to `nextOccurrence[i]`.
+    - Update `nextOccurrence[i][source[i]]` to `i`.
 4. Initialize `sourceIterator = 0` and `count = 1`.
 5. For each character in `target`:
-   - If `nextOccurrence[0][c] == -1`, the character does not exist in `source`; return `-1`.
-   - If `sourceIterator == source.length` or `nextOccurrence[sourceIterator][c] == -1`, increment `count` and reset `sourceIterator = 0`.
-   - Set `sourceIterator = nextOccurrence[sourceIterator][c] + 1`.
+    - If `nextOccurrence[0][c] == -1`, the character does not exist in `source`; return `-1`.
+    - If `sourceIterator == source.length` or `nextOccurrence[sourceIterator][c] == -1`, increment `count` and reset `sourceIterator = 0`.
+    - Set `sourceIterator = nextOccurrence[sourceIterator][c] + 1`.
 6. Return `count`.
 
 ::tabs-start
@@ -1475,52 +1600,68 @@ class Solution {
      */
     shortestWay(source, target) {
         // Length of source
-        const sourceLength = source.length
+        const sourceLength = source.length;
 
         // Next Occurrence of Character after Index
-        const nextOccurrence = Array.from({length: sourceLength}, () => Array(26).fill(-1))
+        const nextOccurrence = Array.from({ length: sourceLength }, () =>
+            Array(26).fill(-1),
+        );
 
         // Base Case
         for (let c = 0; c < 26; c++) {
-            nextOccurrence[sourceLength - 1][c] = -1
+            nextOccurrence[sourceLength - 1][c] = -1;
         }
-        nextOccurrence[sourceLength - 1][source[sourceLength - 1].charCodeAt(0) - 'a'.charCodeAt(0)] = sourceLength - 1
+        nextOccurrence[sourceLength - 1][
+            source[sourceLength - 1].charCodeAt(0) - 'a'.charCodeAt(0)
+        ] = sourceLength - 1;
 
         // Fill using the recurrence relation
         for (let idx = sourceLength - 2; idx >= 0; idx--) {
             for (let c = 0; c < 26; c++) {
-                nextOccurrence[idx][c] = nextOccurrence[idx + 1][c]
+                nextOccurrence[idx][c] = nextOccurrence[idx + 1][c];
             }
-            nextOccurrence[idx][source[idx].charCodeAt(0) - 'a'.charCodeAt(0)] = idx
+            nextOccurrence[idx][source[idx].charCodeAt(0) - 'a'.charCodeAt(0)] =
+                idx;
         }
 
         // Pointer to the current index in source
-        let sourceIterator = 0
+        let sourceIterator = 0;
 
         // Number of times we need to iterate through source
-        let count = 1
+        let count = 1;
 
         // Find all characters of target in source
         for (let idx = 0; idx < target.length; idx++) {
-
             // If the character is not present in source
-            if (nextOccurrence[0][target[idx].charCodeAt(0) - 'a'.charCodeAt(0)] == -1) {
-                return -1
+            if (
+                nextOccurrence[0][
+                    target[idx].charCodeAt(0) - 'a'.charCodeAt(0)
+                ] == -1
+            ) {
+                return -1;
             }
 
             // If we have reached the end of source, or the character is not in
             // source after source_iterator, loop back to beginning
-            if (sourceIterator == sourceLength || nextOccurrence[sourceIterator][target[idx].charCodeAt(0) - 'a'.charCodeAt(0)] == -1) {
-                count++
-                sourceIterator = 0
+            if (
+                sourceIterator == sourceLength ||
+                nextOccurrence[sourceIterator][
+                    target[idx].charCodeAt(0) - 'a'.charCodeAt(0)
+                ] == -1
+            ) {
+                count++;
+                sourceIterator = 0;
             }
 
             // Next occurrence of the character in source after source_iterator
-            sourceIterator = nextOccurrence[sourceIterator][target[idx].charCodeAt(0) - 'a'.charCodeAt(0)] + 1
+            sourceIterator =
+                nextOccurrence[sourceIterator][
+                    target[idx].charCodeAt(0) - 'a'.charCodeAt(0)
+                ] + 1;
         }
 
         // Return the number of times we need to iterate through source
-        return count
+        return count;
     }
 }
 ```
@@ -1731,6 +1872,54 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_way(source: String, target: String) -> i32 {
+        let src = source.as_bytes();
+        let tgt = target.as_bytes();
+        let source_length = src.len();
+
+        // Next occurrence of character after index
+        let mut next_occurrence = vec![[-1i32; 26]; source_length];
+
+        // Base case
+        next_occurrence[source_length - 1][(src[source_length - 1] - b'a') as usize] =
+            (source_length - 1) as i32;
+
+        // Fill using recurrence relation
+        for idx in (0..source_length - 1).rev() {
+            for c in 0..26 {
+                next_occurrence[idx][c] = next_occurrence[idx + 1][c];
+            }
+            next_occurrence[idx][(src[idx] - b'a') as usize] = idx as i32;
+        }
+
+        let mut source_iterator = 0usize;
+        let mut count = 1;
+
+        for &c in tgt {
+            let ci = (c - b'a') as usize;
+
+            // If the character is not present in source
+            if next_occurrence[0][ci] == -1 {
+                return -1;
+            }
+
+            // If we have reached the end of source, or the character is not in
+            // source after source_iterator, loop back to beginning
+            if source_iterator == source_length || next_occurrence[source_iterator][ci] == -1 {
+                count += 1;
+                source_iterator = 0;
+            }
+
+            source_iterator = next_occurrence[source_iterator][ci] as usize + 1;
+        }
+
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1738,7 +1927,7 @@ class Solution {
 - Time complexity: $O(S + T)$
 - Space complexity: $O(S)$
 
->  where $S$ is the length of `source` and $T$ is the length of `target`
+> where $S$ is the length of `source` and $T$ is the length of `target`
 
 ---
 

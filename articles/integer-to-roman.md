@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Roman Numeral System** - Understanding symbols (I, V, X, L, C, D, M) and subtractive notation (IV, IX, etc.)
 - **Greedy Algorithm** - Processing values from largest to smallest to build optimal solutions
 - **Modular Arithmetic** - Using division and modulo to extract digits from numbers
@@ -239,6 +241,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn int_to_roman(num: i32) -> String {
+        let sym_list = [
+            ("I", 1), ("IV", 4), ("V", 5), ("IX", 9),
+            ("X", 10), ("XL", 40), ("L", 50), ("XC", 90),
+            ("C", 100), ("CD", 400), ("D", 500), ("CM", 900),
+            ("M", 1000),
+        ];
+
+        let mut num = num;
+        let mut res = String::new();
+        for &(sym, val) in sym_list.iter().rev() {
+            let count = num / val;
+            for _ in 0..count {
+                res.push_str(sym);
+            }
+            num %= val;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -257,10 +284,10 @@ Since the input is constrained to 1-3999, we can precompute all possible Roman r
 ### Algorithm
 
 1. Create four arrays containing Roman representations for:
-   - Thousands: "", "M", "MM", "MMM"
-   - Hundreds: "", "C", "CC", ... "CM"
-   - Tens: "", "X", "XX", ... "XC"
-   - Ones: "", "I", "II", ... "IX"
+    - Thousands: "", "M", "MM", "MMM"
+    - Hundreds: "", "C", "CC", ... "CM"
+    - Tens: "", "X", "XX", ... "XC"
+    - Ones: "", "I", "II", ... "IX"
 2. Extract each digit using division and modulo.
 3. Look up the corresponding string from each array.
 4. Concatenate and return the result.
@@ -429,6 +456,25 @@ class Solution {
             hundreds[(num % 1000) / 100] +
             tens[(num % 100) / 10] +
             ones[num % 10]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn int_to_roman(num: i32) -> String {
+        let thousands = ["", "M", "MM", "MMM"];
+        let hundreds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
+        let tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
+        let ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+
+        format!(
+            "{}{}{}{}",
+            thousands[(num / 1000) as usize],
+            hundreds[((num % 1000) / 100) as usize],
+            tens[((num % 100) / 10) as usize],
+            ones[(num % 10) as usize]
+        )
     }
 }
 ```

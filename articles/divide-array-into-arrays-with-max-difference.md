@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting Algorithms** - Understanding how sorting brings similar elements together for grouping problems
 - **Greedy Algorithms** - Making locally optimal choices (grouping consecutive sorted elements) to achieve a global optimum
 - **Counting Sort** - An efficient O(n + k) sorting technique when the range of values is bounded
@@ -165,6 +167,24 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn divide_array(mut nums: Vec<i32>, k: i32) -> Vec<Vec<i32>> {
+        nums.sort();
+        let mut res = Vec::new();
+
+        for i in (0..nums.len()).step_by(3) {
+            if nums[i + 2] - nums[i] > k {
+                return vec![];
+            }
+            res.push(vec![nums[i], nums[i + 1], nums[i + 2]]);
+        }
+
+        res
     }
 }
 ```
@@ -468,6 +488,39 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn divide_array(nums: Vec<i32>, k: i32) -> Vec<Vec<i32>> {
+        let max_num = *nums.iter().max().unwrap() as usize;
+        let mut count = vec![0i32; max_num + 1];
+
+        for &num in &nums {
+            count[num as usize] += 1;
+        }
+
+        let mut res = Vec::new();
+        let mut group = Vec::new();
+
+        for num in 0..=max_num {
+            while count[num] > 0 {
+                group.push(num as i32);
+                count[num] -= 1;
+
+                if group.len() == 3 {
+                    if group[2] - group[0] > k {
+                        return vec![];
+                    }
+                    res.push(group.clone());
+                    group.clear();
+                }
+            }
+        }
+
+        res
     }
 }
 ```

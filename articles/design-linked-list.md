@@ -558,6 +558,81 @@ class MyLinkedList {
 }
 ```
 
+
+```rust
+struct MyLinkedList {
+    head: Option<Box<Node>>,
+    size: usize,
+}
+
+struct Node {
+    val: i32,
+    next: Option<Box<Node>>,
+}
+
+impl MyLinkedList {
+    fn new() -> Self {
+        Self { head: None, size: 0 }
+    }
+
+    fn get(&self, index: i32) -> i32 {
+        if index as usize >= self.size {
+            return -1;
+        }
+        let mut cur = &self.head;
+        for _ in 0..index {
+            cur = &cur.as_ref().unwrap().next;
+        }
+        cur.as_ref().unwrap().val
+    }
+
+    fn add_at_head(&mut self, val: i32) {
+        self.add_at_index(0, val);
+    }
+
+    fn add_at_tail(&mut self, val: i32) {
+        self.add_at_index(self.size as i32, val);
+    }
+
+    fn add_at_index(&mut self, index: i32, val: i32) {
+        if index as usize > self.size {
+            return;
+        }
+        let mut cur = &mut self.head as *mut Option<Box<Node>>;
+        for _ in 0..index {
+            unsafe {
+                cur = &mut (*cur).as_mut().unwrap().next;
+            }
+        }
+        unsafe {
+            let new_node = Box::new(Node {
+                val,
+                next: (*cur).take(),
+            });
+            *cur = Some(new_node);
+        }
+        self.size += 1;
+    }
+
+    fn delete_at_index(&mut self, index: i32) {
+        if index as usize >= self.size {
+            return;
+        }
+        let mut cur = &mut self.head as *mut Option<Box<Node>>;
+        for _ in 0..index {
+            unsafe {
+                cur = &mut (*cur).as_mut().unwrap().next;
+            }
+        }
+        unsafe {
+            let removed = (*cur).take().unwrap();
+            *cur = removed.next;
+        }
+        self.size -= 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1058,6 +1133,81 @@ class MyLinkedList {
         let prev = getPrev(index)
         prev.next = prev.next?.next
         size -= 1
+    }
+}
+```
+
+
+```rust
+struct MyLinkedList {
+    head: Option<Box<Node>>,
+    size: usize,
+}
+
+struct Node {
+    val: i32,
+    next: Option<Box<Node>>,
+}
+
+impl MyLinkedList {
+    fn new() -> Self {
+        Self { head: None, size: 0 }
+    }
+
+    fn get(&self, index: i32) -> i32 {
+        if index as usize >= self.size {
+            return -1;
+        }
+        let mut cur = &self.head;
+        for _ in 0..index {
+            cur = &cur.as_ref().unwrap().next;
+        }
+        cur.as_ref().unwrap().val
+    }
+
+    fn add_at_head(&mut self, val: i32) {
+        self.add_at_index(0, val);
+    }
+
+    fn add_at_tail(&mut self, val: i32) {
+        self.add_at_index(self.size as i32, val);
+    }
+
+    fn add_at_index(&mut self, index: i32, val: i32) {
+        if index as usize > self.size {
+            return;
+        }
+        let mut cur = &mut self.head as *mut Option<Box<Node>>;
+        for _ in 0..index {
+            unsafe {
+                cur = &mut (*cur).as_mut().unwrap().next;
+            }
+        }
+        unsafe {
+            let new_node = Box::new(Node {
+                val,
+                next: (*cur).take(),
+            });
+            *cur = Some(new_node);
+        }
+        self.size += 1;
+    }
+
+    fn delete_at_index(&mut self, index: i32) {
+        if index as usize >= self.size {
+            return;
+        }
+        let mut cur = &mut self.head as *mut Option<Box<Node>>;
+        for _ in 0..index {
+            unsafe {
+                cur = &mut (*cur).as_mut().unwrap().next;
+            }
+        }
+        unsafe {
+            let removed = (*cur).take().unwrap();
+            *cur = removed.next;
+        }
+        self.size -= 1;
     }
 }
 ```
@@ -1780,6 +1930,91 @@ class MyLinkedList {
 }
 ```
 
+
+```rust
+struct MyLinkedList {
+    vals: Vec<i32>,
+    prev: Vec<usize>,
+    next: Vec<usize>,
+    head: usize,
+    tail: usize,
+}
+
+impl MyLinkedList {
+    fn new() -> Self {
+        // 0 = head sentinel, 1 = tail sentinel
+        Self {
+            vals: vec![0, 0],
+            prev: vec![0, 0],
+            next: vec![1, 0],
+            head: 0,
+            tail: 1,
+        }
+    }
+
+    fn get(&self, index: i32) -> i32 {
+        let mut cur = self.next[self.head];
+        let mut idx = index;
+        while cur != self.tail && idx > 0 {
+            cur = self.next[cur];
+            idx -= 1;
+        }
+        if cur != self.tail && idx == 0 {
+            self.vals[cur]
+        } else {
+            -1
+        }
+    }
+
+    fn add_at_head(&mut self, val: i32) {
+        self.insert_after(self.head, val);
+    }
+
+    fn add_at_tail(&mut self, val: i32) {
+        let prev = self.prev[self.tail];
+        self.insert_after(prev, val);
+    }
+
+    fn add_at_index(&mut self, index: i32, val: i32) {
+        let mut cur = self.next[self.head];
+        let mut idx = index;
+        while cur != self.tail && idx > 0 {
+            cur = self.next[cur];
+            idx -= 1;
+        }
+        if idx == 0 {
+            let prev = self.prev[cur];
+            self.insert_after(prev, val);
+        }
+    }
+
+    fn delete_at_index(&mut self, index: i32) {
+        let mut cur = self.next[self.head];
+        let mut idx = index;
+        while cur != self.tail && idx > 0 {
+            cur = self.next[cur];
+            idx -= 1;
+        }
+        if cur != self.tail && idx == 0 {
+            let p = self.prev[cur];
+            let n = self.next[cur];
+            self.next[p] = n;
+            self.prev[n] = p;
+        }
+    }
+
+    fn insert_after(&mut self, node: usize, val: i32) {
+        let new_idx = self.vals.len();
+        self.vals.push(val);
+        let nxt = self.next[node];
+        self.prev.push(node);
+        self.next.push(nxt);
+        self.next[node] = new_idx;
+        self.prev[nxt] = new_idx;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2438,6 +2673,91 @@ class MyLinkedList {
         prev.next = next
         next?.prev = prev
         size -= 1
+    }
+}
+```
+
+
+```rust
+struct MyLinkedList {
+    vals: Vec<i32>,
+    prev: Vec<usize>,
+    next: Vec<usize>,
+    head: usize,
+    tail: usize,
+    size: usize,
+}
+
+impl MyLinkedList {
+    fn new() -> Self {
+        // 0 = head sentinel, 1 = tail sentinel
+        Self {
+            vals: vec![0, 0],
+            prev: vec![0, 0],
+            next: vec![1, 0],
+            head: 0,
+            tail: 1,
+            size: 0,
+        }
+    }
+
+    fn get_prev(&self, index: i32) -> usize {
+        if (index as usize) <= self.size / 2 {
+            let mut cur = self.head;
+            for _ in 0..index {
+                cur = self.next[cur];
+            }
+            cur
+        } else {
+            let mut cur = self.tail;
+            for _ in 0..(self.size as i32 - index + 1) {
+                cur = self.prev[cur];
+            }
+            cur
+        }
+    }
+
+    fn get(&self, index: i32) -> i32 {
+        if index as usize >= self.size {
+            return -1;
+        }
+        let prev = self.get_prev(index);
+        self.vals[self.next[prev]]
+    }
+
+    fn add_at_head(&mut self, val: i32) {
+        self.add_at_index(0, val);
+    }
+
+    fn add_at_tail(&mut self, val: i32) {
+        self.add_at_index(self.size as i32, val);
+    }
+
+    fn add_at_index(&mut self, index: i32, val: i32) {
+        if index as usize > self.size {
+            return;
+        }
+        let prev = self.get_prev(index);
+        let new_idx = self.vals.len();
+        self.vals.push(val);
+        let nxt = self.next[prev];
+        self.prev.push(prev);
+        self.next.push(nxt);
+        self.next[prev] = new_idx;
+        self.prev[nxt] = new_idx;
+        self.size += 1;
+    }
+
+    fn delete_at_index(&mut self, index: i32) {
+        if index as usize >= self.size {
+            return;
+        }
+        let prev = self.get_prev(index);
+        let cur = self.next[prev];
+        let nxt = self.next[cur];
+        self.next[prev] = nxt;
+        self.prev[nxt] = prev;
+        self.size -= 1;
     }
 }
 ```

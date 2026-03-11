@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree (BST) Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the current node
 - **Depth First Search (DFS)** - Recursive tree traversal to visit all nodes and accumulate values
 - **Tree Pruning** - Using BST ordering to skip entire subtrees that cannot contain values in the target range
@@ -219,6 +221,30 @@ class Solution {
         res += rangeSumBST(root.left, low, high)
         res += rangeSumBST(root.right, low, high)
         return res
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn range_sum_bst(root: Option<Rc<RefCell<TreeNode>>>, low: i32, high: i32) -> i32 {
+        match root {
+            None => 0,
+            Some(node) => {
+                let node = node.borrow();
+                let mut res = if node.val >= low && node.val <= high { node.val } else { 0 };
+                res += Self::range_sum_bst(node.left.clone(), low, high);
+                res += Self::range_sum_bst(node.right.clone(), low, high);
+                res
+            }
+        }
     }
 }
 ```
@@ -488,6 +514,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn range_sum_bst(root: Option<Rc<RefCell<TreeNode>>>, low: i32, high: i32) -> i32 {
+        match root {
+            None => 0,
+            Some(node) => {
+                let node = node.borrow();
+                if node.val > high {
+                    return Self::range_sum_bst(node.left.clone(), low, high);
+                }
+                if node.val < low {
+                    return Self::range_sum_bst(node.right.clone(), low, high);
+                }
+                node.val
+                    + Self::range_sum_bst(node.left.clone(), low, high)
+                    + Self::range_sum_bst(node.right.clone(), low, high)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -507,10 +555,10 @@ The recursive solution can be converted to an iterative one using an explicit st
 
 1. Initialize a stack with the root node and a result variable set to `0`.
 2. While the stack is not empty:
-   - Pop a node. If `null`, continue.
-   - If the node's value is in range `[low, high]`, add it to the result.
-   - If the node's value is greater than `low`, push the left child.
-   - If the node's value is less than `high`, push the right child.
+    - Pop a node. If `null`, continue.
+    - If the node's value is in range `[low, high]`, add it to the result.
+    - If the node's value is greater than `low`, push the left child.
+    - If the node's value is less than `high`, push the right child.
 3. Return the accumulated result.
 
 ::tabs-start
@@ -814,6 +862,32 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn range_sum_bst(root: Option<Rc<RefCell<TreeNode>>>, low: i32, high: i32) -> i32 {
+        let mut stack = vec![root];
+        let mut res = 0;
+
+        while let Some(opt) = stack.pop() {
+            if let Some(node) = opt {
+                let node = node.borrow();
+                if node.val >= low && node.val <= high {
+                    res += node.val;
+                }
+                if node.val > low {
+                    stack.push(node.left.clone());
+                }
+                if node.val < high {
+                    stack.push(node.right.clone());
+                }
+            }
+        }
+
+        res
     }
 }
 ```

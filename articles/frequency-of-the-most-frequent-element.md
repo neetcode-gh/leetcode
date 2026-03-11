@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Arranging elements to enable efficient window-based approaches
 - **Sliding Window** - Maintaining a dynamic window with adjustable boundaries
 - **Prefix Sum** - Efficiently computing range sums for cost calculations
@@ -195,6 +197,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let mut res = 1;
+
+        for i in 0..nums.len() {
+            let mut j = i as i32 - 1;
+            let mut tmp_k = k as i64;
+
+            while j >= 0 && tmp_k - (nums[i] - nums[j as usize]) as i64 >= 0 {
+                tmp_k -= (nums[i] - nums[j as usize]) as i64;
+                j -= 1;
+            }
+            res = res.max(i as i32 - j);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,8 +240,8 @@ For each right boundary `i`, we binary search for the smallest left boundary `m`
 
 1. Sort the array and build a prefix sum array.
 2. For each index `i`:
-   - Binary search for the leftmost index `m` where the cost `(i - m + 1) * nums[i] - (prefix[i+1] - prefix[m])` is at most `k`.
-   - Update `res` with the window size.
+    - Binary search for the leftmost index `m` where the cost `(i - m + 1) * nums[i] - (prefix[i+1] - prefix[m])` is at most `k`.
+    - Update `res` with the window size.
 3. Return the maximum frequency found.
 
 ::tabs-start
@@ -463,6 +487,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let n = nums.len();
+        let mut prefix_sum = vec![0i64; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i] as i64;
+        }
+
+        let mut res = 1i32;
+        for i in 0..n {
+            let (mut left, mut right) = (0usize, i);
+            while left <= right {
+                let mid = (left + right) / 2;
+                let cur_sum = prefix_sum[i + 1] - prefix_sum[mid];
+                let need = (i - mid + 1) as i64 * nums[i] as i64 - cur_sum;
+                if need <= k as i64 {
+                    if right == 0 { break; }
+                    right = mid.wrapping_sub(1);
+                    if right > i { break; }
+                    res = res.max((i - mid + 1) as i32);
+                } else {
+                    left = mid + 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -485,10 +542,10 @@ The cost for a window is `target * window_size - window_sum`. When this exceeds 
 1. Sort the array.
 2. Initialize `l = 0`, `total = 0`, and `res = 0`.
 3. For each right index `r`:
-   - Add `nums[r]` to `total`.
-   - While `nums[r] * (r - l + 1) > total + k`:
-     - Subtract `nums[l]` from `total` and increment `l`.
-   - Update `res` with `r - l + 1`.
+    - Add `nums[r]` to `total`.
+    - While `nums[r] * (r - l + 1) > total + k`:
+        - Subtract `nums[l]` from `total` and increment `l`.
+    - Update `res` with `r - l + 1`.
 4. Return `res`.
 
 ::tabs-start
@@ -667,6 +724,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let mut total = 0i64;
+        let mut res = 0;
+        let mut l = 0;
+
+        for r in 0..nums.len() {
+            total += nums[r] as i64;
+            while nums[r] as i64 * (r - l + 1) as i64 > total + k as i64 {
+                total -= nums[l] as i64;
+                l += 1;
+            }
+            res = res.max(r - l + 1);
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -689,9 +769,9 @@ If a new element causes the window to become invalid, we remove exactly one elem
 1. Sort the array.
 2. Initialize `l = 0` and `total = 0`.
 3. For each right index `r`:
-   - Add `nums[r]` to `total`.
-   - If `(r - l + 1) * nums[r] > total + k`:
-     - Subtract `nums[l]` from `total` and increment `l`.
+    - Add `nums[r]` to `total`.
+    - If `(r - l + 1) * nums[r] > total + k`:
+        - Subtract `nums[l]` from `total` and increment `l`.
 4. The final window size is `n - l` which equals the maximum frequency.
 5. Return this value.
 
@@ -854,6 +934,27 @@ class Solution {
         }
 
         return nums.count - l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_frequency(nums: Vec<i32>, k: i32) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        let mut total = 0i64;
+        let mut l = 0;
+
+        for r in 0..nums.len() {
+            total += nums[r] as i64;
+            if (r - l + 1) as i64 * nums[r] as i64 > total + k as i64 {
+                total -= nums[l] as i64;
+                l += 1;
+            }
+        }
+
+        (nums.len() - l) as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - Storing and checking unique substrings efficiently
 - **Sliding Window** - Processing fixed-size windows over a string without redundant computation
 - **Bit Manipulation** - Using bitwise operations to represent binary strings as integers
@@ -190,6 +192,27 @@ extension String {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_all_codes(s: String, k: i32) -> bool {
+        let n = s.len();
+        let k = k as usize;
+        if n < (1 << k) {
+            return false;
+        }
+
+        for num in 0..(1 << k) {
+            let binary_code = format!("{:0>width$b}", num, width = k);
+            if !s.contains(&binary_code) {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +378,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_all_codes(s: String, k: i32) -> bool {
+        let k = k as usize;
+        if s.len() < (1 << k) {
+            return false;
+        }
+
+        let mut code_set = HashSet::new();
+        let bytes = s.as_bytes();
+        for i in 0..=bytes.len() - k {
+            code_set.insert(&bytes[i..i + k]);
+        }
+
+        code_set.len() == (1 << k)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,10 +421,10 @@ We can improve upon the hash set approach by using bit manipulation to represent
 3. Build the initial window by reading the first `k` characters and converting them to an integer using bit shifts.
 4. Mark the first code as seen and initialize a counter.
 5. Slide the window one character at a time:
-   - Remove the leftmost bit using XOR if it was `1`.
-   - Shift the current value left by `1`.
-   - Add the new rightmost bit using OR.
-   - If this code has not been seen before, mark it and increment the counter.
+    - Remove the leftmost bit using XOR if it was `1`.
+    - Shift the current value left by `1`.
+    - Add the new rightmost bit using OR.
+    - If this code has not been seen before, mark it and increment the counter.
 6. Return `true` if the counter equals $2^k$.
 
 ::tabs-start
@@ -754,6 +796,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_all_codes(s: String, k: i32) -> bool {
+        let k = k as usize;
+        let n = s.len();
+        if n < (1 << k) {
+            return false;
+        }
+
+        let bytes = s.as_bytes();
+        let mut code_set = vec![false; 1 << k];
+        let mut cur = 0usize;
+        let mut i = 0;
+        let mut j = 0;
+        let mut bit = k as i32 - 1;
+
+        while j < k {
+            if bytes[j] == b'1' {
+                cur |= 1 << bit;
+            }
+            bit -= 1;
+            j += 1;
+        }
+
+        let mut have = 1;
+        code_set[cur] = true;
+
+        while j < n {
+            if bytes[i] == b'1' {
+                cur ^= 1 << (k - 1);
+            }
+            i += 1;
+
+            cur <<= 1;
+            if bytes[j] == b'1' {
+                cur |= 1;
+            }
+            j += 1;
+
+            if !code_set[cur] {
+                have += 1;
+                code_set[cur] = true;
+            }
+        }
+
+        have == (1 << k)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -777,11 +869,11 @@ This approach simplifies the sliding window technique by using a bitmask to auto
 2. Create a boolean array of size $2^k$ to track seen codes.
 3. Initialize the current code value and a counter for unique codes found.
 4. Iterate through each character in `s`:
-   - Shift the current value left by `1`.
-   - Apply a bitmask (AND with $2^k - 1$) to keep only the last `k` bits.
-   - Add the current character's bit value using OR.
-   - Once we have processed at least `k` characters, check if this code is new.
-   - If new, mark it as seen and increment the counter.
+    - Shift the current value left by `1`.
+    - Apply a bitmask (AND with $2^k - 1$) to keep only the last `k` bits.
+    - Add the current character's bit value using OR.
+    - Once we have processed at least `k` characters, check if this code is new.
+    - If new, mark it as seen and increment the counter.
 5. Return `true` if the counter equals $2^k$.
 
 ::tabs-start
@@ -1004,6 +1096,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_all_codes(s: String, k: i32) -> bool {
+        let k = k as usize;
+        let n = s.len();
+        if n < (1 << k) {
+            return false;
+        }
+
+        let bytes = s.as_bytes();
+        let mut code_set = vec![false; 1 << k];
+        let mut cur = 0usize;
+        let mut have = 0;
+
+        for i in 0..n {
+            cur = ((cur << 1) & ((1 << k) - 1)) | (bytes[i] - b'0') as usize;
+
+            if i >= k - 1 {
+                if !code_set[cur] {
+                    code_set[cur] = true;
+                    have += 1;
+                }
+            }
+        }
+
+        have == (1 << k)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1018,7 +1140,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting the Early Length Check
+
 If the string length is less than `k + 2^k - 1`, it's impossible to contain all binary codes since there aren't enough substrings. Skipping this check leads to unnecessary computation and potential incorrect results.
+
 ```python
 # Always check first:
 if len(s) < (1 << k):
@@ -1026,7 +1150,9 @@ if len(s) < (1 << k):
 ```
 
 ### Off-by-One Error in Substring Extraction
+
 When iterating to extract substrings of length `k`, the loop should go from `0` to `len(s) - k` inclusive. Using `range(len(s) - k)` instead of `range(len(s) - k + 1)` misses the last valid substring.
+
 ```python
 # Wrong: for i in range(len(s) - k)
 # Correct:
@@ -1035,7 +1161,9 @@ for i in range(len(s) - k + 1):
 ```
 
 ### Incorrect Bitmask in Sliding Window
+
 When using the sliding window approach with bit manipulation, forgetting to mask the result after shifting causes the integer to grow beyond `k` bits. The mask `(1 << k) - 1` must be applied to keep only the last `k` bits.
+
 ```python
 # Wrong: cur = (cur << 1) | bit
 # Correct:

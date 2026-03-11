@@ -173,6 +173,27 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn is_circular_sentence(sentence: String) -> bool {
+        let words: Vec<&str> = sentence.split(' ').collect();
+        let n = words.len();
+
+        for i in 0..n {
+            let start = words[i].as_bytes()[0];
+            let prev_idx = (i + n - 1) % n;
+            let end = *words[prev_idx].as_bytes().last().unwrap();
+            if start != end {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,6 +317,21 @@ class Solution {
             }
         }
         return chars[0] == chars[chars.count - 1]
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn is_circular_sentence(sentence: String) -> bool {
+        let bytes = sentence.as_bytes();
+        for i in 0..bytes.len() {
+            if bytes[i] == b' ' && bytes[i - 1] != bytes[i + 1] {
+                return false;
+            }
+        }
+        bytes[0] == bytes[bytes.len() - 1]
     }
 }
 ```

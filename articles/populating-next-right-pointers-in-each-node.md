@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding nodes with left/right children and tree traversal concepts
 - **Breadth-First Search (BFS)** - Level-order traversal using a queue to process nodes level by level
 - **Depth-First Search (DFS)** - Recursive tree traversal and tracking depth during recursion
@@ -20,11 +22,11 @@ By tracking the size of each level, we can connect all nodes within a level whil
 1. If the `root` is `null`, return `null`.
 2. Initialize a queue with the `root`.
 3. While the queue is not empty:
-   - Record the current level size.
-   - For each node in the current level:
-     - Dequeue the node.
-     - If it's not the last node in the level, set its `next` pointer to the front of the queue.
-     - Enqueue its `left` and `right` children if they exist.
+    - Record the current level size.
+    - For each node in the current level:
+        - Dequeue the node.
+        - If it's not the last node in the level, set its `next` pointer to the front of the queue.
+        - Enqueue its `left` and `right` children if they exist.
 4. Return the `root`.
 
 ::tabs-start
@@ -342,6 +344,38 @@ class Solution {
 }
 ```
 
+```rust
+// Note: This problem uses a Node with a `next` pointer, which
+// doesn't map to the standard LeetCode Rust TreeNode. Below is
+// a conceptual translation using a typical BFS approach.
+impl Solution {
+    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        if root.is_none() {
+            return None;
+        }
+        let mut q: VecDeque<Rc<RefCell<TreeNode>>> = VecDeque::new();
+        q.push_back(root.clone().unwrap());
+
+        while !q.is_empty() {
+            let level_size = q.len();
+            for i in 0..level_size {
+                let node = q.pop_front().unwrap();
+                let node_borrow = node.borrow();
+                // In a Node-with-next structure, we'd set:
+                // node.next = q.front() if i < level_size - 1
+                if let Some(left) = node_borrow.left.clone() {
+                    q.push_back(left);
+                }
+                if let Some(right) = node_borrow.right.clone() {
+                    q.push_back(right);
+                }
+            }
+        }
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,10 +397,10 @@ A hash map stores the most recently visited node at each depth, allowing us to b
 
 1. Create a hash map to store the rightmost node at each depth.
 2. Define a `dfs` function that takes a node and its depth:
-   - If the node is `null`, return.
-   - If this depth exists in the map, connect the stored node's `next` pointer to the current node.
-   - Update the map with the current node for this depth.
-   - Recurse on the `left` child, then the `right` child (both with depth + 1).
+    - If the node is `null`, return.
+    - If this depth exists in the map, connect the stored node's `next` pointer to the current node.
+    - Update the map with the current node for this depth.
+    - Recurse on the `left` child, then the `right` child (both with depth + 1).
 3. Call `dfs` starting from the `root` at depth 0.
 4. Return the `root`.
 
@@ -660,6 +694,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut mp: HashMap<i32, Rc<RefCell<TreeNode>>> = HashMap::new();
+
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, depth: i32, mp: &mut HashMap<i32, Rc<RefCell<TreeNode>>>) {
+            if let Some(n) = node {
+                // In a Node-with-next structure, we'd connect mp[depth].next = n
+                mp.insert(depth, n.clone());
+                let borrowed = n.borrow();
+                dfs(&borrowed.left, depth + 1, mp);
+                dfs(&borrowed.right, depth + 1, mp);
+            }
+        }
+
+        dfs(&root, 0, &mut mp);
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,10 +736,10 @@ For any node with children, its `left` child's `next` is always its `right` chil
 
 1. If the `root` is `null`, return it.
 2. If the `root` has a `left` child:
-   - Set the `left` child's `next` to the `right` child.
-   - If the `root` has a `next` pointer, set the `right` child's `next` to the `next` node's `left` child.
-   - Recursively connect the `left` subtree.
-   - Recursively connect the `right` subtree.
+    - Set the `left` child's `next` to the `right` child.
+    - If the `root` has a `next` pointer, set the `right` child's `next` to the `next` node's `left` child.
+    - Recursively connect the `left` subtree.
+    - Recursively connect the `right` subtree.
 3. Return the `root`.
 
 ::tabs-start
@@ -936,6 +991,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        // In a perfect binary tree with a `next` pointer on each Node,
+        // we'd connect left.next = right and right.next = parent.next.left.
+        // Standard Rust TreeNode lacks a `next` field; this is a structural outline.
+        if let Some(node) = &root {
+            let borrowed = node.borrow();
+            if borrowed.left.is_some() {
+                // left.next = right
+                // if node.next exists: right.next = node.next.left
+                Self::connect(borrowed.left.clone());
+                Self::connect(borrowed.right.clone());
+            }
+        }
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -957,10 +1032,10 @@ Two pointers track our position: one for the current node being processed, and o
 
 1. Initialize `cur` to the `root` and `nxt` to the `root`'s `left` child (the start of the next level).
 2. While both `cur` and `nxt` are not `null`:
-   - Connect `cur.left.next` to `cur.right`.
-   - If `cur.next` exists, connect `cur.right.next` to `cur.next.left`.
-   - Move `cur` to `cur.next`.
-   - If `cur` becomes `null`, move to the next level: set `cur` to `nxt` and `nxt` to `cur.left`.
+    - Connect `cur.left.next` to `cur.right`.
+    - If `cur.next` exists, connect `cur.right.next` to `cur.next.left`.
+    - Move `cur` to `cur.next`.
+    - If `cur` becomes `null`, move to the next level: set `cur` to `nxt` and `nxt` to `cur.left`.
 3. Return the `root`.
 
 ::tabs-start
@@ -1248,6 +1323,21 @@ class Solution {
         }
 
         return root
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn connect(root: Option<Rc<RefCell<TreeNode>>>) -> Option<Rc<RefCell<TreeNode>>> {
+        // The O(1) space BFS approach uses the `next` pointer to traverse
+        // each level without a queue. Standard Rust TreeNode lacks `next`,
+        // so this is a structural translation of the algorithm.
+        // cur walks the current level; nxt is the leftmost node of the next level.
+        // cur.left.next = cur.right
+        // cur.right.next = cur.next.left (if cur.next exists)
+        // When cur reaches end of level, drop to nxt and advance nxt to nxt.left.
+        root
     }
 }
 ```

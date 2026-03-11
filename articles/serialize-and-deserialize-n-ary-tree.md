@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **N-ary Trees** - Understanding tree nodes with a variable number of children stored in a list
 - **Tree Traversal (DFS)** - Recursively visiting all nodes in preorder fashion
 - **Tree Traversal (BFS)** - Level-order traversal using a queue to process nodes level by level
@@ -18,11 +20,13 @@ One way to serialize an n-ary tree is to record each node along with a unique id
 ### Algorithm
 
 **Serialization:**
+
 1. Traverse the tree using `DFS`, assigning each node a unique identity starting from `1`.
 2. For each node, append three values: its identity, its value, and its parent's identity (or `'N'` for the root).
 3. Return the concatenated string.
 
 **Deserialization:**
+
 1. Parse the string in chunks of `3` characters to extract identity, value, and parent `ID`.
 2. Create all nodes and store them in a map keyed by identity.
 3. For each non-root node, find its parent using the parent `ID` and add the node to the parent's children list.
@@ -222,7 +226,9 @@ class Codec {
 
         serializedList.push(String.fromCharCode(identity.value + 48));
         serializedList.push(String.fromCharCode(root.val + 48));
-        serializedList.push(parentId !== null ? String.fromCharCode(parentId + 48) : 'N');
+        serializedList.push(
+            parentId !== null ? String.fromCharCode(parentId + 48) : 'N',
+        );
 
         const currentId = identity.value;
         for (const child of root.children) {
@@ -454,6 +460,76 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec {
+    identity: usize,
+}
+
+impl Codec {
+    fn new() -> Self {
+        Codec { identity: 1 }
+    }
+
+    fn serialize(&mut self, root: Option<&NaryNode>) -> String {
+        let mut result = Vec::new();
+        self.identity = 1;
+        self.serialize_helper(root, &mut result, None);
+        String::from_utf8(result).unwrap()
+    }
+
+    fn serialize_helper(
+        &mut self,
+        root: Option<&NaryNode>,
+        result: &mut Vec<u8>,
+        parent_id: Option<usize>,
+    ) {
+        let root = match root {
+            Some(r) => r,
+            None => return,
+        };
+        result.push((self.identity as u8) + b'0');
+        result.push((root.val as u8) + b'0');
+        match parent_id {
+            Some(pid) => result.push((pid as u8) + b'0'),
+            None => result.push(b'N'),
+        }
+        let current_id = self.identity;
+        for child in &root.children {
+            self.identity += 1;
+            self.serialize_helper(Some(child), result, Some(current_id));
+        }
+    }
+
+    fn deserialize(&self, data: String) -> Option<NaryNode> {
+        if data.is_empty() {
+            return None;
+        }
+        let bytes = data.as_bytes();
+        let mut nodes: HashMap<usize, NaryNode> = HashMap::new();
+
+        let mut i = 0;
+        while i < bytes.len() {
+            let id = (bytes[i] - b'0') as usize;
+            let val = (bytes[i + 1] - b'0') as i32;
+            nodes.insert(id, NaryNode { val, children: vec![] });
+            i += 3;
+        }
+
+        let mut i = 3;
+        while i < bytes.len() {
+            let id = (bytes[i] - b'0') as usize;
+            let parent_id = (bytes[i + 2] - b'0') as usize;
+            let child = nodes.remove(&id).unwrap();
+            nodes.get_mut(&parent_id).unwrap().children.push(child);
+            i += 3;
+        }
+
+        let root_id = (bytes[0] - b'0') as usize;
+        nodes.remove(&root_id)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -463,12 +539,12 @@ class Codec {
 
     - `Deserialization` : $O(N)$. Technically, it is $3N$ for the first for loop and $N$ for the second one. However, constants are ignored in asymptotic complexity analysis. So, the overall time complexity for deserialization is $O(N)$.
 
-- Space complexity: 
+- Space complexity:
     - `Serialization` : $O(N)$. The space occupied by the serialization helper function is through recursion stack and the final string that is produced. Usually, we don't take into consideration the space of the output. However, in this case, the output is something which is not fixed. For all we know, someone might be able to generate a string of size $N/2$. We don't know! So, the size of the final string is a part of the space complexity here. Overall, the space is $4N = O(N)$.
 
     - `Deserialization` : $O(N)$. The space occupied by the deserialization helper function is through the hash map. For each entry, we have 3 values. Thus, we can say the space is $3N$. But again, the constants don't really matter in asymptotic complexity. So, the overall space is $O(N)$.
 
->  Where $N$ is the number of nodes in the tree.
+> Where $N$ is the number of nodes in the tree.
 
 ---
 
@@ -481,11 +557,13 @@ Instead of storing parent IDs, we can store each node's value followed by its nu
 ### Algorithm
 
 **Serialization:**
+
 1. For each node, append its value followed by the count of its children.
 2. Recursively serialize each child.
 3. Return the concatenated string.
 
 **Deserialization:**
+
 1. Maintain an index pointer into the string.
 2. Read the value at the current index and create a node.
 3. Read the next character to get the number of children.
@@ -504,39 +582,39 @@ class WrappableInt:
             self.value += 1
 
 class Codec:
-    
+
     def serialize(self, root: 'Node') -> str:
         serializedList = []
         self._serializeHelper(root, serializedList)
 
         return "".join(serializedList)
-    
+
     def _serializeHelper(self, root, serializedList):
         if not root:
             return
-        
+
         # Actual value
         serializedList.append(chr(root.val + 48))
-        
+
         # Number of children
         serializedList.append(chr(len(root.children) + 48))
-        
+
         for child in root.children:
             self._serializeHelper(child, serializedList)
-    
+
     def deserialize(self, data: str) -> 'Node':
         if not data:
             return None
-        
+
         return self._deserializeHelper(data, WrappableInt(0))
-        
+
     def _deserializeHelper(self, data, index):
-        
+
         if index.getValue() == len(data):
             return None
-        
+
         # The invariant here is that the "index" always
-        # points to a node and the value next to it 
+        # points to a node and the value next to it
         # represents the number of children it has.
         node = Node(ord(data[index.getValue()]) - 48, [])
         index.increment()
@@ -563,27 +641,27 @@ class Codec {
             this.value++;
         }
     }
-    
+
     public String serialize(Node root) {
-        
+
         StringBuilder sb = new StringBuilder();
         this._serializeHelper(root, sb);
         return sb.toString();
     }
-    
+
     private void _serializeHelper(Node root, StringBuilder sb) {
-        
+
         if (root == null) {
             return;
         }
-        
+
         // Add the value of the node
         sb.append((char) (root.val + '0'));
-        
+
         // Add the number of children
         sb.append((char) (root.children.size() + '0'));
-        
-        // Recurse on the subtrees and build the 
+
+        // Recurse on the subtrees and build the
         // string accordingly
         for (Node child : root.children) {
             this._serializeHelper(child, sb);
@@ -593,18 +671,18 @@ class Codec {
     public Node deserialize(String data) {
         if(data.isEmpty())
             return null;
-        
+
         return this._deserializeHelper(data, new WrappableInt(0));
     }
-    
-    private Node _deserializeHelper(String data, WrappableInt index) {  
-        
+
+    private Node _deserializeHelper(String data, WrappableInt index) {
+
         if (index.getValue() == data.length()) {
             return null;
         }
-        
+
         // The invariant here is that the "index" always
-        // points to a node and the value next to it 
+        // points to a node and the value next to it
         // represents the number of children it has.
         Node node = new Node(data.charAt(index.getValue()) - '0', new ArrayList<Node>());
         index.increment();
@@ -613,7 +691,7 @@ class Codec {
             index.increment();
             node.children.add(this._deserializeHelper(data, index));
         }
-        
+
         return node;
     }
 }
@@ -631,7 +709,7 @@ class Codec {
         const serializedList = [];
         this._serializeHelper(root, serializedList);
         return serializedList.join('');
-    }
+    };
 
     _serializeHelper = function (root, serializedList) {
         if (!root) {
@@ -647,7 +725,7 @@ class Codec {
         for (const child of root.children) {
             this._serializeHelper(child, serializedList);
         }
-    }
+    };
 
     /**
      * @param {string} data
@@ -660,7 +738,7 @@ class Codec {
 
         const index = { value: 0 };
         return this._deserializeHelper(data, index);
-    }
+    };
 
     _deserializeHelper = function (data, index) {
         if (index.value === data.length) {
@@ -680,7 +758,7 @@ class Codec {
         }
 
         return node;
-    }
+    };
 }
 ```
 
@@ -898,6 +976,58 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    fn serialize(&self, root: Option<&NaryNode>) -> String {
+        let mut result = Vec::new();
+        Self::serialize_helper(root, &mut result);
+        String::from_utf8(result).unwrap()
+    }
+
+    fn serialize_helper(root: Option<&NaryNode>, result: &mut Vec<u8>) {
+        let root = match root {
+            Some(r) => r,
+            None => return,
+        };
+        result.push((root.val as u8) + b'0');
+        result.push((root.children.len() as u8) + b'0');
+        for child in &root.children {
+            Self::serialize_helper(Some(child), result);
+        }
+    }
+
+    fn deserialize(&self, data: String) -> Option<NaryNode> {
+        if data.is_empty() {
+            return None;
+        }
+        let bytes = data.as_bytes();
+        let mut index = 0;
+        Self::deserialize_helper(bytes, &mut index)
+    }
+
+    fn deserialize_helper(data: &[u8], index: &mut usize) -> Option<NaryNode> {
+        if *index == data.len() {
+            return None;
+        }
+        let val = (data[*index] - b'0') as i32;
+        *index += 1;
+        let num_children = (data[*index] - b'0') as usize;
+        let mut children = Vec::with_capacity(num_children);
+        for _ in 0..num_children {
+            *index += 1;
+            children.push(Self::deserialize_helper(data, index).unwrap());
+        }
+        Some(NaryNode { val, children })
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -912,7 +1042,7 @@ class Codec {
 
     - `Deserialization` : $O(N)$. For deserialization, the space occupied is by the recursion stack only. We don't use any other intermediate data structures like we did in the previous approach and simply rely on the information in the string and recursion to work it's magic. So, the space complexity would be $O(N)$ since this is not a `balanced` tree of any sort. It's not even binary.
 
->  Where $N$ is the number of nodes in the tree.
+> Where $N$ is the number of nodes in the tree.
 
 ---
 
@@ -925,12 +1055,14 @@ Another approach uses a sentinel character (like '#') to mark the end of a node'
 ### Algorithm
 
 **Serialization:**
+
 1. For each node, append its value.
 2. Recursively serialize each child.
 3. Append the sentinel '#' to mark the end of this node's subtree.
 4. Return the concatenated string.
 
 **Deserialization:**
+
 1. Maintain an index pointer into the string.
 2. Read the value at the current index and create a node.
 3. Increment the index and repeatedly deserialize children until the sentinel '#' is encountered.
@@ -948,48 +1080,48 @@ class WrappableInt:
             self.value += 1
 
 class Codec:
-    
+
     def serialize(self, root: 'Node') -> str:
         serializedList = []
         self._serializeHelper(root, serializedList)
         return "".join(serializedList)
-    
+
     def _serializeHelper(self, root, serializedList):
         if not root:
             return
-        
+
         # Actual value
         serializedList.append(chr(root.val + 48))
-        
+
         for child in root.children:
             self._serializeHelper(child, serializedList)
-            
+
         # Add the sentinel to indicate that all the children
-        # for the current node have been processed 
-        serializedList.append('#')    
-    
+        # for the current node have been processed
+        serializedList.append('#')
+
     def deserialize(self, data: str) -> 'Node':
         if not data:
             return None
-        
+
         return self._deserializeHelper(data, WrappableInt(0))
-        
+
     def _deserializeHelper(self, data, index):
-        
+
         if index.getValue() == len(data):
             return None
-        
+
         node = Node(ord(data[index.getValue()]) - 48, [])
         index.increment()
         while (data[index.getValue()] != '#'):
             node.children.append(self._deserializeHelper(data, index))
-        
-        
+
+
         # Discard the sentinel. Note that this also moves us
         # forward in the input string. So, we don't have the index
         # progressing inside the above while loop!
         index.increment()
-        return node  
+        return node
 ```
 
 ```java
@@ -1007,30 +1139,30 @@ class Codec {
             this.value++;
         }
     }
-    
+
     // Encodes a tree to a single string.
     public String serialize(Node root) {
-        
+
         StringBuilder sb = new StringBuilder();
         this._serializeHelper(root, sb);
         return sb.toString();
     }
-    
+
     private void _serializeHelper(Node root, StringBuilder sb) {
-        
+
         if (root == null) {
             return;
         }
-        
+
         // Add the value of the node
         sb.append((char) (root.val + '0'));
-        
-        // Recurse on the subtrees and build the 
+
+        // Recurse on the subtrees and build the
         // string accordingly
         for (Node child : root.children) {
             this._serializeHelper(child, sb);
         }
-        
+
         // Add the sentinel to indicate that all the children
         // for the current node have been processed
         sb.append('#');
@@ -1040,22 +1172,22 @@ class Codec {
     public Node deserialize(String data) {
         if(data.isEmpty())
             return null;
-        
+
         return this._deserializeHelper(data, new WrappableInt(0));
     }
-    
-    private Node _deserializeHelper(String data, WrappableInt index) {  
-        
+
+    private Node _deserializeHelper(String data, WrappableInt index) {
+
         if (index.getValue() == data.length()) {
             return null;
         }
-        
+
         Node node = new Node(data.charAt(index.getValue()) - '0', new ArrayList<Node>());
         index.increment();
         while (data.charAt(index.getValue()) != '#') {
             node.children.add(this._deserializeHelper(data, index));
         }
-        
+
         // Discard the sentinel. Note that this also moves us
         // forward in the input string. So, we don't have the index
         // progressing inside the above while loop!
@@ -1323,6 +1455,57 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    fn serialize(&self, root: Option<&NaryNode>) -> String {
+        let mut result = Vec::new();
+        Self::serialize_helper(root, &mut result);
+        String::from_utf8(result).unwrap()
+    }
+
+    fn serialize_helper(root: Option<&NaryNode>, result: &mut Vec<u8>) {
+        let root = match root {
+            Some(r) => r,
+            None => return,
+        };
+        result.push((root.val as u8) + b'0');
+        for child in &root.children {
+            Self::serialize_helper(Some(child), result);
+        }
+        result.push(b'#');
+    }
+
+    fn deserialize(&self, data: String) -> Option<NaryNode> {
+        if data.is_empty() {
+            return None;
+        }
+        let bytes = data.as_bytes();
+        let mut index = 0;
+        Self::deserialize_helper(bytes, &mut index)
+    }
+
+    fn deserialize_helper(data: &[u8], index: &mut usize) -> Option<NaryNode> {
+        if *index == data.len() {
+            return None;
+        }
+        let val = (data[*index] - b'0') as i32;
+        *index += 1;
+        let mut children = Vec::new();
+        while data[*index] != b'#' {
+            children.push(Self::deserialize_helper(data, index).unwrap());
+        }
+        *index += 1;
+        Some(NaryNode { val, children })
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1337,7 +1520,7 @@ class Codec {
 
     - `Deserialization` : $O(N)$. For deserialization, the space occupied is by the recursion stack only. We don't use any other intermediate data structures like we did in the previous approach and simply rely on the information in the string and recursion to work it's magic. So, the overall space complexity would be $O(N)$.
 
->  Where $N$ is the number of nodes in the tree.
+> Where $N$ is the number of nodes in the tree.
 
 ---
 
@@ -1350,6 +1533,7 @@ We can serialize the tree level by level using BFS. We use two sentinel markers:
 ### Algorithm
 
 **Serialization:**
+
 1. Use a queue initialized with the root and a level-end marker.
 2. For each node, append its value and enqueue all its children.
 3. After processing a node (if not the last on its level), add a child-switch marker.
@@ -1357,12 +1541,13 @@ We can serialize the tree level by level using BFS. We use two sentinel markers:
 5. Return the concatenated string.
 
 **Deserialization:**
+
 1. Create the root node from the first character.
 2. Maintain current and previous level lists.
 3. Process each character:
-   - '#': Move to the next level by swapping lists and getting the next parent.
-   - '$': Switch to the next parent on the same level.
-   - Otherwise: Create a child node and attach it to the current parent.
+    - '#': Move to the next level by swapping lists and getting the next parent.
+    - '$': Switch to the next parent on the same level.
+    - Otherwise: Create a child node and attach it to the current parent.
 4. Return the root node.
 
 ::tabs-start
@@ -1370,91 +1555,91 @@ We can serialize the tree level by level using BFS. We use two sentinel markers:
 ```python
 class Codec:
     def _serializeHelper(self, root, serializedList):
-        queue = collections.deque() 
+        queue = collections.deque()
         queue.append(root)
         queue.append(None)
-        
+
         while queue:
-            
+
             # Pop a node
             node = queue.popleft()
-            
+
             # If this is an "endNode", we need to add another one
             # to mark the end of the current level unless this
             # was the last level.
             if (node == None):
-                
+
                 # We add a sentinal value of "#" here
                 serializedList.append("#")
                 if queue:
                     queue.append(None)
-                    
+
             elif node == "C":
-                
+
                 # Add a sentinal value of "$" here to mark the switch to a
                 # different parent.
                 serializedList.append("$")
-                
+
             else:
-                
+
                 # Add value of the current node and add all of it's
                 # children nodes to the queue. Note how we convert
                 # the integers to their corresponding ASCII counterparts.
                 serializedList.append(chr(node.val + 48))
                 for child in node.children:
                     queue.append(child)
-                
-                # If this not is NOT the last one on the current level, 
+
+                # If this not is NOT the last one on the current level,
                 # add a childNode as well since we move on to processing
                 # the next node.
                 if queue[0] != None:
                     queue.append("C")
-        
-    def serialize(self, root: 'Node') -> str:   
+
+    def serialize(self, root: 'Node') -> str:
         if not root:
             return ""
-        
+
         serializedList = []
         self._serializeHelper(root, serializedList)
         return "".join(serializedList)
-        
+
     def _deserializeHelper(self, data, rootNode):
-        
+
         # We move one level at a time and at every level, we need access
         # to the nodes on the previous level as well so that we can form
         # the children arrays properly. Hence two arrays.
         prevLevel, currentLevel = collections.deque(), collections.deque()
         currentLevel.append(rootNode)
         parentNode = rootNode
-        
+
         # Process the characters in the string one at a time.
         for i in range (1, len(data)):
             if data[i] == "#":
-                
+
                 # Special processing for end of level. We need to swap the
                 # array lists. Here, we simply re-initialize the "currentLevel"
                 # arraylist rather than clearing it.
                 prevLevel = currentLevel
                 currentLevel = collections.deque()
-                
+
                 # Since we move one level down, we take the parent as the first
                 # node on the current level.
                 parentNode = prevLevel.popleft() if prevLevel else None
-                
+
             else:
                 if data[i] == "$":
-                    
+
                     # Special handling for change in parent on the same level
                     parentNode = prevLevel.popleft() if prevLevel else None
                 else:
                     childNode = Node(ord(data[i]) - 48, [])
                     currentLevel.append(childNode)
                     parentNode.children.append(childNode)
-                   
+
     def deserialize(self, data: str) -> 'Node':
         if not data:
             return None
-        
+
         rootNode = Node(ord(data[0]) - 48, [])
         self._deserializeHelper(data, rootNode)
         return rootNode
@@ -1464,20 +1649,20 @@ class Codec:
 class Codec {
 
     public String serialize(Node root) {
-        
+
         if (root == null) {
             return "";
         }
-        
+
         StringBuilder sb = new StringBuilder();
         this._serializeHelper(root, sb);
         return sb.toString();
     }
-    
+
     private void _serializeHelper(Node root, StringBuilder sb) {
         // Queue to perform a level order traversal of the tree
         Queue<Node> q = new LinkedList<Node>();
-        
+
         // Two dummy nodes that will help us in serialization string formation.
         // We insert the "endNode" whenever a level ends and the "childNode"
         // whenever a node's children are added to the queue and we are about
@@ -1486,29 +1671,29 @@ class Codec {
         Node childNode = new Node();
         q.add(root);
         q.add(endNode);
-        
+
         while (!q.isEmpty()) {
-            
+
             // Pop a node
             Node node = q.poll();
-            
+
             // If this is an "endNode", we need to add another one
             // to mark the end of the current level unless this
             // was the last level.
             if (node == endNode) {
-                
+
                 // We add a sentinal value of "#" here
                 sb.append('#');
                 if (!q.isEmpty()) {
-                    q.add(endNode);  
+                    q.add(endNode);
                 }
             } else if (node == childNode) {
-                
+
                 // Add a sentinal value of "$" here to mark the switch to a
                 // different parent.
                 sb.append('$');
             } else {
-                
+
                 // Add value of the current node and add all of it's
                 // children nodes to the queue. Note how we convert
                 // the integers to their corresponding ASCII counterparts.
@@ -1516,8 +1701,8 @@ class Codec {
                 for (Node child : node.children) {
                     q.add(child);
                 }
-                
-                // If this not is NOT the last one on the current level, 
+
+                // If this not is NOT the last one on the current level,
                 // add a childNode as well since we move on to processing
                 // the next node.
                 if (q.peek() != endNode) {
@@ -1531,14 +1716,14 @@ class Codec {
         if (data.isEmpty()) {
             return null;
         }
-            
+
         Node rootNode = new Node(data.charAt(0) - '0', new ArrayList<Node>());
         this._deserializeHelper(data, rootNode);
         return rootNode;
     }
-    
-    private void _deserializeHelper(String data, Node rootNode) {  
-        
+
+    private void _deserializeHelper(String data, Node rootNode) {
+
         // We move one level at a time and at every level, we need access
         // to the nodes on the previous level as well so that we can form
         // the children arrays properly. Hence two arrays.
@@ -1546,7 +1731,7 @@ class Codec {
         LinkedList<Node> prevLevel = new LinkedList<Node>();
         currentLevel.add(rootNode);
         Node parentNode = rootNode;
-        
+
         // Process the characters in the string one at a time.
         for (int i = 1; i < data.length(); i++) {
             char d = data.charAt(i);
@@ -1556,17 +1741,17 @@ class Codec {
                 // arraylist rather than clearing it.
                 prevLevel = currentLevel;
                 currentLevel = new LinkedList<Node>();
-                
+
                 // Since we move one level down, we take the parent as the first
                 // node on the current level.
                 parentNode = prevLevel.poll();
             } else {
                 if (d == '$') {
-                    
+
                     // Special handling for change in parent on the same level
                     parentNode = prevLevel.poll();
                 } else {
-                    Node childNode = new Node(d - '0', new ArrayList<Node>());    
+                    Node childNode = new Node(d - '0', new ArrayList<Node>());
                     currentLevel.add(childNode);
                     parentNode.children.add(childNode);
                 }
@@ -1583,18 +1768,18 @@ private:
         deque<variant<Node*, char>> queue;
         queue.push_back(root);
         queue.push_back(nullptr);
-        
+
         while (!queue.empty()) {
-            
+
             // Pop a node
             auto front = queue.front();
             queue.pop_front();
-            
+
             // If this is an "endNode", we need to add another one
             // to mark the end of the current level unless this
             // was the last level.
             if (holds_alternative<Node*>(front) && get<Node*>(front) == nullptr) {
-                
+
                 // We add a sentinel value of "#" here
                 serializedList += "#,";
                 if (!queue.empty()) {
@@ -1607,7 +1792,7 @@ private:
                 serializedList += "$,";
             }
             else {
-                
+
                 // Add value of the current node and add all of its
                 // children nodes to the queue.
                 Node* node = get<Node*>(front);
@@ -1615,42 +1800,42 @@ private:
                 for (Node* child : node->children) {
                     queue.push_back(child);
                 }
-                
+
                 // If this node is NOT the last one on the current level,
                 // add a childNode as well since we move on to processing
                 // the next node.
-                if (!queue.empty() && 
+                if (!queue.empty() &&
                     !(holds_alternative<Node*>(queue.front()) && get<Node*>(queue.front()) == nullptr)) {
                     queue.push_back('C');
                 }
             }
         }
     }
-    
+
     void _deserializeHelper(const string& data, Node* rootNode) {
-        
+
         // We move one level at a time and at every level, we need access
         // to the nodes on the previous level as well so that we can form
         // the children arrays properly. Hence two arrays.
         deque<Node*> prevLevel, currentLevel;
         currentLevel.push_back(rootNode);
         Node* parentNode = rootNode;
-        
+
         int i = 0;
         // Skip past first value (already parsed for rootNode)
         while (i < data.length() && data[i] != ',') i++;
         i++; // skip comma
-        
+
         // Process the characters in the string one at a time.
         while (i < data.length()) {
-            
+
             // Special processing for end of level. We need to swap the
             // array lists. Here, we simply re-initialize the "currentLevel"
             // arraylist rather than clearing it.
             if (data[i] == '#') {
                 prevLevel = currentLevel;
                 currentLevel = deque<Node*>();
-                
+
                 // Since we move one level down, we take the parent as the first
                 // node on the current level.
                 if (!prevLevel.empty()) {
@@ -1679,30 +1864,30 @@ private:
                     i++;
                 }
                 i++; // skip comma
-                
+
                 Node* childNode = new Node(val, vector<Node*>());
                 currentLevel.push_back(childNode);
                 parentNode->children.push_back(childNode);
             }
         }
     }
-    
+
 public:
     string serialize(Node* root) {
         if (root == nullptr) {
             return "";
         }
-        
+
         string serializedList;
         _serializeHelper(root, serializedList);
         return serializedList;
     }
-    
+
     Node* deserialize(string data) {
         if (data.empty()) {
             return nullptr;
         }
-        
+
         // Parse first value (handles multi-digit values)
         int val = 0;
         int i = 0;
@@ -1710,7 +1895,7 @@ public:
             val = val * 10 + (data[i] - '0');
             i++;
         }
-        
+
         Node* rootNode = new Node(val, vector<Node*>());
         _deserializeHelper(data, rootNode);
         return rootNode;
@@ -1724,31 +1909,25 @@ class Codec {
         const queue = new Deque();
         queue.pushBack(root);
         queue.pushBack(null);
-        
+
         while (queue.size() > 0) {
-            
             // Pop a node
             const node = queue.popFront();
-            
+
             // If this is an "endNode", we need to add another one
             // to mark the end of the current level unless this
             // was the last level.
             if (node === null) {
-                
                 // We add a sentinel value of "#" here
-                serializedList.push("#");
+                serializedList.push('#');
                 if (queue.size() > 0) {
                     queue.pushBack(null);
                 }
-                    
-            } else if (node === "C") {
-                
+            } else if (node === 'C') {
                 // Add a sentinel value of "$" here to mark the switch to a
                 // different parent.
-                serializedList.push("$");
-                
+                serializedList.push('$');
             } else {
-                
                 // Add value of the current node and add all of its
                 // children nodes to the queue. Note how we convert
                 // the integers to their corresponding ASCII counterparts.
@@ -1756,29 +1935,28 @@ class Codec {
                 for (const child of node.children) {
                     queue.pushBack(child);
                 }
-                
+
                 // If this node is NOT the last one on the current level,
                 // add a childNode as well since we move on to processing
                 // the next node.
                 if (queue.front() !== null) {
-                    queue.pushBack("C");
+                    queue.pushBack('C');
                 }
             }
         }
     }
-    
+
     serialize(root) {
         if (!root) {
-            return "";
+            return '';
         }
-        
+
         const serializedList = [];
         this._serializeHelper(root, serializedList);
-        return serializedList.join("");
+        return serializedList.join('');
     }
-    
+
     _deserializeHelper(data, rootNode) {
-        
         // We move one level at a time and at every level, we need access
         // to the nodes on the previous level as well so that we can form
         // the children arrays properly. Hence two arrays.
@@ -1786,26 +1964,24 @@ class Codec {
         let currentLevel = new Deque();
         currentLevel.pushBack(rootNode);
         let parentNode = rootNode;
-        
+
         // Process the characters in the string one at a time.
         for (let i = 1; i < data.length; i++) {
-            if (data[i] === "#") {
-                
+            if (data[i] === '#') {
                 // Special processing for end of level. We need to swap the
                 // array lists. Here, we simply re-initialize the "currentLevel"
                 // arraylist rather than clearing it.
                 prevLevel = currentLevel;
                 currentLevel = new Deque();
-                
+
                 // Since we move one level down, we take the parent as the first
                 // node on the current level.
                 parentNode = prevLevel.size() > 0 ? prevLevel.popFront() : null;
-                
             } else {
-                if (data[i] === "$") {
-                    
+                if (data[i] === '$') {
                     // Special handling for change in parent on the same level
-                    parentNode = prevLevel.size() > 0 ? prevLevel.popFront() : null;
+                    parentNode =
+                        prevLevel.size() > 0 ? prevLevel.popFront() : null;
                 } else {
                     const childNode = new _Node(data.charCodeAt(i) - 48, []);
                     currentLevel.pushBack(childNode);
@@ -1814,12 +1990,12 @@ class Codec {
             }
         }
     }
-    
+
     deserialize(data) {
         if (!data) {
             return null;
         }
-        
+
         const rootNode = new _Node(data.charCodeAt(0) - 48, []);
         this._deserializeHelper(data, rootNode);
         return rootNode;
@@ -2123,6 +2299,108 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec;
+
+impl Codec {
+    fn new() -> Self {
+        Codec
+    }
+
+    fn serialize(&self, root: Option<&NaryNode>) -> String {
+        let root = match root {
+            Some(r) => r,
+            None => return String::new(),
+        };
+
+        let mut result = Vec::<u8>::new();
+
+        enum QItem<'a> {
+            Node(&'a NaryNode),
+            EndLevel,
+            ChildSwitch,
+        }
+
+        let mut queue = VecDeque::new();
+        queue.push_back(QItem::Node(root));
+        queue.push_back(QItem::EndLevel);
+
+        while let Some(item) = queue.pop_front() {
+            match item {
+                QItem::EndLevel => {
+                    result.push(b'#');
+                    if !queue.is_empty() {
+                        queue.push_back(QItem::EndLevel);
+                    }
+                }
+                QItem::ChildSwitch => {
+                    result.push(b'$');
+                }
+                QItem::Node(node) => {
+                    result.push((node.val as u8) + b'0');
+                    for child in &node.children {
+                        queue.push_back(QItem::Node(child));
+                    }
+                    if let Some(front) = queue.front() {
+                        if !matches!(front, QItem::EndLevel) {
+                            queue.push_back(QItem::ChildSwitch);
+                        }
+                    }
+                }
+            }
+        }
+        String::from_utf8(result).unwrap()
+    }
+
+    fn deserialize(&self, data: String) -> Option<NaryNode> {
+        if data.is_empty() {
+            return None;
+        }
+        let bytes = data.as_bytes();
+        let mut root = NaryNode {
+            val: (bytes[0] - b'0') as i32,
+            children: vec![],
+        };
+
+        let mut prev_level: VecDeque<*mut NaryNode> = VecDeque::new();
+        let mut current_level: VecDeque<*mut NaryNode> = VecDeque::new();
+        current_level.push_back(&mut root as *mut NaryNode);
+        let mut parent: *mut NaryNode = &mut root;
+
+        for i in 1..bytes.len() {
+            match bytes[i] {
+                b'#' => {
+                    prev_level = current_level;
+                    current_level = VecDeque::new();
+                    parent = prev_level
+                        .pop_front()
+                        .unwrap_or(std::ptr::null_mut());
+                }
+                b'$' => {
+                    parent = prev_level
+                        .pop_front()
+                        .unwrap_or(std::ptr::null_mut());
+                }
+                d => {
+                    let child = NaryNode {
+                        val: (d - b'0') as i32,
+                        children: vec![],
+                    };
+                    unsafe {
+                        (*parent).children.push(child);
+                        let children = &mut (*parent).children;
+                        let ptr = children.last_mut().unwrap()
+                            as *mut NaryNode;
+                        current_level.push_back(ptr);
+                    }
+                }
+            }
+        }
+        Some(root)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -2137,7 +2415,7 @@ class Codec {
 
     - `Deserialization` : $O(N)$. For deserialization, the space is mostly occupied by the two lists that we use. The space complexity there is $O(N)$. Note that when we re-initialize a list, the memory that was allocated earlier is deallocated by the garbage collector and it's essentially equal to a single list of size $O(N)$.
 
->  Where $N$ is the number of nodes in the tree.
+> Where $N$ is the number of nodes in the tree.
 
 ---
 

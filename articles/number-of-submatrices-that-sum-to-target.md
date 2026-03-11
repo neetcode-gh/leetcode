@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum (1D and 2D)** - Used to efficiently compute subarray/submatrix sums in O(1) time after preprocessing
 - **Hash Map** - Used to count prefix sums and find pairs that differ by the target value
 - **Subarray Sum Equals K Pattern** - The optimal solution reduces the 2D problem to multiple 1D subarray sum problems
@@ -245,6 +247,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_submatrix_sum_target(matrix: Vec<Vec<i32>>, target: i32) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = 0;
+
+        for r1 in 0..rows {
+            for r2 in r1..rows {
+                for c1 in 0..cols {
+                    for c2 in c1..cols {
+                        let mut sub_sum = 0;
+                        for r in r1..=r2 {
+                            for c in c1..=c2 {
+                                sub_sum += matrix[r][c];
+                            }
+                        }
+                        if sub_sum == target {
+                            res += 1;
+                        }
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -266,7 +297,7 @@ By precomputing a 2D prefix sum, any submatrix sum can be calculated in `O(1)` u
 
 1. Build a 2D prefix sum array where `subSum[r][c]` represents the sum of all elements from `(0,0)` to `(r,c)`.
 2. For each submatrix defined by corners `(r1, c1)` and `(r2, c2)`:
-   - Compute its sum using: `subSum[r2][c2] - subSum[r1-1][c2] - subSum[r2][c1-1] + subSum[r1-1][c1-1]`.
+    - Compute its sum using: `subSum[r2][c2] - subSum[r1-1][c2] - subSum[r2][c1-1] + subSum[r1-1][c1-1]`.
 3. If the sum equals the target, increment the count.
 4. Return the total count.
 
@@ -576,6 +607,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_submatrix_sum_target(matrix: Vec<Vec<i32>>, target: i32) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut sub_sum = vec![vec![0i32; cols]; rows];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                let top = if r > 0 { sub_sum[r - 1][c] } else { 0 };
+                let left = if c > 0 { sub_sum[r][c - 1] } else { 0 };
+                let top_left = if r > 0 && c > 0 { sub_sum[r - 1][c - 1] } else { 0 };
+                sub_sum[r][c] = matrix[r][c] + top + left - top_left;
+            }
+        }
+
+        let mut res = 0;
+        for r1 in 0..rows {
+            for r2 in r1..rows {
+                for c1 in 0..cols {
+                    for c2 in c1..cols {
+                        let top = if r1 > 0 { sub_sum[r1 - 1][c2] } else { 0 };
+                        let left = if c1 > 0 { sub_sum[r2][c1 - 1] } else { 0 };
+                        let top_left = if r1 > 0 && c1 > 0 { sub_sum[r1 - 1][c1 - 1] } else { 0 };
+                        let cur_sum = sub_sum[r2][c2] - top - left + top_left;
+                        if cur_sum == target {
+                            res += 1;
+                        }
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,10 +665,10 @@ We reduce the 2D problem to multiple 1D subarray sum problems. After fixing a ro
 
 1. Compute the 2D prefix sum.
 2. For each pair of rows `(r1, r2)`:
-   - Initialize a hash map with `{0: 1}` to handle subarrays starting from column `0`.
-   - Iterate through columns, computing the cumulative sum for the current row range.
-   - For each column, add the count of `curSum - target` from the map to `res`.
-   - Update the map with the current sum.
+    - Initialize a hash map with `{0: 1}` to handle subarrays starting from column `0`.
+    - Iterate through columns, computing the cumulative sum for the current row range.
+    - For each column, add the count of `curSum - target` from the map to `res`.
+    - Update the map with the current sum.
 3. Return the total count.
 
 ::tabs-start
@@ -874,6 +942,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_submatrix_sum_target(matrix: Vec<Vec<i32>>, target: i32) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut sub_sum = vec![vec![0i32; cols]; rows];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                let top = if r > 0 { sub_sum[r - 1][c] } else { 0 };
+                let left = if c > 0 { sub_sum[r][c - 1] } else { 0 };
+                let top_left = if r > 0 && c > 0 { sub_sum[r - 1][c - 1] } else { 0 };
+                sub_sum[r][c] = matrix[r][c] + top + left - top_left;
+            }
+        }
+
+        let mut res = 0;
+        for r1 in 0..rows {
+            for r2 in r1..rows {
+                let mut count = HashMap::new();
+                count.insert(0, 1);
+                for c in 0..cols {
+                    let cur_sum = sub_sum[r2][c] - if r1 > 0 { sub_sum[r1 - 1][c] } else { 0 };
+                    res += *count.get(&(cur_sum - target)).unwrap_or(&0);
+                    *count.entry(cur_sum).or_insert(0) += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -894,8 +995,8 @@ Similar to the horizontal approach, but we fix column bounds instead of row boun
 ### Algorithm
 
 1. For each pair of columns `(c1, c2)`:
-   - Maintain a row prefix array where `rowPrefix[r]` stores the sum of elements in row `r` from column `c1` to `c2`.
-   - Apply the 1D subarray sum technique: use a hash map to count prefix sums differing by the target.
+    - Maintain a row prefix array where `rowPrefix[r]` stores the sum of elements in row `r` from column `c1` to `c2`.
+    - Apply the 1D subarray sum technique: use a hash map to count prefix sums differing by the target.
 2. For each row, update the row prefix and check against the hash map.
 3. Return the total count.
 
@@ -1122,6 +1223,36 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_submatrix_sum_target(matrix: Vec<Vec<i32>>, target: i32) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut res = 0;
+
+        for c1 in 0..cols {
+            let mut row_prefix = vec![0i32; rows];
+            for c2 in c1..cols {
+                for r in 0..rows {
+                    row_prefix[r] += matrix[r][c2];
+                }
+
+                let mut count = HashMap::new();
+                count.insert(0, 1);
+                let mut cur_sum = 0;
+
+                for r in 0..rows {
+                    cur_sum += row_prefix[r];
+                    res += *count.get(&(cur_sum - target)).unwrap_or(&0);
+                    *count.entry(cur_sum).or_insert(0) += 1;
+                }
+            }
+        }
+        res
     }
 }
 ```

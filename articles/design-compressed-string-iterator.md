@@ -305,6 +305,48 @@ class StringIterator {
 }
 ```
 
+
+```rust
+struct StringIterator {
+    res: Vec<u8>,
+    ptr: usize,
+}
+
+impl StringIterator {
+    fn new(compressed_string: String) -> Self {
+        let bytes = compressed_string.as_bytes();
+        let mut res = Vec::new();
+        let mut i = 0;
+        while i < bytes.len() {
+            let ch = bytes[i];
+            i += 1;
+            let mut num = 0u64;
+            while i < bytes.len() && bytes[i].is_ascii_digit() {
+                num = num * 10 + (bytes[i] - b'0') as u64;
+                i += 1;
+            }
+            for _ in 0..num {
+                res.push(ch);
+            }
+        }
+        Self { res, ptr: 0 }
+    }
+
+    fn next(&mut self) -> char {
+        if !self.has_next() {
+            return ' ';
+        }
+        let ch = self.res[self.ptr] as char;
+        self.ptr += 1;
+        ch
+    }
+
+    fn has_next(&self) -> bool {
+        self.ptr != self.res.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -624,6 +666,53 @@ class StringIterator {
 }
 ```
 
+
+```rust
+struct StringIterator {
+    ptr: usize,
+    chars: Vec<u8>,
+    nums: Vec<i64>,
+}
+
+impl StringIterator {
+    fn new(compressed_string: String) -> Self {
+        let bytes = compressed_string.as_bytes();
+        let mut chars = Vec::new();
+        let mut nums = Vec::new();
+        let mut i = 0;
+        while i < bytes.len() {
+            if bytes[i].is_ascii_alphabetic() {
+                chars.push(bytes[i]);
+                i += 1;
+                let mut num = 0i64;
+                while i < bytes.len() && bytes[i].is_ascii_digit() {
+                    num = num * 10 + (bytes[i] - b'0') as i64;
+                    i += 1;
+                }
+                nums.push(num);
+            }
+        }
+        Self { ptr: 0, chars, nums }
+    }
+
+    fn next(&mut self) -> char {
+        if !self.has_next() {
+            return ' ';
+        }
+        self.nums[self.ptr] -= 1;
+        let res = self.chars[self.ptr] as char;
+        if self.nums[self.ptr] == 0 {
+            self.ptr += 1;
+        }
+        res
+    }
+
+    fn has_next(&self) -> bool {
+        self.ptr != self.chars.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -907,6 +996,47 @@ class StringIterator {
 
     func hasNext() -> Bool {
         return ptr != res.count || num != 0
+    }
+}
+```
+
+
+```rust
+struct StringIterator {
+    res: Vec<u8>,
+    ptr: usize,
+    num: i64,
+    ch: u8,
+}
+
+impl StringIterator {
+    fn new(compressed_string: String) -> Self {
+        Self {
+            res: compressed_string.into_bytes(),
+            ptr: 0,
+            num: 0,
+            ch: b' ',
+        }
+    }
+
+    fn next(&mut self) -> char {
+        if !self.has_next() {
+            return ' ';
+        }
+        if self.num == 0 {
+            self.ch = self.res[self.ptr];
+            self.ptr += 1;
+            while self.ptr < self.res.len() && self.res[self.ptr].is_ascii_digit() {
+                self.num = self.num * 10 + (self.res[self.ptr] - b'0') as i64;
+                self.ptr += 1;
+            }
+        }
+        self.num -= 1;
+        self.ch as char
+    }
+
+    fn has_next(&self) -> bool {
+        self.ptr != self.res.len() || self.num != 0
     }
 }
 ```

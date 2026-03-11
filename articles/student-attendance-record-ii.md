@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both memoization (top-down) and tabulation (bottom-up) approaches for counting problems
 - **State Machine Design** - Modeling problems with multiple constraints as transitions between discrete states
 - **Modular Arithmetic** - Applying modulo operations to prevent integer overflow in counting problems
@@ -17,9 +19,9 @@ A valid attendance record has at most 1 absence (A) and no more than 2 consecuti
 1. Define a recursive function `dfs(i, cntA, cntL)` where `i` is the remaining length, `cntA` is the number of absences used, and `cntL` is the current consecutive late streak.
 2. Base case: when `i == 0`, we have built a valid record, so return `1`.
 3. For each position, we have three choices:
-   - Place `'P'`: always valid, resets consecutive late count to `0`.
-   - Place `'A'`: only valid if `cntA == 0` (no absence used yet), resets late count to `0`.
-   - Place `'L'`: only valid if `cntL < 2` (fewer than `2` consecutive lates), increments late count.
+    - Place `'P'`: always valid, resets consecutive late count to `0`.
+    - Place `'A'`: only valid if `cntA == 0` (no absence used yet), resets late count to `0`.
+    - Place `'L'`: only valid if `cntL < 2` (fewer than `2` consecutive lates), increments late count.
 4. Sum all valid transitions and cache the result.
 5. Return `dfs(n, 0, 0)` as the answer.
 
@@ -293,6 +295,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_record(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = n as usize;
+        let mut cache = vec![vec![vec![-1i64; 3]; 2]; n + 1];
+
+        fn dfs(i: usize, cnt_a: usize, cnt_l: usize, cache: &mut Vec<Vec<Vec<i64>>>) -> i64 {
+            const MOD: i64 = 1_000_000_007;
+            if i == 0 {
+                return 1;
+            }
+            if cache[i][cnt_a][cnt_l] != -1 {
+                return cache[i][cnt_a][cnt_l];
+            }
+
+            let mut res = dfs(i - 1, cnt_a, 0, cache) % MOD;
+
+            if cnt_a == 0 {
+                res = (res + dfs(i - 1, 1, 0, cache)) % MOD;
+            }
+
+            if cnt_l < 2 {
+                res = (res + dfs(i - 1, cnt_a, cnt_l + 1, cache)) % MOD;
+            }
+
+            cache[i][cnt_a][cnt_l] = res;
+            res
+        }
+
+        dfs(n, 0, 0, &mut cache) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,9 +350,9 @@ This approach reorganizes the state representation. Instead of tracking individu
 1. For the base case `n == 1`, manually define the counts for each (A, L) state.
 2. For larger `n`, recursively get the state counts for `n - 1`.
 3. Build the new state counts by considering what character we append:
-   - Appending `'P'` sums all states with the same absence count (resets late to `0`).
-   - Appending `'L'` shifts the late count up by `1`.
-   - Appending `'A'` moves from absence count `0` to `1` (resets late to `0`).
+    - Appending `'P'` sums all states with the same absence count (resets late to `0`).
+    - Appending `'L'` shifts the late count up by `1`.
+    - Appending `'A'` moves from absence count `0` to `1` (resets late to `0`).
 4. Cache results to avoid recomputation.
 5. Sum all six final state values modulo $10^9 + 7$.
 
@@ -713,6 +750,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_record(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = n as usize;
+        let base_case: [[i64; 3]; 2] = [[1, 1, 0], [1, 0, 0]];
+        let mut cache = vec![[[- 1i64; 3]; 2]; n + 1];
+
+        fn count(
+            n: usize, cache: &mut Vec<[[i64; 3]; 2]>,
+            base_case: &[[i64; 3]; 2],
+        ) -> [[i64; 3]; 2] {
+            const MOD: i64 = 1_000_000_007;
+            if n == 1 {
+                return *base_case;
+            }
+            if cache[n][0][0] != -1 {
+                return cache[n];
+            }
+
+            let prev = count(n - 1, cache, base_case);
+
+            // Choose P
+            cache[n][0][0] = ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD;
+            cache[n][1][0] = ((prev[1][0] + prev[1][1]) % MOD + prev[1][2]) % MOD;
+
+            // Choose L
+            cache[n][0][1] = prev[0][0];
+            cache[n][0][2] = prev[0][1];
+            cache[n][1][1] = prev[1][0];
+            cache[n][1][2] = prev[1][1];
+
+            // Choose A
+            cache[n][1][0] = (cache[n][1][0] + ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD) % MOD;
+
+            cache[n]
+        }
+
+        let result = count(n, &mut cache, &base_case);
+        let mut total = 0i64;
+        for row in &result {
+            for &val in row {
+                total = (total + val) % MOD;
+            }
+        }
+        total as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -732,9 +819,9 @@ Instead of recursion, we iterate forward and build the DP table from length 0 to
 
 1. Initialize `dp[0][0][0] = 1` (one way to have an empty record with no absences and no lates).
 2. For each position from `1` to `n`, for each state (cntA, cntL):
-   - Adding `'P'`: transitions from any late count to late count `0` with the same absence count.
-   - Adding `'A'`: if `cntA > 0`, transitions from absence count `cntA - 1` to `cntA` with late count `0`.
-   - Adding `'L'`: if `cntL > 0`, transitions from late count `cntL - 1` to `cntL` with the same absence count.
+    - Adding `'P'`: transitions from any late count to late count `0` with the same absence count.
+    - Adding `'A'`: if `cntA > 0`, transitions from absence count `cntA - 1` to `cntA` with late count `0`.
+    - Adding `'L'`: if `cntL > 0`, transitions from late count `cntL - 1` to `cntL` with the same absence count.
 3. Sum all states at position `n` for the final answer.
 
 ::tabs-start
@@ -1052,6 +1139,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_record(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = n as usize;
+        let mut dp = vec![[[0i64; 3]; 2]; n + 1];
+
+        dp[0][0][0] = 1;
+
+        for i in 1..=n {
+            for cnt_a in 0..2 {
+                for cnt_l in 0..3 {
+                    // Choose P
+                    dp[i][cnt_a][0] = (dp[i][cnt_a][0] + dp[i - 1][cnt_a][cnt_l]) % MOD;
+
+                    // Choose A
+                    if cnt_a > 0 {
+                        dp[i][cnt_a][0] = (dp[i][cnt_a][0] + dp[i - 1][cnt_a - 1][cnt_l]) % MOD;
+                    }
+
+                    // Choose L
+                    if cnt_l > 0 {
+                        dp[i][cnt_a][cnt_l] = (dp[i][cnt_a][cnt_l] + dp[i - 1][cnt_a][cnt_l - 1]) % MOD;
+                    }
+                }
+            }
+        }
+
+        let mut result = 0i64;
+        for cnt_a in 0..2 {
+            for cnt_l in 0..3 {
+                result = (result + dp[n][cnt_a][cnt_l]) % MOD;
+            }
+        }
+
+        result as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1071,10 +1198,10 @@ Since each position only depends on the previous position, we can reduce space f
 
 1. Initialize the base case for length `1`: set counts for each (A, L) state.
 2. For each additional position (from length `2` to `n`):
-   - Compute new state counts based on appending `'P'`, `'L'`, or `'A'`.
-   - `'P'` sums all late counts for the same absence count (resets late to `0`).
-   - `'L'` shifts late count forward.
-   - `'A'` transfers from absence `0` to absence `1`.
+    - Compute new state counts based on appending `'P'`, `'L'`, or `'A'`.
+    - `'P'` sums all late counts for the same absence count (resets late to `0`).
+    - `'L'` shifts late count forward.
+    - `'A'` transfers from absence `0` to absence `1`.
 3. After all iterations, sum the six state values for the answer.
 
 ::tabs-start
@@ -1389,6 +1516,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_record(n: i32) -> i32 {
+        if n == 1 {
+            return 3;
+        }
+
+        const MOD: i64 = 1_000_000_007;
+        let mut dp: [[i64; 3]; 2] = [[1, 1, 0], [1, 0, 0]];
+
+        for _ in 0..(n - 1) {
+            let mut ndp = [[0i64; 3]; 2];
+
+            // Choose P
+            ndp[0][0] = ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD;
+            ndp[1][0] = ((dp[1][0] + dp[1][1]) % MOD + dp[1][2]) % MOD;
+
+            // Choose L
+            ndp[0][1] = dp[0][0];
+            ndp[1][1] = dp[1][0];
+            ndp[0][2] = dp[0][1];
+            ndp[1][2] = dp[1][1];
+
+            // Choose A
+            ndp[1][0] = (ndp[1][0] + ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD) % MOD;
+
+            dp = ndp;
+        }
+
+        let mut total = 0i64;
+        for row in &dp {
+            for &val in row {
+                total = (total + val) % MOD;
+            }
+        }
+        total as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1408,12 +1575,12 @@ This is an alternative space-optimized formulation that iterates forward from th
 
 1. Initialize `dp[0][0] = 1` (empty record with no absences and no consecutive lates).
 2. For each position from `1` to `n`:
-   - Create a fresh next state array.
-   - For each (cntA, cntL) combination, compute transitions:
-     - `'P'`: adds to state (cntA, `0`) from any (cntA, cntL).
-     - `'A'`: adds to state (cntA, `0`) from (cntA - `1`, cntL) if `cntA > 0`.
-     - `'L'`: adds to state (cntA, cntL) from (cntA, cntL - `1`) if `cntL > 0`.
-   - Swap arrays and continue.
+    - Create a fresh next state array.
+    - For each (cntA, cntL) combination, compute transitions:
+        - `'P'`: adds to state (cntA, `0`) from any (cntA, cntL).
+        - `'A'`: adds to state (cntA, `0`) from (cntA - `1`, cntL) if `cntA > 0`.
+        - `'L'`: adds to state (cntA, cntL) from (cntA, cntL - `1`) if `cntL > 0`.
+    - Swap arrays and continue.
 3. Sum all six states at the end for the final count.
 
 ::tabs-start
@@ -1753,6 +1920,49 @@ class Solution {
         }
 
         return result
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn check_record(n: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let mut dp = [[0i64; 3]; 2];
+
+        dp[0][0] = 1;
+
+        for _ in 1..=n {
+            let mut next_dp = [[0i64; 3]; 2];
+
+            for cnt_a in 0..2 {
+                for cnt_l in 0..3 {
+                    // Choose P
+                    next_dp[cnt_a][0] = (next_dp[cnt_a][0] + dp[cnt_a][cnt_l]) % MOD;
+
+                    // Choose A
+                    if cnt_a > 0 {
+                        next_dp[cnt_a][0] = (next_dp[cnt_a][0] + dp[cnt_a - 1][cnt_l]) % MOD;
+                    }
+
+                    // Choose L
+                    if cnt_l > 0 {
+                        next_dp[cnt_a][cnt_l] = (next_dp[cnt_a][cnt_l] + dp[cnt_a][cnt_l - 1]) % MOD;
+                    }
+                }
+            }
+
+            dp = next_dp;
+        }
+
+        let mut result = 0i64;
+        for cnt_a in 0..2 {
+            for cnt_l in 0..3 {
+                result = (result + dp[cnt_a][cnt_l]) % MOD;
+            }
+        }
+
+        result as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structure with value and next pointer, traversing linked lists
 - **Dummy Node Technique** - Using a sentinel node to simplify edge cases like removing the head
 - **Recursion** - Solving problems by breaking them into smaller subproblems on the remaining list
@@ -334,6 +336,37 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn remove_elements(head: Option<Box<ListNode>>, val: i32) -> Option<Box<ListNode>> {
+        let mut arr = Vec::new();
+        let mut cur = &head;
+
+        while let Some(node) = cur {
+            if node.val != val {
+                arr.push(node.val);
+            }
+            cur = &node.next;
+        }
+
+        let mut dummy = Box::new(ListNode::new(0));
+        let mut tail = &mut dummy;
+        for &v in &arr {
+            tail.next = Some(Box::new(ListNode::new(v)));
+            tail = tail.next.as_mut().unwrap();
+        }
+
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -522,6 +555,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_elements(head: Option<Box<ListNode>>, val: i32) -> Option<Box<ListNode>> {
+        match head {
+            None => None,
+            Some(mut node) => {
+                node.next = Self::remove_elements(node.next, val);
+                if node.val == val {
+                    node.next
+                } else {
+                    Some(node)
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -545,9 +596,9 @@ When the value does not match, we simply advance `prev`.
 1. Create a dummy node pointing to `head`.
 2. Initialize `prev` to the dummy node and `curr` to `head`.
 3. While `curr` is not `null`:
-   - If `curr.val` equals `val`, set `prev.next` to `curr.next` to skip the current node.
-   - Otherwise, move `prev` to `curr`.
-   - Move `curr` to the next node.
+    - If `curr.val` equals `val`, set `prev.next` to `curr.next` to skip the current node.
+    - Otherwise, move `prev` to `curr`.
+    - Move `curr` to the next node.
 4. Return `dummy.next`.
 
 ::tabs-start
@@ -795,6 +846,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_elements(head: Option<Box<ListNode>>, val: i32) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut curr = &mut dummy;
+
+        while curr.next.is_some() {
+            if curr.next.as_ref().unwrap().val == val {
+                let next = curr.next.as_mut().unwrap().next.take();
+                curr.next = next;
+            } else {
+                curr = curr.next.as_mut().unwrap();
+            }
+        }
+
+        dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -818,8 +889,8 @@ Otherwise, we advance `curr` to continue scanning.
 1. Create a dummy node pointing to `head`.
 2. Set `curr` to the dummy node.
 3. While `curr.next` is not `null`:
-   - If `curr.next.val` equals `val`, set `curr.next` to `curr.next.next` to remove the node.
-   - Otherwise, advance `curr` to `curr.next`.
+    - If `curr.next.val` equals `val`, set `curr.next` to `curr.next.next` to remove the node.
+    - Otherwise, advance `curr` to `curr.next`.
 4. Return `dummy.next`.
 
 ::tabs-start
@@ -1044,6 +1115,26 @@ class Solution {
         }
 
         return dummy.next
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_elements(head: Option<Box<ListNode>>, val: i32) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: -1, next: head });
+        let mut curr = &mut dummy;
+
+        while curr.next.is_some() {
+            if curr.next.as_ref().unwrap().val == val {
+                let next = curr.next.as_mut().unwrap().next.take();
+                curr.next = next;
+            } else {
+                curr = curr.next.as_mut().unwrap();
+            }
+        }
+
+        dummy.next
     }
 }
 ```

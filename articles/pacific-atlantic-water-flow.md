@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Depth First Search (DFS)** - Recursive traversal to explore connected components and paths in grids
 - **Breadth First Search (BFS)** - Level-by-level traversal as an alternative approach for grid exploration
 - **2D Matrix/Grid Traversal** - Moving in four directions and tracking visited cells
@@ -10,30 +12,33 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force (Backtracking)
 
 ### Intuition
+
 For each cell, we try to see **where water can flow** if it starts there.
 
 Rule: water can flow from a cell to a neighbor only if the neighbor’s height is **<= current height** (downhill or flat).
 
 So for every (r, c):
+
 - Run DFS exploring all paths that keep going to **same or lower** heights.
 - If during DFS we ever step **out of the grid**:
-  - Out of **top/left** boundary ⇒ it can reach the **Pacific**.
-  - Out of **bottom/right** boundary ⇒ it can reach the **Atlantic**.
+    - Out of **top/left** boundary ⇒ it can reach the **Pacific**.
+    - Out of **bottom/right** boundary ⇒ it can reach the **Atlantic**.
 - If both oceans are reachable, include (r, c) in the answer.
 
 To avoid infinite loops, we temporarily mark the current cell as **visited** (here by setting it to `inf`) while exploring, then restore it after backtracking.
 
 ### Algorithm
+
 1. For each cell `(r, c)`:
-   - Set `pacific = false`, `atlantic = false`.
-   - `DFS(r, c, prevVal = +∞)`.
+    - Set `pacific = false`, `atlantic = false`.
+    - `DFS(r, c, prevVal = +∞)`.
 2. `DFS(r, c, prevVal)`:
-   - If `r < 0` or `c < 0`: set `pacific = true`, return.
-   - If `r == ROWS` or `c == COLS`: set `atlantic = true`, return.
-   - If `heights[r][c] > prevVal`: return (can't flow uphill).
-   - Mark cell as visited (temporary), explore 4 neighbors with `prevVal = currentHeight`.
-   - If both oceans found, you can stop early.
-   - Restore the cell value (backtrack).
+    - If `r < 0` or `c < 0`: set `pacific = true`, return.
+    - If `r == ROWS` or `c == COLS`: set `atlantic = true`, return.
+    - If `heights[r][c] > prevVal`: return (can't flow uphill).
+    - Mark cell as visited (temporary), explore 4 neighbors with `prevVal = currentHeight`.
+    - If both oceans found, you can stop early.
+    - Restore the cell value (backtrack).
 3. If after `DFS` both flags are `true`, add `(r, c)` to result.
 4. Return result list.
 
@@ -446,6 +451,61 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pacific_atlantic(heights: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let directions = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+        let mut heights = heights;
+        let mut res = vec![];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                let mut pacific = false;
+                let mut atlantic = false;
+                Self::dfs_backtrack(
+                    &mut heights, r as i32, c as i32, i32::MAX,
+                    rows, cols, &directions, &mut pacific, &mut atlantic,
+                );
+                if pacific && atlantic {
+                    res.push(vec![r as i32, c as i32]);
+                }
+            }
+        }
+        res
+    }
+
+    fn dfs_backtrack(
+        heights: &mut Vec<Vec<i32>>, r: i32, c: i32, prev_val: i32,
+        rows: usize, cols: usize, directions: &[(i32, i32)],
+        pacific: &mut bool, atlantic: &mut bool,
+    ) {
+        if r < 0 || c < 0 {
+            *pacific = true;
+            return;
+        }
+        if r >= rows as i32 || c >= cols as i32 {
+            *atlantic = true;
+            return;
+        }
+        let (ru, cu) = (r as usize, c as usize);
+        if heights[ru][cu] > prev_val {
+            return;
+        }
+        let tmp = heights[ru][cu];
+        heights[ru][cu] = i32::MAX;
+        for &(dr, dc) in directions {
+            Self::dfs_backtrack(heights, r + dr, c + dc, tmp, rows, cols, directions, pacific, atlantic);
+            if *pacific && *atlantic {
+                break;
+            }
+        }
+        heights[ru][cu] = tmp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -460,6 +520,7 @@ class Solution {
 ## 2. Depth First Search
 
 ### Intuition
+
 Instead of starting DFS from every cell (slow), we reverse the thinking:
 
 A cell can reach an ocean **if water can flow from that cell to the ocean** (downhill/flat).
@@ -467,16 +528,18 @@ Reverse it: start from the **ocean borders** and move **uphill/flat** (to neighb
 If you can climb from the ocean to a cell, then that cell can flow down to that ocean.
 
 So we do 2 DFS runs:
+
 - From all **Pacific border** cells (top row + left column) → mark all reachable cells in `pac`
 - From all **Atlantic border** cells (bottom row + right column) → mark all reachable cells in `atl`
 
 Answer = cells that are in **both** sets.
 
 ### Algorithm
+
 1. Create two visited sets: `pac`, `atl`.
 2. `DFS` rule (reverse flow):
-   - From cell `(r, c)`, you may go to a neighbor `(nr, nc)` only if
-     `heights[nr][nc] >= heights[r][c]` (uphill or same).
+    - From cell `(r, c)`, you may go to a neighbor `(nr, nc)` only if
+      `heights[nr][nc] >= heights[r][c]` (uphill or same).
 3. Run `DFS` from every Pacific border cell, fill `pac`.
 4. Run `DFS` from every Atlantic border cell, fill `atl`.
 5. For every cell in the grid, if it's in both `pac` and `atl`, add it to result.
@@ -848,6 +911,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pacific_atlantic(heights: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let mut pac = vec![vec![false; cols]; rows];
+        let mut atl = vec![vec![false; cols]; rows];
+
+        fn dfs(r: usize, c: usize, ocean: &mut Vec<Vec<bool>>, heights: &Vec<Vec<i32>>,
+               rows: usize, cols: usize) {
+            ocean[r][c] = true;
+            let directions: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+            for (dr, dc) in directions {
+                let nr = r as i32 + dr;
+                let nc = c as i32 + dc;
+                if nr >= 0 && nr < rows as i32 && nc >= 0 && nc < cols as i32 {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if !ocean[nr][nc] && heights[nr][nc] >= heights[r][c] {
+                        dfs(nr, nc, ocean, heights, rows, cols);
+                    }
+                }
+            }
+        }
+
+        for c in 0..cols {
+            dfs(0, c, &mut pac, &heights, rows, cols);
+            dfs(rows - 1, c, &mut atl, &heights, rows, cols);
+        }
+        for r in 0..rows {
+            dfs(r, 0, &mut pac, &heights, rows, cols);
+            dfs(r, cols - 1, &mut atl, &heights, rows, cols);
+        }
+
+        let mut res = vec![];
+        for r in 0..rows {
+            for c in 0..cols {
+                if pac[r][c] && atl[r][c] {
+                    res.push(vec![r as i32, c as i32]);
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -862,29 +971,33 @@ class Solution {
 ## 3. Breadth First Search
 
 ### Intuition
+
 Do the same “reverse flow” idea, but with BFS.
 
-A cell can flow to an ocean if you can start from the ocean border and move *backwards* into the grid using the rule:
+A cell can flow to an ocean if you can start from the ocean border and move _backwards_ into the grid using the rule:
+
 - from (r, c) you can go to neighbor (nr, nc) if `heights[nr][nc] >= heights[r][c]`
-(because in the real direction water would flow from higher/equal down to (r, c)).
+  (because in the real direction water would flow from higher/equal down to (r, c)).
 
 So:
+
 - Multi-source BFS from all Pacific border cells marks `pac[r][c] = True`
 - Multi-source BFS from all Atlantic border cells marks `atl[r][c] = True`
-Cells that are `True` in both are the answer.
+  Cells that are `True` in both are the answer.
 
 ### Algorithm
+
 1. Create two boolean grids `pac` and `atl` (same size as `heights`), all `false`.
 2. Build two source lists:
-   - `pacificSources`: all cells on top row + left column
-   - `atlanticSources`: all cells on bottom row + right column
+    - `pacificSources`: all cells on top row + left column
+    - `atlanticSources`: all cells on bottom row + right column
 3. Run `BFS(sources, oceanGrid)`:
-   - Initialize queue with all sources.
-   - While queue not empty:
-     - pop `(r, c)`, mark `oceanGrid[r][c] = true`
-     - for each neighbor `(nr, nc)` in 4 directions:
-       - if inside grid AND not visited in `oceanGrid` AND `heights[nr][nc] >= heights[r][c]`,
-         push `(nr, nc)` into queue.
+    - Initialize queue with all sources.
+    - While queue not empty:
+        - pop `(r, c)`, mark `oceanGrid[r][c] = true`
+        - for each neighbor `(nr, nc)` in 4 directions:
+            - if inside grid AND not visited in `oceanGrid` AND `heights[nr][nc] >= heights[r][c]`,
+              push `(nr, nc)` into queue.
 4. Run `BFS` for Pacific → fill `pac`.
 5. Run `BFS` for Atlantic → fill `atl`.
 6. Iterate all cells; if `pac[r][c]` and `atl[r][c]` are both `true`, add `[r, c]` to result.
@@ -1330,6 +1443,59 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pacific_atlantic(heights: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let rows = heights.len();
+        let cols = heights[0].len();
+        let directions = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+        let mut pac = vec![vec![false; cols]; rows];
+        let mut atl = vec![vec![false; cols]; rows];
+
+        let mut bfs = |source: Vec<(usize, usize)>, ocean: &mut Vec<Vec<bool>>| {
+            let mut queue: VecDeque<(usize, usize)> = source.into_iter().collect();
+            while let Some((r, c)) = queue.pop_front() {
+                ocean[r][c] = true;
+                for &(dr, dc) in &directions {
+                    let nr = r as i32 + dr;
+                    let nc = c as i32 + dc;
+                    if nr >= 0 && nr < rows as i32 && nc >= 0 && nc < cols as i32 {
+                        let (nr, nc) = (nr as usize, nc as usize);
+                        if !ocean[nr][nc] && heights[nr][nc] >= heights[r][c] {
+                            queue.push_back((nr, nc));
+                        }
+                    }
+                }
+            }
+        };
+
+        let mut pacific = vec![];
+        let mut atlantic = vec![];
+        for c in 0..cols {
+            pacific.push((0, c));
+            atlantic.push((rows - 1, c));
+        }
+        for r in 0..rows {
+            pacific.push((r, 0));
+            atlantic.push((r, cols - 1));
+        }
+
+        bfs(pacific, &mut pac);
+        bfs(atlantic, &mut atl);
+
+        let mut res = vec![];
+        for r in 0..rows {
+            for c in 0..cols {
+                if pac[r][c] && atl[r][c] {
+                    res.push(vec![r as i32, c as i32]);
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1349,7 +1515,7 @@ When starting from ocean borders and moving inward, the comparison must check if
 
 ### Running Separate DFS/BFS for Each Cell
 
-A brute force approach that runs a full traversal from every cell to check ocean reachability leads to O((m*n)^2) time complexity or worse. The efficient approach is to run only two traversals total: one multi-source search from all Pacific border cells and one from all Atlantic border cells.
+A brute force approach that runs a full traversal from every cell to check ocean reachability leads to O((m\*n)^2) time complexity or worse. The efficient approach is to run only two traversals total: one multi-source search from all Pacific border cells and one from all Atlantic border cells.
 
 ### Not Properly Handling Edge and Corner Cells
 

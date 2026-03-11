@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding how nodes connect via left and right children
 - **Recursion** - Using recursive calls to naturally traverse tree structures
 - **Stacks** - Simulating recursion iteratively by explicitly managing the call stack
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 Inorder traversal visits nodes in the order: left subtree, current node, right subtree. For a binary search tree, this produces values in sorted order. We can use recursion to naturally handle the traversal by first recursing on the left child, then processing the current node, and finally recursing on the right child.
 
 ### Algorithm
+
 1. Create a result list to store the node values.
 2. Define a recursive helper function that takes a node as input.
 3. If the node is `null`, return immediately (base case).
@@ -257,6 +261,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        Self::inorder(&root, &mut res);
+        res
+    }
+
+    fn inorder(node: &Option<Rc<RefCell<TreeNode>>>, res: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            Self::inorder(&n.left, res);
+            res.push(n.val);
+            Self::inorder(&n.right, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -271,15 +294,17 @@ class Solution {
 ## 2. Iterative Depth First Search
 
 ### Intuition
+
 We can simulate the recursive call stack using an explicit stack. The key insight is that we need to go as far left as possible, then process the current node, and move to the right subtree. The stack helps us remember which nodes we still need to process after finishing the left subtrees.
 
 ### Algorithm
+
 1. Initialize an empty result list and an empty stack.
 2. Set the current node to the root.
 3. While the current node is not `null` or the stack is not empty:
-   - While the current node is not `null`, push it onto the stack and move to its left child.
-   - Pop a node from the stack, add its value to the result.
-   - Move to the right child of the popped node.
+    - While the current node is not `null`, push it onto the stack and move to its left child.
+    - Pop a node from the stack, add its value to the result.
+    - Move to the right child of the popped node.
 4. Return the result list.
 
 ::tabs-start
@@ -549,6 +574,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut cur = root;
+
+        while cur.is_some() || !stack.is_empty() {
+            while let Some(node) = cur {
+                stack.push(node.clone());
+                cur = node.borrow().left.clone();
+            }
+            let node = stack.pop().unwrap();
+            res.push(node.borrow().val);
+            cur = node.borrow().right.clone();
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -563,15 +610,17 @@ class Solution {
 ## 3. Morris Traversal
 
 ### Intuition
+
 Morris Traversal achieves O(1) extra space by temporarily modifying the tree structure. The idea is to create a temporary link from the rightmost node of the left subtree back to the current node. This allows us to return to the current node after traversing the left subtree without using a stack. After processing, we remove the temporary link to restore the original tree.
 
 ### Algorithm
+
 1. Initialize the current node to the root.
 2. While the current node is not `null`:
-   - If the current node has no left child, add its value to the result and move to the right child.
-   - Otherwise, find the rightmost node in the left subtree (the inorder predecessor).
-   - If the predecessor's right pointer is `null`, set it to the current node (create a thread) and move to the left child.
-   - If the predecessor's right pointer already points to the current node, remove the thread, add the current node's value to the result, and move to the right child.
+    - If the current node has no left child, add its value to the result and move to the right child.
+    - Otherwise, find the rightmost node in the left subtree (the inorder predecessor).
+    - If the predecessor's right pointer is `null`, set it to the current node (create a thread) and move to the left child.
+    - If the predecessor's right pointer already points to the current node, remove the thread, add the current node's value to the result, and move to the right child.
 3. Return the result list.
 
 ::tabs-start
@@ -917,6 +966,31 @@ class Solution {
 }
 ```
 
+```rust
+// Note: Morris Traversal requires mutable tree node pointers,
+// which is not idiomatic in Rust's Rc<RefCell<TreeNode>> model.
+// Use the iterative stack-based approach instead for LeetCode Rust.
+impl Solution {
+    pub fn inorder_traversal(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut cur = root;
+
+        while cur.is_some() || !stack.is_empty() {
+            while let Some(node) = cur {
+                stack.push(node.clone());
+                cur = node.borrow().left.clone();
+            }
+            let node = stack.pop().unwrap();
+            res.push(node.borrow().val);
+            cur = node.borrow().right.clone();
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -931,11 +1005,14 @@ class Solution {
 ## Common Pitfalls
 
 ### Wrong Order of Operations in Recursion
+
 Inorder traversal requires visiting left, then current, then right. A common mistake is adding the current node's value before or after both recursive calls, which produces preorder or postorder results instead.
+
 ```python
 # Wrong: res.append(node.val) before inorder(node.left)
 # Correct: inorder(node.left), then res.append(node.val)
 ```
 
 ### Forgetting to Move Right in Iterative Approach
+
 After popping and processing a node from the stack, you must move to its right child. Forgetting `cur = cur.right` causes an infinite loop since the same node keeps getting processed.

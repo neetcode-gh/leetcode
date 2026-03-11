@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to traverse and access elements by index
 - **Binary Search** - Knowing how to efficiently search in a sorted array by repeatedly halving the search space
 
@@ -123,6 +125,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+        for i in 0..nums.len() {
+            if nums[i] >= target {
+                return i as i32;
+            }
+        }
+        nums.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -142,10 +157,10 @@ Since the array is sorted, we can use binary search to find the target in logari
 
 1. Initialize `res = n` (default insertion point at the end) and pointers `l = 0`, `r = n - 1`.
 2. While `l <= r`:
-   - Compute `mid = (l + r) / 2`.
-   - If `nums[mid] == target`, return `mid`.
-   - If `nums[mid] > target`, set `res = mid` and search left with `r = mid - 1`.
-   - Otherwise, search right with `l = mid + 1`.
+    - Compute `mid = (l + r) / 2`.
+    - If `nums[mid] == target`, return `mid`.
+    - If `nums[mid] > target`, set `res = mid` and search left with `r = mid - 1`.
+    - Otherwise, search right with `l = mid + 1`.
 3. Return `res` (final insertion position).
 
 ::tabs-start
@@ -330,6 +345,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+        let mut res = nums.len() as i32;
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+        while l <= r {
+            let mid = (l + r) / 2;
+            if nums[mid as usize] == target {
+                return mid;
+            }
+            if nums[mid as usize] > target {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,10 +386,10 @@ A cleaner observation: when binary search ends without finding the target, the l
 
 1. Initialize pointers `l = 0` and `r = n - 1`.
 2. While `l <= r`:
-   - Compute `mid = (l + r) / 2`.
-   - If `nums[mid] == target`, return `mid`.
-   - If `nums[mid] > target`, search left with `r = mid - 1`.
-   - Otherwise, search right with `l = mid + 1`.
+    - Compute `mid = (l + r) / 2`.
+    - If `nums[mid] == target`, return `mid`.
+    - If `nums[mid] > target`, search left with `r = mid - 1`.
+    - Otherwise, search right with `l = mid + 1`.
 3. Return `l` as the insertion index (where `l` naturally lands on the correct position).
 
 ::tabs-start
@@ -521,6 +558,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0i32, nums.len() as i32 - 1);
+        while l <= r {
+            let mid = (l + r) / 2;
+            if nums[mid as usize] == target {
+                return mid;
+            }
+            if nums[mid as usize] > target {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        l
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,9 +597,9 @@ This is the classic lower bound algorithm. We find the smallest index where the 
 
 1. Initialize pointers `l = 0` and `r = n` (note: `r` starts at `n`, not `n - 1`).
 2. While `l < r`:
-   - Compute `m = l + (r - l) / 2`.
-   - If `nums[m] >= target`, set `r = m`.
-   - Otherwise, set `l = m + 1`.
+    - Compute `m = l + (r - l) / 2`.
+    - If `nums[m] >= target`, set `r = m`.
+    - Otherwise, set `l = m + 1`.
 3. Return `l` (the lower bound position).
 
 ::tabs-start
@@ -688,6 +745,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+        let (mut l, mut r) = (0usize, nums.len());
+        while l < r {
+            let m = l + (r - l) / 2;
+            if nums[m] >= target {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+        l as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -791,6 +865,17 @@ class Solution {
             }
         }
         return l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn search_insert(nums: Vec<i32>, target: i32) -> i32 {
+        match nums.binary_search(&target) {
+            Ok(i) => i as i32,
+            Err(i) => i as i32,
+        }
     }
 }
 ```

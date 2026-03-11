@@ -26,7 +26,7 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    We perform a binary search on the array with pointers <code>l</code> and <code>r</code>, which belong to two different sorted segments. For example, in <code>[3, 4, 5, 6, 1, 2, 3]</code>, <code>l = 0</code>, <code>r = 6</code>, and <code>mid = 3</code>. At least two of <code>l</code>, <code>mid</code>, and <code>r</code> will always be in the same sorted segment. Can you find conditions to eliminate one half and continue the binary search? Perhaps analyzing all possible conditions for <code>l</code>, <code>mid</code>, and <code>r</code> would help. 
+    We perform a binary search on the array with pointers <code>l</code> and <code>r</code>, which belong to two different sorted segments. For example, in <code>[3, 4, 5, 6, 1, 2]</code>, <code>l = 0</code>, <code>r = 5</code>, and <code>mid = 2</code>. At least two of <code>l</code>, <code>mid</code>, and <code>r</code> will always be in the same sorted segment. Can you find conditions to eliminate one half and continue the binary search? Perhaps analyzing all possible conditions for <code>l</code>, <code>mid</code>, and <code>r</code> would help. 
     </p>
 </details>
 

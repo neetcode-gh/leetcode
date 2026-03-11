@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used for counting character frequencies in both the target string and current window
 - **Sliding Window Technique** - The optimal solution uses a dynamic window that expands and contracts to find the minimum valid substring
 - **Two Pointers** - Left and right pointers manage the window boundaries while traversing the string
@@ -21,18 +23,18 @@ This is simple to understand but very slow because we check many overlapping sub
 1. If `t` is empty, return an empty string.
 2. Build a frequency map `countT` for all characters in `t`.
 3. Initialize:
-   - `res = [-1, -1]` to store the best window,
-   - `resLen = infinity` to store the smallest length found.
+    - `res = [-1, -1]` to store the best window,
+    - `resLen = infinity` to store the smallest length found.
 4. For each starting index `i` in `s`:
-   - Create an empty frequency map `countS`.
-   - For each ending index `j` from `i` to the end of `s`:
-     - Add `s[j]` to `countS`.
-     - Check if the current substring from `i` to `j` contains all characters in `t`:
-       - For each character `c` in `countT`, ensure `countS[c]` is at least `countT[c]`.
-     - If it satisfies all requirements and is smaller than the current best, update `res` and `resLen`.
+    - Create an empty frequency map `countS`.
+    - For each ending index `j` from `i` to the end of `s`:
+        - Add `s[j]` to `countS`.
+        - Check if the current substring from `i` to `j` contains all characters in `t`:
+            - For each character `c` in `countT`, ensure `countS[c]` is at least `countT[c]`.
+        - If it satisfies all requirements and is smaller than the current best, update `res` and `resLen`.
 5. After all checks:
-   - If `resLen` is still infinity, return `""`.
-   - Otherwise, return the substring `s[res[0] : res[1] + 1]`.
+    - If `resLen` is still infinity, return `""`.
+    - Otherwise, return the substring `s[res[0] : res[1] + 1]`.
 
 ::tabs-start
 
@@ -355,6 +357,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_window(s: String, t: String) -> String {
+        if t.is_empty() {
+            return String::new();
+        }
+
+        let s = s.as_bytes();
+        let mut count_t: HashMap<u8, i32> = HashMap::new();
+        for &c in t.as_bytes() {
+            *count_t.entry(c).or_insert(0) += 1;
+        }
+
+        let mut res = (0usize, 0usize);
+        let mut res_len = usize::MAX;
+
+        for i in 0..s.len() {
+            let mut count_s: HashMap<u8, i32> = HashMap::new();
+            for j in i..s.len() {
+                *count_s.entry(s[j]).or_insert(0) += 1;
+
+                let flag = count_t.iter().all(|(&c, &cnt)| {
+                    *count_s.get(&c).unwrap_or(&0) >= cnt
+                });
+
+                if flag && (j - i + 1) < res_len {
+                    res_len = j - i + 1;
+                    res = (i, j);
+                }
+            }
+        }
+
+        if res_len == usize::MAX {
+            String::new()
+        } else {
+            String::from_utf8(s[res.0..=res.1].to_vec()).unwrap()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,19 +427,19 @@ This way, we only scan each character at most two times, making it efficient and
 1. If `t` is empty, return `""`.
 2. Build a frequency map `countT` for characters in `t`.
 3. Initialize:
-   - `window` as an empty map for the current window counts.
-   - `have = 0` = how many characters currently meet the required count.
-   - `need = len(countT)` = how many distinct characters we need to match.
-   - `res = [-1, -1]` and `resLen = infinity` to store the best window.
+    - `window` as an empty map for the current window counts.
+    - `have = 0` = how many characters currently meet the required count.
+    - `need = len(countT)` = how many distinct characters we need to match.
+    - `res = [-1, -1]` and `resLen = infinity` to store the best window.
 4. Use a right pointer `r` to expand the window over `s`:
-   - Add `s[r]` to `window`.
-   - If `s[r]` is in `countT` and its count in `window` matches `countT`, increment `have`.
+    - Add `s[r]` to `window`.
+    - If `s[r]` is in `countT` and its count in `window` matches `countT`, increment `have`.
 5. When `have == need`, the window is valid:
-   - Update the best result if the current window is smaller.
-   - Then shrink from the left:
-     - Decrease the count of `s[l]` in `window`.
-     - If `s[l]` is in `countT` and its count in `window` falls below `countT`, decrement `have`.
-     - Move `l` right.
+    - Update the best result if the current window is smaller.
+    - Then shrink from the left:
+        - Decrease the count of `s[l]` in `window`.
+        - If `s[l]` is in `countT` and its count in `window` falls below `countT`, decrement `have`.
+        - Move `l` right.
 6. After the loop, return the substring defined by `res` if found; otherwise, return `""`.
 
 ::tabs-start
@@ -759,6 +802,62 @@ class Solution {
 
         let (left, right) = (res[0], res[1])
         return resLen != Int.max ? String(chars[left...right]) : ""
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_window(s: String, t: String) -> String {
+        if t.is_empty() {
+            return String::new();
+        }
+
+        let s = s.as_bytes();
+        let mut count_t: HashMap<u8, i32> = HashMap::new();
+        for &c in t.as_bytes() {
+            *count_t.entry(c).or_insert(0) += 1;
+        }
+
+        let mut window: HashMap<u8, i32> = HashMap::new();
+        let mut have = 0;
+        let need = count_t.len();
+        let mut res = (0usize, 0usize);
+        let mut res_len = usize::MAX;
+        let mut l = 0;
+
+        for r in 0..s.len() {
+            let c = s[r];
+            *window.entry(c).or_insert(0) += 1;
+
+            if let Some(&required) = count_t.get(&c) {
+                if window[&c] == required {
+                    have += 1;
+                }
+            }
+
+            while have == need {
+                if (r - l + 1) < res_len {
+                    res = (l, r);
+                    res_len = r - l + 1;
+                }
+
+                let left_char = s[l];
+                *window.get_mut(&left_char).unwrap() -= 1;
+                if let Some(&required) = count_t.get(&left_char) {
+                    if window[&left_char] < required {
+                        have -= 1;
+                    }
+                }
+                l += 1;
+            }
+        }
+
+        if res_len == usize::MAX {
+            String::new()
+        } else {
+            String::from_utf8(s[res.0..=res.1].to_vec()).unwrap()
+        }
     }
 }
 ```

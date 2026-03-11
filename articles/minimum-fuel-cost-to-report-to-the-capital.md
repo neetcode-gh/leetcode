@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree/Graph Representation** - Understanding how to represent trees using adjacency lists and traversing undirected graphs
 - **Depth First Search (DFS)** - Ability to traverse trees recursively while tracking parent nodes to avoid revisiting
 - **Ceiling Division** - Knowing how to compute the ceiling of integer division (e.g., using `(a + b - 1) / b` or math.ceil)
@@ -281,6 +283,42 @@ class Solution {
 
         dfs(0, -1)
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_fuel_cost(roads: Vec<Vec<i32>>, seats: i32) -> i64 {
+        let n = roads.len() + 1;
+        let mut adj = vec![vec![]; n];
+
+        for road in &roads {
+            adj[road[0] as usize].push(road[1] as usize);
+            adj[road[1] as usize].push(road[0] as usize);
+        }
+
+        let mut res: i64 = 0;
+        Self::dfs(0, usize::MAX, seats as i64, &adj, &mut res);
+        res
+    }
+
+    fn dfs(
+        node: usize,
+        parent: usize,
+        seats: i64,
+        adj: &Vec<Vec<usize>>,
+        res: &mut i64,
+    ) -> i64 {
+        let mut passengers: i64 = 0;
+        for &child in &adj[node] {
+            if child != parent {
+                let p = Self::dfs(child, node, seats, adj, res);
+                passengers += p;
+                *res += (p + seats - 1) / seats;
+            }
+        }
+        passengers + 1
     }
 }
 ```
@@ -616,6 +654,47 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_fuel_cost(roads: Vec<Vec<i32>>, seats: i32) -> i64 {
+        let n = roads.len() + 1;
+        let mut adj = vec![vec![]; n];
+        let mut indegree = vec![0i32; n];
+        let mut passengers = vec![1i64; n];
+        let mut res: i64 = 0;
+        let seats = seats as i64;
+
+        for road in &roads {
+            let (src, dst) = (road[0] as usize, road[1] as usize);
+            adj[src].push(dst);
+            adj[dst].push(src);
+            indegree[src] += 1;
+            indegree[dst] += 1;
+        }
+
+        let mut q = VecDeque::new();
+        for i in 1..n {
+            if indegree[i] == 1 {
+                q.push_back(i);
+            }
+        }
+
+        while let Some(node) = q.pop_front() {
+            res += (passengers[node] + seats - 1) / seats;
+            for &parent in &adj[node].clone() {
+                indegree[parent] -= 1;
+                if indegree[parent] == 1 && parent != 0 {
+                    q.push_back(parent);
+                }
+                passengers[parent] += passengers[node];
+            }
+        }
+
+        res
     }
 }
 ```

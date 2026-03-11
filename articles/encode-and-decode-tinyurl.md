@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to store bidirectional mappings between long and short URLs for O(1) lookup
 - **String Manipulation** - Required for parsing URLs, extracting indices, and constructing short URL codes
 - **System Design Basics** - Understanding trade-offs between different encoding strategies (sequential IDs vs random codes)
@@ -16,11 +18,11 @@ The simplest way to create a URL shortener is to assign each long URL a unique i
 
 1. Maintain a list `urls` to store all encoded long URLs.
 2. `encode(longUrl)`:
-   - Append `longUrl` to the list.
-   - Return `"http://tinyurl.com/"` followed by the index (list length - 1).
+    - Append `longUrl` to the list.
+    - Return `"http://tinyurl.com/"` followed by the index (list length - 1).
 3. `decode(shortUrl)`:
-   - Extract the index from the end of the short URL.
-   - Return `urls[index]`.
+    - Extract the index from the end of the short URL.
+    - Return `urls[index]`.
 
 ::tabs-start
 
@@ -174,6 +176,28 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec {
+    urls: Vec<String>,
+}
+
+impl Codec {
+    fn new() -> Self {
+        Codec { urls: Vec::new() }
+    }
+
+    fn encode(&mut self, long_url: String) -> String {
+        self.urls.push(long_url);
+        format!("http://tinyurl.com/{}", self.urls.len() - 1)
+    }
+
+    fn decode(&self, short_url: String) -> String {
+        let index: usize = short_url.rsplit('/').next().unwrap().parse().unwrap();
+        self.urls[index].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -195,12 +219,12 @@ Instead of using a list with implicit indices, we use a hash map with an explici
 
 1. Maintain a hash map `url_map` and an integer `id` starting at `0`.
 2. `encode(longUrl)`:
-   - Store `url_map[id] = longUrl`.
-   - Generate the short URL using the current `id`.
-   - Increment `id` and return the short URL.
+    - Store `url_map[id] = longUrl`.
+    - Generate the short URL using the current `id`.
+    - Increment `id` and return the short URL.
 3. `decode(shortUrl)`:
-   - Parse the ID from the short URL.
-   - Return `url_map[id]`.
+    - Parse the ID from the short URL.
+    - Return `url_map[id]`.
 
 ::tabs-start
 
@@ -371,6 +395,34 @@ class Codec {
 }
 ```
 
+```rust
+struct Codec {
+    url_map: HashMap<i32, String>,
+    id: i32,
+}
+
+impl Codec {
+    fn new() -> Self {
+        Codec {
+            url_map: HashMap::new(),
+            id: 0,
+        }
+    }
+
+    fn encode(&mut self, long_url: String) -> String {
+        self.url_map.insert(self.id, long_url);
+        let short_url = format!("http://tinyurl.com/{}", self.id);
+        self.id += 1;
+        short_url
+    }
+
+    fn decode(&self, short_url: String) -> String {
+        let url_id: i32 = short_url.rsplit('/').next().unwrap().parse().unwrap();
+        self.url_map[&url_id].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -392,11 +444,11 @@ This approach uses two hash maps to create a bidirectional mapping. One maps lon
 
 1. Maintain two hash maps: `encodeMap` (longUrl to shortUrl) and `decodeMap` (shortUrl to longUrl).
 2. `encode(longUrl)`:
-   - If `longUrl` is not in `encodeMap`, create a new short URL using the current count.
-   - Store the mapping in both `encodeMap` and `decodeMap`.
-   - Return the short URL.
+    - If `longUrl` is not in `encodeMap`, create a new short URL using the current count.
+    - Store the mapping in both `encodeMap` and `decodeMap`.
+    - Return the short URL.
 3. `decode(shortUrl)`:
-   - Look up the short URL in `decodeMap` and return the corresponding long URL.
+    - Look up the short URL in `decodeMap` and return the corresponding long URL.
 
 ::tabs-start
 
@@ -586,6 +638,37 @@ class Codec {
 
     func decode(_ shortUrl: String) -> String {
         return decodeMap[shortUrl]!
+    }
+}
+```
+
+```rust
+struct Codec {
+    encode_map: HashMap<String, String>,
+    decode_map: HashMap<String, String>,
+    base: String,
+}
+
+impl Codec {
+    fn new() -> Self {
+        Codec {
+            encode_map: HashMap::new(),
+            decode_map: HashMap::new(),
+            base: "http://tinyurl.com/".to_string(),
+        }
+    }
+
+    fn encode(&mut self, long_url: String) -> String {
+        if !self.encode_map.contains_key(&long_url) {
+            let short_url = format!("{}{}", self.base, self.encode_map.len() + 1);
+            self.encode_map.insert(long_url.clone(), short_url.clone());
+            self.decode_map.insert(short_url, long_url);
+        }
+        self.encode_map[&long_url].clone()
+    }
+
+    fn decode(&self, short_url: String) -> String {
+        self.decode_map[&short_url].clone()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Converting characters to digits and building result strings
 - **Grade-School Multiplication** - Understanding how manual digit-by-digit multiplication works with carry propagation
 - **Arrays** - Using arrays to accumulate partial products at specific positions
@@ -17,9 +19,9 @@ This approach mimics how we multiply numbers by hand. We multiply the larger num
 1. If either number is "0", return "0" immediately.
 2. Ensure `num1` is the longer number (swap if needed for efficiency).
 3. For each digit in `num2` from right to left:
-   - Multiply `num1` by that single digit using a helper function.
-   - Append the appropriate number of trailing zeros based on the digit's position.
-   - Add this partial `res` to the running total using a string addition helper.
+    - Multiply `num1` by that single digit using a helper function.
+    - Append the appropriate number of trailing zeros based on the digit's position.
+    - Add this partial `res` to the running total using a string addition helper.
 4. The string addition and multiplication helpers handle `carry` values and build the result digit by digit.
 5. Return the accumulated `res`.
 
@@ -516,6 +518,74 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn multiply(num1: String, num2: String) -> String {
+        if num1 == "0" || num2 == "0" {
+            return "0".to_string();
+        }
+
+        let (num1, num2) = if num1.len() < num2.len() {
+            (num2, num1)
+        } else {
+            (num1, num2)
+        };
+
+        let mut res = String::new();
+        let num2_bytes = num2.as_bytes();
+        for (z, &d) in num2_bytes.iter().rev().enumerate() {
+            let cur = Self::mul_digit(&num1, d, z);
+            res = Self::add_strings(&res, &cur);
+        }
+
+        res
+    }
+
+    fn mul_digit(s: &str, d: u8, zero: usize) -> String {
+        let s_bytes = s.as_bytes();
+        let mut i = s_bytes.len() as i32 - 1;
+        let mut carry = 0u32;
+        let digit = (d - b'0') as u32;
+        let mut cur = Vec::new();
+
+        while i >= 0 || carry > 0 {
+            let n = if i >= 0 { (s_bytes[i as usize] - b'0') as u32 } else { 0 };
+            let prod = n * digit + carry;
+            cur.push((b'0' + (prod % 10) as u8) as char);
+            carry = prod / 10;
+            i -= 1;
+        }
+
+        cur.reverse();
+        let mut result: String = cur.into_iter().collect();
+        result.extend(std::iter::repeat('0').take(zero));
+        result
+    }
+
+    fn add_strings(num1: &str, num2: &str) -> String {
+        let a = num1.as_bytes();
+        let b = num2.as_bytes();
+        let mut i = a.len() as i32 - 1;
+        let mut j = b.len() as i32 - 1;
+        let mut carry = 0u32;
+        let mut res = Vec::new();
+
+        while i >= 0 || j >= 0 || carry > 0 {
+            let n1 = if i >= 0 { (a[i as usize] - b'0') as u32 } else { 0 };
+            let n2 = if j >= 0 { (b[j as usize] - b'0') as u32 } else { 0 };
+            let total = n1 + n2 + carry;
+            res.push((b'0' + (total % 10) as u8) as char);
+            carry = total / 10;
+            i -= 1;
+            j -= 1;
+        }
+
+        res.reverse();
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -539,10 +609,10 @@ Instead of generating partial products and adding them as separate strings, we c
 2. Create a result array of size `len(num1) + len(num2)` initialized to zeros.
 3. Reverse both input strings so index `0` corresponds to the ones place.
 4. For each pair of indices `(i1, i2)`:
-   - Multiply the corresponding digits.
-   - Add the product to `res[i1 + i2]`.
-   - Propagate any `carry` to `res[i1 + i2 + 1]`.
-   - Keep only the ones digit at `res[i1 + i2]`.
+    - Multiply the corresponding digits.
+    - Add the product to `res[i1 + i2]`.
+    - Propagate any `carry` to `res[i1 + i2 + 1]`.
+    - Keep only the ones digit at `res[i1 + i2]`.
 5. Reverse the `res` array, skip leading zeros, and join the digits into a string.
 
 ::tabs-start
@@ -801,6 +871,41 @@ class Solution {
         }
 
         return res[beg...].map { String($0) }.joined()
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn multiply(num1: String, num2: String) -> String {
+        if num1 == "0" || num2 == "0" {
+            return "0".to_string();
+        }
+
+        let mut res = vec![0i32; num1.len() + num2.len()];
+        let n1: Vec<u32> = num1.bytes().rev().map(|b| (b - b'0') as u32).collect();
+        let n2: Vec<u32> = num2.bytes().rev().map(|b| (b - b'0') as u32).collect();
+
+        for i1 in 0..n1.len() {
+            for i2 in 0..n2.len() {
+                let digit = (n1[i1] * n2[i2]) as i32;
+                res[i1 + i2] += digit;
+                res[i1 + i2 + 1] += res[i1 + i2] / 10;
+                res[i1 + i2] %= 10;
+            }
+        }
+
+        let mut i = res.len() as i32 - 1;
+        while i >= 0 && res[i as usize] == 0 {
+            i -= 1;
+        }
+
+        let mut result = String::new();
+        while i >= 0 {
+            result.push((b'0' + res[i as usize] as u8) as char);
+            i -= 1;
+        }
+        result
     }
 }
 ```

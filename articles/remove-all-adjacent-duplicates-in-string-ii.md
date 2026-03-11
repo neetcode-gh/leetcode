@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Tracking consecutive character counts and efficiently handling removals
 - **Two Pointers** - Using read and write pointers to modify strings in-place
 - **String Manipulation** - Working with mutable character arrays and substring operations
@@ -18,8 +20,8 @@ This process continues until a full scan completes without finding any group to 
 
 1. Convert the string to a mutable format (list or character array).
 2. Repeatedly scan the string:
-   - Track the current character and count consecutive occurrences.
-   - When the count reaches `k`, remove those characters from the string, set a flag, and restart the scan.
+    - Track the current character and count consecutive occurrences.
+    - When the count reaches `k`, remove those characters from the string, set a flag, and restart the scan.
 3. If a full scan completes without any removal, exit the loop.
 4. Return the resulting string.
 
@@ -272,6 +274,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(s: String, k: i32) -> String {
+        let k = k as usize;
+        let mut s = s.into_bytes();
+        loop {
+            let mut flag = false;
+            let mut cur = s[0];
+            let mut cnt = 1usize;
+
+            for i in 1..s.len() {
+                if cur != s[i] {
+                    cnt = 0;
+                    cur = s[i];
+                }
+                cnt += 1;
+                if cnt == k {
+                    s.drain(i + 1 - k..=i);
+                    flag = true;
+                    break;
+                }
+            }
+
+            if !flag {
+                break;
+            }
+        }
+
+        String::from_utf8(s).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -293,9 +328,9 @@ When the count reaches `k`, we remove those `k` characters and continue from whe
 
 1. Convert the string to a mutable list and initialize an empty stack to track counts.
 2. Iterate through the string with an index `i`:
-   - If the current character differs from the previous, push `1` onto the stack.
-   - If it matches, increment the top of the stack.
-   - If the count reaches `k`, pop from the stack, delete those `k` characters, and adjust the index.
+    - If the current character differs from the previous, push `1` onto the stack.
+    - If it matches, increment the top of the stack.
+    - If the count reaches `k`, pop from the stack, delete those `k` characters, and adjust the index.
 3. Continue until the end of the string.
 4. Return the resulting string.
 
@@ -519,6 +554,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(s: String, k: i32) -> String {
+        let k = k as usize;
+        let mut stack: Vec<usize> = Vec::new();
+        let mut arr: Vec<u8> = s.into_bytes();
+        let mut n = arr.len();
+        let mut i: i32 = 0;
+
+        while (i as usize) < n {
+            let ui = i as usize;
+            if ui == 0 || arr[ui] != arr[ui - 1] {
+                stack.push(1);
+            } else {
+                let top = stack.last_mut().unwrap();
+                *top += 1;
+                if *top == k {
+                    stack.pop();
+                    arr.drain(ui + 1 - k..ui + 1);
+                    i -= k as i32;
+                    n -= k;
+                }
+            }
+            i += 1;
+        }
+
+        String::from_utf8(arr).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,9 +606,9 @@ Each stack entry is a pair of (character, count). When we encounter a new charac
 
 1. Initialize a stack where each entry stores a character and its consecutive count.
 2. For each character in the string:
-   - If the stack is non-empty and the top character matches, increment its count.
-   - Otherwise, push a new entry with count `1`.
-   - If the count reaches `k`, pop the entry from the stack.
+    - If the stack is non-empty and the top character matches, increment its count.
+    - Otherwise, push a new entry with count `1`.
+    - If the count reaches `k`, pop the entry from the stack.
 3. Build the result by expanding each stack entry: repeat each character by its count.
 4. Return the resulting string.
 
@@ -755,6 +821,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(s: String, k: i32) -> String {
+        let k = k as usize;
+        let mut stack: Vec<(u8, usize)> = Vec::new();
+
+        for &c in s.as_bytes() {
+            if let Some(top) = stack.last_mut() {
+                if top.0 == c {
+                    top.1 += 1;
+                } else {
+                    stack.push((c, 1));
+                }
+            } else {
+                stack.push((c, 1));
+            }
+            if stack.last().unwrap().1 == k {
+                stack.pop();
+            }
+        }
+
+        let mut res = Vec::new();
+        for &(ch, cnt) in &stack {
+            for _ in 0..cnt {
+                res.push(ch);
+            }
+        }
+
+        String::from_utf8(res).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -777,10 +876,10 @@ A separate count array tracks consecutive occurrences at each write position. Wh
 1. Convert the string to a mutable character array and create a count array of the same size.
 2. Use two pointers: `j` iterates through the original string, `i` tracks the write position.
 3. For each character at position `j`:
-   - Copy it to position `i`.
-   - Set its count to `1`. If the previous character (at `i-1`) is the same, add the previous count to the current count.
-   - If the count reaches `k`, move `i` back by `k` positions.
-   - Increment `i`.
+    - Copy it to position `i`.
+    - Set its count to `1`. If the previous character (at `i-1`) is the same, add the previous count to the current count.
+    - If the count reaches `k`, move `i` back by `k` positions.
+    - Increment `i`.
 4. Return the substring from `0` to `i`.
 
 ::tabs-start
@@ -969,6 +1068,33 @@ class Solution {
         }
 
         return String(arr.prefix(i))
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_duplicates(s: String, k: i32) -> String {
+        let k = k as usize;
+        let n = s.len();
+        let mut arr = s.into_bytes();
+        let mut count = vec![0usize; n];
+        let mut i: usize = 0;
+
+        for j in 0..n {
+            arr[i] = arr[j];
+            count[i] = 1;
+            if i > 0 && arr[i - 1] == arr[j] {
+                count[i] += count[i - 1];
+            }
+            if count[i] == k {
+                i -= k;
+            }
+            i += 1;
+        }
+
+        arr.truncate(i);
+        String::from_utf8(arr).unwrap()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree Properties** - Understanding that left children are smaller and right children are larger than the parent
 - **Tree Traversal** - Navigating BST nodes using the ordering property to find specific values
 - **In-Order Successor/Predecessor** - Finding the next or previous node in sorted order for node replacement during deletion
@@ -18,9 +20,9 @@ To delete a node in a BST, we first need to locate it using the BST property (le
 2. If the key is greater than the root's value, recursively delete from the right subtree.
 3. If the key is less than the root's value, recursively delete from the left subtree.
 4. If the key matches the root's value:
-   - If there is no left child, return the right child.
-   - If there is no right child, return the left child.
-   - Otherwise, find the in-order successor (leftmost node in the right subtree), copy its value to the current node, and recursively delete the successor.
+    - If there is no left child, return the right child.
+    - If there is no right child, return the left child.
+    - Otherwise, find the in-order successor (leftmost node in the right subtree), copy its value to the current node, and recursively delete the successor.
 5. Return the root.
 
 ::tabs-start
@@ -330,6 +332,61 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn delete_node(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        key: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let node = root.clone()?;
+        let val = node.borrow().val;
+
+        if key > val {
+            let right = node.borrow().right.clone();
+            let new_right = Self::delete_node(right, key);
+            node.borrow_mut().right = new_right;
+        } else if key < val {
+            let left = node.borrow().left.clone();
+            let new_left = Self::delete_node(left, key);
+            node.borrow_mut().left = new_left;
+        } else {
+            let left = node.borrow().left.clone();
+            let right = node.borrow().right.clone();
+            if left.is_none() {
+                return right;
+            }
+            if right.is_none() {
+                return left;
+            }
+
+            // Find in-order successor
+            let mut cur = right.clone().unwrap();
+            loop {
+                let next = cur.borrow().left.clone();
+                match next {
+                    Some(n) => cur = n,
+                    None => break,
+                }
+            }
+            let successor_val = cur.borrow().val;
+            node.borrow_mut().val = successor_val;
+            let right = node.borrow().right.clone();
+            let new_right = Self::delete_node(right, successor_val);
+            node.borrow_mut().right = new_right;
+        }
+
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -353,9 +410,9 @@ Instead of copying the successor's value and deleting it separately, we can rest
 2. If the key is greater than the root's value, recursively delete from the right subtree.
 3. If the key is less than the root's value, recursively delete from the left subtree.
 4. If the key matches the root's value:
-   - If there is no left child, return the right child.
-   - If there is no right child, return the left child.
-   - Otherwise, find the in-order successor (leftmost node in the right subtree), attach the deleted node's left subtree to this successor's left, delete the node, and return the right subtree.
+    - If there is no left child, return the right child.
+    - If there is no right child, return the left child.
+    - Otherwise, find the in-order successor (leftmost node in the right subtree), attach the deleted node's left subtree to this successor's left, delete the node, and return the right subtree.
 5. Return the root.
 
 ::tabs-start
@@ -674,6 +731,59 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn delete_node(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        key: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        let node = root.clone()?;
+        let val = node.borrow().val;
+
+        if key > val {
+            let right = node.borrow().right.clone();
+            let new_right = Self::delete_node(right, key);
+            node.borrow_mut().right = new_right;
+        } else if key < val {
+            let left = node.borrow().left.clone();
+            let new_left = Self::delete_node(left, key);
+            node.borrow_mut().left = new_left;
+        } else {
+            let left = node.borrow().left.clone();
+            let right = node.borrow().right.clone();
+            if left.is_none() {
+                return right;
+            }
+            if right.is_none() {
+                return left;
+            }
+
+            // Find in-order successor (leftmost in right subtree)
+            let mut cur = right.clone().unwrap();
+            loop {
+                let next = cur.borrow().left.clone();
+                match next {
+                    Some(n) => cur = n,
+                    None => break,
+                }
+            }
+            // Attach left subtree of deleted node to successor's left
+            cur.borrow_mut().left = left;
+            return right;
+        }
+
+        root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -697,14 +807,14 @@ This approach avoids recursion by using a loop to find the node to delete and it
 2. Use a loop to find the node with the given key, tracking its parent.
 3. If the node is not found, return the original root.
 4. If the node has zero or one child:
-   - Determine the child (left or right, whichever exists).
-   - If deleting the root, return the child.
-   - Otherwise, update the parent's pointer to point to the child.
+    - Determine the child (left or right, whichever exists).
+    - If deleting the root, return the child.
+    - Otherwise, update the parent's pointer to point to the child.
 5. If the node has two children:
-   - Find the in-order successor (leftmost node in the right subtree) and its parent.
-   - If the successor is not the immediate right child, update its parent's left pointer to the successor's right child, then set the successor's right to the deleted node's right.
-   - Set the successor's left to the deleted node's left.
-   - Update the parent's pointer to the successor, or return the successor if deleting the root.
+    - Find the in-order successor (leftmost node in the right subtree) and its parent.
+    - If the successor is not the immediate right child, update its parent's left pointer to the successor's right child, then set the successor's right to the deleted node's right.
+    - Set the successor's left to the deleted node's left.
+    - Update the parent's pointer to the successor, or return the successor if deleting the root.
 6. Return the root.
 
 ::tabs-start
@@ -1286,6 +1396,62 @@ class Solution {
         }
 
         return root
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn delete_node(
+        root: Option<Rc<RefCell<TreeNode>>>,
+        key: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        // Use recursive approach (Recursion II) as iterative pointer
+        // manipulation with Rc<RefCell<>> is not idiomatic in Rust
+        let node = match root.clone() {
+            Some(n) => n,
+            None => return None,
+        };
+        let val = node.borrow().val;
+
+        if key > val {
+            let right = node.borrow().right.clone();
+            let new_right = Self::delete_node(right, key);
+            node.borrow_mut().right = new_right;
+        } else if key < val {
+            let left = node.borrow().left.clone();
+            let new_left = Self::delete_node(left, key);
+            node.borrow_mut().left = new_left;
+        } else {
+            let left = node.borrow().left.clone();
+            let right = node.borrow().right.clone();
+            if left.is_none() {
+                return right;
+            }
+            if right.is_none() {
+                return left;
+            }
+
+            let mut cur = right.clone().unwrap();
+            loop {
+                let next = cur.borrow().left.clone();
+                match next {
+                    Some(n) => cur = n,
+                    None => break,
+                }
+            }
+            cur.borrow_mut().left = left;
+            return right;
+        }
+
+        root
     }
 }
 ```

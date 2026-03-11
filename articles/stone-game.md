@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Interval DP)** - Computing optimal results over ranges [l, r] with subproblems based on shrinking intervals
 - **Game Theory / Two-Player Games** - Understanding how to model turn-based games where both players play optimally
 - **Recursion with Memoization** - Converting recursive solutions to efficient DP by caching overlapping subproblems
@@ -195,6 +197,39 @@ class Solution {
 
         let aliceScore = dfs(0, piles.count - 1)
         return aliceScore > total - aliceScore
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn stone_game(piles: Vec<i32>) -> bool {
+        let total: i32 = piles.iter().sum();
+
+        fn dfs(l: usize, r: usize, piles: &[i32]) -> i32 {
+            if l > r {
+                return 0;
+            }
+            let even = (r - l) % 2 == 0;
+            let left = if even { piles[l] } else { 0 };
+            let right = if even { piles[r] } else { 0 };
+            (dfs(l + 1, r, piles) + left).max(dfs(if l > 0 || r > 0 { l } else { 0 }, r.wrapping_sub(1), piles) + right)
+        }
+
+        // Use a safe version to avoid underflow on r
+        fn dfs_safe(l: i32, r: i32, piles: &[i32]) -> i32 {
+            if l > r {
+                return 0;
+            }
+            let even = (r - l) % 2 == 0;
+            let left = if even { piles[l as usize] } else { 0 };
+            let right = if even { piles[r as usize] } else { 0 };
+            (dfs_safe(l + 1, r, piles) + left).max(dfs_safe(l, r - 1, piles) + right)
+        }
+
+        let n = piles.len() as i32;
+        let alice_score = dfs_safe(0, n - 1, &piles);
+        alice_score > total - alice_score
     }
 }
 ```
@@ -468,6 +503,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game(piles: Vec<i32>) -> bool {
+        let n = piles.len();
+        let mut dp = vec![vec![-1i32; n]; n];
+        let total: i32 = piles.iter().sum();
+
+        fn dfs(l: i32, r: i32, piles: &[i32], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if l > r {
+                return 0;
+            }
+            let lu = l as usize;
+            let ru = r as usize;
+            if dp[lu][ru] != -1 {
+                return dp[lu][ru];
+            }
+            let even = (r - l) % 2 == 0;
+            let left = if even { piles[lu] } else { 0 };
+            let right = if even { piles[ru] } else { 0 };
+            dp[lu][ru] = (dfs(l + 1, r, piles, dp) + left)
+                .max(dfs(l, r - 1, piles, dp) + right);
+            dp[lu][ru]
+        }
+
+        let alice_score = dfs(0, n as i32 - 1, &piles, &mut dp);
+        alice_score > total - alice_score
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -718,6 +783,32 @@ class Solution {
         let total = piles.reduce(0, +)
         let aliceScore = dp[0][n - 1]
         return aliceScore > total - aliceScore
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn stone_game(piles: Vec<i32>) -> bool {
+        let n = piles.len();
+        let mut dp = vec![vec![0i32; n]; n];
+
+        for l in (0..n).rev() {
+            for r in l..n {
+                let even = (r - l) % 2 == 0;
+                let left = if even { piles[l] } else { 0 };
+                let right = if even { piles[r] } else { 0 };
+                if l == r {
+                    dp[l][r] = left;
+                } else {
+                    dp[l][r] = (dp[l + 1][r] + left).max(dp[l][r - 1] + right);
+                }
+            }
+        }
+
+        let total: i32 = piles.iter().sum();
+        let alice_score = dp[0][n - 1];
+        alice_score > total - alice_score
     }
 }
 ```
@@ -974,6 +1065,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn stone_game(piles: Vec<i32>) -> bool {
+        let n = piles.len();
+        let mut dp = vec![0i32; n];
+
+        for l in (0..n).rev() {
+            for r in l..n {
+                let even = (r - l) % 2 == 0;
+                let left = if even { piles[l] } else { 0 };
+                let right = if even { piles[r] } else { 0 };
+                if l == r {
+                    dp[r] = left;
+                } else {
+                    dp[r] = (dp[r] + left).max(dp[r - 1] + right);
+                }
+            }
+        }
+
+        let total: i32 = piles.iter().sum();
+        let alice_score = dp[n - 1];
+        alice_score > total - alice_score
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1056,6 +1173,14 @@ class Solution {
 class Solution {
     func stoneGame(_ piles: [Int]) -> Bool {
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn stone_game(_piles: Vec<i32>) -> bool {
+        true
     }
 }
 ```

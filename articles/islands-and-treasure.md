@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array (Grid) Traversal** - Iterating through rows and columns of a matrix
 - **Breadth First Search (BFS)** - Finding shortest paths in unweighted graphs/grids
 - **Multi-Source BFS** - Starting BFS from multiple sources simultaneously for optimal distance calculation
@@ -10,6 +12,7 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force (Backtracking)
 
 ### Intuition
+
 For every empty cell (`INF`), we try to **find the shortest path to any treasure (`0`)** by exploring all 4 directions using backtracking DFS.
 
 - DFS explores **all possible paths** from the cell until it hits a treasure (distance `0`), a wall (`-1`), or goes out of bounds.
@@ -19,17 +22,18 @@ For every empty cell (`INF`), we try to **find the shortest path to any treasure
 This works but is slow because we repeat DFS from many cells and re-explore the same areas again and again.
 
 ### Algorithm
+
 1. Let `INF` represent empty rooms that need a distance.
 2. For each cell in the grid:
-   - If it is `INF`, run `DFS(cell)` to compute the minimum distance to a `0`.
+    - If it is `INF`, run `DFS(cell)` to compute the minimum distance to a `0`.
 3. `DFS(r, c)`:
-   - If out of bounds / wall (`-1`) / already visited → return `INF`.
-   - If current cell is a treasure (`0`) → return `0`.
-   - Mark `(r, c)` as visited.
-   - Try all 4 directions and take:
-     - `min(1 + DFS(neighbor))`
-   - Unmark `(r, c)` (backtrack).
-   - Return the minimum found.
+    - If out of bounds / wall (`-1`) / already visited → return `INF`.
+    - If current cell is a treasure (`0`) → return `0`.
+    - Mark `(r, c)` as visited.
+    - Try all 4 directions and take:
+        - `min(1 + DFS(neighbor))`
+    - Unmark `(r, c)` (backtrack).
+    - Return the minimum found.
 4. Update `grid[r][c]` with the returned minimum distance.
 
 ::tabs-start
@@ -381,6 +385,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn islands_and_treasure(grid: &mut Vec<Vec<i32>>) {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let directions: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+        const INF: i32 = 2147483647;
+        let mut visit = vec![vec![false; cols]; rows];
+
+        fn dfs(
+            grid: &Vec<Vec<i32>>,
+            visit: &mut Vec<Vec<bool>>,
+            r: i32,
+            c: i32,
+            rows: i32,
+            cols: i32,
+            directions: &[(i32, i32); 4],
+        ) -> i32 {
+            if r < 0 || c < 0 || r >= rows || c >= cols
+                || grid[r as usize][c as usize] == -1
+                || visit[r as usize][c as usize]
+            {
+                return INF;
+            }
+            if grid[r as usize][c as usize] == 0 {
+                return 0;
+            }
+            visit[r as usize][c as usize] = true;
+            let mut res = INF;
+            for &(dx, dy) in directions {
+                let cur = dfs(grid, visit, r + dx, c + dy, rows, cols, directions);
+                if cur != INF {
+                    res = res.min(1 + cur);
+                }
+            }
+            visit[r as usize][c as usize] = false;
+            res
+        }
+
+        let (r_len, c_len) = (rows as i32, cols as i32);
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == INF {
+                    grid[r][c] = dfs(grid, &mut visit, r as i32, c as i32, r_len, c_len, &directions);
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -395,25 +450,27 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
+
 BFS is perfect for **shortest path in an unweighted grid**.
 From one empty cell (`INF`), we expand level-by-level (distance `0`, `1`, `2`, ...). The **first time** we reach a treasure cell (`0`), we are guaranteed that distance is the **minimum steps** needed.
 
 This approach runs a BFS **separately for every `INF` cell**, so it's simpler to think about, but can still be slow because many BFS runs repeat the same work.
 
 ### Algorithm
+
 1. Define 4 directions (up, down, left, right) and let `INF` represent empty rooms.
 2. For each cell `(r, c)` in the grid:
-   - If `grid[r][c] == INF`, run `BFS(r, c)` to find the nearest treasure distance.
-   - Replace `grid[r][c]` with that returned distance.
+    - If `grid[r][c] == INF`, run `BFS(r, c)` to find the nearest treasure distance.
+    - Replace `grid[r][c]` with that returned distance.
 3. `BFS(sr, sc)`:
-   - Initialize a queue with `(sr, sc)` and a `visited[ROWS][COLS]`.
-   - Set `steps = 0`.
-   - While the queue is not empty:
-     - Process exactly the current queue size (one BFS "layer").
-     - If any popped cell is a treasure (`grid[row][col] == 0`), return `steps`.
-     - Otherwise, push valid neighbors (in bounds, not visited, not a wall (`-1`)) into the queue.
-     - After finishing the layer, increment `steps`.
-   - If BFS ends without finding a treasure, return `INF` (no reachable treasure).
+    - Initialize a queue with `(sr, sc)` and a `visited[ROWS][COLS]`.
+    - Set `steps = 0`.
+    - While the queue is not empty:
+        - Process exactly the current queue size (one BFS "layer").
+        - If any popped cell is a treasure (`grid[row][col] == 0`), return `steps`.
+        - Otherwise, push valid neighbors (in bounds, not visited, not a wall (`-1`)) into the queue.
+        - After finishing the layer, increment `steps`.
+    - If BFS ends without finding a treasure, return `INF` (no reachable treasure).
 
 ::tabs-start
 
@@ -809,6 +866,60 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn islands_and_treasure(grid: &mut Vec<Vec<i32>>) {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let directions: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+        const INF: i32 = i32::MAX;
+
+        let bfs = |grid: &Vec<Vec<i32>>, r: usize, c: usize| -> i32 {
+            let mut q = VecDeque::new();
+            q.push_back((r, c));
+            let mut visit = vec![vec![false; cols]; rows];
+            visit[r][c] = true;
+            let mut steps = 0;
+
+            while !q.is_empty() {
+                let size = q.len();
+                for _ in 0..size {
+                    let (row, col) = q.pop_front().unwrap();
+                    if grid[row][col] == 0 {
+                        return steps;
+                    }
+                    for &(dr, dc) in &directions {
+                        let nr = row as i32 + dr;
+                        let nc = col as i32 + dc;
+                        if nr >= 0
+                            && nr < rows as i32
+                            && nc >= 0
+                            && nc < cols as i32
+                        {
+                            let (ur, uc) = (nr as usize, nc as usize);
+                            if !visit[ur][uc] && grid[ur][uc] != -1 {
+                                visit[ur][uc] = true;
+                                q.push_back((ur, uc));
+                            }
+                        }
+                    }
+                }
+                steps += 1;
+            }
+            INF
+        };
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == INF {
+                    grid[r][c] = bfs(grid, r, c);
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -823,26 +934,29 @@ class Solution {
 ## 3. Multi Source BFS
 
 ### Intuition
+
 Instead of running BFS from **every empty room**, run BFS **once** starting from **all treasures (`0` cells) at the same time**.
 
 Why this works:
+
 - BFS spreads out in "waves" of distance `0`, `1`, `2`, ...
 - If we start the queue with **all treasures**, the first time the wave reaches an empty cell, it must be from the **closest treasure** (because BFS guarantees the first visit is the shortest distance in an unweighted grid).
-So each cell gets filled with its minimum distance to **any** treasure.
+  So each cell gets filled with its minimum distance to **any** treasure.
 
 This avoids repeated work and is the optimal approach.
 
 ### Algorithm
+
 1. Put all treasure cells (`grid[r][c] == 0`) into a queue.
 2. Mark them visited. Walls (`-1`) are never added.
 3. Set `dist = 0`.
 4. While the queue is not empty:
-   - Process all nodes currently in the queue (this is one BFS level = distance `dist`).
-   - For each cell popped:
-     - Set `grid[r][c] = dist` (distance to nearest treasure).
-     - Try its 4 neighbors:
-       - If in bounds, not a wall, and not visited -> mark visited and push to queue.
-   - After finishing the level, do `dist += 1`.
+    - Process all nodes currently in the queue (this is one BFS level = distance `dist`).
+    - For each cell popped:
+        - Set `grid[r][c] = dist` (distance to nearest treasure).
+        - Try its 4 neighbors:
+            - If in bounds, not a wall, and not visited -> mark visited and push to queue.
+    - After finishing the level, do `dist += 1`.
 5. After BFS ends, every reachable empty room has been updated with its shortest distance; unreachable rooms remain `INF`.
 
 ::tabs-start
@@ -1172,6 +1286,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn islands_and_treasure(grid: &mut Vec<Vec<i32>>) {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut q = VecDeque::new();
+
+        for i in 0..m {
+            for j in 0..n {
+                if grid[i][j] == 0 {
+                    q.push_back((i, j));
+                }
+            }
+        }
+        if q.is_empty() {
+            return;
+        }
+
+        let dirs: [(i32, i32); 4] = [(-1, 0), (0, -1), (1, 0), (0, 1)];
+        while let Some((row, col)) = q.pop_front() {
+            for &(dr, dc) in &dirs {
+                let r = row as i32 + dr;
+                let c = col as i32 + dc;
+                if r < 0 || r >= m as i32 || c < 0 || c >= n as i32 {
+                    continue;
+                }
+                let (ur, uc) = (r as usize, c as usize);
+                if grid[ur][uc] != i32::MAX {
+                    continue;
+                }
+                grid[ur][uc] = grid[row][col] + 1;
+                q.push_back((ur, uc));
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1187,7 +1339,7 @@ class Solution {
 
 ### Starting BFS from Empty Rooms Instead of Treasures
 
-A common mistake is to run BFS from each empty room to find the nearest treasure, resulting in O((m*n)^2) time complexity. The optimal approach is multi-source BFS starting from all treasures simultaneously, which processes each cell exactly once.
+A common mistake is to run BFS from each empty room to find the nearest treasure, resulting in O((m\*n)^2) time complexity. The optimal approach is multi-source BFS starting from all treasures simultaneously, which processes each cell exactly once.
 
 ### Not Distinguishing Walls from Unvisited Cells
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion and Divide-and-Conquer** - Breaking a problem in half repeatedly to reduce complexity
 - **Binary Exponentiation** - The mathematical property that x^n = (x^2)^(n/2) for even n
 - **Bit Manipulation Basics** - Using bitwise AND and right shift to check odd/even and halve values
@@ -12,13 +14,16 @@ Before attempting this problem, you should be comfortable with:
 ### Intuition
 
 We are asked to compute \( x^n \), where:
+
 - `x` is a floating-point number
 - `n` can be **positive, zero, or negative**
 
 The most straightforward way to think about exponentiation is:
+
 - multiplying `x` by itself `n` times
 
 This brute force approach directly follows the mathematical definition of power:
+
 - if `n` is positive → multiply `x` repeatedly
 - if `n` is zero → the result is always `1`
 - if `n` is negative → compute \( x^{|n|} \) and take its reciprocal
@@ -28,15 +33,15 @@ Although this method is not efficient for large `n`, it is very easy to understa
 ### Algorithm
 
 1. Handle edge cases:
-   - If `x == 0`, return `0`
-   - If `n == 0`, return `1`
+    - If `x == 0`, return `0`
+    - If `n == 0`, return `1`
 2. Initialize `res = 1` to store the result.
 3. Repeat `abs(n)` times:
-   - multiply `res` by `x`
+    - multiply `res` by `x`
 4. If `n` is positive:
-   - return `res`
+    - return `res`
 5. If `n` is negative:
-   - return `1 / res`
+    - return `1 / res`
 
 ::tabs-start
 
@@ -196,6 +201,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn my_pow(x: f64, n: i32) -> f64 {
+        if x == 0.0 {
+            return 0.0;
+        }
+        if n == 0 {
+            return 1.0;
+        }
+
+        let mut res = 1.0;
+        for _ in 0..(n as i64).abs() {
+            res *= x;
+        }
+        if n >= 0 { res } else { 1.0 / res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -212,37 +236,40 @@ class Solution {
 Computing \( x^n \) by multiplying `x` repeatedly works, but it becomes very slow when `n` is large.
 
 A much better idea is to use **binary exponentiation**, which is based on these observations:
+
 - If `n` is even:
-  - \( x^n = (x^2)^{n/2} \)
+    - \( x^n = (x^2)^{n/2} \)
 - If `n` is odd:
-  - \( x^n = x \times (x^2)^{(n-1)/2} \)
+    - \( x^n = x \times (x^2)^{(n-1)/2} \)
 
 This means we can:
+
 - **halve the exponent** at each step
 - **square the base** accordingly
 
 By doing this recursively, the number of multiplications reduces from `O(n)` to `O(log n)`.
 
 We also handle negative powers by:
+
 - computing \( x^{|n|} \)
 - taking the reciprocal if `n` is negative
 
 ### Algorithm
 
 1. Define a recursive helper function `helper(x, n)`:
-   - If `x == 0`, return `0`
-   - If `n == 0`, return `1`
+    - If `x == 0`, return `0`
+    - If `n == 0`, return `1`
 2. Recursively compute:
-   - `res = helper(x * x, n // 2)`
+    - `res = helper(x * x, n // 2)`
 3. If `n` is odd:
-   - return `x * res`
+    - return `x * res`
 4. If `n` is even:
-   - return `res`
+    - return `res`
 5. Call `helper(x, abs(n))` to compute the magnitude.
 6. If `n` is negative:
-   - return `1 / result`
+    - return `1 / result`
 7. Otherwise:
-   - return `result`
+    - return `result`
 
 ::tabs-start
 
@@ -435,6 +462,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn my_pow(x: f64, n: i32) -> f64 {
+        fn helper(x: f64, n: i64) -> f64 {
+            if x == 0.0 {
+                return 0.0;
+            }
+            if n == 0 {
+                return 1.0;
+            }
+            let half = helper(x, n / 2);
+            if n % 2 == 0 { half * half } else { x * half * half }
+        }
+
+        let power = (n as i64).abs();
+        let res = helper(x, power);
+        if n >= 0 { res } else { 1.0 / res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -454,13 +502,15 @@ The brute force approach multiplies `x` repeatedly and takes **O(n)** time, whic
 Instead, we use **binary exponentiation**, which reduces the time complexity to **O(log n)**.
 
 The key ideas are:
+
 - Any number `n` can be written in binary
 - If the current `power` is **odd**, we must include one extra `x` in the result
 - We repeatedly:
-  - square the base (`x = x * x`)
-  - halve the exponent (`power = power // 2`)
+    - square the base (`x = x * x`)
+    - halve the exponent (`power = power // 2`)
 
 For negative powers:
+
 - \( x^n = \frac{1}{x^{|n|}} \)
 - so we compute using `abs(n)` and take the reciprocal at the end if needed
 
@@ -469,22 +519,22 @@ This iterative version avoids recursion and works efficiently with constant extr
 ### Algorithm
 
 1. Handle edge cases:
-   - If `x == 0`, return `0`
-   - If `n == 0`, return `1`
+    - If `x == 0`, return `0`
+    - If `n == 0`, return `1`
 2. Initialize:
-   - `res = 1` (stores the final answer)
-   - `power = abs(n)` (work with positive exponent)
+    - `res = 1` (stores the final answer)
+    - `power = abs(n)` (work with positive exponent)
 3. While `power > 0`:
-   - If `power` is odd:
-     - multiply `res` by `x`
-   - Square the base:
-     - `x = x * x`
-   - Divide the exponent by 2:
-     - `power = power >> 1`
+    - If `power` is odd:
+        - multiply `res` by `x`
+    - Square the base:
+        - `x = x * x`
+    - Divide the exponent by 2:
+        - `power = power >> 1`
 4. If `n` is negative:
-   - return `1 / res`
+    - return `1 / res`
 5. Otherwise:
-   - return `res`
+    - return `res`
 
 ::tabs-start
 
@@ -679,6 +729,33 @@ class Solution {
         }
 
         return n >= 0 ? res : 1 / res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn my_pow(x: f64, n: i32) -> f64 {
+        if x == 0.0 {
+            return 0.0;
+        }
+        if n == 0 {
+            return 1.0;
+        }
+
+        let mut res = 1.0;
+        let mut base = x;
+        let mut power = (n as i64).abs();
+
+        while power > 0 {
+            if power & 1 == 1 {
+                res *= base;
+            }
+            base *= base;
+            power >>= 1;
+        }
+
+        if n >= 0 { res } else { 1.0 / res }
     }
 }
 ```

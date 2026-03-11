@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structure with value and next pointer
 - **Recursion** - Solving problems by breaking them into smaller subproblems
 - **Two Pointers** - Traversing multiple data structures simultaneously
@@ -23,12 +25,12 @@ So we:
 
 1. If one list is empty, return the other list — nothing left to merge.
 2. Compare the head values of `list1` and `list2`:
-   - If `list1.val <= list2.val`:
-     - Set `list1.next` to the merged result of the remaining nodes.
-     - Return `list1` as the current head.
-   - Otherwise:
-     - Set `list2.next` to the merged result of the remaining nodes.
-     - Return `list2` as the current head.
+    - If `list1.val <= list2.val`:
+        - Set `list1.next` to the merged result of the remaining nodes.
+        - Return `list1` as the current head.
+    - Otherwise:
+        - Set `list2.next` to the merged result of the remaining nodes.
+        - Return `list2` as the current head.
 3. The recursion continues until both lists are fully merged.
 
 ::tabs-start
@@ -264,6 +266,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_two_lists(
+        list1: Option<Box<ListNode>>,
+        list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        match (list1, list2) {
+            (None, r) => r,
+            (l, None) => l,
+            (Some(mut l1), Some(mut l2)) => {
+                if l1.val <= l2.val {
+                    l1.next = Self::merge_two_lists(l1.next, Some(l2));
+                    Some(l1)
+                } else {
+                    l2.next = Self::merge_two_lists(Some(l1), l2.next);
+                    Some(l2)
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -292,12 +317,12 @@ Using a dummy node makes handling the head of the merged list simple and clean.
 
 1. Create a dummy node and a `node` pointer pointing to it.
 2. While both lists have nodes:
-   - Compare `list1.val` and `list2.val`.
-   - Attach the smaller node to `node.next`.
-   - Move forward in the chosen list.
-   - Move `node` to `node.next`.
+    - Compare `list1.val` and `list2.val`.
+    - Attach the smaller node to `node.next`.
+    - Move forward in the chosen list.
+    - Move `node` to `node.next`.
 3. When one list becomes empty:
-   - Attach the remaining nodes of the other list to `node.next`.
+    - Attach the remaining nodes of the other list to `node.next`.
 4. Return `dummy.next`, which is the head of the merged list.
 
 ::tabs-start
@@ -589,6 +614,33 @@ class Solution {
         node.next = l1 ?? l2
 
         return dummy.next
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge_two_lists(
+        mut list1: Option<Box<ListNode>>,
+        mut list2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode::new(0));
+        let mut tail = &mut dummy;
+
+        while let (Some(l1), Some(l2)) = (list1.as_ref(), list2.as_ref()) {
+            if l1.val < l2.val {
+                tail.next = list1;
+                tail = tail.next.as_mut().unwrap();
+                list1 = tail.next.take();
+            } else {
+                tail.next = list2;
+                tail = tail.next.as_mut().unwrap();
+                list2 = tail.next.take();
+            }
+        }
+
+        tail.next = if list1.is_some() { list1 } else { list2 };
+        dummy.next
     }
 }
 ```

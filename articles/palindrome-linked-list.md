@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Traversal** - Understanding how to iterate through a singly linked list
 - **Two Pointers (Fast & Slow)** - Used to find the middle of the list in one pass
 - **In-place List Reversal** - Reversing a linked list without extra space
@@ -254,16 +256,6 @@ class Solution {
 ```
 
 ```swift
-/**
- * Definition for singly-linked list.
- * public class ListNode {
- *     public var val: Int
- *     public var next: ListNode?
- *     public init() { self.val = 0; self.next = nil; }
- *     public init(_ val: Int) { self.val = val; self.next = nil; }
- *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
- * }
- */
 class Solution {
     func isPalindrome(_ head: ListNode?) -> Bool {
         var arr = [Int]()
@@ -284,6 +276,34 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {
+        let mut arr = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.val);
+            cur = &node.next;
+        }
+        let (mut l, mut r) = (0, arr.len() as i32 - 1);
+        while l < r {
+            if arr[l as usize] != arr[r as usize] {
+                return false;
+            }
+            l += 1;
+            r -= 1;
+        }
+        true
     }
 }
 ```
@@ -309,11 +329,11 @@ We maintain a pointer starting at the head. As recursion unwinds from the tail, 
 
 1. Initialize a pointer `cur` at the head of the list.
 2. Define a recursive function `rec(node)` that:
-   - Returns `true` if `node` is `null` (base case).
-   - Recursively calls `rec(node.next)` first to reach the end.
-   - Compares `cur.val` with `node.val`. If they differ, return `false`.
-   - Advances `cur` to the next node.
-   - Returns `true` if all comparisons pass.
+    - Returns `true` if `node` is `null` (base case).
+    - Recursively calls `rec(node.next)` first to reach the end.
+    - Compares `cur.val` with `node.val`. If they differ, return `false`.
+    - Advances `cur` to the next node.
+    - Returns `true` if all comparisons pass.
 3. Call `rec(head)` and return the result.
 
 ::tabs-start
@@ -571,6 +591,39 @@ class Solution {
             cur = cur?.next
         }
         return true
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+        let mut idx = 0;
+        fn rec(node: &Option<Box<ListNode>>, vals: &[i32], idx: &mut usize) -> bool {
+            if let Some(n) = node {
+                if !rec(&n.next, vals, idx) {
+                    return false;
+                }
+                if vals[*idx] != n.val {
+                    return false;
+                }
+                *idx += 1;
+            }
+            true
+        }
+        rec(&head, &vals, &mut idx)
     }
 }
 ```
@@ -836,6 +889,33 @@ class Solution {
         }
 
         return cur == nil
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {
+        let mut stack = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            stack.push(node.val);
+            cur = &node.next;
+        }
+        let mut cur = &head;
+        while let Some(node) = cur {
+            if node.val != stack.pop().unwrap() {
+                return false;
+            }
+            cur = &node.next;
+        }
+        true
     }
 }
 ```
@@ -1216,6 +1296,32 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//     pub val: i32,
+//     pub next: Option<Box<ListNode>>,
+// }
+impl Solution {
+    pub fn is_palindrome(head: Option<Box<ListNode>>) -> bool {
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+        let n = vals.len();
+        for i in 0..n / 2 {
+            if vals[i] != vals[n - 1 - i] {
+                return false;
+            }
+        }
+        true
     }
 }
 ```

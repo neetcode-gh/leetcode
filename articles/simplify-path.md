@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Using push/pop operations to track directory hierarchy
 - **String Parsing** - Splitting strings by delimiters and handling edge cases like empty strings
 - **Unix Path Semantics** - Understanding that `.` means current directory and `..` means parent directory
@@ -17,9 +19,9 @@ A Unix-style path can contain special directory references: `.` means the curren
 1. Append a trailing `/` to ensure the last directory name is processed.
 2. Iterate character by character, building up the current directory name.
 3. When encountering a `/`:
-   - If the accumulated name is `..`, pop from the `stack` (if not empty).
-   - If the name is a valid directory (not empty and not `.`), push it onto the `stack`.
-   - Reset the current name.
+    - If the accumulated name is `..`, pop from the `stack` (if not empty).
+    - If the name is a valid directory (not empty and not `.`), push it onto the `stack`.
+    - Reset the current name.
 4. Join the `stack` elements with `/` and prepend a leading `/` to form the canonical path.
 
 ::tabs-start
@@ -226,6 +228,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn simplify_path(path: String) -> String {
+        let mut stack: Vec<String> = Vec::new();
+        let mut cur = String::new();
+
+        for c in path.chars().chain(std::iter::once('/')) {
+            if c == '/' {
+                if cur == ".." {
+                    stack.pop();
+                } else if !cur.is_empty() && cur != "." {
+                    stack.push(cur.clone());
+                }
+                cur.clear();
+            } else {
+                cur.push(c);
+            }
+        }
+
+        format!("/{}", stack.join("/"))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -245,8 +271,8 @@ Instead of processing character by character, we can split the path by `/` to ge
 
 1. Split the path string by `/` to get an array of parts.
 2. For each part:
-   - If it equals `..`, pop from the `stack` (if not empty).
-   - If it is a valid directory name (not empty and not `.`), push it onto the `stack`.
+    - If it equals `..`, pop from the `stack` (if not empty).
+    - If it is a valid directory name (not empty and not `.`), push it onto the `stack`.
 3. Join the `stack` with `/` and prepend a leading `/` to return the simplified path.
 
 ::tabs-start
@@ -415,6 +441,24 @@ class Solution {
         }
 
         return "/" + stack.joined(separator: "/")
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn simplify_path(path: String) -> String {
+        let mut stack: Vec<&str> = Vec::new();
+
+        for part in path.split('/') {
+            match part {
+                ".." => { stack.pop(); }
+                "" | "." => {}
+                _ => stack.push(part),
+            }
+        }
+
+        format!("/{}", stack.join("/"))
     }
 }
 ```

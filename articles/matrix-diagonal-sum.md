@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Array Traversal** - Understanding how to access elements in a matrix using row and column indices
 - **Diagonal Patterns** - Recognizing that primary diagonal has i==j and secondary diagonal has i+j==n-1
 
@@ -232,6 +234,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn diagonal_sum(mat: Vec<Vec<i32>>) -> i32 {
+        let mut mat = mat;
+        let n = mat.len();
+
+        fn helper(matrix: &mut Vec<Vec<i32>>, n: usize) -> i32 {
+            let mut res = 0;
+            for i in 0..n {
+                for j in 0..n {
+                    if i == j {
+                        res += matrix[i][j];
+                    }
+                }
+                matrix[i].reverse();
+            }
+            res
+        }
+
+        let mut sum = helper(&mut mat, n) + helper(&mut mat, n);
+        if n % 2 == 1 {
+            sum -= mat[n / 2][n / 2];
+        }
+        sum
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -251,8 +281,8 @@ We can directly compute both diagonal sums in a single pass. For row `r`, the pr
 
 1. Initialize the result sum to `0`.
 2. For each row index `r` from `0` to `n - 1`:
-   - Add `mat[r][r]` (primary diagonal element).
-   - Add `mat[r][n - r - 1]` (secondary diagonal element).
+    - Add `mat[r][r]` (primary diagonal element).
+    - Add `mat[r][n - r - 1]` (secondary diagonal element).
 3. If `n` is odd, subtract the center element `mat[n / 2][n / 2]` to correct for double-counting.
 4. Return the result.
 
@@ -397,6 +427,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn diagonal_sum(mat: Vec<Vec<i32>>) -> i32 {
+        let n = mat.len();
+        let mut res = 0;
+
+        for r in 0..n {
+            res += mat[r][r];
+            res += mat[r][n - r - 1];
+        }
+
+        if n % 2 == 1 {
+            res -= mat[n / 2][n / 2];
+        }
+
+        res
     }
 }
 ```

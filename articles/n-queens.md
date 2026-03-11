@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Understanding how to explore all possibilities by making choices and undoing them when they lead to invalid states
 - **Recursion** - The solution builds the board row by row using recursive calls
 - **2D Arrays/Matrices** - Working with board representations and understanding coordinate systems
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Backtracking
 
 ### Intuition
+
 The goal is to place **one queen in each row** such that no two queens attack each other.
 
 Key observations:
+
 - A queen can attack **vertically**, **diagonally left**, and **diagonally right**
 - Since we place queens **row by row from top to bottom**, we only need to check rows **above** the current row
 - If a position is safe, we place a queen and move to the next row
@@ -21,20 +25,21 @@ Key observations:
 This is a classic **backtracking + constraint checking** problem.
 
 ### Algorithm
+
 1. Create an empty `n x n` board filled with `"."`.
 2. Start backtracking from row `0`.
 3. For the current `r` (row):
-   - Try placing a queen in every `c` (column).
-   - Before placing, check if the position is `isSafe`:
-     - No queen in the same column above
-     - No queen in the upper-left diagonal
-     - No queen in the upper-right diagonal
+    - Try placing a queen in every `c` (column).
+    - Before placing, check if the position is `isSafe`:
+        - No queen in the same column above
+        - No queen in the upper-left diagonal
+        - No queen in the upper-right diagonal
 4. If safe:
-   - Place the queen (`"Q"`)
-   - Recurse to the next row
-   - Remove the queen after returning (backtrack)
+    - Place the queen (`"Q"`)
+    - Recurse to the next row
+    - Remove the queen after returning (backtrack)
 5. If all `n` rows are filled:
-   - Convert the board into a list of strings and store it as one valid solution
+    - Convert the board into a list of strings and store it as one valid solution
 6. Continue until all possibilities are explored.
 
 ::tabs-start
@@ -422,6 +427,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        let n = n as usize;
+        let mut board = vec![vec!['.'; n]; n];
+        let mut res = Vec::new();
+        Self::backtrack(0, &mut board, &mut res, n);
+        res
+    }
+
+    fn backtrack(r: usize, board: &mut Vec<Vec<char>>, res: &mut Vec<Vec<String>>, n: usize) {
+        if r == n {
+            let copy = board.iter().map(|row| row.iter().collect()).collect();
+            res.push(copy);
+            return;
+        }
+        for c in 0..n {
+            if Self::is_safe(r, c, board, n) {
+                board[r][c] = 'Q';
+                Self::backtrack(r + 1, board, res, n);
+                board[r][c] = '.';
+            }
+        }
+    }
+
+    fn is_safe(r: usize, c: usize, board: &Vec<Vec<char>>, n: usize) -> bool {
+        for i in (0..r).rev() {
+            if board[i][c] == 'Q' { return false; }
+        }
+        let (mut i, mut j) = (r as i32 - 1, c as i32 - 1);
+        while i >= 0 && j >= 0 {
+            if board[i as usize][j as usize] == 'Q' { return false; }
+            i -= 1;
+            j -= 1;
+        }
+        let (mut i, mut j) = (r as i32 - 1, c as i32 + 1);
+        while i >= 0 && (j as usize) < n {
+            if board[i as usize][j as usize] == 'Q' { return false; }
+            i -= 1;
+            j += 1;
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,9 +485,11 @@ class Solution {
 ## 2. Backtracking (Hash Set)
 
 ### Intuition
+
 Instead of checking the board every time to see if a queen is safe, we **remember the attacked positions** using hash sets.
 
 For any queen at position `(row, col)`:
+
 - **Column conflict** → same `col`
 - **Positive diagonal conflict** → same `(row + col)`
 - **Negative diagonal conflict** → same `(row - col)`
@@ -446,24 +499,25 @@ By storing these in sets, we can check whether a position is safe in **O(1)** ti
 We still place **one queen per row**, move row by row, and backtrack when a placement leads to a conflict.
 
 ### Algorithm
+
 1. Use three hash sets:
-   - `col` → tracks used `c` (columns)
-   - `posDiag` → tracks `(row + col)`
-   - `negDiag` → tracks `(row - col)`
+    - `col` → tracks used `c` (columns)
+    - `posDiag` → tracks `(row + col)`
+    - `negDiag` → tracks `(row - col)`
 2. Initialize an empty `n x n` board with `"."`.
 3. Start backtracking from row `0`.
 4. For the current `r` (row):
-   - Try every `c` (column)
-   - If `c`, `(r + c)`, or `(r - c)` is already in the sets → skip
+    - Try every `c` (column)
+    - If `c`, `(r + c)`, or `(r - c)` is already in the sets → skip
 5. If safe:
-   - Add `c`, `(r + c)`, `(r - c)` to the sets
-   - Place `"Q"` on the board
-   - Recurse to the next row
+    - Add `c`, `(r + c)`, `(r - c)` to the sets
+    - Place `"Q"` on the board
+    - Recurse to the next row
 6. If all rows are filled:
-   - Convert the board into a list of strings and save it
+    - Convert the board into a list of strings and save it
 7. Backtrack:
-   - Remove the queen from the board
-   - Remove entries from all sets
+    - Remove the queen from the board
+    - Remove entries from all sets
 8. Continue until all valid configurations are found.
 
 ::tabs-start
@@ -826,6 +880,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        let n = n as usize;
+        let mut col = HashSet::new();
+        let mut pos_diag = HashSet::new();
+        let mut neg_diag = HashSet::new();
+        let mut res = Vec::new();
+        let mut board = vec![vec!['.'; n]; n];
+
+        Self::backtrack(0, n, &mut col, &mut pos_diag, &mut neg_diag,
+                        &mut board, &mut res);
+        res
+    }
+
+    fn backtrack(
+        r: usize, n: usize,
+        col: &mut HashSet<i32>,
+        pos_diag: &mut HashSet<i32>,
+        neg_diag: &mut HashSet<i32>,
+        board: &mut Vec<Vec<char>>,
+        res: &mut Vec<Vec<String>>,
+    ) {
+        if r == n {
+            let copy = board.iter().map(|row| row.iter().collect()).collect();
+            res.push(copy);
+            return;
+        }
+        for c in 0..n {
+            let (ri, ci) = (r as i32, c as i32);
+            if col.contains(&ci) || pos_diag.contains(&(ri + ci))
+                || neg_diag.contains(&(ri - ci))
+            {
+                continue;
+            }
+            col.insert(ci);
+            pos_diag.insert(ri + ci);
+            neg_diag.insert(ri - ci);
+            board[r][c] = 'Q';
+
+            Self::backtrack(r + 1, n, col, pos_diag, neg_diag, board, res);
+
+            col.remove(&ci);
+            pos_diag.remove(&(ri + ci));
+            neg_diag.remove(&(ri - ci));
+            board[r][c] = '.';
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -838,14 +943,17 @@ class Solution {
 ## 3. Backtracking (Visited Array)
 
 ### Intuition
+
 This approach is the **array-based version** of the hash-set solution.
 
 Instead of using sets, we use **boolean arrays** to mark whether a column or diagonal is already occupied by a queen.  
 This works because:
+
 - Columns are limited to `n`
 - Diagonals can be mapped to indices using math
 
 For a queen at position `(row, col)`:
+
 - **Column index** → `col`
 - **Positive diagonal ( / )** → `row + col`
 - **Negative diagonal ( \ )** → `row - col + n` (shifted to avoid negative index)
@@ -855,24 +963,25 @@ If any of these positions are already marked `True`, placing a queen there would
 We place queens **row by row**, and backtrack when no safe column is available.
 
 ### Algorithm
+
 1. Create three boolean arrays:
-   - `col[n]` → tracks occupied columns
-   - `posDiag[2n]` → tracks `row + col`
-   - `negDiag[2n]` → tracks `row - col + n`
+    - `col[n]` → tracks occupied columns
+    - `posDiag[2n]` → tracks `row + col`
+    - `negDiag[2n]` → tracks `row - col + n`
 2. Initialize an empty `n x n` board filled with `"."`.
 3. Start backtracking from row `0`.
 4. For the current `r` (row):
-   - Try every `c` (column)
-   - If `col[c]`, `posDiag[r+c]`, or `negDiag[r-c+n]` is `true`, skip
+    - Try every `c` (column)
+    - If `col[c]`, `posDiag[r+c]`, or `negDiag[r-c+n]` is `true`, skip
 5. If safe:
-   - Mark `col[c]`, `posDiag[r+c]`, `negDiag[r-c+n]` as `true`
-   - Place `"Q"` on the board at `(r, c)`
-   - Recurse to row `r + 1`
+    - Mark `col[c]`, `posDiag[r+c]`, `negDiag[r-c+n]` as `true`
+    - Place `"Q"` on the board at `(r, c)`
+    - Recurse to row `r + 1`
 6. If `r == n`:
-   - Convert the board to strings and store the solution
+    - Convert the board to strings and store the solution
 7. Backtrack:
-   - Remove the queen
-   - Reset the corresponding boolean entries
+    - Remove the queen
+    - Reset the corresponding boolean entries
 8. Continue until all valid boards are generated.
 
 ::tabs-start
@@ -1224,6 +1333,54 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        let n = n as usize;
+        let mut col = vec![false; n];
+        let mut pos_diag = vec![false; 2 * n];
+        let mut neg_diag = vec![false; 2 * n];
+        let mut res = Vec::new();
+        let mut board = vec![vec!['.'; n]; n];
+
+        Self::backtrack(0, n, &mut col, &mut pos_diag, &mut neg_diag,
+                        &mut board, &mut res);
+        res
+    }
+
+    fn backtrack(
+        r: usize, n: usize,
+        col: &mut Vec<bool>,
+        pos_diag: &mut Vec<bool>,
+        neg_diag: &mut Vec<bool>,
+        board: &mut Vec<Vec<char>>,
+        res: &mut Vec<Vec<String>>,
+    ) {
+        if r == n {
+            let copy = board.iter().map(|row| row.iter().collect()).collect();
+            res.push(copy);
+            return;
+        }
+        for c in 0..n {
+            if col[c] || pos_diag[r + c] || neg_diag[r - c + n] {
+                continue;
+            }
+            col[c] = true;
+            pos_diag[r + c] = true;
+            neg_diag[r - c + n] = true;
+            board[r][c] = 'Q';
+
+            Self::backtrack(r + 1, n, col, pos_diag, neg_diag, board, res);
+
+            col[c] = false;
+            pos_diag[r + c] = false;
+            neg_diag[r - c + n] = false;
+            board[r][c] = '.';
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1236,17 +1393,20 @@ class Solution {
 ## 4. Backtracking (Bit Mask)
 
 ### Intuition
+
 This is the **most optimized backtracking approach** for the N-Queens problem.
 
 Instead of using arrays or hash sets to track occupied columns and diagonals, we use **bit masks (integers)**.  
 Each bit represents whether a column or diagonal is already occupied.
 
 Why this works well:
+
 - Integers allow **O(1)** checks using bitwise operations
 - Uses **very little memory**
 - Faster than arrays/sets in practice
 
 For a queen placed at position `(row, col)`:
+
 - **Column mask** → bit `col`
 - **Positive diagonal (`/`)** → bit `(row + col)`
 - **Negative diagonal (`\`)** → bit `(row - col + n)`
@@ -1256,27 +1416,28 @@ If any of these bits are already set, placing a queen there causes a conflict.
 We still place queens **row by row**, but conflict checks are done using bitwise AND.
 
 ### Algorithm
+
 1. Initialize three integers (bit masks):
-   - `col` → tracks used columns
-   - `posDiag` → tracks `row + col`
-   - `negDiag` → tracks `row - col + n`
+    - `col` → tracks used columns
+    - `posDiag` → tracks `row + col`
+    - `negDiag` → tracks `row - col + n`
 2. Initialize an empty `n x n` board filled with `"."`.
 3. Start backtracking from row `0`.
 4. For each `c` (column) in the current `r` (row):
-   - Check conflicts using bitwise AND:
-     - `col & (1 << c)`
-     - `posDiag & (1 << (r + c))`
-     - `negDiag & (1 << (r - c + n))`
-   - If any is set → skip
+    - Check conflicts using bitwise AND:
+        - `col & (1 << c)`
+        - `posDiag & (1 << (r + c))`
+        - `negDiag & (1 << (r - c + n))`
+    - If any is set → skip
 5. If safe:
-   - Set bits using XOR (`^=`) to mark column and diagonals
-   - Place `"Q"` at `(r, c)`
-   - Recurse to row `r + 1`
+    - Set bits using XOR (`^=`) to mark column and diagonals
+    - Place `"Q"` at `(r, c)`
+    - Recurse to row `r + 1`
 6. If `r == n`:
-   - Convert the board to string format and save it
+    - Convert the board to string format and save it
 7. Backtrack:
-   - Remove the queen
-   - Toggle the same bits back using XOR
+    - Remove the queen
+    - Toggle the same bits back using XOR
 8. Continue until all valid boards are generated.
 
 ::tabs-start
@@ -1620,6 +1781,48 @@ class Solution {
 
         backtrack(0)
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn solve_n_queens(n: i32) -> Vec<Vec<String>> {
+        let n = n as usize;
+        let mut res = Vec::new();
+        let mut board = vec![vec!['.'; n]; n];
+        Self::backtrack(0, n, 0, 0, 0, &mut board, &mut res);
+        res
+    }
+
+    fn backtrack(
+        r: usize, n: usize,
+        col: u32, pos_diag: u32, neg_diag: u32,
+        board: &mut Vec<Vec<char>>,
+        res: &mut Vec<Vec<String>>,
+    ) {
+        if r == n {
+            let copy = board.iter().map(|row| row.iter().collect()).collect();
+            res.push(copy);
+            return;
+        }
+        for c in 0..n {
+            if (col & (1 << c)) != 0
+                || (pos_diag & (1 << (r + c))) != 0
+                || (neg_diag & (1 << (r - c + n))) != 0
+            {
+                continue;
+            }
+            board[r][c] = 'Q';
+            Self::backtrack(
+                r + 1, n,
+                col ^ (1 << c),
+                pos_diag ^ (1 << (r + c)),
+                neg_diag ^ (1 << (r - c + n)),
+                board, res,
+            );
+            board[r][c] = '.';
+        }
     }
 }
 ```

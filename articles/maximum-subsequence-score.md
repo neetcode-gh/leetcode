@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap / Priority Queue** - Min-heap is used to maintain the k largest elements from nums1 efficiently
 - **Sorting** - Pairs are sorted by nums2 values to process elements in decreasing order of the minimum candidate
 - **Greedy Algorithms** - Understanding when to include/exclude elements to maximize the score
@@ -20,8 +22,8 @@ We need to select exactly `k` indices. The score is the sum of selected elements
 3. If we cannot select `k` more elements, return negative infinity.
 4. If `minVal` is `0`, the result is `0` (any selection will have score `0`).
 5. Try both options:
-   - Skip the current index.
-   - Include the current index (update min and sum).
+    - Skip the current index.
+    - Include the current index (update min and sum).
 6. Return the maximum of both choices.
 
 ::tabs-start
@@ -246,6 +248,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(nums1: Vec<i32>, nums2: Vec<i32>, k: i32) -> i64 {
+        let n = nums1.len();
+        let k = k as usize;
+
+        fn dfs(i: usize, k: usize, min_val: i32, cur_sum: i64, nums1: &[i32], nums2: &[i32], n: usize) -> i64 {
+            if k == 0 {
+                return cur_sum * min_val as i64;
+            }
+            if i == n || n - i < k {
+                return i64::MIN;
+            }
+            if min_val == 0 {
+                return 0;
+            }
+            let skip = dfs(i + 1, k, min_val, cur_sum, nums1, nums2, n);
+            let take = dfs(i + 1, k - 1, min_val.min(nums2[i]), cur_sum + nums1[i] as i64, nums1, nums2, n);
+            skip.max(take)
+        }
+
+        dfs(0, k, i32::MAX, 0, &nums1, &nums2, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -267,9 +295,9 @@ The key insight is that if we fix which element provides the minimum from `nums2
 2. Use a min-heap to track the `k` largest `nums1` values seen so far.
 3. Maintain a running sum of elements in the heap.
 4. For each pair in sorted order:
-   - Add the `nums1` value to the heap and update the sum.
-   - If heap size exceeds `k`, remove the smallest and subtract from sum.
-   - If heap size equals `k`, calculate score (`sum * current nums2`) and update result.
+    - Add the `nums1` value to the heap and update the sum.
+    - If heap size exceeds `k`, remove the smallest and subtract from sum.
+    - If heap size equals `k`, calculate score (`sum * current nums2`) and update result.
 5. Return the maximum score.
 
 ::tabs-start
@@ -507,6 +535,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(nums1: Vec<i32>, nums2: Vec<i32>, k: i32) -> i64 {
+        let n = nums1.len();
+        let k = k as usize;
+        let mut pairs: Vec<(i32, i32)> = nums1.iter().zip(nums2.iter())
+            .map(|(&a, &b)| (a, b)).collect();
+        pairs.sort_by(|a, b| b.1.cmp(&a.1));
+
+        let mut min_heap = BinaryHeap::new();
+        let mut n1_sum: i64 = 0;
+        let mut res: i64 = 0;
+
+        for &(n1, n2) in &pairs {
+            n1_sum += n1 as i64;
+            min_heap.push(std::cmp::Reverse(n1 as i64));
+
+            if min_heap.len() > k {
+                if let Some(std::cmp::Reverse(val)) = min_heap.pop() {
+                    n1_sum -= val;
+                }
+            }
+
+            if min_heap.len() == k {
+                res = res.max(n1_sum * n2 as i64);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -527,9 +588,9 @@ This is a space-optimized version that packs both values into a single 64-bit in
 1. For each index, create a combined value: `(nums2[i] << 30) | nums1[i]`.
 2. Sort the combined array in descending order (sorts by `nums2` primarily).
 3. Process each combined value:
-   - Extract `nums1` and `nums2` using bit operations.
-   - Add `nums1` to heap and sum; remove smallest if heap exceeds `k`.
-   - When heap has exactly `k` elements, calculate and track maximum score.
+    - Extract `nums1` and `nums2` using bit operations.
+    - Add `nums1` to heap and sum; remove smallest if heap exceeds `k`.
+    - When heap has exactly `k` elements, calculate and track maximum score.
 4. Return the maximum score.
 
 ::tabs-start
@@ -772,6 +833,41 @@ class Solution {
         }
 
         return Int(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score(nums1: Vec<i32>, nums2: Vec<i32>, k: i32) -> i64 {
+        let n = nums1.len();
+        let k = k as usize;
+        let mut arr: Vec<i64> = (0..n)
+            .map(|i| ((nums2[i] as i64) << 30) | (nums1[i] as i64))
+            .collect();
+        arr.sort_unstable_by(|a, b| b.cmp(a));
+
+        let mut min_heap = BinaryHeap::new();
+        let mut n1_sum: i64 = 0;
+        let mut res: i64 = 0;
+
+        for &num in &arr {
+            let n1 = (num & ((1 << 30) - 1)) as i64;
+            let n2 = (num >> 30) as i64;
+            n1_sum += n1;
+            min_heap.push(std::cmp::Reverse(n1));
+
+            if min_heap.len() > k {
+                if let Some(std::cmp::Reverse(val)) = min_heap.pop() {
+                    n1_sum -= val;
+                }
+            }
+            if min_heap.len() == k {
+                res = res.max(n1_sum * n2);
+            }
+        }
+
+        res
     }
 }
 ```

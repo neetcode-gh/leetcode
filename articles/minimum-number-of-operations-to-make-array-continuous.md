@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting and Deduplication** - Removing duplicates and ordering elements for efficient processing
 - **Binary Search** - Finding boundary positions in sorted arrays in O(log n) time
 - **Sliding Window Technique** - Maintaining a valid window of consecutive values with two pointers
@@ -218,6 +220,31 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let n_len = nums.len() as i32;
+        let mut sorted_nums: Vec<i32> = nums.iter().copied().collect::<HashSet<_>>()
+            .into_iter().collect();
+        sorted_nums.sort();
+        let n = sorted_nums.len();
+        let mut res = i32::MAX;
+
+        for i in 0..n {
+            let mut no_change = 1;
+            for j in i + 1..n {
+                if sorted_nums[j] < sorted_nums[i] + n_len {
+                    no_change += 1;
+                }
+            }
+            res = res.min(n_len - no_change);
+        }
+
+        res
     }
 }
 ```
@@ -478,6 +505,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let n_len = nums.len() as i32;
+        let mut sorted_nums: Vec<i32> = nums.iter().copied().collect::<HashSet<_>>()
+            .into_iter().collect();
+        sorted_nums.sort();
+        let n = sorted_nums.len();
+        let mut res = i32::MAX;
+
+        for i in 0..n {
+            let pos = sorted_nums.partition_point(|&x| x < sorted_nums[i] + n_len);
+            let no_change = pos as i32 - i as i32;
+            res = res.min(n_len - no_change);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -498,9 +546,9 @@ Since the sorted unique elements are in increasing order, we can use a sliding w
 1. Remove duplicates and sort the unique elements.
 2. Use two pointers `l` (left) and `r` (right) starting at 0.
 3. For each left pointer position:
-   - Expand the right pointer while elements are within range `[nums[l], nums[l] + n - 1]`.
-   - The `window` size `r - l` represents elements that can stay.
-   - Update the `result` as `min(result, n - window)`.
+    - Expand the right pointer while elements are within range `[nums[l], nums[l] + n - 1]`.
+    - The `window` size `r - l` represents elements that can stay.
+    - Update the `result` as `min(result, n - window)`.
 4. Return the minimum operations.
 
 ::tabs-start
@@ -683,6 +731,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(nums: Vec<i32>) -> i32 {
+        let length = nums.len() as i32;
+        let mut sorted_nums: Vec<i32> = nums.iter().copied().collect::<HashSet<_>>()
+            .into_iter().collect();
+        sorted_nums.sort();
+        let mut res = length;
+        let mut r = 0usize;
+
+        for l in 0..sorted_nums.len() {
+            while r < sorted_nums.len() && sorted_nums[r] < sorted_nums[l] + length {
+                r += 1;
+            }
+            let window = (r - l) as i32;
+            res = res.min(length - window);
+        }
+
+        res
     }
 }
 ```
@@ -912,6 +983,32 @@ class Solution {
         }
 
         return length - (n - l)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(mut nums: Vec<i32>) -> i32 {
+        let length = nums.len() as i32;
+        nums.sort();
+        let mut n = 1usize;
+
+        for i in 1..nums.len() {
+            if nums[i] != nums[i - 1] {
+                nums[n] = nums[i];
+                n += 1;
+            }
+        }
+
+        let mut l = 0usize;
+        for r in 0..n {
+            if nums[r] - nums[l] > length - 1 {
+                l += 1;
+            }
+        }
+
+        length - (n - l) as i32
     }
 }
 ```

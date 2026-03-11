@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Dynamically adjusting a window of elements by moving left and right pointers to find optimal subarrays
 - **Prefix Sum Arrays** - Precomputing cumulative sums to enable O(1) range sum queries
 - **Binary Search** - Efficiently finding target values or boundaries in sorted data in O(log n) time
@@ -16,9 +18,9 @@ The most straightforward approach is to check every possible subarray. For each 
 
 1. Initialize `res` to infinity.
 2. For each starting index `i` from `0` to `n-1`:
-   - Initialize `curSum = 0`.
-   - Expand `j` from `i` to `n-1`, adding `nums[j]` to `curSum`.
-   - When `curSum >= target`, update `res` with `j - i + 1` and break.
+    - Initialize `curSum = 0`.
+    - Expand `j` from `i` to `n-1`, adding `nums[j]` to `curSum`.
+    - When `curSum >= target`, update `res` with `j - i + 1` and break.
 3. Return `0` if `res` is still infinity, otherwise return `res`.
 
 ::tabs-start
@@ -207,6 +209,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = i32::MAX;
+
+        for i in 0..n {
+            let mut cur_sum = 0;
+            for j in i..n {
+                cur_sum += nums[j];
+                if cur_sum >= target {
+                    res = res.min((j - i + 1) as i32);
+                    break;
+                }
+            }
+        }
+
+        if res == i32::MAX { 0 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -226,10 +250,10 @@ Since all elements are positive, we can use a sliding window approach. We expand
 
 1. Initialize `l = 0`, `total = 0`, and `res = infinity`.
 2. Iterate `r` from `0` to `n-1`:
-   - Add `nums[r]` to `total`.
-   - While `total >= target`:
-     - Update `res` with the minimum of `res` and `r - l + 1`.
-     - Subtract `nums[l]` from `total` and increment `l`.
+    - Add `nums[r]` to `total`.
+    - While `total >= target`:
+        - Update `res` with the minimum of `res` and `r - l + 1`.
+        - Subtract `nums[l]` from `total` and increment `l`.
 3. Return `0` if `res` is infinity, otherwise return `res`.
 
 ::tabs-start
@@ -402,6 +426,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
+        let mut l = 0;
+        let mut total = 0;
+        let mut res = i32::MAX;
+
+        for r in 0..nums.len() {
+            total += nums[r];
+            while total >= target {
+                res = res.min((r - l + 1) as i32);
+                total -= nums[l];
+                l += 1;
+            }
+        }
+
+        if res == i32::MAX { 0 } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -421,8 +466,8 @@ We can precompute prefix sums so that the sum of any subarray from index `i` to 
 
 1. Build a prefix sum array where `prefixSum[i]` represents the sum of the first `i` elements.
 2. For each starting index `i`:
-   - Binary search in range `[i, n]` to find the smallest `j` where `prefixSum[j+1] - prefixSum[i] >= target`.
-   - If found, update `res` with `j - i + 1`.
+    - Binary search in range `[i, n]` to find the smallest `j` where `prefixSum[j+1] - prefixSum[i] >= target`.
+    - If found, update `res` with `j - i + 1`.
 3. Return `res % (n + 1)` to handle the case where no valid subarray exists (returns `0`).
 
 ::tabs-start
@@ -675,6 +720,37 @@ class Solution {
         }
 
         return res % (n + 1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_sub_array_len(target: i32, nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut prefix_sum = vec![0i32; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i];
+        }
+
+        let mut res = n + 1;
+        for i in 0..n {
+            let (mut l, mut r) = (i, n);
+            while l < r {
+                let mid = (l + r) / 2;
+                let cur_sum = prefix_sum[mid + 1] - prefix_sum[i];
+                if cur_sum >= target {
+                    r = mid;
+                } else {
+                    l = mid + 1;
+                }
+            }
+            if l != n {
+                res = res.min(l - i + 1);
+            }
+        }
+
+        (res % (n + 1)) as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Building solutions from smaller subproblems using both top-down (memoization) and bottom-up (tabulation) approaches
 - **Inverse Pairs in Permutations** - Understanding that an inverse pair (i, j) means i < j but arr[i] > arr[j]
 - **Modular Arithmetic** - Performing addition and subtraction under modulo to prevent integer overflow
@@ -258,6 +260,37 @@ class Solution {
 
         dp[n][k] = res
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn k_inverse_pairs(n: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![vec![-1i64; k + 1]; n + 1];
+
+        fn count(n: usize, k: i32, dp: &mut Vec<Vec<i64>>) -> i64 {
+            if n == 0 {
+                return if k == 0 { 1 } else { 0 };
+            }
+            if k < 0 {
+                return 0;
+            }
+            let ku = k as usize;
+            if dp[n][ku] != -1 {
+                return dp[n][ku];
+            }
+            let mut res = 0i64;
+            for i in 0..n as i32 {
+                res = (res + count(n - 1, k - i, dp)) % 1_000_000_007;
+            }
+            dp[n][ku] = res;
+            res
+        }
+
+        count(n, k as i32, &mut dp) as i32
     }
 }
 ```
@@ -548,6 +581,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn k_inverse_pairs(n: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![vec![-1i64; k + 1]; n + 1];
+
+        fn count(n: usize, k: usize, dp: &mut Vec<Vec<i64>>) -> i64 {
+            const MOD: i64 = 1_000_000_007;
+            if k == 0 { return 1; }
+            if n == 1 { return 0; }
+            if n * (n - 1) / 2 < k { return 0; }
+            if n * (n - 1) / 2 == k { return 1; }
+            if dp[n][k] != -1 { return dp[n][k]; }
+
+            let mut res = count(n, k - 1, dp);
+            if k >= n {
+                res -= count(n - 1, k - n, dp);
+            }
+            res = (res + count(n - 1, k, dp) + MOD) % MOD;
+            dp[n][k] = res;
+            res
+        }
+
+        count(n, k, &mut dp) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -569,8 +631,8 @@ We build up the solution starting from smaller values of `n`. For each `(N, K)` 
 
 1. Create a 2D DP table with `dp[0][0] = 1`.
 2. For each `N` from `1` to `n`:
-   - For each `K` from `0` to `k`:
-     - Sum up `dp[N - 1][K - pairs]` for `pairs` from `0` to `N - 1` where `K - pairs >= 0`.
+    - For each `K` from `0` to `k`:
+        - Sum up `dp[N - 1][K - pairs]` for `pairs` from `0` to `N - 1` where `K - pairs >= 0`.
 3. Return `dp[n][k]`.
 
 ::tabs-start
@@ -752,6 +814,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn k_inverse_pairs(n: i32, k: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![vec![0i32; k + 1]; n + 1];
+        dp[0][0] = 1;
+
+        for nn in 1..=n {
+            for kk in 0..=k {
+                for pairs in 0..nn {
+                    if kk >= pairs {
+                        dp[nn][kk] = (dp[nn][kk] + dp[nn - 1][kk - pairs]) % MOD;
+                    }
+                }
+            }
+        }
+        dp[n][k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -773,9 +857,9 @@ Rather than summing `N` terms for each cell, we use the sliding window observati
 
 1. Create a 2D DP table with `dp[0][0] = 1`.
 2. For each `N` from `1` to `n`, and each `K` from `0` to `k`:
-   - Start with `dp[N][K] = dp[N - 1][K]`.
-   - If `K > 0`, add `dp[N][K - 1]` (cumulative sum from left).
-   - If `K >= N`, subtract `dp[N - 1][K - N]` (remove out-of-window term).
+    - Start with `dp[N][K] = dp[N - 1][K]`.
+    - If `K > 0`, add `dp[N][K - 1]` (cumulative sum from left).
+    - If `K >= N`, subtract `dp[N - 1][K - N]` (remove out-of-window term).
 3. Return `dp[n][k]`.
 
 ::tabs-start
@@ -973,6 +1057,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn k_inverse_pairs(n: i32, k: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![vec![0i32; k + 1]; n + 1];
+        dp[0][0] = 1;
+
+        for nn in 1..=n {
+            for kk in 0..=k {
+                dp[nn][kk] = dp[nn - 1][kk];
+                if kk > 0 {
+                    dp[nn][kk] = (dp[nn][kk] + dp[nn][kk - 1]) % MOD;
+                }
+                if kk >= nn {
+                    dp[nn][kk] = (dp[nn][kk] - dp[nn - 1][kk - nn] + MOD) % MOD;
+                }
+            }
+        }
+        dp[n][k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -994,12 +1102,12 @@ Since each row only depends on the previous row, we only need to keep two 1D arr
 
 1. Initialize `prev` array with `prev[0] = 1`.
 2. For each `N` from `1` to `n`:
-   - Create a new `cur` array and maintain a running `total`.
-   - For each `K` from `0` to `k`:
-     - Add `prev[K]` to `total`.
-     - If `K >= N`, subtract `prev[K - N]` from `total`.
-     - Set `cur[K] = total`.
-   - Swap `prev = cur` for the next iteration.
+    - Create a new `cur` array and maintain a running `total`.
+    - For each `K` from `0` to `k`:
+        - Add `prev[K]` to `total`.
+        - If `K >= N`, subtract `prev[K - N]` from `total`.
+        - Set `cur[K] = total`.
+    - Swap `prev = cur` for the next iteration.
 3. Return `prev[k]`.
 
 ::tabs-start
@@ -1199,6 +1307,31 @@ class Solution {
         }
 
         return prev[k]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn k_inverse_pairs(n: i32, k: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut prev = vec![0i32; k + 1];
+        prev[0] = 1;
+
+        for nn in 1..=n {
+            let mut cur = vec![0i32; k + 1];
+            let mut total = 0i32;
+            for kk in 0..=k {
+                total = (total + prev[kk]) % MOD;
+                if kk >= nn {
+                    total = (total - prev[kk - nn] + MOD) % MOD;
+                }
+                cur[kk] = total;
+            }
+            prev = cur;
+        }
+        prev[k]
     }
 }
 ```

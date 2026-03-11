@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Caching results for states defined by position, remaining deletions, and run information
 - **Run-Length Encoding** - Understanding how consecutive character runs are compressed (e.g., "aaa" becomes "a3")
 - **Multi-dimensional State Management** - Tracking position, deletion budget, previous character, and count simultaneously
@@ -319,6 +321,52 @@ class Solution {
 
         dp[i][k][prev][prevCnt] = res
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_length_of_optimal_compression(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let k = k as usize;
+        const INF: i32 = i32::MAX / 2;
+        let mut dp = vec![vec![vec![vec![-1i32; n + 1]; 27]; k + 1]; n + 1];
+
+        fn count(
+            i: usize, k: usize, prev: usize, prev_cnt: usize,
+            s: &[u8], dp: &mut Vec<Vec<Vec<Vec<i32>>>>,
+        ) -> i32 {
+            const INF: i32 = i32::MAX / 2;
+            if k > s.len() {
+                // k < 0 can't happen with usize, but n-i <= k handled at call
+            }
+            if i == s.len() {
+                return 0;
+            }
+            if dp[i][k][prev][prev_cnt] != -1 {
+                return dp[i][k][prev][prev_cnt];
+            }
+            let curr = (s[i] - b'a') as usize;
+            let res;
+            if prev == curr {
+                let incr = if prev_cnt == 1 || prev_cnt == 9 || prev_cnt == 99 { 1 } else { 0 };
+                res = incr + count(i + 1, k, prev, prev_cnt + 1, s, dp);
+            } else {
+                let keep = 1 + count(i + 1, k, curr, 1, s, dp);
+                if k > 0 {
+                    let del = count(i + 1, k - 1, prev, prev_cnt, s, dp);
+                    res = keep.min(del);
+                } else {
+                    res = keep;
+                }
+            }
+            dp[i][k][prev][prev_cnt] = res;
+            res
+        }
+
+        count(0, k, 26, 0, s, &mut dp)
     }
 }
 ```
@@ -656,6 +704,51 @@ class Solution {
         }
         dp[i][k] = res
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_length_of_optimal_compression(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let k = k as usize;
+        let mut dp = vec![vec![-1i32; k + 1]; n + 1];
+
+        fn dfs(i: usize, k: usize, s: &[u8], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if s.len() - i <= k {
+                return 0;
+            }
+            if dp[i][k] != -1 {
+                return dp[i][k];
+            }
+            let mut res = 150;
+            if k > 0 {
+                res = dfs(i + 1, k - 1, s, dp);
+            }
+            let mut freq = 0;
+            let mut del_cnt = 0;
+            let mut comp_len = 1;
+            for j in i..s.len() {
+                if s[i] == s[j] {
+                    if freq == 1 || freq == 9 || freq == 99 {
+                        comp_len += 1;
+                    }
+                    freq += 1;
+                } else {
+                    del_cnt += 1;
+                    if del_cnt > k {
+                        break;
+                    }
+                }
+                res = res.min(comp_len + dfs(j + 1, k - del_cnt, s, dp));
+            }
+            dp[i][k] = res;
+            res
+        }
+
+        dfs(0, k, s, &mut dp)
     }
 }
 ```
@@ -1001,6 +1094,48 @@ class Solution {
         }
 
         return dp[0][k]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_length_of_optimal_compression(s: String, k: i32) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let k = k as usize;
+        let mut dp = vec![vec![150i32; k + 1]; n + 1];
+
+        for rem_k in 0..=k {
+            dp[n][rem_k] = 0;
+        }
+
+        for i in (0..n).rev() {
+            for rem_k in 0..=k {
+                if rem_k > 0 {
+                    dp[i][rem_k] = dp[i + 1][rem_k - 1];
+                }
+                let mut freq = 0;
+                let mut del_cnt = 0;
+                let mut comp_len = 1i32;
+                for j in i..n {
+                    if s[i] == s[j] {
+                        if freq == 1 || freq == 9 || freq == 99 {
+                            comp_len += 1;
+                        }
+                        freq += 1;
+                    } else {
+                        del_cnt += 1;
+                        if del_cnt > rem_k {
+                            break;
+                        }
+                    }
+                    dp[i][rem_k] = dp[i][rem_k].min(comp_len + dp[j + 1][rem_k - del_cnt]);
+                }
+            }
+        }
+
+        dp[0][k]
     }
 }
 ```

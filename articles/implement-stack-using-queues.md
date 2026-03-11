@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Queues** - Understanding FIFO (First-In-First-Out) operations including enqueue and dequeue
 - **Stacks** - Understanding LIFO (Last-In-First-Out) behavior and why it differs from queues
 - **Linked Lists** - Basic understanding for the queue-of-queues approach that uses a linked structure
@@ -292,6 +294,42 @@ class MyStack {
 }
 ```
 
+```rust
+struct MyStack {
+    q1: VecDeque<i32>,
+    q2: VecDeque<i32>,
+}
+
+impl MyStack {
+    fn new() -> Self {
+        MyStack {
+            q1: VecDeque::new(),
+            q2: VecDeque::new(),
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.q2.push_back(x);
+        while let Some(val) = self.q1.pop_front() {
+            self.q2.push_back(val);
+        }
+        std::mem::swap(&mut self.q1, &mut self.q2);
+    }
+
+    fn pop(&mut self) -> i32 {
+        self.q1.pop_front().unwrap()
+    }
+
+    fn top(&self) -> i32 {
+        *self.q1.front().unwrap()
+    }
+
+    fn empty(&self) -> bool {
+        self.q1.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,6 +593,40 @@ class MyStack {
 
     func empty() -> Bool {
         return q.isEmpty
+    }
+}
+```
+
+```rust
+struct MyStack {
+    q: VecDeque<i32>,
+}
+
+impl MyStack {
+    fn new() -> Self {
+        MyStack {
+            q: VecDeque::new(),
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.q.push_back(x);
+        for _ in 0..self.q.len() - 1 {
+            let val = self.q.pop_front().unwrap();
+            self.q.push_back(val);
+        }
+    }
+
+    fn pop(&mut self) -> i32 {
+        self.q.pop_front().unwrap()
+    }
+
+    fn top(&self) -> i32 {
+        *self.q.front().unwrap()
+    }
+
+    fn empty(&self) -> bool {
+        self.q.is_empty()
     }
 }
 ```
@@ -858,6 +930,51 @@ class MyStack {
 
     func empty() -> Bool {
         return q == nil
+    }
+}
+```
+
+```rust
+struct Node {
+    val: i32,
+    next: Option<Box<Node>>,
+}
+
+struct MyStack {
+    q: Option<Box<Node>>,
+}
+
+impl MyStack {
+    fn new() -> Self {
+        MyStack { q: None }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.q = Some(Box::new(Node {
+            val: x,
+            next: self.q.take(),
+        }));
+    }
+
+    fn pop(&mut self) -> i32 {
+        match self.q.take() {
+            Some(node) => {
+                self.q = node.next;
+                node.val
+            }
+            None => -1,
+        }
+    }
+
+    fn top(&self) -> i32 {
+        match &self.q {
+            Some(node) => node.val,
+            None => -1,
+        }
+    }
+
+    fn empty(&self) -> bool {
+        self.q.is_none()
     }
 }
 ```

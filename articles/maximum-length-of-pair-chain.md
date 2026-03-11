@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Pairs must be sorted by end value for greedy approach or by start value for binary search
 - **Greedy Algorithms** - The optimal solution uses interval scheduling greedy strategy
 - **Dynamic Programming** - Both top-down and bottom-up DP approaches are presented
@@ -215,6 +217,28 @@ class Solution {
         }
 
         return dfs(0, -1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_longest_chain(mut pairs: Vec<Vec<i32>>) -> i32 {
+        pairs.sort_by_key(|p| p[1]);
+        let n = pairs.len();
+
+        fn dfs(i: usize, j: i32, pairs: &[Vec<i32>], n: usize) -> i32 {
+            if i == n {
+                return 0;
+            }
+            let mut res = dfs(i + 1, j, pairs, n);
+            if j == -1 || pairs[j as usize][1] < pairs[i][0] {
+                res = res.max(1 + dfs(i + 1, i as i32, pairs, n));
+            }
+            res
+        }
+
+        dfs(0, -1, &pairs, n)
     }
 }
 ```
@@ -502,6 +526,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_longest_chain(mut pairs: Vec<Vec<i32>>) -> i32 {
+        pairs.sort_by_key(|p| p[1]);
+        let n = pairs.len();
+        let mut dp = vec![vec![-1i32; n + 1]; n];
+
+        fn dfs(i: usize, j: i32, pairs: &[Vec<i32>], dp: &mut Vec<Vec<i32>>, n: usize) -> i32 {
+            if i == n {
+                return 0;
+            }
+            if dp[i][(j + 1) as usize] != -1 {
+                return dp[i][(j + 1) as usize];
+            }
+            let mut res = dfs(i + 1, j, pairs, dp, n);
+            if j == -1 || pairs[j as usize][1] < pairs[i][0] {
+                res = res.max(1 + dfs(i + 1, i as i32, pairs, dp, n));
+            }
+            dp[i][(j + 1) as usize] = res;
+            res
+        }
+
+        dfs(0, -1, &pairs, &mut dp, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -699,6 +750,26 @@ class Solution {
         }
 
         return dp.max()!
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_longest_chain(mut pairs: Vec<Vec<i32>>) -> i32 {
+        let n = pairs.len();
+        pairs.sort_by_key(|p| p[1]);
+        let mut dp = vec![1; n];
+
+        for i in 0..n {
+            for j in 0..i {
+                if pairs[j][1] < pairs[i][0] {
+                    dp[i] = dp[i].max(dp[j] + 1);
+                }
+            }
+        }
+
+        *dp.iter().max().unwrap()
     }
 }
 ```
@@ -972,6 +1043,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_longest_chain(mut pairs: Vec<Vec<i32>>) -> i32 {
+        pairs.sort_by_key(|p| p[0]);
+        let mut dp: Vec<i32> = Vec::new();
+
+        for pair in &pairs {
+            let pos = dp.partition_point(|&x| x < pair[0]);
+            if pos == dp.len() {
+                dp.push(pair[1]);
+            } else {
+                dp[pos] = dp[pos].min(pair[1]);
+            }
+        }
+
+        dp.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1148,6 +1239,25 @@ class Solution {
         }
 
         return length
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_longest_chain(mut pairs: Vec<Vec<i32>>) -> i32 {
+        pairs.sort_by_key(|p| p[1]);
+        let mut length = 1;
+        let mut end = pairs[0][1];
+
+        for i in 1..pairs.len() {
+            if end < pairs[i][0] {
+                length += 1;
+                end = pairs[i][1];
+            }
+        }
+
+        length
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Basic array traversal and accessing elements by index
 - **Sorting** - Understanding how sorting works and its time complexity
 - **Greedy Algorithms** - Making locally optimal choices to find a global optimum
@@ -16,8 +18,8 @@ We want to buy two chocolates and maximize the leftover money, which means we sh
 
 1. Initialize result to `-1` (indicating no valid purchase found yet).
 2. For each pair of chocolates `(i, j)` where `i < j`:
-   - If the sum of their prices is within our budget, calculate the leftover money.
-   - Update result with the maximum leftover found.
+    - If the sum of their prices is within our budget, calculate the leftover money.
+    - Update result with the maximum leftover found.
 3. If no valid pair was found (result is `-1`), return the original money (we buy nothing).
 4. Otherwise, return the maximum leftover amount.
 
@@ -155,6 +157,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn buy_choco(prices: Vec<i32>, money: i32) -> i32 {
+        let mut res = -1;
+        for i in 0..prices.len() {
+            for j in (i + 1)..prices.len() {
+                if prices[i] + prices[j] <= money {
+                    res = res.max(money - prices[i] - prices[j]);
+                }
+            }
+        }
+        if res == -1 { money } else { res }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -264,6 +282,16 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn buy_choco(mut prices: Vec<i32>, money: i32) -> i32 {
+        prices.sort();
+        let buy = prices[0] + prices[1];
+        if buy > money { money } else { money - buy }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,8 +311,8 @@ We can find the two cheapest chocolates in a single pass without sorting. As we 
 
 1. Initialize two variables to track the smallest (`min1`) and second smallest (`min2`) prices, both set to infinity.
 2. Iterate through each price:
-   - If the current price is less than `min1`, update `min2` to be the old `min1`, and `min1` to be the current price.
-   - Otherwise, if the current price is less than `min2`, update `min2` to be the current price.
+    - If the current price is less than `min1`, update `min2` to be the old `min1`, and `min1` to be the current price.
+    - Otherwise, if the current price is less than `min2`, update `min2` to be the current price.
 3. Calculate the leftover money after buying chocolates at `min1` and `min2` prices.
 4. If leftover is non-negative, return it; otherwise, return the original money.
 
@@ -455,6 +483,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn buy_choco(prices: Vec<i32>, money: i32) -> i32 {
+        let (mut min1, mut min2) = (i32::MAX, i32::MAX);
+
+        for &p in &prices {
+            if p < min1 {
+                min2 = min1;
+                min1 = p;
+            } else if p < min2 {
+                min2 = p;
+            }
+        }
+
+        let leftover = money - min1 - min2;
+        if leftover >= 0 { leftover } else { money }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -467,7 +515,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Returning Leftover When You Cannot Afford Both Chocolates
+
 If the sum of the two cheapest chocolates exceeds your money, you should return the original money (buy nothing), not a negative leftover or zero.
+
 ```python
 # Wrong: returning negative leftover
 return money - min1 - min2  # Could be negative
@@ -475,7 +525,9 @@ return money - min1 - min2  # Could be negative
 ```
 
 ### Not Updating Both Minimums Correctly
+
 When finding a new smallest price, forgetting to shift the old minimum to become the second minimum loses track of valid candidates.
+
 ```python
 # Wrong: losing second minimum
 if p < min1:

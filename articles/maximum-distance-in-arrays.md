@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorted Array Properties** - Understanding that the minimum is at the start and maximum at the end of a sorted array
 - **Tracking Global Extremes** - Maintaining running minimum and maximum values across multiple data sources
 - **Greedy Approach** - Making locally optimal choices to build towards the global solution
@@ -86,7 +88,10 @@ class Solution {
             for (let j = 0; j < arrays[i].length; j++) {
                 for (let k = i + 1; k < n; k++) {
                     for (let l = 0; l < arrays[k].length; l++) {
-                        res = Math.max(res, Math.abs(arrays[i][j] - arrays[k][l]));
+                        res = Math.max(
+                            res,
+                            Math.abs(arrays[i][j] - arrays[k][l]),
+                        );
                     }
                 }
             }
@@ -176,6 +181,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_distance(arrays: Vec<Vec<i32>>) -> i32 {
+        let mut res = 0;
+        let n = arrays.len();
+        for i in 0..n - 1 {
+            for j in 0..arrays[i].len() {
+                for k in (i + 1)..n {
+                    for l in 0..arrays[k].len() {
+                        res = res.max((arrays[i][j] - arrays[k][l]).abs());
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,7 +207,7 @@ class Solution {
 - Time complexity: $O((n * x)^2)$
 - Space complexity: $O(1)$ constant space used
 
->  Where $n$ refers to the number of arrays in $arrays$ and $x$ refers to the average number of elements in each array in $arrays$.
+> Where $n$ refers to the number of arrays in $arrays$ and $x$ refers to the average number of elements in each array in $arrays$.
 
 ---
 
@@ -196,8 +220,8 @@ Since each array is sorted, the minimum is always at the start and the maximum i
 ### Algorithm
 
 1. For each pair of arrays `(i, j)` where `i` < `j`:
-   - Compute `|array1[0] - array2[last]|` and `|array2[0] - array1[last]|`.
-   - Update the maximum distance.
+    - Compute `|array1[0] - array2[last]|` and `|array2[0] - array1[last]|`.
+    - Update the maximum distance.
 2. Return the maximum distance found.
 
 ::tabs-start
@@ -269,8 +293,14 @@ class Solution {
             for (let j = i + 1; j < n; j++) {
                 array1 = arrays[i];
                 array2 = arrays[j];
-                res = Math.max(res, Math.abs(array1[0] - array2[array2.length - 1]));
-                res = Math.max(res, Math.abs(array2[0] - array1[array1.length - 1]));
+                res = Math.max(
+                    res,
+                    Math.abs(array1[0] - array2[array2.length - 1]),
+                );
+                res = Math.max(
+                    res,
+                    Math.abs(array2[0] - array1[array1.length - 1]),
+                );
             }
         }
         return res;
@@ -364,6 +394,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_distance(arrays: Vec<Vec<i32>>) -> i32 {
+        let mut res = 0;
+        let n = arrays.len();
+        for i in 0..n - 1 {
+            for j in (i + 1)..n {
+                let array1 = &arrays[i];
+                let array2 = &arrays[j];
+                res = res.max((array1[0] - array2[array2.len() - 1]).abs());
+                res = res.max((array2[0] - array1[array1.len() - 1]).abs());
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -387,9 +435,9 @@ The key insight is that we compare the current array against all previous arrays
 
 1. Initialize `min_val` and `max_val` from the first array.
 2. For each subsequent array:
-   - Compute the distance using `current_last` - `min_val` and `max_val` - `current_first`.
-   - Update the result with the maximum of these distances.
-   - Update `min_val` and `max_val` to include the current array's first and last elements.
+    - Compute the distance using `current_last` - `min_val` and `max_val` - `current_first`.
+    - Update the result with the maximum of these distances.
+    - Update `min_val` and `max_val` to include the current array's first and last elements.
 3. Return the result.
 
 ::tabs-start
@@ -403,7 +451,7 @@ class Solution:
         max_val = arrays[0][-1]
         for i in range(1, len(arrays)):
             n = len(arrays[i])
-            res = max(res, max(abs(arrays[i][n - 1] - min_val), 
+            res = max(res, max(abs(arrays[i][n - 1] - min_val),
                                abs(max_val - arrays[i][0])))
             min_val = min(min_val, arrays[i][0])
             max_val = max(max_val, arrays[i][n - 1])
@@ -419,7 +467,7 @@ class Solution {
         int max_val = arrays.get(0).get(arrays.get(0).size() - 1);
         for (int i = 1; i < arrays.size(); i++) {
             n = arrays.get(i).size();
-            res = Math.max(res, Math.max(Math.abs(arrays.get(i).get(n - 1) - min_val), 
+            res = Math.max(res, Math.max(Math.abs(arrays.get(i).get(n - 1) - min_val),
                                          Math.abs(max_val - arrays.get(i).get(0))));
             min_val = Math.min(min_val, arrays.get(i).get(0));
             max_val = Math.max(max_val, arrays.get(i).get(n - 1));
@@ -439,7 +487,7 @@ public:
         int max_val = arrays[0][arrays[0].size() - 1];
         for (int i = 1; i < arrays.size(); i++) {
             n = arrays[i].size();
-            res = std::max(res, std::max(std::abs(arrays[i][n - 1] - min_val), 
+            res = std::max(res, std::max(std::abs(arrays[i][n - 1] - min_val),
                                          std::abs(max_val - arrays[i][0])));
             min_val = std::min(min_val, arrays[i][0]);
             max_val = std::max(max_val, arrays[i][n - 1]);
@@ -462,8 +510,13 @@ class Solution {
         let max_val = arrays[0][arrays[0].length - 1];
         for (let i = 1; i < arrays.length; i++) {
             n = arrays[i].length;
-            res = Math.max(res, Math.max(Math.abs(arrays[i][n - 1] - min_val), 
-                                         Math.abs(max_val - arrays[i][0])));
+            res = Math.max(
+                res,
+                Math.max(
+                    Math.abs(arrays[i][n - 1] - min_val),
+                    Math.abs(max_val - arrays[i][0]),
+                ),
+            );
             min_val = Math.min(min_val, arrays[i][0]);
             max_val = Math.max(max_val, arrays[i][n - 1]);
         }
@@ -482,7 +535,7 @@ public class Solution {
 
         for (int i = 1; i < arrays.Count; i++) {
             n = arrays[i].Count;
-            res = Math.Max(res, Math.Max(Math.Abs(arrays[i][n - 1] - min_val), 
+            res = Math.Max(res, Math.Max(Math.Abs(arrays[i][n - 1] - min_val),
                 Math.Abs(max_val - arrays[i][0])));
             min_val = Math.Min(min_val, arrays[i][0]);
             max_val = Math.Max(max_val, arrays[i][n - 1]);
@@ -567,6 +620,26 @@ class Solution {
             maxVal = max(maxVal, arrays[i][n - 1])
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_distance(arrays: Vec<Vec<i32>>) -> i32 {
+        let mut res = 0;
+        let mut min_val = arrays[0][0];
+        let mut max_val = *arrays[0].last().unwrap();
+        for i in 1..arrays.len() {
+            let n = arrays[i].len();
+            res = res.max(
+                (arrays[i][n - 1] - min_val).abs()
+                    .max((max_val - arrays[i][0]).abs()),
+            );
+            min_val = min_val.min(arrays[i][0]);
+            max_val = max_val.max(arrays[i][n - 1]);
+        }
+        res
     }
 }
 ```

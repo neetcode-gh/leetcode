@@ -154,6 +154,22 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_disappeared_numbers(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut store: HashSet<i32> = (1..=n as i32).collect();
+
+        for num in nums {
+            store.remove(&num);
+        }
+
+        store.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -341,6 +357,28 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_disappeared_numbers(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut mark = vec![false; n];
+
+        for num in &nums {
+            mark[(*num as usize) - 1] = true;
+        }
+
+        let mut res = vec![];
+        for i in 1..=n {
+            if !mark[i - 1] {
+                res.push(i as i32);
+            }
+        }
+        res
     }
 }
 ```
@@ -536,6 +574,28 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_disappeared_numbers(mut nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        nums.sort();
+
+        let mut res = vec![];
+        let mut idx = 0;
+        for num in 1..=n as i32 {
+            while idx < n && nums[idx] < num {
+                idx += 1;
+            }
+            if idx == n || nums[idx] > num {
+                res.push(num);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -716,6 +776,26 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_disappeared_numbers(mut nums: Vec<i32>) -> Vec<i32> {
+        for j in 0..nums.len() {
+            let i = (nums[j].abs() - 1) as usize;
+            nums[i] = -nums[i].abs();
+        }
+
+        let mut res = vec![];
+        for i in 0..nums.len() {
+            if nums[i] > 0 {
+                res.push((i + 1) as i32);
+            }
+        }
+        res
     }
 }
 ```

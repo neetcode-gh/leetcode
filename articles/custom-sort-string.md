@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to map characters to their custom ranking or priority
 - **Custom Sorting / Comparators** - Defining a custom comparison function to sort elements based on non-standard criteria
 - **Frequency Counting** - Counting occurrences of characters to reconstruct strings in a specific order
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Custom Comparator
 
 ### Intuition
+
 We want to reorder string `s` so that characters appear in the same relative order as they do in `order`. The key insight is that we can assign each character a rank based on its position in `order`. Characters not in `order` can be assigned a high rank (like `26`) so they appear at the end. By sorting `s` using these ranks as the comparison key, characters will naturally arrange themselves according to the custom ordering.
 
 ### Algorithm
+
 1. Build a rank map where each character in `order` maps to its index (`0`, `1`, `2`, ...).
 2. For characters not in `order`, assign a default rank of `26` (higher than any position in `order`).
 3. Sort the characters of `s` using the rank values as the sorting key.
@@ -81,11 +85,13 @@ class Solution {
             rank[order[i]] = i;
         }
 
-        return [...s].sort((a, b) => {
-            const ra = rank[a] ?? 26;
-            const rb = rank[b] ?? 26;
-            return ra - rb;
-        }).join('');
+        return [...s]
+            .sort((a, b) => {
+                const ra = rank[a] ?? 26;
+                const rb = rank[b] ?? 26;
+                return ra - rb;
+            })
+            .join('');
     }
 }
 ```
@@ -162,21 +168,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn custom_sort_string(order: String, s: String) -> String {
+        let mut rank = [26i32; 26];
+        for (i, c) in order.bytes().enumerate() {
+            rank[(c - b'a') as usize] = i as i32;
+        }
+
+        let mut arr: Vec<u8> = s.into_bytes();
+        arr.sort_by_key(|&c| rank[(c - b'a') as usize]);
+        String::from_utf8(arr).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
 ## 2. Frequency Count
 
 ### Intuition
+
 Instead of sorting, we can build the result string directly by counting character frequencies. Since we know the desired order of characters, we first iterate through `order` and append each character as many times as it appears in `s`. Then we handle any remaining characters not in `order` by iterating through the alphabet. This avoids the `O(n log n)` sorting overhead.
 
 ### Algorithm
+
 1. Create a frequency array of size `26` to count occurrences of each character in `s`.
 2. Iterate through each character in `order`. For each character, append it to the result as many times as its count, then set its count to `0`.
 3. Iterate through all `26` letters. Append any remaining characters (those not in `order`) to the result based on their counts.
@@ -421,12 +444,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn custom_sort_string(order: String, s: String) -> String {
+        let mut count = [0i32; 26];
+        for c in s.bytes() {
+            count[(c - b'a') as usize] += 1;
+        }
+
+        let mut res = String::new();
+        for c in order.bytes() {
+            let idx = (c - b'a') as usize;
+            while count[idx] > 0 {
+                res.push(c as char);
+                count[idx] -= 1;
+            }
+        }
+
+        for idx in 0..26 {
+            let c = (b'a' + idx as u8) as char;
+            while count[idx] > 0 {
+                res.push(c);
+                count[idx] -= 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 

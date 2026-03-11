@@ -195,6 +195,29 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn add_to_array_form(num: Vec<i32>, k: i32) -> Vec<i32> {
+        let mut result = Vec::new();
+        let mut k = k;
+
+        for i in (0..num.len()).rev() {
+            k += num[i];
+            result.push(k % 10);
+            k /= 10;
+        }
+
+        while k > 0 {
+            result.push(k % 10);
+            k /= 10;
+        }
+
+        result.reverse();
+        result
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -421,6 +444,31 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn add_to_array_form(num: Vec<i32>, k: i32) -> Vec<i32> {
+        let mut result = VecDeque::new();
+        let mut carry = 0;
+        let mut i = num.len() as i32 - 1;
+        let mut k = k;
+
+        while i >= 0 || k > 0 || carry > 0 {
+            let digit = k % 10;
+            let num_digit = if i >= 0 { num[i as usize] } else { 0 };
+            let sum = carry + num_digit + digit;
+
+            result.push_front(sum % 10);
+            carry = sum / 10;
+
+            k /= 10;
+            i -= 1;
+        }
+
+        result.into_iter().collect()
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

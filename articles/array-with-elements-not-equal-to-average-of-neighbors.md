@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Used to arrange elements so we can pick from smallest and largest ends
 - **Two Pointers** - Needed to efficiently pick elements from both ends of the sorted array
 - **Greedy Algorithms** - Understanding why interleaving small and large values guarantees a valid arrangement
@@ -183,6 +185,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_array(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let mut res = Vec::with_capacity(nums.len());
+        let mut l = 0;
+        let mut r = nums.len() - 1;
+
+        while res.len() != nums.len() {
+            res.push(nums[l]);
+            l += 1;
+            if l <= r {
+                res.push(nums[r]);
+                r -= 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -310,6 +334,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_array(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let mut i = 1;
+        while i < nums.len() {
+            nums.swap(i, i - 1);
+            i += 2;
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,9 +366,9 @@ We can fix violations as we find them without sorting first. If an element equal
 ### Algorithm
 
 1. Make a forward pass from index `1` to `n-2`.
-   - If the current element equals the average of its neighbors, swap it with the next element.
+    - If the current element equals the average of its neighbors, swap it with the next element.
 2. Make a backward pass from index `n-2` to `1`.
-   - If the current element equals the average of its neighbors, swap it with the previous element.
+    - If the current element equals the average of its neighbors, swap it with the previous element.
 3. Return the modified array.
 
 ::tabs-start
@@ -521,6 +559,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+
+        for i in 1..n - 1 {
+            if 2 * nums[i] == nums[i - 1] + nums[i + 1] {
+                nums.swap(i, i + 1);
+            }
+        }
+
+        for i in (1..n - 1).rev() {
+            if 2 * nums[i] == nums[i - 1] + nums[i + 1] {
+                nums.swap(i, i - 1);
+            }
+        }
+
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -683,6 +743,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_array(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut increase = nums[0] < nums[1];
+        for i in 1..nums.len() - 1 {
+            if (increase && nums[i] < nums[i + 1])
+                || (!increase && nums[i] > nums[i + 1])
+            {
+                nums.swap(i, i + 1);
+            }
+            increase = !increase;
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -695,7 +772,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Checking Only One Direction After Swapping
+
 When fixing a violation by swapping, the swap might create a new violation at the previous position. A single forward pass may not catch all cases, which is why some solutions use both forward and backward passes.
+
 ```python
 # Wrong: only forward pass may leave violations
 for i in range(1, n - 1):
@@ -705,7 +784,9 @@ for i in range(1, n - 1):
 ```
 
 ### Using Division for Average Check
+
 Using division to check if an element equals the average of its neighbors can introduce floating-point precision issues. Instead, multiply both sides by 2 to avoid division entirely.
+
 ```python
 # Wrong: floating-point comparison
 if nums[i] == (nums[i-1] + nums[i+1]) / 2:
@@ -715,7 +796,9 @@ if 2 * nums[i] == nums[i-1] + nums[i+1]:
 ```
 
 ### Forgetting to Handle Array Boundaries
+
 The check only applies to elements with both neighbors (indices 1 through n-2). Applying the average check to the first or last element causes index out of bounds errors.
+
 ```python
 # Wrong: starts at index 0
 for i in range(len(nums) - 1):

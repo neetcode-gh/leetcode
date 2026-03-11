@@ -287,6 +287,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_value_sum(nums: Vec<i32>, k: i32, edges: Vec<Vec<i32>>) -> i64 {
+        let n = nums.len();
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+            adj[edge[1] as usize].push(edge[0] as usize);
+        }
+
+        fn dfs(node: usize, parent: i32, nums: &[i32], k: i32, adj: &[Vec<usize>]) -> [i64; 2] {
+            let mut res = [nums[node] as i64, (nums[node] ^ k) as i64];
+            for &child in &adj[node] {
+                if child as i32 == parent { continue; }
+                let cur = dfs(child, node as i32, nums, k, adj);
+                let mut tmp = [0i64; 2];
+                tmp[0] = (res[0] + cur[0]).max(res[1] + cur[1]);
+                tmp[1] = (res[1] + cur[0]).max(res[0] + cur[1]);
+                res = tmp;
+            }
+            res
+        }
+
+        dfs(0, -1, &nums, k, &adj)[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -528,6 +556,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_value_sum(nums: Vec<i32>, k: i32, _edges: Vec<Vec<i32>>) -> i64 {
+        let n = nums.len();
+        let mut dp = vec![[i64::MIN; 2]; n + 1];
+        dp[n][0] = 0;
+        dp[n][1] = i32::MIN as i64;
+
+        fn dfs(i: usize, xor_cnt: usize, nums: &[i32], k: i32, dp: &mut Vec<[i64; 2]>) -> i64 {
+            if dp[i][xor_cnt] != i64::MIN {
+                return dp[i][xor_cnt];
+            }
+            let mut res = nums[i] as i64 + dfs(i + 1, xor_cnt, nums, k, dp);
+            res = res.max((nums[i] ^ k) as i64 + dfs(i + 1, xor_cnt ^ 1, nums, k, dp));
+            dp[i][xor_cnt] = res;
+            res
+        }
+
+        dfs(0, 0, &nums, k, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -708,6 +759,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_value_sum(nums: Vec<i32>, k: i32, _edges: Vec<Vec<i32>>) -> i64 {
+        let n = nums.len();
+        let mut dp = vec![[0i64; 2]; n + 1];
+        dp[n][1] = i32::MIN as i64;
+
+        for i in (0..n).rev() {
+            dp[i][0] = (nums[i] as i64 + dp[i + 1][0])
+                .max((nums[i] ^ k) as i64 + dp[i + 1][1]);
+            dp[i][1] = (nums[i] as i64 + dp[i + 1][1])
+                .max((nums[i] ^ k) as i64 + dp[i + 1][0]);
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -882,6 +952,23 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_value_sum(nums: Vec<i32>, k: i32, _edges: Vec<Vec<i32>>) -> i64 {
+        let mut dp = [0i64, i64::MIN];
+
+        for i in (0..nums.len()).rev() {
+            let mut next_dp = [0i64; 2];
+            next_dp[0] = (nums[i] as i64 + dp[0]).max((nums[i] ^ k) as i64 + dp[1]);
+            next_dp[1] = (nums[i] as i64 + dp[1]).max((nums[i] ^ k) as i64 + dp[0]);
+            dp = next_dp;
+        }
+
+        dp[0]
     }
 }
 ```
@@ -1121,6 +1208,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_value_sum(nums: Vec<i32>, k: i32, _edges: Vec<Vec<i32>>) -> i64 {
+        let n = nums.len();
+        let mut delta: Vec<i32> = nums.iter().map(|&num| (num ^ k) - num).collect();
+        delta.sort_unstable_by(|a, b| b.cmp(a));
+        let mut res: i64 = nums.iter().map(|&x| x as i64).sum();
+
+        let mut i = 0;
+        while i + 1 < n {
+            let path_delta = delta[i] + delta[i + 1];
+            if path_delta <= 0 { break; }
+            res += path_delta as i64;
+            i += 2;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1331,6 +1439,29 @@ class Solution {
         }
 
         return res - xorCnt * minDiff
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_value_sum(nums: Vec<i32>, k: i32, _edges: Vec<Vec<i32>>) -> i64 {
+        let mut xor_cnt = 0;
+        let mut min_diff = 1 << 30;
+        let mut res: i64 = 0;
+
+        for &num in &nums {
+            let xor_num = num ^ k;
+            if xor_num > num {
+                res += xor_num as i64;
+                xor_cnt ^= 1;
+            } else {
+                res += num as i64;
+            }
+            min_diff = min_diff.min((xor_num - num).abs());
+        }
+
+        res - (xor_cnt as i64) * (min_diff as i64)
     }
 }
 ```

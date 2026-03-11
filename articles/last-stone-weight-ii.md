@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Understanding both top-down (memoization) and bottom-up (tabulation) approaches
 - **0/1 Knapsack Problem** - Selecting items with constraints to optimize a value
 - **Subset Sum** - Determining if a subset with a target sum exists
@@ -194,6 +196,25 @@ class Solution {
         }
 
         return dfs(0, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+        let stone_sum: i32 = stones.iter().sum();
+        let target = (stone_sum + 1) / 2;
+
+        fn dfs(i: usize, total: i32, stones: &[i32], stone_sum: i32, target: i32) -> i32 {
+            if total >= target || i == stones.len() {
+                return (total - (stone_sum - total)).abs();
+            }
+            dfs(i + 1, total, stones, stone_sum, target)
+                .min(dfs(i + 1, total + stones[i], stones, stone_sum, target))
+        }
+
+        dfs(0, 0, &stones, stone_sum, target)
     }
 }
 ```
@@ -474,6 +495,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+        let stone_sum: i32 = stones.iter().sum();
+        let target = ((stone_sum + 1) / 2) as usize;
+        let mut dp = vec![vec![-1i32; target + 1]; stones.len()];
+
+        fn dfs(i: usize, total: usize, stones: &[i32], stone_sum: i32, target: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if total >= target || i == stones.len() {
+                return (total as i32 - (stone_sum - total as i32)).abs();
+            }
+            if dp[i][total] != -1 {
+                return dp[i][total];
+            }
+            dp[i][total] = dfs(i + 1, total, stones, stone_sum, target, dp)
+                .min(dfs(i + 1, total + stones[i] as usize, stones, stone_sum, target, dp));
+            dp[i][total]
+        }
+
+        dfs(0, 0, &stones, stone_sum, target, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,9 +540,9 @@ Instead of working recursively from the first stone forward, we can build up sol
 
 1. Initialize a 2D DP table of size `(n+1) x (target+1)` with zeros.
 2. For each stone `i` from `1` to `n`:
-   - For each possible capacity `t` from `0` to `target`:
-     - If the stone fits (`t >= stones[i-1]`), take the maximum of skipping it or including it.
-     - Otherwise, carry forward the previous result.
+    - For each possible capacity `t` from `0` to `target`:
+        - If the stone fits (`t >= stones[i-1]`), take the maximum of skipping it or including it.
+        - Otherwise, carry forward the previous result.
 3. The answer is `stoneSum - 2 * dp[n][target]`.
 
 ::tabs-start
@@ -716,6 +761,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+        let stone_sum: i32 = stones.iter().sum();
+        let target = (stone_sum / 2) as usize;
+        let n = stones.len();
+
+        let mut dp = vec![vec![0i32; target + 1]; n + 1];
+
+        for i in 1..=n {
+            let w = stones[i - 1] as usize;
+            for t in 0..=target {
+                if t >= w {
+                    dp[i][t] = dp[i - 1][t].max(dp[i - 1][t - w] + stones[i - 1]);
+                } else {
+                    dp[i][t] = dp[i - 1][t];
+                }
+            }
+        }
+
+        stone_sum - 2 * dp[n][target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -737,8 +807,8 @@ Looking at the bottom-up solution, each row only depends on the previous row. Th
 
 1. Initialize a 1D DP array of size `target + 1` with zeros.
 2. For each stone in the array:
-   - Iterate `t` from `target` down to the stone's weight.
-   - Update `dp[t]` as the maximum of keeping it or adding the stone.
+    - Iterate `t` from `target` down to the stone's weight.
+    - Update `dp[t]` as the maximum of keeping it or adding the stone.
 3. Return `stoneSum - 2 * dp[target]`.
 
 ::tabs-start
@@ -897,6 +967,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+        let stone_sum: i32 = stones.iter().sum();
+        let target = (stone_sum / 2) as usize;
+        let mut dp = vec![0i32; target + 1];
+
+        for &stone in &stones {
+            let w = stone as usize;
+            for t in (w..=target).rev() {
+                dp[t] = dp[t].max(dp[t - w] + stone);
+            }
+        }
+
+        stone_sum - 2 * dp[target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -918,9 +1007,9 @@ Instead of tracking the maximum achievable sum at each capacity, we can simply t
 
 1. Initialize a set containing only `0` (representing an empty subset).
 2. For each stone:
-   - Create a new set by adding the stone's weight to each existing value.
-   - Merge it with the existing set.
-   - If we reach exactly `target`, return `0` immediately.
+    - Create a new set by adding the stone's weight to each existing value.
+    - Merge it with the existing set.
+    - If we reach exactly `target`, return `0` immediately.
 3. Find the maximum value in the set and return `stoneSum - 2 * max`.
 
 ::tabs-start
@@ -1160,6 +1249,35 @@ class Solution {
         }
 
         return stoneSum - 2 * (dp.max() ?? 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn last_stone_weight_ii(stones: Vec<i32>) -> i32 {
+        let stone_sum: i32 = stones.iter().sum();
+        let target = (stone_sum / 2) as usize;
+
+        let mut dp = HashSet::new();
+        dp.insert(0usize);
+
+        for &stone in &stones {
+            let w = stone as usize;
+            let mut new_dp = dp.clone();
+            for &val in &dp {
+                if val + w == target {
+                    return stone_sum - 2 * target as i32;
+                }
+                if val + w < target {
+                    new_dp.insert(val + w);
+                }
+            }
+            dp = new_dp;
+        }
+
+        let max_val = dp.into_iter().max().unwrap_or(0) as i32;
+        stone_sum - 2 * max_val
     }
 }
 ```

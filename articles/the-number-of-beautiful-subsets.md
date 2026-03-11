@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Exploring all possible subsets by including or excluding each element
 - **Hash maps** - Tracking element counts to check for conflicts efficiently
 - **Recursion** - Building subsets through recursive decision trees
@@ -211,6 +213,32 @@ class Solution {
         }
 
         return helper(0) - 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn beautiful_subsets(nums: Vec<i32>, k: i32) -> i32 {
+        fn helper(i: usize, count: &mut HashMap<i32, i32>, nums: &[i32], k: i32) -> i32 {
+            if i == nums.len() {
+                return 1;
+            }
+            let mut res = helper(i + 1, count, nums, k); // Skip nums[i]
+            if *count.get(&(nums[i] + k)).unwrap_or(&0) == 0
+                && *count.get(&(nums[i] - k)).unwrap_or(&0) == 0
+            {
+                *count.entry(nums[i]).or_insert(0) += 1;
+                res += helper(i + 1, count, nums, k);
+                let e = count.get_mut(&nums[i]).unwrap();
+                *e -= 1;
+                if *e == 0 {
+                    count.remove(&nums[i]);
+                }
+            }
+            res
+        }
+        helper(0, &mut HashMap::new(), &nums, k) - 1
     }
 }
 ```
@@ -609,6 +637,60 @@ class Solution {
         }
 
         return res - 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn beautiful_subsets(nums: Vec<i32>, k: i32) -> i32 {
+        let mut cnt = HashMap::new();
+        for &num in &nums {
+            *cnt.entry(num).or_insert(0) += 1;
+        }
+
+        let mut groups: Vec<HashMap<i32, i32>> = Vec::new();
+        let mut visit = HashSet::new();
+
+        for &n in cnt.keys() {
+            if visit.contains(&n) {
+                continue;
+            }
+            let mut g = HashMap::new();
+            let mut num = n;
+            while cnt.contains_key(&(num - k)) {
+                num -= k;
+            }
+            while cnt.contains_key(&num) {
+                g.insert(num, cnt[&num]);
+                visit.insert(num);
+                num += k;
+            }
+            groups.push(g);
+        }
+
+        fn helper(n: i32, g: &HashMap<i32, i32>, k: i32, cache: &mut HashMap<i32, i32>) -> i32 {
+            if !g.contains_key(&n) {
+                return 1;
+            }
+            if let Some(&v) = cache.get(&n) {
+                return v;
+            }
+            let skip = helper(n + k, g, k, cache);
+            let include = ((1 << g[&n]) - 1) * helper(n + 2 * k, g, k, cache);
+            let result = skip + include;
+            cache.insert(n, result);
+            result
+        }
+
+        let mut res = 1;
+        for g in &groups {
+            let min_n = *g.keys().min().unwrap();
+            let mut cache = HashMap::new();
+            res *= helper(min_n, g, k, &mut cache);
+        }
+
+        res - 1
     }
 }
 ```
@@ -1012,6 +1094,62 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn beautiful_subsets(nums: Vec<i32>, k: i32) -> i32 {
+        let mut cnt = HashMap::new();
+        for &num in &nums {
+            *cnt.entry(num).or_insert(0) += 1;
+        }
+
+        let mut groups: Vec<HashMap<i32, i32>> = Vec::new();
+        let mut visit = HashSet::new();
+
+        for &n in cnt.keys() {
+            if visit.contains(&n) {
+                continue;
+            }
+            let mut g = HashMap::new();
+            let mut num = n;
+            while cnt.contains_key(&(num - k)) {
+                num -= k;
+            }
+            while cnt.contains_key(&num) {
+                g.insert(num, cnt[&num]);
+                visit.insert(num);
+                num += k;
+            }
+            groups.push(g);
+        }
+
+        let mut res = 1;
+        for g in &groups {
+            let mut dp = HashMap::new();
+            let mut prev: Option<i32> = None;
+
+            let mut keys: Vec<i32> = g.keys().copied().collect();
+            keys.sort();
+            for &num in &keys {
+                let count = g[&num];
+                if prev.is_none() || prev.unwrap() + k != num {
+                    let prev_val = prev.map_or(1, |p| dp[&p]);
+                    dp.insert(num, prev_val * (1 + (1 << count) - 1));
+                } else {
+                    let p = prev.unwrap();
+                    let prev_k_val = dp.get(&(p - k)).copied().unwrap_or(1);
+                    dp.insert(num, dp[&p] + ((1 << count) - 1) * prev_k_val);
+                }
+                prev = Some(num);
+            }
+
+            res *= dp[&prev.unwrap()];
+        }
+
+        res - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1345,6 +1483,51 @@ class Solution {
         }
 
         return res - 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn beautiful_subsets(nums: Vec<i32>, k: i32) -> i32 {
+        let mut cnt = HashMap::new();
+        for &num in &nums {
+            *cnt.entry(num).or_insert(0) += 1;
+        }
+
+        let mut groups: HashMap<i32, HashMap<i32, i32>> = HashMap::new();
+        // Group numbers based on remainder with k
+        for &num in &nums {
+            groups.entry(num % k).or_default().insert(num, cnt[&num]);
+        }
+
+        let mut res = 1;
+        for g in groups.values() {
+            let mut prev = 0;
+            let (mut dp, mut ndp) = (0, 1);
+
+            let mut keys: Vec<i32> = g.keys().copied().collect();
+            keys.sort();
+
+            for &num in &keys {
+                let count = g[&num];
+                let have = (1 << count) - 1;
+                let tmp = ndp;
+                ndp += dp;
+
+                if prev == 0 || prev + k != num {
+                    dp = have * (tmp + dp);
+                } else {
+                    dp = tmp * have;
+                }
+
+                prev = num;
+            }
+
+            res *= dp + ndp;
+        }
+
+        res - 1
     }
 }
 ```

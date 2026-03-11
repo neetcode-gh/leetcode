@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Used to explore all possible ways to partition elements into two groups
 - **Memoization / Dynamic Programming** - Required to optimize the recursive solution by caching subproblem results
 - **Subset Sum Problem** - This problem is a variant where we find subsets with specific sum constraints
@@ -248,12 +250,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array_same_average(nums: Vec<i32>) -> bool {
+        fn backtrack(nums: &[i32], i: usize, a: &mut Vec<i32>, b: &mut Vec<i32>) -> bool {
+            if i == nums.len() {
+                if a.is_empty() || b.is_empty() {
+                    return false;
+                }
+                let sum_a: i64 = a.iter().map(|&x| x as i64).sum();
+                let sum_b: i64 = b.iter().map(|&x| x as i64).sum();
+                return sum_a * b.len() as i64 == sum_b * a.len() as i64;
+            }
+
+            a.push(nums[i]);
+            if backtrack(nums, i + 1, a, b) {
+                return true;
+            }
+            a.pop();
+
+            b.push(nums[i]);
+            let res = backtrack(nums, i + 1, a, b);
+            b.pop();
+
+            res
+        }
+
+        backtrack(&nums, 0, &mut vec![], &mut vec![])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -375,14 +408,21 @@ class Solution {
         const memo = new Map();
 
         const dfs = (i, size, currSum) => {
-        const key = `${i},${size},${currSum}`;
+            const key = `${i},${size},${currSum}`;
             if (memo.has(key)) return memo.get(key);
 
-            if (size > 0 && size < n && currSum * (n - size) === (total - currSum) * size)
+            if (
+                size > 0 &&
+                size < n &&
+                currSum * (n - size) === (total - currSum) * size
+            )
                 return true;
             if (i === n) return false;
 
-            if (dfs(i + 1, size + 1, currSum + nums[i]) || dfs(i + 1, size, currSum)) {
+            if (
+                dfs(i + 1, size + 1, currSum + nums[i]) ||
+                dfs(i + 1, size, currSum)
+            ) {
                 memo.set(key, true);
                 return true;
             }
@@ -521,12 +561,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array_same_average(nums: Vec<i32>) -> bool {
+        let total: i32 = nums.iter().sum();
+        let n = nums.len();
+        let mut memo = HashMap::new();
+
+        fn dfs(
+            nums: &[i32], i: usize, size: usize, curr_sum: i32,
+            total: i32, n: usize, memo: &mut HashMap<(usize, usize, i32), bool>,
+        ) -> bool {
+            if let Some(&val) = memo.get(&(i, size, curr_sum)) {
+                return val;
+            }
+            if size > 0 && size < n
+                && curr_sum as i64 * (n - size) as i64
+                    == (total - curr_sum) as i64 * size as i64
+            {
+                return true;
+            }
+            if i == n {
+                return false;
+            }
+            if dfs(nums, i + 1, size + 1, curr_sum + nums[i], total, n, memo)
+                || dfs(nums, i + 1, size, curr_sum, total, n, memo)
+            {
+                memo.insert((i, size, curr_sum), true);
+                return true;
+            }
+            memo.insert((i, size, curr_sum), false);
+            false
+        }
+
+        dfs(&nums, 0, 0, 0, total, n, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * s)$
-* Space complexity: $O(n ^ 2 * s)$
+- Time complexity: $O(n ^ 2 * s)$
+- Space complexity: $O(n ^ 2 * s)$
 
 > Where $n$ is the size of the input array $nums$, and $s$ is the sum of the elements of the array.
 
@@ -541,8 +619,8 @@ For two groups to have the same average as the whole array, we need: `sum(A) / l
 ### Algorithm
 
 1. For each valid subset size `a` from `1` to `n/2` where `a * total % n == 0`:
-   - Calculate target sum = `a * total / n`.
-   - Use memoized DFS to check if any subset of size `a` has this exact sum.
+    - Calculate target sum = `a * total / n`.
+    - Use memoized DFS to check if any subset of size `a` has this exact sum.
 2. The DFS tries including or excluding each element, tracking remaining size and sum needed.
 3. Return `true` if any valid subset is found.
 
@@ -667,7 +745,8 @@ class Solution {
      * @return {boolean}
      */
     splitArraySameAverage(nums) {
-        const n = nums.length, total = nums.reduce((a, b) => a + b, 0);
+        const n = nums.length,
+            total = nums.reduce((a, b) => a + b, 0);
 
         // len(A) = a, len(B) = b, let a <= b
         // avg(A) = avg(B)
@@ -855,12 +934,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array_same_average(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let total: i32 = nums.iter().sum();
+        let half = n / 2;
+        let mut memo = vec![vec![vec![-1i8; total as usize + 1]; half + 1]; n + 1];
+
+        fn dfs(
+            nums: &[i32], i: usize, a: usize, s: i32, n: usize,
+            memo: &mut Vec<Vec<Vec<i8>>>,
+        ) -> bool {
+            if a == 0 {
+                return s == 0;
+            }
+            if i == n || s < 0 {
+                return false;
+            }
+            if memo[i][a][s as usize] != -1 {
+                return memo[i][a][s as usize] == 1;
+            }
+            let res = dfs(nums, i + 1, a, s, n, memo)
+                || dfs(nums, i + 1, a - 1, s - nums[i], n, memo);
+            memo[i][a][s as usize] = if res { 1 } else { 0 };
+            res
+        }
+
+        for a in 1..=half {
+            if (total as i64 * a as i64) % n as i64 == 0 {
+                let target = (total as i64 * a as i64 / n as i64) as i32;
+                if dfs(&nums, 0, a, target, n, &mut memo) {
+                    return true;
+                }
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * s)$
-* Space complexity: $O(n ^ 2 * s)$
+- Time complexity: $O(n ^ 2 * s)$
+- Space complexity: $O(n ^ 2 * s)$
 
 > Where $n$ is the size of the input array $nums$, and $s$ is the sum of the elements of the array.
 
@@ -876,10 +996,10 @@ We can build all achievable sums for each subset size using dynamic programming.
 
 1. Create `dp[a]` as a set of achievable sums for subsets of size `a`. Initialize `dp[0] = {0}`.
 2. For each number in the array:
-   - For sizes from `n/2` down to `1`:
-     - For each previously achievable sum in `dp[a-1]`, add `sum + num` to `dp[a]`.
+    - For sizes from `n/2` down to `1`:
+        - For each previously achievable sum in `dp[a-1]`, add `sum + num` to `dp[a]`.
 3. After processing all numbers, check each size `a` from `1` to `n/2`:
-   - If `a * total % n == 0` and the target sum `a * total / n` exists in `dp[a]`, return `true`.
+    - If `a * total % n == 0` and the target sum `a * total / n` exists in `dp[a]`, return `true`.
 4. Return `false` if no valid partition exists.
 
 ::tabs-start
@@ -1008,7 +1128,10 @@ class Solution {
         // a is in the range [1, (n//2)]
 
         const total = nums.reduce((a, b) => a + b, 0);
-        const dp = Array.from({ length: Math.floor(n / 2) + 1 }, () => new Set());
+        const dp = Array.from(
+            { length: Math.floor(n / 2) + 1 },
+            () => new Set(),
+        );
         dp[0].add(0);
 
         for (const num of nums) {
@@ -1159,12 +1282,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array_same_average(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let total: i32 = nums.iter().sum();
+        let half = n / 2;
+
+        let mut dp: Vec<HashSet<i32>> = vec![HashSet::new(); half + 1];
+        dp[0].insert(0);
+
+        for &num in &nums {
+            for a in (1..=half).rev() {
+                let prev: Vec<i32> = dp[a - 1].iter().copied().collect();
+                for p in prev {
+                    dp[a].insert(p + num);
+                }
+            }
+        }
+
+        for a in 1..=half {
+            if (total as i64 * a as i64) % n as i64 == 0 {
+                let target = (total as i64 * a as i64 / n as i64) as i32;
+                if dp[a].contains(&target) {
+                    return true;
+                }
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * s)$
-* Space complexity: $O(n ^ 2 * s)$
+- Time complexity: $O(n ^ 2 * s)$
+- Space complexity: $O(n ^ 2 * s)$
 
 > Where $n$ is the size of the input array $nums$, and $s$ is the sum of the elements of the array.
 

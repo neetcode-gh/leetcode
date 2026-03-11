@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Exploring all possible paths and undoing choices to try different options
 - **Depth First Search (DFS)** - Traversing a grid by exploring as far as possible along each branch
 - **2D Grid Traversal** - Moving in four directions (up, down, left, right) and handling boundaries
@@ -352,6 +354,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_maximum_gold(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+
+        fn dfs(
+            grid: &[Vec<i32>], r: i32, c: i32,
+            visit: &mut Vec<Vec<bool>>,
+            directions: &[(i32, i32)], rows: i32, cols: i32,
+        ) -> i32 {
+            if r < 0 || c < 0 || r >= rows || c >= cols
+                || grid[r as usize][c as usize] == 0
+                || visit[r as usize][c as usize]
+            {
+                return 0;
+            }
+            let (ru, cu) = (r as usize, c as usize);
+            visit[ru][cu] = true;
+            let mut res = grid[ru][cu];
+            for &(dr, dc) in directions {
+                res = res.max(
+                    grid[ru][cu] + dfs(grid, r + dr, c + dc, visit, directions, rows, cols),
+                );
+            }
+            visit[ru][cu] = false;
+            res
+        }
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] != 0 {
+                    let mut visit = vec![vec![false; cols]; rows];
+                    res = res.max(dfs(
+                        &grid, r as i32, c as i32, &mut visit,
+                        &directions, rows as i32, cols as i32,
+                    ));
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,6 +741,42 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_maximum_gold(mut grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+
+        fn dfs(grid: &mut Vec<Vec<i32>>, r: i32, c: i32, rows: i32, cols: i32) -> i32 {
+            if r < 0 || c < 0 || r >= rows || c >= cols
+                || grid[r as usize][c as usize] == 0
+            {
+                return 0;
+            }
+            let (ru, cu) = (r as usize, c as usize);
+            let gold = grid[ru][cu];
+            grid[ru][cu] = 0;
+            let mut res = 0;
+            for &(dr, dc) in &[(1, 0), (-1, 0), (0, 1), (0, -1)] {
+                res = res.max(dfs(grid, r + dr, c + dc, rows, cols));
+            }
+            grid[ru][cu] = gold;
+            gold + res
+        }
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] != 0 {
+                    res = res.max(dfs(&mut grid, r as i32, c as i32, rows as i32, cols as i32));
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -1102,6 +1187,59 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_maximum_gold(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let directions: [i32; 5] = [1, 0, -1, 0, 1];
+        let mut index = vec![vec![0usize; cols]; rows];
+        let mut idx = 0;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] != 0 {
+                    index[r][c] = idx;
+                    idx += 1;
+                }
+            }
+        }
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] > 0 {
+                    let mut q: VecDeque<(i32, i32, i32, u32)> = VecDeque::new();
+                    q.push_back((r as i32, c as i32, grid[r][c], 1 << index[r][c]));
+
+                    while let Some((row, col, gold, mask)) = q.pop_front() {
+                        res = res.max(gold);
+                        for i in 0..4 {
+                            let nr = row + directions[i];
+                            let nc = col + directions[i + 1];
+                            if nr >= 0 && nr < rows as i32
+                                && nc >= 0 && nc < cols as i32
+                                && grid[nr as usize][nc as usize] > 0
+                            {
+                                let new_idx = index[nr as usize][nc as usize];
+                                if mask & (1 << new_idx) == 0 {
+                                    q.push_back((
+                                        nr, nc,
+                                        gold + grid[nr as usize][nc as usize],
+                                        mask | (1 << new_idx),
+                                    ));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```

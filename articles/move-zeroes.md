@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding array indexing and in-place modification
 - **Two Pointers** - Using two pointers to partition or rearrange elements within an array
 
@@ -15,8 +17,8 @@ The simplest approach is to separate non-zero elements from zeros using extra st
 
 1. Create a temporary list `tmp` and add all non-zero elements from `nums`.
 2. Iterate through the original array:
-   - For indices less than `tmp.length`, copy the value from `tmp`.
-   - For remaining indices, set the value to `0`.
+    - For indices less than `tmp.length`, copy the value from `tmp`.
+    - For remaining indices, set the value to `0`.
 
 ::tabs-start
 
@@ -181,6 +183,22 @@ class Solution {
                 nums[i] = tmp[i]
             } else {
                 nums[i] = 0
+            }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn move_zeroes(nums: &mut Vec<i32>) {
+        let tmp: Vec<i32> = nums.iter().copied().filter(|&x| x != 0).collect();
+
+        for i in 0..nums.len() {
+            if i < tmp.len() {
+                nums[i] = tmp[i];
+            } else {
+                nums[i] = 0;
             }
         }
     }
@@ -354,6 +372,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn move_zeroes(nums: &mut Vec<i32>) {
+        let mut l = 0;
+        for r in 0..nums.len() {
+            if nums[r] != 0 {
+                nums[l] = nums[r];
+                l += 1;
+            }
+        }
+
+        while l < nums.len() {
+            nums[l] = 0;
+            l += 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -373,8 +410,8 @@ Instead of copying values and then filling zeros separately, we can swap element
 
 1. Initialize `l = 0` to track the swap position.
 2. Iterate through the array with pointer `r`. For each non-zero element:
-   - Swap `nums[l]` and `nums[r]`.
-   - Increment `l`.
+    - Swap `nums[l]` and `nums[r]`.
+    - Increment `l`.
 3. After the loop, all non-zero elements are at the front and zeros are at the end.
 
 ::tabs-start
@@ -490,6 +527,20 @@ class Solution {
             if nums[r] != 0 {
                 nums.swapAt(l, r)
                 l += 1
+            }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn move_zeroes(nums: &mut Vec<i32>) {
+        let mut l = 0;
+        for r in 0..nums.len() {
+            if nums[r] != 0 {
+                nums.swap(l, r);
+                l += 1;
             }
         }
     }

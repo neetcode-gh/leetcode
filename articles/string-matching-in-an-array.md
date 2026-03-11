@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Substring Search** - Checking if one string appears within another using built-in methods or algorithms
 - **Sorting** - Ordering elements by a custom criterion (e.g., string length) to optimize comparisons
 - **String Matching Algorithms** - KMP, Rabin-Karp, or Z-Algorithm for efficient pattern matching (for advanced solutions)
@@ -204,6 +206,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn string_matching(words: Vec<String>) -> Vec<String> {
+        let mut res = vec![];
+
+        for i in 0..words.len() {
+            for j in 0..words.len() {
+                if i == j {
+                    continue;
+                }
+
+                if words[j].contains(&words[i] as &str) {
+                    res.push(words[i].clone());
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,6 +415,27 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn string_matching(words: Vec<String>) -> Vec<String> {
+        let mut res = vec![];
+        let mut words = words;
+        words.sort_by_key(|w| w.len());
+
+        for i in 0..words.len() {
+            for j in (i + 1)..words.len() {
+                if words[j].contains(&words[i] as &str) {
+                    res.push(words[i].clone());
+                    break;
+                }
+            }
+        }
+
+        res
     }
 }
 ```
@@ -888,6 +934,69 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn string_matching(words: Vec<String>) -> Vec<String> {
+        fn kmp(word1: &[u8], word2: &[u8]) -> i32 {
+            let m = word2.len();
+            if m == 0 {
+                return 0;
+            }
+            let mut lps = vec![0usize; m];
+            let mut prev_lps = 0;
+            let mut i = 1;
+
+            while i < m {
+                if word2[i] == word2[prev_lps] {
+                    prev_lps += 1;
+                    lps[i] = prev_lps;
+                    i += 1;
+                } else if prev_lps == 0 {
+                    lps[i] = 0;
+                    i += 1;
+                } else {
+                    prev_lps = lps[prev_lps - 1];
+                }
+            }
+
+            i = 0;
+            let mut j = 0;
+            while i < word1.len() {
+                if word1[i] == word2[j] {
+                    i += 1;
+                    j += 1;
+                } else if j == 0 {
+                    i += 1;
+                } else {
+                    j = lps[j - 1];
+                }
+
+                if j == m {
+                    return (i - m) as i32;
+                }
+            }
+
+            -1
+        }
+
+        let mut res = vec![];
+        let mut words = words;
+        words.sort_by_key(|w| w.len());
+
+        for i in 0..words.len() {
+            for j in (i + 1)..words.len() {
+                if kmp(words[j].as_bytes(), words[i].as_bytes()) != -1 {
+                    res.push(words[i].clone());
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1278,6 +1387,69 @@ func stringMatching(words []string) []string {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn string_matching(words: Vec<String>) -> Vec<String> {
+        fn rabin_karp(word1: &[u8], word2: &[u8]) -> i32 {
+            let base1: i64 = 31;
+            let mod1: i64 = 768258391;
+            let base2: i64 = 37;
+            let mod2: i64 = 685683731;
+            let n = word1.len();
+            let m = word2.len();
+
+            let mut power1: i64 = 1;
+            let mut power2: i64 = 1;
+            for _ in 0..m {
+                power1 = power1 * base1 % mod1;
+                power2 = power2 * base2 % mod2;
+            }
+
+            let (mut h1, mut h2) = (0i64, 0i64);
+            let (mut cur1, mut cur2) = (0i64, 0i64);
+
+            for i in 0..m {
+                h1 = (h1 * base1 + word2[i] as i64) % mod1;
+                h2 = (h2 * base2 + word2[i] as i64) % mod2;
+                cur1 = (cur1 * base1 + word1[i] as i64) % mod1;
+                cur2 = (cur2 * base2 + word1[i] as i64) % mod2;
+            }
+
+            for i in 0..=(n - m) {
+                if cur1 == h1 && cur2 == h2 {
+                    return i as i32;
+                }
+                if i + m < n {
+                    cur1 = (cur1 * base1 - word1[i] as i64 * power1
+                        + word1[i + m] as i64) % mod1;
+                    cur2 = (cur2 * base2 - word1[i] as i64 * power2
+                        + word1[i + m] as i64) % mod2;
+                    cur1 = (cur1 + mod1) % mod1;
+                    cur2 = (cur2 + mod2) % mod2;
+                }
+            }
+
+            -1
+        }
+
+        let mut res = vec![];
+        let mut words = words;
+        words.sort_by_key(|w| w.len());
+
+        for i in 0..words.len() {
+            for j in (i + 1)..words.len() {
+                if rabin_karp(words[j].as_bytes(), words[i].as_bytes()) != -1 {
+                    res.push(words[i].clone());
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1593,6 +1765,58 @@ func stringMatching(words []string) []string {
     }
 
     return res
+}
+```
+
+```rust
+impl Solution {
+    pub fn string_matching(words: Vec<String>) -> Vec<String> {
+        fn z_algorithm(word1: &[u8], word2: &[u8]) -> i32 {
+            let mut s = Vec::with_capacity(word2.len() + 1 + word1.len());
+            s.extend_from_slice(word2);
+            s.push(b'$');
+            s.extend_from_slice(word1);
+            let n = s.len();
+            let mut z = vec![0usize; n];
+            let (mut l, mut r) = (0, 0);
+
+            for i in 1..n {
+                if i <= r {
+                    z[i] = (r - i + 1).min(z[i - l]);
+                }
+                while i + z[i] < n && s[z[i]] == s[i + z[i]] {
+                    z[i] += 1;
+                }
+                if i + z[i] > r + 1 {
+                    l = i;
+                    r = i + z[i] - 1;
+                }
+            }
+
+            for i in (word2.len() + 1)..n {
+                if z[i] == word2.len() {
+                    return (i - word2.len() - 1) as i32;
+                }
+            }
+
+            -1
+        }
+
+        let mut res = vec![];
+        let mut words = words;
+        words.sort_by_key(|w| w.len());
+
+        for i in 0..words.len() {
+            for j in (i + 1)..words.len() {
+                if z_algorithm(words[j].as_bytes(), words[i].as_bytes()) != -1 {
+                    res.push(words[i].clone());
+                    break;
+                }
+            }
+        }
+
+        res
+    }
 }
 ```
 
@@ -1983,6 +2207,72 @@ func stringMatching(words []string) []string {
     }
 
     return res
+}
+```
+
+```rust
+struct TrieNode {
+    children: [Option<Box<TrieNode>>; 26],
+    cnt: i32,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self {
+            children: Default::default(),
+            cnt: 0,
+        }
+    }
+}
+
+struct Trie {
+    root: Box<TrieNode>,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Self { root: Box::new(TrieNode::new()) }
+    }
+
+    fn insert_suffixes(&mut self, word: &[u8]) {
+        for i in 0..word.len() {
+            let mut node = &mut *self.root;
+            for j in i..word.len() {
+                let idx = (word[j] - b'a') as usize;
+                node = node.children[idx]
+                    .get_or_insert_with(|| Box::new(TrieNode::new()));
+                node.cnt += 1;
+            }
+        }
+    }
+
+    fn search(&self, word: &[u8]) -> bool {
+        let mut node = &*self.root;
+        for &b in word {
+            let idx = (b - b'a') as usize;
+            node = node.children[idx].as_ref().unwrap();
+        }
+        node.cnt > 1
+    }
+}
+
+impl Solution {
+    pub fn string_matching(words: Vec<String>) -> Vec<String> {
+        let mut trie = Trie::new();
+
+        for word in &words {
+            trie.insert_suffixes(word.as_bytes());
+        }
+
+        let mut res = vec![];
+        for word in &words {
+            if trie.search(word.as_bytes()) {
+                res.push(word.clone());
+            }
+        }
+
+        res
+    }
 }
 ```
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Basic array indexing and iteration
 - **Two Pointers** - Using pointers at opposite ends to traverse and modify data
 - **In-place Modification** - Modifying data structures without using extra space
@@ -136,6 +138,17 @@ class Solution {
         }
         for i in 0..<s.count {
             s[i] = tmp[i]
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reverse_string(s: &mut Vec<char>) {
+        let tmp: Vec<char> = s.iter().rev().cloned().collect();
+        for i in 0..s.len() {
+            s[i] = tmp[i];
         }
     }
 }
@@ -296,6 +309,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_string(s: &mut Vec<char>) {
+        fn reverse(s: &mut Vec<char>, l: usize, r: usize) {
+            if l < r {
+                reverse(s, l + 1, r - 1);
+                s.swap(l, r);
+            }
+        }
+        if !s.is_empty() {
+            reverse(s, 0, s.len() - 1);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,6 +472,17 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_string(s: &mut Vec<char>) {
+        let mut stack: Vec<char> = s.iter().cloned().collect();
+        for i in 0..s.len() {
+            s[i] = stack.pop().unwrap();
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -543,6 +583,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_string(s: &mut Vec<char>) {
+        s.reverse();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -562,8 +610,8 @@ The most efficient approach uses two pointers starting at opposite ends of the a
 
 1. Initialize two pointers: `l` at index 0 and `r` at the last index.
 2. While `l < r`:
-   - Swap `s[l]` and `s[r]`.
-   - Increment `l` and decrement `r`.
+    - Swap `s[l]` and `s[r]`.
+    - Increment `l` and decrement `r`.
 3. The array `s` is now reversed in place.
 
 ::tabs-start
@@ -679,6 +727,19 @@ class Solution {
             s[r] = temp
             l += 1
             r -= 1
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reverse_string(s: &mut Vec<char>) {
+        let (mut l, mut r) = (0, s.len().wrapping_sub(1));
+        while l < r {
+            s.swap(l, r);
+            l += 1;
+            r -= 1;
         }
     }
 }

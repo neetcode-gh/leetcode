@@ -1,9 +1,11 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Union-Find (Disjoint Set Union)** - Data structure for tracking connected components with efficient union and find operations
 - **Path Compression** - Optimization technique to flatten the Union-Find tree during find operations
 - **Union by Rank** - Optimization to keep the Union-Find tree balanced by attaching smaller trees under larger ones
-- **2D to 1D Index Mapping** - Converting grid coordinates (row, col) to a single index using row * cols + col
+- **2D to 1D Index Mapping** - Converting grid coordinates (row, col) to a single index using row \* cols + col
 
 ---
 
@@ -17,10 +19,10 @@ We need to track islands dynamically as land cells are added one at a time. Unio
 
 1. Initialize a Union-Find structure with all cells marked as water (`parent = -1`) and island `count = 0`.
 2. For each position in the `positions` array:
-   - If this cell is already land, record the current `count` and continue.
-   - Mark the cell as land, set its parent to itself, and increment the island `count`.
-   - Check all four neighbors (up, down, left, right). For each neighbor that is land, union it with the new cell (this decrements the `count` if they were in different sets).
-   - Append the current island `count` to the result.
+    - If this cell is already land, record the current `count` and continue.
+    - Mark the cell as land, set its parent to itself, and increment the island `count`.
+    - Check all four neighbors (up, down, left, right). For each neighbor that is land, union it with the new cell (this decrements the `count` if they were in different sets).
+    - Append the current island `count` to the result.
 3. Return the result array.
 
 ::tabs-start
@@ -31,31 +33,31 @@ class UnionFind:
         self.parent = [-1] * size
         self.rank = [0] * size
         self.count = 0
-    
+
     def add_land(self, x):
         if self.parent[x] >= 0:
             return
         self.parent[x] = x
         self.count += 1
-    
+
     def is_land(self, x):
         if self.parent[x] >= 0:
             return True
         else:
             return False
-    
+
     def number_of_islands(self):
         return self.count
-    
+
     def find(self, x):
         if self.parent[x] != x:
             self.parent[x] = self.find(self.parent[x])
         return self.parent[x]
-    
+
     def union(self, x, y):
         xset = self.find(x)
         yset = self.find(y)
-        
+
         if xset == yset:
             return
         elif self.rank[xset] < self.rank[yset]:
@@ -65,7 +67,7 @@ class UnionFind:
         else:
             self.parent[yset] = xset
             self.rank[xset] += 1
-        
+
         self.count -= 1
 
 
@@ -75,23 +77,23 @@ class Solution:
         y = [0, 0, -1, 1]
         dsu = UnionFind(m * n)
         answer = []
-        
+
         for position in positions:
             land_position = position[0] * n + position[1]
             dsu.add_land(land_position)
-            
+
             for i in range(4):
                 neighbor_x = position[0] + x[i]
                 neighbor_y = position[1] + y[i]
                 neighbor_position = neighbor_x * n + neighbor_y
-                
+
                 # If neighborX and neighborY correspond to a point in the grid and there is a
                 # land at that point, then merge it with the current land.
                 if neighbor_x >= 0 and neighbor_x < m and neighbor_y >= 0 and neighbor_y < n and dsu.is_land(neighbor_position):
                     dsu.union(land_position, neighbor_position)
-            
+
             answer.append(dsu.number_of_islands())
-        
+
         return answer
 ```
 
@@ -172,7 +174,7 @@ class Solution {
                     dsu.union(landPosition, neighborPosition);
                 }
             }
-            
+
             answer.add(dsu.numberOfIslands());
         }
         return answer;
@@ -307,8 +309,7 @@ class UnionFind {
      * @return {number}
      */
     find(x) {
-        if (this.parent[x] !== x)
-            this.parent[x] = this.find(this.parent[x]);
+        if (this.parent[x] !== x) this.parent[x] = this.find(this.parent[x]);
         return this.parent[x];
     }
 
@@ -360,7 +361,13 @@ class Solution {
 
                 // If neighborX and neighborY correspond to a point in the grid and there is a
                 // land at that point, then merge it with the current land.
-                if (neighborX >= 0 && neighborX < m && neighborY >= 0 && neighborY < n && dsu.isLand(neighborPosition)) {
+                if (
+                    neighborX >= 0 &&
+                    neighborX < m &&
+                    neighborY >= 0 &&
+                    neighborY < n &&
+                    dsu.isLand(neighborPosition)
+                ) {
                     dsu.union(landPosition, neighborPosition);
                 }
             }
@@ -685,6 +692,99 @@ class Solution {
 }
 ```
 
+```rust
+struct UnionFind {
+    parent: Vec<i32>,
+    rank: Vec<i32>,
+    count: i32,
+}
+
+impl UnionFind {
+    fn new(size: usize) -> Self {
+        Self {
+            parent: vec![-1; size],
+            rank: vec![0; size],
+            count: 0,
+        }
+    }
+
+    fn add_land(&mut self, x: usize) {
+        if self.parent[x] >= 0 {
+            return;
+        }
+        self.parent[x] = x as i32;
+        self.count += 1;
+    }
+
+    fn is_land(&self, x: usize) -> bool {
+        self.parent[x] >= 0
+    }
+
+    fn number_of_islands(&self) -> i32 {
+        self.count
+    }
+
+    fn find(&mut self, x: usize) -> usize {
+        if self.parent[x] != x as i32 {
+            let p = self.parent[x] as usize;
+            self.parent[x] = self.find(p) as i32;
+        }
+        self.parent[x] as usize
+    }
+
+    fn union(&mut self, x: usize, y: usize) {
+        let xset = self.find(x);
+        let yset = self.find(y);
+        if xset == yset {
+            return;
+        } else if self.rank[xset] < self.rank[yset] {
+            self.parent[xset] = yset as i32;
+        } else if self.rank[xset] > self.rank[yset] {
+            self.parent[yset] = xset as i32;
+        } else {
+            self.parent[yset] = xset as i32;
+            self.rank[xset] += 1;
+        }
+        self.count -= 1;
+    }
+}
+
+impl Solution {
+    pub fn num_islands2(m: i32, n: i32, positions: Vec<Vec<i32>>) -> Vec<i32> {
+        let (m, n) = (m as usize, n as usize);
+        let dx = [-1i32, 1, 0, 0];
+        let dy = [0i32, 0, -1, 1];
+        let mut dsu = UnionFind::new(m * n);
+        let mut answer = Vec::new();
+
+        for position in &positions {
+            let land_position = position[0] as usize * n + position[1] as usize;
+            dsu.add_land(land_position);
+
+            for i in 0..4 {
+                let neighbor_x = position[0] + dx[i];
+                let neighbor_y = position[1] + dy[i];
+                if neighbor_x >= 0
+                    && (neighbor_x as usize) < m
+                    && neighbor_y >= 0
+                    && (neighbor_y as usize) < n
+                {
+                    let neighbor_position =
+                        neighbor_x as usize * n + neighbor_y as usize;
+                    if dsu.is_land(neighbor_position) {
+                        dsu.union(land_position, neighbor_position);
+                    }
+                }
+            }
+
+            answer.push(dsu.number_of_islands());
+        }
+
+        answer
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,7 +792,7 @@ class Solution {
 - Time complexity: $O(m \cdot n + l)$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m$ and $n$ are the number of rows and columns in the given grid, and $l$ is the size of `positions`.
+> Where $m$ and $n$ are the number of rows and columns in the given grid, and $l$ is the size of `positions`.
 
 ## Common Pitfalls
 

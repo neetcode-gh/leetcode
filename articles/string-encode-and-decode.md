@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Building strings by concatenation and extracting substrings based on indices
 - **Delimiter Design** - Understanding how to choose separators that won't conflict with input content
 - **Length-Prefix Encoding** - Using string lengths to unambiguously mark boundaries between encoded segments
@@ -18,21 +20,23 @@ This avoids any issues with special characters, commas, or symbols inside the st
 ### Algorithm
 
 #### Encoding
+
 1. If the input list is empty, return an empty string.
 2. Create an empty list to store the sizes of each string.
 3. For each string, append its length to the sizes list.
 4. Build a single string by:
-   - Writing all sizes separated by commas.
-   - Adding a `'#'` to mark the end of the size section.
-   - Appending all the actual strings in order.
+    - Writing all sizes separated by commas.
+    - Adding a `'#'` to mark the end of the size section.
+    - Appending all the actual strings in order.
 5. Return the final encoded string.
 
 #### Decoding
+
 1. If the encoded string is empty, return an empty list.
 2. Read characters from the start until reaching `'#'` to extract all recorded sizes:
-   - Parse each size by reading until a comma.
+    - Parse each size by reading until a comma.
 3. After the `'#'`, extract substrings according to the sizes list:
-   - For each size, read that many characters and append the substring to the result.
+    - For each size, read that many characters and append the substring to the result.
 4. Return the list of decoded strings.
 
 ::tabs-start
@@ -370,6 +374,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn encode(strs: Vec<String>) -> String {
+        if strs.is_empty() {
+            return String::new();
+        }
+        let mut res = String::new();
+        let sizes: Vec<usize> = strs.iter().map(|s| s.len()).collect();
+        for sz in &sizes {
+            res.push_str(&sz.to_string());
+            res.push(',');
+        }
+        res.push('#');
+        for s in &strs {
+            res.push_str(s);
+        }
+        res
+    }
+
+    pub fn decode(s: String) -> Vec<String> {
+        if s.is_empty() {
+            return vec![];
+        }
+        let bytes = s.as_bytes();
+        let mut sizes = vec![];
+        let mut res = vec![];
+        let mut i = 0;
+        while bytes[i] != b'#' {
+            let mut cur = String::new();
+            while bytes[i] != b',' {
+                cur.push(bytes[i] as char);
+                i += 1;
+            }
+            sizes.push(cur.parse::<usize>().unwrap());
+            i += 1;
+        }
+        i += 1;
+        for sz in sizes {
+            res.push(s[i..i + sz].to_string());
+            i += sz;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -394,21 +444,23 @@ This approach is both simpler and more efficient because it avoids building sepa
 ### Algorithm
 
 #### Encoding
+
 1. Initialize an empty result string.
 2. For each string in the list:
-   - Compute its length.
-   - Append `"length#string"` to the result.
+    - Compute its length.
+    - Append `"length#string"` to the result.
 3. Return the final encoded string.
 
 #### Decoding
+
 1. Initialize an empty list for the decoded strings and a pointer `i = 0`.
 2. While `i` is within the bounds of the encoded string:
-   - Move a pointer `j` forward until it finds `'#'` — this segment represents the length.
-   - Convert the substring `s[i:j]` into an integer `length`.
-   - Move `i` to the character right after `'#'`.
-   - Extract the next `length` characters — this is the original string.
-   - Append the extracted string to the result list.
-   - Move `i` forward by `length` to continue decoding the next segment.
+    - Move a pointer `j` forward until it finds `'#'` — this segment represents the length.
+    - Convert the substring `s[i:j]` into an integer `length`.
+    - Move `i` to the character right after `'#'`.
+    - Extract the next `length` characters — this is the original string.
+    - Append the extracted string to the result list.
+    - Move `i` forward by `length` to continue decoding the next segment.
 3. Return the list of decoded strings.
 
 ::tabs-start
@@ -653,6 +705,38 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn encode(strs: Vec<String>) -> String {
+        let mut res = String::new();
+        for s in &strs {
+            res.push_str(&s.len().to_string());
+            res.push('#');
+            res.push_str(s);
+        }
+        res
+    }
+
+    pub fn decode(s: String) -> Vec<String> {
+        let mut res = vec![];
+        let bytes = s.as_bytes();
+        let mut i = 0;
+        while i < bytes.len() {
+            let mut j = i;
+            while bytes[j] != b'#' {
+                j += 1;
+            }
+            let length: usize = s[i..j].parse().unwrap();
+            i = j + 1;
+            j = i + length;
+            res.push(s[i..j].to_string());
+            i = j;
+        }
+        res
     }
 }
 ```

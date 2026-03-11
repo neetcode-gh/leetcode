@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Sets** - The optimal solution uses a hash set for O(1) lookups to detect duplicates efficiently
 - **Sorting** - An alternative approach sorts the array to bring duplicates adjacent, then scans linearly
 - **Basic Array Traversal** - The brute force approach uses nested loops to compare all pairs of elements
@@ -135,6 +137,21 @@ class Solution {
             }
         }
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn has_duplicate(nums: Vec<i32>) -> bool {
+        for i in 0..nums.len() {
+            for j in (i + 1)..nums.len() {
+                if nums[i] == nums[j] {
+                    return true;
+                }
+            }
+        }
+        false
     }
 }
 ```
@@ -277,6 +294,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_duplicate(mut nums: Vec<i32>) -> bool {
+        nums.sort();
+        for i in 1..nums.len() {
+            if nums[i] == nums[i - 1] {
+                return true;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -300,8 +331,8 @@ Using a hash set allows constant-time lookups, making this approach much more ef
 1. Initialize an empty hash set to store seen values.
 2. Iterate through each number in the array.
 3. For each number:
-   - If it is already in the set, return `true` because a duplicate has been found.
-   - Otherwise, add it to the set.
+    - If it is already in the set, return `true` because a duplicate has been found.
+    - Otherwise, add it to the set.
 4. If the loop finishes without finding any duplicates, return `false`.
 
 ::tabs-start
@@ -425,6 +456,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_duplicate(nums: Vec<i32>) -> bool {
+        let mut seen = HashSet::new();
+        for &num in &nums {
+            if !seen.insert(num) {
+                return true;
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -517,6 +562,15 @@ class Solution {
 class Solution {
     func hasDuplicate(_ nums: [Int]) -> Bool {
         return Set(nums).count < nums.count
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn has_duplicate(nums: Vec<i32>) -> bool {
+        let set: HashSet<i32> = nums.iter().copied().collect();
+        set.len() < nums.len()
     }
 }
 ```

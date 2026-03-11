@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Used to manage both operator precedence and nested parentheses
 - **String Parsing** - Building multi-digit numbers and identifying operators, parentheses, and whitespace
 - **Operator Precedence** - Multiplication/division before addition/subtraction
@@ -18,12 +20,12 @@ This problem adds parentheses to the basic calculator, which introduces nested s
 
 1. Append a sentinel character `@` to the string to trigger final processing.
 2. For each character:
-   - If it's a digit, build the current number.
-   - If it's `(`, push the previous operator onto the stack and reset the operator to `+`.
-   - Otherwise (operator or `)` or `@`):
-     - Apply the previous operator to the current number (handle `*` and `/` by popping and computing immediately).
-     - If it's `)`, sum all numbers on the stack until we hit a saved operator, then use that operator for the combined result.
-     - Update the previous operator and reset the current number.
+    - If it's a digit, build the current number.
+    - If it's `(`, push the previous operator onto the stack and reset the operator to `+`.
+    - Otherwise (operator or `)` or `@`):
+        - Apply the previous operator to the current number (handle `*` and `/` by popping and computing immediately).
+        - If it's `)`, sum all numbers on the stack until we hit a saved operator, then use that operator for the combined result.
+        - Update the previous operator and reset the current number.
 3. Return the sum of remaining numbers on the stack.
 
 ::tabs-start
@@ -39,12 +41,12 @@ class Solution:
             if operator == "*":
                 return x * y
             return int(x / y)
-        
+
         stack = []
         curr = 0
         previous_operator = "+"
         s += "@"
-        
+
         for c in s:
             if c.isdigit():
                 curr = curr * 10 + int(c)
@@ -56,7 +58,7 @@ class Solution:
                     stack.append(evaluate(stack.pop(), curr, previous_operator))
                 else:
                     stack.append(evaluate(curr, 0, previous_operator))
-                
+
                 curr = 0
                 previous_operator = c
                 if c == ")":
@@ -73,7 +75,7 @@ class Solution {
         int x = Integer.parseInt(first);
         int y = Integer.parseInt(second);
         int res = 0;
-        
+
         if (operator == '+') {
             res = x;
         } else if (operator == '-') {
@@ -83,17 +85,17 @@ class Solution {
         } else {
             res = x / y;
         }
-        
+
         return Integer.toString(res);
     }
-    
+
     public int calculate(String s) {
         Stack<String> stack = new Stack<>();
         String curr = "";
         char previousOperator = '+';
         s += "@";
         Set<String> operators = new HashSet<>(Arrays.asList("+", "-", "*", "/"));
-        
+
         for (char c: s.toCharArray()) {
             if (Character.isDigit(c)) {
                 curr += c;
@@ -106,7 +108,7 @@ class Solution {
                 } else {
                     stack.push(evaluate(previousOperator, curr, "0"));
                 }
-                
+
                 curr = "";
                 previousOperator = c;
                 if (c == ')') {
@@ -114,13 +116,13 @@ class Solution {
                     while (!operators.contains(stack.peek())) {
                         currentTerm += Integer.parseInt(stack.pop());
                     }
-                    
+
                     curr = Integer.toString(currentTerm);
                     previousOperator = stack.pop().charAt(0); // convert string from stack back to char
                 }
             }
         }
-        
+
         int ans = 0;
         for (String num: stack) {
             ans += Integer.parseInt(num);
@@ -206,13 +208,13 @@ class Solution {
          * @return {number}
          */
         function evaluate(x, y, operator) {
-            if (operator === "+") {
+            if (operator === '+') {
                 return x;
             }
-            if (operator === "-") {
+            if (operator === '-') {
                 return -x;
             }
-            if (operator === "*") {
+            if (operator === '*') {
                 return x * y;
             }
             return Math.trunc(x / y);
@@ -220,17 +222,17 @@ class Solution {
 
         const stack = [];
         let curr = 0;
-        let previousOperator = "+";
-        s += "@";
+        let previousOperator = '+';
+        s += '@';
 
         for (const c of s) {
-            if (c >= "0" && c <= "9") {
+            if (c >= '0' && c <= '9') {
                 curr = curr * 10 + parseInt(c);
-            } else if (c === "(") {
+            } else if (c === '(') {
                 stack.push(previousOperator);
-                previousOperator = "+";
+                previousOperator = '+';
             } else {
-                if (previousOperator === "*" || previousOperator === "/") {
+                if (previousOperator === '*' || previousOperator === '/') {
                     stack.push(evaluate(stack.pop(), curr, previousOperator));
                 } else {
                     stack.push(evaluate(curr, 0, previousOperator));
@@ -239,8 +241,8 @@ class Solution {
                 curr = 0;
                 previousOperator = c;
 
-                if (c === ")") {
-                    while (typeof stack[stack.length - 1] === "number") {
+                if (c === ')') {
+                    while (typeof stack[stack.length - 1] === 'number') {
                         curr += stack.pop();
                     }
                     previousOperator = stack.pop();
@@ -248,7 +250,9 @@ class Solution {
             }
         }
 
-        return stack.reduce(function(sum, val) { return sum + val; }, 0);
+        return stack.reduce(function (sum, val) {
+            return sum + val;
+        }, 0);
     }
 }
 ```
@@ -486,6 +490,55 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calculate(s: String) -> i32 {
+        fn evaluate(x: i32, y: i32, op: u8) -> i32 {
+            match op {
+                b'+' => x,
+                b'-' => -x,
+                b'*' => x * y,
+                _    => x / y,
+            }
+        }
+
+        // Stack items: (value, is_int). If !is_int, value is the operator byte.
+        let mut stack: Vec<(i32, bool)> = Vec::new();
+        let mut curr: i32 = 0;
+        let mut prev_op: u8 = b'+';
+        let s: Vec<u8> = s.bytes().chain(std::iter::once(b'@')).collect();
+
+        for &c in &s {
+            if c.is_ascii_digit() {
+                curr = curr * 10 + (c - b'0') as i32;
+            } else if c == b'(' {
+                stack.push((prev_op as i32, false));
+                prev_op = b'+';
+            } else {
+                if prev_op == b'*' || prev_op == b'/' {
+                    let top = stack.pop().unwrap().0;
+                    stack.push((evaluate(top, curr, prev_op), true));
+                } else {
+                    stack.push((evaluate(curr, 0, prev_op), true));
+                }
+
+                curr = 0;
+                prev_op = c;
+
+                if c == b')' {
+                    while !stack.is_empty() && stack.last().unwrap().1 {
+                        curr += stack.pop().unwrap().0;
+                    }
+                    prev_op = stack.pop().unwrap().0 as u8;
+                }
+            }
+        }
+
+        stack.iter().map(|&(v, _)| v).sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,7 +546,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the expression
+> Where $n$ is the length of the expression
 
 ---
 
@@ -507,14 +560,14 @@ Parentheses naturally suggest recursion. When we encounter an opening parenthesi
 
 1. Append a sentinel `@` to the string. Use an index variable shared across recursive calls.
 2. Define a recursive `solve` function:
-   - Initialize a stack, current number, and previous operator (`+`).
-   - While the index is within bounds:
-     - If the character is `(`, increment the index and recursively call `solve` to get the inner result.
-     - If it's a digit, build the current number.
-     - Otherwise, apply the previous operator (push for `+`/`-`, compute for `*`/`/`).
-     - If it's `)`, break out of the loop.
-     - Reset the number and update the operator.
-   - Return the sum of the stack.
+    - Initialize a stack, current number, and previous operator (`+`).
+    - While the index is within bounds:
+        - If the character is `(`, increment the index and recursively call `solve` to get the inner result.
+        - If it's a digit, build the current number.
+        - Otherwise, apply the previous operator (push for `+`/`-`, compute for `*`/`/`).
+        - If it's `)`, break out of the loop.
+        - Reset the number and update the operator.
+    - Return the sum of the stack.
 3. Call `solve` starting from index `0` and return its result.
 
 ::tabs-start
@@ -530,12 +583,12 @@ class Solution:
             if operator == "*":
                 return x * y
             return int(x / y)
-        
+
         def solve(i):
             stack = []
             curr = 0
             previous_operator = "+"
-            
+
             while i[0] < len(s):
                 c = s[i[0]]
                 if c == "(":
@@ -548,15 +601,15 @@ class Solution:
                         stack.append(evaluate(stack.pop(), curr, previous_operator))
                     else:
                         stack.append(evaluate(curr, 0, previous_operator))
-                     
+
                     if c == ")":
                         break
-                    
+
                     curr = 0
                     previous_operator = c
-                    
+
                 i[0] += 1
-            
+
             return sum(stack)
 
         s += "@"
@@ -573,15 +626,15 @@ class Solution {
         } else if (operator == '*') {
             return x * y;
         }
-        
+
         return x / y;
     }
-    
+
     private int solve(String s, int[] i) {
         Stack<Integer> stack = new Stack<>();
         int curr = 0;
         char previousOperator = '+';
-        
+
         while (i[0] < s.length()) {
             char c = s.charAt(i[0]);
             if (c == '(') {
@@ -595,26 +648,26 @@ class Solution {
                 } else {
                     stack.push(evaluate(previousOperator, curr, 0));
                 }
-                
+
                 if (c == ')') {
                     break;
                 }
-                
+
                 curr = 0;
                 previousOperator = c;
             }
-            
+
             i[0]++;
         }
-        
+
         int ans = 0;
         for (int num: stack) {
             ans += num;
         }
-        
+
         return ans;
     }
-    
+
     public int calculate(String s) {
         s += "@";
         int[] i = new int[1];
@@ -703,13 +756,13 @@ class Solution {
          * @return {number}
          */
         function evaluate(x, y, operator) {
-            if (operator === "+") {
+            if (operator === '+') {
                 return x;
             }
-            if (operator === "-") {
+            if (operator === '-') {
                 return -x;
             }
-            if (operator === "*") {
+            if (operator === '*') {
                 return x * y;
             }
             return Math.trunc(x / y);
@@ -722,24 +775,26 @@ class Solution {
         function solve(i) {
             const stack = [];
             let curr = 0;
-            let previousOperator = "+";
+            let previousOperator = '+';
 
             while (i[0] < s.length) {
                 const c = s[i[0]];
 
-                if (c === "(") {
+                if (c === '(') {
                     i[0] += 1;
                     curr = solve(i);
-                } else if (c >= "0" && c <= "9") {
+                } else if (c >= '0' && c <= '9') {
                     curr = curr * 10 + parseInt(c);
                 } else {
-                    if (previousOperator === "*" || previousOperator === "/") {
-                        stack.push(evaluate(stack.pop(), curr, previousOperator));
+                    if (previousOperator === '*' || previousOperator === '/') {
+                        stack.push(
+                            evaluate(stack.pop(), curr, previousOperator),
+                        );
                     } else {
                         stack.push(evaluate(curr, 0, previousOperator));
                     }
 
-                    if (c === ")") {
+                    if (c === ')') {
                         break;
                     }
 
@@ -750,10 +805,12 @@ class Solution {
                 i[0] += 1;
             }
 
-            return stack.reduce(function(sum, val) { return sum + val; }, 0);
+            return stack.reduce(function (sum, val) {
+                return sum + val;
+            }, 0);
         }
 
-        s += "@";
+        s += '@';
         return solve([0]);
     }
 }
@@ -987,6 +1044,61 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calculate(s: String) -> i32 {
+        fn evaluate(x: i32, y: i32, op: u8) -> i32 {
+            match op {
+                b'+' => x,
+                b'-' => -x,
+                b'*' => x * y,
+                _    => x / y,
+            }
+        }
+
+        fn solve(s: &[u8], i: &mut usize) -> i32 {
+            let mut stack: Vec<i32> = Vec::new();
+            let mut curr: i32 = 0;
+            let mut prev_op: u8 = b'+';
+
+            while *i < s.len() {
+                let c = s[*i];
+
+                if c == b'(' {
+                    *i += 1;
+                    curr = solve(s, i);
+                } else if c.is_ascii_digit() {
+                    curr = curr * 10 + (c - b'0') as i32;
+                } else {
+                    if prev_op == b'*' || prev_op == b'/' {
+                        let prev = stack.pop().unwrap();
+                        stack.push(evaluate(prev, curr, prev_op));
+                    } else {
+                        stack.push(evaluate(curr, 0, prev_op));
+                    }
+
+                    if c == b')' {
+                        break;
+                    }
+
+                    curr = 0;
+                    prev_op = c;
+                }
+
+                *i += 1;
+            }
+
+            stack.iter().sum()
+        }
+
+        let mut s: Vec<u8> = s.bytes().collect();
+        s.push(b'@');
+        let mut i = 0;
+        solve(&s, &mut i)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -994,27 +1106,33 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the length of the expression
+> Where $n$ is the length of the expression
 
 ---
 
 ## Common Pitfalls
 
 ### Not Resetting State When Entering Parentheses
+
 When encountering an opening parenthesis, you must save the current operator and reset to a default state (usually `+`). Failing to reset causes the operator before the parenthesis to be applied incorrectly inside.
+
 ```python
 # Wrong: not resetting previous_operator when entering parenthesis
 # Correct: save current operator to stack, reset to '+'
 ```
 
 ### Incorrect Handling of Closing Parenthesis
+
 When a closing parenthesis is encountered, you must sum all values inside the parentheses and then apply the saved operator from before the opening parenthesis. Missing either step produces wrong results.
 
 ### Mixing Up Operator Precedence with Parentheses
+
 Multiplication and division still have higher precedence than addition and subtraction, even inside parentheses. The parentheses only group sub-expressions; they do not change the relative precedence of operators within them.
 
 ### Off-by-One Errors in Index Management with Recursion
+
 When using recursion to handle parentheses, the index must be shared across recursive calls (e.g., using a mutable reference or array). Failing to properly advance the index after processing a sub-expression causes characters to be processed multiple times or skipped.
 
 ### Forgetting the Sentinel Character
+
 Many solutions append a sentinel character (like `@`) to trigger processing of the final number. Without this, the last number or sub-expression may not be evaluated.

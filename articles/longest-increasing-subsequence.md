@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for tracking optimal subsequences
 - **Binary Search** - Finding insertion positions in a sorted array to achieve O(n log n) time complexity
 - **Recursion** - Breaking down the problem into subproblems of including or excluding each element
@@ -208,6 +210,24 @@ class Solution {
         }
 
         return dfs(0, -1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        fn dfs(nums: &[i32], i: usize, j: i32) -> i32 {
+            if i == nums.len() {
+                return 0;
+            }
+            let mut lis = dfs(nums, i + 1, j); // not include
+            if j == -1 || nums[j as usize] < nums[i] {
+                lis = lis.max(1 + dfs(nums, i + 1, i as i32)); // include
+            }
+            lis
+        }
+        dfs(&nums, 0, -1)
     }
 }
 ```
@@ -486,6 +506,32 @@ class Solution {
         }
 
         return dfs(0, -1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut memo = vec![vec![-1i32; n + 1]; n];
+
+        fn dfs(nums: &[i32], memo: &mut Vec<Vec<i32>>, i: usize, j: i32) -> i32 {
+            if i == nums.len() {
+                return 0;
+            }
+            if memo[i][(j + 1) as usize] != -1 {
+                return memo[i][(j + 1) as usize];
+            }
+            let mut lis = dfs(nums, memo, i + 1, j);
+            if j == -1 || nums[j as usize] < nums[i] {
+                lis = lis.max(1 + dfs(nums, memo, i + 1, i as i32));
+            }
+            memo[i][(j + 1) as usize] = lis;
+            lis
+        }
+
+        dfs(&nums, &mut memo, 0, -1)
     }
 }
 ```
@@ -770,6 +816,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut memo = vec![-1i32; n];
+
+        fn dfs(nums: &[i32], memo: &mut Vec<i32>, i: usize) -> i32 {
+            if memo[i] != -1 {
+                return memo[i];
+            }
+            let mut lis = 1;
+            for j in (i + 1)..nums.len() {
+                if nums[i] < nums[j] {
+                    lis = lis.max(1 + dfs(nums, memo, j));
+                }
+            }
+            memo[i] = lis;
+            lis
+        }
+
+        let mut max_lis = 1;
+        for i in 0..n {
+            max_lis = max_lis.max(dfs(&nums, &mut memo, i));
+        }
+        max_lis
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -790,9 +865,9 @@ This is the iterative version of the two-dimensional memoization approach. We fi
 1. Create a 2D array `dp` of size `(n + 1) x (n + 1)`.
 2. Iterate `i` from `n - 1` down to `0`.
 3. For each `j` from `i - 1` down to `-1`:
-   - Start with `LIS = dp[i + 1][j + 1]` (skipping `nums[i]`).
-   - If `j == -1` or `nums[j] < nums[i]`, also consider `1 + dp[i + 1][i + 1]`.
-   - Set `dp[i][j + 1]` to the maximum.
+    - Start with `LIS = dp[i + 1][j + 1]` (skipping `nums[i]`).
+    - If `j == -1` or `nums[j] < nums[i]`, also consider `1 + dp[i + 1][i + 1]`.
+    - Set `dp[i][j + 1]` to the maximum.
 4. Return `dp[0][0]`.
 
 ::tabs-start
@@ -991,6 +1066,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut dp = vec![vec![0i32; n + 1]; n + 1];
+
+        for i in (0..n).rev() {
+            for j in (-1..i as i32).rev() {
+                let mut lis = dp[i + 1][(j + 1) as usize]; // not including nums[i]
+                if j == -1 || nums[j as usize] < nums[i] {
+                    lis = lis.max(1 + dp[i + 1][i + 1]); // including nums[i]
+                }
+                dp[i][(j + 1) as usize] = lis;
+            }
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1011,7 +1107,7 @@ A simpler 1D approach: let `LIS[i]` be the length of the longest increasing subs
 1. Create an array `LIS` of size `n`, initialized to `1` (each element alone is a subsequence of length 1).
 2. Iterate `i` from `n - 1` down to `0`.
 3. For each `j` from `i + 1` to `n - 1`:
-   - If `nums[i] < nums[j]`, set `LIS[i] = max(LIS[i], 1 + LIS[j])`.
+    - If `nums[i] < nums[j]`, set `LIS[i] = max(LIS[i], 1 + LIS[j])`.
 4. Return the maximum value in `LIS`.
 
 ::tabs-start
@@ -1166,6 +1262,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut lis = vec![1; n];
+
+        for i in (0..n).rev() {
+            for j in (i + 1)..n {
+                if nums[i] < nums[j] {
+                    lis[i] = lis[i].max(1 + lis[j]);
+                }
+            }
+        }
+
+        *lis.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1186,9 +1301,9 @@ We can use a segment tree to efficiently query the maximum LIS length among all 
 1. Compress the array values to indices `0` to `n - 1` based on sorted order.
 2. Build a segment tree that supports range maximum queries and point updates.
 3. For each compressed value `num`:
-   - Query the maximum in range `[0, num - 1]`.
-   - The current LIS ending here is `query result + 1`.
-   - Update the segment tree at position `num` with this value.
+    - Query the maximum in range `[0, num - 1]`.
+    - The current LIS ending here is `query result + 1`.
+    - Update the segment tree at position `num` with this value.
 4. Return the overall maximum LIS found.
 
 ::tabs-start
@@ -1741,6 +1856,60 @@ class Solution {
 }
 ```
 
+```rust
+struct SegmentTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegmentTree {
+    fn new(mut n: usize) -> Self {
+        while n & (n - 1) != 0 { n += 1; }
+        Self { n, tree: vec![0; 2 * n] }
+    }
+
+    fn update(&mut self, i: usize, val: i32) {
+        self.tree[self.n + i] = val;
+        let mut j = (self.n + i) >> 1;
+        while j >= 1 {
+            self.tree[j] = self.tree[j << 1].max(self.tree[j << 1 | 1]);
+            j >>= 1;
+        }
+    }
+
+    fn query(&self, l: i32, r: i32) -> i32 {
+        if l > r { return 0; }
+        let (mut l, mut r) = (l as usize + self.n, r as usize + self.n + 1);
+        let mut res = i32::MIN;
+        while l < r {
+            if l & 1 == 1 { res = res.max(self.tree[l]); l += 1; }
+            if r & 1 == 1 { r -= 1; res = res.max(self.tree[r]); }
+            l >>= 1; r >>= 1;
+        }
+        res
+    }
+}
+
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let mut sorted_arr: Vec<i32> = nums.iter().cloned().collect::<BTreeSet<_>>().into_iter().collect();
+        let order: Vec<usize> = nums.iter().map(|&x|
+            sorted_arr.binary_search(&x).unwrap()
+        ).collect();
+
+        let n = sorted_arr.len();
+        let mut seg_tree = SegmentTree::new(n);
+        let mut lis = 0;
+        for &num in &order {
+            let cur_lis = seg_tree.query(0, num as i32 - 1) + 1;
+            seg_tree.update(num, cur_lis);
+            lis = lis.max(cur_lis);
+        }
+        lis
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1760,8 +1929,8 @@ We maintain an array `dp` where `dp[i]` is the smallest ending element of all in
 
 1. Initialize `dp` with the first element.
 2. For each subsequent element `nums[i]`:
-   - If `nums[i]` is greater than `dp[-1]`, append it to `dp`.
-   - Otherwise, find the leftmost position in `dp` where `dp[pos] >= nums[i]` using binary search, and replace `dp[pos]` with `nums[i]`.
+    - If `nums[i]` is greater than `dp[-1]`, append it to `dp`.
+    - Otherwise, find the leftmost position in `dp` where `dp[pos] >= nums[i]` using binary search, and replace `dp[pos]` with `nums[i]`.
 3. The length of `dp` is the answer.
 
 ::tabs-start
@@ -1970,6 +2139,25 @@ class Solution {
             }
         }
         return left
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn length_of_lis(nums: Vec<i32>) -> i32 {
+        let mut dp = vec![nums[0]];
+
+        for i in 1..nums.len() {
+            if *dp.last().unwrap() < nums[i] {
+                dp.push(nums[i]);
+            } else {
+                let idx = dp.partition_point(|&x| x < nums[i]);
+                dp[idx] = nums[i];
+            }
+        }
+
+        dp.len() as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge lists for directed graphs
 - **Depth-First Search (DFS)** - Traversing graphs and tracking visited nodes to avoid infinite loops
 - **Cycle Detection** - Identifying cycles in directed graphs using path tracking during DFS
@@ -18,10 +20,10 @@ The problem asks for the maximum count of any single color along any valid path 
 
 1. Build an adjacency list from the edges.
 2. For each node from `0` to `n-1`, and for each color from `0` to `25`:
-   - Run DFS from that node, tracking visited nodes in the current path to detect cycles.
-   - Count nodes matching the target color along the path.
-   - If a cycle is detected, return `-1` immediately.
-   - Track the maximum color count found.
+    - Run DFS from that node, tracking visited nodes in the current path to detect cycles.
+    - Count nodes matching the target color along the path.
+    - If a cycle is detected, return `-1` immediately.
+    - Track the maximum color count found.
 3. Return the maximum count.
 
 ::tabs-start
@@ -368,6 +370,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_path_value(colors: String, edges: Vec<Vec<i32>>) -> i32 {
+        let colors = colors.as_bytes();
+        let n = colors.len();
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        let mut visit = vec![false; n];
+        let mut res = -1i32;
+
+        fn dfs(
+            node: usize, c: u8, adj: &[Vec<usize>],
+            visit: &mut [bool], colors: &[u8],
+        ) -> i32 {
+            if visit[node] { return i32::MAX; }
+            visit[node] = true;
+            let mut clr_cnt = 0;
+            for &nei in &adj[node] {
+                let cur = dfs(nei, c, adj, visit, colors);
+                if cur == i32::MAX { return cur; }
+                clr_cnt = clr_cnt.max(cur);
+            }
+            visit[node] = false;
+            clr_cnt + if (colors[node] - b'a') == c { 1 } else { 0 }
+        }
+
+        for i in 0..n {
+            for c in 0..26u8 {
+                let cnt = dfs(i, c, &adj, &mut visit, colors);
+                if cnt == i32::MAX { return -1; }
+                res = res.max(cnt);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,11 +433,11 @@ Instead of checking one color at a time, we can track all 26 color counts simult
 1. Build an adjacency list from the edges.
 2. Create a 2D array `count[node][color]` to store the maximum count of each color reachable from each node.
 3. For each node, run DFS:
-   - If the node is in the current path, a cycle exists; return infinity.
-   - If already fully visited, return `0`.
-   - Mark the node as in the current path and initialize its own color count to `1`.
-   - For each neighbor, recursively compute counts and update the current node's counts by taking the maximum.
-   - Remove the node from the current path after processing.
+    - If the node is in the current path, a cycle exists; return infinity.
+    - If already fully visited, return `0`.
+    - Mark the node as in the current path and initialize its own color count to `1`.
+    - For each neighbor, recursively compute counts and update the current node's counts by taking the maximum.
+    - Remove the node from the current path after processing.
 4. Return the maximum value across all `count[node][color]`, or `-1` if a cycle was detected.
 
 ::tabs-start
@@ -833,6 +876,62 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_path_value(colors: String, edges: Vec<Vec<i32>>) -> i32 {
+        let colors = colors.as_bytes();
+        let n = colors.len();
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            adj[edge[0] as usize].push(edge[1] as usize);
+        }
+
+        let mut visit = vec![false; n];
+        let mut path = vec![false; n];
+        let mut count = vec![[0i32; 26]; n];
+
+        fn dfs(
+            node: usize, adj: &[Vec<usize>], colors: &[u8],
+            visit: &mut [bool], path: &mut [bool], count: &mut [[i32; 26]],
+        ) -> i32 {
+            if path[node] { return i32::MAX; }
+            if visit[node] { return 0; }
+
+            visit[node] = true;
+            path[node] = true;
+            let ci = (colors[node] - b'a') as usize;
+            count[node][ci] = 1;
+
+            for idx in 0..adj[node].len() {
+                let nei = adj[node][idx];
+                if dfs(nei, adj, colors, visit, path, count) == i32::MAX {
+                    return i32::MAX;
+                }
+                for c in 0..26 {
+                    count[node][c] = count[node][c].max(
+                        if c == ci { 1 } else { 0 } + count[nei][c],
+                    );
+                }
+            }
+
+            path[node] = false;
+            0
+        }
+
+        let mut res = 0;
+        for i in 0..n {
+            if dfs(i, &adj, colors, &mut visit, &mut path, &mut count) == i32::MAX {
+                return -1;
+            }
+            for c in 0..26 {
+                res = res.max(count[i][c]);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -856,9 +955,9 @@ Since we need valid paths in a directed graph, topological sorting naturally fit
 2. Initialize a 2D array `count[node][color]` for tracking color frequencies.
 3. Add all nodes with indegree `0` to a queue.
 4. Process nodes in BFS order:
-   - Increment the count for the node's own color.
-   - Update the result with this color count.
-   - For each neighbor, propagate the current node's color counts, then decrement the neighbor's indegree. If it becomes `0`, add it to the queue.
+    - Increment the count for the node's own color.
+    - Update the result with this color count.
+    - For each neighbor, propagate the current node's color counts, then decrement the neighbor's indegree. If it becomes `0`, add it to the queue.
 5. If the number of processed nodes equals `n`, return the result. Otherwise, return `-1` (cycle detected).
 
 ::tabs-start
@@ -1227,6 +1326,53 @@ class Solution {
         }
 
         return visit == n ? res : -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_path_value(colors: String, edges: Vec<Vec<i32>>) -> i32 {
+        let colors = colors.as_bytes();
+        let n = colors.len();
+        let mut adj = vec![vec![]; n];
+        let mut indegree = vec![0i32; n];
+        let mut count = vec![[0i32; 26]; n];
+
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            indegree[v] += 1;
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 0..n {
+            if indegree[i] == 0 {
+                queue.push_back(i);
+            }
+        }
+
+        let mut visit = 0;
+        let mut res = 0;
+        while let Some(node) = queue.pop_front() {
+            visit += 1;
+            let ci = (colors[node] - b'a') as usize;
+            count[node][ci] += 1;
+            res = res.max(count[node][ci]);
+
+            for idx in 0..adj[node].len() {
+                let nei = adj[node][idx];
+                for c in 0..26 {
+                    count[nei][c] = count[nei][c].max(count[node][c]);
+                }
+                indegree[nei] -= 1;
+                if indegree[nei] == 0 {
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        if visit == n as i32 { res } else { -1 }
     }
 }
 ```

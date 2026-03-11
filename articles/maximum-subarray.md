@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Kadane's Algorithm** - The classic O(n) solution for maximum subarray problems using dynamic programming
 - **Dynamic Programming** - Understanding how to build solutions from subproblems (top-down and bottom-up approaches)
 - **Divide and Conquer** - Alternative approach that splits the array and handles cross-boundary subarrays
@@ -14,6 +16,7 @@ Before attempting this problem, you should be comfortable with:
 This problem asks us to find the **maximum sum of any contiguous subarray**.
 
 The most straightforward way to think about this is:
+
 - try **every possible subarray**
 - calculate its sum
 - keep track of the maximum sum we see
@@ -29,10 +32,10 @@ This approach is easy to understand and works well for learning, but it is not e
 2. Initialize the result `res` with the first element of the array.
 3. Iterate over all possible starting indices `i` from `0` to `n - 1`:
 4. For each starting index `i`:
-   - Initialize a running sum `cur = 0`
-   - Iterate over ending indices `j` from `i` to `n - 1`:
-     - Add `nums[j]` to `cur`
-     - Update `res` with the maximum of `res` and `cur`
+    - Initialize a running sum `cur = 0`
+    - Iterate over ending indices `j` from `i` to `n - 1`:
+        - Add `nums[j]` to `cur`
+        - Update `res` with the maximum of `res` and `cur`
 5. After all subarrays are checked, return `res`.
 
 ::tabs-start
@@ -174,6 +177,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = nums[0];
+        for i in 0..n {
+            let mut cur = 0;
+            for j in i..n {
+                cur += nums[j];
+                res = res.max(cur);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -190,10 +210,12 @@ class Solution {
 We want the **maximum sum of a contiguous subarray**.
 
 Using recursion, we can think of the problem as making a decision at each index:
+
 - either we **haven’t started** a subarray yet
 - or we are **already inside** a subarray and can choose whether to continue it or stop
 
 The recursive function keeps track of this using a flag:
+
 - `flag = False` - we have not started a subarray yet
 - `flag = True` - we are currently building a subarray
 
@@ -205,22 +227,22 @@ By exploring both possibilities at every step, the recursion eventually finds th
 ### Algorithm
 
 1. Define a recursive function `dfs(i, flag)`:
-   - `i` is the current index in the array
-   - `flag` indicates whether a subarray has already started
+    - `i` is the current index in the array
+    - `flag` indicates whether a subarray has already started
 2. Base case:
-   - If `i` reaches the end of the array:
-     - Return `0` if a subarray was already started
-     - Otherwise return a very small value (to ensure at least one element is chosen)
+    - If `i` reaches the end of the array:
+        - Return `0` if a subarray was already started
+        - Otherwise return a very small value (to ensure at least one element is chosen)
 3. If `flag` is `True` (we are inside a subarray):
-   - We have two choices:
-     - stop the subarray - return `0`
-     - continue the subarray - add `nums[i]` and recurse
-   - Take the maximum of these two options
+    - We have two choices:
+        - stop the subarray - return `0`
+        - continue the subarray - add `nums[i]` and recurse
+    - Take the maximum of these two options
 4. If `flag` is `False` (we have not started yet):
-   - We can either:
-     - skip the current element and stay outside the subarray
-     - start a new subarray at the current element
-   - Take the maximum of these two choices
+    - We can either:
+        - skip the current element and stay outside the subarray
+        - start a new subarray at the current element
+    - Take the maximum of these two choices
 5. Start the recursion with `dfs(0, False)`
 6. Return the final result.
 
@@ -372,6 +394,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        fn dfs(nums: &[i32], i: usize, flag: bool) -> i32 {
+            if i == nums.len() {
+                return if flag { 0 } else { -1_000_000 };
+            }
+            if flag {
+                return 0i32.max(nums[i] + dfs(nums, i + 1, true));
+            }
+            dfs(nums, i + 1, false).max(nums[i] + dfs(nums, i + 1, true))
+        }
+        dfs(&nums, 0, false)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,6 +427,7 @@ class Solution {
 We want to find the **maximum sum of a contiguous subarray**.
 
 In the recursive solution, we modeled the problem using two states:
+
 - we have **not started** a subarray yet
 - we are **already inside** a subarray
 
@@ -395,6 +435,7 @@ However, plain recursion repeats the same computations many times.
 To optimize this, we use **top-down dynamic programming (memoization)**.
 
 Each state is uniquely identified by:
+
 - `i`: the current index in the array
 - `flag`: whether a subarray has already started (`True`) or not (`False`).
 
@@ -406,25 +447,25 @@ By storing results for each `(i, flag)` state, we avoid recomputing them.
 ### Algorithm
 
 1. Create a memo table `memo` where:
-   - `memo[i][flag]` stores the maximum subarray sum starting at index `i`
-     given whether a subarray has started.
+    - `memo[i][flag]` stores the maximum subarray sum starting at index `i`
+      given whether a subarray has started.
 2. Define a recursive function `dfs(i, flag)`:
-   - `i` is the current index
-   - `flag` indicates whether a subarray is already in progress.
+    - `i` is the current index
+    - `flag` indicates whether a subarray is already in progress.
 3. Base case:
-   - If `i` reaches the end of the array:
-     - Return `0` if a subarray was started
-     - Otherwise return a very small value (to force choosing at least one element).
+    - If `i` reaches the end of the array:
+        - Return `0` if a subarray was started
+        - Otherwise return a very small value (to force choosing at least one element).
 4. If the result for `(i, flag)` is already stored in `memo`:
-   - Return it directly.
+    - Return it directly.
 5. If `flag` is `True` (inside a subarray):
-   - Either stop the subarray (`0`)
-   - Or continue it by adding `nums[i]`
-   - Store the maximum of these two options.
+    - Either stop the subarray (`0`)
+    - Or continue it by adding `nums[i]`
+    - Store the maximum of these two options.
 6. If `flag` is `False` (not started yet):
-   - Either skip the current element
-   - Or start a new subarray at the current element
-   - Store the maximum of these two choices.
+    - Either skip the current element
+    - Or start a new subarray at the current element
+    - Store the maximum of these two choices.
 7. Start the recursion with `dfs(0, False)`.
 8. Return the final result.
 
@@ -634,6 +675,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut memo = vec![[i32::MIN; 2]; n + 1];
+
+        fn dfs(nums: &[i32], i: usize, flag: usize, memo: &mut Vec<[i32; 2]>) -> i32 {
+            if i == nums.len() {
+                return if flag == 1 { 0 } else { -1_000_000 };
+            }
+            if memo[i][flag] != i32::MIN {
+                return memo[i][flag];
+            }
+            memo[i][flag] = if flag == 1 {
+                0i32.max(nums[i] + dfs(nums, i + 1, 1, memo))
+            } else {
+                dfs(nums, i + 1, 0, memo)
+                    .max(nums[i] + dfs(nums, i + 1, 1, memo))
+            };
+            memo[i][flag]
+        }
+
+        dfs(&nums, 0, 0, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -650,12 +718,14 @@ class Solution {
 We want the **maximum sum of a contiguous subarray**.
 
 From the recursive and top-down DP solutions, we observed two useful states:
+
 - the best subarray sum **starting exactly at index `i`**
 - the best subarray sum **starting at or after index `i`**
 
 Instead of recursion, we can compute these values iteratively using **bottom-up dynamic programming**.
 
 At each index, we decide:
+
 - whether to start a new subarray at the current element
 - or extend a subarray from the next index
 
@@ -665,18 +735,18 @@ By filling the DP table from right to left, all needed future values are already
 
 1. Let `n` be the length of the array.
 2. Create a DP table `dp` of size `n x 2`:
-   - `dp[i][1]` = maximum subarray sum that **must start at index `i`**
-   - `dp[i][0]` = maximum subarray sum that **starts at index `i` or later**
+    - `dp[i][1]` = maximum subarray sum that **must start at index `i`**
+    - `dp[i][0]` = maximum subarray sum that **starts at index `i` or later**
 3. Initialize the base case at the last index:
-   - `dp[n - 1][1] = nums[n - 1]`
-   - `dp[n - 1][0] = nums[n - 1]`
+    - `dp[n - 1][1] = nums[n - 1]`
+    - `dp[n - 1][0] = nums[n - 1]`
 4. Iterate `i` from `n - 2` down to `0`:
-   - Compute `dp[i][1]`:
-     - either start a new subarray at `i` - `nums[i]`
-     - or extend the subarray from `i + 1` - `nums[i] + dp[i + 1][1]`
-   - Compute `dp[i][0]`:
-     - either the best subarray starts later - `dp[i + 1][0]`
-     - or it starts exactly at `i` - `dp[i][1]`
+    - Compute `dp[i][1]`:
+        - either start a new subarray at `i` - `nums[i]`
+        - or extend the subarray from `i + 1` - `nums[i] + dp[i + 1][1]`
+    - Compute `dp[i][0]`:
+        - either the best subarray starts later - `dp[i + 1][0]`
+        - or it starts exactly at `i` - `dp[i][1]`
 5. After filling the table, `dp[0][0]` contains the maximum subarray sum.
 6. Return `dp[0][0]`.
 
@@ -832,6 +902,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut dp = vec![[0i32; 2]; n];
+        dp[n - 1][1] = nums[n - 1];
+        dp[n - 1][0] = nums[n - 1];
+        for i in (0..n - 1).rev() {
+            dp[i][1] = nums[i].max(nums[i] + dp[i + 1][1]);
+            dp[i][0] = dp[i + 1][0].max(dp[i][1]);
+        }
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -848,6 +934,7 @@ class Solution {
 We want the **maximum sum of a contiguous subarray**.
 
 At every position, we have a simple choice:
+
 - start a new subarray at the current element
 - or extend the subarray that ended at the previous index
 
@@ -858,12 +945,12 @@ This idea allows us to keep track of the best subarray sum ending at each index 
 ### Algorithm
 
 1. Create an array `dp` where:
-   - `dp[i]` represents the maximum subarray sum **ending at index `i`**.
+    - `dp[i]` represents the maximum subarray sum **ending at index `i`**.
 2. Initialize `dp` as a copy of `nums` since the smallest subarray ending at each index is the element itself.
 3. Iterate through the array from index `1` to the end:
-   - Update `dp[i]` as:
-     - the maximum of starting fresh at `nums[i]`
-     - or extending the previous subarray: `nums[i] + dp[i - 1]`.
+    - Update `dp[i]` as:
+        - the maximum of starting fresh at `nums[i]`
+        - or extending the previous subarray: `nums[i] + dp[i - 1]`.
 4. The maximum subarray sum is the maximum value in `dp`.
 5. Return that value.
 
@@ -994,6 +1081,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        let mut dp = nums.clone();
+        for i in 1..nums.len() {
+            dp[i] = nums[i].max(nums[i] + dp[i - 1]);
+        }
+        *dp.iter().max().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1010,22 +1109,24 @@ class Solution {
 We want the **maximum sum of a contiguous subarray**.
 
 Kadane’s Algorithm is based on one simple observation:
+
 - if the running sum becomes negative, keeping it will only reduce the sum of any future subarray
 
 So whenever the current sum drops below zero, we **reset** it and start a new subarray from the next element.
 
 As we scan the array once, we keep track of:
+
 - the best subarray sum ending at the current position
 - the best subarray sum seen overall
 
 ### Algorithm
 
 1. Initialize:
-   - `curSum = 0` to track the running subarray sum
-   - `maxSub` as the first element (handles all-negative arrays).
+    - `curSum = 0` to track the running subarray sum
+    - `maxSub` as the first element (handles all-negative arrays).
 2. Iterate through each number in the array:
 3. If `curSum` becomes negative:
-   - reset it to `0` (start a new subarray).
+    - reset it to `0` (start a new subarray).
 4. Add the current number to `curSum`.
 5. Update `maxSub` with the maximum of `maxSub` and `curSum`.
 6. After processing all elements, return `maxSub`.
@@ -1171,6 +1272,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        let mut max_sub = nums[0];
+        let mut cur_sum = 0;
+        for &num in &nums {
+            if cur_sum < 0 {
+                cur_sum = 0;
+            }
+            cur_sum += num;
+            max_sub = max_sub.max(cur_sum);
+        }
+        max_sub
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1195,6 +1313,7 @@ For any subarray `[l .. r]`, the maximum subarray must be one of these three cas
 
 The first two cases are solved recursively.  
 The third case is handled by:
+
 - taking the maximum sum extending **left** from the middle
 - taking the maximum sum extending **right** from the middle
 - adding both to the middle element
@@ -1205,19 +1324,19 @@ The recursive function represents:
 ### Algorithm
 
 1. Define a recursive function `dfs(l, r)`:
-   - If `l > r`, return negative infinity (invalid range).
+    - If `l > r`, return negative infinity (invalid range).
 2. Find the middle index `m` of the range `[l .. r]`.
 3. Compute the maximum subarray sum that **crosses the middle**:
-   - Move left from `m - 1` to `l`, keeping the maximum prefix sum
-   - Move right from `m + 1` to `r`, keeping the maximum prefix sum
-   - Combine them with `nums[m]`.
+    - Move left from `m - 1` to `l`, keeping the maximum prefix sum
+    - Move right from `m + 1` to `r`, keeping the maximum prefix sum
+    - Combine them with `nums[m]`.
 4. Recursively compute:
-   - maximum subarray in the left half - `dfs(l, m - 1)`
-   - maximum subarray in the right half - `dfs(m + 1, r)`.
+    - maximum subarray in the left half - `dfs(l, m - 1)`
+    - maximum subarray in the right half - `dfs(m + 1, r)`.
 5. Return the maximum of:
-   - left result
-   - right result
-   - crossing-middle result.
+    - left result
+    - right result
+    - crossing-middle result.
 6. Start the recursion with the full range `[0 .. n - 1]`.
 7. Return the final result.
 
@@ -1483,6 +1602,38 @@ class Solution {
         }
 
         return dfs(0, nums.count - 1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_sub_array(nums: Vec<i32>) -> i32 {
+        fn dfs(nums: &[i32], l: isize, r: isize) -> i32 {
+            if l > r {
+                return i32::MIN;
+            }
+            let m = ((l + r) >> 1) as usize;
+            let mut left_sum = 0i32;
+            let mut right_sum = 0i32;
+            let mut cur_sum = 0i32;
+            let mut i = m as isize - 1;
+            while i >= l {
+                cur_sum += nums[i as usize];
+                left_sum = left_sum.max(cur_sum);
+                i -= 1;
+            }
+            cur_sum = 0;
+            for i in (m + 1)..=(r as usize) {
+                cur_sum += nums[i];
+                right_sum = right_sum.max(cur_sum);
+            }
+            let cross = left_sum + nums[m] + right_sum;
+            dfs(nums, l, m as isize - 1)
+                .max(dfs(nums, m as isize + 1, r))
+                .max(cross)
+        }
+        dfs(&nums, 0, nums.len() as isize - 1)
     }
 }
 ```

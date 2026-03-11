@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through adjacent pairs in an array
 - **Modulo Operator** - Using `% 2` to determine if a number is even or odd
 - **Bitwise AND** - Understanding that `n & 1` extracts the least significant bit to check parity
@@ -120,6 +122,19 @@ class Solution {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_array_special(nums: Vec<i32>) -> bool {
+        for i in 1..nums.len() {
+            if nums[i - 1] % 2 == nums[i] % 2 {
+                return false;
+            }
+        }
+        true
     }
 }
 ```
@@ -247,6 +262,19 @@ class Solution {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_array_special(nums: Vec<i32>) -> bool {
+        for i in 1..nums.len() {
+            if (nums[i - 1] & 1) == (nums[i] & 1) {
+                return false;
+            }
+        }
+        true
     }
 }
 ```

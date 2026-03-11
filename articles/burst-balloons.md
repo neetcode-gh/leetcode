@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down problems into smaller subproblems
 - **Dynamic Programming** - Memoization and tabulation techniques for optimization
 - **Interval DP** - Solving problems by considering all possible subranges and combining results
@@ -16,6 +18,7 @@ This problem asks us to find the **maximum coins** we can collect by bursting ba
 When we burst a balloon, the number of coins we gain depends on its **current neighbors**. Since bursting one balloon changes the neighbors of others, the order of bursting matters a lot.
 
 A brute-force way to solve this is to **try every possible balloon as the last one to burst** in the current array:
+
 - If we choose a balloon to burst now, we earn coins based on its left and right neighbors.
 - Then the problem reduces to bursting the remaining balloons.
 
@@ -28,16 +31,16 @@ To simplify edge cases, we add `1` to both ends of the array so every balloon al
 
 1. Add `1` to the beginning and end of the array to handle boundaries safely.
 2. Define a recursive function `dfs(nums)`:
-   - `nums` represents the current list of remaining balloons
+    - `nums` represents the current list of remaining balloons
 3. If only the two boundary `1`s are left:
-   - Return `0` since no real balloons remain
+    - Return `0` since no real balloons remain
 4. Initialize `maxCoins = 0`
 5. For each balloon index `i` between the boundaries:
-   - Calculate coins gained by bursting `nums[i]`:
-     - `nums[i - 1] * nums[i] * nums[i + 1]`
-   - Recursively compute the maximum coins from the remaining balloons:
-     - Remove `nums[i]` and call `dfs` on the new list
-   - Update `maxCoins` with the best result
+    - Calculate coins gained by bursting `nums[i]`:
+        - `nums[i - 1] * nums[i] * nums[i + 1]`
+    - Recursively compute the maximum coins from the remaining balloons:
+        - Remove `nums[i]` and call `dfs` on the new list
+    - Update `maxCoins` with the best result
 6. Return `maxCoins` for the current configuration
 7. Start the recursion with the full padded array and return the result
 
@@ -254,6 +257,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_coins(nums: Vec<i32>) -> i32 {
+        let mut new_nums = vec![1];
+        new_nums.extend_from_slice(&nums);
+        new_nums.push(1);
+
+        fn dfs(nums: &Vec<i32>) -> i32 {
+            if nums.len() == 2 {
+                return 0;
+            }
+
+            let mut max_coins = 0;
+            for i in 1..nums.len() - 1 {
+                let coins = nums[i - 1] * nums[i] * nums[i + 1];
+                let mut new_nums: Vec<i32> = nums[..i].to_vec();
+                new_nums.extend_from_slice(&nums[i + 1..]);
+                let coins = coins + dfs(&new_nums);
+                max_coins = max_coins.max(coins);
+            }
+            max_coins
+        }
+
+        dfs(&new_nums)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,14 +304,15 @@ A useful way to think about this problem is:
 instead of choosing the **first** balloon to burst, choose the **last** balloon to burst in a subarray.
 
 Why this helps:
+
 - If balloon `i` is the last one to burst between indices `l` and `r`, then at that moment:
-  - everything inside `(l..r)` except `i` is already gone
-  - the neighbors of `i` are fixed: `nums[l - 1]` on the left and `nums[r + 1]` on the right
+    - everything inside `(l..r)` except `i` is already gone
+    - the neighbors of `i` are fixed: `nums[l - 1]` on the left and `nums[r + 1]` on the right
 - So the coins gained from bursting `i` last are:
-  - `nums[l - 1] * nums[i] * nums[r + 1]`
+    - `nums[l - 1] * nums[i] * nums[r + 1]`
 - And the remaining work splits cleanly into two independent parts:
-  - best coins from `(l..i-1)`
-  - best coins from `(i+1..r)`
+    - best coins from `(l..i-1)`
+    - best coins from `(i+1..r)`
 
 This creates overlapping subproblems, so we store results in a memo table `dp` keyed by `(l, r)`.
 
@@ -288,18 +320,18 @@ This creates overlapping subproblems, so we store results in a memo table `dp` k
 
 1. Add `1` to both ends of the array to avoid boundary checks.
 2. Use a memo table `dp` where:
-   - `dp[(l, r)]` stores the maximum coins obtainable by bursting balloons in the range `[l, r]`
+    - `dp[(l, r)]` stores the maximum coins obtainable by bursting balloons in the range `[l, r]`
 3. Define a recursive function `dfs(l, r)`:
-   - If `l > r`, return `0` (no balloons to burst)
-   - If `(l, r)` is already computed, return it
+    - If `l > r`, return `0` (no balloons to burst)
+    - If `(l, r)` is already computed, return it
 4. Try every balloon `i` in `[l, r]` as the **last balloon to burst**:
-   - Coins from bursting `i` last:
-     - `nums[l - 1] * nums[i] * nums[r + 1]`
-   - Plus the best coins from the left side:
-     - `dfs(l, i - 1)`
-   - Plus the best coins from the right side:
-     - `dfs(i + 1, r)`
-   - Take the maximum over all choices of `i`
+    - Coins from bursting `i` last:
+        - `nums[l - 1] * nums[i] * nums[r + 1]`
+    - Plus the best coins from the left side:
+        - `dfs(l, i - 1)`
+    - Plus the best coins from the right side:
+        - `dfs(i + 1, r)`
+    - Take the maximum over all choices of `i`
 5. Store the best value in `dp[(l, r)]` and return it
 6. The final answer is `dfs(1, len(nums) - 2)` (the original balloons, excluding the added boundaries)
 
@@ -562,6 +594,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_coins(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut new_nums = vec![1];
+        new_nums.extend_from_slice(&nums);
+        new_nums.push(1);
+
+        let mut dp = vec![vec![-1i32; n + 2]; n + 2];
+
+        fn dfs(nums: &[i32], l: i32, r: i32, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if l > r {
+                return 0;
+            }
+            let (lu, ru) = (l as usize, r as usize);
+            if dp[lu][ru] != -1 {
+                return dp[lu][ru];
+            }
+
+            dp[lu][ru] = 0;
+            for i in l..=r {
+                let coins = nums[(l - 1) as usize] * nums[i as usize] * nums[(r + 1) as usize];
+                let total = coins + dfs(nums, l, i - 1, dp) + dfs(nums, i + 1, r, dp);
+                dp[lu][ru] = dp[lu][ru].max(total);
+            }
+            dp[lu][ru]
+        }
+
+        dfs(&new_nums, 1, new_nums.len() as i32 - 2, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -581,12 +646,14 @@ The key trick is to think in reverse:
 Instead of choosing which balloon to burst first, we choose which balloon is **burst last** in a range.
 
 If we are only looking at balloons between `l` and `r`, and balloon `i` is the last one burst in that range, then:
+
 - all balloons inside `(l..r)` except `i` are already gone
 - so the neighbors of `i` are fixed as `new_nums[l - 1]` and `new_nums[r + 1]`
 - coins gained from bursting `i` last are:
-  - `new_nums[l - 1] * new_nums[i] * new_nums[r + 1]`
+    - `new_nums[l - 1] * new_nums[i] * new_nums[r + 1]`
 
 After bursting `i` last, the remaining problem splits into two independent subproblems:
+
 - best coins for `[l .. i-1]`
 - best coins for `[i+1 .. r]`
 
@@ -598,16 +665,16 @@ This makes the problem perfect for interval DP.
 2. Let `dp[l][r]` represent the maximum coins we can collect by bursting balloons from index `l` to `r` (inside `new_nums`).
 3. Initialize `dp` with zeros since empty ranges give `0` coins.
 4. Fill the DP table by increasing interval size:
-   - iterate `l` from `n` down to `1`
-   - iterate `r` from `l` up to `n`
+    - iterate `l` from `n` down to `1`
+    - iterate `r` from `l` up to `n`
 5. For each interval `[l, r]`, try every balloon `i` in `[l, r]` as the **last** balloon to burst:
-   - coins from bursting `i` last:
-     - `new_nums[l - 1] * new_nums[i] * new_nums[r + 1]`
-   - plus the best coins from the left sub-interval:
-     - `dp[l][i - 1]`
-   - plus the best coins from the right sub-interval:
-     - `dp[i + 1][r]`
-   - take the maximum over all `i`
+    - coins from bursting `i` last:
+        - `new_nums[l - 1] * new_nums[i] * new_nums[r + 1]`
+    - plus the best coins from the left sub-interval:
+        - `dp[l][i - 1]`
+    - plus the best coins from the right sub-interval:
+        - `dp[i + 1][r]`
+    - take the maximum over all `i`
 6. The final answer is stored in `dp[1][n]`, representing bursting all original balloons.
 
 ::tabs-start
@@ -813,6 +880,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_coins(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut new_nums = vec![1];
+        new_nums.extend_from_slice(&nums);
+        new_nums.push(1);
+
+        let mut dp = vec![vec![0i32; n + 2]; n + 2];
+
+        for l in (1..=n).rev() {
+            for r in l..=n {
+                for i in l..=r {
+                    let coins = new_nums[l - 1] * new_nums[i] * new_nums[r + 1];
+                    let total = coins + dp[l][i - 1] + dp[i + 1][r];
+                    dp[l][r] = dp[l][r].max(total);
+                }
+            }
+        }
+
+        dp[1][n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -825,7 +917,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Thinking About First Balloon to Burst Instead of Last
+
 The key insight is to consider which balloon is burst LAST in a range, not first. When thinking about the first balloon, the subproblems are not independent because neighbors change. When considering the last balloon, the boundary neighbors are fixed.
+
 ```python
 # Wrong mental model: burst balloon i first
 # The remaining array's structure changes unpredictably
@@ -835,7 +929,9 @@ The key insight is to consider which balloon is burst LAST in a range, not first
 ```
 
 ### Forgetting to Pad the Array with 1s
+
 The problem states that out-of-bounds neighbors are treated as value 1. Forgetting to add `1` at both ends of the array causes index errors or incorrect coin calculations at the boundaries.
+
 ```python
 # Wrong: using original array
 nums = [3, 1, 5, 8]
@@ -845,10 +941,13 @@ nums = [1] + nums + [1]  # [1, 3, 1, 5, 8, 1]
 ```
 
 ### Incorrect Loop Order in Bottom-Up DP
+
 In bottom-up DP, smaller intervals must be computed before larger ones. The left index `l` should iterate in decreasing order while `r` iterates in increasing order. Wrong iteration order reads uncomputed DP values.
 
 ### Using Wrong Neighbors in Coin Calculation
+
 When balloon `i` is the last to burst in range `[l, r]`, its neighbors are `nums[l-1]` and `nums[r+1]` (the boundaries), not `nums[i-1]` and `nums[i+1]` (adjacent indices).
+
 ```python
 # Wrong: using adjacent indices
 coins = nums[i-1] * nums[i] * nums[i+1]
@@ -858,4 +957,5 @@ coins = nums[l-1] * nums[i] * nums[r+1]
 ```
 
 ### Not Handling Empty Range Base Case
+
 When `l > r`, there are no balloons to burst, so the result should be 0. Missing this base case causes incorrect recursion or array index errors.

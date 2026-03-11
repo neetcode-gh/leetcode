@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Interactive/Query-Based Problems** - Understanding how to extract information through limited API calls rather than direct array access
 - **Counting and Grouping** - Tracking counts of elements that share properties without knowing their actual values
 - **Logical Deduction** - Using comparison results to infer relationships between elements
@@ -42,7 +44,7 @@ class Solution:
         query0123 = reader.query(0, 1, 2, 3)
         query1234 = reader.query(1, 2, 3, 4)
         f(reader.query(1, 2, 3, 4) == query0123, 4)
-        
+
         for i in range(5, n):
             f(reader.query(1, 2, 3, i) == query0123, i)
 
@@ -70,7 +72,7 @@ class Solution {
     public int guessMajority(ArrayReader reader) {
         int n = reader.length(), query0123 = reader.query(0, 1, 2, 3), query1234 = reader.query(1, 2, 3, 4);
         f(query1234 == query0123, 4);
-        
+
         for (int i = 5; i < n; i++) {
             f(reader.query(1, 2, 3, i) == query0123, i);
         }
@@ -91,7 +93,7 @@ class Solution {
 public:
     int guessMajority(ArrayReader& reader) {
         int n = reader.length(), query0123 = reader.query(0, 1, 2, 3), query1234 = reader.query(1, 2, 3, 4);
-        
+
         function<void(bool, int)> f = [this](bool equal, int i) {
             if (equal) {
                 cntEqual++;
@@ -150,9 +152,11 @@ class Solution {
         f(reader.query(0, 1, 3, 4) === query1234, 2);
         f(reader.query(0, 1, 2, 4) === query1234, 3);
 
-        return cntEqual > cntDiffer ? 0
-            : cntDiffer > cntEqual ? indexDiffer
-            : -1;
+        return cntEqual > cntDiffer
+            ? 0
+            : cntDiffer > cntEqual
+              ? indexDiffer
+              : -1;
     }
 }
 ```
@@ -305,6 +309,52 @@ class Solution {
 }
 ```
 
+```rust
+// This is an interactive problem using ArrayReader API.
+// impl Solution {
+//     pub fn guess_majority(reader: &ArrayReader) -> i32 { ... }
+// }
+
+impl Solution {
+    pub fn guess_majority(reader: &ArrayReader) -> i32 {
+        let n = reader.length();
+        let mut cnt_equal = 1;
+        let mut cnt_differ = 0;
+        let mut index_differ = -1;
+
+        let mut f = |equal: bool, i: i32| {
+            if equal {
+                cnt_equal += 1;
+            } else {
+                cnt_differ += 1;
+                index_differ = i;
+            }
+        };
+
+        let query0123 = reader.query(0, 1, 2, 3);
+        let query1234 = reader.query(1, 2, 3, 4);
+
+        f(query1234 == query0123, 4);
+
+        for i in 5..n {
+            f(reader.query(1, 2, 3, i) == query0123, i);
+        }
+
+        f(reader.query(0, 2, 3, 4) == query1234, 1);
+        f(reader.query(0, 1, 3, 4) == query1234, 2);
+        f(reader.query(0, 1, 2, 4) == query1234, 3);
+
+        if cnt_equal > cnt_differ {
+            0
+        } else if cnt_differ > cnt_equal {
+            index_differ
+        } else {
+            -1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,7 +363,7 @@ class Solution {
 
 - Space complexity: $O(1)$
 
->  Where $n$ is the number of queries.
+> Where $n$ is the number of queries.
 
 ---
 

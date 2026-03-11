@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy Algorithms** - Making optimal local decisions at each step (prioritizing $10 bills for $15 change to preserve flexibility)
 - **Basic Iteration** - Processing elements sequentially while maintaining state
 - **Simple Counting** - Tracking quantities of different bill denominations using variables
@@ -16,9 +18,9 @@ Each lemonade costs `$5`, so we need to give back the difference when customers 
 
 1. Track the count of `$5` and `$10` bills we have.
 2. For each customer's bill:
-   - If `$5`: simply add it to our `$5` count.
-   - If `$10`: we need to give `$5` change. Decrement the `$5` count and increment the `$10` count. Return `false` if no `$5` is available.
-   - If `$20`: we need to give `$15` change. Prefer using one `$10` + one `$5` if possible; otherwise use three `$5`s. Return `false` if neither option works.
+    - If `$5`: simply add it to our `$5` count.
+    - If `$10`: we need to give `$5` change. Decrement the `$5` count and increment the `$10` count. Return `false` if no `$5` is available.
+    - If `$20`: we need to give `$15` change. Prefer using one `$10` + one `$5` if possible; otherwise use three `$5`s. Return `false` if neither option works.
 3. Return `true` if all customers received correct change.
 
 ::tabs-start
@@ -265,6 +267,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn lemonade_change(bills: Vec<i32>) -> bool {
+        let (mut five, mut ten) = (0, 0);
+        for b in bills {
+            if b == 5 {
+                five += 1;
+            } else if b == 10 {
+                ten += 1;
+                if five > 0 {
+                    five -= 1;
+                } else {
+                    return false;
+                }
+            } else {
+                if five > 0 && ten > 0 {
+                    five -= 1;
+                    ten -= 1;
+                } else if five >= 3 {
+                    five -= 3;
+                } else {
+                    return false;
+                }
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,10 +316,10 @@ This is a cleaner version of the same greedy approach. Instead of checking condi
 
 1. Track `$5` and `$10` bill counts.
 2. For each bill:
-   - If `$5`: increment the `$5` count.
-   - If `$10`: decrement `$5`, increment `$10`.
-   - If `$20` and we have a `$10`: decrement both `$5` and `$10`.
-   - If `$20` and no `$10`: decrement `$5` by `3`.
+    - If `$5`: increment the `$5` count.
+    - If `$10`: decrement `$5`, increment `$10`.
+    - If `$20` and we have a `$10`: decrement both `$5` and `$10`.
+    - If `$20` and no `$10`: decrement `$5` by `3`.
 3. After each transaction, check if the `$5` count is negative. If so, return `false`.
 4. Return `true` after processing all customers.
 
@@ -489,6 +521,31 @@ class Solution {
             }
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn lemonade_change(bills: Vec<i32>) -> bool {
+        let (mut five, mut ten) = (0i32, 0i32);
+        for b in bills {
+            if b == 5 {
+                five += 1;
+            } else if b == 10 {
+                five -= 1;
+                ten += 1;
+            } else if ten > 0 {
+                five -= 1;
+                ten -= 1;
+            } else {
+                five -= 3;
+            }
+            if five < 0 {
+                return false;
+            }
+        }
+        true
     }
 }
 ```

@@ -580,6 +580,74 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn accounts_merge(accounts: Vec<Vec<String>>) -> Vec<Vec<String>> {
+        let n = accounts.len();
+        let mut email_idx: HashMap<String, usize> = HashMap::new();
+        let mut emails: Vec<String> = Vec::new();
+        let mut email_to_acc: HashMap<usize, usize> = HashMap::new();
+
+        let mut m = 0;
+        for (acc_id, account) in accounts.iter().enumerate() {
+            for i in 1..account.len() {
+                let email = &account[i];
+                if !email_idx.contains_key(email) {
+                    emails.push(email.clone());
+                    email_idx.insert(email.clone(), m);
+                    email_to_acc.insert(m, acc_id);
+                    m += 1;
+                }
+            }
+        }
+
+        let mut adj = vec![vec![]; m];
+        for account in &accounts {
+            for i in 2..account.len() {
+                let id1 = email_idx[&account[i]];
+                let id2 = email_idx[&account[i - 1]];
+                adj[id1].push(id2);
+                adj[id2].push(id1);
+            }
+        }
+
+        let mut email_group: HashMap<usize, Vec<String>> = HashMap::new();
+        let mut visited = vec![false; m];
+
+        fn dfs(
+            node: usize, acc_id: usize, adj: &Vec<Vec<usize>>,
+            emails: &Vec<String>, visited: &mut Vec<bool>,
+            email_group: &mut HashMap<usize, Vec<String>>,
+        ) {
+            visited[node] = true;
+            email_group.entry(acc_id).or_default().push(emails[node].clone());
+            for &nei in &adj[node] {
+                if !visited[nei] {
+                    dfs(nei, acc_id, adj, emails, visited, email_group);
+                }
+            }
+        }
+
+        for i in 0..m {
+            if !visited[i] {
+                dfs(i, email_to_acc[&i], &adj, &emails, &mut visited, &mut email_group);
+            }
+        }
+
+        let mut res = Vec::new();
+        for (acc_id, mut group) in email_group {
+            let name = accounts[acc_id][0].clone();
+            group.sort();
+            let mut merged = vec![name];
+            merged.extend(group);
+            res.push(merged);
+        }
+
+        res
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1203,6 +1271,74 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn accounts_merge(accounts: Vec<Vec<String>>) -> Vec<Vec<String>> {
+        let n = accounts.len();
+        let mut email_idx: HashMap<String, usize> = HashMap::new();
+        let mut emails: Vec<String> = Vec::new();
+        let mut email_to_acc: HashMap<usize, usize> = HashMap::new();
+
+        let mut m = 0;
+        for (acc_id, account) in accounts.iter().enumerate() {
+            for i in 1..account.len() {
+                let email = &account[i];
+                if !email_idx.contains_key(email) {
+                    emails.push(email.clone());
+                    email_idx.insert(email.clone(), m);
+                    email_to_acc.insert(m, acc_id);
+                    m += 1;
+                }
+            }
+        }
+
+        let mut adj = vec![vec![]; m];
+        for account in &accounts {
+            for i in 2..account.len() {
+                let id1 = email_idx[&account[i]];
+                let id2 = email_idx[&account[i - 1]];
+                adj[id1].push(id2);
+                adj[id2].push(id1);
+            }
+        }
+
+        let mut email_group: HashMap<usize, Vec<String>> = HashMap::new();
+        let mut visited = vec![false; m];
+
+        for i in 0..m {
+            if !visited[i] {
+                let acc_id = email_to_acc[&i];
+                let mut queue = VecDeque::new();
+                queue.push_back(i);
+                visited[i] = true;
+                email_group.entry(acc_id).or_default();
+
+                while let Some(node) = queue.pop_front() {
+                    email_group.get_mut(&acc_id).unwrap().push(emails[node].clone());
+                    for &nei in &adj[node] {
+                        if !visited[nei] {
+                            visited[nei] = true;
+                            queue.push_back(nei);
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut res = Vec::new();
+        for (acc_id, mut group) in email_group {
+            let name = accounts[acc_id][0].clone();
+            group.sort();
+            let mut merged = vec![name];
+            merged.extend(group);
+            res.push(merged);
+        }
+
+        res
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1815,6 +1951,79 @@ class Solution {
 }
 ```
 
+
+```rust
+struct UnionFind {
+    parent: Vec<usize>,
+    rank: Vec<usize>,
+}
+
+impl UnionFind {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..n).collect(),
+            rank: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, x: usize) -> usize {
+        if x != self.parent[x] {
+            self.parent[x] = self.find(self.parent[x]);
+        }
+        self.parent[x]
+    }
+
+    fn union(&mut self, x: usize, y: usize) -> bool {
+        let px = self.find(x);
+        let py = self.find(y);
+        if px == py { return false; }
+        if self.rank[px] > self.rank[py] {
+            self.parent[py] = px;
+            self.rank[px] += self.rank[py];
+        } else {
+            self.parent[px] = py;
+            self.rank[py] += self.rank[px];
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn accounts_merge(accounts: Vec<Vec<String>>) -> Vec<Vec<String>> {
+        let n = accounts.len();
+        let mut uf = UnionFind::new(n);
+        let mut email_to_acc: HashMap<String, usize> = HashMap::new();
+
+        for i in 0..n {
+            for j in 1..accounts[i].len() {
+                let email = &accounts[i][j];
+                if let Some(&acc) = email_to_acc.get(email) {
+                    uf.union(i, acc);
+                } else {
+                    email_to_acc.insert(email.clone(), i);
+                }
+            }
+        }
+
+        let mut email_group: HashMap<usize, Vec<String>> = HashMap::new();
+        for (email, acc_id) in &email_to_acc {
+            let leader = uf.find(*acc_id);
+            email_group.entry(leader).or_default().push(email.clone());
+        }
+
+        let mut res = Vec::new();
+        for (acc_id, mut emails) in email_group {
+            let name = accounts[acc_id][0].clone();
+            emails.sort();
+            let mut merged = vec![name];
+            merged.extend(emails);
+            res.push(merged);
+        }
+
+        res
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

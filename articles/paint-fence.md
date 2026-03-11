@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming Fundamentals** - Understanding overlapping subproblems and optimal substructure
 - **Recurrence Relations** - Deriving and implementing formulas that relate current state to previous states
 - **Memoization** - Caching recursive results to avoid redundant computation
@@ -33,11 +35,11 @@ class Solution:
                 return k
             if i == 2:
                 return k * k
-            
+
             # Check if we have already calculated totalWays(i)
             if i in memo:
                 return memo[i]
-            
+
             # Use the recurrence relation to calculate total_ways(i)
             memo[i] = (k - 1) * (total_ways(i - 1) + total_ways(i - 2))
             return memo[i]
@@ -49,21 +51,21 @@ class Solution:
 ```java
 class Solution {
     private HashMap<Integer, Integer> memo = new HashMap<Integer, Integer>();
-    
+
     private int totalWays(int i, int k) {
         if (i == 1) return k;
         if (i == 2) return k * k;
-        
+
         // Check if we have already calculated totalWays(i)
         if (memo.containsKey(i)) {
             return memo.get(i);
         }
-        
+
         // Use the recurrence relation to calculate totalWays(i)
         memo.put(i, (k - 1) * (totalWays(i - 1, k) + totalWays(i - 2, k)));
         return memo.get(i);
     }
-    
+
     public int numWays(int n, int k) {
         return totalWays(n, k);
     }
@@ -74,22 +76,22 @@ class Solution {
 class Solution {
 private:
     unordered_map<int, int> memo;
-    
+
     int totalWays(int i, int k) {
         if (i == 1) return k;
-        
+
         if (i == 2) return k * k;
-        
+
         // Check if we have already calculated totalWays(i)
         if (memo.find(i) != memo.end()) {
             return memo[i];
         }
-        
+
         // Use the recurrence relation to calculate totalWays(i)
         memo[i] = (k - 1) * (totalWays(i - 1, k) + totalWays(i - 2, k));
         return memo[i];
     }
-    
+
 public:
     int numWays(int n, int k) {
         return totalWays(n, k);
@@ -218,6 +220,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(n: i32, k: i32) -> i32 {
+        let mut memo = HashMap::new();
+
+        fn total_ways(i: i32, k: i32, memo: &mut HashMap<i32, i32>) -> i32 {
+            if i == 1 { return k; }
+            if i == 2 { return k * k; }
+            if let Some(&val) = memo.get(&i) { return val; }
+
+            let result = (k - 1) * (total_ways(i - 1, k, memo) + total_ways(i - 2, k, memo));
+            memo.insert(i, result);
+            result
+        }
+
+        total_ways(n, k, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,7 +247,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of fence posts.
+> Where $n$ is the number of fence posts.
 
 ---
 
@@ -259,10 +281,10 @@ class Solution:
         total_ways = [0] * (n + 1)
         total_ways[1] = k
         total_ways[2] = k * k
-        
+
         for i in range(3, n + 1):
             total_ways[i] = (k - 1) * (total_ways[i - 1] + total_ways[i - 2])
-        
+
         return total_ways[n]
 ```
 
@@ -272,15 +294,15 @@ class Solution {
         // Base cases for the problem to avoid index out of bound issues
         if (n == 1) return k;
         if (n == 2) return k * k;
-        
+
         int totalWays[] = new int[n + 1];
         totalWays[1] = k;
         totalWays[2] = k * k;
-        
+
         for (int i = 3; i <= n; i++) {
             totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2]);
         }
-        
+
         return totalWays[n];
     }
 }
@@ -293,15 +315,15 @@ public:
         // Base cases for the problem to avoid index out of bound issues
         if (n == 1) return k;
         if (n == 2) return k * k;
-        
+
         int totalWays[n + 1];
         totalWays[1] = k;
         totalWays[2] = k * k;
-        
+
         for (int i = 3; i <= n; i++) {
             totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2]);
         }
-        
+
         return totalWays[n];
     }
 };
@@ -410,6 +432,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(n: i32, k: i32) -> i32 {
+        if n == 1 { return k; }
+        if n == 2 { return k * k; }
+
+        let n = n as usize;
+        let mut total_ways = vec![0; n + 1];
+        total_ways[1] = k;
+        total_ways[2] = k * k;
+
+        for i in 3..=n {
+            total_ways[i] = (k - 1) * (total_ways[i - 1] + total_ways[i - 2]);
+        }
+
+        total_ways[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -417,7 +459,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of fence posts.
+> Where $n$ is the number of fence posts.
 
 ---
 
@@ -434,8 +476,8 @@ This optimization reduces space complexity from O(n) to O(1).
 1. If `n` is `1`, return `k`.
 2. Initialize `twoPostsBack = k` and `onePostBack = k * k`.
 3. For `i` from `3` to `n`:
-   - Compute `curr = (k - 1) * (onePostBack + twoPostsBack)`.
-   - Shift: `twoPostsBack = onePostBack`, `onePostBack = curr`.
+    - Compute `curr = (k - 1) * (onePostBack + twoPostsBack)`.
+    - Shift: `twoPostsBack = onePostBack`, `onePostBack = curr`.
 4. Return `onePostBack`.
 
 ::tabs-start
@@ -445,10 +487,10 @@ class Solution:
     def numWays(self, n: int, k: int) -> int:
         if n == 1:
             return k
-        
+
         two_posts_back = k
         one_post_back = k * k
-        
+
         for i in range(3, n + 1):
             curr = (k - 1) * (one_post_back + two_posts_back)
             two_posts_back = one_post_back
@@ -461,16 +503,16 @@ class Solution:
 class Solution {
     public int numWays(int n, int k) {
         if (n == 1) return k;
-        
+
         int twoPostsBack = k;
         int onePostBack = k * k;
-        
+
         for (int i = 3; i <= n; i++) {
             int curr = (k - 1) * (onePostBack + twoPostsBack);
             twoPostsBack = onePostBack;
             onePostBack = curr;
         }
-        
+
         return onePostBack;
     }
 }
@@ -596,6 +638,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(n: i32, k: i32) -> i32 {
+        if n == 1 { return k; }
+
+        let mut two_posts_back = k;
+        let mut one_post_back = k * k;
+
+        for _ in 3..=n {
+            let curr = (k - 1) * (one_post_back + two_posts_back);
+            two_posts_back = one_post_back;
+            one_post_back = curr;
+        }
+
+        one_post_back
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -603,7 +664,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the number of fence posts.
+> Where $n$ is the number of fence posts.
 
 ---
 
@@ -615,7 +676,7 @@ The problem forbids more than two consecutive posts with the same color. Some so
 
 ### Incorrect Base Cases for Small n
 
-When n equals 1, there are exactly k ways. When n equals 2, there are k*k ways since any combination is valid (no three consecutive posts exist yet). Forgetting to handle these base cases or computing them incorrectly leads to wrong answers and potential index-out-of-bounds errors.
+When n equals 1, there are exactly k ways. When n equals 2, there are k\*k ways since any combination is valid (no three consecutive posts exist yet). Forgetting to handle these base cases or computing them incorrectly leads to wrong answers and potential index-out-of-bounds errors.
 
 ### Deriving the Wrong Recurrence Relation
 

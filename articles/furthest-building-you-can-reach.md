@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy Algorithms** - Understanding when local optimal choices lead to global optimal solutions
 - **Heaps (Priority Queues)** - Using min-heaps and max-heaps to efficiently track extreme values
 - **Binary Search** - Searching for optimal values in a sorted or monotonic space
@@ -270,6 +272,40 @@ class Solution {
         }
 
         return n - 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn furthest_building(heights: Vec<i32>, bricks: i32, ladders: i32) -> i32 {
+        let n = heights.len();
+
+        for i in 1..n {
+            if ladders >= i as i32 {
+                continue;
+            }
+
+            let mut diffs = vec![];
+            for j in 0..i {
+                if heights[j + 1] > heights[j] {
+                    diffs.push(heights[j + 1] - heights[j]);
+                }
+            }
+
+            diffs.sort();
+            let mut brick_sum: i64 = 0;
+            let end = diffs.len() as i32 - ladders;
+            for j in 0..end.max(0) as usize {
+                brick_sum += diffs[j] as i64;
+            }
+
+            if brick_sum > bricks as i64 {
+                return i as i32 - 1;
+            }
+        }
+
+        n as i32 - 1
     }
 }
 ```
@@ -612,6 +648,44 @@ class Solution {
         }
 
         return l - 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn furthest_building(heights: Vec<i32>, bricks: i32, ladders: i32) -> i32 {
+        let can_reach = |mid: i32| -> bool {
+            let mut diffs = vec![];
+            for i in 0..mid as usize {
+                if heights[i + 1] > heights[i] {
+                    diffs.push(heights[i + 1] - heights[i]);
+                }
+            }
+            diffs.sort();
+            let mut brick_sum = 0i32;
+            let end = diffs.len() as i32 - ladders;
+            for j in 0..end.max(0) as usize {
+                brick_sum += diffs[j];
+                if brick_sum > bricks {
+                    return false;
+                }
+            }
+            true
+        };
+
+        let mut l = ladders - 1;
+        let mut r = heights.len() as i32 - 1;
+        while l <= r {
+            let mid = (l + r) / 2;
+            if can_reach(mid) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        l - 1
     }
 }
 ```
@@ -1006,6 +1080,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn furthest_building(heights: Vec<i32>, bricks: i32, ladders: i32) -> i32 {
+        let mut diffs: Vec<(i32, usize)> = vec![];
+        for i in 1..heights.len() {
+            if heights[i] > heights[i - 1] {
+                diffs.push((heights[i] - heights[i - 1], i));
+            }
+        }
+        diffs.sort_by(|a, b| b.0.cmp(&a.0));
+
+        let can_reach = |index: usize| -> bool {
+            let mut use_ladders = 0;
+            let mut use_bricks: i64 = 0;
+            for &(jump, i) in &diffs {
+                if i > index { continue; }
+                if use_ladders < ladders {
+                    use_ladders += 1;
+                } else {
+                    use_bricks += jump as i64;
+                    if use_bricks > bricks as i64 {
+                        return false;
+                    }
+                }
+            }
+            true
+        };
+
+        let mut l: i32 = 1;
+        let mut r: i32 = heights.len() as i32 - 1;
+        while l <= r {
+            let mid = (l + r) >> 1;
+            if can_reach(mid as usize) {
+                l = mid + 1;
+            } else {
+                r = mid - 1;
+            }
+        }
+
+        l - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1026,9 +1144,9 @@ We can make greedy decisions as we traverse by initially using bricks for each j
 1. Traverse buildings from left to right.
 2. For each positive height difference, subtract it from `bricks` and push the difference onto a max-heap.
 3. If `bricks` go negative:
-   - If no ladders remain, return the current index (cannot proceed).
-   - Otherwise, use a ladder: pop the largest difference from the heap and add it back to `bricks`.
-   - Decrement `ladders`.
+    - If no ladders remain, return the current index (cannot proceed).
+    - Otherwise, use a ladder: pop the largest difference from the heap and add it back to `bricks`.
+    - Decrement `ladders`.
 4. If we complete the traversal, return `n - 1`.
 
 ::tabs-start
@@ -1257,6 +1375,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn furthest_building(heights: Vec<i32>, bricks: i32, ladders: i32) -> i32 {
+        let mut bricks = bricks;
+        let mut ladders = ladders;
+        let mut max_heap = BinaryHeap::new();
+
+        for i in 0..heights.len() - 1 {
+            let diff = heights[i + 1] - heights[i];
+            if diff <= 0 {
+                continue;
+            }
+
+            bricks -= diff;
+            max_heap.push(diff);
+
+            if bricks < 0 {
+                if ladders == 0 {
+                    return i as i32;
+                }
+                ladders -= 1;
+                bricks += max_heap.pop().unwrap();
+            }
+        }
+
+        heights.len() as i32 - 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1277,9 +1425,9 @@ Instead of tracking brick usages, we can track ladder usages in a min-heap. We g
 1. Traverse buildings from left to right.
 2. For each positive height difference, push it onto a min-heap (representing a ladder allocation).
 3. If the heap size exceeds the number of ladders:
-   - Pop the smallest difference (least valuable ladder usage).
-   - Subtract it from `bricks`.
-   - If `bricks` go negative, return the current index.
+    - Pop the smallest difference (least valuable ladder usage).
+    - Subtract it from `bricks`.
+    - If `bricks` go negative, return the current index.
 4. If we complete the traversal, return `n - 1`.
 
 ::tabs-start
@@ -1477,6 +1625,32 @@ class Solution {
         }
 
         return heights.count - 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn furthest_building(heights: Vec<i32>, bricks: i32, ladders: i32) -> i32 {
+        let mut bricks = bricks;
+        let mut min_heap = BinaryHeap::new();
+
+        for i in 0..heights.len() - 1 {
+            let diff = heights[i + 1] - heights[i];
+            if diff <= 0 {
+                continue;
+            }
+
+            min_heap.push(Reverse(diff));
+            if min_heap.len() > ladders as usize {
+                bricks -= min_heap.pop().unwrap().0;
+                if bricks < 0 {
+                    return i as i32;
+                }
+            }
+        }
+
+        heights.len() as i32 - 1
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Efficiently searching in sorted data by eliminating half the search space
 - **Two Pointers** - Merging or comparing elements from two sorted arrays
 - **Median Calculation** - Understanding how to find the middle value(s) for odd and even length arrays
@@ -13,6 +15,7 @@ Before attempting this problem, you should be comfortable with:
 
 The simplest way to find the median of two sorted arrays is to **combine them into one array** and then sort it.  
 Once everything is merged and sorted, finding the median becomes straightforward:
+
 - If the total number of elements is odd → the middle element is the median.
 - If even → the median is the average of the two middle elements.
 
@@ -23,8 +26,8 @@ This method is easy to understand but does not take advantage of the fact that t
 1. Merge both arrays into a single list.
 2. Sort the merged list.
 3. Compute the total length:
-   - If it’s odd, return the middle element.
-   - If it’s even, return the average of the two middle elements.
+    - If it’s odd, return the middle element.
+    - If it’s even, return the average of the two middle elements.
 
 ::tabs-start
 
@@ -169,6 +172,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
+        let mut merged = nums1;
+        merged.extend_from_slice(&nums2);
+        merged.sort();
+
+        let total_len = merged.len();
+        if total_len % 2 == 0 {
+            (merged[total_len / 2 - 1] + merged[total_len / 2]) as f64 / 2.0
+        } else {
+            merged[total_len / 2] as f64
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -194,12 +214,12 @@ We simply track the last one or two values seen while merging, and once we reach
 
 1. Initialize two pointers `i` and `j` for each array.
 2. Iterate until you have processed `(len1 + len2) // 2 + 1` elements:
-   - At each step, pick the smaller of the two current elements.
-   - Move the corresponding pointer forward.
-   - Track the last two picked values (`median1` and `median2`).
+    - At each step, pick the smaller of the two current elements.
+    - Move the corresponding pointer forward.
+    - Track the last two picked values (`median1` and `median2`).
 3. After the loop:
-   - If the total size is odd → return the last picked value (`median1`).
-   - If even → return the average of the last two values (`(median1 + median2) / 2`).
+    - If the total size is odd → return the last picked value (`median1`).
+    - If even → return the average of the last two values (`(median1 + median2) / 2`).
 
 ::tabs-start
 
@@ -494,6 +514,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
+        let (len1, len2) = (nums1.len(), nums2.len());
+        let (mut i, mut j) = (0, 0);
+        let (mut median1, mut median2) = (0, 0);
+
+        for _ in 0..(len1 + len2) / 2 + 1 {
+            median2 = median1;
+            if i < len1 && j < len2 {
+                if nums1[i] > nums2[j] {
+                    median1 = nums2[j];
+                    j += 1;
+                } else {
+                    median1 = nums1[i];
+                    i += 1;
+                }
+            } else if i < len1 {
+                median1 = nums1[i];
+                i += 1;
+            } else {
+                median1 = nums2[j];
+                j += 1;
+            }
+        }
+
+        if (len1 + len2) % 2 == 1 {
+            median1 as f64
+        } else {
+            (median1 + median2) as f64 / 2.0
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -514,9 +569,11 @@ Instead of fully merging the two arrays, think about this question:
 > “What is the **k-th smallest** element in the union of two sorted arrays?”
 
 If we can find the k-th smallest element efficiently, then:
+
 - The median is just the middle element (or the average of the two middle elements).
 
 To find the k-th smallest:
+
 - We compare the **k/2-th element** of each array.
 - The smaller one (and everything before it in that array) **cannot** be the k-th element,
   because there are at least `k/2` elements smaller than or equal to it.
@@ -528,24 +585,24 @@ This is like a binary search on k: every step cuts off about half of the remaini
 ### Algorithm
 
 1. Define a function `getKth(A, B, k)` that returns the k-th smallest element in two sorted arrays `A` and `B`:
-   1. Always make sure `A` is the shorter array (swap if needed).
-   2. If `A` is empty, the k-th element is simply `B[k-1]`.
-   3. If `k == 1`, return `min(A[0], B[0])`.
-   4. Let `i = min(len(A), k/2)` and `j = min(len(B), k/2)`.
-   5. Compare `A[i-1]` and `B[j-1]`:
-      - If `A[i-1] <= B[j-1]`, then the first `i` elements of `A` can't contain the k-th smallest.
-        Call `getKth(A[i:], B, k - i)`.
-      - Else, the first `j` elements of `B` can't contain the k-th smallest.
-        Call `getKth(A, B[j:], k - j)`.
+    1. Always make sure `A` is the shorter array (swap if needed).
+    2. If `A` is empty, the k-th element is simply `B[k-1]`.
+    3. If `k == 1`, return `min(A[0], B[0])`.
+    4. Let `i = min(len(A), k/2)` and `j = min(len(B), k/2)`.
+    5. Compare `A[i-1]` and `B[j-1]`:
+        - If `A[i-1] <= B[j-1]`, then the first `i` elements of `A` can't contain the k-th smallest.
+          Call `getKth(A[i:], B, k - i)`.
+        - Else, the first `j` elements of `B` can't contain the k-th smallest.
+          Call `getKth(A, B[j:], k - j)`.
 
 2. To find the median:
-   - Let `total = len(A) + len(B)`.
-   - If `total` is odd:
-     - Median is `getKth(A, B, (total + 1) / 2)`.
-   - If `total` is even:
-     - Median is the average of:
-       - `getKth(A, B, total / 2)` and
-       - `getKth(A, B, total / 2 + 1)`.
+    - Let `total = len(A) + len(B)`.
+    - If `total` is odd:
+        - Median is `getKth(A, B, (total + 1) / 2)`.
+    - If `total` is even:
+        - Median is the average of:
+            - `getKth(A, B, total / 2)` and
+            - `getKth(A, B, total / 2 + 1)`.
 
 3. Return that median value.
 
@@ -833,6 +890,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
+        fn get_kth(a: &[i32], m: usize, b: &[i32], n: usize,
+                   k: usize, a_start: usize, b_start: usize) -> i32 {
+            if m > n {
+                return get_kth(b, n, a, m, k, b_start, a_start);
+            }
+            if m == 0 {
+                return b[b_start + k - 1];
+            }
+            if k == 1 {
+                return a[a_start].min(b[b_start]);
+            }
+
+            let i = m.min(k / 2);
+            let j = n.min(k / 2);
+
+            if a[a_start + i - 1] > b[b_start + j - 1] {
+                get_kth(a, m, b, n - j, k - j, a_start, b_start + j)
+            } else {
+                get_kth(a, m - i, b, n, k - i, a_start + i, b_start)
+            }
+        }
+
+        let (m, n) = (nums1.len(), nums2.len());
+        let left = (m + n + 1) / 2;
+        let right = (m + n + 2) / 2;
+        (get_kth(&nums1, m, &nums2, n, left, 0, 0) as f64
+            + get_kth(&nums1, m, &nums2, n, right, 0, 0) as f64)
+            / 2.0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -856,18 +948,19 @@ Think of placing the two arrays side by side and making a **cut** (partition) so
 - All elements on the **left side** are `<=` all elements on the **right side**.
 
 If we can find such a partition, then:
+
 - The median must come from the **border elements** around this cut:
-  - The largest element on the left side,
-  - And the smallest element on the right side.
+    - The largest element on the left side,
+    - And the smallest element on the right side.
 
 To find this cut efficiently, we:
 
 - Only binary search on the **smaller array**.
 - For a chosen cut in the smaller array, the cut in the larger array is fixed (so total elements on the left is half).
 - Check if this partition is valid:
-  - `Aleft <= Bright` and `Bleft <= Aright`
+    - `Aleft <= Bright` and `Bleft <= Aright`
 - If not valid:
-  - Move the cut left or right (like normal binary search) until it becomes valid.
+    - Move the cut left or right (like normal binary search) until it becomes valid.
 
 Once we have a valid partition, we compute the median using the max of left side and min of right side.
 
@@ -877,33 +970,33 @@ Once we have a valid partition, we compute the median using the max of left side
    Ensure `A` is the **smaller** array (swap if needed).
 
 2. Let:
-   - `total = len(A) + len(B)`
-   - `half = total // 2`
+    - `total = len(A) + len(B)`
+    - `half = total // 2`
 
 3. Use binary search on `A`:
-   - `l = 0`, `r = len(A) - 1`
-   - While searching:
-     - Let `i` be the cut index in `A` (midpoint of `l` and `r`).
-     - Let `j = half - i - 2` be the cut index in `B`
-       (so that total elements on the left of both arrays equals `half`).
+    - `l = 0`, `r = len(A) - 1`
+    - While searching:
+        - Let `i` be the cut index in `A` (midpoint of `l` and `r`).
+        - Let `j = half - i - 2` be the cut index in `B`
+          (so that total elements on the left of both arrays equals `half`).
 
 4. Define border values around the cut:
-   - `Aleft = A[i]` if `i >= 0` else `-∞`
-   - `Aright = A[i + 1]` if `i + 1 < len(A)` else `+∞`
-   - `Bleft = B[j]` if `j >= 0` else `-∞`
-   - `Bright = B[j + 1]` if `j + 1 < len(B)` else `+∞`
+    - `Aleft = A[i]` if `i >= 0` else `-∞`
+    - `Aright = A[i + 1]` if `i + 1 < len(A)` else `+∞`
+    - `Bleft = B[j]` if `j >= 0` else `-∞`
+    - `Bright = B[j + 1]` if `j + 1 < len(B)` else `+∞`
 
 5. Check if the partition is valid:
-   - If `Aleft <= Bright` **and** `Bleft <= Aright`:
-     - We found the correct partition.
-     - If `total` is odd:
-       - Median = `min(Aright, Bright)`
-     - Else (even total):
-       - Median = `(max(Aleft, Bleft) + min(Aright, Bright)) / 2`
-   - Else if `Aleft > Bright`:
-       - Move the cut in `A` **left** → set `r = i - 1`.
-   - Else (`Bleft > Aright`):
-       - Move the cut in `A` **right** → set `l = i + 1`.
+    - If `Aleft <= Bright` **and** `Bleft <= Aright`:
+        - We found the correct partition.
+        - If `total` is odd:
+            - Median = `min(Aright, Bright)`
+        - Else (even total):
+            - Median = `(max(Aleft, Bleft) + min(Aright, Bright)) / 2`
+    - Else if `Aleft > Bright`:
+        - Move the cut in `A` **left** → set `r = i - 1`.
+    - Else (`Bleft > Aright`):
+        - Move the cut in `A` **right** → set `l = i + 1`.
 
 6. Return the median computed from the valid partition.
 
@@ -1248,6 +1341,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_median_sorted_arrays(nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
+        let (a, b) = if nums1.len() <= nums2.len() {
+            (&nums1, &nums2)
+        } else {
+            (&nums2, &nums1)
+        };
+
+        let total = a.len() + b.len();
+        let half = (total + 1) / 2;
+
+        let (mut l, mut r) = (0usize, a.len());
+        loop {
+            let i = (l + r) / 2;
+            let j = half - i;
+
+            let a_left = if i > 0 { a[i - 1] as f64 } else { f64::NEG_INFINITY };
+            let a_right = if i < a.len() { a[i] as f64 } else { f64::INFINITY };
+            let b_left = if j > 0 { b[j - 1] as f64 } else { f64::NEG_INFINITY };
+            let b_right = if j < b.len() { b[j] as f64 } else { f64::INFINITY };
+
+            if a_left <= b_right && b_left <= a_right {
+                if total % 2 != 0 {
+                    return a_left.max(b_left);
+                }
+                return (a_left.max(b_left) + a_right.min(b_right)) / 2.0;
+            } else if a_left > b_right {
+                r = i - 1;
+            } else {
+                l = i + 1;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1280,4 +1410,3 @@ For odd total length, the median is a single element; for even, it is the averag
 ### Forgetting Arrays Are Already Sorted
 
 Some implementations unnecessarily sort the input arrays or merge them fully before finding the median. This ignores the key constraint that the arrays are already sorted, inflating time complexity to `O((m+n) log(m+n))` instead of the optimal `O(log(min(m, n)))`.
-

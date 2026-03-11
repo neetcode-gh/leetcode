@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Used to count valid ways by tracking seat counts in each section
 - **Memoization** - Caching subproblem results to avoid redundant computation
 - **Modular Arithmetic** - Required for handling large results modulo 10^9+7
@@ -18,8 +20,8 @@ We need to divide the corridor so each section has exactly two seats. The key in
 1. Define a recursive function `dfs(i, seats)` where `i` is the current index and `seats` counts how many seats are in the current section (`0`, `1`, or `2`).
 2. Base case: If we reach the end of the corridor, return `1` if we have exactly `2` seats (valid section), otherwise `0`.
 3. If we already have `2` seats in the current section:
-   - If the current position is a seat, we must start a new section (reset `seats` to `1`).
-   - If it's a plant, we can either place the divider here (reset to `0`) or continue without dividing (keep at `2`).
+    - If the current position is a seat, we must start a new section (reset `seats` to `1`).
+    - If it's a plant, we can either place the divider here (reset to `0`) or continue without dividing (keep at `2`).
 4. If we have fewer than `2` seats, count the seat if present and continue.
 5. Use memoization to cache results.
 
@@ -343,6 +345,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_ways(corridor: String) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let chars: Vec<u8> = corridor.into_bytes();
+        let n = chars.len();
+        let mut dp = vec![[-1i32; 3]; n];
+
+        fn dfs(chars: &[u8], dp: &mut Vec<[i32; 3]>, i: usize, seats: usize) -> i32 {
+            if i == chars.len() {
+                return if seats == 2 { 1 } else { 0 };
+            }
+            if dp[i][seats] != -1 {
+                return dp[i][seats];
+            }
+            let res = if seats == 2 {
+                if chars[i] == b'S' {
+                    dfs(chars, dp, i + 1, 1)
+                } else {
+                    (dfs(chars, dp, i + 1, 0) + dfs(chars, dp, i + 1, 2)) % MOD
+                }
+            } else {
+                if chars[i] == b'S' {
+                    dfs(chars, dp, i + 1, seats + 1)
+                } else {
+                    dfs(chars, dp, i + 1, seats)
+                }
+            };
+            dp[i][seats] = res;
+            res
+        }
+
+        dfs(&chars, &mut dp, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,7 +402,7 @@ We can convert the top-down approach to bottom-up by iterating from the end of t
 1. Create a DP table where `dp[i][seats]` represents the number of ways to divide from index `i` onward with `seats` seats in the current section.
 2. Initialize `dp[n][2] = 1` (reaching the end with exactly `2` seats is one valid way).
 3. Iterate backward through the corridor:
-   - For each position and seat count, apply the same transitions as the top-down approach.
+    - For each position and seat count, apply the same transitions as the top-down approach.
 4. Return `dp[0][0]` (starting from index `0` with `0` seats).
 
 ::tabs-start
@@ -609,6 +648,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_ways(corridor: String) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let chars: Vec<u8> = corridor.into_bytes();
+        let n = chars.len();
+        let mut dp = vec![[0i32; 3]; n + 1];
+        dp[n][2] = 1;
+
+        for i in (0..n).rev() {
+            for seats in 0..3 {
+                if seats == 2 {
+                    if chars[i] == b'S' {
+                        dp[i][seats] = dp[i + 1][1];
+                    } else {
+                        dp[i][seats] = (dp[i + 1][0] + dp[i + 1][2]) % MOD;
+                    }
+                } else {
+                    if chars[i] == b'S' {
+                        dp[i][seats] = dp[i + 1][seats + 1];
+                    } else {
+                        dp[i][seats] = dp[i + 1][seats];
+                    }
+                }
+            }
+        }
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -628,8 +698,8 @@ Since each row of the DP table only depends on the next row, we can reduce space
 
 1. Initialize a DP array of size `3` with `dp[2] = 1`.
 2. Iterate backward through the corridor:
-   - Create a new DP array and compute transitions based on whether the current position is a seat or plant.
-   - Replace the old DP array with the new one.
+    - Create a new DP array and compute transitions based on whether the current position is a seat or plant.
+    - Replace the old DP array with the new one.
 3. Return `dp[0]`.
 
 ::tabs-start
@@ -816,6 +886,29 @@ class Solution {
             dp = newDp
         }
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn number_of_ways(corridor: String) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let chars: Vec<u8> = corridor.into_bytes();
+        let mut dp = [0i32, 0, 1];
+
+        for i in (0..chars.len()).rev() {
+            let mut new_dp = [0i32; 3];
+            for seats in 0..3 {
+                if seats == 2 {
+                    new_dp[seats] = if chars[i] == b'S' { dp[1] } else { (dp[0] + dp[2]) % MOD };
+                } else {
+                    new_dp[seats] = if chars[i] == b'S' { dp[seats + 1] } else { dp[seats] };
+                }
+            }
+            dp = new_dp;
+        }
+        dp[0]
     }
 }
 ```
@@ -1054,6 +1147,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_ways(corridor: String) -> i32 {
+        let modulo: i64 = 1_000_000_007;
+        let seats: Vec<usize> = corridor
+            .bytes()
+            .enumerate()
+            .filter(|&(_, c)| c == b'S')
+            .map(|(i, _)| i)
+            .collect();
+
+        let length = seats.len();
+        if length < 2 || length % 2 == 1 {
+            return 0;
+        }
+
+        let mut res: i64 = 1;
+        for i in (1..length - 1).step_by(2) {
+            res = (res * (seats[i + 1] - seats[i]) as i64) % modulo;
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1073,9 +1192,9 @@ We can optimize the combinatorics approach by not storing all seat positions. In
 
 1. Initialize `count = 0`, `res = 1`, and `prev = -1` to track the position of the last seat.
 2. Iterate through the corridor:
-   - When a seat is found, increment `count`.
-   - If `count > 2` and `count % 2 == 1` (meaning we just started a new section), multiply `res` by the distance from `prev`.
-   - Update `prev` to the current position.
+    - When a seat is found, increment `count`.
+    - If `count > 2` and `count % 2 == 1` (meaning we just started a new section), multiply `res` by the distance from `prev`.
+    - Update `prev` to the current position.
 3. If `count >= 2` and `count % 2 == 0`, return `res`; otherwise return `0`.
 
 ::tabs-start
@@ -1254,6 +1373,29 @@ class Solution {
         }
 
         return (count >= 2 && count % 2 == 0) ? res : 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn number_of_ways(corridor: String) -> i32 {
+        let modulo: i64 = 1_000_000_007;
+        let mut count = 0;
+        let mut res: i64 = 1;
+        let mut prev: i64 = -1;
+
+        for (i, c) in corridor.bytes().enumerate() {
+            if c == b'S' {
+                count += 1;
+                if count > 2 && count % 2 == 1 {
+                    res = (res * (i as i64 - prev)) % modulo;
+                }
+                prev = i as i64;
+            }
+        }
+
+        if count >= 2 && count % 2 == 0 { res as i32 } else { 0 }
     }
 }
 ```

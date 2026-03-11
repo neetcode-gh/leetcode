@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how to break problems into smaller subproblems and handle base cases
 - **Dynamic Programming** - Both memoization (top-down) and tabulation (bottom-up) approaches
 - **Hash Set** - Using sets for O(1) lookup to efficiently check if a word exists in the dictionary
@@ -11,10 +13,13 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 At every index `i` in the string, we want to decide:
+
 > **Can the suffix starting at index `i` be segmented into valid dictionary words?**
 
 The recursive idea is:
+
 - Try **every word** in `wordDict`
 - If a word matches the string starting at position `i`
 - Recursively check whether the **remaining substring** (starting at `i + len(word)`) can also be broken successfully
@@ -22,15 +27,17 @@ The recursive idea is:
 If **any path** reaches the end of the string, the answer is `true`.
 
 This is a classic **decision-based recursion** where:
+
 - Each index `i` represents a subproblem
 - Base case: reaching the end means a valid segmentation
 
 ### Algorithm
+
 1. Define a recursive function `dfs(i)`:
-   - If `i == len(s)`, return `true`
+    - If `i == len(s)`, return `true`
 2. For each word `w` in `wordDict`:
-   - Check if `w` matches `s[i : i + len(w)]`
-   - If it matches and `dfs(i + len(w))` is `true`, return `true`
+    - Check if `w` matches `s[i : i + len(w)]`
+    - If it matches and `dfs(i + len(w))` is `true`, return `true`
 3. If no word leads to a valid segmentation, return `false`
 4. Start recursion from index `0`
 
@@ -238,6 +245,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        fn dfs(s: &[u8], word_dict: &[String], i: usize) -> bool {
+            if i == s.len() {
+                return true;
+            }
+            for w in word_dict {
+                let wb = w.as_bytes();
+                if i + wb.len() <= s.len() && &s[i..i + wb.len()] == wb {
+                    if dfs(s, word_dict, i + wb.len()) {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+
+        dfs(s.as_bytes(), &word_dict, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,26 +282,31 @@ class Solution {
 ## 2. Recursion (Hash Set)
 
 ### Intuition
+
 This version improves the brute-force recursion by **optimizing word lookup**.
 
 Instead of trying every word from `wordDict` at each index, we:
+
 - Fix a starting index `i`
 - Try **all possible substrings** `s[i : j+1]`
 - Check if the substring exists in a **Hash Set** (`O(1)` lookup)
 
 If a valid word is found:
+
 - Recursively check whether the remaining suffix starting at `j + 1` can be segmented
 
 The key idea:
+
 > If we can split the string at **any valid word boundary** and the rest is solvable, then the whole string is solvable.
 
 ### Algorithm
+
 1. Convert `wordDict` into a hash set `wordSet` for fast lookup
 2. Define a recursive function `dfs(i)`:
-   - If `i == len(s)`, return `true`
+    - If `i == len(s)`, return `true`
 3. For every `j` from `i` to `len(s) - 1`:
-   - If `s[i : j + 1]` is in `wordSet`
-     - If `dfs(j + 1)` is `true`, return `true`
+    - If `s[i : j + 1]` is in `wordSet`
+        - If `dfs(j + 1)` is `true`, return `true`
 4. If no split works, return `false`
 5. Start recursion from index `0`
 
@@ -475,6 +510,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        let word_set: HashSet<&str> = word_dict.iter().map(|w| w.as_str()).collect();
+
+        fn dfs(s: &str, word_set: &HashSet<&str>, i: usize) -> bool {
+            if i == s.len() {
+                return true;
+            }
+            for j in i..s.len() {
+                if word_set.contains(&s[i..=j]) {
+                    if dfs(s, word_set, j + 1) {
+                        return true;
+                    }
+                }
+            }
+            false
+        }
+
+        dfs(&s, &word_set, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,31 +548,36 @@ class Solution {
 ## 3. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 This is an **optimized version of recursion using memoization**.
 
 The key observation:
+
 - While recursively checking splits, the **same index `i` is reached many times**
 - The result of `dfs(i)` (can suffix `s[i:]` be segmented?) **never changes**
 
 So we **cache the result for each index**:
+
 - If `dfs(i)` was already computed, reuse it
 - This avoids recomputing exponential subtrees
 
 In short:
+
 > Convert exponential recursion into linear states using memoization.
 
 ### Algorithm
+
 1. Use a hash map `memo` where:
-   - `memo[i] = true/false` means whether `s[i:]` can be segmented
-   - Base case: `memo[len(s)] = true`
+    - `memo[i] = true/false` means whether `s[i:]` can be segmented
+    - Base case: `memo[len(s)] = true`
 2. Define `dfs(i)`:
-   - If `i` is in `memo`, return `memo[i]`
+    - If `i` is in `memo`, return `memo[i]`
 3. For each word `w` in `wordDict`:
-   - If `s[i : i + len(w)] == w`
-     - Recursively call `dfs(i + len(w))`
-     - If it returns `true`, store `memo[i] = true` and return `true`
+    - If `s[i : i + len(w)] == w`
+        - Recursively call `dfs(i + len(w))`
+        - If it returns `true`, store `memo[i] = true` and return `true`
 4. If no word leads to a valid split:
-   - Store `memo[i] = false`
+    - Store `memo[i] = false`
 5. Return `dfs(0)`
 
 ::tabs-start
@@ -757,6 +821,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        let n = s.len();
+        let mut memo = HashMap::new();
+        memo.insert(n, true);
+
+        fn dfs(
+            s: &[u8], word_dict: &[String], i: usize,
+            memo: &mut HashMap<usize, bool>,
+        ) -> bool {
+            if let Some(&val) = memo.get(&i) {
+                return val;
+            }
+            for w in word_dict {
+                let wb = w.as_bytes();
+                if i + wb.len() <= s.len() && &s[i..i + wb.len()] == wb {
+                    if dfs(s, word_dict, i + wb.len(), memo) {
+                        memo.insert(i, true);
+                        return true;
+                    }
+                }
+            }
+            memo.insert(i, false);
+            false
+        }
+
+        dfs(s.as_bytes(), &word_dict, 0, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -771,33 +867,37 @@ class Solution {
 ## 4. Dynamic Programming (Hash Set)
 
 ### Intuition
+
 This approach is a **top-down dynamic programming solution with pruning**.
 
 Key ideas:
+
 - Checking every possible substring is expensive.
 - A word can only be as long as the **maximum word length** in `wordDict`.
 - Use a **Hash Set** for `O(1)` word lookup.
 - Use **memoization** so each index in the string is solved only once.
 
 So we:
+
 - Limit how far we try to split from each index
 - Cache results for indices to avoid repeated work
 
 This turns exponential recursion into efficient DP.
 
 ### Algorithm
+
 1. Convert `wordDict` into a hash set `wordSet`
 2. Compute `t` = maximum length of any word in `wordDict`
 3. Use a `memo` map where `memo[i]` means:
-   - Can substring `s[i:]` be segmented?
+    - Can substring `s[i:]` be segmented?
 4. Define `dfs(i)`:
-   - If `i` is in `memo`, return `memo[i]`
-   - If `i == len(s)`, return `true`
+    - If `i` is in `memo`, return `memo[i]`
+    - If `i == len(s)`, return `true`
 5. For `j` from `i` to `min(len(s), i + t) - 1`:
-   - If `s[i : j + 1]` is in `wordSet`
-     - If `dfs(j + 1)` is `true`, store and return `true`
+    - If `s[i : j + 1]` is in `wordSet`
+        - If `dfs(j + 1)` is `true`, store and return `true`
 6. If no valid split works:
-   - Store `memo[i] = false`
+    - Store `memo[i] = false`
 7. Return `dfs(0)`
 
 ::tabs-start
@@ -1089,6 +1189,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        let word_set: HashSet<&str> = word_dict.iter().map(|w| w.as_str()).collect();
+        let t = word_dict.iter().map(|w| w.len()).max().unwrap_or(0);
+        let n = s.len();
+        let mut memo = HashMap::new();
+
+        fn dfs(
+            s: &str, i: usize, t: usize,
+            word_set: &HashSet<&str>, memo: &mut HashMap<usize, bool>,
+        ) -> bool {
+            if let Some(&val) = memo.get(&i) {
+                return val;
+            }
+            if i == s.len() {
+                return true;
+            }
+            for j in i..s.len().min(i + t) {
+                if word_set.contains(&s[i..=j]) {
+                    if dfs(s, j + 1, t, word_set, memo) {
+                        memo.insert(i, true);
+                        return true;
+                    }
+                }
+            }
+            memo.insert(i, false);
+            false
+        }
+
+        dfs(&s, 0, t, &word_set, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1103,25 +1238,28 @@ class Solution {
 ## 5. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 This is a **bottom-up dynamic programming** approach.
 
 Instead of trying to split the string recursively, we solve the problem **from the end of the string toward the start**.
 
 Key idea:
+
 - `dp[i]` means **whether the substring `s[i:]` can be segmented**
 - If we know the answer for future positions, we can decide the current one
 - We reuse already computed results → no recursion, no stack overhead
 
 ### Algorithm
+
 1. Create a boolean array `dp` of size `len(s) + 1`
-   - `dp[i]` = `true` if `s[i:]` can be segmented
+    - `dp[i]` = `true` if `s[i:]` can be segmented
 2. Base case:
-   - `dp[len(s)] = true` (empty string is valid)
+    - `dp[len(s)] = true` (empty string is valid)
 3. Iterate `i` from `len(s) - 1` down to `0`:
-   - For each word `w` in `wordDict`:
-     - If `s[i : i + len(w)] == w`
-       - Set `dp[i] = dp[i + len(w)]`
-     - If `dp[i]` becomes `true`, break early
+    - For each word `w` in `wordDict`:
+        - If `s[i : i + len(w)] == w`
+            - Set `dp[i] = dp[i + len(w)]`
+        - If `dp[i]` becomes `true`, break early
 4. Return `dp[0]`
 
 ::tabs-start
@@ -1306,6 +1444,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        let n = s.len();
+        let sb = s.as_bytes();
+        let mut dp = vec![false; n + 1];
+        dp[n] = true;
+
+        for i in (0..n).rev() {
+            for w in &word_dict {
+                let wb = w.as_bytes();
+                if i + wb.len() <= n && &sb[i..i + wb.len()] == wb {
+                    dp[i] = dp[i + wb.len()];
+                }
+                if dp[i] {
+                    break;
+                }
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1320,28 +1483,32 @@ class Solution {
 ## 6. Dynamic Programming (Trie)
 
 ### Intuition
+
 The normal DP checks every word at every index, which can waste time comparing strings again and again.
 
 A **Trie** stores all dictionary words like a prefix tree, so from any starting index `i` in `s`, we can **walk forward character-by-character** and quickly know:
+
 - whether the current prefix matches some dictionary word path
 - and when we hit a complete word (`is_word = true`)
 
 We still use DP:
+
 - `dp[i]` = can we break the suffix `s[i:]` into dictionary words?
 - If from `i` we can reach some `j` where `s[i..j]` is a word, then `dp[i] = dp[j+1]`
 
-Trie helps us *find valid words starting at `i` efficiently*.
+Trie helps us _find valid words starting at `i` efficiently_.
 
 ### Algorithm
+
 1. Build a Trie from all words in `wordDict`.
 2. Create a boolean DP array `dp` of size `n + 1` where `n = len(s)`.
-   - `dp[n] = true` (empty suffix is always valid)
+    - `dp[n] = true` (empty suffix is always valid)
 3. Let `t` be the maximum word length in the dictionary (use it as a bound).
 4. Fill DP from right to left:
-   - For each index `i` from `n` down to `0`:
-     - Try all end positions `j` from `i` to `min(n-1, i+t-1)`:
-       - If `s[i..j]` is a word in the Trie, set `dp[i] = dp[j+1]`
-       - If `dp[i]` becomes `true`, stop early for this `i`
+    - For each index `i` from `n` down to `0`:
+        - Try all end positions `j` from `i` to `min(n-1, i+t-1)`:
+            - If `s[i..j]` is a word in the Trie, set `dp[i] = dp[j+1]`
+            - If `dp[i]` becomes `true`, stop early for this `i`
 5. Return `dp[0]`.
 
 ::tabs-start
@@ -1871,6 +2038,75 @@ class Solution {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: HashMap<u8, TrieNode>,
+    is_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self { children: HashMap::new(), is_word: false }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Self { root: TrieNode::new() }
+    }
+    fn insert(&mut self, word: &str) {
+        let mut node = &mut self.root;
+        for &b in word.as_bytes() {
+            node = node.children.entry(b).or_insert_with(TrieNode::new);
+        }
+        node.is_word = true;
+    }
+    fn search(&self, s: &[u8], i: usize, j: usize) -> bool {
+        let mut node = &self.root;
+        for idx in i..=j {
+            match node.children.get(&s[idx]) {
+                Some(next) => node = next,
+                None => return false,
+            }
+        }
+        node.is_word
+    }
+}
+
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> bool {
+        let mut trie = Trie::new();
+        for word in &word_dict {
+            trie.insert(word);
+        }
+
+        let sb = s.as_bytes();
+        let n = sb.len();
+        let mut dp = vec![false; n + 1];
+        dp[n] = true;
+
+        let max_len = word_dict.iter().map(|w| w.len()).max().unwrap_or(0);
+
+        for i in (0..n).rev() {
+            for j in i..n.min(i + max_len) {
+                if trie.search(sb, i, j) {
+                    dp[i] = dp[j + 1];
+                    if dp[i] {
+                        break;
+                    }
+                }
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1885,6 +2121,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Off-by-One Error in DP Array Initialization
+
 The DP array needs size `n + 1` to represent the state after processing all characters. Using size `n` causes index-out-of-bounds when checking `dp[n]` as the base case.
 
 ```python
@@ -1898,6 +2135,7 @@ dp[len(s)] = True
 ```
 
 ### Checking Substring Beyond String Length
+
 When iterating through possible word matches, failing to check if the word extends beyond the string causes substring errors or incorrect matches.
 
 ```python
@@ -1911,6 +2149,7 @@ for w in wordDict:
 ```
 
 ### Not Converting wordDict to a Set for Efficient Lookup
+
 Using a list for the word dictionary when checking substrings against it results in O(m) lookup time per check, causing TLE on large inputs.
 
 ```python
@@ -1921,4 +2160,3 @@ if s[i:j+1] in wordDict:  # wordDict is a list
 wordSet = set(wordDict)
 if s[i:j+1] in wordSet:
 ```
-

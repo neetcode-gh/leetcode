@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming Fundamentals** - Understanding how to build optimal solutions from subproblems
 - **Recursion with Memoization** - Converting brute force recursion to efficient top-down DP
 - **State Transitions** - Tracking which color was used previously to enforce the adjacent constraint
@@ -224,6 +226,28 @@ class Solution {
         }
 
         return dfs(0, -1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+
+        fn dfs(i: usize, prev_color: i32, costs: &Vec<Vec<i32>>, n: usize) -> i32 {
+            if i == n {
+                return 0;
+            }
+            let mut res = i32::MAX;
+            for c in 0..3 {
+                if c == prev_color { continue; }
+                res = res.min(costs[i][c as usize] + dfs(i + 1, c, costs, n));
+            }
+            res
+        }
+
+        dfs(0, -1, &costs, n)
     }
 }
 ```
@@ -511,6 +535,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        let mut dp = vec![[-1i32; 4]; n];
+
+        fn dfs(i: usize, prev_color: i32, costs: &Vec<Vec<i32>>,
+               n: usize, dp: &mut Vec<[i32; 4]>) -> i32 {
+            if i == n {
+                return 0;
+            }
+            let idx = (prev_color + 1) as usize;
+            if dp[i][idx] != -1 {
+                return dp[i][idx];
+            }
+            let mut res = i32::MAX;
+            for c in 0..3i32 {
+                if c == prev_color { continue; }
+                res = res.min(costs[i][c as usize] + dfs(i + 1, c, costs, n, dp));
+            }
+            dp[i][idx] = res;
+            res
+        }
+
+        dfs(0, -1, &costs, n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -738,6 +791,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let n = costs.len();
+        if n == 0 { return 0; }
+
+        let mut dp = vec![vec![0; 3]; n];
+        for c in 0..3 {
+            dp[0][c] = costs[0][c];
+        }
+
+        for i in 1..n {
+            for c in 0..3 {
+                dp[i][c] = costs[i][c] + dp[i - 1][(c + 1) % 3].min(dp[i - 1][(c + 2) % 3]);
+            }
+        }
+
+        dp[n - 1][0].min(dp[n - 1][1]).min(dp[n - 1][2])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -915,6 +990,25 @@ class Solution {
         }
 
         return min(dp0, min(dp1, dp2))
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost(costs: Vec<Vec<i32>>) -> i32 {
+        let (mut dp0, mut dp1, mut dp2) = (0, 0, 0);
+
+        for cost in &costs {
+            let new_dp0 = cost[0] + dp1.min(dp2);
+            let new_dp1 = cost[1] + dp0.min(dp2);
+            let new_dp2 = cost[2] + dp0.min(dp1);
+            dp0 = new_dp0;
+            dp1 = new_dp1;
+            dp2 = new_dp2;
+        }
+
+        dp0.min(dp1).min(dp2)
     }
 }
 ```

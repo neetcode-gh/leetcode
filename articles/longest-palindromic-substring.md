@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Used to expand around centers and verify palindromes by comparing characters from both ends
 - **Dynamic Programming (2D)** - The DP solution uses a table where `dp[i][j]` indicates if the substring from index i to j is a palindrome
 - **String Manipulation** - Understanding substrings, character indexing, and string slicing
@@ -10,10 +12,12 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 A palindrome reads the same forward and backward.  
 The simplest idea is to **try every possible substring** and check whether it is a palindrome, then keep the longest one found.
 
 For each pair `(i, j)`:
+
 - Assume `s[i:j]` is a candidate substring
 - Use two pointers (`l` and `r`) to check if it’s a palindrome
 - If valid and longer than the current answer, update the result
@@ -21,12 +25,13 @@ For each pair `(i, j)`:
 This approach is straightforward but inefficient.
 
 ### Algorithm
+
 1. Initialize an empty result string and length `0`.
 2. For every start index `i`:
-   - For every end index `j >= i`:
-     - Check if substring `s[i..j]` is a palindrome using two pointers.
-     - If it is a palindrome and longer than the current best:
-       - Update the result.
+    - For every end index `j >= i`:
+        - Check if substring `s[i..j]` is a palindrome using two pointers.
+        - If it is a palindrome and longer than the current best:
+            - Update the result.
 3. Return the longest palindrome found.
 
 ::tabs-start
@@ -236,6 +241,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> String {
+        let s = s.as_bytes();
+        let mut res_idx = 0;
+        let mut res_len = 0;
+
+        for i in 0..s.len() {
+            for j in i..s.len() {
+                let (mut l, mut r) = (i, j);
+                while l < r && s[l] == s[r] {
+                    l += 1;
+                    r -= 1;
+                }
+                if l >= r && res_len < (j - i + 1) {
+                    res_idx = i;
+                    res_len = j - i + 1;
+                }
+            }
+        }
+
+        String::from_utf8(s[res_idx..res_idx + res_len].to_vec()).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,28 +279,32 @@ class Solution {
 ## 2. Dynamic Programming
 
 ### Intuition
+
 Instead of re-checking the same substrings again and again, we **remember** whether a substring is a palindrome.
 
 Let:
+
 - `dp[i][j] = true` if the substring `s[i..j]` is a palindrome.
 
 A substring `s[i..j]` is a palindrome when:
+
 1. The end characters match: `s[i] == s[j]`
 2. And the inside part is also a palindrome: `dp[i+1][j-1]`
-   - **Special small cases:** if the length is `1`, `2`, or `3` (`j - i <= 2`), then matching ends is enough because the middle is empty or a single char.
+    - **Special small cases:** if the length is `1`, `2`, or `3` (`j - i <= 2`), then matching ends is enough because the middle is empty or a single char.
 
 We fill `dp` from **bottom to top** (`i` from `n-1` down to `0`) so that when we compute `dp[i][j]`, the value `dp[i+1][j-1]` is already known.
 
 While filling, we keep track of the **best (longest) palindrome** seen so far.
 
 ### Algorithm
+
 1. Let `n = len(s)`. Create a 2D table `dp[n][n]` initialized to `false`.
 2. Keep `resIdx = 0` and `resLen = 0` for the best answer.
 3. For `i` from `n-1` down to `0`:
-   - For `j` from `i` up to `n-1`:
-     - If `s[i] == s[j]` and (`j - i <= 2` OR `dp[i+1][j-1]` is `true`):
-       - Mark `dp[i][j] = true`
-       - If `(j - i + 1)` is bigger than `resLen`, update `resIdx` and `resLen`.
+    - For `j` from `i` up to `n-1`:
+        - If `s[i] == s[j]` and (`j - i <= 2` OR `dp[i+1][j-1]` is `true`):
+            - Mark `dp[i][j] = true`
+            - If `(j - i + 1)` is bigger than `resLen`, update `resIdx` and `resLen`.
 4. Return `s[resIdx : resIdx + resLen]`.
 
 ::tabs-start
@@ -482,6 +517,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> String {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res_idx = 0;
+        let mut res_len = 0;
+        let mut dp = vec![vec![false; n]; n];
+
+        for i in (0..n).rev() {
+            for j in i..n {
+                if s[i] == s[j] && (j - i <= 2 || dp[i + 1][j - 1]) {
+                    dp[i][j] = true;
+                    if res_len < (j - i + 1) {
+                        res_idx = i;
+                        res_len = j - i + 1;
+                    }
+                }
+            }
+        }
+
+        String::from_utf8(s[res_idx..res_idx + res_len].to_vec()).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -494,13 +555,16 @@ class Solution {
 ## 3. Two Pointers
 
 ### Intuition
+
 A palindrome **expands symmetrically from its center**.
 
 Every palindrome has one of two centers:
+
 1. **Odd length** → a single character center (e.g. `"racecar"`)
 2. **Even length** → between two characters (e.g. `"abba"`)
 
 So instead of checking all substrings, we:
+
 - Treat every index as a possible center
 - Expand **left and right** while characters match
 - Track the longest palindrome found during expansion
@@ -508,17 +572,18 @@ So instead of checking all substrings, we:
 This avoids extra space and redundant checks.
 
 ### Algorithm
+
 1. Initialize:
-   - `resIdx = 0` - starting index of best palindrome
-   - `resLen = 0` - length of best palindrome
+    - `resIdx = 0` - starting index of best palindrome
+    - `resLen = 0` - length of best palindrome
 2. For each index `i` in the string:
-   - **Odd-length palindrome**
-     - Set `l = i`, `r = i`
-     - Expand while `l >= 0`, `r < n`, and `s[l] == s[r]`
-   - **Even-length palindrome**
-     - Set `l = i`, `r = i + 1`
-     - Expand while `l >= 0`, `r < n`, and `s[l] == s[r]`
-   - During each expansion, update `resIdx` and `resLen` if a longer palindrome is found
+    - **Odd-length palindrome**
+        - Set `l = i`, `r = i`
+        - Expand while `l >= 0`, `r < n`, and `s[l] == s[r]`
+    - **Even-length palindrome**
+        - Set `l = i`, `r = i + 1`
+        - Expand while `l >= 0`, `r < n`, and `s[l] == s[r]`
+    - During each expansion, update `resIdx` and `resLen` if a longer palindrome is found
 3. Return substring `s[resIdx : resIdx + resLen]`
 
 ::tabs-start
@@ -810,6 +875,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> String {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res_idx = 0;
+        let mut res_len = 0;
+
+        for i in 0..n {
+            // odd length
+            let (mut l, mut r) = (i as isize, i as isize);
+            while l >= 0 && (r as usize) < n && s[l as usize] == s[r as usize] {
+                if (r - l + 1) as usize > res_len {
+                    res_idx = l as usize;
+                    res_len = (r - l + 1) as usize;
+                }
+                l -= 1;
+                r += 1;
+            }
+
+            // even length
+            let (mut l, mut r) = (i as isize, i as isize + 1);
+            while l >= 0 && (r as usize) < n && s[l as usize] == s[r as usize] {
+                if (r - l + 1) as usize > res_len {
+                    res_idx = l as usize;
+                    res_len = (r - l + 1) as usize;
+                }
+                l -= 1;
+                r += 1;
+            }
+        }
+
+        String::from_utf8(s[res_idx..res_idx + res_len].to_vec()).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -824,32 +926,35 @@ class Solution {
 ## 4. Manacher's Algorithm
 
 ### Intuition
+
 Manacher’s Algorithm is an **optimized way to find the longest palindromic substring in linear time**.
 
 The key ideas are:
+
 - **Unify odd and even length palindromes** by inserting a special character (like `#`) between characters.
-  - Example: `"abba"` → `"#a#b#b#a#"`
+    - Example: `"abba"` → `"#a#b#b#a#"`
 - Use **previous palindrome information** to avoid re-checking characters.
 - Maintain a **current rightmost palindrome** and mirror indices to reuse results.
 
 Instead of expanding from every center independently, Manacher’s algorithm **reuses symmetry**, making it much faster than the two-pointer approach.
 
 ### Algorithm
+
 1. **Transform the string**
-   - Insert `#` between characters and at both ends to handle odd/even palindromes uniformly.
+    - Insert `#` between characters and at both ends to handle odd/even palindromes uniformly.
 2. Create an array `p[]`
-   - `p[i]` = radius of palindrome centered at index `i` in the transformed string.
+    - `p[i]` = radius of palindrome centered at index `i` in the transformed string.
 3. Maintain two pointers:
-   - `center` - center of the current rightmost palindrome
-   - `right` - right boundary of that palindrome
+    - `center` - center of the current rightmost palindrome
+    - `right` - right boundary of that palindrome
 4. For each index `i`:
-   - If `i` is inside the current palindrome:
-     - Initialize `p[i]` using its **mirror** around `center`
-   - Expand around `i` while characters match
-   - If the palindrome expands beyond `right`, update `center` and `right`
+    - If `i` is inside the current palindrome:
+        - Initialize `p[i]` using its **mirror** around `center`
+    - Expand around `i` while characters match
+    - If the palindrome expands beyond `right`, update `center` and `right`
 5. After processing:
-   - Find the index with the **maximum value in `p`**
-   - Convert that position back to the original string indices
+    - Find the index with the **maximum value in `p`**
+    - Convert that position back to the original string indices
 6. Return the longest palindromic substring
 
 ::tabs-start
@@ -1156,6 +1261,47 @@ class Solution {
         let start = s.index(s.startIndex, offsetBy: resIdx)
         let end = s.index(start, offsetBy: resLen)
         return String(s[start..<end])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_palindrome(s: String) -> String {
+        let s_bytes = s.as_bytes();
+        let mut t = vec![b'#'];
+        for &c in s_bytes {
+            t.push(c);
+            t.push(b'#');
+        }
+        let n = t.len();
+        let mut p = vec![0usize; n];
+        let (mut l, mut r) = (0usize, 0usize);
+
+        for i in 0..n {
+            p[i] = if i < r { (r - i).min(p[l + (r - i)]) } else { 0 };
+            while i + p[i] + 1 < n
+                && i >= p[i] + 1
+                && t[i + p[i] + 1] == t[i - p[i] - 1]
+            {
+                p[i] += 1;
+            }
+            if i + p[i] > r {
+                l = i - p[i];
+                r = i + p[i];
+            }
+        }
+
+        let (mut res_len, mut center_idx) = (0, 0);
+        for (i, &v) in p.iter().enumerate() {
+            if v > res_len {
+                res_len = v;
+                center_idx = i;
+            }
+        }
+
+        let res_idx = (center_idx - res_len) / 2;
+        String::from_utf8(s_bytes[res_idx..res_idx + res_len].to_vec()).unwrap()
     }
 }
 ```

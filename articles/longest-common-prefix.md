@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Comparing characters, extracting substrings, and iterating through strings
 - **Sorting** - Understanding lexicographic string ordering for the sorting approach
 - **Trie Data Structure** - Building and traversing a prefix tree for the optimal solution
@@ -175,6 +177,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_common_prefix(strs: Vec<String>) -> String {
+        let mut prefix = strs[0].clone();
+        for i in 1..strs.len() {
+            let mut j = 0;
+            let s = strs[i].as_bytes();
+            let p = prefix.as_bytes();
+            while j < p.len().min(s.len()) {
+                if p[j] != s[j] {
+                    break;
+                }
+                j += 1;
+            }
+            prefix = prefix[..j].to_string();
+        }
+        prefix
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -318,6 +341,23 @@ class Solution {
             }
         }
         return strs[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_common_prefix(strs: Vec<String>) -> String {
+        let first = strs[0].as_bytes();
+        for i in 0..first.len() {
+            for s in &strs {
+                let sb = s.as_bytes();
+                if i == sb.len() || sb[i] != first[i] {
+                    return s[..i].to_string();
+                }
+            }
+        }
+        strs[0].clone()
     }
 }
 ```
@@ -516,6 +556,27 @@ class Solution {
         }
 
         return sorted[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_common_prefix(strs: Vec<String>) -> String {
+        if strs.len() == 1 {
+            return strs[0].clone();
+        }
+        let mut strs = strs;
+        strs.sort();
+        let first = strs[0].as_bytes();
+        let last = strs[strs.len() - 1].as_bytes();
+        let n = first.len().min(last.len());
+        for i in 0..n {
+            if first[i] != last[i] {
+                return strs[0][..i].to_string();
+            }
+        }
+        strs[0].clone()
     }
 }
 ```
@@ -1017,6 +1078,70 @@ class Solution {
         }
 
         return String(strs[0].prefix(prefixLen))
+    }
+}
+```
+
+```rust
+struct TrieNode {
+    children: HashMap<u8, TrieNode>,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        TrieNode { children: HashMap::new() }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Trie { root: TrieNode::new() }
+    }
+
+    fn insert(&mut self, word: &str) {
+        let mut node = &mut self.root;
+        for &c in word.as_bytes() {
+            node = node.children.entry(c).or_insert_with(TrieNode::new);
+        }
+    }
+
+    fn lcp(&self, word: &str, prefix_len: usize) -> usize {
+        let mut node = &self.root;
+        let bytes = word.as_bytes();
+        let limit = bytes.len().min(prefix_len);
+        for i in 0..limit {
+            if let Some(child) = node.children.get(&bytes[i]) {
+                node = child;
+            } else {
+                return i;
+            }
+        }
+        limit
+    }
+}
+
+impl Solution {
+    pub fn longest_common_prefix(strs: Vec<String>) -> String {
+        if strs.len() == 1 {
+            return strs[0].clone();
+        }
+        let mut mini = 0;
+        for i in 1..strs.len() {
+            if strs[i].len() < strs[mini].len() {
+                mini = i;
+            }
+        }
+        let mut trie = Trie::new();
+        trie.insert(&strs[mini]);
+        let mut prefix_len = strs[mini].len();
+        for s in &strs {
+            prefix_len = trie.lcp(s, prefix_len);
+        }
+        strs[0][..prefix_len].to_string()
     }
 }
 ```

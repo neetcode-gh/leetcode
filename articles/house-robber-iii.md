@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding how to recursively navigate tree structures (DFS)
 - **Dynamic Programming on Trees** - Extending DP concepts to tree-based problems
 - **House Robber I** - The foundational problem that this extends to tree structures
@@ -274,6 +276,38 @@ class Solution {
         }
 
         return max(res, rob(root.left) + rob(root.right))
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+            if let Some(n) = node {
+                let n = n.borrow();
+                let mut res = n.val;
+                if let Some(ref left) = n.left {
+                    let left = left.borrow();
+                    res += dfs(&left.left) + dfs(&left.right);
+                }
+                if let Some(ref right) = n.right {
+                    let right = right.borrow();
+                    res += dfs(&right.left) + dfs(&right.right);
+                }
+                res.max(dfs(&n.left) + dfs(&n.right))
+            } else {
+                0
+            }
+        }
+        dfs(&root)
     }
 }
 ```
@@ -630,6 +664,48 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut cache = HashMap::new();
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            cache: &mut HashMap<*const RefCell<TreeNode>, i32>,
+        ) -> i32 {
+            if let Some(n) = node {
+                let key = Rc::as_ptr(n);
+                if let Some(&val) = cache.get(&key) {
+                    return val;
+                }
+                let nb = n.borrow();
+                let mut res = nb.val;
+                if let Some(ref left) = nb.left {
+                    let lb = left.borrow();
+                    res += dfs(&lb.left, cache) + dfs(&lb.right, cache);
+                }
+                if let Some(ref right) = nb.right {
+                    let rb = right.borrow();
+                    res += dfs(&rb.left, cache) + dfs(&rb.right, cache);
+                }
+                res = res.max(dfs(&nb.left, cache) + dfs(&nb.right, cache));
+                cache.insert(key, res);
+                res
+            } else {
+                0
+            }
+        }
+        dfs(&root, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -934,6 +1010,35 @@ class Solution {
         let withoutRoot = max(leftPair.0, leftPair.1) + max(rightPair.0, rightPair.1)
 
         return (withRoot, withoutRoot)
+    }
+}
+```
+
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn rob(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>) -> (i32, i32) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                let left_pair = dfs(&n.left);
+                let right_pair = dfs(&n.right);
+                let with_root = n.val + left_pair.1 + right_pair.1;
+                let without_root =
+                    left_pair.0.max(left_pair.1) + right_pair.0.max(right_pair.1);
+                (with_root, without_root)
+            } else {
+                (0, 0)
+            }
+        }
+        let result = dfs(&root);
+        result.0.max(result.1)
     }
 }
 ```

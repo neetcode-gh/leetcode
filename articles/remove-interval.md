@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Intervals** - Understanding interval representation as [start, end] pairs
 - **Interval Overlap Detection** - Determining when two intervals overlap or are disjoint
 - **Array Iteration** - Traversing a list of intervals and building a result list
@@ -19,9 +21,9 @@ This could mean keeping a left portion, a right portion, or both if the removal 
 
 1. Extract `remove_start` and `remove_end` from `toBeRemoved`.
 2. For each interval `[start, end]` in `intervals`:
-   - If the interval has no overlap with the removal range (ends before it starts or starts after it ends), add it to the output as is.
-   - Otherwise, check if there is a left portion to keep (`start < remove_start`) and add `[start, remove_start]`.
-   - Check if there is a right portion to keep (`end > remove_end`) and add `[remove_end, end]`.
+    - If the interval has no overlap with the removal range (ends before it starts or starts after it ends), add it to the output as is.
+    - Otherwise, check if there is a left portion to keep (`start < remove_start`) and add `[start, remove_start]`.
+    - Check if there is a right portion to keep (`end > remove_end`) and add `[remove_end, end]`.
 3. Return the resulting list of intervals.
 
 ::tabs-start
@@ -52,7 +54,7 @@ class Solution:
 class Solution {
     public List<List<Integer>> removeInterval(int[][] intervals, int[] toBeRemoved) {
         List<List<Integer>> result = new ArrayList<>();
-        
+
         for (int[] interval : intervals) {
             // If there are no overlaps, add the interval to the list as is.
             if (interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0]) {
@@ -68,7 +70,7 @@ class Solution {
                 }
             }
         }
-        
+
         return result;
     }
 }
@@ -79,7 +81,7 @@ class Solution {
 public:
     vector<vector<int>> removeInterval(vector<vector<int>>& intervals, vector<int>& toBeRemoved) {
         vector<vector<int>> result;
-        
+
         for (auto& interval : intervals) {
             // If there are no overlaps, add the interval to the list as is.
             if (interval[0] > toBeRemoved[1] || interval[1] < toBeRemoved[0]) {
@@ -95,7 +97,7 @@ public:
                 }
             }
         }
-        
+
         return result;
     }
 };
@@ -234,6 +236,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_interval(intervals: Vec<Vec<i32>>, to_be_removed: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut result = Vec::new();
+
+        for interval in &intervals {
+            // If there are no overlaps, add the interval to the list as is.
+            if interval[0] > to_be_removed[1] || interval[1] < to_be_removed[0] {
+                result.push(vec![interval[0], interval[1]]);
+            } else {
+                // Is there a left interval we need to keep?
+                if interval[0] < to_be_removed[0] {
+                    result.push(vec![interval[0], to_be_removed[0]]);
+                }
+                // Is there a right interval we need to keep?
+                if interval[1] > to_be_removed[1] {
+                    result.push(vec![to_be_removed[1], interval[1]]);
+                }
+            }
+        }
+
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -241,7 +269,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$ without considering $O(N)$ space for the output list.
 
->  Where $N$ is the number of intervals in `intervals`
+> Where $N$ is the number of intervals in `intervals`
 
 ---
 

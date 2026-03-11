@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the root
 - **Recursion** - Building solutions by combining results from recursive subproblems
 - **Dynamic Programming** - Using memoization to cache and reuse previously computed subtrees
@@ -18,9 +20,9 @@ To generate all unique BSTs with values from `1` to `n`, we pick each value as t
 1. Define a recursive function `generate(left, right)` that returns a list of all unique BSTs using values from `left` to `right`.
 2. Base case: If `left > right`, return a list containing `null` (representing an empty subtree).
 3. For each value `val` from `left` to `right`:
-   - Recursively generate all left subtrees using `generate(left, val - 1)`.
-   - Recursively generate all right subtrees using `generate(val + 1, right)`.
-   - For each combination of `leftTree` and `rightTree`, create a new tree with `val` as root and add it to `res`.
+    - Recursively generate all left subtrees using `generate(left, val - 1)`.
+    - Recursively generate all right subtrees using `generate(val + 1, right)`.
+    - For each combination of `leftTree` and `rightTree`, create a new tree with `val` as root and add it to `res`.
 4. Return `res`.
 5. Call `generate(1, n)` to get the final result.
 
@@ -318,6 +320,34 @@ class Solution {
             return res
         }
         return generate(1, n)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn generate_trees(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        fn generate(left: i32, right: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+            if left > right {
+                return vec![None];
+            }
+            let mut res = vec![];
+            for val in left..=right {
+                let left_trees = generate(left, val - 1);
+                let right_trees = generate(val + 1, right);
+                for lt in &left_trees {
+                    for rt in &right_trees {
+                        res.push(Some(Rc::new(RefCell::new(TreeNode {
+                            val,
+                            left: lt.clone(),
+                            right: rt.clone(),
+                        }))));
+                    }
+                }
+            }
+            res
+        }
+        generate(1, n)
     }
 }
 ```
@@ -662,6 +692,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate_trees(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let n = n as usize;
+        let mut dp: Vec<Vec<Option<Vec<Option<Rc<RefCell<TreeNode>>>>>>> =
+            vec![vec![None; n + 1]; n + 1];
+
+        fn generate(
+            left: usize,
+            right: usize,
+            dp: &mut Vec<Vec<Option<Vec<Option<Rc<RefCell<TreeNode>>>>>>>,
+        ) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+            if left > right {
+                return vec![None];
+            }
+            if let Some(cached) = &dp[left][right] {
+                return cached.clone();
+            }
+            let mut res = vec![];
+            for val in left..=right {
+                let left_trees = generate(left, val.wrapping_sub(1), dp);
+                let right_trees = generate(val + 1, right, dp);
+                for lt in &left_trees {
+                    for rt in &right_trees {
+                        res.push(Some(Rc::new(RefCell::new(TreeNode {
+                            val: val as i32,
+                            left: lt.clone(),
+                            right: rt.clone(),
+                        }))));
+                    }
+                }
+            }
+            dp[left][right] = Some(res.clone());
+            res
+        }
+        generate(1, n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -685,11 +755,11 @@ We can build the solution iteratively by computing all BSTs for smaller ranges f
 1. Create a 2D table `dp[left][right]` to store all BSTs for each range.
 2. Initialize base cases: For each `i`, set `dp[i][i-1] = [null]` (empty subtree).
 3. For each `length` from `1` to `n`:
-   - For each starting position `left` where `left + length - 1 <= n`:
-     - Let `right = left + length - 1`.
-     - For each root value `val` from `left` to `right`:
-       - Combine all trees from `dp[left][val-1]` and `dp[val+1][right]`.
-       - Create a new tree node for each combination and add to `dp[left][right]`.
+    - For each starting position `left` where `left + length - 1 <= n`:
+        - Let `right = left + length - 1`.
+        - For each root value `val` from `left` to `right`:
+            - Combine all trees from `dp[left][val-1]` and `dp[val+1][right]`.
+            - Create a new tree node for each combination and add to `dp[left][right]`.
 4. Return `dp[1][n]`.
 
 ::tabs-start
@@ -1002,6 +1072,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn generate_trees(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        let n = n as usize;
+        let mut dp: Vec<Vec<Vec<Option<Rc<RefCell<TreeNode>>>>>> =
+            vec![vec![vec![]; n + 2]; n + 2];
+        for i in 1..=n + 1 {
+            dp[i][i - 1] = vec![None];
+        }
+
+        for length in 1..=n {
+            for left in 1..=(n - length + 1) {
+                let right = left + length - 1;
+                let mut trees = vec![];
+                for val in left..=right {
+                    let left_trees = dp[left][val - 1].clone();
+                    let right_trees = dp[val + 1][right].clone();
+                    for lt in &left_trees {
+                        for rt in &right_trees {
+                            trees.push(Some(Rc::new(RefCell::new(TreeNode {
+                                val: val as i32,
+                                left: lt.clone(),
+                                right: rt.clone(),
+                            }))));
+                        }
+                    }
+                }
+                dp[left][right] = trees;
+            }
+        }
+        dp[1][n].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1024,10 +1129,10 @@ The number of unique BST structures depends only on the count of nodes, not thei
 1. Create an array `dp[length]` to store all BST structures for trees with `length` nodes.
 2. Initialize `dp[0] = [null]` (empty tree).
 3. For each `length` from `1` to `n`:
-   - For each root position `val` from `1` to `length`:
-     - Left subtree has `val - 1` nodes (from `dp[val-1]`).
-     - Right subtree has `length - val` nodes (from `dp[length-val]`), but needs value shifting.
-     - Create trees by combining `leftTree` from `dp[val-1]` with `shift(rightTree, val)` from `dp[length-val]`.
+    - For each root position `val` from `1` to `length`:
+        - Left subtree has `val - 1` nodes (from `dp[val-1]`).
+        - Right subtree has `length - val` nodes (from `dp[length-val]`), but needs value shifting.
+        - Create trees by combining `leftTree` from `dp[val-1]` with `shift(rightTree, val)` from `dp[length-val]`.
 4. Define a `shift(node, offset)` function that creates a new tree with all values increased by `offset`.
 5. Return `dp[n]`.
 
@@ -1372,6 +1477,50 @@ class Solution {
             }
         }
         return dp[n]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn generate_trees(n: i32) -> Vec<Option<Rc<RefCell<TreeNode>>>> {
+        fn shift(node: &Option<Rc<RefCell<TreeNode>>>, offset: i32) -> Option<Rc<RefCell<TreeNode>>> {
+            match node {
+                None => None,
+                Some(n) => {
+                    let n = n.borrow();
+                    Some(Rc::new(RefCell::new(TreeNode {
+                        val: n.val + offset,
+                        left: shift(&n.left, offset),
+                        right: shift(&n.right, offset),
+                    })))
+                }
+            }
+        }
+
+        let n = n as usize;
+        let mut dp: Vec<Vec<Option<Rc<RefCell<TreeNode>>>>> = vec![vec![]; n + 1];
+        dp[0] = vec![None];
+
+        for length in 1..=n {
+            let mut trees = vec![];
+            for val in 1..=length {
+                let left_trees = dp[val - 1].clone();
+                let right_trees = dp[length - val].clone();
+                for lt in &left_trees {
+                    for rt in &right_trees {
+                        let root = Rc::new(RefCell::new(TreeNode {
+                            val: val as i32,
+                            left: lt.clone(),
+                            right: shift(rt, val as i32),
+                        }));
+                        trees.push(Some(root));
+                    }
+                }
+            }
+            dp[length] = trees;
+        }
+        dp[n].clone()
     }
 }
 ```

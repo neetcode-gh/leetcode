@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Depth First Search (DFS)** - Used to identify and mark all cells of one island before searching for the bridge
 - **Breadth First Search (BFS)** - Essential for finding the shortest path (minimum flips) between the two islands since BFS explores by levels
 - **Graph Traversal on Grids** - Understanding 4-directional movement and boundary checking in 2D matrices
@@ -20,9 +22,9 @@ First, we identify one island completely using DFS and mark all its cells as vis
 1. Find the first land cell and run `DFS` to mark all cells of the first island as visited.
 2. Initialize a `BFS` queue with all cells from the first island.
 3. Perform `BFS`, expanding outward level by level:
-   - For each cell, check all four neighbors.
-   - If a neighbor is part of the second island (land and not visited), return the current distance.
-   - If a neighbor is water and not visited, mark it visited and add to the queue.
+    - For each cell, check all four neighbors.
+    - If a neighbor is part of the second island (land and not visited), return the current distance.
+    - If a neighbor is water and not visited, mark it visited and add to the queue.
 4. Increment the distance counter after processing each level.
 5. Return the distance when the second island is reached.
 
@@ -518,6 +520,74 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_bridge(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut visited = vec![vec![false; n]; n];
+        let mut grid = grid;
+
+        fn dfs(
+            grid: &Vec<Vec<i32>>, visited: &mut Vec<Vec<bool>>,
+            r: i32, c: i32, n: i32, direct: &[(i32, i32); 4],
+        ) {
+            if r < 0 || c < 0 || r >= n || c >= n
+                || grid[r as usize][c as usize] == 0
+                || visited[r as usize][c as usize]
+            {
+                return;
+            }
+            visited[r as usize][c as usize] = true;
+            for &(dr, dc) in direct {
+                dfs(grid, visited, r + dr, c + dc, n, direct);
+            }
+        }
+
+        let mut found = false;
+        for r in 0..n {
+            if found { break; }
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    dfs(&grid, &mut visited, r as i32, c as i32, n as i32, &direct);
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+        for r in 0..n {
+            for c in 0..n {
+                if visited[r][c] {
+                    q.push_back((r, c));
+                }
+            }
+        }
+
+        let mut res = 0;
+        while !q.is_empty() {
+            for _ in 0..q.len() {
+                let (r, c) = q.pop_front().unwrap();
+                for &(dr, dc) in &direct {
+                    let (cr, cc) = (r as i32 + dr, c as i32 + dc);
+                    if cr < 0 || cc < 0 || cr >= n as i32 || cc >= n as i32 {
+                        continue;
+                    }
+                    let (cr, cc) = (cr as usize, cc as usize);
+                    if visited[cr][cc] { continue; }
+                    if grid[cr][cc] == 1 { return res; }
+                    q.push_back((cr, cc));
+                    visited[cr][cc] = true;
+                }
+            }
+            res += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,9 +610,9 @@ During BFS expansion, water cells are also marked as 2 when visited. When we enc
 1. Find the first land cell and run `DFS` to mark all its cells with value `2`.
 2. During `DFS`, add each cell to the `BFS` queue.
 3. Perform `BFS`, expanding outward level by level:
-   - For each cell, check all four neighbors.
-   - If a neighbor has value `1`, return the current distance (found second island).
-   - If a neighbor has value `0`, mark it as `2` and add to the queue.
+    - For each cell, check all four neighbors.
+    - If a neighbor has value `1`, return the current distance (found second island).
+    - If a neighbor has value `0`, mark it as `2` and add to the queue.
 4. Increment the distance counter after processing each level.
 5. Return the distance when the second island is reached.
 
@@ -965,6 +1035,60 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_bridge(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+
+        fn dfs(
+            grid: &mut Vec<Vec<i32>>, q: &mut VecDeque<(usize, usize)>,
+            r: i32, c: i32, n: i32, direct: &[(i32, i32); 4],
+        ) {
+            if r < 0 || c < 0 || r >= n || c >= n || grid[r as usize][c as usize] != 1 {
+                return;
+            }
+            grid[r as usize][c as usize] = 2;
+            q.push_back((r as usize, c as usize));
+            for &(dr, dc) in direct {
+                dfs(grid, q, r + dr, c + dc, n, direct);
+            }
+        }
+
+        'outer: for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    dfs(&mut grid, &mut q, r as i32, c as i32, n as i32, &direct);
+                    break 'outer;
+                }
+            }
+        }
+
+        let mut res = 0;
+        while !q.is_empty() {
+            for _ in 0..q.len() {
+                let (r, c) = q.pop_front().unwrap();
+                for &(dr, dc) in &direct {
+                    let (nr, nc) = (r as i32 + dr, c as i32 + dc);
+                    if nr < 0 || nc < 0 || nr >= n as i32 || nc >= n as i32 {
+                        continue;
+                    }
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if grid[nr][nc] == 1 { return res; }
+                    if grid[nr][nc] == 0 {
+                        grid[nr][nc] = 2;
+                        q.push_back((nr, nc));
+                    }
+                }
+            }
+            res += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -987,9 +1111,9 @@ The first BFS explores all connected land cells starting from the first land cel
 1. Find the first land cell.
 2. Run `BFS` from this cell to identify all cells of the first island, marking them as `2` and adding them to a second queue.
 3. Perform `BFS` using the second queue, expanding outward level by level:
-   - For each cell, check all four neighbors.
-   - If a neighbor has value `1`, return the current distance.
-   - If a neighbor has value `0`, mark it as `2` and add to the queue.
+    - For each cell, check all four neighbors.
+    - If a neighbor has value `1`, return the current distance.
+    - If a neighbor has value `0`, mark it as `2` and add to the queue.
 4. Increment the distance counter after processing each level.
 5. Return the distance when the second island is reached.
 
@@ -1463,6 +1587,61 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_bridge(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut q2: VecDeque<(usize, usize)> = VecDeque::new();
+
+        'outer: for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    let mut q1: VecDeque<(usize, usize)> = VecDeque::new();
+                    q1.push_back((r, c));
+                    grid[r][c] = 2;
+
+                    while let Some((x, y)) = q1.pop_front() {
+                        q2.push_back((x, y));
+                        for &(dx, dy) in &direct {
+                            let (nx, ny) = (x as i32 + dx, y as i32 + dy);
+                            if nx >= 0 && ny >= 0 && nx < n as i32 && ny < n as i32 {
+                                let (nx, ny) = (nx as usize, ny as usize);
+                                if grid[nx][ny] == 1 {
+                                    grid[nx][ny] = 2;
+                                    q1.push_back((nx, ny));
+                                }
+                            }
+                        }
+                    }
+                    break 'outer;
+                }
+            }
+        }
+
+        let mut res = 0;
+        while !q2.is_empty() {
+            for _ in 0..q2.len() {
+                let (x, y) = q2.pop_front().unwrap();
+                for &(dx, dy) in &direct {
+                    let (nx, ny) = (x as i32 + dx, y as i32 + dy);
+                    if nx >= 0 && ny >= 0 && nx < n as i32 && ny < n as i32 {
+                        let (nx, ny) = (nx as usize, ny as usize);
+                        if grid[nx][ny] == 1 { return res; }
+                        if grid[nx][ny] == 0 {
+                            grid[nx][ny] = 2;
+                            q2.push_back((nx, ny));
+                        }
+                    }
+                }
+            }
+            res += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1486,9 +1665,9 @@ Once we know which cells belong to the first island (tracked during the initial 
 2. Scan the grid, unioning adjacent land cells. Track the first island's root.
 3. Identify boundary cells of the first island (cells adjacent to water) and add them to the `BFS` queue.
 4. Perform `BFS`, expanding outward level by level:
-   - For each cell, check all four neighbors.
-   - If a neighbor is land and unioning returns `true` (different component), return the current distance.
-   - If a neighbor is water, mark it as land, union with current cell, and add to queue.
+    - For each cell, check all four neighbors.
+    - If a neighbor is land and unioning returns `true` (different component), return the current distance.
+    - If a neighbor is water, mark it as land, union with current cell, and add to queue.
 5. Increment distance after each level.
 6. Return the distance when the islands are connected.
 
@@ -2219,6 +2398,105 @@ class Solution {
             res += 1
         }
         return res
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    rank: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        DSU {
+            parent: (0..n).collect(),
+            rank: vec![1; n],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let (mut pu, mut pv) = (self.find(u), self.find(v));
+        if pu == pv { return false; }
+        if self.rank[pv] > self.rank[pu] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.parent[pv] = pu;
+        self.rank[pu] += self.rank[pv];
+        true
+    }
+}
+
+impl Solution {
+    pub fn shortest_bridge(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut dsu = DSU::new(n * n + 1);
+        let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+
+        let idx = |r: usize, c: usize| r * n + c + 1;
+
+        let mut first_island = 0;
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    first_island = dsu.find(idx(r, c));
+                    if c + 1 < n && grid[r][c + 1] == 1 {
+                        dsu.union(idx(r, c), idx(r, c + 1));
+                    }
+                    if r + 1 < n && grid[r + 1][c] == 1 {
+                        dsu.union(idx(r, c), idx(r + 1, c));
+                    }
+                }
+            }
+        }
+
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 && dsu.find(idx(r, c)) == first_island {
+                    for &(dr, dc) in &direct {
+                        let (nr, nc) = (r as i32 + dr, c as i32 + dc);
+                        if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32
+                            && grid[nr as usize][nc as usize] == 0
+                        {
+                            q.push_back((r, c));
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        let mut res = 0;
+        while !q.is_empty() {
+            for _ in 0..q.len() {
+                let (r, c) = q.pop_front().unwrap();
+                for &(dr, dc) in &direct {
+                    let (nr, nc) = (r as i32 + dr, c as i32 + dc);
+                    if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32 {
+                        let (nr, nc) = (nr as usize, nc as usize);
+                        if grid[nr][nc] == 1 && dsu.union(idx(r, c), idx(nr, nc)) {
+                            return res;
+                        }
+                        if grid[nr][nc] == 0 {
+                            grid[nr][nc] = 1;
+                            dsu.union(idx(r, c), idx(nr, nc));
+                            q.push_back((nr, nc));
+                        }
+                    }
+                }
+            }
+            res += 1;
+        }
+        res
     }
 }
 ```

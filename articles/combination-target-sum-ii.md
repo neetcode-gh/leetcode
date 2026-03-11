@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Exploring choices by including/excluding elements and undoing decisions when needed
 - **Recursion** - Building combinations by making decisions at each index in the array
 - **Sorting** - Arranging elements to group duplicates together for efficient skip logic
@@ -15,26 +17,26 @@ The brute-force approach tries **every possible subset** of the candidate number
 
 - We sort the array so duplicate combinations appear in the same order.
 - At each index, we have two choices:
-  1. **Include** the current number.
-  2. **Skip** the current number.
+    1. **Include** the current number.
+    2. **Skip** the current number.
 - This produces all subsets (like a binary tree of choices).
 - Whenever a subset’s sum equals the target, we store it.
 - To avoid duplicate combinations, we store each result as a **tuple in a set**.
 
-This method is easy to understand but slow because it explores *all* subsets, even invalid or duplicate ones.
+This method is easy to understand but slow because it explores _all_ subsets, even invalid or duplicate ones.
 
 ### Algorithm
 
 1. **Sort** the array to keep combinations in consistent order.
 2. Use a recursive function
    `dfs(i, currentList, total)`:
-   - If `total == target`, add the tuple version of `currentList` to a set.
-   - If `total > target` or `i == len(candidates)`, stop exploring.
+    - If `total == target`, add the tuple version of `currentList` to a set.
+    - If `total > target` or `i == len(candidates)`, stop exploring.
 3. At each index `i`:
-   - **Include** the current number:
-     - Add it to `currentList`, recurse with `i + 1`, then remove it.
-   - **Exclude** the current number:
-     - Recurse with `i + 1`.
+    - **Include** the current number:
+        - Add it to `currentList`, recurse with `i + 1`, then remove it.
+    - **Exclude** the current number:
+        - Recurse with `i + 1`.
 4. After recursion finishes, convert all unique tuples in the set into lists and return them.
 
 ::tabs-start
@@ -288,6 +290,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum2(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut res = HashSet::new();
+        let mut candidates = candidates;
+        candidates.sort();
+
+        fn generate_subsets(
+            candidates: &[i32], target: i32, i: usize,
+            cur: &mut Vec<i32>, total: i32, res: &mut HashSet<Vec<i32>>,
+        ) {
+            if total == target {
+                res.insert(cur.clone());
+                return;
+            }
+            if total > target || i == candidates.len() {
+                return;
+            }
+            cur.push(candidates[i]);
+            generate_subsets(candidates, target, i + 1, cur, total + candidates[i], res);
+            cur.pop();
+            generate_subsets(candidates, target, i + 1, cur, total, res);
+        }
+
+        generate_subsets(&candidates, target, 0, &mut vec![], 0, &mut res);
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -306,8 +338,8 @@ To avoid generating duplicate combinations, we:
 
 1. **Sort the array** so duplicates appear next to each other.
 2. Use **backtracking** to explore choices:
-   - Take the current number.
-   - Skip the current number.
+    - Take the current number.
+    - Skip the current number.
 3. When skipping, we **skip all duplicates in one jump** to avoid creating duplicate combinations like `[1,2,2]` multiple times.
 4. If the running total exceeds the target, we stop exploring the current path early.
 
@@ -317,16 +349,16 @@ Sorting + skipping duplicates + backtracking ensures we only build valid and uni
 
 1. Sort `candidates`.
 2. Use a recursive function `dfs(i, cur, total)`:
-   - If `total == target`, add a copy of `cur` to the result.
-   - If `total > target` or `i == len(candidates)`, stop exploring.
+    - If `total == target`, add a copy of `cur` to the result.
+    - If `total > target` or `i == len(candidates)`, stop exploring.
 3. **Include** the current number:
-   - Add `candidates[i]` to `cur`.
-   - Recurse with next index `i + 1`.
-   - Remove the number (backtrack).
+    - Add `candidates[i]` to `cur`.
+    - Recurse with next index `i + 1`.
+    - Remove the number (backtrack).
 4. **Skip duplicates**:
-   - Advance index `i` forward while the next number is the same.
+    - Advance index `i` forward while the next number is the same.
 5. **Exclude** the current number:
-   - Call `dfs(i + 1, cur, total)` after skipping duplicates.
+    - Call `dfs(i + 1, cur, total)` after skipping duplicates.
 6. Return the result list.
 
 ::tabs-start
@@ -602,6 +634,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum2(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let mut candidates = candidates;
+        candidates.sort();
+
+        fn dfs(
+            candidates: &[i32], target: i32, i: usize,
+            cur: &mut Vec<i32>, total: i32, res: &mut Vec<Vec<i32>>,
+        ) {
+            if total == target {
+                res.push(cur.clone());
+                return;
+            }
+            if total > target || i == candidates.len() {
+                return;
+            }
+
+            cur.push(candidates[i]);
+            dfs(candidates, target, i + 1, cur, total + candidates[i], res);
+            cur.pop();
+
+            let mut j = i;
+            while j + 1 < candidates.len() && candidates[j] == candidates[j + 1] {
+                j += 1;
+            }
+            dfs(candidates, target, j + 1, cur, total, res);
+        }
+
+        dfs(&candidates, target, 0, &mut vec![], 0, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,15 +712,15 @@ This ensures we explore all valid combinations while preventing duplicates natur
 1. Build a **frequency map** (`count[num]++`) for all numbers.
 2. Build a list of **unique numbers** (`A`).
 3. Use backtracking function `backtrack(i, target, cur)`:
-   - If `target == 0`, add `cur` to the result.
-   - If `target < 0` or `i` is out of bounds, return.
+    - If `target == 0`, add `cur` to the result.
+    - If `target < 0` or `i` is out of bounds, return.
 4. **Include `nums[i]`** if available in frequency map:
-   - Append number to `cur`
-   - Decrease count
-   - Recurse with same index `i` (because duplicates allowed up to frequency)
-   - Backtrack by restoring count and removing number
+    - Append number to `cur`
+    - Decrease count
+    - Recurse with same index `i` (because duplicates allowed up to frequency)
+    - Backtrack by restoring count and removing number
 5. **Exclude `nums[i]`**:
-   - Move to `i + 1`
+    - Move to `i + 1`
 
 ::tabs-start
 
@@ -992,6 +1060,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum2(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let mut count = HashMap::new();
+        let mut unique_nums = Vec::new();
+
+        for &num in &candidates {
+            let e = count.entry(num).or_insert(0);
+            if *e == 0 {
+                unique_nums.push(num);
+            }
+            *e += 1;
+        }
+
+        fn backtrack(
+            nums: &[i32], target: i32, cur: &mut Vec<i32>,
+            i: usize, count: &mut HashMap<i32, i32>, res: &mut Vec<Vec<i32>>,
+        ) {
+            if target == 0 {
+                res.push(cur.clone());
+                return;
+            }
+            if target < 0 || i >= nums.len() {
+                return;
+            }
+            if *count.get(&nums[i]).unwrap_or(&0) > 0 {
+                cur.push(nums[i]);
+                *count.get_mut(&nums[i]).unwrap() -= 1;
+                backtrack(nums, target - nums[i], cur, i, count, res);
+                *count.get_mut(&nums[i]).unwrap() += 1;
+                cur.pop();
+            }
+            backtrack(nums, target, cur, i + 1, count, res);
+        }
+
+        backtrack(&unique_nums, target, &mut vec![], 0, &mut count, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1013,12 +1123,12 @@ To handle duplicates safely, we:
    This groups equal numbers together, which helps us skip duplicates easily.
 
 2. Use **backtracking** where at each index we decide:
-   - Take the number
-   - Skip the number
+    - Take the number
+    - Skip the number
 
 3. To avoid duplicate combinations:
-   - If `candidates[i] == candidates[i - 1]` and we are still in the same level of recursion (`i > idx`),
-     we **skip** that number.
+    - If `candidates[i] == candidates[i - 1]` and we are still in the same level of recursion (`i > idx`),
+      we **skip** that number.
 
 4. We stop early if `current_sum + candidates[i] > target` because the list is sorted.
 
@@ -1028,12 +1138,12 @@ This approach explores each number only once per combination path and guarantees
 
 1. Sort the candidates.
 2. Define a DFS function `dfs(idx, path, curSum)`:
-   - If `curSum == target`, add a copy of `path` to the result.
-   - Loop `i` from `idx` to end:
-     - If `i > idx` and the current number equals the previous → skip (duplicate control).
-     - If adding this number exceeds `target` → break (pruning).
-     - Include the number and recurse with `i + 1` (cannot reuse same element).
-     - Backtrack by removing the last number.
+    - If `curSum == target`, add a copy of `path` to the result.
+    - Loop `i` from `idx` to end:
+        - If `i > idx` and the current number equals the previous → skip (duplicate control).
+        - If adding this number exceeds `target` → break (pruning).
+        - Include the number and recurse with `i + 1` (cannot reuse same element).
+        - Backtrack by removing the last number.
 3. Call `dfs(0, [], 0)` and return the result.
 
 ::tabs-start
@@ -1294,6 +1404,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn combination_sum2(candidates: Vec<i32>, target: i32) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let mut candidates = candidates;
+        candidates.sort();
+
+        fn dfs(
+            candidates: &[i32], target: i32, idx: usize,
+            path: &mut Vec<i32>, cur: i32, res: &mut Vec<Vec<i32>>,
+        ) {
+            if cur == target {
+                res.push(path.clone());
+                return;
+            }
+            for i in idx..candidates.len() {
+                if i > idx && candidates[i] == candidates[i - 1] {
+                    continue;
+                }
+                if cur + candidates[i] > target {
+                    break;
+                }
+                path.push(candidates[i]);
+                dfs(candidates, target, i + 1, path, cur + candidates[i], res);
+                path.pop();
+            }
+        }
+
+        dfs(&candidates, target, 0, &mut vec![], 0, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1306,7 +1450,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Generating Duplicate Combinations
+
 The input contains duplicates, and each element can only be used once. Without proper duplicate handling, `[1,1,2]` with target `3` might produce `[1,2]` twice. Always sort first and skip consecutive duplicates at the same recursion level.
+
 ```python
 # Wrong: generates duplicates
 for i in range(idx, len(candidates)):
@@ -1319,7 +1465,9 @@ for i in range(idx, len(candidates)):
 ```
 
 ### Reusing Elements (Using i Instead of i + 1)
+
 Unlike Combination Sum I where elements can be reused, this problem requires each element to be used at most once. Recursing with the same index allows reuse.
+
 ```python
 # Wrong: allows reusing same element
 dfs(i, cur, total + candidates[i])
@@ -1328,4 +1476,5 @@ dfs(i + 1, cur, total + candidates[i])
 ```
 
 ### Forgetting to Sort Before Skipping Duplicates
+
 The duplicate-skipping logic `candidates[i] == candidates[i-1]` only works on a sorted array. Without sorting, duplicates won't be adjacent and the skip logic fails silently, producing duplicate combinations.

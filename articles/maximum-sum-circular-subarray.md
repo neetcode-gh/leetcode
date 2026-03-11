@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Kadane's Algorithm** - Foundation for finding maximum subarray sum; extended here to handle circular arrays
 - **Prefix and Suffix Sums** - Used to efficiently compute wrap-around subarray sums
 - **Circular Array Handling** - Understanding how subarrays can wrap from end to beginning
@@ -17,9 +19,9 @@ Since the array is circular, any contiguous subarray can wrap around from the en
 
 1. Initialize `res` with the first element.
 2. For each starting index `i` from `0` to `n` - `1`:
-   - Reset `cur_sum` to `0`.
-   - Extend the subarray from index `i` up to `i` + `n` - `1`, using `j` % `n` to wrap around.
-   - Add each element to `cur_sum` and update `res` with the maximum.
+    - Reset `cur_sum` to `0`.
+    - Extend the subarray from index `i` up to `i` + `n` - `1`, using `j` % `n` to wrap around.
+    - Add each element to `cur_sum` and update `res` with the maximum.
 3. Return `res`.
 
 ::tabs-start
@@ -177,6 +179,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_subarray_sum_circular(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = nums[0];
+        for i in 0..n {
+            let mut cur_sum = 0;
+            for j in i..i + n {
+                cur_sum += nums[j % n];
+                res = res.max(cur_sum);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,10 +216,10 @@ A circular subarray with maximum sum either lies entirely within the array (no w
 1. Compute `right_max[i]` as the maximum suffix sum starting at index `i` or later, iterating from right to left.
 2. Initialize `max_sum` with `nums[0]`, and set `cur_max` and `prefix_sum` to `0`.
 3. Iterate from left to right:
-   - Update `cur_max` using Kadane's logic: `cur_max` = `max(cur_max, 0)` + `nums[i]`.
-   - Update `max_sum` with `cur_max` (non-wrapping case).
-   - Add `nums[i]` to `prefix_sum`.
-   - If `i` + `1` < `n`, update `max_sum` with `prefix_sum` + `right_max[i + 1]` (wrapping case).
+    - Update `cur_max` using Kadane's logic: `cur_max` = `max(cur_max, 0)` + `nums[i]`.
+    - Update `max_sum` with `cur_max` (non-wrapping case).
+    - Add `nums[i]` to `prefix_sum`.
+    - If `i` + `1` < `n`, update `max_sum` with `prefix_sum` + `right_max[i + 1]` (wrapping case).
 4. Return `max_sum`.
 
 ::tabs-start
@@ -458,6 +477,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_subarray_sum_circular(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut right_max = vec![0; n];
+        right_max[n - 1] = nums[n - 1];
+        let mut suffix_sum = nums[n - 1];
+
+        for i in (0..n - 1).rev() {
+            suffix_sum += nums[i];
+            right_max[i] = right_max[i + 1].max(suffix_sum);
+        }
+
+        let mut max_sum = nums[0];
+        let mut cur_max = 0;
+        let mut prefix_sum = 0;
+
+        for i in 0..n {
+            cur_max = 0i32.max(cur_max) + nums[i];
+            max_sum = max_sum.max(cur_max);
+            prefix_sum += nums[i];
+            if i + 1 < n {
+                max_sum = max_sum.max(prefix_sum + right_max[i + 1]);
+            }
+        }
+
+        max_sum
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -477,9 +527,9 @@ The maximum circular subarray sum falls into one of two cases: either the subarr
 
 1. Initialize `globMax` and `globMin` to `nums[0]`, and set `curMax`, `curMin`, and `total` to `0`.
 2. For each `num` in `nums`:
-   - Update `curMax` = `max(curMax` + `num, num)` and `globMax` = `max(globMax, curMax)`.
-   - Update `curMin` = `min(curMin` + `num, num)` and `globMin` = `min(globMin, curMin)`.
-   - Add `num` to `total`.
+    - Update `curMax` = `max(curMax` + `num, num)` and `globMax` = `max(globMax, curMax)`.
+    - Update `curMin` = `min(curMin` + `num, num)` and `globMin` = `min(globMin, curMin)`.
+    - Add `num` to `total`.
 3. If `globMax` > `0`, return `max(globMax, total - globMin)`. Otherwise, return `globMax`.
 
 ::tabs-start
@@ -661,6 +711,32 @@ class Solution {
         }
 
         return globMax > 0 ? max(globMax, total - globMin) : globMax
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_subarray_sum_circular(nums: Vec<i32>) -> i32 {
+        let mut glob_max = nums[0];
+        let mut glob_min = nums[0];
+        let mut cur_max = 0;
+        let mut cur_min = 0;
+        let mut total = 0;
+
+        for &num in &nums {
+            cur_max = (cur_max + num).max(num);
+            cur_min = (cur_min + num).min(num);
+            total += num;
+            glob_max = glob_max.max(cur_max);
+            glob_min = glob_min.min(cur_min);
+        }
+
+        if glob_max > 0 {
+            glob_max.max(total - glob_min)
+        } else {
+            glob_max
+        }
     }
 }
 ```

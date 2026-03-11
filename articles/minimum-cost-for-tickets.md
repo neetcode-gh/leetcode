@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - The problem has optimal substructure and overlapping subproblems, making DP essential
 - **Recursion with Memoization** - Top-down approaches cache results to avoid recomputing the same states
 - **Queues/Deques** - Space-optimized solutions use queues to track pass expiration within sliding windows
@@ -17,8 +19,8 @@ We need to cover all travel days with the minimum cost using 1-day, 7-day, or 30
 1. Define a recursive function `dfs(i)` that returns the minimum cost to cover all days starting from index `i`.
 2. Base case: If `i` equals the number of travel days, return `0` (no more days to cover).
 3. For each pass type (1-day, 7-day, 30-day):
-   - Find the next day index `j` that is not covered by this pass.
-   - Calculate the cost as the pass price plus `dfs(j)`.
+    - Find the next day index `j` that is not covered by this pass.
+    - Calculate the cost as the pass price plus `dfs(j)`.
 4. Return the `min` cost among all three options.
 
 ::tabs-start
@@ -265,6 +267,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        fn dfs(i: usize, days: &[i32], costs: &[i32]) -> i32 {
+            if i == days.len() { return 0; }
+
+            let mut res = costs[0] + dfs(i + 1, days, costs);
+
+            let mut j = i;
+            while j < days.len() && days[j] < days[i] + 7 { j += 1; }
+            res = res.min(costs[1] + dfs(j, days, costs));
+
+            j = i;
+            while j < days.len() && days[j] < days[i] + 30 { j += 1; }
+            res = res.min(costs[2] + dfs(j, days, costs));
+
+            res
+        }
+
+        dfs(0, &days, &costs)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,8 +312,8 @@ The recursive solution recomputes the same subproblems many times. Since the min
 2. Define `dfs(i)` that returns the minimum cost from index `i`.
 3. If `i` is already in `dp`, return the cached value.
 4. For each pass duration (1, 7, 30 days):
-   - Find the first uncovered day index `j`.
-   - Update the minimum cost as `min(current_min, cost + dfs(j))`.
+    - Find the first uncovered day index `j`.
+    - Update the minimum cost as `min(current_min, cost + dfs(j))`.
 5. Store and return the result.
 
 ::tabs-start
@@ -528,6 +554,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let n = days.len();
+        let mut dp = vec![-1; n];
+        let durations = [1, 7, 30];
+
+        fn dfs(
+            i: usize, days: &[i32], costs: &[i32],
+            dp: &mut Vec<i32>, durations: &[i32; 3],
+        ) -> i32 {
+            if i == days.len() { return 0; }
+            if dp[i] != -1 { return dp[i]; }
+
+            dp[i] = i32::MAX;
+            let mut j = i;
+            for k in 0..3 {
+                while j < days.len() && days[j] < days[i] + durations[k] {
+                    j += 1;
+                }
+                dp[i] = dp[i].min(costs[k] + dfs(j, days, costs, dp, durations));
+            }
+            dp[i]
+        }
+
+        dfs(0, &days, &costs, &mut dp, &durations)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -731,6 +787,29 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let n = days.len();
+        let mut dp = vec![0; n + 1];
+        let durations = [1, 7, 30];
+
+        for i in (0..n).rev() {
+            dp[i] = i32::MAX;
+            let mut j = i;
+            for k in 0..3 {
+                while j < n && days[j] < days[i] + durations[k] {
+                    j += 1;
+                }
+                dp[i] = dp[i].min(costs[k] + dp[j]);
+            }
+        }
+
+        dp[0]
     }
 }
 ```
@@ -984,6 +1063,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let mut days = days;
+        days.push(*days.last().unwrap() + 30);
+        let n = days.len();
+        let mut dp = vec![0; n];
+        let mut last7 = n;
+        let mut last30 = n;
+
+        for i in (0..n - 1).rev() {
+            dp[i] = dp[i + 1] + costs[0];
+
+            while last7 > i + 1 && days[last7 - 1] >= days[i] + 7 {
+                last7 -= 1;
+            }
+            dp[i] = dp[i].min(costs[1] + dp[last7]);
+
+            while last30 > i + 1 && days[last30 - 1] >= days[i] + 30 {
+                last30 -= 1;
+            }
+            dp[i] = dp[i].min(costs[2] + dp[last30]);
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1003,9 +1111,9 @@ We can process days forward instead of backward. At each day, we only need to kn
 
 1. Use two queues to store `(day, cost)` pairs for 7-day and 30-day passes.
 2. For each travel day:
-   - Remove expired passes from both queues.
-   - Add new pass options: buying a 7-day or 30-day pass today.
-   - Calculate minimum cost: 1-day pass from yesterday, or cheapest valid 7-day or 30-day pass.
+    - Remove expired passes from both queues.
+    - Add new pass options: buying a 7-day or 30-day pass today.
+    - Calculate minimum cost: 1-day pass from yesterday, or cheapest valid 7-day or 30-day pass.
 3. Return the final cost after processing all days.
 
 ::tabs-start
@@ -1217,6 +1325,34 @@ class Solution {
         }
 
         return dp
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let mut dp7: VecDeque<(i32, i32)> = VecDeque::new();
+        let mut dp30: VecDeque<(i32, i32)> = VecDeque::new();
+        let mut dp = 0;
+
+        for &d in &days {
+            while let Some(&front) = dp7.front() {
+                if front.0 + 7 <= d { dp7.pop_front(); } else { break; }
+            }
+            while let Some(&front) = dp30.front() {
+                if front.0 + 30 <= d { dp30.pop_front(); } else { break; }
+            }
+
+            dp7.push_back((d, dp + costs[1]));
+            dp30.push_back((d, dp + costs[2]));
+
+            dp = (dp + costs[0])
+                .min(dp7.front().unwrap().1)
+                .min(dp30.front().unwrap().1);
+        }
+
+        dp
     }
 }
 ```
@@ -1485,6 +1621,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let mut dp7: VecDeque<(i32, i32)> = VecDeque::new();
+        let mut dp30: VecDeque<(i32, i32)> = VecDeque::new();
+        let mut dp = 0;
+        let mut last7 = 0;
+        let mut last30 = 0;
+
+        for i in (0..days.len()).rev() {
+            dp += costs[0];
+
+            while let Some(&back) = dp7.back() {
+                if back.0 >= days[i] + 7 { last7 = dp7.pop_back().unwrap().1; } else { break; }
+            }
+            dp = dp.min(costs[1] + last7);
+
+            while let Some(&back) = dp30.back() {
+                if back.0 >= days[i] + 30 { last30 = dp30.pop_back().unwrap().1; } else { break; }
+            }
+            dp = dp.min(costs[2] + last30);
+
+            dp7.push_front((days[i], dp));
+            dp30.push_front((days[i], dp));
+        }
+
+        dp
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1505,11 +1672,11 @@ Instead of indexing by travel day positions, we can index by actual calendar day
 1. Create a DP array of size 366 for each day of the year.
 2. Keep a pointer `i` to track the current travel day index.
 3. For each calendar day from 1 to 365:
-   - If not a travel day, copy the previous day's cost.
-   - If it is a travel day, compute the minimum of:
-     - `dp[d-1] + cost[0]` (1-day pass)
-     - `dp[max(0, d-7)] + cost[1]` (7-day pass)
-     - `dp[max(0, d-30)] + cost[2]` (30-day pass)
+    - If not a travel day, copy the previous day's cost.
+    - If it is a travel day, compute the minimum of:
+        - `dp[d-1] + cost[0]` (1-day pass)
+        - `dp[max(0, d-7)] + cost[1]` (7-day pass)
+        - `dp[max(0, d-30)] + cost[2]` (30-day pass)
 4. Return the cost at the last travel day.
 
 ::tabs-start
@@ -1717,6 +1884,31 @@ class Solution {
         }
 
         return dp[365]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let mut dp = vec![0; 366];
+        let mut i = 0;
+
+        for d in 1..366 {
+            dp[d] = dp[d - 1];
+            if i == days.len() {
+                return dp[d];
+            }
+
+            if d as i32 == days[i] {
+                dp[d] += costs[0];
+                dp[d] = dp[d].min(costs[1] + dp[(d as i32 - 7).max(0) as usize]);
+                dp[d] = dp[d].min(costs[2] + dp[(d as i32 - 30).max(0) as usize]);
+                i += 1;
+            }
+        }
+
+        dp[365]
     }
 }
 ```
@@ -1953,6 +2145,32 @@ class Solution {
         }
 
         return dp[days.last! % 31]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn mincost_tickets(days: Vec<i32>, costs: Vec<i32>) -> i32 {
+        let mut dp = [0i32; 31];
+        let mut i = 0;
+
+        for d in 1..=365i32 {
+            if i >= days.len() { break; }
+
+            dp[d as usize % 31] = dp[(d - 1) as usize % 31];
+
+            if d == days[i] {
+                dp[d as usize % 31] += costs[0];
+                dp[d as usize % 31] = dp[d as usize % 31]
+                    .min(costs[1] + dp[(d - 7).max(0) as usize % 31]);
+                dp[d as usize % 31] = dp[d as usize % 31]
+                    .min(costs[2] + dp[(d - 30).max(0) as usize % 31]);
+                i += 1;
+            }
+        }
+
+        dp[*days.last().unwrap() as usize % 31]
     }
 }
 ```

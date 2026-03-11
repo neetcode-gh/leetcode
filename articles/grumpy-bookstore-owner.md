@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - Maintaining a fixed-size window that slides across an array while tracking window properties
 - **Array Traversal** - Iterating through arrays while maintaining running sums and tracking maximum values
 
@@ -17,8 +19,8 @@ The idea is straightforward: first count all customers who are already satisfied
 
 1. Calculate the baseline satisfaction by summing customers at all indices where the owner is not grumpy.
 2. For each possible starting position of the technique window (from `0` to `n - minutes`):
-   - Count how many customers would be saved within this window (customers at grumpy minutes).
-   - Track the maximum total satisfaction (baseline + saved customers).
+    - Count how many customers would be saved within this window (customers at grumpy minutes).
+    - Track the maximum total satisfaction (baseline + saved customers).
 3. Return the maximum satisfaction found.
 
 ::tabs-start
@@ -104,7 +106,8 @@ class Solution {
      * @return {number}
      */
     maxSatisfied(customers, grumpy, minutes) {
-        let res = 0, n = customers.length;
+        let res = 0,
+            n = customers.length;
         for (let i = 0; i < n; i++) {
             if (grumpy[i] === 0) {
                 res += customers[i];
@@ -233,12 +236,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_satisfied(customers: Vec<i32>, grumpy: Vec<i32>, minutes: i32) -> i32 {
+        let n = customers.len();
+        let minutes = minutes as usize;
+        let mut res = 0;
+        for i in 0..n {
+            if grumpy[i] == 0 {
+                res += customers[i];
+            }
+        }
+
+        let satisfied = res;
+        for i in 0..=(n - minutes) {
+            let mut cur = 0;
+            for j in i..(i + minutes) {
+                if grumpy[j] == 1 {
+                    cur += customers[j];
+                }
+            }
+            res = res.max(satisfied + cur);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the size of the input array and $m$ is the number of minutes.
 
@@ -257,10 +288,10 @@ This reduces redundant computation since we only need to track customers at grum
 1. Initialize two counters: `satisfied` for customers already happy (non-grumpy minutes) and `window` for customers saved within the current window.
 2. Use two pointers `l` and `r` to represent the sliding window boundaries.
 3. For each position `r`:
-   - If grumpy at `r`, add those customers to the `window` count.
-   - Otherwise, add them to the baseline `satisfied` count.
-   - If the window exceeds `minutes`, shrink from the left by removing contributions at `l` (only if grumpy).
-   - Track the maximum `window` value seen.
+    - If grumpy at `r`, add those customers to the `window` count.
+    - Otherwise, add them to the baseline `satisfied` count.
+    - If the window exceeds `minutes`, shrink from the left by removing contributions at `l` (only if grumpy).
+    - Track the maximum `window` value seen.
 4. Return `satisfied + maxWindow`.
 
 ::tabs-start
@@ -352,7 +383,10 @@ class Solution {
      * @return {number}
      */
     maxSatisfied(customers, grumpy, minutes) {
-        let l = 0, window = 0, maxWindow = 0, satisfied = 0;
+        let l = 0,
+            window = 0,
+            maxWindow = 0,
+            satisfied = 0;
 
         for (let r = 0; r < customers.length; r++) {
             if (grumpy[r] === 1) {
@@ -490,12 +524,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_satisfied(customers: Vec<i32>, grumpy: Vec<i32>, minutes: i32) -> i32 {
+        let minutes = minutes as usize;
+        let mut l = 0;
+        let mut window = 0;
+        let mut max_window = 0;
+        let mut satisfied = 0;
+
+        for r in 0..customers.len() {
+            if grumpy[r] == 1 {
+                window += customers[r];
+            } else {
+                satisfied += customers[r];
+            }
+
+            if r - l + 1 > minutes {
+                if grumpy[l] == 1 {
+                    window -= customers[l];
+                }
+                l += 1;
+            }
+
+            max_window = max_window.max(window);
+        }
+
+        satisfied + max_window
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

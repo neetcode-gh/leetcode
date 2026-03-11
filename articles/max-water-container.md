@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to iterate through and access array elements by index
 - **Two Pointers Technique** - Moving pointers from opposite ends of an array to efficiently search for optimal pairs
 
@@ -17,12 +19,12 @@ By checking all pairs, we are guaranteed to find the maximum area.
 
 1. Initialize `res = 0` to track the maximum area found.
 2. Use two nested loops:
-   - Outer loop picks the left line `i`.
-   - Inner loop picks the right line `j > i`.
+    - Outer loop picks the left line `i`.
+    - Inner loop picks the right line `j > i`.
 3. For each pair `(i, j)`:
-   - Compute the height as `min(heights[i], heights[j])`.
-   - Compute the width as `j - i`.
-   - Update `res` with the maximum of its current value and the new area.
+    - Compute the height as `min(heights[i], heights[j])`.
+    - Compute the width as `j - i`.
+    - Update `res` with the maximum of its current value and the new area.
 4. After checking all pairs, return `res`.
 
 ::tabs-start
@@ -149,6 +151,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_area(heights: Vec<i32>) -> i32 {
+        let mut res = 0;
+        for i in 0..heights.len() {
+            for j in (i + 1)..heights.len() {
+                res = res.max(heights[i].min(heights[j]) * (j - i) as i32);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -171,16 +187,16 @@ By always moving the shorter side, we explore all meaningful possibilities.
 ### Algorithm
 
 1. Initialize two pointers:
-   - `l = 0`
-   - `r = len(heights) - 1`
+    - `l = 0`
+    - `r = len(heights) - 1`
 2. Set `res = 0` to store the maximum area.
 3. While `l < r`:
-   - Compute the current area:
-     `area = min(heights[l], heights[r]) * (r - l)`
-   - Update `res` with the maximum area so far.
-   - Move the pointer at the shorter height:
-     - If `heights[l] <= heights[r]`, move `l` right.
-     - Otherwise, move `r` left.
+    - Compute the current area:
+      `area = min(heights[l], heights[r]) * (r - l)`
+    - Update `res` with the maximum area so far.
+    - Move the pointer at the shorter height:
+        - If `heights[l] <= heights[r]`, move `l` right.
+        - Otherwise, move `r` left.
 4. Return `res` after the pointers meet.
 
 ::tabs-start
@@ -355,6 +371,27 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_area(heights: Vec<i32>) -> i32 {
+        let mut l = 0usize;
+        let mut r = heights.len() - 1;
+        let mut res = 0;
+
+        while l < r {
+            let area = heights[l].min(heights[r]) * (r - l) as i32;
+            res = res.max(area);
+            if heights[l] <= heights[r] {
+                l += 1;
+            } else {
+                r -= 1;
+            }
+        }
+        res
     }
 }
 ```

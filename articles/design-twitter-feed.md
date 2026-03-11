@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Mapping user IDs to their tweets and follow relationships
 - **Hash Sets** - Tracking followee relationships with O(1) add/remove/lookup
 - **Heap / Priority Queue** - Merging k sorted lists efficiently to find top-k elements
@@ -25,25 +27,25 @@ This works because sorting guarantees we always pick the latest `10` tweets, reg
 ### Algorithm
 
 1. Maintain:
-   - `tweetMap[user]` -> list of `(time, tweetId)`
-   - `followMap[user]` -> set of users they follow
-   - `time` -> increases every time someone posts a tweet
+    - `tweetMap[user]` -> list of `(time, tweetId)`
+    - `followMap[user]` -> set of users they follow
+    - `time` -> increases every time someone posts a tweet
 
 2. **postTweet(user, tweetId)**
-   - Store `(current_time, tweetId)` in that user's list
-   - Increment global `time`
+    - Store `(current_time, tweetId)` in that user's list
+    - Increment global `time`
 
 3. **getNewsFeed(user)**
-   - Start with the user's tweets
-   - Add tweets from all followees
-   - Sort the combined list by time descending
-   - Return first `10` tweet IDs
+    - Start with the user's tweets
+    - Add tweets from all followees
+    - Sort the combined list by time descending
+    - Return first `10` tweet IDs
 
 4. **follow(follower, followee)**
-   - Add followee to follower's follow-set (ignore if same user)
+    - Add followee to follower's follow-set (ignore if same user)
 
 5. **unfollow(follower, followee)**
-   - Remove followee from follow-set if present
+    - Remove followee from follow-set if present
 
 ::tabs-start
 
@@ -412,6 +414,63 @@ class Twitter {
 }
 ```
 
+```rust
+struct Twitter {
+    time: i32,
+    follow_map: HashMap<i32, HashSet<i32>>,
+    tweet_map: HashMap<i32, Vec<[i32; 2]>>,
+}
+
+impl Twitter {
+    fn new() -> Self {
+        Twitter {
+            time: 0,
+            follow_map: HashMap::new(),
+            tweet_map: HashMap::new(),
+        }
+    }
+
+    fn post_tweet(&mut self, user_id: i32, tweet_id: i32) {
+        self.tweet_map
+            .entry(user_id)
+            .or_default()
+            .push([self.time, tweet_id]);
+        self.time += 1;
+    }
+
+    fn get_news_feed(&self, user_id: i32) -> Vec<i32> {
+        let mut feed: Vec<[i32; 2]> = Vec::new();
+        if let Some(tweets) = self.tweet_map.get(&user_id) {
+            feed.extend_from_slice(tweets);
+        }
+        if let Some(followees) = self.follow_map.get(&user_id) {
+            for &followee_id in followees {
+                if let Some(tweets) = self.tweet_map.get(&followee_id) {
+                    feed.extend_from_slice(tweets);
+                }
+            }
+        }
+        feed.sort_by(|a, b| b[0].cmp(&a[0]));
+        feed.iter().take(10).map(|t| t[1]).collect()
+    }
+
+    fn follow(&mut self, follower_id: i32, followee_id: i32) {
+        if follower_id != followee_id {
+            self.follow_map
+                .entry(follower_id)
+                .or_default()
+                .insert(followee_id);
+        }
+    }
+
+    fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
+        if let Some(set) = self.follow_map.get_mut(&follower_id) {
+            set.remove(&followee_id);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -432,12 +491,13 @@ Instead of combining **all** tweets and sorting them (which is slow), we only ne
 
 We use a **min-heap** (priority queue) because:
 
-- We push only the *latest tweet* of each followee.
+- We push only the _latest tweet_ of each followee.
 - Each tweet has a timestamp (`count`), where smaller means more recent.
-- We repeatedly extract the most recent tweet and then push the *next* tweet from that same user.
+- We repeatedly extract the most recent tweet and then push the _next_ tweet from that same user.
 - This is similar to merging K sorted lists efficiently.
 
 This ensures:
+
 - We never sort huge lists.
 - The heap always contains at most “number of followees” entries.
 - We only perform work proportional to the `10` tweets we need.
@@ -445,30 +505,30 @@ This ensures:
 ### Algorithm
 
 1. Maintain:
-   - `tweetMap[user]` -> list of `(time, tweetId)`, sorted by recency
-   - `followMap[user]` -> set of followees
-   - `count` -> a decreasing timestamp for ordering tweets
+    - `tweetMap[user]` -> list of `(time, tweetId)`, sorted by recency
+    - `followMap[user]` -> set of followees
+    - `count` -> a decreasing timestamp for ordering tweets
 
 2. **postTweet(user, tweetId)**
-   - Store `(count, tweetId)` in the user's list
-   - Decrease `count` (more negative = more recent)
+    - Store `(count, tweetId)` in the user's list
+    - Decrease `count` (more negative = more recent)
 
 3. **getNewsFeed(user)**
-   - Make sure user follows themselves
-   - For each followee:
-     - Push their most recent tweet into a min-heap:
-       `[time, tweetId, followeeId, nextIndex]`
-   - While heap is not empty and result has < `10` tweets:
-     - Pop the most recent tweet
-     - Add tweetId to the result
-     - If the followee has older tweets, push the next one into the heap
-   - Return the collected tweets
+    - Make sure user follows themselves
+    - For each followee:
+        - Push their most recent tweet into a min-heap:
+          `[time, tweetId, followeeId, nextIndex]`
+    - While heap is not empty and result has < `10` tweets:
+        - Pop the most recent tweet
+        - Add tweetId to the result
+        - If the followee has older tweets, push the next one into the heap
+    - Return the collected tweets
 
 4. **follow(follower, followee)**
-   - Add followee to the follower's follow-set
+    - Add followee to the follower's follow-set
 
 5. **unfollow(follower, followee)**
-   - Remove followee if present
+    - Remove followee if present
 
 ::tabs-start
 
@@ -987,6 +1047,100 @@ struct Item: Comparable {
 }
 ```
 
+```rust
+struct Twitter {
+    count: i32,
+    tweet_map: HashMap<i32, Vec<[i32; 2]>>,
+    follow_map: HashMap<i32, HashSet<i32>>,
+}
+
+impl Twitter {
+    fn new() -> Self {
+        Twitter {
+            count: 0,
+            tweet_map: HashMap::new(),
+            follow_map: HashMap::new(),
+        }
+    }
+
+    fn post_tweet(&mut self, user_id: i32, tweet_id: i32) {
+        self.tweet_map
+            .entry(user_id)
+            .or_default()
+            .push([self.count, tweet_id]);
+        self.count -= 1;
+    }
+
+    fn get_news_feed(&mut self, user_id: i32) -> Vec<i32> {
+        let mut res = Vec::new();
+        // min-heap: smallest count first (most recent since count is negative)
+        let mut min_heap = BinaryHeap::new();
+
+        self.follow_map
+            .entry(user_id)
+            .or_default()
+            .insert(user_id);
+
+        let followees: Vec<i32> = self
+            .follow_map
+            .get(&user_id)
+            .cloned()
+            .unwrap_or_default()
+            .into_iter()
+            .collect();
+
+        for followee_id in &followees {
+            if let Some(tweets) = self.tweet_map.get(followee_id) {
+                if !tweets.is_empty() {
+                    let index = tweets.len() - 1;
+                    let tweet = tweets[index];
+                    // BinaryHeap is max-heap; use Reverse for min-heap behavior
+                    min_heap.push(std::cmp::Reverse((
+                        tweet[0],
+                        tweet[1],
+                        *followee_id,
+                        index as i32,
+                    )));
+                }
+            }
+        }
+
+        while let Some(std::cmp::Reverse((_, tweet_id, followee_id, index))) = min_heap.pop()
+        {
+            if res.len() >= 10 {
+                break;
+            }
+            res.push(tweet_id);
+            if index > 0 {
+                let tweets = &self.tweet_map[&followee_id];
+                let prev = (index - 1) as usize;
+                let tweet = tweets[prev];
+                min_heap.push(std::cmp::Reverse((
+                    tweet[0],
+                    tweet[1],
+                    followee_id,
+                    prev as i32,
+                )));
+            }
+        }
+        res
+    }
+
+    fn follow(&mut self, follower_id: i32, followee_id: i32) {
+        self.follow_map
+            .entry(follower_id)
+            .or_default()
+            .insert(followee_id);
+    }
+
+    fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
+        if let Some(set) = self.follow_map.get_mut(&follower_id) {
+            set.remove(&followee_id);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1005,18 +1159,20 @@ struct Item: Comparable {
 The basic heap solution looks at **all tweets of all followees**, which is fast enough but can be improved.
 
 Key observation:
+
 - Each user only cares about the **latest `10` tweets**, because the news feed returns at most `10` items.
-- So for each user, instead of storing *all* tweets, store only their **`10` most recent** tweets.
+- So for each user, instead of storing _all_ tweets, store only their **`10` most recent** tweets.
 - This reduces:
-  - Memory usage
-  - Heap operations
-  - Time per query
+    - Memory usage
+    - Heap operations
+    - Time per query
 
 The trick:
+
 - When a user posts a tweet, append it with a decreasing timestamp (`count`) and keep only the last `10` tweets.
 - When getting the news feed:
-  - If the user follows many people (>= `10`), we first gather only the recent tweets that *could* appear in the final `10`, using a max-heap limited to size `10`.
-  - Otherwise, push the most recent tweet of each followee directly into a min-heap and expand like a K-sorted-list merge.
+    - If the user follows many people (>= `10`), we first gather only the recent tweets that _could_ appear in the final `10`, using a max-heap limited to size `10`.
+    - Otherwise, push the most recent tweet of each followee directly into a min-heap and expand like a K-sorted-list merge.
 - In both cases, we never process more than **`10` tweets per followee**, and never extract more than **`10` results**.
 
 This makes the method very fast even when users post a lot of tweets.
@@ -1024,29 +1180,29 @@ This makes the method very fast even when users post a lot of tweets.
 ### Algorithm
 
 1. **postTweet(user, tweetId)**
-   - Insert `(timestamp, tweetId)` at the end of that user's list.
-   - If the list grows beyond `10`, remove the oldest tweet.
-   - Decrease global timestamp so newer tweets have smaller values.
+    - Insert `(timestamp, tweetId)` at the end of that user's list.
+    - If the list grows beyond `10`, remove the oldest tweet.
+    - Decrease global timestamp so newer tweets have smaller values.
 
 2. **getNewsFeed(user)**
    Steps:
-   - Ensure user follows themselves.
-   - If followees >= `10`:
-     - Build a **max-heap** that stores only the top `10` most recent tweets across followees.
-     - Convert it to a **min-heap** for final processing.
-   - Else:
-     - Push the newest tweet from each followee into a min-heap.
-   - Repeatedly pop from the heap:
-     - Add the tweet to the result
-     - Push the next tweet from the same followee (if exists)
-     - Stop after `10` tweets
-   - Return the collected tweets.
+    - Ensure user follows themselves.
+    - If followees >= `10`:
+        - Build a **max-heap** that stores only the top `10` most recent tweets across followees.
+        - Convert it to a **min-heap** for final processing.
+    - Else:
+        - Push the newest tweet from each followee into a min-heap.
+    - Repeatedly pop from the heap:
+        - Add the tweet to the result
+        - Push the next tweet from the same followee (if exists)
+        - Stop after `10` tweets
+    - Return the collected tweets.
 
 3. **follow(follower, followee)**
-   - Add followee to follower's follow-set
+    - Add followee to follower's follow-set
 
 4. **unfollow(follower, followee)**
-   - Remove the followee if present
+    - Remove the followee if present
 
 ::tabs-start
 
@@ -1792,6 +1948,113 @@ class Twitter {
 
     func unfollow(_ followerId: Int, _ followeeId: Int) {
         followMap[followerId]?.remove(followeeId)
+    }
+}
+```
+
+```rust
+struct Twitter {
+    count: i32,
+    tweet_map: HashMap<i32, Vec<[i32; 2]>>,
+    follow_map: HashMap<i32, HashSet<i32>>,
+}
+
+impl Twitter {
+    fn new() -> Self {
+        Twitter {
+            count: 0,
+            tweet_map: HashMap::new(),
+            follow_map: HashMap::new(),
+        }
+    }
+
+    fn post_tweet(&mut self, user_id: i32, tweet_id: i32) {
+        let tweets = self.tweet_map.entry(user_id).or_default();
+        tweets.push([self.count, tweet_id]);
+        if tweets.len() > 10 {
+            tweets.remove(0);
+        }
+        self.count -= 1;
+    }
+
+    fn get_news_feed(&mut self, user_id: i32) -> Vec<i32> {
+        let mut res = Vec::new();
+        self.follow_map
+            .entry(user_id)
+            .or_default()
+            .insert(user_id);
+
+        let followees: Vec<i32> = self
+            .follow_map
+            .get(&user_id)
+            .cloned()
+            .unwrap_or_default()
+            .into_iter()
+            .collect();
+
+        // min-heap for final extraction
+        let mut min_heap: BinaryHeap<std::cmp::Reverse<(i32, i32, i32, i32)>> =
+            BinaryHeap::new();
+
+        if followees.len() >= 10 {
+            // Use a max-heap (BinaryHeap default) limited to size 10
+            let mut max_heap: BinaryHeap<std::cmp::Reverse<(i32, i32, i32, i32)>> =
+                BinaryHeap::new();
+            for &f_id in &followees {
+                if let Some(tweets) = self.tweet_map.get(&f_id) {
+                    if !tweets.is_empty() {
+                        let idx = tweets.len() - 1;
+                        let t = tweets[idx];
+                        max_heap
+                            .push(std::cmp::Reverse((-t[0], t[1], f_id, idx as i32 - 1)));
+                        if max_heap.len() > 10 {
+                            max_heap.pop();
+                        }
+                    }
+                }
+            }
+            while let Some(std::cmp::Reverse((neg_count, t_id, f_id, idx))) = max_heap.pop()
+            {
+                min_heap.push(std::cmp::Reverse((-neg_count, t_id, f_id, idx)));
+            }
+        } else {
+            for &f_id in &followees {
+                if let Some(tweets) = self.tweet_map.get(&f_id) {
+                    if !tweets.is_empty() {
+                        let idx = tweets.len() - 1;
+                        let t = tweets[idx];
+                        min_heap
+                            .push(std::cmp::Reverse((t[0], t[1], f_id, idx as i32 - 1)));
+                    }
+                }
+            }
+        }
+
+        while let Some(std::cmp::Reverse((_, t_id, f_id, idx))) = min_heap.pop() {
+            if res.len() >= 10 {
+                break;
+            }
+            res.push(t_id);
+            if idx >= 0 {
+                let tweets = &self.tweet_map[&f_id];
+                let t = tweets[idx as usize];
+                min_heap.push(std::cmp::Reverse((t[0], t[1], f_id, idx - 1)));
+            }
+        }
+        res
+    }
+
+    fn follow(&mut self, follower_id: i32, followee_id: i32) {
+        self.follow_map
+            .entry(follower_id)
+            .or_default()
+            .insert(followee_id);
+    }
+
+    fn unfollow(&mut self, follower_id: i32, followee_id: i32) {
+        if let Some(set) = self.follow_map.get_mut(&follower_id) {
+            set.remove(&followee_id);
+        }
     }
 }
 ```

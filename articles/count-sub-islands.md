@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Depth First Search (DFS)** - Recursively exploring connected components in a grid
 - **Breadth First Search (BFS)** - Level-by-level traversal using a queue for grid exploration
 - **2D Grid Traversal** - Navigating a matrix using four-directional movement (up, down, left, right)
@@ -18,11 +20,11 @@ An island in `grid2` is a sub-island if every land cell of that island is also l
 1. Create a visited set to track explored cells.
 2. For each unvisited land cell in `grid2`, start a DFS.
 3. In the DFS:
-   - Return `true` if out of bounds, on water, or already visited (base cases).
-   - Mark the current cell as visited.
-   - Check if `grid1` has land at this position; if not, the result becomes `false`.
-   - Recursively explore all four directions, combining results with AND.
-   - Return whether this island is a valid sub-island.
+    - Return `true` if out of bounds, on water, or already visited (base cases).
+    - Mark the current cell as visited.
+    - Check if `grid1` has land at this position; if not, the result becomes `false`.
+    - Recursively explore all four directions, combining results with AND.
+    - Return whether this island is a valid sub-island.
 4. Count and return the number of valid sub-islands.
 
 ::tabs-start
@@ -311,6 +313,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_sub_islands(grid1: Vec<Vec<i32>>, grid2: Vec<Vec<i32>>) -> i32 {
+        let rows = grid1.len();
+        let cols = grid1[0].len();
+        let mut visit = vec![vec![false; cols]; rows];
+
+        fn dfs(
+            r: i32, c: i32,
+            grid1: &Vec<Vec<i32>>, grid2: &Vec<Vec<i32>>,
+            visit: &mut Vec<Vec<bool>>,
+            rows: i32, cols: i32,
+        ) -> bool {
+            if r < 0 || c < 0 || r >= rows || c >= cols
+                || grid2[r as usize][c as usize] == 0
+                || visit[r as usize][c as usize]
+            {
+                return true;
+            }
+            visit[r as usize][c as usize] = true;
+            let mut res = grid1[r as usize][c as usize] == 1;
+            res = dfs(r - 1, c, grid1, grid2, visit, rows, cols) && res;
+            res = dfs(r + 1, c, grid1, grid2, visit, rows, cols) && res;
+            res = dfs(r, c - 1, grid1, grid2, visit, rows, cols) && res;
+            res = dfs(r, c + 1, grid1, grid2, visit, rows, cols) && res;
+            res
+        }
+
+        let mut count = 0;
+        let (r_i32, c_i32) = (rows as i32, cols as i32);
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid2[r][c] == 1 && !visit[r][c]
+                    && dfs(r as i32, c as i32, &grid1, &grid2, &mut visit, r_i32, c_i32)
+                {
+                    count += 1;
+                }
+            }
+        }
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -333,12 +379,12 @@ Similar to DFS, we can use BFS to explore islands in `grid2`. Starting from any 
 1. Create a visited matrix and a directions array for the four neighbors.
 2. For each unvisited land cell in `grid2`, start a BFS.
 3. In the BFS:
-   - Initialize a queue with the starting cell and mark it visited.
-   - Set result to `true`.
-   - While the queue is not empty:
-     - Dequeue a cell; if `grid1` has water at this position, set result to `false`.
-     - Add all unvisited land neighbors in `grid2` to the queue and mark them visited.
-   - Return whether this island is a valid sub-island.
+    - Initialize a queue with the starting cell and mark it visited.
+    - Set result to `true`.
+    - While the queue is not empty:
+        - Dequeue a cell; if `grid1` has water at this position, set result to `false`.
+        - Add all unvisited land neighbors in `grid2` to the queue and mark them visited.
+    - Return whether this island is a valid sub-island.
 4. Count and return the number of valid sub-islands.
 
 ::tabs-start
@@ -709,6 +755,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_sub_islands(grid1: Vec<Vec<i32>>, grid2: Vec<Vec<i32>>) -> i32 {
+        let rows = grid1.len();
+        let cols = grid1[0].len();
+        let mut visit = vec![vec![false; cols]; rows];
+        let directions = [1, 0, -1, 0, 1];
+
+        let mut count = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid2[r][c] == 1 && !visit[r][c] {
+                    let mut queue = VecDeque::new();
+                    queue.push_back((r, c));
+                    visit[r][c] = true;
+                    let mut res = true;
+
+                    while let Some((cr, cc)) = queue.pop_front() {
+                        if grid1[cr][cc] == 0 {
+                            res = false;
+                        }
+                        for i in 0..4 {
+                            let nr = cr as i32 + directions[i];
+                            let nc = cc as i32 + directions[i + 1];
+                            if nr >= 0 && nr < rows as i32 && nc >= 0 && nc < cols as i32 {
+                                let (nr, nc) = (nr as usize, nc as usize);
+                                if grid2[nr][nc] == 1 && !visit[nr][nc] {
+                                    visit[nr][nc] = true;
+                                    queue.push_back((nr, nc));
+                                }
+                            }
+                        }
+                    }
+                    if res {
+                        count += 1;
+                    }
+                }
+            }
+        }
+        count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -730,10 +820,10 @@ We can use Union-Find to group connected land cells in `grid2` into islands. The
 
 1. Initialize a DSU with `N+1` nodes (`N` cells plus one invalid node).
 2. For each land cell in `grid2`:
-   - Count it as a land cell.
-   - Union it with its right neighbor if the neighbor is also land in `grid2`.
-   - Union it with its bottom neighbor if the neighbor is also land in `grid2`.
-   - If `grid1` has water at this position, union this cell with the invalid node `N`.
+    - Count it as a land cell.
+    - Union it with its right neighbor if the neighbor is also land in `grid2`.
+    - Union it with its bottom neighbor if the neighbor is also land in `grid2`.
+    - If `grid1` has water at this position, union this cell with the invalid node `N`.
 3. Track the number of successful unions (where two different components merge).
 4. Return land count minus union count, which gives the number of valid sub-islands.
 
@@ -1181,6 +1271,75 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        DSU {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> i32 {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv {
+            return 0;
+        }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        1
+    }
+}
+
+impl Solution {
+    pub fn count_sub_islands(grid1: Vec<Vec<i32>>, grid2: Vec<Vec<i32>>) -> i32 {
+        let rows = grid1.len();
+        let cols = grid1[0].len();
+        let n = rows * cols;
+        let mut dsu = DSU::new(n);
+
+        let get_id = |r: usize, c: usize| r * cols + c;
+
+        let mut land = 0i32;
+        let mut unions = 0i32;
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid2[r][c] == 0 {
+                    continue;
+                }
+                land += 1;
+                if r + 1 < rows && grid2[r + 1][c] == 1 {
+                    unions += dsu.union(get_id(r, c), get_id(r + 1, c));
+                }
+                if c + 1 < cols && grid2[r][c + 1] == 1 {
+                    unions += dsu.union(get_id(r, c), get_id(r, c + 1));
+                }
+                if grid1[r][c] == 0 {
+                    unions += dsu.union(get_id(r, c), n);
+                }
+            }
+        }
+        land - unions
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1195,6 +1354,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Returning Early When a Mismatch is Found
+
 A critical mistake is returning `false` immediately when finding a cell that exists in `grid2` but not in `grid1`. This leaves part of the island unexplored and unvisited, causing those cells to be counted as separate islands later.
 
 ```python
@@ -1208,7 +1368,9 @@ res &= dfs(r - 1, c)  # Must visit all cells
 ```
 
 ### Using OR Instead of AND for Recursive Results
+
 When combining results from the four directional DFS calls, using OR (`|`) instead of AND (`&`) will incorrectly mark an island as a sub-island if any single cell matches, rather than requiring all cells to match.
 
 ### Checking the Wrong Grid for Land Cells
+
 When deciding whether to explore a neighboring cell, the check must be against `grid2` (where we're finding islands), not `grid1`. The `grid1` check determines validity, but `grid2` determines connectivity.

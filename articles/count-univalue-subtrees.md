@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, nodes, and traversal patterns
 - **Depth First Search (DFS)** - Recursive traversal of tree structures from leaves to root
 - **Post-order Traversal** - Processing children before parent nodes to aggregate subtree information
@@ -19,9 +21,9 @@ A uni-value subtree is one where all nodes have the same value. We can use DFS t
 3. Base case: if the node is `null`, return `true`.
 4. Recursively check the left and right subtrees.
 5. If both subtrees are uni-value:
-   - Check if the left child exists and has a different value; if so, return `false`.
-   - Check if the right child exists and has a different value; if so, return `false`.
-   - Increment the counter and return `true`.
+    - Check if the left child exists and has a different value; if so, return `false`.
+    - Check if the right child exists and has a different value; if so, return `false`.
+    - Increment the counter and return `true`.
 6. Otherwise, return `false` (one of the subtrees is not uni-value).
 7. Call DFS on the root and return the counter.
 
@@ -46,13 +48,13 @@ class Solution:
                     return False
                 if node.right and node.val != node.right.val:
                     return False
-    
+
                 self.count += 1
                 return True
             # Else if any of the child does not form a uni-value subtree, the subtree
             # rooted at node cannot be a uni-value subtree.
             return False
-        
+
         dfs(root)
         return self.count
 ```
@@ -304,6 +306,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_unival_subtrees(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut count = 0;
+        Self::dfs(&root, &mut count);
+        count
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, count: &mut i32) -> bool {
+        match node {
+            None => true,
+            Some(n) => {
+                let n = n.borrow();
+                let left = Self::dfs(&n.left, count);
+                let right = Self::dfs(&n.right, count);
+
+                if left && right {
+                    if let Some(ref l) = n.left {
+                        if l.borrow().val != n.val {
+                            return false;
+                        }
+                    }
+                    if let Some(ref r) = n.right {
+                        if r.borrow().val != n.val {
+                            return false;
+                        }
+                    }
+                    *count += 1;
+                    return true;
+                }
+                false
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -311,7 +350,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the given binary tree
+> Where $n$ is the number of nodes in the given binary tree
 
 ---
 
@@ -327,7 +366,7 @@ The previous solution uses a global or instance variable to track the count. We 
 2. Base case: if the node is `null`, return `true`.
 3. Recursively check the left and right subtrees, passing the count array.
 4. If both subtrees are uni-value and the current node's value matches its children's values (when they exist):
-   - Increment `count[0]` and return `true`.
+    - Increment `count[0]` and return `true`.
 5. Otherwise, return `false`.
 6. Create a count array initialized to `0`, call DFS on the root, and return `count[0]`.
 
@@ -350,7 +389,7 @@ class Solution:
                     return False
                 if node.right and node.val != node.right.val:
                     return False
-    
+
                 count[0] += 1
                 return True
             # Else if any of the child does not form a uni-value subtree, the subtree
@@ -382,7 +421,7 @@ class Solution {
 
         return false;
     }
-    
+
     public int countUnivalSubtrees(TreeNode root) {
         int[] count = new int[1];
         dfs(root, count);
@@ -442,7 +481,9 @@ class Solution {
         let isLeftUnival = this.dfs(root.left, count);
         let isRightUnival = this.dfs(root.right, count);
 
-        if (isLeftUnival && isRightUnival &&
+        if (
+            isLeftUnival &&
+            isRightUnival &&
             (root.left === null || root.left.val === root.val) &&
             (root.right === null || root.right.val === root.val)
         ) {
@@ -575,6 +616,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_unival_subtrees(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut count = 0;
+        Self::dfs(&root, &mut count);
+        count
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, count: &mut i32) -> bool {
+        match node {
+            None => true,
+            Some(n) => {
+                let n = n.borrow();
+                let is_left_unival = Self::dfs(&n.left, count);
+                let is_right_unival = Self::dfs(&n.right, count);
+
+                if is_left_unival && is_right_unival
+                    && n.left.as_ref().map_or(true, |l| l.borrow().val == n.val)
+                    && n.right.as_ref().map_or(true, |r| r.borrow().val == n.val)
+                {
+                    *count += 1;
+                    return true;
+                }
+                false
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -582,7 +653,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the given binary tree
+> Where $n$ is the number of nodes in the given binary tree
 
 ---
 

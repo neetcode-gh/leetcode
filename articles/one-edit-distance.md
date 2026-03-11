@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Manipulation** - Working with substrings and character-by-character comparison
 - **Two Pointers** - Scanning two strings simultaneously to find mismatches
 - **Edit Distance Concept** - Understanding the three edit operations: insert, delete, and replace
@@ -21,9 +23,9 @@ We scan both strings in parallel. When we find the first mismatch, we check if t
 1. Ensure `s` is the shorter string by swapping if necessary.
 2. If the length difference is greater than `1`, return `false`.
 3. Iterate through the shorter string character by character:
-   - When we find a mismatch at position `i`:
-     - If lengths are equal, check if `s[i+1:]` equals `t[i+1:]` (one replacement).
-     - If lengths differ, check if `s[i:]` equals `t[i+1:]` (one deletion from `t`).
+    - When we find a mismatch at position `i`:
+        - If lengths are equal, check if `s[i+1:]` equals `t[i+1:]` (one replacement).
+        - If lengths differ, check if `s[i:]` equals `t[i+1:]` (one deletion from `t`).
 4. If no mismatch is found, return `true` only if `t` has exactly one more character (the edit is appending to `s`).
 
 ::tabs-start
@@ -290,6 +292,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_one_edit_distance(s: String, t: String) -> bool {
+        let (s, t) = if s.len() > t.len() { (t, s) } else { (s, t) };
+        let (ns, nt) = (s.len(), t.len());
+
+        if nt - ns > 1 {
+            return false;
+        }
+
+        let sb: &[u8] = s.as_bytes();
+        let tb: &[u8] = t.as_bytes();
+
+        for i in 0..ns {
+            if sb[i] != tb[i] {
+                return if ns == nt {
+                    sb[i + 1..] == tb[i + 1..]
+                } else {
+                    sb[i..] == tb[i + 1..]
+                };
+            }
+        }
+
+        ns + 1 == nt
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -297,7 +327,7 @@ class Solution {
 - Time complexity: $O(N)$ in the worst case when string lengths are close enough `abs(ns - nt) <= 1`. $O(1)$ in the best case when `abs(ns - nt) > 1`
 - Space complexity: $O(N)$ extra space used
 
->  where $N$ is the number of characters in the longest string
+> where $N$ is the number of characters in the longest string
 
 ---
 

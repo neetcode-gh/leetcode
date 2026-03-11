@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Understanding LIFO (Last In First Out) operations including push, pop, and peek
 - **Auxiliary Data Structures** - Using additional stacks or variables to track extra state alongside the main data structure
 - **Space-Time Tradeoffs** - Trading extra memory for faster operations (e.g., O(n) space for O(1) getMin)
@@ -20,10 +22,10 @@ It's easy to understand but slow because each `getMin` call scans the entire sta
 2. To `pop`, remove the top element of the stack.
 3. To `top`, return the last element.
 4. To `getMin`:
-   - Create a temporary list.
-   - Pop all elements from the stack while tracking the smallest value.
-   - Push all elements back from the temporary list to restore the stack.
-   - Return the smallest value found.
+    - Create a temporary list.
+    - Pop all elements from the stack while tracking the smallest value.
+    - Push all elements back from the temporary list to restore the stack.
+    - Return the smallest value found.
 
 ::tabs-start
 
@@ -339,6 +341,46 @@ class MinStack {
 }
 ```
 
+```rust
+struct MinStack {
+    stack: Vec<i32>,
+}
+
+impl MinStack {
+    fn new() -> Self {
+        Self { stack: Vec::new() }
+    }
+
+    fn push(&mut self, val: i32) {
+        self.stack.push(val);
+    }
+
+    fn pop(&mut self) {
+        self.stack.pop();
+    }
+
+    fn top(&self) -> i32 {
+        *self.stack.last().unwrap()
+    }
+
+    fn get_min(&mut self) -> i32 {
+        let mut tmp = Vec::new();
+        let mut mini = *self.stack.last().unwrap();
+
+        while let Some(val) = self.stack.pop() {
+            mini = mini.min(val);
+            tmp.push(val);
+        }
+
+        while let Some(val) = tmp.pop() {
+            self.stack.push(val);
+        }
+
+        mini
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -352,25 +394,25 @@ class MinStack {
 
 ### Intuition
 
-Instead of searching the whole stack to find the minimum every time, we can keep a **second stack** that always stores the minimum value *up to that point*.
+Instead of searching the whole stack to find the minimum every time, we can keep a **second stack** that always stores the minimum value _up to that point_.
 So whenever we push a new value, we compare it with the current minimum and store the smaller one on the `minStack`.
 This guarantees that the top of `minStack` is always the minimum of the entire stack — allowing `getMin()` to work in constant time.
 
 ### Algorithm
 
 1. Maintain two stacks:
-   - `stack` → stores all pushed values.
-   - `minStack` → stores the minimum so far at each level.
+    - `stack` → stores all pushed values.
+    - `minStack` → stores the minimum so far at each level.
 2. On `push(val)`:
-   - Push `val` onto `stack`.
-   - Compute the new minimum (between `val` and the current minimum on `minStack`).
-   - Push this minimum onto `minStack`.
+    - Push `val` onto `stack`.
+    - Compute the new minimum (between `val` and the current minimum on `minStack`).
+    - Push this minimum onto `minStack`.
 3. On `pop()`:
-   - Pop from both `stack` and `minStack` to keep them aligned.
+    - Pop from both `stack` and `minStack` to keep them aligned.
 4. On `top()`:
-   - Return the top of `stack`.
+    - Return the top of `stack`.
 5. On `getMin()`:
-   - Return the top of `minStack`, which is the current minimum.
+    - Return the top of `minStack`, which is the current minimum.
 
 ::tabs-start
 
@@ -635,6 +677,45 @@ class MinStack {
 }
 ```
 
+```rust
+struct MinStack {
+    stack: Vec<i32>,
+    min_stack: Vec<i32>,
+}
+
+impl MinStack {
+    fn new() -> Self {
+        Self {
+            stack: Vec::new(),
+            min_stack: Vec::new(),
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        self.stack.push(val);
+        let min_val = if let Some(&top) = self.min_stack.last() {
+            val.min(top)
+        } else {
+            val
+        };
+        self.min_stack.push(min_val);
+    }
+
+    fn pop(&mut self) {
+        self.stack.pop();
+        self.min_stack.pop();
+    }
+
+    fn top(&self) -> i32 {
+        *self.stack.last().unwrap()
+    }
+
+    fn get_min(&self) -> i32 {
+        *self.min_stack.last().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -649,7 +730,7 @@ class MinStack {
 ### Intuition
 
 This approach keeps only **one stack** and stores **encoded values** instead of the actual numbers.
-The trick is to record the *difference* between the pushed value and the current minimum.
+The trick is to record the _difference_ between the pushed value and the current minimum.
 Whenever a new minimum is pushed, we store a **negative encoded value**, which signals that the minimum has changed.
 Later, when popping such a value, we can decode it to restore the previous minimum.
 
@@ -658,23 +739,23 @@ This way, the stack internally keeps track of all minimum updates without needin
 ### Algorithm
 
 1. Maintain:
-   - `stack` → stores encoded values (not the actual numbers)
-   - `min` → stores the current minimum in the stack
+    - `stack` → stores encoded values (not the actual numbers)
+    - `min` → stores the current minimum in the stack
 2. **Push(val)**:
-   - If the stack is empty:
-     - Push `0` (difference) and set `min = val`.
-   - Otherwise:
-     - Push `val - min`.
-     - If `val` is the new minimum, update `min`.
+    - If the stack is empty:
+        - Push `0` (difference) and set `min = val`.
+    - Otherwise:
+        - Push `val - min`.
+        - If `val` is the new minimum, update `min`.
 3. **Pop()**:
-   - Pop the encoded value.
-   - If this value is **negative**, it means the popped element was the minimum.
-     - Restore the previous minimum using the encoded difference.
+    - Pop the encoded value.
+    - If this value is **negative**, it means the popped element was the minimum.
+        - Restore the previous minimum using the encoded difference.
 4. **Top()**:
-   - If the encoded value is positive, return `encoded + min`.
-   - If it's negative, the top actual value is simply `min`.
+    - If the encoded value is positive, return `encoded + min`.
+    - If it's negative, the top actual value is simply `min`.
 5. **getMin()**:
-   - Return the current `min`.
+    - Return the current `min`.
 
 ::tabs-start
 
@@ -1005,6 +1086,52 @@ class MinStack {
 
     func getMin() -> Int {
         return minVal
+    }
+}
+```
+
+```rust
+struct MinStack {
+    min_val: i64,
+    stack: Vec<i64>,
+}
+
+impl MinStack {
+    fn new() -> Self {
+        Self {
+            min_val: 0,
+            stack: Vec::new(),
+        }
+    }
+
+    fn push(&mut self, val: i32) {
+        let val = val as i64;
+        if self.stack.is_empty() {
+            self.stack.push(0);
+            self.min_val = val;
+        } else {
+            self.stack.push(val - self.min_val);
+            if val < self.min_val {
+                self.min_val = val;
+            }
+        }
+    }
+
+    fn pop(&mut self) {
+        if let Some(top) = self.stack.pop() {
+            if top < 0 {
+                self.min_val -= top;
+            }
+        }
+    }
+
+    fn top(&self) -> i32 {
+        let top = *self.stack.last().unwrap();
+        if top > 0 { (top + self.min_val) as i32 } else { self.min_val as i32 }
+    }
+
+    fn get_min(&self) -> i32 {
+        self.min_val as i32
     }
 }
 ```

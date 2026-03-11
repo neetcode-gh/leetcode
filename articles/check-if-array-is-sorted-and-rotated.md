@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Iterating through arrays and comparing adjacent elements
 - **Modulo Arithmetic** - Using modulo to handle circular array indexing (wrap-around)
 - **Sorted Array Properties** - Understanding non-decreasing order and rotation concepts
@@ -278,6 +280,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut sorted_nums = nums.clone();
+        sorted_nums.sort();
+
+        for i in 0..n {
+            let mut matched = true;
+            let mut idx = 0;
+
+            let mut j = n - i;
+            while j < n && matched {
+                if nums[idx] != sorted_nums[j] {
+                    matched = false;
+                }
+                idx += 1;
+                j += 1;
+            }
+
+            j = 0;
+            while j < n - i && matched {
+                if nums[idx] != sorted_nums[j] {
+                    matched = false;
+                }
+                idx += 1;
+                j += 1;
+            }
+
+            if matched { return true; }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -478,6 +517,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut count = 1;
+
+        for i in 1..2 * n {
+            if nums[(i - 1) % n] <= nums[i % n] {
+                count += 1;
+            } else {
+                count = 1;
+            }
+            if count == n {
+                return true;
+            }
+        }
+
+        n == 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,6 +705,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut count = 0;
+
+        for i in 0..n {
+            if nums[i] > nums[(i + 1) % n] {
+                count += 1;
+                if count > 1 {
+                    return false;
+                }
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -656,7 +737,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Check the Wrap-Around
+
 A sorted and rotated array is circular, so you must compare the last element with the first element. Using `nums[i] > nums[i + 1]` without modulo wrapping misses the case where the "break" occurs between the last and first elements.
+
 ```python
 # Wrong: if nums[i] > nums[i + 1]
 # Correct:
@@ -664,4 +747,5 @@ if nums[i] > nums[(i + 1) % N]
 ```
 
 ### Expecting Strictly Increasing Order
+
 The problem allows non-decreasing order (duplicates are permitted). Checking for strict inequality `nums[i] >= nums[i+1]` instead of `nums[i] > nums[i+1]` incorrectly flags valid arrays like `[1, 1, 1]` or `[2, 2, 3, 1, 1]` as invalid.

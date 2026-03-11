@@ -89,6 +89,15 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn array_strings_are_equal(word1: Vec<String>, word2: Vec<String>) -> bool {
+        word1.concat() == word2.concat()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -267,6 +276,27 @@ class Solution {
             }
         }
         return i == s1Array.count
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn array_strings_are_equal(word1: Vec<String>, word2: Vec<String>) -> bool {
+        let s1: String = word1.concat();
+        let mut i = 0;
+        let s1_bytes = s1.as_bytes();
+
+        for w in &word2 {
+            for &c in w.as_bytes() {
+                if i == s1_bytes.len() || s1_bytes[i] != c {
+                    return false;
+                }
+                i += 1;
+            }
+        }
+        i == s1_bytes.len()
     }
 }
 ```
@@ -525,6 +555,35 @@ class Solution {
             }
         }
         return w1 == word1Arrays.count && w2 == word2Arrays.count
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn array_strings_are_equal(word1: Vec<String>, word2: Vec<String>) -> bool {
+        let (mut w1, mut w2) = (0, 0);
+        let (mut i, mut j) = (0, 0);
+        let w1_bytes: Vec<&[u8]> = word1.iter().map(|s| s.as_bytes()).collect();
+        let w2_bytes: Vec<&[u8]> = word2.iter().map(|s| s.as_bytes()).collect();
+
+        while w1 < w1_bytes.len() && w2 < w2_bytes.len() {
+            if w1_bytes[w1][i] != w2_bytes[w2][j] {
+                return false;
+            }
+            i += 1;
+            j += 1;
+            if i == w1_bytes[w1].len() {
+                w1 += 1;
+                i = 0;
+            }
+            if j == w2_bytes[w2].len() {
+                w2 += 1;
+                j = 0;
+            }
+        }
+        w1 == w1_bytes.len() && w2 == w2_bytes.len()
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure with left and right children
 - **Depth First Search (DFS)** - Recursively or iteratively traversing tree structures
 - **Recursion** - Solving problems by breaking them into smaller subproblems with base cases
@@ -285,6 +287,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_trees(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        match (&root1, &root2) {
+            (None, None) => None,
+            _ => {
+                let v1 = root1.as_ref().map_or(0, |n| n.borrow().val);
+                let v2 = root2.as_ref().map_or(0, |n| n.borrow().val);
+                let left1 = root1.as_ref().and_then(|n| n.borrow().left.clone());
+                let right1 = root1.as_ref().and_then(|n| n.borrow().right.clone());
+                let left2 = root2.as_ref().and_then(|n| n.borrow().left.clone());
+                let right2 = root2.as_ref().and_then(|n| n.borrow().right.clone());
+
+                let node = Rc::new(RefCell::new(TreeNode::new(v1 + v2)));
+                node.borrow_mut().left = Self::merge_trees(left1, left2);
+                node.borrow_mut().right = Self::merge_trees(right1, right2);
+                Some(node)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -531,6 +559,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_trees(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        match (root1, root2) {
+            (None, r) => r,
+            (l, None) => l,
+            (Some(n1), Some(n2)) => {
+                n1.borrow_mut().val += n2.borrow().val;
+                let left = Self::merge_trees(
+                    n1.borrow().left.clone(),
+                    n2.borrow().left.clone(),
+                );
+                let right = Self::merge_trees(
+                    n1.borrow().right.clone(),
+                    n2.borrow().right.clone(),
+                );
+                n1.borrow_mut().left = left;
+                n1.borrow_mut().right = right;
+                Some(n1)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -554,9 +610,9 @@ We can avoid recursion by using an explicit stack to traverse both trees. We pus
 2. Create a new root node with the sum of both root values.
 3. Initialize a stack with the triplet (`root1`, `root2`, `root`).
 4. While the stack is not empty:
-   - Pop (`node1`, `node2`, `node`).
-   - For left children: if either exists, create a merged left child and push to stack if both exist.
-   - For right children: similarly handle and push if both exist.
+    - Pop (`node1`, `node2`, `node`).
+    - For left children: if either exists, create a merged left child and push to stack if both exist.
+    - For right children: similarly handle and push if both exist.
 5. Return the merged root.
 
 ::tabs-start
@@ -953,6 +1009,61 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn merge_trees(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        if root1.is_none() && root2.is_none() {
+            return None;
+        }
+
+        let v1 = root1.as_ref().map_or(0, |n| n.borrow().val);
+        let v2 = root2.as_ref().map_or(0, |n| n.borrow().val);
+        let root = Rc::new(RefCell::new(TreeNode::new(v1 + v2)));
+
+        let mut stack: Vec<(
+            Option<Rc<RefCell<TreeNode>>>,
+            Option<Rc<RefCell<TreeNode>>>,
+            Rc<RefCell<TreeNode>>,
+        )> = vec![(root1, root2, root.clone())];
+
+        while let Some((n1, n2, node)) = stack.pop() {
+            let left1 = n1.as_ref().and_then(|n| n.borrow().left.clone());
+            let left2 = n2.as_ref().and_then(|n| n.borrow().left.clone());
+            match (&left1, &left2) {
+                (Some(l1), Some(l2)) => {
+                    let child = Rc::new(RefCell::new(TreeNode::new(
+                        l1.borrow().val + l2.borrow().val,
+                    )));
+                    node.borrow_mut().left = Some(child.clone());
+                    stack.push((left1, left2, child));
+                }
+                (None, _) => node.borrow_mut().left = left2,
+                (_, None) => node.borrow_mut().left = left1,
+            }
+
+            let right1 = n1.as_ref().and_then(|n| n.borrow().right.clone());
+            let right2 = n2.as_ref().and_then(|n| n.borrow().right.clone());
+            match (&right1, &right2) {
+                (Some(r1), Some(r2)) => {
+                    let child = Rc::new(RefCell::new(TreeNode::new(
+                        r1.borrow().val + r2.borrow().val,
+                    )));
+                    node.borrow_mut().right = Some(child.clone());
+                    stack.push((right1, right2, child));
+                }
+                (None, _) => node.borrow_mut().right = right2,
+                (_, None) => node.borrow_mut().right = right1,
+            }
+        }
+
+        Some(root)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -977,10 +1088,10 @@ Similar to the recursive in-place approach, we can modify the first tree iterati
 1. Handle base cases where one or both trees are `null`.
 2. Initialize a stack with the pair (`root1`, `root2`).
 3. While the stack is not empty:
-   - Pop (`node1`, `node2`). Skip if either is `null`.
-   - Add `node2.val` to `node1.val`.
-   - If both have left children, push them to the stack. Otherwise, if `node1` has no left child, attach `node2.left`.
-   - Similarly handle right children.
+    - Pop (`node1`, `node2`). Skip if either is `null`.
+    - Add `node2.val` to `node1.val`.
+    - If both have left children, push them to the stack. Otherwise, if `node1` has no left child, attach `node2.left`.
+    - Similarly handle right children.
 4. Return `root1`.
 
 ::tabs-start
@@ -1346,6 +1457,45 @@ class Solution {
         }
 
         return root1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn merge_trees(
+        root1: Option<Rc<RefCell<TreeNode>>>,
+        root2: Option<Rc<RefCell<TreeNode>>>,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        match (&root1, &root2) {
+            (None, _) => return root2,
+            (_, None) => return root1,
+            _ => {}
+        }
+
+        let mut stack = vec![(root1.clone().unwrap(), root2.unwrap())];
+
+        while let Some((n1, n2)) = stack.pop() {
+            n1.borrow_mut().val += n2.borrow().val;
+
+            let left1 = n1.borrow().left.clone();
+            let left2 = n2.borrow().left.clone();
+            match (left1, left2) {
+                (Some(l1), Some(l2)) => stack.push((l1, l2)),
+                (None, l2) => n1.borrow_mut().left = l2,
+                _ => {}
+            }
+
+            let right1 = n1.borrow().right.clone();
+            let right2 = n2.borrow().right.clone();
+            match (right1, right2) {
+                (Some(r1), Some(r2)) => stack.push((r1, r2)),
+                (None, r2) => n1.borrow_mut().right = r2,
+                _ => {}
+            }
+        }
+
+        root1
     }
 }
 ```

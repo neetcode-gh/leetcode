@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting element frequencies and mapping values to their ordering priorities
 - **Sorting** - Understanding built-in sort functions and custom comparators
 - **Counting Sort** - Linear time sorting when the value range is bounded
@@ -18,8 +20,8 @@ This approach directly mimics the problem requirements: first place elements in 
 
 1. Create an empty result list.
 2. For each number in `arr2`:
-   - Scan through `arr1` and find all occurrences of this number.
-   - Add each occurrence to the result and mark the position in `arr1` as used (e.g., set to `-1`).
+    - Scan through `arr1` and find all occurrences of this number.
+    - Add each occurrence to the result and mark the position in `arr1` as used (e.g., set to `-1`).
 3. Sort the modified `arr1` (marked positions will sort to the beginning).
 4. Append all unmarked elements (those not equal to `-1`) from `arr1` to the result.
 5. Return the result.
@@ -213,6 +215,30 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn relative_sort_array(mut arr1: Vec<i32>, arr2: Vec<i32>) -> Vec<i32> {
+        let mut res = Vec::new();
+
+        for &num2 in &arr2 {
+            for i in 0..arr1.len() {
+                if arr1[i] == num2 {
+                    res.push(arr1[i]);
+                    arr1[i] = -1;
+                }
+            }
+        }
+
+        arr1.sort();
+        for i in res.len()..arr1.len() {
+            res.push(arr1[i]);
+        }
+
+        res
     }
 }
 ```
@@ -461,6 +487,35 @@ class Solution {
 
         res.append(contentsOf: end)
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn relative_sort_array(arr1: Vec<i32>, arr2: Vec<i32>) -> Vec<i32> {
+        let arr2_set: HashSet<i32> = arr2.iter().cloned().collect();
+        let mut count = HashMap::new();
+        let mut end = Vec::new();
+
+        for &num in &arr1 {
+            if !arr2_set.contains(&num) {
+                end.push(num);
+            }
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        end.sort();
+        let mut res = Vec::new();
+
+        for &num in &arr2 {
+            for _ in 0..count[&num] {
+                res.push(num);
+            }
+        }
+
+        res.extend(end);
+        res
     }
 }
 ```
@@ -726,6 +781,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn relative_sort_array(arr1: Vec<i32>, arr2: Vec<i32>) -> Vec<i32> {
+        let mut count = HashMap::new();
+        for &num in &arr1 {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut res = Vec::new();
+        for &num in &arr2 {
+            if let Some(freq) = count.remove(&num) {
+                for _ in 0..freq {
+                    res.push(num);
+                }
+            }
+        }
+
+        let mut remaining: Vec<i32> = count.keys().cloned().collect();
+        remaining.sort();
+        for num in remaining {
+            for _ in 0..count[&num] {
+                res.push(num);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -955,6 +1040,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn relative_sort_array(arr1: Vec<i32>, arr2: Vec<i32>) -> Vec<i32> {
+        let max_val = *arr1.iter().max().unwrap() as usize;
+        let mut count = vec![0i32; max_val + 1];
+
+        for &num in &arr1 {
+            count[num as usize] += 1;
+        }
+
+        let mut res = Vec::new();
+        for &num in &arr2 {
+            let idx = num as usize;
+            while count[idx] > 0 {
+                res.push(num);
+                count[idx] -= 1;
+            }
+        }
+
+        for num in 0..=max_val {
+            while count[num] > 0 {
+                res.push(num as i32);
+                count[num] -= 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1118,6 +1234,23 @@ class Solution {
             let ib = index[b] ?? (1000 + b)
             return ia < ib
         }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn relative_sort_array(mut arr1: Vec<i32>, arr2: Vec<i32>) -> Vec<i32> {
+        let mut index = HashMap::new();
+        for (i, &num) in arr2.iter().enumerate() {
+            index.insert(num, i as i32);
+        }
+
+        arr1.sort_by_key(|&x| {
+            *index.get(&x).unwrap_or(&(1000 + x))
+        });
+
+        arr1
     }
 }
 ```

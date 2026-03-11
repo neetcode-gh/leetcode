@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding pre-order, in-order, and post-order traversal patterns
 - **Binary Search Tree (BST) Validation** - Knowing the BST property and how to verify if a tree is a valid BST
 - **Recursion with Return Values** - Returning multiple pieces of information (min, max, size) from recursive calls
@@ -16,9 +18,9 @@ The most direct approach is to check every subtree: if a subtree is a valid BST,
 ### Algorithm
 
 1. For each node, check if its subtree is a valid BST:
-   - Find the maximum value in the left subtree; it must be less than the current node's value.
-   - Find the minimum value in the right subtree; it must be greater than the current node's value.
-   - Recursively verify that both left and right subtrees are also valid BSTs.
+    - Find the maximum value in the left subtree; it must be less than the current node's value.
+    - Find the minimum value in the right subtree; it must be greater than the current node's value.
+    - Recursively verify that both left and right subtrees are also valid BSTs.
 2. If the current subtree is a valid BST, count and return the number of nodes.
 3. Otherwise, recursively search the left and right subtrees and return the maximum size found.
 
@@ -56,7 +58,7 @@ class Solution:
         # Max node in a empty tree should be smaller than parent.
         if not root:
             return float('-inf')
-    
+
         # Check the maximum node from the current node, left and right subtree of the current tree.
         return max(root.val, self.find_max(root.left), self.find_max(root.right))
 
@@ -64,26 +66,26 @@ class Solution:
         # Min node in a empty tree should be larger than parent.
         if not root:
             return float('inf')
-        
+
         # Check the minimum node from the current node, left and right subtree of the current tree
         return min(root.val, self.find_min(root.left), self.find_min(root.right))
 
     def count_nodes(self, root: Optional[TreeNode]) -> int:
-        if not root: 
+        if not root:
             return 0
 
         # Add nodes in left and right subtree.
         # Add 1 and return total size.
-        return 1 + self.count_nodes(root.left) + self.count_nodes(root.right) 
+        return 1 + self.count_nodes(root.left) + self.count_nodes(root.right)
 
     def largestBSTSubtree(self, root: Optional[TreeNode]) -> int:
         if not root:
             return 0
-        
+
         # If current subtree is a validBST, its children will have smaller size BST.
         if self.is_valid_bst(root):
             return self.count_nodes(root)
-        
+
         # Find BST in left and right subtrees of current nodes.
         return max(self.largestBSTSubtree(root.left), self.largestBSTSubtree(root.right))
 ```
@@ -120,7 +122,7 @@ class Solution {
         if (isValidBST(root.left) && isValidBST(root.right)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -129,7 +131,7 @@ class Solution {
         if (root == null) {
             return Integer.MIN_VALUE;
         }
-        
+
         // Check the maximum node from the current node, left and right subtree of the current tree
         return Math.max(Math.max(root.val, findMax(root.left)), findMax(root.right));
     }
@@ -139,32 +141,32 @@ class Solution {
         if (root == null) {
             return Integer.MAX_VALUE;
         }
-        
+
         // Check the minimum node from the current node, left and right subtree of the current tree
         return Math.min(Math.min(root.val, findMin(root.left)), findMin(root.right));
     }
-    
+
     private int countNodes(TreeNode root) {
         // Empty tree has 0 nodes.
         if (root == null) {
              return 0;
         }
-        
+
         // Add nodes in left and right subtree.
         // Add 1 and return total size.
         return 1 + countNodes(root.left) + countNodes(root.right);
     }
-    
+
     public int largestBSTSubtree(TreeNode root) {
         if (root == null) {
             return 0;
         }
-        
+
         // If current subtree is a validBST, its children will have smaller size BST.
         if (isValidBST(root)) {
             return countNodes(root);
         }
-        
+
         // Find BST in left and right subtrees of current nodes.
         return Math.max(largestBSTSubtree(root.left), largestBSTSubtree(root.right));
     }
@@ -189,7 +191,7 @@ public:
         if (leftMax >= root->val) {
             return false;
         }
-        
+
         // Find the min node in the right subtree of current node.
         int rightMin = findMin(root->right);
 
@@ -204,7 +206,7 @@ public:
         if (isValidBST(root->left) && isValidBST(root->right)) {
             return true;
         }
-        
+
         return false;
     }
 
@@ -227,28 +229,28 @@ public:
         // Check the minimum node from the current node, left and right subtree of the current tree
         return min({ root->val, findMin(root->left), findMin(root->right) });
     }
-    
+
     int countNodes(TreeNode* root) {
         // Empty tree has 0 nodes.
         if (!root) {
             return 0;
         }
-        
+
         // Add nodes in left and right subtree.
         // Add 1 and return total size.
         return 1 + countNodes(root->left) + countNodes(root->right);
     }
-    
+
     int largestBSTSubtree(TreeNode* root) {
         if (!root) {
             return 0;
         }
-        
+
         // If current subtree is a validBST, its children will have smaller size BST.
         if (isValidBST(root)) {
             return countNodes(root);
         }
-        
+
         // Find BST in left and right subtrees of current nodes.
         return max(largestBSTSubtree(root->right), largestBSTSubtree(root->left));
     }
@@ -271,7 +273,10 @@ class Solution {
             return this.countNodes(root);
         }
         // Find BST in left and right subtrees of current nodes.
-        return Math.max(this.largestBSTSubtree(root.left), this.largestBSTSubtree(root.right));
+        return Math.max(
+            this.largestBSTSubtree(root.left),
+            this.largestBSTSubtree(root.right),
+        );
     }
 
     // Function to check if given tree is a valid Binary Search Tree or not.
@@ -309,7 +314,11 @@ class Solution {
         }
 
         // Check the maximum node from the current node, left and right subtree of the current tree
-        return Math.max(root.val, this.findMax(root.left), this.findMax(root.right));
+        return Math.max(
+            root.val,
+            this.findMax(root.left),
+            this.findMax(root.right),
+        );
     }
 
     findMin(root) {
@@ -319,7 +328,11 @@ class Solution {
         }
 
         // Check the minimum node from the current node, left and right subtree of the current tree
-        return Math.min(root.val, this.findMin(root.left), this.findMin(root.right));
+        return Math.min(
+            root.val,
+            this.findMin(root.left),
+            this.findMin(root.right),
+        );
     }
 
     countNodes(root) {
@@ -557,6 +570,68 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_bst_subtree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if root.is_none() {
+            return 0;
+        }
+        if Self::is_valid_bst(&root) {
+            return Self::count_nodes(&root);
+        }
+        let node = root.as_ref().unwrap().borrow();
+        Self::largest_bst_subtree(node.left.clone())
+            .max(Self::largest_bst_subtree(node.right.clone()))
+    }
+
+    fn is_valid_bst(root: &Option<Rc<RefCell<TreeNode>>>) -> bool {
+        if root.is_none() {
+            return true;
+        }
+        let node = root.as_ref().unwrap().borrow();
+        let left_max = Self::find_max(&node.left);
+        if left_max >= node.val {
+            return false;
+        }
+        let right_min = Self::find_min(&node.right);
+        if right_min <= node.val {
+            return false;
+        }
+        Self::is_valid_bst(&node.left) && Self::is_valid_bst(&node.right)
+    }
+
+    fn find_max(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        match root {
+            None => i32::MIN,
+            Some(n) => {
+                let n = n.borrow();
+                n.val.max(Self::find_max(&n.left).max(Self::find_max(&n.right)))
+            }
+        }
+    }
+
+    fn find_min(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        match root {
+            None => i32::MAX,
+            Some(n) => {
+                let n = n.borrow();
+                n.val.min(Self::find_min(&n.left).min(Self::find_min(&n.right)))
+            }
+        }
+    }
+
+    fn count_nodes(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        match root {
+            None => 0,
+            Some(n) => {
+                let n = n.borrow();
+                1 + Self::count_nodes(&n.left) + Self::count_nodes(&n.right)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -565,7 +640,7 @@ class Solution {
 - Space complexity: $O(N)$
     - The recursion call stack can take at most $O(H)$ space; in the worst-case scenario, the height of the tree will equal $N$.
 
->  Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
+> Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
 
 ---
 
@@ -578,10 +653,10 @@ Instead of finding the min/max of entire subtrees, we can validate the BST using
 ### Algorithm
 
 1. For each node, validate the BST using in-order traversal:
-   - Recursively validate the left subtree first.
-   - Check that the current node's value is greater than the previous node's value.
-   - Update the previous node to the current node.
-   - Recursively validate the right subtree.
+    - Recursively validate the left subtree first.
+    - Check that the current node's value is greater than the previous node's value.
+    - Update the previous node to the current node.
+    - Recursively validate the right subtree.
 2. If the subtree is a valid BST, count and return its nodes.
 3. Otherwise, search the left and right subtrees and return the maximum size found.
 
@@ -594,12 +669,12 @@ class Solution:
         # An empty tree is a valid Binary Search Tree.
         if not root:
             return True
-        
+
         # If left subtree is not a valid BST return false.
         if not self.is_valid_bst(root.left):
             return False
 
-        # If current node's value is not greater than the previous 
+        # If current node's value is not greater than the previous
         # node's value in the in-order traversal return false.
         if self.previous and self.previous.val >= root.val:
             return False
@@ -612,24 +687,24 @@ class Solution:
 
     # Count nodes in current tree.
     def count_nodes(self, root: Optional[TreeNode]) -> int:
-        if not root: 
+        if not root:
             return 0
 
         # Add nodes in left and right subtree.
         # Add 1 and return total size.
         return 1 + self.count_nodes(root.left) + self.count_nodes(root.right)
-        
+
     def largestBSTSubtree(self, root: Optional[TreeNode]) -> int:
         if not root:
             return 0
-        
+
         # Previous node is initially null.
         self.previous = None
 
         # If current subtree is a validBST, its children will have smaller size BST.
         if self.is_valid_bst(root):
             return self.count_nodes(root)
-        
+
         # Find BST in left and right subtrees of current nodes.
         return max(self.largestBSTSubtree(root.left), self.largestBSTSubtree(root.right))
 ```
@@ -638,7 +713,7 @@ class Solution:
 class Solution {
     // Track previous node while doing inorder traversal.
     private TreeNode previous;
-    
+
     // Function to check if given tree is a valid Binary Search Tree or not.
     private boolean isValidBST(TreeNode root) {
         // An empty tree is a valid Binary Search Tree.
@@ -650,16 +725,16 @@ class Solution {
         if(!isValidBST(root.left)) {
             return false;
         }
-        
-        // If current node's value is not greater than the previous 
+
+        // If current node's value is not greater than the previous
         // node's value in the in-order traversal return false.
         if (previous != null && previous.val >= root.val) {
             return false;
         }
-        
+
         // Update previous node to current node.
         previous = root;
-        
+
         // If right subtree is not a valid BST return false.
         return isValidBST(root.right);
     }
@@ -668,25 +743,25 @@ class Solution {
         if (root == null) {
             return 0;
         }
-        
+
         // Add nodes in left and right subtree.
         // Add 1 and return total size.
         return 1 + countNodes(root.left) + countNodes(root.right);
     }
-    
+
     public int largestBSTSubtree(TreeNode root) {
         if (root == null) {
             return 0;
         }
-        
+
         // Set previous node to NULL initially.
         previous = null;
-        
+
         // If current subtree is a validBST, its children will have smaller size BST.
         if (isValidBST(root)) {
             return countNodes(root);
         }
-        
+
         // Find BST in left and right subtrees of current nodes.
         return Math.max(largestBSTSubtree(root.left), largestBSTSubtree(root.right));
     }
@@ -698,7 +773,7 @@ class Solution {
 public:
     // Track previous node while doing inorder traversal.
     TreeNode* previous = NULL;
-    
+
     // Function to check if given tree is a valid Binary Search Tree or not.
     bool isValidBST(TreeNode* root) {
         // An empty tree is a valid Binary Search Tree.
@@ -710,16 +785,16 @@ public:
         if(!isValidBST(root->left)) {
             return false;
         }
-        
-        // If current node's value is not greater than the previous 
+
+        // If current node's value is not greater than the previous
         // node's value in the in-order traversal return false.
         if (previous && previous->val >= root->val) {
             return false;
         }
-        
+
         // Update previous node to current node.
         previous = root;
-        
+
         // If right subtree is not a valid BST return false.
         return isValidBST(root->right);
     }
@@ -728,25 +803,25 @@ public:
         if (!root) {
             return 0;
         }
-        
+
         // Add nodes in left and right subtree.
         // Add 1 and return total size.
         return 1 + countNodes(root->left) + countNodes(root->right);
     }
-    
+
     int largestBSTSubtree(TreeNode* root) {
         if (!root) {
             return 0;
         }
-        
+
         // Set previous node to NULL initially.
         previous = NULL;
-        
+
         // If current subtree is a validBST, its children will have smaller size BST.
         if (isValidBST(root)) {
             return countNodes(root);
         }
-        
+
         // Find BST in left and right subtrees of current nodes.
         return max(largestBSTSubtree(root->left), largestBSTSubtree(root->right));
     }
@@ -770,7 +845,10 @@ class Solution {
             return this.countNodes(root);
         }
         // Find BST in left and right subtrees of current nodes.
-        return Math.max(this.largestBSTSubtree(root.left), this.largestBSTSubtree(root.right));
+        return Math.max(
+            this.largestBSTSubtree(root.left),
+            this.largestBSTSubtree(root.right),
+        );
     }
 
     // Function to check if given tree is a valid Binary Search Tree or not.
@@ -997,6 +1075,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_bst_subtree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        if root.is_none() {
+            return 0;
+        }
+        let mut previous: Option<i32> = None;
+        if Self::is_valid_bst(&root, &mut previous) {
+            return Self::count_nodes(&root);
+        }
+        let node = root.as_ref().unwrap().borrow();
+        Self::largest_bst_subtree(node.left.clone())
+            .max(Self::largest_bst_subtree(node.right.clone()))
+    }
+
+    fn is_valid_bst(
+        root: &Option<Rc<RefCell<TreeNode>>>,
+        previous: &mut Option<i32>,
+    ) -> bool {
+        if root.is_none() {
+            return true;
+        }
+        let node = root.as_ref().unwrap().borrow();
+        if !Self::is_valid_bst(&node.left, previous) {
+            return false;
+        }
+        if let Some(prev) = *previous {
+            if prev >= node.val {
+                return false;
+            }
+        }
+        *previous = Some(node.val);
+        Self::is_valid_bst(&node.right, previous)
+    }
+
+    fn count_nodes(root: &Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        match root {
+            None => 0,
+            Some(n) => {
+                let n = n.borrow();
+                1 + Self::count_nodes(&n.left) + Self::count_nodes(&n.right)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1005,7 +1130,7 @@ class Solution {
 - Space complexity: $O(N)$
     - The recursion call stack can take at most $O(H)$ space; in the worst-case scenario, the height of the tree will equal $N$.
 
->  Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
+> Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
 
 ---
 
@@ -1021,8 +1146,8 @@ The key insight is that we can determine if a subtree is a valid BST by looking 
 2. For an empty node, return values that indicate a valid empty BST (`min = infinity`, `max = negative infinity`, `size = 0`).
 3. Recursively process left and right children first.
 4. If the current node is greater than the left max and less than the right min:
-   - The subtree rooted here is a valid BST.
-   - Return updated min/max bounds and the combined size.
+    - The subtree rooted here is a valid BST.
+    - Return updated min/max bounds and the combined size.
 5. Otherwise, return invalid bounds (to prevent parent from being a valid BST) and the maximum size found so far.
 
 ::tabs-start
@@ -1044,13 +1169,13 @@ class Solution:
         # Get values from left and right subtree of current tree.
         left = self.largest_bst_subtree_helper(root.left)
         right = self.largest_bst_subtree_helper(root.right)
-        
+
         # Current node is greater than max in left AND smaller than min in right, it is a BST.
         if left.max_node < root.val < right.min_node:
             # It is a BST.
-            return NodeValue(min(root.val, left.min_node), max(root.val, right.max_node), 
+            return NodeValue(min(root.val, left.min_node), max(root.val, right.max_node),
                              left.max_size + right.max_size + 1)
-        
+
         # Otherwise, return [-inf, inf] so that parent can't be valid BST
         return NodeValue(float('-inf'), float('inf'), max(left.max_size, right.max_size))
 
@@ -1062,7 +1187,7 @@ class Solution:
 // Each node will return min node value, max node value, max size
 class NodeValue {
     public int maxNode, minNode, maxSize;
-    
+
     NodeValue(int minNode, int maxNode, int maxSize) {
         this.maxNode = maxNode;
         this.minNode = minNode;
@@ -1076,23 +1201,23 @@ class Solution {
         if (root == null) {
             return new NodeValue(Integer.MAX_VALUE, Integer.MIN_VALUE, 0);
         }
-        
+
         // Get values from left and right subtree of current tree.
         NodeValue left = largestBSTSubtreeHelper(root.left);
         NodeValue right = largestBSTSubtreeHelper(root.right);
-        
+
         // Current node is greater than max in left AND smaller than min in right, it is a BST.
         if (left.maxNode < root.val && root.val < right.minNode) {
             // It is a BST.
-            return new NodeValue(Math.min(root.val, left.minNode), Math.max(root.val, right.maxNode), 
+            return new NodeValue(Math.min(root.val, left.minNode), Math.max(root.val, right.maxNode),
                                 left.maxSize + right.maxSize + 1);
         }
-        
+
         // Otherwise, return [-inf, inf] so that parent can't be valid BST
-        return new NodeValue(Integer.MIN_VALUE, Integer.MAX_VALUE, 
+        return new NodeValue(Integer.MIN_VALUE, Integer.MAX_VALUE,
                             Math.max(left.maxSize, right.maxSize));
     }
-    
+
     public int largestBSTSubtree(TreeNode root) {
         return largestBSTSubtreeHelper(root).maxSize;
     }
@@ -1104,7 +1229,7 @@ class Solution {
 class NodeValue {
 public:
     int maxNode, minNode, maxSize;
-    
+
     NodeValue(int minNode, int maxNode, int maxSize) {
         this->maxNode = maxNode;
         this->minNode = minNode;
@@ -1119,22 +1244,22 @@ public:
         if (!root) {
             return NodeValue(INT_MAX, INT_MIN, 0);
         }
-        
+
         // Get values from left and right subtree of current tree.
         auto left = largestBSTSubtreeHelper(root->left);
         auto right = largestBSTSubtreeHelper(root->right);
-        
+
         // Current node is greater than max in left AND smaller than min in right, it is a BST.
         if (left.maxNode < root->val && root->val < right.minNode) {
             // It is a BST.
-            return NodeValue(min(root->val, left.minNode), max(root->val, right.maxNode), 
+            return NodeValue(min(root->val, left.minNode), max(root->val, right.maxNode),
                             left.maxSize + right.maxSize + 1);
         }
-        
+
         // Otherwise, return [-inf, inf] so that parent can't be valid BST
         return NodeValue(INT_MIN, INT_MAX, max(left.maxSize, right.maxSize));
     }
-    
+
     int largestBSTSubtree(TreeNode* root) {
         return largestBSTSubtreeHelper(root).maxSize;
     }
@@ -1149,7 +1274,7 @@ class NodeValue {
         this.minNode = minNode;
         this.maxSize = maxSize;
     }
-};
+}
 
 class Solution {
     /**
@@ -1163,7 +1288,11 @@ class Solution {
     largestBSTSubtreeHelper(root) {
         // An empty tree is a BST of size 0.
         if (!root) {
-            return new NodeValue(Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER, 0);
+            return new NodeValue(
+                Number.MAX_SAFE_INTEGER,
+                Number.MIN_SAFE_INTEGER,
+                0,
+            );
         }
 
         // Get values from left and right subtree of current tree.
@@ -1173,13 +1302,19 @@ class Solution {
         // Current node is greater than max in left AND smaller than min in right, it is a BST.
         if (left.maxNode < root.val && root.val < right.minNode) {
             // It is a BST.
-            return new NodeValue(Math.min(root.val, left.minNode), Math.max(root.val, right.maxNode),
-                                left.maxSize + right.maxSize + 1);
+            return new NodeValue(
+                Math.min(root.val, left.minNode),
+                Math.max(root.val, right.maxNode),
+                left.maxSize + right.maxSize + 1,
+            );
         }
 
         // Otherwise, return [-inf, inf] so that parent can't be valid BST
-        return new NodeValue(Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER,
-                            Math.max(left.maxSize, right.maxSize));
+        return new NodeValue(
+            Number.MIN_SAFE_INTEGER,
+            Number.MAX_SAFE_INTEGER,
+            Math.max(left.maxSize, right.maxSize),
+        );
     }
 }
 ```
@@ -1345,6 +1480,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_bst_subtree(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        Self::helper(&root).2
+    }
+
+    // Returns (min_node, max_node, max_size)
+    fn helper(root: &Option<Rc<RefCell<TreeNode>>>) -> (i32, i32, i32) {
+        match root {
+            None => (i32::MAX, i32::MIN, 0),
+            Some(n) => {
+                let n = n.borrow();
+                let left = Self::helper(&n.left);
+                let right = Self::helper(&n.right);
+
+                if left.1 < n.val && n.val < right.0 {
+                    (
+                        n.val.min(left.0),
+                        n.val.max(right.1),
+                        left.2 + right.2 + 1,
+                    )
+                } else {
+                    (i32::MIN, i32::MAX, left.2.max(right.2))
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1353,7 +1518,7 @@ class Solution {
 - Space complexity: $O(N)$
     - The recursion call stack can take at most $O(H)$ space; in the worst-case scenario, the height of the tree will equal $N$.
 
->  Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
+> Where $N$ and $H$ are the number of nodes and the max height of the given tree respectively
 
 ---
 

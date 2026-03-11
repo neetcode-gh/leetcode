@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stacks** - Understanding LIFO operations (push, pop, top) and their O(1) time complexity
 - **Balanced Binary Search Trees / Sorted Sets** - Using self-balancing trees (TreeSet, SortedList) for O(log n) insertion, deletion, and ordered access
 - **Heaps / Priority Queues** - Implementing max heaps for efficient maximum element retrieval
@@ -146,7 +148,8 @@ class MaxStack {
     }
 
     _insertSorted(arr, item, compareFn) {
-        let low = 0, high = arr.length;
+        let low = 0,
+            high = arr.length;
         while (low < high) {
             const mid = (low + high) >> 1;
             if (compareFn(arr[mid], item) < 0) low = mid + 1;
@@ -156,7 +159,8 @@ class MaxStack {
     }
 
     _removeSorted(arr, item, compareFn) {
-        let low = 0, high = arr.length;
+        let low = 0,
+            high = arr.length;
         while (low < high) {
             const mid = (low + high) >> 1;
             if (compareFn(arr[mid], item) < 0) low = mid + 1;
@@ -467,6 +471,52 @@ class MaxStack {
 }
 ```
 
+```rust
+struct MaxStack {
+    stack: BTreeSet<(i32, i32)>,  // (cnt, x)
+    values: BTreeSet<(i32, i32)>, // (x, cnt)
+    cnt: i32,
+}
+
+impl MaxStack {
+    fn new() -> Self {
+        MaxStack {
+            stack: BTreeSet::new(),
+            values: BTreeSet::new(),
+            cnt: 0,
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.stack.insert((self.cnt, x));
+        self.values.insert((x, self.cnt));
+        self.cnt += 1;
+    }
+
+    fn pop(&mut self) -> i32 {
+        let &(idx, val) = self.stack.iter().next_back().unwrap();
+        self.stack.remove(&(idx, val));
+        self.values.remove(&(val, idx));
+        val
+    }
+
+    fn top(&self) -> i32 {
+        self.stack.iter().next_back().unwrap().1
+    }
+
+    fn peek_max(&self) -> i32 {
+        self.values.iter().next_back().unwrap().0
+    }
+
+    fn pop_max(&mut self) -> i32 {
+        let &(val, idx) = self.values.iter().next_back().unwrap();
+        self.values.remove(&(val, idx));
+        self.stack.remove(&(idx, val));
+        val
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -475,7 +525,7 @@ class MaxStack {
 
 - Space complexity: $O(N)$ the maximum size of the two balanced trees.
 
->  Where $N$ is the number of elements to add to the stack.
+> Where $N$ is the number of elements to add to the stack.
 
 ---
 
@@ -534,7 +584,7 @@ class MaxStack:
     def popMax(self) -> int:
         while self.heap and -self.heap[0][1] in self.removed:
             heapq.heappop(self.heap)
-            
+
         num, idx = heapq.heappop(self.heap)
         self.removed.add(-idx)
 
@@ -543,7 +593,7 @@ class MaxStack:
 
 ```java
 class MaxStack {
-    
+
     private Stack<int[]> stack;
     private Queue<int[]> heap;
     private Set<Integer> removed;
@@ -655,7 +705,7 @@ public:
         const pair<int, int> p = heap.top();
         heap.pop();
         removed.insert(p.second);
-        
+
         return p.first;
     }
 };
@@ -1040,6 +1090,64 @@ class MaxStack {
 }
 ```
 
+```rust
+struct MaxStack {
+    stack: Vec<(i32, i32)>,          // (value, cnt)
+    heap: BinaryHeap<(i32, i32)>,    // max-heap by (value, cnt)
+    removed: HashSet<i32>,           // removed cnt indices
+    cnt: i32,
+}
+
+impl MaxStack {
+    fn new() -> Self {
+        MaxStack {
+            stack: Vec::new(),
+            heap: BinaryHeap::new(),
+            removed: HashSet::new(),
+            cnt: 0,
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.stack.push((x, self.cnt));
+        self.heap.push((x, self.cnt));
+        self.cnt += 1;
+    }
+
+    fn pop(&mut self) -> i32 {
+        while self.removed.contains(&self.stack.last().unwrap().1) {
+            self.stack.pop();
+        }
+        let (val, idx) = self.stack.pop().unwrap();
+        self.removed.insert(idx);
+        val
+    }
+
+    fn top(&mut self) -> i32 {
+        while self.removed.contains(&self.stack.last().unwrap().1) {
+            self.stack.pop();
+        }
+        self.stack.last().unwrap().0
+    }
+
+    fn peek_max(&mut self) -> i32 {
+        while self.removed.contains(&self.heap.peek().unwrap().1) {
+            self.heap.pop();
+        }
+        self.heap.peek().unwrap().0
+    }
+
+    fn pop_max(&mut self) -> i32 {
+        while self.removed.contains(&self.heap.peek().unwrap().1) {
+            self.heap.pop();
+        }
+        let (val, idx) = self.heap.pop().unwrap();
+        self.removed.insert(idx);
+        val
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1052,7 +1160,7 @@ class MaxStack {
 
 - Space Complexity: $O(N)$, the maximum size of the `heap`, `stack`, and `removed`.
 
->  Where $N$ is the number of elements to add to the stack.
+> Where $N$ is the number of elements to add to the stack.
 
 ---
 

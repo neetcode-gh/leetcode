@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Used for O(1) lookups to check if a coordinate has been visited
 - **Coordinate Systems** - Understanding how to represent and track 2D positions
 
@@ -16,9 +18,9 @@ We start at the origin and follow the path character by character. At each step,
 1. Initialize a set `visit` and add the starting position `(0, 0)`.
 2. Initialize coordinates `x = 0`, `y = 0`.
 3. For each character in the path:
-   - Update `x` or `y` based on the direction (N, S, E, W).
-   - If the new position exists in `visit`, return `true`.
-   - Otherwise, add the new position to `visit`.
+    - Update `x` or `y` based on the direction (N, S, E, W).
+    - If the new position exists in `visit`, return `true`.
+    - Otherwise, add the new position to `visit`.
 4. If we finish the path without revisiting any position, return `false`.
 
 ::tabs-start
@@ -221,6 +223,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_path_crossing(path: String) -> bool {
+        let mut visit = HashSet::new();
+        let (mut x, mut y) = (0i32, 0i32);
+        visit.insert((x, y));
+
+        for c in path.chars() {
+            match c {
+                'N' => y += 1,
+                'S' => y -= 1,
+                'E' => x += 1,
+                'W' => x -= 1,
+                _ => {}
+            }
+            if !visit.insert((x, y)) {
+                return true;
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -242,10 +269,10 @@ Instead of storing coordinates as strings or tuples, we can encode them into a s
 2. Initialize a set and add `hash(0, 0)`.
 3. Track position with `x = 0`, `y = 0`.
 4. For each character in the path:
-   - Update coordinates based on direction.
-   - Compute the `hash` of the new position.
-   - If it exists in the set, return `true`.
-   - Otherwise, add the `hash` to the set.
+    - Update coordinates based on direction.
+    - Compute the `hash` of the new position.
+    - If it exists in the set, return `true`.
+    - Otherwise, add the `hash` to the set.
 5. Return `false` if no crossing is found.
 
 ::tabs-start
@@ -485,6 +512,36 @@ class Solution {
 
     private func hash(_ x: Int64, _ y: Int64) -> Int64 {
         return (x << 32) + y
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_path_crossing(path: String) -> bool {
+        let mut visit = HashSet::new();
+        let (mut x, mut y) = (0i64, 0i64);
+        visit.insert(Self::hash(x, y));
+
+        for c in path.chars() {
+            match c {
+                'N' => y += 1,
+                'S' => y -= 1,
+                'E' => x += 1,
+                'W' => x -= 1,
+                _ => {}
+            }
+            let pos = Self::hash(x, y);
+            if !visit.insert(pos) {
+                return true;
+            }
+        }
+
+        false
+    }
+
+    fn hash(x: i64, y: i64) -> i64 {
+        (x << 32) + y
     }
 }
 ```

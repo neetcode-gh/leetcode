@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Custom Sorting** - Sorting with multiple criteria (height and k-value)
 - **Greedy Algorithms** - Processing people in an order that simplifies placement decisions
 - **List Insertion** - Understanding how inserting at an index shifts subsequent elements
@@ -363,6 +365,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reconstruct_queue(people: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = people.len();
+        let mut mp: HashMap<i32, Vec<i32>> = HashMap::new();
+
+        for p in &people {
+            mp.entry(p[1]).or_default().push(p[0]);
+        }
+        for v in mp.values_mut() {
+            v.sort_unstable_by(|a, b| b.cmp(a));
+        }
+
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        for i in 0..n {
+            let mut mini: i32 = -1;
+            let keys: Vec<i32> = mp.keys().copied().collect();
+            for &k in &keys {
+                if k as usize > i { continue; }
+                let last = *mp[&k].last().unwrap();
+                let cnt = res.iter().filter(|r| r[0] >= last).count() as i32;
+                if cnt == k && (mini == -1 || last < *mp[&mini].last().unwrap()) {
+                    mini = k;
+                }
+            }
+
+            let val = mp.get_mut(&mini).unwrap().pop().unwrap();
+            res.push(vec![val, mini]);
+            if mp[&mini].is_empty() {
+                mp.remove(&mini);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -502,6 +542,22 @@ class Solution {
             res.insert(p, at: p[1])
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reconstruct_queue(mut people: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        people.sort_unstable_by(|a, b| {
+            if a[0] == b[0] { a[1].cmp(&b[1]) } else { b[0].cmp(&a[0]) }
+        });
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        for p in people {
+            let k = p[1] as usize;
+            res.insert(k, p);
+        }
+        res
     }
 }
 ```
@@ -736,6 +792,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reconstruct_queue(mut people: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = people.len();
+        people.sort_unstable_by(|a, b| {
+            if a[0] == b[0] { b[1].cmp(&a[1]) } else { a[0].cmp(&b[0]) }
+        });
+        let mut res: Vec<Option<Vec<i32>>> = vec![None; n];
+        let mut used = vec![false; n];
+
+        for p in &people {
+            let mut cnt = 0;
+            let mut i = 0;
+            while i < n {
+                if !used[i] {
+                    if cnt == p[1] { break; }
+                    cnt += 1;
+                }
+                i += 1;
+            }
+            used[i] = true;
+            res[i] = Some(p.clone());
+        }
+
+        res.into_iter().map(|x| x.unwrap()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -756,9 +841,9 @@ The ascending-order approach requires finding the `(k + 1)`th empty slot, which 
 1. Sort people by height ascending, then by `k` descending for ties.
 2. Build a segment tree where each leaf is initialized to `1` (empty slot).
 3. For each person:
-   - Binary search for the smallest index where the prefix sum of empty slots exceeds `k`.
-   - Place the person at that index.
-   - Update the segment tree to mark that slot as filled.
+    - Binary search for the smallest index where the prefix sum of empty slots exceeds `k`.
+    - Place the person at that index.
+    - Update the segment tree to mark that slot as filled.
 4. Return the result array.
 
 ::tabs-start
@@ -1356,6 +1441,71 @@ class Solution {
 }
 ```
 
+```rust
+struct SegTree {
+    n: usize,
+    tree: Vec<i32>,
+}
+
+impl SegTree {
+    fn new(big_n: usize) -> Self {
+        let mut n = big_n;
+        while n & (n - 1) != 0 { n += 1; }
+        let mut tree = vec![0i32; 2 * n];
+        for i in 0..big_n { tree[n + i] = 1; }
+        for i in (1..n).rev() { tree[i] = tree[i << 1] + tree[i << 1 | 1]; }
+        Self { n, tree }
+    }
+    fn update(&mut self, i: usize, val: i32) {
+        self.tree[self.n + i] = val;
+        let mut j = (self.n + i) >> 1;
+        while j >= 1 {
+            self.tree[j] = self.tree[j << 1] + self.tree[j << 1 | 1];
+            j >>= 1;
+        }
+    }
+    fn query(&self, l: usize, r: usize) -> i32 {
+        let (mut l, mut r) = (l + self.n, r + self.n + 1);
+        let mut res = 0;
+        while l < r {
+            if l & 1 == 1 { res += self.tree[l]; l += 1; }
+            if r & 1 == 1 { r -= 1; res += self.tree[r]; }
+            l >>= 1; r >>= 1;
+        }
+        res
+    }
+}
+
+impl Solution {
+    pub fn reconstruct_queue(mut people: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = people.len();
+        people.sort_unstable_by(|a, b| {
+            if a[0] == b[0] { b[1].cmp(&a[1]) } else { a[0].cmp(&b[0]) }
+        });
+        let mut res: Vec<Option<Vec<i32>>> = vec![None; n];
+        let mut seg = SegTree::new(n);
+
+        for p in &people {
+            let (mut lo, mut hi, mut idx) = (0usize, n - 1, 0usize);
+            while lo <= hi {
+                let mid = (lo + hi) >> 1;
+                if seg.query(0, mid) > p[1] {
+                    idx = mid;
+                    if mid == 0 { break; }
+                    hi = mid - 1;
+                } else {
+                    lo = mid + 1;
+                }
+            }
+            res[idx] = Some(p.clone());
+            seg.update(idx, 0);
+        }
+
+        res.into_iter().map(|x| x.unwrap()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1376,9 +1526,9 @@ Similar to the segment tree approach, but using a Binary Indexed Tree (Fenwick T
 1. Sort people by height ascending, then by `k` descending for ties.
 2. Initialize a BIT with all positions marked as available (value `1`).
 3. For each person:
-   - Binary search for the position where the prefix count of available slots first exceeds `k`.
-   - Place the person at that position.
-   - Update the BIT to decrement the count at that position.
+    - Binary search for the position where the prefix count of available slots first exceeds `k`.
+    - Place the person at that position.
+    - Update the BIT to decrement the count at that position.
 4. Return the result array.
 
 ::tabs-start
@@ -1914,6 +2064,70 @@ class Solution {
 }
 ```
 
+```rust
+struct BIT {
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl BIT {
+    fn new(big_n: usize) -> Self {
+        let n = big_n + 1;
+        let mut bit = Self { tree: vec![0; n], n };
+        for i in 0..big_n { bit.update(i, 1); }
+        bit
+    }
+    fn update(&mut self, index: usize, val: i32) {
+        let mut i = index + 1;
+        while i < self.n {
+            self.tree[i] += val;
+            i += i & i.wrapping_neg();
+        }
+    }
+    fn prefix_sum(&self, index: usize) -> i32 {
+        let mut s = 0;
+        let mut i = index;
+        while i > 0 {
+            s += self.tree[i];
+            i -= i & i.wrapping_neg();
+        }
+        s
+    }
+    fn query(&self, l: usize, r: usize) -> i32 {
+        self.prefix_sum(r + 1) - self.prefix_sum(l)
+    }
+}
+
+impl Solution {
+    pub fn reconstruct_queue(mut people: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = people.len();
+        people.sort_unstable_by(|a, b| {
+            if a[0] == b[0] { b[1].cmp(&a[1]) } else { a[0].cmp(&b[0]) }
+        });
+        let mut res: Vec<Option<Vec<i32>>> = vec![None; n];
+        let mut bit = BIT::new(n);
+
+        for p in &people {
+            let (mut lo, mut hi, mut idx) = (0usize, n - 1, 0usize);
+            while lo <= hi {
+                let mid = (lo + hi) >> 1;
+                if bit.query(0, mid) > p[1] {
+                    idx = mid;
+                    if mid == 0 { break; }
+                    hi = mid - 1;
+                } else {
+                    lo = mid + 1;
+                }
+            }
+            res[idx] = Some(p.clone());
+            bit.update(idx, -1);
+        }
+
+        res.into_iter().map(|x| x.unwrap()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1934,9 +2148,9 @@ We can eliminate the explicit binary search by leveraging the BIT's structure di
 1. Sort people by height ascending, then by `k` descending for ties.
 2. Initialize a BIT with all positions marked as available.
 3. For each person:
-   - Use bit manipulation to traverse the BIT directly, finding the position with exactly `k` available slots before it.
-   - Place the person at the found position.
-   - Update the BIT to mark that slot as filled.
+    - Use bit manipulation to traverse the BIT directly, finding the position with exactly `k` available slots before it.
+    - Place the person at the found position.
+    - Update the BIT to mark that slot as filled.
 4. Return the result array.
 
 ::tabs-start
@@ -2383,6 +2597,61 @@ class Solution {
         }
 
         return res.compactMap { $0 }
+    }
+}
+```
+
+```rust
+struct BIT {
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl BIT {
+    fn new(big_n: usize) -> Self {
+        let n = big_n + 1;
+        let mut bit = Self { tree: vec![0; n], n };
+        for i in 0..big_n { bit.update(i, 1); }
+        bit
+    }
+    fn update(&mut self, index: usize, val: i32) {
+        let mut i = index + 1;
+        while i < self.n {
+            self.tree[i] += val;
+            i += i & i.wrapping_neg();
+        }
+    }
+    fn get_idx(&self, mut cnt: i32, mut msb: usize) -> usize {
+        let mut idx = 0;
+        while msb != 0 {
+            let nxt = idx + msb;
+            if nxt < self.n && cnt >= self.tree[nxt] {
+                idx = nxt;
+                cnt -= self.tree[nxt];
+            }
+            msb >>= 1;
+        }
+        idx
+    }
+}
+
+impl Solution {
+    pub fn reconstruct_queue(mut people: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let n = people.len();
+        people.sort_unstable_by(|a, b| {
+            if a[0] == b[0] { b[1].cmp(&a[1]) } else { a[0].cmp(&b[0]) }
+        });
+        let mut res: Vec<Option<Vec<i32>>> = vec![None; n];
+        let mut bit = BIT::new(n);
+        let msb = 1usize << (usize::BITS - 1 - n.leading_zeros());
+
+        for p in &people {
+            let idx = bit.get_idx(p[1], msb);
+            res[idx] = Some(p.clone());
+            bit.update(idx, -1);
+        }
+
+        res.into_iter().map(|x| x.unwrap()).collect()
     }
 }
 ```

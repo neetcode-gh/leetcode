@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding how nodes connect via left and right children
 - **Depth-First Search (DFS)** - Traversing trees using both top-down and bottom-up recursive approaches
 - **Passing State Through Recursion** - Carrying information (parent value, sequence length) down or up the tree
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Top Down Depth-first Search
 
 ### Intuition
+
 We traverse the tree from root to leaves, passing down the current consecutive sequence length to each child. At each node, we check if it continues the sequence from its parent (value is exactly one more than the parent). If so, we extend the sequence; otherwise, we start a new sequence. We track the maximum length seen across all nodes.
 
 ### Algorithm
+
 1. Initialize a global variable to track the maximum consecutive sequence length.
 2. Define a DFS function that takes the current node, its parent, and the current sequence length.
 3. If the current node is `null`, return.
@@ -28,14 +32,14 @@ class Solution:
         self.max_length = 0
         self.dfs(root, None, 0)
         return self.max_length
-    
+
     def dfs(self, p: TreeNode, parent: TreeNode, length: int) -> None:
         if p is None:
             return
-        
+
         length = length + 1 if parent is not None and p.val == parent.val + 1 else 1
         self.max_length = max(self.max_length, length)
-        
+
         self.dfs(p.left, p, length)
         self.dfs(p.right, p, length)
 ```
@@ -43,7 +47,7 @@ class Solution:
 ```java
 class Solution {
     private int maxLength = 0;
-    
+
     public int longestConsecutive(TreeNode root) {
         dfs(root, null, 0);
         return maxLength;
@@ -63,17 +67,17 @@ class Solution {
 class Solution {
 private:
     int maxLength = 0;
-    
+
     void dfs(TreeNode* p, TreeNode* parent, int length) {
         if (p == nullptr) return;
-        
+
         length = (parent != nullptr && p->val == parent->val + 1) ? length + 1 : 1;
         maxLength = max(maxLength, length);
-        
+
         dfs(p->left, p, length);
         dfs(p->right, p, length);
     }
-    
+
 public:
     int longestConsecutive(TreeNode* root) {
         dfs(root, nullptr, 0);
@@ -107,7 +111,7 @@ class Solution {
     dfs(p, parent, length) {
         if (p === null) return;
 
-        length = (parent !== null && p.val === parent.val + 1) ? length + 1 : 1;
+        length = parent !== null && p.val === parent.val + 1 ? length + 1 : 1;
         this.maxLength = Math.max(this.maxLength, length);
 
         this.dfs(p.left, p, length);
@@ -204,6 +208,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_consecutive(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut max_length = 0;
+        Self::dfs(&root, None, 0, &mut max_length);
+        max_length
+    }
+
+    fn dfs(
+        p: &Option<Rc<RefCell<TreeNode>>>,
+        parent_val: Option<i32>,
+        length: i32,
+        max_length: &mut i32,
+    ) {
+        let node = match p {
+            None => return,
+            Some(n) => n.borrow(),
+        };
+        let len = if let Some(pv) = parent_val {
+            if node.val == pv + 1 { length + 1 } else { 1 }
+        } else {
+            1
+        };
+        *max_length = (*max_length).max(len);
+        Self::dfs(&node.left, Some(node.val), len, max_length);
+        Self::dfs(&node.right, Some(node.val), len, max_length);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -211,16 +245,18 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the input tree 
+> Where $n$ is the number of nodes in the input tree
 
 ---
 
 ## 2. Bottom Up Depth-first Search
 
 ### Intuition
+
 Instead of passing information down, we can compute the consecutive sequence length from leaves up to the root. Each node returns the length of the longest consecutive sequence starting from itself going downward. The parent then checks if it can extend this sequence by verifying that its value is exactly one less than its child's value.
 
 ### Algorithm
+
 1. Initialize a global variable to track the maximum consecutive sequence length.
 2. Define a DFS function that returns the longest consecutive sequence starting from the current node.
 3. If the current node is `null`, return `0`.
@@ -238,23 +274,23 @@ class Solution:
         self.max_length = 0
         self.dfs(root)
         return self.max_length
-    
+
     def dfs(self, p: Optional[TreeNode]) -> int:
         if p is None:
             return 0
-        
+
         L = self.dfs(p.left) + 1
         R = self.dfs(p.right) + 1
-        
+
         if p.left is not None and p.val + 1 != p.left.val:
             L = 1
-        
+
         if p.right is not None and p.val + 1 != p.right.val:
             R = 1
-        
+
         length = max(L, R)
         self.max_length = max(self.max_length, length)
-        
+
         return length
 ```
 
@@ -292,27 +328,27 @@ public class Solution {
 class Solution {
 private:
     int maxLength = 0;
-    
+
     int dfs(TreeNode* p) {
         if (p == nullptr) return 0;
-        
+
         int L = dfs(p->left) + 1;
         int R = dfs(p->right) + 1;
-        
+
         if (p->left != nullptr && p->val + 1 != p->left->val) {
             L = 1;
         }
-        
+
         if (p->right != nullptr && p->val + 1 != p->right->val) {
             R = 1;
         }
-        
+
         int length = max(L, R);
         maxLength = max(maxLength, length);
-        
+
         return length;
     }
-    
+
 public:
     int longestConsecutive(TreeNode* root) {
         dfs(root);
@@ -495,6 +531,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_consecutive(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut max_length = 0;
+        Self::dfs(&root, &mut max_length);
+        max_length
+    }
+
+    fn dfs(p: &Option<Rc<RefCell<TreeNode>>>, max_length: &mut i32) -> i32 {
+        let node = match p {
+            None => return 0,
+            Some(n) => n.borrow(),
+        };
+
+        let mut l = Self::dfs(&node.left, max_length) + 1;
+        let mut r = Self::dfs(&node.right, max_length) + 1;
+
+        if let Some(ref left) = node.left {
+            if node.val + 1 != left.borrow().val {
+                l = 1;
+            }
+        }
+
+        if let Some(ref right) = node.right {
+            if node.val + 1 != right.borrow().val {
+                r = 1;
+            }
+        }
+
+        let length = l.max(r);
+        *max_length = (*max_length).max(length);
+        length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -502,25 +574,30 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$
 
->  Where $n$ is the number of nodes in the input tree
+> Where $n$ is the number of nodes in the input tree
 
 ---
 
 ## Common Pitfalls
 
 ### Allowing Decreasing Sequences
+
 The problem asks for strictly increasing consecutive sequences where each child is exactly `parent.val + 1`. A common mistake is checking for any consecutive values (including decreasing) or allowing gaps.
+
 ```python
 # Wrong: allows decreasing sequences
 if abs(p.val - parent.val) == 1:
 ```
 
 ### Not Resetting Length When Sequence Breaks
+
 When the consecutive pattern breaks, the length must reset to 1 (the current node starts a new sequence). Forgetting to reset causes incorrect counts.
+
 ```python
 # Wrong: continues accumulating instead of resetting
 length = length + 1  # should be: length = 1 when pattern breaks
 ```
 
 ### Forgetting to Handle the Root Node
+
 The root node has no parent, so attempting to check `parent.val` without a null check causes errors. The root always starts a new sequence of length 1.

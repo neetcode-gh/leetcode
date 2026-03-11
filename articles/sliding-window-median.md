@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Managing a fixed-size window that moves through an array
 - **Two Heaps Pattern** - Using a max-heap and min-heap together to track medians efficiently
 - **Balanced Binary Search Trees / Multisets** - Maintaining sorted order with O(log n) insertions and deletions
@@ -174,6 +176,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn median_sliding_window(nums: Vec<i32>, k: i32) -> Vec<f64> {
+        let k = k as usize;
+        let n = nums.len() - k + 1;
+        let mut res = Vec::with_capacity(n);
+        for i in 0..n {
+            let mut tmp: Vec<i32> = nums[i..i + k].to_vec();
+            tmp.sort();
+            if k % 2 == 1 {
+                res.push(tmp[k / 2] as f64);
+            } else {
+                res.push((tmp[k / 2] as f64 + tmp[(k - 1) / 2] as f64) / 2.0);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -198,12 +220,12 @@ Instead of sorting each window from scratch, we can maintain the elements in two
 1. Initialize a max-heap (`small`) and a min-heap (`large`) for the first `k` elements, balancing them so `small` has the ceiling of `k/2` elements.
 2. Compute the first median from the heap tops.
 3. For each new element entering the window:
-   - Mark the outgoing element for lazy deletion in a hash map.
-   - Track the balance change based on which heap the outgoing element belongs to.
-   - Insert the new element into the appropriate heap based on comparison with the `small` heap's top.
-   - Rebalance the heaps if needed by moving elements between them.
-   - Remove any elements marked for deletion that appear at heap tops.
-   - Compute and store the median.
+    - Mark the outgoing element for lazy deletion in a hash map.
+    - Track the balance change based on which heap the outgoing element belongs to.
+    - Insert the new element into the appropriate heap based on comparison with the `small` heap's top.
+    - Rebalance the heaps if needed by moving elements between them.
+    - Remove any elements marked for deletion that appear at heap tops.
+    - Compute and store the median.
 4. Return the array of medians.
 
 ::tabs-start
@@ -565,6 +587,81 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn median_sliding_window(nums: Vec<i32>, k: i32) -> Vec<f64> {
+        let k = k as usize;
+        let mut small = BinaryHeap::new(); // max-heap
+        let mut large = BinaryHeap::new(); // min-heap (store negated)
+        let mut d: HashMap<i32, i32> = HashMap::new();
+
+        for i in 0..k {
+            small.push(nums[i]);
+        }
+        for _ in 0..k / 2 {
+            large.push(-small.pop().unwrap());
+        }
+
+        let mut res = Vec::with_capacity(nums.len() - k + 1);
+        let get_median = |s: &BinaryHeap<i32>, l: &BinaryHeap<i32>| -> f64 {
+            if k % 2 == 1 {
+                *s.peek().unwrap() as f64
+            } else {
+                (*s.peek().unwrap() as f64 + (-*l.peek().unwrap()) as f64) / 2.0
+            }
+        };
+        res.push(get_median(&small, &large));
+
+        for i in k..nums.len() {
+            *d.entry(nums[i - k]).or_insert(0) += 1;
+            let balance;
+            let out = nums[i - k];
+            let mut bal = if !small.is_empty() && out <= *small.peek().unwrap() {
+                -1
+            } else {
+                1
+            };
+
+            if !small.is_empty() && nums[i] <= *small.peek().unwrap() {
+                small.push(nums[i]);
+                bal += 1;
+            } else {
+                large.push(-nums[i]);
+                bal -= 1;
+            }
+
+            if bal > 0 {
+                large.push(-small.pop().unwrap());
+            }
+            if bal < 0 {
+                small.push(-large.pop().unwrap());
+            }
+
+            while let Some(&top) = small.peek() {
+                if *d.get(&top).unwrap_or(&0) > 0 {
+                    *d.get_mut(&top).unwrap() -= 1;
+                    small.pop();
+                } else {
+                    break;
+                }
+            }
+            while let Some(&top) = large.peek() {
+                if *d.get(&(-top)).unwrap_or(&0) > 0 {
+                    *d.get_mut(&(-top)).unwrap() -= 1;
+                    large.pop();
+                } else {
+                    break;
+                }
+            }
+
+            res.push(get_median(&small, &large));
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -588,10 +685,10 @@ Using two balanced multisets (or sorted lists) instead of heaps gives us direct 
 
 1. Initialize two multisets: `small` for the lower half and `large` for the upper half.
 2. For each element in the array:
-   - Insert into `small` if it is less than or equal to `small`'s maximum, otherwise into `large`.
-   - If past the first `k` elements, remove the outgoing element from whichever set contains it.
-   - Rebalance so that `small` has at most one more element than `large`, and `large` never exceeds `small`'s size.
-   - Once the window is full (`i >= k - 1`), compute the median from the tops of the sets.
+    - Insert into `small` if it is less than or equal to `small`'s maximum, otherwise into `large`.
+    - If past the first `k` elements, remove the outgoing element from whichever set contains it.
+    - Rebalance so that `small` has at most one more element than `large`, and `large` never exceeds `small`'s size.
+    - Once the window is full (`i >= k - 1`), compute the median from the tops of the sets.
 3. Return the collected medians.
 
 ::tabs-start
@@ -896,6 +993,76 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn median_sliding_window(nums: Vec<i32>, k: i32) -> Vec<f64> {
+        let k = k as usize;
+        let mut small = BTreeMap::new(); // lower half (sorted, max accessible)
+        let mut large = BTreeMap::new(); // upper half (sorted, min accessible)
+        let mut small_size = 0usize;
+        let mut large_size = 0usize;
+        let mut res = Vec::with_capacity(nums.len() - k + 1);
+
+        let add = |set: &mut BTreeMap<(i32, usize), ()>, key: (i32, usize)| {
+            set.insert(key, ());
+        };
+        let remove = |set: &mut BTreeMap<(i32, usize), ()>, key: &(i32, usize)| {
+            set.remove(key);
+        };
+
+        // Use (value, index) as key to handle duplicates
+        for i in 0..nums.len() {
+            let key = (nums[i], i);
+            if small_size == 0 || key <= *small.keys().next_back().unwrap() {
+                small.insert(key, ());
+                small_size += 1;
+            } else {
+                large.insert(key, ());
+                large_size += 1;
+            }
+
+            if i >= k {
+                let rm_key = (nums[i - k], i - k);
+                if small.contains_key(&rm_key) {
+                    small.remove(&rm_key);
+                    small_size -= 1;
+                } else {
+                    large.remove(&rm_key);
+                    large_size -= 1;
+                }
+            }
+
+            while small_size > large_size + 1 {
+                let max_small = *small.keys().next_back().unwrap();
+                small.remove(&max_small);
+                large.insert(max_small, ());
+                small_size -= 1;
+                large_size += 1;
+            }
+            while large_size > small_size {
+                let min_large = *large.keys().next().unwrap();
+                large.remove(&min_large);
+                small.insert(min_large, ());
+                large_size -= 1;
+                small_size += 1;
+            }
+
+            if i >= k - 1 {
+                if k % 2 == 1 {
+                    res.push(small.keys().next_back().unwrap().0 as f64);
+                } else {
+                    let s = small.keys().next_back().unwrap().0 as f64;
+                    let l = large.keys().next().unwrap().0 as f64;
+                    res.push((s + l) / 2.0);
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -921,10 +1088,10 @@ A single sorted data structure can track all k elements directly. By maintaining
 2. Set a median pointer to the element at index `k / 2`.
 3. Compute the first median from the pointer position.
 4. For each subsequent element:
-   - Insert the new element and adjust the median pointer if the insertion happens before or at the current median.
-   - Adjust the median pointer if the element being removed is at or before the current median.
-   - Remove the outgoing element from the container.
-   - Compute and store the median.
+    - Insert the new element and adjust the median pointer if the insertion happens before or at the current median.
+    - Adjust the median pointer if the element being removed is at or before the current median.
+    - Remove the outgoing element from the container.
+    - Compute and store the median.
 5. Return the array of medians.
 
 ::tabs-start
@@ -1086,6 +1253,41 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn median_sliding_window(nums: Vec<i32>, k: i32) -> Vec<f64> {
+        let k = k as usize;
+        let mut window: Vec<i32> = nums[..k].to_vec();
+        window.sort();
+        let mut res = Vec::with_capacity(nums.len() - k + 1);
+
+        let get_median = |w: &[i32]| -> f64 {
+            if k % 2 == 1 {
+                w[k / 2] as f64
+            } else {
+                (w[k / 2 - 1] as f64 + w[k / 2] as f64) / 2.0
+            }
+        };
+
+        res.push(get_median(&window));
+
+        for i in k..nums.len() {
+            // Remove nums[i - k]
+            let rm_idx = window.binary_search(&nums[i - k]).unwrap();
+            window.remove(rm_idx);
+
+            // Insert nums[i]
+            let ins_idx = window.partition_point(|&x| x < nums[i]);
+            window.insert(ins_idx, nums[i]);
+
+            res.push(get_median(&window));
+        }
+
+        res
     }
 }
 ```

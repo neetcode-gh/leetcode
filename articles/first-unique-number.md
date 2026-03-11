@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Queues** - FIFO data structure for maintaining insertion order of elements
 - **Hash Maps** - Tracking element counts and uniqueness status in O(1) time
 - **LinkedHashSet / OrderedDict** - Combining hash map O(1) lookups with insertion order preservation
@@ -39,13 +41,13 @@ class FirstUnique:
 class FirstUnique {
 
     private Queue<Integer> queue = new ArrayDeque<>();
-    
+
     public FirstUnique(int[] nums) {
         for (int num : nums) {
             queue.add(num);
         }
     }
-        
+
     public int showFirstUnique() {
         for (int num : queue) {
             int count = Collections.frequency(queue, num);
@@ -55,9 +57,9 @@ class FirstUnique {
         }
         return -1;
     }
-        
+
     public void add(int value) {
-        queue.add(value);    
+        queue.add(value);
     }
 }
 ```
@@ -66,34 +68,34 @@ class FirstUnique {
 class FirstUnique {
 private:
     queue<int> q;
-    
+
 public:
     FirstUnique(vector<int>& nums) {
         for (int num : nums) {
             q.push(num);
         }
     }
-    
+
     int showFirstUnique() {
         queue<int> temp = q;
         while (!temp.empty()) {
             int num = temp.front();
             temp.pop();
-            
+
             int count = 0;
             queue<int> countTemp = q;
             while (!countTemp.empty()) {
                 if (countTemp.front() == num) count++;
                 countTemp.pop();
             }
-            
+
             if (count == 1) {
                 return num;
             }
         }
         return -1;
     }
-    
+
     void add(int value) {
         q.push(value);
     }
@@ -254,6 +256,33 @@ class FirstUnique {
 }
 ```
 
+```rust
+struct FirstUnique {
+    queue: VecDeque<i32>,
+}
+
+impl FirstUnique {
+    fn new(nums: Vec<i32>) -> Self {
+        let queue: VecDeque<i32> = nums.into_iter().collect();
+        FirstUnique { queue }
+    }
+
+    fn show_first_unique(&self) -> i32 {
+        for &item in &self.queue {
+            let count = self.queue.iter().filter(|&&x| x == item).count();
+            if count == 1 {
+                return item;
+            }
+        }
+        -1
+    }
+
+    fn add(&mut self, value: i32) {
+        self.queue.push_back(value);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -267,7 +296,7 @@ class FirstUnique {
 
 - Space complexity: $O(N)$
 
->  Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
+> Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
 
 ---
 
@@ -281,25 +310,25 @@ We can speed up uniqueness checks by maintaining a hash map that tracks whether 
 
 1. **Constructor**: For each number in the initial array, call `add()`.
 2. **add(value)**:
-   - If the value is new, mark it as unique in the hash map and add to the queue.
-   - If it already exists, mark it as non-unique in the hash map.
+    - If the value is new, mark it as unique in the hash map and add to the queue.
+    - If it already exists, mark it as non-unique in the hash map.
 3. **showFirstUnique()**:
-   - Remove elements from the front of the queue while they are marked as non-unique.
-   - Return the front element if the queue is non-empty, otherwise return `-1`.
+    - Remove elements from the front of the queue while they are marked as non-unique.
+    - Return the front element if the queue is non-empty, otherwise return `-1`.
 
 ::tabs-start
 
 ```python
 class FirstUnique:
-    
+
     def __init__(self, nums: List[int]):
         self._queue = deque(nums)
         self._is_unique = {}
-        
+
         for num in nums:
-            # Notice that we're calling the "add" method of FirstUnique; not of the queue. 
+            # Notice that we're calling the "add" method of FirstUnique; not of the queue.
             self.add(num)
-    
+
 
     def showFirstUnique(self) -> int:
         # We need to start by "cleaning" the queue of any non-uniques at the start.
@@ -307,20 +336,20 @@ class FirstUnique:
         # is_unique, as the implementation of add() guarantees this.
         while self._queue and not self._is_unique[self._queue[0]]:
             self._queue.popleft()
-        
+
         # Check if there is still a value left in the queue. There might be no uniques.
         if self._queue:
             return self._queue[0]  # We don't want to actually *remove* the value.
-        
+
         return -1
-    
+
 
     def add(self, value: int) -> None:
-        # Case 1: We need to add the number to the queue and mark it as unique. 
+        # Case 1: We need to add the number to the queue and mark it as unique.
         if value not in self._is_unique:
             self._is_unique[value] = True
             self._queue.append(value)
-        
+
         # Case 2 and 3: We need to mark the number as no longer unique.
         else:
             self._is_unique[value] = False
@@ -335,7 +364,7 @@ class FirstUnique {
 
     public FirstUnique(int[] nums) {
         for (int num : nums) {
-            // Notice that we're calling the "add" method of FirstUnique; not of the queue. 
+            // Notice that we're calling the "add" method of FirstUnique; not of the queue.
             this.add(num);
         }
     }
@@ -357,7 +386,7 @@ class FirstUnique {
     }
 
     public void add(int value) {
-        // Case 1: We need to add the number to the queue and mark it as unique. 
+        // Case 1: We need to add the number to the queue and mark it as unique.
         if (!isUnique.containsKey(value)) {
             isUnique.put(value, true);
             queue.add(value);
@@ -375,26 +404,26 @@ class FirstUnique {
 private:
     queue<int> q;
     unordered_map<int, bool> isUnique;
-    
+
 public:
     FirstUnique(vector<int>& nums) {
         for (int num : nums) {
             this->add(num);
         }
     }
-    
+
     int showFirstUnique() {
         while (!q.empty() && !isUnique[q.front()]) {
             q.pop();
         }
-        
+
         if (!q.empty()) {
             return q.front();
         }
-        
+
         return -1;
     }
-    
+
     void add(int value) {
         if (isUnique.find(value) == isUnique.end()) {
             isUnique[value] = true;
@@ -596,6 +625,46 @@ class FirstUnique {
 }
 ```
 
+```rust
+struct FirstUnique {
+    queue: VecDeque<i32>,
+    is_unique: HashMap<i32, bool>,
+}
+
+impl FirstUnique {
+    fn new(nums: Vec<i32>) -> Self {
+        let mut fu = FirstUnique {
+            queue: VecDeque::new(),
+            is_unique: HashMap::new(),
+        };
+        for num in nums {
+            fu.add(num);
+        }
+        fu
+    }
+
+    fn show_first_unique(&mut self) -> i32 {
+        while let Some(&front) = self.queue.front() {
+            if !self.is_unique[&front] {
+                self.queue.pop_front();
+            } else {
+                return front;
+            }
+        }
+        -1
+    }
+
+    fn add(&mut self, value: i32) {
+        if !self.is_unique.contains_key(&value) {
+            self.is_unique.insert(value, true);
+            self.queue.push_back(value);
+        } else {
+            self.is_unique.insert(value, false);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -609,7 +678,7 @@ class FirstUnique {
 
 - Space complexity: $O(N)$
 
->  Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
+> Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
 
 ---
 
@@ -623,9 +692,9 @@ Instead of lazily removing non-unique elements during `showFirstUnique()`, we ca
 
 1. **Constructor**: For each number in the initial array, call `add()`.
 2. **add(value)**:
-   - If the value is new, mark it as unique in the hash map and add it to the set.
-   - If seen once before (currently unique), mark it as non-unique and remove it from the set.
-   - If already non-unique, do nothing.
+    - If the value is new, mark it as unique in the hash map and add it to the set.
+    - If seen once before (currently unique), mark it as non-unique and remove it from the set.
+    - If already non-unique, do nothing.
 3. **showFirstUnique()**: Return the first element from the set if non-empty, otherwise return `-1`.
 
 ::tabs-start
@@ -641,9 +710,9 @@ class FirstUnique:
         self._is_unique = {}
 
         for num in nums:
-            # Notice that we're calling the "add" method of FirstUnique; not of the queue. 
+            # Notice that we're calling the "add" method of FirstUnique; not of the queue.
             self.add(num)
-        
+
     def showFirstUnique(self) -> int:
         # Check if there is still a value left in the queue. There might be no uniques.
         if self._queue:
@@ -652,16 +721,16 @@ class FirstUnique:
             # the first value is to create an iterator, and then get the "next" value
             # from that. Note that this is O(1).
             return next(iter(self._queue))
-        
+
         return -1
-        
+
     def add(self, value: int) -> None:
-        # Case 1: We need to add the number to the queue and mark it as unique. 
+        # Case 1: We need to add the number to the queue and mark it as unique.
         if value not in self._is_unique:
             self._is_unique[value] = True
             self._queue[value] = None
 
-        # Case 2: We need to mark the value as no longer unique and then 
+        # Case 2: We need to mark the value as no longer unique and then
         # remove it from the queue.
         elif self._is_unique[value]:
             self._is_unique[value] = False
@@ -714,14 +783,14 @@ private:
     std::list<int> setQueue;
     std::unordered_map<int, std::list<int>::iterator> queuePosition;
     std::unordered_map<int, bool> isUnique;
-    
+
 public:
     FirstUnique(vector<int>& nums) {
         for (int num : nums) {
             this->add(num);
         }
     }
-    
+
     int showFirstUnique() {
         // If the queue contains values, we need to get the first one from it.
         // We can do this by making an iterator, and getting its first item.
@@ -730,7 +799,7 @@ public:
         }
         return -1;
     }
-    
+
     void add(int value) {
         // Case 1: This value is not yet in the data structure.
         // It should be ADDED.
@@ -785,8 +854,8 @@ class FirstUnique {
         if (!this.isUnique.has(value)) {
             this.isUnique.set(value, true);
             this.setQueue.add(value);
-        // Case 2: This value has been seen once, so is now becoming
-        // non-unique. It should be REMOVED.
+            // Case 2: This value has been seen once, so is now becoming
+            // non-unique. It should be REMOVED.
         } else if (this.isUnique.get(value)) {
             this.isUnique.set(value, false);
             this.setQueue.delete(value);
@@ -940,6 +1009,52 @@ class FirstUnique {
 }
 ```
 
+```rust
+struct FirstUnique {
+    set_queue: BTreeSet<(usize, i32)>,  // (insertion order, value)
+    is_unique: HashMap<i32, bool>,
+    order: HashMap<i32, usize>,
+    counter: usize,
+}
+
+impl FirstUnique {
+    fn new(nums: Vec<i32>) -> Self {
+        let mut fu = FirstUnique {
+            set_queue: BTreeSet::new(),
+            is_unique: HashMap::new(),
+            order: HashMap::new(),
+            counter: 0,
+        };
+        for num in nums {
+            fu.add(num);
+        }
+        fu
+    }
+
+    fn show_first_unique(&self) -> i32 {
+        if let Some(&(_, val)) = self.set_queue.iter().next() {
+            val
+        } else {
+            -1
+        }
+    }
+
+    fn add(&mut self, value: i32) {
+        if !self.is_unique.contains_key(&value) {
+            self.is_unique.insert(value, true);
+            self.order.insert(value, self.counter);
+            self.set_queue.insert((self.counter, value));
+            self.counter += 1;
+        } else if *self.is_unique.get(&value).unwrap() {
+            self.is_unique.insert(value, false);
+            if let Some(&ord) = self.order.get(&value) {
+                self.set_queue.remove(&(ord, value));
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -953,7 +1068,7 @@ class FirstUnique {
 
 - Space complexity: $O(N)$
 
->  Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
+> Where $K$ is the length of the initial array passed into the constructor and $N$ is the total number of items added into the queue so far (including those from the constructor).
 
 ---
 

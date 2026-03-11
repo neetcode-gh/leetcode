@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - Expanding and shrinking a window while maintaining validity conditions
 - **Heaps (Priority Queues)** - Using max-heap and min-heap to track extreme values in a dynamic set
 - **Monotonic Deques** - Maintaining increasing or decreasing order to efficiently track min/max in a sliding window
@@ -10,19 +12,21 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 A subarray is valid if the **difference between its maximum and minimum** is at most `limit`.
 Brute force tries every possible starting index `i`, then extends the subarray to the right (`j`) while tracking the current `min` and `max`.
 The moment `max - min` becomes greater than `limit`, extending further will only keep it invalid (or worse), so we **break** and move to the next `i`.
 
 ### Algorithm
+
 1. Initialize `res` = `1`.
 2. For each starting index `i`:
-   - Set `mini` = `maxi` = `nums[i]`.
-   - For each `j` from `i+1` to `n-1`:
-     - Update `mini` = `min(mini, nums[j])`
-     - Update `maxi` = `max(maxi, nums[j])`
-     - If `maxi` - `mini` > `limit`, break.
-     - Otherwise update `res` = `max(res, j - i + 1)`.
+    - Set `mini` = `maxi` = `nums[i]`.
+    - For each `j` from `i+1` to `n-1`:
+        - Update `mini` = `min(mini, nums[j])`
+        - Update `maxi` = `max(maxi, nums[j])`
+        - If `maxi` - `mini` > `limit`, break.
+        - Otherwise update `res` = `max(res, j - i + 1)`.
 3. Return `res`.
 
 ::tabs-start
@@ -219,6 +223,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_subarray(nums: Vec<i32>, limit: i32) -> i32 {
+        let n = nums.len();
+        let mut res = 1i32;
+
+        for i in 0..n {
+            let mut mini = nums[i];
+            let mut maxi = nums[i];
+            for j in (i + 1)..n {
+                mini = mini.min(nums[j]);
+                maxi = maxi.max(nums[j]);
+                if maxi - mini > limit {
+                    break;
+                }
+                res = res.max((j - i + 1) as i32);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,6 +265,7 @@ We want to find the longest continuous subarray where the difference between the
 A simple way would be to check all subarrays, but that would be too slow. Instead, we can use a **sliding window** approach where we expand the window to the right and shrink it from the left only when the condition becomes invalid.
 
 The key challenge is to **quickly know the maximum and minimum values** in the current window. To handle this efficiently, we use:
+
 - a **max heap** to track the maximum value
 - a **min heap** to track the minimum value
 
@@ -245,18 +274,18 @@ Each heap also stores indices so we can remove elements that move out of the win
 ### Algorithm
 
 1. Initialize two heaps:
-   - a max heap to store values (as negative for max behavior) along with their indices
-   - a min heap to store values along with their indices
+    - a max heap to store values (as negative for max behavior) along with their indices
+    - a min heap to store values along with their indices
 2. Use two pointers:
-   - `i` for expanding the window to the right
-   - `j` for shrinking the window from the left
+    - `i` for expanding the window to the right
+    - `j` for shrinking the window from the left
 3. For each element at index `i`:
-   - Add it to both the max heap and the min heap
+    - Add it to both the max heap and the min heap
 4. While the difference between the current maximum and minimum exceeds the limit:
-   - Move the left pointer `j` forward
-   - Remove elements from both heaps whose indices are less than `j` (they are outside the window)
+    - Move the left pointer `j` forward
+    - Remove elements from both heaps whose indices are less than `j` (they are outside the window)
 5. After the window becomes valid again:
-   - Update the result with the current window length `i` - `j` + `1`
+    - Update the result with the current window length `i` - `j` + `1`
 6. Continue this process until all elements are processed
 7. Return the maximum window length found.
 
@@ -529,6 +558,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_subarray(nums: Vec<i32>, limit: i32) -> i32 {
+        let mut max_heap = BinaryHeap::new();
+        let mut min_heap = BinaryHeap::new();
+        let mut j = 0usize;
+        let mut res = 0i32;
+
+        for i in 0..nums.len() {
+            let v = nums[i];
+            max_heap.push((v, i));
+            min_heap.push((Reverse(v), i));
+
+            while max_heap.peek().unwrap().0 - min_heap.peek().unwrap().0 .0 > limit {
+                j += 1;
+                while let Some(&(_, idx)) = max_heap.peek() {
+                    if idx < j { max_heap.pop(); } else { break; }
+                }
+                while let Some(&(Reverse(_), idx)) = min_heap.peek() {
+                    if idx < j { min_heap.pop(); } else { break; }
+                }
+            }
+
+            res = res.max((i - j + 1) as i32);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,6 +606,7 @@ We want the longest continuous subarray where the difference between the maximum
 Using a sliding window helps us avoid checking all subarrays. As we expand the window to the right, we need a way to **always know the current minimum and maximum values** inside the window.
 
 To do this efficiently, we use a **sorted data structure** that keeps all elements of the current window in order. This allows us to:
+
 - get the minimum element from the beginning
 - get the maximum element from the end
 
@@ -556,16 +616,16 @@ If the difference between these two values becomes greater than the limit, we sh
 
 1. Initialize a sorted dictionary to store elements of the current window along with their frequencies.
 2. Use two pointers:
-   - `l` as the left boundary of the window
-   - `r` as the right boundary of the window
+    - `l` as the left boundary of the window
+    - `r` as the right boundary of the window
 3. For each element at index `r`:
-   - Insert it into the sorted dictionary and increase its count
+    - Insert it into the sorted dictionary and increase its count
 4. While the difference between the largest and smallest keys in the sorted dictionary exceeds the limit:
-   - Remove the element at index `l` from the dictionary
-   - Decrease its count and delete it if the count becomes zero
-   - Move the left pointer `l` forward
+    - Remove the element at index `l` from the dictionary
+    - Decrease its count and delete it if the count becomes zero
+    - Move the left pointer `l` forward
 5. Once the window is valid:
-   - Update the result with the current window size `r` - `l` + `1`
+    - Update the result with the current window size `r` - `l` + `1`
 6. Continue until all elements are processed
 7. Return the maximum window length found.
 
@@ -747,6 +807,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_subarray(nums: Vec<i32>, limit: i32) -> i32 {
+        let mut map = BTreeMap::new();
+        let mut l = 0;
+        let mut res = 0;
+
+        for r in 0..nums.len() {
+            *map.entry(nums[r]).or_insert(0) += 1;
+            while map.keys().next_back().unwrap() - map.keys().next().unwrap() > limit {
+                let y = nums[l];
+                l += 1;
+                let cnt = map.get_mut(&y).unwrap();
+                *cnt -= 1;
+                if *cnt == 0 {
+                    map.remove(&y);
+                }
+            }
+            res = res.max((r - l + 1) as i32);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -765,6 +850,7 @@ We want to find the longest continuous subarray where the difference between the
 A sliding window is a natural choice here, but the main challenge is efficiently tracking the **current minimum and maximum** in the window as it moves.
 
 To solve this, we use **two monotonic deques**:
+
 - a **monotonically increasing deque** to keep track of the minimum values
 - a **monotonically decreasing deque** to keep track of the maximum values
 
@@ -773,21 +859,21 @@ These deques are maintained in such a way that their front elements always repre
 ### Algorithm
 
 1. Initialize two deques:
-   - `min_q` to store elements in increasing order (front is the minimum)
-   - `max_q` to store elements in decreasing order (front is the maximum)
+    - `min_q` to store elements in increasing order (front is the minimum)
+    - `max_q` to store elements in decreasing order (front is the maximum)
 2. Use two pointers:
-   - `l` for the left boundary of the window
-   - `r` for expanding the window to the right
+    - `l` for the left boundary of the window
+    - `r` for expanding the window to the right
 3. For each index `r`:
-   - Remove elements from the back of `min_q` while the current value is smaller
-   - Remove elements from the back of `max_q` while the current value is larger
-   - Add the current value to both deques
+    - Remove elements from the back of `min_q` while the current value is smaller
+    - Remove elements from the back of `max_q` while the current value is larger
+    - Add the current value to both deques
 4. While the difference between the front of `max_q` and `min_q` exceeds the limit:
-   - If the element leaving the window equals the front of `max_q`, remove it
-   - If the element leaving the window equals the front of `min_q`, remove it
-   - Move the left pointer `l` forward
+    - If the element leaving the window equals the front of `max_q`, remove it
+    - If the element leaving the window equals the front of `min_q`, remove it
+    - Move the left pointer `l` forward
 5. After the window becomes valid:
-   - Update the result using the current window size `r` - `l` + `1`
+    - Update the result using the current window size `r` - `l` + `1`
 6. Continue until all elements are processed
 7. Return the maximum window length found
 
@@ -1054,6 +1140,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_subarray(nums: Vec<i32>, limit: i32) -> i32 {
+        let mut min_q: VecDeque<i32> = VecDeque::new();
+        let mut max_q: VecDeque<i32> = VecDeque::new();
+        let mut l = 0;
+        let mut res = 0;
+
+        for r in 0..nums.len() {
+            while !min_q.is_empty() && nums[r] < *min_q.back().unwrap() {
+                min_q.pop_back();
+            }
+            while !max_q.is_empty() && nums[r] > *max_q.back().unwrap() {
+                max_q.pop_back();
+            }
+            min_q.push_back(nums[r]);
+            max_q.push_back(nums[r]);
+
+            while max_q.front().unwrap() - min_q.front().unwrap() > limit {
+                if nums[l] == *max_q.front().unwrap() {
+                    max_q.pop_front();
+                }
+                if nums[l] == *min_q.front().unwrap() {
+                    min_q.pop_front();
+                }
+                l += 1;
+            }
+            res = res.max((r - l + 1) as i32);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1072,6 +1192,7 @@ We want the longest continuous subarray where the difference between the maximum
 A sliding window works well because the subarray must be continuous. As we expand the window to the right, we need to always know the **current minimum and maximum** in the window.
 
 To track them efficiently, we maintain two monotonic deques:
+
 - `inc` (increasing deque): keeps possible minimum values in increasing order, so the front is the current minimum
 - `dec` (decreasing deque): keeps possible maximum values in decreasing order, so the front is the current maximum
 
@@ -1080,19 +1201,19 @@ Whenever the window becomes invalid (`max` - `min` > `limit`), we shrink it from
 ### Algorithm
 
 1. Initialize two deques using the first element:
-   - `inc` for minimum tracking (monotonic increasing)
-   - `dec` for maximum tracking (monotonic decreasing)
+    - `inc` for minimum tracking (monotonic increasing)
+    - `dec` for maximum tracking (monotonic decreasing)
 2. Use two pointers:
-   - `i` expands the window to the right
-   - `j` shrinks the window from the left when needed
+    - `i` expands the window to the right
+    - `j` shrinks the window from the left when needed
 3. For each new element `nums[i]`:
-   - Maintain `inc` by popping from the back while the back is greater than `nums[i]`
-   - Maintain `dec` by popping from the back while the back is less than `nums[i]`
-   - Append `nums[i]` to both deques
+    - Maintain `inc` by popping from the back while the back is greater than `nums[i]`
+    - Maintain `dec` by popping from the back while the back is less than `nums[i]`
+    - Append `nums[i]` to both deques
 4. If the window becomes invalid (`dec[0]` - `inc[0]` > `limit`):
-   - If the element leaving the window (`nums[j]`) equals the front of `dec`, pop it from `dec`
-   - If it equals the front of `inc`, pop it from `inc`
-   - Move `j` forward by `1` to shrink the window
+    - If the element leaving the window (`nums[j]`) equals the front of `dec`, pop it from `dec`
+    - If it equals the front of `inc`, pop it from `inc`
+    - Move `j` forward by `1` to shrink the window
 5. After processing all elements, the valid window starts at `j` and ends at the last index, so its length is `len(nums)` - `j`
 6. Return that length
 
@@ -1366,6 +1487,41 @@ class Solution {
         }
 
         return nums.count - j
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_subarray(nums: Vec<i32>, limit: i32) -> i32 {
+        let mut inc: VecDeque<i32> = VecDeque::new();
+        let mut dec: VecDeque<i32> = VecDeque::new();
+        inc.push_back(nums[0]);
+        dec.push_back(nums[0]);
+        let mut j = 0usize;
+
+        for i in 1..nums.len() {
+            while !inc.is_empty() && *inc.back().unwrap() > nums[i] {
+                inc.pop_back();
+            }
+            while !dec.is_empty() && *dec.back().unwrap() < nums[i] {
+                dec.pop_back();
+            }
+            inc.push_back(nums[i]);
+            dec.push_back(nums[i]);
+
+            if dec.front().unwrap() - inc.front().unwrap() > limit {
+                if *dec.front().unwrap() == nums[j] {
+                    dec.pop_front();
+                }
+                if *inc.front().unwrap() == nums[j] {
+                    inc.pop_front();
+                }
+                j += 1;
+            }
+        }
+
+        (nums.len() - j) as i32
     }
 }
 ```

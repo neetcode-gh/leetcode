@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Used to traverse both strings simultaneously while matching characters
 - **Subsequences** - Understanding what makes one string a subsequence of another
 - **Greedy Algorithms** - Recognizing that matching characters from left to right is optimal
@@ -171,6 +173,27 @@ class Solution {
         }
 
         return tArr.count - j
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn append_characters(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let mut i = 0;
+        let mut j = 0;
+
+        while i < s.len() && j < t.len() {
+            if s[i] == t[j] {
+                i += 1;
+                j += 1;
+            } else {
+                i += 1;
+            }
+        }
+        (t.len() - j) as i32
     }
 }
 ```
@@ -442,6 +465,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn append_characters(s: String, t: String) -> i32 {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let n = s.len();
+        let m = t.len();
+
+        let mut store = vec![[n + 1; 26]; n];
+        store[n - 1][(s[n - 1] - b'a') as usize] = n - 1;
+
+        for i in (0..n - 1).rev() {
+            store[i] = store[i + 1];
+            store[i][(s[i] - b'a') as usize] = i;
+        }
+
+        let mut i = 0;
+        let mut j = 0;
+        while i < n && j < m {
+            let idx = store[i][(t[j] - b'a') as usize];
+            if idx == n + 1 {
+                break;
+            }
+            i = idx + 1;
+            j += 1;
+        }
+
+        (m - j) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -456,7 +511,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Returning the Wrong Value After Matching
+
 The result should be the number of unmatched characters in `t`, not the number of matched characters. After the loop, `j` represents how many characters were matched, so you need to return `len(t) - j`, not `j`.
+
 ```python
 # Wrong: returning matched count
 return j  # Returns how many matched, not how many to append
@@ -466,7 +523,9 @@ return len(t) - j
 ```
 
 ### Advancing Both Pointers on Mismatch
+
 When characters do not match, only the pointer for `s` should advance. The pointer for `t` should stay in place waiting for its character to appear later in `s`. Advancing both pointers skips characters in `t` that might match later.
+
 ```python
 # Wrong: advancing both pointers
 if s[i] != t[j]:

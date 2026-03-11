@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Using arrays to store and access data by index
 - **Index Mapping** - Converting between 1-indexed input and 0-indexed arrays
 
@@ -8,9 +10,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Array - I
 
 ### Intuition
+
 A parking lot has a fixed number of spaces for each car size (big, medium, small). We can represent the available slots using an array of three integers. Since car types are numbered `1`, `2`, and `3`, we map them to array indices `0`, `1`, and `2` by subtracting `1`. When a car arrives, we check if there is room for its type. If so, we decrement the count and allow parking; otherwise, we reject it.
 
 ### Algorithm
+
 1. **Initialization:** Store the slot counts for big, medium, and small in an array `spaces` at indices `0`, `1`, and `2`.
 2. **addCar(carType):** Check if `spaces[carType - 1] > 0`. If yes, decrement that slot count and return `true`. Otherwise, return `false`.
 
@@ -162,6 +166,28 @@ class ParkingSystem {
 }
 ```
 
+```rust
+struct ParkingSystem {
+    spaces: [i32; 3],
+}
+
+impl ParkingSystem {
+    fn new(big: i32, medium: i32, small: i32) -> Self {
+        ParkingSystem {
+            spaces: [big, medium, small],
+        }
+    }
+
+    fn add_car(&mut self, car_type: i32) -> bool {
+        if self.spaces[(car_type - 1) as usize] > 0 {
+            self.spaces[(car_type - 1) as usize] -= 1;
+            return true;
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -176,9 +202,11 @@ class ParkingSystem {
 ## 2. Array - II
 
 ### Intuition
+
 This is a more concise version of the array approach. Instead of checking before decrementing, we decrement first and then check if the result is non-negative. The logic works because if there were no available slots, the count becomes negative, which we use to indicate failure. This allows the check and update to happen in a single expression.
 
 ### Algorithm
+
 1. **Initialization:** Store the slot counts for big, medium, and small in an array `spaces`.
 2. **addCar(carType):** Decrement `spaces[carType - 1]` and return `true` if the new value is greater than or equal to `0`, otherwise return `false`.
 
@@ -297,6 +325,25 @@ class ParkingSystem {
     func addCar(_ carType: Int) -> Bool {
         spaces[carType - 1] -= 1
         return spaces[carType - 1] >= 0
+    }
+}
+```
+
+```rust
+struct ParkingSystem {
+    spaces: [i32; 3],
+}
+
+impl ParkingSystem {
+    fn new(big: i32, medium: i32, small: i32) -> Self {
+        ParkingSystem {
+            spaces: [big, medium, small],
+        }
+    }
+
+    fn add_car(&mut self, car_type: i32) -> bool {
+        self.spaces[(car_type - 1) as usize] -= 1;
+        self.spaces[(car_type - 1) as usize] >= 0
     }
 }
 ```

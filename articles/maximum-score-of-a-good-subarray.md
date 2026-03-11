@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Expanding a window from a fixed center point while tracking the minimum element
 - **Monotonic Stack** - Finding next/previous smaller elements to determine valid ranges for each minimum value
 - **Binary Search** - Efficiently finding boundaries where elements satisfy a threshold condition
@@ -16,10 +18,10 @@ A "good" subarray must contain index `k`. The score is the minimum element multi
 ### Algorithm
 
 1. For each starting index `i` from `0` to `k`:
-   - Initialize `minEle` with `nums[i]`.
-   - Extend the subarray rightward from `i` to `n-1`.
-   - Update `minEle` as we encounter each new element.
-   - Once `j` reaches `k` or beyond, calculate the score and update the result.
+    - Initialize `minEle` with `nums[i]`.
+    - Extend the subarray rightward from `i` to `n-1`.
+    - Update `minEle` as we encounter each new element.
+    - Once `j` reaches `k` or beyond, calculate the score and update the result.
 2. Return the maximum score found.
 
 ::tabs-start
@@ -184,6 +186,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_score(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut res = 0;
+
+        for i in 0..=k {
+            let mut min_ele = nums[i];
+            for j in i..n {
+                min_ele = min_ele.min(nums[j]);
+                if j >= k {
+                    res = res.max(min_ele * (j - i + 1) as i32);
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,12 +225,12 @@ For any subarray containing `k`, the minimum value decreases (or stays the same)
 ### Algorithm
 
 1. Create a copy of the array and modify it:
-   - From `k-1` down to `0`, set `arr[i] = min(arr[i], arr[i+1])`.
-   - From `k+1` to `n-1`, set `arr[i] = min(arr[i], arr[i-1])`.
+    - From `k-1` down to `0`, set `arr[i] = min(arr[i], arr[i+1])`.
+    - From `k+1` to `n-1`, set `arr[i] = min(arr[i], arr[i-1])`.
 2. For each unique minimum value in the modified array:
-   - Binary search the left array to find the leftmost index with value >= `minVal`.
-   - Binary search the right array to find the rightmost index with value >= `minVal`.
-   - Calculate the score and update the result.
+    - Binary search the left array to find the leftmost index with value >= `minVal`.
+    - Binary search the right array to find the rightmost index with value >= `minVal`.
+    - Calculate the score and update the result.
 3. Return the maximum score.
 
 ::tabs-start
@@ -626,6 +649,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_score(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut arr = nums.clone();
+        let mut candidates = HashSet::new();
+        candidates.insert(arr[k]);
+
+        for i in (0..k).rev() {
+            arr[i] = arr[i].min(arr[i + 1]);
+            candidates.insert(arr[i]);
+        }
+        for i in (k + 1)..n {
+            arr[i] = arr[i].min(arr[i - 1]);
+            candidates.insert(arr[i]);
+        }
+
+        let left_arr = &arr[..=k];
+        let right_arr = &arr[k..];
+
+        let mut res = 0;
+        for &min_val in &candidates {
+            let l = left_arr.partition_point(|&x| x < min_val);
+            let r = {
+                let mut lo = 0usize;
+                let mut hi = right_arr.len();
+                let mut pos = 0;
+                while lo < hi {
+                    let mid = (lo + hi) / 2;
+                    if right_arr[mid] >= min_val {
+                        pos = mid;
+                        lo = mid + 1;
+                    } else {
+                        hi = mid;
+                    }
+                }
+                pos
+            };
+            res = res.max(min_val * (k as i32 - l as i32 + 1 + r as i32));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -644,12 +713,12 @@ This is a space-optimized version of the previous approach. Instead of creating 
 ### Algorithm
 
 1. Modify the input array in place:
-   - From `k-1` down to `0`, set `nums[i] = min(nums[i], nums[i+1])`.
-   - From `k+1` to `n-1`, set `nums[i] = min(nums[i], nums[i-1])`.
+    - From `k-1` down to `0`, set `nums[i] = min(nums[i], nums[i+1])`.
+    - From `k+1` to `n-1`, set `nums[i] = min(nums[i], nums[i-1])`.
 2. For each unique value in the modified array:
-   - Binary search to find the leftmost index (in range `[0, k]`) with value >= target.
-   - Binary search to find the rightmost index (in range `[k, n-1]`) with value >= target.
-   - Calculate and track the maximum score.
+    - Binary search to find the leftmost index (in range `[0, k]`) with value >= target.
+    - Binary search to find the rightmost index (in range `[k, n-1]`) with value >= target.
+    - Calculate and track the maximum score.
 3. Return the result.
 
 ::tabs-start
@@ -1044,6 +1113,54 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_score(mut nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut res = 0;
+
+        for i in (0..k).rev() {
+            nums[i] = nums[i].min(nums[i + 1]);
+        }
+        for i in (k + 1)..n {
+            nums[i] = nums[i].min(nums[i - 1]);
+        }
+
+        let candidates: HashSet<i32> = nums.iter().copied().collect();
+
+        for &min_val in &candidates {
+            let i = {
+                let (mut lo, mut hi) = (0i32, k as i32);
+                while lo <= hi {
+                    let mid = (lo + hi) / 2;
+                    if nums[mid as usize] < min_val {
+                        lo = mid + 1;
+                    } else {
+                        hi = mid - 1;
+                    }
+                }
+                lo
+            };
+            let j = {
+                let (mut lo, mut hi) = (k as i32, n as i32 - 1);
+                while lo <= hi {
+                    let mid = (lo + hi) / 2;
+                    if nums[mid as usize] >= min_val {
+                        lo = mid + 1;
+                    } else {
+                        hi = mid - 1;
+                    }
+                }
+                hi
+            };
+            res = res.max(min_val * (j - i + 1));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1064,9 +1181,9 @@ This problem is related to finding the largest rectangle in a histogram. For eac
 1. Iterate from index `0` to `n` (using `n` as a sentinel to flush the stack).
 2. Maintain a stack of indices in increasing order of values.
 3. When we encounter a smaller element (or reach the end):
-   - Pop from the stack. The popped element's value is the minimum for some range.
-   - The range extends from the element below it in the stack (or `-1`) to the current index.
-   - If this range contains `k`, calculate the score.
+    - Pop from the stack. The popped element's value is the minimum for some range.
+    - The range extends from the element below it in the stack (or `-1`) to the current index.
+    - If this range contains `k`, calculate the score.
 4. Return the maximum score found.
 
 ::tabs-start
@@ -1260,6 +1377,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_score(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut res = 0;
+        let mut stack: Vec<usize> = vec![];
+
+        for i in 0..=n {
+            while !stack.is_empty() && (i == n || nums[*stack.last().unwrap()] >= nums[i]) {
+                let mini = nums[stack.pop().unwrap()];
+                let j = if stack.is_empty() { -1i32 } else { *stack.last().unwrap() as i32 };
+                if j < k as i32 && k < i {
+                    res = res.max(mini * (i as i32 - j - 1));
+                }
+            }
+            stack.push(i);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1279,10 +1420,10 @@ Start with just the element at index `k` as our subarray. To expand, we have two
 
 1. Initialize pointers `l = r = k` and track the current minimum starting with `nums[k]`.
 2. While we can still expand (`l > 0` or `r < n-1`):
-   - Compare the left neighbor (if exists) with the right neighbor (if exists).
-   - Expand toward the larger one (or whichever exists).
-   - Update the current minimum with the newly included element.
-   - Calculate the score and update the result.
+    - Compare the left neighbor (if exists) with the right neighbor (if exists).
+    - Expand toward the larger one (or whichever exists).
+    - Update the current minimum with the newly included element.
+    - Calculate the score and update the result.
 3. Return the maximum score.
 
 ::tabs-start
@@ -1520,6 +1661,36 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximum_score(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut l = k;
+        let mut r = k;
+        let mut res = nums[k];
+        let mut cur_min = nums[k];
+
+        while l > 0 || r < n - 1 {
+            let left = if l > 0 { nums[l - 1] } else { 0 };
+            let right = if r < n - 1 { nums[r + 1] } else { 0 };
+
+            if left > right {
+                l -= 1;
+                cur_min = cur_min.min(left);
+            } else {
+                r += 1;
+                cur_min = cur_min.min(right);
+            }
+
+            res = res.max(cur_min * (r - l + 1) as i32);
+        }
+
+        res
     }
 }
 ```

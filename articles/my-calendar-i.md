@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Interval Overlap Detection** - Understanding when two intervals conflict using start and end time comparisons
 - **Binary Search Trees** - Organizing intervals in a tree structure for efficient insertion and lookup
 - **Binary Search** - Finding insertion points in sorted collections to efficiently check neighbors
@@ -16,8 +18,8 @@ Two events overlap if one starts before the other ends and vice versa. For each 
 
 1. Maintain a list of booked events, where each event is stored as a `(start, end)` pair.
 2. When `book(startTime, endTime)` is called:
-   - Iterate through all existing events.
-   - For each event `(start, end)`, check if `startTime < end` and `start < endTime`. If both conditions are `true`, there is an overlap, so return `false`.
+    - Iterate through all existing events.
+    - For each event `(start, end)`, check if `startTime < end` and `start < endTime`. If both conditions are `true`, there is an overlap, so return `false`.
 3. If no overlap is found, append the new event to the list and return `true`.
 
 ::tabs-start
@@ -176,6 +178,28 @@ class MyCalendar {
 }
 ```
 
+```rust
+struct MyCalendar {
+    events: Vec<(i32, i32)>,
+}
+
+impl MyCalendar {
+    fn new() -> Self {
+        Self { events: Vec::new() }
+    }
+
+    fn book(&mut self, start_time: i32, end_time: i32) -> bool {
+        for &(start, end) in &self.events {
+            if start_time < end && start < end_time {
+                return false;
+            }
+        }
+        self.events.push((start_time, end_time));
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -195,12 +219,12 @@ We can organize events in a binary search tree where each node represents a book
 
 1. Each tree node stores `(start, end)` and has `left` and `right` children.
 2. When `book(startTime, endTime)` is called:
-   - If the tree is empty, create the root node with this interval and return `true`.
-   - Otherwise, traverse from the root:
-     - If `endTime <= node.start`, the new interval belongs in the `left` subtree.
-     - If `startTime >= node.end`, the new interval belongs in the `right` subtree.
-     - Otherwise, there is an overlap, so return `false`.
-   - When reaching a `null` child pointer, insert the new node there and return `true`.
+    - If the tree is empty, create the root node with this interval and return `true`.
+    - Otherwise, traverse from the root:
+        - If `endTime <= node.start`, the new interval belongs in the `left` subtree.
+        - If `startTime >= node.end`, the new interval belongs in the `right` subtree.
+        - Otherwise, there is an overlap, so return `false`.
+    - When reaching a `null` child pointer, insert the new node there and return `true`.
 
 ::tabs-start
 
@@ -559,6 +583,52 @@ class MyCalendar {
 }
 ```
 
+```rust
+struct TreeNode {
+    start: i32,
+    end: i32,
+    left: Option<Box<TreeNode>>,
+    right: Option<Box<TreeNode>>,
+}
+
+struct MyCalendar {
+    root: Option<Box<TreeNode>>,
+}
+
+impl MyCalendar {
+    fn new() -> Self {
+        Self { root: None }
+    }
+
+    fn book(&mut self, start_time: i32, end_time: i32) -> bool {
+        Self::insert(&mut self.root, start_time, end_time)
+    }
+
+    fn insert(node: &mut Option<Box<TreeNode>>, start: i32, end: i32) -> bool {
+        match node {
+            None => {
+                *node = Some(Box::new(TreeNode {
+                    start,
+                    end,
+                    left: None,
+                    right: None,
+                }));
+                true
+            }
+            Some(n) => {
+                if end <= n.start {
+                    Self::insert(&mut n.left, start, end)
+                } else if start >= n.end {
+                    Self::insert(&mut n.right, start, end)
+                } else {
+                    false
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -578,9 +648,9 @@ By keeping events sorted by start time, we can use binary search to quickly find
 
 1. Maintain a sorted collection of events ordered by start time.
 2. When `book(startTime, endTime)` is called:
-   - Use binary search to find the `idx` for the new event.
-   - Check the event at the previous index (if it exists): if its end time is greater than `startTime`, return `false`.
-   - Check the event at the current `idx` (if it exists): if its start time is less than `endTime`, return `false`.
+    - Use binary search to find the `idx` for the new event.
+    - Check the event at the previous index (if it exists): if its end time is greater than `startTime`, return `false`.
+    - Check the event at the current `idx` (if it exists): if its start time is less than `endTime`, return `false`.
 3. If no conflicts, insert the new event at the correct position and return `true`.
 
 ::tabs-start
@@ -822,6 +892,30 @@ class MyCalendar {
             }
         }
         return left
+    }
+}
+```
+
+```rust
+struct MyCalendar {
+    events: Vec<(i32, i32)>,
+}
+
+impl MyCalendar {
+    fn new() -> Self {
+        Self { events: Vec::new() }
+    }
+
+    fn book(&mut self, start_time: i32, end_time: i32) -> bool {
+        let idx = self.events.partition_point(|&(s, _)| s < start_time);
+        if idx > 0 && self.events[idx - 1].1 > start_time {
+            return false;
+        }
+        if idx < self.events.len() && self.events[idx].0 < end_time {
+            return false;
+        }
+        self.events.insert(idx, (start_time, end_time));
+        true
     }
 }
 ```

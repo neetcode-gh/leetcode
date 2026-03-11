@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Min-Heap (Priority Queue)** - Essential for efficiently selecting the task with minimum processing time among available tasks
 - **Sorting** - Tasks must be processed in order of enqueue time, requiring initial sorting or a heap
 - **Simulation** - Understanding how to model a single-threaded CPU processing tasks over time
@@ -18,9 +20,9 @@ A single-threaded CPU processes one task at a time. At any moment, we need to kn
 1. Store all tasks with their original indices in a min-heap ordered by enqueue time.
 2. Initialize the current time and an empty result list.
 3. While there are pending or available tasks:
-   - Move all tasks from the pending heap to the available heap if their enqueue time has been reached.
-   - If no tasks are available, jump the current time to the next pending task's enqueue time.
-   - Otherwise, pop the task with the shortest processing time from the available heap, add its index to the `result`, and advance time by its processing duration.
+    - Move all tasks from the pending heap to the available heap if their enqueue time has been reached.
+    - If no tasks are available, jump the current time to the next pending task's enqueue time.
+    - Otherwise, pop the task with the shortest processing time from the available heap, add its index to the `result`, and advance time by its processing duration.
 4. Return the `result` list.
 
 ::tabs-start
@@ -336,6 +338,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_order(tasks: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = tasks.len();
+        let mut pending: Vec<(i32, i32, usize)> = tasks
+            .iter()
+            .enumerate()
+            .map(|(i, t)| (t[0], t[1], i))
+            .collect();
+        pending.sort_unstable();
+
+        let mut available = BinaryHeap::new();
+        let mut res = Vec::with_capacity(n);
+        let mut time: i64 = 0;
+        let mut i = 0;
+
+        while !available.is_empty() || i < n {
+            while i < n && (pending[i].0 as i64) <= time {
+                let (_, proc_time, idx) = pending[i];
+                available.push(Reverse((proc_time, idx as i32)));
+                i += 1;
+            }
+
+            if available.is_empty() {
+                time = pending[i].0 as i64;
+                continue;
+            }
+
+            let Reverse((proc_time, idx)) = available.pop().unwrap();
+            time += proc_time as i64;
+            res.push(idx);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -357,9 +397,9 @@ Instead of using two heaps, we can sort the tasks by enqueue time first. This al
 2. Initialize the current time to the first task's enqueue time and an empty min-heap for available tasks.
 3. Use an index `i` to track which tasks have been considered.
 4. While tasks remain or the heap is not empty:
-   - Add all tasks with enqueue time at or before the current time to the heap.
-   - If the heap is empty, jump time to the next task's enqueue time.
-   - Otherwise, pop the task with the shortest processing time, update `time`, and record the `index`.
+    - Add all tasks with enqueue time at or before the current time to the heap.
+    - If the heap is empty, jump time to the next task's enqueue time.
+    - Otherwise, pop the task with the shortest processing time, update `time`, and record the `index`.
 5. Return the result.
 
 ::tabs-start
@@ -646,6 +686,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_order(tasks: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = tasks.len();
+        let mut tasks_with_idx: Vec<(i32, i32, i32)> = tasks
+            .iter()
+            .enumerate()
+            .map(|(i, t)| (t[0], t[1], i as i32))
+            .collect();
+        tasks_with_idx.sort_unstable();
+
+        let mut min_heap = BinaryHeap::new();
+        let mut res = Vec::with_capacity(n);
+        let mut i = 0;
+        let mut time: i64 = tasks_with_idx[0].0 as i64;
+
+        while !min_heap.is_empty() || i < n {
+            while i < n && time >= tasks_with_idx[i].0 as i64 {
+                let (_, proc, idx) = tasks_with_idx[i];
+                min_heap.push(Reverse((proc, idx)));
+                i += 1;
+            }
+            if min_heap.is_empty() {
+                time = tasks_with_idx[i].0 as i64;
+            } else {
+                let Reverse((proc_time, index)) = min_heap.pop().unwrap();
+                time += proc_time as i64;
+                res.push(index);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,9 +741,9 @@ This solution optimizes memory by not modifying the original tasks array. Instea
 1. Create an array of indices `[0, 1, 2, ..., n-1]` and sort it based on the tasks' enqueue times.
 2. Initialize `time` to `0`, and create a min-heap that compares indices by their task's processing time (then by `index` for ties).
 3. Iterate through sorted indices:
-   - Push indices of tasks that have become available onto the heap.
-   - If the heap is empty and tasks remain, jump `time` forward.
-   - Otherwise, pop the best task, update `time`, and record the result.
+    - Push indices of tasks that have become available onto the heap.
+    - If the heap is empty and tasks remain, jump `time` forward.
+    - Otherwise, pop the best task, update `time`, and record the result.
 4. Return the execution order.
 
 ::tabs-start
@@ -1008,6 +1083,41 @@ class Solution {
         }
 
         return result
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_order(tasks: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = tasks.len();
+        let mut indices: Vec<usize> = (0..n).collect();
+        indices.sort_unstable_by(|&a, &b| {
+            tasks[a][0].cmp(&tasks[b][0]).then(a.cmp(&b))
+        });
+
+        let mut min_heap = BinaryHeap::new();
+        let mut result = Vec::with_capacity(n);
+        let mut time: i64 = 0;
+        let mut i = 0;
+
+        while !min_heap.is_empty() || i < n {
+            while i < n && tasks[indices[i]][0] as i64 <= time {
+                let idx = indices[i];
+                min_heap.push(Reverse((tasks[idx][1], idx as i32)));
+                i += 1;
+            }
+
+            if min_heap.is_empty() {
+                time = tasks[indices[i]][0] as i64;
+            } else {
+                let Reverse((proc_time, idx)) = min_heap.pop().unwrap();
+                time += proc_time as i64;
+                result.push(idx);
+            }
+        }
+
+        result
     }
 }
 ```

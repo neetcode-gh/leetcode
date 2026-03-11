@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bitwise XOR** - The XOR approach uses the property that a number XORed with itself equals zero to cancel out all present numbers
 - **Math (Sum Formula)** - The mathematical approach uses the sum formula for consecutive integers to find the missing value
 - **Hash Set** - One solution uses constant-time lookups to identify which number from the expected range is absent
@@ -14,6 +16,7 @@ We are given an array containing `n` **distinct numbers** taken from the range `
 Exactly **one number is missing**, and we need to find it.
 
 A simple way to reason about this is:
+
 - If the array were complete and sorted, the number at index `i` should be exactly `i`
 - As soon as this condition breaks, that index represents the missing number
 
@@ -23,9 +26,9 @@ Sorting the array puts the numbers in order, making this comparison straightforw
 
 1. Sort the array in ascending order.
 2. Traverse the array from index `0` to `n - 1`:
-   - If `nums[i] != i`, then `i` is the missing number → return `i`.
+    - If `nums[i] != i`, then `i` is the missing number → return `i`.
 3. If all indices match their values:
-   - The missing number must be `n` → return `n` as the result.
+    - The missing number must be `n` → return `n` as the result.
 
 ::tabs-start
 
@@ -148,6 +151,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_number(nums: Vec<i32>) -> i32 {
+        let n = nums.len() as i32;
+        let mut nums = nums;
+        nums.sort();
+        for i in 0..nums.len() {
+            if nums[i] != i as i32 {
+                return i as i32;
+            }
+        }
+        n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -164,9 +183,11 @@ class Solution {
 We are given `n` distinct numbers taken from the range `[0, n]`, with **exactly one number missing**.
 
 A natural way to approach this is to ask:
+
 > “Can we quickly check whether a number exists in the array?”
 
 Using a **hash-based data structure** (like a hash set) allows us to:
+
 - Store all given numbers
 - Check the presence of any number in **constant time**
 
@@ -178,7 +199,7 @@ This approach trades a little extra space for very clear and simple logic.
 
 1. Insert all elements of the array into a hash set.
 2. Iterate through all numbers from `0` to `n`:
-   - If a number is **not present** in the set, return it as the missing number.
+    - If a number is **not present** in the set, return it as the missing number.
 3. Since exactly one number is missing, this process will always find the answer.
 
 ::tabs-start
@@ -306,6 +327,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_number(nums: Vec<i32>) -> i32 {
+        let num_set: HashSet<i32> = nums.iter().copied().collect();
+        let n = nums.len() as i32;
+        for i in 0..=n {
+            if !num_set.contains(&i) {
+                return i;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -323,11 +359,12 @@ We are given `n` distinct numbers from the range `[0, n]`, with **exactly one nu
 
 A very powerful observation comes from the properties of **XOR (⊕)**:
 
-- `a ⊕ a = 0`  (a number cancels itself)
+- `a ⊕ a = 0` (a number cancels itself)
 - `a ⊕ 0 = a`
 - XOR is **commutative and associative** (order does not matter)
 
 If we XOR:
+
 - all numbers from `0` to `n`
 - and all numbers present in the array
 
@@ -340,8 +377,8 @@ This allows us to find the answer in **linear time** and **constant space**, wit
 1. Let `n` be the length of the array.
 2. Initialize a variable `xorr` with `n`.
 3. For each index `i` from `0` to `n - 1`:
-   - XOR `xorr` with `i`
-   - XOR `xorr` with `nums[i]`
+    - XOR `xorr` with `i`
+    - XOR `xorr` with `nums[i]`
 4. After the loop, `xorr` will contain the missing number.
 5. Return `xorr`.
 
@@ -453,6 +490,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_number(nums: Vec<i32>) -> i32 {
+        let n = nums.len() as i32;
+        let mut xorr = n;
+        for i in 0..nums.len() {
+            xorr ^= i as i32 ^ nums[i];
+        }
+        xorr
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +519,7 @@ class Solution {
 We are given `n` distinct numbers from the range `[0, n]`, with **exactly one number missing**.
 
 A simple mathematical observation helps here:
+
 - The sum of numbers from `0` to `n` is known
 - If we subtract the sum of the given array from this expected sum, the result must be the missing number
 
@@ -481,8 +532,8 @@ This approach uses **basic arithmetic**, making it easy to understand and langua
 1. Let `n` be the length of the array.
 2. Initialize a variable `res = n`.
 3. For each index `i` from `0` to `n - 1`:
-   - Add `i` to `res`
-   - Subtract `nums[i]` from `res`
+    - Add `i` to `res`
+    - Subtract `nums[i]` from `res`
 4. After the loop, `res` will hold the missing number.
 5. Return `res` as the answer.
 
@@ -587,6 +638,18 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn missing_number(nums: Vec<i32>) -> i32 {
+        let mut res = nums.len() as i32;
+        for i in 0..nums.len() {
+            res += i as i32 - nums[i];
+        }
+        res
     }
 }
 ```

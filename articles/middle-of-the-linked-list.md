@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structure with value and next pointer, and how to traverse a linked list
 - **Two Pointers (Fast & Slow)** - The technique of using two pointers moving at different speeds to find middle elements or detect cycles
 - **Arrays** - Using dynamic arrays to store elements for indexed access
@@ -199,6 +201,27 @@ class Solution {
             cur = cur?.next
         }
         return arr[arr.count / 2]
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut arr = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            arr.push(node.clone());
+            cur = &node.next;
+        }
+        let mid = arr.len() / 2;
+        Some(arr.remove(mid))
     }
 }
 ```
@@ -465,6 +488,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut n = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            cur = &node.next;
+            n += 1;
+        }
+
+        n /= 2;
+        let mut cur = head;
+        for _ in 0..n {
+            cur = cur.unwrap().next;
+        }
+        cur
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -484,8 +527,8 @@ The fast and slow pointer technique finds the middle in a single pass. The `slow
 
 1. Initialize both `slow` and `fast` pointers at the head.
 2. While `fast` is not `null` and `fast.next` is not `null`:
-   - Move `slow` one step forward.
-   - Move `fast` two steps forward.
+    - Move `slow` one step forward.
+    - Move `fast` two steps forward.
 3. Return `slow`, which now points to the middle node.
 
 ::tabs-start
@@ -669,6 +712,25 @@ class Solution {
             fast = fast?.next?.next
         }
         return slow
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn middle_node(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut n = 0;
+        let mut cur = &head;
+        while let Some(node) = cur {
+            n += 1;
+            cur = &node.next;
+        }
+        let mid = n / 2;
+        let mut cur = head;
+        for _ in 0..mid {
+            cur = cur.unwrap().next;
+        }
+        cur
     }
 }
 ```

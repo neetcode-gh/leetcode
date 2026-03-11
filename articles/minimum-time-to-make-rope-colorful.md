@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers Technique** - Using multiple indices to traverse arrays and identify groups of consecutive elements
 - **Greedy Algorithms** - Making locally optimal choices (keeping the most expensive balloon) to achieve a globally optimal solution
 - **String Traversal** - Iterating through characters while comparing adjacent elements
@@ -16,10 +18,10 @@ The goal is to remove consecutive balloons of the same color such that no two ad
 
 1. Initialize `res = 0` and `i = 0`.
 2. While `i < n`:
-   - Find all consecutive balloons with the same color starting at `i`.
-   - Track the sum of removal times (`curr`) and the maximum removal time (`maxi`) in this group.
-   - Add `curr - maxi` to `res` (we keep the most expensive one, remove the rest).
-   - Move `i` to the next group.
+    - Find all consecutive balloons with the same color starting at `i`.
+    - Track the sum of removal times (`curr`) and the maximum removal time (`maxi`) in this group.
+    - Add `curr - maxi` to `res` (we keep the most expensive one, remove the rest).
+    - Move `i` to the next group.
 3. Return `res` as the result.
 
 ::tabs-start
@@ -198,6 +200,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost(colors: String, needed_time: Vec<i32>) -> i32 {
+        let n = needed_time.len();
+        let colors = colors.as_bytes();
+        let mut res = 0;
+        let mut i = 0;
+        while i < n {
+            let mut j = i;
+            let mut maxi = 0;
+            let mut curr = 0;
+            while j < n && colors[j] == colors[i] {
+                maxi = maxi.max(needed_time[j]);
+                curr += needed_time[j];
+                j += 1;
+            }
+            res += curr - maxi;
+            i = j;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -217,10 +243,10 @@ Instead of finding entire groups at once, we can process pairs of adjacent ballo
 
 1. Initialize `l = 0` and `res = 0`.
 2. For each `r` from `1` to `n-1`:
-   - If `colors[l] == colors[r]` (same color):
-     - If `neededTime[l] < neededTime[r]`: add `neededTime[l]` to `res` and update `l = r`.
-     - Otherwise: add `neededTime[r]` to `res` (keep `l` unchanged).
-   - If different colors: update `l = r`.
+    - If `colors[l] == colors[r]` (same color):
+        - If `neededTime[l] < neededTime[r]`: add `neededTime[l]` to `res` and update `l = r`.
+        - Otherwise: add `neededTime[r]` to `res` (keep `l` unchanged).
+    - If different colors: update `l = r`.
 3. Return `res`.
 
 ::tabs-start
@@ -396,6 +422,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost(colors: String, needed_time: Vec<i32>) -> i32 {
+        let colors = colors.as_bytes();
+        let mut l = 0;
+        let mut res = 0;
+        for r in 1..colors.len() {
+            if colors[l] == colors[r] {
+                if needed_time[l] < needed_time[r] {
+                    res += needed_time[l];
+                    l = r;
+                } else {
+                    res += needed_time[r];
+                }
+            } else {
+                l = r;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -415,9 +464,9 @@ We can simplify the logic further by tracking the maximum removal time seen so f
 
 1. Initialize `res = 0` and `maxi = 0`.
 2. For each index `i`:
-   - If `i > 0` and `colors[i] != colors[i-1]`, reset `maxi = 0`.
-   - Add `min(maxi, neededTime[i])` to `res`.
-   - Update `maxi = max(maxi, neededTime[i])`.
+    - If `i > 0` and `colors[i] != colors[i-1]`, reset `maxi = 0`.
+    - Add `min(maxi, neededTime[i])` to `res`.
+    - Update `maxi = max(maxi, neededTime[i])`.
 3. Return `res`.
 
 ::tabs-start
@@ -554,6 +603,24 @@ class Solution {
             maxi = max(maxi, neededTime[i])
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost(colors: String, needed_time: Vec<i32>) -> i32 {
+        let colors = colors.as_bytes();
+        let mut res = 0;
+        let mut maxi = 0;
+        for i in 0..colors.len() {
+            if i > 0 && colors[i] != colors[i - 1] {
+                maxi = 0;
+            }
+            res += maxi.min(needed_time[i]);
+            maxi = maxi.max(needed_time[i]);
+        }
+        res
     }
 }
 ```

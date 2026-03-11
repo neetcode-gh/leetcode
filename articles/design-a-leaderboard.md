@@ -285,6 +285,33 @@ class Leaderboard {
 }
 ```
 
+
+```rust
+struct Leaderboard {
+    scores: HashMap<i32, i32>,
+}
+
+impl Leaderboard {
+    fn new() -> Self {
+        Self { scores: HashMap::new() }
+    }
+
+    fn add_score(&mut self, player_id: i32, score: i32) {
+        *self.scores.entry(player_id).or_insert(0) += score;
+    }
+
+    fn top(&self, k: i32) -> i32 {
+        let mut values: Vec<i32> = self.scores.values().copied().collect();
+        values.sort_unstable_by(|a, b| b.cmp(a));
+        values.iter().take(k as usize).sum()
+    }
+
+    fn reset(&mut self, player_id: i32) {
+        self.scores.insert(player_id, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -636,6 +663,38 @@ class Leaderboard {
 
     func reset(_ playerId: Int) {
         scores[playerId] = 0
+    }
+}
+```
+
+
+```rust
+struct Leaderboard {
+    scores: HashMap<i32, i32>,
+}
+
+impl Leaderboard {
+    fn new() -> Self {
+        Self { scores: HashMap::new() }
+    }
+
+    fn add_score(&mut self, player_id: i32, score: i32) {
+        *self.scores.entry(player_id).or_insert(0) += score;
+    }
+
+    fn top(&self, k: i32) -> i32 {
+        let mut heap = BinaryHeap::new();
+        for &score in self.scores.values() {
+            heap.push(Reverse(score));
+            if heap.len() > k as usize {
+                heap.pop();
+            }
+        }
+        heap.into_iter().map(|Reverse(v)| v).sum()
+    }
+
+    fn reset(&mut self, player_id: i32) {
+        self.scores.insert(player_id, 0);
     }
 }
 ```
@@ -1195,6 +1254,64 @@ class Leaderboard {
             sortedScores.removeValue(forKey: preScore)
         }
         scores.removeValue(forKey: playerId)
+    }
+}
+```
+
+
+```rust
+struct Leaderboard {
+    scores: HashMap<i32, i32>,
+    sorted_scores: BTreeMap<Reverse<i32>, i32>,
+}
+
+impl Leaderboard {
+    fn new() -> Self {
+        Self {
+            scores: HashMap::new(),
+            sorted_scores: BTreeMap::new(),
+        }
+    }
+
+    fn add_score(&mut self, player_id: i32, score: i32) {
+        if let Some(&pre_score) = self.scores.get(&player_id) {
+            let count = self.sorted_scores.get_mut(&Reverse(pre_score)).unwrap();
+            *count -= 1;
+            if *count == 0 {
+                self.sorted_scores.remove(&Reverse(pre_score));
+            }
+            let new_score = pre_score + score;
+            self.scores.insert(player_id, new_score);
+            *self.sorted_scores.entry(Reverse(new_score)).or_insert(0) += 1;
+        } else {
+            self.scores.insert(player_id, score);
+            *self.sorted_scores.entry(Reverse(score)).or_insert(0) += 1;
+        }
+    }
+
+    fn top(&self, k: i32) -> i32 {
+        let mut count = 0;
+        let mut sum = 0;
+        for (&Reverse(key), &times) in &self.sorted_scores {
+            for _ in 0..times {
+                sum += key;
+                count += 1;
+                if count == k {
+                    return sum;
+                }
+            }
+        }
+        sum
+    }
+
+    fn reset(&mut self, player_id: i32) {
+        let pre_score = *self.scores.get(&player_id).unwrap();
+        let count = self.sorted_scores.get_mut(&Reverse(pre_score)).unwrap();
+        *count -= 1;
+        if *count == 0 {
+            self.sorted_scores.remove(&Reverse(pre_score));
+        }
+        self.scores.remove(&player_id);
     }
 }
 ```

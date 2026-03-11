@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Efficiently processing fixed-size subarrays by adding/removing elements at window boundaries
 - **Prefix Sum** - Precomputing cumulative sums to enable O(1) range sum queries
 - **Array Traversal** - Iterating through arrays with multiple pointers to define window boundaries
@@ -187,6 +189,28 @@ class Solution {
             l += 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>, k: i32, threshold: i32) -> i32 {
+        let k = k as usize;
+        let mut res = 0;
+        let mut l = 0;
+
+        for r in (k - 1)..arr.len() {
+            let mut sum = 0;
+            for i in l..=r {
+                sum += arr[i];
+            }
+            if sum / k as i32 >= threshold {
+                res += 1;
+            }
+            l += 1;
+        }
+        res
     }
 }
 ```
@@ -390,6 +414,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>, k: i32, threshold: i32) -> i32 {
+        let k = k as usize;
+        let mut prefix_sum = vec![0; arr.len() + 1];
+        for i in 0..arr.len() {
+            prefix_sum[i + 1] = prefix_sum[i] + arr[i];
+        }
+
+        let mut res = 0;
+        let mut l = 0;
+        for r in (k - 1)..arr.len() {
+            let sum = prefix_sum[r + 1] - prefix_sum[l];
+            if sum / k as i32 >= threshold {
+                res += 1;
+            }
+            l += 1;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -411,9 +458,9 @@ We maintain a running sum of the current window. When the window slides, we add 
 
 1. Initialize `curSum` with the sum of the first `k-1` elements.
 2. For each starting position `L`:
-   - Add the element at position `L + k - 1` to complete the window.
-   - Check if the average meets the threshold.
-   - Remove the element at position `L` before moving to the next window.
+    - Add the element at position `L + k - 1` to complete the window.
+    - Check if the average meets the threshold.
+    - Remove the element at position `L` before moving to the next window.
 3. Return the count of valid subarrays.
 
 ::tabs-start
@@ -594,6 +641,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>, k: i32, threshold: i32) -> i32 {
+        let k = k as usize;
+        let mut res = 0;
+        let mut cur_sum = 0;
+
+        for i in 0..k - 1 {
+            cur_sum += arr[i];
+        }
+
+        for l in 0..=arr.len() - k {
+            cur_sum += arr[l + k - 1];
+            if cur_sum / k as i32 >= threshold {
+                res += 1;
+            }
+            cur_sum -= arr[l];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,8 +686,8 @@ A small optimization: instead of dividing the sum by `k` for each comparison, we
 1. Multiply `threshold` by `k` to get the target sum.
 2. Expand the window by adding elements from the right.
 3. Once the window reaches size `k`:
-   - Check if the current sum meets or exceeds the target.
-   - Shrink the window from the left by removing the oldest element.
+    - Check if the current sum meets or exceeds the target.
+    - Shrink the window from the left by removing the oldest element.
 4. Return the count of valid subarrays.
 
 ::tabs-start
@@ -784,6 +854,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_subarrays(arr: Vec<i32>, k: i32, threshold: i32) -> i32 {
+        let k = k as usize;
+        let target = threshold * k as i32;
+        let mut res = 0;
+        let mut cur_sum = 0;
+
+        for r in 0..arr.len() {
+            cur_sum += arr[r];
+            if r >= k - 1 {
+                if cur_sum >= target {
+                    res += 1;
+                }
+                cur_sum -= arr[r - k + 1];
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -803,7 +895,7 @@ When computing `sum / k` in languages like Java, C++, or Go, integer division tr
 
 ### Recalculating the Window Sum
 
-A common inefficiency is recalculating the sum for each window from scratch, leading to O(n*k) time complexity. The sliding window technique maintains a running sum, adding the new element and removing the old element in O(1) time per window.
+A common inefficiency is recalculating the sum for each window from scratch, leading to O(n\*k) time complexity. The sliding window technique maintains a running sum, adding the new element and removing the old element in O(1) time per window.
 
 ### Off-By-One Errors in Window Boundaries
 

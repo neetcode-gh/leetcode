@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Traversing and comparing elements in an array
 - **Monotonic Stack** - Understanding how to maintain a stack with elements in decreasing/increasing order
 - **Reverse Iteration** - Processing arrays from right to left for optimization
@@ -205,6 +207,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_buildings(heights: Vec<i32>) -> Vec<i32> {
+        let n = heights.len();
+        let mut res = Vec::new();
+
+        for i in 0..n {
+            let mut flag = true;
+            for j in (i + 1)..n {
+                if heights[i] <= heights[j] {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                res.push(i as i32);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,7 +251,7 @@ We can use a monotonic decreasing stack to efficiently track buildings with ocea
 1. Initialize an empty stack to store building indices.
 2. Iterate through buildings from left to right.
 3. While the stack is not empty and the current building's height is greater than or equal to the height of the building at the stack top:
-   - Pop from the stack (that building no longer has an ocean view).
+    - Pop from the stack (that building no longer has an ocean view).
 4. Push the current building index onto the stack.
 5. Return the stack contents as the result (indices are already in increasing order).
 
@@ -371,6 +397,27 @@ class Solution {
         }
 
         return stack
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_buildings(heights: Vec<i32>) -> Vec<i32> {
+        let mut stack: Vec<i32> = Vec::new();
+
+        for i in 0..heights.len() {
+            while let Some(&top) = stack.last() {
+                if heights[top as usize] <= heights[i] {
+                    stack.pop();
+                } else {
+                    break;
+                }
+            }
+            stack.push(i as i32);
+        }
+
+        stack
     }
 }
 ```
@@ -548,6 +595,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_buildings(heights: Vec<i32>) -> Vec<i32> {
+        let n = heights.len();
+        let mut res = vec![(n - 1) as i32];
+
+        for i in (0..n - 1).rev() {
+            if heights[i] > heights[*res.last().unwrap() as usize] {
+                res.push(i as i32);
+            }
+        }
+
+        res.reverse();
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -562,7 +627,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Using Wrong Comparison Operator
+
 A building loses its ocean view if any building to its right is taller OR EQUAL in height. Using strictly greater than (`>`) instead of greater than or equal (`>=`) incorrectly keeps buildings that are blocked by same-height buildings.
+
 ```python
 # Wrong: same height doesn't block
 if heights[i] > heights[j]:  # Misses equal heights
@@ -573,7 +640,9 @@ if heights[i] <= heights[j]:
 ```
 
 ### Forgetting to Reverse the Result
+
 When iterating from right to left (the optimal approach), indices are collected in reverse order. Forgetting to reverse the final result returns indices in descending order instead of the required ascending order.
 
 ### Not Handling Single Building Case
+
 An array with one building should return `[0]` since the only building always has an ocean view. Edge case handling ensures the rightmost building is always included in the initial result.

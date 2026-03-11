@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Basics (Directed Graphs)** - Understanding how to model relationships as directed edges between nodes
 - **Indegree and Outdegree** - Counting incoming and outgoing edges for each vertex in a graph
 - **Arrays/Hash Maps** - Using arrays or dictionaries to count occurrences
@@ -16,10 +18,10 @@ The town judge is trusted by everyone else but trusts nobody. In graph terms, if
 
 1. Create two arrays: `incoming` and `outgoing`, both of size `n + 1`.
 2. For each trust pair `[a, b]`:
-   - Increment `outgoing[a]` (person `a` trusts someone).
-   - Increment `incoming[b]` (person `b` is trusted by someone).
+    - Increment `outgoing[a]` (person `a` trusts someone).
+    - Increment `incoming[b]` (person `b` is trusted by someone).
 3. Iterate through persons `1` to `n`:
-   - If `outgoing[i] == 0` and `incoming[i] == n - 1`, return `i`.
+    - If `outgoing[i] == 0` and `incoming[i] == n - 1`, return `i`.
 4. Return `-1` if no judge found.
 
 ::tabs-start
@@ -199,6 +201,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_judge(n: i32, trust: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut incoming = vec![0; n + 1];
+        let mut outgoing = vec![0; n + 1];
+
+        for t in &trust {
+            outgoing[t[0] as usize] += 1;
+            incoming[t[1] as usize] += 1;
+        }
+
+        for i in 1..=n {
+            if outgoing[i] == 0 && incoming[i] == n as i32 - 1 {
+                return i as i32;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,10 +245,10 @@ We can combine the two arrays into one by using the difference: `delta[i] = inco
 
 1. Create a single array `delta` of size `n + 1`.
 2. For each trust pair `[a, b]`:
-   - Decrement `delta[a]` (person `a` trusts someone, reducing their score).
-   - Increment `delta[b]` (person `b` is trusted, increasing their score).
+    - Decrement `delta[a]` (person `a` trusts someone, reducing their score).
+    - Increment `delta[b]` (person `b` is trusted, increasing their score).
 3. Iterate through persons `1` to `n`:
-   - If `delta[i] == n - 1`, return `i`.
+    - If `delta[i] == n - 1`, return `i`.
 4. Return `-1` if no judge found.
 
 ::tabs-start
@@ -396,6 +421,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_judge(n: i32, trust: Vec<Vec<i32>>) -> i32 {
+        let n = n as usize;
+        let mut delta = vec![0i32; n + 1];
+
+        for t in &trust {
+            delta[t[0] as usize] -= 1;
+            delta[t[1] as usize] += 1;
+        }
+
+        for i in 1..=n {
+            if delta[i] == n as i32 - 1 {
+                return i as i32;
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -416,4 +463,3 @@ The town judge must be trusted by everyone (indegree = n-1) AND trust nobody (ou
 ### Off-by-One Errors with 1-Indexed People
 
 People are labeled from 1 to n, not 0 to n-1. When using arrays indexed from 0, forgetting to iterate from 1 to n (inclusive) or incorrectly accessing array indices can cause out-of-bounds errors or missed candidates.
-

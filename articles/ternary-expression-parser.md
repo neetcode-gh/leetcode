@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - The optimal solution uses a stack to evaluate nested expressions from right to left
 - **String Manipulation** - Parsing and substring extraction are fundamental to all approaches
 - **Recursion** - The recursive solution and binary tree approach rely on recursive expression evaluation
@@ -20,8 +22,8 @@ The key insight is that the rightmost atomic expression (a simple `B?E1:E2` wher
 1. Define a helper to check if a 5-character substring is a valid atomic expression (form `B?X:Y` where `B` is `T` or `F`, and `X`, `Y` are digits or `T`/`F`).
 2. Define a helper to evaluate an atomic expression, returning `X` if `B` is `T`, otherwise `Y`.
 3. While the expression has more than one character:
-   - Scan from the right to find the rightmost valid atomic expression.
-   - Replace that 5-character substring with its evaluated single character result.
+    - Scan from the right to find the rightmost valid atomic expression.
+    - Replace that 5-character substring with its evaluated single character result.
 4. Return the final single character.
 
 ::tabs-start
@@ -54,13 +56,13 @@ class Solution:
 ```java
 class Solution {
     public String parseTernary(String expression) {
-        
+
         // Checks if the string s is a valid atomic expression
         Predicate<String> isValidAtomic = s -> (s.charAt(0) == 'T' || s.charAt(0) == 'F') && s.charAt(1) == '?' && ((s.charAt(2) >= '0' && s.charAt(2) <= '9') || s.charAt(2) == 'T' || s.charAt(2) == 'F') && s.charAt(3) == ':' && ((s.charAt(4) >= '0' && s.charAt(4) <= '9') || s.charAt(4) == 'T' || s.charAt(4) == 'F');
-        
+
         // Returns the value of the atomic expression
         Function<String, String> solveAtomic = s -> s.charAt(0) == 'T' ? s.substring(2, 3) : s.substring(4, 5);
-        
+
         // Reduce expression until we are left with a single character
         while (expression.length() != 1) {
             int j = expression.length() - 1;
@@ -69,7 +71,7 @@ class Solution {
             }
             expression = expression.substring(0, j-4) + solveAtomic.apply(expression.substring(j-4, j+1)) + expression.substring(j+1, expression.length());
         }
-        
+
         // Return the final character
         return expression;
     }
@@ -80,17 +82,17 @@ class Solution {
 class Solution {
 public:
     string parseTernary(string expression) {
-        
+
         // Checks if the string s is a valid atomic expression
         auto isValidAtomic = [](string s) {
-            return (s[0] == 'T' || s[0] == 'F') && s[1] == '?' && ((s[2] >= '0' && s[2] <= '9') || s[2] == 'T' || s[2] == 'F') && s[3] == ':' && ((s[4] >= '0' && s[4] <= '9') || s[4] == 'T' || s[4] == 'F'); 
+            return (s[0] == 'T' || s[0] == 'F') && s[1] == '?' && ((s[2] >= '0' && s[2] <= '9') || s[2] == 'T' || s[2] == 'F') && s[3] == ':' && ((s[4] >= '0' && s[4] <= '9') || s[4] == 'T' || s[4] == 'F');
         };
-        
+
         // Returns the value of the atomic expression
         auto solveAtomic = [](string s) {
             return s[0] == 'T' ? s[2] : s[4];
         };
-        
+
         // Reduce expression until we are left with a single character
         while (expression.size() != 1) {
             int j = expression.size() - 1;
@@ -99,7 +101,7 @@ public:
             }
             expression = expression.substr(0, j-4) + solveAtomic(expression.substr(j-4, 5)) + expression.substr(j+1);
         }
-        
+
         // Return the final character
         return expression;
     }
@@ -115,11 +117,16 @@ class Solution {
     parseTernary(expression) {
         // Checks if the string s is a valid atomic expression
         const isValidAtomic = (s) => {
-            return s[0] && (s[0] === 'T' || s[0] === 'F') &&
-                   s[1] === '?' &&
-                   s[2] && /[TF0-9]/.test(s[2]) &&
-                   s[3] === ':' &&
-                   s[4] && /[TF0-9]/.test(s[4]);
+            return (
+                s[0] &&
+                (s[0] === 'T' || s[0] === 'F') &&
+                s[1] === '?' &&
+                s[2] &&
+                /[TF0-9]/.test(s[2]) &&
+                s[3] === ':' &&
+                s[4] &&
+                /[TF0-9]/.test(s[4])
+            );
         };
 
         // Returns the value of the atomic expression
@@ -133,9 +140,10 @@ class Solution {
             while (!isValidAtomic(expression.substring(j - 4, j + 1))) {
                 j--;
             }
-            expression = expression.substring(0, j - 4) +
-                        solveAtomic(expression.substring(j - 4, j + 1)) +
-                        expression.substring(j + 1);
+            expression =
+                expression.substring(0, j - 4) +
+                solveAtomic(expression.substring(j - 4, j + 1)) +
+                expression.substring(j + 1);
         }
 
         // Return the final character
@@ -282,6 +290,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn parse_ternary(expression: String) -> String {
+        let is_valid_atomic = |s: &[u8]| -> bool {
+            s.len() >= 5
+                && (s[0] == b'T' || s[0] == b'F')
+                && s[1] == b'?'
+                && (s[2].is_ascii_digit() || s[2] == b'T' || s[2] == b'F')
+                && s[3] == b':'
+                && (s[4].is_ascii_digit() || s[4] == b'T' || s[4] == b'F')
+        };
+
+        let solve_atomic = |s: &[u8]| -> u8 {
+            if s[0] == b'T' { s[2] } else { s[4] }
+        };
+
+        let mut expr = expression.into_bytes();
+        while expr.len() != 1 {
+            let mut j = expr.len() - 1;
+            while !is_valid_atomic(&expr[j - 4..=j]) {
+                j -= 1;
+            }
+            let result = solve_atomic(&expr[j - 4..=j]);
+            expr.splice(j - 4..=j, std::iter::once(result));
+        }
+        String::from_utf8(expr).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,7 +327,7 @@ class Solution {
 - Time complexity: $O(N^2)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of `expression`
+> Where $N$ is the length of `expression`
 
 ---
 
@@ -304,11 +342,11 @@ This works because the rightmost `?` is always part of the innermost (deepest ne
 ### Algorithm
 
 1. While the expression has more than one character:
-   - Find the index of the rightmost `?` by scanning from the end.
-   - The condition is at index `questionMarkIndex - 1`.
-   - If the condition is `T`, take the character at `questionMarkIndex + 1`.
-   - Otherwise, take the character at `questionMarkIndex + 3`.
-   - Replace the 5-character ternary with the resulting single character.
+    - Find the index of the rightmost `?` by scanning from the end.
+    - The condition is at index `questionMarkIndex - 1`.
+    - If the condition is `T`, take the character at `questionMarkIndex + 1`.
+    - Otherwise, take the character at `questionMarkIndex + 3`.
+    - Replace the 5-character ternary with the resulting single character.
 2. Return the final character.
 
 ::tabs-start
@@ -340,14 +378,14 @@ class Solution:
 ```java
 class Solution {
     public String parseTernary(String expression) {
-        
+
         // Reduce expression until we are left with a single character
         while (expression.length() != 1) {
             int questionMarkIndex = expression.length() - 1;
             while (expression.charAt(questionMarkIndex) != '?') {
                 questionMarkIndex--;
             }
-            
+
             // Find the value of the expression.
             char value;
             if (expression.charAt(questionMarkIndex - 1) == 'T') {
@@ -355,11 +393,11 @@ class Solution {
             } else {
                 value = expression.charAt(questionMarkIndex + 3);
             }
-            
+
             // Replace the expression with the value
             expression = expression.substring(0, questionMarkIndex - 1) + value + expression.substring(questionMarkIndex + 4);
         }
-        
+
         // Return the final character
         return expression;
     }
@@ -370,14 +408,14 @@ class Solution {
 class Solution {
 public:
     string parseTernary(string expression) {
-        
+
         // Reduce expression until we are left with a single character
         while (expression.size() != 1) {
             int questionMarkIndex = expression.size() - 1;
             while (expression[questionMarkIndex] != '?') {
                 questionMarkIndex--;
             }
-            
+
             // Find the value of the expression.
             char value;
             if (expression[questionMarkIndex - 1] == 'T') {
@@ -385,11 +423,11 @@ public:
             } else {
                 value = expression[questionMarkIndex + 3];
             }
-            
+
             // Replace the expression with the value
             expression = expression.substr(0, questionMarkIndex - 1) + value + expression.substr(questionMarkIndex + 4);
         }
-        
+
         // Return the final character
         return expression;
     }
@@ -403,7 +441,6 @@ class Solution {
      * @return {string}
      */
     parseTernary(expression) {
-
         // Reduce expression until we are left with a single character
         while (expression.length !== 1) {
             let questionMarkIndex = expression.length - 1;
@@ -418,7 +455,9 @@ class Solution {
                 value = expression[questionMarkIndex + 3];
             }
             // Replace the expression with the value
-            expression = expression.substring(0, questionMarkIndex - 1) + value +
+            expression =
+                expression.substring(0, questionMarkIndex - 1) +
+                value +
                 expression.substring(questionMarkIndex + 4);
         }
         // Return the final character
@@ -540,6 +579,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn parse_ternary(expression: String) -> String {
+        let mut expr = expression.into_bytes();
+
+        // Reduce expression until we are left with a single character
+        while expr.len() != 1 {
+            let mut qi = expr.len() - 1;
+            while expr[qi] != b'?' {
+                qi -= 1;
+            }
+
+            // Find the value of the expression.
+            let value = if expr[qi - 1] == b'T' {
+                expr[qi + 1]
+            } else {
+                expr[qi + 3]
+            };
+
+            // Replace the expression with the value
+            expr.splice(qi - 1..qi + 4, std::iter::once(value));
+        }
+
+        // Return the final character
+        String::from_utf8(expr).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,7 +615,7 @@ class Solution {
 - Time complexity: $O(N^2)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of `expression`
+> Where $N$ is the length of `expression`
 
 ---
 
@@ -563,10 +631,10 @@ This approach processes each character exactly once and avoids expensive substri
 
 1. Initialize an empty stack.
 2. Traverse the expression from right to left:
-   - If the stack's top is `?`:
-     - Pop `?`, pop the true value, pop `:`, pop the false value.
-     - Push the true value if the current character is `T`, otherwise push the false value.
-   - Otherwise, push the current character onto the stack.
+    - If the stack's top is `?`:
+        - Pop `?`, pop the true value, pop `:`, pop the false value.
+        - Push the true value if the current character is `T`, otherwise push the false value.
+    - Otherwise, push the current character onto the stack.
 3. Return the single character remaining in the stack.
 
 ::tabs-start
@@ -574,13 +642,13 @@ This approach processes each character exactly once and avoids expensive substri
 ```python
 class Solution:
     def parseTernary(self, expression: str) -> str:
-        
+
         # Initialize a stack
         stack = []
-        
+
         # Traverse the expression from right to left
         for char in expression[::-1]:
-            
+
             # If stack top is ?, then replace next four characters
             # with E1 or E2 depending on the value of B
             if stack and stack[-1] == '?':
@@ -589,11 +657,11 @@ class Solution:
                 stack.pop()
                 onFalse = stack.pop()
                 stack.append(onTrue if char == 'T' else onFalse)
-            
+
             # Otherwise, push this character
             else:
                 stack.append(char)
-        
+
         # Return the final character
         return stack[0]
 ```
@@ -601,13 +669,13 @@ class Solution:
 ```java
 class Solution {
     public String parseTernary(String expression) {
-        
+
         // Initialize a stack
         Stack<Character> stack = new Stack<>();
-        
+
         // Traverse the expression from right to left
         for (int i = expression.length() - 1; i >= 0; i--) {
-            
+
             // If stack top is ?, then replace next four characters
             // with E1 or E2 depending on the value of B
             if (!stack.isEmpty() && stack.peek() == '?') {
@@ -617,13 +685,13 @@ class Solution {
                 char onFalse = stack.pop();
                 stack.push(expression.charAt(i) == 'T' ? onTrue : onFalse);
             }
-            
+
             // Otherwise, push this character
             else {
                 stack.push(expression.charAt(i));
             }
         }
-        
+
         // Return the final character
         return String.valueOf(stack.peek());
     }
@@ -634,13 +702,13 @@ class Solution {
 class Solution {
 public:
     string parseTernary(string expression) {
-        
+
         // Initialize a stack
         stack<char> stack;
-        
+
         // Traverse the expression from right to left
         for (int i = expression.length() - 1; i >= 0; i--) {
-            
+
             // If stack top is ?, then replace next four characters
             // with E1 or E2 depending on the value of B
             if (!stack.empty() && stack.top() == '?') {
@@ -652,13 +720,13 @@ public:
                 stack.pop();
                 stack.push(expression[i] == 'T' ? onTrue : onFalse);
             }
-            
+
             // Otherwise, push this character
             else {
                 stack.push(expression[i]);
             }
         }
-        
+
         // Return the final character
         return string(1, stack.top());
     }
@@ -672,7 +740,6 @@ class Solution {
      * @return {string}
      */
     parseTernary(expression) {
-
         // Initialize a stack
         const stack = [];
 
@@ -825,6 +892,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn parse_ternary(expression: String) -> String {
+        // Initialize a stack
+        let mut stack: Vec<u8> = Vec::new();
+        let bytes = expression.as_bytes();
+
+        // Traverse the expression from right to left
+        for &ch in bytes.iter().rev() {
+            // If stack top is ?, then replace next four characters
+            // with E1 or E2 depending on the value of B
+            if !stack.is_empty() && *stack.last().unwrap() == b'?' {
+                stack.pop(); // '?'
+                let on_true = stack.pop().unwrap();
+                stack.pop(); // ':'
+                let on_false = stack.pop().unwrap();
+                stack.push(if ch == b'T' { on_true } else { on_false });
+            } else {
+                // Otherwise, push this character
+                stack.push(ch);
+            }
+        }
+
+        // Return the final character
+        String::from_utf8(vec![stack[0]]).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -832,7 +928,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of `expression`
+> Where $N$ is the length of `expression`
 
 ---
 
@@ -847,13 +943,13 @@ Once the tree is built, evaluating the expression is straightforward: start at t
 ### Algorithm
 
 1. Build the binary tree recursively:
-   - Create a node for the current character.
-   - If the next character is `?`, recursively build the left subtree (true branch) and right subtree (false branch).
-   - Use a global index to track position in the expression.
+    - Create a node for the current character.
+    - If the next character is `?`, recursively build the left subtree (true branch) and right subtree (false branch).
+    - Use a global index to track position in the expression.
 2. Traverse the tree from root:
-   - If the current node is `T`, move to the left child.
-   - If the current node is `F`, move to the right child.
-   - Continue until reaching a leaf node.
+    - If the current node is `T`, move to the left child.
+    - If the current node is `F`, move to the right child.
+    - Continue until reaching a leaf node.
 3. Return the leaf node's value.
 
 ::tabs-start
@@ -867,29 +963,29 @@ class TreeNode:
 
 class Solution:
     def parseTernary(self, expression: str) -> str:
-        
+
         # Global Index to Construct Binary Tree
         self.index = 0
         root = self.constructTree(expression)
-        
+
         # Parse the binary tree till we reach the leaf node
         while root.left and root.right:
             if root.val == 'T':
                 root = root.left
             else:
                 root = root.right
-        
+
         return root.val
 
     def constructTree(self, expression):
-        
+
         # Storing current character of expression
         root = TreeNode(expression[self.index])
 
         # If the last character of expression, return
         if self.index == len(expression) - 1:
             return root
-        
+
         # Check the next character
         self.index += 1
         if expression[self.index] == '?':
@@ -897,7 +993,7 @@ class Solution:
             root.left = self.constructTree(expression)
             self.index += 1
             root.right = self.constructTree(expression)
-            
+
         return root
 ```
 
@@ -906,7 +1002,7 @@ class TreeNode {
     char val;
     TreeNode left;
     TreeNode right;
-    
+
     TreeNode(char val) {
         this.val = val;
     }
@@ -914,12 +1010,12 @@ class TreeNode {
 
 class Solution {
     int index = 0;
-    
+
     public String parseTernary(String expression) {
-        
+
         // Construct Binary Tree
         TreeNode root = constructTree(expression);
-        
+
         // Parse the binary tree till we reach the leaf node
         while (root.left != null && root.right != null) {
             if (root.val == 'T') {
@@ -928,12 +1024,12 @@ class Solution {
                 root = root.right;
             }
         }
-        
+
         return String.valueOf(root.val);
     }
-    
+
     private TreeNode constructTree(String expression) {
-        
+
         // Storing current character of expression
         TreeNode root = new TreeNode(expression.charAt(index));
 
@@ -941,7 +1037,7 @@ class Solution {
         if (index == expression.length() - 1) {
             return root;
         }
-        
+
         // Check next character
         index++;
         if (expression.charAt(index) == '?') {
@@ -950,7 +1046,7 @@ class Solution {
             index++;
             root.right = constructTree(expression);
         }
-        
+
         return root;
     }
 }
@@ -961,23 +1057,23 @@ struct TreeNode {
     char val;
     TreeNode* left;
     TreeNode* right;
-    
+
     TreeNode(char val) : val(val), left(nullptr), right(nullptr) {}
 };
 
 class Solution {
 private:
     int index = 0;
-    
+
     TreeNode* constructTree(string& expression) {
-        
+
         // Storing current character of expression
         TreeNode* root = new TreeNode(expression[index]);
         // If last character of expression, return
         if (index == expression.length() - 1) {
             return root;
         }
-        
+
         // Check next character
         index++;
         if (expression[index] == '?') {
@@ -986,16 +1082,16 @@ private:
             index++;
             root->right = constructTree(expression);
         }
-        
+
         return root;
     }
-    
+
 public:
     string parseTernary(string expression) {
-        
+
         // Construct Binary Tree
         TreeNode* root = constructTree(expression);
-        
+
         // Parse the binary tree till we reach the leaf node
         while (root->left != nullptr && root->right != nullptr) {
             if (root->val == 'T') {
@@ -1004,7 +1100,7 @@ public:
                 root = root->right;
             }
         }
-        
+
         return string(1, root->val);
     }
 };
@@ -1029,7 +1125,6 @@ class Solution {
      * @return {string}
      */
     parseTernary(expression) {
-
         // Construct Binary Tree
         let root = this.constructTree(expression);
 
@@ -1046,7 +1141,6 @@ class Solution {
     }
 
     constructTree(expression) {
-
         // Storing current character of expression
         const root = new TreeNode(expression[this.index]);
         // If last character of expression, return
@@ -1268,6 +1362,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn parse_ternary(expression: String) -> String {
+        let bytes = expression.as_bytes();
+        let mut index = 0usize;
+
+        // Build and evaluate the binary tree in one pass
+        fn construct_and_eval(bytes: &[u8], idx: &mut usize) -> u8 {
+            let val = bytes[*idx];
+            if *idx == bytes.len() - 1 {
+                return val;
+            }
+            *idx += 1;
+            if bytes[*idx] == b'?' {
+                *idx += 1;
+                let left = construct_and_eval(bytes, idx);
+                *idx += 1; // skip ':'
+                let right = construct_and_eval(bytes, idx);
+                return if val == b'T' { left } else { right };
+            }
+            *idx -= 1;
+            val
+        }
+
+        // Construct Binary Tree and evaluate
+        let result = construct_and_eval(bytes, &mut index);
+        String::from_utf8(vec![result]).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1275,7 +1400,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of `expression`
+> Where $N$ is the length of `expression`
 
 ---
 
@@ -1293,9 +1418,9 @@ By counting `?` and `:` characters, we can find the matching `:` for any given `
 2. Base case: if `i == j`, return the single character.
 3. Find the first `?` after index `i`.
 4. Find the matching `:` by tracking nested ternaries:
-   - Start with `count = 1` after the `?`.
-   - Increment `count` for each `?`, decrement for each `:`.
-   - Stop when `count` reaches 0.
+    - Start with `count = 1` after the `?`.
+    - Increment `count` for each `?`, decrement for each `:`.
+    - Stop when `count` reaches 0.
 5. If the condition at index `i` is `T`, recurse on the true branch.
 6. Otherwise, recurse on the false branch.
 7. Return the result of `solve(0, len(expression) - 1)`.
@@ -1343,20 +1468,20 @@ class Solution {
     public String parseTernary(String expression) {
         return solve(expression, 0, expression.length() - 1);
     }
-    
+
     private String solve(String expression, int i, int j) {
-        
+
         // If expression is a single character, return it
         if (i == j) {
             return expression.substring(i, i + 1);
         }
-        
+
         // Find the index of ?
         int questionMarkIndex = i;
         while (expression.charAt(questionMarkIndex) != '?') {
             questionMarkIndex++;
         }
-        
+
         // Find one index after corresponding :
         int aheadColonIndex = questionMarkIndex + 1;
         int count = 1;
@@ -1368,7 +1493,7 @@ class Solution {
             }
             aheadColonIndex++;
         }
-        
+
         // Check the value of B and recursively solve
         if (expression.charAt(i) == 'T') {
             return solve(expression, questionMarkIndex + 1, aheadColonIndex - 2);
@@ -1383,20 +1508,20 @@ class Solution {
 class Solution {
 private:
     string expression;
-    
+
     // To analyze the expression between two indices
     string solve(int i, int j) {
         // If expression is a single character, return it
         if (i == j) {
             return string(1, expression[i]);
         }
-        
+
         // Find the index of ?
         int questionMarkIndex = i;
         while (expression[questionMarkIndex] != '?') {
             questionMarkIndex++;
         }
-        
+
         // Find one index after corresponding :
         int aheadColonIndex = questionMarkIndex + 1;
         int count = 1;
@@ -1408,7 +1533,7 @@ private:
             }
             aheadColonIndex++;
         }
-        
+
         // Check the value of B and recursively solve
         if (expression[i] == 'T') {
             return solve(questionMarkIndex + 1, aheadColonIndex - 2);
@@ -1416,7 +1541,7 @@ private:
             return solve(aheadColonIndex, j);
         }
     }
-    
+
 public:
     string parseTernary(string expr) {
         expression = expr;
@@ -1633,6 +1758,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn parse_ternary(expression: String) -> String {
+        let bytes = expression.as_bytes();
+
+        fn solve(expr: &[u8], i: usize, j: usize) -> String {
+            // If expression is a single character, return it
+            if i == j {
+                return String::from(expr[i] as char);
+            }
+
+            // Find the index of ?
+            let mut qi = i;
+            while expr[qi] != b'?' {
+                qi += 1;
+            }
+
+            // Find one index after corresponding :
+            let mut ahead = qi + 1;
+            let mut count = 1i32;
+            while count != 0 {
+                if expr[ahead] == b'?' {
+                    count += 1;
+                } else if expr[ahead] == b':' {
+                    count -= 1;
+                }
+                ahead += 1;
+            }
+
+            // Check the value of B and recursively solve
+            if expr[i] == b'T' {
+                solve(expr, qi + 1, ahead - 2)
+            } else {
+                solve(expr, ahead, j)
+            }
+        }
+
+        solve(bytes, 0, bytes.len() - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1640,7 +1807,7 @@ class Solution {
 - Time complexity: $O(N^2)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of `expression`
+> Where $N$ is the length of `expression`
 
 ---
 
@@ -1656,12 +1823,12 @@ When the condition is `T`, we simply skip past the `?` to the true branch. When 
 
 1. Initialize index `i = 0`.
 2. Loop while `i` is within bounds:
-   - If the current character is not `T` or `F`, or we have reached the end, or the next character is `:`, we have found the result. Return it.
-   - If the condition is `T`, skip to `i + 2` (start of true branch).
-   - If the condition is `F`:
-     - Skip to `i + 2` and use a counter starting at `1`.
-     - Increment `counter` for `?`, decrement for `:`.
-     - Stop when `counter` reaches `0`; we are now at the false branch.
+    - If the current character is not `T` or `F`, or we have reached the end, or the next character is `:`, we have found the result. Return it.
+    - If the condition is `T`, skip to `i + 2` (start of true branch).
+    - If the condition is `F`:
+        - Skip to `i + 2` and use a counter starting at `1`.
+        - Increment `counter` for `?`, decrement for `:`.
+        - Stop when `counter` reaches `0`; we are now at the false branch.
 3. Return the character at position `i`.
 
 ::tabs-start
@@ -1693,7 +1860,7 @@ class Solution {
     public String parseTernary(String expression) {
         int i = 0;
         for ( ; i < expression.length(); ) {
-            
+
             if (expression.charAt(i) != 'T' && expression.charAt(i) != 'F'
             || i == expression.length() - 1 || expression.charAt(i + 1) == ':') {
                 break;
@@ -1723,7 +1890,7 @@ public:
     string parseTernary(string expression) {
         int i = 0;
         for ( ; i < expression.length(); ) {
-            
+
             if (expression[i] != 'T' && expression[i] != 'F'
             || i == expression.length() - 1 || expression[i + 1] == ':') {
                 break;
@@ -1755,10 +1922,12 @@ class Solution {
      */
     parseTernary(expression) {
         let i = 0;
-        for ( ; i < expression.length; ) {
-
-            if (expression[i] != 'T' && expression[i] != 'F'
-            || i == expression.length - 1 || expression[i + 1] == ':') {
+        for (; i < expression.length; ) {
+            if (
+                (expression[i] != 'T' && expression[i] != 'F') ||
+                i == expression.length - 1 ||
+                expression[i + 1] == ':'
+            ) {
                 break;
             }
             if (expression[i] == 'T') {
@@ -1899,6 +2068,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn parse_ternary(expression: String) -> String {
+        let bytes = expression.as_bytes();
+        let mut i = 0usize;
+        loop {
+            if (bytes[i] != b'T' && bytes[i] != b'F')
+                || i == bytes.len() - 1
+                || bytes[i + 1] == b':'
+            {
+                break;
+            }
+            if bytes[i] == b'T' {
+                i += 2;
+            } else {
+                let mut count = 1i32;
+                i += 2;
+                while count != 0 {
+                    if bytes[i] == b':' {
+                        count -= 1;
+                    } else if bytes[i] == b'?' {
+                        count += 1;
+                    }
+                    i += 1;
+                }
+            }
+        }
+        String::from(bytes[i] as char)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1906,7 +2107,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$
 
->  Where $N$ is the length of `expression`
+> Where $N$ is the length of `expression`
 
 ---
 

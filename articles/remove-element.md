@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to traverse and modify array elements by index
 - **Two Pointers Technique** - Using multiple pointers to track positions during array manipulation
 - **In-Place Modification** - Modifying an array without using extra space
@@ -162,6 +164,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+        let tmp: Vec<i32> = nums.iter().copied().filter(|&x| x != val).collect();
+        for i in 0..tmp.len() {
+            nums[i] = tmp[i];
+        }
+        tmp.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,7 +198,7 @@ At the end, everything before index `k` contains valid elements.
 
 1. Initialize a pointer `k = 0` to track the position for the next valid element.
 2. Iterate through the array with index `i`:
-   - If `nums[i]` is not equal to `val`, copy it to `nums[k]` and increment `k`.
+    - If `nums[i]` is not equal to `val`, copy it to `nums[k]` and increment `k`.
 3. Return `k` as the count of valid elements.
 
 ::tabs-start
@@ -304,6 +318,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+        let mut k = 0;
+        for i in 0..nums.len() {
+            if nums[i] != val {
+                nums[k] = nums[i];
+                k += 1;
+            }
+        }
+        k as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -326,8 +355,8 @@ This minimizes write operations when removals are rare.
 
 1. Initialize `i = 0` as the current position and `n` as the effective length of the array.
 2. While `i < n`:
-   - If `nums[i]` equals `val`, replace it with `nums[n-1]` and decrement `n` (don't increment `i` since the swapped element needs checking).
-   - Otherwise, increment `i` to move to the next element.
+    - If `nums[i]` equals `val`, replace it with `nums[n-1]` and decrement `n` (don't increment `i` since the swapped element needs checking).
+    - Otherwise, increment `i` to move to the next element.
 3. Return `n` as the count of valid elements.
 
 ::tabs-start
@@ -464,6 +493,24 @@ class Solution {
             }
         }
         return n
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_element(nums: &mut Vec<i32>, val: i32) -> i32 {
+        let mut i = 0;
+        let mut n = nums.len();
+        while i < n {
+            if nums[i] == val {
+                n -= 1;
+                nums[i] = nums[n];
+            } else {
+                i += 1;
+            }
+        }
+        n as i32
     }
 }
 ```

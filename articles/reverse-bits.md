@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Number Representation** - Understanding how integers are represented as 32-bit binary sequences
 - **Bit Manipulation Operators** - Familiarity with AND (&), OR (|), left shift (<<), and right shift (>>) operations
 - **Extracting and Setting Individual Bits** - Knowing how to isolate a specific bit and place it at a desired position
@@ -13,10 +15,12 @@ Before attempting this problem, you should be comfortable with:
 We are given a **32-bit unsigned integer**, and we need to **reverse its bits**.
 
 The most straightforward way to think about this problem is:
+
 - Read the bits of the number from **right to left**
 - Build a new number by placing those bits from **left to right**
 
 In simpler terms:
+
 - Extract each bit one by one
 - Reverse their order
 - Reconstruct the number from the reversed bits
@@ -27,12 +31,12 @@ This brute force approach closely follows how humans would solve the problem man
 
 1. Initialize an empty sequence `binary` to store bits.
 2. For each position `i` from `0` to `31` (since the number is 32-bit):
-   - Check if the bit at that position is `1` or `0`
-   - Append the bit to the sequence
+    - Check if the bit at that position is `1` or `0`
+    - Append the bit to the sequence
 3. Reverse the sequence of bits.
 4. Initialize a result number `res` as `0`.
 5. For each bit in the reversed sequence:
-   - If the bit is `1`, set the corresponding bit in `res` using bit shifting.
+    - If the bit is `1`, set the corresponding bit in `res` using bit shifting.
 6. Return the result.
 
 ::tabs-start
@@ -221,6 +225,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_bits(n: u32) -> u32 {
+        let mut binary = String::new();
+        for i in 0..32 {
+            if n & (1 << i) != 0 {
+                binary.push('1');
+            } else {
+                binary.push('0');
+            }
+        }
+
+        let mut res: u32 = 0;
+        let reversed: Vec<char> = binary.chars().rev().collect();
+        for i in 0..32 {
+            if reversed[i] == '1' {
+                res |= 1 << i;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,9 +277,9 @@ This approach avoids extra memory and works directly at the **bit level**, makin
 
 1. Initialize a variable `res = 0` to store the reversed number.
 2. For each bit position `i` from `0` to `31`:
-   - Extract the `i`-th `bit` of `n`
-   - Shift this `bit` to position `(31 - i)`
-   - Add it to `res`
+    - Extract the `i`-th `bit` of `n`
+    - Shift this `bit` to position `(31 - i)`
+    - Add it to `res`
 3. After processing all 32 bits, return `res`.
 
 ::tabs-start
@@ -360,6 +389,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse_bits(n: u32) -> u32 {
+        let mut res: u32 = 0;
+        for i in 0..32 {
+            let bit = (n >> i) & 1;
+            res += bit << (31 - i);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -378,11 +420,13 @@ We are given a **32-bit unsigned integer** and need to **reverse its bits**.
 Instead of reversing bits one-by-one, we can do this **much faster** by using a classic bit-manipulation trick called **bitwise divide and conquer**.
 
 The key idea is:
+
 - Reverse bits in **large blocks first**
 - Then gradually reverse **smaller and smaller blocks**
 - Until all individual bits are reversed
 
 This works because reversing bits is equivalent to:
+
 - swapping the left half with the right half
 - then swapping bytes
 - then nibbles (4 bits)
@@ -396,10 +440,10 @@ Each step rearranges bits closer to their final reversed positions.
 1. Start with the original number `n` stored in `res`.
 2. Swap the **left 16 bits** with the **right 16 bits**.
 3. Swap bits in blocks of:
-   - 8 bits (bytes)
-   - 4 bits
-   - 2 bits
-   - 1 bit
+    - 8 bits (bytes)
+    - 4 bits
+    - 2 bits
+    - 1 bit
 4. After each step, use **bit masks** to isolate groups of bits and shift them to their new positions.
 5. Ensure the final result stays within **32 bits**.
 6. Return the reversed number.
@@ -515,6 +559,20 @@ class Solution {
         res = ((res & 0xcccccccc) >> 2) | ((res & 0x33333333) << 2)
         res = ((res & 0xaaaaaaaa) >> 1) | ((res & 0x55555555) << 1)
         return res & 0xFFFFFFFF
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reverse_bits(n: u32) -> u32 {
+        let mut ret = n;
+        ret = (ret >> 16) | (ret << 16);
+        ret = ((ret & 0xff00ff00) >> 8) | ((ret & 0x00ff00ff) << 8);
+        ret = ((ret & 0xf0f0f0f0) >> 4) | ((ret & 0x0f0f0f0f) << 4);
+        ret = ((ret & 0xcccccccc) >> 2) | ((ret & 0x33333333) << 2);
+        ret = ((ret & 0xaaaaaaaa) >> 1) | ((ret & 0x55555555) << 1);
+        ret
     }
 }
 ```

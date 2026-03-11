@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Used to defer lower-precedence operations while computing higher-precedence ones
 - **String Parsing** - Building multi-digit numbers from character sequences and handling whitespace
 - **Operator Precedence** - Understanding that multiplication/division must be evaluated before addition/subtraction
@@ -17,10 +19,10 @@ The challenge with evaluating expressions is handling operator precedence. Multi
 1. Remove all spaces from the string and initialize an empty `stack`.
 2. Track the current `num` and the previous `op` (start with `+`).
 3. For each character:
-   - If it's a digit, build up the current `num`.
-   - If it's an operator or the last character:
-     - Apply the previous `op`: push for `+`, push negative for `-`, multiply top for `*`, divide top for `/`.
-     - Reset the current `num` and update the previous `op`.
+    - If it's a digit, build up the current `num`.
+    - If it's an operator or the last character:
+        - Apply the previous `op`: push for `+`, push negative for `-`, multiply top for `*`, divide top for `/`.
+        - Reset the current `num` and update the previous `op`.
 4. Return the sum of all elements in the `stack`.
 
 ::tabs-start
@@ -308,6 +310,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calculate(s: String) -> i32 {
+        let s: Vec<u8> = s.bytes().filter(|&b| b != b' ').collect();
+        let mut stack: Vec<i32> = Vec::new();
+        let mut num: i32 = 0;
+        let mut op = b'+';
+
+        for i in 0..s.len() {
+            let ch = s[i];
+            if ch.is_ascii_digit() {
+                num = num * 10 + (ch - b'0') as i32;
+            }
+            if !ch.is_ascii_digit() || i == s.len() - 1 {
+                match op {
+                    b'+' => stack.push(num),
+                    b'-' => stack.push(-num),
+                    b'*' => {
+                        let prev = stack.pop().unwrap();
+                        stack.push(prev * num);
+                    }
+                    b'/' => {
+                        let prev = stack.pop().unwrap();
+                        stack.push(prev / num);
+                    }
+                    _ => {}
+                }
+                op = ch;
+                num = 0;
+            }
+        }
+
+        stack.iter().sum()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,11 +368,11 @@ We can avoid using a `stack` by realizing that we only need to track two values:
 2. Iterate through the string (plus one extra iteration to process the last number).
 3. Skip spaces. Build up multi-digit numbers.
 4. When we hit an operator or the end:
-   - For `+`: add `prev` to `total`, set `prev` to `num`.
-   - For `-`: add `prev` to `total`, set `prev` to `-num`.
-   - For `*`: multiply `prev` by `num`.
-   - For `/`: divide `prev` by `num` (truncate toward zero).
-   - Update the operator and reset `num`.
+    - For `+`: add `prev` to `total`, set `prev` to `num`.
+    - For `-`: add `prev` to `total`, set `prev` to `-num`.
+    - For `*`: multiply `prev` by `num`.
+    - For `/`: divide `prev` by `num` (truncate toward zero).
+    - Update the operator and reset `num`.
 5. Add the final `prev` to `total` and return it.
 
 ::tabs-start
@@ -669,6 +708,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calculate(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut total: i32 = 0;
+        let mut prev: i32 = 0;
+        let mut num: i32 = 0;
+        let mut op = b'+';
+        let mut i = 0;
+
+        while i <= n {
+            let ch = if i < n { s[i] } else { b'+' };
+            if ch == b' ' {
+                i += 1;
+                continue;
+            }
+            if ch.is_ascii_digit() {
+                num = num * 10 + (ch - b'0') as i32;
+            } else {
+                match op {
+                    b'+' => { total += prev; prev = num; }
+                    b'-' => { total += prev; prev = -num; }
+                    b'*' => { prev *= num; }
+                    _    => { prev /= num; }
+                }
+                op = ch;
+                num = 0;
+            }
+            i += 1;
+        }
+        total += prev;
+        total
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,14 +757,18 @@ class Solution {
 ## Common Pitfalls
 
 ### Incorrect Integer Division with Negative Numbers
+
 Division in this problem truncates toward zero, but some languages (like Python) use floor division by default, which truncates toward negative infinity. This gives wrong results for negative numbers.
+
 ```python
 # Wrong: -3 // 2 = -2 in Python (floor division)
 # Correct: int(-3 / 2) = -1 (truncation toward zero)
 ```
 
 ### Forgetting to Process the Last Number
+
 The algorithm typically processes a number when it encounters an operator. However, the last number in the expression has no operator after it, so it might never get processed unless you handle this edge case explicitly.
 
 ### Not Handling Spaces Correctly
+
 The expression can contain spaces between numbers and operators. Failing to skip or remove spaces causes parsing errors or treats spaces as invalid characters.

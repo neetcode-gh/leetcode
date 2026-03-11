@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - Maintaining a dynamic window with two pointers that expands and contracts based on constraints
 - **Hash Maps** - Tracking element frequencies within the current window efficiently
 - **Frequency Counting** - Incrementing and decrementing counts as elements enter and leave the window
@@ -185,6 +187,27 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_subarray_length(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut count = HashMap::new();
+            for j in i..n {
+                *count.entry(nums[j]).or_insert(0) += 1;
+                if count[&nums[j]] > k {
+                    break;
+                }
+                res = res.max((j - i + 1) as i32);
+            }
+        }
+        res
     }
 }
 ```
@@ -377,6 +400,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_subarray_length(nums: Vec<i32>, k: i32) -> i32 {
+        let mut res = 0;
+        let mut count = HashMap::new();
+        let mut l = 0;
+
+        for r in 0..nums.len() {
+            *count.entry(nums[r]).or_insert(0) += 1;
+            while count[&nums[r]] > k {
+                *count.get_mut(&nums[l]).unwrap() -= 1;
+                l += 1;
+            }
+            res = res.max((r - l + 1) as i32);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -562,6 +605,32 @@ class Solution {
             }
         }
         return nums.count - l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_subarray_length(nums: Vec<i32>, k: i32) -> i32 {
+        let mut count = HashMap::new();
+        let mut l = 0;
+        let mut cnt = 0; // count of numbers with freq > k
+        for r in 0..nums.len() {
+            let freq = count.entry(nums[r]).or_insert(0);
+            *freq += 1;
+            if *freq > k {
+                cnt += 1;
+            }
+            if cnt > 0 {
+                let lf = count.get_mut(&nums[l]).unwrap();
+                if *lf > k {
+                    cnt -= 1;
+                }
+                *lf -= 1;
+                l += 1;
+            }
+        }
+        (nums.len() - l) as i32
     }
 }
 ```

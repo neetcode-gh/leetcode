@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure with parent pointers and traversal concepts
 - **Hash Sets** - Using sets for O(1) lookup to track visited nodes
 - **Two Pointers** - The technique of using two pointers that traverse at different rates or from different starting points (similar to finding intersection of linked lists)
@@ -247,6 +249,38 @@ class Solution {
             qNode = node.parent
         }
         return nil
+    }
+}
+```
+
+```rust
+// Definition for a Node.
+// struct Node {
+//     val: i32,
+//     left: Option<Rc<RefCell<Node>>>,
+//     right: Option<Rc<RefCell<Node>>>,
+//     parent: Option<Rc<RefCell<Node>>>,
+// }
+
+impl Solution {
+    pub fn lowest_common_ancestor(
+        p: Option<Rc<RefCell<Node>>>,
+        q: Option<Rc<RefCell<Node>>>,
+    ) -> Option<Rc<RefCell<Node>>> {
+        let mut seen = HashSet::new();
+        let mut cur = p.clone();
+        while let Some(node) = cur {
+            seen.insert(Rc::as_ptr(&node) as usize);
+            cur = node.borrow().parent.clone();
+        }
+        let mut cur = q.clone();
+        while let Some(node) = cur {
+            if seen.contains(&(Rc::as_ptr(&node) as usize)) {
+                return Some(node);
+            }
+            cur = node.borrow().parent.clone();
+        }
+        None
     }
 }
 ```
@@ -630,6 +664,58 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a Node.
+// struct Node {
+//     val: i32,
+//     left: Option<Rc<RefCell<Node>>>,
+//     right: Option<Rc<RefCell<Node>>>,
+//     parent: Option<Rc<RefCell<Node>>>,
+// }
+
+impl Solution {
+    pub fn lowest_common_ancestor(
+        p: Option<Rc<RefCell<Node>>>,
+        q: Option<Rc<RefCell<Node>>>,
+    ) -> Option<Rc<RefCell<Node>>> {
+        fn height(node: &Option<Rc<RefCell<Node>>>) -> i32 {
+            let mut h = 0;
+            let mut cur = node.clone();
+            while let Some(n) = cur {
+                h += 1;
+                cur = n.borrow().parent.clone();
+            }
+            h
+        }
+
+        let h1 = height(&p);
+        let h2 = height(&q);
+        let (mut a, mut b) = if h1 <= h2 {
+            (p, q)
+        } else {
+            (q, p)
+        };
+        let mut diff = (h1 - h2).abs();
+        while diff > 0 {
+            if let Some(node) = b {
+                b = node.borrow().parent.clone();
+            }
+            diff -= 1;
+        }
+        while a.is_some() && b.is_some() {
+            if Rc::ptr_eq(a.as_ref().unwrap(), b.as_ref().unwrap()) {
+                return a;
+            }
+            let next_a = a.as_ref().unwrap().borrow().parent.clone();
+            let next_b = b.as_ref().unwrap().borrow().parent.clone();
+            a = next_a;
+            b = next_b;
+        }
+        None
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -649,8 +735,8 @@ This approach is similar to finding the intersection of two linked lists. We use
 
 1. Initialize two pointers `ptr1 = p` and `ptr2 = q`.
 2. While `ptr1 != ptr2`:
-   - Move `ptr1` to its parent, or to `q` if it reaches `null`.
-   - Move `ptr2` to its parent, or to `p` if it reaches `null`.
+    - Move `ptr1` to its parent, or to `q` if it reaches `null`.
+    - Move `ptr2` to its parent, or to `p` if it reaches `null`.
 3. Return `ptr1` (or `ptr2`) as the LCA.
 
 ::tabs-start
@@ -853,6 +939,44 @@ class Solution {
             ptr2 = ptr2 != nil ? ptr2?.parent : p
         }
         return ptr1
+    }
+}
+```
+
+```rust
+// Definition for a Node.
+// struct Node {
+//     val: i32,
+//     left: Option<Rc<RefCell<Node>>>,
+//     right: Option<Rc<RefCell<Node>>>,
+//     parent: Option<Rc<RefCell<Node>>>,
+// }
+
+impl Solution {
+    pub fn lowest_common_ancestor(
+        p: Option<Rc<RefCell<Node>>>,
+        q: Option<Rc<RefCell<Node>>>,
+    ) -> Option<Rc<RefCell<Node>>> {
+        let mut ptr1 = p.clone();
+        let mut ptr2 = q.clone();
+        loop {
+            let same = match (&ptr1, &ptr2) {
+                (Some(a), Some(b)) => Rc::ptr_eq(a, b),
+                (None, None) => true,
+                _ => false,
+            };
+            if same {
+                return ptr1;
+            }
+            ptr1 = match ptr1 {
+                Some(node) => node.borrow().parent.clone(),
+                None => q.clone(),
+            };
+            ptr2 = match ptr2 {
+                Some(node) => node.borrow().parent.clone(),
+                None => p.clone(),
+            };
+        }
     }
 }
 ```

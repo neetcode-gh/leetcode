@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **0/1 Knapsack Problem** - This is a variation with two constraints (members and profit)
 - **Recursion** - Building decision trees where each item can be included or excluded
 - **Memoization** - Caching results to avoid redundant computation in overlapping subproblems
@@ -17,13 +19,13 @@ This is a variation of the 0/1 knapsack problem with two constraints: number of 
 ### Algorithm
 
 1. Define a recursive function `dfs(i, n, p)` where:
-   - `i` is the current crime index.
-   - `n` is the remaining number of members available.
-   - `p` is the profit accumulated so far.
+    - `i` is the current crime index.
+    - `n` is the remaining number of members available.
+    - `p` is the profit accumulated so far.
 2. Base case: if `i` equals the number of crimes, return `1` if `p >= minProfit`, else return `0`.
 3. For the current crime:
-   - Option 1: skip it and recurse with `dfs(i + 1, n, p)`.
-   - Option 2: if we have enough members, include it and recurse with `dfs(i + 1, n - group[i], p + profit[i])`.
+    - Option 1: skip it and recurse with `dfs(i + 1, n, p)`.
+    - Option 2: if we have enough members, include it and recurse with `dfs(i + 1, n - group[i], p + profit[i])`.
 4. Sum both options and return the result modulo `10^9 + 7`.
 
 ::tabs-start
@@ -215,6 +217,27 @@ class Solution {
         }
 
         return dfs(0, n, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn profitable_schemes(n: i32, min_profit: i32, group: Vec<i32>, profit: Vec<i32>) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+
+        fn dfs(i: usize, n: i32, p: i32, group: &[i32], profit: &[i32], min_profit: i32) -> i32 {
+            if i == group.len() {
+                return if p >= min_profit { 1 } else { 0 };
+            }
+            let mut res = dfs(i + 1, n, p, group, profit, min_profit);
+            if n - group[i] >= 0 {
+                res = (res + dfs(i + 1, n - group[i], p + profit[i], group, profit, min_profit)) % MOD;
+            }
+            res
+        }
+
+        dfs(0, n, 0, &group, &profit, min_profit)
     }
 }
 ```
@@ -516,6 +539,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn profitable_schemes(n: i32, min_profit: i32, group: Vec<i32>, profit: Vec<i32>) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let n = n as usize;
+        let min_profit = min_profit as usize;
+        let len = group.len();
+        let mut dp = vec![vec![vec![-1i32; min_profit + 1]; n + 1]; len];
+
+        fn dfs(
+            i: usize, n: usize, p: usize,
+            group: &[i32], profit: &[i32],
+            min_profit: usize, dp: &mut Vec<Vec<Vec<i32>>>,
+        ) -> i32 {
+            if i == group.len() {
+                return if p >= min_profit { 1 } else { 0 };
+            }
+            if dp[i][n][p] != -1 {
+                return dp[i][n][p];
+            }
+            let mut res = dfs(i + 1, n, p, group, profit, min_profit, dp);
+            let g = group[i] as usize;
+            if n >= g {
+                let nxt_p = (p + profit[i] as usize).min(min_profit);
+                res = (res + dfs(i + 1, n - g, nxt_p, group, profit, min_profit, dp)) % MOD;
+            }
+            dp[i][n][p] = res;
+            res
+        }
+
+        dfs(0, n, 0, &group, &profit, min_profit, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -538,8 +596,8 @@ We can convert the top-down solution to bottom-up by iterating through crimes in
 1. Create a 3D DP table `dp[i][j][p]` representing the count of schemes considering crimes from index `i` onward, using at most `j` members, with current profit `p`.
 2. Initialize: for all member counts `j`, set `dp[N][j][minProfit] = 1` (reached the goal).
 3. Iterate `i` from `N-1` down to 0, `j` from 0 to `n`, and `p` from 0 to `minProfit`:
-   - Start with the count from skipping this crime: `dp[i+1][j][p]`.
-   - If we have enough members, add the count from including this crime with updated profit (capped at `minProfit`).
+    - Start with the count from skipping this crime: `dp[i+1][j][p]`.
+    - If we have enough members, add the count from including this crime with updated profit (capped at `minProfit`).
 4. Return `dp[0][n][0]`.
 
 ::tabs-start
@@ -794,6 +852,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn profitable_schemes(n: i32, min_profit: i32, group: Vec<i32>, profit: Vec<i32>) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let n = n as usize;
+        let min_profit = min_profit as usize;
+        let big_n = group.len();
+
+        let mut dp = vec![vec![vec![0i32; min_profit + 1]; n + 2]; big_n + 1];
+
+        for j in 0..=n {
+            dp[big_n][j][min_profit] = 1;
+        }
+
+        for i in (0..big_n).rev() {
+            let g = group[i] as usize;
+            let pr = profit[i] as usize;
+            for j in 0..=n {
+                for p in 0..=min_profit {
+                    let mut res = dp[i + 1][j][p];
+                    if j >= g {
+                        let nxt_p = (pr + p).min(min_profit);
+                        res = (res + dp[i + 1][j - g][nxt_p]) % MOD;
+                    }
+                    dp[i][j][p] = res;
+                }
+            }
+        }
+
+        dp[0][n][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -816,9 +908,9 @@ Since each crime's DP state only depends on the next crime's state, we can reduc
 1. Create a 2D DP table `dp[j][p]` for member count `j` and profit `p`.
 2. Initialize: for all `j`, set `dp[j][minProfit] = 1`.
 3. Iterate `i` from `N-1` down to 0:
-   - Iterate `j` from `n` down to 0 (reverse to avoid using updated values).
-   - For each profit `p` from 0 to `minProfit`:
-     - Add the contribution from including the crime if we have enough members.
+    - Iterate `j` from `n` down to 0 (reverse to avoid using updated values).
+    - For each profit `p` from 0 to `minProfit`:
+        - Add the contribution from including the crime if we have enough members.
 4. Return `dp[n][0]`.
 
 ::tabs-start
@@ -1066,6 +1158,40 @@ class Solution {
         }
 
         return dp[n][0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn profitable_schemes(n: i32, min_profit: i32, group: Vec<i32>, profit: Vec<i32>) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let n = n as usize;
+        let min_profit = min_profit as usize;
+        let big_n = group.len();
+
+        let mut dp = vec![vec![0i32; min_profit + 1]; n + 2];
+
+        for j in 0..=n {
+            dp[j][min_profit] = 1;
+        }
+
+        for i in (0..big_n).rev() {
+            let g = group[i] as usize;
+            let pr = profit[i] as usize;
+            for j in (0..=n).rev() {
+                for p in 0..=min_profit {
+                    let mut res = dp[j][p];
+                    if j >= g {
+                        let nxt_p = (pr + p).min(min_profit);
+                        res = (res + dp[j - g][nxt_p]) % MOD;
+                    }
+                    dp[j][p] = res;
+                }
+            }
+        }
+
+        dp[n][0]
     }
 }
 ```

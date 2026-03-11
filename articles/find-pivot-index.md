@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum** - Computing cumulative sums to efficiently query range sums in O(1) time
 - **Array Traversal** - Iterating through arrays while maintaining running totals
 
@@ -15,9 +17,9 @@ The pivot index is where the sum of elements to the left equals the sum of eleme
 
 1. Iterate through each index `i` from `0` to `n-1`.
 2. For each index:
-   - Compute the left sum by adding all elements before index `i`.
-   - Compute the right sum by adding all elements after index `i`.
-   - If the two sums are equal, return `i`.
+    - Compute the left sum by adding all elements before index `i`.
+    - Compute the right sum by adding all elements after index `i`.
+    - If the two sums are equal, return `i`.
 3. If no pivot is found, return `-1`.
 
 ::tabs-start
@@ -190,6 +192,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pivot_index(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        for i in 0..n {
+            let left_sum: i32 = nums[..i].iter().sum();
+            let right_sum: i32 = nums[i + 1..].iter().sum();
+            if left_sum == right_sum {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -209,9 +227,9 @@ We can avoid recomputing sums repeatedly by precomputing a prefix sum array. The
 
 1. Build a prefix sum array where `prefixSum[i+1] = prefixSum[i] + nums[i]`.
 2. For each index `i`:
-   - Left sum = `prefixSum[i]`.
-   - Right sum = `prefixSum[n] - prefixSum[i+1]`.
-   - If they are equal, return `i`.
+    - Left sum = `prefixSum[i]`.
+    - Right sum = `prefixSum[n] - prefixSum[i+1]`.
+    - If they are equal, return `i`.
 3. If no pivot is found, return `-1`.
 
 ::tabs-start
@@ -381,6 +399,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn pivot_index(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut prefix_sum = vec![0; n + 1];
+        for i in 0..n {
+            prefix_sum[i + 1] = prefix_sum[i] + nums[i];
+        }
+
+        for i in 0..n {
+            let left_sum = prefix_sum[i];
+            let right_sum = prefix_sum[n] - prefix_sum[i + 1];
+            if left_sum == right_sum {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -401,9 +440,9 @@ We can eliminate the need for a separate prefix sum array by maintaining a runni
 1. Compute the total sum of the array.
 2. Initialize `leftSum = 0`.
 3. For each index `i`:
-   - Compute `rightSum = total - leftSum - nums[i]`.
-   - If `leftSum == rightSum`, return `i`.
-   - Add `nums[i]` to `leftSum`.
+    - Compute `rightSum = total - leftSum - nums[i]`.
+    - If `leftSum == rightSum`, return `i`.
+    - Add `nums[i]` to `leftSum`.
 4. If no pivot is found, return `-1`.
 
 ::tabs-start
@@ -566,6 +605,23 @@ class Solution {
             leftSum += nums[i]
         }
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn pivot_index(nums: Vec<i32>) -> i32 {
+        let total: i32 = nums.iter().sum();
+        let mut left_sum = 0;
+        for i in 0..nums.len() {
+            let right_sum = total - left_sum - nums[i];
+            if left_sum == right_sum {
+                return i as i32;
+            }
+            left_sum += nums[i];
+        }
+        -1
     }
 }
 ```

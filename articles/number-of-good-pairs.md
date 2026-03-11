@@ -1,7 +1,9 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to count frequencies of elements in O(1) time
-- **Combinatorics** - Understanding how to count pairs using the formula n*(n-1)/2 for choosing 2 items from n
+- **Combinatorics** - Understanding how to count pairs using the formula n\*(n-1)/2 for choosing 2 items from n
 
 ---
 
@@ -142,6 +144,22 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_identical_pairs(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        for i in 0..nums.len() {
+            for j in (i + 1)..nums.len() {
+                if nums[i] == nums[j] {
+                    res += 1;
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -295,6 +313,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_identical_pairs(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        let mut res = 0;
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+        for &c in count.values() {
+            res += c * (c - 1) / 2;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -314,8 +348,8 @@ Instead of counting all frequencies first and then computing pairs, we can count
 
 1. Initialize a hash map to store the count of each number seen so far.
 2. For each number in the array:
-   - Add the current count of that number to the `res` (this is the number of new pairs formed).
-   - Increment the count of that number in the map.
+    - Add the current count of that number to the `res` (this is the number of new pairs formed).
+    - Increment the count of that number in the map.
 3. Return the `res`.
 
 ::tabs-start
@@ -432,6 +466,20 @@ class Solution {
             count[num, default: 0] += 1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_identical_pairs(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        let mut res = 0;
+        for &num in &nums {
+            res += *count.get(&num).unwrap_or(&0);
+            *count.entry(num).or_insert(0) += 1;
+        }
+        res
     }
 }
 ```

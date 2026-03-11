@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - One approach sorts the array to easily access the two largest and two smallest elements
 - **Single-Pass Min/Max Tracking** - The optimal solution tracks the top 2 maximum and minimum values in one pass
 - **Basic Array Manipulation** - Understanding how to iterate and compare elements efficiently
@@ -201,6 +203,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_product_difference(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+        for a in 0..n {
+            for b in 0..n {
+                if a == b { continue; }
+                for c in 0..n {
+                    if a == c || b == c { continue; }
+                    for d in 0..n {
+                        if a == d || b == d || c == d { continue; }
+                        res = res.max(nums[a] * nums[b] - nums[c] * nums[d]);
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -303,6 +327,16 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_product_difference(mut nums: Vec<i32>) -> i32 {
+        nums.sort_unstable();
+        let n = nums.len();
+        nums[n - 1] * nums[n - 2] - nums[0] * nums[1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,8 +356,8 @@ We only need the two largest and two smallest values, so we can find them in a s
 
 1. Initialize `max1`, `max2` to `0` (or the smallest possible values) and `min1`, `min2` to infinity (or the largest possible values).
 2. For each number in the array:
-   - Update `max1` and `max2` if the current number is among the two largest seen so far.
-   - Update `min1` and `min2` if the current number is among the two smallest seen so far.
+    - Update `max1` and `max2` if the current number is among the two largest seen so far.
+    - Update `min1` and `min2` if the current number is among the two smallest seen so far.
 3. Return `(max1 * max2) - (min1 * min2)`.
 
 ::tabs-start
@@ -518,6 +552,30 @@ class Solution {
             }
         }
         return (max1 * max2) - (min1 * min2)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_product_difference(nums: Vec<i32>) -> i32 {
+        let (mut max1, mut max2) = (0, 0);
+        let (mut min1, mut min2) = (i32::MAX, i32::MAX);
+        for &num in &nums {
+            if num > max1 {
+                max2 = max1;
+                max1 = num;
+            } else if num > max2 {
+                max2 = num;
+            }
+            if num < min1 {
+                min2 = min1;
+                min1 = num;
+            } else if num < min2 {
+                min2 = num;
+            }
+        }
+        (max1 * max2) - (min1 * min2)
     }
 }
 ```

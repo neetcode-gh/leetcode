@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers technique** - Using pointers at both ends of a sorted array and moving them based on sum comparison
 - **Binary Search** - Efficiently finding a target value in a sorted array in O(log n) time
 - **Hash Maps** - Storing values and indices for O(1) lookup of complements
@@ -19,9 +21,8 @@ This approach is easy to understand but inefficient because it tries all combina
 1. Loop through the array using index `i` from `0` to `n - 1`.
 2. For each `i`, loop through index `j` from `i + 1` to `n - 1`.
 3. If `numbers[i] + numbers[j]` equals the target:
-   - Return `[i + 1, j + 1]` (1-indexed as required by the problem).
+    - Return `[i + 1, j + 1]` (1-indexed as required by the problem).
 4. If no such pair is found, return an empty list.
-
 
 ::tabs-start
 
@@ -144,6 +145,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(numbers: Vec<i32>, target: i32) -> Vec<i32> {
+        for i in 0..numbers.len() {
+            for j in (i + 1)..numbers.len() {
+                if numbers[i] + numbers[j] == target {
+                    return vec![i as i32 + 1, j as i32 + 1];
+                }
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -167,11 +183,11 @@ This reduces the inner search from **O(n)** to **O(log n)**, making the solution
 
 1. Loop through each index `i` from `0` to `n - 1`.
 2. For each number `numbers[i]`, compute the needed complement:
-   - `tmp = target - numbers[i]`
+    - `tmp = target - numbers[i]`
 3. Perform binary search on the subarray from `i + 1` to the end:
-   - If `numbers[mid] == tmp`, return `[i + 1, mid + 1]`
-   - If `numbers[mid] < tmp`, search the right half
-   - Otherwise, search the left half
+    - If `numbers[mid] == tmp`, return `[i + 1, mid + 1]`
+    - If `numbers[mid] < tmp`, search the right half
+    - Otherwise, search the left half
 4. If no pair is found after checking all indices, return an empty list.
 
 ::tabs-start
@@ -352,6 +368,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(numbers: Vec<i32>, target: i32) -> Vec<i32> {
+        for i in 0..numbers.len() {
+            let (mut l, mut r) = (i + 1, numbers.len() - 1);
+            let tmp = target - numbers[i];
+            while l <= r {
+                let mid = l + (r - l) / 2;
+                if numbers[mid] == tmp {
+                    return vec![i as i32 + 1, mid as i32 + 1];
+                } else if numbers[mid] < tmp {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -374,10 +412,10 @@ Otherwise, we store the current number with its **(1-indexed)** position.
 
 1. Create an empty hash map `mp` that maps numbers to their 1-indexed positions.
 2. Loop through the array with index `i` from `0` to `n - 1`:
-   - Compute the complement: `tmp = target - numbers[i]`
-   - If `tmp` exists in `mp`, return `[mp[tmp], i + 1]`
-   - Otherwise, store the current number in the map:
-     - `mp[numbers[i]] = i + 1`
+    - Compute the complement: `tmp = target - numbers[i]`
+    - If `tmp` exists in `mp`, return `[mp[tmp], i + 1]`
+    - Otherwise, store the current number in the map:
+        - `mp[numbers[i]] = i + 1`
 3. If no pair is found, return an empty list.
 
 ::tabs-start
@@ -512,6 +550,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn two_sum(numbers: Vec<i32>, target: i32) -> Vec<i32> {
+        let mut mp = HashMap::new();
+        for (i, &num) in numbers.iter().enumerate() {
+            let tmp = target - num;
+            if let Some(&idx) = mp.get(&tmp) {
+                return vec![idx, i as i32 + 1];
+            }
+            mp.insert(num, i as i32 + 1);
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -533,13 +587,13 @@ This lets us quickly close in on the target without checking every pair.
 ### Algorithm
 
 1. Initialize two pointers:
-   - `l = 0` (start)
-   - `r = len(numbers) - 1` (end)
+    - `l = 0` (start)
+    - `r = len(numbers) - 1` (end)
 2. While `l < r`:
-   - Compute `curSum = numbers[l] + numbers[r]`.
-   - If `curSum > target`, move `r` left to reduce the sum.
-   - If `curSum < target`, move `l` right to increase the sum.
-   - If `curSum == target`, return `[l + 1, r + 1]`.
+    - Compute `curSum = numbers[l] + numbers[r]`.
+    - If `curSum > target`, move `r` left to reduce the sum.
+    - If `curSum < target`, move `l` right to increase the sum.
+    - If `curSum == target`, return `[l + 1, r + 1]`.
 3. If no pair matches the target, return an empty list.
 
 ::tabs-start
@@ -706,6 +760,26 @@ class Solution {
             }
         }
         return []
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn two_sum(numbers: Vec<i32>, target: i32) -> Vec<i32> {
+        let (mut l, mut r) = (0usize, numbers.len() - 1);
+
+        while l < r {
+            let cur_sum = numbers[l] + numbers[r];
+            if cur_sum > target {
+                r -= 1;
+            } else if cur_sum < target {
+                l += 1;
+            } else {
+                return vec![l as i32 + 1, r as i32 + 1];
+            }
+        }
+        vec![]
     }
 }
 ```

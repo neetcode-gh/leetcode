@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree Data Structures** - Understanding how N-ary trees differ from binary trees (nodes can have multiple children)
 - **Recursion** - The recursive DFS solution relies on understanding how recursive calls process children before the parent
 - **Stack** - The iterative solution uses a stack to simulate recursion and manage traversal order
@@ -16,9 +18,9 @@ Postorder traversal means we visit all children of a node before visiting the no
 
 1. Create an empty `res` list.
 2. Define a recursive helper function `dfs(node)`:
-   - If the node is `null`, return immediately.
-   - For each `child` of the node, recursively call `dfs(child)`.
-   - After processing all children, append the node's value to the `res` list.
+    - If the node is `null`, return immediately.
+    - For each `child` of the node, recursively call `dfs(child)`.
+    - After processing all children, append the node's value to the `res` list.
 3. Call `dfs(root)` and return the `res` list.
 
 ::tabs-start
@@ -281,12 +283,39 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a Node.
+// #[derive(Debug)]
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Option<Rc<RefCell<Node>>>>,
+// }
+
+impl Solution {
+    pub fn postorder(root: Option<Rc<RefCell<Node>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        Self::dfs(&root, &mut res);
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<Node>>>, res: &mut Vec<i32>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            for child in &n.children {
+                Self::dfs(child, res);
+            }
+            res.push(n.val);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the recursion stack.
 
 ---
 
@@ -301,9 +330,9 @@ To convert the recursive solution to an iterative one, we use a stack. The key c
 1. If the root is `null`, return an empty list.
 2. Initialize a `stack` with the pair `(root, false)`, where `false` indicates the node has not been `visited`.
 3. While the `stack` is not empty:
-   - Pop a pair `(node, visited)`.
-   - If `visited` is `true`, add `node.val` to the result.
-   - Otherwise, push `(node, true)` back onto the `stack`, then push all children in reverse order as `(child, false)`.
+    - Pop a pair `(node, visited)`.
+    - If `visited` is `true`, add `node.val` to the result.
+    - Otherwise, push `(node, true)` back onto the `stack`, then push all children in reverse order as `(child, false)`.
 4. Return the result list.
 
 ::tabs-start
@@ -322,7 +351,7 @@ class Solution:
         res = []
         if not root:
             return res
-        
+
         stack = [(root, False)]
         while stack:
             node, visited = stack.pop()
@@ -629,12 +658,50 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a Node.
+// #[derive(Debug)]
+// pub struct Node {
+//     pub val: i32,
+//     pub children: Vec<Option<Rc<RefCell<Node>>>>,
+// }
+
+impl Solution {
+    pub fn postorder(root: Option<Rc<RefCell<Node>>>) -> Vec<i32> {
+        let mut res = Vec::new();
+        let root = match root {
+            Some(r) => r,
+            None => return res,
+        };
+
+        let mut stack: Vec<(Rc<RefCell<Node>>, bool)> = vec![(root, false)];
+
+        while let Some((node, visited)) = stack.pop() {
+            if visited {
+                res.push(node.borrow().val);
+            } else {
+                let children: Vec<Rc<RefCell<Node>>> = node.borrow().children
+                    .iter()
+                    .filter_map(|c| c.clone())
+                    .collect();
+                stack.push((Rc::clone(&node), true));
+                for child in children.into_iter().rev() {
+                    stack.push((child, false));
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 

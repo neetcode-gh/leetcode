@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming (Memoization)** - Caching recursive results to avoid redundant computation
 - **Recursion** - Breaking down problems into smaller subproblems with base cases
 - **BFS (Breadth-First Search)** - Finding shortest paths in unweighted graphs by exploring level by level
@@ -20,9 +22,9 @@ The challenge is that `n` can be very large, but memoization helps by caching re
 1. Use a hash map to memoize results for each value of `n`.
 2. Base case: if `n` is `0`, return `0` (no days needed).
 3. For each state, compute the minimum of:
-   - Eating one orange and solving for `n - 1`
-   - If divisible by `2`, eating half and solving for `n / 2`
-   - If divisible by `3`, eating two-thirds and solving for `n / 3`
+    - Eating one orange and solving for `n - 1`
+    - If divisible by `2`, eating half and solving for `n / 2`
+    - If divisible by `3`, eating two-thirds and solving for `n / 3`
 4. Store and return the minimum result plus one day.
 
 ::tabs-start
@@ -222,6 +224,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_days(n: i32) -> i32 {
+        let mut dp = HashMap::new();
+        Self::dfs(n, &mut dp)
+    }
+
+    fn dfs(n: i32, dp: &mut HashMap<i32, i32>) -> i32 {
+        if n == 0 { return 0; }
+        if let Some(&v) = dp.get(&n) { return v; }
+
+        let mut res = 1 + Self::dfs(n - 1, dp);
+        if n % 3 == 0 { res = res.min(1 + Self::dfs(n / 3, dp)); }
+        if n % 2 == 0 { res = res.min(1 + Self::dfs(n / 2, dp)); }
+
+        dp.insert(n, res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,9 +266,9 @@ To reach a number divisible by `2`, we need `n % 2` subtractions. To reach a num
 
 1. Use a hash map with base cases: `0` oranges takes `0` days, `1` orange takes `1` day.
 2. For each state `n`:
-   - Compute cost to divide by `2`: `(n % 2)` remainder days + `1` division day + solve for `n / 2`
-   - Compute cost to divide by `3`: `(n % 3)` remainder days + `1` division day + solve for `n / 3`
-   - Take the minimum of both options.
+    - Compute cost to divide by `2`: `(n % 2)` remainder days + `1` division day + solve for `n / 2`
+    - Compute cost to divide by `3`: `(n % 3)` remainder days + `1` division day + solve for `n / 3`
+    - Take the minimum of both options.
 3. Memoize and return the result.
 
 ::tabs-start
@@ -428,6 +451,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_days(n: i32) -> i32 {
+        let mut dp = HashMap::new();
+        dp.insert(0, 0);
+        dp.insert(1, 1);
+        Self::dfs(n, &mut dp)
+    }
+
+    fn dfs(n: i32, dp: &mut HashMap<i32, i32>) -> i32 {
+        if let Some(&v) = dp.get(&n) { return v; }
+
+        let mut res = 1 + (n % 2) + Self::dfs(n / 2, dp);
+        res = res.min(1 + (n % 3) + Self::dfs(n / 3, dp));
+
+        dp.insert(n, res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -449,9 +493,9 @@ We use a visited set to avoid reprocessing the same orange count. From each stat
 
 1. Initialize a queue with `n` and a visited set.
 2. Process level by level (each level represents one day):
-   - For each current orange count, try all three operations.
-   - If any operation results in `0`, return the current day count.
-   - Add unvisited new states to the queue.
+    - For each current orange count, try all three operations.
+    - If any operation results in `0`, return the current day count.
+    - Add unvisited new states to the queue.
 3. Continue until reaching `0`.
 
 ::tabs-start
@@ -730,6 +774,39 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_days(n: i32) -> i32 {
+        let mut q = VecDeque::new();
+        let mut visit = HashSet::new();
+        q.push_back(n);
+        let mut res = 0;
+
+        while !q.is_empty() {
+            res += 1;
+            for _ in 0..q.len() {
+                let node = q.pop_front().unwrap();
+                let nei = node - 1;
+                if nei == 0 { return res; }
+                if visit.insert(nei) {
+                    q.push_back(nei);
+                }
+                for d in 2..=3 {
+                    if node % d == 0 {
+                        let nei = node / d;
+                        if nei == 0 { return res; }
+                        if visit.insert(nei) {
+                            q.push_back(nei);
+                        }
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```

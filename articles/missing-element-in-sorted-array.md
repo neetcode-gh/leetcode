@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - The optimal solution uses binary search to find the position containing the k-th missing number in logarithmic time
 - **Sorted Array Properties** - Understanding how to calculate missing elements between consecutive values in a sorted sequence
 
@@ -31,7 +33,7 @@ class Solution:
             if missed_in_gap >= k:
                 return nums[i - 1] + k
             k -= missed_in_gap
-        
+
         return nums[n - 1] + k
 ```
 
@@ -39,7 +41,7 @@ class Solution:
 class Solution {
     public int missingElement(int[] nums, int k) {
         int n = nums.length;
-        
+
         for (int i = 1; i < n; ++i) {
             int missedInGap = nums[i] - nums[i - 1] - 1;
             if (missedInGap >= k) {
@@ -47,7 +49,7 @@ class Solution {
             }
             k -= missedInGap;
         }
-        
+
         return nums[n - 1] + k;
     }
 }
@@ -58,7 +60,7 @@ class Solution {
 public:
     int missingElement(vector<int>& nums, int k) {
         int n = nums.size();
-        
+
         for (int i = 1; i < n; ++i) {
             int missedInGap = nums[i] - nums[i - 1] - 1;
             if (missedInGap >= k) {
@@ -66,7 +68,7 @@ public:
             }
             k -= missedInGap;
         }
-        
+
         return nums[n - 1] + k;
     }
 };
@@ -167,6 +169,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_element(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut k = k;
+
+        for i in 1..n {
+            let missed_in_gap = nums[i] - nums[i - 1] - 1;
+            if missed_in_gap >= k {
+                return nums[i - 1] + k;
+            }
+            k -= missed_in_gap;
+        }
+
+        nums[n - 1] + k
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -174,7 +195,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the length of the input array `nums`.
+> Where $n$ is the length of the input array `nums`.
 
 ---
 
@@ -188,10 +209,10 @@ Instead of scanning linearly, we can use binary search to find the position wher
 
 1. Initialize `left = 0` and `right = n - 1`.
 2. While `left < right`:
-   - Calculate `mid` using upper mid to avoid infinite loops.
-   - Compute the number of missing elements up to index `mid`: `missing = nums[mid] - nums[0] - mid`.
-   - If `missing < k`, the `k`-th missing number is to the right, so set `left = mid`.
-   - Otherwise, set `right = mid - 1`.
+    - Calculate `mid` using upper mid to avoid infinite loops.
+    - Compute the number of missing elements up to index `mid`: `missing = nums[mid] - nums[0] - mid`.
+    - If `missing < k`, the `k`-th missing number is to the right, so set `left = mid`.
+    - Otherwise, set `right = mid - 1`.
 3. After the loop, `left` points to the largest index where the count of missing numbers is less than `k`.
 4. Return `nums[0] + k + left`.
 
@@ -202,7 +223,7 @@ class Solution:
     def missingElement(self, nums: List[int], k: int) -> int:
         n = len(nums)
         left, right = 0, n - 1
-        
+
         while left < right:
             mid = right - (right - left) // 2
             if (nums[mid] - nums[0]) - mid < k:
@@ -210,7 +231,7 @@ class Solution:
             else:
                 right = mid - 1
 
-        return nums[0] + k + left 
+        return nums[0] + k + left
 ```
 
 ```java
@@ -218,7 +239,7 @@ class Solution {
     public int missingElement(int[] nums, int k) {
         int n = nums.length;
         int left = 0, right = n - 1;
-        
+
         while (left < right) {
             int mid = right - (right - left) / 2;
             if (nums[mid] - nums[0] - mid < k) {
@@ -227,7 +248,7 @@ class Solution {
                 right = mid - 1;
             }
         }
-        
+
         return nums[0] + k + left;
     }
 }
@@ -239,7 +260,7 @@ public:
     int missingElement(vector<int>& nums, int k) {
         int n = nums.size();
         int left = 0, right = n - 1;
-        
+
         while (left < right) {
             int mid = right - (right - left) / 2;
             if (nums[mid] - nums[0] - mid < k) {
@@ -248,7 +269,7 @@ public:
                 right = mid - 1;
             }
         }
-        
+
         return nums[0] + k + left;
     }
 };
@@ -263,11 +284,12 @@ class Solution {
      */
     missingElement(nums, k) {
         const n = nums.length;
-        let left = 0, right = n - 1;
+        let left = 0,
+            right = n - 1;
 
         while (left < right) {
             const mid = right - Math.floor((right - left) / 2);
-            if ((nums[mid] - nums[0]) - mid < k) {
+            if (nums[mid] - nums[0] - mid < k) {
                 left = mid;
             } else {
                 right = mid - 1;
@@ -359,6 +381,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn missing_element(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let mut left: usize = 0;
+        let mut right: usize = n - 1;
+
+        while left < right {
+            let mid = right - (right - left) / 2;
+            if nums[mid] - nums[0] - mid as i32 > k {
+                right = mid - 1;
+            } else {
+                left = mid;
+            }
+        }
+
+        nums[0] + k + left as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -366,7 +409,7 @@ class Solution {
 - Time complexity: $O(\log n)$
 - Space complexity: $O(1)$ constant space
 
->  Where $n$ is the length of the input array `nums`.
+> Where $n$ is the length of the input array `nums`.
 
 ---
 

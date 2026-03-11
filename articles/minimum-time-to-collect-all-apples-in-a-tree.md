@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree Data Structure** - Understanding parent-child relationships and traversing trees represented as edge lists
 - **Depth First Search (DFS) on Trees** - Recursively exploring tree nodes while tracking the parent to avoid revisiting
 - **Topological Sort (Kahn's Algorithm)** - Processing nodes from leaves to root using indegree tracking and a queue
@@ -16,10 +18,10 @@ We start at node `0` and need to visit all nodes that have apples. The key obser
 
 1. Build an adjacency list from the edges (undirected tree).
 2. Run DFS from node `0` with parent tracking to avoid revisiting:
-   - For each child (excluding parent):
-     - Recursively compute `childTime` for that subtree.
-     - If `childTime > 0` or the child has an apple, add `2 + childTime` to the current time.
-   - Return the accumulated time for this subtree.
+    - For each child (excluding parent):
+        - Recursively compute `childTime` for that subtree.
+        - If `childTime > 0` or the child has an apple, add `2 + childTime` to the current time.
+    - Return the accumulated time for this subtree.
 3. Return the result of `dfs(0, -1)`.
 
 ::tabs-start
@@ -243,6 +245,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_time(n: i32, edges: Vec<Vec<i32>>, has_apple: Vec<bool>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        Self::dfs(0, usize::MAX, &adj, &has_apple)
+    }
+
+    fn dfs(cur: usize, parent: usize, adj: &Vec<Vec<usize>>, has_apple: &Vec<bool>) -> i32 {
+        let mut time = 0;
+        for &child in &adj[cur] {
+            if child == parent { continue; }
+            let child_time = Self::dfs(child, cur, adj, has_apple);
+            if child_time > 0 || has_apple[child] {
+                time += 2 + child_time;
+            }
+        }
+        time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,10 +295,10 @@ Instead of top-down DFS, we can process the tree from leaves to root. Starting f
 1. Build an adjacency list and track the degree (number of connections) for each node.
 2. Initialize a queue with all leaf nodes (degree `1`, excluding node `0`).
 3. Process nodes in the queue:
-   - For each neighbor of the current node with positive degree:
-     - Decrement the neighbor's degree.
-     - If the current node has an apple or has accumulated time, add `time[node] + 2` to `time[neighbor]`.
-     - If the neighbor becomes a leaf (degree `1`) and isn't the root, add it to the queue.
+    - For each neighbor of the current node with positive degree:
+        - Decrement the neighbor's degree.
+        - If the current node has an apple or has accumulated time, add `time[node] + 2` to `time[neighbor]`.
+        - If the neighbor becomes a leaf (degree `1`) and isn't the root, add it to the queue.
 4. Return `time[0]`.
 
 ::tabs-start
@@ -611,6 +641,48 @@ class Solution {
         }
 
         return time[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_time(n: i32, edges: Vec<Vec<i32>>, has_apple: Vec<bool>) -> i32 {
+        let n = n as usize;
+        let mut adj = vec![vec![]; n];
+        let mut indegree = vec![0i32; n];
+
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+            indegree[u] += 1;
+            indegree[v] += 1;
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 1..n {
+            if indegree[i] == 1 {
+                queue.push_back(i);
+                indegree[i] = 0;
+            }
+        }
+
+        let mut time = vec![0i32; n];
+        while let Some(node) = queue.pop_front() {
+            for &nei in &adj[node] {
+                if indegree[nei] <= 0 { continue; }
+                indegree[nei] -= 1;
+                if has_apple[node] || time[node] > 0 {
+                    time[nei] += time[node] + 2;
+                }
+                if indegree[nei] == 1 && nei != 0 {
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        time[0]
     }
 }
 ```

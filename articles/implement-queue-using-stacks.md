@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stacks** - Understanding LIFO (Last-In-First-Out) operations including push, pop, and peek
 - **Queues** - Understanding FIFO (First-In-First-Out) behavior and why it differs from stacks
 - **Amortized Analysis** - Recognizing when operations have different worst-case vs average-case time complexities
@@ -364,6 +366,54 @@ class MyQueue {
 }
 ```
 
+```rust
+struct MyQueue {
+    stack1: Vec<i32>,
+    stack2: Vec<i32>,
+}
+
+impl MyQueue {
+    fn new() -> Self {
+        MyQueue {
+            stack1: Vec::new(),
+            stack2: Vec::new(),
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.stack1.push(x);
+    }
+
+    fn pop(&mut self) -> i32 {
+        while self.stack1.len() > 1 {
+            let val = self.stack1.pop().unwrap();
+            self.stack2.push(val);
+        }
+        let res = self.stack1.pop().unwrap();
+        while let Some(val) = self.stack2.pop() {
+            self.stack1.push(val);
+        }
+        res
+    }
+
+    fn peek(&mut self) -> i32 {
+        while self.stack1.len() > 1 {
+            let val = self.stack1.pop().unwrap();
+            self.stack2.push(val);
+        }
+        let res = *self.stack1.last().unwrap();
+        while let Some(val) = self.stack2.pop() {
+            self.stack1.push(val);
+        }
+        res
+    }
+
+    fn empty(&self) -> bool {
+        self.stack1.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -695,6 +745,48 @@ class MyQueue {
 
     func empty() -> Bool {
         return s1.isEmpty && s2.isEmpty
+    }
+}
+```
+
+```rust
+struct MyQueue {
+    s1: Vec<i32>,
+    s2: Vec<i32>,
+}
+
+impl MyQueue {
+    fn new() -> Self {
+        MyQueue {
+            s1: Vec::new(),
+            s2: Vec::new(),
+        }
+    }
+
+    fn push(&mut self, x: i32) {
+        self.s1.push(x);
+    }
+
+    fn pop(&mut self) -> i32 {
+        if self.s2.is_empty() {
+            while let Some(val) = self.s1.pop() {
+                self.s2.push(val);
+            }
+        }
+        self.s2.pop().unwrap()
+    }
+
+    fn peek(&mut self) -> i32 {
+        if self.s2.is_empty() {
+            while let Some(val) = self.s1.pop() {
+                self.s2.push(val);
+            }
+        }
+        *self.s2.last().unwrap()
+    }
+
+    fn empty(&self) -> bool {
+        self.s1.is_empty() && self.s2.is_empty()
     }
 }
 ```

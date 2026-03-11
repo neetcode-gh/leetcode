@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting arrays with custom comparators (by start time, then by end time)
 - **Interval Problems** - Understanding interval containment and overlap concepts
 - **Greedy Algorithms** - Processing intervals in sorted order to make optimal decisions
@@ -182,6 +184,27 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_covered_intervals(intervals: Vec<Vec<i32>>) -> i32 {
+        let n = intervals.len();
+        let mut res = n as i32;
+
+        for i in 0..n {
+            for j in 0..n {
+                if i != j && intervals[j][0] <= intervals[i][0]
+                    && intervals[j][1] >= intervals[i][1]
+                {
+                    res -= 1;
+                    break;
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -381,6 +404,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_covered_intervals(mut intervals: Vec<Vec<i32>>) -> i32 {
+        intervals.sort_by(|a, b| {
+            if a[0] == b[0] {
+                b[1].cmp(&a[1])
+            } else {
+                a[0].cmp(&b[0])
+            }
+        });
+        let mut res = 1;
+        let mut prev_l = intervals[0][0];
+        let mut prev_r = intervals[0][1];
+        for interval in &intervals {
+            let (l, r) = (interval[0], interval[1]);
+            if prev_l <= l && prev_r >= r {
+                continue;
+            }
+            res += 1;
+            prev_l = l;
+            prev_r = r;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -564,6 +614,27 @@ class Solution {
             end = max(end, r)
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_covered_intervals(mut intervals: Vec<Vec<i32>>) -> i32 {
+        intervals.sort_by_key(|a| a[0]);
+        let mut res = 1;
+        let mut start = intervals[0][0];
+        let mut end = intervals[0][1];
+
+        for interval in &intervals {
+            let (l, r) = (interval[0], interval[1]);
+            if start < l && end < r {
+                start = l;
+                res += 1;
+            }
+            end = end.max(r);
+        }
+        res
     }
 }
 ```

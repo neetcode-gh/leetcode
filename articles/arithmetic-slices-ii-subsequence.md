@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both memoization (top-down) and tabulation (bottom-up) approaches
 - **Hash Maps** - Storing counts of subsequences keyed by their common difference
 - **Subsequences** - Understanding how to count and extend subsequences
@@ -314,6 +316,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_arithmetic_slices(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        if n < 3 {
+            return 0;
+        }
+
+        const INF: i64 = 1_000_000_000_000_000;
+        let mut dp: HashMap<String, i32> = HashMap::new();
+
+        fn dfs(
+            nums: &[i32],
+            i: usize,
+            j: i32,
+            diff: i64,
+            flag: i32,
+            dp: &mut HashMap<String, i32>,
+        ) -> i32 {
+            if i == nums.len() {
+                return flag;
+            }
+            let key = format!("{},{},{},{}", i, j, diff, flag);
+            if let Some(&cached) = dp.get(&key) {
+                return cached;
+            }
+
+            let mut res = dfs(nums, i + 1, j, diff, flag, dp);
+            if j == -1 {
+                res += dfs(nums, i + 1, i as i32, INF, flag, dp);
+            } else {
+                if diff == INF {
+                    res += dfs(
+                        nums, i + 1, i as i32,
+                        nums[i] as i64 - nums[j as usize] as i64,
+                        flag, dp,
+                    );
+                } else if diff == nums[i] as i64 - nums[j as usize] as i64 {
+                    res += dfs(nums, i + 1, i as i32, diff, 1, dp);
+                }
+            }
+
+            dp.insert(key, res);
+            res
+        }
+
+        dfs(&nums, 0, -1, INF, 0, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -498,6 +551,26 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn number_of_arithmetic_slices(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+        let mut dp: Vec<HashMap<i64, i32>> = vec![HashMap::new(); n];
+
+        for i in 0..n {
+            for j in 0..i {
+                let diff = nums[i] as i64 - nums[j] as i64;
+                let count = *dp[j].get(&diff).unwrap_or(&0);
+                *dp[i].entry(diff).or_insert(0) += count + 1;
+                res += count;
+            }
+        }
+        res
     }
 }
 ```
@@ -713,6 +786,29 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn number_of_arithmetic_slices(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let n = nums.len();
+        let s: HashSet<i64> = nums.iter().map(|&x| x as i64).collect();
+        let mut dp: Vec<HashMap<i64, i32>> = vec![HashMap::new(); n];
+
+        for i in 0..n {
+            for j in 0..i {
+                let diff = nums[i] as i64 - nums[j] as i64;
+                let cnt = *dp[j].get(&diff).unwrap_or(&0);
+                if s.contains(&(nums[i] as i64 + diff)) {
+                    *dp[i].entry(diff).or_insert(0) += cnt + 1;
+                }
+                res += cnt;
+            }
+        }
+        res
     }
 }
 ```
@@ -1003,6 +1099,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_arithmetic_slices(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let n = nums.len();
+        let mut mp_idx: HashMap<i64, Vec<usize>> = HashMap::new();
+        let mut dp = vec![vec![0i32; n]; n];
+
+        for i in 0..n {
+            mp_idx.entry(nums[i] as i64).or_default().push(i);
+        }
+
+        for i in 0..n {
+            for j in 0..i {
+                let prev = 2i64 * nums[j] as i64 - nums[i] as i64;
+
+                if let Some(indices) = mp_idx.get(&prev) {
+                    for &k in indices {
+                        if k >= j {
+                            break;
+                        }
+                        dp[i][j] += dp[j][k] + 1;
+                    }
+                }
+                res += dp[i][j];
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1015,7 +1144,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Integer Overflow When Computing Differences
+
 The difference between two elements can exceed the range of a 32-bit integer (e.g., `INT_MAX - INT_MIN`). You must use a 64-bit integer type for the difference to avoid overflow and incorrect hash map lookups.
+
 ```python
 # Wrong in languages with fixed-size integers:
 int diff = nums[i] - nums[j];  # Can overflow in Java/C++
@@ -1025,7 +1156,9 @@ long diff = (long)nums[i] - nums[j];
 ```
 
 ### Counting Pairs Instead of Subsequences of Length 3+
+
 The DP stores counts of subsequences of length 2 or more ending at each index. You only add to the result when extending an existing subsequence (making it length 3+), not when creating a new pair.
+
 ```python
 # Wrong: adding 1 for every pair
 res += dp[j][diff] + 1  # Counts pairs, not just 3+ length
@@ -1036,7 +1169,9 @@ dp[i][diff] += dp[j][diff] + 1  # Store for future extensions
 ```
 
 ### Using the Wrong Index Order in Nested Loops
+
 The outer loop must be the current index `i` and inner loop must iterate through all previous indices `j < i`. Reversing this order means you're trying to access DP values that haven't been computed yet.
+
 ```python
 # Wrong: j as outer loop
 for j in range(n):
@@ -1046,7 +1181,9 @@ for j in range(n):
 ```
 
 ### Forgetting to Handle Duplicate Values
+
 When the array contains duplicate values, multiple indices can have the same value. The DP must correctly accumulate counts from all valid previous indices, not just the first occurrence of a value.
+
 ```python
 # Example: nums = [2, 2, 3, 4]
 # Both index 0 and 1 have value 2
@@ -1054,7 +1191,9 @@ When the array contains duplicate values, multiple indices can have the same val
 ```
 
 ### Not Initializing DP Entries Before Access
+
 In some languages, accessing a missing key in a hash map returns null or throws an error. Ensure you handle missing keys by using default values or checking existence before access.
+
 ```python
 # Wrong in Java: NullPointerException
 int count = dp[j].get(diff);  # Null if key doesn't exist

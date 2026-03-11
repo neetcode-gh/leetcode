@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - Core technique for exploring all possible word segmentations by trying each valid prefix and recursing on the remainder
 - **Dynamic Programming (Memoization)** - Caching results for each starting index avoids recomputing the same suffix segmentations
 - **Trie Data Structure** - Optional optimization for efficient prefix matching when the dictionary has many words with common prefixes
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Backtracking
 
 ### Intuition
+
 We need to find all possible ways to segment the string into valid dictionary words. Starting from the beginning of the string, we try every possible prefix that exists in the dictionary. When we find a valid prefix, we recursively process the remaining substring. When we reach the end of the string, we have found a valid segmentation and add it to our result.
 
 ### Algorithm
+
 1. Convert the word dictionary to a set for `O(1)` lookups.
 2. Use a recursive backtracking function starting at index `0`.
 3. At each position, try all substrings from the current index to the end.
@@ -271,6 +275,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> Vec<String> {
+        let word_set: HashSet<String> = word_dict.into_iter().collect();
+        let mut res = Vec::new();
+        let mut cur = Vec::new();
+
+        fn backtrack(
+            s: &str, i: usize, cur: &mut Vec<String>,
+            res: &mut Vec<String>, word_set: &HashSet<String>,
+        ) {
+            if i == s.len() {
+                res.push(cur.join(" "));
+                return;
+            }
+            for j in i..s.len() {
+                let w = &s[i..=j];
+                if word_set.contains(w) {
+                    cur.push(w.to_string());
+                    backtrack(s, j + 1, cur, res, word_set);
+                    cur.pop();
+                }
+            }
+        }
+
+        backtrack(&s, 0, &mut cur, &mut res, &word_set);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,9 +320,11 @@ class Solution {
 ## 2. Backtracking + Trie
 
 ### Intuition
+
 Building a Trie from the dictionary words allows us to efficiently check prefixes while traversing the string. Instead of checking each substring against a set, we walk character by character through the Trie. This can provide early termination when no dictionary word starts with the current prefix, avoiding unnecessary substring operations.
 
 ### Algorithm
+
 1. Build a Trie by inserting all words from the dictionary.
 2. Use backtracking starting at index `0` with an empty path.
 3. At each position, traverse the Trie character by character from the current index.
@@ -612,6 +649,78 @@ public class Solution {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: HashMap<u8, TrieNode>,
+    is_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self { children: HashMap::new(), is_word: false }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Self { root: TrieNode::new() }
+    }
+    fn add_word(&mut self, word: &str) {
+        let mut curr = &mut self.root;
+        for &b in word.as_bytes() {
+            curr = curr.children.entry(b).or_insert_with(TrieNode::new);
+        }
+        curr.is_word = true;
+    }
+}
+
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> Vec<String> {
+        let mut trie = Trie::new();
+        for word in &word_dict {
+            trie.add_word(word);
+        }
+        let bytes = s.as_bytes();
+        let mut res = Vec::new();
+
+        fn backtrack(
+            bytes: &[u8], index: usize, path: &mut Vec<String>,
+            trie: &Trie, res: &mut Vec<String>,
+        ) {
+            if index == bytes.len() {
+                res.push(path.join(" "));
+                return;
+            }
+            let mut node = &trie.root;
+            let mut word = Vec::new();
+            for i in index..bytes.len() {
+                let c = bytes[i];
+                match node.children.get(&c) {
+                    Some(next) => {
+                        word.push(c);
+                        node = next;
+                        if node.is_word {
+                            let w = String::from_utf8(word.clone()).unwrap();
+                            path.push(w);
+                            backtrack(bytes, i + 1, path, trie, res);
+                            path.pop();
+                        }
+                    }
+                    None => break,
+                }
+            }
+        }
+
+        backtrack(bytes, 0, &mut Vec::new(), &trie, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -626,9 +735,11 @@ public class Solution {
 ## 3. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 The pure backtracking approach may recompute results for the same suffix multiple times. By caching the list of all valid sentences that can be formed starting from each index, we avoid redundant computation. When we encounter a starting position we have already processed, we simply return the cached result.
 
 ### Algorithm
+
 1. Convert the dictionary to a set and create a `cache` dictionary.
 2. Define a recursive function that returns all valid sentences from index `i` to end.
 3. Base case: when `i` equals the string length, return a list containing an empty string.
@@ -922,6 +1033,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> Vec<String> {
+        let word_set: HashSet<String> = word_dict.into_iter().collect();
+        let mut cache: HashMap<usize, Vec<String>> = HashMap::new();
+
+        fn backtrack(
+            s: &str, i: usize, word_set: &HashSet<String>,
+            cache: &mut HashMap<usize, Vec<String>>,
+        ) -> Vec<String> {
+            if i == s.len() {
+                return vec![String::new()];
+            }
+            if let Some(cached) = cache.get(&i) {
+                return cached.clone();
+            }
+            let mut res = Vec::new();
+            for j in i..s.len() {
+                let w = &s[i..=j];
+                if !word_set.contains(w) {
+                    continue;
+                }
+                let strings = backtrack(s, j + 1, word_set, cache);
+                for substr in &strings {
+                    if substr.is_empty() {
+                        res.push(w.to_string());
+                    } else {
+                        res.push(format!("{} {}", w, substr));
+                    }
+                }
+            }
+            cache.insert(i, res.clone());
+            res
+        }
+
+        backtrack(&s, 0, &word_set, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -936,9 +1087,11 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 Instead of recursing from the start, we can build the solution iteratively from the beginning. For each position `i`, we store all valid sentences that can be formed using characters from index `0` to `i-1`. We extend existing sentences by appending new words when a valid dictionary word ends at position `i`.
 
 ### Algorithm
+
 1. Create a DP array where `dp[i]` contains all valid sentences using the first `i` characters.
 2. Initialize `dp[0]` with an empty string as the base case.
 3. For each position `i` from `1` to `n`, check all possible last words ending at `i`.
@@ -1162,6 +1315,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> Vec<String> {
+        let word_set: HashSet<String> = word_dict.into_iter().collect();
+        let n = s.len();
+        let mut dp: Vec<Vec<String>> = vec![Vec::new(); n + 1];
+        dp[0] = vec![String::new()];
+
+        for i in 1..=n {
+            for j in 0..i {
+                let word = &s[j..i];
+                if word_set.contains(word) {
+                    let sentences: Vec<String> = dp[j]
+                        .clone()
+                        .into_iter()
+                        .map(|sentence| {
+                            if sentence.is_empty() {
+                                word.to_string()
+                            } else {
+                                format!("{} {}", sentence, word)
+                            }
+                        })
+                        .collect();
+                    dp[i].extend(sentences);
+                }
+            }
+        }
+
+        dp[n].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1176,9 +1362,11 @@ class Solution {
 ## 5. Dynamic Programming (Top-Down) Using Trie
 
 ### Intuition
+
 This combines the benefits of Trie-based prefix matching with memoization. The Trie provides efficient character-by-character matching and early termination, while the `cache` prevents recomputation of results for the same starting positions. This is particularly effective when the dictionary contains many words with common prefixes.
 
 ### Algorithm
+
 1. Build a Trie from all dictionary words.
 2. Create a `cache` to store results for each starting index.
 3. Define a recursive function that returns all sentences from index `i`.
@@ -1721,6 +1909,84 @@ class Solution {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: HashMap<u8, TrieNode>,
+    is_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self { children: HashMap::new(), is_word: false }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Self { root: TrieNode::new() }
+    }
+    fn add_word(&mut self, word: &str) {
+        let mut curr = &mut self.root;
+        for &b in word.as_bytes() {
+            curr = curr.children.entry(b).or_insert_with(TrieNode::new);
+        }
+        curr.is_word = true;
+    }
+}
+
+impl Solution {
+    pub fn word_break(s: String, word_dict: Vec<String>) -> Vec<String> {
+        let mut trie = Trie::new();
+        for word in &word_dict {
+            trie.add_word(word);
+        }
+        let bytes = s.as_bytes();
+        let mut cache: HashMap<usize, Vec<String>> = HashMap::new();
+
+        fn backtrack(
+            bytes: &[u8], index: usize, trie: &Trie,
+            cache: &mut HashMap<usize, Vec<String>>,
+        ) -> Vec<String> {
+            if index == bytes.len() {
+                return vec![String::new()];
+            }
+            if let Some(cached) = cache.get(&index) {
+                return cached.clone();
+            }
+            let mut res = Vec::new();
+            let mut curr = &trie.root;
+            for i in index..bytes.len() {
+                let c = bytes[i];
+                match curr.children.get(&c) {
+                    Some(next) => {
+                        curr = next;
+                        if curr.is_word {
+                            let word = std::str::from_utf8(&bytes[index..=i]).unwrap();
+                            for suffix in backtrack(bytes, i + 1, trie, cache) {
+                                if suffix.is_empty() {
+                                    res.push(word.to_string());
+                                } else {
+                                    res.push(format!("{} {}", word, suffix));
+                                }
+                            }
+                        }
+                    }
+                    None => break,
+                }
+            }
+            cache.insert(index, res.clone());
+            res
+        }
+
+        backtrack(bytes, 0, &trie, &mut cache)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1735,6 +2001,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Handling the Base Case Correctly When Building Sentences
+
 When recursion reaches the end of the string, returning an empty list `[]` instead of a list with an empty string `[""]` causes all valid sentences to be lost since there's nothing to append the last word to.
 
 ```python
@@ -1748,6 +2015,7 @@ if i == len(s):
 ```
 
 ### Forgetting to Add Space Between Words
+
 When concatenating words to form sentences, forgetting to add spaces between words results in malformed output like "catsand" instead of "cats and".
 
 ```python
@@ -1759,7 +2027,8 @@ sentence = word if not substr else word + " " + substr
 ```
 
 ### Using List Instead of Set for Dictionary Lookup
-Checking if a substring exists in the word dictionary using a list results in O(m * t) lookup per check instead of O(t). This significantly slows down the solution.
+
+Checking if a substring exists in the word dictionary using a list results in O(m \* t) lookup per check instead of O(t). This significantly slows down the solution.
 
 ```python
 # Wrong: O(m * t) lookup per check
@@ -1771,6 +2040,7 @@ if s[i:j+1] in wordSet:
 ```
 
 ### Not Memoizing Results Leading to TLE
+
 Without memoization, the same suffix is recomputed many times, leading to exponential time complexity even when not necessary. This causes Time Limit Exceeded on inputs with many overlapping subproblems.
 
 ```python
@@ -1790,6 +2060,7 @@ def backtrack(i):
 ```
 
 ### Modifying Shared State Without Proper Backtracking
+
 When using a shared list to build the current path, forgetting to pop the last word after recursion corrupts the path for other branches.
 
 ```python

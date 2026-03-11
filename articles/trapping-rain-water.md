@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Basic array traversal and element access
 - **Prefix and Suffix Arrays** - Precomputing running maximums from both directions
 - **Two Pointers** - Using left and right pointers that move toward each other based on conditions
@@ -23,9 +25,9 @@ The brute-force method recomputes the left maximum and right maximum for every i
 1. If the input list is empty, return `0`.
 2. Let `n` be the length of the array and initialize `res = 0`.
 3. For each index `i`:
-   - Compute `leftMax` by scanning from index `0` to `i`.
-   - Compute `rightMax` by scanning from index `i + 1` to the end.
-   - Add `min(leftMax, rightMax) - height[i]` to `res`.
+    - Compute `leftMax` by scanning from index `0` to `i`.
+    - Compute `rightMax` by scanning from index `i + 1` to the end.
+    - Add `min(leftMax, rightMax) - height[i]` to `res`.
 4. After processing all positions, return `res`.
 
 <details>
@@ -34,33 +36,30 @@ The brute-force method recomputes the left maximum and right maximum for every i
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 ```markdown
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │ height
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
-
 
 **Step-by-step execution:**
 
 For each position, we scan left and right to find the maximum heights.
 
-
-| i | height[i] | leftMax | rightMax | min(L,R) | Water = min(L,R) - height[i] |
-|---|-----------|---------|----------|----------|------------------------------|
-| 0 | 0         | 0       | 3        | 0        | 0 - 0 = 0                    |
-| 1 | 1         | 1       | 3        | 1        | 1 - 1 = 0                    |
-| 2 | 0         | 1       | 3        | 1        | 1 - 0 = **1**                |
-| 3 | 2         | 2       | 3        | 2        | 2 - 2 = 0                    |
-| 4 | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
-| 5 | 0         | 2       | 3        | 2        | 2 - 0 = **2**                |
-| 6 | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
-| 7 | 3         | 3       | 3        | 3        | 3 - 3 = 0                    |
-| 8 | 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
-| 9 | 1         | 3       | 2        | 2        | 2 - 1 = **1**                |
-| 10| 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
-| 11| 1         | 3       | 1        | 1        | 1 - 1 = 0                    |
-
+| i   | height[i] | leftMax | rightMax | min(L,R) | Water = min(L,R) - height[i] |
+| --- | --------- | ------- | -------- | -------- | ---------------------------- |
+| 0   | 0         | 0       | 3        | 0        | 0 - 0 = 0                    |
+| 1   | 1         | 1       | 3        | 1        | 1 - 1 = 0                    |
+| 2   | 0         | 1       | 3        | 1        | 1 - 0 = **1**                |
+| 3   | 2         | 2       | 3        | 2        | 2 - 2 = 0                    |
+| 4   | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
+| 5   | 0         | 2       | 3        | 2        | 2 - 0 = **2**                |
+| 6   | 1         | 2       | 3        | 2        | 2 - 1 = **1**                |
+| 7   | 3         | 3       | 3        | 3        | 3 - 3 = 0                    |
+| 8   | 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
+| 9   | 1         | 3       | 2        | 2        | 2 - 1 = **1**                |
+| 10  | 2         | 3       | 2        | 2        | 2 - 2 = 0                    |
+| 11  | 1         | 3       | 1        | 1        | 1 - 1 = 0                    |
 
 **Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
 
@@ -292,6 +291,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn trap(height: Vec<i32>) -> i32 {
+        if height.is_empty() {
+            return 0;
+        }
+        let n = height.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut left_max = height[i];
+            let mut right_max = height[i];
+
+            for j in 0..i {
+                left_max = left_max.max(height[j]);
+            }
+            for j in (i + 1)..n {
+                right_max = right_max.max(height[j]);
+            }
+
+            res += left_max.min(right_max) - height[i];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -321,18 +347,18 @@ This removes the repeated work from the brute-force approach and makes the solut
 
 1. If the array is empty, return `0`.
 2. Create two arrays:
-   - `leftMax` of size `n`
-   - `rightMax` of size `n`
+    - `leftMax` of size `n`
+    - `rightMax` of size `n`
 3. Fill `leftMax`:
-   - `leftMax[0] = height[0]`
-   - For each `i` from `1` to `n - 1`,
-     `leftMax[i] = max(leftMax[i - 1], height[i])`
+    - `leftMax[0] = height[0]`
+    - For each `i` from `1` to `n - 1`,
+      `leftMax[i] = max(leftMax[i - 1], height[i])`
 4. Fill `rightMax`:
-   - `rightMax[n - 1] = height[n - 1]`
-   - For each `i` from `n - 2` down to `0`,
-     `rightMax[i] = max(rightMax[i + 1], height[i])`
+    - `rightMax[n - 1] = height[n - 1]`
+    - For each `i` from `n - 2` down to `0`,
+      `rightMax[i] = max(rightMax[i + 1], height[i])`
 5. Compute trapped water:
-   - For each index `i`, add `min(leftMax[i], rightMax[i]) - height[i]` to the result.
+    - For each index `i`, add `min(leftMax[i], rightMax[i]) - height[i]` to the result.
 6. Return the total trapped water.
 
 <details>
@@ -341,61 +367,52 @@ This removes the repeated work from the brute-force approach and makes the solut
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 ```markdown
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │ height
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
-
 
 **Step 1: Build leftMax array (scan left to right)**
 
 ```markdown
-  leftMax[i] = max height from index 0 to i
+leftMax[i] = max height from index 0 to i
 
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 1 │ 2 │ 2 │ 2 │ 2 │ 3 │ 3 │ 3 │ 3 │ 3 │  leftMax
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 1 │ 2 │ 2 │ 2 │ 2 │ 3 │ 3 │ 3 │ 3 │ 3 │ leftMax
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
-
-
-
 
 **Step 2: Build rightMax array (scan right to left)**
 
 ```markdown
-  rightMax[i] = max height from index i to n-1
+rightMax[i] = max height from index i to n-1
 
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 2 │ 2 │ 2 │ 1 │  rightMax
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 3 │ 2 │ 2 │ 2 │ 1 │ rightMax
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
-
-
-
 
 **Step 3: Calculate water at each position**
 
 Water at index i = min(leftMax[i], rightMax[i]) - height[i]
 
-
-| i | height[i] | leftMax[i] | rightMax[i] | min(L,R) | Water |
-|---|-----------|------------|-------------|----------|-------|
-| 0 | 0 | 0 | 3 | 0 | 0 |
-| 1 | 1 | 1 | 3 | 1 | 0 |
-| 2 | 0 | 1 | 3 | 1 | **1** |
-| 3 | 2 | 2 | 3 | 2 | 0 |
-| 4 | 1 | 2 | 3 | 2 | **1** |
-| 5 | 0 | 2 | 3 | 2 | **2** |
-| 6 | 1 | 2 | 3 | 2 | **1** |
-| 7 | 3 | 3 | 3 | 3 | 0 |
-| 8 | 2 | 3 | 2 | 2 | 0 |
-| 9 | 1 | 3 | 2 | 2 | **1** |
-| 10 | 2 | 3 | 2 | 2 | 0 |
-| 11 | 1 | 3 | 1 | 1 | 0 |
-
+| i   | height[i] | leftMax[i] | rightMax[i] | min(L,R) | Water |
+| --- | --------- | ---------- | ----------- | -------- | ----- |
+| 0   | 0         | 0          | 3           | 0        | 0     |
+| 1   | 1         | 1          | 3           | 1        | 0     |
+| 2   | 0         | 1          | 3           | 1        | **1** |
+| 3   | 2         | 2          | 3           | 2        | 0     |
+| 4   | 1         | 2          | 3           | 2        | **1** |
+| 5   | 0         | 2          | 3           | 2        | **2** |
+| 6   | 1         | 2          | 3           | 2        | **1** |
+| 7   | 3         | 3          | 3           | 3        | 0     |
+| 8   | 2         | 3          | 2           | 2        | 0     |
+| 9   | 1         | 3          | 2           | 2        | **1** |
+| 10  | 2         | 3          | 2           | 2        | 0     |
+| 11  | 1         | 3          | 1           | 1        | 0     |
 
 **Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
 
@@ -654,6 +671,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn trap(height: Vec<i32>) -> i32 {
+        let n = height.len();
+        if n == 0 {
+            return 0;
+        }
+
+        let mut left_max = vec![0; n];
+        let mut right_max = vec![0; n];
+
+        left_max[0] = height[0];
+        for i in 1..n {
+            left_max[i] = left_max[i - 1].max(height[i]);
+        }
+
+        right_max[n - 1] = height[n - 1];
+        for i in (0..n - 1).rev() {
+            right_max[i] = right_max[i + 1].max(height[i]);
+        }
+
+        let mut res = 0;
+        for i in 0..n {
+            res += left_max[i].min(right_max[i]) - height[i];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -677,12 +724,12 @@ We keep doing this as long as the current bar keeps forming valid containers.
 
 1. Create an empty stack and set `res = 0`.
 2. Loop through each index `i`:
-   - While the stack is not empty and `height[i]` is taller than the bar at the stack's top:
-     - Pop the top index — that's the **bottom**.
-     - If the stack is not empty:
-       - Compute the trapped water between the new top (left wall) and the current bar (right wall).
-       - Add it to `res`.
-   - Push the current index onto the stack.
+    - While the stack is not empty and `height[i]` is taller than the bar at the stack's top:
+        - Pop the top index — that's the **bottom**.
+        - If the stack is not empty:
+            - Compute the trapped water between the new top (left wall) and the current bar (right wall).
+            - Add it to `res`.
+    - Push the current index onto the stack.
 3. Return `res` after the loop finishes.
 
 <details>
@@ -691,35 +738,32 @@ We keep doing this as long as the current bar keeps forming valid containers.
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 ```markdown
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │ height
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
-
 
 **Stack-based approach: Process horizontally layer by layer**
 
 The stack stores indices. When we find a taller bar, we pop and calculate water trapped.
 
-
 **Step-by-step trace:**
 
-| Step | i | height[i] | Stack (indices) | Action | Water |
-|------|---|-----------|-----------------|--------|-------|
-| 1 | 0 | 0 | [] | Push 0 | 0 |
-| 2 | 1 | 1 | [0] | Pop 0, no left wall; Push 1 | 0 |
-| 3 | 2 | 0 | [1] | Push 2 | 0 |
-| 4 | 3 | 2 | [1,2] | Pop 2, calculate water; Push 3 | **1** |
-| 5 | 4 | 1 | [3] | Push 4 | 0 |
-| 6 | 5 | 0 | [3,4] | Push 5 | 0 |
-| 7 | 6 | 1 | [3,4,5] | Pop 5, calculate water; Push 6 | **1** |
-| 8 | 7 | 3 | [3,4,6] | Pop 6,4,3, calculate water; Push 7 | **3** |
-| 9 | 8 | 2 | [7] | Push 8 | 0 |
-| 10 | 9 | 1 | [7,8] | Push 9 | 0 |
-| 11 | 10 | 2 | [7,8,9] | Pop 9, calculate water; Push 10 | **1** |
-| 12 | 11 | 1 | [7,8,10] | Push 11 | 0 |
-
+| Step | i   | height[i] | Stack (indices) | Action                             | Water |
+| ---- | --- | --------- | --------------- | ---------------------------------- | ----- |
+| 1    | 0   | 0         | []              | Push 0                             | 0     |
+| 2    | 1   | 1         | [0]             | Pop 0, no left wall; Push 1        | 0     |
+| 3    | 2   | 0         | [1]             | Push 2                             | 0     |
+| 4    | 3   | 2         | [1,2]           | Pop 2, calculate water; Push 3     | **1** |
+| 5    | 4   | 1         | [3]             | Push 4                             | 0     |
+| 6    | 5   | 0         | [3,4]           | Push 5                             | 0     |
+| 7    | 6   | 1         | [3,4,5]         | Pop 5, calculate water; Push 6     | **1** |
+| 8    | 7   | 3         | [3,4,6]         | Pop 6,4,3, calculate water; Push 7 | **3** |
+| 9    | 8   | 2         | [7]             | Push 8                             | 0     |
+| 10   | 9   | 1         | [7,8]           | Push 9                             | 0     |
+| 11   | 10  | 2         | [7,8,9]         | Pop 9, calculate water; Push 10    | **1** |
+| 12   | 11  | 1         | [7,8,10]        | Push 11                            | 0     |
 
 **Total water trapped = 1 + 1 + 3 + 1 = 6**
 
@@ -965,6 +1009,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn trap(height: Vec<i32>) -> i32 {
+        if height.is_empty() {
+            return 0;
+        }
+
+        let mut stack: Vec<usize> = Vec::new();
+        let mut res = 0;
+
+        for i in 0..height.len() {
+            while let Some(&top) = stack.last() {
+                if height[i] >= height[top] {
+                    let mid = height[stack.pop().unwrap()];
+                    if let Some(&left_idx) = stack.last() {
+                        let right = height[i];
+                        let left = height[left_idx];
+                        let h = right.min(left) - mid;
+                        let w = (i - left_idx - 1) as i32;
+                        res += h * w;
+                    }
+                } else {
+                    break;
+                }
+            }
+            stack.push(i);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -991,18 +1067,18 @@ The water at each position is simply:
 ### Algorithm
 
 1. Set two pointers:
-   - `l` at the start
-   - `r` at the end
-   Track `leftMax` and `rightMax` as the tallest walls seen.
+    - `l` at the start
+    - `r` at the end
+      Track `leftMax` and `rightMax` as the tallest walls seen.
 2. While `l < r`:
-   - If `leftMax < rightMax`:
-     - Move `l` right.
-     - Update `leftMax`.
-     - Add `leftMax - height[l]` to the result.
-   - Else:
-     - Move `r` left.
-     - Update `rightMax`.
-     - Add `rightMax - height[r]` to the result.
+    - If `leftMax < rightMax`:
+        - Move `l` right.
+        - Update `leftMax`.
+        - Add `leftMax - height[l]` to the result.
+    - Else:
+        - Move `r` left.
+        - Update `rightMax`.
+        - Add `rightMax - height[r]` to the result.
 3. Return the total trapped water.
 
 <details>
@@ -1011,31 +1087,26 @@ The water at each position is simply:
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 ```markdown
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │ height
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
 
-
 **Two Pointers Approach**
-
 
 **Step 1: Initial State**
 
 ```markdown
-   L                                           R
-   ↓                                           ↓
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+L R
+↓ ↓
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 
-  leftMax = 0    rightMax = 1    water = 0
+leftMax = 0 rightMax = 1 water = 0
 ```
-
-
-
 
 **Step 3: Water trapped at index 2**
 
@@ -1044,17 +1115,15 @@ leftMax < rightMax, so process left side. Water = leftMax - height[2] = 1 - 0 = 
 ```markdown
            L                                   R
            ↓                                   ↓
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
-            ≈
 
-  leftMax = 1    rightMax = 2    water = 1
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
+≈
+
+leftMax = 1 rightMax = 2 water = 1
 ```
-
-
-
 
 **Step 5: Water trapped at index 9**
 
@@ -1063,17 +1132,15 @@ leftMax >= rightMax, so process right side. Water = rightMax - height[9] = 2 - 1
 ```markdown
                L                       R
                ↓                       ↓
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
-            ≈                           ≈
 
-  leftMax = 2    rightMax = 2    water = 2
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
+≈ ≈
+
+leftMax = 2 rightMax = 2 water = 2
 ```
-
-
-
 
 **Steps 8-10: Water trapped at indices 4, 5, 6**
 
@@ -1082,50 +1149,46 @@ Processing left side as leftMax < rightMax
 ```markdown
                            L       R
                            ↓       ↓
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
-            ≈       ≈   ≈   ≈           ≈
 
-  leftMax = 2    rightMax = 3    water = 6
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
+≈ ≈ ≈ ≈ ≈
+
+leftMax = 2 rightMax = 3 water = 6
 ```
-
-
-
 
 **Complete step-by-step trace:**
 
-| Step | l | r | height[l] | height[r] | leftMax | rightMax | Action | Water | Total |
-|------|---|---|-----------|-----------|---------|----------|--------|-------|-------|
-| 1 | 0 | 11 | 0 | 1 | 0 | 1 | l++ | 0 | 0 |
-| 2 | 1 | 11 | 1 | 1 | 1 | 1 | r-- | 0 | 0 |
-| 3 | 1 | 10 | 1 | 2 | 1 | 2 | l++ | **1** | 1 |
-| 4 | 2 | 10 | 0 | 2 | 1 | 2 | l++ | 0 | 1 |
-| 5 | 3 | 10 | 2 | 2 | 2 | 2 | r-- | **1** | 2 |
-| 6 | 3 | 9 | 2 | 1 | 2 | 2 | r-- | 0 | 2 |
-| 7 | 3 | 8 | 2 | 2 | 2 | 2 | r-- | 0 | 2 |
-| 8 | 3 | 7 | 2 | 3 | 2 | 3 | l++ | **1** | 3 |
-| 9 | 4 | 7 | 1 | 3 | 2 | 3 | l++ | **2** | 5 |
-| 10 | 5 | 7 | 0 | 3 | 2 | 3 | l++ | **1** | 6 |
-| 11 | 6 | 7 | 1 | 3 | 2 | 3 | l++ | 0 | 6 |
-
+| Step | l   | r   | height[l] | height[r] | leftMax | rightMax | Action | Water | Total |
+| ---- | --- | --- | --------- | --------- | ------- | -------- | ------ | ----- | ----- |
+| 1    | 0   | 11  | 0         | 1         | 0       | 1        | l++    | 0     | 0     |
+| 2    | 1   | 11  | 1         | 1         | 1       | 1        | r--    | 0     | 0     |
+| 3    | 1   | 10  | 1         | 2         | 1       | 2        | l++    | **1** | 1     |
+| 4    | 2   | 10  | 0         | 2         | 1       | 2        | l++    | 0     | 1     |
+| 5    | 3   | 10  | 2         | 2         | 2       | 2        | r--    | **1** | 2     |
+| 6    | 3   | 9   | 2         | 1         | 2       | 2        | r--    | 0     | 2     |
+| 7    | 3   | 8   | 2         | 2         | 2       | 2        | r--    | 0     | 2     |
+| 8    | 3   | 7   | 2         | 3         | 2       | 3        | l++    | **1** | 3     |
+| 9    | 4   | 7   | 1         | 3         | 2       | 3        | l++    | **2** | 5     |
+| 10   | 5   | 7   | 0         | 3         | 2       | 3        | l++    | **1** | 6     |
+| 11   | 6   | 7   | 1         | 3         | 2       | 3        | l++    | 0     | 6     |
 
 Loop ends when l = 7 = r
-
 
 **Final Result:**
 
 ```markdown
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │ height
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 
-  ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
-  │ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │  water
-  └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
-    0   1   2   3   4   5   6   7   8   9  10  11
+┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
+│ 0 │ 0 │ 1 │ 0 │ 1 │ 2 │ 1 │ 0 │ 0 │ 1 │ 0 │ 0 │ water
+└───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
+0 1 2 3 4 5 6 7 8 9 10 11
 ```
 
 **Total water trapped = 0 + 0 + 1 + 0 + 1 + 2 + 1 + 0 + 0 + 1 + 0 + 0 = 6**
@@ -1354,6 +1417,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn trap(height: Vec<i32>) -> i32 {
+        if height.is_empty() {
+            return 0;
+        }
+
+        let mut l = 0;
+        let mut r = height.len() - 1;
+        let mut left_max = height[l];
+        let mut right_max = height[r];
+        let mut res = 0;
+
+        while l < r {
+            if left_max < right_max {
+                l += 1;
+                left_max = left_max.max(height[l]);
+                res += left_max - height[l];
+            } else {
+                r -= 1;
+                right_max = right_max.max(height[r]);
+                res += right_max - height[r];
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1366,10 +1458,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Calculating Water at Boundary Bars
+
 The leftmost and rightmost bars can never hold water above them since there's no wall on one side to contain it. Including them in water calculations gives wrong results.
 
 ### Using Current Bar Height Instead of Max Heights
+
 Water at each position depends on the minimum of the maximum heights to its left and right, minus the current height. Using the current bar's height in the max comparison instead of tracking running maximums is incorrect.
+
 ```python
 # Wrong: comparing current height directly
 water = min(height[l], height[r]) - height[i]
@@ -1378,7 +1473,9 @@ water = min(leftMax, rightMax) - height[i]
 ```
 
 ### Negative Water Values
+
 When the current bar is taller than the limiting wall, the water calculation yields a negative value. This happens at peaks and should contribute zero water, not negative.
+
 ```python
 # Wrong: can add negative water
 res += leftMax - height[i]
@@ -1387,4 +1484,5 @@ res += max(0, min(leftMax, rightMax) - height[i])
 ```
 
 ### Wrong Pointer Movement in Two Pointers
+
 In the two-pointer approach, always move the pointer on the side with the smaller max height. Moving the wrong pointer breaks the invariant that the smaller side determines the water level.

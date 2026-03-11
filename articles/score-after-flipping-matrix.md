@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy algorithms** - Making locally optimal choices (prioritizing high-value bits) to achieve global optimum
 - **Bit manipulation** - Using XOR to flip bits and bit shifting to calculate binary values
 - **Binary number representation** - Understanding positional value where leftmost bits contribute more
@@ -17,9 +19,9 @@ Each row represents a binary number, and higher-order bits contribute more to th
 
 1. For each row, if the first element is 0, flip the entire row using XOR.
 2. For each column (starting from column 1), count the number of 1s.
-   - If 0s outnumber 1s, flip the entire column.
+    - If 0s outnumber 1s, flip the entire column.
 3. Calculate the final score by summing each cell's contribution:
-   - A cell at column `c` contributes `value * 2^(COLS - c - 1)` to the total.
+    - A cell at column `c` contributes `value * 2^(COLS - c - 1)` to the total.
 4. Return the total `res`.
 
 ::tabs-start
@@ -314,6 +316,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn matrix_score(mut grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+
+        for r in 0..rows {
+            if grid[r][0] == 0 {
+                for c in 0..cols {
+                    grid[r][c] ^= 1;
+                }
+            }
+        }
+
+        for c in 0..cols {
+            let one_cnt: i32 = (0..rows).map(|r| grid[r][c]).sum();
+            if one_cnt < (rows as i32) - one_cnt {
+                for r in 0..rows {
+                    grid[r][c] ^= 1;
+                }
+            }
+        }
+
+        let mut res = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                res += grid[r][c] << (cols - c - 1);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -335,9 +371,9 @@ We can compute the score without modifying the grid. After row flips to ensure a
 
 1. Initialize the result with `ROWS * 2^(COLS - 1)` (all first bits are 1).
 2. For each column `c` from 1 to `COLS - 1`:
-   - Count cells that differ from the first cell in their row.
-   - Take the maximum of this `cnt` and `ROWS - cnt` (the better choice after potential column flip).
-   - Add `cnt * 2^(COLS - c - 1)` to the result.
+    - Count cells that differ from the first cell in their row.
+    - Take the maximum of this `cnt` and `ROWS - cnt` (the better choice after potential column flip).
+    - Add `cnt * 2^(COLS - c - 1)` to the result.
 3. Return the result.
 
 ::tabs-start
@@ -511,6 +547,28 @@ class Solution {
             res += cnt * (1 << (COLS - c - 1))
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn matrix_score(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len() as i32;
+        let cols = grid[0].len();
+        let mut res = rows * (1 << (cols - 1));
+
+        for c in 1..cols {
+            let mut cnt = 0i32;
+            for r in 0..rows as usize {
+                if grid[r][c] != grid[r][0] {
+                    cnt += 1;
+                }
+            }
+            cnt = cnt.max(rows - cnt);
+            res += cnt * (1 << (cols - c - 1));
+        }
+        res
     }
 }
 ```

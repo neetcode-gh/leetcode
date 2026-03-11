@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Building each row from the previous row, using both top-down (recursive) and bottom-up (iterative) approaches
 - **Recursion** - Understanding how to compute a row by first computing all previous rows
 - **Combinatorics** - Recognizing that Pascal's Triangle values are binomial coefficients C(n, k) and computing them efficiently
@@ -18,7 +20,7 @@ To get row `n`, we need row `n - 1` first. Each row depends on the previous one,
 2. Recursively get the previous row.
 3. Start the current row with `[1]`.
 4. For each index from `1` to `rowIndex - 1`:
-   - Add `prevRow[i - 1] + prevRow[i]` to the current row.
+    - Add `prevRow[i - 1] + prevRow[i]` to the current row.
 5. Append `1` to complete the row.
 6. Return the current `row`.
 
@@ -173,6 +175,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_row(row_index: i32) -> Vec<i32> {
+        if row_index == 0 {
+            return vec![1];
+        }
+
+        let prev_row = Self::get_row(row_index - 1);
+        let mut cur_row = vec![1];
+
+        for i in 1..row_index as usize {
+            cur_row.push(prev_row[i - 1] + prev_row[i]);
+        }
+
+        cur_row.push(1);
+        cur_row
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -192,8 +214,8 @@ We build the entire triangle iteratively from row 0 up to the target row. Each r
 
 1. Create a 2D list where row `i` has `i + 1` elements, all initialized to `1`.
 2. For each row from index 2 to `rowIndex`:
-   - For each interior position `j`:
-     - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
+    - For each interior position `j`:
+        - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
 3. Return `res[rowIndex]`.
 
 ::tabs-start
@@ -325,6 +347,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_row(row_index: i32) -> Vec<i32> {
+        let row_index = row_index as usize;
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        for i in 0..=row_index {
+            let mut row = vec![1; i + 1];
+            for j in 1..i {
+                row[j] = res[i - 1][j - 1] + res[i - 1][j];
+            }
+            res.push(row);
+        }
+        res[row_index].clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -344,9 +383,9 @@ We only need the previous row to compute the current row, so we don't need to st
 
 1. Start with `res = [1]`.
 2. For each iteration from `0` to `rowIndex - 1`:
-   - Create `nextRow` of size `len(res) + 1`, filled with `0`.
-   - For each element in the current row, add its value to `nextRow[j]` and `nextRow[j + 1]`.
-   - Replace `res` with `nextRow`.
+    - Create `nextRow` of size `len(res) + 1`, filled with `0`.
+    - For each element in the current row, add its value to `nextRow[j]` and `nextRow[j + 1]`.
+    - Replace `res` with `nextRow`.
 3. Return `res`.
 
 ::tabs-start
@@ -487,6 +526,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_row(row_index: i32) -> Vec<i32> {
+        let mut res = vec![1];
+        for _ in 0..row_index {
+            let mut next_row = vec![0; res.len() + 1];
+            for j in 0..res.len() {
+                next_row[j] += res[j];
+                next_row[j + 1] += res[j];
+            }
+            res = next_row;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,8 +562,8 @@ We can update the row in place by iterating from right to left. This ensures we 
 
 1. Initialize `row` with `rowIndex + 1` elements, all set to `1`.
 2. For each row from `1` to `rowIndex - 1`:
-   - Iterate from index `i` down to `1`:
-     - Add `row[j - 1]` to `row[j]`.
+    - Iterate from index `i` down to `1`:
+        - Add `row[j - 1]` to `row[j]`.
 3. Return `row`.
 
 ::tabs-start
@@ -627,6 +683,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_row(row_index: i32) -> Vec<i32> {
+        let n = row_index as usize;
+        let mut row = vec![1i32; n + 1];
+        for i in 1..n {
+            for j in (1..=i).rev() {
+                row[j] += row[j - 1];
+            }
+        }
+        row
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,8 +717,8 @@ The values in row `n` of Pascal's Triangle are the binomial coefficients `C(n, 0
 
 1. Start with `row = [1]`.
 2. For each `i` from `1` to `rowIndex`:
-   - Compute the next value as `row[last] * (rowIndex - i + 1) / i`.
-   - Append it to the `row`.
+    - Compute the next value as `row[last] * (rowIndex - i + 1) / i`.
+    - Append it to the `row`.
 3. Return `row`.
 
 ::tabs-start
@@ -747,6 +818,20 @@ class Solution {
             row.append(row.last! * (rowIndex - i + 1) / i)
         }
         return row
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_row(row_index: i32) -> Vec<i32> {
+        let n = row_index as i64;
+        let mut row = vec![1i32];
+        for i in 1..=n {
+            let last = *row.last().unwrap() as i64;
+            row.push((last * (n - i + 1) / i) as i32);
+        }
+        row
     }
 }
 ```

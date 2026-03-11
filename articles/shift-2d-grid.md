@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays / Matrices** - Traversing and manipulating elements using row and column indices
 - **Array Rotation** - Understanding how elements shift positions in a circular manner
 - **Index Mapping** - Converting between 2D coordinates (row, column) and 1D linear indices
@@ -18,10 +20,10 @@ By simulating this process k times, we can achieve the desired result. For each 
 ### Algorithm
 
 1. For each shift iteration (k times):
-   - Create a new grid `cur` filled with zeros.
-   - Copy each element from column `c` to column `c + 1` in the same row.
-   - Handle the last column separately: element at `(r, n-1)` wraps to `((r + 1) % m, 0)`.
-   - Replace the original grid with `cur`.
+    - Create a new grid `cur` filled with zeros.
+    - Copy each element from column `c` to column `c + 1` in the same row.
+    - Handle the last column separately: element at `(r, n-1)` wraps to `((r + 1) % m, 0)`.
+    - Replace the original grid with `cur`.
 2. Return the final grid after all shifts.
 
 ::tabs-start
@@ -265,6 +267,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shift_grid(grid: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut grid = grid;
+        let mut k = k;
+
+        while k > 0 {
+            let mut cur = vec![vec![0; n]; m];
+
+            for r in 0..m {
+                for c in 0..n - 1 {
+                    cur[r][c + 1] = grid[r][c];
+                }
+            }
+
+            for r in 0..m {
+                cur[(r + 1) % m][0] = grid[r][n - 1];
+            }
+
+            grid = cur;
+            k -= 1;
+        }
+
+        grid
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,10 +317,10 @@ Instead of creating a new grid each time, we can shift elements in place. The ke
 ### Algorithm
 
 1. For each shift iteration (k times):
-   - Store the last element `grid[m-1][n-1]` as `prev`.
-   - Traverse the grid row by row, column by column.
-   - At each cell, swap the current element with `prev`.
-   - This naturally propagates each element to the next position.
+    - Store the last element `grid[m-1][n-1]` as `prev`.
+    - Traverse the grid row by row, column by column.
+    - At each cell, swap the current element with `prev`.
+    - This naturally propagates each element to the next position.
 2. Return the grid after all shifts.
 
 ::tabs-start
@@ -474,6 +506,29 @@ class Solution {
         }
 
         return grid
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn shift_grid(grid: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let m = grid.len();
+        let n = grid[0].len();
+        let mut grid = grid;
+        let mut k = k;
+
+        while k > 0 {
+            let mut prev = grid[m - 1][n - 1];
+            for r in 0..m {
+                for c in 0..n {
+                    std::mem::swap(&mut grid[r][c], &mut prev);
+                }
+            }
+            k -= 1;
+        }
+
+        grid
     }
 }
 ```
@@ -808,6 +863,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shift_grid(grid: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let m = grid.len();
+        let n = grid[0].len();
+        let total = m * n;
+        let k = (k as usize) % total;
+
+        let mut arr = vec![0; total];
+        for r in 0..m {
+            for c in 0..n {
+                arr[r * n + c] = grid[r][c];
+            }
+        }
+
+        arr.reverse();
+        arr[..k].reverse();
+        arr[k..].reverse();
+
+        let mut res = vec![vec![0; n]; m];
+        for r in 0..m {
+            for c in 0..n {
+                res[r][c] = arr[r * n + c];
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -831,9 +916,9 @@ This approach processes each element exactly once, computing its final position 
 
 1. Create a result grid of the same dimensions.
 2. For each cell `(r, c)`:
-   - Compute the new flattened position: `newVal = (r * n + c + k) % (m * n)`.
-   - Convert back to 2D: `newR = newVal / n`, `newC = newVal % n`.
-   - Place the original value at the new position: `res[newR][newC] = grid[r][c]`.
+    - Compute the new flattened position: `newVal = (r * n + c + k) % (m * n)`.
+    - Convert back to 2D: `newR = newVal / n`, `newC = newVal % n`.
+    - Place the original value at the new position: `res[newR][newC] = grid[r][c]`.
 3. Return the result grid.
 
 ::tabs-start
@@ -1020,6 +1105,29 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn shift_grid(grid: Vec<Vec<i32>>, k: i32) -> Vec<Vec<i32>> {
+        let m = grid.len();
+        let n = grid[0].len();
+        let total = m * n;
+        let k = k as usize;
+
+        let mut res = vec![vec![0; n]; m];
+        for r in 0..m {
+            for c in 0..n {
+                let new_pos = (r * n + c + k) % total;
+                let new_r = new_pos / n;
+                let new_c = new_pos % n;
+                res[new_r][new_c] = grid[r][c];
+            }
+        }
+
+        res
     }
 }
 ```

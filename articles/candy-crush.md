@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays / Matrices** - Traversing grids and accessing elements by row and column
 - **Simulation** - Implementing step-by-step processes that repeat until a condition is met
 - **Set Data Structure** - Storing unique positions to mark candies for removal
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Separate Steps: Find, Crush, Drop
 
 ### Intuition
+
 We simulate the candy crush game by repeatedly performing three operations: find all candies that need to be crushed (three or more adjacent same-colored candies horizontally or vertically), crush them by setting their values to zero, and then drop remaining candies down to fill the gaps. We repeat this cycle until no more candies can be crushed.
 
 ### Algorithm
+
 1. Implement a `find` function that scans the board for groups of three or more adjacent candies (horizontally and vertically) and stores their positions in a set.
 2. Implement a `crush` function that sets all positions in the crushed set to `0`.
 3. Implement a `drop` function that, for each column, moves all non-zero candies down to fill the gaps left by crushed candies (using a lowest-zero pointer technique).
@@ -29,17 +33,17 @@ class Solution:
         def find():
             crushed_set = set()
 
-            # Check vertically adjacent candies 
+            # Check vertically adjacent candies
             for r in range(1, m - 1):
                 for c in range(n):
                     if board[r][c] == 0:
                         continue
-                    if board[r][c] == board[r - 1][c] == board[r + 1][c]: 
+                    if board[r][c] == board[r - 1][c] == board[r + 1][c]:
                         crushed_set.add((r, c))
                         crushed_set.add((r - 1, c))
                         crushed_set.add((r + 1, c))
 
-            # Check horizontally adjacent candies 
+            # Check horizontally adjacent candies
             for r in range(m):
                 for c in range(1, n - 1):
                     if board[r][c] == 0:
@@ -49,12 +53,12 @@ class Solution:
                         crushed_set.add((r, c - 1))
                         crushed_set.add((r, c + 1))
             return crushed_set
-        
+
         # Set the value of each candies to be crushed as 0
         def crush(crushed_set):
             for (r, c) in crushed_set:
                 board[r][c] = 0
-        
+
         def drop():
             for c in range(n):
                 lowest_zero = -1
@@ -160,10 +164,10 @@ class Solution {
 ```cpp
 class Solution {
     int m, n;
-    
+
     set<pair<int, int>> find(vector<vector<int>>& board) {
         set<pair<int, int>> crushedSet;
-        
+
         // Check vertically adjacent candies
         for (int r = 1; r < m - 1; r++) {
             for (int c = 0; c < n; c++) {
@@ -177,7 +181,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Check horizontally adjacent candies
         for (int r = 0; r < m; r++) {
             for (int c = 1; c < n - 1; c++) {
@@ -191,10 +195,10 @@ class Solution {
                 }
             }
         }
-        
+
         return crushedSet;
     }
-    
+
     void crush(vector<vector<int>>& board, set<pair<int, int>>& crushedSet) {
         for (const auto& p : crushedSet) {
             int r = p.first;
@@ -202,11 +206,11 @@ class Solution {
             board[r][c] = 0;
         }
     }
-    
+
     void drop(vector<vector<int>>& board) {
         for (int c = 0; c < n; c++) {
             int lowestZero = -1;
-            
+
             // Iterate over each column
             for (int r = m - 1; r >= 0; r--) {
                 if (board[r][c] == 0) {
@@ -220,19 +224,19 @@ class Solution {
             }
         }
     }
-    
+
 public:
     vector<vector<int>> candyCrush(vector<vector<int>>& board) {
         m = board.size();
         n = board[0].size();
-        
+
         set<pair<int, int>> crushedSet = find(board);
         while (!crushedSet.empty()) {
             crush(board, crushedSet);
             drop(board);
             crushedSet = find(board);
         }
-        
+
         return board;
     }
 };
@@ -271,7 +275,10 @@ class Solution {
                 if (board[r][c] === 0) {
                     continue;
                 }
-                if (board[r][c] === board[r - 1][c] && board[r][c] === board[r + 1][c]) {
+                if (
+                    board[r][c] === board[r - 1][c] &&
+                    board[r][c] === board[r + 1][c]
+                ) {
                     crushedSet.add(`${r},${c}`);
                     crushedSet.add(`${r - 1},${c}`);
                     crushedSet.add(`${r + 1},${c}`);
@@ -285,7 +292,10 @@ class Solution {
                 if (board[r][c] === 0) {
                     continue;
                 }
-                if (board[r][c] === board[r][c - 1] && board[r][c] === board[r][c + 1]) {
+                if (
+                    board[r][c] === board[r][c - 1] &&
+                    board[r][c] === board[r][c + 1]
+                ) {
                     crushedSet.add(`${r},${c}`);
                     crushedSet.add(`${r},${c - 1}`);
                     crushedSet.add(`${r},${c + 1}`);
@@ -626,6 +636,70 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn candy_crush(board: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut board = board;
+        let m = board.len();
+        let n = board[0].len();
+
+        let find = |board: &Vec<Vec<i32>>| -> HashSet<(usize, usize)> {
+            let mut crushed_set = HashSet::new();
+
+            for r in 1..m - 1 {
+                for c in 0..n {
+                    if board[r][c] == 0 { continue; }
+                    if board[r][c] == board[r - 1][c] && board[r][c] == board[r + 1][c] {
+                        crushed_set.insert((r, c));
+                        crushed_set.insert((r - 1, c));
+                        crushed_set.insert((r + 1, c));
+                    }
+                }
+            }
+
+            for r in 0..m {
+                for c in 1..n - 1 {
+                    if board[r][c] == 0 { continue; }
+                    if board[r][c] == board[r][c - 1] && board[r][c] == board[r][c + 1] {
+                        crushed_set.insert((r, c));
+                        crushed_set.insert((r, c - 1));
+                        crushed_set.insert((r, c + 1));
+                    }
+                }
+            }
+
+            crushed_set
+        };
+
+        loop {
+            let crushed_set = find(&board);
+            if crushed_set.is_empty() {
+                break;
+            }
+            for &(r, c) in &crushed_set {
+                board[r][c] = 0;
+            }
+            for c in 0..n {
+                let mut lowest_zero: i32 = -1;
+                for r in (0..m).rev() {
+                    if board[r][c] == 0 {
+                        lowest_zero = lowest_zero.max(r as i32);
+                    } else if lowest_zero >= 0 {
+                        let lz = lowest_zero as usize;
+                        let tmp = board[r][c];
+                        board[r][c] = board[lz][c];
+                        board[lz][c] = tmp;
+                        lowest_zero -= 1;
+                    }
+                }
+            }
+        }
+
+        board
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -633,16 +707,18 @@ class Solution {
 - Time complexity: $O(m^2 \cdot n^2)$
 - Space complexity: $O(m \cdot n)$
 
->  Where $m × n$ is the size of the grid `board`
+> Where $m × n$ is the size of the grid `board`
 
 ---
 
 ## 2. In-place Modification
 
 ### Intuition
+
 Instead of using a separate set to track crushed candies, we can mark them in-place by negating their values. This allows us to identify candies to crush while still being able to check for matching (using absolute values). After marking, we convert all negative values to `0`. This reduces space usage compared to maintaining a separate set.
 
 ### Algorithm
+
 1. Scan the board for groups of three or more adjacent candies. When found, mark them by negating their values (making them negative). Use absolute values when comparing to handle already-marked candies.
 2. After marking, convert all negative values to `0`.
 3. Return a flag indicating whether any candies were marked for crushing.
@@ -660,35 +736,35 @@ class Solution:
         def find_and_crush():
             complete = True
 
-            # Check vertically adjacent candies 
+            # Check vertically adjacent candies
             for r in range(1, m - 1):
                 for c in range(n):
                     if board[r][c] == 0:
                         continue
-                    if abs(board[r][c]) == abs(board[r - 1][c]) == abs(board[r + 1][c]): 
+                    if abs(board[r][c]) == abs(board[r - 1][c]) == abs(board[r + 1][c]):
                         board[r][c] = -abs(board[r][c])
                         board[r - 1][c] = -abs(board[r - 1][c])
                         board[r + 1][c] = -abs(board[r + 1][c])
                         complete = False
 
-            # Check horizontally adjacent candies 
+            # Check horizontally adjacent candies
             for r in range(m):
                 for c in range(1, n - 1):
                     if board[r][c] == 0:
                         continue
-                    if abs(board[r][c]) == abs(board[r][c - 1]) == abs(board[r][c + 1]): 
+                    if abs(board[r][c]) == abs(board[r][c - 1]) == abs(board[r][c + 1]):
                         board[r][c] = -abs(board[r][c])
                         board[r][c - 1] = -abs(board[r][c - 1])
                         board[r][c + 1] = -abs(board[r][c + 1])
                         complete = False
-            
+
             # Set the value of each candies to be crushed as 0
             for r in range(m):
                 for c in range(n):
                     if board[r][c] < 0:
-                        board[r][c] = 0           
+                        board[r][c] = 0
             return complete
-        
+
         def drop():
             for c in range(n):
                 lowest_zero = -1
@@ -793,10 +869,10 @@ class Solution {
 ```cpp
 class Solution {
     int m, n;
-    
+
     bool findAndCrush(vector<vector<int>>& board) {
         bool complete = true;
-        
+
         // Check vertically adjacent candies
         for (int r = 1; r < m - 1; r++) {
             for (int c = 0; c < n; c++) {
@@ -811,7 +887,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Check horizontally adjacent candies
         for (int r = 0; r < m; r++) {
             for (int c = 1; c < n - 1; c++) {
@@ -826,7 +902,7 @@ class Solution {
                 }
             }
         }
-        
+
         // Set the value of each candy to be crushed as 0
         for (int r = 0; r < m; r++) {
             for (int c = 0; c < n; c++) {
@@ -835,14 +911,14 @@ class Solution {
                 }
             }
         }
-        
+
         return complete;
     }
-    
+
     void drop(vector<vector<int>>& board) {
         for (int c = 0; c < n; c++) {
             int lowestZero = -1;
-            
+
             // Iterate over each column
             for (int r = m - 1; r >= 0; r--) {
                 if (board[r][c] == 0) {
@@ -856,17 +932,17 @@ class Solution {
             }
         }
     }
-    
+
 public:
     vector<vector<int>> candyCrush(vector<vector<int>>& board) {
         m = board.size();
         n = board[0].size();
-        
+
         // Continue with the three steps until we can no longer find any crushable candies.
         while (!findAndCrush(board)) {
             drop(board);
         }
-        
+
         return board;
     }
 };
@@ -903,7 +979,10 @@ class Solution {
                 if (board[r][c] === 0) {
                     continue;
                 }
-                if (Math.abs(board[r][c]) === Math.abs(board[r - 1][c]) && Math.abs(board[r][c]) === Math.abs(board[r + 1][c])) {
+                if (
+                    Math.abs(board[r][c]) === Math.abs(board[r - 1][c]) &&
+                    Math.abs(board[r][c]) === Math.abs(board[r + 1][c])
+                ) {
                     board[r][c] = -Math.abs(board[r][c]);
                     board[r - 1][c] = -Math.abs(board[r - 1][c]);
                     board[r + 1][c] = -Math.abs(board[r + 1][c]);
@@ -918,7 +997,10 @@ class Solution {
                 if (board[r][c] === 0) {
                     continue;
                 }
-                if (Math.abs(board[r][c]) === Math.abs(board[r][c - 1]) && Math.abs(board[r][c]) === Math.abs(board[r][c + 1])) {
+                if (
+                    Math.abs(board[r][c]) === Math.abs(board[r][c - 1]) &&
+                    Math.abs(board[r][c]) === Math.abs(board[r][c + 1])
+                ) {
                     board[r][c] = -Math.abs(board[r][c]);
                     board[r][c - 1] = -Math.abs(board[r][c - 1]);
                     board[r][c + 1] = -Math.abs(board[r][c + 1]);
@@ -1276,6 +1358,84 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn candy_crush(board: Vec<Vec<i32>>) -> Vec<Vec<i32>> {
+        let mut board = board;
+        let m = board.len();
+        let n = board[0].len();
+
+        let find_and_crush = |board: &mut Vec<Vec<i32>>| -> bool {
+            let mut complete = true;
+
+            // Check vertically adjacent candies
+            for r in 1..m - 1 {
+                for c in 0..n {
+                    if board[r][c] == 0 { continue; }
+                    if board[r][c].abs() == board[r - 1][c].abs()
+                        && board[r][c].abs() == board[r + 1][c].abs()
+                    {
+                        board[r][c] = -board[r][c].abs();
+                        board[r - 1][c] = -board[r - 1][c].abs();
+                        board[r + 1][c] = -board[r + 1][c].abs();
+                        complete = false;
+                    }
+                }
+            }
+
+            // Check horizontally adjacent candies
+            for r in 0..m {
+                for c in 1..n - 1 {
+                    if board[r][c] == 0 { continue; }
+                    if board[r][c].abs() == board[r][c - 1].abs()
+                        && board[r][c].abs() == board[r][c + 1].abs()
+                    {
+                        board[r][c] = -board[r][c].abs();
+                        board[r][c - 1] = -board[r][c - 1].abs();
+                        board[r][c + 1] = -board[r][c + 1].abs();
+                        complete = false;
+                    }
+                }
+            }
+
+            // Set crushed candies to 0
+            for r in 0..m {
+                for c in 0..n {
+                    if board[r][c] < 0 {
+                        board[r][c] = 0;
+                    }
+                }
+            }
+
+            complete
+        };
+
+        let drop_fn = |board: &mut Vec<Vec<i32>>| {
+            for c in 0..n {
+                let mut lowest_zero: i32 = -1;
+                for r in (0..m).rev() {
+                    if board[r][c] == 0 {
+                        lowest_zero = lowest_zero.max(r as i32);
+                    } else if lowest_zero >= 0 {
+                        let lz = lowest_zero as usize;
+                        let tmp = board[r][c];
+                        board[r][c] = board[lz][c];
+                        board[lz][c] = tmp;
+                        lowest_zero -= 1;
+                    }
+                }
+            }
+        };
+
+        while !find_and_crush(&mut board) {
+            drop_fn(&mut board);
+        }
+
+        board
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1283,19 +1443,22 @@ class Solution {
 - Time complexity: $O(m^2 \cdot n^2)$
 - Space complexity: $O(1)$ constant space
 
->  Where $m × n$ is the size of the grid `board`
+> Where $m × n$ is the size of the grid `board`
 
 ---
 
 ## Common Pitfalls
 
 ### Only Checking Exactly Three Adjacent Candies
+
 Groups can be longer than three candies. Checking only the center of a triplet misses candies at the ends of longer sequences. The solution must mark all candies in contiguous groups of three or more.
 
 ### Crushing Before Fully Marking All Matches
+
 If you crush candies immediately upon finding a match, you may miss overlapping horizontal and vertical groups. All crushable candies must be identified first, then crushed together.
 
 ### Incorrect Drop Logic
+
 When dropping candies, you must process each column from bottom to top, moving non-zero candies down to fill gaps. A common mistake is shifting candies horizontally or not properly tracking the lowest available position.
 
 ```python

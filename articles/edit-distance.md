@@ -1,9 +1,11 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - This classic DP problem requires understanding both top-down (memoization) and bottom-up (tabulation) approaches
 - **Recursion with Memoization** - The top-down solution builds on recursive thinking with caching to avoid redundant computation
 - **2D DP Tables** - The bottom-up solution uses a 2D table where dp[i][j] represents the edit distance for substrings
-- **Space Optimization** - Advanced solutions reduce space from O(m*n) to O(min(m,n)) by observing that only adjacent rows are needed
+- **Space Optimization** - Advanced solutions reduce space from O(m\*n) to O(min(m,n)) by observing that only adjacent rows are needed
 
 ---
 
@@ -13,6 +15,7 @@ Before attempting this problem, you should be comfortable with:
 
 This problem asks for the **minimum number of operations** required to convert `word1` into `word2`.  
 The allowed operations are:
+
 - insert a character
 - delete a character
 - replace a character
@@ -29,21 +32,21 @@ If they do not match, we try all three possible operations and take the minimum 
 
 1. Let `m = len(word1)` and `n = len(word2)`.
 2. Define a recursive function `dfs(i, j)`:
-   - `i` is the current index in `word1`
-   - `j` is the current index in `word2`
+    - `i` is the current index in `word1`
+    - `j` is the current index in `word2`
 3. If we reach the end of `word1`:
-   - All remaining characters in `word2` must be inserted
-   - Return `n - j`
+    - All remaining characters in `word2` must be inserted
+    - Return `n - j`
 4. If we reach the end of `word2`:
-   - All remaining characters in `word1` must be deleted
-   - Return `m - i`
+    - All remaining characters in `word1` must be deleted
+    - Return `m - i`
 5. If `word1[i] == word2[j]`:
-   - No operation is needed
-   - Move both pointers forward: `dfs(i + 1, j + 1)`
+    - No operation is needed
+    - Move both pointers forward: `dfs(i + 1, j + 1)`
 6. Otherwise, consider all three operations:
-   - **Delete** from `word1`: `dfs(i + 1, j)`
-   - **Insert** into `word1`: `dfs(i, j + 1)`
-   - **Replace** the character: `dfs(i + 1, j + 1)`
+    - **Delete** from `word1`: `dfs(i + 1, j)`
+    - **Insert** into `word1`: `dfs(i, j + 1)`
+    - **Replace** the character: `dfs(i + 1, j + 1)`
 7. Take the minimum of these three results and add `1` for the current operation
 8. Start the recursion from `(0, 0)` and return the final result
 
@@ -238,6 +241,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_distance(word1: String, word2: String) -> i32 {
+        let w1: Vec<u8> = word1.into_bytes();
+        let w2: Vec<u8> = word2.into_bytes();
+        let m = w1.len();
+        let n = w2.len();
+
+        fn dfs(i: usize, j: usize, w1: &[u8], w2: &[u8], m: usize, n: usize) -> i32 {
+            if i == m { return (n - j) as i32; }
+            if j == n { return (m - i) as i32; }
+            if w1[i] == w2[j] {
+                return dfs(i + 1, j + 1, w1, w2, m, n);
+            }
+            let res = dfs(i + 1, j, w1, w2, m, n)
+                .min(dfs(i, j + 1, w1, w2, m, n));
+            res.min(dfs(i + 1, j + 1, w1, w2, m, n)) + 1
+        }
+
+        dfs(0, 0, &w1, &w2, m, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -255,6 +282,7 @@ class Solution {
 
 This problem asks for the **minimum number of edit operations** required to convert `word1` into `word2`.  
 The allowed operations are:
+
 - insert a character
 - delete a character
 - replace a character
@@ -262,6 +290,7 @@ The allowed operations are:
 The recursive solution explores all possibilities, but many subproblems repeat. To optimize this, we use **top-down dynamic programming (memoization)**.
 
 A state is uniquely defined by:
+
 - `i`: current index in `word1`
 - `j`: current index in `word2`
 
@@ -274,23 +303,23 @@ By caching results for each `(i, j)` pair, we avoid recomputing the same states.
 
 1. Let `m = len(word1)` and `n = len(word2)`.
 2. Create a memoization map `dp` where:
-   - `dp[(i, j)]` stores the minimum edit distance for `word1[i:]` and `word2[j:]`
+    - `dp[(i, j)]` stores the minimum edit distance for `word1[i:]` and `word2[j:]`
 3. Define a recursive function `dfs(i, j)`:
-   - `i` is the current index in `word1`
-   - `j` is the current index in `word2`
+    - `i` is the current index in `word1`
+    - `j` is the current index in `word2`
 4. If `i` reaches the end of `word1`:
-   - Return the number of remaining characters in `word2` (`n - j`)
+    - Return the number of remaining characters in `word2` (`n - j`)
 5. If `j` reaches the end of `word2`:
-   - Return the number of remaining characters in `word1` (`m - i`)
+    - Return the number of remaining characters in `word1` (`m - i`)
 6. If the state `(i, j)` is already in `dp`:
-   - Return the cached result
+    - Return the cached result
 7. If `word1[i] == word2[j]`:
-   - No operation is needed
-   - Store and return `dfs(i + 1, j + 1)`
+    - No operation is needed
+    - Store and return `dfs(i + 1, j + 1)`
 8. Otherwise, consider all three operations:
-   - Delete from `word1` → `dfs(i + 1, j)`
-   - Insert into `word1` → `dfs(i, j + 1)`
-   - Replace the character → `dfs(i + 1, j + 1)`
+    - Delete from `word1` → `dfs(i + 1, j)`
+    - Insert into `word1` → `dfs(i, j + 1)`
+    - Replace the character → `dfs(i + 1, j + 1)`
 9. Take the minimum of the three results, add `1`, and store it in `dp[(i, j)]`
 10. Start the recursion from `(0, 0)` and return the final answer
 
@@ -541,6 +570,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_distance(word1: String, word2: String) -> i32 {
+        let w1: Vec<u8> = word1.into_bytes();
+        let w2: Vec<u8> = word2.into_bytes();
+        let m = w1.len();
+        let n = w2.len();
+        let mut dp = vec![vec![-1i32; n]; m];
+
+        fn dfs(i: usize, j: usize, w1: &[u8], w2: &[u8],
+               m: usize, n: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i == m { return (n - j) as i32; }
+            if j == n { return (m - i) as i32; }
+            if dp[i][j] != -1 { return dp[i][j]; }
+
+            if w1[i] == w2[j] {
+                dp[i][j] = dfs(i + 1, j + 1, w1, w2, m, n, dp);
+            } else {
+                let res = dfs(i + 1, j, w1, w2, m, n, dp)
+                    .min(dfs(i, j + 1, w1, w2, m, n, dp))
+                    .min(dfs(i + 1, j + 1, w1, w2, m, n, dp));
+                dp[i][j] = res + 1;
+            }
+            dp[i][j]
+        }
+
+        dfs(0, 0, &w1, &w2, m, n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +617,7 @@ class Solution {
 ### Intuition
 
 We want the **minimum number of edits** needed to convert `word1` into `word2`, where an edit can be:
+
 - insert a character
 - delete a character
 - replace a character
@@ -575,21 +636,21 @@ By filling a table from the end of the strings toward the beginning, every subpr
 2. Let `dp[i][j]` represent the minimum number of operations to convert
    `word1[i:]` into `word2[j:]`.
 3. Initialize the base cases:
-   - If `word1` is exhausted (`i == len(word1)`), all remaining characters of `word2` must be inserted:
-     - `dp[len(word1)][j] = len(word2) - j`
-   - If `word2` is exhausted (`j == len(word2)`), all remaining characters of `word1` must be deleted:
-     - `dp[i][len(word2)] = len(word1) - i`
+    - If `word1` is exhausted (`i == len(word1)`), all remaining characters of `word2` must be inserted:
+        - `dp[len(word1)][j] = len(word2) - j`
+    - If `word2` is exhausted (`j == len(word2)`), all remaining characters of `word1` must be deleted:
+        - `dp[i][len(word2)] = len(word1) - i`
 4. Fill the DP table from bottom-right to top-left:
 5. For each position `(i, j)`:
-   - If `word1[i] == word2[j]`:
-     - No operation is needed
-     - `dp[i][j] = dp[i + 1][j + 1]`
-   - Otherwise:
-     - Consider all three operations:
-       - Delete → `dp[i + 1][j]`
-       - Insert → `dp[i][j + 1]`
-       - Replace → `dp[i + 1][j + 1]`
-     - Take the minimum of these and add `1`
+    - If `word1[i] == word2[j]`:
+        - No operation is needed
+        - `dp[i][j] = dp[i + 1][j + 1]`
+    - Otherwise:
+        - Consider all three operations:
+            - Delete → `dp[i + 1][j]`
+            - Insert → `dp[i][j + 1]`
+            - Replace → `dp[i + 1][j + 1]`
+        - Take the minimum of these and add `1`
 6. After filling the table, the answer is stored in `dp[0][0]`
 7. Return `dp[0][0]`
 
@@ -829,6 +890,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_distance(word1: String, word2: String) -> i32 {
+        let w1: Vec<u8> = word1.into_bytes();
+        let w2: Vec<u8> = word2.into_bytes();
+        let m = w1.len();
+        let n = w2.len();
+        let mut dp = vec![vec![0i32; n + 1]; m + 1];
+
+        for j in 0..=n {
+            dp[m][j] = (n - j) as i32;
+        }
+        for i in 0..=m {
+            dp[i][n] = (m - i) as i32;
+        }
+
+        for i in (0..m).rev() {
+            for j in (0..n).rev() {
+                if w1[i] == w2[j] {
+                    dp[i][j] = dp[i + 1][j + 1];
+                } else {
+                    dp[i][j] = 1 + dp[i + 1][j]
+                        .min(dp[i][j + 1])
+                        .min(dp[i + 1][j + 1]);
+                }
+            }
+        }
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -848,15 +941,18 @@ We want the minimum number of edits (insert, delete, replace) to convert `word1`
 
 In the 2D DP solution, we used `dp[i][j]` to represent the answer for `word1[i:]` and `word2[j:]`.
 But notice that each cell `dp[i][j]` depends only on:
-- `dp[i + 1][j]`   (delete)
-- `dp[i][j + 1]`   (insert)
+
+- `dp[i + 1][j]` (delete)
+- `dp[i][j + 1]` (insert)
 - `dp[i + 1][j + 1]` (replace / match)
 
 So when filling the table from bottom to top, we only need:
+
 - the **next row** (`i + 1`) and
 - the **current row** being built (`i`)
 
 That means we can optimize space by keeping just two 1D arrays:
+
 - `dp` for the next row
 - `nextDp` for the current row
 
@@ -867,22 +963,22 @@ To reduce memory even more, we also ensure the 1D arrays are based on the **shor
 1. Let `m = len(word1)` and `n = len(word2)`.
 2. If `word2` is longer than `word1`, swap them so that `n` is the smaller length (this keeps the DP arrays small).
 3. Create two arrays of size `n + 1`:
-   - `dp` represents the DP values for row `i + 1`
-   - `nextDp` represents the DP values for row `i`
+    - `dp` represents the DP values for row `i + 1`
+    - `nextDp` represents the DP values for row `i`
 4. Initialize the base case for when `word1` is exhausted:
-   - `dp[j] = n - j` for all `j`
-   - meaning if `word1` is empty, we must insert the remaining characters of `word2`
+    - `dp[j] = n - j` for all `j`
+    - meaning if `word1` is empty, we must insert the remaining characters of `word2`
 5. Iterate `i` from `m - 1` down to `0`:
-   - Set `nextDp[n] = m - i`
-   - meaning if `word2` is exhausted, we must delete the remaining characters of `word1`
+    - Set `nextDp[n] = m - i`
+    - meaning if `word2` is exhausted, we must delete the remaining characters of `word1`
 6. For each `i`, iterate `j` from `n - 1` down to `0`:
-   - If `word1[i] == word2[j]`:
-     - no edit needed: `nextDp[j] = dp[j + 1]`
-   - Otherwise:
-     - take `1` + minimum of:
-       - delete: `dp[j]`
-       - insert: `nextDp[j + 1]`
-       - replace: `dp[j + 1]`
+    - If `word1[i] == word2[j]`:
+        - no edit needed: `nextDp[j] = dp[j + 1]`
+    - Otherwise:
+        - take `1` + minimum of:
+            - delete: `dp[j]`
+            - insert: `nextDp[j + 1]`
+            - replace: `dp[j + 1]`
 7. After finishing the row, copy `nextDp` into `dp` for the next iteration.
 8. The final answer is `dp[0]`, which represents converting `word1[0:]` to `word2[0:]`.
 9. Return `dp[0]`
@@ -1176,6 +1272,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_distance(word1: String, word2: String) -> i32 {
+        let mut w1: Vec<u8> = word1.into_bytes();
+        let mut w2: Vec<u8> = word2.into_bytes();
+        let mut m = w1.len();
+        let mut n = w2.len();
+
+        if m < n {
+            std::mem::swap(&mut w1, &mut w2);
+            std::mem::swap(&mut m, &mut n);
+        }
+
+        let mut dp = vec![0i32; n + 1];
+        let mut next_dp = vec![0i32; n + 1];
+
+        for j in 0..=n {
+            dp[j] = (n - j) as i32;
+        }
+
+        for i in (0..m).rev() {
+            next_dp[n] = (m - i) as i32;
+            for j in (0..n).rev() {
+                if w1[i] == w2[j] {
+                    next_dp[j] = dp[j + 1];
+                } else {
+                    next_dp[j] = 1 + dp[j].min(next_dp[j + 1]).min(dp[j + 1]);
+                }
+            }
+            dp.copy_from_slice(&next_dp);
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1194,11 +1327,13 @@ class Solution {
 We want the minimum number of edits (insert, delete, replace) needed to convert `word1` into `word2`.
 
 The classic DP idea is:
+
 - `dp[i][j]` = minimum operations to convert `word1[i:]` into `word2[j:]`
 
 But to compute `dp[i][j]`, we only need three neighboring states:
-- `dp[i + 1][j]`   (delete from `word1`)
-- `dp[i][j + 1]`   (insert into `word1`)
+
+- `dp[i + 1][j]` (delete from `word1`)
+- `dp[i][j + 1]` (insert into `word1`)
 - `dp[i + 1][j + 1]` (replace, or match if characters are equal)
 
 That means we don't need the full 2D table. We can compress it into a single 1D array `dp`, and update it row-by-row (from the end of the strings to the start).
@@ -1213,21 +1348,21 @@ We also swap the strings if needed so the DP array is based on the shorter word,
 1. Let `m = len(word1)` and `n = len(word2)`.
 2. If `word2` is longer than `word1`, swap them so `n` is the smaller length (smaller DP array).
 3. Create a 1D array `dp` of size `n + 1`:
-   - Initialize it for the base case when `word1` is exhausted:
-     - `dp[j] = n - j` (we must insert the remaining characters of `word2`)
+    - Initialize it for the base case when `word1` is exhausted:
+        - `dp[j] = n - j` (we must insert the remaining characters of `word2`)
 4. Iterate `i` from `m - 1` down to `0`:
-   - Store the old diagonal value using `nextDp` (this represents `dp[i + 1][j + 1]` during updates)
-   - Update `dp[n] = m - i` (when `word2` is exhausted, we must delete remaining characters of `word1`)
+    - Store the old diagonal value using `nextDp` (this represents `dp[i + 1][j + 1]` during updates)
+    - Update `dp[n] = m - i` (when `word2` is exhausted, we must delete remaining characters of `word1`)
 5. Iterate `j` from `n - 1` down to `0`:
-   - Save the current `dp[j]` in `temp` before overwriting it (this becomes the next diagonal)
-   - If `word1[i] == word2[j]`:
-     - no operation needed: set `dp[j] = nextDp`
-   - Otherwise:
-     - take `1` + minimum of:
-       - delete: `dp[j]` (still represents `dp[i + 1][j]`)
-       - insert: `dp[j + 1]` (already updated for current row)
-       - replace: `nextDp` (the diagonal `dp[i + 1][j + 1]`)
-   - Move the diagonal forward: set `nextDp = temp`
+    - Save the current `dp[j]` in `temp` before overwriting it (this becomes the next diagonal)
+    - If `word1[i] == word2[j]`:
+        - no operation needed: set `dp[j] = nextDp`
+    - Otherwise:
+        - take `1` + minimum of:
+            - delete: `dp[j]` (still represents `dp[i + 1][j]`)
+            - insert: `dp[j + 1]` (already updated for current row)
+            - replace: `nextDp` (the diagonal `dp[i + 1][j + 1]`)
+    - Move the diagonal forward: set `nextDp = temp`
 6. After finishing all updates, `dp[0]` represents converting the full `word1` into the full `word2`.
 7. Return `dp[0]`
 
@@ -1490,6 +1625,39 @@ class Solution {
             }
         }
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_distance(word1: String, word2: String) -> i32 {
+        let mut w1: Vec<u8> = word1.into_bytes();
+        let mut w2: Vec<u8> = word2.into_bytes();
+        let mut m = w1.len();
+        let mut n = w2.len();
+
+        if m < n {
+            std::mem::swap(&mut w1, &mut w2);
+            std::mem::swap(&mut m, &mut n);
+        }
+
+        let mut dp: Vec<i32> = (0..=n).map(|j| (n - j) as i32).collect();
+
+        for i in (0..m).rev() {
+            let mut next_dp = dp[n];
+            dp[n] = (m - i) as i32;
+            for j in (0..n).rev() {
+                let temp = dp[j];
+                if w1[i] == w2[j] {
+                    dp[j] = next_dp;
+                } else {
+                    dp[j] = 1 + dp[j].min(dp[j + 1]).min(next_dp);
+                }
+                next_dp = temp;
+            }
+        }
+        dp[0]
     }
 }
 ```

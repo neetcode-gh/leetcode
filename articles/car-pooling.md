@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting events or intervals by start/end points
 - **Min-Heap (Priority Queue)** - Efficiently tracking and removing minimum elements
 - **Line Sweep / Difference Array** - Processing interval changes as discrete events
@@ -16,9 +18,9 @@ At each pickup location, we need to know how many passengers are currently in th
 
 1. Sort all trips by their pickup location (start time).
 2. For each trip at index `i`:
-   - Start with the number of passengers from the current trip.
-   - Check all previous trips (`j` < `i`) and add their passengers if their drop-off location is after the current pickup location.
-   - If the total passengers exceed capacity, return `false`.
+    - Start with the number of passengers from the current trip.
+    - Check all previous trips (`j` < `i`) and add their passengers if their drop-off location is after the current pickup location.
+    - If the total passengers exceed capacity, return `false`.
 3. If all trips pass the capacity check, return `true`.
 
 ::tabs-start
@@ -201,6 +203,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn car_pooling(mut trips: Vec<Vec<i32>>, capacity: i32) -> bool {
+        trips.sort_by_key(|t| t[1]);
+
+        for i in 0..trips.len() {
+            let mut cur_pass = trips[i][0];
+            for j in 0..i {
+                if trips[j][2] > trips[i][1] {
+                    cur_pass += trips[j][0];
+                }
+            }
+            if cur_pass > capacity {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -221,10 +245,10 @@ When we process trips in order of pickup time, we only care about trips whose pa
 1. Sort trips by their pickup location.
 2. Use a min-heap to track active trips, ordered by their drop-off location.
 3. For each trip:
-   - Pop all trips from the heap whose drop-off location is at or before the current pickup, subtracting their passengers from the count.
-   - Add the current trip's passengers to the count.
-   - If the count exceeds capacity, return `false`.
-   - Push the current trip (drop-off time, passenger count) onto the heap.
+    - Pop all trips from the heap whose drop-off location is at or before the current pickup, subtracting their passengers from the count.
+    - Add the current trip's passengers to the count.
+    - If the count exceeds capacity, return `false`.
+    - Push the current trip (drop-off time, passenger count) onto the heap.
 4. Return `true` if all trips are processed without exceeding capacity.
 
 ::tabs-start
@@ -524,6 +548,39 @@ struct Heap<T> {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn car_pooling(mut trips: Vec<Vec<i32>>, capacity: i32) -> bool {
+        trips.sort_by_key(|t| t[1]);
+
+        let mut min_heap: BinaryHeap<Reverse<(i32, i32)>> = BinaryHeap::new();
+        let mut cur_pass = 0;
+
+        for trip in &trips {
+            let (num_pass, start, end) = (trip[0], trip[1], trip[2]);
+
+            while let Some(&Reverse((e, p))) = min_heap.peek() {
+                if e <= start {
+                    cur_pass -= p;
+                    min_heap.pop();
+                } else {
+                    break;
+                }
+            }
+
+            cur_pass += num_pass;
+            if cur_pass > capacity {
+                return false;
+            }
+
+            min_heap.push(Reverse((end, num_pass)));
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -758,6 +815,31 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn car_pooling(trips: Vec<Vec<i32>>, capacity: i32) -> bool {
+        let mut points: Vec<(i32, i32)> = Vec::new();
+        for trip in &trips {
+            let (passengers, start, end) = (trip[0], trip[1], trip[2]);
+            points.push((start, passengers));
+            points.push((end, -passengers));
+        }
+
+        points.sort();
+
+        let mut cur_pass = 0;
+        for (_, passengers) in &points {
+            cur_pass += passengers;
+            if cur_pass > capacity {
+                return false;
+            }
+        }
+
+        true
     }
 }
 ```
@@ -1038,6 +1120,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn car_pooling(trips: Vec<Vec<i32>>, capacity: i32) -> bool {
+        let mut l = i32::MAX;
+        let mut r = i32::MIN;
+        for trip in &trips {
+            l = l.min(trip[1]);
+            r = r.max(trip[2]);
+        }
+
+        let n = (r - l + 1) as usize;
+        let mut pass_change = vec![0i32; n + 1];
+        for trip in &trips {
+            let (passengers, start, end) = (trip[0], trip[1], trip[2]);
+            pass_change[(start - l) as usize] += passengers;
+            pass_change[(end - l) as usize] -= passengers;
+        }
+
+        let mut cur_pass = 0;
+        for change in &pass_change {
+            cur_pass += change;
+            if cur_pass > capacity {
+                return false;
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1052,7 +1165,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Processing Drop-offs Before Pickups at Same Location
+
 When a passenger is dropped off and another is picked up at the same location, the drop-off must happen first. Failing to sort events so that drop-offs (negative values) come before pickups at the same location causes false capacity violations.
+
 ```python
 # Wrong: no tiebreaker for same location
 points.sort(key=lambda x: x[0])
@@ -1061,7 +1176,9 @@ points.sort(key=lambda x: (x[0], x[1]))
 ```
 
 ### Checking Passengers Still in Car at Drop-off Location
+
 Passengers are dropped off at the `end` location and are not in the car during that location. A common mistake is including passengers who should have already exited, leading to overcounting.
+
 ```python
 # Wrong: includes passengers still at drop-off
 if trips[j][2] >= trips[i][1]:
@@ -1070,7 +1187,9 @@ if trips[j][2] > trips[i][1]:
 ```
 
 ### Off-by-One Error in Difference Array Index
+
 When using a difference array, failing to account for the offset between actual locations and array indices causes incorrect passenger counts. This is especially problematic when locations do not start at zero.
+
 ```python
 # Wrong: assumes locations start at 0
 passChange[start] += passengers

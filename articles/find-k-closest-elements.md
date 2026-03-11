@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Used to efficiently locate the position closest to the target value in a sorted array
 - **Two Pointers** - Used to expand or shrink a window from both ends to find the k closest elements
 - **Sorting with Custom Comparators** - Understanding how to sort elements by custom criteria (distance from target)
@@ -148,6 +150,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_closest_elements(mut arr: Vec<i32>, k: i32, x: i32) -> Vec<i32> {
+        let k = k as usize;
+        arr.sort_by(|a, b| {
+            let diff = (a - x).abs() - (b - x).abs();
+            if diff == 0 { a.cmp(b) } else { diff.cmp(&0) }
+        });
+        let mut result: Vec<i32> = arr[..k].to_vec();
+        result.sort();
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,9 +190,9 @@ Since we need elements closest to `x`, we can first find the element nearest to 
 2. Initialize the result with that element.
 3. Set two pointers: `l` pointing to the index before the closest element, and `r` pointing to the index after.
 4. While we have fewer than `k` elements:
-   - If both pointers are valid, compare distances and add the closer element.
-   - If only the left pointer is valid, add from the left.
-   - If only the right pointer is valid, add from the right.
+    - If both pointers are valid, compare distances and add the closer element.
+    - If only the left pointer is valid, add from the left.
+    - If only the right pointer is valid, add from the right.
 5. Sort the result and return it.
 
 ::tabs-start
@@ -469,6 +486,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_closest_elements(arr: Vec<i32>, k: i32, x: i32) -> Vec<i32> {
+        let k = k as usize;
+        let n = arr.len();
+        let mut idx = 0;
+        for i in 1..n {
+            if (x - arr[idx]).abs() > (x - arr[i]).abs() {
+                idx = i;
+            }
+        }
+
+        let mut res = vec![arr[idx]];
+        let mut l = idx as i32 - 1;
+        let mut r = idx + 1;
+
+        while res.len() < k {
+            if l >= 0 && r < n {
+                if (x - arr[l as usize]).abs() <= (x - arr[r]).abs() {
+                    res.push(arr[l as usize]);
+                    l -= 1;
+                } else {
+                    res.push(arr[r]);
+                    r += 1;
+                }
+            } else if l >= 0 {
+                res.push(arr[l as usize]);
+                l -= 1;
+            } else if r < n {
+                res.push(arr[r]);
+                r += 1;
+            }
+        }
+
+        res.sort();
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -492,9 +549,9 @@ Since the array is already sorted, the `k` closest elements must form a contiguo
 
 1. Initialize `l = 0` and `r = n - 1`.
 2. While `r - l >= k`:
-   - Compare the distances of `arr[l]` and `arr[r]` from `x`.
-   - Remove the element that is farther by moving the corresponding pointer inward.
-   - If distances are equal, prefer the left element (smaller value), so move `r` inward.
+    - Compare the distances of `arr[l]` and `arr[r]` from `x`.
+    - Remove the element that is farther by moving the corresponding pointer inward.
+    - If distances are equal, prefer the left element (smaller value), so move `r` inward.
 3. Return the subarray from index `l` to `r` (inclusive).
 
 ::tabs-start
@@ -647,6 +704,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_closest_elements(arr: Vec<i32>, k: i32, x: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut l = 0usize;
+        let mut r = arr.len() - 1;
+        while r - l >= k {
+            if (x - arr[l]).abs() <= (x - arr[r]).abs() {
+                r -= 1;
+            } else {
+                l += 1;
+            }
+        }
+        arr[l..=r].to_vec()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -669,9 +744,9 @@ Instead of scanning linearly to find the starting point, we can use binary searc
 1. Use binary search to find the leftmost position where `arr[mid] >= x`.
 2. Initialize two pointers: `l` pointing one position to the left of this index, and `r` at this index.
 3. While we have fewer than `k` elements (i.e., `r - l - 1 < k`):
-   - If `l < 0`, expand right.
-   - If `r >= n`, expand left.
-   - Otherwise, compare distances and expand toward the closer element.
+    - If `l < 0`, expand right.
+    - If `r >= n`, expand left.
+    - Otherwise, compare distances and expand toward the closer element.
 4. Return the subarray from index `l + 1` to `r - 1` (exclusive bounds).
 
 ::tabs-start
@@ -945,6 +1020,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_closest_elements(arr: Vec<i32>, k: i32, x: i32) -> Vec<i32> {
+        let k = k as i32;
+        let n = arr.len() as i32;
+        let (mut l, mut r) = (0i32, n - 1);
+        while l < r {
+            let mid = (l + r) / 2;
+            if arr[mid as usize] < x {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        l -= 1;
+        r = l + 1;
+        while r - l - 1 < k {
+            if l < 0 {
+                r += 1;
+            } else if r >= n {
+                l -= 1;
+            } else if (arr[l as usize] - x).abs() <= (arr[r as usize] - x).abs() {
+                l -= 1;
+            } else {
+                r += 1;
+            }
+        }
+
+        arr[(l + 1) as usize..r as usize].to_vec()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -966,10 +1075,10 @@ We can binary search directly for the starting index of the `k`-length window. F
 
 1. Set `l = 0` and `r = n - k` (the rightmost valid starting index).
 2. While `l < r`:
-   - Compute `m = (l + r) / 2`.
-   - Compare `x - arr[m]` with `arr[m + k] - x`.
-   - If `x - arr[m] > arr[m + k] - x`, the window is too far left, so set `l = m + 1`.
-   - Otherwise, set `r = m`.
+    - Compute `m = (l + r) / 2`.
+    - Compare `x - arr[m]` with `arr[m + k] - x`.
+    - If `x - arr[m] > arr[m + k] - x`, the window is too far left, so set `l = m + 1`.
+    - Otherwise, set `r = m`.
 3. Return the subarray starting at index `l` with length `k`.
 
 ::tabs-start
@@ -1118,6 +1227,25 @@ class Solution {
             }
         }
         return Array(arr[l..<(l + k)])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_closest_elements(arr: Vec<i32>, k: i32, x: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut l = 0usize;
+        let mut r = arr.len() - k;
+        while l < r {
+            let m = (l + r) / 2;
+            if x - arr[m] > arr[m + k] - x {
+                l = m + 1;
+            } else {
+                r = m;
+            }
+        }
+        arr[l..l + k].to_vec()
     }
 }
 ```

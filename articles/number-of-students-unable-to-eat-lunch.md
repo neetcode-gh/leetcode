@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Queue Data Structure** - FIFO structure for managing elements that need to be processed in order
 - **Simulation** - Implementing step-by-step processes exactly as described in the problem
 - **Frequency Counting** - Using arrays or hash maps to count occurrences of different values
@@ -16,9 +18,9 @@ We simulate the lunch process exactly as described. Students form a queue and ta
 
 1. Initialize a queue with all student preferences.
 2. For each sandwich from top to bottom:
-   - Rotate students in the queue until we find one who wants this sandwich, or until we've rotated through all remaining students.
-   - If a matching student is found, remove them and decrement the count of students unable to eat.
-   - If no one wants the current sandwich after a full rotation, stop the process.
+    - Rotate students in the queue until we find one who wants this sandwich, or until we've rotated through all remaining students.
+    - If a matching student is found, remove them and decrement the count of students unable to eat.
+    - If no one wants the current sandwich after a full rotation, stop the process.
 3. Return the number of students still in the queue.
 
 ::tabs-start
@@ -243,6 +245,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_students(students: Vec<i32>, sandwiches: Vec<i32>) -> i32 {
+        let n = students.len();
+        let mut q = VecDeque::from(students);
+        let mut res = n as i32;
+
+        for &sandwich in &sandwiches {
+            let mut cnt = 0;
+            while cnt < q.len() && *q.front().unwrap() != sandwich {
+                let front = q.pop_front().unwrap();
+                q.push_back(front);
+                cnt += 1;
+            }
+            if *q.front().unwrap() == sandwich {
+                q.pop_front();
+                res -= 1;
+            } else {
+                break;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,9 +290,9 @@ Instead of using a separate queue, we can simulate the rotation using a circular
 
 1. Use an index pointer that wraps around the students array.
 2. For each sandwich:
-   - Search for a student (not yet served) who wants this sandwich, allowing at most `n` checks.
-   - Mark matched students as served with `-1` and decrement the remaining count.
-   - If no match is found after checking all remaining students, stop.
+    - Search for a student (not yet served) who wants this sandwich, allowing at most `n` checks.
+    - Mark matched students as served with `-1` and decrement the remaining count.
+    - If no match is found after checking all remaining students, stop.
 3. Return the count of students who could not eat.
 
 ::tabs-start
@@ -479,6 +507,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_students(mut students: Vec<i32>, sandwiches: Vec<i32>) -> i32 {
+        let n = students.len();
+        let mut idx = 0;
+        let mut res = n as i32;
+
+        for &sandwich in &sandwiches {
+            let mut cnt = 0;
+            while cnt < n && students[idx] != sandwich {
+                idx = (idx + 1) % n;
+                cnt += 1;
+            }
+            if students[idx] == sandwich {
+                students[idx] = -1;
+                res -= 1;
+            } else {
+                break;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -498,8 +551,8 @@ The key insight is that student order does not matter. Since students can rotate
 
 1. Count the number of students preferring each sandwich type.
 2. Process sandwiches in order:
-   - If at least one student wants the current sandwich, decrement that count and the total remaining.
-   - If no student wants it, stop immediately since those behind cannot be served either.
+    - If at least one student wants the current sandwich, decrement that count and the total remaining.
+    - If no student wants it, stop immediately since those behind cannot be served either.
 3. Return the remaining count.
 
 ::tabs-start
@@ -676,6 +729,28 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn count_students(students: Vec<i32>, sandwiches: Vec<i32>) -> i32 {
+        let mut res = students.len() as i32;
+        let mut cnt = [0i32; 2];
+        for &s in &students {
+            cnt[s as usize] += 1;
+        }
+
+        for &s in &sandwiches {
+            if cnt[s as usize] > 0 {
+                cnt[s as usize] -= 1;
+                res -= 1;
+            } else {
+                break;
+            }
+        }
+        res
     }
 }
 ```

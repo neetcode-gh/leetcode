@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window Technique** - The optimal solution maintains a fixed-size window that slides across the string
 - **Hash Set / Set Operations** - Used for O(1) vowel membership checking
 - **Prefix Sum** - An alternative approach uses cumulative sums to answer range queries efficiently
@@ -18,8 +20,8 @@ This works correctly but is inefficient because we recount characters for overla
 ### Algorithm
 
 1. For each starting index `i` from `0` to `n - k`:
-   - Count the vowels in the substring `s[i..i+k-1]`.
-   - Update the result if this count is larger.
+    - Count the vowels in the substring `s[i..i+k-1]`.
+    - Update the result if this count is larger.
 2. Return the maximum vowel count found.
 
 ::tabs-start
@@ -172,6 +174,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_vowels(s: String, k: i32) -> i32 {
+        let k = k as usize;
+        let s = s.as_bytes();
+        let vowels: HashSet<u8> = [b'a', b'e', b'i', b'o', b'u'].into();
+        let mut res = 0;
+
+        for i in 0..=s.len() - k {
+            let mut cnt = 0;
+            for j in i..i + k {
+                if vowels.contains(&s[j]) {
+                    cnt += 1;
+                }
+            }
+            res = res.max(cnt);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -193,8 +218,8 @@ This allows us to answer each window query in O(1) time after O(n) preprocessing
 
 1. Build a prefix array where `prefix[i+1] = prefix[i] + (1 if s[i] is a vowel else 0)`.
 2. For each ending position `i` from `k` to `n`:
-   - Calculate the vowel count as `prefix[i] - prefix[i-k]`.
-   - Update the maximum.
+    - Calculate the vowel count as `prefix[i] - prefix[i-k]`.
+    - Update the maximum.
 3. Return the maximum vowel count.
 
 ::tabs-start
@@ -345,6 +370,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_vowels(s: String, k: i32) -> i32 {
+        let k = k as usize;
+        let s = s.as_bytes();
+        let vowels: HashSet<u8> = [b'a', b'e', b'i', b'o', b'u'].into();
+        let mut prefix = vec![0i32; s.len() + 1];
+
+        for i in 0..s.len() {
+            prefix[i + 1] = prefix[i] + if vowels.contains(&s[i]) { 1 } else { 0 };
+        }
+
+        let mut res = 0;
+        for i in k..=s.len() {
+            res = res.max(prefix[i] - prefix[i - k]);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -359,6 +406,7 @@ class Solution {
 ### Intuition
 
 Instead of storing prefix sums, we can maintain a running count of vowels in the current window. As we slide the window right:
+
 - Add `1` if the new character entering the window is a vowel.
 - Subtract `1` if the character leaving the window is a vowel.
 
@@ -369,9 +417,9 @@ This gives us O(n) time with O(1) extra space.
 1. Initialize a vowel count `cnt` and result `res` to `0`.
 2. Use two pointers: `l` (left) starts at `0`, `r` (right) iterates through the string.
 3. For each character at `r`:
-   - If it is a vowel, increment `cnt`.
-   - If the window size exceeds `k`, check if `s[l]` is a vowel and decrement `cnt` if so, then increment `l`.
-   - Update `res` with the maximum of `res` and `cnt`.
+    - If it is a vowel, increment `cnt`.
+    - If the window size exceeds `k`, check if `s[l]` is a vowel and decrement `cnt` if so, then increment `l`.
+    - Update `res` with the maximum of `res` and `cnt`.
 4. Return `res`.
 
 ::tabs-start
@@ -450,6 +498,27 @@ class Solution {
             res = Math.max(res, cnt);
         }
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_vowels(s: String, k: i32) -> i32 {
+        let k = k as usize;
+        let s = s.as_bytes();
+        let vowels: HashSet<u8> = [b'a', b'e', b'i', b'o', b'u'].into();
+
+        let (mut l, mut cnt, mut res) = (0usize, 0i32, 0i32);
+        for r in 0..s.len() {
+            cnt += if vowels.contains(&s[r]) { 1 } else { 0 };
+            if r - l + 1 > k {
+                cnt -= if vowels.contains(&s[l]) { 1 } else { 0 };
+                l += 1;
+            }
+            res = res.max(cnt);
+        }
+        res
     }
 }
 ```
@@ -576,6 +645,32 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_vowels(s: String, k: i32) -> i32 {
+        let k = k as usize;
+        let s = s.as_bytes();
+        let mask: u32 = (1 << (b'a' - b'a'))
+            | (1 << (b'e' - b'a'))
+            | (1 << (b'i' - b'a'))
+            | (1 << (b'o' - b'a'))
+            | (1 << (b'u' - b'a'));
+
+        let (mut l, mut cnt, mut res) = (0usize, 0i32, 0i32);
+        for r in 0..s.len() {
+            cnt += ((mask >> (s[r] - b'a')) & 1) as i32;
+            if r - l + 1 > k {
+                cnt -= ((mask >> (s[l] - b'a')) & 1) as i32;
+                l += 1;
+            }
+            res = res.max(cnt);
+        }
+
+        res
     }
 }
 ```

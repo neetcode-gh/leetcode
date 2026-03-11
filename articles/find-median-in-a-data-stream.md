@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap / Priority Queue** - The optimal solution uses two heaps (max-heap and min-heap) to efficiently track the median as elements stream in
 - **Sorting** - Understanding how sorting enables finding the median helps grasp the brute force approach and why heaps improve upon it
 - **Data Stream Design** - This problem requires designing a class that handles continuous data input while maintaining efficient query operations
@@ -24,18 +26,18 @@ but it is the easiest to understand and implement.
 ### Algorithm
 
 1. **Initialize**
-   - Create an empty list `data`.
+    - Create an empty list `data`.
 
 2. **addNum(x)**
-   - Append `x` to the list.
+    - Append `x` to the list.
 
 3. **findMedian()**
-   - Sort the list.
-   - Let `n = length of data`.
-   - If `n` is odd:
-     - Return `data[n // 2]`.
-   - Else:
-     - Return `(data[n // 2] + data[n // 2 - 1]) / 2`.
+    - Sort the list.
+    - Let `n = length of data`.
+    - If `n` is odd:
+        - Return `data[n // 2]`.
+    - Else:
+        - Return `(data[n // 2] + data[n // 2 - 1]) / 2`.
 
 ::tabs-start
 
@@ -223,6 +225,32 @@ class MedianFinder {
 }
 ```
 
+```rust
+struct MedianFinder {
+    data: Vec<i32>,
+}
+
+impl MedianFinder {
+    fn new() -> Self {
+        MedianFinder { data: Vec::new() }
+    }
+
+    fn add_num(&mut self, num: i32) {
+        self.data.push(num);
+    }
+
+    fn find_median(&mut self) -> f64 {
+        self.data.sort();
+        let n = self.data.len();
+        if n & 1 == 1 {
+            self.data[n / 2] as f64
+        } else {
+            (self.data[n / 2] + self.data[n / 2 - 1]) as f64 / 2.0
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -241,16 +269,18 @@ class MedianFinder {
 To efficiently find the median while numbers keep coming, we split the
 stream into two halves:
 
-- A **max-heap** (`small`) that stores the *smaller half* of the numbers.
-  - The largest number of this half is on top.
-- A **min-heap** (`large`) that stores the *larger half* of the numbers.
-  - The smallest number of this half is on top.
+- A **max-heap** (`small`) that stores the _smaller half_ of the numbers.
+    - The largest number of this half is on top.
+- A **min-heap** (`large`) that stores the _larger half_ of the numbers.
+    - The smallest number of this half is on top.
 
 The goal:
+
 - Ensure both heaps are balanced in size (difference at most 1).
 - Ensure all numbers in `small` are ≤ all numbers in `large`.
 
 This setup allows:
+
 - Median = top of the bigger heap (if odd count)
 - Median = average of both tops (if even count)
 
@@ -259,23 +289,23 @@ This gives **O(log n)** insert and **O(1)** median lookup.
 ### Algorithm
 
 1. **Initialize**
-   - Create two heaps:
-     - `small` -> max-heap for lower half
-     - `large` -> min-heap for upper half
+    - Create two heaps:
+        - `small` -> max-heap for lower half
+        - `large` -> min-heap for upper half
 
 2. **addNum(x)**
-   - If `large` is not empty and `x` is greater than the smallest element in `large`,
-     insert into `large`.
-   - Otherwise insert into `small`.
-   - Rebalance:
-     - If one heap becomes larger than the other by more than `1`,
-       move the top element to the other heap.
+    - If `large` is not empty and `x` is greater than the smallest element in `large`,
+      insert into `large`.
+    - Otherwise insert into `small`.
+    - Rebalance:
+        - If one heap becomes larger than the other by more than `1`,
+          move the top element to the other heap.
 
 3. **findMedian()**
-   - If one heap has more elements:
-     - Median = top of that heap.
-   - If both heaps have equal elements:
-     - Median = average of both heap tops.
+    - If one heap has more elements:
+        - Median = top of that heap.
+    - If both heaps have equal elements:
+        - Median = average of both heap tops.
 
 ::tabs-start
 
@@ -586,6 +616,47 @@ class MedianFinder {
             return Double(large.min!)
         }
         return (Double(small.max!) + Double(large.min!)) / 2.0
+    }
+}
+```
+
+```rust
+struct MedianFinder {
+    small_heap: BinaryHeap<i32>,           // max-heap for smaller half
+    large_heap: BinaryHeap<Reverse<i32>>,  // min-heap for larger half
+}
+
+impl MedianFinder {
+    fn new() -> Self {
+        MedianFinder {
+            small_heap: BinaryHeap::new(),
+            large_heap: BinaryHeap::new(),
+        }
+    }
+
+    fn add_num(&mut self, num: i32) {
+        self.small_heap.push(num);
+        if self.small_heap.len() > self.large_heap.len() + 1
+            || (!self.large_heap.is_empty()
+                && *self.small_heap.peek().unwrap() > self.large_heap.peek().unwrap().0)
+        {
+            let val = self.small_heap.pop().unwrap();
+            self.large_heap.push(Reverse(val));
+        }
+        if self.large_heap.len() > self.small_heap.len() + 1 {
+            let Reverse(val) = self.large_heap.pop().unwrap();
+            self.small_heap.push(val);
+        }
+    }
+
+    fn find_median(&self) -> f64 {
+        if self.small_heap.len() == self.large_heap.len() {
+            (*self.small_heap.peek().unwrap() + self.large_heap.peek().unwrap().0) as f64 / 2.0
+        } else if self.small_heap.len() > self.large_heap.len() {
+            *self.small_heap.peek().unwrap() as f64
+        } else {
+            self.large_heap.peek().unwrap().0 as f64
+        }
     }
 }
 ```

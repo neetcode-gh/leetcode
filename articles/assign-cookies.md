@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Required to process children and cookies in order of greed/size
 - **Two Pointers** - Efficiently matching sorted children with sorted cookies
 - **Greedy Algorithms** - Understanding why assigning the smallest sufficient cookie maximizes satisfaction
@@ -232,6 +234,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_content_children(g: Vec<i32>, s: Vec<i32>) -> i32 {
+        let mut s = s;
+        s.sort();
+        let mut res = 0;
+
+        for &greed in &g {
+            let mut min_idx: i32 = -1;
+            for j in 0..s.len() {
+                if s[j] < greed {
+                    continue;
+                }
+                if min_idx == -1 || s[min_idx as usize] > s[j] {
+                    min_idx = j as i32;
+                }
+            }
+            if min_idx != -1 {
+                s[min_idx as usize] = -1;
+                res += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -426,6 +456,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_content_children(mut g: Vec<i32>, mut s: Vec<i32>) -> i32 {
+        g.sort();
+        s.sort();
+
+        let mut i = 0;
+        let mut j = 0;
+        while i < g.len() {
+            while j < s.len() && g[i] > s[j] {
+                j += 1;
+            }
+            if j == s.len() {
+                break;
+            }
+            i += 1;
+            j += 1;
+        }
+        i as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +643,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_content_children(mut g: Vec<i32>, mut s: Vec<i32>) -> i32 {
+        g.sort();
+        s.sort();
+
+        let mut i = 0;
+        let mut j = 0;
+        while i < g.len() && j < s.len() {
+            if g[i] <= s[j] {
+                i += 1;
+            }
+            j += 1;
+        }
+        i as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,7 +676,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Sort Both Arrays
+
 The two-pointer greedy approach only works when both the greed factors and cookie sizes are sorted. Forgetting to sort one of them leads to suboptimal assignments.
+
 ```python
 # Wrong: only sorting cookies, not greed factors
 s.sort()
@@ -612,7 +686,9 @@ s.sort()
 ```
 
 ### Using the Wrong Comparison Operator
+
 A child is satisfied when the cookie size is greater than or equal to the greed factor. Using strict greater-than misses valid matches where the cookie exactly equals the greed.
+
 ```python
 # Wrong: should be >= not >
 if s[j] > g[i]:  # Misses case where s[j] == g[i]

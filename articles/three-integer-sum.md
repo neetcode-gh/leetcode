@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting the array enables efficient duplicate handling and two-pointer technique
 - **Two pointers** - The optimal solution uses two pointers to find pairs that sum to a target
 - **Hash maps** - An alternative approach uses hash maps for O(1) lookups
@@ -20,11 +22,11 @@ Sorting helps keep the triplets in order and makes it easier to avoid duplicates
 1. Sort the array to make handling duplicates easier.
 2. Create an empty set `res` to store unique triplets.
 3. Use three nested loops:
-   - For each `i`,
-   - For each `j > i`,
-   - For each `k > j`,
-     - Check if `nums[i] + nums[j] + nums[k] == 0`.
-     - If true, add the sorted triplet to the set.
+    - For each `i`,
+    - For each `j > i`,
+    - For each `k > j`,
+        - Check if `nums[i] + nums[j] + nums[k] == 0`.
+        - If true, add the sorted triplet to the set.
 4. Convert the set of tuples back into a list of lists.
 5. Return the result.
 
@@ -194,6 +196,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res: HashSet<Vec<i32>> = HashSet::new();
+        nums.sort();
+        let n = nums.len();
+        for i in 0..n {
+            for j in (i + 1)..n {
+                for k in (j + 1)..n {
+                    if nums[i] + nums[j] + nums[k] == 0 {
+                        res.insert(vec![nums[i], nums[j], nums[k]]);
+                    }
+                }
+            }
+        }
+        res.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -221,15 +243,15 @@ Sorting also helps us skip duplicates easily so we only add unique triplets.
 2. Build a frequency map `count` for all numbers.
 3. Initialize an empty list `res` for storing valid triplets.
 4. Loop through each index `i`:
-   - Decrease the count of `nums[i]` (so it won't be reused).
-   - Skip duplicates of the first element.
-   - Loop through each index `j > i`:
-     - Decrease the count of `nums[j]`.
-     - Skip duplicates of the second element.
-     - Compute the needed third value:
-       `target = -(nums[i] + nums[j])`
-     - If `target` still has a positive count, add the triplet.
-   - After finishing all `j`s, restore the counts for the second loop by adding back the decremented values.
+    - Decrease the count of `nums[i]` (so it won't be reused).
+    - Skip duplicates of the first element.
+    - Loop through each index `j > i`:
+        - Decrease the count of `nums[j]`.
+        - Skip duplicates of the second element.
+        - Compute the needed third value:
+          `target = -(nums[i] + nums[j])`
+        - If `target` still has a positive count, add the triplet.
+    - After finishing all `j`s, restore the counts for the second loop by adding back the decremented values.
 5. Return `res` containing all found triplets.
 
 ::tabs-start
@@ -508,6 +530,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        nums.sort();
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut res = Vec::new();
+        let n = nums.len();
+        for i in 0..n {
+            *count.get_mut(&nums[i]).unwrap() -= 1;
+            if i > 0 && nums[i] == nums[i - 1] {
+                continue;
+            }
+            for j in (i + 1)..n {
+                *count.get_mut(&nums[j]).unwrap() -= 1;
+                if j > i + 1 && nums[j] == nums[j - 1] {
+                    continue;
+                }
+                let target = -(nums[i] + nums[j]);
+                if *count.get(&target).unwrap_or(&0) > 0 {
+                    res.push(vec![nums[i], nums[j], target]);
+                }
+            }
+            for j in (i + 1)..n {
+                *count.get_mut(&nums[j]).unwrap() += 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -523,10 +580,12 @@ class Solution {
 
 After sorting the array, we can fix one number and then search for the other two using the two-pointer technique.
 Sorting helps in two ways:
+
 1. It lets us skip duplicates easily.
 2. It ensures that moving the left or right pointer will increase or decrease the sum in a predictable way.
 
 For each fixed number `a`, we place two pointers:
+
 - `l` starts just after `i`,
 - `r` starts at the end.
 
@@ -538,20 +597,20 @@ When the sum is exactly zero, we record the triplet and skip duplicates.
 
 1. Sort the array to handle duplicates and enable two-pointer logic.
 2. Loop through the array using index `i`:
-   - Let `a = nums[i]`.
-   - If `a > 0`, break (all remaining numbers are positive).
-   - Skip duplicate values for the first number.
+    - Let `a = nums[i]`.
+    - If `a > 0`, break (all remaining numbers are positive).
+    - Skip duplicate values for the first number.
 3. Set two pointers:
-   - `l = i + 1`
-   - `r = len(nums) - 1`
+    - `l = i + 1`
+    - `r = len(nums) - 1`
 4. While `l < r`:
-   - Compute `threeSum = a + nums[l] + nums[r]`.
-   - If `threeSum > 0`, move `r` left.
-   - If `threeSum < 0`, move `l` right.
-   - If `threeSum == 0`:
-     - Add the triplet to the result.
-     - Move both pointers inward.
-     - Skip duplicates at the left pointer.
+    - Compute `threeSum = a + nums[l] + nums[r]`.
+    - If `threeSum > 0`, move `r` left.
+    - If `threeSum < 0`, move `l` right.
+    - If `threeSum == 0`:
+        - Add the triplet to the result.
+        - Move both pointers inward.
+        - Skip duplicates at the left pointer.
 5. Return the list of all valid triplets.
 
 ::tabs-start
@@ -824,6 +883,44 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
+        nums.sort();
+        let mut res = Vec::new();
+        let n = nums.len();
+
+        for i in 0..n {
+            let a = nums[i];
+            if a > 0 {
+                break;
+            }
+            if i > 0 && a == nums[i - 1] {
+                continue;
+            }
+
+            let (mut l, mut r) = (i + 1, n - 1);
+            while l < r {
+                let sum = a + nums[l] + nums[r];
+                if sum > 0 {
+                    r -= 1;
+                } else if sum < 0 {
+                    l += 1;
+                } else {
+                    res.push(vec![a, nums[l], nums[r]]);
+                    l += 1;
+                    r -= 1;
+                    while l < r && nums[l] == nums[l - 1] {
+                        l += 1;
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```

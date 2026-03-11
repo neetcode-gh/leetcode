@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **BFS (Breadth-First Search)** - Finding shortest paths in unweighted graphs by level-order traversal
 - **Bidirectional BFS** - Optimizing BFS by searching from both start and target simultaneously
 - **Recursion with Memoization** - Caching results to avoid redundant computations in DFS
@@ -246,6 +248,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_knight_moves(x: i32, y: i32) -> i32 {
+        let offsets: [(i32, i32); 8] = [
+            (1, 2), (2, 1), (2, -1), (1, -2),
+            (-1, -2), (-2, -1), (-2, 1), (-1, 2),
+        ];
+
+        let mut visited = vec![vec![false; 607]; 607];
+        let mut queue = VecDeque::new();
+        queue.push_back((0i32, 0i32));
+        let mut steps = 0;
+
+        while !queue.is_empty() {
+            let curr_level_size = queue.len();
+            for _ in 0..curr_level_size {
+                let (cx, cy) = queue.pop_front().unwrap();
+                if cx == x && cy == y {
+                    return steps;
+                }
+
+                for &(ox, oy) in &offsets {
+                    let (nx, ny) = (cx + ox, cy + oy);
+                    let (ri, ci) = ((nx + 302) as usize, (ny + 302) as usize);
+                    if !visited[ri][ci] {
+                        visited[ri][ci] = true;
+                        queue.push_back((nx, ny));
+                    }
+                }
+            }
+            steps += 1;
+        }
+        steps
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,7 +292,7 @@ class Solution {
 - Time complexity: $O\left(\left(\max(|x|, |y|)\right)^2\right)$
 - Space complexity: $O\left(\left(\max(|x|, |y|)\right)^2\right)$
 
->  Where $(x,y)$ is the coordinate of the target.
+> Where $(x,y)$ is the coordinate of the target.
 
 ---
 
@@ -591,6 +630,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_knight_moves(x: i32, y: i32) -> i32 {
+        let offsets: [(i32, i32); 8] = [
+            (1, 2), (2, 1), (2, -1), (1, -2),
+            (-1, -2), (-2, -1), (-2, 1), (-1, 2),
+        ];
+
+        let mut origin_queue: VecDeque<(i32, i32, i32)> = VecDeque::new();
+        origin_queue.push_back((0, 0, 0));
+        let mut origin_distance: HashMap<(i32, i32), i32> = HashMap::new();
+        origin_distance.insert((0, 0), 0);
+
+        let mut target_queue: VecDeque<(i32, i32, i32)> = VecDeque::new();
+        target_queue.push_back((x, y, 0));
+        let mut target_distance: HashMap<(i32, i32), i32> = HashMap::new();
+        target_distance.insert((x, y), 0);
+
+        loop {
+            let (ox, oy, os) = origin_queue.pop_front().unwrap();
+            if let Some(&d) = target_distance.get(&(ox, oy)) {
+                return os + d;
+            }
+
+            let (tx, ty, ts) = target_queue.pop_front().unwrap();
+            if let Some(&d) = origin_distance.get(&(tx, ty)) {
+                return ts + d;
+            }
+
+            for &(dx, dy) in &offsets {
+                let no = (ox + dx, oy + dy);
+                if !origin_distance.contains_key(&no) {
+                    origin_queue.push_back((no.0, no.1, os + 1));
+                    origin_distance.insert(no, os + 1);
+                }
+
+                let nt = (tx + dx, ty + dy);
+                if !target_distance.contains_key(&nt) {
+                    target_queue.push_back((nt.0, nt.1, ts + 1));
+                    target_distance.insert(nt, ts + 1);
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -598,7 +684,7 @@ class Solution {
 - Time complexity: $O\left(\left(\max(|x|, |y|)\right)^2\right)$
 - Space complexity: $O\left(\left(\max(|x|, |y|)\right)^2\right)$
 
->  Where $(x,y)$ is the coordinate of the target.
+> Where $(x,y)$ is the coordinate of the target.
 
 ---
 
@@ -640,7 +726,7 @@ class Solution:
 
 ```java
 class Solution {
-    
+
     private Map<String, Integer> memo = new HashMap<>();
 
     private int dfs(int x, int y) {
@@ -671,13 +757,13 @@ class Solution {
 class Solution {
 private:
     unordered_map<string, int> memo;
-    
+
     int dfs(int x, int y) {
         string key = to_string(x) + "," + to_string(y);
         if (memo.find(key) != memo.end()) {
             return memo[key];
         }
-        
+
         if (x + y == 0) {
             return 0;
         } else if (x + y == 2) {
@@ -689,7 +775,7 @@ private:
             return ret;
         }
     }
-    
+
 public:
     int minKnightMoves(int x, int y) {
         return dfs(abs(x), abs(y));
@@ -718,8 +804,11 @@ class Solution {
             } else if (x + y === 2) {
                 return 2;
             } else {
-                const ret = Math.min(dfs(Math.abs(x - 1), Math.abs(y - 2)),
-                                    dfs(Math.abs(x - 2), Math.abs(y - 1))) + 1;
+                const ret =
+                    Math.min(
+                        dfs(Math.abs(x - 1), Math.abs(y - 2)),
+                        dfs(Math.abs(x - 2), Math.abs(y - 1)),
+                    ) + 1;
                 memo.set(key, ret);
                 return ret;
             }
@@ -856,6 +945,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_knight_moves(x: i32, y: i32) -> i32 {
+        let mut memo = HashMap::new();
+        Self::dfs(x.abs(), y.abs(), &mut memo)
+    }
+
+    fn dfs(x: i32, y: i32, memo: &mut HashMap<(i32, i32), i32>) -> i32 {
+        if let Some(&v) = memo.get(&(x, y)) {
+            return v;
+        }
+        if x + y == 0 {
+            return 0;
+        } else if x + y == 2 {
+            return 2;
+        }
+        let ret = Self::dfs((x - 1).abs(), (y - 2).abs(), memo)
+            .min(Self::dfs((x - 2).abs(), (y - 1).abs(), memo))
+            + 1;
+        memo.insert((x, y), ret);
+        ret
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -863,7 +977,7 @@ class Solution {
 - Time complexity: $O(|x \cdot y|)$
 - Space complexity: $O(|x \cdot y|)$
 
->  Where $(x,y)$ is the coordinate of the target.
+> Where $(x,y)$ is the coordinate of the target.
 
 ---
 

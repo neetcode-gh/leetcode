@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Exploring all possible coin choices by reducing the problem to smaller subproblems
 - **Dynamic Programming (Memoization)** - Storing results of overlapping subproblems to optimize recursive solutions
 - **Dynamic Programming (Tabulation)** - Building the minimum coins array from smaller amounts to larger
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Recursion
 
 ### Intuition
+
 This is the **pure recursive brute-force approach**.
 
 For a given `amount`, we try **every coin**:
+
 - Pick one coin
 - Solve the remaining subproblem `amount - coin`
 - Take the minimum coins needed among all choices
@@ -22,13 +26,14 @@ We explore **all possible combinations**, which leads to many repeated subproble
 If no combination reaches exactly `0`, we treat it as invalid using a very large number.
 
 ### Algorithm
+
 1. Define a recursive function `dfs(amount)`:
-   - If `amount == 0`, return `0` (no coins needed)
+    - If `amount == 0`, return `0` (no coins needed)
 2. Initialize `res` as a very large value
 3. For each coin:
-   - If `amount - coin >= 0`
-     - Recursively compute `1 + dfs(amount - coin)`
-     - Update `res` with the minimum
+    - If `amount - coin >= 0`
+        - Recursively compute `1 + dfs(amount - coin)`
+        - Update `res` with the minimum
 4. Return `res`
 5. If the final result is still very large, return `-1`, else return the result
 
@@ -223,6 +228,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
+        fn dfs(coins: &[i32], amount: i32) -> i32 {
+            if amount == 0 { return 0; }
+
+            let mut res = 1_000_000_000;
+            for &coin in coins {
+                if amount - coin >= 0 {
+                    res = res.min(1 + dfs(coins, amount - coin));
+                }
+            }
+            res
+        }
+
+        let min_coins = dfs(&coins, amount);
+        if min_coins >= 1_000_000_000 { -1 } else { min_coins }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,23 +263,26 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
+
 This is the **optimized version of the brute-force recursion** using **memoization**.
 
 The key observation is that the same `amount` gets solved **multiple times** in recursion.  
 So instead of recomputing it, we **store the result** the first time and reuse it.
 
-Each `amount` represents a subproblem:  
-> *Minimum coins needed to make this amount*
+Each `amount` represents a subproblem:
+
+> _Minimum coins needed to make this amount_
 
 ### Algorithm
+
 1. Use a hashmap `memo` to store results for already computed amounts
 2. Define `dfs(amount)`:
-   - If `amount == 0`, return `0`
-   - If `amount` exists in `memo`, return it
+    - If `amount == 0`, return `0`
+    - If `amount` exists in `memo`, return it
 3. Try every coin:
-   - If `amount - coin >= 0`
-     - Compute `1 + dfs(amount - coin)`
-     - Track the minimum
+    - If `amount - coin >= 0`
+        - Compute `1 + dfs(amount - coin)`
+        - Track the minimum
 4. Store the result in `memo[amount]`
 5. Return the stored value
 6. If the final answer is still very large, return `-1`
@@ -497,6 +526,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
+        let mut memo = HashMap::new();
+
+        fn dfs(coins: &[i32], amount: i32, memo: &mut HashMap<i32, i32>) -> i32 {
+            if amount == 0 { return 0; }
+            if let Some(&val) = memo.get(&amount) {
+                return val;
+            }
+
+            let mut res = i32::MAX;
+            for &coin in coins {
+                if amount - coin >= 0 {
+                    let result = dfs(coins, amount - coin, memo);
+                    if result != i32::MAX {
+                        res = res.min(1 + result);
+                    }
+                }
+            }
+
+            memo.insert(amount, res);
+            res
+        }
+
+        let min_coins = dfs(&coins, amount, &mut memo);
+        if min_coins == i32::MAX { -1 } else { min_coins }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -511,25 +571,28 @@ class Solution {
 ## 3. Dynamic Programming (Bottom-Up)
 
 ### Intuition
+
 This is the **bottom-up DP version** of Coin Change.
 
-Instead of asking *“how many coins to make this amount?”* recursively, we **build answers from smaller amounts to larger ones**.
+Instead of asking _“how many coins to make this amount?”_ recursively, we **build answers from smaller amounts to larger ones**.
 
 Key idea:
+
 - If we know the minimum coins to make `a - coin`,
 - then we can make `a` using **1 extra coin**.
 
 So each amount depends on **previously solved smaller amounts**.
 
 ### Algorithm
+
 1. Create a DP array `dp` where `dp[a]` = minimum coins needed to make amount `a`
 2. Initialize:
-   - `dp[0] = 0` (0 coins to make amount 0)
-   - All other values as a large number (`amount + 1`)
+    - `dp[0] = 0` (0 coins to make amount 0)
+    - All other values as a large number (`amount + 1`)
 3. For every amount `a` from `1` to `amount`:
-   - For each coin `c`:
-     - If `a - c >= 0`
-       - Update `dp[a] = min(dp[a], 1 + dp[a - c])`
+    - For each coin `c`:
+        - If `a - c >= 0`
+            - Update `dp[a] = min(dp[a], 1 + dp[a - c])`
 4. If `dp[amount]` is still large, return `-1`
 5. Otherwise return `dp[amount]`
 
@@ -692,6 +755,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
+        let amount = amount as usize;
+        let mut dp = vec![amount as i32 + 1; amount + 1];
+        dp[0] = 0;
+
+        for a in 1..=amount {
+            for &c in &coins {
+                if c as usize <= a {
+                    dp[a] = dp[a].min(dp[a - c as usize] + 1);
+                }
+            }
+        }
+
+        if dp[amount] > amount as i32 { -1 } else { dp[amount] }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -706,6 +789,7 @@ class Solution {
 ## 4. Breadth First Search
 
 ### Intuition
+
 Think of each **amount** as a node in a graph.
 
 - From a current amount `x`, you can go to `x + coin` for every coin.
@@ -715,21 +799,23 @@ Think of each **amount** as a node in a graph.
 This makes the problem a **shortest path in an unweighted graph**, so **Breadth First Search (BFS)** is a natural fit.
 
 BFS explores level by level:
+
 - Level 1 → amounts reachable using 1 coin
 - Level 2 → amounts reachable using 2 coins
 - First time we reach `amount`, we've used the minimum coins.
 
 ### Algorithm
+
 1. If `amount == 0`, return `0`
 2. Initialize a queue with `0` (starting amount)
 3. Use a `seen` array to avoid revisiting amounts
 4. Set `steps = 0`
 5. While the queue is not empty:
-   - Increment `steps` (represents number of coins used)
-   - For each element in the current level:
-     - Try adding every coin
-     - If `current + coin == amount`, return `steps`
-     - If within bounds and unseen, mark seen and push into queue
+    - Increment `steps` (represents number of coins used)
+    - For each element in the current level:
+        - Try adding every coin
+        - If `current + coin == amount`, return `steps`
+        - If within bounds and unseen, mark seen and push into queue
 6. If BFS finishes without reaching `amount`, return `-1`
 
 ::tabs-start
@@ -984,6 +1070,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn coin_change(coins: Vec<i32>, amount: i32) -> i32 {
+        if amount == 0 { return 0; }
+
+        let amount = amount as usize;
+        let mut q = VecDeque::new();
+        q.push_back(0usize);
+        let mut seen = vec![false; amount + 1];
+        seen[0] = true;
+        let mut res = 0;
+
+        while !q.is_empty() {
+            res += 1;
+            let size = q.len();
+            for _ in 0..size {
+                let cur = q.pop_front().unwrap();
+                for &coin in &coins {
+                    let nxt = cur + coin as usize;
+                    if nxt == amount { return res; }
+                    if nxt > amount || seen[nxt] { continue; }
+                    seen[nxt] = true;
+                    q.push_back(nxt);
+                }
+            }
+        }
+
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -998,10 +1116,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Using Greedy Instead of DP
+
 A common mistake is assuming a greedy approach (always picking the largest coin) works. For `coins = [1, 3, 4]` and `amount = 6`, greedy picks `[4, 1, 1]` (3 coins), but the optimal is `[3, 3]` (2 coins). The problem requires exploring all combinations.
 
 ### Incorrect Handling of Impossible Cases
+
 Forgetting to return `-1` when the amount cannot be formed. Using `0` or leaving the result as infinity/large value causes wrong answers.
+
 ```python
 # Wrong: returns large number instead of -1
 return dp[amount]
@@ -1010,7 +1131,9 @@ return dp[amount] if dp[amount] != amount + 1 else -1
 ```
 
 ### Integer Overflow When Adding 1 to Infinity
+
 When using `INT_MAX` or `Integer.MAX_VALUE` as the "impossible" sentinel, adding `1` causes overflow. Use `amount + 1` as the sentinel instead, since you can never need more than `amount` coins (when using coin value 1).
+
 ```java
 // Wrong: 1 + INT_MAX overflows
 if (result != INT_MAX) res = min(res, 1 + result);

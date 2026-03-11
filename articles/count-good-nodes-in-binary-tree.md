@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structures with left and right children
 - **Depth First Search (DFS)** - Traversing trees recursively while passing state (max value) down each path
 - **Breadth First Search (BFS)** - Level-order traversal using a queue with associated path information
@@ -19,11 +21,11 @@ If the current node’s value ≥ that maximum → it is a good node.
 
 1. Start DFS from the root and store the root's value as the current `maxSoFar`.
 2. At each node:
-   - If `node.val >= maxSoFar`, count it as a good node.
-   - Update `maxSoFar = max(maxSoFar, node.val)`.
+    - If `node.val >= maxSoFar`, count it as a good node.
+    - Update `maxSoFar = max(maxSoFar, node.val)`.
 3. Recursively explore:
-   - Left child with updated `maxSoFar`
-   - Right child with updated `maxSoFar`
+    - Left child with updated `maxSoFar`
+    - Right child with updated `maxSoFar`
 4. Sum the counts from left and right and return the total.
 
 ::tabs-start
@@ -309,6 +311,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn good_nodes(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, max_val: i32) -> i32 {
+            match node {
+                None => 0,
+                Some(n) => {
+                    let n = n.borrow();
+                    let res = if n.val >= max_val { 1 } else { 0 };
+                    let new_max = max_val.max(n.val);
+                    res + dfs(&n.left, new_max) + dfs(&n.right, new_max)
+                }
+            }
+        }
+        dfs(&root, i32::MIN)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -333,10 +354,10 @@ Each child inherits the updated maximum of its own path.
 1. Use a queue that stores pairs: `(node, maxSoFarOnPath)`.
 2. Start by pushing `(root, -infinity)` into the queue.
 3. While the queue is not empty:
-   - Pop one `(node, maxVal)`.
-   - If `node.val >= maxVal`, increase the good-node count.
-   - For each child:
-     - Push `(child, max(maxVal, node.val))` into the queue.
+    - Pop one `(node, maxVal)`.
+    - If `node.val >= maxVal`, increase the good-node count.
+    - For each child:
+        - Push `(child, max(maxVal, node.val))` into the queue.
 4. Return the total count.
 
 ::tabs-start
@@ -668,6 +689,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn good_nodes(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        let mut q: VecDeque<(Rc<RefCell<TreeNode>>, i32)> = VecDeque::new();
+        if let Some(ref r) = root {
+            q.push_back((Rc::clone(r), i32::MIN));
+        }
+
+        while let Some((node, max_val)) = q.pop_front() {
+            let n = node.borrow();
+            if n.val >= max_val {
+                res += 1;
+            }
+            let new_max = max_val.max(n.val);
+            if let Some(ref left) = n.left {
+                q.push_back((Rc::clone(left), new_max));
+            }
+            if let Some(ref right) = n.right {
+                q.push_back((Rc::clone(right), new_max));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -680,10 +729,13 @@ class Solution {
 ## Common Pitfalls
 
 ### Using Strictly Greater Than Instead of Greater Than or Equal
+
 A node is "good" if its value is greater than OR EQUAL to all ancestors. Using `node.val > maxVal` instead of `node.val >= maxVal` causes the root and equal-valued paths to be missed.
 
 ### Initializing maxVal Too High
+
 Starting with `maxVal = 0` or `maxVal = root.val` can cause issues with negative values. Initialize with negative infinity or the root's value to correctly count the root as a good node.
+
 ```python
 # Wrong: misses root if root.val < 0
 dfs(root, 0)
@@ -693,4 +745,5 @@ dfs(root, float('-inf'))
 ```
 
 ### Sharing maxVal Across Sibling Subtrees
+
 The maximum value must be tracked per-path, not globally. Updating a shared variable instead of passing the new max to each recursive call causes incorrect comparisons across different branches.

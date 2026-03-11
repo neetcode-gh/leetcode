@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree (BST) Properties** - Understanding that inorder traversal of a valid BST produces a sorted sequence
 - **Inorder Traversal** - Both recursive and iterative implementations for visiting nodes in left-root-right order
 - **Tree Validation** - Checking if a binary tree satisfies BST constraints using min/max bounds
@@ -56,11 +58,11 @@ class Solution:
         def dfs1(node1, node2):
             if not node2 or node1 == node2:
                 return False
-            
+
             node1.val, node2.val = node2.val, node1.val
             if isBST(root):
                 return True
-            
+
             node1.val, node2.val = node2.val, node1.val
             return dfs1(node1, node2.left) or dfs1(node1, node2.right)
 
@@ -68,12 +70,12 @@ class Solution:
         def dfs(node):
             if not node:
                 return False
-            
+
             if dfs1(node, root):
                 return True
-            
+
             return dfs(node.left) or dfs(node.right)
-        
+
         dfs(root)
         return root
 ```
@@ -203,7 +205,7 @@ public:
  *     }
  * }
  */
- class Solution {
+class Solution {
     /**
      * @param {TreeNode} root
      * @return {void} Do not return anything, modify root in-place instead.
@@ -237,7 +239,7 @@ public:
 
         dfs(root);
     }
- }
+}
 ```
 
 ```csharp
@@ -463,12 +465,71 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn recover_tree(root: &mut Option<Rc<RefCell<TreeNode>>>) {
+        fn collect(node: &Option<Rc<RefCell<TreeNode>>>, nodes: &mut Vec<Rc<RefCell<TreeNode>>>) {
+            if let Some(n) = node {
+                let n_ref = n.borrow();
+                collect(&n_ref.left, nodes);
+                drop(n_ref);
+                nodes.push(Rc::clone(n));
+                let n_ref = n.borrow();
+                collect(&n_ref.right, nodes);
+            }
+        }
+
+        fn is_bst(node: &Option<Rc<RefCell<TreeNode>>>, lo: i64, hi: i64) -> bool {
+            match node {
+                None => true,
+                Some(n) => {
+                    let n_ref = n.borrow();
+                    let v = n_ref.val as i64;
+                    if v <= lo || v >= hi {
+                        return false;
+                    }
+                    is_bst(&n_ref.left, lo, v) && is_bst(&n_ref.right, v, hi)
+                }
+            }
+        }
+
+        let mut nodes = Vec::new();
+        collect(root, &mut nodes);
+
+        for i in 0..nodes.len() {
+            for j in i + 1..nodes.len() {
+                {
+                    let mut a = nodes[i].borrow_mut();
+                    let mut b = nodes[j].borrow_mut();
+                    std::mem::swap(&mut a.val, &mut b.val);
+                }
+                if is_bst(root, i64::MIN, i64::MAX) {
+                    return;
+                }
+                {
+                    let mut a = nodes[i].borrow_mut();
+                    let mut b = nodes[j].borrow_mut();
+                    std::mem::swap(&mut a.val, &mut b.val);
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -508,7 +569,7 @@ class Solution:
         def inorder(node):
             if not node:
                 return
-            
+
             inorder(node.left)
             arr.append(node)
             inorder(node.right)
@@ -622,7 +683,7 @@ public:
  *     }
  * }
  */
- class Solution {
+class Solution {
     /**
      * @param {TreeNode} root
      * @return {void} Do not return anything, modify root in-place instead.
@@ -630,7 +691,7 @@ public:
     recoverTree(root) {
         const arr = [];
 
-        const inorder = node => {
+        const inorder = (node) => {
             if (!node) return;
             inorder(node.left);
             arr.push(node);
@@ -639,7 +700,8 @@ public:
 
         inorder(root);
 
-        let node1 = null, node2 = null;
+        let node1 = null,
+            node2 = null;
         for (let i = 0; i < arr.length - 1; i++) {
             if (arr[i].val > arr[i + 1].val) {
                 node2 = arr[i + 1];
@@ -650,7 +712,7 @@ public:
 
         [node1.val, node2.val] = [node2.val, node1.val];
     }
- }
+}
 ```
 
 ```csharp
@@ -821,12 +883,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn recover_tree(root: &mut Option<Rc<RefCell<TreeNode>>>) {
+        fn inorder(node: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<Rc<RefCell<TreeNode>>>) {
+            if let Some(n) = node {
+                let n_ref = n.borrow();
+                inorder(&n_ref.left, arr);
+                drop(n_ref);
+                arr.push(Rc::clone(n));
+                let n_ref = n.borrow();
+                inorder(&n_ref.right, arr);
+            }
+        }
+
+        let mut arr = Vec::new();
+        inorder(root, &mut arr);
+
+        let mut node1: Option<usize> = None;
+        let mut node2: Option<usize> = None;
+
+        for i in 0..arr.len() - 1 {
+            if arr[i].borrow().val > arr[i + 1].borrow().val {
+                node2 = Some(i + 1);
+                if node1.is_none() {
+                    node1 = Some(i);
+                } else {
+                    break;
+                }
+            }
+        }
+
+        let i = node1.unwrap();
+        let j = node2.unwrap();
+        let mut a = arr[i].borrow_mut();
+        let mut b = arr[j].borrow_mut();
+        std::mem::swap(&mut a.val, &mut b.val);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -974,14 +1076,17 @@ public:
  *     }
  * }
  */
- class Solution {
+class Solution {
     /**
      * @param {TreeNode} root
      * @return {void} Do not return anything, modify root in-place instead.
      */
     recoverTree(root) {
         let stack = [];
-        let node1 = null, node2 = null, prev = null, curr = root;
+        let node1 = null,
+            node2 = null,
+            prev = null,
+            curr = root;
 
         while (stack.length > 0 || curr) {
             while (curr) {
@@ -1001,7 +1106,7 @@ public:
 
         [node1.val, node2.val] = [node2.val, node1.val];
     }
- }
+}
 ```
 
 ```csharp
@@ -1174,12 +1279,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn recover_tree(root: &mut Option<Rc<RefCell<TreeNode>>>) {
+        let mut stack: Vec<Rc<RefCell<TreeNode>>> = Vec::new();
+        let mut node1: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut node2: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut prev: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut curr = root.clone();
+
+        while !stack.is_empty() || curr.is_some() {
+            while let Some(c) = curr {
+                curr = c.borrow().left.clone();
+                stack.push(c);
+            }
+
+            let c = stack.pop().unwrap();
+            if let Some(ref p) = prev {
+                if p.borrow().val > c.borrow().val {
+                    node2 = Some(Rc::clone(&c));
+                    if node1.is_none() {
+                        node1 = Some(Rc::clone(p));
+                    } else {
+                        break;
+                    }
+                }
+            }
+            prev = Some(Rc::clone(&c));
+            curr = c.borrow().right.clone();
+        }
+
+        let n1 = node1.unwrap();
+        let n2 = node2.unwrap();
+        std::mem::swap(&mut n1.borrow_mut().val, &mut n2.borrow_mut().val);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1195,10 +1337,10 @@ This temporary threading allows us to return to ancestor nodes after processing 
 
 1. Initialize pointers for `node1`, `node2`, `prev`, and `curr` (starting at root).
 2. While `curr` is not null:
-   - If `curr` has no left child, process it (check for inversion with `prev`), update `prev`, and move to the right child.
-   - If `curr` has a left child, find its inorder predecessor (rightmost node in left subtree).
-     - If the predecessor's right pointer is null, create a thread to `curr` and move left.
-     - If the predecessor's right pointer points to `curr`, remove the thread, process `curr`, update `prev`, and move right.
+    - If `curr` has no left child, process it (check for inversion with `prev`), update `prev`, and move to the right child.
+    - If `curr` has a left child, find its inorder predecessor (rightmost node in left subtree).
+        - If the predecessor's right pointer is null, create a thread to `curr` and move left.
+        - If the predecessor's right pointer points to `curr`, remove the thread, process `curr`, update `prev`, and move right.
 3. After traversal, swap the values of `node1` and `node2`.
 
 ::tabs-start
@@ -1364,13 +1506,16 @@ public:
  *     }
  * }
  */
- class Solution {
+class Solution {
     /**
      * @param {TreeNode} root
      * @return {void} Do not return anything, modify root in-place instead.
      */
     recoverTree(root) {
-        let node1 = null, node2 = null, prev = null, curr = root;
+        let node1 = null,
+            node2 = null,
+            prev = null,
+            curr = root;
 
         while (curr !== null) {
             if (curr.left === null) {
@@ -1405,7 +1550,7 @@ public:
         node1.val = node2.val;
         node2.val = temp;
     }
- }
+}
 ```
 
 ```csharp
@@ -1625,12 +1770,73 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn recover_tree(root: &mut Option<Rc<RefCell<TreeNode>>>) {
+        let mut node1: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut node2: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut prev: Option<Rc<RefCell<TreeNode>>> = None;
+        let mut curr = root.clone();
+
+        while let Some(c) = curr.clone() {
+            if c.borrow().left.is_none() {
+                if let Some(ref p) = prev {
+                    if p.borrow().val > c.borrow().val {
+                        node2 = Some(Rc::clone(&c));
+                        if node1.is_none() {
+                            node1 = Some(Rc::clone(p));
+                        }
+                    }
+                }
+                prev = Some(Rc::clone(&c));
+                curr = c.borrow().right.clone();
+            } else {
+                let mut pred = c.borrow().left.clone();
+                loop {
+                    let next = {
+                        let p = pred.as_ref().unwrap().borrow();
+                        if p.right.is_some() && !Rc::ptr_eq(p.right.as_ref().unwrap(), &c) {
+                            p.right.clone()
+                        } else {
+                            break;
+                        }
+                    };
+                    pred = next;
+                }
+
+                let pred_node = pred.unwrap();
+                if pred_node.borrow().right.is_none() {
+                    pred_node.borrow_mut().right = Some(Rc::clone(&c));
+                    curr = c.borrow().left.clone();
+                } else {
+                    pred_node.borrow_mut().right = None;
+                    if let Some(ref p) = prev {
+                        if p.borrow().val > c.borrow().val {
+                            node2 = Some(Rc::clone(&c));
+                            if node1.is_none() {
+                                node1 = Some(Rc::clone(p));
+                            }
+                        }
+                    }
+                    prev = Some(Rc::clone(&c));
+                    curr = c.borrow().right.clone();
+                }
+            }
+        }
+
+        let n1 = node1.unwrap();
+        let n2 = node2.unwrap();
+        std::mem::swap(&mut n1.borrow_mut().val, &mut n2.borrow_mut().val);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap / Priority Queue** - Understanding min-heaps and max-heaps for efficient extraction of minimum and maximum elements
 - **Greedy Algorithms** - Recognizing when selecting the locally optimal choice leads to a globally optimal solution
 - **Sorting** - Sorting data to process elements in a specific order
@@ -17,9 +19,9 @@ To maximize capital after completing at most `k` projects, we should always pick
 1. Build a min-heap of all projects ordered by their capital requirement.
 2. Initialize a max-heap for profits (empty at start).
 3. Repeat up to `k` times:
-   - Move all projects from the min-heap whose capital requirement is at most `w` into the max-heap.
-   - If the max-heap is empty, no more projects can be started, so `break`.
-   - Pop the top of the max-heap (highest profit) and add it to `w`.
+    - Move all projects from the min-heap whose capital requirement is at most `w` into the max-heap.
+    - If the max-heap is empty, no more projects can be started, so `break`.
+    - Pop the top of the max-heap (highest profit) and add it to `w`.
 4. Return the final capital `w`.
 
 ::tabs-start
@@ -266,6 +268,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_maximized_capital(k: i32, w: i32, profits: Vec<i32>, capital: Vec<i32>) -> i32 {
+        let mut min_capital: BinaryHeap<Reverse<(i32, i32)>> = BinaryHeap::new();
+        let mut max_profit: BinaryHeap<i32> = BinaryHeap::new();
+
+        for i in 0..capital.len() {
+            min_capital.push(Reverse((capital[i], profits[i])));
+        }
+
+        let mut w = w;
+        for _ in 0..k {
+            while let Some(&Reverse((c, p))) = min_capital.peek() {
+                if c <= w {
+                    min_capital.pop();
+                    max_profit.push(p);
+                } else {
+                    break;
+                }
+            }
+            if let Some(p) = max_profit.pop() {
+                w += p;
+            } else {
+                break;
+            }
+        }
+
+        w
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,9 +320,9 @@ This approach improves on the previous one by storing only indices in the heaps 
 1. Build a min-heap of project indices, ordered by `capital[index]`.
 2. Initialize an empty max-heap of indices, to be ordered by `profits[index]`.
 3. Repeat up to `k` times:
-   - Transfer all indices from the min-heap where `capital[index] <= w` into the max-heap.
-   - If the max-heap is empty, `break`.
-   - Pop the `index` with maximum profit, add `profits[index]` to `w`.
+    - Transfer all indices from the min-heap where `capital[index] <= w` into the max-heap.
+    - If the max-heap is empty, `break`.
+    - Pop the `index` with maximum profit, add `profits[index]` to `w`.
 4. Return `w`.
 
 ::tabs-start
@@ -552,6 +586,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_maximized_capital(k: i32, w: i32, profits: Vec<i32>, capital: Vec<i32>) -> i32 {
+        let n = capital.len();
+        let mut min_capital: BinaryHeap<Reverse<(i32, usize)>> = BinaryHeap::new();
+        let mut max_profit: BinaryHeap<i32> = BinaryHeap::new();
+
+        for i in 0..n {
+            min_capital.push(Reverse((capital[i], i)));
+        }
+
+        let mut w = w;
+        for _ in 0..k {
+            while let Some(&Reverse((c, idx))) = min_capital.peek() {
+                if c <= w {
+                    min_capital.pop();
+                    max_profit.push(profits[idx]);
+                } else {
+                    break;
+                }
+            }
+            if let Some(p) = max_profit.pop() {
+                w += p;
+            } else {
+                break;
+            }
+        }
+
+        w
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,9 +639,9 @@ Instead of using a min-heap for capital, we can simply sort the projects by thei
 1. Create an array of indices `[0, 1, ..., n-1]` and sort it by `capital[index]`.
 2. Initialize a max-heap for profits and a pointer `idx = 0`.
 3. Repeat up to `k` times:
-   - While `idx < n` and `capital[indices[idx]] <= w`, push `profits[indices[idx]]` onto the max-heap and increment `idx`.
-   - If the max-heap is empty, `break`.
-   - Pop the maximum profit and add it to `w`.
+    - While `idx < n` and `capital[indices[idx]] <= w`, push `profits[indices[idx]]` onto the max-heap and increment `idx`.
+    - If the max-heap is empty, `break`.
+    - Pop the maximum profit and add it to `w`.
 4. Return `w`.
 
 ::tabs-start
@@ -818,6 +885,34 @@ class Solution {
         }
 
         return w
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_maximized_capital(k: i32, w: i32, profits: Vec<i32>, capital: Vec<i32>) -> i32 {
+        let n = profits.len();
+        let mut indices: Vec<usize> = (0..n).collect();
+        indices.sort_by_key(|&i| capital[i]);
+
+        let mut max_profit: BinaryHeap<i32> = BinaryHeap::new();
+        let mut w = w;
+        let mut idx = 0;
+
+        for _ in 0..k {
+            while idx < n && capital[indices[idx]] <= w {
+                max_profit.push(profits[indices[idx]]);
+                idx += 1;
+            }
+            if let Some(p) = max_profit.pop() {
+                w += p;
+            } else {
+                break;
+            }
+        }
+
+        w
     }
 }
 ```

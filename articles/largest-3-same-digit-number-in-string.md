@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Traversal** - Iterating through characters in a string and accessing elements by index
 - **Sliding Window (Fixed Size)** - Examining consecutive elements of a fixed length (in this case, 3 characters)
 - **String Comparison** - Comparing strings lexicographically or converting substrings to integers for comparison
@@ -16,9 +18,9 @@ We need to find the largest "good integer" in the string, where a good integer i
 
 1. Initialize `res` as an empty string and `val` as `0` to track the largest good integer found.
 2. Iterate through the string from index `0` to `len(num) - 2`:
-   - Check if the current character equals the next two characters.
-   - If so, extract the 3-character substring and convert it to an integer.
-   - If this value is greater than or equal to `val`, update both `val` and `res`.
+    - Check if the current character equals the next two characters.
+    - If so, extract the 3-character substring and convert it to an integer.
+    - If this value is greater than or equal to `val`, update both `val` and `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -195,6 +197,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_good_integer(num: String) -> String {
+        let bytes = num.as_bytes();
+        let mut res = String::new();
+        let mut val = 0;
+
+        for i in 0..bytes.len() - 2 {
+            if bytes[i] == bytes[i + 1] && bytes[i] == bytes[i + 2] {
+                let tmp = &num[i..i + 3];
+                let tmp_val: i32 = tmp.parse().unwrap();
+                if val <= tmp_val {
+                    val = tmp_val;
+                    res = tmp.to_string();
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -214,7 +239,7 @@ Instead of tracking both the numeric value and the string separately, we can sim
 
 1. Initialize `res` to `"0"` as a baseline for comparison.
 2. Iterate through the string, checking each window of size 3:
-   - If three consecutive characters are the same, compare the substring with `res` and keep the larger one.
+    - If three consecutive characters are the same, compare the substring with `res` and keep the larger one.
 3. If `res` is still `"0"` and `"000"` was never found, return an empty string. Otherwise, return `res`.
 
 ::tabs-start
@@ -366,6 +391,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn largest_good_integer(num: String) -> String {
+        let bytes = num.as_bytes();
+        let mut res = String::new();
+
+        for i in 0..bytes.len() - 2 {
+            if bytes[i] == bytes[i + 1] && bytes[i] == bytes[i + 2] {
+                let curr = &num[i..i + 3];
+                if curr > res.as_str() {
+                    res = curr.to_string();
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -385,7 +430,7 @@ We can optimize further by observing that we only need to track the digit itself
 
 1. Initialize `res` to `-1` to indicate no good integer found yet.
 2. Iterate through the string, checking each window of size 3:
-   - If three consecutive characters are the same, extract the digit value and update `res` if it is larger.
+    - If three consecutive characters are the same, extract the digit value and update `res` if it is larger.
 3. If `res` is still `-1`, return an empty string. Otherwise, return the digit repeated three times.
 
 ::tabs-start
@@ -521,6 +566,30 @@ class Solution {
         }
 
         return res == -1 ? "" : String(repeating: String(res), count: 3)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn largest_good_integer(num: String) -> String {
+        let bytes = num.as_bytes();
+        let mut res: i32 = -1;
+
+        for i in 0..bytes.len() - 2 {
+            if bytes[i] == bytes[i + 1] && bytes[i] == bytes[i + 2] {
+                let digit = (bytes[i] - b'0') as i32;
+                res = res.max(digit);
+            }
+        }
+
+        if res == -1 {
+            String::new()
+        } else {
+            std::iter::repeat(char::from(b'0' + res as u8))
+                .take(3)
+                .collect()
+        }
     }
 }
 ```

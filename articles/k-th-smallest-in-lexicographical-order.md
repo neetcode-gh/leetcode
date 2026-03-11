@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Lexicographical Ordering** - Understanding that strings are compared character by character, so "10" < "2" because '1' < '2'
 - **Tree/Trie Traversal** - Visualizing numbers as a tree where each prefix extends to its children (1 -> 10, 11, ..., 19)
 - **Counting Nodes in a Subtree** - Calculating how many numbers exist under a given prefix without enumeration
@@ -124,6 +126,16 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_kth_number(n: i32, k: i32) -> i32 {
+        let mut nums: Vec<String> = (1..=n).map(|x| x.to_string()).collect();
+        nums.sort();
+        nums[k as usize - 1].parse().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -144,9 +156,9 @@ Numbers in lexicographical order form a tree structure where each prefix leads t
 1. Define `count(cur)` to calculate how many numbers in `[1, n]` have `cur` as a prefix.
 2. Start with `cur = 1` and `i = 1` (position in lexicographical order).
 3. While `i < k`:
-   - Calculate `steps = count(cur)`.
-   - If `i + steps <= k`, move to the next sibling: `cur++` and `i += steps`.
-   - Otherwise, descend into children: `cur *= 10` and `i++`.
+    - Calculate `steps = count(cur)`.
+    - If `i + steps <= k`, move to the next sibling: `cur++` and `i += steps`.
+    - Otherwise, descend into children: `cur *= 10` and `i++`.
 4. Return `cur` when `i == k`.
 
 ::tabs-start
@@ -405,6 +417,40 @@ class Solution {
             }
         }
         return cur
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_kth_number(n: i32, k: i32) -> i32 {
+        let n = n as i64;
+        let k = k as i64;
+
+        fn count(mut cur: i64, n: i64) -> i64 {
+            let mut res = 0i64;
+            let mut nei = cur + 1;
+            while cur <= n {
+                res += nei.min(n + 1) - cur;
+                cur *= 10;
+                nei *= 10;
+            }
+            res
+        }
+
+        let mut cur: i64 = 1;
+        let mut i: i64 = 1;
+        while i < k {
+            let steps = count(cur, n);
+            if i + steps <= k {
+                cur += 1;
+                i += steps;
+            } else {
+                cur *= 10;
+                i += 1;
+            }
+        }
+        cur as i32
     }
 }
 ```

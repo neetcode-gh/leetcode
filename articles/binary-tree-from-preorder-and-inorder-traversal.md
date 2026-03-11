@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding how nodes connect via left and right children
 - **Tree Traversal Orders** - Knowing what preorder (root-left-right) and inorder (left-root-right) sequences represent
 - **Recursion / DFS** - Building solutions by breaking problems into subproblems on left and right subtrees
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 The first element of the `preorder` array is always the root. We can find this root's position in the `inorder` array, which divides `inorder` into left and right subtrees. Elements before the root in `inorder` belong to the left subtree, and elements after belong to the right subtree. The same split applies to `preorder`. We recursively build left and right subtrees using the corresponding portions of both arrays.
 
 ### Algorithm
+
 1. If either array is empty, return `null` (base case).
 2. Create a root node with the first element of `preorder`.
 3. Find the index of the root value in `inorder` (call it `mid`).
@@ -298,6 +302,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        if preorder.is_empty() || inorder.is_empty() {
+            return None;
+        }
+
+        let root_val = preorder[0];
+        let mid = inorder.iter().position(|&x| x == root_val).unwrap();
+
+        let mut root = TreeNode::new(root_val);
+        root.left = Self::build_tree(
+            preorder[1..=mid].to_vec(),
+            inorder[..mid].to_vec(),
+        );
+        root.right = Self::build_tree(
+            preorder[mid + 1..].to_vec(),
+            inorder[mid + 1..].to_vec(),
+        );
+
+        Some(Rc::new(RefCell::new(root)))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -310,9 +339,11 @@ class Solution {
 ## 2. Hash Map + Depth First Search
 
 ### Intuition
+
 In the basic DFS approach, we search for the root's position in `inorder` using linear search, which takes O(n) time per node. By precomputing a hash map from values to their indices in `inorder`, we can find the root's position in O(1) time. We also avoid creating new arrays by passing indices that define the current subarray boundaries.
 
 ### Algorithm
+
 1. Build a hash map mapping each value in `inorder` to its index.
 2. Maintain a global preorder index starting at `0`.
 3. Define a recursive function `dfs(l, r)` for the `inorder` range `[l, r]`.
@@ -628,6 +659,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut indices = HashMap::new();
+        for (i, &val) in inorder.iter().enumerate() {
+            indices.insert(val, i as i32);
+        }
+        let mut pre_idx = 0;
+        Self::dfs(&preorder, &indices, &mut pre_idx, 0, inorder.len() as i32 - 1)
+    }
+
+    fn dfs(
+        preorder: &[i32],
+        indices: &HashMap<i32, i32>,
+        pre_idx: &mut usize,
+        l: i32,
+        r: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        if l > r {
+            return None;
+        }
+        let root_val = preorder[*pre_idx];
+        *pre_idx += 1;
+        let mid = *indices.get(&root_val).unwrap();
+        let mut root = TreeNode::new(root_val);
+        root.left = Self::dfs(preorder, indices, pre_idx, l, mid - 1);
+        root.right = Self::dfs(preorder, indices, pre_idx, mid + 1, r);
+        Some(Rc::new(RefCell::new(root)))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -640,9 +703,11 @@ class Solution {
 ## 3. Depth First Search (Optimal)
 
 ### Intuition
+
 We can avoid the hash map entirely by using a limit-based approach. Instead of explicitly finding the root's position, we pass a "limit" value that tells us when to stop building the left subtree. When we encounter the limit value in `inorder`, we know the left subtree is complete. The `preorder` index tells us which node to create next, and the `inorder` index tells us when we have finished a subtree.
 
 ### Algorithm
+
 1. Maintain two global indices: `preIdx` for `preorder` and `inIdx` for `inorder`.
 2. Define a recursive function `dfs(limit)` that builds a subtree until it hits the limit value.
 3. If `preIdx >= n`, return `null` (no more nodes).
@@ -952,6 +1017,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        let mut pre_idx = 0;
+        let mut in_idx = 0;
+        Self::dfs(&preorder, &inorder, &mut pre_idx, &mut in_idx, i32::MAX)
+    }
+
+    fn dfs(
+        preorder: &[i32],
+        inorder: &[i32],
+        pre_idx: &mut usize,
+        in_idx: &mut usize,
+        limit: i32,
+    ) -> Option<Rc<RefCell<TreeNode>>> {
+        if *pre_idx >= preorder.len() {
+            return None;
+        }
+        if inorder[*in_idx] == limit {
+            *in_idx += 1;
+            return None;
+        }
+
+        let root_val = preorder[*pre_idx];
+        *pre_idx += 1;
+        let mut root = TreeNode::new(root_val);
+        root.left = Self::dfs(preorder, inorder, pre_idx, in_idx, root_val);
+        root.right = Self::dfs(preorder, inorder, pre_idx, in_idx, limit);
+        Some(Rc::new(RefCell::new(root)))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -964,9 +1062,11 @@ class Solution {
 ## 4. Morris Traversal
 
 ### Intuition
+
 Morris traversal allows us to build the tree iteratively without using a recursion stack. The idea is to use the right pointers of nodes to temporarily store parent references, simulating the call stack. We build nodes as we iterate through `preorder`, connecting them via left/right pointers. When we finish a left subtree (detected by matching the `inorder` sequence), we restore the original structure by clearing temporary links and moving up the tree.
 
 ### Algorithm
+
 1. Create a dummy head node and set `curr` to point to it.
 2. Iterate through `preorder` with index `i` and `inorder` with index `j`.
 3. Create a new node for `preorder[i]` and attach it as `curr`'s right child, then move `curr` to this new node.
@@ -1004,7 +1104,7 @@ class Solution:
                 curr.right = None
                 curr = prev
                 j += 1
-        
+
         return head.right
 ```
 
@@ -1114,7 +1214,9 @@ class Solution {
     buildTree(preorder, inorder) {
         let head = new TreeNode(null);
         let curr = head;
-        let i = 0, j = 0, n = preorder.length;
+        let i = 0,
+            j = 0,
+            n = preorder.length;
 
         while (i < n && j < n) {
             curr.right = new TreeNode(preorder[i], null, curr.right);
@@ -1304,28 +1406,74 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn build_tree(preorder: Vec<i32>, inorder: Vec<i32>) -> Option<Rc<RefCell<TreeNode>>> {
+        let head = Rc::new(RefCell::new(TreeNode::new(0)));
+        let mut curr = head.clone();
+        let mut i = 0;
+        let mut j = 0;
+        let n = preorder.len();
+
+        while i < n && j < n {
+            let new_node = Rc::new(RefCell::new(TreeNode::new(preorder[i])));
+            new_node.borrow_mut().right = curr.borrow().right.clone();
+            curr.borrow_mut().right = Some(new_node.clone());
+            curr = new_node;
+            i += 1;
+
+            while i < n && curr.borrow().val != inorder[j] {
+                let new_left = Rc::new(RefCell::new(TreeNode::new(preorder[i])));
+                new_left.borrow_mut().right = Some(curr.clone());
+                curr.borrow_mut().left = Some(new_left.clone());
+                curr = new_left;
+                i += 1;
+            }
+
+            j += 1;
+            while curr.borrow().right.is_some() && j < n {
+                let right_val = curr.borrow().right.as_ref().unwrap().borrow().val;
+                if right_val != inorder[j] {
+                    break;
+                }
+                let prev = curr.borrow().right.clone().unwrap();
+                curr.borrow_mut().right = None;
+                curr = prev;
+                j += 1;
+            }
+        }
+
+        head.borrow().right.clone()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ for the output tree.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ for the output tree.
 
 ---
 
 ## Common Pitfalls
 
 ### Off-by-One Error When Splitting Arrays
+
 The split point `mid` represents the root's index in `inorder`. When slicing `preorder`, the left subtree uses `preorder[1:mid+1]` (not `preorder[1:mid]`), since there are exactly `mid` elements in the left subtree.
+
 ```python
 # Wrong: preorder[1:mid]
 # Correct: preorder[1:mid+1]
 ```
 
 ### Building Right Subtree Before Left Subtree
+
 When using a global preorder index, the left subtree must be built first. Preorder visits root, then left, then right. Building right first consumes wrong nodes from the preorder array.
 
 ### Confusing Preorder and Inorder Roles
+
 The root always comes from `preorder` (first element), while the split point is found in `inorder`. Swapping these roles produces an incorrect tree structure.

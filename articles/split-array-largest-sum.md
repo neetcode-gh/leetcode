@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Exploring all possible split points by recursively solving subproblems
 - **Dynamic Programming** - Using memoization or tabulation to cache overlapping subproblems
 - **Binary Search on Answer** - Searching for the minimum feasible value when the check function is monotonic
@@ -19,9 +21,9 @@ We want to split the array into k subarrays and minimize the maximum sum among t
 1. Define `dfs(i, m)` where `i` is the starting index and `m` is the number of subarrays left to form.
 2. Base cases: if `i == n` and `m == 0`, return `0` (valid split). If either condition fails alone, return infinity (invalid).
 3. For each possible endpoint `j` of the current subarray:
-   - Accumulate the sum from index `i` to `j`.
-   - Recursively solve `dfs(j + 1, m - 1)` for the remaining portion.
-   - Track `min(res, max(curSum, recursiveResult))`.
+    - Accumulate the sum from index `i` to `j`.
+    - Recursively solve `dfs(j + 1, m - 1)` for the remaining portion.
+    - Track `min(res, max(curSum, recursiveResult))`.
 4. Return the result of `dfs(0, k)`.
 
 ::tabs-start
@@ -258,6 +260,35 @@ class Solution {
         }
 
         return dfs(0, k)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+
+        fn dfs(nums: &[i32], i: usize, m: usize, n: usize) -> i32 {
+            if i == n {
+                return if m == 0 { 0 } else { i32::MAX };
+            }
+            if m == 0 {
+                return i32::MAX;
+            }
+            let mut res = i32::MAX;
+            let mut cur_sum = 0;
+            for j in i..=n - m {
+                cur_sum += nums[j];
+                let next = dfs(nums, j + 1, m - 1, n);
+                if next != i32::MAX {
+                    res = res.min(cur_sum.max(next));
+                }
+            }
+            res
+        }
+
+        dfs(&nums, 0, k as usize, n)
     }
 }
 ```
@@ -580,6 +611,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut dp = vec![vec![-1i32; k + 1]; n];
+
+        fn dfs(nums: &[i32], i: usize, m: usize, n: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if i == n {
+                return if m == 0 { 0 } else { i32::MAX };
+            }
+            if m == 0 {
+                return i32::MAX;
+            }
+            if dp[i][m] != -1 {
+                return dp[i][m];
+            }
+            let mut res = i32::MAX;
+            let mut cur_sum = 0;
+            for j in i..=n - m {
+                cur_sum += nums[j];
+                let next = dfs(nums, j + 1, m - 1, n, dp);
+                if next != i32::MAX {
+                    res = res.min(cur_sum.max(next));
+                }
+            }
+            dp[i][m] = res;
+            res
+        }
+
+        dfs(&nums, 0, k, n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -601,9 +667,9 @@ We can convert the top-down approach to bottom-up by filling the DP table iterat
 
 1. Create `dp[n+1][k+1]` initialized to infinity, with `dp[n][0] = 0` as the base case.
 2. For each number of subarrays `m` from `1` to `k`:
-   - For each starting index `i` from `n-1` down to `0`:
-     - Try all possible endpoints `j` for the first subarray.
-     - Compute `dp[i][m] = min(dp[i][m], max(curSum, dp[j+1][m-1]))`.
+    - For each starting index `i` from `n-1` down to `0`:
+        - Try all possible endpoints `j` for the first subarray.
+        - Compute `dp[i][m] = min(dp[i][m], max(curSum, dp[j+1][m-1]))`.
 3. Return `dp[0][k]`.
 
 ::tabs-start
@@ -812,6 +878,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut dp = vec![vec![i32::MAX; k + 1]; n + 1];
+        dp[n][0] = 0;
+
+        for m in 1..=k {
+            for i in (0..n).rev() {
+                let mut cur_sum = 0;
+                for j in i..n - m + 1 {
+                    cur_sum += nums[j];
+                    if dp[j + 1][m - 1] != i32::MAX {
+                        dp[i][m] = dp[i][m].min(cur_sum.max(dp[j + 1][m - 1]));
+                    }
+                }
+            }
+        }
+
+        dp[0][k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -827,15 +918,15 @@ class Solution {
 
 ### Intuition
 
-In the bottom-up approach, computing `dp[i][m]` only depends on values from `dp[...][m-1]`. We can reduce space from O(k * n) to O(n) by using two 1D arrays: one for the previous layer and one for the current layer, swapping them after each iteration.
+In the bottom-up approach, computing `dp[i][m]` only depends on values from `dp[...][m-1]`. We can reduce space from O(k \* n) to O(n) by using two 1D arrays: one for the previous layer and one for the current layer, swapping them after each iteration.
 
 ### Algorithm
 
 1. Create two 1D arrays `dp` and `nextDp` of size `n+1`, initialized to infinity with `dp[n] = 0`.
 2. For each number of subarrays `m` from `1` to `k`:
-   - Reset `nextDp` to infinity.
-   - For each starting index `i`, compute the minimum largest sum using the previous `dp` array.
-   - Swap `dp` and `nextDp`.
+    - Reset `nextDp` to infinity.
+    - For each starting index `i`, compute the minimum largest sum using the previous `dp` array.
+    - Swap `dp` and `nextDp`.
 3. Return `dp[0]`.
 
 ::tabs-start
@@ -1063,6 +1154,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as usize;
+        let mut dp = vec![i32::MAX; n + 1];
+        let mut next_dp = vec![i32::MAX; n + 1];
+        dp[n] = 0;
+
+        for m in 1..=k {
+            next_dp.fill(i32::MAX);
+            for i in (0..n).rev() {
+                let mut cur_sum = 0;
+                for j in i..n - m + 1 {
+                    cur_sum += nums[j];
+                    if dp[j + 1] != i32::MAX {
+                        next_dp[i] = next_dp[i].min(cur_sum.max(dp[j + 1]));
+                    }
+                }
+            }
+            std::mem::swap(&mut dp, &mut next_dp);
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1084,10 +1203,10 @@ Instead of trying all possible splits, we binary search on the answer itself. Th
 
 1. Set `l = max(nums)` and `r = sum(nums)`.
 2. Binary search while `l <= r`:
-   - For `mid`, check if we can split into at most `k` subarrays with max sum `<= mid`.
-   - The check greedily adds elements until the sum exceeds `mid`, then starts a new subarray.
-   - If feasible, record `mid` as a candidate and search for smaller values.
-   - Otherwise, search for larger values.
+    - For `mid`, check if we can split into at most `k` subarrays with max sum `<= mid`.
+    - The check greedily adds elements until the sum exceeds `mid`, then starts a new subarray.
+    - If feasible, record `mid` as a candidate and search for smaller values.
+    - Otherwise, search for larger values.
 3. Return the smallest feasible value.
 
 ::tabs-start
@@ -1379,6 +1498,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+        let k = k as i32;
+
+        let can_split = |largest: i32| -> bool {
+            let mut subarray = 1;
+            let mut cur_sum = 0;
+            for &num in &nums {
+                cur_sum += num;
+                if cur_sum > largest {
+                    subarray += 1;
+                    if subarray > k {
+                        return false;
+                    }
+                    cur_sum = num;
+                }
+            }
+            true
+        };
+
+        let mut l = *nums.iter().max().unwrap();
+        let mut r: i32 = nums.iter().sum();
+        let mut res = r;
+
+        while l <= r {
+            let mid = l + (r - l) / 2;
+            if can_split(mid) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1401,8 +1559,8 @@ We can optimize the feasibility check using prefix sums and binary search. Inste
 1. Build a prefix sum array where `prefix[i]` is the sum of elements from index `0` to `i-1`.
 2. Binary search on the answer as before.
 3. In the feasibility check:
-   - For each subarray start, binary search for the rightmost end where `prefix[end] - prefix[start] <= target`.
-   - Count subarrays and verify it does not exceed `k`.
+    - For each subarray start, binary search for the rightmost end where `prefix[end] - prefix[start] <= target`.
+    - Count subarrays and verify it does not exceed `k`.
 4. Return the smallest feasible value.
 
 ::tabs-start
@@ -1809,6 +1967,56 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn split_array(nums: Vec<i32>, k: i32) -> i32 {
+        let n = nums.len();
+        let k = k as i32;
+        let mut prefix = vec![0i32; n + 1];
+        for i in 0..n {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        let can_split = |largest: i32| -> bool {
+            let mut subarrays = 0;
+            let mut i = 0;
+            while i < n {
+                let (mut l, mut r) = (i + 1, n);
+                while l <= r {
+                    let mid = l + (r - l) / 2;
+                    if prefix[mid] - prefix[i] <= largest {
+                        l = mid + 1;
+                    } else {
+                        r = mid - 1;
+                    }
+                }
+                subarrays += 1;
+                i = r;
+                if subarrays > k {
+                    return false;
+                }
+            }
+            true
+        };
+
+        let mut l = *nums.iter().max().unwrap();
+        let mut r: i32 = nums.iter().sum();
+        let mut res = r;
+
+        while l <= r {
+            let mid = l + (r - l) / 2;
+            if can_split(mid) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        res
     }
 }
 ```

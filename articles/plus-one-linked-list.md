@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Traversal** - Iterating through nodes using next pointers to find specific elements
 - **Sentinel/Dummy Node Pattern** - Using a placeholder node before the head to simplify edge cases like inserting at the beginning
 - **Carry Propagation** - Understanding how addition works digit by digit, where trailing 9s become 0s and carry forward
@@ -271,6 +273,57 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn plus_one(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        // collect values into a vec for easier manipulation
+        let mut vals = Vec::new();
+        let mut cur = &head;
+        while let Some(node) = cur {
+            vals.push(node.val);
+            cur = &node.next;
+        }
+
+        // find the rightmost not-nine digit
+        let mut not_nine: i32 = -1; // sentinel position
+        for (i, &v) in vals.iter().enumerate() {
+            if v != 9 {
+                not_nine = i as i32;
+            }
+        }
+
+        // increase the rightmost not-nine digit by 1 and set following to 0
+        if not_nine == -1 {
+            // all digits are 9, need extra leading 1
+            let mut result = vec![1];
+            result.resize(vals.len() + 1, 0);
+            // build linked list from result
+            let mut head = None;
+            for &v in result.iter().rev() {
+                let mut node = ListNode::new(v);
+                node.next = head;
+                head = Some(Box::new(node));
+            }
+            return head;
+        }
+
+        vals[not_nine as usize] += 1;
+        for i in (not_nine as usize + 1)..vals.len() {
+            vals[i] = 0;
+        }
+
+        // build linked list from vals
+        let mut head = None;
+        for &v in vals.iter().rev() {
+            let mut node = ListNode::new(v);
+            node.next = head;
+            head = Some(Box::new(node));
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,7 +331,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$
 
->  Where $N$ is the length of the input list
+> Where $N$ is the length of the input list
 
 ## Common Pitfalls
 

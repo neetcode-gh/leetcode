@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Grid Traversal** - Understanding how to navigate through a matrix using row/column indices and direction vectors
 - **Depth First Search (DFS)** - Recursive exploration of connected components in a graph or grid
 - **Breadth First Search (BFS)** - Iterative level-by-level exploration using a queue
@@ -329,6 +331,53 @@ class Solution {
             }
         }
         return land - borderLand
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_enclaves(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let mut visit = vec![vec![false; cols]; rows];
+        let direct: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+
+        fn dfs(
+            r: i32, c: i32, rows: usize, cols: usize,
+            grid: &[Vec<i32>], visit: &mut Vec<Vec<bool>>,
+            direct: &[(i32, i32); 4],
+        ) -> i32 {
+            if r < 0 || c < 0 || r == rows as i32 || c == cols as i32
+                || grid[r as usize][c as usize] == 0
+                || visit[r as usize][c as usize]
+            {
+                return 0;
+            }
+            visit[r as usize][c as usize] = true;
+            let mut res = 1;
+            for &(dr, dc) in direct {
+                res += dfs(r + dr, c + dc, rows, cols, grid, visit, direct);
+            }
+            res
+        }
+
+        let mut land = 0;
+        let mut border_land = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                land += grid[r][c];
+                if grid[r][c] == 1
+                    && !visit[r][c]
+                    && (r == 0 || r == rows - 1 || c == 0 || c == cols - 1)
+                {
+                    border_land += dfs(
+                        r as i32, c as i32, rows, cols, &grid, &mut visit, &direct,
+                    );
+                }
+            }
+        }
+        land - border_land
     }
 }
 ```
@@ -699,6 +748,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_enclaves(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let direct: [i32; 5] = [0, 1, 0, -1, 0];
+        let mut visit = vec![vec![false; cols]; rows];
+        let mut q = VecDeque::new();
+
+        let mut land = 0i32;
+        let mut border_land = 0i32;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                land += grid[r][c];
+                if grid[r][c] == 1
+                    && (r == 0 || r == rows - 1 || c == 0 || c == cols - 1)
+                {
+                    q.push_back((r, c));
+                    visit[r][c] = true;
+                }
+            }
+        }
+
+        while let Some((r, c)) = q.pop_front() {
+            border_land += 1;
+            for d in 0..4 {
+                let nr = r as i32 + direct[d];
+                let nc = c as i32 + direct[d + 1];
+                if nr >= 0
+                    && nc >= 0
+                    && (nr as usize) < rows
+                    && (nc as usize) < cols
+                    && grid[nr as usize][nc as usize] == 1
+                    && !visit[nr as usize][nc as usize]
+                {
+                    visit[nr as usize][nc as usize] = true;
+                    q.push_back((nr as usize, nc as usize));
+                }
+            }
+        }
+
+        land - border_land
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -720,9 +816,9 @@ Union-Find provides another perspective on this problem. We create a virtual bou
 
 1. Create a DSU with size `ROWS * COLS + 1`, where index `N` represents the boundary.
 2. For each land cell:
-   - Count it toward total land.
-   - Union with adjacent land cells.
-   - If on the boundary (neighbor out of bounds), union with the virtual boundary node `N`.
+    - Count it toward total land.
+    - Union with adjacent land cells.
+    - If on the boundary (neighbor out of bounds), union with the virtual boundary node `N`.
 3. Get the size of the boundary component using `find(N)`.
 4. Return `land - borderLand + 1` (the +1 adjusts for the virtual boundary node).
 
@@ -1240,6 +1336,83 @@ class Solution {
 
         let borderLand = dsu.size[dsu.find(N)]
         return land - borderLand + 1
+    }
+}
+```
+
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+        true
+    }
+}
+
+impl Solution {
+    pub fn num_enclaves(grid: Vec<Vec<i32>>) -> i32 {
+        let rows = grid.len();
+        let cols = grid[0].len();
+        let n = rows * cols;
+        let mut dsu = DSU::new(n);
+        let directions: [i32; 5] = [0, 1, 0, -1, 0];
+        let mut land = 0i32;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if grid[r][c] == 0 {
+                    continue;
+                }
+                land += 1;
+                for d in 0..4 {
+                    let nr = r as i32 + directions[d];
+                    let nc = c as i32 + directions[d + 1];
+                    if nr >= 0
+                        && nc >= 0
+                        && (nr as usize) < rows
+                        && (nc as usize) < cols
+                    {
+                        if grid[nr as usize][nc as usize] == 1 {
+                            dsu.union(r * cols + c, nr as usize * cols + nc as usize);
+                        }
+                    } else {
+                        dsu.union(n, r * cols + c);
+                    }
+                }
+            }
+        }
+
+        let border_land = dsu.size[dsu.find(n)] as i32;
+        land - border_land + 1
     }
 }
 ```

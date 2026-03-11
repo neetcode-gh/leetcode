@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Basic array traversal and element access for computing range sums
 - **Prefix Sums** - Precomputing cumulative sums to enable constant-time range queries
 - **Segment Trees (Optional)** - Alternative data structure for range queries, though overkill for immutable arrays
@@ -16,9 +18,9 @@ The simplest approach is to iterate through the array from `left` to `right` and
 
 1. Store the original array.
 2. For each `sumRange(left, right)` query:
-   - Initialize `res = 0`.
-   - Loop through indices from `left` to `right`.
-   - Add each element to `res`.
+    - Initialize `res = 0`.
+    - Loop through indices from `left` to `right`.
+    - Add each element to `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -162,6 +164,26 @@ class NumArray {
 }
 ```
 
+```rust
+struct NumArray {
+    nums: Vec<i32>,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray { nums }
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        let mut res = 0;
+        for i in left as usize..=right as usize {
+            res += self.nums[i];
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -180,12 +202,12 @@ We can precompute a prefix sum array where `prefix[i]` stores the sum of all ele
 ### Algorithm
 
 1. Build a prefix sum array during construction:
-   - Maintain a running sum `cur`.
-   - For each element, add it to `cur` and store in `prefix`.
+    - Maintain a running sum `cur`.
+    - For each element, add it to `cur` and store in `prefix`.
 2. For each `sumRange(left, right)` query:
-   - Get `rightSum = prefix[right]`.
-   - If `left > 0`, set `leftSum = prefix[left - 1]`, otherwise `leftSum = 0`.
-   - Return `rightSum - leftSum`.
+    - Get `rightSum = prefix[right]`.
+    - If `left > 0`, set `leftSum = prefix[left - 1]`, otherwise `leftSum = 0`.
+    - Return `rightSum - leftSum`.
 
 ::tabs-start
 
@@ -362,6 +384,30 @@ class NumArray {
 }
 ```
 
+```rust
+struct NumArray {
+    prefix: Vec<i32>,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        let mut prefix = Vec::with_capacity(nums.len());
+        let mut cur = 0;
+        for &num in &nums {
+            cur += num;
+            prefix.push(cur);
+        }
+        NumArray { prefix }
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        let right_sum = self.prefix[right as usize];
+        let left_sum = if left > 0 { self.prefix[left as usize - 1] } else { 0 };
+        right_sum - left_sum
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,9 +427,9 @@ This is a cleaner variation of the prefix sum approach. By creating an array of 
 
 1. Create a `prefix` array of size `n + 1` initialized to `0`.
 2. Build the prefix sums:
-   - For each index `i`, set `prefix[i + 1] = prefix[i] + nums[i]`.
+    - For each index `i`, set `prefix[i + 1] = prefix[i] + nums[i]`.
 3. For each `sumRange(left, right)` query:
-   - Return `prefix[right + 1] - prefix[left]`.
+    - Return `prefix[right + 1] - prefix[left]`.
 
 ::tabs-start
 
@@ -527,6 +573,26 @@ class NumArray {
 }
 ```
 
+```rust
+struct NumArray {
+    prefix: Vec<i32>,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        let mut prefix = vec![0; nums.len() + 1];
+        for i in 0..nums.len() {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+        NumArray { prefix }
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.prefix[right as usize + 1] - self.prefix[left as usize]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -545,14 +611,14 @@ A segment tree is a binary tree where each node stores the sum of a range of ele
 ### Algorithm
 
 1. Build the segment tree:
-   - Store leaf values at indices `n` to `2n - 1`.
-   - Compute internal nodes bottom-up: `tree[i] = tree[2*i] + tree[2*i + 1]`.
+    - Store leaf values at indices `n` to `2n - 1`.
+    - Compute internal nodes bottom-up: `tree[i] = tree[2*i] + tree[2*i + 1]`.
 2. For each `sumRange(left, right)` query:
-   - Shift `left` and `right` to leaf positions.
-   - While `left < right`:
-     - If `left` is odd, add `tree[left]` to the result and increment `left`.
-     - If `right` is odd, decrement `right` and add `tree[right]` to the result.
-     - Move both pointers to their parents.
+    - Shift `left` and `right` to leaf positions.
+    - While `left < right`:
+        - If `left` is odd, add `tree[left]` to the result and increment `left`.
+        - If `right` is odd, decrement `right` and add `tree[right]` to the result.
+        - Move both pointers to their parents.
 3. Return the accumulated sum.
 
 ::tabs-start
@@ -908,6 +974,61 @@ class NumArray {
 
     func sumRange(_ left: Int, _ right: Int) -> Int {
         return segTree.query(left, right)
+    }
+}
+```
+
+```rust
+struct SegmentTree {
+    tree: Vec<i32>,
+    n: usize,
+}
+
+impl SegmentTree {
+    fn new(nums: &[i32]) -> Self {
+        let n = nums.len();
+        let mut tree = vec![0; 2 * n];
+        for i in 0..n {
+            tree[n + i] = nums[i];
+        }
+        for i in (1..n).rev() {
+            tree[i] = tree[2 * i] + tree[2 * i + 1];
+        }
+        SegmentTree { tree, n }
+    }
+
+    fn query(&self, left: usize, right: usize) -> i32 {
+        let (mut l, mut r) = (left + self.n, right + self.n + 1);
+        let mut sum = 0;
+        while l < r {
+            if l % 2 == 1 {
+                sum += self.tree[l];
+                l += 1;
+            }
+            if r % 2 == 1 {
+                r -= 1;
+                sum += self.tree[r];
+            }
+            l /= 2;
+            r /= 2;
+        }
+        sum
+    }
+}
+
+struct NumArray {
+    seg_tree: SegmentTree,
+}
+
+impl NumArray {
+    fn new(nums: Vec<i32>) -> Self {
+        NumArray {
+            seg_tree: SegmentTree::new(&nums),
+        }
+    }
+
+    fn sum_range(&self, left: i32, right: i32) -> i32 {
+        self.seg_tree.query(left as usize, right as usize)
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to store and retrieve passenger check-in data and route statistics in O(1) time
 - **Object-Oriented Design** - Understanding how to design a class with multiple methods that share state
 
@@ -8,9 +10,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Two HashMaps
 
 ### Intuition
+
 We need to track passenger trips and compute average travel times between stations. Each passenger checks in at one station and checks out at another, forming a route. By storing check-in information and aggregating travel times for each route, we can efficiently calculate averages without storing individual trip details.
 
 ### Algorithm
+
 1. Use one hashmap to store check-in information: map passenger id to `(start station, check-in time)`.
 2. Use another hashmap to store route statistics: map `(start station, end station)` to `[total time, trip count]`.
 3. For `checkIn`: Store the passenger's start station and time in the check-in map.
@@ -271,6 +275,40 @@ class UndergroundSystem {
 }
 ```
 
+```rust
+struct UndergroundSystem {
+    check_in_map: HashMap<i32, (String, i32)>,
+    route_map: HashMap<String, [i32; 2]>,
+}
+
+impl UndergroundSystem {
+    fn new() -> Self {
+        UndergroundSystem {
+            check_in_map: HashMap::new(),
+            route_map: HashMap::new(),
+        }
+    }
+
+    fn check_in(&mut self, id: i32, station_name: String, t: i32) {
+        self.check_in_map.insert(id, (station_name, t));
+    }
+
+    fn check_out(&mut self, id: i32, station_name: String, t: i32) {
+        let (start_station, time) = self.check_in_map.get(&id).unwrap().clone();
+        let route = format!("{},{}", start_station, station_name);
+        let entry = self.route_map.entry(route).or_insert([0, 0]);
+        entry[0] += t - time;
+        entry[1] += 1;
+    }
+
+    fn get_average_time(&self, start_station: String, end_station: String) -> f64 {
+        let route = format!("{},{}", start_station, end_station);
+        let data = self.route_map.get(&route).unwrap();
+        data[0] as f64 / data[1] as f64
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,9 +326,11 @@ class UndergroundSystem {
 ## 2. Two HashMaps + Hashing
 
 ### Intuition
+
 The previous approach uses string concatenation to create route keys, which can be slow for long station names. By computing a hash value for each route instead of concatenating strings, we can achieve faster lookups. Using double hashing (two different hash functions) reduces collision probability while maintaining `O(1)` average lookup time.
 
 ### Algorithm
+
 1. Use one hashmap to store check-in information: map passenger id to `(start station, check-in time)`.
 2. Use another hashmap to store route statistics: map route hash to `[total time, trip count]`.
 3. Implement a hash function that combines two polynomial rolling hashes with different bases and moduli to create a unique identifier for each route.
@@ -693,6 +733,61 @@ class UndergroundSystem {
         let routeHash = getHash(startStation, endStation)
         let data = routeMap[routeHash]!
         return Double(data[0]) / Double(data[1])
+    }
+}
+```
+
+```rust
+struct UndergroundSystem {
+    check_in_map: HashMap<i32, (String, i32)>,
+    route_map: HashMap<u64, [i32; 2]>,
+}
+
+const MOD1: i64 = 768258391;
+const MOD2: i64 = 685683731;
+const BASE1: i64 = 37;
+const BASE2: i64 = 31;
+
+impl UndergroundSystem {
+    fn new() -> Self {
+        UndergroundSystem {
+            check_in_map: HashMap::new(),
+            route_map: HashMap::new(),
+        }
+    }
+
+    fn get_hash(s1: &str, s2: &str) -> u64 {
+        let mut h1: i64 = 0;
+        let mut h2: i64 = 0;
+        let mut p1: i64 = 1;
+        let mut p2: i64 = 1;
+        let combined = format!("{},{}", s1, s2);
+        for c in combined.chars() {
+            let val = c as i64 - 96;
+            h1 = (h1 + val * p1) % MOD1;
+            h2 = (h2 + val * p2) % MOD2;
+            p1 = (p1 * BASE1) % MOD1;
+            p2 = (p2 * BASE2) % MOD2;
+        }
+        ((h1 as u64) << 32) | (h2 as u64)
+    }
+
+    fn check_in(&mut self, id: i32, station_name: String, t: i32) {
+        self.check_in_map.insert(id, (station_name, t));
+    }
+
+    fn check_out(&mut self, id: i32, station_name: String, t: i32) {
+        let (start_station, time) = self.check_in_map.get(&id).unwrap().clone();
+        let route_hash = Self::get_hash(&start_station, &station_name);
+        let entry = self.route_map.entry(route_hash).or_insert([0, 0]);
+        entry[0] += t - time;
+        entry[1] += 1;
+    }
+
+    fn get_average_time(&self, start_station: String, end_station: String) -> f64 {
+        let route_hash = Self::get_hash(&start_station, &end_station);
+        let data = self.route_map.get(&route_hash).unwrap();
+        data[0] as f64 / data[1] as f64
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **N-ary Trees** - Understanding tree structures where nodes can have multiple children
 - **Hash Sets** - Using sets for O(1) lookups to track seen values
 - **Tree Properties** - Recognizing that the root is the only node not appearing as any other node's child
@@ -71,7 +73,7 @@ public:
     Node* findRoot(vector<Node*> tree) {
         // set that contains all the child nodes.
         unordered_set<int> seen;
-        
+
         // add all the child nodes into the set
         for (Node* node : tree) {
             for (Node* child : node->children) {
@@ -79,7 +81,7 @@ public:
                 seen.insert(child->val);
             }
         }
-        
+
         Node* root = nullptr;
         // find the node that is not in the child node set.
         for (Node* node : tree) {
@@ -88,7 +90,7 @@ public:
                 break;
             }
         }
-        
+
         return root;
     }
 };
@@ -230,6 +232,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_root(tree: Vec<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let mut seen = HashSet::new();
+
+        for node in &tree {
+            for child in &node.borrow().children {
+                seen.insert(child.borrow().val);
+            }
+        }
+
+        for node in &tree {
+            if !seen.contains(&node.borrow().val) {
+                return Some(node.clone());
+            }
+        }
+
+        None
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -237,7 +261,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the length of the input list, which is also the number of nodes in the N-ary tree.
+> Where $N$ is the length of the input list, which is also the number of nodes in the N-ary tree.
 
 ---
 
@@ -251,8 +275,8 @@ Every node except the root appears exactly once as a parent and exactly once as 
 
 1. Initialize `valueSum = 0`.
 2. For each node in the tree:
-   - Add the node's value to `valueSum` (counting it as a parent).
-   - Subtract each child's value from `valueSum` (counting it as a child).
+    - Add the node's value to `valueSum` (counting it as a parent).
+    - Subtract each child's value from `valueSum` (counting it as a child).
 3. Find and return the node whose value equals `valueSum`.
 
 ::tabs-start
@@ -307,7 +331,7 @@ class Solution {
 public:
     Node* findRoot(vector<Node*> tree) {
         int value_sum = 0;
-        
+
         for (Node* node : tree) {
             // the value is added as a parent node
             value_sum += node->val;
@@ -455,6 +479,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_root(tree: Vec<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let mut value_sum: i32 = 0;
+
+        for node in &tree {
+            value_sum += node.borrow().val;
+            for child in &node.borrow().children {
+                value_sum -= child.borrow().val;
+            }
+        }
+
+        for node in &tree {
+            if node.borrow().val == value_sum {
+                return Some(node.clone());
+            }
+        }
+
+        None
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -462,7 +509,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$
 
->  Where $N$ is the length of the input list, which is also the number of nodes in the N-ary tree.
+> Where $N$ is the length of the input list, which is also the number of nodes in the N-ary tree.
 
 ---
 

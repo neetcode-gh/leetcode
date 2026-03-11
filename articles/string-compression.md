@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers Technique** - Used to traverse and write to the array simultaneously while tracking consecutive characters
 - **In-Place Array Modification** - Understanding how to modify an array without using additional space proportional to input size
 - **String to Integer Conversion** - Converting count values to individual digit characters for multi-digit numbers
@@ -112,7 +114,7 @@ class Solution {
      */
     compress(chars) {
         const n = chars.length;
-        let s = "";
+        let s = '';
 
         let i = 0;
         while (i < n) {
@@ -246,12 +248,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn compress(chars: &mut Vec<char>) -> i32 {
+        let n = chars.len();
+        let mut s = String::new();
+
+        let mut i = 0;
+        while i < n {
+            s.push(chars[i]);
+            let mut j = i + 1;
+            while j < n && chars[i] == chars[j] {
+                j += 1;
+            }
+
+            if j - i > 1 {
+                s.push_str(&(j - i).to_string());
+            }
+            i = j;
+        }
+
+        for (idx, c) in s.chars().enumerate() {
+            chars[idx] = c;
+        }
+        s.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ or $O(n ^ 2)$ depending on the language.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ or $O(n ^ 2)$ depending on the language.
+- Space complexity: $O(n)$
 
 ---
 
@@ -353,7 +383,9 @@ class Solution {
      * @return {number}
      */
     compress(chars) {
-        let n = chars.length, k = 0, i = 0;
+        let n = chars.length,
+            k = 0,
+            i = 0;
 
         while (i < n) {
             chars[k++] = chars[i];
@@ -487,12 +519,41 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn compress(chars: &mut Vec<char>) -> i32 {
+        let n = chars.len();
+        let mut k = 0;
+        let mut i = 0;
+
+        while i < n {
+            chars[k] = chars[i];
+            k += 1;
+            let mut j = i + 1;
+            while j < n && chars[i] == chars[j] {
+                j += 1;
+            }
+
+            if j - i > 1 {
+                for c in (j - i).to_string().chars() {
+                    chars[k] = c;
+                    k += 1;
+                }
+            }
+            i = j;
+        }
+
+        k as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 

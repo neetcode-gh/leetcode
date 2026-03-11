@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree/Graph Data Structures** - Understanding how to represent hierarchical relationships using adjacency lists
 - **Depth First Search (DFS)** - Recursively traversing tree structures and tracking accumulated values along paths
 - **Breadth First Search (BFS)** - Level-by-level traversal using queues to process nodes
@@ -196,6 +198,31 @@ class Solution {
         }
 
         return dfs(headID)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_of_minutes(n: i32, head_id: i32, manager: Vec<i32>, inform_time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let head = head_id as usize;
+        let mut adj = vec![vec![]; n];
+        for i in 0..n {
+            if i != head {
+                adj[manager[i] as usize].push(i);
+            }
+        }
+
+        fn dfs(node: usize, adj: &[Vec<usize>], inform_time: &[i32]) -> i32 {
+            let mut res = 0;
+            for &child in &adj[node] {
+                res = res.max(inform_time[node] + dfs(child, adj, inform_time));
+            }
+            res
+        }
+
+        dfs(head, &adj, &inform_time)
     }
 }
 ```
@@ -407,6 +434,33 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_of_minutes(n: i32, head_id: i32, manager: Vec<i32>, inform_time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let mut adj: HashMap<i32, Vec<usize>> = HashMap::new();
+        for i in 0..n {
+            adj.entry(manager[i]).or_default().push(i);
+        }
+
+        let mut queue = VecDeque::new();
+        queue.push_back((head_id as usize, 0i32));
+        let mut res = 0;
+
+        while let Some((id, time)) = queue.pop_front() {
+            res = res.max(time);
+            if let Some(emps) = adj.get(&(id as i32)) {
+                for &emp in emps {
+                    queue.push_back((emp, time + inform_time[id]));
+                }
+            }
+        }
+
+        res
     }
 }
 ```
@@ -692,6 +746,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_of_minutes(n: i32, head_id: i32, manager: Vec<i32>, inform_time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let mut indegree = vec![0i32; n];
+        let mut time = vec![0i32; n];
+
+        for i in 0..n {
+            if manager[i] != -1 {
+                indegree[manager[i] as usize] += 1;
+            }
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 0..n {
+            if indegree[i] == 0 {
+                queue.push_back(i);
+            }
+        }
+
+        while let Some(node) = queue.pop_front() {
+            time[node] += inform_time[node];
+            if manager[node] != -1 {
+                let mgr = manager[node] as usize;
+                time[mgr] = time[mgr].max(time[node]);
+                indegree[mgr] -= 1;
+                if indegree[mgr] == 0 {
+                    queue.push_back(mgr);
+                }
+            }
+        }
+
+        time[head_id as usize]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -863,6 +954,31 @@ class Solution {
             res = max(res, dfs(node))
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_of_minutes(n: i32, _head_id: i32, manager: Vec<i32>, inform_time: Vec<i32>) -> i32 {
+        let n = n as usize;
+        let mut manager = manager;
+        let mut inform_time = inform_time;
+
+        fn dfs(node: usize, manager: &mut Vec<i32>, inform_time: &mut Vec<i32>) -> i32 {
+            if manager[node] != -1 {
+                let parent = manager[node] as usize;
+                inform_time[node] += dfs(parent, manager, inform_time);
+                manager[node] = -1;
+            }
+            inform_time[node]
+        }
+
+        let mut res = 0;
+        for node in 0..n {
+            res = res.max(dfs(node, &mut manager, &mut inform_time));
+        }
+        res
     }
 }
 ```

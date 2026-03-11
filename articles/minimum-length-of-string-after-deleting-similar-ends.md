@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers Technique** - Using pointers at both ends of an array/string to process elements
 - **Greedy Algorithms** - Making locally optimal choices that lead to a globally optimal solution
 - **String Manipulation** - Working with character comparisons and substrings
@@ -18,9 +20,9 @@ Using two pointers starting at opposite ends, we check if both point to the same
 
 1. Initialize two pointers: `l` at the start and `r` at the end of the string.
 2. While `l < r` and `s[l] == s[r]`:
-   - Store the matching character.
-   - Move `l` right past all consecutive occurrences of this character.
-   - Move `r` left past all consecutive occurrences of this character.
+    - Store the matching character.
+    - Move `l` right past all consecutive occurrences of this character.
+    - Move `r` left past all consecutive occurrences of this character.
 3. The remaining length is `r - l + 1`.
 4. If the pointers cross (`l > r`), the entire string was deleted, returning `0`.
 
@@ -176,6 +178,26 @@ class Solution {
             }
         }
         return r - l + 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_length(s: String) -> i32 {
+        let s = s.as_bytes();
+        let (mut l, mut r) = (0i32, s.len() as i32 - 1);
+
+        while l < r && s[l as usize] == s[r as usize] {
+            let tmp = s[l as usize];
+            while l <= r && s[l as usize] == tmp {
+                l += 1;
+            }
+            while l <= r && s[r as usize] == tmp {
+                r -= 1;
+            }
+        }
+        r - l + 1
     }
 }
 ```

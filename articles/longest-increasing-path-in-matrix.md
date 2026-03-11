@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Depth-First Search (DFS)** - The solution explores paths in a grid using recursive DFS with 4-directional movement
 - **Dynamic Programming with Memoization** - Caching results for each cell to avoid redundant path computations
 - **Topological Sort (Kahn's Algorithm)** - An alternative BFS approach using indegrees to process cells in dependency order
@@ -25,13 +27,13 @@ If the move goes out of bounds or the next value is not strictly larger than `pr
 
 1. Store the 4 possible movement directions (up, down, left, right).
 2. Define a recursive function `dfs(r, c, prevVal)`:
-   - If `(r, c)` is outside the grid, or `matrix[r][c] <= prevVal`, return `0`
-   - Otherwise, start with `res = 1` (the current cell counts as length 1)
-   - Try all 4 directions and take the maximum:
-     - `1 + dfs(next_r, next_c, matrix[r][c])`
+    - If `(r, c)` is outside the grid, or `matrix[r][c] <= prevVal`, return `0`
+    - Otherwise, start with `res = 1` (the current cell counts as length 1)
+    - Try all 4 directions and take the maximum:
+        - `1 + dfs(next_r, next_c, matrix[r][c])`
 3. For every cell in the matrix:
-   - Call `dfs(r, c, -infinity)` so the first cell is always allowed
-   - Track the maximum result over all starting cells
+    - Call `dfs(r, c, -infinity)` so the first cell is always allowed
+    - Track the maximum result over all starting cells
 4. Return that maximum length
 
 ::tabs-start
@@ -303,6 +305,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_increasing_path(matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let directions = [(-1i32, 0i32), (1, 0), (0, -1), (0, 1)];
+
+        fn dfs(matrix: &Vec<Vec<i32>>, r: i32, c: i32, prev_val: i32,
+               rows: i32, cols: i32, dirs: &[(i32, i32)]) -> i32 {
+            if r < 0 || r >= rows || c < 0 || c >= cols
+                || matrix[r as usize][c as usize] <= prev_val {
+                return 0;
+            }
+            let mut res = 1;
+            for &(dr, dc) in dirs {
+                res = res.max(1 + dfs(matrix, r + dr, c + dc,
+                    matrix[r as usize][c as usize], rows, cols, dirs));
+            }
+            res
+        }
+
+        let mut lip = 0;
+        for r in 0..rows as i32 {
+            for c in 0..cols as i32 {
+                lip = lip.max(dfs(&matrix, r, c, i32::MIN, rows as i32, cols as i32, &directions));
+            }
+        }
+        lip
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,14 +368,14 @@ We only move to neighbors that have a larger value than the current cell, and we
 ### Algorithm
 
 1. Create a map `dp` to cache results:
-   - `dp[(r, c)]` = length of the longest increasing path starting from `(r, c)`
+    - `dp[(r, c)]` = length of the longest increasing path starting from `(r, c)`
 2. Define a DFS function `dfs(r, c, prevVal)`:
-   - If `(r, c)` is out of bounds, or `matrix[r][c] <= prevVal`, return `0`
-   - If `(r, c)` is already in `dp`, return `dp[(r, c)]` (reuse the cached answer)
+    - If `(r, c)` is out of bounds, or `matrix[r][c] <= prevVal`, return `0`
+    - If `(r, c)` is already in `dp`, return `dp[(r, c)]` (reuse the cached answer)
 3. Otherwise, compute the answer for `(r, c)`:
-   - Start with `res = 1` (path length including the current cell)
-   - Try moving in all 4 directions and take the best valid extension:
-     - `res = max(res, 1 + dfs(nr, nc, matrix[r][c]))`
+    - Start with `res = 1` (path length including the current cell)
+    - Try moving in all 4 directions and take the best valid extension:
+        - `res = max(res, 1 + dfs(nr, nc, matrix[r][c]))`
 4. Store the computed value in `dp[(r, c)]` and return it
 5. Call `dfs` from every cell to ensure all `dp` values are filled
 6. The final answer is the maximum value stored in `dp`
@@ -665,6 +699,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn longest_increasing_path(matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut dp = vec![vec![-1i32; cols]; rows];
+        let directions = [(1i32,0i32),(-1,0),(0,1),(0,-1)];
+
+        fn dfs(matrix: &Vec<Vec<i32>>, dp: &mut Vec<Vec<i32>>,
+               r: i32, c: i32, prev_val: i32,
+               rows: i32, cols: i32, dirs: &[(i32,i32)]) -> i32 {
+            if r < 0 || r >= rows || c < 0 || c >= cols
+                || matrix[r as usize][c as usize] <= prev_val {
+                return 0;
+            }
+            if dp[r as usize][c as usize] != -1 {
+                return dp[r as usize][c as usize];
+            }
+            let cur = matrix[r as usize][c as usize];
+            let mut res = 1;
+            for &(dr, dc) in dirs {
+                res = res.max(1 + dfs(matrix, dp, r + dr, c + dc, cur, rows, cols, dirs));
+            }
+            dp[r as usize][c as usize] = res;
+            res
+        }
+
+        let mut lip = 0;
+        for r in 0..rows as i32 {
+            for c in 0..cols as i32 {
+                lip = lip.max(dfs(&matrix, &mut dp, r, c, i32::MIN, rows as i32, cols as i32, &directions));
+            }
+        }
+        lip
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,6 +753,7 @@ class Solution {
 ### Intuition
 
 We can think of the matrix as a directed graph:
+
 - each cell is a node
 - we draw a directed edge from a smaller value to a larger value (only for 4-direction neighbors)
 
@@ -688,6 +761,7 @@ Because edges always go from smaller to larger, the graph has **no cycles** (val
 
 In a DAG, the longest path length can be found using **topological order**.  
 Kahn’s algorithm (BFS with indegrees) processes nodes level by level:
+
 - nodes with indegree `0` are the “smallest” starting points (no smaller neighbor points into them)
 - removing one layer may unlock the next larger layer
 
@@ -698,19 +772,19 @@ So, the number of layers processed is exactly the length of the longest increasi
 
 1. Treat each cell `(r, c)` as a node.
 2. Compute `indegree[r][c]`:
-   - `indegree[r][c]` = number of neighboring cells with a smaller value (neighbors that point into `(r, c)`)
-   - For each cell, look at its 4 neighbors:
-     - if a neighbor value is smaller, increase the cell's indegree
+    - `indegree[r][c]` = number of neighboring cells with a smaller value (neighbors that point into `(r, c)`)
+    - For each cell, look at its 4 neighbors:
+        - if a neighbor value is smaller, increase the cell's indegree
 3. Initialize a queue with all cells that have indegree `0`:
-   - these are local minima and can start an increasing path
+    - these are local minima and can start an increasing path
 4. Perform BFS in layers:
-   - for each layer:
-     - pop all current nodes in the queue
-     - for each popped cell, check its 4 neighbors
-     - if a neighbor has a larger value, it is reachable from the current cell:
-       - decrement that neighbor's `indegree`
-       - if the neighbor's `indegree` becomes `0`, push it into the queue
-   - after finishing the layer, increment the answer (`LIS += 1`)
+    - for each layer:
+        - pop all current nodes in the queue
+        - for each popped cell, check its 4 neighbors
+        - if a neighbor has a larger value, it is reachable from the current cell:
+            - decrement that neighbor's `indegree`
+            - if the neighbor's `indegree` becomes `0`, push it into the queue
+    - after finishing the layer, increment the answer (`LIS += 1`)
 5. When the queue becomes empty, all nodes have been processed.
 6. Return the number of layers processed (`LIS`), which equals the longest increasing path length.
 
@@ -1144,6 +1218,60 @@ class Solution {
             LIS += 1
         }
         return LIS
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn longest_increasing_path(matrix: Vec<Vec<i32>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let directions: [(i32, i32); 4] = [(-1,0),(1,0),(0,-1),(0,1)];
+        let mut indegree = vec![vec![0i32; cols]; rows];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                for &(dr, dc) in &directions {
+                    let nr = r as i32 + dr;
+                    let nc = c as i32 + dc;
+                    if nr >= 0 && nr < rows as i32 && nc >= 0 && nc < cols as i32
+                        && matrix[nr as usize][nc as usize] < matrix[r][c] {
+                        indegree[r][c] += 1;
+                    }
+                }
+            }
+        }
+
+        let mut q = VecDeque::new();
+        for r in 0..rows {
+            for c in 0..cols {
+                if indegree[r][c] == 0 {
+                    q.push_back((r, c));
+                }
+            }
+        }
+
+        let mut lis = 0;
+        while !q.is_empty() {
+            let size = q.len();
+            for _ in 0..size {
+                let (r, c) = q.pop_front().unwrap();
+                for &(dr, dc) in &directions {
+                    let nr = r as i32 + dr;
+                    let nc = c as i32 + dc;
+                    if nr >= 0 && nr < rows as i32 && nc >= 0 && nc < cols as i32
+                        && matrix[nr as usize][nc as usize] > matrix[r][c] {
+                        indegree[nr as usize][nc as usize] -= 1;
+                        if indegree[nr as usize][nc as usize] == 0 {
+                            q.push_back((nr as usize, nc as usize));
+                        }
+                    }
+                }
+            }
+            lis += 1;
+        }
+        lis
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting with Custom Comparators** - Engineers are sorted by efficiency in descending order to fix the minimum efficiency
 - **Heap / Priority Queue (Min-Heap)** - Used to efficiently maintain the k largest speeds as we iterate
 - **Greedy Algorithms** - The key insight is fixing the minimum efficiency and maximizing the speed sum
@@ -13,7 +15,7 @@ Before attempting this problem, you should be comfortable with:
 
 The simplest approach is to try all possible subsets of engineers with size at most `k`. For each subset, we compute the sum of speeds and multiply by the minimum efficiency in that subset. We track the maximum performance across all valid subsets.
 
-This works because performance is defined as (sum of speeds) * (minimum efficiency), so we need to consider every combination to find the optimal team.
+This works because performance is defined as (sum of speeds) \* (minimum efficiency), so we need to consider every combination to find the optimal team.
 
 ### Algorithm
 
@@ -208,6 +210,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_performance(n: i32, speed: Vec<i32>, efficiency: Vec<i32>, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = n as usize;
+        let mut res: i64 = 0;
+
+        fn dfs(
+            i: usize, k: i32, min_eff: i64, speed_sum: i64,
+            n: usize, speed: &[i32], efficiency: &[i32], res: &mut i64,
+        ) {
+            if min_eff != i64::MAX {
+                *res = (*res).max(speed_sum * min_eff);
+            }
+            if i == n || k == 0 {
+                return;
+            }
+            dfs(i + 1, k, min_eff, speed_sum, n, speed, efficiency, res);
+            dfs(
+                i + 1, k - 1,
+                min_eff.min(efficiency[i] as i64),
+                speed_sum + speed[i] as i64,
+                n, speed, efficiency, res,
+            );
+        }
+
+        dfs(0, k, i64::MAX, 0, n, &speed, &efficiency, &mut res);
+        (res % MOD) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -230,9 +264,9 @@ By sorting engineers in descending order of efficiency, as we iterate through th
 1. Pair each engineer's efficiency with their speed and sort by efficiency in descending order.
 2. Use a min-heap to track the speeds of selected engineers.
 3. Iterate through the sorted list. For each engineer:
-   - If the heap already has `k` engineers, remove the one with the smallest speed.
-   - Add the current engineer's speed to the heap and update the speed sum.
-   - Calculate performance using the current efficiency (which is now the minimum) and update the result.
+    - If the heap already has `k` engineers, remove the one with the smallest speed.
+    - Add the current engineer's speed to the heap and update the speed sum.
+    - Calculate performance using the current efficiency (which is now the minimum) and update the result.
 4. Return the maximum performance modulo $10^9 + 7$.
 
 ::tabs-start
@@ -440,6 +474,37 @@ class Solution {
         }
 
         return res % MOD
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_performance(n: i32, speed: Vec<i32>, efficiency: Vec<i32>, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let n = n as usize;
+        let k = k as usize;
+        let mut engineers: Vec<(i32, i32)> = (0..n)
+            .map(|i| (efficiency[i], speed[i]))
+            .collect();
+        engineers.sort_unstable_by(|a, b| b.0.cmp(&a.0));
+
+        let mut min_heap = BinaryHeap::new();
+        let mut speed_sum: i64 = 0;
+        let mut res: i64 = 0;
+
+        for &(eff, spd) in &engineers {
+            if min_heap.len() == k {
+                if let Some(Reverse(smallest)) = min_heap.pop() {
+                    speed_sum -= smallest;
+                }
+            }
+            speed_sum += spd as i64;
+            min_heap.push(Reverse(spd as i64));
+            res = res.max(speed_sum * eff as i64);
+        }
+
+        (res % MOD) as i32
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, nodes, and null children
 - **Breadth-First Search (BFS)** - Level-order traversal using a queue to process nodes
 - **Depth-First Search (DFS)** - Recursive tree traversal and tracking node indices
@@ -17,9 +19,9 @@ In a complete binary tree, all nodes are as far left as possible, with no gaps. 
 
 1. Initialize a queue with the root node.
 2. Process nodes in BFS order:
-   - Dequeue a node and add its left and right children (even if null) to the queue.
-   - If the dequeued node is `null`, drain the remaining queue.
-   - If any non-null node appears after a `null`, return `false`.
+    - Dequeue a node and add its left and right children (even if null) to the queue.
+    - If the dequeued node is `null`, drain the remaining queue.
+    - If any non-null node appears after a `null`, return `false`.
 3. Return `true` if the entire queue is processed without finding a non-null after `null`.
 
 ::tabs-start
@@ -301,6 +303,37 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//   pub val: i32,
+//   pub left: Option<Rc<RefCell<TreeNode>>>,
+//   pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn is_complete_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut q: VecDeque<Option<Rc<RefCell<TreeNode>>>> = VecDeque::new();
+        q.push_back(root);
+
+        while let Some(node) = q.pop_front() {
+            if let Some(n) = node {
+                let n = n.borrow();
+                q.push_back(n.left.clone());
+                q.push_back(n.right.clone());
+            } else {
+                while let Some(next) = q.pop_front() {
+                    if next.is_some() {
+                        return false;
+                    }
+                }
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,9 +353,9 @@ This is a cleaner version of the BFS approach. Instead of draining the queue aft
 
 1. Initialize a queue with the root and a boolean flag `nullSeen` = `false`.
 2. Process each node from the queue:
-   - If the node is non-null and `nullSeen` is `true`, return `false`.
-   - If the node is non-null, add both children to the queue.
-   - If the node is `null`, set `nullSeen` = `true`.
+    - If the node is non-null and `nullSeen` is `true`, return `false`.
+    - If the node is non-null, add both children to the queue.
+    - If the node is `null`, set `nullSeen` = `true`.
 3. Return `true` after processing all nodes.
 
 ::tabs-start
@@ -593,6 +626,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_complete_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut q: VecDeque<Option<Rc<RefCell<TreeNode>>>> = VecDeque::new();
+        q.push_back(root);
+        let mut null_seen = false;
+
+        while let Some(node) = q.pop_front() {
+            if let Some(n) = node {
+                if null_seen { return false; }
+                let n = n.borrow();
+                q.push_back(n.left.clone());
+                q.push_back(n.right.clone());
+            } else {
+                null_seen = true;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -612,9 +667,9 @@ A complete binary tree with `n` nodes has a specific property: if we number node
 
 1. First pass: Count the total number of nodes in the tree using DFS.
 2. Second pass: Perform DFS with indices, starting from (root, 0).
-   - If a node is `null`, return `true`.
-   - If a node's index >= total count, return `false` (gap exists).
-   - Recursively check left child (index 2`i`+1) and right child (index 2`i`+2).
+    - If a node is `null`, return `true`.
+    - If a node's index >= total count, return `false` (gap exists).
+    - Recursively check left child (index 2`i`+1) and right child (index 2`i`+2).
 3. Return `true` if all nodes pass the index check.
 
 ::tabs-start
@@ -883,6 +938,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_complete_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        fn count_nodes(node: &Option<Rc<RefCell<TreeNode>>>) -> usize {
+            match node {
+                None => 0,
+                Some(n) => {
+                    let n = n.borrow();
+                    1 + count_nodes(&n.left) + count_nodes(&n.right)
+                }
+            }
+        }
+
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, index: usize, n: usize) -> bool {
+            match node {
+                None => true,
+                Some(nd) => {
+                    if index >= n { return false; }
+                    let nd = nd.borrow();
+                    dfs(&nd.left, 2 * index + 1, n) && dfs(&nd.right, 2 * index + 2, n)
+                }
+            }
+        }
+
+        let n = count_nodes(&root);
+        dfs(&root, 0, n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -902,9 +987,9 @@ We can verify completeness in a single DFS pass by tracking the tree's height an
 
 1. Track the tree height (initialized to 0) and a flag `nullSeen` (for detecting gaps).
 2. Perform DFS, tracking the current height:
-   - When reaching a `null` node, set `treeHgt` if not set.
-   - If the `null` is at height (`treeHgt` - 1), mark `nullSeen` = `true`.
-   - If the `null` is at `treeHgt` after `nullSeen` is `true`, return `false` (gap detected).
+    - When reaching a `null` node, set `treeHgt` if not set.
+    - If the `null` is at height (`treeHgt` - 1), mark `nullSeen` = `true`.
+    - If the `null` is at `treeHgt` after `nullSeen` is `true`, return `false` (gap detected).
 3. Recursively check left then right children.
 4. Return `true` if no gaps are detected.
 
@@ -1204,6 +1289,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_complete_tree(root: Option<Rc<RefCell<TreeNode>>>) -> bool {
+        let mut tree_hgt: i32 = 0;
+        let mut null_seen = false;
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            hgt: i32,
+            tree_hgt: &mut i32,
+            null_seen: &mut bool,
+        ) -> bool {
+            match node {
+                None => {
+                    if *tree_hgt == 0 {
+                        *tree_hgt = hgt;
+                    } else if hgt == *tree_hgt - 1 {
+                        *null_seen = true;
+                    } else if hgt != *tree_hgt {
+                        return false;
+                    }
+                    !(hgt == *tree_hgt && *null_seen)
+                }
+                Some(n) => {
+                    let n = n.borrow();
+                    dfs(&n.left, hgt + 1, tree_hgt, null_seen)
+                        && dfs(&n.right, hgt + 1, tree_hgt, null_seen)
+                }
+            }
+        }
+
+        dfs(&root, 0, &mut tree_hgt, &mut null_seen)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1216,7 +1337,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Adding Null Children to Queue
+
 When using BFS, both left and right children must be added to the queue even if they are null. Skipping null children prevents detection of gaps in the tree, since the null marker is needed to identify when a non-null node appears after a gap.
+
 ```python
 # Wrong: only adds non-null children
 if node.left:
@@ -1227,7 +1350,9 @@ q.append(node.right)
 ```
 
 ### Checking Only Immediate Children for Completeness
+
 A tree can have a missing left child but present right child, which violates completeness. Simply checking if both children exist misses cases where a null appears in the middle of a level.
+
 ```python
 # Wrong: only checks current node's children
 if node.left is None and node.right is not None:
@@ -1238,7 +1363,9 @@ if node and nullSeen:
 ```
 
 ### Wrong Index Formula in DFS Approach
+
 When using array-based indexing (root at 0, children at 2i+1 and 2i+2), using incorrect formulas causes false positives. A common mistake is using 2i and 2i+1, which corresponds to 1-indexed arrays instead of 0-indexed.
+
 ```python
 # Wrong: 1-indexed formula with 0-indexed array
 left_child = 2 * index

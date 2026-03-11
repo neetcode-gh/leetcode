@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps / Frequency Counting** - Counting character occurrences efficiently
 - **Palindrome Properties** - Understanding that palindromes require at most one character with odd frequency
 - **Set Data Structure** - Using sets to track elements with odd occurrences
@@ -155,16 +157,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_permute_palindrome(s: String) -> bool {
+        let mut count_arr = [0i32; 128];
+        for b in s.bytes() {
+            count_arr[b as usize] += 1;
+        }
+        let mut count = 0;
+        for i in 0..128 {
+            count += count_arr[i] % 2;
+            if count > 1 {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
-    - If we generalize the solution to handle any Unicode character (no hardcoding): $O(k \cdot n)$. <br> $O(n^2)$ In the worst case, if all characters are unique $(k = n)$ 
+    - If we generalize the solution to handle any Unicode character (no hardcoding): $O(k \cdot n)$. <br> $O(n^2)$ In the worst case, if all characters are unique $(k = n)$
 - Space complexity: $O(1)$ If the we assume the input contains only ASCII characters.
     - $O(1)$ If the implementation is modiifed to handle Unicode characters.
 
->  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+> Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
 
 ---
 
@@ -323,6 +344,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_permute_palindrome(s: String) -> bool {
+        let mut map = HashMap::new();
+        for b in s.bytes() {
+            *map.entry(b).or_insert(0) += 1;
+        }
+        let count: i32 = map.values().map(|v: &i32| v % 2).sum();
+        count <= 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,7 +366,7 @@ class Solution {
 - Space complexity: $O(1)$ If the we assume the input contains only ASCII characters.
     - $O(k)$ If the implementation is modiifed to handle Unicode characters, the space complexity would depend on the number of unique characters in the string. $O(n)$ in the worst case (if all characters are unique).
 
->  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+> Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
 
 ---
 
@@ -496,6 +530,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_permute_palindrome(s: String) -> bool {
+        let mut map = [0i32; 128];
+        for b in s.bytes() {
+            map[b as usize] += 1;
+        }
+        let mut count = 0;
+        for i in 0..128 {
+            count += map[i] % 2;
+            if count > 1 {
+                return false;
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -504,7 +557,7 @@ class Solution {
 - Space complexity: $O(1)$ If the we assume the input contains only ASCII characters.
     - $O(k)$ If the implementation is modiifed to handle Unicode characters, the space complexity would depend on the number of unique characters in the string. $O(n)$ in the worst case (if all characters are unique).
 
->  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+> Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
 
 ---
 
@@ -530,9 +583,9 @@ We can optimize further by tracking the odd count dynamically as we process each
 
 1. Create an array of size 128 for character frequencies and initialize an odd counter to `0`.
 2. For each character in the string:
-   - Increment its count in the array.
-   - If the new count is even, decrement the odd counter.
-   - If the new count is odd, increment the odd counter.
+    - Increment its count in the array.
+    - If the new count is even, decrement the odd counter.
+    - If the new count is odd, increment the odd counter.
 3. Return `true` if the odd counter is at most 1.
 
 ::tabs-start
@@ -668,6 +721,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_permute_palindrome(s: String) -> bool {
+        let mut map = [0i32; 128];
+        let mut count = 0i32;
+        for b in s.bytes() {
+            map[b as usize] += 1;
+            if map[b as usize] % 2 == 0 {
+                count -= 1;
+            } else {
+                count += 1;
+            }
+        }
+        count <= 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -676,7 +747,7 @@ class Solution {
 - Space complexity: $O(1)$ If the we assume the input contains only ASCII characters.
     - $O(k)$ If the implementation is modiifed to handle Unicode characters, the space complexity would depend on the number of unique characters in the string. $O(n)$ in the worst case (if all characters are unique).
 
->  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+> Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
 
 ---
 
@@ -689,7 +760,6 @@ A common mistake is checking if all character counts are even. For odd-length pa
 ### Confusing Palindrome With Palindrome Permutation
 
 Some developers attempt to check if the string itself is a palindrome rather than if any permutation can form one. The problem asks about rearranging characters, so only character frequencies matter, not their positions in the original string.
-
 
 ---
 
@@ -705,8 +775,8 @@ At the end, if the set has at most one element, a palindrome permutation is poss
 
 1. Initialize an empty set.
 2. For each character in the string:
-   - If the character is already in the set, remove it.
-   - Otherwise, add it to the set.
+    - If the character is already in the set, remove it.
+    - Otherwise, add it to the set.
 3. Return `true` if the set contains at most one character.
 
 ::tabs-start
@@ -833,6 +903,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_permute_palindrome(s: String) -> bool {
+        let mut set = HashSet::new();
+        for b in s.bytes() {
+            if !set.insert(b) {
+                set.remove(&b);
+            }
+        }
+        set.len() <= 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -841,7 +925,7 @@ class Solution {
 - Space complexity: $O(1)$ If the we assume the input contains only ASCII characters.
     - $O(k)$ If the implementation is modiifed to handle Unicode characters, the space complexity would depend on the number of unique characters in the string. $O(n)$ in the worst case (if all characters are unique)
 
->  Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
+> Where $n$ is the size of the input string `s` and where $k$ is the number of unique characters in `s`
 
 ---
 

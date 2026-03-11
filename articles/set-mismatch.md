@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Iterating through and manipulating array elements
 - **Hash Maps / Frequency Counting** - Tracking how many times each element appears
 - **Sorting** - Understanding how sorted order reveals duplicates and gaps
@@ -18,9 +20,9 @@ The array should contain each number from 1 to n exactly once, but one number is
 
 1. Initialize a result array to store `[duplicate, missing]`.
 2. For each number `i` from `1` to `n`:
-   - Count how many times `i` appears in the array.
-   - If the count is `0`, `i` is the missing number.
-   - If the count is `2`, `i` is the duplicate number.
+    - Count how many times `i` appears in the array.
+    - If the count is `0`, `i` is the missing number.
+    - If the count is `2`, `i` is the duplicate number.
 3. Return the result.
 
 ::tabs-start
@@ -230,6 +232,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_error_nums(nums: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![0, 0];
+        let n = nums.len() as i32;
+
+        for i in 1..=n {
+            let cnt = nums.iter().filter(|&&x| x == i).count();
+            if cnt == 0 {
+                res[1] = i;
+            } else if cnt == 2 {
+                res[0] = i;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,8 +272,8 @@ After sorting, consecutive elements should differ by exactly 1. If two adjacent 
 1. Sort the array.
 2. Initialize the result with `missing = 1` (handles the case where `1` is missing).
 3. Iterate through adjacent pairs:
-   - If two elements are equal, record the duplicate.
-   - If two elements differ by `2`, the missing number is in between.
+    - If two elements are equal, record the duplicate.
+    - If two elements differ by `2`, the missing number is in between.
 4. If the last element is not `n`, then `n` is the missing number.
 5. Return `[duplicate, missing]`.
 
@@ -431,6 +453,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_error_nums(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![0, 1];
+        nums.sort();
+        let n = nums.len();
+
+        for i in 1..n {
+            if nums[i] == nums[i - 1] {
+                res[0] = nums[i];
+            } else if nums[i] - nums[i - 1] == 2 {
+                res[1] = nums[i] - 1;
+            }
+        }
+
+        if nums[n - 1] != n as i32 {
+            res[1] = n as i32;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,8 +496,8 @@ Using extra space, we can count occurrences in a single pass and then check each
 1. Create a count array of size `n+1` initialized to `0`.
 2. Iterate through the input array and increment count for each number.
 3. Iterate through numbers `1` to `n`:
-   - If `count[i]` is `0`, `i` is the missing number.
-   - If `count[i]` is `2`, `i` is the duplicate number.
+    - If `count[i]` is `0`, `i` is the missing number.
+    - If `count[i]` is `2`, `i` is the duplicate number.
 4. Return `[duplicate, missing]`.
 
 ::tabs-start
@@ -650,6 +695,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_error_nums(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut count = vec![0; n + 1];
+        let mut res = vec![0, 0];
+
+        for &num in &nums {
+            count[num as usize] += 1;
+        }
+
+        for i in 1..=n {
+            if count[i] == 0 {
+                res[1] = i as i32;
+            }
+            if count[i] == 2 {
+                res[0] = i as i32;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -668,12 +738,12 @@ We can use the input array itself as a hash table by marking visited indices. Fo
 ### Algorithm
 
 1. Iterate through the array:
-   - For each value, take its absolute value to get the index.
-   - If the value at that index is already negative, this is the duplicate.
-   - Otherwise, negate the value at that index.
+    - For each value, take its absolute value to get the index.
+    - If the value at that index is already negative, this is the duplicate.
+    - Otherwise, negate the value at that index.
 2. Iterate through the array again:
-   - Find the index with a positive value that is not the duplicate.
-   - This `index + 1` is the missing number.
+    - Find the index with a positive value that is not the duplicate.
+    - This `index + 1` is the missing number.
 3. Return `[duplicate, missing]`.
 
 ::tabs-start
@@ -884,6 +954,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_error_nums(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![0, 0];
+
+        for i in 0..nums.len() {
+            let abs_num = nums[i].abs();
+            if nums[(abs_num - 1) as usize] < 0 {
+                res[0] = abs_num;
+            } else {
+                nums[(abs_num - 1) as usize] *= -1;
+            }
+        }
+
+        for i in 0..nums.len() {
+            if nums[i] > 0 && (i as i32 + 1) != res[0] {
+                res[1] = i as i32 + 1;
+                return res;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1057,6 +1153,25 @@ class Solution {
         let missing = (y - x * x) / (2 * x)
         let duplicate = missing + x
         return [duplicate, missing]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_error_nums(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len() as i64;
+        let mut x: i64 = 0; // duplicate - missing
+        let mut y: i64 = 0; // duplicate^2 - missing^2
+
+        for i in 1..=n {
+            x += nums[(i - 1) as usize] as i64 - i;
+            y += (nums[(i - 1) as usize] as i64).pow(2) - i * i;
+        }
+
+        let missing = (y - x * x) / (2 * x);
+        let duplicate = missing + x;
+        vec![duplicate as i32, missing as i32]
     }
 }
 ```
@@ -1413,6 +1528,41 @@ class Solution {
             }
         }
         return [y, x]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_error_nums(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut xorr = 0i32;
+        for i in 1..=n as i32 {
+            xorr ^= i;
+            xorr ^= nums[(i - 1) as usize];
+        }
+
+        let right_most_bit = xorr & (!xorr + 1);
+
+        let (mut x, mut y) = (0i32, 0i32);
+        for i in 1..=n as i32 {
+            if i & right_most_bit != 0 {
+                x ^= i;
+            } else {
+                y ^= i;
+            }
+            if nums[(i - 1) as usize] & right_most_bit != 0 {
+                x ^= nums[(i - 1) as usize];
+            } else {
+                y ^= nums[(i - 1) as usize];
+            }
+        }
+
+        if nums.contains(&x) {
+            vec![x, y]
+        } else {
+            vec![y, x]
+        }
     }
 }
 ```

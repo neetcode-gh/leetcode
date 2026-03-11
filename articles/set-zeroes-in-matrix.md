@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays / Matrices** - Traversing and modifying elements in a matrix using row and column indices
 - **In-Place Modification** - Updating data structures without using extra space proportional to input size
 - **Marker Techniques** - Using parts of the input as flags to track state during processing
@@ -15,6 +17,7 @@ We need to modify the matrix so that if any cell is `0`, then its **entire row a
 The main challenge is that if we change cells to `0` while scanning, those newly created zeros could incorrectly force more rows/columns to be zeroed.
 
 To avoid this, the brute force approach uses a **separate copy** of the matrix:
+
 - we read zeros from the original matrix
 - we write the row/column changes into the copy
 - at the end, we copy the final values back
@@ -26,9 +29,9 @@ This keeps the logic simple and prevents accidental cascading updates.
 1. Let `ROWS` and `COLS` be the matrix dimensions.
 2. Create a copy matrix `mark` with the same values as the original matrix.
 3. Traverse every cell `(r, c)` in the original matrix:
-   - If `matrix[r][c] == 0`:
-     - set all cells in row `r` of `mark` to `0`
-     - set all cells in column `c` of `mark` to `0`
+    - If `matrix[r][c] == 0`:
+        - set all cells in row `r` of `mark` to `0`
+        - set all cells in column `c` of `mark` to `0`
 4. After processing all zeros, copy every value from `mark` back into `matrix`.
 5. The original `matrix` is now updated correctly.
 
@@ -270,6 +273,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn set_zeroes(matrix: &mut Vec<Vec<i32>>) {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut mark = matrix.clone();
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if matrix[r][c] == 0 {
+                    for col in 0..cols {
+                        mark[r][col] = 0;
+                    }
+                    for row in 0..rows {
+                        mark[row][c] = 0;
+                    }
+                }
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                matrix[r][c] = mark[r][c];
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,10 +323,12 @@ The key challenge is to avoid modifying the matrix **too early**.
 If we directly set rows and columns to `0` while scanning, newly created zeros could incorrectly trigger more rows and columns to be zeroed.
 
 To handle this safely, we split the process into **two passes**:
+
 1. First pass: **record** which rows and columns need to be zeroed using `rows` and `cols` flags
 2. Second pass: **apply** the zeroing based on that record
 
 We use two helper arrays:
+
 - `rows[r]` → whether row `r` should be zeroed
 - `cols[c]` → whether column `c` should be zeroed
 
@@ -304,15 +338,15 @@ This keeps the logic clean and easy to reason about.
 
 1. Let `ROWS` and `COLS` be the dimensions of the matrix.
 2. Create two boolean arrays:
-   - `rows` of size `ROWS`, initialized to `false`
-   - `cols` of size `COLS`, initialized to `false`
+    - `rows` of size `ROWS`, initialized to `false`
+    - `cols` of size `COLS`, initialized to `false`
 3. Traverse the matrix:
-   - If `matrix[r][c] == 0`:
-     - mark `rows[r] = true`
-     - mark `cols[c] = true`
+    - If `matrix[r][c] == 0`:
+        - mark `rows[r] = true`
+        - mark `cols[c] = true`
 4. Traverse the matrix again:
-   - If `rows[r]` is `true` **or** `cols[c]` is `true`:
-     - set `matrix[r][c] = 0`
+    - If `rows[r]` is `true` **or** `cols[c]` is `true`:
+        - set `matrix[r][c] = 0`
 5. The matrix is now correctly updated.
 
 ::tabs-start
@@ -530,6 +564,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn set_zeroes(matrix: &mut Vec<Vec<i32>>) {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut row_zero = vec![false; rows];
+        let mut col_zero = vec![false; cols];
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if matrix[r][c] == 0 {
+                    row_zero[r] = true;
+                    col_zero[c] = true;
+                }
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if row_zero[r] || col_zero[c] {
+                    matrix[r][c] = 0;
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -554,29 +616,31 @@ To optimize space, we can reuse the matrix itself as the "marker storage":
 - Use the **first column** to mark which rows should become zero
 
 One complication:
+
 - `matrix[0][0]` sits at the intersection of the first row and first column, so it can't independently represent both.
 - Also, we must separately track whether the **first row** originally contained a zero.
 
 That's why we keep a boolean `rowZero`:
+
 - `rowZero = true` means the first row must be zeroed at the end.
 
 ### Algorithm
 
 1. Initialize `rowZero = false`.
 2. First pass (mark rows and columns):
-   - Traverse every cell `(r, c)`:
-     - If `matrix[r][c] == 0`:
-       - mark the column by setting `matrix[0][c] = 0`
-       - if `r > 0`, mark the row by setting `matrix[r][0] = 0`
-       - if `r == 0`, set `rowZero = true` (first row needs to be zeroed)
+    - Traverse every cell `(r, c)`:
+        - If `matrix[r][c] == 0`:
+            - mark the column by setting `matrix[0][c] = 0`
+            - if `r > 0`, mark the row by setting `matrix[r][0] = 0`
+            - if `r == 0`, set `rowZero = true` (first row needs to be zeroed)
 3. Second pass (apply markers to the inner matrix):
-   - For `r` from `1` to `ROWS - 1`:
-     - For `c` from `1` to `COLS - 1`:
-       - If `matrix[0][c] == 0` or `matrix[r][0] == 0`, set `matrix[r][c] = 0`
+    - For `r` from `1` to `ROWS - 1`:
+        - For `c` from `1` to `COLS - 1`:
+            - If `matrix[0][c] == 0` or `matrix[r][0] == 0`, set `matrix[r][c] = 0`
 4. Handle the first column:
-   - If `matrix[0][0] == 0`, zero out the entire first column
+    - If `matrix[0][0] == 0`, zero out the entire first column
 5. Handle the first row:
-   - If `rowZero` is `true`, zero out the entire first row
+    - If `rowZero` is `true`, zero out the entire first row
 
 ::tabs-start
 
@@ -903,6 +967,49 @@ class Solution {
         if rowZero {
             for c in 0..<COLS {
                 matrix[0][c] = 0
+            }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn set_zeroes(matrix: &mut Vec<Vec<i32>>) {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut row_zero = false;
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if matrix[r][c] == 0 {
+                    matrix[0][c] = 0;
+                    if r > 0 {
+                        matrix[r][0] = 0;
+                    } else {
+                        row_zero = true;
+                    }
+                }
+            }
+        }
+
+        for r in 1..rows {
+            for c in 1..cols {
+                if matrix[0][c] == 0 || matrix[r][0] == 0 {
+                    matrix[r][c] = 0;
+                }
+            }
+        }
+
+        if matrix[0][0] == 0 {
+            for r in 0..rows {
+                matrix[r][0] = 0;
+            }
+        }
+
+        if row_zero {
+            for c in 0..cols {
+                matrix[0][c] = 0;
             }
         }
     }

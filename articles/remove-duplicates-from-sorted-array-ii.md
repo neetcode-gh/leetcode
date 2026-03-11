@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Using a read pointer and write pointer to modify arrays in-place
 - **In-Place Array Modification** - Overwriting elements without using extra space
 - **Sorted Array Properties** - Leveraging the fact that duplicates are always adjacent in sorted arrays
@@ -256,6 +258,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut n = nums.len();
+        if n <= 2 {
+            return n as i32;
+        }
+        let mut i = 0;
+        while i < n - 1 {
+            if nums[i] == nums[i + 1] {
+                let mut j = i + 2;
+                let mut cnt = 0;
+                while j < n && nums[i] == nums[j] {
+                    j += 1;
+                    cnt += 1;
+                }
+                for k in i + 2..n {
+                    if j >= n {
+                        break;
+                    }
+                    nums[k] = nums[j];
+                    j += 1;
+                }
+                n -= cnt;
+                i += 2;
+            } else {
+                i += 1;
+            }
+        }
+        n as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -485,6 +521,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        let mut arr = Vec::new();
+        for &num in nums.iter() {
+            let e = count.entry(num).or_insert(0);
+            if *e == 0 {
+                arr.push(num);
+            }
+            *e += 1;
+        }
+
+        let mut i = 0;
+        for &num in &arr {
+            nums[i] = num;
+            i += 1;
+            *count.get_mut(&num).unwrap() -= 1;
+            if *count.get(&num).unwrap() >= 1 {
+                nums[i] = num;
+                i += 1;
+                *count.get_mut(&num).unwrap() -= 1;
+            }
+        }
+        i as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -709,6 +774,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut l = 0;
+        let mut r = 0;
+
+        while r < nums.len() {
+            let mut count = 1;
+            while r + 1 < nums.len() && nums[r] == nums[r + 1] {
+                r += 1;
+                count += 1;
+            }
+
+            for _ in 0..count.min(2) {
+                nums[l] = nums[r];
+                l += 1;
+            }
+            r += 1;
+        }
+
+        l as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -848,6 +938,21 @@ class Solution {
             }
         }
         return l
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_duplicates(nums: &mut Vec<i32>) -> i32 {
+        let mut l = 0;
+        for i in 0..nums.len() {
+            if l < 2 || nums[i] != nums[l - 2] {
+                nums[l] = nums[i];
+                l += 1;
+            }
+        }
+        l as i32
     }
 }
 ```

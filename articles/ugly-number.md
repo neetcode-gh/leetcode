@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prime Factorization** - Understanding how to break down a number into its prime factors
 - **Modulo and Division Operations** - Using the modulo operator to check divisibility and integer division to reduce numbers
 
@@ -15,7 +17,7 @@ An ugly number has only 2, 3, and 5 as prime factors. This means if we keep divi
 
 1. Handle edge case: if `n <= 0`, return `false` (ugly numbers are positive).
 2. For each prime factor in `[2, 3, 5]`:
-   - While `n` is divisible by the prime, divide `n` by it.
+    - While `n` is divisible by the prime, divide `n` by it.
 3. After all divisions, check if `n == 1`.
 4. Return `true` if `n` is `1`, `false` otherwise.
 
@@ -154,6 +156,23 @@ class Solution {
         }
 
         return num == 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_ugly(n: i32) -> bool {
+        if n <= 0 {
+            return false;
+        }
+        let mut n = n;
+        for p in [2, 3, 5] {
+            while n % p == 0 {
+                n /= p;
+            }
+        }
+        n == 1
     }
 }
 ```

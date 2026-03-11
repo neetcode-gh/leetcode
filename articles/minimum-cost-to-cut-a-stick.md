@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - The brute-force approach explores all possible orderings of cuts using recursive function calls
 - **Dynamic Programming (Memoization)** - Overlapping subproblems require caching results to avoid redundant computation
 - **Interval DP** - The problem structure involves optimizing over contiguous segments/intervals
@@ -18,8 +20,8 @@ Each cut costs the length of the current stick segment. The order of cuts matter
 1. Define `dfs(l, r)` to return the minimum cost to make all cuts within the segment `[l, r]`.
 2. Base case: If `r - l == 1`, no cuts are possible, return `0`.
 3. For each cut point `c` between `l` and `r`:
-   - Calculate cost as `(r - l) + dfs(l, c) + dfs(c, r)`.
-   - Track the minimum across all choices.
+    - Calculate cost as `(r - l) + dfs(l, c) + dfs(c, r)`.
+    - Track the minimum across all choices.
 4. Return `0` if no cuts exist in the range, otherwise return the minimum cost.
 
 ::tabs-start
@@ -186,6 +188,26 @@ class Solution {
             return res == Int.max ? 0 : res
         }
         return dfs(0, n)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost(n: i32, cuts: Vec<i32>) -> i32 {
+        fn dfs(l: i32, r: i32, cuts: &[i32]) -> i32 {
+            if r - l == 1 {
+                return 0;
+            }
+            let mut res = i32::MAX;
+            for &c in cuts {
+                if l < c && c < r {
+                    res = res.min((r - l) + dfs(l, c, cuts) + dfs(c, r, cuts));
+                }
+            }
+            if res == i32::MAX { 0 } else { res }
+        }
+        dfs(0, n, &cuts)
     }
 }
 ```
@@ -445,6 +467,32 @@ class Solution {
         }
 
         return dfs(0, n)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost(n: i32, cuts: Vec<i32>) -> i32 {
+        let mut dp = HashMap::new();
+        fn dfs(l: i32, r: i32, cuts: &[i32], dp: &mut HashMap<(i32, i32), i32>) -> i32 {
+            if r - l == 1 {
+                return 0;
+            }
+            if let Some(&v) = dp.get(&(l, r)) {
+                return v;
+            }
+            let mut res = i32::MAX;
+            for &c in cuts {
+                if l < c && c < r {
+                    res = res.min((r - l) + dfs(l, c, cuts, dp) + dfs(c, r, cuts, dp));
+                }
+            }
+            let res = if res == i32::MAX { 0 } else { res };
+            dp.insert((l, r), res);
+            res
+        }
+        dfs(0, n, &cuts, &mut dp)
     }
 }
 ```
@@ -719,6 +767,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost(n: i32, mut cuts: Vec<i32>) -> i32 {
+        let m = cuts.len();
+        cuts.sort();
+        let mut dp = vec![vec![-1i32; m + 1]; m + 1];
+
+        fn dfs(l: i32, r: i32, i: usize, j: isize, cuts: &[i32], dp: &mut Vec<Vec<i32>>) -> i32 {
+            if (i as isize) > j {
+                return 0;
+            }
+            let ju = j as usize;
+            if dp[i][ju] != -1 {
+                return dp[i][ju];
+            }
+            let mut res = i32::MAX;
+            for mid in i..=ju {
+                let cur = (r - l)
+                    + dfs(l, cuts[mid], i, mid as isize - 1, cuts, dp)
+                    + dfs(cuts[mid], r, mid + 1, j, cuts, dp);
+                res = res.min(cur);
+            }
+            dp[i][ju] = res;
+            res
+        }
+
+        dfs(0, n, 0, m as isize - 1, &cuts, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -741,10 +820,10 @@ We can solve this iteratively by building up from smaller segments to larger one
 1. Create extended cuts array: `[0] + sorted(cuts) + [n]`.
 2. Initialize a 2D DP table with zeros.
 3. For each segment length from `2` to `m+1`:
-   - For each starting index `i`:
-     - Set `j = i + length`.
-     - Try each cut point `mid` between `i` and `j`.
-     - `dp[i][j] = min(cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j])`.
+    - For each starting index `i`:
+        - Set `j = i + length`.
+        - Try each cut point `mid` between `i` and `j`.
+        - `dp[i][j] = min(cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j])`.
 4. Return `dp[0][m + 1]`.
 
 ::tabs-start
@@ -961,6 +1040,36 @@ class Solution {
         }
 
         return dp[0][m + 1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost(n: i32, cuts: Vec<i32>) -> i32 {
+        let m = cuts.len();
+        let mut new_cuts = vec![0];
+        let mut sorted = cuts;
+        sorted.sort();
+        new_cuts.extend_from_slice(&sorted);
+        new_cuts.push(n);
+
+        let sz = m + 2;
+        let mut dp = vec![vec![0; sz]; sz];
+
+        for length in 2..=m + 1 {
+            for i in 0..=m + 1 - length {
+                let j = i + length;
+                dp[i][j] = i32::MAX;
+                for mid in i + 1..j {
+                    dp[i][j] = dp[i][j].min(
+                        new_cuts[j] - new_cuts[i] + dp[i][mid] + dp[mid][j],
+                    );
+                }
+            }
+        }
+
+        dp[0][m + 1]
     }
 }
 ```

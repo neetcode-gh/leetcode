@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Traversal** - Iterating through characters in a string one by one
 - **Stack Data Structure** - Understanding how stacks work for tracking nested/paired elements
 - **Recursion Basics** - Using recursive function calls to process sequential data
@@ -249,6 +251,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_depth(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut res = 0;
+
+        fn dfs(s: &[u8], i: usize, res: &mut i32) -> i32 {
+            if i == s.len() {
+                return 0;
+            }
+            let mut cur = dfs(s, i + 1, res);
+            if s[i] == b'(' {
+                cur += 1;
+            } else if s[i] == b')' {
+                cur -= 1;
+            }
+            *res = (*res).max(cur.abs());
+            cur
+        }
+
+        dfs(s, 0, &mut res);
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -435,6 +463,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_depth(s: String) -> i32 {
+        let mut res = 0;
+        let mut stack = Vec::new();
+
+        for c in s.chars() {
+            if c == '(' {
+                stack.push(c);
+                res = res.max(stack.len() as i32);
+            } else if c == ')' {
+                stack.pop();
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -617,6 +665,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_depth(s: String) -> i32 {
+        let mut res = 0;
+        let mut cur = 0;
+
+        for c in s.chars() {
+            if c == '(' {
+                cur += 1;
+            } else if c == ')' {
+                cur -= 1;
+            }
+            res = res.max(cur);
+        }
+
+        res
     }
 }
 ```

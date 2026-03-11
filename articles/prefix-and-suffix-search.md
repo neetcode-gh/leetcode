@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Trie (Prefix Tree)** - Understanding how to build and traverse a trie for efficient prefix matching is crucial for the optimal solution
 - **Hash Map** - Used to precompute and store all prefix-suffix combinations for O(1) query lookups
 - **String Manipulation** - Generating all prefixes and suffixes of a word and combining them with delimiters
@@ -16,10 +18,10 @@ The simplest approach is to store the words and check each one during a query. F
 
 1. Store the input `words` array.
 2. For each `f(pref, suff)` call:
-   - Iterate through the words in reverse order (from the last index to the first).
-   - Skip words that are shorter than either the `pref` or `suff`.
-   - Check if the word starts with `pref` and ends with `suff`.
-   - Return the first matching index found, or `-1` if no match exists.
+    - Iterate through the words in reverse order (from the last index to the first).
+    - Skip words that are shorter than either the `pref` or `suff`.
+    - Check if the word starts with `pref` and ends with `suff`.
+    - Return the first matching index found, or `-1` if no match exists.
 
 ::tabs-start
 
@@ -382,6 +384,33 @@ class WordFilter {
 }
 ```
 
+```rust
+struct WordFilter {
+    words: Vec<String>,
+}
+
+impl WordFilter {
+    fn new(words: Vec<String>) -> Self {
+        Self { words }
+    }
+
+    fn f(&self, pref: String, suff: String) -> i32 {
+        for i in (0..self.words.len()).rev() {
+            let w = self.words[i].as_bytes();
+            let p = pref.as_bytes();
+            let s = suff.as_bytes();
+            if w.len() < p.len() || w.len() < s.len() {
+                continue;
+            }
+            if w.starts_with(p) && w.ends_with(s) {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -403,13 +432,13 @@ We can precompute all possible prefix-suffix combinations for each word during i
 
 1. Initialize an empty hash map.
 2. For each word at index `i`:
-   - Generate all prefixes of the word.
-   - For each prefix, generate all suffixes of the word.
-   - Create a key by concatenating `prefix + "$" + suffix`.
-   - Store the index `i` in the map (later words overwrite earlier ones, ensuring we keep the highest index).
+    - Generate all prefixes of the word.
+    - For each prefix, generate all suffixes of the word.
+    - Create a key by concatenating `prefix + "$" + suffix`.
+    - Store the index `i` in the map (later words overwrite earlier ones, ensuring we keep the highest index).
 3. For `f(pref, suff)`:
-   - Build the key `pref + "$" + suff`.
-   - Return the value from the map if it exists, otherwise return `-1`.
+    - Build the key `pref + "$" + suff`.
+    - Return the value from the map if it exists, otherwise return `-1`.
 
 ::tabs-start
 
@@ -619,6 +648,33 @@ class WordFilter {
 }
 ```
 
+```rust
+struct WordFilter {
+    mp: HashMap<String, i32>,
+}
+
+impl WordFilter {
+    fn new(words: Vec<String>) -> Self {
+        let mut mp = HashMap::new();
+        for (i, w) in words.iter().enumerate() {
+            for j in 0..w.len() {
+                let pref = &w[..j + 1];
+                for k in 0..w.len() {
+                    let cur = format!("{}${}", pref, &w[k..]);
+                    mp.insert(cur, i as i32);
+                }
+            }
+        }
+        Self { mp }
+    }
+
+    fn f(&self, pref: String, suff: String) -> i32 {
+        let s = format!("{}${}", pref, suff);
+        *self.mp.get(&s).unwrap_or(&-1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -642,13 +698,13 @@ A Trie is ideal for prefix matching, but we also need suffix matching. The trick
 
 1. Build a Trie where each node stores children (`26` letters + `1` separator) and the latest word index.
 2. For each word at index `i`:
-   - For every suffix starting position `j`:
-     - For every prefix ending position `k`:
-       - Insert `suffix + "{" + prefix` into the Trie.
-       - Mark each node along the path with index `i`.
+    - For every suffix starting position `j`:
+        - For every prefix ending position `k`:
+            - Insert `suffix + "{" + prefix` into the Trie.
+            - Mark each node along the path with index `i`.
 3. For `f(pref, suff)`:
-   - Search the Trie for `suff + "{" + pref`.
-   - Return the index stored at the final node, or `-1` if not found.
+    - Search the Trie for `suff + "{" + pref`.
+    - Return the index stored at the final node, or `-1` if not found.
 
 ::tabs-start
 
@@ -1169,6 +1225,80 @@ class WordFilter {
 
     func f(_ pref: String, _ suff: String) -> Int {
         return trie.search(suff + String(charSep) + pref)
+    }
+}
+```
+
+```rust
+struct TrieNode {
+    children: [Option<Box<TrieNode>>; 27],
+    index: i32,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self {
+            children: Default::default(),
+            index: -1,
+        }
+    }
+}
+
+struct Trie {
+    root: TrieNode,
+}
+
+impl Trie {
+    fn new() -> Self {
+        Self { root: TrieNode::new() }
+    }
+
+    fn add_word(&mut self, word: &str, i: i32) {
+        let mut cur = &mut self.root;
+        for ch in word.bytes() {
+            let c = if ch == b'{' { 26 } else { (ch - b'a') as usize };
+            cur = cur.children[c].get_or_insert_with(|| Box::new(TrieNode::new()));
+        }
+        cur.index = i;
+    }
+
+    fn search(&self, word: &str) -> i32 {
+        let mut cur = &self.root;
+        for ch in word.bytes() {
+            let c = if ch == b'{' { 26 } else { (ch - b'a') as usize };
+            match &cur.children[c] {
+                Some(node) => cur = node,
+                None => return -1,
+            }
+        }
+        cur.index
+    }
+}
+
+struct WordFilter {
+    trie: Trie,
+}
+
+impl WordFilter {
+    fn new(words: Vec<String>) -> Self {
+        let mut trie = Trie::new();
+        for (i, word) in words.iter().enumerate() {
+            let w_len = word.len();
+            for j in 0..w_len {
+                let suffix = &word[j..];
+                for k in 0..=w_len {
+                    let prefix = &word[..k];
+                    let key = format!("{}{{{}", suffix, prefix);
+                    trie.add_word(&key, i as i32);
+                }
+            }
+        }
+        Self { trie }
+    }
+
+    fn f(&self, pref: String, suff: String) -> i32 {
+        let key = format!("{}{{{}", suff, pref);
+        self.trie.search(&key)
     }
 }
 ```

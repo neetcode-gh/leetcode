@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers Technique** - Using pointers from both ends of a string to compare characters
 - **Palindrome Fundamentals** - Understanding how to check if a string reads the same forwards and backwards
 
@@ -15,9 +17,9 @@ The simplest approach is to check every possibility. First, check if the string 
 
 1. First check if the original string is a palindrome by comparing it to its reverse. If yes, return `true`.
 2. For each index `i` from `0` to `n-1`:
-   - Create a new string by removing the character at index `i`.
-   - Check if this new string is a palindrome.
-   - If it is, return `true`.
+    - Create a new string by removing the character at index `i`.
+    - Check if this new string is a palindrome.
+    - If it is, return `true`.
 3. If no single removal produces a palindrome, return `false`.
 
 ::tabs-start
@@ -248,6 +250,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn valid_palindrome(s: String) -> bool {
+        let s = s.as_bytes();
+
+        fn is_palindrome(s: &[u8]) -> bool {
+            let (mut l, mut r) = (0, s.len().wrapping_sub(1));
+            while l < r {
+                if s[l] != s[r] {
+                    return false;
+                }
+                l += 1;
+                r -= 1;
+            }
+            true
+        }
+
+        if is_palindrome(s) {
+            return true;
+        }
+
+        for i in 0..s.len() {
+            let new_s: Vec<u8> = s[..i].iter().chain(&s[i + 1..]).copied().collect();
+            if is_palindrome(&new_s) {
+                return true;
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -267,11 +302,11 @@ Instead of blindly trying every removal, we can be smarter. Use two pointers sta
 
 1. Initialize two pointers: `l` at the start and `r` at the end of the string.
 2. While `l < r`:
-   - If `s[l] == s[r]`, move both pointers inward (`l++`, `r--`).
-   - If they differ, we found the mismatch. Check two possibilities:
-     - Skip the left character and check if `s[l+1...r]` is a palindrome.
-     - Skip the right character and check if `s[l...r-1]` is a palindrome.
-   - Return `true` if either substring is a palindrome.
+    - If `s[l] == s[r]`, move both pointers inward (`l++`, `r--`).
+    - If they differ, we found the mismatch. Check two possibilities:
+        - Skip the left character and check if `s[l+1...r]` is a palindrome.
+        - Skip the right character and check if `s[l...r-1]` is a palindrome.
+    - Return `true` if either substring is a palindrome.
 3. If the loop completes without mismatches, the string is already a palindrome. Return `true`.
 
 ::tabs-start
@@ -523,6 +558,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn valid_palindrome(s: String) -> bool {
+        let s = s.as_bytes();
+
+        fn is_palindrome(s: &[u8]) -> bool {
+            let (mut l, mut r) = (0, s.len().wrapping_sub(1));
+            while l < r {
+                if s[l] != s[r] {
+                    return false;
+                }
+                l += 1;
+                r -= 1;
+            }
+            true
+        }
+
+        let (mut l, mut r) = (0, s.len() - 1);
+        while l < r {
+            if s[l] != s[r] {
+                return is_palindrome(&s[l + 1..=r])
+                    || is_palindrome(&s[l..r]);
+            }
+            l += 1;
+            r -= 1;
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -543,8 +610,8 @@ The previous two-pointer solution creates new substrings, which costs `O(n)` spa
 1. Create a helper function `isPalindrome(l, r)` that checks if `s[l...r]` is a palindrome using two pointers without creating a new string.
 2. Initialize pointers `l = 0` and `r = len(s) - 1`.
 3. While `l < r`:
-   - If `s[l] != s[r]`, return `isPalindrome(l+1, r) or isPalindrome(l, r-1)`.
-   - Otherwise, increment `l` and decrement `r`.
+    - If `s[l] != s[r]`, return `isPalindrome(l+1, r) or isPalindrome(l, r-1)`.
+    - Otherwise, increment `l` and decrement `r`.
 4. Return `true` if the loop completes (string is already a palindrome).
 
 ::tabs-start
@@ -784,6 +851,37 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn valid_palindrome(s: String) -> bool {
+        let s = s.as_bytes();
+
+        fn is_palindrome(s: &[u8], mut l: usize, mut r: usize) -> bool {
+            while l < r {
+                if s[l] != s[r] {
+                    return false;
+                }
+                l += 1;
+                r -= 1;
+            }
+            true
+        }
+
+        let (mut l, mut r) = (0, s.len() - 1);
+        while l < r {
+            if s[l] != s[r] {
+                return is_palindrome(s, l + 1, r)
+                    || is_palindrome(s, l, r - 1);
+            }
+            l += 1;
+            r -= 1;
+        }
+
+        true
     }
 }
 ```

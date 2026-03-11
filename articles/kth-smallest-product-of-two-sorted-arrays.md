@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Using binary search to find a target value or boundary in a sorted space
 - **Two Pointers Technique** - Efficiently traversing sorted arrays from both ends to count elements meeting certain conditions
 - **Sorted Array Properties** - Leveraging the sorted nature of arrays to optimize counting and searching operations
@@ -154,12 +156,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_smallest_product(nums1: Vec<i32>, nums2: Vec<i32>, k: i64) -> i64 {
+        let mut prod: Vec<i64> = Vec::new();
+        for &x in &nums1 {
+            for &y in &nums2 {
+                prod.push(x as i64 * y as i64);
+            }
+        }
+        prod.sort();
+        prod[(k - 1) as usize]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ and $n$ are the lengths of the arrays $nums1$ and $nums2$, respectively.
 
@@ -176,9 +193,9 @@ Instead of enumerating all products, we can binary search on the answer. For a c
 1. Set the search range from `-10^10` to `10^10` (product bounds).
 2. Binary search for the smallest product where at least `k` products are less than or equal to it.
 3. For counting products <= `prod`:
-   - For positive `a` in `nums1`: count elements in `nums2` where `a * b <= prod`.
-   - For negative `a`: count elements where the product doesn't exceed `prod` (direction reverses).
-   - For `a = 0`: if `prod >= 0`, all of `nums2` contributes.
+    - For positive `a` in `nums1`: count elements in `nums2` where `a * b <= prod`.
+    - For negative `a`: count elements where the product doesn't exceed `prod` (direction reverses).
+    - For `a = 0`: if `prod >= 0`, all of `nums2` contributes.
 4. Return the binary search result.
 
 ::tabs-start
@@ -281,7 +298,7 @@ public:
         }
         return left;
     }
-    
+
 private:
     long long count(vector<int>& nums1, vector<int>& nums2, long long prod) {
         long long cnt = 0;
@@ -314,7 +331,8 @@ class Solution {
      */
     kthSmallestProduct(nums1, nums2, k) {
         const lowerBound = (arr, target) => {
-            let l = 0, r = arr.length;
+            let l = 0,
+                r = arr.length;
             while (l < r) {
                 const m = (l + r) >>> 1;
                 if (arr[m] < target) l = m + 1;
@@ -324,7 +342,8 @@ class Solution {
         };
 
         const upperBound = (arr, target) => {
-            let l = 0, r = arr.length;
+            let l = 0,
+                r = arr.length;
             while (l < r) {
                 const m = (l + r) >>> 1;
                 if (arr[m] <= target) l = m + 1;
@@ -333,7 +352,8 @@ class Solution {
             return l;
         };
 
-        let left = -1e10, right = 1e10;
+        let left = -1e10,
+            right = 1e10;
         const n2 = nums2.length;
         while (left < right) {
             const mid = Math.floor((left + right) / 2);
@@ -409,12 +429,70 @@ public class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_smallest_product(nums1: Vec<i32>, nums2: Vec<i32>, k: i64) -> i64 {
+        let n2 = nums2.len();
+
+        let lower_bound = |arr: &[i32], target: i64| -> usize {
+            let (mut l, mut r) = (0usize, arr.len());
+            while l < r {
+                let m = (l + r) / 2;
+                if (arr[m] as i64) < target { l = m + 1; } else { r = m; }
+            }
+            l
+        };
+
+        let upper_bound = |arr: &[i32], target: i64| -> usize {
+            let (mut l, mut r) = (0usize, arr.len());
+            while l < r {
+                let m = (l + r) / 2;
+                if (arr[m] as i64) <= target { l = m + 1; } else { r = m; }
+            }
+            l
+        };
+
+        let count = |prod: i64| -> i64 {
+            let mut cnt: i64 = 0;
+            for &a in &nums1 {
+                if a > 0 {
+                    let a64 = a as i64;
+                    let bound = if prod >= 0 {
+                        prod / a64
+                    } else {
+                        -((-prod + a64 - 1) / a64)
+                    };
+                    cnt += upper_bound(&nums2, bound) as i64;
+                } else if a < 0 {
+                    let threshold = (prod as f64 / a as f64).ceil() as i64;
+                    cnt += (n2 - lower_bound(&nums2, threshold)) as i64;
+                } else if prod >= 0 {
+                    cnt += n2 as i64;
+                }
+            }
+            cnt
+        };
+
+        let (mut left, mut right): (i64, i64) = (-10_000_000_000, 10_000_000_000);
+        while left <= right {
+            let mid = left + (right - left) / 2;
+            if count(mid) < k {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        left
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log (\log N))$
-* Space complexity: $O(1)$
+- Time complexity: $O(m \log (\log N))$
+- Space complexity: $O(1)$
 
 > Where $m$ and $n$ are the lengths of the arrays $nums1$ and $nums2$, respectively. $N$ is the size of the range of the product.
 
@@ -431,10 +509,10 @@ We can optimize the counting step using two pointers instead of binary search fo
 1. Find the boundary indices where negative numbers end in both arrays (`pos1`, `pos2`).
 2. Binary search on the product value.
 3. For each candidate, count products using four two-pointer traversals:
-   - Negatives from `nums1` with negatives from `nums2` (yields positives).
-   - Positives from `nums1` with positives from `nums2`.
-   - Negatives from `nums1` with positives from `nums2` (yields negatives).
-   - Positives from `nums1` with negatives from `nums2`.
+    - Negatives from `nums1` with negatives from `nums2` (yields positives).
+    - Positives from `nums1` with positives from `nums2`.
+    - Negatives from `nums1` with positives from `nums2` (yields negatives).
+    - Positives from `nums1` with negatives from `nums2`.
 4. Adjust pointers based on whether the current product exceeds the target.
 5. Return the smallest product where count >= `k`.
 
@@ -673,8 +751,9 @@ class Solution {
      * @return {number}
      */
     kthSmallestProduct(nums1, nums2, k) {
-        const n1 = nums1.length, n2 = nums2.length;
-        
+        const n1 = nums1.length,
+            n2 = nums2.length;
+
         let pos1 = 0; // first non-negative in nums1
         while (pos1 < n1 && nums1[pos1] < 0) {
             pos1++;
@@ -684,51 +763,56 @@ class Solution {
             pos2++;
         }
 
-        let left = -1e10, right = 1e10;
+        let left = -1e10,
+            right = 1e10;
         while (left <= right) {
             const mid = left + Math.floor((right - left) / 2);
             let cnt = 0;
 
             // negative * negative -> positive
-            let i = 0, j = pos2 - 1;
+            let i = 0,
+                j = pos2 - 1;
             while (i < pos1 && j >= 0) {
                 if (nums1[i] * nums2[j] > mid) {
                     i++;
                 } else {
-                    cnt += (pos1 - i);
+                    cnt += pos1 - i;
                     j--;
                 }
             }
 
             // positive * positive -> positive
-            i = pos1; j = n2 - 1;
+            i = pos1;
+            j = n2 - 1;
             while (i < n1 && j >= pos2) {
                 if (nums1[i] * nums2[j] > mid) {
                     j--;
                 } else {
-                    cnt += (j - pos2 + 1);
+                    cnt += j - pos2 + 1;
                     i++;
                 }
             }
 
             // negative * positive -> negative
-            i = 0; j = pos2;
+            i = 0;
+            j = pos2;
             while (i < pos1 && j < n2) {
                 if (nums1[i] * nums2[j] > mid) {
                     j++;
                 } else {
-                    cnt += (n2 - j);
+                    cnt += n2 - j;
                     i++;
                 }
             }
 
             // positive * negative -> negative
-            i = pos1; j = 0;
+            i = pos1;
+            j = 0;
             while (i < n1 && j < pos2) {
                 if (nums1[i] * nums2[j] > mid) {
                     i++;
                 } else {
-                    cnt += (n1 - i);
+                    cnt += n1 - i;
                     j++;
                 }
             }
@@ -824,12 +908,86 @@ public class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn kth_smallest_product(nums1: Vec<i32>, nums2: Vec<i32>, k: i64) -> i64 {
+        let n1 = nums1.len();
+        let n2 = nums2.len();
+        let mut pos1 = 0;
+        while pos1 < n1 && nums1[pos1] < 0 { pos1 += 1; }
+        let mut pos2 = 0;
+        while pos2 < n2 && nums2[pos2] < 0 { pos2 += 1; }
+
+        let count = |prod: i64| -> i64 {
+            let mut cnt: i64 = 0;
+
+            // negative * negative -> positive
+            let (mut i, mut j) = (0i64, pos2 as i64 - 1);
+            while i < pos1 as i64 && j >= 0 {
+                if nums1[i as usize] as i64 * nums2[j as usize] as i64 > prod {
+                    i += 1;
+                } else {
+                    cnt += pos1 as i64 - i;
+                    j -= 1;
+                }
+            }
+
+            // positive * positive -> positive
+            let (mut i, mut j) = (pos1, n2 as i64 - 1);
+            while i < n1 && j >= pos2 as i64 {
+                if nums1[i] as i64 * nums2[j as usize] as i64 > prod {
+                    j -= 1;
+                } else {
+                    cnt += j - pos2 as i64 + 1;
+                    i += 1;
+                }
+            }
+
+            // negative * positive -> negative
+            let (mut i, mut j) = (0usize, pos2);
+            while i < pos1 && j < n2 {
+                if nums1[i] as i64 * nums2[j] as i64 > prod {
+                    j += 1;
+                } else {
+                    cnt += (n2 - j) as i64;
+                    i += 1;
+                }
+            }
+
+            // positive * negative -> negative
+            let (mut i, mut j) = (pos1, 0usize);
+            while i < n1 && j < pos2 {
+                if nums1[i] as i64 * nums2[j] as i64 > prod {
+                    i += 1;
+                } else {
+                    cnt += (n1 - i) as i64;
+                    j += 1;
+                }
+            }
+
+            cnt
+        };
+
+        let (mut left, mut right): (i64, i64) = (-10_000_000_000, 10_000_000_000);
+        while left <= right {
+            let mid = left + (right - left) / 2;
+            if count(mid) < k {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        left
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m + n) \log N)$
-* Space complexity: $O(1)$
+- Time complexity: $O((m + n) \log N)$
+- Space complexity: $O(1)$
 
 > Where $m$ and $n$ are the lengths of the arrays $nums1$ and $nums2$, respectively. $N$ is the size of the range of the product.
 

@@ -229,6 +229,38 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+
+        fn dfs(r1: i32, c1: i32, r2: i32, c2: i32, grid: &Vec<Vec<i32>>, n: i32) -> i32 {
+            if r1 >= n || c1 >= n || r2 >= n || c2 >= n
+                || grid[r1 as usize][c1 as usize] == -1
+                || grid[r2 as usize][c2 as usize] == -1
+            {
+                return -1000;
+            }
+            if r1 == n - 1 && c1 == n - 1 && r2 == n - 1 && c2 == n - 1 {
+                return grid[r1 as usize][c1 as usize];
+            }
+            let mut res = dfs(r1 + 1, c1, r2 + 1, c2, grid, n);
+            res = res.max(dfs(r1 + 1, c1, r2, c2 + 1, grid, n));
+            res = res.max(dfs(r1, c1 + 1, r2 + 1, c2, grid, n));
+            res = res.max(dfs(r1, c1 + 1, r2, c2 + 1, grid, n));
+            res += grid[r1 as usize][c1 as usize] + grid[r2 as usize][c2 as usize];
+            if r1 == r2 && c1 == c2 {
+                res -= grid[r1 as usize][c1 as usize];
+            }
+            res
+        }
+
+        0.max(dfs(0, 0, 0, 0, &grid, n as i32))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -552,6 +584,47 @@ class Solution {
             return res
         }
         return max(0, dfs(0, 0, 0, 0))
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut dp = vec![vec![vec![vec![i32::MIN; n]; n]; n]; n];
+
+        fn dfs(
+            r1: i32, c1: i32, r2: i32, c2: i32,
+            grid: &Vec<Vec<i32>>, dp: &mut Vec<Vec<Vec<Vec<i32>>>>, n: i32,
+        ) -> i32 {
+            if r1 >= n || c1 >= n || r2 >= n || c2 >= n
+                || grid[r1 as usize][c1 as usize] == -1
+                || grid[r2 as usize][c2 as usize] == -1
+            {
+                return -1000;
+            }
+            if r1 == n - 1 && c1 == n - 1 && r2 == n - 1 && c2 == n - 1 {
+                return grid[r1 as usize][c1 as usize];
+            }
+            let (r1u, c1u, r2u, c2u) = (r1 as usize, c1 as usize, r2 as usize, c2 as usize);
+            if dp[r1u][c1u][r2u][c2u] != i32::MIN {
+                return dp[r1u][c1u][r2u][c2u];
+            }
+            let mut res = dfs(r1 + 1, c1, r2 + 1, c2, grid, dp, n);
+            res = res.max(dfs(r1 + 1, c1, r2, c2 + 1, grid, dp, n));
+            res = res.max(dfs(r1, c1 + 1, r2 + 1, c2, grid, dp, n));
+            res = res.max(dfs(r1, c1 + 1, r2, c2 + 1, grid, dp, n));
+            res += grid[r1u][c1u] + grid[r2u][c2u];
+            if r1 == r2 && c1 == c2 {
+                res -= grid[r1u][c1u];
+            }
+            dp[r1u][c1u][r2u][c2u] = res;
+            res
+        }
+
+        0.max(dfs(0, 0, 0, 0, &grid, &mut dp, n as i32))
     }
 }
 ```
@@ -883,6 +956,48 @@ class Solution {
             return res
         }
         return max(0, dfs(0, 0, 0))
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut dp = vec![vec![vec![i32::MIN; n]; n]; n];
+
+        fn dfs(
+            r1: i32, c1: i32, r2: i32,
+            grid: &Vec<Vec<i32>>, dp: &mut Vec<Vec<Vec<i32>>>, n: i32,
+        ) -> i32 {
+            let c2 = r1 + c1 - r2;
+            if r1 >= n || c1 >= n || r2 >= n || c2 >= n
+                || grid[r1 as usize][c1 as usize] == -1
+                || grid[r2 as usize][c2 as usize] == -1
+            {
+                return -1000;
+            }
+            if r1 == n - 1 && c1 == n - 1 {
+                return grid[r1 as usize][c1 as usize];
+            }
+            let (r1u, c1u, r2u) = (r1 as usize, c1 as usize, r2 as usize);
+            if dp[r1u][c1u][r2u] != i32::MIN {
+                return dp[r1u][c1u][r2u];
+            }
+            let mut res = dfs(r1 + 1, c1, r2 + 1, grid, dp, n);
+            res = res.max(dfs(r1 + 1, c1, r2, grid, dp, n));
+            res = res.max(dfs(r1, c1 + 1, r2 + 1, grid, dp, n));
+            res = res.max(dfs(r1, c1 + 1, r2, grid, dp, n));
+            res += grid[r1u][c1u];
+            if !(r1 == r2 && c1 == c2) {
+                res += grid[r2 as usize][c2 as usize];
+            }
+            dp[r1u][c1u][r2u] = res;
+            res
+        }
+
+        0.max(dfs(0, 0, 0, &grid, &mut dp, n as i32))
     }
 }
 ```
@@ -1231,6 +1346,47 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let min_val = i32::MIN / 2;
+        let mut dp = vec![vec![vec![min_val; n]; n]; n];
+
+        for r1 in (0..n).rev() {
+            for c1 in (0..n).rev() {
+                for r2 in (0..n).rev() {
+                    let c2 = r1 as i32 + c1 as i32 - r2 as i32;
+                    if c2 < 0 || c2 >= n as i32 {
+                        continue;
+                    }
+                    let c2u = c2 as usize;
+                    if grid[r1][c1] == -1 || grid[r2][c2u] == -1 {
+                        continue;
+                    }
+                    if r1 == n - 1 && c1 == n - 1 {
+                        dp[r1][c1][r2] = grid[r1][c1];
+                    } else {
+                        let mut res = min_val;
+                        if r1 + 1 < n && r2 + 1 < n { res = res.max(dp[r1 + 1][c1][r2 + 1]); }
+                        if r1 + 1 < n { res = res.max(dp[r1 + 1][c1][r2]); }
+                        if c1 + 1 < n && r2 + 1 < n { res = res.max(dp[r1][c1 + 1][r2 + 1]); }
+                        if c1 + 1 < n { res = res.max(dp[r1][c1 + 1][r2]); }
+                        if res == min_val { continue; }
+                        res += grid[r1][c1];
+                        if r1 != r2 || c1 != c2u { res += grid[r2][c2u]; }
+                        dp[r1][c1][r2] = res;
+                    }
+                }
+            }
+        }
+
+        0.max(dp[0][0][0])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1565,6 +1721,42 @@ class Solution {
             prev = dp
         }
         return max(0, prev[n - 1][n - 1])
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn cherry_pickup(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut prev = vec![vec![i32::MIN; n]; n];
+        prev[0][0] = grid[0][0];
+
+        for k in 1..(2 * n - 1) {
+            let mut dp = vec![vec![i32::MIN; n]; n];
+            let lo = 0.max(k as i32 - n as i32 + 1) as usize;
+            let hi = n.min(k + 1);
+            for r1 in lo..hi {
+                let c1 = k - r1;
+                if c1 >= n || grid[r1][c1] == -1 { continue; }
+                for r2 in lo..hi {
+                    let c2 = k - r2;
+                    if c2 >= n || grid[r2][c2] == -1 { continue; }
+                    let mut val = prev[r1][r2];
+                    if r1 > 0 { val = val.max(prev[r1 - 1][r2]); }
+                    if r2 > 0 { val = val.max(prev[r1][r2 - 1]); }
+                    if r1 > 0 && r2 > 0 { val = val.max(prev[r1 - 1][r2 - 1]); }
+                    if val < 0 { continue; }
+                    val += grid[r1][c1];
+                    if r1 != r2 { val += grid[r2][c2]; }
+                    dp[r1][r2] = val;
+                }
+            }
+            prev = dp;
+        }
+
+        0.max(prev[n - 1][n - 1])
     }
 }
 ```

@@ -314,6 +314,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_difference(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res1: HashSet<i32> = HashSet::new();
+        let mut res2: HashSet<i32> = HashSet::new();
+
+        for &num1 in &nums1 {
+            let mut found = false;
+            for &num2 in &nums2 {
+                if num1 == num2 {
+                    found = true;
+                    break;
+                }
+            }
+            if !found {
+                res1.insert(num1);
+            }
+        }
+
+        for &num2 in &nums2 {
+            let mut found = false;
+            for &num1 in &nums1 {
+                if num1 == num2 {
+                    found = true;
+                    break;
+                }
+            }
+            if !found {
+                res2.insert(num2);
+            }
+        }
+
+        vec![
+            res1.into_iter().collect(),
+            res2.into_iter().collect(),
+        ]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,6 +601,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_difference(mut nums1: Vec<i32>, mut nums2: Vec<i32>) -> Vec<Vec<i32>> {
+        nums1.sort();
+        nums2.sort();
+
+        fn helper(a: &[i32], b: &[i32]) -> Vec<i32> {
+            let mut res = Vec::new();
+            let mut j = 0;
+            let mut prev = i32::MIN;
+
+            for &num in a {
+                if num == prev { continue; }
+                while j < b.len() && b[j] < num { j += 1; }
+                if j == b.len() || b[j] != num {
+                    res.push(num);
+                }
+                prev = num;
+            }
+            res
+        }
+
+        vec![helper(&nums1, &nums2), helper(&nums2, &nums1)]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -748,6 +815,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_difference(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<Vec<i32>> {
+        let num1_set: HashSet<i32> = nums1.into_iter().collect();
+        let num2_set: HashSet<i32> = nums2.into_iter().collect();
+
+        let res1: Vec<i32> = num1_set.iter().filter(|x| !num2_set.contains(x)).cloned().collect();
+        let res2: Vec<i32> = num2_set.iter().filter(|x| !num1_set.contains(x)).cloned().collect();
+
+        vec![res1, res2]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -913,6 +994,20 @@ class Solution {
         return [
             Array(numSet1.subtracting(numSet2)),
             Array(numSet2.subtracting(numSet1))
+        ]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_difference(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<Vec<i32>> {
+        let num_set1: HashSet<i32> = nums1.into_iter().collect();
+        let num_set2: HashSet<i32> = nums2.into_iter().collect();
+
+        vec![
+            num_set1.difference(&num_set2).cloned().collect(),
+            num_set2.difference(&num_set1).cloned().collect(),
         ]
     }
 }

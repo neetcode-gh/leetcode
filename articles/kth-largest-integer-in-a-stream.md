@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Heap Data Structure** - Understanding min-heaps and how they maintain the smallest element at the root
 - **Priority Queues** - Using built-in heap implementations for efficient insertion and extraction
 - **Sorting Algorithms** - Understanding basic sorting as a baseline approach
@@ -20,10 +22,12 @@ This method is easy to understand but slow because sorting happens every time `a
 ### Algorithm
 
 #### Initialization
+
 - Store `k`.
 - Store the initial numbers in an array.
 
 #### add(val)
+
 1. Append `val` to the array.
 2. Sort the array.
 3. Return the element at index `len(arr) - k` (the k-th largest).
@@ -170,6 +174,25 @@ class KthLargest {
 }
 ```
 
+```rust
+struct KthLargest {
+    k: usize,
+    arr: Vec<i32>,
+}
+
+impl KthLargest {
+    fn new(k: i32, nums: Vec<i32>) -> Self {
+        KthLargest { k: k as usize, arr: nums }
+    }
+
+    fn add(&mut self, val: i32) -> i32 {
+        self.arr.push(val);
+        self.arr.sort();
+        self.arr[self.arr.len() - self.k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,22 +219,24 @@ A **min-heap of size `k`** is perfect for this:
 - If the heap contains the `k` largest elements,
   then the **smallest among them** is exactly the **k-th largest overall**.
 - Whenever a new number arrives:
-  - If we add it and the heap grows beyond `k`,
-    we remove the smallest element - because it cannot be in the top `k` anymore.
+    - If we add it and the heap grows beyond `k`,
+      we remove the smallest element - because it cannot be in the top `k` anymore.
 
 This way, the heap always holds exactly the **top `k` elements**, and retrieving the k-th largest is `O(1)`.
 
 ### Algorithm
 
 #### Initialization
+
 1. Insert all initial numbers into a min-heap.
 2. If the heap size becomes greater than `k`, repeatedly remove the smallest element.
-   - After this, the heap contains exactly `k` elements.
+    - After this, the heap contains exactly `k` elements.
 
 #### add(value)
+
 1. Insert the new value into the min-heap.
 2. If heap size > `k`:
-   - Remove the smallest element (the heap root).
+    - Remove the smallest element (the heap root).
 3. Return the heap's smallest element (the root), which is now the **k-th largest**.
 
 ::tabs-start
@@ -423,6 +448,35 @@ class KthLargest {
             minHeap.popMin()
         }
         return minHeap.min!
+    }
+}
+```
+
+```rust
+struct KthLargest {
+    min_heap: BinaryHeap<Reverse<i32>>,
+    k: usize,
+}
+
+impl KthLargest {
+    fn new(k: i32, nums: Vec<i32>) -> Self {
+        let k = k as usize;
+        let mut min_heap = BinaryHeap::new();
+        for num in nums {
+            min_heap.push(Reverse(num));
+            if min_heap.len() > k {
+                min_heap.pop();
+            }
+        }
+        KthLargest { min_heap, k }
+    }
+
+    fn add(&mut self, val: i32) -> i32 {
+        self.min_heap.push(Reverse(val));
+        if self.min_heap.len() > self.k {
+            self.min_heap.pop();
+        }
+        self.min_heap.peek().unwrap().0
     }
 }
 ```

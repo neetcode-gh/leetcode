@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Simulation** - Executing step-by-step instructions to track state changes
 - **2D Coordinate Systems** - Working with x, y positions and direction vectors
 - **Direction Vectors** - Representing and rotating directions (90-degree turns)
@@ -17,13 +19,13 @@ A robot executing the same instructions repeatedly will be bounded in a circle i
 
 1. Initialize direction as north with `(dirX, dirY) = (0, 1)` and position as `(x, y) = (0, 0)`.
 2. Process each instruction in the string:
-   - `G`: Move forward by adding direction to position.
-   - `L`: Rotate left 90 degrees by setting `(dirX, dirY) = (-dirY, dirX)`.
-   - `R`: Rotate right 90 degrees by setting `(dirX, dirY) = (dirY, -dirX)`.
+    - `G`: Move forward by adding direction to position.
+    - `L`: Rotate left 90 degrees by setting `(dirX, dirY) = (-dirY, dirX)`.
+    - `R`: Rotate right 90 degrees by setting `(dirX, dirY) = (dirY, -dirX)`.
 3. After processing all instructions, check if bounded:
-   - Return `true` if position is `(0, 0)` (back at origin).
-   - Return `true` if direction is not `(0, 1)` (not facing north).
-   - Otherwise return `false`.
+    - Return `true` if position is `(0, 0)` (back at origin).
+    - Return `true` if direction is not `(0, 1)` (not facing north).
+    - Otherwise return `false`.
 
 ::tabs-start
 
@@ -222,6 +224,36 @@ class Solution {
         }
 
         return (x == 0 && y == 0) || (dirX != 0 || dirY != 1)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_robot_bounded(instructions: String) -> bool {
+        let (mut dir_x, mut dir_y) = (0_i32, 1_i32);
+        let (mut x, mut y) = (0_i32, 0_i32);
+
+        for d in instructions.bytes() {
+            match d {
+                b'G' => {
+                    x += dir_x;
+                    y += dir_y;
+                }
+                b'L' => {
+                    let temp = dir_x;
+                    dir_x = -dir_y;
+                    dir_y = temp;
+                }
+                _ => {
+                    let temp = dir_x;
+                    dir_x = dir_y;
+                    dir_y = -temp;
+                }
+            }
+        }
+
+        (x == 0 && y == 0) || (dir_x != 0 || dir_y != 1)
     }
 }
 ```

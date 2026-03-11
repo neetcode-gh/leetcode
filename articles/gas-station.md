@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Greedy Algorithms** - Recognizing when local decisions can determine global validity
 - **Array Traversal** - Iterating through arrays while maintaining running totals
 - **Two Pointers** - Using pointers from opposite ends to efficiently narrow down candidates
@@ -14,32 +16,34 @@ Before attempting this problem, you should be comfortable with:
 We need to find a starting gas station index such that we can travel around the entire circle exactly once without the gas tank ever going negative.
 
 The most direct (brute force) idea is:
+
 - try starting from every station `i`
 - simulate the trip around the circle
 - if at any point the tank becomes negative, that start index fails
 - if we return back to `i` successfully, then `i` is a valid answer
 
 At each station:
+
 - we gain `gas[j]`
 - we spend `cost[j]` to travel to the next station
-So the tank changes by `gas[j] - cost[j]`.
+  So the tank changes by `gas[j] - cost[j]`.
 
 ### Algorithm
 
 1. Let `n` be the number of stations.
 2. For each possible starting station `i` from `0` to `n - 1`:
-   - Initialize `tank = gas[i] - cost[i]`
-   - If `tank < 0`, we cannot even leave station `i`, so skip it
+    - Initialize `tank = gas[i] - cost[i]`
+    - If `tank < 0`, we cannot even leave station `i`, so skip it
 3. Set `j` to the next station `(i + 1) % n`
 4. While we haven’t returned to `i`:
-   - Add gas at station `j`: `tank += gas[j]`
-   - Subtract travel cost to next station: `tank -= cost[j]`
-   - If `tank < 0`, this start `i` fails, stop the simulation
-   - Move `j` to `(j + 1) % n`
+    - Add gas at station `j`: `tank += gas[j]`
+    - Subtract travel cost to next station: `tank -= cost[j]`
+    - If `tank < 0`, this start `i` fails, stop the simulation
+    - Move `j` to `(j + 1) % n`
 5. If we successfully return to `i` (completed the circle):
-   - Return `i`
+    - Return `i`
 6. If no starting index works:
-   - Return `-1`
+    - Return `-1`
 
 ::tabs-start
 
@@ -254,6 +258,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
+        let n = gas.len();
+
+        for i in 0..n {
+            let mut tank = gas[i] - cost[i];
+            if tank < 0 {
+                continue;
+            }
+
+            let mut j = (i + 1) % n;
+            while j != i {
+                tank += gas[j] - cost[j];
+                if tank < 0 {
+                    break;
+                }
+                j = (j + 1) % n;
+            }
+
+            if j == i {
+                return i as i32;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,11 +305,13 @@ We need to find a gas station index from which we can complete the full circular
 Instead of simulating the trip from every station (brute force), this approach uses **two pointers** to narrow down the possible starting station efficiently.
 
 Think of the route as a circle that we are trying to “cover” from both ends:
+
 - `start` moves backward from the end of the array
 - `end` moves forward from the beginning of the array
 - `tank` keeps track of the current gas balance for the segment we are considering
 
 At every step, we decide **which side to expand** based on whether the current `tank` is sufficient:
+
 - If the `tank` is negative, the current segment cannot work, so we must include more gas by moving `start` backward
 - If the `tank` is non-negative, we can safely extend the route forward by moving `end`
 
@@ -287,18 +322,18 @@ If the final `tank` is non-negative, `start` is a valid starting station.
 
 1. Let `n` be the number of gas stations.
 2. Initialize two pointers:
-   - `start = n - 1`
-   - `end = 0`
+    - `start = n - 1`
+    - `end = 0`
 3. Initialize `tank` with the net gas at `start`:
-   - `tank = gas[start] - cost[start]`
+    - `tank = gas[start] - cost[start]`
 4. While `start > end`:
-   - If `tank < 0`:
-     - Move `start` one step backward
-     - Add the net gas of the new `start` station to `tank`
-   - Else:
-     - Extend the route forward by including station `end`
-     - Add `gas[end] - cost[end]` to `tank`
-     - Move `end` one step forward
+    - If `tank < 0`:
+        - Move `start` one step backward
+        - Add the net gas of the new `start` station to `tank`
+    - Else:
+        - Extend the route forward by including station `end`
+        - Add `gas[end] - cost[end]` to `tank`
+        - Move `end` one step forward
 5. After the loop ends, all stations are included in the segment
 6. If `tank >= 0`, return `start` as the valid starting index.
 7. Otherwise, return `-1`.
@@ -477,6 +512,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
+        let n = gas.len();
+        let mut start = n - 1;
+        let mut end = 0;
+        let mut tank = gas[start] - cost[start];
+
+        while start > end {
+            if tank < 0 {
+                start -= 1;
+                tank += gas[start] - cost[start];
+            } else {
+                tank += gas[end] - cost[end];
+                end += 1;
+            }
+        }
+
+        if tank >= 0 { start as i32 } else { -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -493,31 +551,33 @@ class Solution {
 We want to find a gas station index from which we can complete the entire circular route without the gas tank ever going negative.
 
 First, notice an important fact:
+
 - If the **total gas available** is less than the **total cost required**, then it is **impossible** to complete the circuit from any station.
 
 If the total gas is sufficient, then there must be **exactly one valid starting station**.
 
 The greedy idea is to scan the stations from left to right while keeping track of the **current tank balance**.
+
 - If at some index the tank becomes negative, it means **we cannot start from any station between the previous start and this index**, because they would all run out of gas at the same point.
 - So we reset the tank and try the **next station as a new starting point**.
 
 ### Algorithm
 
 1. Check if the total gas is less than the total cost:
-   - If `sum(gas) < sum(cost)`, return `-1` immediately.
+    - If `sum(gas) < sum(cost)`, return `-1` immediately.
 2. Initialize:
-   - `total = 0` to track the current gas balance.
-   - `res = 0` to store the candidate starting index.
+    - `total = 0` to track the current gas balance.
+    - `res = 0` to store the candidate starting index.
 3. Iterate through all stations from index `0` to `n - 1`.
 4. At each station `i`:
-   - Add the net gas change:
-     - `total += gas[i] - cost[i]`
+    - Add the net gas change:
+        - `total += gas[i] - cost[i]`
 5. If `total` becomes negative:
-   - The current starting point cannot work.
-   - Reset `total = 0`.
-   - Set the next station as the new candidate start: `res = i + 1`.
+    - The current starting point cannot work.
+    - Reset `total = 0`.
+    - Set the next station as the new candidate start: `res = i + 1`.
 6. After finishing the loop:
-   - Return `res` as the valid starting station.
+    - Return `res` as the valid starting station.
 
 ::tabs-start
 
@@ -712,6 +772,28 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn can_complete_circuit(gas: Vec<i32>, cost: Vec<i32>) -> i32 {
+        if gas.iter().sum::<i32>() < cost.iter().sum::<i32>() {
+            return -1;
+        }
+
+        let mut total = 0;
+        let mut res = 0;
+        for i in 0..gas.len() {
+            total += gas[i] - cost[i];
+            if total < 0 {
+                total = 0;
+                res = i as i32 + 1;
+            }
+        }
+
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Storing and looking up key-value pairs in O(1) time
 - **String Iteration** - Traversing characters in a string by index
 - **Bijective Mapping** - Understanding one-to-one correspondence between two sets
@@ -15,8 +17,8 @@ Two strings are isomorphic if there's a one-to-one mapping between their charact
 ### Algorithm
 
 1. Create a helper function that checks if characters from one string map consistently to another:
-   - Use a hash map to store the character mappings.
-   - For each character, check if an existing mapping conflicts with the current pair.
+    - Use a hash map to store the character mappings.
+    - For each character, check if an existing mapping conflicts with the current pair.
 2. Call the helper twice: once with `(s, t)` and once with `(t, s)`.
 3. Return `true` only if both checks pass.
 
@@ -182,6 +184,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_isomorphic(s: String, t: String) -> bool {
+        fn helper(s: &[u8], t: &[u8]) -> bool {
+            let mut map = HashMap::new();
+            for i in 0..s.len() {
+                if let Some(&v) = map.get(&s[i]) {
+                    if v != t[i] {
+                        return false;
+                    }
+                }
+                map.insert(s[i], t[i]);
+            }
+            true
+        }
+        helper(s.as_bytes(), t.as_bytes()) && helper(t.as_bytes(), s.as_bytes())
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -203,9 +225,9 @@ We can verify both mapping directions simultaneously in a single pass. By mainta
 
 1. Create two hash maps: `mapST` for `s -> t` and `mapTS` for `t -> s`.
 2. Iterate through both strings simultaneously:
-   - If `s[i]` already maps to something other than `t[i]`, return `false`.
-   - If `t[i]` already maps to something other than `s[i]`, return `false`.
-   - Otherwise, record both mappings.
+    - If `s[i]` already maps to something other than `t[i]`, return `false`.
+    - If `t[i]` already maps to something other than `s[i]`, return `false`.
+    - Otherwise, record both mappings.
 3. If the loop completes without conflicts, return `true`.
 
 ::tabs-start
@@ -399,6 +421,38 @@ class Solution {
         }
 
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_isomorphic(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let mut map_st = HashMap::new();
+        let mut map_ts = HashMap::new();
+
+        for i in 0..s.len() {
+            let c1 = s[i];
+            let c2 = t[i];
+
+            if let Some(&v) = map_st.get(&c1) {
+                if v != c2 {
+                    return false;
+                }
+            }
+            if let Some(&v) = map_ts.get(&c2) {
+                if v != c1 {
+                    return false;
+                }
+            }
+
+            map_st.insert(c1, c2);
+            map_ts.insert(c2, c1);
+        }
+
+        true
     }
 }
 ```

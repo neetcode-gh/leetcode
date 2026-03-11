@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries to count element frequencies efficiently
 - **Sorting** - Sorting elements by custom criteria (frequency in this case)
 - **Heap/Priority Queue** - Using min-heaps to maintain the top k elements efficiently
@@ -212,6 +214,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        let mut arr: Vec<(i32, i32)> = count.into_iter().map(|(num, cnt)| (cnt, num)).collect();
+        arr.sort_unstable_by(|a, b| b.0.cmp(&a.0));
+
+        arr.iter().take(k).map(|&(_, num)| num).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,8 +254,8 @@ In the end, the heap holds exactly the `k` values with the highest frequencies.
 1. Build a frequency map that counts how many times each number appears.
 2. Create an empty min-heap.
 3. For each number in the frequency map:
-   - Push `(frequency, number)` into the heap.
-   - If the heap size becomes greater than `k`, pop once to remove the smallest frequency.
+    - Push `(frequency, number)` into the heap.
+    - If the heap size becomes greater than `k`, pop once to remove the smallest frequency.
 4. After processing all numbers, the heap contains the `k` most frequent elements.
 5. Pop all elements from the heap and collect their numbers into the result list.
 6. Return the result.
@@ -461,6 +480,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut count = HashMap::new();
+        for &num in &nums {
+            *count.entry(num).or_insert(0i32) += 1;
+        }
+
+        let mut heap = BinaryHeap::new();
+        for (&num, &freq) in &count {
+            heap.push(Reverse((freq, num)));
+            if heap.len() > k {
+                heap.pop();
+            }
+        }
+
+        heap.into_iter().map(|Reverse((_, num))| num).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -480,6 +521,7 @@ Each number in the array appears a certain number of times, and the maximum poss
 We can use this idea by creating a list where the index represents a frequency, and at each index we store all numbers that appear exactly that many times.
 
 For example:
+
 - All numbers that appear `1` time go into group `freq[1]`.
 - All numbers that appear `2` times go into group `freq[2]`.
 - And so on.
@@ -494,8 +536,8 @@ This way, we directly jump to the most frequent numbers without sorting all the 
 3. For each number and its frequency in the map, add the number to `freq[frequency]`.
 4. Initialize an empty result list.
 5. Loop from the largest possible frequency down to `1`:
-   - For each number in `freq[i]`, add it to the result list.
-   - Once the result contains `k` numbers, return it.
+    - For each number in `freq[i]`, add it to the result list.
+    - Once the result contains `k` numbers, return it.
 
 ::tabs-start
 
@@ -721,6 +763,34 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn top_k_frequent(nums: Vec<i32>, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut count = HashMap::new();
+        let mut freq = vec![vec![]; nums.len() + 1];
+
+        for &num in &nums {
+            *count.entry(num).or_insert(0usize) += 1;
+        }
+        for (&num, &cnt) in &count {
+            freq[cnt].push(num);
+        }
+
+        let mut res = Vec::new();
+        for i in (1..freq.len()).rev() {
+            for &num in &freq[i] {
+                res.push(num);
+                if res.len() == k {
+                    return res;
+                }
+            }
+        }
+        res
     }
 }
 ```

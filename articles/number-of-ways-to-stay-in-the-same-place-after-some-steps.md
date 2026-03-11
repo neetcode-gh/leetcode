@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Using memoization (top-down) or tabulation (bottom-up) to solve problems with overlapping subproblems
 - **Recursion** - Breaking down problems into smaller cases and identifying base cases
 - **State Space Optimization** - Recognizing when to bound the search space (e.g., you cannot move further than `steps` positions)
@@ -276,6 +278,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(steps: i32, arr_len: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let max_pos = steps.min(arr_len) as usize;
+        let steps = steps as usize;
+        let mut dp = vec![vec![-1i32; steps + 1]; max_pos + 1];
+
+        fn dfs(i: usize, steps: usize, max_pos: usize, dp: &mut Vec<Vec<i32>>) -> i32 {
+            if steps == 0 {
+                return if i == 0 { 1 } else { 0 };
+            }
+            if dp[i][steps] != -1 { return dp[i][steps]; }
+
+            let mut res = dfs(i, steps - 1, max_pos, dp);
+            if i > 0 {
+                res = (res + dfs(i - 1, steps - 1, max_pos, dp)) % MOD;
+            }
+            if i < max_pos - 1 {
+                res = (res + dfs(i + 1, steps - 1, max_pos, dp)) % MOD;
+            }
+
+            dp[i][steps] = res;
+            res
+        }
+
+        dfs(0, steps, max_pos, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -300,10 +333,10 @@ At each step, the number of ways to reach position `i` is the sum of ways to rea
 1. Create a 2D DP table where `dp[step][i]` represents the number of ways to be at position `i` after `step` moves.
 2. Initialize `dp[0][0] = 1` since we start at index `0` with `0` steps taken.
 3. For each step from `1` to `steps`:
-   - For each position `i` from `0` to `arrLen - 1`:
-     - Add ways from staying in place: `dp[step-1][i]`
-     - Add ways from moving right (if `i > 0`): `dp[step-1][i-1]`
-     - Add ways from moving left (if `i < arrLen - 1`): `dp[step-1][i+1]`
+    - For each position `i` from `0` to `arrLen - 1`:
+        - Add ways from staying in place: `dp[step-1][i]`
+        - Add ways from moving right (if `i > 0`): `dp[step-1][i-1]`
+        - Add ways from moving left (if `i < arrLen - 1`): `dp[step-1][i+1]`
 4. Return `dp[steps][0]`.
 
 ::tabs-start
@@ -521,6 +554,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(steps: i32, arr_len: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let arr_len = (arr_len as usize).min(steps as usize);
+        let steps = steps as usize;
+        let mut dp = vec![vec![0i32; arr_len + 1]; steps + 1];
+        dp[0][0] = 1;
+
+        for step in 1..=steps {
+            for i in 0..arr_len {
+                let mut res = dp[step - 1][i];
+                if i > 0 {
+                    res = (res + dp[step - 1][i - 1]) % MOD;
+                }
+                if i < arr_len - 1 {
+                    res = (res + dp[step - 1][i + 1]) % MOD;
+                }
+                dp[step][i] = res;
+            }
+        }
+
+        dp[steps][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -538,16 +598,16 @@ class Solution {
 
 Looking at the bottom-up solution, we notice that computing the values for step `k` only requires values from step `k-1`. We do not need the entire history of all steps.
 
-This means we can reduce space from O(steps * positions) to O(positions) by keeping only two arrays: one for the current step and one for the previous step.
+This means we can reduce space from O(steps \* positions) to O(positions) by keeping only two arrays: one for the current step and one for the previous step.
 
 ### Algorithm
 
 1. Use a 1D array `dp` where `dp[i]` represents the number of ways to be at position `i` after the current number of steps.
 2. Initialize `dp[0] = 1` for the starting position.
 3. For each step:
-   - Create a new array `next_dp` to store results for this step.
-   - For each position `i`, compute `next_dp[i]` by summing contributions from positions `i-1`, `i`, and `i+1` in `dp`.
-   - Replace `dp` with `next_dp`.
+    - Create a new array `next_dp` to store results for this step.
+    - For each position `i`, compute `next_dp[i]` by summing contributions from positions `i-1`, `i`, and `i+1` in `dp`.
+    - Replace `dp` with `next_dp`.
 4. Return `dp[0]` after all steps.
 
 ::tabs-start
@@ -768,6 +828,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_ways(steps: i32, arr_len: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let len = (steps as usize).min(arr_len as usize);
+        let steps = steps as usize;
+        let mut dp = vec![0i32; len];
+        dp[0] = 1;
+
+        for _ in 0..steps {
+            let mut next_dp = vec![0i32; len];
+            for i in 0..len {
+                next_dp[i] = dp[i];
+                if i > 0 {
+                    next_dp[i] = (next_dp[i] + dp[i - 1]) % MOD;
+                }
+                if i < len - 1 {
+                    next_dp[i] = (next_dp[i] + dp[i + 1]) % MOD;
+                }
+            }
+            dp = next_dp;
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -792,12 +880,12 @@ The trick is to process positions from left to right while keeping track of the 
 1. Use a single 1D array `dp` where `dp[i]` represents ways to reach position `i`.
 2. Initialize `dp[0] = 1`.
 3. For each step:
-   - Track `prev` to store the old value of `dp[i-1]` before it was updated.
-   - For each position `i` from `0` to `arrLen - 1`:
-     - Save the current `dp[i]` as `cur` before modifying it.
-     - Add `prev` (contribution from the left) if `i > 0`.
-     - Add `dp[i+1]` (contribution from the right) if `i < arrLen - 1`.
-     - Update `prev = cur` for the next iteration.
+    - Track `prev` to store the old value of `dp[i-1]` before it was updated.
+    - For each position `i` from `0` to `arrLen - 1`:
+        - Save the current `dp[i]` as `cur` before modifying it.
+        - Add `prev` (contribution from the left) if `i > 0`.
+        - Add `dp[i+1]` (contribution from the right) if `i < arrLen - 1`.
+        - Update `prev = cur` for the next iteration.
 4. Return `dp[0]`.
 
 ::tabs-start
@@ -1013,6 +1101,34 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_ways(steps: i32, arr_len: i32) -> i32 {
+        const MOD: i32 = 1_000_000_007;
+        let len = (steps as usize).min(arr_len as usize);
+        let steps = steps as usize;
+        let mut dp = vec![0i32; len];
+        dp[0] = 1;
+
+        for _ in 0..steps {
+            let mut prev = 0i32;
+            for i in 0..len {
+                let cur = dp[i];
+                if i > 0 {
+                    dp[i] = (dp[i] + prev) % MOD;
+                }
+                if i < len - 1 {
+                    dp[i] = (dp[i] + dp[i + 1]) % MOD;
+                }
+                prev = cur;
+            }
+        }
+
+        dp[0]
     }
 }
 ```

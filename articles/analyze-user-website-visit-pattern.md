@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Used to group website visits by user and count pattern frequencies
 - **Sets** - Used to avoid counting duplicate patterns from the same user
 - **Sorting** - Required to process visits in chronological order
@@ -357,12 +359,56 @@ class Solution {
         var maxCnt = 0
         var res = ""
         for (p, c) in count {
-            if c > maxCnt || (c == maxCnt && (res.isEmpty || p < res)) {
+            if c > maxCnt || (c == maxCnt && (res.is_empty() || p < res)) {
                 maxCnt = c
                 res = p
             }
         }
         return res.components(separatedBy: "#")
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn most_visited_pattern(
+        username: Vec<String>,
+        timestamp: Vec<i32>,
+        website: Vec<String>,
+    ) -> Vec<String> {
+        let n = timestamp.len();
+        let mut arr: Vec<(i32, usize)> = (0..n).map(|i| (timestamp[i], i)).collect();
+        arr.sort();
+
+        let mut mp: HashMap<&str, Vec<&str>> = HashMap::new();
+        for &(_, idx) in &arr {
+            mp.entry(&username[idx]).or_default().push(&website[idx]);
+        }
+
+        let mut count: HashMap<String, i32> = HashMap::new();
+        for (_, cur) in &mp {
+            let mut patterns: HashSet<String> = HashSet::new();
+            for i in 0..cur.len() {
+                for j in (i + 1)..cur.len() {
+                    for k in (j + 1)..cur.len() {
+                        patterns.insert(format!("{}#{}#{}", cur[i], cur[j], cur[k]));
+                    }
+                }
+            }
+            for p in patterns {
+                *count.entry(p).or_insert(0) += 1;
+            }
+        }
+
+        let mut max_cnt = 0;
+        let mut res = String::new();
+        for (p, &c) in &count {
+            if c > max_cnt || (c == max_cnt && (res.is_empty() || *p < res)) {
+                max_cnt = c;
+                res = p.clone();
+            }
+        }
+        res.split('#').map(|s| s.to_string()).collect()
     }
 }
 ```
@@ -381,7 +427,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Counting Duplicate Patterns From the Same User
+
 When a user visits enough websites to generate the same 3-site pattern multiple times, you should only count that pattern once per user. Failing to use a set for each user's patterns will inflate the count incorrectly.
+
 ```python
 # Wrong: counting duplicates from same user
 for i in range(len(cur)):
@@ -398,7 +446,9 @@ for p in patterns:
 ```
 
 ### Not Sorting Visits by Timestamp Before Grouping
+
 The pattern must follow chronological order of visits. If you group websites by user without first sorting by timestamp, the patterns will be in arbitrary order and produce wrong results.
+
 ```python
 # Wrong: not sorting by timestamp
 for i in range(n):
@@ -409,7 +459,9 @@ arr.sort(key=lambda x: x[0])  # Sort by timestamp
 ```
 
 ### Incorrect Lexicographic Comparison for Tie-Breaking
+
 When multiple patterns have the same count, you must return the lexicographically smallest one. Comparing concatenated strings with a separator may not give correct lexicographic ordering of the tuple components.
+
 ```python
 # Wrong: comparing by concatenated string may differ from tuple comparison
 if "a#z#b" < "aa#a#a":  # String comparison, not tuple comparison

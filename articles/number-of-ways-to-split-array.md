@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sum** - Computing cumulative sums to efficiently calculate subarray sums in O(1) time
 - **Array Traversal** - Iterating through arrays and maintaining running totals
 - **Integer Overflow** - Understanding when to use long/long long for large sums
@@ -15,9 +17,9 @@ A valid split at index `i` means the sum of elements from `0` to `i` is at least
 ### Algorithm
 
 1. For each possible split index `i` from `0` to `n - 2`:
-   - Compute `leftSum` by iterating from `0` to `i`.
-   - Compute `rightSum` by iterating from `i + 1` to `n - 1`.
-   - If `leftSum >= rightSum`, increment `res`.
+    - Compute `leftSum` by iterating from `0` to `i`.
+    - Compute `rightSum` by iterating from `i + 1` to `n - 1`.
+    - If `leftSum >= rightSum`, increment `res`.
 2. Return the count of valid splits.
 
 ::tabs-start
@@ -234,6 +236,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn ways_to_split_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for i in 0..n - 1 {
+            let mut left_sum: i64 = 0;
+            for j in 0..=i {
+                left_sum += nums[j] as i64;
+            }
+
+            let mut right_sum: i64 = 0;
+            for j in i + 1..n {
+                right_sum += nums[j] as i64;
+            }
+
+            if left_sum >= right_sum {
+                res += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,9 +282,9 @@ Recomputing sums from scratch for each split is wasteful. By precomputing a pref
 
 1. Build a prefix sum array where `prefix[i]` is the sum of the first `i` elements.
 2. For each split index `i` from `1` to `n - 1`:
-   - `left = prefix[i]`.
-   - `right = prefix[n] - prefix[i]`.
-   - If `left >= right`, increment `res`.
+    - `left = prefix[i]`.
+    - `right = prefix[n] - prefix[i]`.
+    - If `left >= right`, increment `res`.
 3. Return the count.
 
 ::tabs-start
@@ -450,6 +479,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn ways_to_split_array(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut prefix = vec![0i64; n + 1];
+
+        for i in 0..n {
+            prefix[i + 1] = prefix[i] + nums[i] as i64;
+        }
+
+        let mut res = 0;
+        for i in 1..n {
+            let left = prefix[i];
+            let right = prefix[n] - prefix[i];
+            if left >= right {
+                res += 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -470,8 +523,8 @@ We don't need to store the entire prefix sum array. Instead, we can maintain a r
 1. Compute the total sum and assign it to `right`.
 2. Initialize `left = 0` and `res = 0`.
 3. For each index `i` from `0` to `n - 2`:
-   - Add `nums[i]` to `left` and subtract it from `right`.
-   - If `left >= right`, increment `res`.
+    - Add `nums[i]` to `left` and subtract it from `right`.
+    - If `left >= right`, increment `res`.
 4. Return `res`.
 
 ::tabs-start
@@ -637,6 +690,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn ways_to_split_array(nums: Vec<i32>) -> i32 {
+        let mut right: i64 = nums.iter().map(|&x| x as i64).sum();
+        let mut left: i64 = 0;
+        let mut res = 0;
+
+        for i in 0..nums.len() - 1 {
+            left += nums[i] as i64;
+            right -= nums[i] as i64;
+            if left >= right {
+                res += 1;
+            }
+        }
+
+        res
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Finding minimum elements and their indices in an array
 - **Simulation** - Implementing step-by-step operations as described in the problem
 - **Min-Heap (Priority Queue)** - Efficiently retrieving and updating minimum elements
@@ -16,8 +18,8 @@ The problem asks us to repeatedly find the minimum element and multiply it by a 
 ### Algorithm
 
 1. Repeat the following `k` times:
-   - Find the index of the minimum element in the array. If there are duplicates, pick the smallest index.
-   - Multiply the element at that index by `multiplier`.
+    - Find the index of the minimum element in the array. If there are duplicates, pick the smallest index.
+    - Multiply the element at that index by `multiplier`.
 2. Return the modified array.
 
 ::tabs-start
@@ -167,12 +169,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_final_state(nums: Vec<i32>, k: i32, multiplier: i32) -> Vec<i32> {
+        let mut nums = nums;
+        let n = nums.len();
+        for _ in 0..k {
+            let mut min_idx = 0;
+            for i in 1..n {
+                if nums[i] < nums[min_idx] {
+                    min_idx = i;
+                }
+            }
+            nums[min_idx] *= multiplier;
+        }
+        nums
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n * k)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the input array, and $k$ is the number of operations.
 
@@ -189,9 +210,9 @@ Instead of scanning the entire array each time to find the minimum, we can use a
 1. Create a copy of the input array to store results.
 2. Build a min-heap containing pairs of `(value, index)` for each element.
 3. Repeat `k` times:
-   - Pop the minimum element from the heap.
-   - Multiply the corresponding value in the result array by `multiplier`.
-   - Push the updated `(new_value, index)` back into the heap.
+    - Pop the minimum element from the heap.
+    - Multiply the corresponding value in the result array by `multiplier`.
+    - Push the updated `(new_value, index)` back into the heap.
 4. Return the result array.
 
 ::tabs-start
@@ -423,11 +444,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_final_state(nums: Vec<i32>, k: i32, multiplier: i32) -> Vec<i32> {
+        let mut res = nums.clone();
+        let n = res.len();
+        let mut heap = BinaryHeap::new();
+
+        for i in 0..n {
+            heap.push(Reverse((res[i], i)));
+        }
+
+        for _ in 0..k {
+            let Reverse((_, idx)) = heap.pop().unwrap();
+            res[idx] *= multiplier;
+            heap.push(Reverse((res[idx], idx)));
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity:
+- Time complexity:
     - $O(n + k \log n)$ in Python.
     - $O(n \log n + k \log n)$ in other languages.
 

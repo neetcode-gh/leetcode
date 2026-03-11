@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Both top-down (memoization) and bottom-up approaches for counting subproblems
 - **Longest Increasing Subsequence (LIS)** - Understanding the classic LIS problem and its O(n^2) DP solution
 - **Recursion with Backtracking** - Exploring all possible subsequences by making choices at each position
@@ -19,9 +21,9 @@ The brute force approach explores every possible increasing subsequence by tryin
 1. Initialize `LIS` to track the maximum length found and `res` to count subsequences of that length.
 2. For each index `i`, start a `dfs` that treats element `i` as the beginning of a subsequence.
 3. In the `dfs`:
-   - If the current length exceeds `LIS`, update `LIS` and reset `res` to `1`.
-   - If the current length equals `LIS`, increment `res`.
-   - Try extending the subsequence with any element `j > i` where `nums[j] > nums[i]`.
+    - If the current length exceeds `LIS`, update `LIS` and reset `res` to `1`.
+    - If the current length equals `LIS`, increment `res`.
+    - Try extending the subsequence with any element `j > i` where `nums[j] > nums[i]`.
 4. Return `res` after exploring all starting positions.
 
 ::tabs-start
@@ -266,6 +268,36 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+        let mut lis = 0;
+        let mut res = 0;
+
+        fn dfs(nums: &[i32], i: usize, length: i32, lis: &mut i32, res: &mut i32) {
+            if *lis < length {
+                *lis = length;
+                *res = 1;
+            } else if *lis == length {
+                *res += 1;
+            }
+
+            for j in (i + 1)..nums.len() {
+                if nums[j] <= nums[i] {
+                    continue;
+                }
+                dfs(nums, j, length + 1, lis, res);
+            }
+        }
+
+        for i in 0..nums.len() {
+            dfs(&nums, i, 1, &mut lis, &mut res);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,12 +317,12 @@ The recursive solution has overlapping subproblems since we repeatedly compute t
 
 1. Create a memoization structure `dp` to store `(maxLen, maxCnt)` for each index.
 2. For each index `i`, call `dfs(i)` which:
-   - Returns immediately if the result is already cached.
-   - Initializes `maxLen = 1` and `maxCnt = 1` (the element itself forms a subsequence of length `1`).
-   - For each `j > i` where `nums[j] > nums[i]`, recursively compute the result for `j`.
-   - If `1 + length[j]` exceeds `maxLen`, update `maxLen` and set `maxCnt` to `count[j]`.
-   - If `1 + length[j]` equals `maxLen`, add `count[j]` to `maxCnt`.
-   - Cache and return `(maxLen, maxCnt)`.
+    - Returns immediately if the result is already cached.
+    - Initializes `maxLen = 1` and `maxCnt = 1` (the element itself forms a subsequence of length `1`).
+    - For each `j > i` where `nums[j] > nums[i]`, recursively compute the result for `j`.
+    - If `1 + length[j]` exceeds `maxLen`, update `maxLen` and set `maxCnt` to `count[j]`.
+    - If `1 + length[j]` equals `maxLen`, add `count[j]` to `maxCnt`.
+    - Cache and return `(maxLen, maxCnt)`.
 3. Aggregate results from all starting positions and return the count for the global maximum length.
 
 ::tabs-start
@@ -656,6 +688,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut dp = vec![[-1i32, -1i32]; n];
+
+        fn dfs(nums: &[i32], i: usize, dp: &mut Vec<[i32; 2]>) {
+            if dp[i][0] != -1 {
+                return;
+            }
+            let mut max_len = 1;
+            let mut max_cnt = 1;
+            for j in (i + 1)..nums.len() {
+                if nums[j] > nums[i] {
+                    dfs(nums, j, dp);
+                    let length = dp[j][0];
+                    let count = dp[j][1];
+                    if 1 + length > max_len {
+                        max_len = 1 + length;
+                        max_cnt = count;
+                    } else if 1 + length == max_len {
+                        max_cnt += count;
+                    }
+                }
+            }
+            dp[i] = [max_len, max_cnt];
+        }
+
+        let mut len_lis = 0;
+        let mut res = 0;
+        for i in 0..n {
+            dfs(&nums, i, &mut dp);
+            let max_len = dp[i][0];
+            let max_cnt = dp[i][1];
+            if max_len > len_lis {
+                len_lis = max_len;
+                res = max_cnt;
+            } else if max_len == len_lis {
+                res += max_cnt;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -676,12 +754,12 @@ Instead of using recursion with memoization, we can iterate through the array in
 1. Create a DP array where `dp[i] = [maxLen, maxCnt]` represents the longest increasing subsequence starting at index `i` and the count of such subsequences.
 2. Iterate from right to left (from `n-1` to `0`).
 3. For each index `i`:
-   - Initialize `maxLen = 1` and `maxCnt = 1`.
-   - For each `j > i` where `nums[j] > nums[i]`:
-     - If `dp[j][0] + 1 > maxLen`, update `maxLen` and set `maxCnt = dp[j][1]`.
-     - If `dp[j][0] + 1 == maxLen`, add `dp[j][1]` to `maxCnt`.
-   - Store `dp[i] = [maxLen, maxCnt]`.
-   - Update the global maximum length and result count accordingly.
+    - Initialize `maxLen = 1` and `maxCnt = 1`.
+    - For each `j > i` where `nums[j] > nums[i]`:
+        - If `dp[j][0] + 1 > maxLen`, update `maxLen` and set `maxCnt = dp[j][1]`.
+        - If `dp[j][0] + 1 == maxLen`, add `dp[j][1]` to `maxCnt`.
+    - Store `dp[i] = [maxLen, maxCnt]`.
+    - Update the global maximum length and result count accordingly.
 4. Return the count of subsequences with the maximum length.
 
 ::tabs-start
@@ -973,6 +1051,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut dp = vec![[0i32; 2]; n];
+        let mut len_lis = 0;
+        let mut res = 0;
+
+        for i in (0..n).rev() {
+            let mut max_len = 1;
+            let mut max_cnt = 1;
+            for j in (i + 1)..n {
+                if nums[j] > nums[i] {
+                    let length = dp[j][0];
+                    let count = dp[j][1];
+                    if length + 1 > max_len {
+                        max_len = length + 1;
+                        max_cnt = count;
+                    } else if length + 1 == max_len {
+                        max_cnt += count;
+                    }
+                }
+            }
+
+            if max_len > len_lis {
+                len_lis = max_len;
+                res = max_cnt;
+            } else if max_len == len_lis {
+                res += max_cnt;
+            }
+            dp[i][0] = max_len;
+            dp[i][1] = max_cnt;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -992,10 +1108,10 @@ The `O(n^2)` DP solution can be optimized by using binary search and prefix sums
 
 1. Initialize `dp` as a list of lists, where `dp[len]` contains pairs `(value, cumulative_count)` representing elements that end an increasing subsequence of length `len+1`.
 2. For each element in the array:
-   - Use binary search (`bs1`) to find the longest subsequence length this element can extend.
-   - Use binary search (`bs2`) on the previous length's list to count how many subsequences can be extended (those with values less than the current element).
-   - If this element extends the maximum length, create a new entry in `dp`.
-   - Otherwise, append the element to the appropriate length bucket with updated cumulative count.
+    - Use binary search (`bs1`) to find the longest subsequence length this element can extend.
+    - Use binary search (`bs2`) on the previous length's list to count how many subsequences can be extended (those with values less than the current element).
+    - If this element extends the maximum length, create a new entry in `dp`.
+    - Otherwise, append the element to the appropriate length bucket with updated cumulative count.
 3. The answer is the cumulative count in the last entry of the longest length bucket.
 
 ::tabs-start
@@ -1474,6 +1590,65 @@ class Solution {
             }
         }
         return dp[i][dp[i].count - 1][1] - dp[i][j][1]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_number_of_lis(nums: Vec<i32>) -> i32 {
+        let mut dp: Vec<Vec<[i32; 2]>> = vec![vec![[0, 0], [nums[0], 1]]];
+        let mut lis = 1usize;
+
+        let bs1 = |dp: &Vec<Vec<[i32; 2]>>, num: i32| -> usize {
+            let (mut l, mut r) = (0i32, dp.len() as i32 - 1);
+            let mut j = dp.len() - 1;
+            while l <= r {
+                let mid = (l + r) / 2;
+                if dp[mid as usize].last().unwrap()[0] < num {
+                    l = mid + 1;
+                } else {
+                    j = mid as usize;
+                    r = mid - 1;
+                }
+            }
+            j
+        };
+
+        let bs2 = |dp: &Vec<Vec<[i32; 2]>>, i: i32, num: i32| -> i32 {
+            if i < 0 {
+                return 1;
+            }
+            let i = i as usize;
+            let (mut l, mut r) = (1i32, dp[i].len() as i32 - 1);
+            let mut j = 0usize;
+            while l <= r {
+                let mid = (l + r) / 2;
+                if dp[i][mid as usize][0] >= num {
+                    j = mid as usize;
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            dp[i].last().unwrap()[1] - dp[i][j][1]
+        };
+
+        for i in 1..nums.len() {
+            let num = nums[i];
+            if num > dp.last().unwrap().last().unwrap()[0] {
+                let count = bs2(&dp, lis as i32 - 1, num);
+                dp.push(vec![[0, 0], [num, count]]);
+                lis += 1;
+            } else {
+                let j = bs1(&dp, num);
+                let count = bs2(&dp, j as i32 - 1, num);
+                let prev = dp[j].last().unwrap()[1];
+                dp[j].push([num, prev + count]);
+            }
+        }
+
+        dp.last().unwrap().last().unwrap()[1]
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map / Hash Set** - Used to count frequencies or track seen values in a single pass through the grid
 - **Mathematical Formulas for Sums** - The optimal solution uses sum and sum of squares formulas to derive the missing and repeated values without extra space
 - **2D Array Traversal** - The problem requires iterating through all cells in an n x n grid
@@ -15,9 +17,9 @@ The grid contains numbers from `1` to `n*n`, but one number appears twice (repea
 ### Algorithm
 
 1. For each number from `1` to `n*n`:
-   - Count its occurrences by scanning every cell in the grid.
-   - If the count equals `2`, this is the repeated number.
-   - If the count equals `0`, this is the missing number.
+    - Count its occurrences by scanning every cell in the grid.
+    - If the count equals `2`, this is the repeated number.
+    - If the count equals `0`, this is the missing number.
 2. Return the repeated and missing numbers as the result.
 
 ::tabs-start
@@ -245,6 +247,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = grid.len();
+        let (mut double_val, mut missing) = (0, 0);
+
+        for num in 1..=(n * n) as i32 {
+            let mut cnt = 0;
+            for i in 0..n {
+                for j in 0..n {
+                    if grid[i][j] == num {
+                        cnt += 1;
+                    }
+                }
+            }
+            if cnt == 2 {
+                double_val = num;
+            } else if cnt == 0 {
+                missing = num;
+            }
+        }
+
+        vec![double_val, missing]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -264,8 +293,8 @@ Instead of rescanning the grid for every number, we can count all occurrences in
 
 1. Traverse the entire grid and store the frequency of each number in a hash map.
 2. Iterate through numbers from `1` to `n*n`:
-   - If the frequency is `0`, record it as the missing number.
-   - If the frequency is `2`, record it as the repeated number.
+    - If the frequency is `0`, record it as the missing number.
+    - If the frequency is `2`, record it as the repeated number.
 3. Return the repeated and missing numbers.
 
 ::tabs-start
@@ -482,6 +511,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = grid.len();
+        let mut count = HashMap::new();
+
+        for i in 0..n {
+            for j in 0..n {
+                *count.entry(grid[i][j]).or_insert(0) += 1;
+            }
+        }
+
+        let (mut double_val, mut missing) = (0, 0);
+
+        for num in 1..=(n * n) as i32 {
+            let freq = *count.get(&num).unwrap_or(&0);
+            if freq == 0 { missing = num; }
+            if freq == 2 { double_val = num; }
+        }
+
+        vec![double_val, missing]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,8 +555,8 @@ A hash set can detect duplicates efficiently. As we scan the grid, we add each n
 
 1. Initialize an empty hash set.
 2. Traverse the grid:
-   - If the current number is already in the set, it is the repeated number.
-   - Otherwise, add the number to the set.
+    - If the current number is already in the set, it is the repeated number.
+    - Otherwise, add the number to the set.
 3. Iterate from `1` to `n*n` and find the number not present in the set; this is the missing number.
 4. Return the repeated and missing numbers.
 
@@ -728,6 +782,34 @@ class Solution {
         }
 
         return [doubleVal, missing]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = grid.len();
+        let mut seen = HashSet::new();
+        let (mut double_val, mut missing) = (0, 0);
+
+        for i in 0..n {
+            for j in 0..n {
+                if seen.contains(&grid[i][j]) {
+                    double_val = grid[i][j];
+                }
+                seen.insert(grid[i][j]);
+            }
+        }
+
+        for num in 1..=(n * n) as i32 {
+            if !seen.contains(&num) {
+                missing = num;
+                break;
+            }
+        }
+
+        vec![double_val, missing]
     }
 }
 ```
@@ -994,6 +1076,36 @@ class Solution {
         let b = sum - a
 
         return [a, b]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_missing_and_repeated_values(grid: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = grid.len() as i64;
+        let mut grid_sum: i64 = 0;
+        let mut grid_sq_sum: i64 = 0;
+
+        for i in 0..n as usize {
+            for j in 0..n as usize {
+                grid_sum += grid[i][j] as i64;
+                grid_sq_sum += (grid[i][j] as i64) * (grid[i][j] as i64);
+            }
+        }
+
+        let tot_sum = n * n * (n * n + 1) / 2;
+        let diff = grid_sum - tot_sum; // a - b
+
+        let tot_sq_sum = n * n * (n * n + 1) * (2 * n * n + 1) / 6;
+        let sq_diff = grid_sq_sum - tot_sq_sum; // a^2 - b^2
+
+        let sum = sq_diff / diff; // a + b
+
+        let a = (sum + diff) / 2;
+        let b = sum - a;
+
+        vec![a as i32, b as i32]
     }
 }
 ```

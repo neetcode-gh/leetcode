@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structure, traversal, and inserting nodes between existing nodes
 - **GCD (Greatest Common Divisor)** - Knowing the Euclidean algorithm for efficiently computing the GCD of two numbers
 - **Pointer Manipulation** - Safely adjusting next pointers without losing references or creating infinite loops
@@ -18,11 +20,11 @@ Since we're inserting nodes as we traverse, we need to be careful to advance the
 
 1. Start with `cur` pointing to the head of the list.
 2. While `cur.next` exists:
-   - Get the values of `cur` and `cur.next` as `n1` and `n2`.
-   - Compute their `gcd` using the Euclidean algorithm.
-   - Create a new node with the `gcd` value.
-   - Insert it between `cur` and `cur.next` by adjusting pointers.
-   - Move `cur` to `cur.next.next` to skip over the newly inserted node.
+    - Get the values of `cur` and `cur.next` as `n1` and `n2`.
+    - Compute their `gcd` using the Euclidean algorithm.
+    - Create a new node with the `gcd` value.
+    - Insert it between `cur` and `cur.next` by adjusting pointers.
+    - Move `cur` to `cur.next.next` to skip over the newly inserted node.
 3. Return the head of the modified list.
 
 ::tabs-start
@@ -305,6 +307,47 @@ class Solution {
         }
 
         return head
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn insert_greatest_common_divisors(
+        head: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        fn gcd(mut a: i32, mut b: i32) -> i32 {
+            while b > 0 {
+                let temp = b;
+                b = a % b;
+                a = temp;
+            }
+            a
+        }
+
+        let mut head = head;
+        let mut cur = &mut head;
+        while cur.is_some() && cur.as_ref().unwrap().next.is_some() {
+            let node = cur.as_mut().unwrap();
+            let n1 = node.val;
+            let n2 = node.next.as_ref().unwrap().val;
+            let rest = node.next.take();
+            node.next = Some(Box::new(ListNode {
+                val: gcd(n1, n2),
+                next: rest,
+            }));
+            cur = &mut cur.as_mut().unwrap()
+                .next.as_mut().unwrap()
+                .next;
+        }
+
+        head
     }
 }
 ```

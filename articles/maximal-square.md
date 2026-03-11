@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **2D Arrays/Matrices** - Traversing and manipulating elements in a grid structure
 - **Dynamic Programming** - Building solutions from smaller subproblems and using recurrence relations
 - **Space Optimization** - Reducing space complexity by recognizing that only previous row/column values are needed
@@ -17,10 +19,10 @@ For each cell containing a `'1'`, we can try to expand a square outward as far a
 1. Iterate through each cell `(r, c)` in the matrix.
 2. If `matrix[r][c]` is `'0'`, skip it.
 3. Otherwise, try expanding a square of side `k` starting at `1`:
-   - Check if `r + k` and `c + k` are within bounds.
-   - Verify all cells in the new right column and bottom row are `'1'`.
-   - If any cell is `'0'`, stop expanding.
-   - Update the result with `k * k` if the square is valid.
+    - Check if `r + k` and `c + k` are within bounds.
+    - Verify all cells in the new right column and bottom row are `'1'`.
+    - If any cell is `'0'`, stop expanding.
+    - Update the result with `k * k` if the square is valid.
 4. Return the maximum area found.
 
 ::tabs-start
@@ -370,6 +372,52 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
+        let m = matrix.len();
+        let n = matrix[0].len();
+        let mut res = 0;
+
+        for r in 0..m {
+            for c in 0..n {
+                if matrix[r][c] == '0' {
+                    continue;
+                }
+                let mut k = 1usize;
+                loop {
+                    if r + k > m || c + k > n {
+                        break;
+                    }
+                    let mut flag = true;
+
+                    for i in r..r + k {
+                        if matrix[i][c + k - 1] == '0' {
+                            flag = false;
+                            break;
+                        }
+                    }
+                    for j in c..c + k {
+                        if matrix[r + k - 1][j] == '0' {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if !flag {
+                        break;
+                    }
+                    res = res.max((k * k) as i32);
+                    k += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -391,11 +439,11 @@ We can define a recursive function where `dp(r, c)` returns the side length of t
 
 1. Create a memoization table initialized to `-1` (unvisited).
 2. Define `dfs(r, c)`:
-   - If out of bounds, return `0`.
-   - If already computed, return the cached value.
-   - Recursively compute `dfs(r+1, c)`, `dfs(r, c+1)`, and `dfs(r+1, c+1)`.
-   - If `matrix[r][c]` is `'1'`, set `dp[r][c] = 1 + min(down, right, diag)`.
-   - Otherwise, set `dp[r][c] = 0`.
+    - If out of bounds, return `0`.
+    - If already computed, return the cached value.
+    - Recursively compute `dfs(r+1, c)`, `dfs(r, c+1)`, and `dfs(r+1, c+1)`.
+    - If `matrix[r][c]` is `'1'`, set `dp[r][c] = 1 + min(down, right, diag)`.
+    - Otherwise, set `dp[r][c] = 0`.
 3. Call `dfs(0, 0)` to fill the table.
 4. Find the maximum value in the table and return its square.
 
@@ -714,6 +762,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
+        let rows = matrix.len();
+        let cols = matrix[0].len();
+        let mut dp = vec![vec![-1i32; cols]; rows];
+
+        fn dfs(r: usize, c: usize, matrix: &[Vec<char>], dp: &mut Vec<Vec<i32>>) -> i32 {
+            let rows = matrix.len();
+            let cols = matrix[0].len();
+            if r >= rows || c >= cols {
+                return 0;
+            }
+            if dp[r][c] != -1 {
+                return dp[r][c];
+            }
+            let down = dfs(r + 1, c, matrix, dp);
+            let right = dfs(r, c + 1, matrix, dp);
+            let diag = dfs(r + 1, c + 1, matrix, dp);
+            dp[r][c] = 0;
+            if matrix[r][c] == '1' {
+                dp[r][c] = 1 + down.min(right).min(diag);
+            }
+            dp[r][c]
+        }
+
+        dfs(0, 0, &matrix, &mut dp);
+        let mut max_square = 0;
+        for r in 0..rows {
+            for c in 0..cols {
+                max_square = max_square.max(dp[r][c]);
+            }
+        }
+        max_square * max_square
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -735,8 +821,8 @@ Instead of recursion, we can fill the DP table iteratively from bottom-right to 
 
 1. Create a DP table of size `(m+1) x (n+1)` initialized to `0`.
 2. Iterate from `r = m-1` down to `0`, and `c = n-1` down to `0`:
-   - If `matrix[r][c]` is `'1'`, set `dp[r][c] = 1 + min(dp[r+1][c], dp[r][c+1], dp[r+1][c+1])`.
-   - Update `maxSquare` with `dp[r][c]`.
+    - If `matrix[r][c]` is `'1'`, set `dp[r][c] = 1 + min(dp[r+1][c], dp[r][c+1], dp[r+1][c+1])`.
+    - Update `maxSquare` with `dp[r][c]`.
 3. Return `maxSquare * maxSquare`.
 
 ::tabs-start
@@ -926,6 +1012,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
+        let m = matrix.len();
+        let n = matrix[0].len();
+        let mut dp = vec![vec![0i32; n + 1]; m + 1];
+        let mut max_square = 0;
+
+        for r in (0..m).rev() {
+            for c in (0..n).rev() {
+                if matrix[r][c] == '1' {
+                    dp[r][c] = 1 + dp[r + 1][c].min(dp[r][c + 1]).min(dp[r + 1][c + 1]);
+                    max_square = max_square.max(dp[r][c]);
+                }
+            }
+        }
+
+        max_square * max_square
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -947,12 +1055,12 @@ The bottom-up DP only needs the current row and the next row to compute values. 
 
 1. Create a 1D DP array of size `n+1` initialized to `0`.
 2. Iterate from `r = m-1` down to `0`:
-   - Set `prev = 0` (represents the diagonal value from the previous iteration).
-   - For each column `c` from `n-1` down to `0`:
-     - Store `dp[c]` in `temp` (this will be the next diagonal).
-     - If `matrix[r][c]` is `'1'`, set `dp[c] = 1 + min(dp[c], dp[c+1], prev)` and update `maxSquare`.
-     - Otherwise, set `dp[c] = 0`.
-     - Update `prev = temp`.
+    - Set `prev = 0` (represents the diagonal value from the previous iteration).
+    - For each column `c` from `n-1` down to `0`:
+        - Store `dp[c]` in `temp` (this will be the next diagonal).
+        - If `matrix[r][c]` is `'1'`, set `dp[c] = 1 + min(dp[c], dp[c+1], prev)` and update `maxSquare`.
+        - Otherwise, set `dp[c] = 0`.
+        - Update `prev = temp`.
 3. Return `maxSquare * maxSquare`.
 
 ::tabs-start
@@ -1170,6 +1278,33 @@ class Solution {
         }
 
         return maxSquare * maxSquare
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn maximal_square(matrix: Vec<Vec<char>>) -> i32 {
+        let m = matrix.len();
+        let n = matrix[0].len();
+        let mut dp = vec![0i32; n + 1];
+        let mut max_square = 0;
+
+        for r in (0..m).rev() {
+            let mut prev = 0;
+            for c in (0..n).rev() {
+                let temp = dp[c];
+                if matrix[r][c] == '1' {
+                    dp[c] = 1 + dp[c].min(dp[c + 1]).min(prev);
+                    max_square = max_square.max(dp[c]);
+                } else {
+                    dp[c] = 0;
+                }
+                prev = temp;
+            }
+        }
+
+        max_square * max_square
     }
 }
 ```

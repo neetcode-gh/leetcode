@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking / Recursion** - Used to explore all possible ways to split the string and validate sequences
 - **String to Integer Conversion** - Building numbers digit by digit from string characters
 - **Stack-based Iteration** - Alternative to recursion for simulating DFS without the call stack
@@ -296,6 +298,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_string(s: String) -> bool {
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+
+        fn is_valid(splits: &[i64]) -> bool {
+            if splits.len() <= 1 {
+                return false;
+            }
+            for i in 1..splits.len() {
+                if splits[i] != splits[i - 1] - 1 {
+                    return false;
+                }
+            }
+            true
+        }
+
+        fn dfs(bytes: &[u8], i: usize, splits: &mut Vec<i64>) -> bool {
+            if i == bytes.len() {
+                return is_valid(splits);
+            }
+            let mut num: i64 = 0;
+            for j in i..bytes.len() {
+                num = num * 10 + (bytes[j] - b'0') as i64;
+                splits.push(num);
+                if dfs(bytes, j + 1, splits) {
+                    return true;
+                }
+                splits.pop();
+            }
+            false
+        }
+
+        dfs(bytes, 0, &mut vec![])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,6 +602,39 @@ class Solution {
         }
 
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn split_string(s: String) -> bool {
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+
+        fn dfs(bytes: &[u8], index: usize, prev: i64) -> bool {
+            if index == bytes.len() {
+                return true;
+            }
+            let mut num: i64 = 0;
+            for j in index..bytes.len() {
+                num = num * 10 + (bytes[j] - b'0') as i64;
+                if num + 1 == prev && dfs(bytes, j + 1, num) {
+                    return true;
+                }
+            }
+            false
+        }
+
+        let mut val: i64 = 0;
+        for i in 0..n - 1 {
+            val = val * 10 + (bytes[i] - b'0') as i64;
+            if dfs(bytes, i + 1, val) {
+                return true;
+            }
+        }
+
+        false
     }
 }
 ```
@@ -857,6 +931,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn split_string(s: String) -> bool {
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+
+        fn dfs(bytes: &[u8], index: usize, prev: i64) -> bool {
+            if index == bytes.len() {
+                return true;
+            }
+            let mut num: i64 = 0;
+            for j in index..bytes.len() {
+                num = num * 10 + (bytes[j] - b'0') as i64;
+                if num + 1 == prev && dfs(bytes, j + 1, num) {
+                    return true;
+                }
+                if num >= prev {
+                    break;
+                }
+            }
+            false
+        }
+
+        let mut val: i64 = 0;
+        for i in 0..n - 1 {
+            val = val * 10 + (bytes[i] - b'0') as i64;
+            if dfs(bytes, i + 1, val) {
+                return true;
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -877,8 +987,8 @@ Instead of using recursion with the call stack, we can simulate the same process
 1. For each possible first number, push the state (next index, first number value) onto the stack.
 2. While the stack is not empty, pop a state containing the current index and previous value.
 3. Build numbers starting from the current index. When a number equals `prev - 1`:
-   - If this number uses all remaining characters, return `true`.
-   - Otherwise, push the new state (next index, current number) onto the stack.
+    - If this number uses all remaining characters, return `true`.
+    - Otherwise, push the new state (next index, current number) onto the stack.
 4. Apply the same pruning: if the number grows to be greater than or equal to `prev`, stop building.
 5. If all possibilities are exhausted without finding a valid sequence, return `false`.
 
@@ -1161,6 +1271,39 @@ class Solution {
         }
 
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn split_string(s: String) -> bool {
+        let bytes = s.as_bytes();
+        let n = bytes.len();
+        let mut stack: Vec<(usize, i64)> = Vec::new();
+        let mut val: i64 = 0;
+
+        for i in 0..n - 1 {
+            val = val * 10 + (bytes[i] - b'0') as i64;
+            stack.push((i + 1, val));
+
+            while let Some((index, prev)) = stack.pop() {
+                let mut num: i64 = 0;
+                for j in index..n {
+                    num = num * 10 + (bytes[j] - b'0') as i64;
+                    if num + 1 == prev {
+                        if j + 1 == n {
+                            return true;
+                        }
+                        stack.push((j + 1, num));
+                    } else if num >= prev {
+                        break;
+                    }
+                }
+            }
+        }
+
+        false
     }
 }
 ```

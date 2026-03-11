@@ -246,6 +246,34 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn common_chars(words: Vec<String>) -> Vec<String> {
+        let mut cnt = [i32::MAX; 26];
+
+        for word in &words {
+            let mut cur_cnt = [0i32; 26];
+            for c in word.bytes() {
+                cur_cnt[(c - b'a') as usize] += 1;
+            }
+            for i in 0..26 {
+                cnt[i] = cnt[i].min(cur_cnt[i]);
+            }
+        }
+
+        let mut res = vec![];
+        for i in 0..26 {
+            for _ in 0..cnt[i] {
+                res.push(String::from((b'a' + i as u8) as char));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

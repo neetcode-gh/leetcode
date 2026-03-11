@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Traversing singly linked lists and understanding node references vs values
 - **Hash Set** - Using sets to store and lookup node references in O(1) time
 - **Two Pointers** - Manipulating two pointers simultaneously to traverse linked structures
@@ -231,6 +233,35 @@ class Solution {
             a = a?.next
         }
         return nil
+    }
+}
+```
+
+```rust
+// Note: In Rust on LeetCode, linked list intersection
+// problems typically compare by pointer identity using
+// raw pointers, since Option<Box<ListNode>> has unique
+// ownership. Below follows the same brute-force algorithm.
+impl Solution {
+    pub fn get_intersection_node(
+        head_a: Option<Box<ListNode>>,
+        head_b: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut a = &head_a;
+        while let Some(node_a) = a {
+            let mut b = &head_b;
+            while let Some(node_b) = b {
+                if std::ptr::eq(node_a.as_ref(), node_b.as_ref()) {
+                    return Some(Box::new(ListNode {
+                        val: node_a.val,
+                        next: None,
+                    }));
+                }
+                b = &node_b.next;
+            }
+            a = &node_a.next;
+        }
+        None
     }
 }
 ```
@@ -511,6 +542,34 @@ class Solution {
         }
 
         return nil
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_intersection_node(
+        head_a: Option<Box<ListNode>>,
+        head_b: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut node_set = HashSet::new();
+        let mut cur = &head_a;
+        while let Some(node) = cur {
+            node_set.insert(node.as_ref() as *const ListNode);
+            cur = &node.next;
+        }
+
+        let mut cur = &head_b;
+        while let Some(node) = cur {
+            if node_set.contains(&(node.as_ref() as *const ListNode)) {
+                return Some(Box::new(ListNode {
+                    val: node.val,
+                    next: None,
+                }));
+            }
+            cur = &node.next;
+        }
+        None
     }
 }
 ```
@@ -896,6 +955,53 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn get_intersection_node(
+        head_a: Option<Box<ListNode>>,
+        head_b: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        fn get_length(head: &Option<Box<ListNode>>) -> usize {
+            let mut length = 0;
+            let mut cur = head;
+            while let Some(node) = cur {
+                length += 1;
+                cur = &node.next;
+            }
+            length
+        }
+
+        let mut m = get_length(&head_a);
+        let mut n = get_length(&head_b);
+        let (mut l1, mut l2) = if m >= n {
+            (&head_a, &head_b)
+        } else {
+            std::mem::swap(&mut m, &mut n);
+            (&head_b, &head_a)
+        };
+
+        for _ in 0..(m - n) {
+            l1 = &l1.as_ref().unwrap().next;
+        }
+
+        while l1.is_some() && !std::ptr::eq(
+            l1.as_ref().unwrap().as_ref(),
+            l2.as_ref().unwrap_or(&Box::new(ListNode::new(0))).as_ref(),
+        ) {
+            l1 = &l1.as_ref().unwrap().next;
+            l2 = &l2.as_ref().unwrap().next;
+        }
+
+        l1.as_ref().map(|node| {
+            Box::new(ListNode {
+                val: node.val,
+                next: None,
+            })
+        })
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -917,8 +1023,8 @@ A clever approach avoids computing lengths explicitly. Two pointers start at the
 
 1. Initialize `l1 = headA` and `l2 = headB`.
 2. While `l1 != l2`:
-   - If `l1` is `null`, set `l1 = headB`; otherwise advance `l1`.
-   - If `l2` is `null`, set `l2 = headA`; otherwise advance `l2`.
+    - If `l1` is `null`, set `l1 = headB`; otherwise advance `l1`.
+    - If `l2` is `null`, set `l2 = headA`; otherwise advance `l2`.
 3. Return `l1` (which equals `l2`), the intersection node or `null`.
 
 ::tabs-start
@@ -1106,6 +1212,48 @@ class Solution {
             l2 = l2 != nil ? l2?.next : headA
         }
         return l1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn get_intersection_node(
+        head_a: Option<Box<ListNode>>,
+        head_b: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        fn to_vec(head: &Option<Box<ListNode>>) -> Vec<*const ListNode> {
+            let mut v = Vec::new();
+            let mut cur = head;
+            while let Some(node) = cur {
+                v.push(node.as_ref() as *const ListNode);
+                cur = &node.next;
+            }
+            v
+        }
+
+        let a = to_vec(&head_a);
+        let b = to_vec(&head_b);
+        let (mut ia, mut ib) = (a.len(), b.len());
+
+        let mut result = None;
+        while ia > 0 && ib > 0 {
+            ia -= 1;
+            ib -= 1;
+            if a[ia] == b[ib] {
+                // Walk the list to find the node at position ia
+                let mut cur = &head_a;
+                for _ in 0..ia {
+                    cur = &cur.as_ref().unwrap().next;
+                }
+                result = cur.as_ref().map(|node| {
+                    Box::new(ListNode { val: node.val, next: None })
+                });
+            } else {
+                break;
+            }
+        }
+        result
     }
 }
 ```

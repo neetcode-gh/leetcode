@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array Traversal** - Understanding how to iterate through arrays and compute cumulative values
 - **Prefix Sums** - The optimized solution uses prefix sums to efficiently calculate contributions from left and right
 - **Two-Pass Technique** - The optimal approach processes the array in two passes (left-to-right and right-to-left)
@@ -18,8 +20,8 @@ We can compute this directly by iterating through all boxes for each target posi
 
 1. Create a `res` array of size `n`.
 2. For each target position `pos`:
-   - Iterate through all boxes.
-   - If box `i` contains a `ball` (value is '1'), add `|pos - i|` to `res`.
+    - Iterate through all boxes.
+    - If box `i` contains a `ball` (value is '1'), add `|pos - i|` to `res`.
 3. Return the `res` array.
 
 ::tabs-start
@@ -179,6 +181,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(boxes: String) -> Vec<i32> {
+        let n = boxes.len();
+        let bytes = boxes.as_bytes();
+        let mut res = vec![0; n];
+
+        for pos in 0..n {
+            for i in 0..n {
+                if bytes[i] == b'1' {
+                    res[pos] += (pos as i32 - i as i32).abs();
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -199,12 +220,12 @@ We can split the total cost for each position into contributions from the left a
 ### Algorithm
 
 1. Build two prefix arrays:
-   - `prefix_count[i]` = number of `balls` in boxes 0 to `i-1`.
-   - `index_sum[i]` = sum of `indices` of `balls` in boxes 0 to `i-1`.
+    - `prefix_count[i]` = number of `balls` in boxes 0 to `i-1`.
+    - `index_sum[i]` = sum of `indices` of `balls` in boxes 0 to `i-1`.
 2. For each position `i`:
-   - Left contribution: `i * left_count - left_sum`.
-   - Right contribution: `right_sum - i * right_count`.
-   - Add both to get the `res` for position `i`.
+    - Left contribution: `i * left_count - left_sum`.
+    - Right contribution: `right_sum - i * right_count`.
+    - Add both to get the `res` for position `i`.
 3. Return the `res` array.
 
 ::tabs-start
@@ -429,6 +450,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_operations(boxes: String) -> Vec<i32> {
+        let n = boxes.len();
+        let bytes = boxes.as_bytes();
+        let mut res = vec![0i32; n];
+        let mut prefix_count = vec![0i32; n + 1];
+        let mut index_sum = vec![0i32; n + 1];
+
+        for i in 0..n {
+            let is_one = if bytes[i] == b'1' { 1 } else { 0 };
+            prefix_count[i + 1] = prefix_count[i] + is_one;
+            index_sum[i + 1] = index_sum[i] + if bytes[i] == b'1' { i as i32 } else { 0 };
+        }
+
+        for i in 0..n {
+            let left = prefix_count[i];
+            let left_sum = index_sum[i];
+            let right = prefix_count[n] - prefix_count[i + 1];
+            let right_sum = index_sum[n] - index_sum[i + 1];
+            res[i] = i as i32 * left - left_sum + (right_sum - i as i32 * right);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -447,11 +495,11 @@ Instead of storing prefix arrays, we can compute the contribution incrementally 
 ### Algorithm
 
 1. Left-to-right pass:
-   - Track `balls` (count of `balls` seen) and `moves` (cumulative operations).
-   - For each position, `res[i] = balls + moves`, then update `moves += balls` and add current `ball` if present.
+    - Track `balls` (count of `balls` seen) and `moves` (cumulative operations).
+    - For each position, `res[i] = balls + moves`, then update `moves += balls` and add current `ball` if present.
 2. Right-to-left pass:
-   - Reset `balls` and `moves`.
-   - For each position from right to left, add `balls + moves` to `res[i]`, then update similarly.
+    - Reset `balls` and `moves`.
+    - For each position from right to left, add `balls + moves` to `res[i]`, then update similarly.
 3. Return the `res` array.
 
 ::tabs-start
@@ -657,6 +705,33 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_operations(boxes: String) -> Vec<i32> {
+        let n = boxes.len();
+        let bytes = boxes.as_bytes();
+        let mut res = vec![0i32; n];
+
+        let mut balls = 0i32;
+        let mut moves = 0i32;
+        for i in 0..n {
+            res[i] = balls + moves;
+            moves += balls;
+            balls += (bytes[i] - b'0') as i32;
+        }
+
+        balls = 0;
+        moves = 0;
+        for i in (0..n).rev() {
+            res[i] += balls + moves;
+            moves += balls;
+            balls += (bytes[i] - b'0') as i32;
+        }
+        res
     }
 }
 ```

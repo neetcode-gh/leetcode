@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map** - Used to store and quickly lookup the integer value for each Roman numeral character
 - **String Iteration** - Traversing through a string character by character while comparing adjacent elements
 - **Conditional Logic** - Determining when to add vs subtract based on comparing current and next values
@@ -17,8 +19,8 @@ Roman numerals normally add values from left to right. The key insight is handli
 1. Create a hash map storing each Roman numeral character and its integer value.
 2. Initialize the result to `0`.
 3. Iterate through each character in the string:
-   - If the current character's value is less than the next character's value, subtract it from the result.
-   - Otherwise, add it to the result.
+    - If the current character's value is less than the next character's value, subtract it from the result.
+    - Otherwise, add it to the result.
 4. Return the final result.
 
 ::tabs-start
@@ -192,6 +194,30 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn roman_to_int(s: String) -> i32 {
+        let roman = |c: u8| -> i32 {
+            match c {
+                b'I' => 1, b'V' => 5, b'X' => 10,
+                b'L' => 50, b'C' => 100, b'D' => 500, b'M' => 1000,
+                _ => 0,
+            }
+        };
+        let bytes = s.as_bytes();
+        let mut res = 0;
+        for i in 0..bytes.len() {
+            if i + 1 < bytes.len() && roman(bytes[i]) < roman(bytes[i + 1]) {
+                res -= roman(bytes[i]);
+            } else {
+                res += roman(bytes[i]);
+            }
+        }
+        res
     }
 }
 ```

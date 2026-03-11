@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String Traversal** - Iterating through characters in a string from either direction
 - **Two-Pointer Technique** - Using index variables to track positions while scanning
 - **Edge Case Handling** - Managing trailing spaces and multiple consecutive spaces in strings
@@ -16,10 +18,10 @@ We need to find the length of the last word, where words are separated by spaces
 
 1. Initialize `length` to `0` and start at index `0`.
 2. Iterate through the string:
-   - If we hit a space, skip all consecutive spaces.
-   - If we've reached the end after skipping spaces, return the current `length`.
-   - Otherwise, reset `length` to `0` (we're starting a new word).
-   - For non-space characters, increment `length`.
+    - If we hit a space, skip all consecutive spaces.
+    - If we've reached the end after skipping spaces, return the current `length`.
+    - Otherwise, reset `length` to `0` (we're starting a new word).
+    - For non-space characters, increment `length`.
 3. Return `length` after the loop completes.
 
 ::tabs-start
@@ -201,6 +203,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_last_word(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut length = 0i32;
+        let mut i = 0;
+        while i < s.len() {
+            if s[i] == b' ' {
+                while i < s.len() && s[i] == b' ' {
+                    i += 1;
+                }
+                if i == s.len() {
+                    return length;
+                }
+                length = 0;
+            } else {
+                length += 1;
+                i += 1;
+            }
+        }
+        length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -353,6 +380,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn length_of_last_word(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut i = n as i32 - 1;
+        let mut length = 0;
+        while i >= 0 && s[i as usize] == b' ' {
+            i -= 1;
+        }
+        while i >= 0 && s[i as usize] != b' ' {
+            i -= 1;
+            length += 1;
+        }
+        length
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -442,6 +488,15 @@ class Solution {
 class Solution {
     func lengthOfLastWord(_ s: String) -> Int {
         return s.split(separator: " ").last?.count ?? 0
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn length_of_last_word(s: String) -> i32 {
+        let s = s.trim_end();
+        (s.len() - s.rfind(' ').map_or(0, |i| i + 1)) as i32
     }
 }
 ```

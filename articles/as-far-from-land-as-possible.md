@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Breadth-First Search (BFS)** - Core algorithm for finding shortest distances in unweighted graphs/grids
 - **Multi-source BFS** - Extending BFS to start from multiple source nodes simultaneously
 - **2D Grid Traversal** - Navigating a matrix using 4-directional movement
@@ -430,6 +432,60 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_distance(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+
+        let bfs = |row: usize, col: usize| -> i32 {
+            let mut q = VecDeque::new();
+            let mut visit = vec![vec![false; n]; n];
+            q.push_back((row, col));
+            visit[row][col] = true;
+            let mut dist = 0;
+
+            while !q.is_empty() {
+                dist += 1;
+                for _ in 0..q.len() {
+                    let (r, c) = q.pop_front().unwrap();
+                    for &(dr, dc) in &direct {
+                        let nr = r as i32 + dr;
+                        let nc = c as i32 + dc;
+                        if nr < 0 || nc < 0 || nr >= n as i32 || nc >= n as i32 {
+                            continue;
+                        }
+                        let (nr, nc) = (nr as usize, nc as usize);
+                        if visit[nr][nc] {
+                            continue;
+                        }
+                        if grid[nr][nc] == 1 {
+                            return dist;
+                        }
+                        visit[nr][nc] = true;
+                        q.push_back((nr, nc));
+                    }
+                }
+            }
+            -1
+        };
+
+        let mut res = -1;
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 0 {
+                    res = res.max(bfs(r, c));
+                    if res == -1 {
+                        return res;
+                    }
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -730,6 +786,41 @@ class Solution {
             }
         }
         return res > 1 ? res - 1 : -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_distance(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct: [(i32, i32); 4] = [(0, 1), (0, -1), (1, 0), (-1, 0)];
+        let mut q = VecDeque::new();
+
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    q.push_back((r, c));
+                }
+            }
+        }
+
+        let mut res = -1;
+        while let Some((r, c)) = q.pop_front() {
+            res = grid[r][c];
+            for &(dr, dc) in &direct {
+                let nr = r as i32 + dr;
+                let nc = c as i32 + dc;
+                if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32 {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if grid[nr][nc] == 0 {
+                        q.push_back((nr, nc));
+                        grid[nr][nc] = grid[r][c] + 1;
+                    }
+                }
+            }
+        }
+        if res > 1 { res - 1 } else { -1 }
     }
 }
 ```
@@ -1059,6 +1150,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_distance(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct = [0i32, 1, 0, -1, 0];
+        let mut visit = vec![vec![false; n]; n];
+        let mut q = VecDeque::new();
+
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 {
+                    visit[r][c] = true;
+                    q.push_back((r, c));
+                }
+            }
+        }
+
+        let mut res = 0;
+        while !q.is_empty() {
+            res += 1;
+            for _ in 0..q.len() {
+                let (row, col) = q.pop_front().unwrap();
+                for d in 0..4 {
+                    let nr = row as i32 + direct[d];
+                    let nc = col as i32 + direct[d + 1];
+                    if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32 {
+                        let (nr, nc) = (nr as usize, nc as usize);
+                        if !visit[nr][nc] {
+                            q.push_back((nr, nc));
+                            visit[nr][nc] = true;
+                        }
+                    }
+                }
+            }
+        }
+        if res > 1 { res - 1 } else { -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1340,6 +1471,36 @@ class Solution {
         }
 
         return res < INF ? res - 1 : -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_distance(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let inf = 1_000_000;
+
+        for r in 0..n {
+            for c in 0..n {
+                if grid[r][c] == 1 { continue; }
+                grid[r][c] = inf;
+                if r > 0 { grid[r][c] = grid[r][c].min(grid[r - 1][c] + 1); }
+                if c > 0 { grid[r][c] = grid[r][c].min(grid[r][c - 1] + 1); }
+            }
+        }
+
+        let mut res = 0;
+        for r in (0..n).rev() {
+            for c in (0..n).rev() {
+                if grid[r][c] == 1 { continue; }
+                if r < n - 1 { grid[r][c] = grid[r][c].min(grid[r + 1][c] + 1); }
+                if c < n - 1 { grid[r][c] = grid[r][c].min(grid[r][c + 1] + 1); }
+                res = res.max(grid[r][c]);
+            }
+        }
+
+        if res < inf { res - 1 } else { -1 }
     }
 }
 ```
@@ -1640,6 +1801,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_distance(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let inf = 1_000_000;
+        let mut dp = vec![vec![inf; n + 2]; n + 2];
+
+        for r in 1..=n {
+            for c in 1..=n {
+                if grid[r - 1][c - 1] == 1 {
+                    dp[r][c] = 0;
+                } else {
+                    dp[r][c] = dp[r - 1][c].min(dp[r][c - 1]) + 1;
+                }
+            }
+        }
+
+        let mut res = -1;
+        for r in (1..=n).rev() {
+            for c in (1..=n).rev() {
+                if grid[r - 1][c - 1] == 0 {
+                    dp[r][c] = dp[r][c].min(dp[r + 1][c].min(dp[r][c + 1]) + 1);
+                    res = res.max(dp[r][c]);
+                }
+            }
+        }
+        if res < inf { res } else { -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1652,14 +1844,18 @@ class Solution {
 ## Common Pitfalls
 
 ### Not Handling Edge Cases (All Land or All Water)
+
 The problem requires returning -1 if the grid contains only land cells or only water cells. Forgetting this check leads to incorrect results or infinite loops.
+
 ```python
 # Wrong: doesn't check if there's no water or no land
 # BFS from land will never find water, or vice versa
 ```
 
 ### Starting BFS from Water Instead of Land
+
 For multi-source BFS, the sources should be all land cells (value 1), not water cells. Starting from water cells would require running separate BFS from each water cell, which is O(n^4) instead of O(n^2).
+
 ```python
 # Wrong: starting from water cells
 for r in range(N):
@@ -1669,7 +1865,9 @@ for r in range(N):
 ```
 
 ### Off-by-One Error in Distance Calculation
+
 When using multi-source BFS, land cells start with distance 0 (or 1 in some implementations). A common mistake is mishandling the initial distance, leading to results that are off by one.
+
 ```python
 # Wrong: land cells marked as 1, so final answer needs adjustment
 grid[newR][newC] = grid[r][c] + 1

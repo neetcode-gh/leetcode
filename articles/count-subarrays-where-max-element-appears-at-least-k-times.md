@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to traverse and find maximum elements in an array
 - **Sliding Window Technique** - Using two pointers to efficiently process subarrays without recomputing from scratch
 - **Subarray Counting** - Recognizing patterns for counting valid subarrays based on window positions
@@ -16,10 +18,10 @@ We need to count subarrays where the maximum element of the entire array appears
 
 1. Find the maximum element in the array.
 2. For each starting index `i` from `0` to `n-1`:
-   - Initialize a counter for max element occurrences.
-   - For each ending index `j` from `i` to `n-1`:
-     - If `nums[j]` equals the max element, increment the counter.
-     - If the counter is at least `k`, this subarray is valid; increment the result.
+    - Initialize a counter for max element occurrences.
+    - For each ending index `j` from `i` to `n-1`:
+        - If `nums[j]` equals the max element, increment the counter.
+        - If the counter is at least `k`, this subarray is valid; increment the result.
 3. Return the total count of valid subarrays.
 
 ::tabs-start
@@ -230,6 +232,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_subarrays(nums: Vec<i32>, k: i32) -> i64 {
+        let n = nums.len();
+        let mut res: i64 = 0;
+        let maxi = *nums.iter().max().unwrap();
+
+        for i in 0..n {
+            let mut cnt = 0;
+            for j in i..n {
+                if nums[j] == maxi {
+                    cnt += 1;
+                }
+                if cnt >= k {
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,9 +276,9 @@ Instead of checking all subarrays, we can use a sliding window. For each right e
 1. Find the maximum element and initialize counters.
 2. Use two pointers `l` and `r`, both starting at `0`.
 3. For each right pointer position:
-   - If `nums[r]` is the max element, increment the count.
-   - Shrink the window from the left while the count exceeds `k`, or while count equals `k` and the left element is not the max (to find the rightmost valid left position).
-   - If count equals `k`, add `(l + 1)` to the result, representing all valid starting positions.
+    - If `nums[r]` is the max element, increment the count.
+    - Shrink the window from the left while the count exceeds `k`, or while count equals `k` and the left element is not the max (to find the rightmost valid left position).
+    - If count equals `k`, add `(l + 1)` to the result, representing all valid starting positions.
 4. Return the total count.
 
 ::tabs-start
@@ -494,6 +520,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_subarrays(nums: Vec<i32>, k: i32) -> i64 {
+        let max_n = *nums.iter().max().unwrap();
+        let mut max_cnt = 0;
+        let mut l = 0usize;
+        let mut res: i64 = 0;
+
+        for r in 0..nums.len() {
+            if nums[r] == max_n {
+                max_cnt += 1;
+            }
+            while max_cnt > k || (l <= r && max_cnt == k && nums[l] != max_n) {
+                if nums[l] == max_n {
+                    max_cnt -= 1;
+                }
+                l += 1;
+            }
+            if max_cnt == k {
+                res += (l + 1) as i64;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -513,11 +567,11 @@ We can simplify the sliding window by counting subarrays with fewer than `k` occ
 
 1. Find the maximum element and initialize counters.
 2. For each right pointer position:
-   - If `nums[r]` is the max element, increment the count.
-   - While count equals `k`:
-     - If `nums[l]` is the max element, decrement the count.
-     - Move `l` to the right.
-   - Add `l` to the result (representing all valid starting positions from `0` to `l-1`).
+    - If `nums[r]` is the max element, increment the count.
+    - While count equals `k`:
+        - If `nums[l]` is the max element, decrement the count.
+        - Move `l` to the right.
+    - Add `l` to the result (representing all valid starting positions from `0` to `l-1`).
 3. Return the total count.
 
 ::tabs-start
@@ -727,6 +781,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_subarrays(nums: Vec<i32>, k: i32) -> i64 {
+        let max_n = *nums.iter().max().unwrap();
+        let mut max_cnt = 0;
+        let mut l = 0usize;
+        let mut res: i64 = 0;
+
+        for r in 0..nums.len() {
+            if nums[r] == max_n {
+                max_cnt += 1;
+            }
+            while max_cnt == k {
+                if nums[l] == max_n {
+                    max_cnt -= 1;
+                }
+                l += 1;
+            }
+            res += l as i64;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -747,9 +827,9 @@ We can collect all indices where the max element appears and then use combinator
 1. Find the maximum element and collect all indices where it appears.
 2. Add `-1` at the beginning of the index list (as a sentinel for computing gaps).
 3. For each window of `k` consecutive indices in the list:
-   - Calculate left choices: difference between current index and previous index.
-   - Calculate right choices: distance from the last index in the window to the end.
-   - Multiply these values and add to the result.
+    - Calculate left choices: difference between current index and previous index.
+    - Calculate right choices: distance from the last index in the window to the end.
+    - Multiply these values and add to the result.
 4. Return the total count.
 
 ::tabs-start
@@ -961,6 +1041,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_subarrays(nums: Vec<i32>, k: i32) -> i64 {
+        let n = nums.len();
+        let max_n = *nums.iter().max().unwrap();
+        let mut max_indexes: Vec<i64> = vec![-1];
+
+        for i in 0..n {
+            if nums[i] == max_n {
+                max_indexes.push(i as i64);
+            }
+        }
+
+        let mut res: i64 = 0;
+        let k = k as usize;
+        for i in 1..=(max_indexes.len().saturating_sub(k)) {
+            let cur = (max_indexes[i] - max_indexes[i - 1])
+                * (n as i64 - max_indexes[i + k - 1]);
+            res += cur;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -980,9 +1086,9 @@ We maintain a sliding window containing exactly `k` indices of the max element. 
 
 1. Find the maximum element and create an empty queue for indices.
 2. For each index `i` in the array:
-   - If `nums[i]` equals the max element, add `i` to the queue.
-   - If the queue size exceeds `k`, remove the front element.
-   - If the queue size equals `k`, add `(front index + 1)` to the result.
+    - If `nums[i]` equals the max element, add `i` to the queue.
+    - If the queue size exceeds `k`, remove the front element.
+    - If the queue size equals `k`, add `(front index + 1)` to the result.
 3. Return the total count.
 
 ::tabs-start
@@ -1202,6 +1308,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn count_subarrays(nums: Vec<i32>, k: i32) -> i64 {
+        let max_n = *nums.iter().max().unwrap();
+        let mut max_indexes = VecDeque::new();
+        let mut res: i64 = 0;
+        let k = k as usize;
+
+        for i in 0..nums.len() {
+            if nums[i] == max_n {
+                max_indexes.push_back(i as i64);
+            }
+            if max_indexes.len() > k {
+                max_indexes.pop_front();
+            }
+            if max_indexes.len() == k {
+                res += max_indexes[0] + 1;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1214,6 +1345,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Using Subarray Maximum Instead of Array Maximum
+
 The problem asks for subarrays where the **array's** maximum element appears at least `k` times, not subarrays where the subarray's maximum appears `k` times. You must first find the global maximum of the entire array, then count its occurrences.
 
 ```python
@@ -1227,7 +1359,9 @@ maxi = max(nums)  # Find once, use for all subarrays
 ```
 
 ### Off-by-One Error in Counting Valid Subarrays
+
 When using the sliding window approach, a common mistake is miscounting the number of valid left endpoints. If the window `[l, r]` has exactly `k` occurrences of the max element with the max at position `l`, valid starting positions are `0` through `l` (inclusive), giving `l + 1` subarrays, not `l`.
 
 ### Integer Overflow with Large Arrays
+
 The result can be very large (up to `n * (n + 1) / 2` for an array of size `n`). Using `int` instead of `long` in languages like Java or C++ will cause overflow for large inputs. Always use `long long` or `long` for the result variable.

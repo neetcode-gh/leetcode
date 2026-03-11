@@ -253,6 +253,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn calculate_time(keyboard: String, word: String) -> i32 {
+        let mut key_indices = [0i32; 26];
+
+        // Get the index for each key.
+        for (i, c) in keyboard.bytes().enumerate() {
+            key_indices[(c - b'a') as usize] = i as i32;
+        }
+
+        // Initialize previous index as starting index = 0.
+        let mut prev = 0i32;
+        let mut result = 0i32;
+
+        // Calculate the total time.
+        for c in word.bytes() {
+            let idx = key_indices[(c - b'a') as usize];
+            result += (prev - idx).abs();
+            prev = idx;
+        }
+
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

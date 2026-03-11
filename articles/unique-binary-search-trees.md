@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search Tree Properties** - Understanding that left subtree values are smaller and right subtree values are larger than the root
 - **Recursion** - Breaking down the problem by choosing each node as the root and solving for left and right subtrees
 - **Dynamic Programming** - Using memoization or bottom-up tabulation to avoid redundant calculations
@@ -20,9 +22,9 @@ This gives us a recursive structure: the count for `n` nodes equals the sum over
 1. Base case: If `n <= 1`, there's exactly one BST (empty tree or single node), so return `1`.
 2. Initialize `res = 0` to accumulate the total count.
 3. For each potential root `i` from `1` to `n`:
-   - Left subtree has `i - 1` nodes.
-   - Right subtree has `n - i` nodes.
-   - Add `numTrees(i - 1) * numTrees(n - i)` to `res`.
+    - Left subtree has `i - 1` nodes.
+    - Right subtree has `n - i` nodes.
+    - Add `numTrees(i - 1) * numTrees(n - i)` to `res`.
 4. Return `res`.
 
 ::tabs-start
@@ -150,6 +152,21 @@ class Solution {
             res += numTrees(i - 1) * numTrees(n - i)
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_trees(n: i32) -> i32 {
+        if n <= 1 {
+            return 1;
+        }
+        let mut res = 0;
+        for i in 1..=n {
+            res += Self::num_trees(i - 1) * Self::num_trees(n - i);
+        }
+        res
     }
 }
 ```
@@ -369,6 +386,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_trees(n: i32) -> i32 {
+        let mut dp = HashMap::new();
+
+        fn helper(n: i32, dp: &mut HashMap<i32, i32>) -> i32 {
+            if n <= 1 {
+                return 1;
+            }
+            if let Some(&val) = dp.get(&n) {
+                return val;
+            }
+            let mut res = 0;
+            for i in 1..=n {
+                res += helper(i - 1, dp) * helper(n - i, dp);
+            }
+            dp.insert(n, res);
+            res
+        }
+        helper(n, &mut dp)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,12 +429,12 @@ Instead of recursion, we can build the solution iteratively from smaller subprob
 
 1. Create an array `numTree` of size `n + 1`, initialized with `1` (base cases for 0 and 1 node).
 2. For each number of `nodes` from `2` to `n`:
-   - Initialize `total = 0`.
-   - For each `root` choice from `1` to `nodes`:
-     - `left = root - 1` (nodes in left subtree).
-     - `right = nodes - root` (nodes in right subtree).
-     - Add `numTree[left] * numTree[right]` to `total`.
-   - Set `numTree[nodes] = total`.
+    - Initialize `total = 0`.
+    - For each `root` choice from `1` to `nodes`:
+        - `left = root - 1` (nodes in left subtree).
+        - `right = nodes - root` (nodes in right subtree).
+        - Add `numTree[left] * numTree[right]` to `total`.
+    - Set `numTree[nodes] = total`.
 3. Return `numTree[n]`.
 
 ::tabs-start
@@ -564,6 +605,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_trees(n: i32) -> i32 {
+        let n = n as usize;
+        let mut num_tree = vec![1; n + 1];
+
+        for nodes in 2..=n {
+            let mut total = 0;
+            for root in 1..=nodes {
+                let left = root - 1;
+                let right = nodes - root;
+                total += num_tree[left] * num_tree[right];
+            }
+            num_tree[nodes] = total;
+        }
+
+        num_tree[n] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -583,8 +645,8 @@ The number of unique BSTs with `n` nodes is the nth Catalan number. Catalan numb
 
 1. Initialize `res = 1`.
 2. For `i` from `1` to `n - 1`:
-   - Multiply `res` by `(n + i + 1)`.
-   - Divide `res` by `i`.
+    - Multiply `res` by `(n + i + 1)`.
+    - Divide `res` by `i`.
 3. Return `res / n`.
 
 ::tabs-start
@@ -693,6 +755,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_trees(n: i32) -> i32 {
+        let n = n as i64;
+        let mut res: i64 = 1;
+        for i in 1..n {
+            res *= n + i + 1;
+            res /= i;
+        }
+        (res / n) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -712,7 +788,7 @@ Another formula for Catalan numbers uses a recurrence relation: `C(n+1) = C(n) *
 
 1. Initialize `res = 1`.
 2. For `i` from `0` to `n - 1`:
-   - Multiply `res` by `(4 * i + 2) / (i + 2)`.
+    - Multiply `res` by `(4 * i + 2) / (i + 2)`.
 3. Return `res` as an integer.
 
 ::tabs-start
@@ -809,6 +885,18 @@ class Solution {
             res *= Double(4 * i + 2) / Double(i + 2)
         }
         return Int(res)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_trees(n: i32) -> i32 {
+        let mut res = 1.0_f64;
+        for i in 0..n {
+            res *= (4 * i + 2) as f64 / (i + 2) as f64;
+        }
+        res as i32
     }
 }
 ```

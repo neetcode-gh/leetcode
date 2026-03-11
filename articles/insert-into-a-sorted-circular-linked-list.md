@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked Lists** - Understanding node structure, traversal, and insertion operations
 - **Two Pointers Technique** - Using multiple pointers to track positions while traversing
 - **Circular Data Structures** - Handling wrap-around logic where the tail connects back to the head
@@ -19,9 +21,9 @@ If we traverse the entire list without finding a spot, it means all values are e
 1. If the list is empty, create a new node pointing to itself and return it.
 2. Initialize `prev` to `head` and `curr` to `head.next`. Use a flag `toInsert` to track when we find the insertion point.
 3. Traverse the list:
-   - **Case 1**: If `prev.val <= insertVal <= curr.val`, we found a normal insertion point between two nodes.
-   - **Case 2**: If `prev.val > curr.val`, we're at the tail-to-head boundary. Insert here if `insertVal >= prev.val` (new maximum) or `insertVal <= curr.val` (new minimum).
-   - If either case is true, insert the new node between `prev` and `curr` and return `head`.
+    - **Case 1**: If `prev.val <= insertVal <= curr.val`, we found a normal insertion point between two nodes.
+    - **Case 2**: If `prev.val > curr.val`, we're at the tail-to-head boundary. Insert here if `insertVal >= prev.val` (new maximum) or `insertVal <= curr.val` (new minimum).
+    - If either case is true, insert the new node between `prev` and `curr` and return `head`.
 4. Move the pointers forward. If we return to the starting position without inserting, insert the node anywhere (Case 3: all values are equal).
 
 ::tabs-start
@@ -34,12 +36,12 @@ class Solution:
             newNode = Node(insertVal, None)
             newNode.next = newNode
             return newNode
- 
+
         prev, curr = head, head.next
         toInsert = False
 
         while True:
-            
+
             if prev.val <= insertVal <= curr.val:
                 # Case #1.
                 toInsert = True
@@ -112,11 +114,11 @@ public:
             newNode->next = newNode;
             return newNode;
         }
-        
+
         Node* prev = head;
         Node* curr = head->next;
         bool toInsert = false;
-        
+
         do {
             if (prev->val <= insertVal && insertVal <= curr->val) {
                 // Case 1
@@ -126,16 +128,16 @@ public:
                 if (insertVal >= prev->val || insertVal <= curr->val)
                     toInsert = true;
             }
-            
+
             if (toInsert) {
                 prev->next = new Node(insertVal, curr);
                 return head;
             }
-            
+
             prev = curr;
             curr = curr->next;
         } while (prev != head);
-        
+
         // Case 3
         prev->next = new Node(insertVal, curr);
         return head;
@@ -395,6 +397,70 @@ class Solution {
 }
 ```
 
+```rust
+// This problem uses a circular linked list with raw pointers,
+// which is not representable with Option<Box<ListNode>>.
+// The solution below assumes a Node struct with val and next fields.
+use std::ptr;
+
+#[derive(Debug)]
+struct Node {
+    val: i32,
+    next: *mut Node,
+}
+
+impl Node {
+    fn new(val: i32) -> *mut Node {
+        Box::into_raw(Box::new(Node { val, next: ptr::null_mut() }))
+    }
+}
+
+impl Solution {
+    pub unsafe fn insert(head: *mut Node, insert_val: i32) -> *mut Node {
+        if head.is_null() {
+            let new_node = Node::new(insert_val);
+            (*new_node).next = new_node;
+            return new_node;
+        }
+
+        let mut prev = head;
+        let mut curr = (*head).next;
+        let mut to_insert = false;
+
+        loop {
+            if (*prev).val <= insert_val && insert_val <= (*curr).val {
+                // Case 1
+                to_insert = true;
+            } else if (*prev).val > (*curr).val {
+                // Case 2
+                if insert_val >= (*prev).val || insert_val <= (*curr).val {
+                    to_insert = true;
+                }
+            }
+
+            if to_insert {
+                let new_node = Node::new(insert_val);
+                (*new_node).next = curr;
+                (*prev).next = new_node;
+                return head;
+            }
+
+            prev = curr;
+            curr = (*curr).next;
+            if prev == head {
+                break;
+            }
+        }
+
+        // Case 3
+        let new_node = Node::new(insert_val);
+        (*new_node).next = curr;
+        (*prev).next = new_node;
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,7 +468,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(1)$
 
->  Where $N$ is the size of the list.
+> Where $N$ is the size of the list.
 
 ---
 

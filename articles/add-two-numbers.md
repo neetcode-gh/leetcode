@@ -381,6 +381,48 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    fn add(
+        l1: Option<Box<ListNode>>,
+        l2: Option<Box<ListNode>>,
+        carry: i32,
+    ) -> Option<Box<ListNode>> {
+        if l1.is_none() && l2.is_none() && carry == 0 {
+            return None;
+        }
+
+        let v1 = l1.as_ref().map_or(0, |n| n.val);
+        let v2 = l2.as_ref().map_or(0, |n| n.val);
+
+        let sum = v1 + v2 + carry;
+        let new_carry = sum / 10;
+        let node_value = sum % 10;
+
+        let next_node = Self::add(
+            l1.and_then(|n| n.next),
+            l2.and_then(|n| n.next),
+            new_carry,
+        );
+
+        Some(Box::new(ListNode { val: node_value, next: next_node }))
+    }
+
+    pub fn add_two_numbers(
+        l1: Option<Box<ListNode>>,
+        l2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        Self::add(l1, l2, 0)
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity
@@ -731,6 +773,42 @@ class Solution {
 }
 ```
 
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn add_two_numbers(
+        l1: Option<Box<ListNode>>,
+        l2: Option<Box<ListNode>>,
+    ) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode::new(0));
+        let mut cur = &mut dummy;
+        let mut l1 = l1;
+        let mut l2 = l2;
+        let mut carry = 0;
+
+        while l1.is_some() || l2.is_some() || carry != 0 {
+            let v1 = l1.as_ref().map_or(0, |n| n.val);
+            let v2 = l2.as_ref().map_or(0, |n| n.val);
+
+            let sum = v1 + v2 + carry;
+            carry = sum / 10;
+            cur.next = Some(Box::new(ListNode::new(sum % 10)));
+
+            cur = cur.next.as_mut().unwrap();
+            l1 = l1.and_then(|n| n.next);
+            l2 = l2.and_then(|n| n.next);
+        }
+
+        dummy.next
+    }
+}
+```
 ::tabs-end
 
 ### Time & Space Complexity

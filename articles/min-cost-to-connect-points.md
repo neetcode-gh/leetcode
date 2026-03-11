@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Theory Basics** - Understanding nodes, edges, and weighted graphs
 - **Minimum Spanning Tree (MST)** - The concept of connecting all nodes with minimum total edge weight
 - **Union-Find (Disjoint Set Union)** - Data structure for efficiently tracking connected components and detecting cycles
@@ -11,10 +13,12 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Kruskal's Algorithm
 
 ### Intuition
+
 We want to connect **all points** such that the **total cost is minimum**, where the cost to connect two points is their **Manhattan distance**.
 This is exactly the definition of a **Minimum Spanning Tree (MST)**.
 
 **Kruskal's Algorithm** fits naturally:
+
 - Treat each point as a node.
 - Treat the distance between every pair of points as an edge weight.
 - Always choose the **cheapest edge** that connects two **different components**.
@@ -23,14 +27,15 @@ This is exactly the definition of a **Minimum Spanning Tree (MST)**.
 To efficiently check whether two points are already connected, we use **Disjoint Set Union (Union-Find)**.
 
 ### Algorithm
+
 1. Consider each point as a node.
 2. Generate all possible edges between pairs of points with their Manhattan distances.
 3. Sort all edges in increasing order of distance.
 4. Initialize a Disjoint Set Union (DSU) structure.
 5. Iterate through the sorted edges:
-   - If the two points are in different sets:
-     - Union them.
-     - Add the edge cost to the total answer.
+    - If the two points are in different sets:
+        - Union them.
+        - Add the edge cost to the total answer.
 6. Continue until all points are connected.
 7. Return the total cost.
 
@@ -496,6 +501,69 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        Self {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) -> bool {
+        let mut pu = self.find(u);
+        let mut pv = self.find(v);
+        if pu == pv {
+            return false;
+        }
+        if self.size[pu] < self.size[pv] {
+            std::mem::swap(&mut pu, &mut pv);
+        }
+        self.size[pu] += self.size[pv];
+        self.parent[pv] = pu;
+        true
+    }
+}
+
+impl Solution {
+    pub fn min_cost_connect_points(points: Vec<Vec<i32>>) -> i32 {
+        let n = points.len();
+        let mut dsu = DSU::new(n);
+        let mut edges = Vec::new();
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                let dist = (points[i][0] - points[j][0]).abs()
+                    + (points[i][1] - points[j][1]).abs();
+                edges.push((dist, i, j));
+            }
+        }
+
+        edges.sort_unstable();
+        let mut res = 0;
+
+        for (dist, u, v) in edges {
+            if dsu.union(u, v) {
+                res += dist;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,29 +576,32 @@ class Solution {
 ## 2. Prim's Algorithm
 
 ### Intuition
+
 We still want a **Minimum Spanning Tree (MST)**: connect all points with minimum total Manhattan distance.
 
 **Prim's Algorithm** grows the MST **one node at a time**:
+
 - Start from any point (say point `0`).
 - At every step, pick the **cheapest edge** that connects:
-  - a point already in the MST
-  - to a point not yet in the MST
+    - a point already in the MST
+    - to a point not yet in the MST
 - Keep doing this until all points are included.
 
 A **min-heap (priority queue)** is used to always get the next cheapest edge quickly.
 
 ### Algorithm
+
 1. Build a graph where each pair of points has an edge with weight = Manhattan distance.
 2. Start MST from node `0`.
 3. Push `(0, 0)` into a min-heap (cost to add starting node is 0).
 4. Maintain a `visited` set for nodes already in the MST.
 5. While `visited` size < `N`:
-   - Pop the smallest `(cost, node)` from heap.
-   - If `node` is already visited, skip it.
-   - Otherwise:
-     - Add `cost` to answer.
-     - Mark `node` as visited.
-     - Push all edges `(edgeCost, neighbor)` to heap for unvisited neighbors.
+    - Pop the smallest `(cost, node)` from heap.
+    - If `node` is already visited, skip it.
+    - Otherwise:
+        - Add `cost` to answer.
+        - Mark `node` as visited.
+        - Push all edges `(edgeCost, neighbor)` to heap for unvisited neighbors.
 6. The accumulated cost is the minimum cost to connect all points.
 
 ::tabs-start
@@ -890,6 +961,46 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_cost_connect_points(points: Vec<Vec<i32>>) -> i32 {
+        let n = points.len();
+        let mut adj: Vec<Vec<(i32, usize)>> = vec![vec![]; n];
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                let dist = (points[i][0] - points[j][0]).abs()
+                    + (points[i][1] - points[j][1]).abs();
+                adj[i].push((dist, j));
+                adj[j].push((dist, i));
+            }
+        }
+
+        let mut res = 0;
+        let mut visit = vec![false; n];
+        let mut visited_count = 0;
+        let mut min_heap = BinaryHeap::new();
+        min_heap.push(Reverse((0i32, 0usize)));
+
+        while visited_count < n {
+            let Reverse((cost, i)) = min_heap.pop().unwrap();
+            if visit[i] {
+                continue;
+            }
+            res += cost;
+            visit[i] = true;
+            visited_count += 1;
+            for &(nei_cost, nei) in &adj[i] {
+                if !visit[nei] {
+                    min_heap.push(Reverse((nei_cost, nei)));
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -911,6 +1022,7 @@ This is exactly a **Minimum Spanning Tree (MST)** problem:
 - We need the cheapest way to connect all nodes without forming unnecessary cycles → that’s an MST.
 
 This solution uses **Prim’s Algorithm** (greedy MST building):
+
 - Start from any node (here, node `0`).
 - Repeatedly add the **closest unvisited node** to the growing connected set.
 - Keep track of the best (minimum) known distance from the current MST to every unvisited node.
@@ -923,18 +1035,18 @@ Instead of building all edges (which would be too many), we compute distances **
 
 1. Let `n` be the number of points.
 2. Create:
-   - `visit[i]` → whether point `i` is already included in the MST
-   - `dist[i]` → the minimum cost to connect point `i` to the current MST
-     (initialize all as infinity)
+    - `visit[i]` → whether point `i` is already included in the MST
+    - `dist[i]` → the minimum cost to connect point `i` to the current MST
+      (initialize all as infinity)
 3. Start from `node = 0` with total cost `res = 0` and connected edges `edges = 0`.
 4. While we have added fewer than `n - 1` edges:
-   1. Mark the current `node` as visited (added to MST).
-   2. For every unvisited point `i`:
-      - Compute cost to connect `i` from the current `node`
-      - Update `dist[i] = min(dist[i], cost)`
-   3. Choose `nextNode` as the unvisited point with the smallest `dist[i]`.
-   4. Add `dist[nextNode]` to `res` (we are connecting `nextNode` to the MST).
-   5. Move `node = nextNode` and increment `edges`.
+    1. Mark the current `node` as visited (added to MST).
+    2. For every unvisited point `i`:
+        - Compute cost to connect `i` from the current `node`
+        - Update `dist[i] = min(dist[i], cost)`
+    3. Choose `nextNode` as the unvisited point with the smallest `dist[i]`.
+    4. Add `dist[nextNode]` to `res` (we are connecting `nextNode` to the MST).
+    5. Move `node = nextNode` and increment `edges`.
 5. Return `res` as the total minimum cost.
 
 ::tabs-start
@@ -1190,6 +1302,39 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_cost_connect_points(points: Vec<Vec<i32>>) -> i32 {
+        let n = points.len();
+        let mut node = 0usize;
+        let mut dist = vec![100_000_000; n];
+        let mut visit = vec![false; n];
+        let mut edges = 0;
+        let mut res = 0;
+
+        while edges < n - 1 {
+            visit[node] = true;
+            let mut next_node = usize::MAX;
+            for i in 0..n {
+                if visit[i] {
+                    continue;
+                }
+                let cur_dist = (points[i][0] - points[node][0]).abs()
+                    + (points[i][1] - points[node][1]).abs();
+                dist[i] = dist[i].min(cur_dist);
+                if next_node == usize::MAX || dist[i] < dist[next_node] {
+                    next_node = i;
+                }
+            }
+            res += dist[next_node];
+            node = next_node;
+            edges += 1;
+        }
+        res
     }
 }
 ```

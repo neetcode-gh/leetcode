@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **String iteration** - Traversing through characters in a string using indices
 - **ASCII values** - Converting characters to their numeric ASCII codes for comparison
 - **Absolute value** - Computing the non-negative difference between two numbers
@@ -16,8 +18,8 @@ The score of a string is defined as the sum of absolute differences between adja
 
 1. Initialize a variable `res` to store the running total.
 2. Iterate through the string from index `0` to `n - 2`:
-   - For each position `i`, compute the absolute difference between the ASCII values of `s[i]` and `s[i + 1]`.
-   - Add this difference to `res`.
+    - For each position `i`, compute the absolute difference between the ASCII values of `s[i]` and `s[i + 1]`.
+    - Add this difference to `res`.
 3. Return `res` as the final answer.
 
 ::tabs-start
@@ -119,6 +121,19 @@ class Solution {
             res += abs(Int(chars[i].asciiValue!) - Int(chars[i + 1].asciiValue!))
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn score_of_string(s: String) -> i32 {
+        let bytes = s.as_bytes();
+        let mut res = 0;
+        for i in 0..bytes.len() - 1 {
+            res += (bytes[i] as i32 - bytes[i + 1] as i32).abs();
+        }
+        res
     }
 }
 ```

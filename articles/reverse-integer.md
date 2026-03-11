@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Integer Arithmetic** - Using modulo (%) to extract digits and integer division (/) to remove digits
 - **Overflow Detection** - Understanding 32-bit signed integer bounds and checking for overflow before it occurs
 - **Handling Negative Numbers** - Knowing how modulo and division behave differently for negative values across languages
@@ -13,14 +15,16 @@ Before attempting this problem, you should be comfortable with:
 We want to reverse the digits of an integer `x` (for example, `123 -> 321`, `-120 -> -21`).
 
 A very simple way to do this is:
+
 - ignore the sign for a moment and work with the absolute value
 - convert the number to a string so digits become easy to manipulate
 - reverse the string and convert it back to an integer
 - restore the original sign if `x` was negative
 
 Finally, the problem usually requires that the answer must fit in a **32-bit signed integer** range:
+
 - from `-2^31` to `2^31 - 1`
-If the reversed number goes outside this range, we return `0`.
+  If the reversed number goes outside this range, we return `0`.
 
 This approach is beginner-friendly because it uses direct operations on strings instead of manual digit math.
 
@@ -33,7 +37,7 @@ This approach is beginner-friendly because it uses direct operations on strings 
 5. Convert the reversed string back to an integer `res` (this automatically removes leading zeros).
 6. If the original number was negative, make `res` negative.
 7. Check if `res` fits in the 32-bit signed integer range:
-   - If it does not, return `0`.
+    - If it does not, return `0`.
 8. Otherwise, return the reversed number.
 
 ::tabs-start
@@ -202,6 +206,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse(x: i32) -> i32 {
+        let org = x;
+        let x = (x as i64).abs();
+        let reversed: String = x.to_string().chars().rev().collect();
+        let mut res: i64 = reversed.parse().unwrap();
+        if org < 0 {
+            res *= -1;
+        }
+        if res < i32::MIN as i64 || res > i32::MAX as i64 {
+            return 0;
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,18 +253,18 @@ Recursion naturally fits this process because each step reduces the problem size
 
 1. Determine the sign of the number (`+` or `-`) and work with its absolute value.
 2. Define a recursive function `rec` that takes:
-   - the remaining number `n`
-   - the reversed number built so far `rev`
+    - the remaining number `n`
+    - the reversed number built so far `rev`
 3. Base case:
-   - If `n` is `0`, return `rev`.
+    - If `n` is `0`, return `rev`.
 4. Recursive step:
-   - Extract the last digit using modulo (`n % 10`)
-   - Append it to `rev` (`rev * 10 + digit`)
-   - Recurse on the remaining number (`n // 10`)
+    - Extract the last digit using modulo (`n % 10`)
+    - Append it to `rev` (`rev * 10 + digit`)
+    - Recurse on the remaining number (`n // 10`)
 5. After recursion finishes:
-   - Restore the original sign.
+    - Restore the original sign.
 6. Check for 32-bit signed integer overflow:
-   - If overflow occurs, return `0`.
+    - If overflow occurs, return `0`.
 7. Otherwise, return the reversed number.
 
 ::tabs-start
@@ -419,6 +441,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn reverse(x: i32) -> i32 {
+        fn rec(n: i64, rev: i64) -> i64 {
+            if n == 0 {
+                return rev;
+            }
+            rec(n / 10, rev * 10 + n % 10)
+        }
+
+        let sign: i64 = if x < 0 { -1 } else { 1 };
+        let reversed_num = rec((x as i64).abs(), 0) * sign;
+        if reversed_num < i32::MIN as i64 || reversed_num > i32::MAX as i64 {
+            return 0;
+        }
+        reversed_num as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -435,6 +477,7 @@ class Solution {
 We want to reverse the digits of an integer **without using strings**, while also ensuring the result fits within the **32-bit signed integer range**.
 
 The key idea is to build the reversed number **digit by digit**:
+
 - Repeatedly take the **last digit** of the number
 - Append it to the end of a running `res`
 - Remove the last digit from the original number
@@ -447,16 +490,16 @@ This approach closely matches how integer reversal works at a low level and is b
 ### Algorithm
 
 1. Define constants:
-   - `MIN = -2^31`
-   - `MAX = 2^31 - 1`
+    - `MIN = -2^31`
+    - `MAX = 2^31 - 1`
 2. Initialize `res = 0` to store the reversed number.
 3. While `x` is not `0`:
-   - Extract the last digit `digit` of `x`.
-   - Remove the last digit from `x`.
-   - Before updating `res`, check:
-     - If `res * 10 + digit` would overflow the 32-bit signed integer range:
-       - Return `0`.
-   - Update `res = res * 10 + digit`.
+    - Extract the last digit `digit` of `x`.
+    - Remove the last digit from `x`.
+    - Before updating `res`, check:
+        - If `res * 10 + digit` would overflow the 32-bit signed integer range:
+            - Return `0`.
+    - Update `res = res * 10 + digit`.
 4. After the loop finishes, return `res`.
 
 ::tabs-start
@@ -650,6 +693,30 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn reverse(x: i32) -> i32 {
+        let mut res: i32 = 0;
+        let mut num = x;
+
+        while num != 0 {
+            let digit = num % 10;
+            num /= 10;
+
+            if res > i32::MAX / 10 || (res == i32::MAX / 10 && digit > 7) {
+                return 0;
+            }
+            if res < i32::MIN / 10 || (res == i32::MIN / 10 && digit < -8) {
+                return 0;
+            }
+            res = res * 10 + digit;
+        }
+
+        res
     }
 }
 ```

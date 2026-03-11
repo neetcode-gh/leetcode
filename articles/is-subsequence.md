@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers** - Traversing two sequences simultaneously with independent pointers
 - **Recursion** - Breaking down the problem into smaller subproblems with base cases
 - **Dynamic Programming** - Using memoization or tabulation to avoid redundant computations
@@ -16,8 +18,8 @@ To check if `s` is a subsequence of `t`, we need to find all characters of `s` i
 
 1. Define a recursive function `rec(i, j)` where `i` is the index in `s` and `j` is the index in `t`.
 2. Base cases:
-   - If `i == len(s)`, all characters matched, return `true`.
-   - If `j == len(t)`, ran out of characters in `t`, return `false`.
+    - If `i == len(s)`, all characters matched, return `true`.
+    - If `j == len(t)`, ran out of characters in `t`, return `false`.
 3. If `s[i] == t[j]`, both characters match, so recurse with `rec(i + 1, j + 1)`.
 4. Otherwise, skip the current character in `t` and recurse with `rec(i, j + 1)`.
 5. Start with `rec(0, 0)`.
@@ -167,6 +169,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+
+        fn rec(s: &[u8], t: &[u8], i: usize, j: usize) -> bool {
+            if i == s.len() { return true; }
+            if j == t.len() { return false; }
+            if s[i] == t[j] {
+                return rec(s, t, i + 1, j + 1);
+            }
+            rec(s, t, i, j + 1)
+        }
+
+        rec(s, t, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -188,10 +210,10 @@ The recursive solution may recompute the same subproblems multiple times. By add
 
 1. Create a 2D memo table initialized to `-1`.
 2. Define a recursive function `rec(i, j)`:
-   - Base cases same as before.
-   - If `memo[i][j]` is already computed, return the cached result.
-   - Compute the result based on whether characters match or not.
-   - Store the result in `memo[i][j]` and return it.
+    - Base cases same as before.
+    - If `memo[i][j]` is already computed, return the cached result.
+    - Compute the result based on whether characters match or not.
+    - Store the result in `memo[i][j]` and return it.
 3. Call `rec(0, 0)`.
 
 ::tabs-start
@@ -416,6 +438,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let (n, m) = (s.len(), t.len());
+        let mut memo = vec![vec![-1i8; m]; n.max(1)];
+
+        fn rec(s: &[u8], t: &[u8], i: usize, j: usize, memo: &mut Vec<Vec<i8>>) -> bool {
+            if i == s.len() { return true; }
+            if j == t.len() { return false; }
+            if memo[i][j] != -1 { return memo[i][j] == 1; }
+            let result = if s[i] == t[j] {
+                rec(s, t, i + 1, j + 1, memo)
+            } else {
+                rec(s, t, i, j + 1, memo)
+            };
+            memo[i][j] = if result { 1 } else { 0 };
+            result
+        }
+
+        rec(s, t, 0, 0, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -438,8 +486,8 @@ Instead of recursion with memoization, we can fill a DP table iteratively from t
 1. Create a 2D DP table of size `(n+1) x (m+1)` initialized to `false`.
 2. Set `dp[n][j] = true` for all `j` (empty remainder of `s` is always a subsequence).
 3. Iterate `i` from `n-1` down to `0`, and `j` from `m-1` down to `0`:
-   - If `s[i] == t[j]`, set `dp[i][j] = dp[i+1][j+1]`.
-   - Otherwise, set `dp[i][j] = dp[i][j+1]`.
+    - If `s[i] == t[j]`, set `dp[i][j] = dp[i+1][j+1]`.
+    - Otherwise, set `dp[i][j] = dp[i][j+1]`.
 4. Return `dp[0][0]`.
 
 ::tabs-start
@@ -651,6 +699,33 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let (n, m) = (s.len(), t.len());
+        let mut dp = vec![vec![false; m + 1]; n + 1];
+
+        for j in 0..=m {
+            dp[n][j] = true;
+        }
+
+        for i in (0..n).rev() {
+            for j in (0..m).rev() {
+                if s[i] == t[j] {
+                    dp[i][j] = dp[i + 1][j + 1];
+                } else {
+                    dp[i][j] = dp[i][j + 1];
+                }
+            }
+        }
+
+        dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -672,8 +747,8 @@ The most efficient approach uses two pointers since we only need to make a singl
 
 1. Initialize pointers `i = 0` and `j = 0`.
 2. While `i < len(s)` and `j < len(t)`:
-   - If `s[i] == t[j]`, increment `i`.
-   - Always increment `j`.
+    - If `s[i] == t[j]`, increment `i`.
+    - Always increment `j`.
 3. Return `i == len(s)`.
 
 ::tabs-start
@@ -802,6 +877,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let (mut i, mut j) = (0, 0);
+        while i < s.len() && j < t.len() {
+            if s[i] == t[j] {
+                i += 1;
+            }
+            j += 1;
+        }
+        i == s.len()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -815,18 +907,18 @@ class Solution {
 
 ### Intuition
 
-When checking many strings against the same `t`, the two-pointer approach becomes inefficient because we scan `t` repeatedly. Instead, we precompute for each position in `t` the next occurrence of each character. This lets us jump directly to the next matching character rather than scanning. The preprocessing takes O(26 * m) time and space, but each subsequence query then takes only O(n) time regardless of the length of `t`.
+When checking many strings against the same `t`, the two-pointer approach becomes inefficient because we scan `t` repeatedly. Instead, we precompute for each position in `t` the next occurrence of each character. This lets us jump directly to the next matching character rather than scanning. The preprocessing takes O(26 \* m) time and space, but each subsequence query then takes only O(n) time regardless of the length of `t`.
 
 ### Algorithm
 
 1. Build a 2D array `store` of size `m x 26`. Entry `store[j][c]` holds the smallest index `>= j` where character `c` appears in `t`.
 2. Fill `store` from right to left:
-   - Initialize `store[m-1]` with `m + 1` for all characters except `t[m-1]`.
-   - For each position `j` from `m-2` to `0`, copy `store[j+1]` and update the entry for `t[j]`.
+    - Initialize `store[m-1]` with `m + 1` for all characters except `t[m-1]`.
+    - For each position `j` from `m-2` to `0`, copy `store[j+1]` and update the entry for `t[j]`.
 3. To check if `s` is a subsequence:
-   - Start at `j = 0`.
-   - For each character in `s`, look up its next position from `store[j]` and jump to it.
-   - If the jump goes beyond `m`, return `false`.
+    - Start at `j = 0`.
+    - For each character in `s`, look up its next position from `store[j]` and jump to it.
+    - If the jump goes beyond `m`, return `false`.
 4. Return `true` if all characters are matched.
 
 ::tabs-start
@@ -1066,6 +1158,38 @@ class Solution {
         }
 
         return i == n
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_subsequence(s: String, t: String) -> bool {
+        let s = s.as_bytes();
+        let t = t.as_bytes();
+        let (n, m) = (s.len(), t.len());
+        if m == 0 {
+            return n == 0;
+        }
+
+        let mut store = vec![[m + 1; 26]; m];
+        store[m - 1][(t[m - 1] - b'a') as usize] = m - 1;
+
+        for i in (0..m - 1).rev() {
+            store[i] = store[i + 1];
+            store[i][(t[i] - b'a') as usize] = i;
+        }
+
+        let (mut i, mut j) = (0, 0);
+        while i < n && j < m {
+            j = store[j][(s[i] - b'a') as usize] + 1;
+            if j > m {
+                return false;
+            }
+            i += 1;
+        }
+
+        i == n
     }
 }
 ```

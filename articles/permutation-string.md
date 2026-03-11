@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Tables / Frequency Counting** - Tracking character counts to compare substrings
 - **Sliding Window Technique** - Efficiently checking fixed-size substrings without rebuilding counts
 - **String Manipulation** - Working with substrings and character comparisons
@@ -21,9 +23,9 @@ This method is simple to understand but very slow because it examines all substr
 1. Sort `s1` so we can compare substrings against it.
 2. Loop through every starting index `i` in `s2`.
 3. For each `i`, loop through every ending index `j ≥ i`:
-   - Extract the substring `s2[i : j + 1]`.
-   - Sort it and compare with sorted `s1`.
-   - If they match, return `true`.
+    - Extract the substring `s2[i : j + 1]`.
+    - Sort it and compare with sorted `s1`.
+    - If they match, return `true`.
 4. If no matching substring is found, return `false`.
 
 ::tabs-start
@@ -198,6 +200,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_inclusion(s1: String, s2: String) -> bool {
+        let mut s1_sorted: Vec<u8> = s1.bytes().collect();
+        s1_sorted.sort();
+        let s2 = s2.as_bytes();
+        for i in 0..s2.len() {
+            for j in i..s2.len() {
+                let mut sub: Vec<u8> = s2[i..=j].to_vec();
+                sub.sort();
+                if sub == s1_sorted {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -222,12 +244,12 @@ This method is much cleaner than brute force but still slow because it restarts 
 1. Build a frequency map `count1` for all characters in `s1`.
 2. Let `need` be the number of unique characters in `s1` whose counts must match.
 3. For each starting index `i` in `s2`:
-   - Create an empty map `count2` and a match counter `cur = 0`.
-   - Extend the substring by moving `j` from `i` forward:
-     - Increment the frequency of `s2[j]` in `count2`.
-     - If `count2[s2[j]]` exceeds what `count1` requires, break — this substring can't work.
-     - If the count for this character now matches `count1`, increase `cur`.
-     - If `cur == need`, return `true` — we found a valid permutation.
+    - Create an empty map `count2` and a match counter `cur = 0`.
+    - Extend the substring by moving `j` from `i` forward:
+        - Increment the frequency of `s2[j]` in `count2`.
+        - If `count2[s2[j]]` exceeds what `count1` requires, break — this substring can't work.
+        - If the count for this character now matches `count1`, increase `cur`.
+        - If `cur == need`, return `true` — we found a valid permutation.
 4. If no starting index yields a match, return `false`.
 
 ::tabs-start
@@ -494,6 +516,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn check_inclusion(s1: String, s2: String) -> bool {
+        let mut count1 = HashMap::new();
+        for c in s1.bytes() {
+            *count1.entry(c).or_insert(0) += 1;
+        }
+        let need = count1.len();
+        let s2 = s2.as_bytes();
+        for i in 0..s2.len() {
+            let mut count2 = HashMap::new();
+            let mut cur = 0;
+            for j in i..s2.len() {
+                let c = s2[j];
+                *count2.entry(c).or_insert(0) += 1;
+                let c1 = *count1.get(&c).unwrap_or(&0);
+                let c2 = *count2.get(&c).unwrap_or(&0);
+                if c1 < c2 {
+                    break;
+                }
+                if c1 == c2 {
+                    cur += 1;
+                }
+                if cur == need {
+                    return true;
+                }
+            }
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -523,13 +578,13 @@ This makes the solution fast and efficient.
 
 1. If `s1` is longer than `s2`, return `false`.
 2. Build character frequency arrays for:
-   - `s1`
-   - the first window of `s2` of size `len(s1)`
+    - `s1`
+    - the first window of `s2` of size `len(s1)`
 3. Count how many positions match between the two arrays (`matches`).
 4. Slide the window from left to right across `s2`:
-   - At each step, add the new right character and update counts/matches.
-   - Remove the left character and update counts/matches.
-   - If at any time `matches == 26`, return `true`.
+    - At each step, add the new right character and update counts/matches.
+    - Remove the left character and update counts/matches.
+    - If at any time `matches == 26`, return `true`.
 5. After finishing the loop, return whether `matches == 26`.
 
 ::tabs-start
@@ -915,6 +970,52 @@ class Solution {
         }
 
         return matches == 26
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn check_inclusion(s1: String, s2: String) -> bool {
+        let s1 = s1.as_bytes();
+        let s2 = s2.as_bytes();
+        if s1.len() > s2.len() {
+            return false;
+        }
+        let mut s1_count = [0i32; 26];
+        let mut s2_count = [0i32; 26];
+        for i in 0..s1.len() {
+            s1_count[(s1[i] - b'a') as usize] += 1;
+            s2_count[(s2[i] - b'a') as usize] += 1;
+        }
+        let mut matches = 0;
+        for i in 0..26 {
+            if s1_count[i] == s2_count[i] {
+                matches += 1;
+            }
+        }
+        let mut l = 0;
+        for r in s1.len()..s2.len() {
+            if matches == 26 {
+                return true;
+            }
+            let idx = (s2[r] - b'a') as usize;
+            s2_count[idx] += 1;
+            if s1_count[idx] == s2_count[idx] {
+                matches += 1;
+            } else if s1_count[idx] + 1 == s2_count[idx] {
+                matches -= 1;
+            }
+            let idx = (s2[l] - b'a') as usize;
+            s2_count[idx] -= 1;
+            if s1_count[idx] == s2_count[idx] {
+                matches += 1;
+            } else if s1_count[idx] - 1 == s2_count[idx] {
+                matches -= 1;
+            }
+            l += 1;
+        }
+        matches == 26
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Understanding how to break down problems into smaller subproblems with base cases
 - **Dynamic Programming** - Recognizing overlapping subproblems and using memoization or tabulation
 - **Combinatorics** - Counting arrangements and understanding the recurrence relation for permutations
@@ -17,11 +19,11 @@ Consider placing sticks from tallest to shortest. The tallest stick must be visi
 
 1. Define `dfs(N, K)` where `N` is the number of sticks remaining and `K` is how many still need to be visible.
 2. Base cases:
-   - If `N == K`, all remaining sticks must be visible (only one way: place them in increasing order from left), return `1`.
-   - If `N == 0` or `K == 0` (but not both), it's impossible, return `0`.
+    - If `N == K`, all remaining sticks must be visible (only one way: place them in increasing order from left), return `1`.
+    - If `N == 0` or `K == 0` (but not both), it's impossible, return `0`.
 3. Two choices for the shortest remaining stick:
-   - Place it at the leftmost position, making it visible: `dfs(N-1, K-1)`.
-   - Place it in one of the `N-1` positions behind a taller stick: `(N-1) * dfs(N-1, K)`.
+    - Place it at the leftmost position, making it visible: `dfs(N-1, K-1)`.
+    - Place it in one of the `N-1` positions behind a taller stick: `(N-1) * dfs(N-1, K)`.
 4. Return the sum modulo `10^9 + 7`.
 
 ::tabs-start
@@ -158,6 +160,22 @@ class Solution {
         }
 
         return dfs(n, k)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rearrange_sticks(n: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+
+        fn dfs(n: i64, k: i64) -> i64 {
+            if n == k { return 1; }
+            if n == 0 || k == 0 { return 0; }
+            (dfs(n - 1, k - 1) + (n - 1) * dfs(n - 1, k)) % MOD
+        }
+
+        dfs(n as i64, k as i64) as i32
     }
 }
 ```
@@ -368,6 +386,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_sticks(n: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![vec![-1i64; k + 1]; n + 1];
+
+        fn dfs(n: usize, k: usize, dp: &mut Vec<Vec<i64>>) -> i64 {
+            if n == k { return 1; }
+            if n == 0 || k == 0 { return 0; }
+            if dp[n][k] != -1 { return dp[n][k]; }
+            dp[n][k] = (dfs(n - 1, k - 1, dp) + (n as i64 - 1) * dfs(n - 1, k, dp)) % MOD;
+            dp[n][k]
+        }
+
+        dfs(n, k, &mut dp) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,7 +428,7 @@ We fill the DP table iteratively from smaller subproblems to larger ones. `dp[N]
 1. Create a DP table of size `(n+1) x (k+1)` initialized to `0`.
 2. Set `dp[1][1] = 1` (one stick, one visible).
 3. For each `N` from `2` to `n`, and each `K` from `1` to `k`:
-   - `dp[N][K] = (dp[N-1][K-1] + (N-1) * dp[N-1][K]) % MOD`
+    - `dp[N][K] = (dp[N-1][K-1] + (N-1) * dp[N-1][K]) % MOD`
 4. Return `dp[n][k]`.
 
 ::tabs-start
@@ -544,6 +582,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_sticks(n: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![vec![0i64; k + 1]; n + 1];
+        dp[1][1] = 1;
+
+        for ni in 2..=n {
+            for ki in 1..=k {
+                dp[ni][ki] = (dp[ni - 1][ki - 1] + (ni as i64 - 1) * dp[ni - 1][ki]) % MOD;
+            }
+        }
+
+        dp[n][k] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,8 +623,8 @@ Each row only depends on the previous row, so we can use a 1D array and update i
 1. Use a 1D DP array of size `k + 1`.
 2. Set `dp[1] = 1`.
 3. For each `N` from `2` to `n`:
-   - Iterate through `K` from `1` to `k`, tracking the previous value before updating.
-   - Update `dp[K] = (prev + (N-1) * dp[K]) % MOD`.
+    - Iterate through `K` from `1` to `k`, tracking the previous value before updating.
+    - Update `dp[K] = (prev + (N-1) * dp[K]) % MOD`.
 4. Return `dp[k]`.
 
 ::tabs-start
@@ -738,6 +795,28 @@ class Solution {
         }
 
         return dp[k]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn rearrange_sticks(n: i32, k: i32) -> i32 {
+        const MOD: i64 = 1_000_000_007;
+        let (n, k) = (n as usize, k as usize);
+        let mut dp = vec![0i64; k + 1];
+        dp[1] = 1;
+
+        for ni in 2..=n {
+            let mut prev = 0i64;
+            for ki in 1..=k {
+                let tmp = dp[ki];
+                dp[ki] = (prev + (ni as i64 - 1) * dp[ki]) % MOD;
+                prev = tmp;
+            }
+        }
+
+        dp[k] as i32
     }
 }
 ```

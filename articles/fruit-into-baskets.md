@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sliding Window** - Maintaining a dynamic window that expands and contracts based on constraints
 - **Hash Map/Dictionary** - Tracking counts of elements within the current window
 - **Two Pointers** - Managing left and right boundaries of a subarray
@@ -18,10 +20,10 @@ For each starting index, we greedily expand until we encounter a third distinct 
 ### Algorithm
 
 1. For each starting index `i`:
-   - Initialize an empty set `types` to track distinct fruit types.
-   - Extend `j` from `i` while we have fewer than two types or the current fruit is already in our `types` set.
-   - Add each fruit to the set and increment `j`.
-   - Record the length `j - i`.
+    - Initialize an empty set `types` to track distinct fruit types.
+    - Extend `j` from `i` while we have fewer than two types or the current fruit is already in our `types` set.
+    - Add each fruit to the set and increment `j`.
+    - Record the length `j - i`.
 2. Return the maximum length found.
 
 ::tabs-start
@@ -193,6 +195,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_fruit(fruits: Vec<i32>) -> i32 {
+        let n = fruits.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let mut types = HashSet::new();
+            let mut j = i;
+
+            while j < n && (types.len() < 2 || types.contains(&fruits[j])) {
+                types.insert(fruits[j]);
+                j += 1;
+            }
+            res = res.max(j - i);
+        }
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -214,12 +237,12 @@ A hash map tracks the count of each fruit type in the current window. When a cou
 
 1. Initialize a hash map `count`, left pointer `l = 0`, and `res = 0`.
 2. For each right index `r`:
-   - Add `fruits[r]` to the `count` map.
-   - While the map has more than two keys:
-     - Decrement `count[fruits[l]]`.
-     - If it becomes zero, remove that key.
-     - Increment `l`.
-   - Update `res` with the current window size.
+    - Add `fruits[r]` to the `count` map.
+    - While the map has more than two keys:
+        - Decrement `count[fruits[l]]`.
+        - If it becomes zero, remove that key.
+        - Increment `l`.
+    - Update `res` with the current window size.
 3. Return `res`.
 
 ::tabs-start
@@ -444,6 +467,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_fruit(fruits: Vec<i32>) -> i32 {
+        let mut count: HashMap<i32, i32> = HashMap::new();
+        let mut l = 0;
+        let mut total = 0;
+        let mut res = 0;
+
+        for r in 0..fruits.len() {
+            *count.entry(fruits[r]).or_insert(0) += 1;
+            total += 1;
+
+            while count.len() > 2 {
+                let f = fruits[l];
+                let cnt = count.get_mut(&f).unwrap();
+                *cnt -= 1;
+                total -= 1;
+                if *cnt == 0 {
+                    count.remove(&f);
+                }
+                l += 1;
+            }
+            res = res.max(total);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -465,11 +517,11 @@ When a third fruit type appears, instead of shrinking until valid, we just slide
 
 1. Initialize a hash map `count` and left pointer `l = 0`.
 2. For each right index `r`:
-   - Add `fruits[r]` to the `count` map.
-   - If the map has more than two keys:
-     - Decrement `count[fruits[l]]`.
-     - If it becomes zero, remove that key.
-     - Increment `l`.
+    - Add `fruits[r]` to the `count` map.
+    - If the map has more than two keys:
+        - Decrement `count[fruits[l]]`.
+        - If it becomes zero, remove that key.
+        - Increment `l`.
 3. Return `n - l` as the maximum window size.
 
 ::tabs-start
@@ -659,6 +711,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn total_fruit(fruits: Vec<i32>) -> i32 {
+        let mut count: HashMap<i32, i32> = HashMap::new();
+        let mut l = 0;
+
+        for r in 0..fruits.len() {
+            *count.entry(fruits[r]).or_insert(0) += 1;
+
+            if count.len() > 2 {
+                let f = fruits[l];
+                let cnt = count.get_mut(&f).unwrap();
+                *cnt -= 1;
+                if *cnt == 0 {
+                    count.remove(&f);
+                }
+                l += 1;
+            }
+        }
+
+        (fruits.len() - l) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -681,13 +758,13 @@ This approach uses `O(1)` space and handles the window adjustment in constant ti
 1. Track `fruit1`, `fruit2`, and their last indices `fruit1_lastIdx`, `fruit2_lastIdx`.
 2. Initialize `l = 0` and `res = 1`.
 3. For each index `r`:
-   - If `fruits[r]` matches `fruit1`, update `fruit1_lastIdx`.
-   - Else if it matches `fruit2` (or `fruit2` is unset), update accordingly.
-   - Else (third type found):
-     - The fruit with the smaller last index gets replaced.
-     - Update `l` to be one past that smaller index.
-     - Set the new fruit and its index.
-   - Update `res` with `r - l + 1`.
+    - If `fruits[r]` matches `fruit1`, update `fruit1_lastIdx`.
+    - Else if it matches `fruit2` (or `fruit2` is unset), update accordingly.
+    - Else (third type found):
+        - The fruit with the smaller last index gets replaced.
+        - Update `l` to be one past that smaller index.
+        - Set the new fruit and its index.
+    - Update `res` with `r - l + 1`.
 4. Return `res`.
 
 ::tabs-start
@@ -1005,6 +1082,44 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn total_fruit(fruits: Vec<i32>) -> i32 {
+        let mut l: i32 = 0;
+        let mut fruit1_last_idx: i32 = 0;
+        let mut fruit2_last_idx: i32 = -1;
+        let mut fruit1 = fruits[0];
+        let mut fruit2 = -1;
+        let mut total = 1;
+        let mut res = 1;
+
+        for r in 0..fruits.len() as i32 {
+            let f = fruits[r as usize];
+            if f == fruit1 {
+                total += 1;
+                fruit1_last_idx = r;
+            } else if f == fruit2 || fruit2 == -1 {
+                total += 1;
+                fruit2_last_idx = r;
+                fruit2 = f;
+            } else {
+                if fruit2_last_idx == fruit1_last_idx.min(fruit2_last_idx) {
+                    std::mem::swap(&mut fruit1_last_idx, &mut fruit2_last_idx);
+                    std::mem::swap(&mut fruit1, &mut fruit2);
+                }
+                total -= fruit1_last_idx - l + 1;
+                l = fruit1_last_idx + 1;
+                fruit1 = f;
+                fruit1_last_idx = r;
+            }
+            res = res.max(r - l + 1);
+        }
+
+        res
     }
 }
 ```

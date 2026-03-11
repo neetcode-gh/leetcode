@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Counting element frequencies efficiently for O(n) time solutions
 - **Sorting** - Understanding that after sorting, the majority element occupies the middle position
 - **Boyer-Moore Voting Algorithm** - The candidate elimination technique that finds majority elements in O(1) space
@@ -16,8 +18,8 @@ The majority element appears more than `n/2` times. For each element, we can cou
 ### Algorithm
 
 1. For each element `num` in the array:
-   - Count how many times `num` appears in the entire array.
-   - If the count exceeds `n / 2`, return `num`.
+    - Count how many times `num` appears in the entire array.
+    - If the count exceeds `n / 2`, return `num`.
 2. A majority element is guaranteed to exist, so we will always find one.
 
 ::tabs-start
@@ -173,6 +175,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        for &num in &nums {
+            let count = nums.iter().filter(|&&x| x == num).count();
+            if count > n / 2 {
+                return num;
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -193,8 +210,8 @@ We can avoid repeated counting by using a hash map to store the frequency of eac
 1. Create a hash map to store element frequencies.
 2. Initialize `res` and `maxCount` to track the current best candidate.
 3. For each element `num`:
-   - Increment its count in the hash map.
-   - If its count exceeds `maxCount`, update `res = num` and `maxCount = count[num]`.
+    - Increment its count in the hash map.
+    - If its count exceeds `maxCount`, update `res = num` and `maxCount = count[num]`.
 4. Return `res`.
 
 ::tabs-start
@@ -350,6 +367,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let mut count = HashMap::new();
+        let mut res = 0;
+        let mut max_count = 0;
+
+        for &num in &nums {
+            let c = count.entry(num).or_insert(0);
+            *c += 1;
+            if *c > max_count {
+                res = num;
+                max_count = *c;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -441,6 +478,16 @@ class Solution {
     func majorityElement(_ nums: [Int]) -> Int {
         let sorted = nums.sorted()
         return sorted[nums.count / 2]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let mut nums = nums;
+        nums.sort();
+        nums[nums.len() / 2]
     }
 }
 ```
@@ -651,6 +698,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut bit = [0usize; 32];
+        for &num in &nums {
+            for i in 0..32 {
+                bit[i] += ((num >> i) & 1) as usize;
+            }
+        }
+        let mut res: i32 = 0;
+        for i in 0..32 {
+            if bit[i] > n / 2 {
+                res |= 1 << i;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -672,8 +740,8 @@ The Boyer-Moore algorithm works by maintaining a candidate and a count. When we 
 
 1. Initialize `res` as the candidate and `count = 0`.
 2. For each element `num`:
-   - If `count == 0`, set `res = num`.
-   - If `num == res`, increment `count`; otherwise decrement `count`.
+    - If `count == 0`, set `res = num`.
+    - If `num == res`, increment `count`; otherwise decrement `count`.
 3. Return `res` as the majority element.
 
 ::tabs-start
@@ -809,6 +877,23 @@ class Solution {
             count += (num == res) ? 1 : -1
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let mut res = 0;
+        let mut count = 0;
+
+        for &num in &nums {
+            if count == 0 {
+                res = num;
+            }
+            count += if num == res { 1 } else { -1 };
+        }
+        res
     }
 }
 ```
@@ -989,6 +1074,21 @@ class Solution {
             }
             if count > n / 2 {
                 return candidate
+            }
+        }
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn majority_element(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        loop {
+            let candidate = nums[rand::random::<usize>() % n];
+            let count = nums.iter().filter(|&&x| x == candidate).count();
+            if count > n / 2 {
+                return candidate;
             }
         }
     }

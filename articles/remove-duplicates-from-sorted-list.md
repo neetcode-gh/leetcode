@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Fundamentals** - Understanding node structure, traversal, and pointer manipulation
 - **Recursion** - Processing linked lists recursively from the tail back to the head
 - **Sorted Data Structures** - Leveraging the fact that duplicates are adjacent in sorted lists
@@ -184,6 +186,30 @@ class Solution {
 
         head.next = deleteDuplicates(head.next)
         return head.val != head.next!.val ? head : head.next
+    }
+}
+```
+
+```rust
+// Definition for singly-linked list.
+// #[derive(PartialEq, Eq, Clone, Debug)]
+// pub struct ListNode {
+//   pub val: i32,
+//   pub next: Option<Box<ListNode>>
+// }
+impl Solution {
+    pub fn delete_duplicates(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        match head {
+            None => None,
+            Some(mut node) => {
+                node.next = Self::delete_duplicates(node.next);
+                if node.next.is_some() && node.val == node.next.as_ref().unwrap().val {
+                    node.next
+                } else {
+                    Some(node)
+                }
+            }
+        }
     }
 }
 ```
@@ -404,6 +430,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn delete_duplicates(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut head = head;
+        let mut cur = &mut head;
+        while cur.is_some() {
+            while cur.as_ref().unwrap().next.is_some()
+                && cur.as_ref().unwrap().val
+                    == cur.as_ref().unwrap().next.as_ref().unwrap().val
+            {
+                let next_next = cur.as_mut().unwrap().next.as_mut().unwrap().next.take();
+                cur.as_mut().unwrap().next = next_next;
+            }
+            cur = &mut cur.as_mut().unwrap().next;
+        }
+        head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -423,8 +469,8 @@ A slightly different structure: instead of a nested loop, we use a single loop w
 
 1. Start with a pointer `cur` at the head.
 2. While both `cur` and `cur.next` exist:
-   - If they have the same value, skip the next node by updating `cur.next`.
-   - Otherwise, advance `cur` to the next node.
+    - If they have the same value, skip the next node by updating `cur.next`.
+    - Otherwise, advance `cur` to the next node.
 3. Return the head.
 
 ::tabs-start
@@ -623,6 +669,23 @@ class Solution {
             }
         }
         return head
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn delete_duplicates(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut head = head;
+        let mut cur = &mut head;
+        while let Some(node) = cur {
+            if node.next.is_some() && node.val == node.next.as_ref().unwrap().val {
+                node.next = node.next.as_mut().unwrap().next.take();
+            } else {
+                cur = &mut node.next;
+            }
+        }
+        head
     }
 }
 ```

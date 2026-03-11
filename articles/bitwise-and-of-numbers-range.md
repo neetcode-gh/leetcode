@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation** - Understanding bitwise AND, OR, and shift operations
 - **Binary Number Representation** - Recognizing how numbers are represented in binary and how bits change across a range
 - **Common Bit Tricks** - Techniques like clearing the rightmost set bit using n & (n-1)
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The most straightforward approach is to AND all numbers in the range together. Starting with the left boundary, we iterate through each number up to the right boundary, accumulating the AND result. While simple, this is inefficient for large ranges.
 
 ### Algorithm
+
 1. Initialize the result with the `left` boundary value.
 2. Iterate from `left + 1` to `right` (inclusive).
 3. For each number, perform a bitwise AND with the current result.
@@ -116,6 +120,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
+        let mut res = left;
+        for i in (left + 1)..=right {
+            res &= i;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -128,15 +144,17 @@ class Solution {
 ## 2. Bit Manipulation - I
 
 ### Intuition
+
 For any bit position in the result to be `1`, that bit must be `1` in all numbers from `left` to `right`. If a bit is `1` in `left`, we need to check if it will flip to `0` at some point in the range. A bit at position `i` flips when we reach the next multiple of `2^(i+1)`. So we calculate how far `left` is from that flip point and check if `right` is still before it.
 
 ### Algorithm
+
 1. Initialize result to `0`.
 2. For each bit position `i` from `0` to `31`:
-   - Check if bit `i` is set in `left`. If not, skip (result bit stays `0`).
-   - Calculate the remainder of `left` when divided by `2^(i+1)`.
-   - Calculate the distance to the next flip: `2^(i+1)` minus the remainder.
-   - If `(right - left)` is less than this distance, the bit survives in all numbers, so set bit `i` in the result.
+    - Check if bit `i` is set in `left`. If not, skip (result bit stays `0`).
+    - Calculate the remainder of `left` when divided by `2^(i+1)`.
+    - Calculate the distance to the next flip: `2^(i+1)` minus the remainder.
+    - If `(right - left)` is less than this distance, the bit survives in all numbers, so set bit `i` in the result.
 3. Return the result.
 
 ::tabs-start
@@ -303,6 +321,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
+        let mut res = 0i32;
+        for i in 0..32 {
+            let bit = (left >> i) & 1;
+            if bit == 0 {
+                continue;
+            }
+            let remain = left % (1 << (i + 1));
+            let diff = (1i64 << (i + 1)) - remain as i64;
+            if (right - left) as i64 <= diff - 1 {
+                res |= 1 << i;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -315,13 +353,15 @@ class Solution {
 ## 3. Bit Manipulation - II
 
 ### Intuition
+
 The result is the common prefix of the binary representations of `left` and `right`. When `left` and `right` differ, the differing bits and all bits to the right will become `0` in the AND result (since there will be at least one `0` in each of those positions across the range). We find this common prefix by right-shifting both numbers until they are equal.
 
 ### Algorithm
+
 1. Initialize a counter `i` to `0`.
 2. While `left` and `right` are not equal:
-   - Right-shift both `left` and `right` by `1`.
-   - Increment `i`.
+    - Right-shift both `left` and `right` by `1`.
+    - Increment `i`.
 3. Left-shift the common value (`left` or `right`) back by `i` positions.
 4. Return the result.
 
@@ -444,6 +484,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
+        let mut left = left;
+        let mut right = right;
+        let mut i = 0;
+        while left != right {
+            left >>= 1;
+            right >>= 1;
+            i += 1;
+        }
+        left << i
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -456,11 +512,13 @@ class Solution {
 ## 4. Bit Manipulation - III
 
 ### Intuition
+
 Instead of shifting both numbers, we can repeatedly clear the rightmost set bit of `right` until `right` becomes less than or equal to `left`. The operation `(n & (n-1))` clears the lowest set bit of `n`. This works because any bit position where `right` has a `1` but needs to flip within the range will be cleared, leaving only the common prefix.
 
 ### Algorithm
+
 1. While `left` is less than `right`:
-   - Apply the operation `right = right AND (right - 1)` to clear the rightmost set bit of `right`.
+    - Apply the operation `right = right AND (right - 1)` to clear the rightmost set bit of `right`.
 2. Return `right` (which now equals the common prefix with trailing zeros).
 
 ::tabs-start
@@ -556,6 +614,18 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn range_bitwise_and(left: i32, right: i32) -> i32 {
+        let mut right = right;
+        while left < right {
+            right &= right - 1;
+        }
+        right
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -568,17 +638,22 @@ class Solution {
 ## Common Pitfalls
 
 ### Iterating Through All Numbers in the Range
+
 The brute force approach of ANDing every number from `left` to `right` will time out for large ranges. For example, when `left = 1` and `right = 2^31 - 1`, this requires billions of operations.
 
 ### Misunderstanding the Common Prefix Property
+
 The result is the common binary prefix of `left` and `right` with trailing zeros. A common mistake is trying to AND only `left` and `right` directly, missing that intermediate values determine which bits survive.
+
 ```python
 # Wrong: only checking left and right
 return left & right  # Misses intermediate values that clear bits
 ```
 
 ### Integer Overflow in Bit Calculations
+
 When calculating `(1 << (i + 1))` for bit position 31, the result exceeds 32-bit signed integer range in some languages. Use unsigned types or 64-bit integers to avoid overflow.
+
 ```cpp
 // Wrong in C++: signed overflow at i=31
 int diff = (1 << (i + 1)) - remain;  // Overflow when i=31

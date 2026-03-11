@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Two Pointers Technique** - Simultaneously traversing two strings with independent indices
 - **String Parsing** - Converting sequences of digit characters into numeric values
 - **Character Classification** - Distinguishing between alphabetic characters and digits
@@ -16,13 +18,13 @@ We need to verify that the abbreviation correctly represents the word. The abbre
 
 1. Initialize two pointers: `i` for the word and `j` for the abbreviation.
 2. While both pointers are within bounds:
-   - If `abbr[j]` is `'0'`, return `false` (leading zeros are invalid).
-   - If `abbr[j]` is a letter:
-     - Check if `word[i] == abbr[j]`. If not, return `false`.
-     - Increment both `i` and `j`.
-   - If `abbr[j]` is a digit:
-     - Parse the complete number by collecting consecutive digits.
-     - Advance `i` by that number (skip characters in the word).
+    - If `abbr[j]` is `'0'`, return `false` (leading zeros are invalid).
+    - If `abbr[j]` is a letter:
+        - Check if `word[i] == abbr[j]`. If not, return `false`.
+        - Increment both `i` and `j`.
+    - If `abbr[j]` is a digit:
+        - Parse the complete number by collecting consecutive digits.
+        - Advance `i` by that number (skip characters in the word).
 3. Return `true` if both pointers have reached the end of their respective strings.
 
 ::tabs-start
@@ -277,6 +279,41 @@ class Solution {
         }
 
         return i == n && j == m
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn valid_word_abbreviation(word: String, abbr: String) -> bool {
+        let word = word.as_bytes();
+        let abbr = abbr.as_bytes();
+        let (n, m) = (word.len(), abbr.len());
+        let (mut i, mut j) = (0, 0);
+
+        while i < n && j < m {
+            if abbr[j] == b'0' {
+                return false;
+            }
+
+            if abbr[j].is_ascii_alphabetic() {
+                if word[i] == abbr[j] {
+                    i += 1;
+                    j += 1;
+                } else {
+                    return false;
+                }
+            } else {
+                let mut sub_len = 0usize;
+                while j < m && abbr[j].is_ascii_digit() {
+                    sub_len = sub_len * 10 + (abbr[j] - b'0') as usize;
+                    j += 1;
+                }
+                i += sub_len;
+            }
+        }
+
+        i == n && j == m
     }
 }
 ```

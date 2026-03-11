@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Traversal** - Understanding how to navigate through tree nodes using parent-child relationships
 - **Depth First Search (DFS)** - Recursively exploring paths from root to leaves while maintaining state
 - **Path Tracking** - Accumulating values along a tree path and recognizing leaf nodes (nodes with no children)
@@ -256,6 +258,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        fn dfs(cur: &Option<Rc<RefCell<TreeNode>>>, num: i32) -> i32 {
+            match cur {
+                None => 0,
+                Some(node) => {
+                    let node = node.borrow();
+                    let num = num * 10 + node.val;
+                    if node.left.is_none() && node.right.is_none() {
+                        return num;
+                    }
+                    dfs(&node.left, num) + dfs(&node.right, num)
+                }
+            }
+        }
+        dfs(&root, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,10 +300,10 @@ Instead of going deep first, we can process the tree level by level using a queu
 
 1. Initialize a result variable to `0` and a queue with the root node and initial number `0`.
 2. While the queue is not empty:
-   - Dequeue a node and its accumulated number.
-   - Update the number: `num = num * 10 + cur.val`.
-   - If the node is a leaf, add the number to the result.
-   - Otherwise, enqueue each non-null child with the current accumulated number.
+    - Dequeue a node and its accumulated number.
+    - Update the number: `num = num * 10 + cur.val`.
+    - If the node is a leaf, add the number to the result.
+    - Otherwise, enqueue each non-null child with the current accumulated number.
 3. Return the total sum.
 
 ::tabs-start
@@ -566,6 +589,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let root = match root {
+            Some(r) => r,
+            None => return 0,
+        };
+        let mut res = 0;
+        let mut q: VecDeque<(Rc<RefCell<TreeNode>>, i32)> = VecDeque::new();
+        q.push_back((root, 0));
+
+        while let Some((node_rc, num)) = q.pop_front() {
+            let node = node_rc.borrow();
+            let new_num = num * 10 + node.val;
+            if node.left.is_none() && node.right.is_none() {
+                res += new_num;
+                continue;
+            }
+            if let Some(ref left) = node.left {
+                q.push_back((Rc::clone(left), new_num));
+            }
+            if let Some(ref right) = node.right {
+                q.push_back((Rc::clone(right), new_num));
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -585,12 +639,12 @@ We can simulate the recursive DFS using an explicit stack instead of the call st
 
 1. Initialize result to `0`, an empty stack, and start with the root node and number `0`.
 2. While the current node exists or the stack is not empty:
-   - If current node exists:
-     - Update number: `num = num * 10 + cur.val`.
-     - If it is a leaf, add the number to the result.
-     - Push the right child and current number onto the stack.
-     - Move to the left child.
-   - Otherwise, pop from the stack to get the next node and its accumulated number.
+    - If current node exists:
+        - Update number: `num = num * 10 + cur.val`.
+        - If it is a leaf, add the number to the result.
+        - Push the right child and current number onto the stack.
+        - Move to the left child.
+    - Otherwise, pop from the stack to get the next node and its accumulated number.
 3. Return the result.
 
 ::tabs-start
@@ -893,6 +947,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        let mut stack: Vec<(Option<Rc<RefCell<TreeNode>>>, i32)> = Vec::new();
+        let mut cur = root;
+        let mut num = 0;
+
+        while cur.is_some() || !stack.is_empty() {
+            if let Some(node_rc) = cur {
+                let node = node_rc.borrow();
+                num = num * 10 + node.val;
+                if node.left.is_none() && node.right.is_none() {
+                    res += num;
+                }
+                stack.push((node.right.clone(), num));
+                cur = node.left.clone();
+            } else {
+                let (node, n) = stack.pop().unwrap();
+                cur = node;
+                num = n;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -914,13 +997,13 @@ Morris traversal allows us to traverse the tree without using extra space for a 
 
 1. Precompute powers of `10` for quick division.
 2. While the current node exists:
-   - If no left child exists:
-     - Add the current digit to the number.
-     - If no right child exists (leaf), add number to result.
-     - Move to the right child.
-   - Otherwise, find the inorder predecessor (rightmost node in left subtree) while counting steps:
-     - If predecessor's right is `null`, create a temporary link to current, add digit to number, and move left.
-     - If predecessor's right points to current (revisiting), remove the link. If predecessor is a leaf, add number to result. Divide number by `10^steps` to remove the left subtree digits. Move right.
+    - If no left child exists:
+        - Add the current digit to the number.
+        - If no right child exists (leaf), add number to result.
+        - Move to the right child.
+    - Otherwise, find the inorder predecessor (rightmost node in left subtree) while counting steps:
+        - If predecessor's right is `null`, create a temporary link to current, add digit to number, and move left.
+        - If predecessor's right points to current (revisiting), remove the link. If predecessor is a leaf, add number to result. Divide number by `10^steps` to remove the left subtree digits. Move right.
 3. Return the result.
 
 ::tabs-start
@@ -1339,6 +1422,69 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn sum_numbers(root: Option<Rc<RefCell<TreeNode>>>) -> i32 {
+        let mut res = 0;
+        let mut num = 0;
+        let mut power = [1i32; 10];
+        for i in 1..10 {
+            power[i] = power[i - 1] * 10;
+        }
+
+        let mut cur = root;
+        while let Some(cur_rc) = cur.clone() {
+            let cur_node = cur_rc.borrow();
+            if cur_node.left.is_none() {
+                num = num * 10 + cur_node.val;
+                if cur_node.right.is_none() {
+                    res += num;
+                }
+                let right = cur_node.right.clone();
+                drop(cur_node);
+                cur = right;
+            } else {
+                let mut prev = cur_node.left.clone().unwrap();
+                let mut steps = 1;
+                loop {
+                    let next = {
+                        let p = prev.borrow();
+                        p.right.clone()
+                    };
+                    match next {
+                        Some(ref r) if !Rc::ptr_eq(r, &cur_rc) => {
+                            prev = r.clone();
+                            steps += 1;
+                        }
+                        _ => break,
+                    }
+                }
+                let prev_right = prev.borrow().right.clone();
+                if prev_right.is_none() {
+                    prev.borrow_mut().right = Some(cur_rc.clone());
+                    num = num * 10 + cur_node.val;
+                    let left = cur_node.left.clone();
+                    drop(cur_node);
+                    cur = left;
+                } else {
+                    prev.borrow_mut().right = None;
+                    let prev_left_none = prev.borrow().left.is_none();
+                    if prev_left_none {
+                        res += num;
+                    }
+                    num /= power[steps];
+                    let right = cur_node.right.clone();
+                    drop(cur_node);
+                    cur = right;
+                }
+            }
+        }
+
+        res
     }
 }
 ```

@@ -222,6 +222,32 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn valid_partition(nums: Vec<i32>) -> bool {
+        fn dfs(nums: &[i32], i: usize) -> bool {
+            if i == nums.len() {
+                return true;
+            }
+            let mut res = false;
+            if i < nums.len() - 1 && nums[i] == nums[i + 1] {
+                res = dfs(nums, i + 2);
+            }
+            if i < nums.len() - 2 {
+                if (nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2])
+                    || (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2])
+                {
+                    res = res || dfs(nums, i + 3);
+                }
+            }
+            res
+        }
+        dfs(&nums, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -486,6 +512,39 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn valid_partition(nums: Vec<i32>) -> bool {
+        let mut memo = vec![-1i8; nums.len() + 1];
+
+        fn dfs(nums: &[i32], i: usize, memo: &mut Vec<i8>) -> bool {
+            if i == nums.len() {
+                return true;
+            }
+            if memo[i] != -1 {
+                return memo[i] == 1;
+            }
+            let mut res = false;
+            if i < nums.len() - 1 && nums[i] == nums[i + 1] {
+                res = dfs(nums, i + 2, memo);
+            }
+            if i < nums.len() - 2 {
+                if (nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2])
+                    || (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2])
+                {
+                    res = res || dfs(nums, i + 3, memo);
+                }
+            }
+            memo[i] = if res { 1 } else { 0 };
+            res
+        }
+
+        dfs(&nums, 0, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -678,6 +737,31 @@ class Solution {
         }
 
         return dp[nums.count]
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn valid_partition(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut dp = vec![false; n + 1];
+        dp[0] = true;
+
+        for i in 2..=n {
+            if nums[i - 1] == nums[i - 2] {
+                dp[i] = dp[i] || dp[i - 2];
+            }
+            if i > 2
+                && ((nums[i - 1] == nums[i - 2] && nums[i - 2] == nums[i - 3])
+                    || (nums[i - 3] + 1 == nums[i - 2] && nums[i - 2] + 1 == nums[i - 1]))
+            {
+                dp[i] = dp[i] || dp[i - 3];
+            }
+        }
+
+        dp[n]
     }
 }
 ```
@@ -913,6 +997,36 @@ class Solution {
         }
 
         return dp[0]
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn valid_partition(nums: Vec<i32>) -> bool {
+        let n = nums.len();
+        let mut dp = [false, true, true];
+
+        for i in (0..=(n as i32 - 2)).rev() {
+            let i = i as usize;
+            let dp1 = dp[0];
+            if nums[i] == nums[i + 1] && dp[1] {
+                dp[0] = true;
+            } else if i < n - 2
+                && dp[2]
+                && ((nums[i] == nums[i + 1] && nums[i] == nums[i + 2])
+                    || (nums[i] + 1 == nums[i + 1] && nums[i + 1] == nums[i + 2] - 1))
+            {
+                dp[0] = true;
+            } else {
+                dp[0] = false;
+            }
+            dp[2] = dp[1];
+            dp[1] = dp1;
+        }
+
+        dp[0]
     }
 }
 ```

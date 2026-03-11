@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Priority Queue (Max Heap)** - Used to always select the character with the highest remaining frequency
 - **Hash Map** - For counting character frequencies in the string
 - **Greedy Algorithms** - The approach of always making the locally optimal choice (highest frequency character) to build the solution
@@ -23,10 +25,10 @@ If at any point we have no available characters to place (the priority queue is 
 2. Insert all characters with their frequencies into a max heap (priority queue), prioritized by frequency.
 3. Initialize an empty result string and a "busy" queue to track characters in their cooldown period.
 4. While the result is not complete:
-   - Check if the character at the front of the busy queue has completed its cooldown (at least `k` positions since last use). If so, move it back to the priority queue.
-   - If the priority queue is empty, return an empty string (rearrangement is impossible).
-   - Pop the character with the highest frequency from the priority queue and append it to the result.
-   - Decrement its frequency. If it still has remaining occurrences, add it to the busy queue with the current index.
+    - Check if the character at the front of the busy queue has completed its cooldown (at least `k` positions since last use). If so, move it back to the priority queue.
+    - If the priority queue is empty, return an empty string (rearrangement is impossible).
+    - Pop the character with the highest frequency from the priority queue and append it to the result.
+    - Decrement its frequency. If it still has remaining occurrences, add it to the busy queue with the current index.
 5. Return the constructed result string.
 
 ::tabs-start
@@ -39,7 +41,7 @@ class Solution {
         for (char c : s.toCharArray()){
             freq.put(c, freq.getOrDefault(c, 0) + 1);
         }
-        
+
         PriorityQueue<Pair<Integer, Character>> free=
                     new PriorityQueue<Pair<Integer, Character>>((a, b) -> b.getKey() - a.getKey());
 
@@ -47,35 +49,35 @@ class Solution {
         for (char c : freq.keySet()){
             free.offer(new Pair<>(freq.get(c), c));
         }
-        
+
         StringBuffer ans = new StringBuffer();
         // This queue stores the characters that cannot be used now.
         Queue<Pair<Integer, Character>> busy = new LinkedList<>();
         while (ans.length() != s.length()) {
             int index = ans.length();
-            
+
             // Insert the character that could be used now into the free heap.
             if (!busy.isEmpty() && (index - busy.peek().getKey()) >= k) {
                 Pair<Integer, Character> q = busy.remove();
                 free.offer(new Pair<>(freq.get(q.getValue()), q.getValue()));
             }
-            
+
             // If the free heap is empty, it implies no character can be used at this index.
             if (free.isEmpty()) {
                 return "";
             }
-            
+
             Character currChar = free.peek().getValue();
             free.remove();
             ans.append(currChar);
-            
+
             // Insert the used character into busy queue with the current index.
             freq.put(currChar, freq.get(currChar) - 1);
             if (freq.get(currChar) > 0) {
                 busy.add(new Pair<>(index, currChar));
             }
         }
-        
+
         return ans.toString();
     }
 }
@@ -322,6 +324,51 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_string(s: String, k: i32) -> String {
+        let k = k as usize;
+        let mut freq = HashMap::new();
+        for c in s.chars() {
+            *freq.entry(c).or_insert(0i32) += 1;
+        }
+
+        let mut free = BinaryHeap::new();
+        for (&c, &f) in &freq {
+            free.push((f, c));
+        }
+
+        let mut ans = String::new();
+        let mut busy: VecDeque<(usize, char)> = VecDeque::new();
+
+        while ans.len() != s.len() {
+            let index = ans.len();
+
+            if let Some(&(bi, bc)) = busy.front() {
+                if index >= bi + k {
+                    busy.pop_front();
+                    free.push((freq[&bc], bc));
+                }
+            }
+
+            if free.is_empty() {
+                return String::new();
+            }
+
+            let (_, curr_char) = free.pop().unwrap();
+            ans.push(curr_char);
+
+            *freq.get_mut(&curr_char).unwrap() -= 1;
+            if freq[&curr_char] > 0 {
+                busy.push_back((index, curr_char));
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,7 +376,7 @@ class Solution {
 - Time complexity: $O((N + K) \log K)$
 - Space complexity: $O(K)$
 
->  Where $N$ is the length of the string `s`, and $K$ is the number of unique characters in the string `s`.
+> Where $N$ is the length of the string `s`, and $K$ is the number of unique characters in the string `s`.
 
 ---
 
@@ -359,48 +406,48 @@ class Solution:
     def rearrangeString(self, s: str, k: int) -> str:
         freqs = Counter(s)
         max_freq = max(freqs.values()) if freqs else 0
-        
+
         # Store all the characters with the highest and second highest frequency
         most_chars = set()
         second_chars = set()
-        
+
         for char, freq in freqs.items():
             if freq == max_freq:
                 most_chars.add(char)
             elif freq == max_freq - 1:
                 second_chars.add(char)
-        
+
         # Create max_freq number of different strings
         segments = [[] for _ in range(max_freq)]
-        
+
         # Insert one instance of characters with frequency max_freq & max_freq - 1 in each segment
         for i in range(max_freq):
             for c in most_chars:
                 segments[i].append(c)
-            
+
             # Skip the last segment as the frequency is only max_freq - 1
             if i < max_freq - 1:
                 for c in second_chars:
                     segments[i].append(c)
-        
+
         segment_id = 0
-        
+
         # Iterate over the remaining characters and distribute instances over segments
         for char, freq in freqs.items():
             # Skip characters with max_freq or max_freq - 1 frequency
             if char in most_chars or char in second_chars:
                 continue
-            
+
             # Distribute the instances over segments in round-robin manner
             for _ in range(freq):
                 segments[segment_id].append(char)
                 segment_id = (segment_id + 1) % (max_freq - 1)
-        
+
         # Each segment except the last should have exactly k elements
         for i in range(max_freq - 1):
             if len(segments[i]) < k:
                 return ""
-        
+
         # Join all segments and return
         return ''.join(''.join(segment) for segment in segments)
 ```
@@ -448,7 +495,7 @@ class Solution {
         int segmentId = 0;
         // Iterate over the remaining characters, and for each, distribute the instances over the segments.
         for (char c: freqs.keySet()) {
-            // Skip characters with maxFreq or maxFreq - 1 
+            // Skip characters with maxFreq or maxFreq - 1
             // frequency as they have already been inserted.
             if (mostChars.contains(c) || secondChars.contains(c)) {
                 continue;
@@ -485,7 +532,7 @@ public:
             freqs[c]++;
             maxFreq = max(maxFreq, freqs[c]);
         }
-        
+
         unordered_set<char> mostChars;
         unordered_set<char> secondChars;
         // Store all the characters with the highest and second highest frequency - 1.
@@ -504,7 +551,7 @@ public:
             for (char c: mostChars) {
                 segments[i] += c;
             }
-            
+
             // Skip the last segment as the frequency is only maxFreq - 1.
             if (i < maxFreq - 1) {
                 for (char c: secondChars) {
@@ -517,14 +564,14 @@ public:
         // Iterate over the remaining characters, and for each, distribute the instances over the segments.
         for (pair<char, int> charPair: freqs) {
             char currChar = charPair.first;
-            
-            // Skip characters with maxFreq or maxFreq - 1 
+
+            // Skip characters with maxFreq or maxFreq - 1
             // frequency as they have already been inserted.
-            if (mostChars.find(currChar)  != mostChars.end() 
+            if (mostChars.find(currChar)  != mostChars.end()
                 || secondChars.find(currChar) != secondChars.end()) {
                 continue;
             }
-            
+
             // Distribute the instances of these characters over the segments in a round-robin manner.
             for (int freq = freqs[currChar]; freq > 0; freq--) {
                 segments[segmentId] += charPair.first;
@@ -538,13 +585,13 @@ public:
                 return "";
             }
         }
-        
+
         string ans;
         // Join all the segments and return them.
         for (string s : segments) {
             ans += s;
         }
-        
+
         return ans;
     }
 };
@@ -615,12 +662,12 @@ class Solution {
         // Each segment except the last should have exactly k elements
         for (let i = 0; i < maxFreq - 1; i++) {
             if (segments[i].length < k) {
-                return "";
+                return '';
             }
         }
 
         // Join all segments and return
-        return segments.map(seg => seg.join('')).join('');
+        return segments.map((seg) => seg.join('')).join('');
     }
 }
 ```
@@ -844,6 +891,64 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn rearrange_string(s: String, k: i32) -> String {
+        let k = k as usize;
+        let mut freqs = HashMap::new();
+        let mut max_freq = 0usize;
+
+        for c in s.chars() {
+            let f = freqs.entry(c).or_insert(0usize);
+            *f += 1;
+            max_freq = max_freq.max(*f);
+        }
+
+        let mut most_chars = HashSet::new();
+        let mut second_chars = HashSet::new();
+
+        for (&c, &freq) in &freqs {
+            if freq == max_freq {
+                most_chars.insert(c);
+            } else if freq == max_freq - 1 {
+                second_chars.insert(c);
+            }
+        }
+
+        let mut segments: Vec<Vec<char>> = vec![vec![]; max_freq];
+        for i in 0..max_freq {
+            for &c in &most_chars {
+                segments[i].push(c);
+            }
+            if i < max_freq - 1 {
+                for &c in &second_chars {
+                    segments[i].push(c);
+                }
+            }
+        }
+
+        let mut segment_id = 0usize;
+        for (&c, &freq) in &freqs {
+            if most_chars.contains(&c) || second_chars.contains(&c) {
+                continue;
+            }
+            for _ in 0..freq {
+                segments[segment_id].push(c);
+                segment_id = (segment_id + 1) % (max_freq - 1);
+            }
+        }
+
+        for i in 0..max_freq - 1 {
+            if segments[i].len() < k {
+                return String::new();
+            }
+        }
+
+        segments.iter().map(|seg| seg.iter().collect::<String>()).collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -851,7 +956,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(K)$
 
->  Where $N$ is the length of the string `s`, and $K$ is the number of unique characters in the string `s`.
+> Where $N$ is the length of the string `s`, and $K$ is the number of unique characters in the string `s`.
 
 ---
 

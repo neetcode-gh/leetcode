@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - The optimal approach uses binary search to find the square root efficiently
 - **Integer Overflow Handling** - Squaring numbers can overflow 32-bit integers, requiring careful type management
 - **Bit Manipulation** - One advanced approach constructs the square root bit by bit
@@ -160,6 +162,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_perfect_square(num: i32) -> bool {
+        let num = num as i64;
+        let mut i: i64 = 1;
+        while i <= num {
+            let sq = i * i;
+            if sq > num {
+                return false;
+            }
+            if sq == num {
+                return true;
+            }
+            i += 1;
+        }
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -256,6 +278,15 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_perfect_square(num: i32) -> bool {
+        let sq_root = (num as f64).sqrt() as i32;
+        sq_root * sq_root == num
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -275,11 +306,11 @@ Instead of checking every number sequentially, we can use binary search to find 
 
 1. Initialize `l = 1` and `r = num`.
 2. While `l <= r`:
-   - Compute the midpoint `m = l + (r - l) / 2`.
-   - Compute `sq = m * m`.
-   - If `sq > num`, search left: `r = m - 1`.
-   - If `sq < num`, search right: `l = m + 1`.
-   - If `sq == num`, return `true`.
+    - Compute the midpoint `m = l + (r - l) / 2`.
+    - Compute `sq = m * m`.
+    - If `sq > num`, search left: `r = m - 1`.
+    - If `sq < num`, search right: `l = m + 1`.
+    - If `sq == num`, return `true`.
 3. If the loop ends without finding a match, return `false`.
 
 ::tabs-start
@@ -462,6 +493,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_perfect_square(num: i32) -> bool {
+        let num = num as i64;
+        let (mut l, mut r) = (1i64, num);
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+            let sq = m * m;
+            if sq > num {
+                r = m - 1;
+            } else if sq < num {
+                l = m + 1;
+            } else {
+                return true;
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,8 +535,8 @@ There is a beautiful mathematical property: perfect squares can be expressed as 
 
 1. Initialize `i = 1` (the first odd number).
 2. While `num > 0`:
-   - Subtract `i` from `num`.
-   - Increment `i` by `2` to get the next odd number.
+    - Subtract `i` from `num`.
+    - Increment `i` by `2` to get the next odd number.
 3. If `num == 0`, the original number was a perfect square. Return `true`.
 4. Otherwise, return `false`.
 
@@ -594,6 +648,20 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_perfect_square(num: i32) -> bool {
+        let mut num = num;
+        let mut i = 1;
+        while num > 0 {
+            num -= i;
+            i += 2;
+        }
+        num == 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -613,7 +681,7 @@ Newton's method is a fast iterative technique for finding roots of equations. To
 
 1. Initialize `r = num` as the initial guess.
 2. While `r * r > num`:
-   - Update `r = (r + num / r) / 2`.
+    - Update `r = (r + num / r) / 2`.
 3. After convergence, check if `r * r == num`.
 4. Return `true` if equal, `false` otherwise.
 
@@ -715,6 +783,19 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn is_perfect_square(num: i32) -> bool {
+        let num = num as i64;
+        let mut r = num;
+        while r * r > num {
+            r = (r + num / r) / 2;
+        }
+        r * r == num
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -734,9 +815,9 @@ We can construct the square root bit by bit, from the most significant bit to th
 
 1. Initialize `r = 0` and `mask = 1 << 15` (starting from the highest possible bit).
 2. While `mask > 0`:
-   - Set the current bit: `r |= mask`.
-   - If `r > num / r` (meaning `r^2` would exceed `num`), clear the bit: `r ^= mask`.
-   - Shift the mask right: `mask >>= 1`.
+    - Set the current bit: `r |= mask`.
+    - If `r > num / r` (meaning `r^2` would exceed `num`), clear the bit: `r ^= mask`.
+    - Shift the mask right: `mask >>= 1`.
 3. After processing all bits, check if `r * r == num`.
 4. Return `true` if equal, `false` otherwise.
 
@@ -884,6 +965,25 @@ class Solution {
         }
 
         return r * r == num
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn is_perfect_square(num: i32) -> bool {
+        let mut r = 0i32;
+        let mut mask = 1i32 << 15;
+
+        while mask > 0 {
+            r |= mask;
+            if r > num / r {
+                r ^= mask;
+            }
+            mask >>= 1;
+        }
+
+        r * r == num
     }
 }
 ```

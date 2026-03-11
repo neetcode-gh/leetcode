@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Combinatorics Basics** - Understanding how to count combinations and permutations for distribution problems
 - **Enumeration Techniques** - Iterating through all valid possibilities systematically
 - **Inclusion-Exclusion Principle** - Computing counts by adding/subtracting overlapping sets to avoid overcounting
@@ -160,6 +162,24 @@ class Solution {
             }
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn distribute_candies(n: i32, limit: i32) -> i64 {
+        let mut res: i64 = 0;
+        for a in 0..=limit {
+            for b in 0..=limit {
+                for c in 0..=limit {
+                    if a + b + c == n {
+                        res += 1;
+                    }
+                }
+            }
+        }
+        res
     }
 }
 ```
@@ -332,6 +352,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distribute_candies(n: i32, limit: i32) -> i64 {
+        let mut res: i64 = 0;
+        let max_a = n.min(limit);
+        for a in 0..=max_a {
+            let max_b = (n - a).min(limit);
+            for b in 0..=max_b {
+                if n - a - b <= limit {
+                    res += 1;
+                }
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -491,12 +529,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distribute_candies(n: i32, limit: i32) -> i64 {
+        let mut res: i64 = 0;
+        let a_max = n.min(limit);
+        for a in 0..=a_max {
+            let b_max = (n - a).min(limit);
+            let b_min = 0.max(n - a - limit);
+            if b_max >= b_min {
+                res += (b_max - b_min + 1) as i64;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time complexity: $O(min(n, limit))$
-- Space complexity: $O(1)$
 
 ---
 
@@ -657,12 +711,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn distribute_candies(n: i32, limit: i32) -> i64 {
+        let mut res: i64 = 0;
+        let max_a = n.min(limit);
+        for a in 0..=max_a {
+            let rem = n - a;
+            if rem <= 2 * limit {
+                let hi = rem.min(limit);
+                let lo = 0.max(rem - limit);
+                res += (hi - lo + 1) as i64;
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time complexity: $O(min(n, limit))$
-- Space complexity: $O(1)$
 
 ---
 
@@ -822,6 +893,25 @@ class Solution {
             res += sign * C3[j] * ways
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn distribute_candies(n: i32, limit: i32) -> i64 {
+        let c3: [i64; 4] = [1, 3, 3, 1];
+        let mut res: i64 = 0;
+        for j in 0..4 {
+            let m = n as i64 - j as i64 * (limit as i64 + 1);
+            if m < 0 {
+                continue;
+            }
+            let ways = (m + 2) * (m + 1) / 2;
+            let sign: i64 = if j % 2 == 0 { 1 } else { -1 };
+            res += sign * c3[j] * ways;
+        }
+        res
     }
 }
 ```

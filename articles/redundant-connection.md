@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Representation** - Building adjacency lists from edge lists for undirected graphs
 - **Depth First Search (DFS)** - Traversing graphs and detecting cycles with parent tracking
 - **Union-Find (Disjoint Set Union)** - Efficiently tracking connected components and detecting when edges create cycles
@@ -9,23 +11,26 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Cycle Detection (DFS)
 
 ### Intuition
+
 A **tree** cannot contain a cycle.
 While adding edges one by one, the **first edge that creates a cycle** is the redundant connection.
 
 For each new edge `(u, v)`:
+
 - Temporarily add it to the graph
 - Run `dfs` to check if a cycle exists
 - If `dfs` revisits a node (not coming from its parent), a cycle is formed
-→ that edge is the answer
+  → that edge is the answer
 
 ### Algorithm
+
 1. Initialize an empty adjacency list.
 2. For each edge `(u, v)` in order:
-   - Add `(u, v)` to the graph.
-   - Run `dfs` starting from `u` to detect a cycle:
-     - Track visited nodes.
-     - Ignore the parent node during traversal.
-     - If a visited node is reached again, a cycle exists.
+    - Add `(u, v)` to the graph.
+    - Run `dfs` starting from `u` to detect a cycle:
+        - Track visited nodes.
+        - Ignore the parent node during traversal.
+        - If a visited node is reached again, a cycle exists.
 3. Return the first edge that causes a cycle.
 
 ::tabs-start
@@ -314,6 +319,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_redundant_connection(edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = edges.len();
+        let mut adj = vec![vec![]; n + 1];
+
+        fn dfs(node: usize, parent: i32, adj: &Vec<Vec<usize>>, visit: &mut Vec<bool>) -> bool {
+            if visit[node] {
+                return true;
+            }
+            visit[node] = true;
+            for &nei in &adj[node] {
+                if nei as i32 == parent {
+                    continue;
+                }
+                if dfs(nei, node as i32, adj, visit) {
+                    return true;
+                }
+            }
+            false
+        }
+
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+            let mut visit = vec![false; n + 1];
+
+            if dfs(u, -1, &adj, &mut visit) {
+                return edge.clone();
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,26 +370,30 @@ class Solution {
 ## 2. Depth First Search (Optimal)
 
 ### Intuition
+
 Instead of checking for a cycle **after every edge**, we build the whole graph once and find the **cycle nodes** in a single `dfs`.
 
 Key idea:
+
 - In an undirected graph made from `n` edges on `n` nodes, there is exactly **one cycle**.
 - During `dfs`, if we reach a node that is already `visited`, we just found the **start of the cycle**.
 - While recursion "unwinds" back, we mark every node on that return path as part of the cycle, until we come back to the cycle start.
 
 After we have the set `cycle` (all nodes that lie on the cycle):
+
 - The redundant edge must connect **two cycle nodes**.
 - The problem asks for the edge that appears **last** in the input among the cycle edges,
   so we scan edges from the end and return the first edge `(u, v)` where `u` and `v` are both in `cycle`.
 
 ### Algorithm
+
 1. Build an adjacency list for all edges.
 2. Run `dfs` once to detect the cycle:
-   - Maintain `visited[]`.
-   - If `dfs` enters an already visited node, mark it as `cycleStart`.
-   - While returning from recursion, add nodes to `cycle` until reaching `cycleStart`, then stop marking.
+    - Maintain `visited[]`.
+    - If `dfs` enters an already visited node, mark it as `cycleStart`.
+    - While returning from recursion, add nodes to `cycle` until reaching `cycleStart`, then stop marking.
 3. Iterate edges in reverse order:
-   - Return the first edge `(u, v)` where both endpoints are in `cycle`.
+    - Return the first edge `(u, v)` where both endpoints are in `cycle`.
 4. If none found, return `[]` (shouldn't happen for valid inputs).
 
 ::tabs-start
@@ -752,6 +798,59 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_redundant_connection(edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = edges.len();
+        let mut adj = vec![vec![]; n + 1];
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+        }
+
+        let mut visit = vec![false; n + 1];
+        let mut cycle = HashSet::new();
+        let mut cycle_start: i32 = -1;
+
+        fn dfs(
+            node: usize, par: i32, adj: &Vec<Vec<usize>>,
+            visit: &mut Vec<bool>, cycle: &mut HashSet<usize>,
+            cycle_start: &mut i32,
+        ) -> bool {
+            if visit[node] {
+                *cycle_start = node as i32;
+                return true;
+            }
+            visit[node] = true;
+            for &nei in &adj[node] {
+                if nei as i32 == par { continue; }
+                if dfs(nei, node as i32, adj, visit, cycle, cycle_start) {
+                    if *cycle_start != -1 {
+                        cycle.insert(node);
+                    }
+                    if node as i32 == *cycle_start {
+                        *cycle_start = -1;
+                    }
+                    return true;
+                }
+            }
+            false
+        }
+
+        dfs(1, -1, &adj, &mut visit, &mut cycle, &mut cycle_start);
+
+        for edge in edges.iter().rev() {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            if cycle.contains(&u) && cycle.contains(&v) {
+                return edge.clone();
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -766,6 +865,7 @@ class Solution {
 ## 3. Topological Sort (Kahn's Algorithm)
 
 ### Intuition
+
 This uses the **"peel off leaves"** idea (often called topological trimming).
 Even though the graph is undirected, we can still remove nodes with degree `1` repeatedly:
 
@@ -778,15 +878,16 @@ Finally, the redundant edge must be an edge whose both ends are still in the cyc
 Because we need the **last such edge** in input order, we scan `edges` in reverse and return the first edge connecting two remaining cycle nodes.
 
 ### Algorithm
+
 1. Build the graph (adjacency list) and compute `indegree`/`degree` of every node.
 2. Add all nodes with degree `1` to a queue.
 3. While the queue is not empty:
-   - Pop a leaf node `x` and "remove" it (decrease its degree).
-   - For each neighbor `y` of `x`, decrease `y`'s degree.
-   - If `y` becomes degree `1`, push `y` into the queue.
+    - Pop a leaf node `x` and "remove" it (decrease its degree).
+    - For each neighbor `y` of `x`, decrease `y`'s degree.
+    - If `y` becomes degree `1`, push `y` into the queue.
 4. Now, nodes with degree > 0 are cycle nodes.
 5. Traverse edges from the end:
-   - Return the first edge `(u, v)` where both `degree[u] > 0` and `degree[v] > 0`.
+    - Return the first edge `(u, v)` where both `degree[u] > 0` and `degree[v] > 0`.
 
 ::tabs-start
 
@@ -1109,6 +1210,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_redundant_connection(edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = edges.len();
+        let mut indegree = vec![0i32; n + 1];
+        let mut adj = vec![vec![]; n + 1];
+
+        for edge in &edges {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            adj[u].push(v);
+            adj[v].push(u);
+            indegree[u] += 1;
+            indegree[v] += 1;
+        }
+
+        let mut queue = VecDeque::new();
+        for i in 1..=n {
+            if indegree[i] == 1 {
+                queue.push_back(i);
+            }
+        }
+
+        while let Some(node) = queue.pop_front() {
+            indegree[node] -= 1;
+            for &nei in &adj[node] {
+                indegree[nei] -= 1;
+                if indegree[nei] == 1 {
+                    queue.push_back(nei);
+                }
+            }
+        }
+
+        for edge in edges.iter().rev() {
+            let (u, v) = (edge[0] as usize, edge[1] as usize);
+            if indegree[u] == 2 && indegree[v] > 0 {
+                return edge.clone();
+            }
+        }
+        vec![]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1123,23 +1267,25 @@ class Solution {
 ## 4. Disjoint Set Union
 
 ### Intuition
+
 Use **Disjoint Set Union (Union-Find)** to track connected components while adding edges one by one.
 
 - Initially, every node is its own component.
 - When we add an edge `(u, v)`:
-  - If `u` and `v` are already in the **same component**, adding this edge creates a **cycle**.
-  - That edge is exactly the **redundant connection**.
+    - If `u` and `v` are already in the **same component**, adding this edge creates a **cycle**.
+    - That edge is exactly the **redundant connection**.
 - If they are in different components, we safely merge them.
 
 Because edges are processed in order, the **first edge that fails to union** is the answer.
 
 ### Algorithm
+
 1. Initialize DSU where each node is its own parent.
 2. For each edge `(u, v)`:
-   - Find the parent of `u` and `v`.
-   - If both parents are the same:
-     - Return `(u, v)` → this edge creates a cycle.
-   - Otherwise, union the two components.
+    - Find the parent of `u` and `v`.
+    - If both parents are the same:
+        - Return `(u, v)` → this edge creates a cycle.
+    - Otherwise, union the two components.
 3. The first edge that cannot be unioned is the redundant edge.
 
 This works because a tree with `n` nodes has exactly `n - 1` edges, and any extra edge must form a cycle.
@@ -1488,6 +1634,49 @@ class Solution {
             }
         }
         return []
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn find_redundant_connection(edges: Vec<Vec<i32>>) -> Vec<i32> {
+        let n = edges.len();
+        let mut par: Vec<usize> = (0..=n).collect();
+        let mut rank = vec![1usize; n + 1];
+
+        fn find(par: &mut Vec<usize>, n: usize) -> usize {
+            let mut p = par[n];
+            while p != par[p] {
+                par[p] = par[par[p]];
+                p = par[p];
+            }
+            p
+        }
+
+        fn union(par: &mut Vec<usize>, rank: &mut Vec<usize>, n1: usize, n2: usize) -> bool {
+            let p1 = find(par, n1);
+            let p2 = find(par, n2);
+            if p1 == p2 {
+                return false;
+            }
+            if rank[p1] > rank[p2] {
+                par[p2] = p1;
+                rank[p1] += rank[p2];
+            } else {
+                par[p1] = p2;
+                rank[p2] += rank[p1];
+            }
+            true
+        }
+
+        for edge in &edges {
+            let (n1, n2) = (edge[0] as usize, edge[1] as usize);
+            if !union(&mut par, &mut rank, n1, n2) {
+                return edge.clone();
+            }
+        }
+        vec![]
     }
 }
 ```

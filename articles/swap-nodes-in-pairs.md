@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Linked List Fundamentals** - Understanding node structure, traversal, and pointer manipulation in singly linked lists
 - **In-Place Pointer Manipulation** - Reversing or reordering nodes by changing next pointers without extra data structures
 - **Dummy Node Technique** - Using a sentinel node to simplify edge cases when the head of the list changes
@@ -316,6 +318,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut arr: Vec<Box<ListNode>> = Vec::new();
+        let mut cur = head;
+
+        while let Some(mut node) = cur {
+            cur = node.next.take();
+            arr.push(node);
+        }
+
+        if arr.is_empty() {
+            return None;
+        }
+
+        let mut i = 0;
+        while i + 1 < arr.len() {
+            arr.swap(i, i + 1);
+            i += 2;
+        }
+
+        let mut i = arr.len() - 1;
+        let mut result = Some(arr.pop().unwrap());
+        while let Some(mut node) = arr.pop() {
+            node.next = result;
+            result = Some(node);
+        }
+
+        result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,6 +582,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        match head {
+            None => None,
+            Some(mut cur) => {
+                match cur.next.take() {
+                    None => Some(cur),
+                    Some(mut nxt) => {
+                        cur.next = Self::swap_pairs(nxt.next.take());
+                        nxt.next = Some(cur);
+                        Some(nxt)
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,11 +621,11 @@ We can swap pairs in place by carefully managing pointers. A dummy node simplifi
 
 1. Create a dummy node pointing to the head, and initialize `prev` to dummy and `curr` to head.
 2. While `curr` and `curr.next` both exist:
-   - Save the start of the next pair: `nxtPair = curr.next.next`.
-   - Identify the second node in the pair.
-   - Reverse the pair: point second to first, first to the next pair.
-   - Connect previous node to the new first (second node).
-   - Update `prev` to be `curr` and move `curr` to `nxtPair`.
+    - Save the start of the next pair: `nxtPair = curr.next.next`.
+    - Identify the second node in the pair.
+    - Reverse the pair: point second to first, first to the next pair.
+    - Connect previous node to the new first (second node).
+    - Update `prev` to be `curr` and move `curr` to `nxtPair`.
 3. Return `dummy.next`.
 
 ::tabs-start
@@ -845,6 +900,30 @@ class Solution {
         }
 
         return dummy.next
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn swap_pairs(head: Option<Box<ListNode>>) -> Option<Box<ListNode>> {
+        let mut dummy = Box::new(ListNode { val: 0, next: head });
+        let mut prev = &mut dummy;
+
+        while prev.next.is_some() && prev.next.as_ref().unwrap().next.is_some() {
+            let mut first = prev.next.take().unwrap();
+            let mut second = first.next.take().unwrap();
+            let rest = second.next.take();
+
+            first.next = rest;
+            second.next = Some(first);
+            prev.next = Some(second);
+
+            prev = prev.next.as_mut().unwrap()
+                       .next.as_mut().unwrap();
+        }
+
+        dummy.next
     }
 }
 ```

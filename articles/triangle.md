@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Breaking down problems into smaller subproblems with base cases
 - **Memoization** - Caching recursive results to avoid redundant computation
 - **Dynamic Programming** - Building solutions bottom-up using previously computed values
@@ -148,6 +150,20 @@ class Solution {
             return triangle[row][col] + min(dfs(row + 1, col), dfs(row + 1, col + 1))
         }
         return dfs(0, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_total(triangle: Vec<Vec<i32>>) -> i32 {
+        fn dfs(row: usize, col: usize, triangle: &[Vec<i32>]) -> i32 {
+            if row >= triangle.len() {
+                return 0;
+            }
+            triangle[row][col] + dfs(row + 1, col, triangle).min(dfs(row + 1, col + 1, triangle))
+        }
+        dfs(0, 0, &triangle)
     }
 }
 ```
@@ -388,6 +404,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_total(triangle: Vec<Vec<i32>>) -> i32 {
+        let n = triangle.len();
+        let mut memo: Vec<Vec<i32>> = triangle.iter()
+            .map(|row| vec![i32::MAX; row.len()])
+            .collect();
+
+        fn dfs(row: usize, col: usize, triangle: &[Vec<i32>], memo: &mut Vec<Vec<i32>>) -> i32 {
+            if row >= triangle.len() {
+                return 0;
+            }
+            if memo[row][col] != i32::MAX {
+                return memo[row][col];
+            }
+            memo[row][col] = triangle[row][col]
+                + dfs(row + 1, col, triangle, memo).min(dfs(row + 1, col + 1, triangle, memo));
+            memo[row][col]
+        }
+
+        dfs(0, 0, &triangle, &mut memo)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -589,6 +630,27 @@ class Solution {
         }
 
         return dp[0][0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_total(triangle: Vec<Vec<i32>>) -> i32 {
+        let n = triangle.len();
+        let mut dp = vec![vec![0; n]; n];
+
+        for col in 0..triangle[n - 1].len() {
+            dp[n - 1][col] = triangle[n - 1][col];
+        }
+
+        for row in (0..n - 1).rev() {
+            for col in 0..triangle[row].len() {
+                dp[row][col] = triangle[row][col] + dp[row + 1][col].min(dp[row + 1][col + 1]);
+            }
+        }
+
+        dp[0][0]
     }
 }
 ```
@@ -816,6 +878,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_total(triangle: Vec<Vec<i32>>) -> i32 {
+        let n = triangle.len();
+        let mut dp = vec![triangle[0][0]];
+
+        for row in 1..n {
+            let mut nxt_dp = vec![0; row + 1];
+            nxt_dp[0] = dp[0] + triangle[row][0];
+            for col in 1..row {
+                nxt_dp[col] = triangle[row][col] + dp[col].min(dp[col - 1]);
+            }
+            nxt_dp[row] = dp[row - 1] + triangle[row][row];
+            dp = nxt_dp;
+        }
+
+        *dp.iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -992,6 +1075,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_total(triangle: Vec<Vec<i32>>) -> i32 {
+        let n = triangle.len();
+        let mut dp = triangle[n - 1].clone();
+
+        for row in (0..n - 1).rev() {
+            for col in 0..triangle[row].len() {
+                dp[col] = triangle[row][col] + dp[col].min(dp[col + 1]);
+            }
+        }
+
+        dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1131,6 +1231,19 @@ class Solution {
             }
         }
         return triangle[0][0]
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_total(mut triangle: Vec<Vec<i32>>) -> i32 {
+        for row in (0..triangle.len() - 1).rev() {
+            for col in 0..triangle[row].len() {
+                triangle[row][col] += triangle[row + 1][col].min(triangle[row + 1][col + 1]);
+            }
+        }
+        triangle[0][0]
     }
 }
 ```

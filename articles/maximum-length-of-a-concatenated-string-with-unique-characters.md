@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Backtracking** - The core approach explores all combinations of strings using recursion with backtracking
 - **Bit Manipulation** - Optimized solutions use bitmasks to represent character sets for O(1) conflict detection
 - **Hash Sets** - Used to track which characters are already used in the current concatenation
@@ -18,8 +20,8 @@ We want to find the longest concatenation of strings where all characters are un
 1. Use a hash set `charSet` to track characters in the current concatenation.
 2. Create a helper function `overlap` that checks if a string has duplicate characters within itself or conflicts with `charSet`.
 3. Use backtracking starting from index `0`. At each index `i`:
-   - If the string at `i` doesn't overlap, add its characters to `charSet`, recurse to `i + 1`, then remove the characters (backtrack).
-   - Always try skipping the current string by recursing to `i + 1` without adding it.
+    - If the string at `i` doesn't overlap, add its characters to `charSet`, recurse to `i + 1`, then remove the characters (backtrack).
+    - Always try skipping the current string by recursing to `i + 1` without adding it.
 4. Return the maximum length found when reaching the end of the array.
 
 ::tabs-start
@@ -342,6 +344,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_length(arr: Vec<String>) -> i32 {
+        let mut char_set = HashSet::new();
+
+        fn overlap(char_set: &HashSet<u8>, s: &[u8]) -> bool {
+            let mut prev = HashSet::new();
+            for &c in s {
+                if char_set.contains(&c) || prev.contains(&c) {
+                    return true;
+                }
+                prev.insert(c);
+            }
+            false
+        }
+
+        fn backtrack(i: usize, arr: &[String], char_set: &mut HashSet<u8>) -> i32 {
+            if i == arr.len() {
+                return char_set.len() as i32;
+            }
+
+            let mut res = 0;
+            let bytes = arr[i].as_bytes();
+            if !overlap(char_set, bytes) {
+                for &c in bytes {
+                    char_set.insert(c);
+                }
+                res = backtrack(i + 1, arr, char_set);
+                for &c in bytes {
+                    char_set.remove(&c);
+                }
+            }
+
+            res.max(backtrack(i + 1, arr, char_set))
+        }
+
+        backtrack(0, &arr, &mut char_set)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -364,8 +407,8 @@ Since we only deal with lowercase letters, we can replace the hash set with a fi
 1. Use a boolean array `charSet` of size `26` to track which characters are currently in use.
 2. In the `overlap` function, iterate through the string. For each character, if it's already marked, undo all previous markings from this string and return `true`. Otherwise, mark it as used.
 3. Use backtracking starting from index `0`. At each index `i`:
-   - If the string at `i` doesn't overlap, recurse and add its length to the result, then clear its characters from `charSet`.
-   - Compare with the result of skipping the current string.
+    - If the string at `i` doesn't overlap, recurse and add its length to the result, then clear its characters from `charSet`.
+    - Compare with the result of skipping the current string.
 4. Return the maximum total length.
 
 ::tabs-start
@@ -705,6 +748,50 @@ class Solution {
         }
 
         return backtrack(0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_length(arr: Vec<String>) -> i32 {
+        let mut char_set = [false; 26];
+
+        fn get_idx(c: u8) -> usize {
+            (c - b'a') as usize
+        }
+
+        fn overlap(char_set: &mut [bool; 26], s: &[u8]) -> bool {
+            for i in 0..s.len() {
+                let c = get_idx(s[i]);
+                if char_set[c] {
+                    for j in 0..i {
+                        char_set[get_idx(s[j])] = false;
+                    }
+                    return true;
+                }
+                char_set[c] = true;
+            }
+            false
+        }
+
+        fn backtrack(i: usize, arr: &[String], char_set: &mut [bool; 26]) -> i32 {
+            if i == arr.len() {
+                return 0;
+            }
+
+            let mut res = 0;
+            let bytes = arr[i].as_bytes();
+            if !overlap(char_set, bytes) {
+                res = bytes.len() as i32 + backtrack(i + 1, arr, char_set);
+                for &c in bytes {
+                    char_set[get_idx(c)] = false;
+                }
+            }
+            res.max(backtrack(i + 1, arr, char_set))
+        }
+
+        backtrack(0, &arr, &mut char_set)
     }
 }
 ```
@@ -1070,6 +1157,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_length(arr: Vec<String>) -> i32 {
+        let mut a: Vec<(i32, i32)> = Vec::new();
+
+        for s in &arr {
+            let mut cur = 0i32;
+            let mut valid = true;
+            for &c in s.as_bytes() {
+                let bit = 1 << (c - b'a');
+                if cur & bit != 0 {
+                    valid = false;
+                    break;
+                }
+                cur |= bit;
+            }
+            if valid {
+                a.push((cur, s.len() as i32));
+            }
+        }
+
+        fn dfs(i: usize, sub_seq: i32, a: &[(i32, i32)]) -> i32 {
+            if i == a.len() {
+                return 0;
+            }
+            let mut res = dfs(i + 1, sub_seq, a);
+            let (cur_seq, length) = a[i];
+            if sub_seq & cur_seq == 0 {
+                res = res.max(length + dfs(i + 1, sub_seq | cur_seq, a));
+            }
+            res
+        }
+
+        dfs(0, 0, &a)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1403,6 +1528,43 @@ class Solution {
         }
 
         return dfs(0, 0)
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_length(arr: Vec<String>) -> i32 {
+        let mut a: Vec<(i32, i32)> = Vec::new();
+
+        for s in &arr {
+            let mut cur = 0i32;
+            let mut valid = true;
+            for &c in s.as_bytes() {
+                let bit = 1 << (c - b'a');
+                if cur & bit != 0 {
+                    valid = false;
+                    break;
+                }
+                cur |= bit;
+            }
+            if valid {
+                a.push((cur, s.len() as i32));
+            }
+        }
+
+        fn dfs(i: usize, sub_seq: i32, a: &[(i32, i32)]) -> i32 {
+            let mut res = 0;
+            for j in i..a.len() {
+                let (cur_seq, length) = a[j];
+                if sub_seq & cur_seq == 0 {
+                    res = res.max(length + dfs(j + 1, sub_seq | cur_seq, a));
+                }
+            }
+            res
+        }
+
+        dfs(0, 0, &a)
     }
 }
 ```
@@ -1778,6 +1940,46 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_length(arr: Vec<String>) -> i32 {
+        let mut dp = HashSet::new();
+        dp.insert(0i32);
+        let mut res = 0;
+
+        for s in &arr {
+            let mut cur = 0i32;
+            let mut valid = true;
+
+            for &c in s.as_bytes() {
+                let bit = 1 << (c - b'a');
+                if cur & bit != 0 {
+                    valid = false;
+                    break;
+                }
+                cur |= bit;
+            }
+
+            if !valid {
+                continue;
+            }
+
+            let mut next_dp = dp.clone();
+            for &seq in &dp {
+                if (seq & cur) != 0 || next_dp.contains(&(seq | cur)) {
+                    continue;
+                }
+                next_dp.insert(seq | cur);
+                res = res.max((seq | cur).count_ones() as i32);
+            }
+            dp = next_dp;
+        }
+
+        res
     }
 }
 ```

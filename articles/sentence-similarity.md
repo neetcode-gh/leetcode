@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map** - Using dictionaries to map keys to values for O(1) average lookup time
 - **Hash Set** - Using sets for O(1) membership testing to check if elements belong to a collection
 
@@ -15,11 +17,11 @@ Two sentences are similar if they have the same length and each pair of correspo
 
 1. If the two sentences have different lengths, return `false`.
 2. Build a hash map `wordToSimilarWords` where each word maps to a hash set of its similar words.
-   - For each pair `(word1, word2)`, add `word2` to `word1`'s set and `word1` to `word2`'s set.
+    - For each pair `(word1, word2)`, add `word2` to `word1`'s set and `word1` to `word2`'s set.
 3. For each index `i` in the sentences:
-   - If `sentence1[i]` equals `sentence2[i]`, continue.
-   - If `sentence2[i]` is in the similar words set of `sentence1[i]`, continue.
-   - Otherwise, return `false` (words are not similar).
+    - If `sentence1[i]` equals `sentence2[i]`, continue.
+    - If `sentence2[i]` is in the similar words set of `sentence1[i]`, continue.
+    - Otherwise, return `false` (words are not similar).
 4. Return `true` (all word pairs are similar).
 
 ::tabs-start
@@ -29,7 +31,7 @@ class Solution(object):
     def areSentencesSimilar(self, sentence1, sentence2, similarPairs):
         if len(sentence1) != len(sentence2):
             return False
-        
+
         wordToSimilarWords = defaultdict(set)
 
         for word1, word2 in similarPairs:
@@ -40,7 +42,7 @@ class Solution(object):
             if sentence1[i] == sentence2[i] or sentence2[i] in wordToSimilarWords[sentence1[i]]:
                 continue
             return False
-        
+
         return True
 ```
 
@@ -140,8 +142,10 @@ class Solution {
                 continue;
             }
             // If the words form a similar pair, continue.
-            if (wordToSimilarWords.has(sentence1[i]) &&
-                wordToSimilarWords.get(sentence1[i]).has(sentence2[i])) {
+            if (
+                wordToSimilarWords.has(sentence1[i]) &&
+                wordToSimilarWords.get(sentence1[i]).has(sentence2[i])
+            ) {
                 continue;
             }
             return false;
@@ -282,6 +286,47 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn are_sentences_similar(
+        sentence1: Vec<String>,
+        sentence2: Vec<String>,
+        similar_pairs: Vec<Vec<String>>,
+    ) -> bool {
+        if sentence1.len() != sentence2.len() {
+            return false;
+        }
+
+        let mut word_to_similar: HashMap<String, HashSet<String>> = HashMap::new();
+
+        for pair in &similar_pairs {
+            word_to_similar
+                .entry(pair[0].clone())
+                .or_default()
+                .insert(pair[1].clone());
+            word_to_similar
+                .entry(pair[1].clone())
+                .or_default()
+                .insert(pair[0].clone());
+        }
+
+        for i in 0..sentence1.len() {
+            if sentence1[i] == sentence2[i] {
+                continue;
+            }
+            if let Some(similar_words) = word_to_similar.get(&sentence1[i]) {
+                if similar_words.contains(&sentence2[i]) {
+                    continue;
+                }
+            }
+            return false;
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,7 +334,7 @@ class Solution {
 - Time complexity: $O((n + k) \cdot m)$
 - Space complexity: $O(k\cdot m)$
 
->  Where $n$ is the number of words in `sentence1` and `sentence2`, $k$ is the length of `similarPairs`, and $m$ is the average length of words in `sentence1` as well as `similarPairs`.
+> Where $n$ is the number of words in `sentence1` and `sentence2`, $k$ is the length of `similarPairs`, and $m$ is the average length of words in `sentence1` as well as `similarPairs`.
 
 ---
 

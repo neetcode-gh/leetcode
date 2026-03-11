@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Array traversal** - Iterating through arrays and comparing adjacent elements
 - **Greedy algorithms** - Making locally optimal choices to achieve global optimum
 - **In-place modification** - Modifying array elements without extra space
@@ -19,8 +21,8 @@ When we find a "violation" where `nums[i] > nums[i + 1]`, we need to fix it by m
 3. If `nums[i] <= nums[i + 1]`, the pair is valid, so continue.
 4. If we find a violation (`nums[i] > nums[i + 1]`) and `changed` is already `true`, return `false`.
 5. Otherwise, decide how to fix the violation:
-   - If `i == 0` or `nums[i + 1] >= nums[i - 1]`, set `nums[i] = nums[i + 1]` (decrease the larger element).
-   - Otherwise, set `nums[i + 1] = nums[i]` (increase the smaller element).
+    - If `i == 0` or `nums[i + 1] >= nums[i - 1]`, set `nums[i] = nums[i + 1]` (decrease the larger element).
+    - Otherwise, set `nums[i + 1] = nums[i]` (increase the smaller element).
 6. Mark `changed` as `true`.
 7. If we complete the loop without returning `false`, return `true`.
 
@@ -212,6 +214,31 @@ class Solution {
             changed = true
         }
         return true
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn check_possibility(nums: Vec<i32>) -> bool {
+        let mut nums = nums;
+        let mut changed = false;
+
+        for i in 0..nums.len() - 1 {
+            if nums[i] <= nums[i + 1] {
+                continue;
+            }
+            if changed {
+                return false;
+            }
+            if i == 0 || nums[i + 1] >= nums[i - 1] {
+                nums[i] = nums[i + 1];
+            } else {
+                nums[i + 1] = nums[i];
+            }
+            changed = true;
+        }
+        true
     }
 }
 ```

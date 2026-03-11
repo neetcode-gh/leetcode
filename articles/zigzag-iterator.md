@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Iterator Design Pattern** - Understanding how to implement `next()` and `hasNext()` methods to traverse elements sequentially
 - **Two-Pointer Technique** - Using multiple pointers to track positions across different data structures
 - **Queue Data Structure** - Using FIFO queues to manage and cycle through elements efficiently
@@ -10,17 +12,19 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Two-Pointers
 
 ### Intuition
+
 To iterate through multiple vectors in zigzag order, we need to alternate between vectors while tracking our position in each. The key insight is to maintain two pointers: one for the current vector and one for the current element index. We cycle through vectors in round-robin fashion, and when we complete a full round across all vectors, we advance the element `index`. This ensures we visit elements in the correct zigzag order while handling vectors of different lengths.
 
 ### Algorithm
+
 1. Store references to both input vectors and initialize two pointers: `p_vec` for the current vector `index` and `p_elem` for the current element `index`.
 2. Track the total number of elements and how many have been output for the `hasNext()` method.
 3. In `next()`:
-   - Iterate through vectors starting from the current vector pointer.
-   - If the current vector has an element at `p_elem`, capture it as the return value.
-   - Advance `p_vec` to the next vector (wrapping around using modulo).
-   - When `p_vec` wraps back to `0`, increment `p_elem` to move to the next round.
-   - Return the captured element and increment the output count.
+    - Iterate through vectors starting from the current vector pointer.
+    - If the current vector has an element at `p_elem`, capture it as the return value.
+    - Advance `p_vec` to the next vector (wrapping around using modulo).
+    - When `p_vec` wraps back to `0`, increment `p_elem` to move to the next round.
+    - Return the captured element and increment the output count.
 4. In `hasNext()`, return `true` if the output count is less than the total number of elements.
 
 ::tabs-start
@@ -122,7 +126,7 @@ public:
     ZigzagIterator(vector<int>& v1, vector<int>& v2) {
         vectors.push_back(v1);
         vectors.push_back(v2);
-        
+
         for (const auto& vec : vectors) {
             totalNum += vec.size();
         }
@@ -132,27 +136,27 @@ public:
         int iterNum = 0;
         int ret = -1;
         bool found = false;
-        
+
         while (iterNum < vectors.size()) {
             vector<int>& currVec = vectors[pVec];
-            
+
             if (pElem < currVec.size()) {
                 ret = currVec[pElem];
                 outputCount += 1;
                 found = true;
             }
-            
+
             iterNum += 1;
             pVec = (pVec + 1) % vectors.size();
-            
+
             // increment the element pointer once iterating all vectors
             if (pVec == 0)
                 pElem += 1;
-            
+
             if (found)
                 return ret;
         }
-        
+
         // one should raise an exception here.
         return 0;
     }
@@ -171,8 +175,8 @@ class ZigzagIterator {
      */
     constructor(v1, v2) {
         this.vectors = [v1, v2];
-        this.p_elem = 0;   // pointer to the index of element
-        this.p_vec = 0;    // pointer to the vector
+        this.p_elem = 0; // pointer to the index of element
+        this.p_vec = 0; // pointer to the vector
 
         // variables for hasNext() function
         this.total_num = v1.length + v2.length;
@@ -216,7 +220,7 @@ class ZigzagIterator {
         }
 
         // no more element to output
-        throw new Error("No more elements");
+        throw new Error('No more elements');
     }
 }
 ```
@@ -393,18 +397,67 @@ class ZigzagIterator {
 }
 ```
 
+```rust
+struct ZigzagIterator {
+    vectors: Vec<Vec<i32>>,
+    p_vec: usize,
+    p_elem: usize,
+    total_num: usize,
+    output_count: usize,
+}
+
+impl ZigzagIterator {
+    fn new(v1: Vec<i32>, v2: Vec<i32>) -> Self {
+        let total = v1.len() + v2.len();
+        Self {
+            vectors: vec![v1, v2],
+            p_vec: 0,
+            p_elem: 0,
+            total_num: total,
+            output_count: 0,
+        }
+    }
+
+    fn next(&mut self) -> i32 {
+        let mut iter_num = 0;
+        let mut ret: Option<i32> = None;
+
+        while iter_num < self.vectors.len() {
+            let curr_vec = &self.vectors[self.p_vec];
+            if self.p_elem < curr_vec.len() {
+                ret = Some(curr_vec[self.p_elem]);
+                self.output_count += 1;
+            }
+
+            iter_num += 1;
+            self.p_vec = (self.p_vec + 1) % self.vectors.len();
+            if self.p_vec == 0 {
+                self.p_elem += 1;
+            }
+
+            if let Some(val) = ret {
+                return val;
+            }
+        }
+        0
+    }
+
+    fn has_next(&self) -> bool {
+        self.output_count < self.total_num
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time Complexity:
-
     - For the `next()` function, at most it will take us $K$ iterations to find a valid element to output. Hence, its time complexity is $O(K)$.
 
     - For the `hasNext()` function, its time complexity is $O(1)$.
 
 - Space Complexity:
-
     - For the `next()` function, we keep the references to all the input vectors in the variable `self.vectors`.
     - As a result, we would need $O(K)$ space for $K$ vectors.
     - In addition, we used some constant-space variables such as the pointers to the vector and the element.
@@ -412,22 +465,24 @@ class ZigzagIterator {
 
     - Note: we did not copy the input vectors, but simply keep references to them.
 
->  Where $K$ is the number of input vectors. Although it is always two in the setting of this problem, this variable becomes relevant once the input becomes $K$ vectors.
+> Where $K$ is the number of input vectors. Although it is always two in the setting of this problem, this variable becomes relevant once the input becomes $K$ vectors.
 
 ---
 
 ## 2. Queue of Pointers
 
 ### Intuition
+
 Using a queue to manage pointers provides a cleaner and more efficient approach. Instead of scanning through all vectors on each call, we maintain a queue of (vector `index`, element `index`) pairs representing which elements are ready to be returned. After returning an element, we add the pointer for the next element in that vector (if any) to the back of the queue. This naturally handles vectors of different lengths and ensures `O(1)` time for each `next()` call.
 
 ### Algorithm
+
 1. Initialize a queue with pointers to the first element of each non-empty vector, stored as (vector `index`, element `index`) pairs.
 2. In `next()`:
-   - Dequeue the front pointer to get the current vector and element `indices`.
-   - Retrieve the element to return from the specified position.
-   - If there are more elements in that vector, enqueue a pointer to the next element.
-   - Return the retrieved element.
+    - Dequeue the front pointer to get the current vector and element `indices`.
+    - Retrieve the element to return from the specified position.
+    - If there are more elements in that vector, enqueue a pointer to the next element.
+    - Return the retrieved element.
 3. In `hasNext()`, simply check if the queue is non-empty.
 
 ::tabs-start
@@ -504,12 +559,12 @@ class ZigzagIterator {
 private:
     vector<vector<int>> vectors;
     queue<pair<int, int>> q;
-    
+
 public:
     ZigzagIterator(vector<int>& v1, vector<int>& v2) {
         vectors.push_back(v1);
         vectors.push_back(v2);
-        
+
         for (int index = 0; index < vectors.size(); index++) {
             if (vectors[index].size() > 0) {
                 // <index_to_vec, index_to_element_within_vec>
@@ -517,25 +572,25 @@ public:
             }
         }
     }
-    
+
     int next() {
         // <index_to_vec, index_to_element_within_vec>
         pair<int, int> pointer = q.front();
         q.pop();
-        
+
         int vecIndex = pointer.first;
         int elemIndex = pointer.second;
         int nextElemIndex = elemIndex + 1;
-        
+
         // append the pointer for the next round
         // if there are some elements left.
         if (nextElemIndex < vectors[vecIndex].size()) {
             q.push({vecIndex, nextElemIndex});
         }
-        
+
         return vectors[vecIndex][elemIndex];
     }
-    
+
     bool hasNext() {
         return q.size() > 0;
     }
@@ -586,7 +641,7 @@ class ZigzagIterator {
         }
 
         // no more element to output
-        throw new Error("No more elements");
+        throw new Error('No more elements');
     }
 }
 ```
@@ -738,28 +793,60 @@ class ZigzagIterator {
 }
 ```
 
+```rust
+struct ZigzagIterator {
+    vectors: Vec<Vec<i32>>,
+    queue: VecDeque<(usize, usize)>,
+}
+
+impl ZigzagIterator {
+    fn new(v1: Vec<i32>, v2: Vec<i32>) -> Self {
+        let vectors = vec![v1, v2];
+        let mut queue = VecDeque::new();
+        for (index, vec) in vectors.iter().enumerate() {
+            if !vec.is_empty() {
+                queue.push_back((index, 0));
+            }
+        }
+        Self { vectors, queue }
+    }
+
+    fn next(&mut self) -> i32 {
+        let (vec_index, elem_index) = self.queue.pop_front().unwrap();
+        let next_elem_index = elem_index + 1;
+        if next_elem_index < self.vectors[vec_index].len() {
+            self.queue.push_back((vec_index, next_elem_index));
+        }
+        self.vectors[vec_index][elem_index]
+    }
+
+    fn has_next(&self) -> bool {
+        !self.queue.is_empty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time Complexity: $O(1)$
-
     - For both the `next()` function and the `hasNext()` function, we have a constant time complexity, as we discussed before.
 
 - Space Complexity: $O(K)$
-
-    - We use a queue to keep track of the *pointers* to the input vectors in the variable `self.vectors`.
+    - We use a queue to keep track of the _pointers_ to the input vectors in the variable `self.vectors`.
     - As a result, we would need $O(K)$ space for $K$ vectors.
 
     - Although the size of the queue will reduce over time once we exhaust some shorter vectors, the space complexity for both functions is still $O(K)$.
 
->  Where $K$ is the number of input vectors. Although it is always two in the setting of this problem, this variable becomes relevant once the input becomes $K$ vectors.
+> Where $K$ is the number of input vectors. Although it is always two in the setting of this problem, this variable becomes relevant once the input becomes $K$ vectors.
 
 ---
 
 ## Common Pitfalls
 
 ### Skipping Empty Vectors in Initialization
+
 When one or both input vectors are empty, failing to handle them causes index errors or incorrect iteration. Empty vectors should either be skipped entirely or handled gracefully in the `next()` logic.
 
 ```python
@@ -769,6 +856,7 @@ for index, vector in enumerate(self.vectors):
 ```
 
 ### Incrementing Element Pointer at Wrong Time
+
 In the two-pointer approach, the element index should only increment after completing a full round through all vectors (when `p_vec` wraps back to 0). Incrementing it every step breaks the zigzag order.
 
 ```python
@@ -778,6 +866,7 @@ self.p_elem += 1  # Should only increment when p_vec == 0
 ```
 
 ### Not Returning After Finding a Valid Element
+
 In the two-pointer approach, after finding a valid element in a vector, you must return immediately. Continuing to iterate through other vectors in the same call corrupts the zigzag ordering and may return wrong elements.
 
 ```python

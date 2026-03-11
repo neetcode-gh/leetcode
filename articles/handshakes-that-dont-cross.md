@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming** - Building solutions from smaller subproblems using recurrence relations
 - **Catalan Numbers** - Recognizing problems that count non-crossing arrangements, which follow the Catalan sequence
 - **Modular Arithmetic** - Applying modulo operations to prevent integer overflow and computing modular inverses for division
@@ -19,8 +21,8 @@ By summing over all valid choices for person `0`'s partner, we get a recurrence 
 1. Let `dp[i]` represent the number of valid handshake arrangements for `2*i` people.
 2. Base case: `dp[0] = 1` (zero people means one valid arrangement).
 3. For each `i` from `1` to `numPeople/2`:
-   - Sum over all ways to split: `dp[i] = sum(dp[j] * dp[i-j-1])` for `j` from `0` to `i-1`.
-   - Apply modulo at each step to prevent overflow.
+    - Sum over all ways to split: `dp[i] = sum(dp[j] * dp[i-j-1])` for `j` from `0` to `i-1`.
+    - Apply modulo at each step to prevent overflow.
 4. Return `dp[numPeople/2]`.
 
 ::tabs-start
@@ -162,6 +164,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_ways(num_people: i32) -> i32 {
+        let m: i64 = 1_000_000_007;
+        let n = (num_people / 2) as usize;
+        let mut dp = vec![0i64; n + 1];
+        dp[0] = 1;
+
+        for i in 1..=n {
+            for j in 0..i {
+                dp[i] += dp[j] * dp[i - j - 1] % m;
+                dp[i] %= m;
+            }
+        }
+
+        dp[n] as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,9 +206,9 @@ This approach is often more intuitive since it directly mirrors the problem stru
 
 1. Create a memoization array `dp` initialized to `-1`, with `dp[0] = 1`.
 2. Define a recursive function `calculateDP(i)`:
-   - If `dp[i]` is already computed, return it.
-   - Otherwise, compute `dp[i] = sum(calculateDP(j) * calculateDP(i-j-1))` for `j` from `0` to `i-1`.
-   - Apply modulo and cache the result.
+    - If `dp[i]` is already computed, return it.
+    - Otherwise, compute `dp[i] = sum(calculateDP(j) * calculateDP(i-j-1))` for `j` from `0` to `i-1`.
+    - Apply modulo and cache the result.
 3. Call `calculateDP(numPeople/2)` and return the result.
 
 ::tabs-start
@@ -372,6 +394,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn number_of_ways(num_people: i32) -> i32 {
+        let m: i64 = 1_000_000_007;
+        let n = (num_people / 2) as usize;
+        let mut dp = vec![-1i64; n + 1];
+        dp[0] = 1;
+
+        fn calculate_dp(i: usize, dp: &mut Vec<i64>, m: i64) -> i64 {
+            if dp[i] != -1 {
+                return dp[i];
+            }
+            dp[i] = 0;
+            for j in 0..i {
+                dp[i] += calculate_dp(j, dp, m) * calculate_dp(i - j - 1, dp, m) % m;
+                dp[i] %= m;
+            }
+            dp[i]
+        }
+
+        calculate_dp(n, &mut dp, m) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -395,7 +442,7 @@ Using the formula `C(n) = C(n-1) * 2(2n-1) / (n+1)`, we can compute the result i
 1. Precompute modular multiplicative inverses for numbers `1` through `n+1` using the identity `inv[i] = m - (m/i) * inv[m%i] % m`.
 2. Initialize the Catalan number `C = 1` (representing `C(0)`).
 3. For each `i` from `0` to `n-1`:
-   - Update `C = C * 2 * (2i + 1) * inv[i + 2] % m`.
+    - Update `C = C * 2 * (2i + 1) * inv[i + 2] % m`.
 4. Return the final value of `C`.
 
 ::tabs-start
@@ -487,12 +534,12 @@ class Solution {
             const bi = BigInt(i);
             const k = m / bi;
             const r = m % bi;
-            inv[i] = (m - k * inv[Number(r)] % m) % m;
+            inv[i] = (m - ((k * inv[Number(r)]) % m)) % m;
         }
 
         let C = 1n;
         for (let i = 0; i < n; i++) {
-            C = 2n * BigInt(2 * i + 1) * inv[i + 2] % m * C % m;
+            C = (((2n * BigInt(2 * i + 1) * inv[i + 2]) % m) * C) % m;
         }
 
         return Number(C);
@@ -579,6 +626,32 @@ class Solution {
         }
 
         return C
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn number_of_ways(num_people: i32) -> i32 {
+        let m: i64 = 1_000_000_007;
+        let n = (num_people / 2) as usize;
+        let mut inv = vec![0i64; n + 2];
+        inv[1] = 1;
+
+        let mul = |a: i64, b: i64| -> i64 { a * b % m };
+
+        for i in 2..(n + 2) {
+            let k = m / i as i64;
+            let r = (m % i as i64) as usize;
+            inv[i] = m - mul(k, inv[r]);
+        }
+
+        let mut c: i64 = 1;
+        for i in 0..n {
+            c = mul(mul(2 * (2 * i as i64 + 1), inv[i + 2]), c);
+        }
+
+        c as i32
     }
 }
 ```

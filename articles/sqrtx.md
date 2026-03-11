@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Search** - Efficiently narrows down the search space by halving it each iteration
 - **Integer Overflow Handling** - Squaring large numbers can overflow; use 64-bit types for intermediate calculations
 - **Bit Manipulation** - Used in the recursive approach with right/left shifts to divide/multiply by powers of 2
@@ -177,6 +179,24 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn my_sqrt(x: i32) -> i32 {
+        if x == 0 {
+            return 0;
+        }
+        let mut res = 1;
+        for i in 1..=x {
+            if (i as i64) * (i as i64) > x as i64 {
+                return res;
+            }
+            res = i;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -265,6 +285,14 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn my_sqrt(x: i32) -> i32 {
+        (x as f64).sqrt() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,10 +312,10 @@ Since we are looking for the largest integer whose square is at most `x`, and th
 
 1. Initialize `l = 0`, `r = x`, and `res = 0` to store the answer.
 2. While `l <= r`:
-   - Compute middle `m = l + (r - l) / 2`.
-   - If `m * m > x`, the answer must be smaller, so set `r = m - 1`.
-   - If `m * m < x`, `m` is a valid candidate. Store it in `res` and search for a larger value by setting `l = m + 1`.
-   - If `m * m == x`, we found the exact square root, so return `m`.
+    - Compute middle `m = l + (r - l) / 2`.
+    - If `m * m > x`, the answer must be smaller, so set `r = m - 1`.
+    - If `m * m < x`, `m` is a valid candidate. Store it in `res` and search for a larger value by setting `l = m + 1`.
+    - If `m * m == x`, we found the exact square root, so return `m`.
 3. Return `res` after the loop.
 
 ::tabs-start
@@ -482,6 +510,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn my_sqrt(x: i32) -> i32 {
+        let (mut l, mut r) = (0i32, x);
+        let mut res = 0;
+
+        while l <= r {
+            let m = l + (r - l) / 2;
+            let sq = m as i64 * m as i64;
+            if sq > x as i64 {
+                r = m - 1;
+            } else if sq < x as i64 {
+                l = m + 1;
+                res = m;
+            } else {
+                return m;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -621,6 +673,23 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn my_sqrt(x: i32) -> i32 {
+        if x < 2 {
+            return x;
+        }
+        let l = Self::my_sqrt(x >> 2) << 1;
+        let r = l + 1;
+        if (r as i64) * (r as i64) > x as i64 {
+            l
+        } else {
+            r
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -737,6 +806,18 @@ class Solution {
             r = (r + x / r) >> 1
         }
         return r
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn my_sqrt(x: i32) -> i32 {
+        let mut r = x as i64;
+        while r * r > x as i64 {
+            r = (r + x as i64 / r) >> 1;
+        }
+        r as i32
     }
 }
 ```

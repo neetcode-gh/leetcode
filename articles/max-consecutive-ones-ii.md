@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Understanding how to traverse and manipulate array elements
 - **Sliding Window Technique** - Maintaining a dynamic window over a contiguous subarray while tracking specific conditions
 - **Two Pointers** - Using left and right pointers to efficiently process subarrays without nested iteration
@@ -16,9 +18,9 @@ The simplest approach is to try every possible starting position and extend the 
 
 1. Initialize `longestSequence` to track the maximum valid window length.
 2. For each starting index `left`, iterate through the array with `right`:
-   - Count zeros encountered so far.
-   - If the count exceeds `1`, stop expanding this window.
-   - Otherwise, update `longestSequence` with the current window size.
+    - Count zeros encountered so far.
+    - If the count exceeds `1`, stop expanding this window.
+    - Otherwise, update `longestSequence` with the current window size.
 3. Return `longestSequence`.
 
 ::tabs-start
@@ -108,7 +110,6 @@ class Solution {
 
             //Check every consecutive sequence
             for (let right = left; right < nums.length; right++) {
-
                 // Count how many 0's
                 if (nums[right] === 0) {
                     numZeroes += 1;
@@ -116,7 +117,10 @@ class Solution {
 
                 // Update answer if it's valid
                 if (numZeroes <= 1) {
-                    longestSequence = Math.max(longestSequence, right - left + 1);
+                    longestSequence = Math.max(
+                        longestSequence,
+                        right - left + 1,
+                    );
                 }
             }
         }
@@ -222,6 +226,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_consecutive_ones(nums: Vec<i32>) -> i32 {
+        let mut longest_sequence = 0;
+        for left in 0..nums.len() {
+            let mut num_zeroes = 0;
+            for right in left..nums.len() {
+                if nums[right] == 0 {
+                    num_zeroes += 1;
+                }
+                if num_zeroes <= 1 {
+                    longest_sequence = longest_sequence.max(right - left + 1);
+                }
+            }
+        }
+        longest_sequence as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -229,7 +253,7 @@ class Solution {
 - Time complexity: $O(n^2)$
 - Space complexity: $O(1)$ constant space used
 
->  Where $n$ is the length of the input array `nums`.
+> Where $n$ is the length of the input array `nums`.
 
 ---
 
@@ -243,10 +267,10 @@ Instead of restarting from every position, we can use a sliding window that grow
 
 1. Initialize two pointers `left` and `right` at `0`, along with `numZeroes` to track zeros in the window.
 2. Expand the window by moving `right`:
-   - If the element at `right` is `0`, increment `numZeroes`.
+    - If the element at `right` is `0`, increment `numZeroes`.
 3. While `numZeroes` equals `2` (window is invalid):
-   - If the element at `left` is `0`, decrement `numZeroes`.
-   - Move `left` forward to shrink the window.
+    - If the element at `left` is `0`, decrement `numZeroes`.
+    - Move `left` forward to shrink the window.
 4. Update `longestSequence` with the current window size (`right - left + 1`).
 5. Continue until `right` reaches the end, then return `longestSequence`.
 
@@ -264,7 +288,7 @@ class Solution:
                 num_zeroes += 1
 
             while num_zeroes == 2:   # If our window is invalid, contract our window
-                if nums[left] == 0:    
+                if nums[left] == 0:
                     num_zeroes -= 1
                 left += 1
 
@@ -360,7 +384,6 @@ class Solution {
 
         // While our window is in bounds
         while (right < nums.length) {
-
             // Increase numZeroes if the rightmost element is 0
             if (nums[right] === 0) {
                 numZeroes++;
@@ -502,6 +525,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_consecutive_ones(nums: Vec<i32>) -> i32 {
+        let mut longest_sequence = 0;
+        let mut left = 0;
+        let mut right = 0;
+        let mut num_zeroes = 0;
+
+        while right < nums.len() {
+            if nums[right] == 0 {
+                num_zeroes += 1;
+            }
+            while num_zeroes == 2 {
+                if nums[left] == 0 {
+                    num_zeroes -= 1;
+                }
+                left += 1;
+            }
+            longest_sequence = longest_sequence.max(right - left + 1);
+            right += 1;
+        }
+        longest_sequence as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,7 +558,7 @@ class Solution {
 - Time complexity: $O(n)$
 - Space complexity: $O(1)$ constant space used
 
->  Where $n$ is the length of the input array `nums`.
+> Where $n$ is the length of the input array `nums`.
 
 ---
 

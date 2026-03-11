@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Prefix Sums** - Precomputing cumulative counts to enable O(1) lookups for range queries
 - **String Traversal** - Iterating through a string while maintaining running counts of characters
 - **Algebraic Optimization** - Reformulating the score formula to reduce the problem to a single-pass solution
@@ -16,9 +18,9 @@ The score at any split point is the sum of zeros in the left substring plus the 
 
 1. Iterate through each valid split position `i` from index `1` to `n-1` (both substrings must be non-empty).
 2. For each split position:
-   - Count zeros in the left substring (indices `0` to `i-1`).
-   - Count ones in the right substring (indices `i` to `n-1`).
-   - Calculate the score as the sum of these two counts.
+    - Count zeros in the left substring (indices `0` to `i-1`).
+    - Count ones in the right substring (indices `i` to `n-1`).
+    - Calculate the score as the sum of these two counts.
 3. Track and return the maximum score across all split positions.
 
 ::tabs-start
@@ -201,6 +203,32 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut res = 0;
+        for i in 1..n {
+            let mut left_zero = 0;
+            let mut right_one = 0;
+            for j in 0..i {
+                if s[j] == b'0' {
+                    left_zero += 1;
+                }
+            }
+            for j in i..n {
+                if s[j] == b'1' {
+                    right_one += 1;
+                }
+            }
+            res = res.max(left_zero + right_one);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -221,7 +249,7 @@ Instead of recounting zeros and ones for every split position, we can precompute
 1. Build a prefix array `left_zero` where `left_zero[i]` holds the count of zeros from index `0` to `i`.
 2. Build a suffix array `right_one` where `right_one[i]` holds the count of ones from index `i` to `n-1`.
 3. For each valid split position `i` (from `1` to `n-1`):
-   - The score is `left_zero[i-1] + right_one[i]`.
+    - The score is `left_zero[i-1] + right_one[i]`.
 4. Return the maximum score found.
 
 ::tabs-start
@@ -486,6 +514,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(s: String) -> i32 {
+        let s = s.as_bytes();
+        let n = s.len();
+        let mut left_zero = vec![0i32; n];
+        let mut right_one = vec![0i32; n];
+
+        if s[0] == b'0' {
+            left_zero[0] = 1;
+        }
+        for i in 1..n {
+            left_zero[i] = left_zero[i - 1];
+            if s[i] == b'0' {
+                left_zero[i] += 1;
+            }
+        }
+
+        if s[n - 1] == b'1' {
+            right_one[n - 1] = 1;
+        }
+        for i in (0..n - 1).rev() {
+            right_one[i] = right_one[i + 1];
+            if s[i] == b'1' {
+                right_one[i] += 1;
+            }
+        }
+
+        let mut res = 0;
+        for i in 1..n {
+            res = res.max(left_zero[i - 1] + right_one[i]);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,9 +571,9 @@ We can avoid storing full arrays by maintaining running counts. First, count all
 1. Count the total number of ones in the string.
 2. Initialize `zero = 0` to track zeros seen so far.
 3. Iterate from index `0` to `n-2` (last valid split position):
-   - If the current character is `'0'`, increment `zero`.
-   - Otherwise, decrement `one` (this one moves from right to left portion).
-   - Update the result with `zero + one`.
+    - If the current character is `'0'`, increment `zero`.
+    - Otherwise, decrement `one` (this one moves from right to left portion).
+    - Update the result with `zero + one`.
 4. Return the maximum score.
 
 ::tabs-start
@@ -697,6 +762,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_score(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut zero = 0i32;
+        let mut one = s.iter().filter(|&&c| c == b'1').count() as i32;
+        let mut res = 0;
+
+        for i in 0..s.len() - 1 {
+            if s[i] == b'0' {
+                zero += 1;
+            } else {
+                one -= 1;
+            }
+            res = res.max(zero + one);
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -716,8 +802,8 @@ We can derive a single-pass solution using algebra. The score at position `i` eq
 
 1. Process the first character to initialize `zeros` and `ones` counters.
 2. Iterate from index `1` to `n-1`:
-   - Update the maximum of `(zeros - ones)` before processing the current character.
-   - Update counters based on whether the current character is `'0'` or `'1'`.
+    - Update the maximum of `(zeros - ones)` before processing the current character.
+    - Update counters based on whether the current character is `'0'` or `'1'`.
 3. Return `result + ones` (where `ones` now contains the total count).
 
 ::tabs-start
@@ -921,6 +1007,34 @@ class Solution {
         }
 
         return res + ones
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn max_score(s: String) -> i32 {
+        let s = s.as_bytes();
+        let mut zeros = 0i32;
+        let mut ones = 0i32;
+        let mut res = i32::MIN;
+
+        if s[0] == b'0' {
+            zeros += 1;
+        } else {
+            ones += 1;
+        }
+
+        for i in 1..s.len() {
+            res = res.max(zeros - ones);
+            if s[i] == b'0' {
+                zeros += 1;
+            } else {
+                ones += 1;
+            }
+        }
+
+        res + ones
     }
 }
 ```

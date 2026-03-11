@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - Sorting arrays of pairs/tuples by custom criteria
 - **Stack** - Using a stack to track and merge elements based on conditions
 - **Time-Distance Calculations** - Computing arrival times from position, speed, and target
@@ -21,10 +23,10 @@ Using a stack helps us easily compare each car’s time with the fleet ahead of 
 1. Pair each car's position with its speed.
 2. Sort the cars in descending order of position (closest to target first).
 3. For each car:
-   - Compute the time it takes to reach the target.
-   - Push this time onto a stack.
-   - If the new car’s time is **less than or equal** to the time before it,  
-     it catches up and merges with that fleet → pop it from the stack.
+    - Compute the time it takes to reach the target.
+    - Push this time onto a stack.
+    - If the new car’s time is **less than or equal** to the time before it,  
+      it catches up and merges with that fleet → pop it from the stack.
 4. The number of remaining times in the stack equals the number of fleets.
 5. Return the stack size.
 
@@ -199,6 +201,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn car_fleet(target: i32, position: Vec<i32>, speed: Vec<i32>) -> i32 {
+        let mut pair: Vec<(i32, i32)> = position.into_iter()
+            .zip(speed.into_iter())
+            .collect();
+        pair.sort_by(|a, b| b.0.cmp(&a.0));
+
+        let mut stack: Vec<f64> = Vec::new();
+        for (p, s) in pair {
+            stack.push((target - p) as f64 / s as f64);
+            let len = stack.len();
+            if len >= 2 && stack[len - 1] <= stack[len - 2] {
+                stack.pop();
+            }
+        }
+
+        stack.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,11 +247,11 @@ So instead of using a stack, we just keep track of the most recent fleet time.
 2. Start with the first car forming the first fleet.
 3. Keep track of the fleet's time (`prevTime`) - the time of the car closest to the target.
 4. For each remaining car:
-   - Compute its time to reach the target.
-   - If this time is greater than `prevTime`, it cannot catch up and forms a new fleet.
-     - Increase fleet count.
-     - Update `prevTime` to this new time.
-   - Otherwise, it merges with the existing fleet and do nothing.
+    - Compute its time to reach the target.
+    - If this time is greater than `prevTime`, it cannot catch up and forms a new fleet.
+        - Increase fleet count.
+        - Update `prevTime` to this new time.
+    - Otherwise, it merges with the existing fleet and do nothing.
 5. Return the number of fleets.
 
 ::tabs-start
@@ -420,6 +444,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn car_fleet(target: i32, position: Vec<i32>, speed: Vec<i32>) -> i32 {
+        let mut pair: Vec<(i32, i32)> = position.into_iter()
+            .zip(speed.into_iter())
+            .collect();
+        pair.sort_by(|a, b| b.0.cmp(&a.0));
+
+        let mut fleets = 1;
+        let mut prev_time = (target - pair[0].0) as f64 / pair[0].1 as f64;
+        for i in 1..pair.len() {
+            let curr_time = (target - pair[i].0) as f64 / pair[i].1 as f64;
+            if curr_time > prev_time {
+                fleets += 1;
+                prev_time = curr_time;
+            }
+        }
+
+        fleets
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -432,7 +479,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Sorting in the Wrong Order
+
 Sorting cars by position in ascending order (farthest from target first) instead of descending order causes incorrect fleet merging. Cars must be processed from closest to the target first, since a car behind can only merge with the fleet ahead of it.
+
 ```python
 # Wrong: ascending order
 pair.sort()
@@ -441,7 +490,9 @@ pair.sort(reverse=True)
 ```
 
 ### Using Strict Less Than for Fleet Merging
+
 Using `<` instead of `<=` when comparing arrival times misses the case where two cars arrive at exactly the same time. If a car behind arrives at the same time or earlier than the car ahead, it joins that fleet.
+
 ```python
 # Wrong: misses equal arrival times
 if stack[-1] < stack[-2]:
@@ -450,7 +501,9 @@ if stack[-1] <= stack[-2]:
 ```
 
 ### Integer Division Instead of Float Division
+
 In languages like Java or C++, dividing two integers results in integer division, which truncates the decimal part. Since arrival times are often fractional, this leads to incorrect comparisons and wrong fleet counts.
+
 ```java
 // Wrong: integer division truncates
 int time = (target - position) / speed;

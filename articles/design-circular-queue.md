@@ -384,6 +384,52 @@ class MyCircularQueue {
 }
 ```
 
+
+```rust
+struct MyCircularQueue {
+    q: Vec<i32>,
+    k: usize,
+}
+
+impl MyCircularQueue {
+    fn new(k: i32) -> Self {
+        Self { q: Vec::new(), k: k as usize }
+    }
+
+    fn en_queue(&mut self, value: i32) -> bool {
+        if self.q.len() == self.k {
+            return false;
+        }
+        self.q.push(value);
+        true
+    }
+
+    fn de_queue(&mut self) -> bool {
+        if self.q.is_empty() {
+            return false;
+        }
+        self.q.remove(0);
+        true
+    }
+
+    fn front(&self) -> i32 {
+        if self.q.is_empty() { -1 } else { self.q[0] }
+    }
+
+    fn rear(&self) -> i32 {
+        if self.q.is_empty() { -1 } else { *self.q.last().unwrap() }
+    }
+
+    fn is_empty(&self) -> bool {
+        self.q.is_empty()
+    }
+
+    fn is_full(&self) -> bool {
+        self.q.len() == self.k
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -833,6 +879,64 @@ class MyCircularQueue {
 
     func isFull() -> Bool {
         return size == k
+    }
+}
+```
+
+
+```rust
+struct MyCircularQueue {
+    q: Vec<i32>,
+    front: usize,
+    rear: i32,
+    size: usize,
+    capacity: usize,
+}
+
+impl MyCircularQueue {
+    fn new(k: i32) -> Self {
+        Self {
+            q: vec![0; k as usize],
+            front: 0,
+            rear: -1,
+            size: 0,
+            capacity: k as usize,
+        }
+    }
+
+    fn en_queue(&mut self, value: i32) -> bool {
+        if self.is_full() {
+            return false;
+        }
+        self.rear = (self.rear + 1) % self.capacity as i32;
+        self.q[self.rear as usize] = value;
+        self.size += 1;
+        true
+    }
+
+    fn de_queue(&mut self) -> bool {
+        if self.is_empty() {
+            return false;
+        }
+        self.front = (self.front + 1) % self.capacity;
+        self.size -= 1;
+        true
+    }
+
+    fn front(&self) -> i32 {
+        if self.is_empty() { -1 } else { self.q[self.front] }
+    }
+
+    fn rear(&self) -> i32 {
+        if self.is_empty() { -1 } else { self.q[self.rear as usize] }
+    }
+
+    fn is_empty(&self) -> bool {
+        self.size == 0
+    }
+
+    fn is_full(&self) -> bool {
+        self.size == self.capacity
     }
 }
 ```
@@ -1355,6 +1459,55 @@ class MyCircularQueue {
 
     func isFull() -> Bool {
         return space == 0
+    }
+}
+```
+
+
+```rust
+struct MyCircularQueue {
+    q: VecDeque<i32>,
+    capacity: usize,
+}
+
+impl MyCircularQueue {
+    fn new(k: i32) -> Self {
+        Self {
+            q: VecDeque::new(),
+            capacity: k as usize,
+        }
+    }
+
+    fn en_queue(&mut self, value: i32) -> bool {
+        if self.is_full() {
+            return false;
+        }
+        self.q.push_back(value);
+        true
+    }
+
+    fn de_queue(&mut self) -> bool {
+        if self.is_empty() {
+            return false;
+        }
+        self.q.pop_front();
+        true
+    }
+
+    fn front(&self) -> i32 {
+        if self.is_empty() { -1 } else { *self.q.front().unwrap() }
+    }
+
+    fn rear(&self) -> i32 {
+        if self.is_empty() { -1 } else { *self.q.back().unwrap() }
+    }
+
+    fn is_empty(&self) -> bool {
+        self.q.is_empty()
+    }
+
+    fn is_full(&self) -> bool {
+        self.q.len() == self.capacity
     }
 }
 ```
@@ -1930,6 +2083,55 @@ class MyCircularQueue {
 
     func isFull() -> Bool {
         return space == 0
+    }
+}
+```
+
+
+```rust
+struct MyCircularQueue {
+    q: VecDeque<i32>,
+    capacity: usize,
+}
+
+impl MyCircularQueue {
+    fn new(k: i32) -> Self {
+        Self {
+            q: VecDeque::new(),
+            capacity: k as usize,
+        }
+    }
+
+    fn en_queue(&mut self, value: i32) -> bool {
+        if self.is_full() {
+            return false;
+        }
+        self.q.push_back(value);
+        true
+    }
+
+    fn de_queue(&mut self) -> bool {
+        if self.is_empty() {
+            return false;
+        }
+        self.q.pop_front();
+        true
+    }
+
+    fn front(&self) -> i32 {
+        if self.is_empty() { -1 } else { *self.q.front().unwrap() }
+    }
+
+    fn rear(&self) -> i32 {
+        if self.is_empty() { -1 } else { *self.q.back().unwrap() }
+    }
+
+    fn is_empty(&self) -> bool {
+        self.q.is_empty()
+    }
+
+    fn is_full(&self) -> bool {
+        self.q.len() == self.capacity
     }
 }
 ```

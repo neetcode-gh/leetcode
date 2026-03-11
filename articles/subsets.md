@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Recursion** - Used to explore the decision tree where each element is either included or excluded
 - **Backtracking** - Needed to undo choices (remove elements) after exploring one branch of the decision tree
 - **Bit Manipulation** - Alternative approach uses bitmasks to represent subset membership
@@ -15,6 +17,7 @@ for every number, we have two options — **include it** or **exclude it**.
 This naturally forms a decision tree.
 
 Backtracking helps us explore both choices:
+
 - Add the current number → explore further
 - Remove it (undo) → explore without it
 
@@ -26,18 +29,18 @@ This systematically generates all 2ⁿ subsets.
 ### Algorithm
 
 1. Maintain:
-   - `res` → final list of all subsets
-   - `subset` → current subset being built
+    - `res` → final list of all subsets
+    - `subset` → current subset being built
 2. Define a recursive function `dfs(i)`:
-   - If `i` equals the length of the input:
-     - Add a copy of `subset` to `res`
-     - Return
-   - **Choice 1: include `nums[i]`**
-     - Append number to `subset`
-     - Recurse to next index
-     - Remove the number (backtrack)
-   - **Choice 2: skip `nums[i]`**
-     - Recurse to next index
+    - If `i` equals the length of the input:
+        - Add a copy of `subset` to `res`
+        - Return
+    - **Choice 1: include `nums[i]`**
+        - Append number to `subset`
+        - Recurse to next index
+        - Remove the number (backtrack)
+    - **Choice 2: skip `nums[i]`**
+        - Recurse to next index
 3. Start recursion with `dfs(0)`
 4. Return `res`
 
@@ -51,8 +54,7 @@ Array:
 ┌───┬───┬───┐
 │ 1 │ 2 │ 3 │
 └───┴───┴───┘
-  0   1   2
-
+0 1 2
 
 Backtracking Decision Tree:
 
@@ -70,83 +72,72 @@ Backtracking Decision Tree:
                 ↓     ↓     ↓     ↓   ↓     ↓     ↓     ↓
             [1,2,3] [1,2] [1,3]  [1] [2,3] [2]   [3]   []
 
-
 Step-by-step Subset Generation:
-
 
 Step 1: dfs(0) - Consider nums[0] = 1
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Choice: Include 1                                                  │
-│  subset = [1]                                                       │
-│  Action: Recurse to dfs(1)                                          │
+│ Choice: Include 1 │
+│ subset = [1] │
+│ Action: Recurse to dfs(1) │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-Step 2: dfs(1) - Consider nums[1] = 2  (subset = [1])
+Step 2: dfs(1) - Consider nums[1] = 2 (subset = [1])
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Choice: Include 2                                                  │
-│  subset = [1, 2]                                                    │
-│  Action: Recurse to dfs(2)                                          │
+│ Choice: Include 2 │
+│ subset = [1, 2] │
+│ Action: Recurse to dfs(2) │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-Step 3: dfs(2) - Consider nums[2] = 3  (subset = [1, 2])
+Step 3: dfs(2) - Consider nums[2] = 3 (subset = [1, 2])
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Choice: Include 3                                                  │
-│  subset = [1, 2, 3]                                                 │
-│  Action: Recurse to dfs(3)                                          │
+│ Choice: Include 3 │
+│ subset = [1, 2, 3] │
+│ Action: Recurse to dfs(3) │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Step 4: dfs(3) - Base case reached (i >= len(nums))
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Add [1, 2, 3] to result                                            │
-│  Result: [[1, 2, 3]]                                                │
-│  Action: Return and backtrack                                       │
+│ Add [1, 2, 3] to result │
+│ Result: [[1, 2, 3]] │
+│ Action: Return and backtrack │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Step 5: Backtrack to dfs(2) - Exclude 3
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Remove 3 from subset                                               │
-│  subset = [1, 2]                                                    │
-│  Action: Recurse to dfs(3) without 3                                │
+│ Remove 3 from subset │
+│ subset = [1, 2] │
+│ Action: Recurse to dfs(3) without 3 │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Step 6: dfs(3) - Base case reached
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Add [1, 2] to result                                               │
-│  Result: [[1, 2, 3], [1, 2]]                                        │
-│  Action: Return and backtrack                                       │
+│ Add [1, 2] to result │
+│ Result: [[1, 2, 3], [1, 2]] │
+│ Action: Return and backtrack │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Step 7: Backtrack to dfs(1) - Exclude 2
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Remove 2 from subset                                               │
-│  subset = [1]                                                       │
-│  Action: Continue with nums[2] = 3                                  │
+│ Remove 2 from subset │
+│ subset = [1] │
+│ Action: Continue with nums[2] = 3 │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 ...continuing pattern for remaining branches...
 
-
 Step 8-15: Process remaining combinations
 ┌─────────────────────────────────────────────────────────────────────┐
-│  [1] + 3 → [1, 3] → add to result                                   │
-│  [1] → add to result                                                │
-│  [] + 2 → [2] + 3 → [2, 3] → add to result                          │
-│  [2] → add to result                                                │
-│  [] + 3 → [3] → add to result                                       │
-│  [] → add to result                                                 │
+│ [1] + 3 → [1, 3] → add to result │
+│ [1] → add to result │
+│ [] + 2 → [2] + 3 → [2, 3] → add to result │
+│ [2] → add to result │
+│ [] + 3 → [3] → add to result │
+│ [] → add to result │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Final Result:
 ┌───────────────────────────────────────────────────────────────────────────┐
-│  [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]                    │
+│ [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] │
 └───────────────────────────────────────────────────────────────────────────┘
 
 Total subsets: 2^3 = 8
@@ -351,6 +342,28 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subsets(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let mut subset = Vec::new();
+        Self::dfs(&nums, 0, &mut subset, &mut res);
+        res
+    }
+
+    fn dfs(nums: &[i32], i: usize, subset: &mut Vec<i32>, res: &mut Vec<Vec<i32>>) {
+        if i >= nums.len() {
+            res.push(subset.clone());
+            return;
+        }
+        subset.push(nums[i]);
+        Self::dfs(nums, i + 1, subset, res);
+        subset.pop();
+        Self::dfs(nums, i + 1, subset, res);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -372,6 +385,7 @@ For every number in the array, we take all the subsets we have so far and
 create **new subsets by adding the current number to each of them**.
 
 Example:
+
 - Start: `[[]]`
 - Add `1` → `[[], [1]]`
 - Add `2` → `[[], [1], [2], [1,2]]`
@@ -383,9 +397,9 @@ Each step doubles the number of subsets.
 
 1. Initialize `res = [[]]` (start with empty subset).
 2. For each number `num` in the input array:
-   - For every subset already in `res`:
-     - Create a new subset that includes `num`
-   - Append all these newly created subsets to `res`.
+    - For every subset already in `res`:
+        - Create a new subset that includes `num`
+    - Append all these newly created subsets to `res`.
 3. Return `res` after processing all numbers.
 
 <details>
@@ -398,85 +412,80 @@ Array:
 ┌───┬───┬───┐
 │ 1 │ 2 │ 3 │
 └───┴───┴───┘
-  0   1   2
-
+0 1 2
 
 Iterative Subset Building:
 
 For each number, duplicate all existing subsets
 and add the current number to each copy.
 
-
 Initial State:
 ┌─────────────────────────────────────────────────────────────────────┐
-│  res = [[]]                                                         │
-│                                                                     │
-│  Subsets so far:                                                    │
-│  ┌────┐                                                             │
-│  │ [] │                                                             │
-│  └────┘                                                             │
+│ res = [[]] │
+│ │
+│ Subsets so far: │
+│ ┌────┐ │
+│ │ [] │ │
+│ └────┘ │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Step 1: Process num = 1
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Current subsets: [[]]                                              │
+│ Current subsets: [[]]                                              │
 │                                                                     │
 │  For each existing subset, create a copy with 1 added:              │
 │                                                                     │
 │      []  ──────────────────►  [1]                                   │
 │      (original)               (new copy + 1)                        │
 │                                                                     │
-│  New subsets created: [[1]]                                         │
-│  Append to result                                                   │
+│  New subsets created: [[1]] │
+│ Append to result │
 └─────────────────────────────────────────────────────────────────────┘
 
 res after Step 1:
 ┌────┬─────┐
 │ [] │ [1] │
 └────┴─────┘
-  ↑      ↑
-  │      └── newly added
-  └── original
-
+↑ ↑
+│ └── newly added
+└── original
 
 Step 2: Process num = 2
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Current subsets: [[], [1]]                                         │
-│                                                                     │
-│  For each existing subset, create a copy with 2 added:              │
-│                                                                     │
-│      []  ──────────────────►  [2]                                   │
-│      [1] ──────────────────►  [1, 2]                                │
-│      (originals)              (new copies + 2)                      │
-│                                                                     │
-│  New subsets created: [[2], [1, 2]]                                 │
-│  Append to result                                                   │
+│ Current subsets: [[], [1]] │
+│ │
+│ For each existing subset, create a copy with 2 added: │
+│ │
+│ [] ──────────────────► [2] │
+│ [1] ──────────────────► [1, 2] │
+│ (originals) (new copies + 2) │
+│ │
+│ New subsets created: [[2], [1, 2]] │
+│ Append to result │
 └─────────────────────────────────────────────────────────────────────┘
 
 res after Step 2:
 ┌────┬─────┬─────┬───────┐
 │ [] │ [1] │ [2] │ [1,2] │
 └────┴─────┴─────┴───────┘
-  ↑     ↑     ↑      ↑
-  └─────┴─────│──────│── original
-              └──────┴── newly added
-
+↑ ↑ ↑ ↑
+└─────┴─────│──────│── original
+└──────┴── newly added
 
 Step 3: Process num = 3
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Current subsets: [[], [1], [2], [1, 2]]                            │
-│                                                                     │
-│  For each existing subset, create a copy with 3 added:              │
-│                                                                     │
-│      []     ──────────────────►  [3]                                │
-│      [1]    ──────────────────►  [1, 3]                             │
-│      [2]    ──────────────────►  [2, 3]                             │
-│      [1, 2] ──────────────────►  [1, 2, 3]                          │
-│      (originals)                 (new copies + 3)                   │
-│                                                                     │
-│  New subsets created: [[3], [1, 3], [2, 3], [1, 2, 3]]              │
-│  Append to result                                                   │
+│ Current subsets: [[], [1], [2], [1, 2]] │
+│ │
+│ For each existing subset, create a copy with 3 added: │
+│ │
+│ [] ──────────────────► [3] │
+│ [1] ──────────────────► [1, 3] │
+│ [2] ──────────────────► [2, 3] │
+│ [1, 2] ──────────────────► [1, 2, 3] │
+│ (originals) (new copies + 3) │
+│ │
+│ New subsets created: [[3], [1, 3], [2, 3], [1, 2, 3]] │
+│ Append to result │
 └─────────────────────────────────────────────────────────────────────┘
 
 res after Step 3:
@@ -484,25 +493,23 @@ res after Step 3:
 │ [] │ [1] │ [2] │ [1,2] │ [3] │ [1,3] │ [2,3] │ [1,2,3] │
 └────┴─────┴─────┴───────┴─────┴───────┴───────┴─────────┘
 
-
 Growth Pattern:
 ┌────────────────────────────────────────────────────────────┐
-│                                                            │
-│     After processing:          # of subsets                │
-│    ────────────────────────────────────────────            │
-│     Initial (empty)             1   =  2^0                 │
-│     After num = 1               2   =  2^1                 │
-│     After num = 2               4   =  2^2                 │
-│     After num = 3               8   =  2^3                 │
-│                                                            │
-│     Pattern: Each step doubles the number of subsets!      │
-│                                                            │
+│ │
+│ After processing: # of subsets │
+│ ──────────────────────────────────────────── │
+│ Initial (empty) 1 = 2^0 │
+│ After num = 1 2 = 2^1 │
+│ After num = 2 4 = 2^2 │
+│ After num = 3 8 = 2^3 │
+│ │
+│ Pattern: Each step doubles the number of subsets! │
+│ │
 └────────────────────────────────────────────────────────────┘
-
 
 Final Result:
 ┌───────────────────────────────────────────────────────────────────────────┐
-│  [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]                    │
+│ [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] │
 └───────────────────────────────────────────────────────────────────────────┘
 
 Total subsets: 2^3 = 8
@@ -659,6 +666,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subsets(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = vec![vec![]];
+
+        for &num in &nums {
+            let size = res.len();
+            for i in 0..size {
+                let mut subset = res[i].clone();
+                subset.push(num);
+                res.push(subset);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -688,9 +714,10 @@ Example for `nums = [a, b, c]`:
 - `100` → choose `a`
 - ...and so on.
 
-Each bit tells us whether to *include* the corresponding element.
+Each bit tells us whether to _include_ the corresponding element.
 
 So for every integer `i` from `0` to `(1 << n) - 1`:
+
 - Check each bit `j` of `i`
 - If bit `j` is `1`, include `nums[j]` in the current subset.
 
@@ -699,8 +726,8 @@ So for every integer `i` from `0` to `(1 << n) - 1`:
 1. Let `n` be the length of `nums`.
 2. Loop `i` from `0` to `(1 << n) - 1` (this generates all bitmasks).
 3. For each `i`, build a subset:
-   - For each position `j` from `0` to `n - 1`:
-     - If the `j`-th bit of `i` is set, include `nums[j]` in the subset.
+    - For each position `j` from `0` to `n - 1`:
+        - If the `j`-th bit of `i` is set, include `nums[j]` in the subset.
 4. Add the subset to the result list.
 5. Return all subsets.
 
@@ -714,166 +741,154 @@ Array:
 ┌───┬───┬───┐
 │ 1 │ 2 │ 3 │
 └───┴───┴───┘
-  0   1   2
+0 1 2
 
 n = 3, so we iterate i from 0 to 7 (2^3 - 1)
-
 
 Bitmask to Subset Mapping:
 
 ┌─────────────────────────────────────────────────────────────────────┐
-│  Each bit position corresponds to an element in nums:               │
-│                                                                     │
-│      Bit Position:     2         1         0                        │
-│      Array Element:  nums[2]   nums[1]   nums[0]                    │
-│      Value:            3         2         1                        │
-│                                                                     │
-│  If bit j is SET (1) → include nums[j] in subset                    │
-│  If bit j is CLEAR (0) → exclude nums[j] from subset                │
+│ Each bit position corresponds to an element in nums: │
+│ │
+│ Bit Position: 2 1 0 │
+│ Array Element: nums[2] nums[1] nums[0] │
+│ Value: 3 2 1 │
+│ │
+│ If bit j is SET (1) → include nums[j] in subset │
+│ If bit j is CLEAR (0) → exclude nums[j] from subset │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Step-by-step Iteration:
 
-
-i = 0  (binary: 000)
+i = 0 (binary: 000)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 0 │ 0 │ 0 │                                        │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     -   -   -                                          │
-│                                                                     │
-│     Subset: []                                                      │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 0 │ 0 │ 0 │ │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: - - - │
+│ │
+│ Subset: [] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 1  (binary: 001)
+i = 1 (binary: 001)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 0 │ 0 │ 1 │  ← bit 0 is SET                        │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     -   -   *                                          │
-│                                                                     │
-│     Subset: [1]                                                     │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 0 │ 0 │ 1 │ ← bit 0 is SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: - - \* │
+│ │
+│ Subset: [1] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 2  (binary: 010)
+i = 2 (binary: 010)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 0 │ 1 │ 0 │  ← bit 1 is SET                        │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     -   *   -                                          │
-│                                                                     │
-│     Subset: [2]                                                     │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 0 │ 1 │ 0 │ ← bit 1 is SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: - \* - │
+│ │
+│ Subset: [2] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 3  (binary: 011)
+i = 3 (binary: 011)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 0 │ 1 │ 1 │  ← bits 0,1 are SET                    │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     -   *   *                                          │
-│                                                                     │
-│     Subset: [1, 2]                                                  │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 0 │ 1 │ 1 │ ← bits 0,1 are SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: - \* \* │
+│ │
+│ Subset: [1, 2] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 4  (binary: 100)
+i = 4 (binary: 100)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 1 │ 0 │ 0 │  ← bit 2 is SET                        │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     *   -   -                                          │
-│                                                                     │
-│     Subset: [3]                                                     │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 1 │ 0 │ 0 │ ← bit 2 is SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: \* - - │
+│ │
+│ Subset: [3] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 5  (binary: 101)
+i = 5 (binary: 101)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 1 │ 0 │ 1 │  ← bits 0,2 are SET                    │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     *   -   *                                          │
-│                                                                     │
-│     Subset: [1, 3]                                                  │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 1 │ 0 │ 1 │ ← bits 0,2 are SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: _ - _ │
+│ │
+│ Subset: [1, 3] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 6  (binary: 110)
+i = 6 (binary: 110)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 1 │ 1 │ 0 │  ← bits 1,2 are SET                    │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     *   *   -                                          │
-│                                                                     │
-│     Subset: [2, 3]                                                  │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 1 │ 1 │ 0 │ ← bits 1,2 are SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: \* \* - │
+│ │
+│ Subset: [2, 3] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
 
-
-i = 7  (binary: 111)
+i = 7 (binary: 111)
 ┌─────────────────────────────────────────────────────────────────────┐
-│                                                                     │
-│     Bits:      ┌───┬───┬───┐                                        │
-│                │ 1 │ 1 │ 1 │  ← all bits SET                        │
-│                └───┴───┴───┘                                        │
-│     Position:    2   1   0                                          │
-│     nums[j]:     3   2   1                                          │
-│     Include:     *   *   *                                          │
-│                                                                     │
-│     Subset: [1, 2, 3]                                               │
-│                                                                     │
+│ │
+│ Bits: ┌───┬───┬───┐ │
+│ │ 1 │ 1 │ 1 │ ← all bits SET │
+│ └───┴───┴───┘ │
+│ Position: 2 1 0 │
+│ nums[j]: 3 2 1 │
+│ Include: \* \* \* │
+│ │
+│ Subset: [1, 2, 3] │
+│ │
 └─────────────────────────────────────────────────────────────────────┘
-
 
 Summary Table:
 ┌───────┬──────────┬─────────────────┬─────────────────────────────────┐
-│   i   │  Binary  │     Subset      │           Explanation           │
+│ i │ Binary │ Subset │ Explanation │
 ├───────┼──────────┼─────────────────┼─────────────────────────────────┤
-│   0   │   000    │       []        │  No bits set → empty subset     │
-│   1   │   001    │       [1]       │  Bit 0 set → include nums[0]    │
-│   2   │   010    │       [2]       │  Bit 1 set → include nums[1]    │
-│   3   │   011    │      [1,2]      │  Bits 0,1 set → include both    │
-│   4   │   100    │       [3]       │  Bit 2 set → include nums[2]    │
-│   5   │   101    │      [1,3]      │  Bits 0,2 set → include both    │
-│   6   │   110    │      [2,3]      │  Bits 1,2 set → include both    │
-│   7   │   111    │     [1,2,3]     │  All bits set → include all     │
+│ 0 │ 000 │ [] │ No bits set → empty subset │
+│ 1 │ 001 │ [1] │ Bit 0 set → include nums[0] │
+│ 2 │ 010 │ [2] │ Bit 1 set → include nums[1] │
+│ 3 │ 011 │ [1,2] │ Bits 0,1 set → include both │
+│ 4 │ 100 │ [3] │ Bit 2 set → include nums[2] │
+│ 5 │ 101 │ [1,3] │ Bits 0,2 set → include both │
+│ 6 │ 110 │ [2,3] │ Bits 1,2 set → include both │
+│ 7 │ 111 │ [1,2,3] │ All bits set → include all │
 └───────┴──────────┴─────────────────┴─────────────────────────────────┘
-
 
 Final Result:
 ┌───────────────────────────────────────────────────────────────────────────┐
-│  [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]]                    │
+│ [[], [1], [2], [1, 2], [3], [1, 3], [2, 3], [1, 2, 3]] │
 └───────────────────────────────────────────────────────────────────────────┘
 
 Total subsets: 2^3 = 8
@@ -1038,6 +1053,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn subsets(nums: Vec<i32>) -> Vec<Vec<i32>> {
+        let n = nums.len();
+        let mut res = Vec::new();
+
+        for i in 0..(1 << n) {
+            let mut subset = Vec::new();
+            for j in 0..n {
+                if i & (1 << j) != 0 {
+                    subset.push(nums[j]);
+                }
+            }
+            res.push(subset);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1052,7 +1088,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Modifying the Subset After Adding to Result
+
 When adding a subset to the result list, you must add a copy of the current subset. Otherwise, backtracking modifications will alter subsets already in the result.
+
 ```python
 # Wrong: adds reference that gets modified later
 res.append(subset)
@@ -1061,10 +1099,13 @@ res.append(subset[:])  # or list(subset)
 ```
 
 ### Forgetting the Empty Subset
+
 The power set always includes the empty subset `[]`. Forgetting to initialize with an empty subset or starting the iteration incorrectly will miss this case.
 
 ### Incorrect Index Handling in Backtracking
+
 When recursing, start from `i + 1` to avoid reusing the same element and to prevent duplicate subsets. Starting from `0` or `i` generates incorrect results.
+
 ```python
 # Wrong: includes current element again
 for j in range(i, len(nums)):
@@ -1073,4 +1114,5 @@ for j in range(i + 1, len(nums)):
 ```
 
 ### Integer Overflow in Bitmask Approach
+
 For the bitmask solution, `1 << n` can overflow for large `n`. In most languages, this limits the approach to around 30 elements, though problem constraints usually keep `n` small.

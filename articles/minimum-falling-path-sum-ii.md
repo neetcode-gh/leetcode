@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Dynamic Programming Fundamentals** - Understanding how to break problems into overlapping subproblems and use memoization or tabulation
 - **2D Grid/Matrix Traversal** - Ability to navigate and process elements in a 2D array
 - **Recursion with Memoization** - Converting recursive solutions to top-down DP by caching computed results
@@ -18,7 +20,7 @@ Unlike the standard falling path problem where we can move to adjacent columns, 
 1. Define `helper(r, c)` that returns the minimum path sum from cell `(r, c)` to the last row.
 2. Base case: if `r == n-1`, return `grid[r][c]` (we've reached the last row).
 3. For each column `next_col` in the next row where `next_col != c`:
-   - Recursively compute the path sum and track the minimum.
+    - Recursively compute the path sum and track the minimum.
 4. Return `grid[r][c]` plus the minimum path sum found.
 5. Try starting from each column in row `0` and return the minimum result.
 
@@ -228,6 +230,33 @@ class Solution {
             res = min(res, helper(0, c))
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+
+        fn helper(grid: &Vec<Vec<i32>>, r: usize, c: usize, n: usize) -> i32 {
+            if r == n - 1 {
+                return grid[r][c];
+            }
+            let mut res = i32::MAX;
+            for next_col in 0..n {
+                if c != next_col {
+                    res = res.min(grid[r][c] + helper(grid, r + 1, next_col, n));
+                }
+            }
+            res
+        }
+
+        let mut res = i32::MAX;
+        for c in 0..n {
+            res = res.min(helper(&grid, 0, c, n));
+        }
+        res
     }
 }
 ```
@@ -522,6 +551,44 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut memo = vec![vec![i32::MIN; n]; n];
+
+        fn helper(
+            grid: &Vec<Vec<i32>>,
+            memo: &mut Vec<Vec<i32>>,
+            r: usize,
+            c: usize,
+            n: usize,
+        ) -> i32 {
+            if r == n - 1 {
+                return grid[r][c];
+            }
+            if memo[r][c] != i32::MIN {
+                return memo[r][c];
+            }
+            let mut res = i32::MAX;
+            for next_col in 0..n {
+                if c != next_col {
+                    res = res.min(grid[r][c] + helper(grid, memo, r + 1, next_col, n));
+                }
+            }
+            memo[r][c] = res;
+            res
+        }
+
+        let mut res = i32::MAX;
+        for c in 0..n {
+            res = res.min(helper(&grid, &mut memo, 0, c, n));
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -542,9 +609,9 @@ We can build the solution iteratively from the last row upward. For each cell, w
 1. Create a 2D DP table initialized to infinity.
 2. Fill the last row: `dp[n-1][c] = grid[n-1][c]` for all columns.
 3. For each row `r` from `n-2` down to `0`:
-   - For each column `c`:
-     - For each `next_col != c`:
-       - Update `dp[r][c] = min(dp[r][c], grid[r][c] + dp[r+1][next_col])`.
+    - For each column `c`:
+        - For each `next_col != c`:
+            - Update `dp[r][c] = min(dp[r][c], grid[r][c] + dp[r+1][next_col])`.
 4. Return the minimum value in `dp[0]`.
 
 ::tabs-start
@@ -773,6 +840,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut dp = vec![vec![i32::MAX; n]; n];
+
+        for c in 0..n {
+            dp[n - 1][c] = grid[n - 1][c];
+        }
+
+        for r in (0..n - 1).rev() {
+            for c in 0..n {
+                for next_col in 0..n {
+                    if c != next_col {
+                        dp[r][c] = dp[r][c].min(grid[r][c] + dp[r + 1][next_col]);
+                    }
+                }
+            }
+        }
+
+        *dp[0].iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -792,11 +884,11 @@ Since each row only depends on the next row's values, we can reduce space from O
 
 1. Initialize DP array with the first row of the grid.
 2. For each subsequent row `r`:
-   - Create a new DP array for the current row.
-   - For each column `curr_c`:
-     - For each `prev_c != curr_c`, track the minimum from the previous row.
-     - Set `next_dp[curr_c] = grid[r][curr_c] + min_prev`.
-   - Replace the DP array with the new array.
+    - Create a new DP array for the current row.
+    - For each column `curr_c`:
+        - For each `prev_c != curr_c`, track the minimum from the previous row.
+        - Set `next_dp[curr_c] = grid[r][curr_c] + min_prev`.
+    - Replace the DP array with the new array.
 3. Return the minimum value in the final DP array.
 
 ::tabs-start
@@ -1012,6 +1104,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let mut dp = grid[0].clone();
+
+        for r in 1..n {
+            let mut next_dp = vec![i32::MAX; n];
+            for curr_c in 0..n {
+                for prev_c in 0..n {
+                    if prev_c != curr_c {
+                        next_dp[curr_c] =
+                            next_dp[curr_c].min(grid[r][curr_c] + dp[prev_c]);
+                    }
+                }
+            }
+            dp = next_dp;
+        }
+
+        *dp.iter().min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1031,8 +1147,8 @@ The O(n^3) complexity comes from checking all `n` columns for each of `n^2` cell
 
 1. Initialize DP by computing the two smallest (value, index) pairs from the first row.
 2. For each subsequent row:
-   - For each column, compute the path sum using the smallest previous value if columns differ, else the second smallest.
-   - Collect all results and find the new two smallest pairs.
+    - For each column, compute the path sum using the smallest previous value if columns differ, else the second smallest.
+    - Collect all results and find the new two smallest pairs.
 3. Return the minimum value from the final DP.
 
 ::tabs-start
@@ -1390,6 +1506,48 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+
+        fn get_min_two(row: &[(i32, usize)]) -> Vec<(i32, usize)> {
+            let mut two: Vec<(i32, usize)> = Vec::with_capacity(2);
+            for &entry in row {
+                if two.len() < 2 {
+                    two.push(entry);
+                } else if two[1].0 > entry.0 {
+                    two[1] = entry;
+                }
+                two.sort_by_key(|x| x.0);
+            }
+            two
+        }
+
+        let first_row: Vec<(i32, usize)> =
+            grid[0].iter().enumerate().map(|(i, &v)| (v, i)).collect();
+        let mut dp = get_min_two(&first_row);
+
+        for r in 1..n {
+            let mut next_dp: Vec<(i32, usize)> = Vec::with_capacity(n);
+            for c in 0..n {
+                let curr_val = grid[r][c];
+                let mut min_val = i32::MAX;
+                for &(prev_val, prev_c) in &dp {
+                    if c != prev_c {
+                        min_val = min_val.min(curr_val + prev_val);
+                    }
+                }
+                next_dp.push((min_val, c));
+            }
+            dp = get_min_two(&next_dp);
+        }
+
+        dp.iter().map(|x| x.0).min().unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1409,10 +1567,10 @@ We can further optimize by not storing an entire array of pairs. Instead, we onl
 
 1. Initialize `dpIdx1`, `dpIdx2` (indices of first and second smallest) and `dpVal1`, `dpVal2` (their values) to represent the previous row's state.
 2. For each row:
-   - Track new smallest and second smallest values and indices.
-   - For each column `j`:
-     - If `j != dpIdx1`, add `dpVal1`; otherwise add `dpVal2`.
-     - Update the running smallest and second smallest for this row.
+    - Track new smallest and second smallest values and indices.
+    - For each column `j`:
+        - If `j != dpIdx1`, add `dpVal1`; otherwise add `dpVal2`.
+        - Update the running smallest and second smallest for this row.
 3. After processing all rows, return `dpVal1` (the overall minimum).
 
 ::tabs-start
@@ -1729,6 +1887,47 @@ class Solution {
         }
 
         return dpVal1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_falling_path_sum(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        if n == 1 {
+            return grid[0][0];
+        }
+
+        let (mut dp_idx1, mut dp_idx2): (i32, i32) = (-1, -1);
+        let (mut dp_val1, mut dp_val2): (i32, i32) = (0, 0);
+
+        for i in 0..n {
+            let (mut next_idx1, mut next_idx2): (i32, i32) = (-1, -1);
+            let (mut next_val1, mut next_val2) = (i32::MAX, i32::MAX);
+
+            for j in 0..n {
+                let cur = if j as i32 != dp_idx1 { dp_val1 } else { dp_val2 }
+                    + grid[i][j];
+
+                if next_idx1 == -1 || cur < next_val1 {
+                    next_idx2 = next_idx1;
+                    next_val2 = next_val1;
+                    next_idx1 = j as i32;
+                    next_val1 = cur;
+                } else if next_idx2 == -1 || cur < next_val2 {
+                    next_idx2 = j as i32;
+                    next_val2 = cur;
+                }
+            }
+
+            dp_idx1 = next_idx1;
+            dp_idx2 = next_idx2;
+            dp_val1 = next_val1;
+            dp_val2 = next_val2;
+        }
+
+        dp_val1
     }
 }
 ```

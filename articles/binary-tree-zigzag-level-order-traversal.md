@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree node structure with left and right children
 - **Breadth First Search (BFS)** - Level-order traversal forms the foundation for processing nodes level by level
 - **Queue Data Structure** - Essential for BFS to maintain the order of nodes to visit
@@ -10,16 +12,18 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Breadth First Search
 
 ### Intuition
+
 Level order traversal naturally suggests using BFS with a queue. The zigzag pattern means we alternate the direction we read each level: left-to-right for even levels, right-to-left for odd levels. We can achieve this by collecting each level normally and then reversing it when needed based on the level index.
 
 ### Algorithm
+
 1. Initialize an empty result list and a queue with the root node.
 2. While the queue is not empty:
-   - Create an empty list to store the current level's values.
-   - Process all nodes at the current level by iterating through the queue's current size.
-   - For each node, add its value to the level list and enqueue its children (left then right).
-   - If the current level index is odd, reverse the `level` list.
-   - Add the `level` list to the result.
+    - Create an empty list to store the current level's values.
+    - Process all nodes at the current level by iterating through the queue's current size.
+    - For each node, add its value to the level list and enqueue its children (left then right).
+    - If the current level index is odd, reverse the `level` list.
+    - Add the `level` list to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -342,6 +346,45 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zigzag_level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let root = match root {
+            Some(r) => r,
+            None => return res,
+        };
+
+        let mut q = VecDeque::new();
+        q.push_back(root);
+
+        while !q.is_empty() {
+            let size = q.len();
+            let mut level = Vec::new();
+
+            for _ in 0..size {
+                let node = q.pop_front().unwrap();
+                let node_ref = node.borrow();
+                level.push(node_ref.val);
+                if let Some(ref left) = node_ref.left {
+                    q.push_back(left.clone());
+                }
+                if let Some(ref right) = node_ref.right {
+                    q.push_back(right.clone());
+                }
+            }
+
+            if res.len() % 2 == 1 {
+                level.reverse();
+            }
+            res.push(level);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -354,17 +397,19 @@ class Solution {
 ## 2. Breadth First Search (Optimal)
 
 ### Intuition
+
 Instead of reversing the list after collecting values, we can place each value directly at its correct position. For even levels, values go from index `0` to `size-1`. For odd levels, values go from index `size-1` to `0`. This avoids the extra reversal operation.
 
 ### Algorithm
+
 1. Initialize an empty result list and a queue with the root node.
 2. While the queue is not empty:
-   - Get the current level size and create a fixed-size array for this level.
-   - For each node in the current level:
-     - Calculate the insertion index: for even levels use the iteration index, for odd levels use `(size - 1 - iteration index)`.
-     - Place the node's value at the calculated index.
-     - Enqueue the node's children.
-   - Add the `level` array to the result.
+    - Get the current level size and create a fixed-size array for this level.
+    - For each node in the current level:
+        - Calculate the insertion index: for even levels use the iteration index, for odd levels use `(size - 1 - iteration index)`.
+        - Place the node's value at the calculated index.
+        - Enqueue the node's children.
+    - Add the `level` array to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -685,6 +730,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zigzag_level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let mut res = Vec::new();
+        let root = match root {
+            Some(r) => r,
+            None => return res,
+        };
+
+        let mut q = VecDeque::new();
+        q.push_back(root);
+
+        while !q.is_empty() {
+            let size = q.len();
+            let mut level = vec![0; size];
+
+            for i in 0..size {
+                let node = q.pop_front().unwrap();
+                let node_ref = node.borrow();
+                let idx = if res.len() % 2 == 0 { i } else { size - i - 1 };
+                level[idx] = node_ref.val;
+                if let Some(ref left) = node_ref.left {
+                    q.push_back(left.clone());
+                }
+                if let Some(ref right) = node_ref.right {
+                    q.push_back(right.clone());
+                }
+            }
+
+            res.push(level);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -697,16 +779,18 @@ class Solution {
 ## 3. Depth First Search
 
 ### Intuition
+
 DFS can also solve this problem by tracking the depth during traversal. We recursively visit nodes in a standard preorder manner (root, left, right), appending values to the appropriate level's list. After the traversal completes, we reverse the odd-indexed levels to achieve the zigzag pattern.
 
 ### Algorithm
+
 1. Create an empty result list.
 2. Define a recursive `dfs` function that takes a `node` and its `depth`:
-   - If the `node` is `null`, return.
-   - If this is the first node at this depth, create a new list for this level.
-   - Append the node's value to the list at the current depth.
-   - Recursively process the left child with `depth + 1`.
-   - Recursively process the right child with `depth + 1`.
+    - If the `node` is `null`, return.
+    - If this is the first node at this depth, create a new list for this level.
+    - Append the node's value to the list at the current depth.
+    - Recursively process the left child with `depth + 1`.
+    - Recursively process the right child with `depth + 1`.
 3. Call `dfs` starting from the root at depth `0`.
 4. Reverse all lists at odd indices.
 5. Return the result list.
@@ -1024,6 +1108,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zigzag_level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        Self::dfs(&root, 0, &mut res);
+
+        for i in 0..res.len() {
+            if i % 2 == 1 {
+                res[i].reverse();
+            }
+        }
+
+        res
+    }
+
+    fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, depth: usize, res: &mut Vec<Vec<i32>>) {
+        if let Some(n) = node {
+            let n = n.borrow();
+            if depth == res.len() {
+                res.push(Vec::new());
+            }
+            res[depth].push(n.val);
+            Self::dfs(&n.left, depth + 1, res);
+            Self::dfs(&n.right, depth + 1, res);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1036,17 +1149,19 @@ class Solution {
 ## 4. Iterative DFS
 
 ### Intuition
+
 This approach converts the recursive DFS to an iterative version using an explicit stack. Each stack entry stores both the node and its depth. We process nodes in the same order as recursive DFS by pushing the right child before the left child (so left is processed first). After collecting all values, we reverse the odd levels.
 
 ### Algorithm
+
 1. If the root is `null`, return an empty list.
 2. Initialize a stack with the root node and depth `0`.
 3. While the stack is not empty:
-   - Pop a node and its depth.
-   - If this depth is new, create a new list for it.
-   - Append the node's value to the list at this depth.
-   - Push the right child (if exists) with `depth + 1`.
-   - Push the left child (if exists) with `depth + 1`.
+    - Pop a node and its depth.
+    - If this depth is new, create a new list for it.
+    - Append the node's value to the list at this depth.
+    - Push the right child (if exists) with `depth + 1`.
+    - Push the left child (if exists) with `depth + 1`.
 4. Reverse all lists at odd indices.
 5. Return the result list.
 
@@ -1424,6 +1539,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn zigzag_level_order(root: Option<Rc<RefCell<TreeNode>>>) -> Vec<Vec<i32>> {
+        let root = match root {
+            Some(r) => r,
+            None => return vec![],
+        };
+
+        let mut res: Vec<Vec<i32>> = Vec::new();
+        let mut stack: Vec<(Rc<RefCell<TreeNode>>, usize)> = vec![(root, 0)];
+
+        while let Some((node, depth)) = stack.pop() {
+            if depth == res.len() {
+                res.push(Vec::new());
+            }
+            let node_ref = node.borrow();
+            res[depth].push(node_ref.val);
+
+            if let Some(ref right) = node_ref.right {
+                stack.push((right.clone(), depth + 1));
+            }
+            if let Some(ref left) = node_ref.left {
+                stack.push((left.clone(), depth + 1));
+            }
+        }
+
+        for i in 0..res.len() {
+            if i % 2 == 1 {
+                res[i].reverse();
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1436,7 +1588,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Reversing Children Order Instead of Values
+
 A common mistake is trying to alternate the order of adding children to the queue (right-then-left vs left-then-right). This does not produce the correct zigzag pattern because it affects future levels, not just the current one.
+
 ```python
 # Wrong: alternating child insertion order
 if level_num % 2 == 0:
@@ -1446,7 +1600,9 @@ else:
 ```
 
 ### Off-by-One Error in Level Index Check
+
 Confusing whether level 0 should be left-to-right or right-to-left. The problem defines level 0 (root level) as left-to-right, so odd-indexed levels should be reversed.
+
 ```python
 # Wrong: reversing even levels instead of odd
 if len(res) % 2 == 0:  # Should be: if len(res) % 2 == 1
@@ -1454,4 +1610,5 @@ if len(res) % 2 == 0:  # Should be: if len(res) % 2 == 1
 ```
 
 ### Using Deque Operations Incorrectly for Zigzag
+
 Some attempt to use `appendleft` and `append` alternately to avoid reversing, but this approach requires careful handling to avoid mixing up the traversal order with the output order, often leading to subtle bugs.

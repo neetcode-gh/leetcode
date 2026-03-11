@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Stack Data Structure** - Using LIFO operations to track and remove elements in reverse order
 - **Two Pointers Technique** - Using read and write pointers to modify an array in-place
 - **String Manipulation** - Converting between strings and character arrays, building strings efficiently
@@ -15,9 +17,9 @@ Each star removes the closest non-star character to its left. The simplest appro
 ### Algorithm
 
 1. Loop until no changes occur:
-   - Scan the string from left to right using index `i`.
-   - When a star is found at `s[i]` with a non-star character before it, remove both characters.
-   - Restart the scan.
+    - Scan the string from left to right using index `i`.
+    - When a star is found at `s[i]` with a non-star character before it, remove both characters.
+    - Restart the scan.
 2. Return the final string.
 
 ::tabs-start
@@ -190,6 +192,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_stars(s: String) -> String {
+        let mut s = s.into_bytes();
+        loop {
+            let mut flag = false;
+            for i in 1..s.len() {
+                if s[i] == b'*' && s[i - 1] != b'*' {
+                    s.remove(i);
+                    s.remove(i - 1);
+                    flag = true;
+                    break;
+                }
+            }
+            if !flag {
+                break;
+            }
+        }
+        String::from_utf8(s).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -209,8 +234,8 @@ Instead of restarting the scan from the beginning after each removal, we can con
 
 1. Initialize index `i = 0` and `n = len(s)`.
 2. While `i < n`:
-   - If `s[i]` is a star and `s[i-1]` is not a star, remove both and decrement `i` by 2.
-   - Otherwise, increment `i`.
+    - If `s[i]` is a star and `s[i-1]` is not a star, remove both and decrement `i` by 2.
+    - Otherwise, increment `i`.
 3. Return the final string.
 
 ::tabs-start
@@ -359,6 +384,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_stars(s: String) -> String {
+        let mut s = s.into_bytes();
+        let mut n = s.len();
+        let mut i: i32 = 0;
+        while (i as usize) < n {
+            let idx = i as usize;
+            if idx > 0 && s[idx] == b'*' && s[idx - 1] != b'*' {
+                s.remove(idx);
+                s.remove(idx - 1);
+                n -= 2;
+                i -= 2;
+            }
+            i += 1;
+        }
+        String::from_utf8(s).unwrap()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -378,8 +424,8 @@ A star removes the most recently added non-star character, which is exactly what
 
 1. Initialize an empty `stack`.
 2. For each character `c` in the string:
-   - If it is a star and the `stack` is not empty, pop from the `stack`.
-   - Otherwise, push `c` onto the `stack`.
+    - If it is a star and the `stack` is not empty, pop from the `stack`.
+    - Otherwise, push `c` onto the `stack`.
 3. Join the `stack` contents into a string and return it.
 
 ::tabs-start
@@ -521,6 +567,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn remove_stars(s: String) -> String {
+        let mut stack = Vec::new();
+        for c in s.chars() {
+            if c == '*' {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
+        }
+        stack.into_iter().collect()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -540,8 +602,8 @@ We can avoid extra space by using the input array itself. A left pointer `l` tra
 
 1. Convert the string to a character array and initialize `l = 0`.
 2. For each index `r`:
-   - If `s[r]` is a star, decrement `l`.
-   - Otherwise, copy `s[r]` to `s[l]` and increment `l`.
+    - If `s[r]` is a star, decrement `l`.
+    - Otherwise, copy `s[r]` to `s[l]` and increment `l`.
 3. Return the substring from index `0` to `l`.
 
 ::tabs-start
@@ -693,6 +755,26 @@ class Solution {
             }
         }
         return String(arr[0..<l])
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn remove_stars(s: String) -> String {
+        let mut arr = s.into_bytes();
+        let mut l = 0usize;
+
+        for r in 0..arr.len() {
+            if arr[r] == b'*' {
+                l -= 1;
+            } else {
+                arr[l] = arr[r];
+                l += 1;
+            }
+        }
+        arr.truncate(l);
+        String::from_utf8(arr).unwrap()
     }
 }
 ```

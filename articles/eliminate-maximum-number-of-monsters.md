@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Sorting** - The main solution sorts arrival times to process monsters in order of urgency
 - **Greedy Algorithms** - Understanding that eliminating the earliest-arriving monster first is always optimal
 - **Min-Heap / Priority Queue** - An alternative approach uses a min-heap to extract minimum arrival times on demand
@@ -17,8 +19,8 @@ The weapon needs 1 minute to recharge after each shot. To maximize eliminations,
 1. Compute `minReach[i] = ceil(dist[i] / speed[i])` for each monster.
 2. Sort `minReach` in ascending order.
 3. Iterate through the sorted array with index `minute`:
-   - If `minute >= minReach[minute]`, the monster arrives before we can shoot it. Return the current count.
-   - Otherwise, increment the elimination count.
+    - If `minute >= minReach[minute]`, the monster arrives before we can shoot it. Return the current count.
+    - Otherwise, increment the elimination count.
 4. Return the total count if all monsters are eliminated.
 
 ::tabs-start
@@ -215,6 +217,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn eliminate_maximum(dist: Vec<i32>, speed: Vec<i32>) -> i32 {
+        let n = dist.len();
+        let mut min_reach: Vec<i32> = (0..n)
+            .map(|i| (dist[i] + speed[i] - 1) / speed[i])
+            .collect();
+
+        min_reach.sort();
+
+        let mut res = 0;
+        for minute in 0..n {
+            if minute as i32 >= min_reach[minute] {
+                return res;
+            }
+            res += 1;
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,7 +260,7 @@ This is the same approach as above, but we save space by reusing the input `dist
 1. Overwrite `dist[i]` with `ceil(dist[i] / speed[i])`.
 2. Sort `dist` in ascending order.
 3. For each `minute` from `0` to `n - 1`:
-   - If `minute >= dist[minute]`, return `minute`.
+    - If `minute >= dist[minute]`, return `minute`.
 4. Return `n` if all monsters are eliminated.
 
 ::tabs-start
@@ -320,6 +345,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn eliminate_maximum(mut dist: Vec<i32>, speed: Vec<i32>) -> i32 {
+        let n = dist.len();
+        for i in 0..n {
+            dist[i] = (dist[i] + speed[i] - 1) / speed[i];
+        }
+
+        dist.sort();
+        for minute in 0..n {
+            if minute as i32 >= dist[minute] {
+                return minute as i32;
+            }
+        }
+
+        n as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -340,9 +385,9 @@ Instead of sorting all arrival times upfront, we can use a min-heap to extract t
 1. Push `dist[i] / speed[i]` into a min-heap for each monster.
 2. Initialize `res = 0` to count eliminations.
 3. While the heap is non-empty:
-   - Pop the smallest arrival time.
-   - If `res >= arrival_time`, the monster has reached the city. Return `res`.
-   - Otherwise, increment `res`.
+    - Pop the smallest arrival time.
+    - If `res >= arrival_time`, the monster has reached the city. Return `res`.
+    - Otherwise, increment `res`.
 4. Return `res` after all monsters are eliminated.
 
 ::tabs-start
@@ -429,6 +474,31 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn eliminate_maximum(dist: Vec<i32>, speed: Vec<i32>) -> i32 {
+        let mut min_heap = BinaryHeap::new();
+        for i in 0..dist.len() {
+            // Use Reverse for min-heap behavior; store as (numerator, denominator)
+            // arrival time = dist[i] / speed[i] as float, but we can compare fractions
+            // For simplicity, use ceiling integer division
+            let arrival = (dist[i] + speed[i] - 1) / speed[i];
+            min_heap.push(std::cmp::Reverse(arrival));
+        }
+
+        let mut res = 0;
+        while let Some(std::cmp::Reverse(arrival)) = min_heap.pop() {
+            if res >= arrival {
+                return res;
+            }
+            res += 1;
+        }
+
+        res
     }
 }
 ```

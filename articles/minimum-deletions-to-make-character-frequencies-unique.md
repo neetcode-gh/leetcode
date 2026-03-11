@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Tracks which frequencies are already used to detect and resolve conflicts
 - **Frequency Counting** - Counting character occurrences is the foundation for all approaches
 - **Greedy Algorithms** - Decrementing frequencies until finding an available slot minimizes deletions
@@ -18,8 +20,8 @@ For frequencies to be unique, no two characters can have the same count. When we
 1. Count the frequency of each character.
 2. Create a hash set to track used frequencies.
 3. For each frequency:
-   - While the frequency is positive and already in the set, decrement it and count a deletion.
-   - Add the resulting frequency to the set.
+    - While the frequency is positive and already in the set, decrement it and count a deletion.
+    - Add the resulting frequency to the set.
 4. Return the total deletion count.
 
 ::tabs-start
@@ -217,6 +219,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_deletions(s: String) -> i32 {
+        let mut count = [0i32; 26];
+        for b in s.bytes() {
+            count[(b - b'a') as usize] += 1;
+        }
+
+        let mut used_freq = HashSet::new();
+        let mut res = 0;
+
+        for &f in &count {
+            let mut freq = f;
+            while freq > 0 && used_freq.contains(&freq) {
+                freq -= 1;
+                res += 1;
+            }
+            used_freq.insert(freq);
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -238,8 +265,8 @@ Using a max-heap, we process frequencies from largest to smallest. When the top 
 
 1. Count character frequencies and build a max-heap.
 2. While more than one frequency remains:
-   - Pop the largest frequency.
-   - If it equals the next largest, decrement it, count a deletion, and push back if positive.
+    - Pop the largest frequency.
+    - If it equals the next largest, decrement it, count a deletion, and push back if positive.
 3. Return the total deletion count.
 
 ::tabs-start
@@ -528,6 +555,34 @@ struct Heap<T> {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn min_deletions(s: String) -> i32 {
+        let mut freq = HashMap::new();
+        for b in s.bytes() {
+            *freq.entry(b).or_insert(0) += 1;
+        }
+
+        let mut max_heap = BinaryHeap::from(freq.values().copied().collect::<Vec<i32>>());
+
+        let mut res = 0;
+        while max_heap.len() > 1 {
+            let top = max_heap.pop().unwrap();
+            if let Some(&peek) = max_heap.peek() {
+                if peek == top {
+                    if top - 1 > 0 {
+                        max_heap.push(top - 1);
+                    }
+                    res += 1;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,8 +605,8 @@ By sorting frequencies in descending order, we process them from highest to lowe
 1. Count character frequencies and sort in descending order.
 2. Set `maxAllowedFreq` to the highest frequency.
 3. For each frequency:
-   - If it exceeds `maxAllowedFreq`, add the difference to deletions.
-   - Update `maxAllowedFreq` to `max(0, current_frequency - 1)`.
+    - If it exceeds `maxAllowedFreq`, add the difference to deletions.
+    - Update `maxAllowedFreq` to `max(0, current_frequency - 1)`.
 4. Return the total deletion count.
 
 ::tabs-start
@@ -764,6 +819,32 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn min_deletions(s: String) -> i32 {
+        let mut count = [0i32; 26];
+        for b in s.bytes() {
+            count[(b - b'a') as usize] += 1;
+        }
+
+        count.sort_unstable_by(|a, b| b.cmp(a));
+
+        let mut res = 0;
+        let mut max_allowed_freq = count[0];
+
+        for i in 0..26 {
+            if count[i] > max_allowed_freq {
+                res += count[i] - max_allowed_freq;
+                count[i] = max_allowed_freq;
+            }
+            max_allowed_freq = 0.max(count[i] - 1);
+        }
+
+        res
     }
 }
 ```

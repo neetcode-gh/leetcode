@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Trie (Prefix Tree)** - Building and traversing a trie for efficient prefix-based lookups
 - **Hash Maps** - Storing and retrieving key-value pairs for sentence frequencies
 - **Sorting** - Custom sorting by multiple criteria (frequency descending, then alphabetically)
@@ -10,9 +12,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Trie
 
 ### Intuition
+
 Autocomplete works by finding sentences that share a common prefix with what the user has typed so far. A trie is ideal for prefix-based lookups. We build a trie where each node stores all sentences that pass through it along with their frequencies. As the user types, we walk down the trie character by character. At any node, we have direct access to all matching sentences and can sort them by frequency (highest first) and then alphabetically to return the top 3 results.
 
 ### Algorithm
+
 1. **Initialization:** Build a trie from the given sentences. For each character in a sentence, create a trie node if needed and store the full sentence with its count at every node along the path. Track the current input, the current trie node, and a dead node for invalid prefixes.
 2. **input(c):** If `c` is `#`, add the completed sentence to the trie, reset the current sentence and node, and return an empty list.
 3. Otherwise, append `c` to the current sentence. If `c` is not a child of the current node, move to the dead node and return an empty list.
@@ -32,11 +36,11 @@ class AutocompleteSystem:
         self.root = TrieNode()
         for sentence, count in zip(sentences, times):
             self.add_to_trie(sentence, count)
-            
+
         self.curr_sentence = []
         self.curr_node = self.root
         self.dead = TrieNode()
-        
+
     def input(self, c: str) -> List[str]:
         if c == "#":
             curr_sentence = "".join(self.curr_sentence)
@@ -44,20 +48,20 @@ class AutocompleteSystem:
             self.curr_sentence = []
             self.curr_node = self.root
             return []
-        
+
         self.curr_sentence.append(c)
         if c not in self.curr_node.children:
             self.curr_node = self.dead
             return []
-        
+
         self.curr_node = self.curr_node.children[c]
         sentences = self.curr_node.sentences
         sorted_sentences = sorted(sentences.items(), key = lambda x: (-x[1], x[0]))
-        
+
         ans = []
         for i in range(min(3, len(sorted_sentences))):
             ans.append(sorted_sentences[i][0])
-        
+
         return ans
 
     def add_to_trie(self, sentence, count):
@@ -240,8 +244,8 @@ class AutocompleteSystem {
      * @return {string[]}
      */
     input(c) {
-        if (c === "#") {
-            const currSentenceStr = this.currSentence.join("");
+        if (c === '#') {
+            const currSentenceStr = this.currSentence.join('');
             this.addToTrie(currSentenceStr, 1);
             this.currSentence = [];
             this.currNode = this.root;
@@ -279,7 +283,10 @@ class AutocompleteSystem {
                 node.children.set(c, new TrieNode());
             }
             node = node.children.get(c);
-            node.sentences.set(sentence, (node.sentences.get(sentence) || 0) + count);
+            node.sentences.set(
+                sentence,
+                (node.sentences.get(sentence) || 0) + count,
+            );
         }
     }
 }
@@ -542,32 +549,124 @@ class AutocompleteSystem {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: HashMap<char, usize>,
+    sentences: HashMap<String, i32>,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        TrieNode {
+            children: HashMap::new(),
+            sentences: HashMap::new(),
+        }
+    }
+}
+
+struct AutocompleteSystem {
+    nodes: Vec<TrieNode>,
+    root: usize,
+    curr_node: usize,
+    dead: usize,
+    curr_sentence: String,
+}
+
+impl AutocompleteSystem {
+    fn new(sentences: Vec<String>, times: Vec<i32>) -> Self {
+        let mut nodes = vec![TrieNode::new(), TrieNode::new()];
+        let root = 0;
+        let dead = 1;
+        let mut sys = AutocompleteSystem {
+            nodes,
+            root,
+            curr_node: root,
+            dead,
+            curr_sentence: String::new(),
+        };
+        for i in 0..sentences.len() {
+            sys.add_to_trie(&sentences[i].clone(), times[i]);
+        }
+        sys
+    }
+
+    fn input(&mut self, c: char) -> Vec<String> {
+        if c == '#' {
+            let sentence = self.curr_sentence.clone();
+            self.add_to_trie(&sentence, 1);
+            self.curr_sentence.clear();
+            self.curr_node = self.root;
+            return vec![];
+        }
+
+        self.curr_sentence.push(c);
+        let next = self.nodes[self.curr_node].children.get(&c).copied();
+        match next {
+            None => {
+                self.curr_node = self.dead;
+                return vec![];
+            }
+            Some(next_id) => {
+                self.curr_node = next_id;
+            }
+        }
+
+        let mut items: Vec<(String, i32)> = self.nodes[self.curr_node]
+            .sentences
+            .iter()
+            .map(|(k, &v)| (k.clone(), v))
+            .collect();
+        items.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+
+        items.iter().take(3).map(|(s, _)| s.clone()).collect()
+    }
+
+    fn add_to_trie(&mut self, sentence: &str, count: i32) {
+        let mut node = self.root;
+        for c in sentence.chars() {
+            if !self.nodes[node].children.contains_key(&c) {
+                let new_id = self.nodes.len();
+                self.nodes.push(TrieNode::new());
+                self.nodes[node].children.insert(c, new_id);
+            }
+            node = self.nodes[node].children[&c];
+            *self.nodes[node]
+                .sentences
+                .entry(sentence.to_string())
+                .or_insert(0) += count;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 - Time complexity: $O(n \cdot k + m \cdot (n + \frac{m}{k}) \cdot \log(n + \frac{m}{k}))$
 
-  `constructor`:
-  - We initialize the trie, which costs $O(n \cdot k)$ as we iterate over each character in each sentence.
+    `constructor`:
+    - We initialize the trie, which costs $O(n \cdot k)$ as we iterate over each character in each sentence.
 
-  `input`:
-  - We add a character to `currSentence` and the trie, both cost $O(1)$. Next, we fetch and sort the sentences in the current node. Initially, a node could hold $O(n)$ sentences. After we call `input` $m$ times, we could add $\frac{m}{k}$ new sentences. Overall, there could be up to $O(n + \frac{m}{k})$ sentences, so a sort would cost $O((n + \frac{m}{k}) \cdot \log(n + \frac{m}{k}))$.
-  - The work done in the other cases (like adding a new sentence to the trie) will be dominated by this sort.
-  - `input` is called $m$ times, which gives us a total of $O(m \cdot (n + \frac{m}{k}) \cdot \log(n + \frac{m}{k}))$
+    `input`:
+    - We add a character to `currSentence` and the trie, both cost $O(1)$. Next, we fetch and sort the sentences in the current node. Initially, a node could hold $O(n)$ sentences. After we call `input` $m$ times, we could add $\frac{m}{k}$ new sentences. Overall, there could be up to $O(n + \frac{m}{k})$ sentences, so a sort would cost $O((n + \frac{m}{k}) \cdot \log(n + \frac{m}{k}))$.
+    - The work done in the other cases (like adding a new sentence to the trie) will be dominated by this sort.
+    - `input` is called $m$ times, which gives us a total of $O(m \cdot (n + \frac{m}{k}) \cdot \log(n + \frac{m}{k}))$
 
 - Space complexity: $O(k \cdot (n \cdot k + m))$
 
->  Where $n$ is the length of `sentences`, $k$ is the average length of all sentences, and $m$ is the number of times `input` is called.
+> Where $n$ is the length of `sentences`, $k$ is the average length of all sentences, and $m$ is the number of times `input` is called.
 
 ---
 
 ## 2. Optimize with Heap
 
 ### Intuition
+
 Sorting all matching sentences every time is expensive when there are many matches. Since we only need the top 3 results, we can use a heap to find them more efficiently. By building a min-heap of size 3, we process each sentence once and keep only the best candidates. In languages with linear-time heapify (like Python's `heapq.nsmallest`), this gives a performance boost over full sorting.
 
 ### Algorithm
+
 1. **Initialization:** Same as before: build the trie with sentence counts at each node. Store counts as negative values so that a min-heap naturally gives us the highest frequencies.
 2. **input(c):** If `c` is `#`, add the completed sentence to the trie, reset state, and return empty.
 3. Otherwise, append `c` and navigate the trie. If the character does not exist, go to the dead node and return empty.
@@ -587,11 +686,11 @@ class AutocompleteSystem:
         self.root = TrieNode()
         for sentence, count in zip(sentences, times):
             self.add_to_trie(sentence, count)
-            
+
         self.curr_sentence = []
         self.curr_node = self.root
         self.dead = TrieNode()
-        
+
     def input(self, c: str) -> List[str]:
         if c == "#":
             curr_sentence = "".join(self.curr_sentence)
@@ -599,12 +698,12 @@ class AutocompleteSystem:
             self.curr_sentence = []
             self.curr_node = self.root
             return []
-        
+
         self.curr_sentence.append(c)
         if c not in self.curr_node.children:
             self.curr_node = self.dead
             return []
-        
+
         self.curr_node = self.curr_node.children[c]
         items = [(val, key) for key, val in self.curr_node.sentences.items()]
         ans = heapq.nsmallest(3, items)
@@ -634,18 +733,18 @@ class AutocompleteSystem {
     TrieNode currNode;
     TrieNode dead;
     StringBuilder currSentence;
-    
+
     public AutocompleteSystem(String[] sentences, int[] times) {
         root = new TrieNode();
         for (int i = 0; i < sentences.length; i++) {
             addToTrie(sentences[i], times[i]);
         }
-        
+
         currSentence = new StringBuilder();
         currNode = root;
         dead = new TrieNode();
     }
-    
+
     public List<String> input(char c) {
         if (c == '#') {
             addToTrie(currSentence.toString(), 1);
@@ -653,13 +752,13 @@ class AutocompleteSystem {
             currNode = root;
             return new ArrayList<String>();
         }
-        
+
         currSentence.append(c);
         if (!currNode.children.containsKey(c)) {
             currNode = dead;
             return new ArrayList<String>();
         }
-        
+
         currNode = currNode.children.get(c);
         PriorityQueue<String> heap = new PriorityQueue<>((a, b) -> {
             int hotA = currNode.sentences.get(a);
@@ -667,33 +766,33 @@ class AutocompleteSystem {
             if (hotA == hotB) {
                 return b.compareTo(a);
             }
-            
+
             return hotA - hotB;
         });
-        
+
         for (String sentence: currNode.sentences.keySet()) {
             heap.add(sentence);
             if (heap.size() > 3) {
                 heap.remove();
             }
         }
-        
+
         List<String> ans = new ArrayList<>();
         while (!heap.isEmpty()) {
             ans.add(heap.remove());
         }
-        
+
         Collections.reverse(ans);
         return ans;
     }
-    
+
     private void addToTrie(String sentence, int count) {
         TrieNode node = root;
         for (char c: sentence.toCharArray()) {
             if (!node.children.containsKey(c)) {
                 node.children.put(c, new TrieNode());
             }
-            
+
             node = node.children.get(c);
             node.sentences.put(sentence, node.sentences.getOrDefault(sentence, 0) + count);
         }
@@ -706,7 +805,7 @@ class TrieNode {
 public:
     unordered_map<char, TrieNode*> children;
     unordered_map<string, int> sentences;
-    
+
     TrieNode() {}
 };
 
@@ -716,7 +815,7 @@ private:
     TrieNode* currNode;
     TrieNode* dead;
     string currSentence;
-    
+
     void addToTrie(const string& sentence, int count) {
         TrieNode* node = root;
         for (char c : sentence) {
@@ -727,19 +826,19 @@ private:
             node->sentences[sentence] -= count;
         }
     }
-    
+
 public:
     AutocompleteSystem(vector<string>& sentences, vector<int>& times) {
         root = new TrieNode();
         dead = new TrieNode();
         currNode = root;
         currSentence = "";
-        
+
         for (int i = 0; i < sentences.size(); i++) {
             addToTrie(sentences[i], times[i]);
         }
     }
-    
+
     vector<string> input(char c) {
         if (c == '#') {
             addToTrie(currSentence, 1);
@@ -747,26 +846,26 @@ public:
             currNode = root;
             return {};
         }
-        
+
         currSentence += c;
         if (currNode->children.find(c) == currNode->children.end()) {
             currNode = dead;
             return {};
         }
-        
+
         currNode = currNode->children[c];
-        
+
         vector<pair<int, string>> items;
         for (const auto& [sentence, count] : currNode->sentences) {
             items.push_back({count, sentence});
         }
-        
+
         // O(n log n) sort instead of O(n) heapify - main performance difference from Python
         sort(items.begin(), items.end(), [](const pair<int, string>& a, const pair<int, string>& b) {
             if (a.first != b.first) return a.first < b.first;
             return a.second < b.second;
         });
-        
+
         vector<string> ans;
         for (int i = 0; i < min(3, (int)items.size()); i++) {
             ans.push_back(items[i].second);
@@ -804,8 +903,8 @@ class AutocompleteSystem {
      * @return {string[]}
      */
     input(c) {
-        if (c === "#") {
-            const currSentenceStr = this.currSentence.join("");
+        if (c === '#') {
+            const currSentenceStr = this.currSentence.join('');
             this.addToTrie(currSentenceStr, 1);
             this.currSentence = [];
             this.currNode = this.root;
@@ -848,7 +947,10 @@ class AutocompleteSystem {
                 node.children.set(c, new TrieNode());
             }
             node = node.children.get(c);
-            node.sentences.set(sentence, (node.sentences.get(sentence) || 0) - count);
+            node.sentences.set(
+                sentence,
+                (node.sentences.get(sentence) || 0) - count,
+            );
         }
     }
 }
@@ -1157,6 +1259,106 @@ class AutocompleteSystem {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: HashMap<char, usize>,
+    sentences: HashMap<String, i32>,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        TrieNode {
+            children: HashMap::new(),
+            sentences: HashMap::new(),
+        }
+    }
+}
+
+struct AutocompleteSystem {
+    nodes: Vec<TrieNode>,
+    root: usize,
+    curr_node: usize,
+    dead: usize,
+    curr_sentence: String,
+}
+
+impl AutocompleteSystem {
+    fn new(sentences: Vec<String>, times: Vec<i32>) -> Self {
+        let mut nodes = vec![TrieNode::new(), TrieNode::new()];
+        let root = 0;
+        let dead = 1;
+        let mut sys = AutocompleteSystem {
+            nodes,
+            root,
+            curr_node: root,
+            dead,
+            curr_sentence: String::new(),
+        };
+        for i in 0..sentences.len() {
+            sys.add_to_trie(&sentences[i].clone(), times[i]);
+        }
+        sys
+    }
+
+    fn input(&mut self, c: char) -> Vec<String> {
+        if c == '#' {
+            let sentence = self.curr_sentence.clone();
+            self.add_to_trie(&sentence, 1);
+            self.curr_sentence.clear();
+            self.curr_node = self.root;
+            return vec![];
+        }
+
+        self.curr_sentence.push(c);
+        let next = self.nodes[self.curr_node].children.get(&c).copied();
+        match next {
+            None => {
+                self.curr_node = self.dead;
+                return vec![];
+            }
+            Some(next_id) => {
+                self.curr_node = next_id;
+            }
+        }
+
+        // Use a min-heap of size 3 (BinaryHeap is max-heap, so reverse ordering)
+        // We want top 3 by highest count, then alphabetically
+        // For a min-heap: store (count, Reverse(sentence)) so smallest count is popped first
+        let mut heap: BinaryHeap<std::cmp::Reverse<(i32, std::cmp::Reverse<String>)>> =
+            BinaryHeap::new();
+        for (sentence, &count) in &self.nodes[self.curr_node].sentences {
+            heap.push(std::cmp::Reverse((count, std::cmp::Reverse(sentence.clone()))));
+            if heap.len() > 3 {
+                heap.pop();
+            }
+        }
+
+        let mut ans: Vec<String> = Vec::new();
+        while let Some(std::cmp::Reverse((_, std::cmp::Reverse(s)))) = heap.pop() {
+            ans.push(s);
+        }
+        ans.reverse();
+        ans
+    }
+
+    fn add_to_trie(&mut self, sentence: &str, count: i32) {
+        let mut node = self.root;
+        for c in sentence.chars() {
+            if !self.nodes[node].children.contains_key(&c) {
+                let new_id = self.nodes.len();
+                self.nodes.push(TrieNode::new());
+                self.nodes[node].children.insert(c, new_id);
+            }
+            node = self.nodes[node].children[&c];
+            *self.nodes[node]
+                .sentences
+                .entry(sentence.to_string())
+                .or_insert(0) += count;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1165,17 +1367,17 @@ class AutocompleteSystem {
 
 - Time complexity: $O(n \cdot k + m \cdot (n + \frac{m}{k}))$
 
-  `constructor`:
-  - We initialize the trie, which costs $O(n \cdot k)$ as we iterate over each character in each sentence.
+    `constructor`:
+    - We initialize the trie, which costs $O(n \cdot k)$ as we iterate over each character in each sentence.
 
-  `input`:
-  - We add a character to `currSentence` and the trie, both cost $O(1)$. Next, we fetch the sentences in the current node. Initially, a node could hold $O(n)$ sentences. After we call `input` $m$ times, we could add $\frac{m}{k}$ new sentences. Overall, there could be up to $O(n + \frac{m}{k})$ sentences. We heapify these sentences and find the best 3 in linear time, which costs $O(n + \frac{m}{k})$.
-  - The work done in the other cases (like adding a new sentence to the trie) will be dominated by this.
-  - `input` is called $m$ times, which gives us a total of $O(m \cdot (n + \frac{m}{k}))$.
+    `input`:
+    - We add a character to `currSentence` and the trie, both cost $O(1)$. Next, we fetch the sentences in the current node. Initially, a node could hold $O(n)$ sentences. After we call `input` $m$ times, we could add $\frac{m}{k}$ new sentences. Overall, there could be up to $O(n + \frac{m}{k})$ sentences. We heapify these sentences and find the best 3 in linear time, which costs $O(n + \frac{m}{k})$.
+    - The work done in the other cases (like adding a new sentence to the trie) will be dominated by this.
+    - `input` is called $m$ times, which gives us a total of $O(m \cdot (n + \frac{m}{k}))$.
 
 - Space complexity: $O(k \cdot (n \cdot k + m))$
 
->  Where $n$ is the length of `sentences`, $k$ is the average length of all sentences, and $m$ is the number of times `input` is called.
+> Where $n$ is the length of `sentences`, $k$ is the average length of all sentences, and $m$ is the number of times `input` is called.
 
 ## Common Pitfalls
 

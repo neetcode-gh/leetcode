@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Set** - Used to store and count unique email addresses efficiently
 - **String Manipulation** - Splitting strings, replacing characters, and extracting substrings
 
@@ -17,10 +19,10 @@ We can leverage built-in string functions to parse and normalize each `e` mail, 
 
 1. Initialize an empty set `unique` to store unique email addresses.
 2. For each email `e`:
-   - Split by `@` to get `local` and `domain`.
-   - Split `local` by `+` and take only the first part.
-   - Remove all periods from `local`.
-   - Combine the normalized `local` with `domain` and add to `unique`.
+    - Split by `@` to get `local` and `domain`.
+    - Split `local` by `+` and take only the first part.
+    - Remove all periods from `local`.
+    - Combine the normalized `local` with `domain` and add to `unique`.
 3. Return the size of `unique`.
 
 ::tabs-start
@@ -171,6 +173,25 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn num_unique_emails(emails: Vec<String>) -> i32 {
+        let mut unique = HashSet::new();
+
+        for e in &emails {
+            let mut parts = e.split('@');
+            let local = parts.next().unwrap();
+            let domain = parts.next().unwrap();
+
+            let local: String = local.split('+').next().unwrap()
+                .chars().filter(|&c| c != '.').collect();
+            unique.insert(format!("{}@{}", local, domain));
+        }
+        unique.len() as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -192,13 +213,13 @@ Instead of using built-in string functions, we can manually iterate through each
 
 1. Initialize an empty set `unique` to store unique email addresses.
 2. For each email `e`:
-   - Initialize an empty string `local` and set index `i = 0`.
-   - While the current character is not `@` or `+`:
-     - If the character is not `.`, append it to `local`.
-     - Increment `i`.
-   - Skip characters until we reach `@`.
-   - Extract `domain` as the substring after `@`.
-   - Add the normalized email (`local` + `domain`) to `unique`.
+    - Initialize an empty string `local` and set index `i = 0`.
+    - While the current character is not `@` or `+`:
+        - If the character is not `.`, append it to `local`.
+        - Increment `i`.
+    - Skip characters until we reach `@`.
+    - Extract `domain` as the substring after `@`.
+    - Add the normalized email (`local` + `domain`) to `unique`.
 3. Return the size of `unique`.
 
 ::tabs-start
@@ -412,6 +433,34 @@ class Solution {
             unique.insert("\(local)@\(domain)")
         }
         return unique.count
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn num_unique_emails(emails: Vec<String>) -> i32 {
+        let mut unique = HashSet::new();
+
+        for e in &emails {
+            let bytes = e.as_bytes();
+            let mut i = 0;
+            let mut local = String::new();
+
+            while i < bytes.len() && bytes[i] != b'@' && bytes[i] != b'+' {
+                if bytes[i] != b'.' {
+                    local.push(bytes[i] as char);
+                }
+                i += 1;
+            }
+
+            while i < bytes.len() && bytes[i] != b'@' {
+                i += 1;
+            }
+            let domain = &e[i + 1..];
+            unique.insert(format!("{}@{}", local, domain));
+        }
+        unique.len() as i32
     }
 }
 ```

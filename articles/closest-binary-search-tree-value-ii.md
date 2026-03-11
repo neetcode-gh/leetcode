@@ -261,6 +261,33 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
+        let mut arr = Vec::new();
+
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                arr.push(n.val);
+                dfs(&n.left, arr);
+                dfs(&n.right, arr);
+            }
+        }
+
+        dfs(&root, &mut arr);
+        arr.sort_by(|a, b| {
+            let da = ((*a as f64) - target).abs();
+            let db = ((*b as f64) - target).abs();
+            da.partial_cmp(&db).unwrap().then(a.cmp(b))
+        });
+        arr.truncate(k as usize);
+        arr
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,6 +546,36 @@ class Solution {
 
         dfs(root)
         return heap.map { $0.val }
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut heap: BinaryHeap<(i64, i32)> = BinaryHeap::new();
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            heap: &mut BinaryHeap<(i64, i32)>,
+            target: f64, k: usize,
+        ) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                let diff = ((n.val as f64 - target).abs() * 1_000_000.0) as i64;
+                heap.push((diff, n.val));
+                if heap.len() > k {
+                    heap.pop();
+                }
+                dfs(&n.left, heap, target, k);
+                dfs(&n.right, heap, target, k);
+            }
+        }
+
+        dfs(&root, &mut heap, target, k);
+        heap.into_iter().map(|(_, v)| v).collect()
     }
 }
 ```
@@ -879,6 +936,51 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut arr = Vec::new();
+
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                dfs(&n.left, arr);
+                arr.push(n.val);
+                dfs(&n.right, arr);
+            }
+        }
+
+        dfs(&root, &mut arr);
+
+        let mut left = arr.partition_point(|&x| (x as f64) < target) as i32 - 1;
+        let mut right = left + 1;
+        let mut ans = Vec::new();
+
+        while ans.len() < k {
+            if left < 0 {
+                ans.push(arr[right as usize]);
+                right += 1;
+            } else if right >= arr.len() as i32 {
+                ans.push(arr[left as usize]);
+                left -= 1;
+            } else if ((arr[left as usize] as f64) - target).abs()
+                <= ((arr[right as usize] as f64) - target).abs()
+            {
+                ans.push(arr[left as usize]);
+                left -= 1;
+            } else {
+                ans.push(arr[right as usize]);
+                right += 1;
+            }
+        }
+
+        ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1148,6 +1250,41 @@ class Solution {
         }
 
         return Array(arr[left..<(left + k)])
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut arr = Vec::new();
+
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, arr: &mut Vec<i32>) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                dfs(&n.left, arr);
+                arr.push(n.val);
+                dfs(&n.right, arr);
+            }
+        }
+
+        dfs(&root, &mut arr);
+
+        let mut left = 0usize;
+        let mut right = arr.len() - k;
+
+        while left < right {
+            let mid = (left + right) / 2;
+            if (target - arr[mid + k] as f64).abs() < (target - arr[mid] as f64).abs() {
+                left = mid + 1;
+            } else {
+                right = mid;
+            }
+        }
+
+        arr[left..left + k].to_vec()
     }
 }
 ```
@@ -1423,6 +1560,42 @@ class Solution {
 
         dfs(root)
         return queue
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn closest_k_values(root: Option<Rc<RefCell<TreeNode>>>, target: f64, k: i32) -> Vec<i32> {
+        let k = k as usize;
+        let mut queue: VecDeque<i32> = VecDeque::new();
+
+        fn dfs(
+            node: &Option<Rc<RefCell<TreeNode>>>,
+            queue: &mut VecDeque<i32>,
+            target: f64, k: usize,
+        ) {
+            if let Some(n) = node {
+                let n = n.borrow();
+                dfs(&n.left, queue, target, k);
+                queue.push_back(n.val);
+                if queue.len() > k {
+                    if (target - *queue.front().unwrap() as f64).abs()
+                        <= (target - *queue.back().unwrap() as f64).abs()
+                    {
+                        queue.pop_back();
+                        return;
+                    } else {
+                        queue.pop_front();
+                    }
+                }
+                dfs(&n.right, queue, target, k);
+            }
+        }
+
+        dfs(&root, &mut queue, target, k);
+        queue.into_iter().collect()
     }
 }
 ```

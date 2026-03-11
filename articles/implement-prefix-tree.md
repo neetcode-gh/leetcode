@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Tree Data Structures** - Understanding parent-child relationships and tree traversal
 - **Hash Maps / Arrays for Children** - Storing and accessing child nodes efficiently
 - **String Processing** - Character-by-character iteration and ASCII manipulation
@@ -10,47 +12,54 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Prefix Tree (Array)
 
 ### Intuition
+
 A **Prefix Tree (Trie)** is a tree-like data structure designed for **fast string operations**.
 
 Each node represents a character, and paths from the root represent words.
+
 - Common prefixes are **shared**, which saves space.
 - Each node has **26 children** (for letters `a`-`z`), indexed directly using character positions.
 - A boolean flag `endOfWord` tells us whether a complete word ends at that node.
 
 Why Trie is useful:
+
 - Searching words and prefixes is **O(length of word)**, not dependent on how many words exist.
 - Ideal for problems involving **dictionary lookups**, **autocomplete**, and **prefix checks**.
 
 ### Algorithm
 
 **Data Structure**
+
 - Each node contains:
-  - `children[26]`: array of child pointers (one for each letter)
-  - `endOfWord`: marks completion of a word
+    - `children[26]`: array of child pointers (one for each letter)
+    - `endOfWord`: marks completion of a word
 
 ---
 
 **Insert(word)**
+
 1. Start from the root.
 2. For each character in the word:
-   - Convert character to index (`c - 'a'`)
-   - If the child node doesn’t exist, create it.
-   - Move to the child.
+    - Convert character to index (`c - 'a'`)
+    - If the child node doesn’t exist, create it.
+    - Move to the child.
 3. After processing all characters, mark `endOfWord = true`.
 
 ---
 
 **Search(word)**
+
 1. Start from the root.
 2. For each character:
-   - Move to the corresponding child.
-   - If missing, return `false`.
+    - Move to the corresponding child.
+    - If missing, return `false`.
 3. After traversal:
-   - Return `true` only if `endOfWord` is `true`.
+    - Return `true` only if `endOfWord` is `true`.
 
 ---
 
 **StartsWith(prefix)**
+
 1. Start from the root.
 2. Traverse characters of the prefix.
 3. If all characters exist in sequence, return `true`.
@@ -475,6 +484,65 @@ class PrefixTree {
 }
 ```
 
+```rust
+struct TrieNode {
+    children: [Option<Box<TrieNode>>; 26],
+    end_of_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self {
+            children: Default::default(),
+            end_of_word: false,
+        }
+    }
+}
+
+struct PrefixTree {
+    root: TrieNode,
+}
+
+impl PrefixTree {
+    fn new() -> Self {
+        Self { root: TrieNode::new() }
+    }
+
+    fn insert(&mut self, word: String) {
+        let mut cur = &mut self.root;
+        for c in word.bytes() {
+            let i = (c - b'a') as usize;
+            cur = cur.children[i].get_or_insert_with(|| Box::new(TrieNode::new()));
+        }
+        cur.end_of_word = true;
+    }
+
+    fn search(&self, word: String) -> bool {
+        let mut cur = &self.root;
+        for c in word.bytes() {
+            let i = (c - b'a') as usize;
+            match &cur.children[i] {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        cur.end_of_word
+    }
+
+    fn starts_with(&self, prefix: String) -> bool {
+        let mut cur = &self.root;
+        for c in prefix.bytes() {
+            let i = (c - b'a') as usize;
+            match &cur.children[i] {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -869,6 +937,62 @@ class PrefixTree {
             cur = cur.children[c]!
         }
         return true
+    }
+}
+```
+
+```rust
+struct TrieNode {
+    children: HashMap<char, TrieNode>,
+    end_of_word: bool,
+}
+
+impl TrieNode {
+    fn new() -> Self {
+        Self {
+            children: HashMap::new(),
+            end_of_word: false,
+        }
+    }
+}
+
+struct PrefixTree {
+    root: TrieNode,
+}
+
+impl PrefixTree {
+    fn new() -> Self {
+        Self { root: TrieNode::new() }
+    }
+
+    fn insert(&mut self, word: String) {
+        let mut cur = &mut self.root;
+        for c in word.chars() {
+            cur = cur.children.entry(c).or_insert_with(TrieNode::new);
+        }
+        cur.end_of_word = true;
+    }
+
+    fn search(&self, word: String) -> bool {
+        let mut cur = &self.root;
+        for c in word.chars() {
+            match cur.children.get(&c) {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        cur.end_of_word
+    }
+
+    fn starts_with(&self, prefix: String) -> bool {
+        let mut cur = &self.root;
+        for c in prefix.chars() {
+            match cur.children.get(&c) {
+                Some(node) => cur = node,
+                None => return false,
+            }
+        }
+        true
     }
 }
 ```

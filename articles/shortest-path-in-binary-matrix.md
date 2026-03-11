@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Breadth First Search (BFS)** - BFS guarantees the shortest path in unweighted graphs since it explores nodes level by level
 - **8-Directional Grid Traversal** - Unlike typical grid problems, this one allows diagonal movement requiring all 8 neighbor checks
 - **Queue-based Level Order Processing** - Understanding how to process BFS by levels to track path length accurately
@@ -18,10 +20,10 @@ We need to find the shortest path from the top-left corner to the bottom-right c
 2. Initialize a queue with the starting position `(0, 0, 1)` where `1` represents the path `length`.
 3. Use a visited set or array to track cells we have already explored.
 4. While the queue is not empty:
-   - Dequeue a cell `(r, c, length)`.
-   - If this is the destination `(N-1, N-1)`, return `length` as the shortest path.
-   - For each of the 8 directions, check if the neighbor is valid, unvisited, and contains `0`.
-   - If so, mark it as visited and enqueue it with `length + 1`.
+    - Dequeue a cell `(r, c, length)`.
+    - If this is the destination `(N-1, N-1)`, return `length` as the shortest path.
+    - For each of the 8 directions, check if the neighbor is valid, unvisited, and contains `0`.
+    - If so, mark it as visited and enqueue it with `length + 1`.
 5. If the queue empties without reaching the destination, return `-1` (no path exists).
 
 ::tabs-start
@@ -323,6 +325,43 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_path_binary_matrix(grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        if grid[0][0] == 1 || grid[n - 1][n - 1] == 1 {
+            return -1;
+        }
+
+        let directions: [(i32, i32); 8] = [
+            (0, 1), (1, 0), (0, -1), (-1, 0),
+            (1, 1), (-1, -1), (1, -1), (-1, 1),
+        ];
+        let mut visit = vec![vec![false; n]; n];
+        let mut q: VecDeque<(usize, usize, i32)> = VecDeque::new();
+        q.push_back((0, 0, 1));
+        visit[0][0] = true;
+
+        while let Some((r, c, length)) = q.pop_front() {
+            if r == n - 1 && c == n - 1 {
+                return length;
+            }
+            for &(dr, dc) in &directions {
+                let (nr, nc) = (r as i32 + dr, c as i32 + dc);
+                if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32 {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if grid[nr][nc] == 0 && !visit[nr][nc] {
+                        q.push_back((nr, nc, length + 1));
+                        visit[nr][nc] = true;
+                    }
+                }
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,11 +382,11 @@ This approach is similar to the standard `BFS` but optimizes space by using the 
 1. If the start or end cell is blocked, return `-1`.
 2. Initialize a queue with `(0, 0)` and set `grid[0][0] = 1` (distance of 1).
 3. While the queue is not empty:
-   - Dequeue a cell `(r, c)` and read its `distance` from `grid[r][c]`.
-   - If this is the destination, return the `distance`.
-   - For each of the 8 neighbors, if the neighbor is in bounds and equals `0`:
-     - Set its value to `dist + 1`.
-     - Enqueue the neighbor.
+    - Dequeue a cell `(r, c)` and read its `distance` from `grid[r][c]`.
+    - If this is the destination, return the `distance`.
+    - For each of the 8 neighbors, if the neighbor is in bounds and equals `0`:
+        - Set its value to `dist + 1`.
+        - Enqueue the neighbor.
 4. Return `-1` if the destination is unreachable.
 
 ::tabs-start
@@ -644,6 +683,42 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn shortest_path_binary_matrix(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        let direct = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
+
+        if grid[0][0] == 1 || grid[n - 1][n - 1] == 1 {
+            return -1;
+        }
+
+        let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+        q.push_back((0, 0));
+        grid[0][0] = 1;
+
+        while let Some((r, c)) = q.pop_front() {
+            let dist = grid[r][c];
+            if r == n - 1 && c == n - 1 {
+                return dist;
+            }
+            for d in 0..9 {
+                let nr = r as i32 + direct[d];
+                let nc = c as i32 + direct[d + 1];
+                if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32 {
+                    let (nr, nc) = (nr as usize, nc as usize);
+                    if grid[nr][nc] == 0 {
+                        grid[nr][nc] = dist + 1;
+                        q.push_back((nr, nc));
+                    }
+                }
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -665,9 +740,9 @@ Standard `BFS` explores outward from the source in all directions. Bidirectional
 2. Initialize two queues: `q1` starting from `(0, 0)` and `q2` starting from `(N-1, N-1)`.
 3. Mark the start cell with `-1` and the end cell with `-2` to distinguish the two frontiers.
 4. Alternate between expanding `q1` and `q2`:
-   - For each cell in the current queue, explore all 8 neighbors.
-   - If a neighbor belongs to the other frontier (`end` or `start`), return the current path length.
-   - If a neighbor is unvisited (`0`), mark it with the current frontier's marker and add it to the queue.
+    - For each cell in the current queue, explore all 8 neighbors.
+    - If a neighbor belongs to the other frontier (`end` or `start`), return the current path length.
+    - If a neighbor is unvisited (`0`), mark it with the current frontier's marker and add it to the queue.
 5. Swap the queues and markers after each level, incrementing the path length.
 6. Return `-1` if the frontiers never meet.
 
@@ -1047,6 +1122,54 @@ class Solution {
         }
 
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn shortest_path_binary_matrix(mut grid: Vec<Vec<i32>>) -> i32 {
+        let n = grid.len();
+        if grid[0][0] != 0 || grid[n - 1][n - 1] != 0 {
+            return -1;
+        }
+        if n == 1 {
+            return 1;
+        }
+
+        let direct = [0i32, 1, 0, -1, 0, 1, 1, -1, -1, 1];
+        let mut q1: VecDeque<(usize, usize)> = VecDeque::new();
+        let mut q2: VecDeque<(usize, usize)> = VecDeque::new();
+        q1.push_back((0, 0));
+        q2.push_back((n - 1, n - 1));
+        grid[0][0] = -1;
+        grid[n - 1][n - 1] = -2;
+
+        let mut res = 2;
+        let mut start = -1i32;
+        let mut end = -2i32;
+
+        while !q1.is_empty() && !q2.is_empty() {
+            for _ in 0..q1.len() {
+                let (r, c) = q1.pop_front().unwrap();
+                for d in 0..9 {
+                    let nr = r as i32 + direct[d];
+                    let nc = c as i32 + direct[d + 1];
+                    if nr >= 0 && nc >= 0 && nr < n as i32 && nc < n as i32 {
+                        let (nr, nc) = (nr as usize, nc as usize);
+                        if grid[nr][nc] == end { return res; }
+                        if grid[nr][nc] == 0 {
+                            grid[nr][nc] = start;
+                            q1.push_back((nr, nc));
+                        }
+                    }
+                }
+            }
+            std::mem::swap(&mut q1, &mut q2);
+            std::mem::swap(&mut start, &mut end);
+            res += 1;
+        }
+        -1
     }
 }
 ```

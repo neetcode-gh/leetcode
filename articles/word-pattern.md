@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Maps** - Using dictionaries for efficient key-value lookups and storing mappings
 - **Bijection Concept** - Understanding one-to-one correspondence where each key maps to exactly one value and vice versa
 - **String Manipulation** - Splitting strings by delimiters and iterating through characters
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Two Hash Maps
 
 ### Intuition
+
 A valid pattern match requires a bijection (one-to-one correspondence) between pattern characters and words. Each character must map to exactly one word, and each word must map to exactly one character. Using two hash maps allows us to verify both directions of this mapping simultaneously as we iterate through the `pattern` and `words`.
 
 ### Algorithm
+
 1. Split the string s into an array of words.
 2. If the pattern length does not equal the number of words, return false.
 3. Create two maps: one mapping characters to words, another mapping words to characters.
@@ -262,6 +266,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_pattern(pattern: String, s: String) -> bool {
+        let words: Vec<&str> = s.split(' ').collect();
+        if pattern.len() != words.len() {
+            return false;
+        }
+
+        let mut char_to_word = HashMap::new();
+        let mut word_to_char = HashMap::new();
+
+        for (i, c) in pattern.chars().enumerate() {
+            let w = words[i];
+            if let Some(&mapped) = char_to_word.get(&c) {
+                if mapped != w {
+                    return false;
+                }
+            }
+            if let Some(&mapped) = word_to_char.get(w) {
+                if mapped != c {
+                    return false;
+                }
+            }
+            char_to_word.insert(c, w);
+            word_to_char.insert(w, c);
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,9 +311,11 @@ class Solution {
 ## 2. Two Hash Maps (Optimal)
 
 ### Intuition
+
 Instead of storing the actual mapping, we store the index where each character or word was last seen. If a character and word form a valid pair, they should always have been last seen at the same index. This elegant approach uses the index as a signature that both the `character` and `word` must share to be valid mappings.
 
 ### Algorithm
+
 1. Split the string into words and verify the lengths match.
 2. Create two maps storing the last seen index for each character and each word.
 3. For each position, check if the stored index for the current character equals the stored index for the current word.
@@ -498,6 +535,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_pattern(pattern: String, s: String) -> bool {
+        let words: Vec<&str> = s.split(' ').collect();
+        let pattern: Vec<char> = pattern.chars().collect();
+        if pattern.len() != words.len() {
+            return false;
+        }
+
+        let mut char_to_word: HashMap<char, usize> = HashMap::new();
+        let mut word_to_char: HashMap<&str, usize> = HashMap::new();
+
+        for i in 0..pattern.len() {
+            let c = pattern[i];
+            let word = words[i];
+
+            let char_idx = char_to_word.get(&c).copied().unwrap_or(0);
+            let word_idx = word_to_char.get(word).copied().unwrap_or(0);
+
+            if char_idx != word_idx {
+                return false;
+            }
+
+            char_to_word.insert(c, i + 1);
+            word_to_char.insert(word, i + 1);
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -512,9 +581,11 @@ class Solution {
 ## 3. Hash Set
 
 ### Intuition
+
 We can use a hash map to track character to word mappings and a hash set to track which words have already been assigned to some character. When we encounter a new `character`, we check if its corresponding `word` is already used by another character. This ensures the bijection property using less memory than two full maps.
 
 ### Algorithm
+
 1. Split the string and verify the pattern and word counts match.
 2. Create a map for character to index and a set for used words.
 3. For each character-word pair, if the character was seen before, verify it maps to the same word.
@@ -771,6 +842,39 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_pattern(pattern: String, s: String) -> bool {
+        let words: Vec<&str> = s.split(' ').collect();
+        let pattern: Vec<char> = pattern.chars().collect();
+        if pattern.len() != words.len() {
+            return false;
+        }
+
+        let mut char_to_word: HashMap<char, usize> = HashMap::new();
+        let mut store: HashSet<&str> = HashSet::new();
+
+        for i in 0..pattern.len() {
+            let c = pattern[i];
+
+            if let Some(&idx) = char_to_word.get(&c) {
+                if words[idx] != words[i] {
+                    return false;
+                }
+            } else {
+                if store.contains(words[i]) {
+                    return false;
+                }
+                char_to_word.insert(c, i);
+                store.insert(words[i]);
+            }
+        }
+
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -785,9 +889,11 @@ class Solution {
 ## 4. Single Hash Map
 
 ### Intuition
+
 Using only one hash map from character to index, we can still verify the bijection by iterating through existing mappings when encountering a new character. Since there are at most 26 lowercase letters, this iteration is bounded by a constant. We check if any existing `character` already maps to the current `word`, ensuring no two characters share the same word.
 
 ### Algorithm
+
 1. Split the string and check that pattern and word counts are equal.
 2. Create a single map from characters to their first occurrence index.
 3. For each character-word pair, if the character exists in the map, verify the stored index points to the same word.
@@ -1052,6 +1158,38 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn word_pattern(pattern: String, s: String) -> bool {
+        let words: Vec<&str> = s.split(' ').collect();
+        let pattern: Vec<char> = pattern.chars().collect();
+        if pattern.len() != words.len() {
+            return false;
+        }
+
+        let mut char_to_word: HashMap<char, usize> = HashMap::new();
+        for i in 0..pattern.len() {
+            let c = pattern[i];
+            let w = words[i];
+
+            if let Some(&idx) = char_to_word.get(&c) {
+                if words[idx] != w {
+                    return false;
+                }
+            } else {
+                for &idx in char_to_word.values() {
+                    if words[idx] == w {
+                        return false;
+                    }
+                }
+                char_to_word.insert(c, i);
+            }
+        }
+        true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1066,6 +1204,7 @@ class Solution {
 ## Common Pitfalls
 
 ### Only Checking One Direction of the Mapping
+
 A common mistake is using only one hash map to check if each pattern character maps to the same word, but forgetting to verify the reverse. This fails cases like `pattern = "abba"` and `s = "dog dog dog dog"` where `a -> dog` and `b -> dog` would both be stored, incorrectly returning `true`.
 
 ```python
@@ -1076,6 +1215,7 @@ charToWord[c] = w  # Missing reverse check!
 ```
 
 ### Forgetting to Check Length Mismatch Early
+
 Failing to compare the pattern length with the word count before iterating leads to index errors or incorrect results. For example, `pattern = "ab"` with `s = "dog"` has a mismatch that should immediately return `false`.
 
 ```python

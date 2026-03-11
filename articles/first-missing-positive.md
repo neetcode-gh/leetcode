@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **In-Place Array Modification** - Using the input array itself as auxiliary storage to achieve O(1) space
 - **Cycle Sort** - Placing elements at their "correct" indices through swapping
 - **Index Mapping** - Understanding that value `v` should be at index `v-1` for positive integers
@@ -188,6 +190,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_missing_positive(nums: Vec<i32>) -> i32 {
+        let mut missing = 1;
+        loop {
+            let mut flag = true;
+            for &num in &nums {
+                if missing == num {
+                    flag = false;
+                    break;
+                }
+            }
+            if flag {
+                return missing;
+            }
+            missing += 1;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -210,9 +233,9 @@ So we only care about numbers from `1` to `n`. We can create a boolean array of 
 
 1. Create a boolean array `seen` of size `n`, initialized to `false`.
 2. For each number in the input:
-   - If it's between `1` and `n`, mark `seen[num - 1] = true`.
+    - If it's between `1` and `n`, mark `seen[num - 1] = true`.
 3. Scan `seen` from index `0` to `n - 1`:
-   - Return `i + 1` for the first `false` entry.
+    - Return `i + 1` for the first `false` entry.
 4. If all entries are `true`, return `n + 1`.
 
 ::tabs-start
@@ -397,6 +420,29 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_missing_positive(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut seen = vec![false; n];
+
+        for &num in &nums {
+            if num > 0 && (num as usize) <= n {
+                seen[num as usize - 1] = true;
+            }
+        }
+
+        for i in 0..n {
+            if !seen[i] {
+                return (i + 1) as i32;
+            }
+        }
+
+        (n + 1) as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -421,7 +467,7 @@ We skip negative numbers and zeros since they don't affect our search. Duplicate
 1. Sort the array.
 2. Initialize `missing = 1`.
 3. For each number in the sorted array:
-   - If `num` is positive and equals `missing`, increment `missing`.
+    - If `num` is positive and equals `missing`, increment `missing`.
 4. Return `missing`.
 
 ::tabs-start
@@ -547,6 +593,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_missing_positive(mut nums: Vec<i32>) -> i32 {
+        nums.sort();
+        let mut missing = 1;
+        for &num in &nums {
+            if num > 0 && missing == num {
+                missing += 1;
+            }
+        }
+        missing
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,9 +633,9 @@ Finally, the first non-negative index tells us which number is missing.
 
 1. Replace all negative numbers with `0`.
 2. For each number `val` (using absolute value to handle already-marked cells):
-   - If `1 <= val <= n`:
-     - If `nums[val - 1] > 0`, negate it.
-     - If `nums[val - 1] == 0`, set it to `-(n + 1)`.
+    - If `1 <= val <= n`:
+        - If `nums[val - 1] > 0`, negate it.
+        - If `nums[val - 1] == 0`, set it to `-(n + 1)`.
 3. Find the first index where `nums[i] >= 0` and return `i + 1`.
 4. If no such index exists, return `n + 1`.
 
@@ -840,6 +901,40 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn first_missing_positive(mut nums: Vec<i32>) -> i32 {
+        let n = nums.len() as i32;
+
+        for i in 0..nums.len() {
+            if nums[i] < 0 {
+                nums[i] = 0;
+            }
+        }
+
+        for i in 0..nums.len() {
+            let val = nums[i].abs();
+            if val >= 1 && val <= n {
+                let idx = val as usize - 1;
+                if nums[idx] > 0 {
+                    nums[idx] *= -1;
+                } else if nums[idx] == 0 {
+                    nums[idx] = -(n + 1);
+                }
+            }
+        }
+
+        for i in 0..nums.len() {
+            if nums[i] >= 0 {
+                return (i + 1) as i32;
+            }
+        }
+
+        n + 1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -862,10 +957,10 @@ After this rearrangement, we scan the array. The first position where `nums[i] !
 ### Algorithm
 
 1. Iterate through the array with index `i`:
-   - While `nums[i]` is in range `[1, n]` and `nums[i] != nums[nums[i] - 1]`:
-     - Swap `nums[i]` with `nums[nums[i] - 1]`.
+    - While `nums[i]` is in range `[1, n]` and `nums[i] != nums[nums[i] - 1]`:
+        - Swap `nums[i]` with `nums[nums[i] - 1]`.
 2. Scan the array:
-   - Return `i + 1` for the first index where `nums[i] != i + 1`.
+    - Return `i + 1` for the first index where `nums[i] != i + 1`.
 3. If all positions are correct, return `n + 1`.
 
 ::tabs-start
@@ -1112,6 +1207,36 @@ class Solution {
         }
 
         return n + 1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn first_missing_positive(mut nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut i = 0;
+
+        while i < n {
+            if nums[i] <= 0 || nums[i] as usize > n {
+                i += 1;
+                continue;
+            }
+            let index = nums[i] as usize - 1;
+            if nums[i] != nums[index] {
+                nums.swap(i, index);
+            } else {
+                i += 1;
+            }
+        }
+
+        for i in 0..n {
+            if nums[i] != (i + 1) as i32 {
+                return (i + 1) as i32;
+            }
+        }
+
+        (n + 1) as i32
     }
 }
 ```

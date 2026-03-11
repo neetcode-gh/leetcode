@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Trees** - Understanding tree structure, root, leaf nodes, and traversal concepts
 - **Depth First Search (DFS)** - Recursive tree traversal to explore paths from root to leaves
 - **Recursion** - Using recursive function calls to traverse tree structures
@@ -268,6 +270,33 @@ class Solution {
 }
 ```
 
+```rust
+// Definition for a binary tree node.
+// #[derive(Debug, PartialEq, Eq)]
+// pub struct TreeNode {
+//     pub val: i32,
+//     pub left: Option<Rc<RefCell<TreeNode>>>,
+//     pub right: Option<Rc<RefCell<TreeNode>>>,
+// }
+impl Solution {
+    pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
+        fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, cur_sum: i32, target: i32) -> bool {
+            if let Some(n) = node {
+                let n = n.borrow();
+                let new_sum = cur_sum + n.val;
+                if n.left.is_none() && n.right.is_none() {
+                    return new_sum == target;
+                }
+                dfs(&n.left, new_sum, target) || dfs(&n.right, new_sum, target)
+            } else {
+                false
+            }
+        }
+        dfs(&root, 0, target_sum)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,6 +518,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
+        if let Some(node) = root {
+            let node = node.borrow();
+            let remaining = target_sum - node.val;
+            Self::has_path_sum(node.left.clone(), remaining)
+                || Self::has_path_sum(node.right.clone(), remaining)
+                || (remaining == 0 && node.left.is_none() && node.right.is_none())
+        } else {
+            false
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,10 +554,10 @@ We can simulate the recursive `dfs` using an explicit stack. Each stack entry st
 1. If `root` is `null`, return `false`.
 2. Initialize a stack with `(root, targetSum - root.val)`.
 3. While the stack is not empty:
-   - Pop a node and its remaining sum.
-   - If it's a leaf and the remaining sum is zero, return `true`.
-   - Push the right child (if exists) with its updated remaining sum.
-   - Push the left child (if exists) with its updated remaining sum.
+    - Pop a node and its remaining sum.
+    - If it's a leaf and the remaining sum is zero, return `true`.
+    - Push the right child (if exists) with its updated remaining sum.
+    - Push the left child (if exists) with its updated remaining sum.
 4. If the stack empties without finding a valid path, return `false`.
 
 ::tabs-start
@@ -834,6 +879,37 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
+        let root = match root {
+            Some(r) => r,
+            None => return false,
+        };
+
+        let root_val = root.borrow().val;
+        let mut stack: Vec<(Rc<RefCell<TreeNode>>, i32)> = vec![(root, target_sum - root_val)];
+
+        while let Some((node, curr_sum)) = stack.pop() {
+            let node = node.borrow();
+            if node.left.is_none() && node.right.is_none() && curr_sum == 0 {
+                return true;
+            }
+            if let Some(ref right) = node.right {
+                let rv = right.borrow().val;
+                stack.push((Rc::clone(right), curr_sum - rv));
+            }
+            if let Some(ref left) = node.left {
+                let lv = left.borrow().val;
+                stack.push((Rc::clone(left), curr_sum - lv));
+            }
+        }
+
+        false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -854,10 +930,10 @@ class Solution {
 1. If `root` is `null`, return `false`.
 2. Initialize a queue with `(root, targetSum - root.val)`.
 3. While the queue is not empty:
-   - Dequeue a node and its remaining sum.
-   - If it's a leaf and the remaining sum is zero, return `true`.
-   - Enqueue the left child (if exists) with its updated remaining sum.
-   - Enqueue the right child (if exists) with its updated remaining sum.
+    - Dequeue a node and its remaining sum.
+    - If it's a leaf and the remaining sum is zero, return `true`.
+    - Enqueue the left child (if exists) with its updated remaining sum.
+    - Enqueue the right child (if exists) with its updated remaining sum.
 4. Return `false` if no valid path is found.
 
 ::tabs-start
@@ -1175,6 +1251,38 @@ class Solution {
         }
 
         return false
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn has_path_sum(root: Option<Rc<RefCell<TreeNode>>>, target_sum: i32) -> bool {
+        let root = match root {
+            Some(r) => r,
+            None => return false,
+        };
+
+        let root_val = root.borrow().val;
+        let mut queue: VecDeque<(Rc<RefCell<TreeNode>>, i32)> =
+            VecDeque::from([(root, target_sum - root_val)]);
+
+        while let Some((node, curr_sum)) = queue.pop_front() {
+            let node = node.borrow();
+            if node.left.is_none() && node.right.is_none() && curr_sum == 0 {
+                return true;
+            }
+            if let Some(ref left) = node.left {
+                let lv = left.borrow().val;
+                queue.push_back((Rc::clone(left), curr_sum - lv));
+            }
+            if let Some(ref right) = node.right {
+                let rv = right.borrow().val;
+                queue.push_back((Rc::clone(right), curr_sum - rv));
+            }
+        }
+
+        false
     }
 }
 ```

@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Hash Map** - Used for O(1) lookups to store and retrieve the first occurrence of each running sum value
 - **Prefix Sum / Running Sum** - Tracking cumulative sums to enable efficient subarray sum calculations
 - **Array Transformation** - Converting the problem by treating 0s as -1s to leverage prefix sum properties
@@ -9,9 +11,11 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Brute Force
 
 ### Intuition
+
 The simplest approach is to check every possible subarray and count the number of zeros and ones in each. When we find a subarray where the count of zeros equals the count of ones, we have found a valid contiguous array. We keep track of the maximum length among all valid subarrays.
 
 ### Algorithm
+
 1. Iterate through all possible starting indices `i` from `0` to `n-1`.
 2. For each starting index, iterate through all possible ending indices `j` from `i` to `n-1`.
 3. Maintain counts of zeros and ones as we extend the subarray.
@@ -217,6 +221,31 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_length(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res = 0;
+
+        for i in 0..n {
+            let (mut zeros, mut ones) = (0, 0);
+            for j in i..n {
+                if nums[j] == 1 {
+                    ones += 1;
+                } else {
+                    zeros += 1;
+                }
+                if ones == zeros && res < (j - i + 1) {
+                    res = j - i + 1;
+                }
+            }
+        }
+
+        res as i32
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -229,9 +258,11 @@ class Solution {
 ## 2. Array
 
 ### Intuition
+
 Instead of counting zeros and ones separately, we can treat zeros as `-1` and ones as `+1`. When we compute a running sum, any subarray with equal zeros and ones will have a sum of `0`. More importantly, if the running sum at index `i` equals the running sum at index `j`, then the subarray from `i+1` to `j` has equal zeros and ones. We use an array to store the first occurrence of each possible running sum value.
 
 ### Algorithm
+
 1. Create an array `diffIndex` of size `2n+1` to store indices (the sum can range from `-n` to `+n`).
 2. Initialize a running count starting at `0`.
 3. For each element, add `+1` if it's `1`, or `-1` if it's `0`.
@@ -430,6 +461,30 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_length(nums: Vec<i32>) -> i32 {
+        let n = nums.len();
+        let mut res: i32 = 0;
+        let mut count: i32 = 0;
+        let mut diff_index = vec![-2i32; 2 * n + 1];
+        diff_index[n] = -1;
+
+        for i in 0..n {
+            count += if nums[i] == 1 { 1 } else { -1 };
+            let idx = (count + n as i32) as usize;
+            if diff_index[idx] != -2 {
+                res = res.max(i as i32 - diff_index[idx]);
+            } else {
+                diff_index[idx] = i as i32;
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -442,9 +497,11 @@ class Solution {
 ## 3. Hash Map
 
 ### Intuition
+
 This approach uses the same logic as the array solution but replaces the fixed-size array with a hash map. The key insight remains the same: if the difference between ones and zeros at two different indices is the same, the subarray between them contains equal zeros and ones. A hash map provides more flexibility and can be more memory-efficient when the array is sparse or when we want cleaner code.
 
 ### Algorithm
+
 1. Initialize counters for zeros and ones, and create a hash map to store the first index where each difference value (`ones - zeros`) occurred.
 2. Iterate through the array, incrementing the appropriate counter for each element.
 3. If `zeros` equals `ones`, the entire prefix is valid, so update the result.
@@ -699,6 +756,34 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn find_max_length(nums: Vec<i32>) -> i32 {
+        let (mut zero, mut one, mut res) = (0i32, 0i32, 0i32);
+        let mut diff_index: HashMap<i32, i32> = HashMap::new();
+
+        for (i, &n) in nums.iter().enumerate() {
+            if n == 0 {
+                zero += 1;
+            } else {
+                one += 1;
+            }
+
+            let diff = one - zero;
+            diff_index.entry(diff).or_insert(i as i32);
+
+            if one == zero {
+                res = one + zero;
+            } else {
+                res = res.max(i as i32 - diff_index[&diff]);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -711,7 +796,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Forgetting to Initialize the Hash Map with Zero Difference
+
 When the running sum (ones - zeros) becomes zero, the entire prefix from index 0 is valid. To handle this case uniformly, you must initialize the map with `{0: -1}` or handle it separately. Missing this causes incorrect results for subarrays starting at index 0.
+
 ```python
 # Wrong: No initialization for diff == 0
 diff_index = {}  # Misses subarrays starting from index 0
@@ -721,7 +808,9 @@ diff_index = {0: -1}  # or handle diff == 0 separately
 ```
 
 ### Updating Hash Map Before Checking for Duplicates
+
 You must check if the current difference already exists in the map BEFORE storing the current index. Storing first will overwrite the earlier index, and you want the earliest occurrence to maximize subarray length.
+
 ```python
 # Wrong: Store before check overwrites earlier index
 diff_index[diff] = i
@@ -734,4 +823,5 @@ if diff not in diff_index:
 ```
 
 ### Using Count of Ones Minus Zeros Without the Conversion Trick
+
 The key insight is treating 0s as -1s so that equal counts yield a sum of 0. If you track ones and zeros separately without using this transformation, you cannot efficiently detect when a subarray has equal counts using the hash map approach.

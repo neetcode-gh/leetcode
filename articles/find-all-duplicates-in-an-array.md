@@ -179,6 +179,27 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_duplicates(nums: Vec<i32>) -> Vec<i32> {
+        let n = nums.len();
+        let mut res = vec![];
+
+        for i in 0..n {
+            for j in (i + 1)..n {
+                if nums[i] == nums[j] {
+                    res.push(nums[i]);
+                    break;
+                }
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +355,24 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicates(mut nums: Vec<i32>) -> Vec<i32> {
+        nums.sort();
+        let mut res = vec![];
+
+        for i in 0..nums.len() - 1 {
+            if nums[i] == nums[i + 1] {
+                res.push(nums[i]);
+            }
+        }
+
+        res
     }
 }
 ```
@@ -508,6 +547,26 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicates(nums: Vec<i32>) -> Vec<i32> {
+        let mut seen = HashSet::new();
+        let mut res = vec![];
+
+        for num in nums {
+            if seen.contains(&num) {
+                res.push(num);
+            } else {
+                seen.insert(num);
+            }
+        }
+
+        res
     }
 }
 ```
@@ -703,6 +762,28 @@ class Solution {
 }
 ```
 
+
+```rust
+impl Solution {
+    pub fn find_duplicates(nums: Vec<i32>) -> Vec<i32> {
+        let mut count = HashMap::new();
+        let mut res = vec![];
+
+        for &num in &nums {
+            *count.entry(num).or_insert(0) += 1;
+        }
+
+        for (&num, &freq) in &count {
+            if freq == 2 {
+                res.push(num);
+            }
+        }
+
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -875,6 +956,25 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+
+```rust
+impl Solution {
+    pub fn find_duplicates(mut nums: Vec<i32>) -> Vec<i32> {
+        let mut res = vec![];
+
+        for i in 0..nums.len() {
+            let idx = (nums[i].abs() - 1) as usize;
+            if nums[idx] < 0 {
+                res.push(nums[i].abs());
+            }
+            nums[idx] = -nums[idx];
+        }
+
+        res
     }
 }
 ```

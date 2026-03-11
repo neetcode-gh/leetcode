@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Binary Tree Structure** - Understanding nodes, children, and subtree relationships
 - **Postorder Traversal** - Processing children before the parent node in tree traversal
 - **Recursion** - Using recursive functions to aggregate information from subtrees
@@ -18,11 +20,11 @@ For each node, we track three things: the number of nodes in its subtree, the su
 
 1. Define a helper structure `State` to hold three values: `nodeCount`, `valueSum`, and `maxAverage`.
 2. Perform a postorder traversal using recursion:
-   - Base case: if the node is `null`, return a state with all zeros.
-   - Recursively process the left and right children.
-   - Compute the current node's count as `left.nodeCount + right.nodeCount + 1`.
-   - Compute the current node's sum as `left.valueSum + right.valueSum + node.val`.
-   - Compute the current subtree's average and compare it with the maximum averages from both children.
+    - Base case: if the node is `null`, return a state with all zeros.
+    - Recursively process the left and right children.
+    - Compute the current node's count as `left.nodeCount + right.nodeCount + 1`.
+    - Compute the current node's sum as `left.valueSum + right.valueSum + node.val`.
+    - Compute the current subtree's average and compare it with the maximum averages from both children.
 3. Return the `maxAverage` from the root's state.
 
 ::tabs-start
@@ -38,18 +40,18 @@ class Solution:
             self.value_sum = sum_val
             # max average found in the subtree
             self.max_average = max_average
-    
+
     def maximumAverageSubtree(self, root: Optional[TreeNode]) -> float:
         return self.max_average(root).max_average
-    
+
     def max_average(self, root):
         if root is None:
             return self.State(0, 0, 0)
-        
+
         # postorder traversal, solve for both child nodes first.
         left = self.max_average(root.left)
         right = self.max_average(root.right)
-        
+
         # now find nodeCount, valueSum and maxAverage for current node `root`
         node_count = left.node_count + right.node_count + 1
         sum_val = left.value_sum + right.value_sum + root.val
@@ -57,7 +59,7 @@ class Solution:
             (1.0 * sum_val) / node_count,  # average for current node
             max(right.max_average, left.max_average)  # max average from child nodes
         )
-        
+
         return self.State(node_count, sum_val, max_average)
 ```
 
@@ -181,8 +183,8 @@ class Solution {
         const nodeCount = left.nodeCount + right.nodeCount + 1;
         const sum = left.valueSum + right.valueSum + root.val;
         const maxAverage = Math.max(
-            (1.0 * sum) / nodeCount,  // average for current node
-            Math.max(right.maxAverage, left.maxAverage)  // max average from child nodes
+            (1.0 * sum) / nodeCount, // average for current node
+            Math.max(right.maxAverage, left.maxAverage), // max average from child nodes
         );
 
         return new State(nodeCount, sum, maxAverage);
@@ -375,6 +377,35 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn maximum_average_subtree(root: Option<Rc<RefCell<TreeNode>>>) -> f64 {
+        Self::max_average(&root).2
+    }
+
+    // Returns (node_count, value_sum, max_average)
+    fn max_average(root: &Option<Rc<RefCell<TreeNode>>>) -> (i32, i32, f64) {
+        match root {
+            None => (0, 0, 0.0),
+            Some(node) => {
+                let node = node.borrow();
+                // postorder traversal, solve for both child nodes first.
+                let left = Self::max_average(&node.left);
+                let right = Self::max_average(&node.right);
+
+                // now find nodeCount, valueSum and maxAverage for current node
+                let node_count = left.0 + right.0 + 1;
+                let sum = left.1 + right.1 + node.val;
+                let max_average = (sum as f64 / node_count as f64)
+                    .max(left.2.max(right.2));
+
+                (node_count, sum, max_average)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,7 +413,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where $N$ is the number of nodes in the tree
+> Where $N$ is the number of nodes in the tree
 
 ---
 

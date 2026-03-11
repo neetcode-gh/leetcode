@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Bit Manipulation** - Understanding binary representation, XOR, AND, and bit shifting operations
 - **Recursion** - The base approach recursively processes each set bit from highest to lowest
 - **Gray Codes** - The elegant solution relies on understanding Gray code sequences where consecutive numbers differ by one bit
@@ -157,6 +159,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_one_bit_operations(n: i32) -> i32 {
+        if n == 0 {
+            return 0;
+        }
+        let mut k = 1;
+        while (k << 1) <= n {
+            k <<= 1;
+        }
+        (k << 1) - 1 - Self::minimum_one_bit_operations(k ^ n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -176,10 +193,10 @@ This approach converts the recursive solution into an iterative one. We process 
 
 1. Initialize `res = 0`, `k = 2^30` (starting from the highest possible bit), and `sign = 1`.
 2. While `n` is not zero:
-   - Find the highest set bit by shifting `k` right until `k <= n`.
-   - Add `sign * (2*k - 1)` to `res`.
-   - Flip the `sign` for the next iteration.
-   - Remove this bit from `n` using `XOR`: `n ^= k`.
+    - Find the highest set bit by shifting `k` right until `k <= n`.
+    - Add `sign * (2*k - 1)` to `res`.
+    - Flip the `sign` for the next iteration.
+    - Remove this bit from `n` using `XOR`: `n ^= k`.
 3. Return `res`.
 
 ::tabs-start
@@ -353,6 +370,27 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_one_bit_operations(n: i32) -> i32 {
+        let mut n = n;
+        let mut res = 0;
+        let mut k = 1 << 30;
+        let mut sign = 1;
+
+        while n != 0 {
+            while k > n {
+                k >>= 1;
+            }
+            res += sign * ((k << 1) - 1);
+            sign *= -1;
+            n ^= k;
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -372,10 +410,10 @@ This variant uses a clever bit manipulation trick. The expression `n XOR (n-1)` 
 
 1. Initialize `res = 0` and `sign = 1`.
 2. While `n` is not zero:
-   - Compute `n XOR (n-1)`, which gives a `mask` from the lowest set bit to bit `0`.
-   - Add `sign * (n XOR (n-1))` to `res`.
-   - Clear the lowest set bit using `n &= (n-1)`.
-   - Flip the `sign`.
+    - Compute `n XOR (n-1)`, which gives a `mask` from the lowest set bit to bit `0`.
+    - Add `sign * (n XOR (n-1))` to `res`.
+    - Clear the lowest set bit using `n &= (n-1)`.
+    - Flip the `sign`.
 3. Return the absolute value of `res`.
 
 ::tabs-start
@@ -500,6 +538,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn minimum_one_bit_operations(n: i32) -> i32 {
+        let mut n = n;
+        let mut res = 0i32;
+        let mut sign = 1i32;
+        while n != 0 {
+            res += sign * (n ^ (n - 1));
+            n &= n - 1;
+            sign *= -1;
+        }
+        res.abs()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -519,8 +573,8 @@ This problem has a direct connection to Gray codes. A Gray code is a binary sequ
 
 1. Initialize `res = n`.
 2. While `n` is not zero:
-   - Right shift `n` by `1`.
-   - `XOR` the result into `res`.
+    - Right shift `n` by `1`.
+    - `XOR` the result into `res`.
 3. Return `res`, which represents the position of the original number in the Gray code sequence.
 
 ::tabs-start
@@ -627,6 +681,20 @@ class Solution {
             res ^= n
         }
         return res
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn minimum_one_bit_operations(n: i32) -> i32 {
+        let mut n = n;
+        let mut res = n;
+        while n != 0 {
+            n >>= 1;
+            res ^= n;
+        }
+        res
     }
 }
 ```

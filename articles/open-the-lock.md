@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Breadth-First Search (BFS)** - Level-by-level graph traversal to find shortest paths in unweighted graphs
 - **Graph Modeling** - Recognizing when a problem can be modeled as a graph where states are nodes and transitions are edges
 - **HashSet for Visited States** - Efficiently tracking visited states to avoid revisiting and infinite loops
@@ -21,10 +23,10 @@ BFS is the natural choice here because it explores all states at distance `1` be
 2. Initialize a queue with the starting state "0000" and `0` turns.
 3. Add all deadends to a visited set to block them.
 4. While the queue is not empty:
-   - Dequeue a lock combination and its turn count.
-   - If it matches the target, return the turn count.
-   - Generate all `8` neighbors (each wheel can go up or down by `1`).
-   - For each unvisited neighbor, mark it visited and enqueue it with `turns + 1`.
+    - Dequeue a lock combination and its turn count.
+    - If it matches the target, return the turn count.
+    - Generate all `8` neighbors (each wheel can go up or down by `1`).
+    - For each unvisited neighbor, mark it visited and enqueue it with `turns + 1`.
 5. If the queue empties without finding the target, return `-1`.
 
 ::tabs-start
@@ -357,6 +359,49 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn open_lock(deadends: Vec<String>, target: String) -> i32 {
+        let mut visit: HashSet<String> = deadends.into_iter().collect();
+        if visit.contains("0000") {
+            return -1;
+        }
+
+        let children = |lock: &str| -> Vec<String> {
+            let bytes = lock.as_bytes();
+            let mut res = Vec::with_capacity(8);
+            for i in 0..4 {
+                let digit = (bytes[i] - b'0') as i32;
+                let mut up = bytes.to_vec();
+                up[i] = b'0' + ((digit + 1) % 10) as u8;
+                res.push(String::from_utf8(up).unwrap());
+                let mut down = bytes.to_vec();
+                down[i] = b'0' + ((digit + 9) % 10) as u8;
+                res.push(String::from_utf8(down).unwrap());
+            }
+            res
+        };
+
+        let mut queue = VecDeque::new();
+        queue.push_back(("0000".to_string(), 0));
+        visit.insert("0000".to_string());
+
+        while let Some((lock, turns)) = queue.pop_front() {
+            if lock == target {
+                return turns;
+            }
+            for child in children(&lock) {
+                if !visit.contains(&child) {
+                    visit.insert(child.clone());
+                    queue.push_back((child, turns + 1));
+                }
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -381,10 +426,10 @@ By processing all nodes at the current level before incrementing the step counte
 1. Handle edge cases: if target is "0000", return `0`. If "0000" is a deadend, return `-1`.
 2. Initialize a queue with "0000" and mark it visited.
 3. Set steps to `0` and process level by level:
-   - Increment steps at the start of each level.
-   - For each lock in the current level, try all `8` possible moves.
-   - If a move reaches the target, return steps.
-   - Otherwise, add unvisited states to the queue.
+    - Increment steps at the start of each level.
+    - For each lock in the current level, try all `8` possible moves.
+    - If a move reaches the target, return steps.
+    - Otherwise, add unvisited states to the queue.
 4. Return `-1` if the target is unreachable.
 
 ::tabs-start
@@ -680,6 +725,50 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn open_lock(deadends: Vec<String>, target: String) -> i32 {
+        if target == "0000" {
+            return 0;
+        }
+        let mut visit: HashSet<String> = deadends.into_iter().collect();
+        if visit.contains("0000") {
+            return -1;
+        }
+
+        let mut queue = VecDeque::new();
+        queue.push_back("0000".to_string());
+        visit.insert("0000".to_string());
+        let mut steps = 0;
+
+        while !queue.is_empty() {
+            steps += 1;
+            for _ in 0..queue.len() {
+                let lock = queue.pop_front().unwrap();
+                let bytes = lock.as_bytes();
+                for j in 0..4 {
+                    for &mv in &[1i32, -1] {
+                        let digit = ((bytes[j] as i32 - b'0' as i32) + mv + 10) % 10;
+                        let mut next_bytes = bytes.to_vec();
+                        next_bytes[j] = b'0' + digit as u8;
+                        let next_lock = String::from_utf8(next_bytes).unwrap();
+                        if visit.contains(&next_lock) {
+                            continue;
+                        }
+                        if next_lock == target {
+                            return steps;
+                        }
+                        visit.insert(next_lock.clone());
+                        queue.push_back(next_lock);
+                    }
+                }
+            }
+        }
+        -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -704,12 +793,12 @@ The key optimization is to always expand the smaller frontier. This balances the
 1. Handle edge cases for target "0000" and "0000" being a deadend.
 2. Create two sets: `begin` starting from "0000" and `end` starting from target.
 3. While both sets are non-empty:
-   - If `begin` is larger than `end`, swap them to always expand the smaller one.
-   - Increment steps and create a temporary set for the next level.
-   - For each state in `begin`, generate all `8` neighbors.
-   - If a neighbor is in `end`, the frontiers meet, so return steps.
-   - Otherwise, if unvisited, add to the temp set and mark visited.
-   - Replace `begin` with the temp set.
+    - If `begin` is larger than `end`, swap them to always expand the smaller one.
+    - Increment steps and create a temporary set for the next level.
+    - For each state in `begin`, generate all `8` neighbors.
+    - If a neighbor is in `end`, the frontiers meet, so return steps.
+    - Otherwise, if unvisited, add to the temp set and mark visited.
+    - Replace `begin` with the temp set.
 4. Return `-1` if the sets never meet.
 
 ::tabs-start
@@ -1056,6 +1145,59 @@ class Solution {
             begin = temp
         }
         return -1
+    }
+}
+```
+
+```rust
+impl Solution {
+    pub fn open_lock(deadends: Vec<String>, target: String) -> i32 {
+        if target == "0000" {
+            return 0;
+        }
+        let mut visit: HashSet<String> = deadends.into_iter().collect();
+        if visit.contains("0000") {
+            return -1;
+        }
+
+        let mut begin: HashSet<String> = HashSet::new();
+        begin.insert("0000".to_string());
+        let mut end: HashSet<String> = HashSet::new();
+        end.insert(target);
+        let mut steps = 0;
+
+        while !begin.is_empty() && !end.is_empty() {
+            if begin.len() > end.len() {
+                std::mem::swap(&mut begin, &mut end);
+            }
+
+            steps += 1;
+            let mut temp = HashSet::new();
+
+            for lock in &begin {
+                let bytes = lock.as_bytes();
+                for i in 0..4 {
+                    for &mv in &[-1i32, 1] {
+                        let digit = ((bytes[i] as i32 - b'0' as i32) + mv + 10) % 10;
+                        let mut next_bytes = bytes.to_vec();
+                        next_bytes[i] = b'0' + digit as u8;
+                        let next_lock = String::from_utf8(next_bytes).unwrap();
+
+                        if end.contains(&next_lock) {
+                            return steps;
+                        }
+                        if visit.contains(&next_lock) {
+                            continue;
+                        }
+
+                        visit.insert(next_lock.clone());
+                        temp.insert(next_lock);
+                    }
+                }
+            }
+            begin = temp;
+        }
+        -1
     }
 }
 ```

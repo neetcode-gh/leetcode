@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Graph Traversal (DFS/BFS)** - Exploring connected components in a 2D grid using depth-first or breadth-first search
 - **Flood Fill Algorithm** - Marking all connected cells starting from a given position
 - **Union-Find (Disjoint Set Union)** - Alternative approach using DSU to group connected components and check connectivity
@@ -9,25 +11,27 @@ Before attempting this problem, you should be comfortable with:
 ## 1. Depth First Search
 
 ### Intuition
+
 Only the **'O' regions that touch the border** can never be surrounded, because they have a path to the outside of the board.  
 So instead of trying to find surrounded regions directly, we do the opposite:
 
-1) **Mark all border-connected 'O' cells as “safe”** (temporary mark `'T'`).  
-2) Any remaining `'O'` is truly surrounded → flip it to `'X'`.  
-3) Convert the temporary `'T'` back to `'O'`.
+1. **Mark all border-connected 'O' cells as “safe”** (temporary mark `'T'`).
+2. Any remaining `'O'` is truly surrounded → flip it to `'X'`.
+3. Convert the temporary `'T'` back to `'O'`.
 
 ### Algorithm
+
 1. Let `ROWS` and `COLS` be board dimensions.
 2. Define `capture(r, c)` (`dfs`):
-   - If out of bounds or cell is not `'O'`, return.
-   - Mark cell as `'T'`.
-   - `dfs` to its 4 neighbors (up, down, left, right).
+    - If out of bounds or cell is not `'O'`, return.
+    - Mark cell as `'T'`.
+    - `dfs` to its 4 neighbors (up, down, left, right).
 3. Run `capture` from every border cell that is `'O'`:
-   - All cells in first/last column.
-   - All cells in first/last row.
+    - All cells in first/last column.
+    - All cells in first/last row.
 4. Scan entire board:
-   - If cell is `'O'`, it's surrounded → change to `'X'`.
-   - If cell is `'T'`, it's safe → change back to `'O'`.
+    - If cell is `'O'`, it's surrounded → change to `'X'`.
+    - If cell is `'T'`, it's safe → change back to `'O'`.
 
 ::tabs-start
 
@@ -413,6 +417,56 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn solve(board: &mut Vec<Vec<char>>) {
+        let rows = board.len();
+        let cols = board[0].len();
+
+        fn capture(board: &mut Vec<Vec<char>>, r: i32, c: i32, rows: i32, cols: i32) {
+            if r < 0 || c < 0 || r >= rows || c >= cols
+                || board[r as usize][c as usize] != 'O'
+            {
+                return;
+            }
+            board[r as usize][c as usize] = 'T';
+            capture(board, r + 1, c, rows, cols);
+            capture(board, r - 1, c, rows, cols);
+            capture(board, r, c + 1, rows, cols);
+            capture(board, r, c - 1, rows, cols);
+        }
+
+        let (r_len, c_len) = (rows as i32, cols as i32);
+        for r in 0..rows {
+            if board[r][0] == 'O' {
+                capture(board, r as i32, 0, r_len, c_len);
+            }
+            if board[r][cols - 1] == 'O' {
+                capture(board, r as i32, (cols - 1) as i32, r_len, c_len);
+            }
+        }
+        for c in 0..cols {
+            if board[0][c] == 'O' {
+                capture(board, 0, c as i32, r_len, c_len);
+            }
+            if board[rows - 1][c] == 'O' {
+                capture(board, (rows - 1) as i32, c as i32, r_len, c_len);
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if board[r][c] == 'O' {
+                    board[r][c] = 'X';
+                } else if board[r][c] == 'T' {
+                    board[r][c] = 'O';
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -427,23 +481,25 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
+
 Same idea as DFS, but we use **BFS with a queue**.
 
-- Any `'O'` that is connected to the **border** can “escape”, so it should **NOT** be flipped.
+- Any `'O'` that is connected to the **border** can "escape", so it should **NOT** be flipped.
 - Start BFS from all border `'O'` cells and mark every reachable `'O'` as temporary `'T'` (safe).
 - After that:
-  - leftover `'O'` cells are fully surrounded → flip to `'X'`
-  - `'T'` cells are safe → change back to `'O'`
+    - leftover `'O'` cells are fully surrounded → flip to `'X'`
+    - `'T'` cells are safe → change back to `'O'`
 
 ### Algorithm
+
 1. Initialize a queue and push all **border cells** that contain `'O'`.
 2. While the queue is not empty:
-   - Pop a cell `(r, c)`
-   - If it is `'O'`, mark it as `'T'`
-   - Push its 4 neighbors (up/down/left/right) if they are in bounds
+    - Pop a cell `(r, c)`
+    - If it is `'O'`, mark it as `'T'`
+    - Push its 4 neighbors (up/down/left/right) if they are in bounds
 3. Traverse the entire board:
-   - Change `'O'` → `'X'` (surrounded)
-   - Change `'T'` → `'O'` (safe)
+    - Change `'O'` → `'X'` (surrounded)
+    - Change `'T'` → `'O'` (safe)
 
 ::tabs-start
 
@@ -458,9 +514,7 @@ class Solution:
             for r in range(ROWS):
                 for c in range(COLS):
                     if (r == 0 or r == ROWS - 1 or
-                        c == 0 or c == COLS - 1 and
-                        board[r][c] == "O"
-                    ):
+                        c == 0 or c == COLS - 1) and board[r][c] == "O":
                         q.append((r, c))
             while q:
                 r, c = q.popleft()
@@ -508,8 +562,8 @@ public class Solution {
         Queue<int[]> q = new LinkedList<>();
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                if (r == 0 || r == ROWS - 1 ||
-                    c == 0 || c == COLS - 1 &&
+                if ((r == 0 || r == ROWS - 1 ||
+                    c == 0 || c == COLS - 1) &&
                     board[r][c] == 'O') {
                     q.offer(new int[]{r, c});
                 }
@@ -561,8 +615,8 @@ private:
         queue<pair<int, int>> q;
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                if (r == 0 || r == ROWS - 1 ||
-                    c == 0 || c == COLS - 1 &&
+                if ((r == 0 || r == ROWS - 1 ||
+                    c == 0 || c == COLS - 1) &&
                     board[r][c] == 'O') {
                     q.push({r, c});
                 }
@@ -608,10 +662,11 @@ class Solution {
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     if (
-                        r === 0 ||
-                        r === ROWS - 1 ||
-                        c === 0 ||
-                        (c === COLS - 1 && board[r][c] === 'O')
+                        (r === 0 ||
+                            r === ROWS - 1 ||
+                            c === 0 ||
+                            c === COLS - 1) &&
+                        board[r][c] === 'O'
                     ) {
                         q.push([r, c]);
                     }
@@ -672,8 +727,8 @@ public class Solution {
         Queue<int[]> q = new Queue<int[]>();
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                if (r == 0 || r == ROWS - 1 ||
-                    c == 0 || c == COLS - 1 &&
+                if ((r == 0 || r == ROWS - 1 ||
+                    c == 0 || c == COLS - 1) &&
                     board[r][c] == 'O') {
                     q.Enqueue(new int[] { r, c });
                 }
@@ -842,6 +897,54 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn solve(board: &mut Vec<Vec<char>>) {
+        let rows = board.len();
+        let cols = board[0].len();
+        let directions = [(1i32, 0i32), (-1, 0), (0, 1), (0, -1)];
+
+        let mut q: VecDeque<(usize, usize)> = VecDeque::new();
+        for r in 0..rows {
+            for c in 0..cols {
+                if (r == 0 || r == rows - 1 || c == 0 || c == cols - 1)
+                    && board[r][c] == 'O'
+                {
+                    q.push_back((r, c));
+                }
+            }
+        }
+
+        while let Some((r, c)) = q.pop_front() {
+            if board[r][c] == 'O' {
+                board[r][c] = 'T';
+                for &(dr, dc) in &directions {
+                    let nr = r as i32 + dr;
+                    let nc = c as i32 + dc;
+                    if nr >= 0
+                        && nr < rows as i32
+                        && nc >= 0
+                        && nc < cols as i32
+                    {
+                        q.push_back((nr as usize, nc as usize));
+                    }
+                }
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if board[r][c] == 'O' {
+                    board[r][c] = 'X';
+                } else if board[r][c] == 'T' {
+                    board[r][c] = 'O';
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -853,46 +956,34 @@ class Solution {
 
 ---
 
-## Common Pitfalls
-
-### Trying to Find Surrounded Regions Directly
-
-The intuitive approach of finding regions completely surrounded by 'X' is error-prone. A region touching any border cell cannot be captured, and checking this condition during a flood fill is complex. The correct approach is to invert the logic: first mark all border-connected 'O' cells as safe, then flip all remaining 'O' cells. This reversal simplifies the problem significantly.
-
-### Forgetting to Check All Four Borders
-
-When marking safe regions, you must start DFS/BFS from 'O' cells on all four borders: top row, bottom row, left column, and right column. A common mistake is only checking two opposite edges (like top and bottom) and missing cells connected through the left or right borders. Ensure your initial seeding loop covers all border cells.
-
-### Modifying Cells Without a Temporary Marker
-
-If you flip 'O' to 'X' immediately when you find a surrounded region, you may incorrectly process cells that should remain 'O'. The standard approach uses a temporary marker (like 'T') to distinguish between safe 'O' cells and those to be processed. After marking is complete, convert 'T' back to 'O' and remaining 'O' to 'X' in a final pass.
-
----
-
 ## 3. Disjoint Set Union
 
 ### Intuition
+
 Treat every `'O'` cell as a node in a graph. Two `'O'` cells belong to the same region if they are **4-directionally connected**.
 
 The key observation:
+
 - Any region of `'O'` that touches the **border** is **safe** (it cannot be surrounded).
 - Any region of `'O'` that does **not** touch the border is **captured** → should become `'X'`.
 
 So we use **DSU (Union-Find)** to group connected `'O'` cells, and we create one extra **dummy node** that represents "connected to border".
+
 - Union every border `'O'` with the dummy node.
 - Union every `'O'` with its neighboring `'O'` cells.
 - Finally, any cell **not connected** to the dummy node is surrounded → flip to `'X'`.
 
 ### Algorithm
+
 1. Create a `dsu` for `(ROWS * COLS)` cells plus **1 dummy node**.
 2. For each cell `(r, c)`:
-   - If it is not `'O'`, skip.
-   - Convert `(r, c)` to an `id`: `id = r * COLS + c`.
-   - If `(r, c)` is on the border, union `id` with `dummy`.
-   - Union `id` with any 4-direction neighbor that is also `'O'`.
+    - If it is not `'O'`, skip.
+    - Convert `(r, c)` to an `id`: `id = r * COLS + c`.
+    - If `(r, c)` is on the border, union `id` with `dummy`.
+    - Union `id` with any 4-direction neighbor that is also `'O'`.
 3. Traverse the grid again:
-   - If a cell is `'O'` but **not connected** to `dummy`, flip it to `'X'`.
-   - Otherwise keep it as `'O'`.
+    - If a cell is `'O'` but **not connected** to `dummy`, flip it to `'X'`.
+    - Otherwise keep it as `'O'`.
 
 ::tabs-start
 
@@ -1484,6 +1575,93 @@ class Solution {
 }
 ```
 
+```rust
+struct DSU {
+    parent: Vec<usize>,
+    size: Vec<usize>,
+}
+
+impl DSU {
+    fn new(n: usize) -> Self {
+        DSU {
+            parent: (0..=n).collect(),
+            size: vec![1; n + 1],
+        }
+    }
+
+    fn find(&mut self, node: usize) -> usize {
+        if self.parent[node] != node {
+            self.parent[node] = self.find(self.parent[node]);
+        }
+        self.parent[node]
+    }
+
+    fn union(&mut self, u: usize, v: usize) {
+        let pu = self.find(u);
+        let pv = self.find(v);
+        if pu == pv {
+            return;
+        }
+        if self.size[pu] >= self.size[pv] {
+            self.size[pu] += self.size[pv];
+            self.parent[pv] = pu;
+        } else {
+            self.size[pv] += self.size[pu];
+            self.parent[pu] = pv;
+        }
+    }
+
+    fn connected(&mut self, u: usize, v: usize) -> bool {
+        self.find(u) == self.find(v)
+    }
+}
+
+impl Solution {
+    pub fn solve(board: &mut Vec<Vec<char>>) {
+        let rows = board.len();
+        let cols = board[0].len();
+        let directions: [(i32, i32); 4] = [(1, 0), (-1, 0), (0, 1), (0, -1)];
+        let dummy = rows * cols;
+        let mut dsu = DSU::new(rows * cols);
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if board[r][c] != 'O' {
+                    continue;
+                }
+                if r == 0 || c == 0 || r == rows - 1 || c == cols - 1 {
+                    dsu.union(dummy, r * cols + c);
+                } else {
+                    for &(dr, dc) in &directions {
+                        let nr = r as i32 + dr;
+                        let nc = c as i32 + dc;
+                        if nr >= 0
+                            && (nr as usize) < rows
+                            && nc >= 0
+                            && (nc as usize) < cols
+                            && board[nr as usize][nc as usize] == 'O'
+                        {
+                            dsu.union(
+                                r * cols + c,
+                                nr as usize * cols + nc as usize,
+                            );
+                        }
+                    }
+                }
+            }
+        }
+
+        for r in 0..rows {
+            for c in 0..cols {
+                if !dsu.connected(dummy, r * cols + c) {
+                    board[r][c] = 'X';
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1492,3 +1670,19 @@ class Solution {
 - Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the $board$.
+
+---
+
+## Common Pitfalls
+
+### Trying to Find Surrounded Regions Directly
+
+The intuitive approach of finding regions completely surrounded by 'X' is error-prone. A region touching any border cell cannot be captured, and checking this condition during a flood fill is complex. The correct approach is to invert the logic: first mark all border-connected 'O' cells as safe, then flip all remaining 'O' cells. This reversal simplifies the problem significantly.
+
+### Forgetting to Check All Four Borders
+
+When marking safe regions, you must start DFS/BFS from 'O' cells on all four borders: top row, bottom row, left column, and right column. A common mistake is only checking two opposite edges (like top and bottom) and missing cells connected through the left or right borders. Ensure your initial seeding loop covers all border cells.
+
+### Modifying Cells Without a Temporary Marker
+
+If you flip 'O' to 'X' immediately when you find a surrounded region, you may incorrectly process cells that should remain 'O'. The standard approach uses a temporary marker (like 'T') to distinguish between safe 'O' cells and those to be processed. After marking is complete, convert 'T' back to 'O' and remaining 'O' to 'X' in a final pass.

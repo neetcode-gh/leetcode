@@ -1,5 +1,7 @@
 ## Prerequisites
+
 Before attempting this problem, you should be comfortable with:
+
 - **Arrays** - Iterating through elements and tracking values
 - **Two Pointers** - Using multiple pointers to track buy and sell positions
 - **Greedy Algorithms** - Making locally optimal choices (tracking minimum buy price) for global optimization
@@ -158,6 +160,22 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        let mut res = 0;
+        for i in 0..prices.len() {
+            let buy = prices[i];
+            for j in (i + 1)..prices.len() {
+                let sell = prices[j];
+                res = res.max(sell - buy);
+            }
+        }
+        res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -185,13 +203,13 @@ By moving the pointers this way, we scan the list once and always keep the best 
 ### Algorithm
 
 1. Set two pointers:
-   - `l = 0` (buy day)
-   - `r = 1` (sell day)
-   - `maxP = 0` to track maximum profit
+    - `l = 0` (buy day)
+    - `r = 1` (sell day)
+    - `maxP = 0` to track maximum profit
 2. While `r` is within the array:
-   - If `prices[r] > prices[l]`, compute the profit and update `maxP`.
-   - Otherwise, move `l` to `r` (we found a cheaper buy price).
-   - Move `r` to the next day.
+    - If `prices[r] > prices[l]`, compute the profit and update `maxP`.
+    - Otherwise, move `l` to `r` (we found a cheaper buy price).
+    - Move `r` to the next day.
 3. Return `maxP` at the end.
 
 ::tabs-start
@@ -359,6 +377,26 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        let (mut l, mut r) = (0, 1);
+        let mut max_p = 0;
+
+        while r < prices.len() {
+            if prices[l] < prices[r] {
+                let profit = prices[r] - prices[l];
+                max_p = max_p.max(profit);
+            } else {
+                l = r;
+            }
+            r += 1;
+        }
+        max_p
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,6 +420,7 @@ The profit would be:
 `current price – lowest price seen so far`
 
 We then update:
+
 - the maximum profit,
 - and the lowest price if we find a cheaper one.
 
@@ -390,11 +429,11 @@ This way, we make the optimal buy–sell decision in one simple pass.
 ### Algorithm
 
 1. Initialize:
-   - `minBuy` as the first price
-   - `maxP = 0` for the best profit
+    - `minBuy` as the first price
+    - `maxP = 0` for the best profit
 2. Loop through each price `sell`:
-   - Update `maxP` with `sell - minBuy`.
-   - Update `minBuy` if we find a smaller price.
+    - Update `maxP` with `sell - minBuy`.
+    - Update `minBuy` if we find a smaller price.
 3. Return `maxP` after scanning all days.
 
 ::tabs-start
@@ -523,6 +562,21 @@ class Solution {
 }
 ```
 
+```rust
+impl Solution {
+    pub fn max_profit(prices: Vec<i32>) -> i32 {
+        let mut max_p = 0;
+        let mut min_buy = prices[0];
+
+        for &sell in &prices {
+            max_p = max_p.max(sell - min_buy);
+            min_buy = min_buy.min(sell);
+        }
+        max_p
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -535,7 +589,9 @@ class Solution {
 ## Common Pitfalls
 
 ### Selling Before Buying
+
 The sell day must come after the buy day. Calculating `prices[i] - prices[j]` where `j > i` means you're selling in the past, which is invalid.
+
 ```python
 # Wrong: selling before buying
 for i in range(len(prices)):
@@ -544,7 +600,9 @@ for i in range(len(prices)):
 ```
 
 ### Returning Negative Profit
+
 If prices only decrease, the maximum profit is 0 (don't trade), not a negative number. Always ensure the result is at least 0.
+
 ```python
 # Wrong: can return negative
 return maxPrice - minPrice  # Could be negative if maxPrice found before minPrice
