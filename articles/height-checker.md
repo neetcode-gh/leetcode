@@ -96,6 +96,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int HeightChecker(int[] heights) {
+        int[] expected = new int[heights.Length];
+        Array.Copy(heights, expected, heights.Length);
+        Array.Sort(expected);
+
+        int res = 0;
+        for (int i = 0; i < heights.Length; i++) {
+            if (heights[i] != expected[i]) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 func heightChecker(heights []int) int {
     expected := make([]int, len(heights))
@@ -294,6 +313,34 @@ class Solution {
         let res = 0;
         for (let i = 0; i < heights.length; i++) {
             if (heights[i] !== expected[i]) {
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int HeightChecker(int[] heights) {
+        int[] count = new int[101];
+        foreach (int h in heights) {
+            count[h]++;
+        }
+
+        List<int> expected = new List<int>();
+        for (int h = 1; h <= 100; h++) {
+            int c = count[h];
+            for (int i = 0; i < c; i++) {
+                expected.Add(h);
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < heights.Length; i++) {
+            if (heights[i] != expected[i]) {
                 res++;
             }
         }
