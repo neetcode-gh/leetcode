@@ -791,6 +791,8 @@ public class Solution {
 ```
 
 ```go
+import "github.com/a234567894/gods/stacks/linkedliststack"
+
 func trap(height []int) int {
     if len(height) == 0 {
         return 0
