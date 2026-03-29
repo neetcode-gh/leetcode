@@ -586,6 +586,125 @@ impl Solution {
 
 ---
 
+
+
+
+## Another intuitive Dynamic Programming Method :- 
+> Keeping track of two variables : index and a boolean canBuy
+
+>  canBuy ensures if the stock can be bought or not -> if the stock can be bought it basically implies that the stock has not been sold. But if stock cannot be
+
+>  bought means that it has to be sold. So, we create two cases using the canBuy variable.
+
+> For case 1 where we can buy a stock we check for the current indexed element if it is better to buy or not buy just recursing using two variables namely : 'take' for if we want to take the current stock and 'skip' for if we do not want to take the current stock.
+
+>  Else we either sell the stock or hold it. > This process will only be done once as per the question.
+
+>  But due do recursion we are actually exploring all possibilites, that gives exponential time. In order to bring down the time complexity we cache(Dynamic Programming) our results in a dp table so that we do not repeat any subproblems(standard procedure of Dynamic Programming to take care of overlapping subproblems)
+
+>  two states for DP as we are updating both index and canBuy variables Code in CPP :-
+
+
+
+
+##Recursion + Memoization :- 
+```
+class Solution {
+public:
+    int n;
+    vector<vector<int>> dp;
+    int f(int i, int canBuy, vector<int>& prices){
+        if(i == n){
+            return 0;
+        }
+        if(dp[i][canBuy] != -1 || i+1 > n) return dp[i][canBuy]; //reduces the number of calls
+
+        //case 1 : we can buy it;
+        if(canBuy == 1){
+            int take = f(i+1, 0, prices) - prices[i];
+
+            int skip = f(i+1, 1, prices);
+            
+            return dp[i][canBuy] = max(take, skip);
+
+        }
+        //case 2 : selling the stock (i.e., cannot buy)
+        else{
+            int sell =  prices[i];
+
+            int hold = f(i + 1, 0, prices);
+
+            return dp[i][canBuy] = max(sell, hold);
+        }
+    }
+    int maxProfit(vector<int>& prices) {
+
+
+        n = prices.size();
+        dp.assign(n+1, vector<int>(2, -1)); //canBuy can have only two states, either yes or no
+
+        return f(0, 1, prices);
+        
+    }
+};
+
+```
+#Complexities 
+>Time Complexity = O(2*n) -> O(n)
+>>Space Complexity = O( (n* 2) -> O(n) + recursive stack [ O(n) ]
+
+
+
+
+
+
+## Equivalent Tabulation Method
+>> >Just write the above recursive calls in terms of Dp indices in an iterative manner.
+>> > >Reduces Resursive Stack Overhead.
+
+
+```
+class Solution {
+public:
+    int n;
+    vector<vector<int>> dp;
+    int maxProfit(vector<int>& prices) {
+
+
+        n = prices.size();
+        dp.assign(n+1, vector<int>(2, 0));
+        //tabulation
+        for(int i = n-1;i>=0;i--){
+            int take = dp[i+1][0] - prices[i];
+
+            int skip = dp[i+1][1];
+
+            dp[i][1] = max(take, skip);
+
+            int sell = prices[i];
+
+            int keep = dp[i+1][0];
+
+            dp[i][0] = max(sell , keep);
+        }
+        return dp[0][1]; 
+        
+    }
+};
+
+```
+#Complexities 
+>Time Complexity = O(2*n) -> O(n)
+>Space Complexity = O( (n+1)* 2) -> O(n) (No recursive stack)
+
+
+
+
+
+
+
+
+
 ## Common Pitfalls
 
 ### Selling Before Buying
