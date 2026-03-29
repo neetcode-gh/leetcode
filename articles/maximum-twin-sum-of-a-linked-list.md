@@ -154,6 +154,43 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+
+public class Solution {
+    public int PairSum(ListNode head) {
+        List<int> arr = new List<int>();
+        ListNode cur = head;
+
+        while (cur != null) {
+            arr.Add(cur.val);
+            cur = cur.next;
+        }
+
+        int i = 0, j = arr.Count - 1;
+        int res = 0;
+
+        while (i < j) {
+            res = Math.Max(res, arr[i] + arr[j]);
+            i++;
+            j--;
+        }
+
+        return res;
+    }
+}
+```
+
 ```go
 /**
  * Definition for singly-linked list.
@@ -457,6 +494,50 @@ class Solution {
             second = prev;
         while (second) {
             res = Math.max(res, first.val + second.val);
+            first = first.next;
+            second = second.next;
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+
+public class Solution {
+    public int PairSum(ListNode head) {
+        ListNode slow = head, fast = head;
+
+        while (fast != null && fast.next != null) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+
+        ListNode prev = null, cur = slow;
+        while (cur != null) {
+            ListNode nxt = cur.next;
+            cur.next = prev;
+            prev = cur;
+            cur = nxt;
+        }
+
+        int res = 0;
+        ListNode first = head, second = prev;
+
+        while (second != null) {
+            res = Math.Max(res, first.val + second.val);
             first = first.next;
             second = second.next;
         }
@@ -773,6 +854,45 @@ class Solution {
         let res = 0;
         while (slow) {
             res = Math.max(res, prev.val + slow.val);
+            prev = prev.next;
+            slow = slow.next;
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+
+public class Solution {
+    public int PairSum(ListNode head) {
+        ListNode slow = head, fast = head;
+        ListNode prev = null;
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            ListNode tmp = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = tmp;
+        }
+
+        int res = 0;
+
+        while (slow != null) {
+            res = Math.Max(res, prev.val + slow.val);
             prev = prev.next;
             slow = slow.next;
         }
