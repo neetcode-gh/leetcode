@@ -248,7 +248,7 @@ So we first check how many zeros the array has:
         - The index with zero gets the `prod` of all non-zero numbers.
         - All other positions get `0`.
     - If there are no zeros:
-        - Set each result value to `prod / nums[i]`.
+        - Set each result value to `prod // nums[i]`.
 5. Return the result array.
 
 ::tabs-start

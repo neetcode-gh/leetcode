@@ -103,7 +103,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> GetRow(int rowIndex) {
+    public List<int> GetRow(int rowIndex) {
         if (rowIndex == 0) return new List<int> { 1 };
 
         var curRow = new List<int> { 1 };
@@ -284,7 +284,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> GetRow(int rowIndex) {
+    public List<int> GetRow(int rowIndex) {
         var res = new List<int[]>();
         for (int i = 0; i <= rowIndex; i++) {
             int[] row = new int[i + 1];
@@ -462,7 +462,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> GetRow(int rowIndex) {
+    public List<int> GetRow(int rowIndex) {
         var res = new List<int> { 1 };
         for (int i = 0; i < rowIndex; i++) {
             var nextRow = new List<int>(new int[res.Count + 1]);
@@ -627,7 +627,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> GetRow(int rowIndex) {
+    public List<int> GetRow(int rowIndex) {
         var row = new List<int>(new int[rowIndex + 1]);
         for (int i = 0; i <= rowIndex; i++) row[i] = 1;
         for (int i = 1; i < rowIndex; i++) {
@@ -778,7 +778,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> GetRow(int rowIndex) {
+    public List<int> GetRow(int rowIndex) {
         var row = new List<int> { 1 };
         for (int i = 1; i <= rowIndex; i++) {
             row.Add((int)((long)row[row.Count - 1] * (rowIndex - i + 1) / i));
