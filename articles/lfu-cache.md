@@ -623,10 +623,6 @@ class LinkedList:
         self.pop(self.left.next.val)
         return res
 
-    def update(self, val):
-        self.pop(val)
-        self.pushRight(val)
-
 class LFUCache:
 
     def __init__(self, capacity: int):
@@ -719,11 +715,6 @@ class DoublyLinkedList {
         int res = this.left.next.val;
         pop(res);
         return res;
-    }
-
-    public void update(int val) {
-        pop(val);
-        pushRight(val);
     }
 }
 
@@ -843,11 +834,6 @@ class LFUCache {
             int res = left->next->val;
             pop(res);
             return res;
-        }
-
-        void update(int val) {
-            pop(val);
-            pushRight(val);
         }
     };
 
@@ -975,14 +961,6 @@ class LinkedList {
         const res = this.left.next.val;
         this.pop(res);
         return res;
-    }
-
-    /**
-     * @param {number} val
-     */
-    update(val) {
-        this.pop(val);
-        this.pushRight(val);
     }
 }
 
