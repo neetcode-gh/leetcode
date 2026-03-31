@@ -409,29 +409,27 @@ class Solution {
      * @return {number[][]}
      */
     subsetsWithDup(nums) {
-        const res = [];
+        let res = [];
         nums.sort((a, b) => a - b);
-        this.backtrack(0, [], nums, res);
-        return res;
-    }
 
-    /**
-     * @param {number} start
-     * @param {number[]} subset
-     * @param {number[]} nums
-     * @param {number[][]} res
-     * @return {void}
-     */
-    backtrack(start, subset, nums, res) {
-        res.push([...subset]);
-        for (let i = start; i < nums.length; i++) {
-            if (i > start && nums[i] === nums[i - 1]) {
-                continue;
+        const backtrack = (i, subset) => {
+            if (i === nums.length) {
+                res.push([...subset]);
+                return;
             }
+
             subset.push(nums[i]);
-            this.backtrack(i + 1, subset, nums, res);
+            backtrack(i + 1, subset);
             subset.pop();
-        }
+
+            while (i + 1 < nums.length && nums[i] === nums[i + 1]) {
+                i++;
+            }
+            backtrack(i + 1, subset);
+        };
+
+        backtrack(0, []);
+        return res;
     }
 }
 ```
