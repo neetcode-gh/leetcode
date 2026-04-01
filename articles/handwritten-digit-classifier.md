@@ -34,6 +34,7 @@ We define a PyTorch `nn.Module` with two linear layers, ReLU, dropout, and sigmo
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -58,6 +59,8 @@ class Solution(nn.Module):
         x = self.sigmoid(x)
         return torch.round(x, decimals=4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -86,6 +89,7 @@ The output is 10 values, each representing the model's confidence for a digit. T
 
 Without `torch.manual_seed(0)`, weight initialization and dropout patterns are random, making the output non-deterministic and tests fail.
 
+::tabs-start
 ```python
 # Wrong: non-deterministic initialization
 def __init__(self):
@@ -98,11 +102,14 @@ def __init__(self):
     torch.manual_seed(0)
     self.first_linear = nn.Linear(784, 512)
 ```
+::tabs-end
+
 
 ### Using Softmax Instead of Sigmoid
 
 Softmax produces a distribution that sums to 1 (probabilities are coupled). Sigmoid produces independent probabilities for each class. The problem specifies sigmoid.
 
+::tabs-start
 ```python
 # Wrong: softmax couples the outputs
 x = nn.functional.softmax(x, dim=-1)
@@ -110,6 +117,8 @@ x = nn.functional.softmax(x, dim=-1)
 # Correct: sigmoid gives independent per-class probabilities
 x = self.sigmoid(x)
 ```
+::tabs-end
+
 
 ---
 

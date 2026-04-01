@@ -31,6 +31,7 @@ The forward pass is a single matrix-vector multiplication using `np.matmul`. The
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -45,6 +46,8 @@ class Solution:
         error = np.mean(np.square(model_prediction - ground_truth))
         return round(error, 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -71,6 +74,7 @@ MSE $= (0.25 + 2.25 + 0.25) / 3 = 0.91667$
 
 `X * w` broadcasts and multiplies element-wise, which is not the dot product you want.
 
+::tabs-start
 ```python
 # Wrong: element-wise multiplication, wrong shape
 prediction = X * weights
@@ -78,11 +82,14 @@ prediction = X * weights
 # Correct: matrix-vector multiplication
 prediction = np.matmul(X, weights)
 ```
+::tabs-end
+
 
 ### Forgetting to Square Before Averaging
 
 Mean absolute error and mean squared error are different loss functions with different gradient properties.
 
+::tabs-start
 ```python
 # Wrong: this is MAE, not MSE
 error = np.mean(np.abs(model_prediction - ground_truth))
@@ -90,6 +97,8 @@ error = np.mean(np.abs(model_prediction - ground_truth))
 # Correct: MSE squares the differences
 error = np.mean(np.square(model_prediction - ground_truth))
 ```
+::tabs-end
+
 
 ---
 

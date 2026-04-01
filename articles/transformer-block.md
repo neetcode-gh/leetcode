@@ -35,6 +35,7 @@ The transformer block applies Pre-Norm attention with a skip connection, then Pr
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -112,6 +113,8 @@ class TransformerBlock(nn.Module):
             torch.manual_seed(0)
             return self.dropout(self.down_projection(self.relu(self.up_projection(x))))
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -142,6 +145,7 @@ The output shape matches the input, so blocks can be stacked arbitrarily deep.
 
 Applying layer normalization after the sub-layer (Post-Norm) instead of before it (Pre-Norm) is less stable for deep networks.
 
+::tabs-start
 ```python
 # Wrong (Post-Norm): less stable for deep networks
 embedded = self.first_norm(embedded + self.attention(embedded))
@@ -149,11 +153,14 @@ embedded = self.first_norm(embedded + self.attention(embedded))
 # Correct (Pre-Norm): normalize before the sub-layer
 embedded = embedded + self.attention(self.first_norm(embedded))
 ```
+::tabs-end
+
 
 ### Forgetting the Residual Connection
 
 Without the skip path, the block must learn the full transformation, and gradients must pass through every sub-layer. Deep networks become untrainable.
 
+::tabs-start
 ```python
 # Wrong: no residual, gradients vanish in deep networks
 embedded = self.attention(self.first_norm(embedded))
@@ -161,6 +168,8 @@ embedded = self.attention(self.first_norm(embedded))
 # Correct: residual connection preserves gradient flow
 embedded = embedded + self.attention(self.first_norm(embedded))
 ```
+::tabs-end
+
 
 ---
 

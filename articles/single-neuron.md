@@ -34,6 +34,7 @@ We compute the dot product of inputs and weights using `np.dot`, add the bias, t
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -50,6 +51,8 @@ class Solution:
             result = z
         return round(float(result), 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -78,6 +81,7 @@ The negative $z$ means the input is "misaligned" with the weight direction. Sigm
 
 The bias shifts the decision boundary. Without it, the neuron can only represent functions that pass through the origin.
 
+::tabs-start
 ```python
 # Wrong: missing bias
 z = np.dot(x, w)
@@ -85,11 +89,14 @@ z = np.dot(x, w)
 # Correct: include bias
 z = np.dot(x, w) + b
 ```
+::tabs-end
+
 
 ### Using max() vs np.maximum() for Scalar ReLU
 
 For a single scalar, Python's built-in `max` works fine. But if you later vectorize to arrays, you need `np.maximum`.
 
+::tabs-start
 ```python
 # Fine for scalars
 result = max(0.0, z)
@@ -97,6 +104,8 @@ result = max(0.0, z)
 # Required for arrays (vectorized ReLU)
 result = np.maximum(0, z_array)
 ```
+::tabs-end
+
 
 ---
 

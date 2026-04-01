@@ -33,6 +33,7 @@ Initialize weights to zeros and bias to zero. Each epoch: compute predictions, c
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -60,6 +61,8 @@ class Solution:
 
         return (np.round(w, 5), round(float(b), 5))
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -85,6 +88,7 @@ The weights move toward the true relationship each epoch.
 
 The bias has its own gradient. If you only update weights, the model cannot learn functions with non-zero intercepts.
 
+::tabs-start
 ```python
 # Wrong: only updating weights
 w = w - lr * dw
@@ -94,11 +98,14 @@ w = w - lr * dw
 w = w - lr * dw
 b = b - lr * db
 ```
+::tabs-end
+
 
 ### Getting the Gradient Formula Wrong
 
 The MSE gradient has a factor of $2/N$. Getting this wrong changes the effective learning rate, which can cause divergence or slow convergence.
 
+::tabs-start
 ```python
 # Wrong: missing the 2/N factor
 dw = X.T @ error
@@ -106,6 +113,8 @@ dw = X.T @ error
 # Correct: properly scaled gradient
 dw = (2.0 / n) * (X.T @ error)
 ```
+::tabs-end
+
 
 ---
 

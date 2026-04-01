@@ -31,6 +31,7 @@ Embedding lookup is a single line of NumPy fancy indexing. Given an embedding ma
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -40,6 +41,8 @@ class Solution:
     def lookup(self, embeddings: NDArray[np.float64], token_ids: NDArray[np.int64]) -> NDArray[np.float64]:
         return np.round(embeddings[token_ids], 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -75,6 +78,7 @@ Result shape: $(3, 3)$.
 
 While mathematically equivalent to one-hot times $E$, actually constructing one-hot vectors is wasteful. Use indexing.
 
+::tabs-start
 ```python
 # Wrong: wasteful one-hot matrix multiply
 one_hot = np.eye(V)[token_ids]  # creates huge intermediate matrix
@@ -83,11 +87,14 @@ result = one_hot @ embeddings
 # Correct: direct indexing, O(1) per token
 result = embeddings[token_ids]
 ```
+::tabs-end
+
 
 ### Off-by-One Token IDs
 
 If your vocabulary starts at 1 (reserving 0 for padding), make sure the embedding matrix has $V+1$ rows, or subtract 1 from IDs before lookup.
 
+::tabs-start
 ```python
 # Wrong: token ID 5 indexes row 5, but if vocab starts at 1,
 # that's actually the 6th word
@@ -96,6 +103,8 @@ result = embeddings[token_ids]
 # Correct if IDs are 1-indexed: either expand matrix or shift IDs
 result = embeddings[token_ids - 1]
 ```
+::tabs-end
+
 
 ---
 

@@ -32,6 +32,7 @@ Create a list of `SingleHeadAttention` modules, each with attention dimension `a
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -77,6 +78,8 @@ class MultiHeadedSelfAttention(nn.Module):
 
             return scores @ v
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -105,6 +108,7 @@ Each head projects from 8 to 2 dimensions (8/4 = 2), and concatenation restores 
 
 A plain Python list does not register sub-modules with PyTorch. Their parameters will not be updated during training.
 
+::tabs-start
 ```python
 # Wrong: parameters not tracked
 self.att_heads = []
@@ -116,11 +120,14 @@ self.att_heads = nn.ModuleList()
 for i in range(num_heads):
     self.att_heads.append(SingleHeadAttention(...))
 ```
+::tabs-end
+
 
 ### Wrong Head Dimension
 
 Each head should get `attention_dim // num_heads`, not `attention_dim`. Using the full dimension means each head is as large as a single-head attention, multiplying computation by $h$.
 
+::tabs-start
 ```python
 # Wrong: each head uses full dimension, total params * h
 SingleHeadAttention(embedding_dim, attention_dim)
@@ -128,6 +135,8 @@ SingleHeadAttention(embedding_dim, attention_dim)
 # Correct: each head uses 1/h of the dimension
 SingleHeadAttention(embedding_dim, attention_dim // num_heads)
 ```
+::tabs-end
+
 
 ---
 

@@ -33,6 +33,7 @@ We shift the input by subtracting the maximum value for numerical stability, exp
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -45,6 +46,8 @@ class Solution:
         exps = np.exp(shifted)
         return np.round(exps / np.sum(exps), 4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -72,6 +75,7 @@ The largest logit (3.0) gets the highest probability (0.6652), and all three sum
 
 Without subtracting the max, large logits cause overflow.
 
+::tabs-start
 ```python
 # Wrong: overflows for large z values
 exps = np.exp(z)
@@ -82,11 +86,14 @@ shifted = z - np.max(z)
 exps = np.exp(shifted)
 return exps / np.sum(exps)
 ```
+::tabs-end
+
 
 ### Confusing Softmax with Sigmoid
 
 Sigmoid maps each element independently to $(0,1)$. Softmax creates a distribution that sums to 1 across all elements. They are not interchangeable.
 
+::tabs-start
 ```python
 # Wrong for multi-class: outputs don't sum to 1
 probs = 1 / (1 + np.exp(-z))
@@ -94,6 +101,8 @@ probs = 1 / (1 + np.exp(-z))
 # Correct for multi-class: proper probability distribution
 probs = np.exp(z - np.max(z)) / np.sum(np.exp(z - np.max(z)))
 ```
+::tabs-end
+
 
 ---
 

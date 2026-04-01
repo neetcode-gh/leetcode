@@ -29,6 +29,7 @@ Each method exercises a core PyTorch operation. We use `torch.reshape` for resha
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn
@@ -53,6 +54,8 @@ class Solution:
         loss = torch.nn.functional.mse_loss(prediction, target)
         return torch.round(loss, decimals=4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -76,6 +79,7 @@ class Solution:
 
 `dim=0` averages across rows (column-wise means), `dim=1` averages across columns (row-wise means). These are easy to confuse.
 
+::tabs-start
 ```python
 # Wrong: averages across columns instead of rows
 averaged = torch.mean(to_avg, dim=1)
@@ -83,11 +87,14 @@ averaged = torch.mean(to_avg, dim=1)
 # Correct: averages across rows (column means)
 averaged = torch.mean(to_avg, dim=0)
 ```
+::tabs-end
+
 
 ### Mismatched Shapes for Concatenation
 
 Concatenation along `dim=1` requires the same number of rows. Different row counts cause a runtime error.
 
+::tabs-start
 ```python
 # Wrong: different number of rows (2 vs 3)
 torch.cat((torch.zeros(2, 3), torch.zeros(3, 3)), dim=1)
@@ -95,6 +102,8 @@ torch.cat((torch.zeros(2, 3), torch.zeros(3, 3)), dim=1)
 # Correct: same number of rows
 torch.cat((torch.zeros(2, 3), torch.zeros(2, 3)), dim=1)
 ```
+::tabs-end
+
 
 ---
 

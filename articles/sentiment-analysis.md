@@ -31,6 +31,7 @@ Define an embedding layer, a linear projection, and sigmoid. In the forward pass
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -50,6 +51,8 @@ class Solution(nn.Module):
         projected = self.linear_layer(averaged)
         return torch.round(self.sigmoid_layer(projected), decimals=4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -75,6 +78,7 @@ For `x = [[3, 1, 4]]` (1 sentence, 3 tokens) and `vocabulary_size = 10`:
 
 `dim=0` averages across the batch (wrong: collapses different sentences together). `dim=1` averages across the sequence (correct: collapses words within each sentence).
 
+::tabs-start
 ```python
 # Wrong: averages across batch, mixing different sentences
 averaged = torch.mean(embeddings, dim=0)
@@ -82,11 +86,14 @@ averaged = torch.mean(embeddings, dim=0)
 # Correct: averages across sequence within each sentence
 averaged = torch.mean(embeddings, dim=1)
 ```
+::tabs-end
+
 
 ### Forgetting to Handle Padding
 
 If input sequences are padded with 0s, the padding tokens have their own embedding vectors that get included in the average. For this problem the test cases handle this, but in production you would mask padding before averaging.
 
+::tabs-start
 ```python
 # Simple (works for this problem)
 averaged = torch.mean(embeddings, dim=1)
@@ -95,6 +102,8 @@ averaged = torch.mean(embeddings, dim=1)
 mask = (x != 0).unsqueeze(-1).float()
 averaged = (embeddings * mask).sum(dim=1) / mask.sum(dim=1)
 ```
+::tabs-end
+
 
 ---
 

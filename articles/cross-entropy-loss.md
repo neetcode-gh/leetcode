@@ -36,6 +36,7 @@ For binary cross-entropy, we apply the formula directly: clip predictions with e
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -55,6 +56,8 @@ class Solution:
         loss = -np.mean(np.sum(y_true * np.log(y_pred), axis=1))
         return round(loss, 4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -90,6 +93,7 @@ Average: $(0.35667 + 0.22314) / 2 = 0.28991$
 
 Without epsilon clipping, $\log(0)$ produces $-\infty$ and breaks training.
 
+::tabs-start
 ```python
 # Wrong: log(0) is undefined
 loss = -np.mean(y_true * np.log(y_pred))
@@ -98,11 +102,14 @@ loss = -np.mean(y_true * np.log(y_pred))
 y_pred = np.clip(y_pred, 1e-7, 1 - 1e-7)
 loss = -np.mean(y_true * np.log(y_pred))
 ```
+::tabs-end
+
 
 ### Mixing Up Binary and Categorical
 
 Binary cross-entropy expects 1D arrays (one probability per sample). Categorical expects 2D arrays (one probability per class per sample). Using the wrong one silently produces wrong gradients.
 
+::tabs-start
 ```python
 # Wrong: using BCE formula on one-hot encoded multi-class data
 loss = -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
@@ -110,6 +117,8 @@ loss = -np.mean(y_true * np.log(y_pred) + (1 - y_true) * np.log(1 - y_pred))
 # Correct: for multi-class, sum over classes first, then average over samples
 loss = -np.mean(np.sum(y_true * np.log(y_pred), axis=1))
 ```
+::tabs-end
+
 
 ---
 

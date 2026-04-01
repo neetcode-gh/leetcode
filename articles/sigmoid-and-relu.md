@@ -34,6 +34,7 @@ Both functions are applied element-wise to a NumPy array. Sigmoid uses the formu
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -47,6 +48,8 @@ class Solution:
     def relu(self, z: NDArray[np.float64]) -> NDArray[np.float64]:
         return np.maximum(0, z)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -74,6 +77,7 @@ Notice that sigmoid compresses everything into $(0,1)$, while ReLU is identity f
 
 `np.max` returns the single largest element of an array. `np.maximum` compares element-wise.
 
+::tabs-start
 ```python
 # Wrong: returns a single scalar
 result = np.max(0, z)
@@ -81,11 +85,14 @@ result = np.max(0, z)
 # Correct: element-wise comparison with 0
 result = np.maximum(0, z)
 ```
+::tabs-end
+
 
 ### Numerical Overflow in Sigmoid
 
 For very large negative $z$ values, $e^{-z}$ overflows. A common fix is to use a conditional formula, but NumPy handles this gracefully for standard float64 ranges.
 
+::tabs-start
 ```python
 # Potentially unstable for extreme values
 result = 1 / (1 + np.exp(-z))
@@ -94,6 +101,8 @@ result = 1 / (1 + np.exp(-z))
 z_clipped = np.clip(z, -500, 500)
 result = 1 / (1 + np.exp(-z_clipped))
 ```
+::tabs-end
+
 
 ---
 

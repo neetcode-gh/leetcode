@@ -33,6 +33,7 @@ Split the raw text into words, sample random starting positions, and extract con
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 from typing import List, Tuple
@@ -49,6 +50,8 @@ class Solution:
             Y.append(tokenized[idx+1:idx+1+context_length])
         return X, Y
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -77,6 +80,7 @@ Each target word is the next word after the corresponding input position.
 
 The problem uses `torch.manual_seed(0)` for reproducibility. Using `random.randint` instead produces different indices and fails the test cases.
 
+::tabs-start
 ```python
 # Wrong: different RNG, non-reproducible
 import random
@@ -87,11 +91,14 @@ indices = [random.randint(0, len(tokenized) - context_length - 1) for _ in range
 torch.manual_seed(0)
 indices = torch.randint(low=0, high=len(tokenized) - context_length, size=(batch_size,)).tolist()
 ```
+::tabs-end
+
 
 ### Forgetting to Convert Tensor Indices to Python List
 
 `torch.randint` returns a tensor. Using it directly for list slicing works, but `.tolist()` makes the code clearer and avoids potential type issues.
 
+::tabs-start
 ```python
 # Works but less clear
 indices = torch.randint(low=0, high=n, size=(batch_size,))
@@ -101,6 +108,8 @@ for idx in indices:
 # Better: explicit conversion
 indices = torch.randint(low=0, high=n, size=(batch_size,)).tolist()
 ```
+::tabs-end
+
 
 ---
 

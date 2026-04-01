@@ -29,6 +29,7 @@ We start at some initial value and repeatedly apply the update rule. Each iterat
 
 ### Implementation
 
+::tabs-start
 ```python
 class Solution:
     def get_minimizer(self, iterations: int, learning_rate: float, init: int) -> float:
@@ -40,6 +41,8 @@ class Solution:
 
         return round(minimizer, 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -66,6 +69,7 @@ Each step multiplies $x$ by $(1 - 2\alpha) = 0.8$, so convergence is geometric.
 
 A common mistake is computing the derivative but not actually subtracting it from the current value:
 
+::tabs-start
 ```python
 # Wrong: derivative computed but minimizer never changes
 derivative = 2 * minimizer
@@ -75,6 +79,8 @@ derivative = 2 * minimizer
 derivative = 2 * minimizer
 minimizer = minimizer - learning_rate * derivative
 ```
+::tabs-end
+
 
 ### Using the Wrong Derivative
 

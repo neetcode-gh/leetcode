@@ -37,6 +37,7 @@ We run the forward pass to get $\hat{y}$, compute the delta term (error times si
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -57,6 +58,8 @@ class Solution:
 
         return (dL_dw, dL_db)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -87,6 +90,7 @@ The negative gradients mean: increase $w_0$, increase $w_1$, and increase $b$ to
 
 The error is $\hat{y} - y$, not $y - \hat{y}$. Flipping it negates all gradients, making the model move away from the target.
 
+::tabs-start
 ```python
 # Wrong: inverted error
 error = y_true - y_hat
@@ -94,11 +98,14 @@ error = y_true - y_hat
 # Correct: prediction minus truth
 error = y_hat - y_true
 ```
+::tabs-end
+
 
 ### Forgetting the Sigmoid Derivative
 
 The sigmoid derivative is part of the chain. Without it, you are computing the gradient as if the activation were linear, which gives wrong weight updates.
 
+::tabs-start
 ```python
 # Wrong: missing sigmoid derivative in the chain
 delta = error  # only the error, no activation derivative
@@ -107,6 +114,8 @@ delta = error  # only the error, no activation derivative
 sigmoid_deriv = y_hat * (1.0 - y_hat)
 delta = error * sigmoid_deriv
 ```
+::tabs-end
+
 
 ---
 

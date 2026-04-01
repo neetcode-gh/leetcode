@@ -34,6 +34,7 @@ At each iteration, compute predictions with current weights, compute the gradien
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -64,6 +65,8 @@ class Solution:
 
         return np.round(initial_weights, 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -92,6 +95,7 @@ After more iterations, the weights converge toward the true relationship $y = 1x
 
 If you recompute predictions inside the inner weight loop, each weight sees a different prediction vector. Compute predictions once per iteration, then update all weights.
 
+::tabs-start
 ```python
 # Wrong: recomputing predictions after each weight update
 for j in range(len(weights)):
@@ -105,11 +109,14 @@ for j in range(len(weights)):
     gradient = self.get_derivative(prediction, Y, N, X, j)
     weights[j] -= gradient * lr
 ```
+::tabs-end
+
 
 ### Getting the Gradient Sign Wrong
 
 The derivative formula has a negative sign because we compute $(y - \hat{y})$, not $(\hat{y} - y)$. Flipping the sign makes the model diverge instead of converge.
 
+::tabs-start
 ```python
 # Wrong: wrong sign, model diverges
 return 2 * np.dot(ground_truth - model_prediction, X[:, j]) / N
@@ -117,6 +124,8 @@ return 2 * np.dot(ground_truth - model_prediction, X[:, j]) / N
 # Correct: negative sign
 return -2 * np.dot(ground_truth - model_prediction, X[:, j]) / N
 ```
+::tabs-end
+
 
 ---
 

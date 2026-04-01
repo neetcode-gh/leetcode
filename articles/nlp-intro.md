@@ -30,6 +30,7 @@ Combine positive and negative sentences, build a sorted vocabulary mapping words
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -50,6 +51,8 @@ class Solution:
         # Pad shorter sequences with 0s so output is a rectangular tensor
         return nn.utils.rnn.pad_sequence(encoded, batch_first=True)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -80,6 +83,7 @@ If one sentence were "I really love this" (length 4), the shorter one would beco
 
 If IDs start at 0, the first word gets ID 0, which is the same as padding. The model cannot distinguish between that word and padding positions.
 
+::tabs-start
 ```python
 # Wrong: first word gets ID 0 = padding
 word_to_id = {word: idx for idx, word in enumerate(vocabulary)}
@@ -87,11 +91,14 @@ word_to_id = {word: idx for idx, word in enumerate(vocabulary)}
 # Correct: IDs start at 1, reserving 0 for padding
 word_to_id = {word: idx + 1 for idx, word in enumerate(vocabulary)}
 ```
+::tabs-end
+
 
 ### Not Sorting the Vocabulary
 
 Without sorting, the vocabulary order depends on Python's set iteration order, which is non-deterministic. Different runs produce different ID assignments.
 
+::tabs-start
 ```python
 # Wrong: non-deterministic ordering
 vocabulary = list({word for sentence in combined for word in sentence.split()})
@@ -99,6 +106,8 @@ vocabulary = list({word for sentence in combined for word in sentence.split()})
 # Correct: sorted for reproducibility
 vocabulary = sorted({word for sentence in combined for word in sentence.split()})
 ```
+::tabs-end
+
 
 ---
 

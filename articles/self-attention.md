@@ -36,6 +36,7 @@ Project the input into Q, K, V using linear layers. Compute attention scores as 
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -69,6 +70,8 @@ class SingleHeadAttention(nn.Module):
 
         return torch.round(scores @ v, decimals=4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -96,6 +99,7 @@ For a sequence of 3 tokens with `embedding_dim = 4`, `attention_dim = 2`:
 
 Without scaling, large $d_k$ values make dot products large, pushing softmax into saturation where gradients vanish.
 
+::tabs-start
 ```python
 # Wrong: unscaled dot products
 scores = q @ torch.transpose(k, 1, 2)
@@ -106,11 +110,14 @@ scores = q @ torch.transpose(k, 1, 2)
 scores = scores / (attention_dim ** 0.5)
 scores = nn.functional.softmax(scores, dim=2)
 ```
+::tabs-end
+
 
 ### Applying the Mask After Softmax
 
 The mask must be applied before softmax. After softmax, setting values to zero does not produce a valid probability distribution (the remaining values would not sum to 1).
 
+::tabs-start
 ```python
 # Wrong: mask after softmax
 scores = nn.functional.softmax(scores, dim=2)
@@ -120,6 +127,8 @@ scores = scores.masked_fill(mask, 0)  # row doesn't sum to 1!
 scores = scores.masked_fill(mask, float('-inf'))
 scores = nn.functional.softmax(scores, dim=2)
 ```
+::tabs-end
+
 
 ---
 

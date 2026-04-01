@@ -33,6 +33,7 @@ Compose all previously built components: embedding layers, a sequence of transfo
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -135,6 +136,8 @@ class GPT(nn.Module):
             embedded = embedded + self.linear_network(self.second_norm(embedded)) # another skip connection
             return embedded
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -166,6 +169,7 @@ Each of the 5 positions outputs a distribution over 100 tokens, predicting the n
 
 Without position embeddings, the model has no way to distinguish "cat sat" from "sat cat." The representations would be identical.
 
+::tabs-start
 ```python
 # Wrong: no position information
 embedded = self.word_embeddings(context)
@@ -177,11 +181,14 @@ positions = torch.arange(context.shape[1], device=context.device)
 embedded = embedded + self.position_embeddings(positions)
 output = self.transformer_blocks(embedded)
 ```
+::tabs-end
+
 
 ### Using nn.ModuleList Instead of nn.Sequential for Blocks
 
 `nn.Sequential` chains modules automatically in `forward`. `nn.ModuleList` requires you to write the loop yourself. Both register parameters, but Sequential is cleaner here.
 
+::tabs-start
 ```python
 # Works but requires manual loop
 self.blocks = nn.ModuleList([TransformerBlock(...) for _ in range(N)])
@@ -191,6 +198,8 @@ self.blocks = nn.ModuleList([TransformerBlock(...) for _ in range(N)])
 self.blocks = nn.Sequential(*[TransformerBlock(...) for _ in range(N)])
 # forward: x = self.blocks(x)
 ```
+::tabs-end
+
 
 ---
 

@@ -33,6 +33,7 @@ Compute the mean and variance of the input, subtract the mean, divide by the sta
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -47,6 +48,8 @@ class Solution:
         out = gamma * x_norm + beta
         return np.round(out, 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -75,6 +78,7 @@ With $\gamma = [2, 2, 2, 2]$ and $\beta = [1, 1, 1, 1]$, the output would be $[-
 
 Without epsilon, a constant input (all same values) has variance 0, causing division by zero.
 
+::tabs-start
 ```python
 # Wrong: division by zero when variance is 0
 x_norm = (x - mean) / np.sqrt(var)
@@ -82,11 +86,14 @@ x_norm = (x - mean) / np.sqrt(var)
 # Correct: epsilon prevents division by zero
 x_norm = (x - mean) / np.sqrt(var + 1e-5)
 ```
+::tabs-end
+
 
 ### Using Batch Statistics Instead of Per-Sample Statistics
 
 Layer norm computes mean and variance per sample. If you accidentally compute statistics across the batch dimension, you get batch normalization instead.
 
+::tabs-start
 ```python
 # Wrong for layer norm: statistics across batch
 mean = np.mean(x, axis=0)  # this is batch norm
@@ -94,6 +101,8 @@ mean = np.mean(x, axis=0)  # this is batch norm
 # Correct for layer norm: statistics across features (within each sample)
 mean = np.mean(x)  # for a single sample vector
 ```
+::tabs-end
+
 
 ---
 

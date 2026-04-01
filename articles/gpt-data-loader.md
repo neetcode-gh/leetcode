@@ -32,6 +32,7 @@ Sample random starting indices with `torch.randint`, then for each index use ten
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 from torchtyping import TensorType
@@ -45,6 +46,8 @@ class Solution:
         y = torch.stack([data[i + 1:i + 1 + context_length] for i in ix])
         return x, y
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -73,6 +76,7 @@ At position 0 of batch 0, the model sees $[20]$ and must predict $30$. At positi
 
 If you sample from $[0, \text{len}(\text{data}))$ instead of $[0, \text{len}(\text{data}) - C)$, starting positions near the end will cause index-out-of-bounds when extracting the target window.
 
+::tabs-start
 ```python
 # Wrong: index can be too large, y slice goes past end
 ix = torch.randint(len(data), (batch_size,))
@@ -80,11 +84,14 @@ ix = torch.randint(len(data), (batch_size,))
 # Correct: ensure room for context_length + 1 tokens
 ix = torch.randint(len(data) - context_length, (batch_size,))
 ```
+::tabs-end
+
 
 ### Forgetting the +1 Offset for Targets
 
 The target window starts one position after the input window. Without the offset, input and target are identical and the model learns nothing.
 
+::tabs-start
 ```python
 # Wrong: target same as input
 y = torch.stack([data[i:i + context_length] for i in ix])
@@ -92,6 +99,8 @@ y = torch.stack([data[i:i + context_length] for i in ix])
 # Correct: target shifted by 1
 y = torch.stack([data[i + 1:i + 1 + context_length] for i in ix])
 ```
+::tabs-end
+
 
 ---
 

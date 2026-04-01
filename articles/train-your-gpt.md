@@ -36,6 +36,7 @@ For each epoch, sample a random batch, run the forward pass, compute cross-entro
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -61,6 +62,8 @@ class Solution:
 
         return round(loss.item(), 4)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -87,6 +90,7 @@ The reshape `logits.view(32, 50)` and `y.view(32)` flattens 4 sequences of 8 pos
 
 Without zeroing gradients, they accumulate across epochs. The updates become the sum of all previous gradients, causing erratic training.
 
+::tabs-start
 ```python
 # Wrong: gradients accumulate
 loss.backward()
@@ -97,11 +101,14 @@ optimizer.zero_grad()
 loss.backward()
 optimizer.step()
 ```
+::tabs-end
+
 
 ### Wrong Reshape for Cross-Entropy
 
 The logits must be $(B \cdot T, V)$ and targets must be $(B \cdot T)$. Getting the view dimensions wrong produces incorrect loss values or runtime errors.
 
+::tabs-start
 ```python
 # Wrong: forgot to flatten batch and time dimensions
 loss = F.cross_entropy(logits, y)  # shape mismatch
@@ -110,6 +117,8 @@ loss = F.cross_entropy(logits, y)  # shape mismatch
 B, T, C = logits.shape
 loss = F.cross_entropy(logits.view(B * T, C), y.view(B * T))
 ```
+::tabs-end
+
 
 ---
 

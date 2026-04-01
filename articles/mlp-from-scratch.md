@@ -30,6 +30,7 @@ We iterate through the list of weight matrices and bias vectors. For each layer,
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -45,6 +46,8 @@ class Solution:
                 h = np.maximum(0, h)         # ReLU on hidden layers only
         return np.round(h, 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -71,6 +74,7 @@ Notice that the negative value $-0.5$ was zeroed by ReLU. This sparsity is a fea
 
 The output layer should produce raw logits (for classification) or raw predictions (for regression). Applying ReLU to the output clips negative values, which prevents the model from predicting negative numbers.
 
+::tabs-start
 ```python
 # Wrong: ReLU on every layer including output
 for i in range(len(weights)):
@@ -83,11 +87,14 @@ for i in range(len(weights)):
     if i < len(weights) - 1:
         h = np.maximum(0, h)
 ```
+::tabs-end
+
 
 ### Shape Mismatches in Weight Matrices
 
 Each weight matrix must have its input dimension matching the previous layer's output dimension. A shape $(3, 4)$ weight matrix expects 3-dimensional input and produces 4-dimensional output.
 
+::tabs-start
 ```python
 # Wrong: weights[1] has incompatible input dimension
 weights = [np.zeros((2, 3)), np.zeros((4, 1))]  # 3 != 4
@@ -95,6 +102,8 @@ weights = [np.zeros((2, 3)), np.zeros((4, 1))]  # 3 != 4
 # Correct: output dim of layer i matches input dim of layer i+1
 weights = [np.zeros((2, 3)), np.zeros((3, 1))]  # 3 == 3
 ```
+::tabs-end
+
 
 ---
 

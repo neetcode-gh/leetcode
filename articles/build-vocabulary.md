@@ -32,6 +32,7 @@ Extract unique characters with `set()`, sort them, build two dictionaries with e
 
 ### Implementation
 
+::tabs-start
 ```python
 from typing import Dict, List, Tuple
 
@@ -48,6 +49,8 @@ class Solution:
     def decode(self, ids: List[int], itos: Dict[int, str]) -> str:
         return ''.join(itos[i] for i in ids)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -77,6 +80,7 @@ Round-trip: `decode(encode("hello")) = "hello"`.
 
 Python sets have no guaranteed iteration order. Without sorting, the same text may produce different vocabularies on different runs.
 
+::tabs-start
 ```python
 # Wrong: non-deterministic order
 chars = list(set(text))
@@ -84,11 +88,14 @@ chars = list(set(text))
 # Correct: sorted for reproducibility
 chars = sorted(set(text))
 ```
+::tabs-end
+
 
 ### Building itos Incorrectly
 
 The `itos` mapping must be the exact inverse of `stoi`. Building it independently can introduce mismatches.
 
+::tabs-start
 ```python
 # Wrong: building independently, might not be exact inverse
 itos = {i: ch for i, ch in enumerate(chars)}
@@ -96,6 +103,8 @@ itos = {i: ch for i, ch in enumerate(chars)}
 # Correct: derive from stoi to guarantee inverse relationship
 itos = {i: ch for ch, i in stoi.items()}
 ```
+::tabs-end
+
 
 ---
 

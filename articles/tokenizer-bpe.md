@@ -33,6 +33,7 @@ Start with individual characters. At each step, count all adjacent pairs, find t
 
 ### Implementation
 
+::tabs-start
 ```python
 from typing import List
 
@@ -74,6 +75,8 @@ class Solution:
 
         return merges
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -100,6 +103,7 @@ Result: `[['a','a'], ['a','b'], ['aa','ab']]`
 
 When merging "aa" in "aaa", you get "aa" + "a" (non-overlapping, left to right), not "a" + "aa". The left-to-right scan prevents double-counting.
 
+::tabs-start
 ```python
 # Wrong: re-scanning allows overlapping merges
 for i in range(len(tokens) - 1):
@@ -118,11 +122,14 @@ while i < len(tokens):
         new_tokens.append(tokens[i])
         i += 1
 ```
+::tabs-end
+
 
 ### Wrong Tiebreaking
 
 When multiple pairs have the same frequency, lexicographic ordering ensures deterministic results. Without it, different runs may produce different merge tables.
 
+::tabs-start
 ```python
 # Wrong: arbitrary tiebreak
 best = max(pairs, key=pairs.get)
@@ -132,6 +139,8 @@ best_count = max(pairs.values())
 candidates = sorted(p for p, c in pairs.items() if c == best_count)
 best = candidates[0]
 ```
+::tabs-end
+
 
 ---
 

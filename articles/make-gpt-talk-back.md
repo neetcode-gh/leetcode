@@ -36,6 +36,7 @@ Loop for the desired number of characters. Each iteration: crop context if neede
 
 ### Implementation
 
+::tabs-start
 ```python
 import torch
 import torch.nn as nn
@@ -65,6 +66,8 @@ class Solution:
             result.append(int_to_char[next_token.item()])
         return ''.join(result)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -92,6 +95,7 @@ Result: `"ello"`. Once the context grows past 8 tokens, it would be cropped to t
 
 Without cropping, the context grows past the model's maximum length, causing position embedding index errors.
 
+::tabs-start
 ```python
 # Wrong: context grows indefinitely
 logits = model(context)  # crashes when context > context_length
@@ -101,11 +105,14 @@ if context.shape[1] > context_length:
     context = context[:, -context_length:]
 logits = model(context)
 ```
+::tabs-end
+
 
 ### Using Argmax Instead of Sampling
 
 Greedy decoding (argmax) produces deterministic but often repetitive text. The problem expects sampling with `torch.multinomial`.
 
+::tabs-start
 ```python
 # Wrong: deterministic, repetitive output
 next_token = torch.argmax(probs, dim=-1, keepdim=True)
@@ -113,11 +120,14 @@ next_token = torch.argmax(probs, dim=-1, keepdim=True)
 # Correct: sampling introduces variety
 next_token = torch.multinomial(probs, 1, generator=generator)
 ```
+::tabs-end
+
 
 ### Taking Logits from All Positions Instead of the Last
 
 The model outputs logits at every position, but only the last position predicts the next token. Using logits from other positions gives you predictions for tokens that already exist.
 
+::tabs-start
 ```python
 # Wrong: using all positions
 probs = nn.functional.softmax(logits, dim=-1)  # (1, T, V)
@@ -126,6 +136,8 @@ probs = nn.functional.softmax(logits, dim=-1)  # (1, T, V)
 last_logits = logits[:, -1, :]  # (1, V)
 probs = nn.functional.softmax(last_logits, dim=-1)
 ```
+::tabs-end
+
 
 ---
 

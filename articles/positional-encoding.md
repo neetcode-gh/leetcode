@@ -30,6 +30,7 @@ Construct a matrix of shape `(seq_len, d_model)`, compute position indices and f
 
 ### Implementation
 
+::tabs-start
 ```python
 import numpy as np
 from numpy.typing import NDArray
@@ -44,6 +45,8 @@ class Solution:
         PE[:, 1::2] = np.cos(position / div_term[:PE[:, 1::2].shape[1]])  # Odd indices: cosine
         return np.round(PE, 5)
 ```
+::tabs-end
+
 
 ### Walkthrough
 
@@ -70,6 +73,7 @@ Notice: low-frequency columns (0, 1) change rapidly with position, high-frequenc
 
 Sine goes on even indices only. Odd indices use cosine. Using the same function everywhere loses half the positional information.
 
+::tabs-start
 ```python
 # Wrong: sine everywhere
 PE[:, :] = np.sin(position / div_term_full)
@@ -78,11 +82,14 @@ PE[:, :] = np.sin(position / div_term_full)
 PE[:, 0::2] = np.sin(position / div_term)
 PE[:, 1::2] = np.cos(position / div_term[:num_odd_cols])
 ```
+::tabs-end
+
 
 ### Wrong Divisor Formula
 
 The divisor is $10000^{2i/d}$ where $i$ indexes pairs of dimensions. Using $10000^{i/d}$ (without the factor of 2) produces wrong frequencies.
 
+::tabs-start
 ```python
 # Wrong: missing factor of 2
 div_term = 10000 ** (np.arange(0, d_model, 2) / (d_model * 2))
@@ -90,6 +97,8 @@ div_term = 10000 ** (np.arange(0, d_model, 2) / (d_model * 2))
 # Correct: 2i/d, where arange(0, d_model, 2) already gives 2i
 div_term = 10000 ** (np.arange(0, d_model, 2) / d_model)
 ```
+::tabs-end
+
 
 ---
 
