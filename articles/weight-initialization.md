@@ -34,7 +34,7 @@ The factor of 2 in the numerator compensates for the halved variance from ReLU. 
 
 ### Intuition
 
-Sample weights from $\mathcal{N}(0, \text{std}^2)$ where std is chosen to preserve variance across layers. Xavier averages fan\_in and fan\_out; Kaiming uses only fan\_in with a factor of 2 for ReLU. The `check_activations` function empirically validates this by forwarding random data through a multi-layer network and measuring the std at each layer.
+Sample weights from $\mathcal{N}(0, \text{std}^2)$ where std is chosen to preserve variance across layers. Xavier averages fan\_in and fan\_out; Kaiming uses only fan\_in with a factor of 2 for ReLU. The `check_activations` function empirically validates this by creating weight matrices directly (as `torch.randn * std`), forwarding random data through linear + ReLU at each layer, and measuring the std.
 
 ### Implementation
 
@@ -61,24 +61,23 @@ class Solution:
 
     def check_activations(self, num_layers: int, input_dim: int, hidden_dim: int, init_type: str) -> list[float]:
         torch.manual_seed(0)
-        layers = []
         dims = [input_dim] + [hidden_dim] * num_layers
+        weights = []
         for i in range(num_layers):
-            layer = nn.Linear(dims[i], dims[i + 1], bias=False)
             if init_type == 'xavier':
-                nn.init.xavier_normal_(layer.weight)
+                std = math.sqrt(2.0 / (dims[i] + dims[i + 1]))
             elif init_type == 'kaiming':
-                nn.init.kaiming_normal_(layer.weight, nonlinearity='relu')
-            elif init_type == 'random':
-                layer.weight.data = torch.randn_like(layer.weight)
-            layers.append(layer)
-            layers.append(nn.ReLU())
+                std = math.sqrt(2.0 / dims[i])
+            else:
+                std = 1.0
+            w = torch.randn(dims[i + 1], dims[i]) * std
+            weights.append(w)
 
         x = torch.randn(1, input_dim)
         stds = []
-        for i in range(num_layers):
-            x = layers[2 * i](x)
-            x = layers[2 * i + 1](x)
+        for w in weights:
+            x = x @ w.T
+            x = torch.relu(x)
             stds.append(round(x.std().item(), 4))
 
         return stds

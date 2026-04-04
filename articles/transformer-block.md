@@ -91,13 +91,14 @@ class TransformerBlock(nn.Module):
             self.att_heads = nn.ModuleList()
             for i in range(num_heads):
                 self.att_heads.append(self.SingleHeadAttention(model_dim, model_dim // num_heads))
+            self.output_proj = nn.Linear(model_dim, model_dim, bias=False)
 
         def forward(self, embedded: TensorType[float]) -> TensorType[float]:
             head_outputs = []
             for head in self.att_heads:
                 head_outputs.append(head(embedded))
             concatenated = torch.cat(head_outputs, dim = 2)
-            return concatenated
+            return self.output_proj(concatenated)
 
     class VanillaNeuralNetwork(nn.Module):
 
@@ -123,7 +124,7 @@ For `model_dim = 8` and `num_heads = 2`, with input shape $(B, T, 8)$:
 | Step | Operation | Shape |
 |---|---|---|
 | LayerNorm 1 | Normalize across dim 8 | $(B, T, 8)$ |
-| Multi-Head Attention | 2 heads, each head_size=4, concat | $(B, T, 8)$ |
+| Multi-Head Attention | 2 heads, each head_size=4, concat + $W^O$ | $(B, T, 8)$ |
 | Residual 1 | $x + \text{attention}(LN(x))$ | $(B, T, 8)$ |
 | LayerNorm 2 | Normalize the sum | $(B, T, 8)$ |
 | FFN up-project | Linear $8 \to 32$ + ReLU | $(B, T, 32)$ |

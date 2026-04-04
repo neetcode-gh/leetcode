@@ -17,10 +17,11 @@ If the total attention dimension is $d$ and we have $h$ heads, each head operate
 1. Create $h$ heads, each with attention dimension $d/h$.
 2. Run each head independently on the same input.
 3. Concatenate all head outputs along the feature dimension.
+4. Apply a learned output projection $W^O$ to combine the heads.
 
 Why does this help? Different heads learn different things. In practice, researchers have observed that some heads learn syntactic relationships (attending to the previous word), some learn semantic relationships (attending to the subject of a sentence), and some learn positional patterns (attending to nearby tokens). A single head would have to compromise between all these patterns; multiple heads can specialize.
 
-The output shape is $(B, T, d)$, the same as a single head with the full dimension. This makes multi-head attention a drop-in replacement for single-head attention.
+The final output projection $W^O$ (a linear layer of size $d \times d$) lets the model learn how to best combine information from all heads. The output shape is $(B, T, d)$, the same as a single head with the full dimension, making multi-head attention a drop-in replacement.
 
 ---
 
@@ -28,7 +29,7 @@ The output shape is $(B, T, d)$, the same as a single head with the full dimensi
 
 ### Intuition
 
-Create a list of `SingleHeadAttention` modules, each with attention dimension `attention_dim // num_heads`. Run each head on the same input. Concatenate outputs along the last dimension.
+Create a list of `SingleHeadAttention` modules, each with attention dimension `attention_dim // num_heads`. Run each head on the same input. Concatenate outputs along the last dimension. Apply a learned output projection ($W^O$) to the concatenated result.
 
 ### Implementation
 
@@ -46,13 +47,14 @@ class MultiHeadedSelfAttention(nn.Module):
         self.att_heads = nn.ModuleList()
         for i in range(num_heads):
             self.att_heads.append(self.SingleHeadAttention(embedding_dim, attention_dim // num_heads))
+        self.output_proj = nn.Linear(attention_dim, attention_dim, bias=False)
 
     def forward(self, embedded: TensorType[float]) -> TensorType[float]:
         head_outputs = []
         for head in self.att_heads:
             head_outputs.append(head(embedded))
         concatenated = torch.cat(head_outputs, dim = 2)
-        return torch.round(concatenated, decimals=4)
+        return torch.round(self.output_proj(concatenated), decimals=4)
 
     class SingleHeadAttention(nn.Module):
         def __init__(self, embedding_dim: int, attention_dim: int):
@@ -92,8 +94,9 @@ For `embedding_dim = 8`, `attention_dim = 8`, `num_heads = 4`, sequence of 3 tok
 | Head 2 | $(B, 3, 8)$ | $(B, 3, 2)$ | $(B, 3, 2)$ |
 | Head 3 | $(B, 3, 8)$ | $(B, 3, 2)$ | $(B, 3, 2)$ |
 | Concat | 4 outputs along dim=2 | | $(B, 3, 8)$ |
+| $W^O$ | Linear projection $d \to d$ | | $(B, 3, 8)$ |
 
-Each head projects from 8 to 2 dimensions (8/4 = 2), and concatenation restores the full 8 dimensions.
+Each head projects from 8 to 2 dimensions (8/4 = 2), concatenation restores the full 8 dimensions, and $W^O$ learns how to best combine the heads' outputs.
 
 ### Time & Space Complexity
 
@@ -148,6 +151,6 @@ This becomes `model/multi_head_attention.py`. The GPT model uses multi-headed at
 
 ## Key Takeaways
 
-- Multi-headed attention runs several attention heads in parallel, each specializing in different relationship patterns, without increasing total computation over a single large head.
+- Multi-headed attention runs several attention heads in parallel, each specializing in different relationship patterns, with a learned output projection ($W^O$) that combines their outputs.
 - Each head operates on a $d/h$ dimensional subspace, and concatenation reconstructs the full dimension, making it a drop-in replacement for single-head attention.
 - Using `nn.ModuleList` (not a plain Python list) is essential so PyTorch can track and update each head's parameters during training.
