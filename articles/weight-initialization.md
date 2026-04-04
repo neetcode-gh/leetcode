@@ -78,7 +78,7 @@ class Solution:
         for w in weights:
             x = x @ w.T
             x = torch.relu(x)
-            stds.append(round(x.std().item(), 4))
+            stds.append(round(x.std().item(), 2))
 
         return stds
 ```
