@@ -639,17 +639,17 @@ So instead of storing all values, we can:
 - Count nodes as we visit them,
 - Stop as soon as we visit the k-th smallest node.
 
-This avoids extra space and stops early, making it more optimal.
+This avoids storing all node values, and the early return lets us stop once the k-th smallest node is found.
 
 ### Algorithm
 
 1. Keep a counter `cnt = k`.
 2. Perform an inorder DFS:
     - Go left.
-    - When visiting a node:
-        - Decrease `cnt`.
-        - If `cnt == 0`, record this node's value (this is the k-th smallest).
-    - Go right.
+    - If `cnt == 0`, return early (answer already found).
+    - Decrease `cnt`.
+    - If `cnt == 0`, record this node's value (this is the k-th smallest).
+    - Go right only if the answer has not been found yet.
 3. Return the recorded value.
 
 ::tabs-start
@@ -673,6 +673,8 @@ class Solution:
                 return
 
             dfs(node.left)
+            if cnt == 0:
+                return
             cnt -= 1
             if cnt == 0:
                 res = node.val
@@ -714,11 +716,14 @@ public class Solution {
         }
 
         dfs(node.left, tmp);
+        if (tmp[0] == 0) return;
+
         tmp[0] -= 1;
         if (tmp[0] == 0) {
             tmp[1] = node.val;
             return;
         }
+
         dfs(node.right, tmp);
     }
 }
@@ -748,12 +753,16 @@ public:
 
     void dfs(TreeNode* node, vector<int>& tmp) {
         if (!node) return;
+
         dfs(node->left, tmp);
+        if (tmp[0] == 0) return;
+
         tmp[0]--;
         if (tmp[0] == 0) {
             tmp[1] = node->val;
             return;
         }
+
         dfs(node->right, tmp);
     }
 };
@@ -790,12 +799,16 @@ class Solution {
      */
     dfs(node, tmp) {
         if (!node) return;
+
         this.dfs(node.left, tmp);
+        if (tmp[0] === 0) return;
+
         tmp[0]--;
         if (tmp[0] === 0) {
             tmp[1] = node.val;
             return;
         }
+
         this.dfs(node.right, tmp);
     }
 }
@@ -826,12 +839,16 @@ public class Solution {
 
     private void Dfs(TreeNode node, int[] tmp) {
         if (node == null) return;
+
         Dfs(node.left, tmp);
+        if (tmp[0] == 0) return;
+
         tmp[0]--;
         if (tmp[0] == 0) {
             tmp[1] = node.val;
             return;
         }
+
         Dfs(node.right, tmp);
     }
 }
@@ -856,11 +873,16 @@ func kthSmallest(root *TreeNode, k int) int {
         }
 
         dfs(node.Left)
+        if cnt == 0 {
+            return
+        }
+
         cnt--
         if cnt == 0 {
             res = node.Val
             return
         }
+
         dfs(node.Right)
     }
 
@@ -896,11 +918,14 @@ class Solution {
         }
 
         dfs(node.left)
+        if (cnt == 0) return
+
         cnt--
         if (cnt == 0) {
             res = node.`val`
             return
         }
+
         dfs(node.right)
     }
 }
@@ -931,11 +956,14 @@ class Solution {
             guard let node = node else { return }
 
             dfs(node.left)
+            if cnt == 0 { return }
+
             cnt -= 1
             if cnt == 0 {
                 res = node.val
                 return
             }
+
             dfs(node.right)
         }
 
@@ -956,12 +984,16 @@ impl Solution {
     fn dfs(node: &Option<Rc<RefCell<TreeNode>>>, tmp: &mut [i32; 2]) {
         if let Some(n) = node {
             let n = n.borrow();
+
             Self::dfs(&n.left, tmp);
+            if tmp[0] == 0 { return; }
+
             tmp[0] -= 1;
             if tmp[0] == 0 {
                 tmp[1] = n.val;
                 return;
             }
+
             Self::dfs(&n.right, tmp);
         }
     }
@@ -972,8 +1004,8 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n)$
-- Space complexity: $O(n)$
+- Time complexity: $O(h + k)$ in terms of nodes visited, worst-case $O(n)$
+- Space complexity: $O(h)$ for the recursion stack, worst-case $O(n)$
 
 ---
 
