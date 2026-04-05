@@ -4,7 +4,7 @@ Before attempting this problem, you should be comfortable with:
 
 - **Transformer Blocks** - Multi-headed attention, FFN, layer normalization, and residual connections, because the GPT model stacks multiple transformer blocks
 - **Word and Position Embeddings** - Token embeddings map IDs to vectors, position embeddings encode order, and they are added together before entering the transformer stack
-- **Softmax** - The final operation that converts logits into a probability distribution over the vocabulary
+- **Output Projection ($W_O$)** - Each multi-head attention layer projects the concatenated head outputs through a final linear layer
 
 ---
 
@@ -16,10 +16,9 @@ GPT (Generative Pre-trained Transformer) assembles everything from the course in
 2. **Position embeddings**: Add learned position vectors using a second `nn.Embedding`. Unlike the sinusoidal encoding from earlier, GPT uses learned positions.
 3. **$N$ Transformer blocks**: Each block applies multi-headed self-attention (for inter-token communication) and a feed-forward network (for per-token computation), connected by residual paths and layer normalization.
 4. **Final layer normalization**: Stabilizes the output of the last transformer block.
-5. **Vocabulary projection**: A linear layer that maps from $d_{\text{model}}$ to vocabulary size, producing logits for every possible next token.
-6. **Softmax**: Converts logits to probabilities.
+5. **Vocabulary projection**: A linear layer that maps from $d_{\text{model}}$ to vocabulary size, producing **logits** (raw unnormalized scores) for every possible next token.
 
-At each position $t$, the model outputs a probability distribution over the vocabulary, predicting what token should come at position $t+1$. Causal masking inside the attention layers ensures position $t$ only sees tokens $0$ through $t$, so the model can be used autoregressively: generate one token, append it, and repeat.
+At each position $t$, the model outputs logits over the vocabulary, predicting what token should come at position $t+1$. During training, `cross_entropy` applies softmax internally. During generation, you apply softmax yourself to sample the next token. Causal masking inside the attention layers ensures position $t$ only sees tokens $0$ through $t$, so the model can be used autoregressively: generate one token, append it, and repeat.
 
 This architecture scales remarkably well. GPT-2 Small uses $d=768$, 12 blocks, 12 heads. GPT-3 uses $d=12288$, 96 blocks, 96 heads. The structure is identical; only the numbers change.
 
@@ -29,7 +28,7 @@ This architecture scales remarkably well. GPT-2 Small uses $d=768$, 12 blocks, 1
 
 ### Intuition
 
-Compose all previously built components: embedding layers, a sequence of transformer blocks, final normalization, and a linear projection to vocabulary logits. The forward pass adds token and position embeddings, processes through all blocks, normalizes, projects, and applies softmax.
+Compose all previously built components: embedding layers, a sequence of transformer blocks, final normalization, and a linear projection to vocabulary logits. The forward pass adds token and position embeddings, processes through all blocks, normalizes, and projects to logits. Note: the model returns raw logits, not probabilities — this matches how GPT models work in practice, since `cross_entropy` and generation each handle softmax separately.
 
 ### Implementation
 
@@ -63,8 +62,7 @@ class GPT(nn.Module):
         output = self.final_norm(self.transformer_blocks(embedded))
         logits = self.vocab_projection(output)  # (B, T, vocab_size)
 
-        probabilities = nn.functional.softmax(logits, dim=-1)
-        return torch.round(probabilities, decimals=4)
+        return torch.round(logits, decimals=4)
 
     class TransformerBlock(nn.Module):
 
@@ -100,13 +98,14 @@ class GPT(nn.Module):
                 self.att_heads = nn.ModuleList()
                 for i in range(num_heads):
                     self.att_heads.append(self.SingleHeadAttention(model_dim, model_dim // num_heads))
+                self.output_proj = nn.Linear(model_dim, model_dim, bias=False)
 
             def forward(self, embedded: TensorType[float]) -> TensorType[float]:
                 head_outputs = []
                 for head in self.att_heads:
                     head_outputs.append(head(embedded))
                 concatenated = torch.cat(head_outputs, dim = 2)
-                return concatenated
+                return self.output_proj(concatenated)
 
         class VanillaNeuralNetwork(nn.Module):
 
@@ -152,9 +151,8 @@ For `vocab_size = 100`, `context_length = 8`, `model_dim = 16`, `num_blocks = 2`
 | Block 2 | Same architecture, further refining | $(1, 5, 16)$ |
 | Final LN | LayerNorm across dim 16 | $(1, 5, 16)$ |
 | Vocab proj | Linear $16 \to 100$ | $(1, 5, 100)$ |
-| Softmax | Probabilities over vocabulary | $(1, 5, 100)$ |
 
-Each of the 5 positions outputs a distribution over 100 tokens, predicting the next token.
+Each of the 5 positions outputs logits over 100 tokens, predicting the next token.
 
 ### Time & Space Complexity
 
@@ -211,6 +209,6 @@ This becomes `model/gpt.py`. This is the culmination of the entire course: every
 
 ## Key Takeaways
 
-- GPT composes token embeddings, position embeddings, a stack of transformer blocks, final normalization, and a vocabulary projection into a complete autoregressive language model.
+- GPT composes token embeddings, position embeddings, a stack of transformer blocks (each with $W^O$ output projection in multi-head attention), final normalization, and a vocabulary projection into raw logits.
 - Learned position embeddings (rather than sinusoidal) let the model discover its own positional representation during training.
 - The same architecture scales from tiny models (this problem) to GPT-3 (175 billion parameters) by increasing the model dimension, number of blocks, and number of heads.
