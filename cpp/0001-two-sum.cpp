@@ -51,7 +51,8 @@ public:
             int sum =array[l].first + array[r].first;
             
             if(sum==target){
-                return {array[l].second, array[r].second};
+                return {min(array[l].second, array[r].second),
+                        max(array[l].second, array[r].second)};
             }
             else if(sum<target){
                 l++;
