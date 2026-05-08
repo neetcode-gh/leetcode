@@ -1032,7 +1032,7 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n * k)$
+- Time complexity: $O(m * k)$
 - Space complexity: $O(n + m)$
 
 > Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
