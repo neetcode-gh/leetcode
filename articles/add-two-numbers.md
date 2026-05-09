@@ -427,8 +427,11 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m + n)$
-- Space complexity: $O(m + n)$
+- Time complexity: $O(max(m, n))$
+    - This is asymptotically equivalent to $O(m + n)$.
+- Space complexity: $O(max(m, n))$
+    - $O(max(m, n))$ for the recursion call stack.
+    - $O(max(m, n))$ for the output list.
 
 > Where $m$ is the length of $l1$ and $n$ is the length of $l2$.
 
@@ -813,7 +816,8 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m + n)$
+- Time complexity: $O(max(m, n))$
+    - This is asymptotically equivalent to $O(m + n)$.
 - Space complexity:
     - $O(1)$ extra space.
     - $O(max(m, n))$ for the output list.
