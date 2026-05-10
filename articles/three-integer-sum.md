@@ -221,9 +221,10 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 3)$
-- Space complexity: $O(m)$
+- Space complexity: $O(m)$, which is $O(n ^ 2)$ in the worst case.
+    - $O(m)$ is used for storing the output triplets.
 
-> Where $m$ is the number of triplets and $n$ is the length of the given array.
+> Where $m$ is the number of unique triplets and $n$ is the length of the given array.
 
 ---
 
@@ -929,12 +930,12 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n ^ 2)$
-- Space complexity:
-    - $O(1)$ or $O(n)$ extra space depending on the sorting algorithm.
-    - $O(m)$ space for the output list.
+- Time complexity: $O(n^2)$
+- Space complexity: $O(m)$, plus any auxiliary space used by sorting.
+    - $O(m)$ is used for storing the output triplets.
+    - In the worst case, $m$ is $O(n^2)$.
 
-> Where $m$ is the number of triplets and $n$ is the length of the given array.
+> Where $m$ is the number of unique triplets and $n$ is the length of the given array.
 
 ---
 
