@@ -391,8 +391,8 @@ impl Solution {
 
 - Time complexity: $O(m * n)$
 - Space complexity:
-    - $O(m)$ extra space.
-    - $O(m * n)$ space for the output list.
+    - $O(m)$ auxiliary space, excluding the returned output.
+    - $O(m * n)$ total space if the output groups are counted.
 
 > Where $m$ is the number of strings and $n$ is the length of the longest string.
 

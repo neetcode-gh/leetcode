@@ -203,6 +203,7 @@ public class Solution {
 
         while (minHeap.Count > 0) {
             var (cst, node, stops) = minHeap.Dequeue();
+            if (dist[node][stops] < cst) continue;
             if (node == dst) return cst;
             if (stops > k) continue;
 
@@ -381,10 +382,10 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m \cdot k \cdot \log(n \cdot k))$
-- Space complexity: $O(n \cdot k)$
+- Time complexity: $O(n \cdot K + m \cdot K \cdot \log(m \cdot K))$, commonly written as $O(m \cdot k \cdot \log(m \cdot k))$
+- Space complexity: $O(m + n \cdot K + m \cdot K)$
 
-> Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
+> Where $n$ is the number of cities, $m$ is the number of flights, and $K = k + 1$ is the maximum number of flights/edges allowed. The layered graph has $O(n \cdot K)$ states and $O(m \cdot K)$ transitions. With the lazy priority queue used here, each successful relaxation can push one heap entry, so the heap operation cost is $\log(m \cdot K)$, and the heap can hold $O(m \cdot K)$ entries in the worst case. The adjacency list takes $O(m)$ space and `dist` takes $O(n \cdot K)$ space.
 
 ---
 
