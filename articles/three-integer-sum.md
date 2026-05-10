@@ -221,8 +221,11 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 3)$
-- Space complexity: $O(m)$, which is $O(n ^ 2)$ in the worst case.
-    - $O(m)$ is used for storing the output triplets.
+- Space complexity: $O(m)$, plus the space used by the sorting algorithm.
+    - This excludes the space used for the output list.
+    - $O(m)$ is used for storing unique triplets in a set.
+    - In the worst case, $m$ is $O(n ^ 2)$.
+    - If the output list is included, the space is still $O(m)$, plus sorting space.
 
 > Where $m$ is the number of unique triplets and $n$ is the length of the given array.
 
@@ -572,6 +575,11 @@ impl Solution {
 
 - Time complexity: $O(n ^ 2)$
 - Space complexity: $O(n)$
+    - This excludes the space used for the output list.
+    - $O(n)$ is used for the frequency map.
+    - If the output list is included, the space is $O(n + m)$, which is $O(n^2)$ in the worst case.
+
+> Where $m$ is the number of unique triplets and $n$ is the length of the given array.
 
 ---
 
@@ -931,9 +939,9 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n^2)$
-- Space complexity: $O(m)$, plus any auxiliary space used by sorting.
-    - $O(m)$ is used for storing the output triplets.
-    - In the worst case, $m$ is $O(n^2)$.
+- Space complexity: $O(1)$, plus the space used by the sorting algorithm.
+    - This excludes the space used for the output list.
+    - If the output list is included, the space is $O(m)$, which is $O(n^2)$ in the worst case.
 
 > Where $m$ is the number of unique triplets and $n$ is the length of the given array.
 
