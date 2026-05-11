@@ -34,6 +34,6 @@
 <details class="hint-accordion">  
     <summary>Hint 4</summary>
     <p>
-    In the formula, the amount of water depends only on the minimum height. Therefore, it is appropriate to replace the smaller height value.
+    If <code>heights[i]</code> is smaller, then any future container using index <code>i</code> will have a smaller width, and its height is still at most <code>heights[i]</code>. So it cannot produce a larger area than the current pair. Therefore, we can safely discard the smaller height and move that pointer inward. The same logic applies when <code>heights[j]</code> is smaller.
     </p>
 </details>
