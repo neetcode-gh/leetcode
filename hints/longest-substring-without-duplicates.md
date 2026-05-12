@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A brute force solution would be to try the substring starting at index <code>i</code> and try to find the maximum length we can form without duplicates by starting at that index. we can use a hash set to detect duplicates in <code>O(1)</code> time. Can you think of a better way?
+    A brute force solution would be to try the substring starting at index <code>i</code> and try to find the maximum length we can form without duplicates by starting at that index. We can use a hash set to detect duplicates in <code>O(1)</code> time. Can you think of a better way?
     </p>
 </details>
 
