@@ -31,21 +31,23 @@ DFS works well here because we recursively explore as far as possible in one dir
 ```python
 class Solution:
     def floodFill(self, image: List[List[int]], sr: int, sc: int, color: int) -> List[List[int]]:
-        if image[sr][sc] == color:
+        orig = image[sr][sc]
+        if orig == color:
             return image
 
         m, n = len(image), len(image[0])
-        dirs = [1,0,-1,0,1]
 
-        def dfs(r, c, org):
-            if not (0 <= r < m) or not (0 <= c < n) or image[r][c] != org:
+        def dfs(r, c):
+            if r < 0 or r >= m or c < 0 or c >= n or image[r][c] != orig:
                 return
 
             image[r][c] = color
-            for d in range(4):
-                dfs(r + dirs[d], c + dirs[d + 1], org)
+            dfs(r + 1, c)
+            dfs(r - 1, c)
+            dfs(r, c + 1)
+            dfs(r, c - 1)
 
-        dfs(sr, sc, image[sr][sc])
+        dfs(sr, sc)
         return image
 ```
 
