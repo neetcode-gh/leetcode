@@ -28,6 +28,8 @@ At each station:
 - we spend `cost[j]` to travel to the next station
   So the tank changes by `gas[j] - cost[j]`.
 
+This models refueling at station `j` first, then spending `cost[j]` to drive from station `j` to station `(j + 1) % n`.
+
 ### Algorithm
 
 1. Let `n` be the number of stations.
@@ -554,7 +556,7 @@ First, notice an important fact:
 
 - If the **total gas available** is less than the **total cost required**, then it is **impossible** to complete the circuit from any station.
 
-If the total gas is sufficient, then there must be **exactly one valid starting station**.
+If the total gas is sufficient, then at least one valid starting station exists. Under this problem's guarantee, there will be at most one valid answer.
 
 The greedy idea is to scan the stations from left to right while keeping track of the **current tank balance**.
 

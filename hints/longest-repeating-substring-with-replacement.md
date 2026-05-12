@@ -18,7 +18,7 @@
 <details class="hint-accordion">  
     <summary>Hint 2</summary>
     <p>
-    It is always optimal to replace characters with the most frequent character in the string. Why? Because using the most frequent character minimizes the number of replacements required to make all characters in the string identical. How can you find the number of replacements now?
+    For a given substring or window, it is always optimal to replace characters with the most frequent character in that substring. Why? Because using the most frequent character minimizes the number of replacements required to make all characters in the substring identical. How can you find the number of replacements now?
     </p>
 </details>
 
@@ -26,7 +26,7 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    The number of replacements is equal to the difference between the length of the string and the frequency of the most frequent character in the string. A brute force solution would be to consider all substrings, use a hash map for frequency counting, and return the maximum length of the substring that has at most <code>k</code> replacements. This would be an <code>O(n^2)</code> solution. Can you think of a better way?
+    The number of replacements is equal to the difference between the length of the current substring and the frequency of the most frequent character in that substring. A brute force solution would be to consider all substrings, use a hash map for frequency counting, and return the maximum length of the substring that has at most <code>k</code> replacements. This would be an <code>O(n^2)</code> solution. Can you think of a better way?
     </p>
 </details>
 
