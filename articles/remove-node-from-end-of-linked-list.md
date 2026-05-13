@@ -983,7 +983,8 @@ Use two pointers so that the gap between them is exactly `n`.
 Move the right pointer `n` steps ahead first.
 Then move both pointers together.
 When the right pointer reaches the end, the left pointer will be just before the node we must remove.
-This avoids counting the entire list and removes the target in one pass.
+This avoids a separate length-counting pass, while still traversing the list in `O(N)` time.
+The key benefit is that the `n`-node gap tells us where to delete without storing nodes or computing the length first.
 
 ### Algorithm
 
