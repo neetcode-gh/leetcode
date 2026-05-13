@@ -34,7 +34,7 @@
 <details class="hint-accordion">  
     <summary>Hint 4</summary>
     <p>
-    We can solve this in one pass using a greedy approach. Move the <code>first</code> pointer <code>n</code> steps ahead. Then, start another pointer <code>second</code> at the head and iterate both pointers simultaneously until <code>first</code> reaches <code>null</code>. At this point, the <code>second</code> pointer is just before the node to be removed. We then remove the node that is next to the <code>second</code> pointer. Why does this work?
+    We can avoid a separate length-counting pass with two pointers. Move the <code>first</code> pointer <code>n</code> steps ahead from the head. Then, start another pointer <code>second</code> at a dummy node before the head and iterate both pointers simultaneously until <code>first</code> reaches <code>null</code>. At this point, the <code>second</code> pointer is just before the node to be removed. We then remove the node that is next to the <code>second</code> pointer. Why does this work?
     </p>
 </details>
 
@@ -42,6 +42,6 @@
 <details class="hint-accordion">  
     <summary>Hint 5</summary>
     <p>
-    This greedy approach works because the <code>second</code> pointer is <code>n</code> nodes behind the <code>first</code> pointer. When the <code>first</code> pointer reaches the end, the <code>second</code> pointer is exactly <code>n</code> nodes from the end. This positioning allows us to remove the <code>nth</code> node from the end efficiently.
+    This works because <code>first</code> stays <code>n</code> nodes ahead of <code>second.next</code>. When <code>first</code> reaches the end, <code>second.next</code> is exactly the <code>nth</code> node from the end. This positioning allows us to remove that node efficiently.
     </p>
 </details>
