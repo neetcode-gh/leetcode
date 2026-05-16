@@ -457,8 +457,8 @@ public class MinStack {
 
     public void pop() {
         if (stack.isEmpty()) return;
-        int top = stack.pop();
-        if (top == minStack.peek()) {
+        Integer top = stack.pop();
+        if (top.equals(minStack.peek())) {
             minStack.pop();
         }
     }
