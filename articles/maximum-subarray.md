@@ -230,9 +230,9 @@ By exploring both possibilities at every step, the recursion eventually finds th
     - `i` is the current index in the array
     - `flag` indicates whether a subarray has already started
 2. Base case:
-    - If `i` reaches the end of the array:
-        - Return `0` if a subarray was already started
-        - Otherwise return a very small value (to ensure at least one element is chosen)
+    - If `i` is the last index:
+        - If a subarray has already started, either stop before this element or include it.
+        - If a subarray has not started yet, we must choose this element.
 3. If `flag` is `True` (we are inside a subarray):
     - We have two choices:
         - stop the subarray - return `0`
@@ -252,8 +252,8 @@ By exploring both possibilities at every step, the recursion eventually finds th
 class Solution:
     def maxSubArray(self, nums: List[int]) -> int:
         def dfs(i, flag):
-            if i == len(nums):
-                return 0 if flag else -1e6
+            if i == len(nums) - 1:
+                return max(0, nums[i]) if flag else nums[i]
             if flag:
                 return max(0, nums[i] + dfs(i + 1, True))
             return max(dfs(i + 1, False), nums[i] + dfs(i + 1, True))
@@ -267,8 +267,8 @@ public class Solution {
     }
 
     private int dfs(int[] nums, int i, boolean flag) {
-        if (i == nums.length) {
-            return flag ? 0 : (int) -1e6;
+        if (i == nums.length - 1) {
+            return flag ? Math.max(0, nums[i]) : nums[i];
         }
         if (flag) {
             return Math.max(0, nums[i] + dfs(nums, i + 1, true));
@@ -288,7 +288,7 @@ public:
 
 private:
     int dfs(vector<int>& nums, int i, bool flag) {
-        if (i == nums.size()) return flag ? 0 : -1e6;
+        if (i == nums.size() - 1) return flag ? max(0, nums[i]) : nums[i];
         if (flag) return max(0, nums[i] + dfs(nums, i + 1, true));
         return max(dfs(nums, i + 1, false),
                    nums[i] + dfs(nums, i + 1, true));
@@ -304,7 +304,7 @@ class Solution {
      */
     maxSubArray(nums) {
         const dfs = (i, flag) => {
-            if (i === nums.length) return flag ? 0 : -1e6;
+            if (i === nums.length - 1) return flag ? Math.max(0, nums[i]) : nums[i];
             if (flag) return Math.max(0, nums[i] + dfs(i + 1, true));
             return Math.max(dfs(i + 1, false), nums[i] + dfs(i + 1, true));
         };
@@ -320,7 +320,7 @@ public class Solution {
     }
 
     private int Dfs(int[] nums, int i, bool flag) {
-        if (i == nums.Length) return flag ? 0 : (int)-1e6;
+        if (i == nums.Length - 1) return flag ? Math.Max(0, nums[i]) : nums[i];
         if (flag) return Math.Max(0, nums[i] + Dfs(nums, i + 1, true));
         return Math.Max(Dfs(nums, i + 1, false),
                         nums[i] + Dfs(nums, i + 1, true));
@@ -332,11 +332,11 @@ public class Solution {
 func maxSubArray(nums []int) int {
     var dfs func(i int, flag bool) int
     dfs = func(i int, flag bool) int {
-        if i == len(nums) {
+        if i == len(nums)-1 {
             if flag {
-                return 0
+                return max(0, nums[i])
             }
-            return -1e6
+            return nums[i]
         }
         if flag {
             return max(0, nums[i] + dfs(i + 1, true))
@@ -359,8 +359,8 @@ func max(a, b int) int {
 class Solution {
     fun maxSubArray(nums: IntArray): Int {
         fun dfs(i: Int, flag: Boolean): Int {
-            if (i == nums.size) {
-                return if (flag) 0 else Int.MIN_VALUE
+            if (i == nums.size - 1) {
+                return if (flag) maxOf(0, nums[i]) else nums[i]
             }
             return if (flag) {
                 maxOf(0, nums[i] + dfs(i + 1, true))
@@ -378,8 +378,8 @@ class Solution {
 class Solution {
     func maxSubArray(_ nums: [Int]) -> Int {
         func dfs(_ i: Int, _ flag: Bool) -> Int {
-            if i == nums.count {
-                return flag ? 0 : Int.min
+            if i == nums.count - 1 {
+                return flag ? max(0, nums[i]) : nums[i]
             }
 
             if flag {
@@ -398,8 +398,8 @@ class Solution {
 impl Solution {
     pub fn max_sub_array(nums: Vec<i32>) -> i32 {
         fn dfs(nums: &[i32], i: usize, flag: bool) -> i32 {
-            if i == nums.len() {
-                return if flag { 0 } else { -1_000_000 };
+            if i == nums.len() - 1 {
+                return if flag { 0i32.max(nums[i]) } else { nums[i] };
             }
             if flag {
                 return 0i32.max(nums[i] + dfs(nums, i + 1, true));
@@ -453,9 +453,9 @@ By storing results for each `(i, flag)` state, we avoid recomputing them.
     - `i` is the current index
     - `flag` indicates whether a subarray is already in progress.
 3. Base case:
-    - If `i` reaches the end of the array:
-        - Return `0` if a subarray was started
-        - Otherwise return a very small value (to force choosing at least one element).
+    - If `i` is the last index:
+        - If a subarray has already started, either stop before this element or include it.
+        - If a subarray has not started yet, we must choose this element.
 4. If the result for `(i, flag)` is already stored in `memo`:
     - Return it directly.
 5. If `flag` is `True` (inside a subarray):
@@ -474,11 +474,11 @@ By storing results for each `(i, flag)` state, we avoid recomputing them.
 ```python
 class Solution:
     def maxSubArray(self, nums: List[int]) -> int:
-        memo = [[None] * 2 for _ in range(len(nums) + 1)]
+        memo = [[None] * 2 for _ in range(len(nums))]
 
         def dfs(i, flag):
-            if i == len(nums):
-                return 0 if flag else -1e6
+            if i == len(nums) - 1:
+                return max(0, nums[i]) if flag else nums[i]
             if memo[i][flag] is not None:
                 return memo[i][flag]
             if flag:
@@ -493,18 +493,17 @@ class Solution:
 
 ```java
 public class Solution {
-    private int[][] memo;
+    private Integer[][] memo;
 
     public int maxSubArray(int[] nums) {
-        memo = new int[nums.length + 1][2];
-        for (int[] row : memo) Arrays.fill(row, Integer.MIN_VALUE);
+        memo = new Integer[nums.length][2];
         return dfs(nums, 0, false);
     }
 
     private int dfs(int[] nums, int i, boolean flag) {
-        if (i == nums.length) return flag ? 0 : (int) -1e6;
+        if (i == nums.length - 1) return flag ? Math.max(0, nums[i]) : nums[i];
         int f = flag ? 1 : 0;
-        if (memo[i][f] != Integer.MIN_VALUE) return memo[i][f];
+        if (memo[i][f] != null) return memo[i][f];
         memo[i][f] = flag ? Math.max(0, nums[i] + dfs(nums, i + 1, true))
                           : Math.max(dfs(nums, i + 1, false),
                                      nums[i] + dfs(nums, i + 1, true));
@@ -517,20 +516,23 @@ public class Solution {
 class Solution {
 public:
     int maxSubArray(vector<int>& nums) {
-        vector<vector<int>> memo(nums.size() + 1, vector<int>(2, INT_MIN));
-        return dfs(nums, 0, false, memo);
+        vector<array<int, 2>> memo(nums.size());
+        vector<array<bool, 2>> seen(nums.size(), {false, false});
+        return dfs(nums, 0, false, memo, seen);
     }
 
 private:
-    int dfs(vector<int>& nums, int i, bool flag, vector<vector<int>>& memo) {
-        if (i == nums.size()) return flag ? 0 : -1e6;
+    int dfs(vector<int>& nums, int i, bool flag,
+            vector<array<int, 2>>& memo, vector<array<bool, 2>>& seen) {
+        if (i == nums.size() - 1) return flag ? max(0, nums[i]) : nums[i];
         int f = flag ? 1 : 0;
-        if (memo[i][f] != INT_MIN) return memo[i][f];
+        if (seen[i][f]) return memo[i][f];
         if (flag)
-            memo[i][f] = max(0, nums[i] + dfs(nums, i + 1, true, memo));
+            memo[i][f] = max(0, nums[i] + dfs(nums, i + 1, true, memo, seen));
         else
-            memo[i][f] = max(dfs(nums, i + 1, false, memo),
-                             nums[i] + dfs(nums, i + 1, true, memo));
+            memo[i][f] = max(dfs(nums, i + 1, false, memo, seen),
+                             nums[i] + dfs(nums, i + 1, true, memo, seen));
+        seen[i][f] = true;
         return memo[i][f];
     }
 };
@@ -543,12 +545,12 @@ class Solution {
      * @return {number}
      */
     maxSubArray(nums) {
-        const memo = Array(nums.length + 1)
+        const memo = Array(nums.length)
             .fill(null)
             .map(() => [null, null]);
 
         const dfs = (i, flag) => {
-            if (i === nums.length) return flag ? 0 : -1e6;
+            if (i === nums.length - 1) return flag ? Math.max(0, nums[i]) : nums[i];
             if (memo[i][+flag] !== null) return memo[i][+flag];
             memo[i][+flag] = flag
                 ? Math.max(0, nums[i] + dfs(i + 1, true))
@@ -562,42 +564,39 @@ class Solution {
 
 ```csharp
 public class Solution {
-    private int[,] memo;
+    private int?[,] memo;
 
     public int MaxSubArray(int[] nums) {
-        memo = new int[nums.Length + 1, 2];
-        for (int i = 0; i <= nums.Length; i++) {
-            memo[i, 0] = memo[i, 1] = int.MinValue;
-        }
+        memo = new int?[nums.Length, 2];
         return Dfs(nums, 0, false);
     }
 
     private int Dfs(int[] nums, int i, bool flag) {
-        if (i == nums.Length) return flag ? 0 : -1000000;
+        if (i == nums.Length - 1) return flag ? Math.Max(0, nums[i]) : nums[i];
         int f = flag ? 1 : 0;
-        if (memo[i, f] != int.MinValue) return memo[i, f];
+        if (memo[i, f].HasValue) return memo[i, f].Value;
         memo[i, f] = flag ? Math.Max(0, nums[i] + Dfs(nums, i + 1, true))
                           : Math.Max(Dfs(nums, i + 1, false),
                                      nums[i] + Dfs(nums, i + 1, true));
-        return memo[i, f];
+        return memo[i, f].Value;
     }
 }
 ```
 
 ```go
 func maxSubArray(nums []int) int {
-    memo := make([][2]*int, len(nums)+1)
+    memo := make([][2]*int, len(nums))
     for i := range memo {
         memo[i] = [2]*int{nil, nil}
     }
 
     var dfs func(int, int) int
     dfs = func(i, flag int) int {
-        if i == len(nums) {
+        if i == len(nums)-1 {
             if flag == 1 {
-                return 0
+                return max(0, nums[i])
             }
-            return -1000000
+            return nums[i]
         }
         if memo[i][flag] != nil {
             return *memo[i][flag]
@@ -626,11 +625,11 @@ func max(a, b int) int {
 ```kotlin
 class Solution {
     fun maxSubArray(nums: IntArray): Int {
-        val memo = Array(nums.size + 1) { arrayOfNulls<Int>(2) }
+        val memo = Array(nums.size) { arrayOfNulls<Int>(2) }
 
         fun dfs(i: Int, flag: Int): Int {
-            if (i == nums.size) {
-                return if (flag == 1) 0 else -1000000
+            if (i == nums.size - 1) {
+                return if (flag == 1) maxOf(0, nums[i]) else nums[i]
             }
             if (memo[i][flag] != null) {
                 return memo[i][flag]!!
@@ -651,11 +650,11 @@ class Solution {
 ```swift
 class Solution {
     func maxSubArray(_ nums: [Int]) -> Int {
-        var memo = Array(repeating: [Int?](repeating: nil, count: 2), count: nums.count + 1)
+        var memo = Array(repeating: [Int?](repeating: nil, count: 2), count: nums.count)
 
         func dfs(_ i: Int, _ flag: Bool) -> Int {
-            if i == nums.count {
-                return flag ? 0 : Int.min
+            if i == nums.count - 1 {
+                return flag ? max(0, nums[i]) : nums[i]
             }
             if let value = memo[i][flag ? 1 : 0] {
                 return value
@@ -679,22 +678,23 @@ class Solution {
 impl Solution {
     pub fn max_sub_array(nums: Vec<i32>) -> i32 {
         let n = nums.len();
-        let mut memo = vec![[i32::MIN; 2]; n + 1];
+        let mut memo = vec![[None; 2]; n];
 
-        fn dfs(nums: &[i32], i: usize, flag: usize, memo: &mut Vec<[i32; 2]>) -> i32 {
-            if i == nums.len() {
-                return if flag == 1 { 0 } else { -1_000_000 };
+        fn dfs(nums: &[i32], i: usize, flag: usize, memo: &mut Vec<[Option<i32>; 2]>) -> i32 {
+            if i == nums.len() - 1 {
+                return if flag == 1 { 0i32.max(nums[i]) } else { nums[i] };
             }
-            if memo[i][flag] != i32::MIN {
-                return memo[i][flag];
+            if let Some(value) = memo[i][flag] {
+                return value;
             }
-            memo[i][flag] = if flag == 1 {
+            let result = if flag == 1 {
                 0i32.max(nums[i] + dfs(nums, i + 1, 1, memo))
             } else {
                 dfs(nums, i + 1, 0, memo)
                     .max(nums[i] + dfs(nums, i + 1, 1, memo))
             };
-            memo[i][flag]
+            memo[i][flag] = Some(result);
+            result
         }
 
         dfs(&nums, 0, 0, &mut memo)

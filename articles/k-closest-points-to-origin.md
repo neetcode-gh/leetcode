@@ -149,10 +149,11 @@ This works because the heap always keeps the smallest distances at the front.
 
 ### Algorithm
 
-1. Create an empty min-heap.
-2. For each point `(x, y)`:
+1. For each point `(x, y)`:
     - Compute squared distance `x^2 + y^2`.
-    - Push `(distance, x, y)` into the heap.
+    - Store `(distance, x, y)` as a heap entry.
+2. Build a min-heap from all entries.
+    - This can be done with one `heapify` operation, or by pushing entries one at a time.
 3. Repeat `k` times:
     - Remove the smallest element from the heap.
     - Add its `(x, y)` coordinates to the result.
@@ -370,7 +371,7 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + k * \log n)$
+- Time complexity: $O(n + k * \log n)$ when building the heap with `heapify`, or $O(n * \log n + k * \log n)$ when inserting each point with a heap push.
 - Space complexity: $O(n)$
 
 > Where $n$ is the length of the array $points$.
