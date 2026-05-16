@@ -252,6 +252,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findErrorNums(nums: number[]): number[] {
+        const res: number[] = [0, 0];
+        const n = nums.length;
+        for (let i = 1; i <= n; i++) {
+            let cnt = 0;
+            for (const num of nums) {
+                if (num === i) {
+                    cnt++;
+                }
+            }
+            if (cnt === 0) {
+                res[1] = i;
+            } else if (cnt === 2) {
+                res[0] = i;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,6 +499,30 @@ impl Solution {
             res[1] = n as i32;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findErrorNums(nums: number[]): number[] {
+        const res: number[] = [0, 1];
+        nums.sort((a, b) => a - b);
+        for (let i = 1; i < nums.length; i++) {
+            if (nums[i] === nums[i - 1]) {
+                res[0] = nums[i];
+            } else if (nums[i] - nums[i - 1] === 2) {
+                res[1] = nums[i] - 1;
+            }
+        }
+        if (nums[nums.length - 1] !== nums.length) {
+            res[1] = nums.length;
+        }
+        return res;
     }
 }
 ```
@@ -716,6 +767,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findErrorNums(nums: number[]): number[] {
+        const n = nums.length;
+        const count: number[] = Array(n + 1).fill(0);
+        const res: number[] = [0, 0];
+        for (const num of nums) {
+            count[num]++;
+        }
+        for (let i = 1; i <= n; i++) {
+            if (count[i] === 0) {
+                res[1] = i;
+            }
+            if (count[i] === 2) {
+                res[0] = i;
+            }
+        }
+        return res;
     }
 }
 ```
@@ -980,6 +1057,33 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findErrorNums(nums: number[]): number[] {
+        const res: number[] = [0, 0];
+        for (let num of nums) {
+            const absNum = Math.abs(num);
+            if (nums[absNum - 1] < 0) {
+                res[0] = absNum;
+            } else {
+                nums[absNum - 1] *= -1;
+            }
+        }
+        for (let i = 0; i < nums.length; i++) {
+            if (nums[i] > 0 && i + 1 !== res[0]) {
+                res[1] = i + 1;
+                return res;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1172,6 +1276,27 @@ impl Solution {
         let missing = (y - x * x) / (2 * x);
         let duplicate = missing + x;
         vec![duplicate as i32, missing as i32]
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findErrorNums(nums: number[]): number[] {
+        const N = nums.length;
+        let x = 0; // duplicate - missing
+        let y = 0; // duplicate^2 - missing^2
+        for (let i = 1; i <= N; i++) {
+            x += nums[i - 1] - i;
+            y += nums[i - 1] ** 2 - i ** 2;
+        }
+        const missing = (y - x ** 2) / (2 * x);
+        const duplicate = missing + x;
+        return [duplicate, missing];
     }
 }
 ```
@@ -1563,6 +1688,53 @@ impl Solution {
         } else {
             vec![y, x]
         }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    findErrorNums(nums: number[]): number[] {
+        const N = nums.length;
+        // a ^ a = 0
+        // xorr = (1 ^ 2 ^ ... N) ^ (nums[0] ^ nums[1] ^ ... nums[N - 1])
+        // xorr = missing ^ duplicate
+        let xorr = 0;
+        for (let i = 1; i <= N; i++) {
+            xorr ^= i;
+            xorr ^= nums[i - 1];
+        }
+        // bit that is set in only one number among (duplicate, missing),
+        // will be set in (duplicate ^ missing)
+        // take rightMost set bit for simplicity
+        const rightMostBit = xorr & ~(xorr - 1);
+        // divide numbers (from nums, from [1, N]) into two sets w.r.t the rightMostBit
+        // xorr the numbers of these sets independently
+        let x = 0,
+            y = 0;
+        for (let i = 1; i <= N; i++) {
+            if (i & rightMostBit) {
+                x ^= i;
+            } else {
+                y ^= i;
+            }
+            if (nums[i - 1] & rightMostBit) {
+                x ^= nums[i - 1];
+            } else {
+                y ^= nums[i - 1];
+            }
+        }
+        // identify the duplicate number from x and y
+        for (let num of nums) {
+            if (num === x) {
+                return [x, y];
+            }
+        }
+        return [y, x];
     }
 }
 ```

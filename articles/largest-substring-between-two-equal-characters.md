@@ -188,6 +188,27 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxLengthBetweenEqualCharacters(s: string): number {
+        const n = s.length;
+        let res = -1;
+        for (let i = 0; i < n; i++) {
+            for (let j = i + 1; j < n; j++) {
+                if (s[i] === s[j]) {
+                    res = Math.max(res, j - i - 1);
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +454,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxLengthBetweenEqualCharacters(s: string): number {
+        const firstIdx = new Map<string, number>();
+        const lastIdx = new Map<string, number>();
+        let res = -1;
+        for (let i = 0; i < s.length; i++) {
+            if (!firstIdx.has(s[i])) {
+                firstIdx.set(s[i], i);
+            } else {
+                lastIdx.set(s[i], i);
+            }
+        }
+        for (const [char, idx] of lastIdx) {
+            res = Math.max(res, lastIdx.get(char)! - firstIdx.get(char)! - 1);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -630,6 +676,27 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxLengthBetweenEqualCharacters(s: string): number {
+        const charIndex = new Map<string, number>();
+        let res = -1;
+        for (let i = 0; i < s.length; i++) {
+            if (charIndex.has(s[i])) {
+                res = Math.max(res, i - charIndex.get(s[i])! - 1);
+            } else {
+                charIndex.set(s[i], i);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -846,6 +913,28 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    maxLengthBetweenEqualCharacters(s: string): number {
+        const firstIdx: number[] = Array(26).fill(-1);
+        let res = -1;
+        for (let i = 0; i < s.length; i++) {
+            const j = s.charCodeAt(i) - 'a'.charCodeAt(0);
+            if (firstIdx[j] !== -1) {
+                res = Math.max(res, i - firstIdx[j] - 1);
+            } else {
+                firstIdx[j] = i;
+            }
+        }
+        return res;
     }
 }
 ```

@@ -250,6 +250,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    longestPalindrome(s: string): number {
+        const count: Record<string, number> = {};
+        let res = 0;
+
+        for (const c of s) {
+            count[c] = (count[c] || 0) + 1;
+            if (count[c] % 2 === 0) {
+                res += 2;
+            }
+        }
+
+        for (const key in count) {
+            if (count[key] % 2 === 1) {
+                res += 1;
+                break;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,6 +468,26 @@ impl Solution {
         }
 
         if res < s.len() as i32 { res + 1 } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    longestPalindrome(s: string): number {
+        const count: Record<string, number> = {};
+        let res = 0;
+        for (const c of s) {
+            count[c] = (count[c] || 0) + 1;
+            if (count[c] % 2 === 0) {
+                res += 2;
+            }
+        }
+        return res + (res < s.length ? 1 : 0);
     }
 }
 ```
@@ -649,6 +698,28 @@ impl Solution {
         }
 
         if seen.is_empty() { res } else { res + 1 }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    longestPalindrome(s: string): number {
+        const seen = new Set<string>();
+        let res = 0;
+        for (const c of s) {
+            if (seen.has(c)) {
+                seen.delete(c);
+                res += 2;
+            } else {
+                seen.add(c);
+            }
+        }
+        return seen.size === 0 ? res : res + 1;
     }
 }
 ```
@@ -931,6 +1002,36 @@ impl Solution {
         }
 
         if mask1 != 0 || mask2 != 0 { res + 1 } else { res }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    longestPalindrome(s: string): number {
+        let mask1 = 0; // [a - z]
+        let mask2 = 0; // [A - Z]
+        let res = 0;
+        for (const c of s) {
+            if (c >= 'a' && c <= 'z') {
+                const bit = 1 << (c.charCodeAt(0) - 97);
+                if (mask1 & bit) {
+                    res += 2;
+                }
+                mask1 ^= bit;
+            } else {
+                const bit = 1 << (c.charCodeAt(0) - 65);
+                if (mask2 & bit) {
+                    res += 2;
+                }
+                mask2 ^= bit;
+            }
+        }
+        return mask1 || mask2 ? res + 1 : res;
     }
 }
 ```
