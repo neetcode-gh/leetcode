@@ -224,6 +224,8 @@ public class MinStack {
 ```
 
 ```go
+import "github.com/a234567894/gods/stacks/linkedliststack"
+
 type MinStack struct {
     stack *linkedliststack.Stack
 }
