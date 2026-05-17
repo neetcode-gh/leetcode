@@ -16,4 +16,17 @@ object Solution {
         
         map
     }
+
+    // using `groupBy` and only `one` Mutable Collection.
+    def topKFrequent2(nums: Array[Int], k: Int): Array[Int] = {
+
+        val frequencyArray = Array.fill(nums.length + 1)(ArrayBuffer.empty[Int])
+
+        val groupedNums = nums.groupBy(identity).mapValues(_.length)
+
+        groupedNums.foreach { case (num, len) => frequencyArray(len) += num }
+
+        frequencyArray.flatten.takeRight(k)
+
+    }
 }
