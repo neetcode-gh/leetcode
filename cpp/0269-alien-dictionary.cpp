@@ -1,58 +1,54 @@
-#include<iostream>
-#include<map>
-#include<vector>
-#include<queue>
-using namespace std;
+/*
+    Time - O(C) [C = Total length of all the words]
+*/    
 
 class Solution {
+private:
+    bool dfs(char ch, unordered_map<char, unordered_set<char>> &adj, 
+        unordered_map<char, bool> &visit, string &res) {
+        if(visit.find(ch) != visit.end())
+            return visit[ch];
+
+        visit[ch] = true;
+        for(auto it: adj[ch]) {
+            if(dfs(it, adj, visit, res))
+                return true;
+        }
+        visit[ch] = false;
+        res += ch;
+        return false;
+    }
+
 public:
     string alienOrder(vector<string>& words) {
-        map<char,int> degree;
-        map<char, vector<char>> graph;
+        unordered_map<char, unordered_set<char>> adj;
         int n = words.size();
 
-        for (auto& word : words) {
-            for (auto& ch : word) {
-                degree[ch] = 0;
+        for(auto word: words)
+            for(auto ch: word)
+                adj[ch] = unordered_set<char>();
+
+        for(int i = 0; i < n-1; i++) {
+            string s1 = words[i], s2 = words[i+1];
+            int minLen = min(s1.size(), s2.size());
+            if(s1.size() > s2.size() && s1.substr(0, minLen) == s2.substr(0, minLen))
+                return "";
+            
+            for(int j = 0; j < minLen; j++) {
+                if(s1[j] != s2[j]) {
+                    adj[s1[j]].insert(s2[j]);
+                    break;
+                }
+            }
         }
 
-        for (int i = 0; i < n - 1; i++) {
-         int l = min((int)words[i].size(), (int)words[i + 1].size());
-         for (int j = 0; j < l; j++) {
-            char x = words[i][j];
-            char y = words[i + 1][j];
-            if (x != y) {
-               graph[x].push_back(y);
-               degree[y]++;
-               break;
-            }
-         }
-      }
-      
-      string ret = "";
-      queue<char> q;
-      map<char, int>::iterator it = degree.begin();
-      while (it != degree.end()) {
-         if (it->second == 0) {
-            q.push(it->first);
-         }
-         it++;
-      }
-
-      while (!q.empty()) {
-         char x = q.front();
-         q.pop();
-         ret += x;
-         vector<char>::iterator sit = graph[x].begin();
-         while (sit != graph[x].end()) {
-            degree[*sit]--;
-            if (degree[*sit] == 0) {
-               q.push(*sit);
-            }
-            sit++;
-         }
-      }
-      return ret.size() == degree.size() ? ret : "";
-      }
+        unordered_map<char, bool> visit;
+        string res = "";
+        for(auto chMap: adj) {
+            if(dfs(chMap.first, adj, visit, res))
+                return "";
+        }
+        reverse(res.begin(), res.end());
+        return res;
     }
 };
