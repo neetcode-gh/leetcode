@@ -1,29 +1,40 @@
-public class Solution {
-    public int[] TopKFrequent(int[] nums, int k) {
-        int[] arr = new int[k];
-        var dict = new Dictionary<int, int>();
+public class Solution
+{
+    public int[] TopKFrequent(int[] nums, int k)
+    {
+        Dictionary<int, int> numCount = new Dictionary<int, int>();
         for (int i = 0; i < nums.Length; i++)
         {
-            if (dict.ContainsKey(nums[i]))
-            {
-                dict[nums[i]]++;
-            }
+            if (numCount.ContainsKey(nums[i]))
+                numCount[nums[i]] += 1;
             else
-            {
-                dict.Add(nums[i], 1);    
-            }
+                numCount[nums[i]] = 1;
         }
-        
-        var pq = new PriorityQueue<int, int>();
-        foreach (var key in dict.Keys)
+
+        List<int>[] bucketSort = new List<int>[nums.Length + 1];
+
+        for (int i = 0; i < bucketSort.Length; i++)
+            bucketSort[i] = new List<int>();
+
+        foreach (var i in numCount)
+            bucketSort[i.Value].Add(i.Key);
+
+        int[] result = new int[k];
+        int resultCount = 0;
+
+        for (int i = bucketSort.Length - 1; i >= 1; i--)
         {
-            pq.Enqueue(key, dict[key]);
-            if (pq.Count > k) pq.Dequeue();
+            if (bucketSort[i].Count == 0)
+                continue;
+
+            foreach (int item in bucketSort[i])
+            {
+                result[resultCount] = item;
+                resultCount++;
+            }
+            if (resultCount == k)
+                break;
         }
-        int i2 = k;
-        while (pq.Count > 0) {
-            arr[--i2] = pq.Dequeue();
-        }
-        return arr;
+        return result;
     }
 }
