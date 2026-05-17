@@ -292,6 +292,39 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        let n = nums.length;
+        if (n <= 2) return n;
+        let i = 0;
+        while (i < n - 1) {
+            if (nums[i] === nums[i + 1]) {
+                let j = i + 2,
+                    cnt = 0;
+                while (j < n && nums[i] === nums[j]) {
+                    j++;
+                    cnt++;
+                }
+                for (let k = i + 2; k < n; k++) {
+                    if (j >= n) break;
+                    nums[k] = nums[j++];
+                }
+                n -= cnt;
+                i += 2;
+            } else {
+                i++;
+            }
+        }
+        return n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,6 +583,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        const count = new Map<number, number>();
+        for (const num of nums) {
+            count.set(num, (count.get(num) || 0) + 1);
+        }
+        let i = 0;
+        for (const [num, cnt] of count) {
+            nums[i++] = num;
+            count.set(num, cnt - 1);
+            if (count.get(num)! >= 1) {
+                nums[i++] = num;
+                count.set(num, cnt - 1);
+            }
+        }
+        return i;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -799,6 +857,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        let l = 0,
+            r = 0;
+        while (r < nums.length) {
+            let count = 1;
+            while (r + 1 < nums.length && nums[r] === nums[r + 1]) {
+                r++;
+                count++;
+            }
+            for (let i = 0; i < Math.min(2, count); i++) {
+                nums[l] = nums[r];
+                l++;
+            }
+            r++;
+        }
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -953,6 +1037,25 @@ impl Solution {
             }
         }
         l as i32
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    removeDuplicates(nums: number[]): number {
+        let l = 0;
+        for (const num of nums) {
+            if (l < 2 || num !== nums[l - 2]) {
+                nums[l] = num;
+                l++;
+            }
+        }
+        return l;
     }
 }
 ```
