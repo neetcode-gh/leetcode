@@ -1,0 +1,28 @@
+using System.Collections.Generic;
+
+public class Solution {
+    public string RemoveDuplicates(string s, int k) {
+        var stack = new Stack<KeyValuePair<char, int>>();
+
+        foreach (char c in s) {
+            if (stack.Count == 0 || stack.Peek().Key != c) {
+                stack.Push(new KeyValuePair<char, int>(c, 1));
+            } else {
+                stack.Peek().Value += 1;
+                if (stack.Peek().Value == k) {
+                    stack.Pop();
+                }
+            }
+        }
+
+        var result = new List<char>();
+        while (stack.Count > 0) {
+            var pair = stack.Pop();
+            for (int i = 0; i < pair.Value; i++) {
+                result.Insert(0, pair.Key);
+            }
+        }
+
+        return new string(result.ToArray());
+    }
+}
