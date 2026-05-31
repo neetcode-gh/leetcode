@@ -190,6 +190,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} names
+     * @param {number[]} heights
+     * @return {string[]}
+     */
+    sortPeople(names: string[], heights: number[]): string[] {
+        const map: Record<number, string> = {};
+        for (let i = 0; i < heights.length; i++) {
+            map[heights[i]] = names[i];
+        }
+        heights.sort((a, b) => a - b);
+        const res: string[] = [];
+        for (let i = heights.length - 1; i >= 0; i--) {
+            res.push(map[heights[i]]);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,6 +392,21 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} names
+     * @param {number[]} heights
+     * @return {string[]}
+     */
+    sortPeople(names: string[], heights: number[]): string[] {
+        const arr: [number, string][] = names.map((name, i) => [heights[i], name]);
+        arr.sort((a, b) => b[0] - a[0]);
+        return arr.map((pair) => pair[1]);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -524,6 +561,21 @@ impl Solution {
         let mut indices: Vec<usize> = (0..names.len()).collect();
         indices.sort_by(|&a, &b| heights[b].cmp(&heights[a]));
         indices.into_iter().map(|i| names[i].clone()).collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} names
+     * @param {number[]} heights
+     * @return {string[]}
+     */
+    sortPeople(names: string[], heights: number[]): string[] {
+        const indices: number[] = names.map((_, i) => i);
+        indices.sort((a, b) => heights[b] - heights[a]);
+        return indices.map((i) => names[i]);
     }
 }
 ```
