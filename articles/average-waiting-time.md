@@ -219,6 +219,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} customers
+     * @return {number}
+     */
+    averageWaitingTime(customers: number[][]): number {
+        let t = 0,
+            total = 0;
+        for (const [arrival, order] of customers) {
+            if (t > arrival) {
+                total += t - arrival;
+            } else {
+                t = arrival;
+            }
+            total += order;
+            t += order;
+        }
+        return total / customers.length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,6 +413,24 @@ impl Solution {
         }
 
         total as f64 / customers.len() as f64
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} customers
+     * @return {number}
+     */
+    averageWaitingTime(customers: number[][]): number {
+        let t = 0,
+            total = 0;
+        for (const [arrival, order] of customers) {
+            t = Math.max(t, arrival) + order;
+            total += t - arrival;
+        }
+        return total / customers.length;
     }
 }
 ```

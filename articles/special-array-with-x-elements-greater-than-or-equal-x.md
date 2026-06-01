@@ -190,6 +190,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    specialArray(nums: number[]): number {
+        for (let i = 1; i <= nums.length; i++) {
+            let count = 0;
+            for (const num of nums) {
+                if (num >= i) {
+                    count++;
+                }
+            }
+            if (count === i) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -424,6 +447,30 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    specialArray(nums: number[]): number {
+        let l = 1,
+            r = nums.length;
+        while (l <= r) {
+            const mid = Math.floor((l + r) / 2);
+            const cnt = nums.filter((num) => num >= mid).length;
+            if (cnt === mid) return mid;
+            if (cnt < mid) {
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return -1;
     }
 }
 ```
@@ -700,6 +747,36 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    specialArray(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+        let i = 0,
+            prev = -1,
+            totalRight = nums.length;
+        while (i < nums.length) {
+            if (
+                nums[i] === totalRight ||
+                (prev < totalRight && totalRight < nums[i])
+            ) {
+                return totalRight;
+            }
+            while (i + 1 < nums.length && nums[i] === nums[i + 1]) {
+                i++;
+            }
+            prev = nums[i];
+            i++;
+            totalRight = nums.length - i;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -926,6 +1003,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    specialArray(nums: number[]): number {
+        nums.sort((a, b) => a - b);
+        const n = nums.length;
+        let i = 0,
+            j = 1;
+        while (i < n && j <= n) {
+            while (i < n && j > nums[i]) i++;
+            if (j == n - i) {
+                return j;
+            }
+            j++;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1138,6 +1238,30 @@ impl Solution {
             }
         }
         -1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    specialArray(nums: number[]): number {
+        const count: number[] = new Array(nums.length + 1).fill(0);
+        for (const num of nums) {
+            const index = Math.min(num, nums.length);
+            count[index]++;
+        }
+        let totalRight = 0;
+        for (let i = nums.length; i >= 0; i--) {
+            totalRight += count[i];
+            if (i === totalRight) {
+                return totalRight;
+            }
+        }
+        return -1;
     }
 }
 ```

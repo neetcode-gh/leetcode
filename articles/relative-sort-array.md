@@ -243,6 +243,32 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr1
+     * @param {number[]} arr2
+     * @return {number[]}
+     */
+    relativeSortArray(arr1: number[], arr2: number[]): number[] {
+        const res: number[] = [];
+        for (const num2 of arr2) {
+            for (let i = 0; i < arr1.length; i++) {
+                if (arr1[i] === num2) {
+                    res.push(arr1[i]);
+                    arr1[i] = -1;
+                }
+            }
+        }
+        arr1.sort((a, b) => a - b);
+        for (let i = res.length; i < arr1.length; i++) {
+            res.push(arr1[i]);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -516,6 +542,33 @@ impl Solution {
 
         res.extend(end);
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr1
+     * @param {number[]} arr2
+     * @return {number[]}
+     */
+    relativeSortArray(arr1: number[], arr2: number[]): number[] {
+        const arr2Set = new Set<number>(arr2);
+        const count: Record<number, number> = {};
+        const end: number[] = [];
+        for (const num of arr1) {
+            if (!arr2Set.has(num)) end.push(num);
+            count[num] = (count[num] || 0) + 1;
+        }
+        end.sort((a, b) => a - b);
+        const res: number[] = [];
+        for (const num of arr2) {
+            for (let i = 0; i < count[num]; i++) {
+                res.push(num);
+            }
+        }
+        return res.concat(end);
     }
 }
 ```
@@ -811,6 +864,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr1
+     * @param {number[]} arr2
+     * @return {number[]}
+     */
+    relativeSortArray(arr1: number[], arr2: number[]): number[] {
+        const count: Record<number, number> = {};
+        for (const num of arr1) {
+            count[num] = (count[num] || 0) + 1;
+        }
+        const res: number[] = [];
+        for (const num of arr2) {
+            for (let i = 0; i < count[num]; i++) {
+                res.push(num);
+            }
+            delete count[num];
+        }
+        const remaining = Object.keys(count)
+            .map(Number)
+            .sort((a, b) => a - b);
+        for (const num of remaining) {
+            for (let i = 0; i < count[num]; i++) {
+                res.push(num);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1071,6 +1156,29 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr1
+     * @param {number[]} arr2
+     * @return {number[]}
+     */
+    relativeSortArray(arr1: number[], arr2: number[]): number[] {
+        const max = Math.max(...arr1);
+        const count: number[] = new Array(max + 1).fill(0);
+        for (const num of arr1) count[num]++;
+        const res: number[] = [];
+        for (const num of arr2) {
+            while (count[num]-- > 0) res.push(num);
+        }
+        for (let num = 0; num < count.length; num++) {
+            while (count[num]-- > 0) res.push(num);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1251,6 +1359,25 @@ impl Solution {
         });
 
         arr1
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} arr1
+     * @param {number[]} arr2
+     * @return {number[]}
+     */
+    relativeSortArray(arr1: number[], arr2: number[]): number[] {
+        const index = new Map<number, number>();
+        arr2.forEach((num, i) => index.set(num, i));
+        return arr1.sort((a, b) => {
+            const ia = index.has(a) ? index.get(a)! : 1000 + a;
+            const ib = index.has(b) ? index.get(b)! : 1000 + b;
+            return ia - ib;
+        });
     }
 }
 ```

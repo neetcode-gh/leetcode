@@ -240,6 +240,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {number[][]} queries
+     * @return {number[]}
+     */
+    vowelStrings(words: string[], queries: number[][]): number[] {
+        const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+        const res: number[] = [];
+        for (const [start, end] of queries) {
+            let count = 0;
+            for (let i = start; i <= end; i++) {
+                const word = words[i];
+                if (vowels.has(word[0]) && vowels.has(word[word.length - 1])) {
+                    count++;
+                }
+            }
+            res.push(count);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -503,6 +528,34 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {number[][]} queries
+     * @return {number[]}
+     */
+    vowelStrings(words: string[], queries: number[][]): number[] {
+        const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
+        const n = words.length;
+        const prefixCnt: number[] = new Array(n + 1).fill(0);
+        for (let i = 0; i < n; i++) {
+            prefixCnt[i + 1] = prefixCnt[i];
+            const w = words[i];
+            if (vowels.has(w[0]) && vowels.has(w[w.length - 1])) {
+                prefixCnt[i + 1]++;
+            }
+        }
+        const res: number[] = new Array(queries.length);
+        for (let i = 0; i < queries.length; i++) {
+            const [l, r] = queries[i];
+            res[i] = prefixCnt[r + 1] - prefixCnt[l];
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -759,6 +812,30 @@ impl Solution {
                 prefix[r + 1] - prefix[l]
             })
             .collect()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @param {number[][]} queries
+     * @return {number[]}
+     */
+    vowelStrings(words: string[], queries: number[][]): number[] {
+        let vowels = 0;
+        for (const c of 'aeiou') {
+            vowels |= 1 << (c.charCodeAt(0) - 97);
+        }
+        const prefix: number[] = [0];
+        for (const w of words) {
+            const f = w.charCodeAt(0) - 97;
+            const l = w.charCodeAt(w.length - 1) - 97;
+            const isVowel = (1 << f) & vowels && (1 << l) & vowels ? 1 : 0;
+            prefix.push(prefix[prefix.length - 1] + isVowel);
+        }
+        return queries.map(([l, r]) => prefix[r + 1] - prefix[l]);
     }
 }
 ```

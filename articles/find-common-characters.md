@@ -132,7 +132,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<string> CommonChars(string[] words) {
+    public List<string> CommonChars(string[] words) {
         int[] cnt = new int[26];
         Array.Fill(cnt, int.MaxValue);
 
@@ -246,7 +246,6 @@ class Solution {
 }
 ```
 
-
 ```rust
 impl Solution {
     pub fn common_chars(words: Vec<String>) -> Vec<String> {
@@ -270,6 +269,34 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    commonChars(words: string[]): string[] {
+        const cnt: number[] = new Array(26).fill(Infinity);
+        for (const word of words) {
+            const curCnt: number[] = new Array(26).fill(0);
+            for (const c of word) {
+                curCnt[c.charCodeAt(0) - 97]++;
+            }
+            for (let i = 0; i < 26; i++) {
+                cnt[i] = Math.min(cnt[i], curCnt[i]);
+            }
+        }
+        const res: string[] = [];
+        for (let i = 0; i < 26; i++) {
+            for (let j = 0; j < cnt[i]; j++) {
+                res.push(String.fromCharCode(i + 97));
+            }
+        }
+        return res;
     }
 }
 ```

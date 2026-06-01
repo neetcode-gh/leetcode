@@ -336,6 +336,53 @@ impl BrowserHistory {
 }
 ```
 
+```typescript
+class BrowserHistory {
+    private backHistory: string[];
+    private frontHistory: string[];
+
+    /**
+     * @constructor
+     * @param {string} homepage
+     */
+    constructor(homepage: string) {
+        this.backHistory = [homepage];
+        this.frontHistory = [];
+    }
+
+    /**
+     * @param {string} url
+     * @return {void}
+     */
+    visit(url: string): void {
+        this.backHistory.push(url);
+        this.frontHistory = [];
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    back(steps: number): string {
+        while (steps-- > 0 && this.backHistory.length > 1) {
+            this.frontHistory.push(this.backHistory.pop()!);
+        }
+        return this.backHistory[this.backHistory.length - 1];
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    forward(steps: number): string {
+        while (steps-- > 0 && this.frontHistory.length > 0) {
+            this.backHistory.push(this.frontHistory.pop()!);
+        }
+        return this.backHistory[this.backHistory.length - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -636,6 +683,50 @@ impl BrowserHistory {
     fn forward(&mut self, steps: i32) -> String {
         self.cur = (self.cur + steps as usize).min(self.history.len() - 1);
         self.history[self.cur].clone()
+    }
+}
+```
+
+```typescript
+class BrowserHistory {
+    private history: string[];
+    private cur: number;
+
+    /**
+     * @constructor
+     * @param {string} homepage
+     */
+    constructor(homepage: string) {
+        this.history = [homepage];
+        this.cur = 0;
+    }
+
+    /**
+     * @param {string} url
+     * @return {void}
+     */
+    visit(url: string): void {
+        this.cur++;
+        this.history = this.history.slice(0, this.cur);
+        this.history.push(url);
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    back(steps: number): string {
+        this.cur = Math.max(0, this.cur - steps);
+        return this.history[this.cur];
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    forward(steps: number): string {
+        this.cur = Math.min(this.history.length - 1, this.cur + steps);
+        return this.history[this.cur];
     }
 }
 ```
@@ -998,6 +1089,57 @@ impl BrowserHistory {
     fn forward(&mut self, steps: i32) -> String {
         self.cur = (self.cur + steps as usize).min(self.n - 1);
         self.history[self.cur].clone()
+    }
+}
+```
+
+```typescript
+class BrowserHistory {
+    private history: string[];
+    private cur: number;
+    private n: number;
+
+    /**
+     * @constructor
+     * @param {string} homepage
+     */
+    constructor(homepage: string) {
+        this.history = [homepage];
+        this.cur = 0;
+        this.n = 1;
+    }
+
+    /**
+     * @param {string} url
+     * @return {void}
+     */
+    visit(url: string): void {
+        this.cur++;
+        if (this.cur === this.history.length) {
+            this.history.push(url);
+            this.n++;
+        } else {
+            this.history[this.cur] = url;
+            this.n = this.cur + 1;
+        }
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    back(steps: number): string {
+        this.cur = Math.max(0, this.cur - steps);
+        return this.history[this.cur];
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    forward(steps: number): string {
+        this.cur = Math.min(this.n - 1, this.cur + steps);
+        return this.history[this.cur];
     }
 }
 ```
@@ -1404,6 +1546,65 @@ impl BrowserHistory {
             steps -= 1;
         }
         self.history[self.cur].clone()
+    }
+}
+```
+
+```typescript
+class ListNode {
+    val: string;
+    prev: ListNode | null;
+    next: ListNode | null;
+
+    constructor(val: string, prev: ListNode | null = null, next: ListNode | null = null) {
+        this.val = val;
+        this.prev = prev;
+        this.next = next;
+    }
+}
+
+class BrowserHistory {
+    private cur: ListNode;
+
+    /**
+     * @constructor
+     * @param {string} homepage
+     */
+    constructor(homepage: string) {
+        this.cur = new ListNode(homepage);
+    }
+
+    /**
+     * @param {string} url
+     * @return {void}
+     */
+    visit(url: string): void {
+        this.cur.next = new ListNode(url, this.cur, null);
+        this.cur = this.cur.next;
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    back(steps: number): string {
+        while (this.cur.prev !== null && steps > 0) {
+            this.cur = this.cur.prev;
+            steps--;
+        }
+        return this.cur.val;
+    }
+
+    /**
+     * @param {number} steps
+     * @return {string}
+     */
+    forward(steps: number): string {
+        while (this.cur.next !== null && steps > 0) {
+            this.cur = this.cur.next;
+            steps--;
+        }
+        return this.cur.val;
     }
 }
 ```

@@ -140,6 +140,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TimeRequiredToBuy(int[] tickets, int k) {
+        int n = tickets.Length;
+        Queue<int> queue = new Queue<int>();
+        for (int i = 0; i < n; i++) {
+            queue.Enqueue(i);
+        }
+        int time = 0;
+        while (queue.Count > 0) {
+            time++;
+            int cur = queue.Dequeue();
+            tickets[cur]--;
+            if (tickets[cur] == 0) {
+                if (cur == k) {
+                    return time;
+                }
+            } else {
+                queue.Enqueue(cur);
+            }
+        }
+        return time;
+    }
+}
+```
+
 ```go
 func timeRequiredToBuy(tickets []int, k int) int {
     n := len(tickets)
@@ -244,6 +270,37 @@ impl Solution {
             }
         }
         time
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} tickets
+     * @param {number} k
+     * @return {number}
+     */
+    timeRequiredToBuy(tickets: number[], k: number): number {
+        const n = tickets.length;
+        const queue = new Queue();
+        for (let i = 0; i < n; i++) {
+            queue.push(i);
+        }
+        let time = 0;
+        while (queue.size() > 0) {
+            time++;
+            const cur = queue.pop()!;
+            tickets[cur]--;
+            if (tickets[cur] === 0) {
+                if (cur === k) {
+                    return time;
+                }
+            } else {
+                queue.push(cur);
+            }
+        }
+        return time;
     }
 }
 ```
@@ -379,6 +436,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TimeRequiredToBuy(int[] tickets, int k) {
+        int n = tickets.Length;
+        int idx = 0;
+        int time = 0;
+        while (true) {
+            time++;
+            tickets[idx]--;
+            if (tickets[idx] == 0) {
+                if (idx == k) {
+                    return time;
+                }
+            }
+            idx = (idx + 1) % n;
+            while (tickets[idx] == 0) {
+                idx = (idx + 1) % n;
+            }
+        }
+    }
+}
+```
+
 ```go
 func timeRequiredToBuy(tickets []int, k int) int {
     n := len(tickets)
@@ -466,6 +546,34 @@ impl Solution {
             }
             idx = (idx + 1) % n;
             while tickets[idx] == 0 {
+                idx = (idx + 1) % n;
+            }
+        }
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} tickets
+     * @param {number} k
+     * @return {number}
+     */
+    timeRequiredToBuy(tickets: number[], k: number): number {
+        const n = tickets.length;
+        let idx = 0;
+        let time = 0;
+        while (true) {
+            time++;
+            tickets[idx]--;
+            if (tickets[idx] === 0) {
+                if (idx === k) {
+                    return time;
+                }
+            }
+            idx = (idx + 1) % n;
+            while (tickets[idx] === 0) {
                 idx = (idx + 1) % n;
             }
         }
@@ -576,6 +684,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TimeRequiredToBuy(int[] tickets, int k) {
+        int res = 0;
+        for (int i = 0; i < tickets.Length; i++) {
+            if (i <= k) {
+                res += Math.Min(tickets[i], tickets[k]);
+            } else {
+                res += Math.Min(tickets[i], tickets[k] - 1);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ```go
 func timeRequiredToBuy(tickets []int, k int) int {
     res := 0
@@ -648,6 +772,27 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} tickets
+     * @param {number} k
+     * @return {number}
+     */
+    timeRequiredToBuy(tickets: number[], k: number): number {
+        let res = 0;
+        for (let i = 0; i < tickets.length; i++) {
+            if (i <= k) {
+                res += Math.min(tickets[i], tickets[k]);
+            } else {
+                res += Math.min(tickets[i], tickets[k] - 1);
+            }
+        }
+        return res;
     }
 }
 ```
