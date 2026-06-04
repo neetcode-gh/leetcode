@@ -221,6 +221,8 @@ Most programming languages provide a built-in square root function that computes
 ::tabs-start
 
 ```python
+from math import sqrt
+
 class Solution:
     def mySqrt(self, x: int) -> int:
         return int(sqrt(x))
