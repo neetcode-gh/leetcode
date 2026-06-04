@@ -428,10 +428,10 @@ Instead of solving the problem recursively, we build the answer **from the botto
 Let `dp[i]` represent the **minimum cost to reach step `i`**.
 To reach step `i`, you can:
 
-- Come from step `i-1` and pay `cost[i-1]`
-- Come from step `i-2` and pay `cost[i-2]`
+- Come from step `i-1`, after spending `dp[i-1]` to get there, then pay `cost[i-1]`
+- Come from step `i-2`, after spending `dp[i-2]` to get there, then pay `cost[i-2]`
 
-We choose the cheaper of the two.
+We choose the cheaper total cost, not just the cheaper single step cost.
 
 ### Algorithm
 
