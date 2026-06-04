@@ -390,7 +390,7 @@ impl BSTIterator {
 
 - Time complexity:
     - $O(n)$ time for initialization.
-    - $O(n)$ time for each $next()$ and $hasNext()$ function calls.
+    - $O(1)$ time for each $next()$ and $hasNext()$ function call.
 - Space complexity: $O(n)$
 
 ---
@@ -758,7 +758,7 @@ impl BSTIterator {
 
 - Time complexity:
     - $O(n)$ time for initialization.
-    - $O(n)$ time for each $next()$ and $hasNext()$ function calls.
+    - $O(1)$ time for each $next()$ and $hasNext()$ function call.
 - Space complexity: $O(n)$
 
 ---

@@ -1,9 +1,11 @@
 class Solution:
     def encode(self, strs):
-        res = ""
+        res = []
         for s in strs:
-            res += str(len(s)) + "#" + s
-        return res
+            res.append(str(len(s)))
+            res.append("#")
+            res.append(s)
+        return "".join(res)
 
     def decode(self, s):
         res = []

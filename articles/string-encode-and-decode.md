@@ -2,7 +2,7 @@
 
 Before attempting this problem, you should be comfortable with:
 
-- **String Manipulation** - Building strings by concatenation and extracting substrings based on indices
+- **String Manipulation** - Building encoded strings and extracting substrings based on indices
 - **Delimiter Design** - Understanding how to choose separators that won't conflict with input content
 - **Length-Prefix Encoding** - Using string lengths to unambiguously mark boundaries between encoded segments
 
@@ -46,28 +46,26 @@ class Solution:
     def encode(self, strs: List[str]) -> str:
         if not strs:
             return ""
-        sizes, res = [], ""
+        sizes, res = [], []
         for s in strs:
             sizes.append(len(s))
         for sz in sizes:
-            res += str(sz)
-            res += ','
-        res += '#'
-        for s in strs:
-            res += s
-        return res
+            res.append(str(sz))
+            res.append(',')
+        res.append('#')
+        res.extend(strs)
+        return ''.join(res)
 
     def decode(self, s: str) -> List[str]:
         if not s:
             return []
         sizes, res, i = [], [], 0
         while s[i] != '#':
-            cur = ""
-            while s[i] != ',':
-                cur += s[i]
-                i += 1
-            sizes.append(int(cur))
-            i += 1
+            j = i
+            while s[j] != ',':
+                j += 1
+            sizes.append(int(s[i:j]))
+            i = j + 1
         i += 1
         for sz in sizes:
             res.append(s[i:i + sz])
@@ -127,16 +125,17 @@ public:
     string encode(vector<string>& strs) {
         if (strs.empty()) return "";
         vector<int> sizes;
-        string res = "";
+        string res;
         for (string& s : strs) {
             sizes.push_back(s.size());
         }
         for (int sz : sizes) {
-            res += to_string(sz) + ',';
+            res.append(to_string(sz));
+            res.push_back(',');
         }
-        res += '#';
+        res.push_back('#');
         for (string& s : strs) {
-            res += s;
+            res.append(s);
         }
         return res;
     }
@@ -147,13 +146,12 @@ public:
         vector<string> res;
         int i = 0;
         while (s[i] != '#') {
-            string cur = "";
-            while (s[i] != ',') {
-                cur += s[i];
-                i++;
+            int j = i;
+            while (s[j] != ',') {
+                j++;
             }
-            sizes.push_back(stoi(cur));
-            i++;
+            sizes.push_back(stoi(s.substr(i, j - i)));
+            i = j + 1;
         }
         i++;
         for (int sz : sizes) {
@@ -174,18 +172,15 @@ class Solution {
     encode(strs) {
         if (strs.length === 0) return '';
         let sizes = [],
-            res = '';
+            parts = [];
         for (let s of strs) {
             sizes.push(s.length);
         }
         for (let sz of sizes) {
-            res += sz + ',';
+            parts.push(String(sz), ',');
         }
-        res += '#';
-        for (let s of strs) {
-            res += s;
-        }
-        return res;
+        parts.push('#', ...strs);
+        return parts.join('');
     }
 
     /**
@@ -198,13 +193,12 @@ class Solution {
             res = [],
             i = 0;
         while (str[i] !== '#') {
-            let cur = '';
-            while (str[i] !== ',') {
-                cur += str[i];
-                i++;
+            let j = i;
+            while (str[j] !== ',') {
+                j++;
             }
-            sizes.push(parseInt(cur));
-            i++;
+            sizes.push(parseInt(str.substring(i, j), 10));
+            i = j + 1;
         }
         i++;
         for (let sz of sizes) {
@@ -222,18 +216,18 @@ public class Solution {
     public string Encode(IList<string> strs) {
         if (strs.Count == 0) return "";
         List<int> sizes = new List<int>();
-        string res = "";
+        StringBuilder res = new StringBuilder();
         foreach (string s in strs) {
             sizes.Add(s.Length);
         }
         foreach (int sz in sizes) {
-            res += sz.ToString() + ',';
+            res.Append(sz).Append(',');
         }
-        res += '#';
+        res.Append('#');
         foreach (string s in strs) {
-            res += s;
+            res.Append(s);
         }
-        return res;
+        return res.ToString();
     }
 
     public List<string> Decode(string s) {
@@ -244,13 +238,12 @@ public class Solution {
         List<string> res = new List<string>();
         int i = 0;
         while (s[i] != '#') {
-            string cur = "";
-            while (s[i] != ',') {
-                cur += s[i];
-                i++;
+            int j = i;
+            while (s[j] != ',') {
+                j++;
             }
-            sizes.Add(int.Parse(cur));
-            i++;
+            sizes.Add(int.Parse(s.Substring(i, j - i)));
+            i = j + 1;
         }
         i++;
         foreach (int sz in sizes) {
@@ -329,21 +322,11 @@ class Solution {
     func encode(_ strs: [String]) -> String {
         if strs.isEmpty { return "" }
 
-        var sizes: [Int] = []
-        var res = ""
+        var sizes: [String] = []
         for s in strs {
-            sizes.append(s.count)
+            sizes.append(String(s.count))
         }
-        for sz in sizes {
-            res += String(sz)
-            res += ","
-        }
-
-        res += "#"
-        for s in strs {
-            res += s
-        }
-        return res
+        return sizes.joined(separator: ",") + ",#" + strs.joined()
     }
 
     func decode(_ s: String) -> [String] {
@@ -354,12 +337,11 @@ class Solution {
         var i = 0
 
         while sArr[i] != "#" {
-            var cur = ""
+            let start = i
             while sArr[i] != "," {
-                cur.append(sArr[i])
                 i += 1
             }
-            sizes.append(Int(cur)!)
+            sizes.append(Int(String(sArr[start..<i]))!)
             i += 1
         }
 
@@ -424,7 +406,7 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
+- Time complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 - Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.
@@ -445,10 +427,10 @@ This approach is both simpler and more efficient because it avoids building sepa
 
 #### Encoding
 
-1. Initialize an empty result string.
+1. Initialize an empty result builder (or list of string parts).
 2. For each string in the list:
     - Compute its length.
-    - Append `"length#string"` to the result.
+    - Append `"length#string"` to the builder.
 3. Return the final encoded string.
 
 #### Decoding
@@ -469,10 +451,12 @@ This approach is both simpler and more efficient because it avoids building sepa
 class Solution:
 
     def encode(self, strs: List[str]) -> str:
-        res = ""
+        res = []
         for s in strs:
-            res += str(len(s)) + "#" + s
-        return res
+            res.append(str(len(s)))
+            res.append("#")
+            res.append(s)
+        return "".join(res)
 
     def decode(self, s: str) -> List[str]:
         res = []
@@ -527,7 +511,9 @@ public:
     string encode(vector<string>& strs) {
         string res;
         for (const string& s : strs) {
-            res += to_string(s.size()) + "#" + s;
+            res.append(to_string(s.size()));
+            res.push_back('#');
+            res.append(s);
         }
         return res;
     }
@@ -558,11 +544,11 @@ class Solution {
      * @returns {string}
      */
     encode(strs) {
-        let res = '';
+        const res = [];
         for (let s of strs) {
-            res += s.length + '#' + s;
+            res.push(String(s.length), '#', s);
         }
-        return res;
+        return res.join('');
     }
 
     /**
@@ -591,11 +577,11 @@ class Solution {
 ```csharp
 public class Solution {
     public string Encode(IList<string> strs) {
-        string res = "";
+        StringBuilder res = new StringBuilder();
         foreach (string s in strs) {
-            res += s.Length + "#" + s;
+            res.Append(s.Length).Append('#').Append(s);
         }
-        return res;
+        return res.ToString();
     }
 
     public List<string> Decode(string s) {
@@ -621,11 +607,13 @@ public class Solution {
 type Solution struct{}
 
 func (s *Solution) Encode(strs []string) string {
-	res := ""
+	var res strings.Builder
 	for _, str := range strs {
-		res += strconv.Itoa(len(str)) + "#" + str
+		res.WriteString(strconv.Itoa(len(str)))
+		res.WriteByte('#')
+		res.WriteString(str)
 	}
-	return res
+	return res.String()
 }
 
 func (s *Solution) Decode(encoded string) []string {
@@ -677,11 +665,14 @@ class Solution {
 ```swift
 class Solution {
     func encode(_ strs: [String]) -> String {
-        var res = ""
+        var res: [String] = []
+        res.reserveCapacity(strs.count * 3)
         for s in strs {
-            res += "\(s.count)#\(s)"
+            res.append(String(s.count))
+            res.append("#")
+            res.append(s)
         }
-        return res
+        return res.joined()
     }
 
     func decode(_ s: String) -> [String] {
@@ -745,7 +736,7 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
+- Time complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 - Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.

@@ -12,11 +12,12 @@ public:
 
     // Encodes a list of strings to a single string.
     string encode(vector<string>& strs) {
-        string result = "";
+        string result;
         
-        for (int i = 0; i < strs.size(); i++) {
-            string str = strs[i];
-            result += to_string(str.size()) + "#" + str;
+        for (const string& str : strs) {
+            result.append(to_string(str.size()));
+            result.push_back('#');
+            result.append(str);
         }
         
         return result;

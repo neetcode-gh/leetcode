@@ -1593,7 +1593,7 @@ class Solution:
             pq = [(0, src)]
 
             while pq:
-                max_w, u = heappop(pq)
+                max_w, u = heapq.heappop(pq)
                 if u == dst:
                     return max_w
 
@@ -1603,7 +1603,7 @@ class Solution:
                     new_w = max(max_w, weight)
                     if new_w < dist[v]:
                         dist[v] = new_w
-                        heappush(pq, (new_w, v))
+                        heapq.heappush(pq, (new_w, v))
 
             return float('inf')
 
@@ -2698,7 +2698,7 @@ func findCriticalAndPseudoCriticalEdges(n int, edges [][]int) [][]int {
 
     uf := NewUnionFind(n)
     for _, edge := range edgeList {
-        w, u, v, idx := edge[0], edge[1], edge[2], edge[3]
+        _, u, v, idx := edge[0], edge[1], edge[2], edge[3]
         if uf.Union(u, v) {
             mst[u] = append(mst[u], [2]int{v, idx})
             mst[v] = append(mst[v], [2]int{u, idx})
