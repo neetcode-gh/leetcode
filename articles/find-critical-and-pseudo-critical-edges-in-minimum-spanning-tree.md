@@ -2698,7 +2698,7 @@ func findCriticalAndPseudoCriticalEdges(n int, edges [][]int) [][]int {
 
     uf := NewUnionFind(n)
     for _, edge := range edgeList {
-        w, u, v, idx := edge[0], edge[1], edge[2], edge[3]
+        _, u, v, idx := edge[0], edge[1], edge[2], edge[3]
         if uf.Union(u, v) {
             mst[u] = append(mst[u], [2]int{v, idx})
             mst[v] = append(mst[v], [2]int{u, idx})
