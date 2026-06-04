@@ -19,9 +19,9 @@ This problem asks for the path with maximum probability, which is similar to fin
 
 1. Build an adjacency list where each node maps to its neighbors and the corresponding edge probabilities.
 2. Use a max-heap (priority queue) to always process the node with the highest probability first. Start with probability `1.0` at the source node.
-3. Mark nodes as visited once processed to avoid redundant work.
+3. Avoid redundant work by either marking nodes as visited once processed, or by keeping the best known probability for each node and skipping stale heap entries.
 4. For each node popped from the heap, if it is the destination, return the current probability.
-5. Otherwise, for each unvisited neighbor, compute the new probability by multiplying the current probability with the edge probability, and push it to the heap.
+5. Otherwise, for each eligible neighbor, compute the new probability by multiplying the current probability with the edge probability, and push it to the heap.
 6. If the destination is never reached, return `0`.
 
 ::tabs-start
@@ -75,7 +75,7 @@ public class Solution {
             double curr_prob = top.prob;
 
             if (node == end_node) return curr_prob;
-            if (curr_prob > maxProb[node]) continue;
+            if (curr_prob < maxProb[node]) continue;
 
             for (Pair nei : adj[node]) {
                 double new_prob = curr_prob * nei.prob;
@@ -121,7 +121,7 @@ public:
             auto [curr_prob, node] = pq.top(); pq.pop();
 
             if (node == end_node) return curr_prob;
-            if (curr_prob > maxProb[node]) continue;
+            if (curr_prob < maxProb[node]) continue;
 
             for (auto& [nei, edge_prob] : adj[node]) {
                 double new_prob = curr_prob * edge_prob;
@@ -393,10 +393,10 @@ impl Solution {
         let mut max_prob = vec![0.0f64; n];
         max_prob[start] = 1.0;
         let mut pq = BinaryHeap::new();
-        pq.push((std::cmp::Reverse((-1.0f64).to_bits()), start));
+        pq.push((1.0f64.to_bits(), start));
 
-        while let Some((std::cmp::Reverse(bits), node)) = pq.pop() {
-            let curr_prob = -f64::from_bits(bits);
+        while let Some((bits, node)) = pq.pop() {
+            let curr_prob = f64::from_bits(bits);
             if node == end {
                 return curr_prob;
             }
@@ -407,7 +407,7 @@ impl Solution {
                 let new_prob = curr_prob * edge_prob;
                 if new_prob > max_prob[nei] {
                     max_prob[nei] = new_prob;
-                    pq.push((std::cmp::Reverse((-new_prob).to_bits()), nei));
+                    pq.push((new_prob.to_bits(), nei));
                 }
             }
         }
@@ -439,7 +439,7 @@ This is a refined version of Dijkstra's algorithm that tracks the maximum probab
 1. Build an adjacency list mapping each node to its neighbors and edge probabilities.
 2. Initialize a `maxProb` array where `maxProb[i]` stores the highest probability to reach node `i`. Set `maxProb[start] = 1.0`.
 3. Use a max-heap starting with `(1.0, start_node)`.
-4. For each node popped from the heap, if it is the destination, return the probability. If the current probability is worse than the recorded best, skip it.
+4. For each node popped from the heap, if it is the destination, return the probability. If the current probability is worse than the recorded best (`curr_prob < maxProb[node]`), skip it.
 5. For each neighbor, compute the new probability. If it improves the best known probability for that neighbor, update the array and push the neighbor to the heap.
 6. Return `0` if the destination is unreachable.
 
@@ -464,7 +464,7 @@ class Solution:
 
             if node == end_node:
                 return curr_prob
-            if curr_prob > maxProb[node]:
+            if curr_prob < maxProb[node]:
                 continue
 
             for nei, edge_prob in adj[node]:
@@ -499,7 +499,7 @@ public class Solution {
             double curr_prob = top.prob;
 
             if (node == end_node) return curr_prob;
-            if (curr_prob > maxProb[node]) continue;
+            if (curr_prob < maxProb[node]) continue;
 
             for (Pair nei : adj[node]) {
                 double new_prob = curr_prob * nei.prob;
@@ -545,7 +545,7 @@ public:
             auto [curr_prob, node] = pq.top(); pq.pop();
 
             if (node == end_node) return curr_prob;
-            if (curr_prob > maxProb[node]) continue;
+            if (curr_prob < maxProb[node]) continue;
 
             for (auto& [nei, edge_prob] : adj[node]) {
                 double new_prob = curr_prob * edge_prob;
@@ -588,7 +588,7 @@ class Solution {
             let [node, curr_prob] = pq.dequeue();
 
             if (node === end_node) return curr_prob;
-            if (curr_prob > maxProb[node]) continue;
+            if (curr_prob < maxProb[node]) continue;
 
             for (let [nei, edge_prob] of adj[node]) {
                 let new_prob = curr_prob * edge_prob;
@@ -820,10 +820,10 @@ impl Solution {
         let mut max_prob = vec![0.0f64; n];
         max_prob[start] = 1.0;
         let mut pq = BinaryHeap::new();
-        pq.push((std::cmp::Reverse((-1.0f64).to_bits()), start));
+        pq.push((1.0f64.to_bits(), start));
 
-        while let Some((std::cmp::Reverse(bits), node)) = pq.pop() {
-            let curr_prob = -f64::from_bits(bits);
+        while let Some((bits, node)) = pq.pop() {
+            let curr_prob = f64::from_bits(bits);
             if node == end {
                 return curr_prob;
             }
@@ -834,7 +834,7 @@ impl Solution {
                 let new_prob = curr_prob * edge_prob;
                 if new_prob > max_prob[nei] {
                     max_prob[nei] = new_prob;
-                    pq.push((std::cmp::Reverse((-new_prob).to_bits()), nei));
+                    pq.push((new_prob.to_bits(), nei));
                 }
             }
         }
@@ -1513,6 +1513,12 @@ impl Solution {
 ### Using Min-Heap Instead of Max-Heap
 
 Unlike shortest path problems where we minimize distance, this problem requires maximizing probability. Using a min-heap (the default in most languages) will process low-probability paths first, leading to incorrect results or inefficiency. Always use a max-heap or negate the probabilities when using a min-heap.
+
+In Rust, be careful when using `to_bits()` as a heap key. Storing `Reverse((-prob).to_bits())` does not order probabilities like a numeric max-heap, and can pop a lower probability before a higher one. Since probabilities are non-negative, storing `prob.to_bits()` in a `BinaryHeap` preserves the needed order.
+
+### Reversing the Stale-State Check
+
+When using a `maxProb` array, a heap entry is stale only when its probability is lower than the best probability already recorded for that node. The check should be `curr_prob < maxProb[node]`, not `curr_prob > maxProb[node]`.
 
 ### Initializing Start Probability to Zero
 
