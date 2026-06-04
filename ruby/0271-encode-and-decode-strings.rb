@@ -3,9 +3,7 @@
 # @param {string[]} strs
 # @return {string}
 def encode(strs)
-  strs.reduce("") do |acc, cur|
-    "#{acc}\n#{cur.chars.map { _1.ord.to_s }.join(",")}"
-  end[1..] + "\n"
+  strs.map { |str| "#{str.length}##{str}" }.join
 end
 
 # Decodes a single string to a list of strings.
@@ -13,9 +11,20 @@ end
 # @param {string} s
 # @return {string[]}
 def decode(s)
-  s.each_line.map do |nums|
-    nums[...-1].split(",").map(&:to_i).map(&:chr).join("")
+  res = []
+  i = 0
+
+  while i < s.length
+    j = i
+    j += 1 while s[j] != "#"
+
+    length = s[i...j].to_i
+    start = j + 1
+    res << s[start, length]
+    i = start + length
   end
+
+  res
 end
 
 # Your functions will be called as such:
