@@ -568,9 +568,13 @@ Because the characters that _aren't_ the most frequent are the ones we would nee
 So while expanding the window, we track:
 
 - the frequency of each character,
-- the most frequent character inside the window (`maxf`).
+- the highest frequency we have seen in the window as it grows (`maxf`).
 
-If the window becomes invalid, we shrink it from the left.
+After we shrink from the left, `maxf` may be stale because we do not decrease it.
+That can temporarily make the current window look valid even when its true current maximum frequency is smaller.
+This is still correct because such a stale value never increases the answer beyond a window length that was already achievable when `maxf` was accurate.
+
+If the window is too large under this tracked `maxf`, we shrink it from the left.
 This gives us one clean sliding window pass.
 
 ### Algorithm
@@ -579,9 +583,9 @@ This gives us one clean sliding window pass.
 2. Move the right pointer `r` across the string:
     - Update the frequency of `s[r]`.
     - Update `maxf` with the highest frequency seen so far.
-3. If the window is invalid (`window size - maxf > k`):
+3. If the tracked condition is violated (`window size - maxf > k`):
     - Shrink the window from the left and adjust counts.
-4. Update the result with the valid window size.
+4. Update the result with the current window size.
 5. Return `res` at the end.
 
 ::tabs-start
@@ -826,11 +830,11 @@ impl Solution {
 
 ### Not Updating maxf Correctly
 
-The variable `maxf` tracks the maximum frequency of any character in the current window. A common mistake is recalculating the maximum by iterating through all counts after shrinking the window. In the optimal solution, you do not need to decrease `maxf` when shrinking because keeping a stale (higher) `maxf` only makes the window condition stricter, which is still correct. However, misunderstanding this can lead to unnecessary complexity or bugs.
+The variable `maxf` tracks the highest frequency seen while expanding the window, not necessarily the exact maximum frequency after every shrink. A common mistake is recalculating the maximum by iterating through all counts after moving the left pointer. In the optimal solution, you do not need to decrease `maxf` when shrinking. A stale, higher `maxf` can temporarily make the validity check more permissive and allow an actually invalid current window, but it does not affect correctness because it cannot make the algorithm record a length larger than one that was achievable when `maxf` was accurate.
 
 ### Shrinking the Window Too Aggressively
 
-When the window becomes invalid (`window size - maxf > k`), you only need to shrink it enough to make it valid again. A common error is resetting the left pointer too far or not updating character counts properly when moving the left pointer. Make sure to decrement the count of `s[l]` before incrementing `l`.
+When the tracked condition is violated (`window size - maxf > k`), you only need to shrink until that condition passes again. A common error is resetting the left pointer too far or not updating character counts properly when moving the left pointer. Make sure to decrement the count of `s[l]` before incrementing `l`.
 
 ### Confusing Window Size Calculation
 
