@@ -384,7 +384,7 @@ impl Solution {
                 if found { break; }
                 for c in 0..cols {
                     if board[r][c] != word_chars[0] { continue; }
-                    if Self::backtrack(&mut board, r, c, &word_chars, 0) {
+                    if Self::backtrack(&mut board, r as i32, c as i32, &word_chars, 0) {
                         res.push(word.clone());
                         found = true;
                         break;
