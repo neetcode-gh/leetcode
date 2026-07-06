@@ -332,7 +332,7 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2)$
-- Space complexity: $O(n)$
+- Space complexity: $O(n ^ 2)$ in the worst case due to copied subarrays; the recursion stack alone is $O(n)$.
 
 ---
 
