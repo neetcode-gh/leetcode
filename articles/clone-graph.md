@@ -6,7 +6,7 @@ Before attempting this problem, you should be comfortable with:
 
 ---
 
-## 1. Depth First Seacrh
+## 1. Depth First Search
 
 ### Intuition
 The graph may contain **cycles**, so we cannot simply copy nodes recursively without remembering what we've already copied.  
@@ -130,11 +130,11 @@ public:
 class Solution {
 public:
     Node* cloneGraph(Node* node) {
-        map<Node*, Node*> oldToNew;
+        unordered_map<Node*, Node*> oldToNew;
         return dfs(node, oldToNew);
     }
 
-    Node* dfs(Node* node, map<Node*, Node*>& oldToNew) {
+    Node* dfs(Node* node, unordered_map<Node*, Node*>& oldToNew) {
         if (node == nullptr) {
             return nullptr;
         }
