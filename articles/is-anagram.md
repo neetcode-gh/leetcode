@@ -375,10 +375,10 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + m)$
+- Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
-> Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
+> Where $n$ is the length of the strings after the early length check.
 
 ---
 
@@ -603,10 +603,10 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n + m)$
+- Time complexity: $O(n)$
 - Space complexity: $O(1)$ since we have at most $26$ different characters.
 
-> Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
+> Where $n$ is the length of the strings after the early length check.
 
 ---
 
