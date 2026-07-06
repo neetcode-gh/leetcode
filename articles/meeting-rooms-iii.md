@@ -371,12 +371,13 @@ impl Solution {
             }
         }
 
-        meeting_count
-            .iter()
-            .enumerate()
-            .max_by_key(|&(_, &count)| count)
-            .unwrap()
-            .0 as i32
+        let mut max_room = 0;
+        for i in 1..n {
+            if meeting_count[i] > meeting_count[max_room] {
+                max_room = i;
+            }
+        }
+        max_room as i32
     }
 }
 ```
@@ -736,44 +737,110 @@ class Solution {
 ```
 
 ```swift
+struct MinHeap<T> {
+    private var heap: [T] = []
+    private let areSorted: (T, T) -> Bool
+
+    init(_ areSorted: @escaping (T, T) -> Bool) {
+        self.areSorted = areSorted
+    }
+
+    var isEmpty: Bool {
+        heap.isEmpty
+    }
+
+    var peek: T? {
+        heap.first
+    }
+
+    mutating func push(_ value: T) {
+        heap.append(value)
+        siftUp(heap.count - 1)
+    }
+
+    mutating func pop() -> T? {
+        guard !heap.isEmpty else {
+            return nil
+        }
+        if heap.count == 1 {
+            return heap.removeLast()
+        }
+
+        let value = heap[0]
+        let last = heap.removeLast()
+        heap[0] = last
+        siftDown(0)
+        return value
+    }
+
+    private mutating func siftUp(_ index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+
+        while child > 0 && areSorted(heap[child], heap[parent]) {
+            heap.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(_ index: Int) {
+        var parent = index
+
+        while true {
+            let left = 2 * parent + 1
+            let right = left + 1
+            var candidate = parent
+
+            if left < heap.count && areSorted(heap[left], heap[candidate]) {
+                candidate = left
+            }
+            if right < heap.count && areSorted(heap[right], heap[candidate]) {
+                candidate = right
+            }
+            if candidate == parent {
+                return
+            }
+
+            heap.swapAt(parent, candidate)
+            parent = candidate
+        }
+    }
+}
+
 class Solution {
     func mostBooked(_ n: Int, _ meetings: [[Int]]) -> Int {
         let meetings = meetings.sorted { $0[0] < $1[0] }
-        var available = Array(0..<n)
-        var used: [(end: Int64, room: Int)] = []
+        var available = MinHeap<Int>(<)
+        var used = MinHeap<(end: Int64, room: Int)> {
+            if $0.end == $1.end {
+                return $0.room < $1.room
+            }
+            return $0.end < $1.end
+        }
         var count = [Int](repeating: 0, count: n)
 
-        func heapifyAvailable() {
-            available.sort()
+        for room in 0..<n {
+            available.push(room)
         }
-
-        func heapifyUsed() {
-            used.sort { ($0.end, $0.room) < ($1.end, $1.room) }
-        }
-
-        heapifyAvailable()
 
         for meeting in meetings {
             let start = Int64(meeting[0])
             var end = Int64(meeting[1])
 
-            heapifyUsed()
-            while !used.isEmpty && used[0].end <= start {
-                let room = used.removeFirst().room
-                available.append(room)
-                heapifyAvailable()
+            while let earliest = used.peek, earliest.end <= start {
+                let room = used.pop()!.room
+                available.push(room)
             }
 
             if available.isEmpty {
-                heapifyUsed()
-                let current = used.removeFirst()
+                let current = used.pop()!
                 end = current.end + (end - start)
-                available.append(current.room)
-                heapifyAvailable()
+                available.push(current.room)
             }
 
-            let room = available.removeFirst()
-            used.append((end: end, room: room))
+            let room = available.pop()!
+            used.push((end: end, room: room))
             count[room] += 1
         }
 
@@ -829,12 +896,13 @@ impl Solution {
             count[room] += 1;
         }
 
-        count
-            .iter()
-            .enumerate()
-            .max_by_key(|&(_, &c)| c)
-            .unwrap()
-            .0 as i32
+        let mut max_room = 0;
+        for i in 1..n {
+            if count[i] > count[max_room] {
+                max_room = i;
+            }
+        }
+        max_room as i32
     }
 }
 ```
@@ -843,7 +911,11 @@ impl Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m\log m + m \log n)$
+- Time complexity: $O(m \log m + (m + n) \log n)$
+    - Sorting the meetings costs $O(m \log m)$.
+    - Initializing `available` by inserting `n` rooms one at a time is bounded by $O(n \log n)$.
+    - Across all meetings, heap operations cost $O(m \log n)$.
+    - The Python block starts with an already heap-ordered list, so its initialization is $O(n)$, but the shared bound above applies across the implementations.
 - Space complexity: $O(n)$
 
 > Where $n$ is the number of rooms and $m$ is the number of meetings.
@@ -1206,12 +1278,13 @@ impl Solution {
             count[room] += 1;
         }
 
-        count
-            .iter()
-            .enumerate()
-            .max_by_key(|&(_, &c)| c)
-            .unwrap()
-            .0 as i32
+        let mut max_room = 0;
+        for i in 1..n {
+            if count[i] > count[max_room] {
+                max_room = i;
+            }
+        }
+        max_room as i32
     }
 }
 ```
