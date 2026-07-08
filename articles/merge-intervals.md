@@ -985,7 +985,9 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n + m)$
-- Space complexity: $O(n)$
+- Space complexity: $O(n + m)$
+    - $O(m)$ for the auxiliary array.
+    - $O(n)$ for the output list.
 
 > Where $n$ is the length of the array and $m$ is the maximum start value among all the intervals.
 
