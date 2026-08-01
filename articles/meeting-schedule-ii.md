@@ -196,23 +196,36 @@ public class Solution {
  * }
  */
 
+type MinHeap []int
+
+func (h MinHeap) Len() int           { return len(h) }
+func (h MinHeap) Less(i, j int) bool { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)      { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x any)        { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() any {
+    old := *h
+    n := len(old)
+    top := old[n-1]
+    *h = old[:n-1]
+    return top
+}
+
 func minMeetingRooms(intervals []Interval) int {
     sort.Slice(intervals, func(i, j int) bool {
         return intervals[i].start < intervals[j].start
     })
 
-    pq := priorityqueue.NewWith(utils.IntComparator)
+    pq := &MinHeap{}
+    heap.Init(pq)
 
     for _, interval := range intervals {
-        if pq.Size() > 0 {
-            if top, _ := pq.Peek(); top.(int) <= interval.start {
-                pq.Dequeue()
-            }
+        if pq.Len() > 0 && (*pq)[0] <= interval.start {
+            heap.Pop(pq)
         }
-        pq.Enqueue(interval.end)
+        heap.Push(pq, interval.end)
     }
 
-    return pq.Size()
+    return pq.Len()
 }
 ```
 
@@ -224,10 +237,10 @@ func minMeetingRooms(intervals []Interval) int {
 
 class Solution {
     fun minMeetingRooms(intervals: List<Interval>): Int {
-        intervals.sortBy { it.start }
+        val sortedIntervals = intervals.sortedBy { it.start }
 
         val minHeap = PriorityQueue<Int>()
-        for (interval in intervals) {
+        for (interval in sortedIntervals) {
             if (minHeap.isNotEmpty() && minHeap.peek() <= interval.start) {
                 minHeap.poll()
             }
@@ -252,12 +265,49 @@ class Solution {
  * }
  */
 
+struct MinHeap {
+    private var heap: [Int] = []
+
+    var isEmpty: Bool { heap.isEmpty }
+    var count: Int { heap.count }
+    var min: Int? { heap.first }
+
+    mutating func insert(_ val: Int) {
+        heap.append(val)
+        var i = heap.count - 1
+        while i > 0 {
+            let parent = (i - 1) / 2
+            if heap[parent] <= heap[i] { break }
+            heap.swapAt(parent, i)
+            i = parent
+        }
+    }
+
+    mutating func removeMin() {
+        guard heap.count > 1 else {
+            heap.removeAll()
+            return
+        }
+        heap[0] = heap.removeLast()
+        var i = 0
+        while true {
+            var smallest = i
+            let left = 2 * i + 1, right = 2 * i + 2
+            if left < heap.count, heap[left] < heap[smallest] { smallest = left }
+            if right < heap.count, heap[right] < heap[smallest] { smallest = right }
+            if smallest == i { break }
+            heap.swapAt(i, smallest)
+            i = smallest
+        }
+    }
+}
+
 class Solution {
     func minMeetingRooms(_ intervals: [Interval]) -> Int {
         let sortedIntervals = intervals.sorted { $0.start < $1.start }
-        var minHeap = Heap<Int>()
+        var minHeap = MinHeap()
         for interval in sortedIntervals {
-            if !minHeap.isEmpty, let earliest = minHeap.min!, earliest <= interval.start {
+            if let earliest = minHeap.min, earliest <= interval.start {
                 minHeap.removeMin()
             }
             minHeap.insert(interval.end)
@@ -269,18 +319,18 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn min_meeting_rooms(intervals: Vec<Vec<i32>>) -> i32 {
+    pub fn min_meeting_rooms(intervals: Vec<Interval>) -> i32 {
         let mut intervals = intervals;
-        intervals.sort_by_key(|v| v[0]);
+        intervals.sort_by_key(|i| i.start);
         let mut min_heap = BinaryHeap::new();
 
         for interval in &intervals {
             if let Some(&Reverse(top)) = min_heap.peek() {
-                if top <= interval[0] {
+                if top <= interval.start {
                     min_heap.pop();
                 }
             }
-            min_heap.push(Reverse(interval[1]));
+            min_heap.push(Reverse(interval.end));
         }
 
         min_heap.len() as i32
@@ -575,11 +625,11 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn min_meeting_rooms(intervals: Vec<Vec<i32>>) -> i32 {
+    pub fn min_meeting_rooms(intervals: Vec<Interval>) -> i32 {
         let mut mp = BTreeMap::new();
         for i in &intervals {
-            *mp.entry(i[0]).or_insert(0) += 1;
-            *mp.entry(i[1]).or_insert(0) -= 1;
+            *mp.entry(i.start).or_insert(0) += 1;
+            *mp.entry(i.end).or_insert(0) -= 1;
         }
         let mut prev = 0;
         let mut res = 0;
@@ -946,10 +996,10 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn min_meeting_rooms(intervals: Vec<Vec<i32>>) -> i32 {
+    pub fn min_meeting_rooms(intervals: Vec<Interval>) -> i32 {
         let n = intervals.len();
-        let mut starts: Vec<i32> = intervals.iter().map(|v| v[0]).collect();
-        let mut ends: Vec<i32> = intervals.iter().map(|v| v[1]).collect();
+        let mut starts: Vec<i32> = intervals.iter().map(|i| i.start).collect();
+        let mut ends: Vec<i32> = intervals.iter().map(|i| i.end).collect();
         starts.sort();
         ends.sort();
 
@@ -1226,7 +1276,7 @@ func minMeetingRooms(intervals []Interval) int {
  */
 
 class Solution {
-    fun minMeetingRooms(intervals: Array<IntArray>): Int {
+    fun minMeetingRooms(intervals: List<Interval>): Int {
         val time = mutableListOf<Pair<Int, Int>>()
 
         for (i in intervals) {
@@ -1293,11 +1343,11 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn min_meeting_rooms(intervals: Vec<Vec<i32>>) -> i32 {
+    pub fn min_meeting_rooms(intervals: Vec<Interval>) -> i32 {
         let mut time: Vec<(i32, i32)> = Vec::new();
         for i in &intervals {
-            time.push((i[0], 1));
-            time.push((i[1], -1));
+            time.push((i.start, 1));
+            time.push((i.end, -1));
         }
 
         time.sort();
