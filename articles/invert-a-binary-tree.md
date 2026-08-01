@@ -212,19 +212,18 @@ func invertTree(root *TreeNode) *TreeNode {
     if root == nil {
         return nil
     }
-    queue := arrayqueue.New()
-    queue.Enqueue(root)
+    queue := []*TreeNode{root}
 
-    for queue.Size() > 0 {
-        node, _ := queue.Dequeue()
-        current := node.(*TreeNode)
+    for len(queue) > 0 {
+        current := queue[0]
+        queue = queue[1:]
         current.Left, current.Right = current.Right, current.Left
 
         if current.Left != nil {
-            queue.Enqueue(current.Left)
+            queue = append(queue, current.Left)
         }
         if current.Right != nil {
-            queue.Enqueue(current.Right)
+            queue = append(queue, current.Right)
         }
     }
     return root

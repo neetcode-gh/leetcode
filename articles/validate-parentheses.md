@@ -335,25 +335,26 @@ public class Solution {
 
 ```go
 func isValid(s string) bool {
-    stack := linkedliststack.New()
+    stack := []rune{}
     closeToOpen := map[rune]rune{')': '(', ']': '[', '}': '{'}
 
     for _, c := range s {
         if open, exists := closeToOpen[c]; exists {
-            if !stack.Empty() {
-                top, ok := stack.Pop()
-                if ok && top.(rune) != open {
+            if len(stack) > 0 {
+                top := stack[len(stack)-1]
+                stack = stack[:len(stack)-1]
+                if top != open {
                     return false
                 }
             } else {
                 return false
             }
         } else {
-            stack.Push(c)
+            stack = append(stack, c)
         }
     }
 
-    return stack.Empty()
+    return len(stack) == 0
 }
 ```
 

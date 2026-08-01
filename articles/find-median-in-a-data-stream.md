@@ -494,56 +494,75 @@ public class MedianFinder {
 ```
 
 ```go
+type MaxHeap []int
+
+func (h MaxHeap) Len() int            { return len(h) }
+func (h MaxHeap) Less(i, j int) bool  { return h[i] > h[j] }
+func (h MaxHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MaxHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
+type MinHeap []int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 type MedianFinder struct {
-    small *priorityqueue.Queue // maxHeap
-    large *priorityqueue.Queue // minHeap
+    small *MaxHeap // maxHeap
+    large *MinHeap // minHeap
 }
 
 func Constructor() MedianFinder {
-    small := priorityqueue.NewWith(func(a, b interface{}) int {
-        return b.(int) - a.(int)  // maxHeap
-    })
-    large := priorityqueue.NewWith(func(a, b interface{}) int {
-        return a.(int) - b.(int)  // minHeap
-    })
+    small := &MaxHeap{}
+    large := &MinHeap{}
+    heap.Init(small)
+    heap.Init(large)
     return MedianFinder{small: small, large: large}
 }
 
 func (this *MedianFinder) AddNum(num int) {
-    if this.large.Size() > 0 {
-        largeTop, _ := this.large.Peek()
-        if num > largeTop.(int) {
-            this.large.Enqueue(num)
+    if this.large.Len() > 0 {
+        if num > (*this.large)[0] {
+            heap.Push(this.large, num)
         } else {
-            this.small.Enqueue(num)
+            heap.Push(this.small, num)
         }
     } else {
-        this.small.Enqueue(num)
+        heap.Push(this.small, num)
     }
 
     // Rebalance
-    if this.small.Size() > this.large.Size()+1 {
-        val, _ := this.small.Dequeue()
-        this.large.Enqueue(val)
+    if this.small.Len() > this.large.Len()+1 {
+        heap.Push(this.large, heap.Pop(this.small))
     }
-    if this.large.Size() > this.small.Size()+1 {
-        val, _ := this.large.Dequeue()
-        this.small.Enqueue(val)
+    if this.large.Len() > this.small.Len()+1 {
+        heap.Push(this.small, heap.Pop(this.large))
     }
 }
 
 func (this *MedianFinder) FindMedian() float64 {
-    if this.small.Size() > this.large.Size() {
-        val, _ := this.small.Peek()
-        return float64(val.(int))
+    if this.small.Len() > this.large.Len() {
+        return float64((*this.small)[0])
     }
-    if this.large.Size() > this.small.Size() {
-        val, _ := this.large.Peek()
-        return float64(val.(int))
+    if this.large.Len() > this.small.Len() {
+        return float64((*this.large)[0])
     }
-    smallVal, _ := this.small.Peek()
-    largeVal, _ := this.large.Peek()
-    return float64(smallVal.(int)+largeVal.(int)) / 2.0
+    return float64((*this.small)[0]+(*this.large)[0]) / 2.0
 }
 ```
 

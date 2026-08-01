@@ -495,6 +495,20 @@ public class Solution {
 ```
 
 ```go
+type MinHeap []int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 func isNStraightHand(hand []int, groupSize int) bool {
     if len(hand)%groupSize != 0 {
         return false
@@ -505,24 +519,24 @@ func isNStraightHand(hand []int, groupSize int) bool {
         count[n]++
     }
 
-    minH := priorityqueue.NewWith(utils.IntComparator)
+    minH := &MinHeap{}
     for k := range count {
-        minH.Enqueue(k)
+        *minH = append(*minH, k)
     }
+    heap.Init(minH)
 
-    for !minH.Empty() {
-        first, _ := minH.Peek()
-        firstKey := first.(int)
+    for minH.Len() > 0 {
+        firstKey := (*minH)[0]
         for i := firstKey; i < firstKey+groupSize; i++ {
             if count[i] == 0 {
                 return false
             }
             count[i]--
             if count[i] == 0 {
-                if val, _ := minH.Peek(); val.(int) != i {
+                if minH.Len() == 0 || (*minH)[0] != i {
                     return false
                 }
-                minH.Dequeue()
+                heap.Pop(minH)
             }
         }
     }

@@ -712,31 +712,37 @@ public class Solution {
 
 ```go
 func longestSubarray(nums []int, limit int) int {
-    tree := redblacktree.NewWithIntComparator()
-    l, res := 0, 0
+    // Go has no ordered map in its standard library, so the sorted dict is
+    // modeled with a count map plus a slice of the distinct values in the
+    // window kept in ascending order (binary searched with sort.SearchInts).
+    counts := make(map[int]int)
+    keys := []int{}
 
-    for r := 0; r < len(nums); r++ {
-        x := nums[r]
-        if val, found := tree.Get(x); found {
-            tree.Put(x, val.(int)+1)
-        } else {
-            tree.Put(x, 1)
+    put := func(x int) {
+        counts[x]++
+        if counts[x] == 1 {
+            i := sort.SearchInts(keys, x)
+            keys = append(keys, 0)
+            copy(keys[i+1:], keys[i:])
+            keys[i] = x
         }
+    }
+    remove := func(x int) {
+        counts[x]--
+        if counts[x] == 0 {
+            delete(counts, x)
+            i := sort.SearchInts(keys, x)
+            keys = append(keys[:i], keys[i+1:]...)
+        }
+    }
 
-        for tree.Size() > 0 {
-            maxKey := tree.Right().Key.(int)
-            minKey := tree.Left().Key.(int)
-            if maxKey-minKey <= limit {
-                break
-            }
-            y := nums[l]
+    l, res := 0, 0
+    for r := 0; r < len(nums); r++ {
+        put(nums[r])
+
+        for len(keys) > 0 && keys[len(keys)-1]-keys[0] > limit {
+            remove(nums[l])
             l++
-            val, _ := tree.Get(y)
-            if val.(int) == 1 {
-                tree.Remove(y)
-            } else {
-                tree.Put(y, val.(int)-1)
-            }
         }
 
         if r-l+1 > res {
