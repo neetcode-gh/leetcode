@@ -864,6 +864,45 @@ class Solution {
         }
     }
 }
+
+struct Deque<T>: ExpressibleByArrayLiteral {
+    private var elements: [T] = []
+    private var head = 0
+
+    init() {}
+
+    init(_ elements: [T]) {
+        self.elements = elements
+    }
+
+    init(arrayLiteral elements: T...) {
+        self.elements = elements
+    }
+
+    var isEmpty: Bool { head >= elements.count }
+    var count: Int { elements.count - head }
+
+    mutating func append(_ value: T) {
+        elements.append(value)
+    }
+
+    mutating func popFirst() -> T? {
+        guard head < elements.count else { return nil }
+        let value = elements[head]
+        head += 1
+        // Amortized O(1): compact once half the storage is consumed.
+        if head > 32 && head * 2 >= elements.count {
+            elements.removeFirst(head)
+            head = 0
+        }
+        return value
+    }
+
+    @discardableResult
+    mutating func removeFirst() -> T {
+        return popFirst()!
+    }
+}
 ```
 
 ```rust
@@ -1282,6 +1321,45 @@ class Solution {
             }
             dist += 1
         }
+    }
+}
+
+struct Deque<T>: ExpressibleByArrayLiteral {
+    private var elements: [T] = []
+    private var head = 0
+
+    init() {}
+
+    init(_ elements: [T]) {
+        self.elements = elements
+    }
+
+    init(arrayLiteral elements: T...) {
+        self.elements = elements
+    }
+
+    var isEmpty: Bool { head >= elements.count }
+    var count: Int { elements.count - head }
+
+    mutating func append(_ value: T) {
+        elements.append(value)
+    }
+
+    mutating func popFirst() -> T? {
+        guard head < elements.count else { return nil }
+        let value = elements[head]
+        head += 1
+        // Amortized O(1): compact once half the storage is consumed.
+        if head > 32 && head * 2 >= elements.count {
+            elements.removeFirst(head)
+            head = 0
+        }
+        return value
+    }
+
+    @discardableResult
+    mutating func removeFirst() -> T {
+        return popFirst()!
     }
 }
 ```
