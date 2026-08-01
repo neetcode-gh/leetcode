@@ -990,7 +990,7 @@ class Twitter {
 
     func getNewsFeed(_ userId: Int) -> [Int] {
         var res = [Int]()
-        var minHeap = Heap<Item>()
+        var minHeap = Heap<Item>(comparator: <)
 
         followMap[userId, default: Set()].insert(userId)
         if let followees = followMap[userId] {
@@ -1009,7 +1009,7 @@ class Twitter {
         }
 
         while !minHeap.isEmpty && res.count < 10 {
-            let entry = minHeap.popMin()!
+            let entry = minHeap.remove()!
             res.append(entry.tweetId)
             if entry.index >= 0, let tweets = tweetMap[entry.followeeId] {
                 let (cnt, tweetId) = tweets[entry.index]
@@ -1045,6 +1045,62 @@ struct Item: Comparable {
 
     static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.count == rhs.count
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -1890,11 +1946,11 @@ class Twitter {
 
     func getNewsFeed(_ userId: Int) -> [Int] {
         var res = [Int]()
-        var minHeap = Heap<Item>()
+        var minHeap = Heap<Item>(comparator: <)
         followMap[userId, default: Set()].insert(userId)
 
         if followMap[userId]!.count >= 10 {
-            var maxHeap = Heap<Item>()
+            var maxHeap = Heap<Item>(comparator: >)
             for followeeId in followMap[userId]! {
                 if let tweets = tweetMap[followeeId], !tweets.isEmpty {
                     let index = tweets.count - 1
@@ -1906,12 +1962,12 @@ class Twitter {
                         )
                     )
                     if maxHeap.count > 10 {
-                        maxHeap.removeMax()
+                        _ = maxHeap.remove()
                     }
                 }
             }
             while !maxHeap.isEmpty {
-                let item = maxHeap.popMax()!
+                let item = maxHeap.remove()!
                 minHeap.insert(item)
             }
         } else {
@@ -1930,7 +1986,7 @@ class Twitter {
         }
 
         while !minHeap.isEmpty && res.count < 10 {
-            let item = minHeap.popMin()!
+            let item = minHeap.remove()!
             res.append(item.tweetId)
             if item.index >= 0, let tweets = tweetMap[item.followeeId] {
                 let (cnt, tweetId) = tweets[item.index]
@@ -1952,6 +2008,62 @@ class Twitter {
 
     func unfollow(_ followerId: Int, _ followeeId: Int) {
         followMap[followerId]?.remove(followeeId)
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```

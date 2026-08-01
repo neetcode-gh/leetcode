@@ -587,23 +587,23 @@ class MedianFinder {
     private var large: Heap<Int>
 
     init() {
-        self.small = Heap<Int>()
-        self.large = Heap<Int>()
+        self.small = Heap<Int>(comparator: >)
+        self.large = Heap<Int>(comparator: <)
     }
 
     func addNum(_ num: Int) {
-        if let top = large.min, num > top {
+        if let top = large.peek(), num > top {
             large.insert(num)
         } else {
             small.insert(num)
         }
         if small.count > large.count + 1 {
-            if let val = small.popMax() {
+            if let val = small.remove() {
                 large.insert(val)
             }
         }
         if large.count > small.count + 1 {
-            if let val = large.popMin() {
+            if let val = large.remove() {
                 small.insert(val)
             }
         }
@@ -611,11 +611,67 @@ class MedianFinder {
 
     func findMedian() -> Double {
         if small.count > large.count {
-            return Double(small.max!)
+            return Double(small.peek()!)
         } else if large.count > small.count {
-            return Double(large.min!)
+            return Double(large.peek()!)
         }
-        return (Double(small.max!) + Double(large.min!)) / 2.0
+        return (Double(small.peek()!) + Double(large.peek()!)) / 2.0
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```

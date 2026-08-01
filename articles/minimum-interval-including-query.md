@@ -681,7 +681,7 @@ class Solution {
         }
 
         // Min heap storing [size, index]
-        var sizes = Heap<Item>()
+        var sizes = Heap<Item>(comparator: <)
         var ans = Array(repeating: -1, count: queries.count)
         var inactive = Array(repeating: false, count: intervals.count)
 
@@ -695,16 +695,72 @@ class Solution {
                 inactive[idx] = true
             } else { // Query
                 let queryIdx = event.idx!
-                while !sizes.isEmpty, inactive[sizes.min!.idx] {
-                    sizes.removeMin()
+                while !sizes.isEmpty, inactive[sizes.peek()!.idx] {
+                    _ = sizes.remove()
                 }
                 if !sizes.isEmpty {
-                    ans[queryIdx] = sizes.min!.size
+                    ans[queryIdx] = sizes.peek()!.size
                 }
             }
         }
 
         return ans
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -1077,7 +1133,7 @@ struct HeapItem: Comparable {
 class Solution {
     func minInterval(_ intervals: [[Int]], _ queries: [Int]) -> [Int] {
         let sortedIntervals = intervals.sorted { $0[0] < $1[0] }
-        var minHeap = Heap<HeapItem>()
+        var minHeap = Heap<HeapItem>(comparator: <)
         var res = [Int: Int]()
         var i = 0
 
@@ -1089,13 +1145,69 @@ class Solution {
                 i += 1
             }
 
-            while !minHeap.isEmpty, minHeap.min!.end < q {
-                minHeap.removeMin()
+            while !minHeap.isEmpty, minHeap.peek()!.end < q {
+                _ = minHeap.remove()
             }
-            res[q] = minHeap.isEmpty ? -1 : minHeap.min!.size
+            res[q] = minHeap.isEmpty ? -1 : minHeap.peek()!.size
         }
 
         return queries.map { res[$0] ?? -1 }
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```

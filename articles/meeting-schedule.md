@@ -276,12 +276,12 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn can_attend_meetings(intervals: Vec<Vec<i32>>) -> bool {
+    pub fn can_attend_meetings(intervals: Vec<Interval>) -> bool {
         let n = intervals.len();
         for i in 0..n {
             for j in (i + 1)..n {
-                if intervals[i][1].min(intervals[j][1])
-                    > intervals[i][0].max(intervals[j][0])
+                if intervals[i].end.min(intervals[j].end)
+                    > intervals[i].start.max(intervals[j].start)
                 {
                     return false;
                 }
@@ -544,12 +544,12 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn can_attend_meetings(intervals: Vec<Vec<i32>>) -> bool {
+    pub fn can_attend_meetings(intervals: Vec<Interval>) -> bool {
         let mut intervals = intervals;
-        intervals.sort_by_key(|v| v[0]);
+        intervals.sort_by_key(|i| i.start);
 
         for i in 1..intervals.len() {
-            if intervals[i - 1][1] > intervals[i][0] {
+            if intervals[i - 1].end > intervals[i].start {
                 return false;
             }
         }

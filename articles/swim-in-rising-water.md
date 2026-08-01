@@ -1567,7 +1567,7 @@ class Solution {
     func swimInWater(_ grid: [[Int]]) -> Int {
         let N = grid.count
         var visit = Set<[Int]>()
-        var minHeap = Heap<Item>()
+        var minHeap = Heap<Item>(comparator: <)
 
         let directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
@@ -1575,7 +1575,7 @@ class Solution {
         visit.insert([0, 0])
 
         while !minHeap.isEmpty {
-            let item = minHeap.removeMin()
+            let item = minHeap.remove()!
             let t = item.time, r = item.row, c = item.col
 
             if r == N - 1 && c == N - 1 {
@@ -1593,6 +1593,62 @@ class Solution {
         }
 
         return -1
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```

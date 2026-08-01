@@ -248,7 +248,7 @@ class Solution {
 class Solution {
     func findMaximizedCapital(_ k: Int, _ w: Int, _ profits: [Int], _ capital: [Int]) -> Int {
         var projects = zip(capital, profits).sorted { $0.0 < $1.0 }
-        var maxProfit = Heap<Int>(sort: >)
+        var maxProfit = Heap<Int>(comparator: >)
         var w = w
         var idx = 0
 
@@ -264,6 +264,62 @@ class Solution {
         }
 
         return w
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -566,7 +622,7 @@ class Solution {
         var indices = Array(0..<capital.count)
         indices.sort { capital[$0] < capital[$1] }
 
-        var maxProfit = Heap<Int>(sort: { profits[$0] > profits[$1] })
+        var maxProfit = Heap<Int>(comparator: { profits[$0] > profits[$1] })
         var w = w
         var idx = 0
 
@@ -582,6 +638,62 @@ class Solution {
         }
 
         return w
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
@@ -869,7 +981,7 @@ class Solution {
         let n = profits.count
         let indices = (0..<n).sorted { capital[$0] < capital[$1] }
 
-        var maxProfit = Heap<Int>(sort: >)
+        var maxProfit = Heap<Int>(comparator: >)
         var w = w
         var idx = 0
 
@@ -885,6 +997,62 @@ class Solution {
         }
 
         return w
+    }
+}
+
+struct Heap<T> {
+    var elements: [T] = []
+    let comparator: (T, T) -> Bool
+
+    init(comparator: @escaping (T, T) -> Bool) {
+        self.comparator = comparator
+    }
+
+    var isEmpty: Bool { elements.isEmpty }
+    var count: Int { elements.count }
+
+    func peek() -> T? { elements.first }
+
+    mutating func insert(_ value: T) {
+        elements.append(value)
+        siftUp(from: elements.count - 1)
+    }
+
+    mutating func remove() -> T? {
+        guard !elements.isEmpty else { return nil }
+        if elements.count == 1 { return elements.removeLast() }
+        let first = elements[0]
+        elements[0] = elements.removeLast()
+        siftDown(from: 0)
+        return first
+    }
+
+    private mutating func siftUp(from index: Int) {
+        var child = index
+        var parent = (child - 1) / 2
+        while child > 0 && comparator(elements[child], elements[parent]) {
+            elements.swapAt(child, parent)
+            child = parent
+            parent = (child - 1) / 2
+        }
+    }
+
+    private mutating func siftDown(from index: Int) {
+        var parent = index
+        while true {
+            let left = 2 * parent + 1
+            let right = 2 * parent + 2
+            var candidate = parent
+            if left < elements.count && comparator(elements[left], elements[candidate]) {
+                candidate = left
+            }
+            if right < elements.count && comparator(elements[right], elements[candidate]) {
+                candidate = right
+            }
+            if candidate == parent { return }
+            elements.swapAt(parent, candidate)
+            parent = candidate
+        }
     }
 }
 ```
