@@ -165,7 +165,7 @@ class Solution {
 }
 ```
 
-```kotlin
+```swift
 class Solution {
     func lengthOfLongestSubstring(_ s: String) -> Int {
         var res = 0

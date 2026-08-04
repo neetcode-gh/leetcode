@@ -216,12 +216,13 @@ func kthSmallest(root *TreeNode, k int) int {
             return
         }
 
-        dfs(node.Left)
         arr = append(arr, node.Val)
+        dfs(node.Left)
         dfs(node.Right)
     }
 
     dfs(root)
+    sort.Ints(arr)
     return arr[k-1]
 }
 ```
@@ -242,6 +243,7 @@ class Solution {
 
     fun kthSmallest(root: TreeNode?, k: Int): Int {
         dfs(root)
+        arr.sort()
         return arr[k - 1]
     }
 
@@ -250,8 +252,8 @@ class Solution {
             return
         }
 
-        dfs(node.left)
         arr.add(node.`val`)
+        dfs(node.left)
         dfs(node.right)
     }
 }
@@ -1674,33 +1676,34 @@ func kthSmallest(root *TreeNode, k int) int {
  */
 class Solution {
     fun kthSmallest(root: TreeNode?, k: Int): Int {
-        var curr: TreeNode? = root
+        var curr = root
         var k = k
-        while (true) {
-            if (curr?.left == null) {
+        while (curr != null) {
+            if (curr.left == null) {
                 k--
                 if (k == 0) {
-                    return curr!!.`val`
+                    return curr.`val`
                 }
-                curr = curr?.right
+                curr = curr.right
             } else {
-                var pred = curr.left
-                while (pred?.right != null && pred.right != curr) {
-                    pred = pred.right
+                var pred = curr.left!!
+                while (pred.right != null && pred.right != curr) {
+                    pred = pred.right!!
                 }
-                if (pred?.right == null) {
+                if (pred.right == null) {
                     pred.right = curr
                     curr = curr.left
                 } else {
                     pred.right = null
                     k--
                     if (k == 0) {
-                        return curr!!.`val`
+                        return curr.`val`
                     }
                     curr = curr.right
                 }
             }
         }
+        return -1
     }
 }
 ```
