@@ -796,28 +796,28 @@ func trap(height []int) int {
         return 0
     }
 
-    stack := linkedliststack.New()
+    stack := []int{}
     res := 0
 
     for i := 0; i < len(height); i++ {
-        for !stack.Empty() {
-            topIndex, _ := stack.Peek()
-            if height[i] >= height[topIndex.(int)] {
-                midIndex, _ := stack.Pop()
-                mid := height[midIndex.(int)]
-                if !stack.Empty() {
-                    topIndex, _ := stack.Peek()
+        for len(stack) > 0 {
+            topIndex := stack[len(stack)-1]
+            if height[i] >= height[topIndex] {
+                stack = stack[:len(stack)-1]
+                mid := height[topIndex]
+                if len(stack) > 0 {
+                    topIndex = stack[len(stack)-1]
                     right := height[i]
-                    left := height[topIndex.(int)]
+                    left := height[topIndex]
                     h := min(right, left) - mid
-                    w := i - topIndex.(int) - 1
+                    w := i - topIndex - 1
                     res += h * w
                 }
             } else {
                 break
             }
         }
-        stack.Push(i)
+        stack = append(stack, i)
     }
     return res
 }

@@ -224,6 +224,20 @@ public class Solution {
 ```
 
 ```go
+type MinHeap [][3]int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([3]int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
     INF := 1000000000
     adj := make([][]struct{ to, cost int }, n)
@@ -239,13 +253,12 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
         adj[from] = append(adj[from], struct{ to, cost int }{to, cost})
     }
     dist[src][0] = 0
-    minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
-        return utils.IntComparator(a.([3]int)[0], b.([3]int)[0])
-    })
-    minHeap.Enqueue([3]int{0, src, -1})
-    for !minHeap.Empty() {
-        value, _ := minHeap.Dequeue()
-        cst, node, stops := value.([3]int)[0], value.([3]int)[1], value.([3]int)[2]
+    minHeap := &MinHeap{}
+    heap.Init(minHeap)
+    heap.Push(minHeap, [3]int{0, src, -1})
+    for minHeap.Len() > 0 {
+        value := heap.Pop(minHeap).([3]int)
+        cst, node, stops := value[0], value[1], value[2]
         if node == dst {
             return cst
         }
@@ -257,7 +270,7 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
             nextStops := stops + 1
             if dist[nei.to][nextStops+1] > nextCst {
                 dist[nei.to][nextStops+1] = nextCst
-                minHeap.Enqueue([3]int{nextCst, nei.to, nextStops})
+                heap.Push(minHeap, [3]int{nextCst, nei.to, nextStops})
             }
         }
     }

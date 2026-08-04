@@ -1441,31 +1441,44 @@ public class Solution {
  *     Next *ListNode
  * }
  */
+type NodeHeap []*ListNode
+
+func (h NodeHeap) Len() int            { return len(h) }
+func (h NodeHeap) Less(i, j int) bool  { return h[i].Val < h[j].Val }
+func (h NodeHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *NodeHeap) Push(x interface{}) { *h = append(*h, x.(*ListNode)) }
+func (h *NodeHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 func mergeKLists(lists []*ListNode) *ListNode {
     if len(lists) == 0 {
         return nil
     }
 
-    minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
-        return a.(*ListNode).Val - b.(*ListNode).Val
-    })
+    minHeap := &NodeHeap{}
+    heap.Init(minHeap)
 
     for _, list := range lists {
         if list != nil {
-            minHeap.Enqueue(list)
+            heap.Push(minHeap, list)
         }
     }
 
     res := &ListNode{Val: 0}
     cur := res
 
-    for !minHeap.Empty() {
-        node, _ := minHeap.Dequeue()
-        cur.Next = node.(*ListNode)
+    for minHeap.Len() > 0 {
+        node := heap.Pop(minHeap).(*ListNode)
+        cur.Next = node
         cur = cur.Next
 
         if cur.Next != nil {
-            minHeap.Enqueue(cur.Next)
+            heap.Push(minHeap, cur.Next)
         }
     }
 

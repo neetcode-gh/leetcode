@@ -392,29 +392,39 @@ public class Solution {
 ```
 
 ```go
+type MinHeap [][2]int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([2]int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 func topKFrequent(nums []int, k int) []int {
     count := make(map[int]int)
     for _, num := range nums {
         count[num]++
     }
 
-    heap := priorityqueue.NewWith(func(a, b interface{}) int {
-        freqA := a.([2]int)[0]
-        freqB := b.([2]int)[0]
-        return utils.IntComparator(freqA, freqB)
-    })
+    minHeap := &MinHeap{}
+    heap.Init(minHeap)
 
     for num, freq := range count {
-        heap.Enqueue([2]int{freq, num})
-        if heap.Size() > k {
-            heap.Dequeue()
+        heap.Push(minHeap, [2]int{freq, num})
+        if minHeap.Len() > k {
+            heap.Pop(minHeap)
         }
     }
 
     res := make([]int, k)
     for i := k - 1; i >= 0; i-- {
-        value, _ := heap.Dequeue()
-        res[i] = value.([2]int)[1]
+        res[i] = heap.Pop(minHeap).([2]int)[1]
     }
     return res
 }

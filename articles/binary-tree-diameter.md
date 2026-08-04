@@ -1002,21 +1002,19 @@ func diameterOfBinaryTree(root *TreeNode) int {
        return 0
    }
 
-   stack := linkedliststack.New()
-   stack.Push(root)
+   stack := []*TreeNode{root}
    mp := make(map[*TreeNode][]int)
    mp[nil] = []int{0, 0}
 
-   for !stack.Empty() {
-       val, _ := stack.Peek()
-       node := val.(*TreeNode)
+   for len(stack) > 0 {
+       node := stack[len(stack)-1]
 
        if node.Left != nil && len(mp[node.Left]) == 0 {
-           stack.Push(node.Left)
+           stack = append(stack, node.Left)
        } else if node.Right != nil && len(mp[node.Right]) == 0 {
-           stack.Push(node.Right)
+           stack = append(stack, node.Right)
        } else {
-           stack.Pop()
+           stack = stack[:len(stack)-1]
 
            leftHeight := mp[node.Left][0]
            leftDiameter := mp[node.Left][1]

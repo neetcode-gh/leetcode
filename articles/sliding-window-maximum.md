@@ -905,22 +905,32 @@ public class Solution {
 ```
 
 ```go
+type MaxHeap [][2]int
+
+func (h MaxHeap) Len() int            { return len(h) }
+func (h MaxHeap) Less(i, j int) bool  { return h[i][0] > h[j][0] }
+func (h MaxHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MaxHeap) Push(x interface{}) { *h = append(*h, x.([2]int)) }
+func (h *MaxHeap) Pop() interface{} {
+   old := *h
+   n := len(old)
+   x := old[n-1]
+   *h = old[:n-1]
+   return x
+}
+
 func maxSlidingWindow(nums []int, k int) []int {
-   heap := priorityqueue.NewWith(func(a, b interface{}) int {
-       return b.([2]int)[0] - a.([2]int)[0]
-   })
+   maxHeap := &MaxHeap{}
+   heap.Init(maxHeap)
 
    output := []int{}
    for i := 0; i < len(nums); i++ {
-       heap.Enqueue([2]int{nums[i], i})
+       heap.Push(maxHeap, [2]int{nums[i], i})
        if i >= k - 1 {
-           peek, _ := heap.Peek()
-           for peek.([2]int)[1] <= i - k {
-               heap.Dequeue()
-               peek, _ = heap.Peek()
+           for (*maxHeap)[0][1] <= i - k {
+               heap.Pop(maxHeap)
            }
-           val, _ := heap.Peek()
-           output = append(output, val.([2]int)[0])
+           output = append(output, (*maxHeap)[0][0])
        }
    }
    return output

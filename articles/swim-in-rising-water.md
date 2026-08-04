@@ -1473,21 +1473,33 @@ type Node struct {
     time, r, c int
 }
 
+type MinHeap []Node
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i].time < h[j].time }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(Node)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 func swimInWater(grid [][]int) int {
     N := len(grid)
     directions := [][2]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
 
-    pq := priorityqueue.NewWith(func(a, b interface{}) int {
-        return utils.IntComparator(a.(Node).time, b.(Node).time)
-    })
+    pq := &MinHeap{}
+    heap.Init(pq)
 
-    pq.Enqueue(Node{grid[0][0], 0, 0})
+    heap.Push(pq, Node{grid[0][0], 0, 0})
     visited := make(map[[2]int]bool)
     visited[[2]int{0, 0}] = true
 
-    for !pq.Empty() {
-        item, _ := pq.Dequeue()
-        node := item.(Node)
+    for pq.Len() > 0 {
+        node := heap.Pop(pq).(Node)
         t, r, c := node.time, node.r, node.c
 
         if r == N-1 && c == N-1 {
@@ -1502,7 +1514,7 @@ func swimInWater(grid [][]int) int {
             }
 
             visited[[2]int{neiR, neiC}] = true
-            pq.Enqueue(Node{max(t, grid[neiR][neiC]), neiR, neiC})
+            heap.Push(pq, Node{max(t, grid[neiR][neiC]), neiR, neiC})
         }
     }
 
