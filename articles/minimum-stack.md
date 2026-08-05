@@ -225,39 +225,40 @@ public class MinStack {
 
 ```go
 type MinStack struct {
-    stack *linkedliststack.Stack
+    stack []int
 }
 
 func Constructor() MinStack {
-    return MinStack{stack: linkedliststack.New()}
+    return MinStack{stack: []int{}}
 }
 
 func (this *MinStack) Push(val int) {
-    this.stack.Push(val)
+    this.stack = append(this.stack, val)
 }
 
 func (this *MinStack) Pop() {
-    this.stack.Pop()
+    this.stack = this.stack[:len(this.stack)-1]
 }
 
 func (this *MinStack) Top() int {
-    top, _ := this.stack.Peek()
-    return top.(int)
+    return this.stack[len(this.stack)-1]
 }
 
 func (this *MinStack) GetMin() int {
-    tmp := linkedliststack.New()
+    tmp := []int{}
     min := this.Top()
 
-    for !this.stack.Empty() {
-        val, _ := this.stack.Pop()
-        min = getMin(min, val.(int))
-        tmp.Push(val)
+    for len(this.stack) > 0 {
+        val := this.stack[len(this.stack)-1]
+        this.stack = this.stack[:len(this.stack)-1]
+        min = getMin(min, val)
+        tmp = append(tmp, val)
     }
 
-    for !tmp.Empty() {
-        val, _ := tmp.Pop()
-        this.stack.Push(val)
+    for len(tmp) > 0 {
+        val := tmp[len(tmp)-1]
+        tmp = tmp[:len(tmp)-1]
+        this.stack = append(this.stack, val)
     }
 
     return min
@@ -583,43 +584,39 @@ public class MinStack {
 
 ```go
 type MinStack struct {
-    stack    *linkedliststack.Stack
-    minStack *linkedliststack.Stack
+    stack    []int
+    minStack []int
 }
 
 func Constructor() MinStack {
     return MinStack{
-        stack:    linkedliststack.New(),
-        minStack: linkedliststack.New(),
+        stack:    []int{},
+        minStack: []int{},
     }
 }
 
 func (this *MinStack) Push(val int) {
-    this.stack.Push(val)
+    this.stack = append(this.stack, val)
     minVal := val
-    if !this.minStack.Empty() {
-        if top, ok := this.minStack.Peek(); ok {
-            if top.(int) < val {
-                minVal = top.(int)
-            }
+    if len(this.minStack) > 0 {
+        if top := this.minStack[len(this.minStack)-1]; top < val {
+            minVal = top
         }
     }
-    this.minStack.Push(minVal)
+    this.minStack = append(this.minStack, minVal)
 }
 
 func (this *MinStack) Pop() {
-    this.stack.Pop()
-    this.minStack.Pop()
+    this.stack = this.stack[:len(this.stack)-1]
+    this.minStack = this.minStack[:len(this.minStack)-1]
 }
 
 func (this *MinStack) Top() int {
-    top, _ := this.stack.Peek()
-    return top.(int)
+    return this.stack[len(this.stack)-1]
 }
 
 func (this *MinStack) GetMin() int {
-    min, _ := this.minStack.Peek()
-    return min.(int)
+    return this.minStack[len(this.minStack)-1]
 }
 ```
 

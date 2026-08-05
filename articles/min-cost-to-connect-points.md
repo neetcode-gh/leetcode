@@ -822,6 +822,20 @@ public class Solution {
 ```
 
 ```go
+type MinHeap [][]int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([]int)) }
+func (h *MinHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}
+
 func minCostConnectPoints(points [][]int) int {
 	n := len(points)
 	adj := make(map[int][][]int)
@@ -837,17 +851,16 @@ func minCostConnectPoints(points [][]int) int {
 
 	res := 0
 	visit := make(map[int]bool)
-	pq := priorityqueue.NewWith(func(a, b interface{}) int {
-		return utils.IntComparator(a.([]int)[0], b.([]int)[0])
-	})
-	pq.Enqueue([]int{0, 0})
+	pq := &MinHeap{}
+	heap.Init(pq)
+	heap.Push(pq, []int{0, 0})
 
 	for len(visit) < n {
-		item, ok := pq.Dequeue()
-		if !ok {
-			continue
+		if pq.Len() == 0 {
+			break
 		}
-		cost, point := item.([]int)[0], item.([]int)[1]
+		item := heap.Pop(pq).([]int)
+		cost, point := item[0], item[1]
 		if visit[point] {
 			continue
 		}
@@ -857,7 +870,7 @@ func minCostConnectPoints(points [][]int) int {
 		for _, edge := range adj[point] {
 			neiCost, neiPoint := edge[0], edge[1]
 			if !visit[neiPoint] {
-				pq.Enqueue([]int{neiCost, neiPoint})
+				heap.Push(pq, []int{neiCost, neiPoint})
 			}
 		}
 	}

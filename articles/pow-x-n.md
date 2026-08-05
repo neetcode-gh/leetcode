@@ -618,11 +618,11 @@ class Solution {
         let power = Math.abs(n);
 
         while (power > 0) {
-            if (power & 1) {
+            if (power % 2 === 1) {
                 res *= x;
             }
             x *= x;
-            power >>= 1;
+            power = Math.floor(power / 2);
         }
 
         return n >= 0 ? res : 1 / res;
@@ -772,6 +772,8 @@ impl Solution {
 ### Integer Overflow When Negating n
 
 When `n` is `Integer.MIN_VALUE` (-2147483648), computing `abs(n)` or `-n` overflows because the positive equivalent exceeds `Integer.MAX_VALUE`. Always cast to a `long` before taking the absolute value to avoid this undefined behavior.
+
+In JavaScript, `Math.abs(n)` is safe on its own (numbers are doubles), but the bitwise operators are not: `power & 1` and `power >>= 1` first convert `power` to a signed 32-bit integer, so `2147483648` becomes `-2147483648` and the loop terminates immediately. Use `power % 2` and `Math.floor(power / 2)` instead of bitwise operations.
 
 ### Forgetting to Handle Negative Exponents
 

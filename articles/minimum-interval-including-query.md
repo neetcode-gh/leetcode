@@ -525,6 +525,20 @@ type Event struct {
 	idx  int // interval index
 }
 
+type MinHeap [][]int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([]int)) }
+func (h *MinHeap) Pop() interface{} {
+	old := *h
+	n := len(old)
+	x := old[n-1]
+	*h = old[:n-1]
+	return x
+}
+
 func minInterval(intervals [][]int, queries []int) []int {
 	events := []Event{}
 
@@ -550,9 +564,8 @@ func minInterval(intervals [][]int, queries []int) []int {
 	})
 
 	// Priority queue to store intervals with the smallest size on top
-	sizes := priorityqueue.NewWith(func(a, b interface{}) int {
-		return utils.IntComparator(a.([]int)[0], b.([]int)[0])
-	})
+	sizes := &MinHeap{}
+	heap.Init(sizes)
 	ans := make([]int, len(queries))
 	for i := range ans {
 		ans[i] = -1
@@ -562,22 +575,16 @@ func minInterval(intervals [][]int, queries []int) []int {
 	for _, event := range events {
 		switch event.typ {
 		case 0: // Interval start
-			sizes.Enqueue([]int{event.val, event.idx})
+			heap.Push(sizes, []int{event.val, event.idx})
 		case 2: // Interval end
 			inactive[event.idx] = true
 		case 1: // Query
 			queryIdx := event.val
-			for !sizes.Empty() {
-				top, _ := sizes.Peek()
-				if inactive[top.([]int)[1]] {
-					sizes.Dequeue()
-				} else {
-					break
-				}
+			for sizes.Len() > 0 && inactive[(*sizes)[0][1]] {
+				heap.Pop(sizes)
 			}
-			if !sizes.Empty() {
-				top, _ := sizes.Peek()
-				ans[queryIdx] = top.([]int)[0]
+			if sizes.Len() > 0 {
+				ans[queryIdx] = (*sizes)[0][0]
 			}
 		}
 	}
@@ -971,6 +978,20 @@ public class Solution {
 ```
 
 ```go
+type MinHeap [][2]int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i][0] < h[j][0] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.([2]int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 func minInterval(intervals [][]int, queries []int) []int {
     sort.Slice(intervals, func(i, j int) bool {
         return intervals[i][0] < intervals[j][0]
@@ -984,19 +1005,8 @@ func minInterval(intervals [][]int, queries []int) []int {
         return queriesWithIdx[i][0] < queriesWithIdx[j][0]
     })
 
-    comparator := func(a, b interface{}) int {
-        pair1 := a.([2]int)
-        pair2 := b.([2]int)
-        if pair1[0] != pair2[0] {
-            if pair1[0] < pair2[0] {
-                return -1
-            }
-            return 1
-        }
-        return 0
-    }
-
-    pq := priorityqueue.NewWith(comparator)
+    pq := &MinHeap{}
+    heap.Init(pq)
     res := make([]int, len(queries))
     i := 0
 
@@ -1005,22 +1015,16 @@ func minInterval(intervals [][]int, queries []int) []int {
 
         for i < len(intervals) && intervals[i][0] <= q {
             size := intervals[i][1] - intervals[i][0] + 1
-            pq.Enqueue([2]int{size, intervals[i][1]})
+            heap.Push(pq, [2]int{size, intervals[i][1]})
             i++
         }
 
-        for !pq.Empty() {
-            if top, _ := pq.Peek(); top.([2]int)[1] < q {
-                pq.Dequeue()
-            } else {
-                break
-            }
+        for pq.Len() > 0 && (*pq)[0][1] < q {
+            heap.Pop(pq)
         }
 
-        if !pq.Empty() {
-            if top, _ := pq.Peek(); true {
-                res[originalIdx] = top.([2]int)[0]
-            }
+        if pq.Len() > 0 {
+            res[originalIdx] = (*pq)[0][0]
         } else {
             res[originalIdx] = -1
         }

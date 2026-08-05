@@ -551,8 +551,6 @@ public class Leaderboard {
 ```
 
 ```go
-import "container/heap"
-
 type MinHeap []int
 
 func (h MinHeap) Len() int           { return len(h) }
@@ -1062,64 +1060,72 @@ public class Leaderboard {
 ```
 
 ```go
+// Go has no ordered map in its standard library, so the sorted map is
+// modeled with a count map plus a slice of the distinct scores kept in
+// descending order (binary searched with sort.Search).
 type Leaderboard struct {
     scores       map[int]int
-    sortedScores *redblacktree.Tree
+    scoreCount   map[int]int
+    sortedScores []int
 }
 
 func Constructor() Leaderboard {
     return Leaderboard{
         scores:       make(map[int]int),
-        sortedScores: redblacktree.NewWith(func(a, b interface{}) int {
-            return b.(int) - a.(int)
-        }),
+        scoreCount:   make(map[int]int),
+        sortedScores: []int{},
+    }
+}
+
+func (this *Leaderboard) findIndex(score int) int {
+    return sort.Search(len(this.sortedScores), func(i int) bool {
+        return this.sortedScores[i] <= score
+    })
+}
+
+func (this *Leaderboard) put(score int) {
+    this.scoreCount[score]++
+    if this.scoreCount[score] == 1 {
+        i := this.findIndex(score)
+        this.sortedScores = append(this.sortedScores, 0)
+        copy(this.sortedScores[i+1:], this.sortedScores[i:])
+        this.sortedScores[i] = score
+    }
+}
+
+func (this *Leaderboard) remove(score int) {
+    playerCount := this.scoreCount[score]
+    if playerCount == 0 {
+        return
+    }
+    if playerCount == 1 {
+        delete(this.scoreCount, score)
+        i := this.findIndex(score)
+        this.sortedScores = append(this.sortedScores[:i], this.sortedScores[i+1:]...)
+    } else {
+        this.scoreCount[score] = playerCount - 1
     }
 }
 
 func (this *Leaderboard) AddScore(playerId int, score int) {
     if _, exists := this.scores[playerId]; !exists {
         this.scores[playerId] = score
-        count := 0
-        if val, found := this.sortedScores.Get(score); found {
-            count = val.(int)
-        }
-        this.sortedScores.Put(score, count+1)
+        this.put(score)
     } else {
         preScore := this.scores[playerId]
-        playerCount := this.sortedScores.Values()[this.findIndex(preScore)].(int)
-
-        if playerCount == 1 {
-            this.sortedScores.Remove(preScore)
-        } else {
-            this.sortedScores.Put(preScore, playerCount-1)
-        }
+        this.remove(preScore)
 
         newScore := preScore + score
         this.scores[playerId] = newScore
-        count := 0
-        if val, found := this.sortedScores.Get(newScore); found {
-            count = val.(int)
-        }
-        this.sortedScores.Put(newScore, count+1)
+        this.put(newScore)
     }
-}
-
-func (this *Leaderboard) findIndex(score int) int {
-    for i, k := range this.sortedScores.Keys() {
-        if k.(int) == score {
-            return i
-        }
-    }
-    return -1
 }
 
 func (this *Leaderboard) Top(K int) int {
     count, sum := 0, 0
-    it := this.sortedScores.Iterator()
 
-    for it.Next() {
-        key := it.Key().(int)
-        times := it.Value().(int)
+    for _, key := range this.sortedScores {
+        times := this.scoreCount[key]
 
         for i := 0; i < times; i++ {
             sum += key
@@ -1134,16 +1140,10 @@ func (this *Leaderboard) Top(K int) int {
 }
 
 func (this *Leaderboard) Reset(playerId int) {
-    preScore := this.scores[playerId]
-    if val, found := this.sortedScores.Get(preScore); found {
-        playerCount := val.(int)
-        if playerCount == 1 {
-            this.sortedScores.Remove(preScore)
-        } else {
-            this.sortedScores.Put(preScore, playerCount-1)
-        }
+    if preScore, exists := this.scores[playerId]; exists {
+        this.remove(preScore)
+        delete(this.scores, playerId)
     }
-    delete(this.scores, playerId)
 }
 ```
 

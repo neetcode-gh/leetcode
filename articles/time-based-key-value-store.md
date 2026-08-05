@@ -48,12 +48,12 @@ class TimeMap:
     def get(self, key: str, timestamp: int) -> str:
         if key not in self.keyStore:
             return ""
-        seen = 0
+        seen = -1
 
         for time in self.keyStore[key]:
             if time <= timestamp:
                 seen = max(seen, time)
-        return "" if seen == 0 else self.keyStore[key][seen][-1]
+        return "" if seen == -1 else self.keyStore[key][seen][-1]
 ```
 
 ```java
@@ -78,14 +78,14 @@ public class TimeMap {
         if (!keyStore.containsKey(key)) {
             return "";
         }
-        int seen = 0;
+        int seen = -1;
 
         for (int time : keyStore.get(key).keySet()) {
             if (time <= timestamp) {
                 seen = Math.max(seen, time);
             }
         }
-        if (seen == 0) return "";
+        if (seen == -1) return "";
         int back = keyStore.get(key).get(seen).size() - 1;
         return keyStore.get(key).get(seen).get(back);
     }
@@ -106,13 +106,13 @@ public:
         if (keyStore.find(key) == keyStore.end()) {
             return "";
         }
-        int seen = 0;
+        int seen = -1;
         for (const auto& [time, _] : keyStore[key]) {
             if (time <= timestamp) {
                 seen = max(seen, time);
             }
         }
-        return seen == 0 ? "" : keyStore[key][seen].back();
+        return seen == -1 ? "" : keyStore[key][seen].back();
     }
 };
 ```
@@ -148,14 +148,14 @@ class TimeMap {
         if (!this.keyStore.has(key)) {
             return '';
         }
-        let seen = 0;
+        let seen = -1;
 
         for (let time of this.keyStore.get(key).keys()) {
             if (time <= timestamp) {
                 seen = Math.max(seen, time);
             }
         }
-        return seen === 0 ? '' : this.keyStore.get(key).get(seen).at(-1);
+        return seen === -1 ? '' : this.keyStore.get(key).get(seen).at(-1);
     }
 }
 ```
@@ -183,14 +183,14 @@ public class TimeMap {
             return "";
         }
         var timestamps = keyStore[key];
-        int seen = 0;
+        int seen = -1;
 
         foreach (var time in timestamps.Keys) {
             if (time <= timestamp) {
-                seen = time;
+                seen = Math.Max(seen, time);
             }
         }
-        return seen == 0 ? "" : timestamps[seen][^1];
+        return seen == -1 ? "" : timestamps[seen][^1];
     }
 }
 ```
@@ -218,14 +218,14 @@ func (this *TimeMap) Get(key string, timestamp int) string {
        return ""
    }
 
-   seen := 0
+   seen := -1
    for time := range this.keyStore[key] {
        if time <= timestamp {
            seen = max(seen, time)
        }
    }
 
-   if seen == 0 {
+   if seen == -1 {
        return ""
    }
    values := this.keyStore[key][seen]
@@ -259,14 +259,14 @@ class TimeMap() {
             return ""
         }
 
-        var seen = 0
+        var seen = -1
         for (time in keyStore[key]!!.keys) {
             if (time <= timestamp) {
                 seen = maxOf(seen, time)
             }
         }
 
-        if (seen == 0) {
+        if (seen == -1) {
             return ""
         }
         return keyStore[key]!![seen]!!.last()
@@ -297,13 +297,13 @@ class TimeMap {
             return ""
         }
 
-        var seen = 0
+        var seen = -1
         for time in timeMap.keys {
             if time <= timestamp {
                 seen = max(seen, time)
             }
         }
-        return seen == 0 ? "" : timeMap[seen]!.last!
+        return seen == -1 ? "" : timeMap[seen]!.last!
     }
 }
 ```
@@ -333,13 +333,13 @@ impl TimeMap {
         let Some(time_map) = self.key_store.get(&key) else {
             return String::new();
         };
-        let mut seen = 0;
+        let mut seen = -1;
         for &time in time_map.keys() {
             if time <= timestamp && time > seen {
                 seen = time;
             }
         }
-        if seen == 0 {
+        if seen == -1 {
             String::new()
         } else {
             time_map[&seen].last().unwrap().clone()

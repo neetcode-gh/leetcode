@@ -1153,8 +1153,8 @@ impl Solution {
         let mut dp = vec![vec![false; n]; n];
         for l in 1..=n {
             for i in 0..=n - l {
-                dp[i][i + l - 1] = s[i] == s[i + l - 1]
-                    && (i + 1 > i + l - 2 || dp[i + 1][i + l - 2]);
+                let j = i + l - 1;
+                dp[i][j] = s[i] == s[j] && (l <= 2 || dp[i + 1][j - 1]);
             }
         }
 
@@ -1541,8 +1541,8 @@ impl Solution {
         let mut dp = vec![vec![false; n]; n];
         for l in 1..=n {
             for i in 0..=n - l {
-                dp[i][i + l - 1] = s[i] == s[i + l - 1]
-                    && (i + 1 > i + l - 2 || dp[i + 1][i + l - 2]);
+                let j = i + l - 1;
+                dp[i][j] = s[i] == s[j] && (l <= 2 || dp[i + 1][j - 1]);
             }
         }
 

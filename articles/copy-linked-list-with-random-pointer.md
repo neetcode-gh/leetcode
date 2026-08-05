@@ -295,19 +295,28 @@ class Solution {
 ```
 
 ```rust
-// Note: LeetCode does not support Rust for this problem.
-// Below is an index-based approach using HashMap.
-// Definition for a Node:
-// struct Node { val: i32, next: Option<usize>, random: Option<usize> }
 impl Solution {
-    pub fn copy_random_list(head: &Vec<(i32, Option<usize>)>) -> Vec<(i32, Option<usize>)> {
-        // head is represented as Vec<(val, random_index)>
-        // where random_index is the index of the random pointer node
-        let mut result = Vec::new();
-        for &(val, random) in head.iter() {
-            result.push((val, random));
+    pub fn copy_random_list(head: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        fn dfs(
+            node: &Option<Rc<RefCell<Node>>>,
+            old_to_copy: &mut HashMap<*const RefCell<Node>, Rc<RefCell<Node>>>,
+        ) -> Option<Rc<RefCell<Node>>> {
+            let node = node.as_ref()?;
+            let key = Rc::as_ptr(node);
+            if let Some(copy) = old_to_copy.get(&key) {
+                return Some(copy.clone());
+            }
+            let copy = Rc::new(RefCell::new(Node::new(node.borrow().val)));
+            old_to_copy.insert(key, copy.clone());
+            let next = dfs(&node.borrow().next, old_to_copy);
+            copy.borrow_mut().next = next;
+            let random = dfs(&node.borrow().random, old_to_copy);
+            copy.borrow_mut().random = random;
+            Some(copy)
         }
-        result
+
+        let mut old_to_copy = HashMap::new();
+        dfs(&head, &mut old_to_copy)
     }
 }
 ```
@@ -649,21 +658,28 @@ class Solution {
 ```
 
 ```rust
-// Note: LeetCode does not support Rust for this problem.
-// Below is an index-based two-pass approach.
 impl Solution {
-    pub fn copy_random_list(head: &Vec<(i32, Option<usize>)>) -> Vec<(i32, Option<usize>)> {
-        let n = head.len();
-        let mut copy = Vec::with_capacity(n);
-        // Pass 1: copy values
-        for &(val, _) in head.iter() {
-            copy.push((val, None));
+    pub fn copy_random_list(head: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        let mut old_to_copy: HashMap<*const RefCell<Node>, Rc<RefCell<Node>>> = HashMap::new();
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = Rc::new(RefCell::new(Node::new(node.borrow().val)));
+            old_to_copy.insert(Rc::as_ptr(&node), copy);
+            cur = node.borrow().next.clone();
         }
-        // Pass 2: set random pointers
-        for i in 0..n {
-            copy[i].1 = head[i].1;
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = old_to_copy[&Rc::as_ptr(&node)].clone();
+            let next = node.borrow().next.as_ref().map(|n| old_to_copy[&Rc::as_ptr(n)].clone());
+            copy.borrow_mut().next = next;
+            let random = node.borrow().random.as_ref().map(|n| old_to_copy[&Rc::as_ptr(n)].clone());
+            copy.borrow_mut().random = random;
+            cur = node.borrow().next.clone();
         }
-        copy
+
+        head.as_ref().map(|n| old_to_copy[&Rc::as_ptr(n)].clone())
     }
 }
 ```
@@ -1028,11 +1044,33 @@ class Solution {
 ```
 
 ```rust
-// Note: LeetCode does not support Rust for this problem.
-// Below is an index-based one-pass approach.
 impl Solution {
-    pub fn copy_random_list(head: &Vec<(i32, Option<usize>)>) -> Vec<(i32, Option<usize>)> {
-        head.clone()
+    pub fn copy_random_list(head: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        fn get_copy(
+            node: &Option<Rc<RefCell<Node>>>,
+            old_to_copy: &mut HashMap<*const RefCell<Node>, Rc<RefCell<Node>>>,
+        ) -> Option<Rc<RefCell<Node>>> {
+            let node = node.as_ref()?;
+            let copy = old_to_copy
+                .entry(Rc::as_ptr(node))
+                .or_insert_with(|| Rc::new(RefCell::new(Node::new(node.borrow().val))))
+                .clone();
+            Some(copy)
+        }
+
+        let mut old_to_copy: HashMap<*const RefCell<Node>, Rc<RefCell<Node>>> = HashMap::new();
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = get_copy(&Some(node.clone()), &mut old_to_copy).unwrap();
+            let next = get_copy(&node.borrow().next, &mut old_to_copy);
+            copy.borrow_mut().next = next;
+            let random = get_copy(&node.borrow().random, &mut old_to_copy);
+            copy.borrow_mut().random = random;
+            cur = node.borrow().next.clone();
+        }
+
+        get_copy(&head, &mut old_to_copy)
     }
 }
 ```
@@ -1495,10 +1533,45 @@ class Solution {
 ```
 
 ```rust
-// Note: LeetCode does not support Rust for this problem.
-// The interleaving approach cannot be directly translated
-// to safe Rust due to shared mutable references.
-// See the Hash Map approaches above for Rust solutions.
+impl Solution {
+    pub fn copy_random_list(head: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        head.as_ref()?;
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let next = node.borrow().next.clone();
+            let copy = Rc::new(RefCell::new(Node::new(node.borrow().val)));
+            copy.borrow_mut().next = next.clone();
+            node.borrow_mut().next = Some(copy);
+            cur = next;
+        }
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = node.borrow().next.clone().unwrap();
+            let random_copy = node
+                .borrow()
+                .random
+                .as_ref()
+                .map(|r| r.borrow().next.clone().unwrap());
+            copy.borrow_mut().random = random_copy;
+            cur = copy.borrow().next.clone();
+        }
+
+        let new_head = head.as_ref().unwrap().borrow().next.clone();
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = node.borrow().next.clone().unwrap();
+            let next = copy.borrow().next.clone();
+            node.borrow_mut().next = next.clone();
+            let copy_next = next.as_ref().map(|n| n.borrow().next.clone().unwrap());
+            copy.borrow_mut().next = copy_next;
+            cur = next;
+        }
+
+        new_head
+    }
+}
 ```
 
 ::tabs-end
@@ -1954,10 +2027,45 @@ class Solution {
 ```
 
 ```rust
-// Note: LeetCode does not support Rust for this problem.
-// The random-pointer-based interleaving approach cannot
-// be directly translated to safe Rust.
-// See the Hash Map approaches above for Rust solutions.
+impl Solution {
+    pub fn copy_random_list(head: Option<Rc<RefCell<Node>>>) -> Option<Rc<RefCell<Node>>> {
+        head.as_ref()?;
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = Rc::new(RefCell::new(Node::new(node.borrow().val)));
+            copy.borrow_mut().next = node.borrow().random.clone();
+            node.borrow_mut().random = Some(copy);
+            cur = node.borrow().next.clone();
+        }
+
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = node.borrow().random.clone().unwrap();
+            let random_copy = copy
+                .borrow()
+                .next
+                .as_ref()
+                .map(|orig_random| orig_random.borrow().random.clone().unwrap());
+            copy.borrow_mut().random = random_copy;
+            cur = node.borrow().next.clone();
+        }
+
+        let new_head = head.as_ref().unwrap().borrow().random.clone();
+        let mut cur = head.clone();
+        while let Some(node) = cur {
+            let copy = node.borrow().random.clone().unwrap();
+            let next = node.borrow().next.clone();
+            let orig_random = copy.borrow().next.clone();
+            node.borrow_mut().random = orig_random;
+            let copy_next = next.as_ref().map(|n| n.borrow().random.clone().unwrap());
+            copy.borrow_mut().next = copy_next;
+            cur = next;
+        }
+
+        new_head
+    }
+}
 ```
 
 ::tabs-end

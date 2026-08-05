@@ -870,22 +870,21 @@ func maxDepth(root *TreeNode) int {
        return 0
    }
 
-   q := linkedlistqueue.New()
-   q.Enqueue(root)
+   q := []*TreeNode{root}
    level := 0
 
-   for !q.Empty() {
-       size := q.Size()
+   for len(q) > 0 {
+       size := len(q)
 
        for i := 0; i < size; i++ {
-           val, _ := q.Dequeue()
-           node := val.(*TreeNode)
+           node := q[0]
+           q = q[1:]
 
            if node.Left != nil {
-               q.Enqueue(node.Left)
+               q = append(q, node.Left)
            }
            if node.Right != nil {
-               q.Enqueue(node.Right)
+               q = append(q, node.Right)
            }
        }
        level++

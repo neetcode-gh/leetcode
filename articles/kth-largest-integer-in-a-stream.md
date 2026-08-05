@@ -376,29 +376,43 @@ public class KthLargest {
 ```
 
 ```go
+type MinHeap []int
+
+func (h MinHeap) Len() int            { return len(h) }
+func (h MinHeap) Less(i, j int) bool  { return h[i] < h[j] }
+func (h MinHeap) Swap(i, j int)       { h[i], h[j] = h[j], h[i] }
+func (h *MinHeap) Push(x interface{}) { *h = append(*h, x.(int)) }
+func (h *MinHeap) Pop() interface{} {
+    old := *h
+    n := len(old)
+    x := old[n-1]
+    *h = old[:n-1]
+    return x
+}
+
 type KthLargest struct {
-    minHeap *priorityqueue.Queue
+    minHeap *MinHeap
     k       int
 }
 
 func Constructor(k int, nums []int) KthLargest {
-    minHeap := priorityqueue.NewWith(utils.IntComparator)
+    minHeap := &MinHeap{}
+    heap.Init(minHeap)
     for _, num := range nums {
-        minHeap.Enqueue(num)
+        heap.Push(minHeap, num)
     }
-    for minHeap.Size() > k {
-        minHeap.Dequeue()
+    for minHeap.Len() > k {
+        heap.Pop(minHeap)
     }
     return KthLargest{minHeap: minHeap, k: k}
 }
 
 func (this *KthLargest) Add(val int) int {
-    this.minHeap.Enqueue(val)
-    if this.minHeap.Size() > this.k {
-        this.minHeap.Dequeue()
+    heap.Push(this.minHeap, val)
+    if this.minHeap.Len() > this.k {
+        heap.Pop(this.minHeap)
     }
-    top, _ := this.minHeap.Peek()
-    return top.(int)
+    return (*this.minHeap)[0]
 }
 ```
 
