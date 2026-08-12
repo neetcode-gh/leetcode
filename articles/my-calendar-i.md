@@ -922,7 +922,9 @@ impl MyCalendar {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(\log n)$ for each $book()$ function call.
+- Time complexity per $book()$ function call:
+    - $O(\log n)$ for Python's `SortedList` and the ordered-set implementations in Java and C++.
+    - $O(n)$ for the array/list-backed implementations (JavaScript, C#, Go, Kotlin, Swift, and Rust), since inserting at an arbitrary index can require shifting $O(n)$ elements.
 - Space complexity: $O(n)$
 
 ---
