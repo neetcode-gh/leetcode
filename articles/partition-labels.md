@@ -268,9 +268,10 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
-- Space complexity: $O(m)$
+- Space complexity: $O(1)$
+    - The last-index map contains at most $26$ entries because `s` consists only of lowercase English letters. More generally, this is $O(m)$, where $m$ is the alphabet size.
 
-> Where $n$ is the length of the string $s$ and $m$ is the number of unique characters in the string $s$.
+> Where $n$ is the length of the string $s$.
 
 ---
 
