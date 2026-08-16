@@ -180,17 +180,17 @@ class Solution {
 ```swift
 class Solution {
     func largestLocal(_ grid: [[Int]]) -> [[Int]] {
-        let n = grid.count
-        let k = 3
-        let st = SparseTable(grid)
-        var res = [[Int]](repeating: [Int](repeating: 0, count: n - k + 1), count: n - k + 1)
-
-        for i in 0...(n - k) {
-            for j in 0...(n - k) {
-                res[i][j] = st.query(i, j, i + k - 1, j + k - 1)
+        let N = grid.count
+        var res = [[Int]](repeating: [Int](repeating: 0, count: N - 2), count: N - 2)
+        for i in 0..<(N - 2) {
+            for j in 0..<(N - 2) {
+                for r in i..<(i + 3) {
+                    for c in j..<(j + 3) {
+                        res[i][j] = max(res[i][j], grid[r][c])
+                    }
+                }
             }
         }
-
         return res
     }
 }
@@ -213,6 +213,29 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number[][]}
+     */
+    largestLocal(grid: number[][]): number[][] {
+        const N: number = grid.length;
+        const res: number[][] = Array.from({ length: N - 2 }, () => Array(N - 2).fill(0));
+        for (let i = 0; i < N - 2; i++) {
+            for (let j = 0; j < N - 2; j++) {
+                for (let r = i; r < i + 3; r++) {
+                    for (let c = j; c < j + 3; c++) {
+                        res[i][j] = Math.max(res[i][j], grid[r][c]);
+                    }
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -984,6 +1007,125 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class SparseTable {
+    n: number;
+    log: number[];
+    sparseTable: number[][][][];
+
+    /**
+     * @constructor
+     * @param {number[][]} grid
+     */
+    constructor(grid: number[][]) {
+        this.n = grid.length;
+        this.log = Array<number>(this.n + 1).fill(0);
+        for (let i = 2; i <= this.n; i++) {
+            this.log[i] = this.log[Math.floor(i / 2)] + 1;
+        }
+        const maxLog: number = this.log[this.n];
+        this.sparseTable = Array.from({ length: this.n }, () =>
+            Array.from({ length: this.n }, () =>
+                Array.from({ length: maxLog + 1 }, () =>
+                    Array<number>(maxLog + 1).fill(0),
+                ),
+            ),
+        );
+        for (let r = 0; r < this.n; r++) {
+            for (let c = 0; c < this.n; c++) {
+                this.sparseTable[r][c][0][0] = grid[r][c];
+            }
+        }
+        for (let i = 0; i <= maxLog; i++) {
+            for (let j = 0; j <= maxLog; j++) {
+                for (let r = 0; r + (1 << i) <= this.n; r++) {
+                    for (let c = 0; c + (1 << j) <= this.n; c++) {
+                        if (i === 0 && j === 0) continue;
+                        if (i === 0) {
+                            this.sparseTable[r][c][i][j] = Math.max(
+                                this.sparseTable[r][c][i][j - 1],
+                                this.sparseTable[r][c + (1 << (j - 1))][i][
+                                    j - 1
+                                ],
+                            );
+                        } else if (j === 0) {
+                            this.sparseTable[r][c][i][j] = Math.max(
+                                this.sparseTable[r][c][i - 1][j],
+                                this.sparseTable[r + (1 << (i - 1))][c][i - 1][
+                                    j
+                                ],
+                            );
+                        } else {
+                            this.sparseTable[r][c][i][j] = Math.max(
+                                Math.max(
+                                    this.sparseTable[r][c][i - 1][j - 1],
+                                    this.sparseTable[r + (1 << (i - 1))][c][
+                                        i - 1
+                                    ][j - 1],
+                                ),
+                                Math.max(
+                                    this.sparseTable[r][c + (1 << (j - 1))][
+                                        i - 1
+                                    ][j - 1],
+                                    this.sparseTable[r + (1 << (i - 1))][
+                                        c + (1 << (j - 1))
+                                    ][i - 1][j - 1],
+                                ),
+                            );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * @param {number} x1
+     * @param {number} y1
+     * @param {number} x2
+     * @param {number} y2
+     * @return {number}
+     */
+    query(x1: number, y1: number, x2: number, y2: number): number {
+        const lx: number = this.log[x2 - x1 + 1];
+        const ly: number = this.log[y2 - y1 + 1];
+        return Math.max(
+            Math.max(
+                this.sparseTable[x1][y1][lx][ly],
+                this.sparseTable[x2 - (1 << lx) + 1][y1][lx][ly],
+            ),
+            Math.max(
+                this.sparseTable[x1][y2 - (1 << ly) + 1][lx][ly],
+                this.sparseTable[x2 - (1 << lx) + 1][y2 - (1 << ly) + 1][lx][
+                    ly
+                ],
+            ),
+        );
+    }
+}
+
+class Solution {
+    /**
+     * @param {number[][]} grid
+     * @return {number[][]}
+     */
+    largestLocal(grid: number[][]): number[][] {
+        const n: number = grid.length,
+            k: number = 3;
+        const st: SparseTable = new SparseTable(grid);
+        const res: number[][] = Array.from({ length: n - k + 1 }, () =>
+            Array<number>(n - k + 1).fill(0),
+        );
+        for (let i = 0; i <= n - k; i++) {
+            for (let j = 0; j <= n - k; j++) {
+                res[i][j] = st.query(i, j, i + k - 1, j + k - 1);
+            }
+        }
+        return res;
     }
 }
 ```
