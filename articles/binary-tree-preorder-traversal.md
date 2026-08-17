@@ -670,14 +670,15 @@ This modifies the tree temporarily but restores it fully at the end.
         - Move to `cur.right`.
     - Else:
         - Find the inorder predecessor `prev` (rightmost node in `cur.left`).
-        - If `prev.right` is `null`:
+        - If `rightmost.right` is `null`:
             - This is the **first time** visiting `cur`.
             - Append `cur.val` to `res`.
-            - Create a thread: `prev.right = cur`.
+            - Create a thread: `rightmost.right = cur`. 
+          (Meaning create a link to the current element from the rightmost element in the left part)
             - Move to `cur.left`.
         - Else:
             - Thread exists → we are returning after finishing the left subtree.
-            - Remove the thread: `prev.right = None`.
+            - Remove the thread: `rightmost.right = None`.
             - Move to `cur.right`.
 3. Return `res`.
 
@@ -696,22 +697,31 @@ class Solution:
         cur = root
 
         while cur:
-            if not cur.left:
+            # No left subtree:
+            # visit current and move right.
+            if cur.left is None:
                 res.append(cur.val)
                 cur = cur.right
+                continue
+    
+            # Find the rightmost node in current's left subtree.
+            rightmost = cur.left
+    
+            while rightmost.right and rightmost.right != cur:
+                rightmost = rightmost.right
+    
+            # First time we see current:
+            # create a temporary link back to current.
+            if rightmost.right is None:
+                res.append(cur.val)
+                rightmost.right = cur
+                cur = cur.left
+    
+            # Second time we see current:
+            # left subtree is finished.
             else:
-                prev = cur.left
-                while prev.right and prev.right != cur:
-                    prev = prev.right
-
-                if not prev.right:
-                    res.append(cur.val)
-                    prev.right = cur
-                    cur = cur.left
-                else:
-                    prev.right = None
-                    cur = cur.right
-
+                rightmost.right = None
+                cur = cur.right
         return res
 ```
 
