@@ -723,7 +723,10 @@ private:
             topLeft->val == topRight->val &&
             topLeft->val == bottomLeft->val &&
             topLeft->val == bottomRight->val) {
-            return new Node(topLeft->val, true);
+            delete topRight;
+            delete bottomLeft;
+            delete bottomRight;
+            return topLeft;
         }
 
         return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
