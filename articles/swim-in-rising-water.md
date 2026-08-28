@@ -1249,6 +1249,7 @@ impl Solution {
 ### Time & Space Complexity
 
 - Time complexity: $O(n ^ 2 \log n)$
+    - The binary search runs for $O(\log(n ^ 2))$ iterations because the height range contains at most $n ^ 2$ values. Since $\log(n ^ 2) = 2\log n$, this simplifies to $O(\log n)$ iterations, with each DFS taking $O(n ^ 2)$ time.
 - Space complexity: $O(n ^ 2)$
 
 ---

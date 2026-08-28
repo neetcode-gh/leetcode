@@ -82,7 +82,7 @@ public:
 ```javascript
 class Solution {
     /**
-     * @param {number} n - a positive integer
+     * @param {number} n - a non-negative integer
      * @return {number}
      */
     hammingWeight(n) {
@@ -153,7 +153,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn hamming_weight(n: i32) -> i32 {
+    pub fn hamming_weight(n: u32) -> i32 {
         let mut res = 0;
         for i in 0..32 {
             if (1 << i) & n != 0 {
@@ -244,7 +244,7 @@ public:
 ```javascript
 class Solution {
     /**
-     * @param {number} n - a positive integer
+     * @param {number} n - a non-negative integer
      * @return {number}
      */
     hammingWeight(n) {
@@ -316,11 +316,11 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn hamming_weight(n: i32) -> i32 {
+    pub fn hamming_weight(n: u32) -> i32 {
         let mut n = n;
         let mut res = 0;
         while n != 0 {
-            res += n & 1;
+            res += (n & 1) as i32;
             n >>= 1;
         }
         res
@@ -409,7 +409,7 @@ public:
 ```javascript
 class Solution {
     /**
-     * @param {number} n - a positive integer
+     * @param {number} n - a non-negative integer
      * @return {number}
      */
     hammingWeight(n) {
@@ -477,7 +477,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn hamming_weight(n: i32) -> i32 {
+    pub fn hamming_weight(n: u32) -> i32 {
         let mut n = n;
         let mut res = 0;
         while n != 0 {
@@ -548,7 +548,7 @@ public:
 ```javascript
 class Solution {
     /**
-     * @param {number} n - a positive integer
+     * @param {number} n - a non-negative integer
      * @return {number}
      */
     hammingWeight(n) {
@@ -589,7 +589,7 @@ class Solution {
 
 ```rust
 impl Solution {
-    pub fn hamming_weight(n: i32) -> i32 {
+    pub fn hamming_weight(n: u32) -> i32 {
         n.count_ones() as i32
     }
 }

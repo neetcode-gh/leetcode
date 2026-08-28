@@ -1694,9 +1694,11 @@ impl Solution {
 
 ## Common Pitfalls
 
-### Storing Values Instead of Indices in the Deque
+### Choosing Between Values and Indices in the Deque
 
-When using the deque approach, a common mistake is storing the actual values rather than their indices. Storing values makes it impossible to determine when an element has left the window, since you cannot compare positions. Always store indices in the deque and use `nums[index]` to access values.
+The deque can store either indices or values. Indices make it straightforward to detect when an element leaves the window by comparing its position with the left boundary.
+
+A value-only deque is also correct when the original array is available. Keep duplicate values by removing only strictly smaller values from the back. When the window moves, remove one value from the front if it equals the outgoing value `nums[l]`. If duplicates are discarded without storing indices or counts, the deque can remove a value that still has another occurrence inside the window.
 
 ### Incorrect Window Boundary Checks
 
@@ -1704,7 +1706,7 @@ Many solutions fail by using wrong conditions for when to start recording result
 
 ### Not Maintaining Decreasing Order in Deque
 
-The deque must maintain indices in decreasing order of their corresponding values. A common bug is using `<=` instead of `<` when comparing values before popping, or forgetting to pop elements altogether. This results in the front of the deque not representing the actual maximum. Always pop from the back while `nums[deque.back()] < nums[current]`.
+The deque must remain monotonic in decreasing order of value. For an index deque, both `<` and `<=` are correct when removing elements from the back. Using `<` retains equal values, while `<=` discards the older equal value because the newer occurrence has the same value and expires later. For a value-only deque without counts, use `<` so duplicate occurrences are retained. Forgetting to remove smaller values is the actual error because the front may no longer represent the current window's maximum.
 
 ### Forgetting to Handle the Output Array Size
 
