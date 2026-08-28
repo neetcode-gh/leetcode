@@ -558,7 +558,7 @@ impl Solution {
 ### Intuition
 
 We want the longest window where we can make all characters the same using at most `k` replacements.
-The key insight is that the window is valid as long as:
+Using the true current maximum frequency, the window is valid as long as:
 
 **window size – count of the most frequent character ≤ k**
 
