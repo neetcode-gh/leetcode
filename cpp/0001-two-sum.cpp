@@ -24,3 +24,45 @@ public:
         return {};
     }
 };
+
+/*
+    APPROACH-2: Sorting + Two Pointer
+    Store the given array in vector of pairs {{value,index}, {value,index}}....
+    Then sort the vector of pair..
+    After sorting we can apply two pointer aproach.
+
+    Time Complexity: O(nlogn)
+    Space Complexity: O(n);
+*/
+
+class Solution2{
+public:
+
+    vector<int> twoSum(vector<int>& nums, int target) {
+        vector<pair<int, int>> array;
+        int len = nums.size();
+        for(int i=0; i<len; i++){
+            array.push_back({nums[i],i});
+        }
+        sort(array.begin(), array.end());
+
+        int l=0, r=len-1;
+        while(l<r){
+            int sum =array[l].first + array[r].first;
+            
+            if(sum==target){
+                return {min(array[l].second, array[r].second),
+                        max(array[l].second, array[r].second)};
+            }
+            else if(sum<target){
+                l++;
+            }
+            else{
+                r--;
+            }
+
+        }
+        return {};
+    }
+
+};
