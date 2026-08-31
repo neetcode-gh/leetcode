@@ -1,39 +1,19 @@
-class Solution:    
-    Memo = {}    
-    def countVowelPermutation(self, n, c = '') -> int:        
-        if (c, n) in self.Memo:            
-            return self.Memo[(c, n)]
-        if n == 1:
-            if c == 'a':
-                return 1 
-            if c == 'e':
-                return 2 
-            if c == 'i':
-                return 4 
-            if c == 'o':
-                return 2 
-            if c == 'u':
-                return 1            
-            if c == '':                
-                return 5
-        else:
-            if c == 'a':
-                self.Memo[('a', n)] = self.countVowelPermutation(n - 1, 'e')                
-                return self.Memo[('a', n)]
-            if c == 'e':
-                self.Memo[('e', n)] = self.countVowelPermutation(n - 1, 'a') + self.countVowelPermutation(n - 1, 'i')                
-                return self.Memo[('e', n)]
-            if c == 'i':
-                self.Memo[('i', n)] = self.countVowelPermutation(n - 1, 'a') + self.countVowelPermutation(n - 1, 'e') + self.countVowelPermutation(n - 1, 'o') + self.countVowelPermutation(n - 1, 'u')          
-                return self.Memo[('i', n)]
-            if c == 'o':
-                self.Memo[('o', n)] = self.countVowelPermutation(n - 1, 'i') + self.countVowelPermutation(n - 1, 'u')                
-                return self.Memo[('o', n)]
-            if c == 'u':
-                self.Memo[('u', n)] = self.countVowelPermutation(n - 1, 'a')                
-                return self.Memo[('u', n)]
-            if c == '':
-                Tot = 0
-                for i in ['a', 'e', 'i', 'o', 'u']:
-                    Tot = Tot + self.countVowelPermutation(n - 1, i);                    
-                return Tot % 1000000007         
+class Solution:
+    def countVowelPermutation(self, n: int) -> int:
+        # space complexity - O(1), time complexity - O(N)
+        dp = {"a" : 1, "e" : 1, "i": 1, "o": 1, "u": 1}
+        mod = 10**9 + 7
+
+        for i in range(2, n + 1):
+            newDp = dp.copy()
+            print(newDp)
+
+            newDp["a"] = (dp["e"] + dp["i"] + dp["u"]) % mod
+            newDp["e"] = (dp["a"] + dp["i"]) % mod
+            newDp["i"] = (dp["e"] + dp["o"]) % mod
+            newDp["o"] = dp["i"] % mod
+            newDp["u"] = (dp["i"] + dp["o"]) % mod
+
+            dp = newDp 
+        
+        return sum(dp.values()) % mod
