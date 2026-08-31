@@ -1,16 +1,24 @@
 impl Solution {
     pub fn is_palindrome(x: i32) -> bool {
-        let numbers = x.to_string();
-        let numbers = numbers.as_bytes();
+        if x < 0 {
+            return false;
+        }
 
-        let (mut left, mut right) = (0, numbers.len() - 1);
+        let mut div: i64 = 1;
+        while i64::from(x) >= div * 10 {
+            div *= 10;
+        }
 
-        while left < right {
-            if numbers[left] != numbers[right] {
+        let mut x: i64 = i64::from(x);
+
+        while x != 0 {
+            let left = x / div;
+            let right = x % 10;
+            if left != right {
                 return false;
             }
-            left += 1;
-            right -= 1;
+            x = (x % div) / 10;
+            div /= 100;
         }
 
         true
