@@ -1,41 +1,53 @@
 type MyStack struct {
-	queue []int
+    Queue Queue
 }
 
+type Queue struct {
+    Elems []int
+}
+
+func (q *Queue) Push(e int) {
+    q.Elems = append(q.Elems, e)
+}
+
+func (q *Queue) Pop() int {
+    n := q.Elems[0]
+    q.Elems = q.Elems[1:]
+    return n
+}
 
 func Constructor() MyStack {
-	return MyStack{}
+    return MyStack{}
 }
 
 
 func (this *MyStack) Push(x int)  {
-	this.queue = append(this.queue, x)
+    this.Queue.Push(x)
 }
 
 
 func (this *MyStack) Pop() int {
-	if this.Empty() {
-		return 0
-	}
-
-	elem := this.queue[len(this.queue) - 1]
-
-	this.queue = this.queue[:len(this.queue) - 1]
-
-	return elem
+    k := len(this.Queue.Elems)
+    for i:=0; i<k-1; i++ {
+        n := this.Queue.Pop()
+        this.Queue.Push(n)
+    }
+    return this.Queue.Pop()
 }
 
 
 func (this *MyStack) Top() int {
-	if this.Empty() {
-		return 0
-	}
-
-	return this.queue[len(this.queue) - 1]
+    k := len(this.Queue.Elems)
+    for i:=0; i<k-1; i++ {
+        n := this.Queue.Pop()
+        this.Queue.Push(n)
+    }
+    n := this.Queue.Pop()
+    this.Queue.Push(n)
+    return n
 }
 
 
 func (this *MyStack) Empty() bool {
-	return len(this.queue) == 0
+    return len(this.Queue.Elems) == 0
 }
-
