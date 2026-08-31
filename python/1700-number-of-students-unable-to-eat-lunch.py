@@ -1,12 +1,12 @@
 class Solution:
     def countStudents(self, students: List[int], sandwiches: List[int]) -> int:
-        num_of_students_back_in_line = 0
-        while num_of_students_back_in_line != len(students):
-            curr_student = students.pop(0)
-            if curr_student == sandwiches[0]:
-                sandwiches.pop(0)
-                num_of_students_back_in_line = 0
+        count = {}
+        for s in students:
+            count[s] = count.get(s, 0) + 1
+        
+        for i, s in enumerate(sandwiches):
+            if count.get(s, 0) > 0:
+                count[s] -= 1
             else:
-                students.append(curr_student)
-                num_of_students_back_in_line += 1
-        return len(students)
+                return len(sandwiches) - i
+        return 0
