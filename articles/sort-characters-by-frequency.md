@@ -207,6 +207,28 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    frequencySort(s: string): string {
+        const count: Record<string, number> = {};
+        for (const char of s) {
+            count[char] = (count[char] || 0) + 1;
+        }
+        const sortedChars = [...s].sort((a, b) => {
+            if (count[b] === count[a]) {
+                return a.localeCompare(b);
+            }
+            return count[b] - count[a];
+        });
+        return sortedChars.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,6 +530,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    frequencySort(s: string): string {
+        const count: number[] = new Array(123).fill(0);
+        for (const char of s) {
+            count[char.charCodeAt(0)]++;
+        }
+        const freq: [string, number][] = [];
+        for (let i = 0; i < 123; i++) {
+            if (count[i] > 0) {
+                freq.push([String.fromCharCode(i), count[i]]);
+            }
+        }
+        freq.sort((a, b) => {
+            if (b[1] === a[1]) {
+                return a[0].localeCompare(b[0]);
+            }
+            return b[1] - a[1];
+        });
+        let res = '';
+        for (const [char, freqCount] of freq) {
+            res += char.repeat(freqCount);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -770,6 +824,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    frequencySort(s: string): string {
+        const count: Record<string, number> = {};
+        for (const char of s) {
+            count[char] = (count[char] || 0) + 1;
+        }
+        const buckets: string[][] = Array.from({ length: s.length + 1 }, () => []);
+        for (const [char, freq] of Object.entries(count)) {
+            buckets[freq].push(char);
+        }
+        let res = '';
+        for (let i = s.length; i > 0; i--) {
+            for (const char of buckets[i]) {
+                res += char.repeat(i);
+            }
+        }
+        return res;
     }
 }
 ```
