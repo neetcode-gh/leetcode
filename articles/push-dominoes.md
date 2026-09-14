@@ -342,6 +342,43 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} dominoes
+     * @return {string}
+     */
+    pushDominoes(dominoes: string): string {
+        const n = dominoes.length;
+        const res = dominoes.split('');
+
+        for (let i = 0; i < n; i++) {
+            if (dominoes[i] !== '.') continue;
+
+            let l = i - 1,
+                r = i + 1;
+
+            while (l >= 0 && dominoes[l] === '.') l--;
+            while (r < n && dominoes[r] === '.') r++;
+
+            const leftForce = l >= 0 ? dominoes[l] : null;
+            const rightForce = r < n ? dominoes[r] : null;
+
+            if (leftForce === 'R' && rightForce === 'L') {
+                if (i - l < r - i) res[i] = 'R';
+                else if (r - i < i - l) res[i] = 'L';
+            } else if (leftForce === 'R') {
+                res[i] = 'R';
+            } else if (rightForce === 'L') {
+                res[i] = 'L';
+            }
+        }
+
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -776,6 +813,55 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} dominoes
+     * @return {string}
+     */
+    pushDominoes(dominoes: string): string {
+        const n = dominoes.length;
+        const left = new Array(n).fill(Infinity);
+        const right = new Array(n).fill(Infinity);
+        const res = dominoes.split('');
+
+        let force = Infinity;
+        for (let i = 0; i < n; i++) {
+            if (dominoes[i] === 'R') {
+                force = 0;
+            } else if (dominoes[i] === 'L') {
+                force = Infinity;
+            } else {
+                force = force === Infinity ? Infinity : force + 1;
+            }
+            right[i] = force;
+        }
+
+        force = Infinity;
+        for (let i = n - 1; i >= 0; i--) {
+            if (dominoes[i] === 'L') {
+                force = 0;
+            } else if (dominoes[i] === 'R') {
+                force = Infinity;
+            } else {
+                force = force === Infinity ? Infinity : force + 1;
+            }
+            left[i] = force;
+        }
+
+        for (let i = 0; i < n; i++) {
+            if (left[i] < right[i]) {
+                res[i] = 'L';
+            } else if (right[i] < left[i]) {
+                res[i] = 'R';
+            }
+        }
+
+        return res.join('');
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1115,6 +1201,45 @@ impl Solution {
         }
 
         String::from_utf8(dom).unwrap()
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} dominoes
+     * @return {string}
+     */
+    pushDominoes(dominoes: string): string {
+        const dom = dominoes.split('');
+        const q = new Queue<[number, string]>();
+
+        for (let i = 0; i < dom.length; i++) {
+            if (dom[i] !== '.') {
+                q.push([i, dom[i]]);
+            }
+        }
+
+        while (!q.isEmpty()) {
+            const [i, d] = q.pop()!;
+
+            if (d === 'L' && i > 0 && dom[i - 1] === '.') {
+                q.push([i - 1, 'L']);
+                dom[i - 1] = 'L';
+            } else if (d === 'R') {
+                if (i + 1 < dom.length && dom[i + 1] === '.') {
+                    if (i + 2 < dom.length && dom[i + 2] === 'L') {
+                        q.pop();
+                    } else {
+                        q.push([i + 1, 'R']);
+                        dom[i + 1] = 'R';
+                    }
+                }
+            }
+        }
+
+        return dom.join('');
     }
 }
 ```
@@ -1641,6 +1766,59 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} dominoes
+     * @return {string}
+     */
+    pushDominoes(dominoes: string): string {
+        let res: string[] = [];
+        let dots = 0;
+        let R = false;
+
+        for (let d of dominoes) {
+            if (d === '.') {
+                dots++;
+            } else if (d === 'R') {
+                if (R) {
+                    res.push('R'.repeat(dots + 1));
+                } else if (dots > 0) {
+                    res.push('.'.repeat(dots));
+                }
+                dots = 0;
+                R = true;
+            } else {
+                if (R) {
+                    res.push('R');
+                    if (dots > 0) {
+                        res.push('R'.repeat(Math.floor(dots / 2)));
+                        if (dots % 2 !== 0) {
+                            res.push('.');
+                        }
+                        res.push('L'.repeat(Math.floor(dots / 2)));
+                    }
+                    res.push('L');
+                    R = false;
+                    dots = 0;
+                } else {
+                    res.push('L'.repeat(dots + 1));
+                    dots = 0;
+                }
+            }
+        }
+
+        if (R) {
+            res.push('R'.repeat(dots + 1));
+        } else {
+            res.push('.'.repeat(dots));
+        }
+
+        return res.join('');
     }
 }
 ```
