@@ -162,6 +162,25 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    zeroFilledSubarray(nums: number[]): number {
+        let res = 0;
+        for (let i = 0; i < nums.length; i++) {
+            for (let j = i; j < nums.length; j++) {
+                if (nums[j] != 0) break;
+                res++;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -358,6 +377,29 @@ impl Solution {
             i += 1;
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    zeroFilledSubarray(nums: number[]): number {
+        let res = 0,
+            i = 0;
+        while (i < nums.length) {
+            let count = 0;
+            while (i < nums.length && nums[i] === 0) {
+                count++;
+                i++;
+                res += count;
+            }
+            i++;
+        }
+        return res;
     }
 }
 ```
@@ -568,6 +610,30 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    zeroFilledSubarray(nums: number[]): number {
+        let res = 0,
+            count = 0;
+
+        for (let num of nums) {
+            if (num === 0) {
+                count++;
+            } else {
+                count = 0;
+            }
+            res += count;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -759,6 +825,29 @@ impl Solution {
         }
         res += count * (count + 1) / 2;
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    zeroFilledSubarray(nums: number[]): number {
+        let res = 0,
+            count = 0;
+        for (let num of nums) {
+            if (num === 0) {
+                count++;
+            } else {
+                res += (count * (count + 1)) / 2;
+                count = 0;
+            }
+        }
+        res += (count * (count + 1)) / 2;
+        return res;
     }
 }
 ```
