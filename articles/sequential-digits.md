@@ -117,7 +117,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> SequentialDigits(int low, int high) {
+    public List<int> SequentialDigits(int low, int high) {
         var res = new List<int>();
         for (int num = low; num <= high; num++) {
             string s = num.ToString();
@@ -220,6 +220,33 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number[]}
+     */
+    sequentialDigits(low: number, high: number): number[] {
+        const res: number[] = [];
+        for (let num = low; num <= high; num++) {
+            const s = num.toString();
+            let flag = true;
+            for (let i = 1; i < s.length; i++) {
+                if (s.charCodeAt(i) - s.charCodeAt(i - 1) !== 1) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                res.push(num);
+            }
+        }
+        return res;
     }
 }
 ```
@@ -361,7 +388,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> SequentialDigits(int low, int high) {
+    public List<int> SequentialDigits(int low, int high) {
         var res = new List<int>();
         int lowDigit = low.ToString().Length;
         int highDigit = high.ToString().Length;
@@ -492,6 +519,37 @@ impl Solution {
             }
         }
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number[]}
+     */
+    sequentialDigits(low: number, high: number): number[] {
+        const res: number[] = [];
+        const lowDigit = low.toString().length;
+        const highDigit = high.toString().length;
+        for (let digits = lowDigit; digits <= highDigit; digits++) {
+            for (let start = 1; start < 10; start++) {
+                if (start + digits > 10) {
+                    break;
+                }
+                let num = start;
+                let prev = start;
+                for (let i = 1; i < digits; i++) {
+                    num = num * 10 + ++prev;
+                }
+                if (num >= low && num <= high) {
+                    res.push(num);
+                }
+            }
+        }
+        return res;
     }
 }
 ```
@@ -640,7 +698,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> SequentialDigits(int low, int high) {
+    public List<int> SequentialDigits(int low, int high) {
         var res = new List<int>();
         var queue = new Queue<int>();
 
@@ -778,6 +836,37 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number[]}
+     */
+    sequentialDigits(low: number, high: number): number[] {
+        const res: number[] = [];
+        const queue = new Queue<number>();
+        for (let i = 1; i < 9; i++) {
+            queue.push(i);
+        }
+        while (!queue.isEmpty()) {
+            const n = queue.pop()!;
+            if (n > high) {
+                continue;
+            }
+            if (n >= low && n <= high) {
+                res.push(n);
+            }
+            const ones = n % 10;
+            if (ones < 9) {
+                queue.push(n * 10 + (ones + 1));
+            }
+        }
+        return res;
     }
 }
 ```
@@ -920,7 +1009,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> SequentialDigits(int low, int high) {
+    public List<int> SequentialDigits(int low, int high) {
         var res = new List<int>();
 
         void Dfs(int num) {
@@ -1055,6 +1144,35 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number[]}
+     */
+    sequentialDigits(low: number, high: number): number[] {
+        const res: number[] = [];
+        const dfs = (num: number): void => {
+            if (num > high) {
+                return;
+            }
+            if (num >= low) {
+                res.push(num);
+            }
+            const lastDigit = num % 10;
+            if (lastDigit < 9) {
+                dfs(num * 10 + (lastDigit + 1));
+            }
+        };
+        for (let i = 1; i < 10; i++) {
+            dfs(i);
+        }
+        return res.sort((a, b) => a - b);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1177,7 +1295,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<int> SequentialDigits(int low, int high) {
+    public List<int> SequentialDigits(int low, int high) {
         string nums = "123456789";
         var res = new List<int>();
 
@@ -1284,6 +1402,32 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {number} low
+     * @param {number} high
+     * @return {number[]}
+     */
+    sequentialDigits(low: number, high: number): number[] {
+        const nums = '123456789';
+        const res: number[] = [];
+        for (let d = 2; d <= 9; d++) {
+            for (let i = 0; i <= 9 - d; i++) {
+                const num = parseInt(nums.substring(i, i + d));
+                if (num > high) {
+                    break;
+                }
+                if (num >= low && num <= high) {
+                    res.push(num);
+                }
+            }
+        }
+        return res;
     }
 }
 ```

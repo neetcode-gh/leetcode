@@ -298,6 +298,38 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} customers
+     * @return {number}
+     */
+    bestClosingTime(customers: string): number {
+        const n: number = customers.length;
+        let res: number = n,
+            minPenalty: number = n;
+        for (let i = 0; i <= n; i++) {
+            let penalty: number = 0;
+            for (let j = 0; j < i; j++) {
+                if (customers[j] === 'N') {
+                    penalty++;
+                }
+            }
+            for (let j = i; j < n; j++) {
+                if (customers[j] === 'Y') {
+                    penalty++;
+                }
+            }
+            if (penalty < minPenalty) {
+                minPenalty = penalty;
+                res = i;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -658,6 +690,44 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} customers
+     * @return {number}
+     */
+    bestClosingTime(customers: string): number {
+        const n: number = customers.length;
+        let cnt: number = 0;
+        const prefixN: number[] = [];
+        for (const c of customers) {
+            prefixN.push(cnt);
+            if (c === 'N') {
+                cnt++;
+            }
+        }
+        prefixN.push(cnt);
+        const suffixY: number[] = new Array(n + 1).fill(0);
+        for (let i = n - 1; i >= 0; i--) {
+            suffixY[i] = suffixY[i + 1];
+            if (customers[i] === 'Y') {
+                suffixY[i]++;
+            }
+        }
+        let res: number = n,
+            minPenalty: number = n;
+        for (let i = 0; i <= n; i++) {
+            const penalty: number = prefixN[i] + suffixY[i];
+            if (penalty < minPenalty) {
+                minPenalty = penalty;
+                res = i;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -933,6 +1003,37 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} customers
+     * @return {number}
+     */
+    bestClosingTime(customers: string): number {
+        let cntY: number = 0;
+        for (let c of customers) {
+            if (c === 'Y') cntY++;
+        }
+        let minPenalty: number = cntY,
+            res: number = 0,
+            cntN: number = 0;
+        for (let i = 0; i < customers.length; i++) {
+            if (customers[i] === 'Y') {
+                cntY--;
+            } else {
+                cntN++;
+            }
+            const penalty: number = cntN + cntY;
+            if (penalty < minPenalty) {
+                res = i + 1;
+                minPenalty = penalty;
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1139,6 +1240,28 @@ impl Solution {
         }
 
         res
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} customers
+     * @return {number}
+     */
+    bestClosingTime(customers: string): number {
+        let res: number = 0,
+            minPenalty: number = 0,
+            penalty: number = 0;
+        for (let i = 0; i < customers.length; i++) {
+            penalty += customers[i] === 'Y' ? 1 : -1;
+            if (penalty > minPenalty) {
+                minPenalty = penalty;
+                res = i + 1;
+            }
+        }
+        return res;
     }
 }
 ```
