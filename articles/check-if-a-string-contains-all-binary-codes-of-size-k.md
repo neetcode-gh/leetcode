@@ -213,6 +213,31 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {boolean}
+     */
+    hasAllCodes(s: string, k: number): boolean {
+        const n = s.length;
+        if (n < 1 << k) {
+            return false;
+        }
+
+        for (let num = 0; num < 1 << k; num++) {
+            const binaryCode = num.toString(2).padStart(k, '0');
+            if (!s.includes(binaryCode)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +418,28 @@ impl Solution {
         }
 
         code_set.len() == (1 << k)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {boolean}
+     */
+    hasAllCodes(s: string, k: number): boolean {
+        if (s.length < 1 << k) {
+            return false;
+        }
+
+        const codeSet = new Set<string>();
+        for (let i = 0; i <= s.length - k; i++) {
+            codeSet.add(s.substring(i, i + k));
+        }
+
+        return codeSet.size === 1 << k;
     }
 }
 ```
@@ -846,6 +893,59 @@ impl Solution {
 }
 ```
 
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {boolean}
+     */
+    hasAllCodes(s: string, k: number): boolean {
+        const n = s.length;
+        if (n < 1 << k) {
+            return false;
+        }
+
+        const codeSet = new Array<boolean>(1 << k).fill(false);
+        let cur = 0;
+        let i = 0,
+            j = 0,
+            bit = k - 1;
+
+        while (j < k) {
+            if (s[j] === '1') {
+                cur |= 1 << bit;
+            }
+            bit--;
+            j++;
+        }
+
+        let have = 1;
+        codeSet[cur] = true;
+
+        while (j < n) {
+            if (s[i] === '1') {
+                cur ^= 1 << (k - 1);
+            }
+            i++;
+
+            cur <<= 1;
+            if (s[j] === '1') {
+                cur |= 1;
+            }
+            j++;
+
+            if (!codeSet[cur]) {
+                have++;
+                codeSet[cur] = true;
+            }
+        }
+
+        return have === 1 << k;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1122,6 +1222,39 @@ impl Solution {
         }
 
         have == (1 << k)
+    }
+}
+```
+
+```typescript
+class Solution {
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {boolean}
+     */
+    hasAllCodes(s: string, k: number): boolean {
+        const n = s.length;
+        if (n < 1 << k) {
+            return false;
+        }
+
+        const codeSet = new Array<boolean>(1 << k).fill(false);
+        let cur = 0,
+            have = 0;
+
+        for (let i = 0; i < n; i++) {
+            cur = ((cur << 1) & ((1 << k) - 1)) | (Number(s[i]) - 0);
+
+            if (i >= k - 1) {
+                if (!codeSet[cur]) {
+                    codeSet[cur] = true;
+                    have++;
+                }
+            }
+        }
+
+        return have === 1 << k;
     }
 }
 ```
